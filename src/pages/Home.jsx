@@ -1,5 +1,6 @@
 import Navbar from "../components/navbar/navbar";
 import { Settings, Tag, MessageSquare } from "lucide-react";
+import Partners from "../components/partners/partners";
 
 export default function Home() {
   return (
@@ -284,6 +285,23 @@ export default function Home() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Trusted by our customers & clients */}
+      <section id="" className="flex bg-[#EBF5FD] justify-center items-center text-center py-10">
+        {/* Title and description */}
+        <div className="mx-[7.438rem] space-y-5">
+          <div>
+            <div className="flex flex-row justify-center items-center space-x-2 font-bold text-3xl">
+              <h3 className="">Trusted by Our</h3>
+              <h3 className="text-[#1775EE]">Customers & Partners</h3>
+            </div>
+            <p>We collaborate with recognized technology partners to ensure quality, reliability, and up-to-date ICT solutions.</p>
+          </div>
+
+          {/* Partners Logo (Should be scrollable horizontally) */}
+          <Partners />
         </div>
       </section>
 
