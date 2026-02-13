@@ -49,13 +49,29 @@ export default function Home() {
       </section>
 
       {/* Trusted by our customers & clients */}
-      <section id="">
+      <section id="" className="flex bg-[#EBF5FD] justify-center items-center text-center p-10">
+        {/* Title and description */}
+        <div className=" ml-[7.438rem]">
+          <div className="flex flex-row justify-center items-center space-x-1">
+            <h3>Trusted by Our</h3> 
+            <h3>Customers & Partners</h3>
+          </div>
+          <p>We collaborate with recognized technology partners to ensure quality, reliability, and up-to-date ICT solutions.</p>
+        </div>
 
+        {/* Partners Logo (Should be scrollable horizontally) */}
+        <div>
+          {/* Image container (white bg in the design) */}
+          <div>
+            {/* Image itself */}
+            <img></img>
+          </div>
+        </div>
       </section>
 
       {/* Services We Provide to Elevate Your Business */}
       <section id="">
-
+        
       </section>
 
       {/* Why Choose MGKK ICT Services */}
