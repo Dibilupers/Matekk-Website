@@ -199,10 +199,105 @@ export default function Home() {
       </section>
 
       {/* Our Featured Solutions and Training */}
-      <section></section>
+      <section id="" className="flex bg-[#EBF5FD] justify-center items-center text-center py-10">
+        {/* Title and description */}
+        <div className="mx-[7.438rem]">
+          <div>
+            <div className="flex flex-row justify-center items-center space-x-1">
+              <h3>Our Featured</h3>
+              <h3>Solutions and Training</h3>
+            </div>
+            <p>MGKK Information Communication Technology Services delivers end-to-end ICT and engineering solutions alongside comprehensive training programs designed to meet industry demands and support digital transformation.</p>
+          </div>
+
+          {/* Featured Services */}
+          <div className="w-full h-7">
+            {/* Should be the first image of featured service */}
+            <div>
+              {/* When hovered */}
+              <div className="flex flex-row">
+                {/* Titile and description */}
+                <div>
+                  <h4>Network and Security Infrastructure Projects</h4>
+                  <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. </p>
+                </div>
+
+                {/* Arrow */}
+                <img></img>
+              </div>
+            </div>
+
+            {/* Second featured service image */}
+            <div></div>
+
+            {/* Third featured service image */}
+            <div></div>
+          </div>
+        </div>
+      </section>
 
       {/* Hear from Our Successful Learners */}
-      <section></section>
+      <section id="" className="flex flex-col justify-center items-center text-center py-10">
+        <div className="mx-[7.438rem] flex flex-col">
+          {/* Title and description */}
+          <div className="flex flex-row">
+            <div className="text-left">
+              <div className="flex flex-row justify-start items-center space-x-1">
+                <h3>Hear From Our</h3>
+                <h3>Successful Learners</h3>
+              </div>
+              <p>MGKK ICT Services has successfully delivered critical ICT infrastructure and training solutions for government agencies and private organizations, maintaining a strong focus on quality, reliability, and customer satisfaction.</p>
+            </div>
+            {/* Contact Us Button */}
+            <button>Contact Us</button>
+          </div>
+
+
+          <div className="flex flex-row space-x-3">
+            {/* First Feedback */}
+            <div className="bg-blue-100">
+              <div>
+                <img></img>
+                <div>
+                  <h4>Michael Lewis Bullas Abalos</h4>
+                  <p>CCNA Passer - Jan. 2026</p>
+                  {/* Stars */}
+                  <img></img>
+                </div>
+              </div>
+              <p>I passed my CCNA thanks to Converge Training and I.T. Services. Their complete materials, hands-on training, and supportive staff helped me gain the confidence to succeed. Special thanks to Engr. Mark Anthony Melendres and the entire Converge team enrolling here is truly worth the value.</p>
+            </div>
+
+            {/* Second Feedback */}
+            <div className="bg-blue-100">
+              <div>
+                <img></img>
+                <div>
+                  <h4>Michael Lewis Bullas Abalos</h4>
+                  <p>CCNA Passer - Jan. 2026</p>
+                  {/* Stars */}
+                  <img></img>
+                </div>
+              </div>
+              <p>I passed my CCNA thanks to Converge Training and I.T. Services. Their complete materials, hands-on training, and supportive staff helped me gain the confidence to succeed. Special thanks to Engr. Mark Anthony Melendres and the entire Converge team enrolling here is truly worth the value.</p>
+            </div>
+
+            {/* Third Feedback */}
+            <div className="bg-blue-100">
+              <div>
+                <img></img>
+                <div>
+                  <h4>Michael Lewis Bullas Abalos</h4>
+                  <p>CCNA Passer - Jan. 2026</p>
+                  {/* Stars */}
+                  <img></img>
+                </div>
+              </div>
+              <p>I passed my CCNA thanks to Converge Training and I.T. Services. Their complete materials, hands-on training, and supportive staff helped me gain the confidence to succeed. Special thanks to Engr. Mark Anthony Melendres and the entire Converge team enrolling here is truly worth the value.</p>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* About the Company */}
       <section></section>
