@@ -10,118 +10,168 @@ export default function Home() {
         id="home"
         className="relative overflow-hidden bg-gradient-to-b from-gray-50 to-white py-14"
       >
-        <div className="mx-[7.438rem]">
+        {/* 
+          ADJUST SECTION CONTAINER:
+          - mx-auto max-w-7xl = section width (change max-w-7xl to max-w-6xl for narrower, max-w-screen-2xl for wider)
+          - px-4 sm:px-6 lg:px-8 = side padding
+          - py-12 lg:py-8 = top/bottom padding (increase for more space)
+        */}
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-8 mt-25 lg:mt-0">
+          {/* 
+            ADJUST GRID LAYOUT:
+            - gap-8 lg:gap-16 = space between left and right columns
+            - grid-cols-1 lg:grid-cols-2 = 1 column mobile, 2 columns desktop
+          */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-            {/* Left Side - Content */}
-            <div className="space-y-8 lg:space-y-4">
+            {/* ==================== LEFT SIDE - CONTENT ==================== */}
+            {/* 
+              ADJUST LEFT COLUMN:
+              - space-y-6 lg:space-y-4 = vertical spacing between elements (increase for more space)
+              - text-center lg:text-left = centered on mobile, left-aligned on desktop
+              
+              TO CHANGE MOBILE ALIGNMENT:
+              - text-center = center on mobile (CURRENT)
+              - text-left = left-align on mobile
+              - text-right = right-align on mobile
+            */}
+            <div className="space-y-6 lg:space-y-4 text-left lg:text-left">
+              {/* ==================== SUBTITLE BADGE ==================== */}
               {/* 
-                ADJUST SPACING HERE: 
-                - Change space-y-8 lg:space-y-10 to adjust vertical spacing between elements
-                - Increase numbers for more space, decrease for less
+                ADJUST BADGE:
+                - px-5 py-2.5 = padding (make bigger/smaller)
+                - bg-blue-50 = background color
+                - text-blue-600 = text color
+                - text-sm = font size (text-xs for smaller, text-base for larger)
+                - rounded-full = pill shape
               */}
-
-              {/* Subtitle Badge */}
               <div className="inline-block">
-                {/* 
-                  ADJUST BADGE STYLE HERE:
-                  - bg-blue-50 = background color
-                  - text-blue-600 = text color
-                  - px-5 py-2.5 = padding (horizontal/vertical)
-                  - rounded-full = pill shape
-                */}
                 <span className="px-5 py-2.5 bg-blue-50 text-blue-600 rounded-full text-sm font-semibold tracking-wide">
                   ICT & Engineering
                 </span>
               </div>
 
-              {/* Main Heading - EXACT TEXT FROM DESIGN */}
+              {/* ==================== MAIN HEADING ==================== */}
               {/* 
-                ADJUST HEADING SIZE HERE:
-                - text-4xl sm:text-5xl lg:text-6xl = responsive font sizes
-                - leading-tight = line height
-                - Change text-blue-600 to adjust "Through ICT Excellence" color
+                ADJUST HEADING:
+                - text-4xl sm:text-5xl lg:text-5xl = font sizes (mobile/tablet/desktop)
+                  * Change to text-3xl sm:text-4xl lg:text-5xl for smaller
+                  * Change to text-5xl sm:text-6xl lg:text-7xl for larger
+                - leading-tight = line height (leading-snug for more space, leading-none for tighter)
+                - text-gray-900 = main text color
+                - text-[#1775EE] = blue text color (change hex code for different color)
               */}
-              <h1 className="text-sm sm:text-5xl lg:text-5xl font-bold leading-tight text-gray-900">
+              <h1 className="text-4xl sm:text-5xl lg:text-5xl font-bold leading-tight text-gray-900">
                 Empowering Businesses and Individuals{" "}
                 <span className="text-[#1775EE]">Through ICT Excellence</span>
               </h1>
 
-              {/* Description - EXACT TEXT FROM DESIGN */}
+              {/* ==================== DESCRIPTION ==================== */}
               {/* 
-                ADJUST DESCRIPTION HERE:
-                - text-lg lg:text-xl = font size
-                - max-w-xl = maximum width
+                ADJUST DESCRIPTION:
+                - text-base lg:text-xl = font size (text-sm for smaller, text-2xl for larger)
+                - leading-relaxed = line height
+                - max-w-lg = maximum width (max-w-md for narrower, max-w-2xl for wider)
+                - mx-auto lg:mx-0 = centered on mobile, left-aligned on desktop
                 - text-gray-600 = text color
               */}
-              <p className="text-gray-600 text-lg lg:text-xl leading-relaxed max-w-lg">
+              <p className="text-gray-600 text-base lg:text-xl leading-relaxed max-w-lg mx-auto lg:mx-0">
                 Cutting-edge ICT and Engineering Solutions. Industry-relevant
                 Training. Built on over a decade of expertise.
               </p>
 
-              {/* CTA Buttons */}
+              {/* ==================== CTA BUTTONS ==================== */}
               {/* 
-                ADJUST BUTTON SPACING HERE:
-                - gap-4 = space between buttons
-                - flex-col sm:flex-row = stack on mobile, side-by-side on tablet+
+                ADJUST BUTTONS CONTAINER:
+                - gap-4 = space between buttons (gap-2 for closer, gap-6 for wider)
+                - justify-center lg:justify-start = centered on mobile, left-aligned on desktop
+                - flex-col sm:flex-row = stacked on mobile, side-by-side on tablet+
+                
+                TO CHANGE MOBILE ALIGNMENT:
+                - justify-center = center buttons (CURRENT)
+                - justify-start = left-align buttons
+                - justify-end = right-align buttons
               */}
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
+                {/* PRIMARY BUTTON */}
                 {/* 
-                  PRIMARY BUTTON - ADJUST STYLE HERE:
-                  - bg-blue-600 = background color
-                  - hover:bg-blue-700 = hover background
-                  - px-8 py-4 = padding
-                  - rounded-full = pill shape
+                  ADJUST PRIMARY BUTTON SIZE:
+                  MOBILE: px-6 py-3 (smaller)
+                  DESKTOP: sm:px-8 sm:py-4 (original size)
+                  - Change px-6 to px-4 for even smaller on mobile
+                  - Change px-6 to px-8 to keep same size on mobile
                 */}
-                <button className="px-8 py-4 bg-blue-600 text-white rounded-full font-medium hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl">
+                <button className="px-3 py-3 sm:px-8 sm:py-4 bg-blue-600 text-white rounded-full font-medium hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl text-sm sm:text-base">
                   Explore Our Solutions
-                </button>
+                </button> 
+
+                {/* SECONDARY BUTTON */}
                 {/* 
-                  SECONDARY BUTTON - ADJUST STYLE HERE:
-                  - border-2 border-blue-600 = border width and color
-                  - hover:bg-blue-50 = hover background
-                */}
-                <button className="px-8 py-4 bg-white text-blue-600 border-2 border-blue-600 rounded-full font-medium hover:bg-blue-50 transition-all duration-300">
+                ADJUST SECONDARY BUTTON SIZE:
+                MOBILE: px-6 py-3 (smaller)
+                DESKTOP: sm:px-8 sm:py-4 (original size)
+              */}
+                <button className="px-3 py-3 sm:px-8 sm:py-4 bg-white text-blue-600 border-2 border-blue-600 rounded-full font-medium hover:bg-blue-50 transition-all duration-300 text-sm sm:text-base">
                   View Training Programs
                 </button>
               </div>
 
-              {/* Stats Section */}
+              {/* ==================== STATS SECTION ==================== */}
               {/* 
-                ADJUST STATS LAYOUT HERE:
+                ADJUST STATS CONTAINER:
                 - gap-6 lg:gap-8 = space between stat items
-                - pt-6 = top padding (space from buttons above)
-                - flex-wrap = allows wrapping on small screens
+                - pt-6 = top padding/margin (pt-4 for less space, pt-8 for more)
+                - justify-center lg:justify-start = centered on mobile, left-aligned on desktop
+                - flex-wrap = allows items to wrap to next line
+                
+                TO CHANGE MOBILE ALIGNMENT:
+                - justify-center = center stats (CURRENT)
+                - justify-start = left-align stats
+                - justify-between = space stats evenly
               */}
-              <div className="flex flex-wrap items-center gap-6 lg:gap-8 pt-6">
-                {/* Years of Experience */}
+              <div className="flex flex-wrap justify-center lg:justify-start items-center gap-6 lg:gap-8 pt-6">
+                {/* ==================== STAT 1: YEARS OF EXPERIENCE ==================== */}
                 {/* 
-                  ADJUST STAT STYLE HERE:
-                  - text-4xl lg:text-5xl = number size
-                  - text-sm = label text size
-                  - gap-2 = space between number and labels
+                  ADJUST STAT ITEM:
+                  - gap-1 = space between number and text (gap-2 for more space)
+                  - items-end = bottom alignment (items-center for center, items-baseline for baseline)
                 */}
-                <div className="flex items-end-safe gap-1">
+                <div className="flex items-end gap-1">
+                  {/* 
+                    ADJUST NUMBER:
+                    - text-4xl lg:text-5xl = number size
+                      * text-3xl lg:text-4xl for smaller
+                      * text-5xl lg:text-6xl for larger
+                    - text-gray-900 = color
+                  */}
                   <h2 className="text-4xl lg:text-5xl font-bold text-gray-900">
                     13+
                   </h2>
+                  {/* 
+                    ADJUST LABELS:
+                    - text-sm = font size (text-xs for smaller, text-base for larger)
+                    - leading-tight = line height
+                    - text-gray-600 = color
+                  */}
                   <div className="text-sm text-gray-600 leading-tight">
                     <p className="font-medium">Years of</p>
                     <p className="font-medium">Experience</p>
                   </div>
                 </div>
 
-                {/* Divider Line */}
+                {/* ==================== DIVIDER LINE ==================== */}
                 {/* 
-                  ADJUST DIVIDER HERE:
-                  - h-12 = height
+                  ADJUST DIVIDER:
+                  - h-12 = height (h-10 for shorter, h-16 for taller)
                   - w-px = width (1px)
                   - bg-gray-300 = color
-                  - hidden sm:block = hide on mobile, show on tablet+
+                  
+                  TO HIDE ON MOBILE:
+                  Add "hidden sm:block" before h-12
                 */}
-                <div className="hidden sm:block h-12 w-px bg-gray-300"></div>
+                <div className="h-12 w-px bg-gray-300"></div>
 
-                {/* Data Centers */}
-                <div className="flex items-end-safe gap-1">
+                {/* ==================== STAT 2: DATA CENTERS ==================== */}
+                <div className="flex items-end gap-1">
                   <h2 className="text-4xl lg:text-5xl font-bold text-gray-900">
                     3
                   </h2>
@@ -131,11 +181,11 @@ export default function Home() {
                   </div>
                 </div>
 
-                {/* Divider Line */}
-                <div className="hidden sm:block h-12 w-px bg-gray-300"></div>
+                {/* DIVIDER LINE */}
+                <div className="h-12 w-px bg-gray-300"></div>
 
-                {/* Active Courses */}
-                <div className="flex items-end-safe gap-2">
+                {/* ==================== STAT 3: ACTIVE COURSES ==================== */}
+                <div className="flex items-end gap-1">
                   <h2 className="text-4xl lg:text-5xl font-bold text-gray-900">
                     10
                   </h2>
@@ -147,46 +197,79 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Right Side - Visual Section */}
+            {/* ==================== RIGHT SIDE - VISUAL SECTION ==================== */}
             {/* 
-              ADJUST RIGHT SIDE CONTAINER HERE:
-              - lg:h-[600px] = height on large screens
-              - Increase/decrease 600px for taller/shorter image area
+              VISIBILITY CONTROL (IMPORTANT!):
+              - hidden lg:flex = HIDDEN on mobile, VISIBLE on desktop
+              
+              TO SHOW ON MOBILE:
+              Remove "hidden" and change to just "flex lg:flex"
+              
+              TO HIDE ON DESKTOP:
+              Change to "flex lg:hidden"
+              
+              ADJUST CONTAINER:
+              - lg:h-[600px] = height on desktop (change 600px to 500px for shorter, 700px for taller)
             */}
-            <div className="relative lg:h-[600px] flex items-center justify-center">
-              {/* Decorative Background Circle */}
+            <div className="hidden lg:flex relative lg:h-[600px] items-center justify-center">
+              {/* ==================== DECORATIVE BACKGROUND CIRCLE ==================== */}
               {/* 
-                ADJUST BACKGROUND CIRCLE HERE:
-                - w-[500px] h-[500px] = circle size
-                - opacity-20 = transparency
-                - blur-3xl = blur amount
+                ADJUST BACKGROUND CIRCLE:
+                - w-[500px] h-[500px] = circle size (change to 400px for smaller, 600px for larger)
+                - opacity-20 = transparency (opacity-10 for more transparent, opacity-30 for less)
+                - blur-3xl = blur amount (blur-2xl for less blur, blur-[100px] for more)
                 - from-blue-300 via-blue-400 to-blue-500 = gradient colors
+                
+                TO REMOVE CIRCLE:
+                Delete this entire div or comment it out
               */}
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="w-[500px] h-[500px] bg-gradient-to-br from-blue-300 via-blue-400 to-blue-500 rounded-full opacity-20 blur-3xl"></div>
               </div>
 
-              {/* Main Content Container */}
+              {/* ==================== MAIN CONTENT CONTAINER ==================== */}
               {/* 
-                ADJUST IMAGE CONTAINER SIZE HERE:
-                - max-w-lg = maximum width
-                Change to max-w-md (smaller) or max-w-xl (larger)
+                ADJUST IMAGE AREA SIZE:
+                - max-w-sm = maximum width (384px)
+                  * max-w-xs for smaller (320px)
+                  * max-w-md for medium (448px)
+                  * max-w-lg for larger (512px)
+                  * max-w-xl for even larger (576px)
               */}
               <div className="relative w-full max-w-sm">
-                {/* 95% Passing Rate Badge */}
+                {/* ==================== 95% PASSING RATE BADGE ==================== */}
                 {/* 
-                  ADJUST BADGE POSITION HERE:
-                  - -top-4 -left-4 = position offset from top-left
-                  - lg:left-0 = position on large screens
-                  - z-20 = layer order (higher = on top)
+                  ADJUST BADGE POSITION:
+                  - top-45 = vertical position from top (top-40 for higher, top-50 for lower)
+                  - left-4 lg:-left-30 = horizontal position
+                    * left-0 for far left
+                    * left-8 for more right
+                    * -left-20 for more left on desktop
+                  - z-20 = layer order (higher number = on top)
+                  
+                  ADJUST BADGE STYLE:
+                  - bg-[#EBF5FD] = background color (change hex code)
+                  - px-4 py-4 = padding (px-6 py-6 for larger)
+                  - rounded-2xl = corner radius (rounded-xl for less, rounded-3xl for more)
+                  - shadow-2xl = shadow size
                 */}
                 <div className="absolute top-45 left-4 lg:-left-30 bg-[#EBF5FD] rounded-2xl shadow-2xl px-4 py-4 z-20 hover:scale-105 transition-transform">
                   <div className="flex justify-center items-center gap-3">
-                    {/* 95% text */}
+                    {/* 
+                      ADJUST 95% TEXT:
+                      - text-4xl = font size (text-3xl for smaller, text-5xl for larger)
+                      - text-[#1775EE] = color (change hex code)
+                    */}
                     <p className="text-4xl font-bold text-[#1775EE]">95%</p>
 
                     {/* Star Rating with Passing Rate below */}
                     <div>
+                      {/* 
+                        ADJUST STARS:
+                        - gap-1 = space between stars (gap-0.5 for closer, gap-2 for wider)
+                        - w-4 h-4 = star size (w-3 h-3 for smaller, w-5 h-5 for larger)
+                        - text-yellow-400 = star color
+                      */}
                       <div className="flex gap-1">
                         {[...Array(5)].map((_, i) => (
                           <svg
@@ -198,6 +281,11 @@ export default function Home() {
                           </svg>
                         ))}
                       </div>
+                      {/* 
+                        ADJUST "PASSING RATE" TEXT:
+                        - text-xs = font size (text-[10px] for smaller, text-sm for larger)
+                        - text-gray-500 = color
+                      */}
                       <p className="text-xs text-gray-500 font-medium">
                         Passing Rate
                       </p>
@@ -205,17 +293,21 @@ export default function Home() {
                   </div>
                 </div>
 
-                {/* Main Image Container */}
+                {/* ==================== MAIN IMAGE CONTAINER ==================== */}
                 {/* 
-                  ADJUST IMAGE CONTAINER HERE:
-                  - mt-16 = top margin (space from badge)
-                  - rounded-[3rem] = border radius
-                  - aspect-[4/5] = aspect ratio (width:height)
+                  ADJUST IMAGE SPACING:
+                  - mt-16 = top margin/space from badge above (mt-12 for less, mt-20 for more)
                   
-                  REPLACE IMAGE PATH:
-                  Change "/path/to/your/hero-image.jpg" to your actual image
+                  REPLACE IMAGE:
+                  Change src="/src/assets/maamgrace2.png" to your image path
+                  
+                  ADJUST IMAGE:
+                  - aspect-[4/5] = aspect ratio (width:height)
+                    * aspect-square for 1:1
+                    * aspect-[3/4] for different ratio
+                  - object-cover = how image fits (object-contain to show full image)
                 */}
-                <div className="relative mt-16 ">
+                <div className="relative mt-16">
                   <img
                     src="/src/assets/maamgrace2.png"
                     alt="Professional holding laptop with ICT solutions"
@@ -223,60 +315,95 @@ export default function Home() {
                   />
                 </div>
 
-                {/* Floating Icon Decorations */}
+                {/* ==================== FLOATING ICON DECORATIONS ==================== */}
                 {/* 
-                  ADJUST FLOATING ICONS POSITION HERE:
-                  - top-20, top-36, top-52 = vertical position
-                  - -right-2, -right-4 = horizontal position
-                  - lg:right-4, lg:right-0 = position on large screens
-                  - p-3 = icon padding (size)
-                  - bg-blue-500 = background color
+                  ADJUST FLOATING ICONS:
+                  - Position: Change top-XX and -right-XX values
+                  - Size: Change p-3 (padding) to p-2 (smaller) or p-4 (larger)
+                  - Color: Change bg-blue-500 to different color
+                  - Icon size: Change w-6 h-6 to w-5 h-5 (smaller) or w-7 h-7 (larger)
+                  
+                  TO REMOVE AN ICON:
+                  Delete or comment out the entire div
                 */}
+
+                {/* ICON 1 - TOP */}
+                {/* Position: top-20 (from top), -right-2 lg:right-4 (from right) */}
                 <div className="absolute top-20 -right-2 lg:right-4 bg-blue-500 p-3 rounded-full shadow-lg hover:scale-110 transition-transform">
                   <Settings className="w-6 h-6 text-white" />
                 </div>
+
+                {/* ICON 2 - MIDDLE */}
+                {/* Position: top-36 (from top), -right-4 lg:right-0 (from right) */}
                 <div className="absolute top-36 -right-4 lg:right-0 bg-blue-500 p-3 rounded-full shadow-lg hover:scale-110 transition-transform">
                   <Tag className="w-6 h-6 text-white" />
                 </div>
+
+                {/* ICON 3 - BOTTOM */}
+                {/* Position: top-52 (from top), -right-2 lg:right-4 (from right) */}
                 <div className="absolute top-52 -right-2 lg:right-4 bg-blue-500 p-3 rounded-full shadow-lg hover:scale-110 transition-transform">
                   <MessageSquare className="w-6 h-6 text-white" />
                 </div>
 
-                {/* Certification Achievement Card */}
+                {/* ==================== CERTIFICATION ACHIEVEMENT CARD ==================== */}
                 {/* 
-                  ADJUST ACHIEVEMENT CARD HERE:
-                  - -bottom-4 -right-4 = position offset
-                  - max-w-xs = maximum width
-                  - p-5 = padding inside card
-                  - rounded-2xl = border radius
+                  ADJUST CARD POSITION:
+                  - bottom-10 = position from bottom (bottom-8 for higher, bottom-12 for lower)
+                  - -right-4 lg:-right-30 = position from right
+                    * -right-2 for less left
+                    * -right-6 for more left
+                    * lg:-right-40 for more left on desktop
                   
-                  REPLACE AVATAR IMAGE:
-                  Change "/path/to/avatar.jpg" to your actual avatar image
-
-                  top-45 left-4 lg:-left-30
+                  ADJUST CARD STYLE:
+                  - bg-[#EBF5FD] = background color (change hex)
+                  - px-4 py-2 = padding (px-6 py-4 for larger)
+                  - max-w-65 = maximum width
+                  - rounded-3xl = corner radius
+                  - shadow-2xl = shadow size
+                  - z-20 = layer order
                 */}
-
                 <div className="absolute bottom-10 -right-4 lg:-right-30 bg-[#EBF5FD] rounded-3xl shadow-2xl px-4 py-2 max-w-65 z-20 hover:scale-105 transition-transform">
                   <div className="flex items-start gap-3">
+                    {/* 
+                      REPLACE AVATAR IMAGE:
+                      Change src="/src/assets/maamgrace.png" to your image
+                      
+                      ADJUST AVATAR SIZE:
+                      - w-14 h-14 = size (w-12 h-12 for smaller, w-16 h-16 for larger)
+                    */}
                     <img
-                      src="/src/assets/maamgrace2.png"
+                      src="/src/assets/maamgrace.png"
                       alt="Clyde Nelson R."
                       className="w-14 h-14 rounded-full object-cover"
                     />
                     <div className="flex-1 min-w-0">
+                      {/* 
+                        ADJUST NAME:
+                        - text-sm = font size (text-xs for smaller, text-base for larger)
+                        - text-[#1775EE] = color (change hex)
+                      */}
                       <h4 className="font-bold text-[#1775EE] text-sm truncate">
                         Clyde Nelson R.
                       </h4>
+                      {/* 
+                        ADJUST DESCRIPTION:
+                        - text-xs = font size
+                        - text-gray-600 = color
+                        - mt-0.3 = top margin (mt-0.5 for more, mt-0 for less)
+                      */}
                       <p className="text-xs text-gray-600 mt-0.3">
                         just passed the CCNA certification!
                       </p>
                     </div>
                   </div>
                   {/* 
-                    ADJUST BUTTON HERE:
-                    - mt-4 = top margin
-                    - py-2.5 = vertical padding
-                    - bg-blue-600 = background color
+                    ADJUST BUTTON:
+                    - mt-2 = top margin (mt-3 for more space, mt-1 for less)
+                    - py-2.5 = vertical padding (py-2 for smaller, py-3 for larger)
+                    - bg-[#1775EE] = background color
+                    - hover:bg-blue-700 = hover color
+                    - text-sm = font size
+                    - rounded-xl = corner radius
                   */}
                   <button className="mt-2 w-full py-2.5 bg-[#1775EE] text-white rounded-xl text-sm font-semibold hover:bg-blue-700 transition-colors shadow-md">
                     View Certification
