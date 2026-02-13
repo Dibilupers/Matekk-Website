@@ -8,9 +8,9 @@ export default function Home() {
       {/* Hero Section */}
       <section
         id="home"
-        className="relative overflow-hidden bg-gradient-to-b from-gray-50 to-white"
+        className="relative overflow-hidden bg-gradient-to-b from-gray-50 to-white py-14"
       >
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-8">
+        <div className="mx-[7.438rem]">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
             {/* Left Side - Content */}
             <div className="space-y-8 lg:space-y-4">

@@ -1,31 +1,23 @@
 import DOH from '../../assets/DOH.svg';
 
 function Partners() {
+    const partnerLogos = [
+        { src: DOH, alt: "DOH Logo"},
+        { src: DOH, alt: "DOH Logo"},
+        { src: DOH, alt: "DOH Logo"},
+        { src: DOH, alt: "DOH Logo"},
+        { src: DOH, alt: "DOH Logo"},
+        { src: DOH, alt: "DOH Logo"},
+        { src: DOH, alt: "DOH Logo"},
+    ];
+
     return (
-        <div className="grid grid-cols-6 gap-4">
-            <div className="flex justify-center items-center w-40 h-24 shrink-0 bg-white p-3 rounded-xl">
-                <img src={DOH} alt="DOH logo" className='w-16' />
-            </div>
-
-            <div className="flex justify-center items-center w-40 h-24 shrink-0 bg-white p-3 rounded-xl">
-                <img src={DOH} alt="DOH logo" className='w-16' />
-            </div>
-
-            <div className="flex justify-center items-center w-40 h-24 shrink-0 bg-white p-3 rounded-xl">
-                <img src={DOH} alt="DOH logo" className='w-16' />
-            </div>
-
-            <div className="flex justify-center items-center w-40 h-24 shrink-0 bg-white p-3 rounded-xl">
-                <img src={DOH} alt="DOH logo" className='w-16' />
-            </div>
-
-            <div className="flex justify-center items-center w-40 h-24 shrink-0 bg-white p-3 rounded-xl">
-                <img src={DOH} alt="DOH logo" className='w-16' />
-            </div>
-
-            <div className="flex justify-center items-center w-40 h-24 shrink-0 bg-white p-3 rounded-xl">
-                <img src={DOH} alt="DOH logo" className='w-16' />
-            </div>  
+        <div className="grid grid-cols-6 grid-rows-3 gap-4">
+            {partnerLogos.map((logo, index) => (
+                <div key={index} className="partner-logos-format">
+                    <img src={logo.src} alt={logo.alt} className="w-16"></img>
+                </div>
+            ))}
         </div>
     );
 }
