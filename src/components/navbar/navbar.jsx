@@ -198,15 +198,7 @@ function NavBar() {
               },
               {
                 name: "Cloud Security",
-                subcourses: [
-                  {
-                    name: "Cybersecurity Apprentice",
-                    path: "/training/paloalto/cloudsecurity/cybersecurityapprentice",
-                  },
-                  {
-                    name: "Cybersecurity Practitioner",
-                    path: "/training/paloalto/cloudsecurity/practitioner",
-                  },
+                subcourses: [ 
                   {
                     name: "Cloud Security Professional",
                     path: "/training/paloalto/cloudsecurity/professional",
@@ -260,20 +252,15 @@ function NavBar() {
             name: "Microsoft",
             subcourses: [
               {
-                name: "Foundation",
-                path: "/training/cloud/microsoft/foundation",
-              },
-              {
-                name: "Advanced Design",
-                path: "/training/cloud/microsoft/advanced",
+                name: "Azure Fundamentals",
+                path: "/training/cloud/microsoft/azurefundamentals",
               },
             ],
           },
           {
             name: "AWS",
             subcourses: [
-              { name: "Foundation", path: "/training/cloud/aws/foundation" },
-              { name: "Advanced Design", path: "/training/cloud/aws/advanced" },
+              { name: "Cloud Practitioner", path: "/training/cloud/aws/practitioner" },
             ],
           },
         ],
