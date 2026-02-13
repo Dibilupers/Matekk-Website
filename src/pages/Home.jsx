@@ -1,4 +1,4 @@
-import Navbar from "../components/navbar/navbar";
+import Partners from "../components/partners/partners";
 import { Link } from 'react-router-dom'; // Make sure you have react-router-dom installed
 
 export default function Home() {
@@ -52,23 +52,17 @@ export default function Home() {
       {/* Trusted by our customers & clients */}
       <section id="" className="flex bg-[#EBF5FD] justify-center items-center text-center py-10">
         {/* Title and description */}
-        <div className="mx-[7.438rem]">
+        <div className="mx-[7.438rem] space-y-5">
           <div>
-            <div className="flex flex-row justify-center items-center space-x-1">
-              <h3>Trusted by Our</h3>
-              <h3>Customers & Partners</h3>
+            <div className="flex flex-row justify-center items-center space-x-2 font-bold text-3xl">
+              <h3 className="">Trusted by Our</h3>
+              <h3 className="text-[#1775EE]">Customers & Partners</h3>
             </div>
             <p>We collaborate with recognized technology partners to ensure quality, reliability, and up-to-date ICT solutions.</p>
           </div>
 
           {/* Partners Logo (Should be scrollable horizontally) */}
-          <div className="w-full h-7">
-            {/* Image container (white bg in the design) */}
-            <div>
-              {/* Image itself */}
-              <img></img>
-            </div>
-          </div>
+          <Partners/>
         </div>
       </section>
 
