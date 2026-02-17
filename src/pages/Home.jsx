@@ -128,73 +128,42 @@ export default function Home() {
                 - justify-start = left-align stats
                 - justify-between = space stats evenly
               */}
-              <div className="flex flex-wrap justify-center lg:justify-start items-center gap-6 lg:gap-8 pt-6">
-                {/* ==================== STAT 1: YEARS OF EXPERIENCE ==================== */}
-                {/* 
-                  ADJUST STAT ITEM:
-                  - gap-1 = space between number and text (gap-2 for more space)
-                  - items-end = bottom alignment (items-center for center, items-baseline for baseline)
-                */}
-                <div className="flex items-end gap-1">
-                  {/* 
-                    ADJUST NUMBER:
-                    - text-4xl lg:text-5xl = number size
-                      * text-3xl lg:text-4xl for smaller
-                      * text-5xl lg:text-6xl for larger
-                    - text-gray-900 = color
-                  */}
-                  <h2 className="text-4xl lg:text-5xl font-bold text-gray-900">
-                    13+
-                  </h2>
-                  {/* 
-                    ADJUST LABELS:
-                    - text-sm = font size (text-xs for smaller, text-base for larger)
-                    - leading-tight = line height
-                    - text-gray-600 = color
-                  */}
-                  <div className="text-sm text-gray-600 leading-tight">
-                    <p className="font-medium">Years of</p>
-                    <p className="font-medium">Experience</p>
-                  </div>
-                </div>
+              <div className="flex flex-nowrap justify-center lg:justify-start items-center gap-4 lg:gap-8 pt-6">
 
-                {/* ==================== DIVIDER LINE ==================== */}
-                {/* 
-                  ADJUST DIVIDER:
-                  - h-12 = height (h-10 for shorter, h-16 for taller)
-                  - w-px = width (1px)
-                  - bg-gray-300 = color
-                  
-                  TO HIDE ON MOBILE:
-                  Add "hidden sm:block" before h-12
-                */}
-                <div className="h-12 w-px bg-gray-300"></div>
-
-                {/* ==================== STAT 2: DATA CENTERS ==================== */}
-                <div className="flex items-end gap-1">
-                  <h2 className="text-4xl lg:text-5xl font-bold text-gray-900">
-                    3
-                  </h2>
-                  <div className="text-sm text-gray-600 leading-tight">
-                    <p className="font-medium">Data Centers</p>
-                    <p className="font-medium">Deployed</p>
-                  </div>
-                </div>
-
-                {/* DIVIDER LINE */}
-                <div className="h-12 w-px bg-gray-300"></div>
-
-                {/* ==================== STAT 3: ACTIVE COURSES ==================== */}
-                <div className="flex items-end gap-1">
-                  <h2 className="text-4xl lg:text-5xl font-bold text-gray-900">
-                    10
-                  </h2>
-                  <div className="text-sm text-gray-600 leading-tight">
-                    <p className="font-medium">Total Active</p>
-                    <p className="font-medium">Courses</p>
-                  </div>
+              {/* STAT 1: YEARS OF EXPERIENCE */}
+              <div className="flex items-center gap-1">
+                <h2 className="text-3xl lg:text-5xl font-bold text-gray-900">13+</h2>
+                <div className="text-xs lg:text-sm text-gray-600 leading-tight">
+                  <p className="font-medium whitespace-nowrap">Years of</p>
+                  <p className="font-medium whitespace-nowrap">Experience</p>
                 </div>
               </div>
+
+              {/* DIVIDER LINE */}
+              <div className="h-10 lg:h-12 w-px bg-gray-300 shrink-0"></div>
+
+              {/* STAT 2: DATA CENTERS */}
+              <div className="flex items-center gap-2">
+                <h2 className="text-3xl lg:text-5xl font-bold text-gray-900">3</h2>
+                <div className="text-xs lg:text-sm text-gray-600 leading-tight">
+                  <p className="font-medium whitespace-nowrap">Data Centers</p>
+                  <p className="font-medium whitespace-nowrap">Deployed</p>
+                </div>
+              </div>
+
+              {/* DIVIDER LINE */}
+              <div className="h-10 lg:h-12 w-px bg-gray-300 shrink-0"></div>
+
+              {/* STAT 3: ACTIVE COURSES */}
+              <div className="flex items-center gap-2">
+                <h2 className="text-3xl lg:text-5xl font-bold text-gray-900">10</h2>
+                <div className="text-xs lg:text-sm text-gray-600 leading-tight">
+                  <p className="font-medium whitespace-nowrap">Total Active</p>
+                  <p className="font-medium whitespace-nowrap">Courses</p>
+                </div>
+              </div>
+
+            </div>
             </div>
 
             {/* ==================== RIGHT SIDE - VISUAL SECTION ==================== */}
@@ -236,7 +205,7 @@ export default function Home() {
                   * max-w-lg for larger (512px)
                   * max-w-xl for even larger (576px)
               */}
-              <div className="relative w-full max-w-sm">
+              <div className="relative w-full max-w-md">
                 {/* ==================== 95% PASSING RATE BADGE ==================== */}
                 {/* 
                   ADJUST BADGE POSITION:
@@ -328,21 +297,33 @@ export default function Home() {
                 */}
 
                 {/* ICON 1 - TOP */}
-                {/* Position: top-20 (from top), -right-2 lg:right-4 (from right) */}
-                <div className="absolute top-20 -right-2 lg:right-4 bg-blue-500 p-3 rounded-full shadow-lg hover:scale-110 transition-transform">
-                  <Settings className="w-6 h-6 text-white" />
+                {/* 
+                  ADJUST POSITION: Change top-20 (up/down) and -right-2 lg:right-4 (left/right)
+                  ADJUST SIZE: Change p-3 (padding) and w-6 h-6 (icon size)
+                  ADJUST COLOR: Change bg-blue-500
+                */}
+                <div className="absolute top-28 right-2 lg:right-15 bg-[#7DB6FF] p-2 lg:p-3 rounded-full shadow-lg hover:scale-110 transition-transform">
+                  <Settings className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
                 </div>
 
                 {/* ICON 2 - MIDDLE */}
-                {/* Position: top-36 (from top), -right-4 lg:right-0 (from right) */}
-                <div className="absolute top-36 -right-4 lg:right-0 bg-blue-500 p-3 rounded-full shadow-lg hover:scale-110 transition-transform">
-                  <Tag className="w-6 h-6 text-white" />
+                {/* 
+                  ADJUST POSITION: Change top-36 (up/down) and right-0 lg:right-0 (left/right)
+                  ADJUST SIZE: Change p-2 (padding) and w-4 h-4 (icon size)
+                  ADJUST COLOR: Change bg-blue-500
+                */}
+                <div className="absolute top-50 -right-2 lg:-right-5 bg-[#7DB6FF] p-2 lg:p-3 rounded-full shadow-lg hover:scale-110 transition-transform">
+                  <Tag className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
                 </div>
 
                 {/* ICON 3 - BOTTOM */}
-                {/* Position: top-52 (from top), -right-2 lg:right-4 (from right) */}
-                <div className="absolute top-52 -right-2 lg:right-4 bg-blue-500 p-3 rounded-full shadow-lg hover:scale-110 transition-transform">
-                  <MessageSquare className="w-6 h-6 text-white" />
+                {/* 
+                  ADJUST POSITION: Change top-52 (up/down) and right-0 lg:right-4 (left/right)
+                  ADJUST SIZE: Change p-2 (padding) and w-4 h-4 (icon size)
+                  ADJUST COLOR: Change bg-blue-500
+                */}
+                <div className="absolute top-78 right-0 lg:-right-14 bg-[#7DB6FF] p-2 lg:p-3 rounded-full shadow-lg hover:scale-110 transition-transform">
+                  <MessageSquare className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
                 </div>
 
                 {/* ==================== CERTIFICATION ACHIEVEMENT CARD ==================== */}
@@ -362,7 +343,7 @@ export default function Home() {
                   - shadow-2xl = shadow size
                   - z-20 = layer order
                 */}
-                <div className="absolute bottom-10 -right-4 lg:-right-30 bg-[#EBF5FD] rounded-3xl shadow-2xl px-4 py-2 max-w-65 z-20 hover:scale-105 transition-transform">
+                <div className="absolute bottom-15 -right-4 lg:-right-20 bg-[#EBF5FD] rounded-xl shadow-2xl px-4 py-2 max-w-65 z-20 hover:scale-105 transition-transform">
                   <div className="flex items-start gap-3">
                     {/* 
                       REPLACE AVATAR IMAGE:
@@ -372,7 +353,7 @@ export default function Home() {
                       - w-14 h-14 = size (w-12 h-12 for smaller, w-16 h-16 for larger)
                     */}
                     <img
-                      src="/src/assets/maamgrace.png"
+                      src="/src/assets/maamgrace2.png"
                       alt="Clyde Nelson R."
                       className="w-14 h-14 rounded-full object-cover"
                     />
