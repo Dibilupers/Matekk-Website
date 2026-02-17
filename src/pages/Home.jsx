@@ -16,7 +16,7 @@ export default function Home() {
           - px-4 sm:px-6 lg:px-8 = side padding
           - py-12 lg:py-8 = top/bottom padding (increase for more space)
         */}
-        <div className="mx-[7.438rem]">
+         <div className="mx-4 sm:mx-6 lg:mx-[7.438rem]">
           {/* 
             ADJUST GRID LAYOUT:
             - gap-8 lg:gap-16 = space between left and right columns
