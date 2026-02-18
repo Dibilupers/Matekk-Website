@@ -7,15 +7,9 @@ function NavBar() {
   const [openDropdown, setOpenDropdown] = useState(null);
   const [openSubcourse, setOpenSubcourse] = useState(null);
   const [openSubSubcourse, setOpenSubSubcourse] = useState(null);
-  const [openSubOption, setOpenSubOption] = useState(null);
   const [openSubSubSubcourse, setOpenSubSubSubcourse] = useState(null);
-
-  const resetDropdowns = () => {
-    setOpenDropdown(null);
-    setOpenSubcourse(null);
-    setOpenSubSubcourse(null);
-    setOpenSubOption(null);
-  };
+  const [openThirdLevel, setOpenThirdLevel] = useState(null);
+  const [openFourthLevel, setOpenFourthLevel] = useState(null);
 
   const dropdownMenus = {
     solutions: [
@@ -198,7 +192,7 @@ function NavBar() {
               },
               {
                 name: "Cloud Security",
-                subcourses: [ 
+                subcourses: [
                   {
                     name: "Cloud Security Professional",
                     path: "/training/paloalto/cloudsecurity/professional",
@@ -260,7 +254,10 @@ function NavBar() {
           {
             name: "AWS",
             subcourses: [
-              { name: "Cloud Practitioner", path: "/training/cloud/aws/practitioner" },
+              {
+                name: "Cloud Practitioner",
+                path: "/training/cloud/aws/practitioner",
+              },
             ],
           },
         ],
@@ -301,9 +298,6 @@ function NavBar() {
     setIsOpen(false);
   };
 
-  const toggleDropdown = (dropdown) =>
-    setOpenDropdown(openDropdown === dropdown ? null : dropdown);
-
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll);
@@ -313,7 +307,6 @@ function NavBar() {
   return (
     <header
       className={`flex flex-row items-center justify-between py-4 bg-white sticky top-0 z-50 transition-shadow ${scrolled ? "shadow-md" : ""}`}
-      onMouseLeave={() => resetDropdowns()}
     >
       <Link to="/" className="ml-[2.063rem] md:ml-[7.438rem]">
         LOGO
@@ -322,17 +315,18 @@ function NavBar() {
       <nav className="space-x-8 hidden md:flex font-poppins items-center">
         <button
           onClick={() => scrollToSection("home")}
-          onMouseEnter={() => setOpenDropdown(null)}
           className="hover:text-[#1775EE] hover:font-bold transition-colors cursor-pointer"
         >
           Home
         </button>
 
-        <div
-          className="relative"
-          onMouseEnter={() => setOpenDropdown("solutions")}
-        >
-          <button className="flex items-center gap-1 hover:font-bold hover:text-[#1775EE] transition-colors">
+        <div className="relative">
+          <button
+            onClick={() =>
+              setOpenDropdown(openDropdown === "solutions" ? null : "solutions")
+            }
+            className="flex items-center gap-1 hover:font-bold hover:text-[#1775EE] transition-colors"
+          >
             Solutions
             <svg
               className={`w-4 h-4 transition-transform ${openDropdown === "solutions" ? "rotate-180" : ""}`}
@@ -349,13 +343,7 @@ function NavBar() {
             </svg>
           </button>
           {openDropdown === "solutions" && (
-            <div
-              className="absolute top-full right-0 mt-2 w-56 bg-white shadow-lg rounded-lg py-2 border font-inter border-gray-100"
-              onMouseLeave={() => {
-                setOpenDropdown(null);
-                setOpenSubcourse(null);
-              }}
-            >
+            <div className="absolute top-full right-0 mt-2 w-56 bg-white shadow-lg rounded-lg py-2 border font-inter border-gray-100">
               {dropdownMenus.solutions.map((item) => (
                 <Link
                   key={item.name}
@@ -369,11 +357,13 @@ function NavBar() {
           )}
         </div>
 
-        <div
-          className="relative"
-          onMouseEnter={() => setOpenDropdown("training")}
-        >
-          <button className="flex items-center gap-1 hover:text-[#1775EE] hover:font-bold transition-colors">
+        <div className="relative">
+          <button
+            onClick={() =>
+              setOpenDropdown(openDropdown === "training" ? null : "training")
+            }
+            className="flex items-center gap-1 hover:text-[#1775EE] hover:font-bold transition-colors"
+          >
             Training
             <svg
               className={`w-4 h-4 transition-transform ${openDropdown === "training" ? "rotate-180" : ""}`}
@@ -398,8 +388,12 @@ function NavBar() {
                     <button
                       key={category.name}
                       className={`w-full text-left px-6 py-2 transition-colors rounded-[0.35rem] flex items-center justify-between ${openSubcourse === category.name ? "bg-[#1775EE] text-white font-bold" : "hover:bg-[#1775EE] hover:text-white hover:font-bold"}`}
-                      onMouseEnter={() => {
-                        setOpenSubcourse(category.name);
+                      onClick={() => {
+                        setOpenSubcourse(
+                          openSubcourse === category.name
+                            ? null
+                            : category.name,
+                        );
                         setOpenSubSubcourse(null);
                         setOpenSubSubSubcourse(null);
                       }}
@@ -432,8 +426,12 @@ function NavBar() {
                         <button
                           key={subcourse.name}
                           className={`w-full text-left px-6 py-2 transition-colors rounded-[0.35rem] flex items-center justify-between ${openSubSubcourse === subcourse.name ? "bg-[#1775EE] text-white font-bold" : "hover:bg-[#1775EE] hover:text-white hover:font-bold"}`}
-                          onMouseEnter={() => {
-                            setOpenSubSubcourse(subcourse.name);
+                          onClick={() => {
+                            setOpenSubSubcourse(
+                              openSubSubcourse === subcourse.name
+                                ? null
+                                : subcourse.name,
+                            );
                             setOpenSubSubSubcourse(null);
                           }}
                         >
@@ -466,30 +464,32 @@ function NavBar() {
                       ?.subcourses?.find((sub) => sub.name === openSubSubcourse)
                       ?.subcourses?.map((subSub) => {
                         const hasSubSubcourses =
-                          subSub.subcourses && subSub.subcourses.length > 0; // Check if there are sub-subcourses
+                          subSub.subcourses && subSub.subcourses.length > 0;
 
                         return (
                           <button
                             key={subSub.name}
-                            onMouseEnter={() => {
+                            onClick={() => {
                               if (hasSubSubcourses) {
-                                // Only allow hover for items with sub-subcourses
-                                setOpenSubSubSubcourse(subSub.name);
+                                setOpenSubSubSubcourse(
+                                  openSubSubSubcourse === subSub.name
+                                    ? null
+                                    : subSub.name,
+                                );
                               }
                             }}
                             className={`w-full text-left px-6 py-2 transition-colors rounded-[0.35rem] flex items-center justify-between
               ${
                 hasSubSubcourses
                   ? openSubSubSubcourse === subSub.name
-                    ? "bg-[#1775EE] text-white font-bold" // Blue background when active and has sub-subcourses
-                    : "hover:bg-[#1775EE] hover:text-white hover:font-bold" // Hover effect for items with sub-subcourses
-                  : "hover:text-[#1775EE] hover:font-bold" // Only blue text for items without sub-subcourses
+                    ? "bg-[#1775EE] text-white font-bold"
+                    : "hover:bg-[#1775EE] hover:text-white hover:font-bold"
+                  : "hover:text-[#1775EE] hover:font-bold"
               }
             `}
                           >
                             {subSub.name}
 
-                            {/* Show the arrow only if the item has sub-subcourses */}
                             {hasSubSubcourses && (
                               <svg
                                 className="w-4 h-4"
@@ -538,14 +538,12 @@ function NavBar() {
 
         <button
           onClick={() => scrollToSection("about")}
-          onMouseEnter={() => setOpenDropdown(null)}
           className="hover:text-[#1775EE] hover:font-bold transition-colors cursor-pointer"
         >
           About
         </button>
         <button
           onClick={() => scrollToSection("contact")}
-          onMouseEnter={() => setOpenDropdown(null)}
           className="hover:text-[#1775EE] hover:font-bold transition-colors cursor-pointer"
         >
           Contact Us
@@ -558,7 +556,7 @@ function NavBar() {
       >
         Enroll Now
       </Link>
-      {/* Mobile */}
+      {/* Mobile Hamburger */}
       <div className="flex md:hidden mr-[2.063rem] justify-center items-center">
         <button
           onClick={() => setIsOpen(!isOpen)}
@@ -588,108 +586,419 @@ function NavBar() {
           </svg>
         </button>
 
-        {isOpen && (
-          <div className="md:hidden bg-white shadow-lg absolute top-full left-0 right-0 z-40">
-            <nav className="flex flex-col p-[2.063rem] space-y-4">
+        {/* Main Menu - Full Screen */}
+        {isOpen && !openDropdown && (
+          <div className="fixed inset-0 bg-white z-50 flex flex-col">
+            {/* Header */}
+            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <Link
+                to="/"
+                className="text-xl font-bold text-[#1775EE]"
+                onClick={() => setIsOpen(false)}
+              >
+                LOGO
+              </Link>
               <button
-                onClick={() => scrollToSection("home")}
-                className="text-[#003058] hover:text-blue-600 py-2 text-left"
+                onClick={() => setIsOpen(false)}
+                className="focus:outline-none"
+              >
+                <svg
+                  className="w-6 h-6 text-[#1775EE]"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            {/* Menu Items - Left Aligned */}
+            <nav className="flex-1 flex flex-col mt-[6vh] px-6 space-y-6 font-poppins font-bold">
+              <button
+                onClick={() => {
+                  scrollToSection("home");
+                  setIsOpen(false);
+                }}
+                className="text-2xl font-semibold text-left text-black hover:text-[#1775EE]"
               >
                 Home
               </button>
 
-              <div>
-                <button
-                  onClick={() => toggleDropdown("solutions-mobile")}
-                  className="text-[#003058] hover:text-blue-600 py-2 flex items-center justify-between w-full"
+              <button
+                onClick={() => setOpenDropdown("solutions-mobile")}
+                className="text-2xl font-semibold text-left flex items-center justify-between text-black hover:text-[#1775EE]"
+              >
+                Solutions
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  Solutions
-                  <svg
-                    className={`w-4 h-4 transition-transform ${openDropdown === "solutions-mobile" ? "rotate-180" : ""}`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                </button>
-                {openDropdown === "solutions-mobile" && (
-                  <div className="pl-4 space-y-2 mt-2">
-                    {dropdownMenus.solutions.map((item) => (
-                      <Link
-                        key={item.name}
-                        to={item.path}
-                        onClick={() => setIsOpen(false)}
-                        className="block text-gray-600 hover:text-blue-600 py-1"
-                      >
-                        {item.name}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              <div>
-                <button
-                  onClick={() => toggleDropdown("training-mobile")}
-                  className="text-[#003058] hover:text-blue-600 py-2 flex items-center justify-between w-full"
-                >
-                  Training
-                  <svg
-                    className={`w-4 h-4 transition-transform ${openDropdown === "training-mobile" ? "rotate-180" : ""}`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                </button>
-                {openDropdown === "training-mobile" && (
-                  <div className="pl-4 space-y-2 mt-2">
-                    {dropdownMenus.training.map((item) => (
-                      <Link
-                        key={item.name}
-                        to={item.path}
-                        onClick={() => setIsOpen(false)}
-                        className="block text-gray-600 hover:text-blue-600 py-1"
-                      >
-                        {item.name}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </button>
 
               <button
-                onClick={() => scrollToSection("about")}
-                className="text-[#003058] hover:text-blue-600 py-2 text-left"
+                onClick={() => setOpenDropdown("training-mobile")}
+                className="text-2xl font-semibold text-left text-black flex items-center justify-between"
+              >
+                Training
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </button>
+
+              <button
+                onClick={() => {
+                  scrollToSection("about");
+                  setIsOpen(false);
+                }}
+                className="text-2xl font-semibold text-left text-black hover:text-[#1775EE]"
               >
                 About
               </button>
+
               <button
-                onClick={() => scrollToSection("contact")}
-                className="text-[#003058] hover:text-blue-600 py-2 text-left"
+                onClick={() => {
+                  scrollToSection("contact");
+                  setIsOpen(false);
+                }}
+                className="text-2xl font-semibold text-left text-black hover:text-[#1775EE]"
               >
                 Contact Us
               </button>
+            </nav>
 
+            {/* Enroll Button at Bottom */}
+            <div className="p-6">
               <Link
                 to="/enroll"
                 onClick={() => setIsOpen(false)}
-                className="bg-blue-600 text-white text-center py-3 px-6 rounded-lg hover:bg-blue-700 mt-4"
+                className="block w-full text-[1.25rem] text-center font-poppins font-bold py-3 px-6 border-2 border-[#1775EE] text-[#1775EE] rounded-full hover:bg-[#1775EE] hover:text-white transition-colors"
               >
                 Enroll Now
               </Link>
+            </div>
+          </div>
+        )}
+
+        {/* Solutions Submenu */}
+        {openDropdown === "solutions-mobile" && (
+          <div className="fixed inset-0 bg-white z-50 flex flex-col">
+            <div className="flex items-center p-6 border-b border-gray-200">
+              <button
+                onClick={() => setOpenDropdown(null)}
+                className="focus:outline-none mr-4"
+              >
+                <svg
+                  className="w-6 h-6 text-[#1775EE]"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
+              </button>
+              <h2 className="text-xl font-bold text-[#1775EE] font-poppins">
+                Solutions
+              </h2>
+            </div>
+
+            <nav className="flex-1 px-6 py-8 space-y-4">
+              {dropdownMenus.solutions.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.path}
+                  onClick={() => {
+                    setIsOpen(false);
+                    setOpenDropdown(null);
+                  }}
+                  className="block text-lg text-black font-poppins hover:text-[#1775EE] py-2 flex items-center justify-between"
+                >
+                  {item.name}
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </Link>
+              ))}
+            </nav>
+          </div>
+        )}
+
+        {/* Training Level 1 - Main Categories */}
+        {openDropdown === "training-mobile" && !openSubcourse && (
+          <div className="fixed inset-0 bg-white z-50 flex flex-col">
+            <div className="flex items-center p-6 border-b border-gray-200">
+              <button
+                onClick={() => setOpenDropdown(null)}
+                className="focus:outline-none mr-4"
+              >
+                <svg
+                  className="w-6 h-6 text-[#1775EE]"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
+              </button>
+              <h2 className="text-xl font-bold text-[#1775EE] font-poppins">
+                Training
+              </h2>
+            </div>
+
+            <nav className="flex-1 px-6 py-8 space-y-4">
+              {dropdownMenus.training.map((category) => (
+                <button
+                  key={category.name}
+                  onClick={() => setOpenSubcourse(category.name)}
+                  className="block w-full text-left text-lg text-black font-poppins hover:text-[#1775EE] py-2 flex items-center justify-between"
+                >
+                  {category.name}
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </button>
+              ))}
+            </nav>
+          </div>
+        )}
+
+        {/* Training Level 2 - Subcourses (e.g., CCNA, CCNP) */}
+        {openSubcourse && !openThirdLevel && (
+          <div className="fixed inset-0 bg-white z-50 flex flex-col">
+            <div className="flex items-center p-6 border-b border-gray-200">
+              <button
+                onClick={() => setOpenSubcourse(null)}
+                className="focus:outline-none mr-4"
+              >
+                <svg
+                  className="w-6 h-6 text-[#1775EE]"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
+              </button>
+              <h2 className="text-xl font-bold text-[#1775EE] font-poppins">
+                Training/{openSubcourse}
+              </h2>
+            </div>
+
+            <nav className="flex-1 px-6 py-8 space-y-4">
+              {dropdownMenus.training
+                .find((cat) => cat.name === openSubcourse)
+                ?.subcourses.map((subcourse) => (
+                  <button
+                    key={subcourse.name}
+                    onClick={() => setOpenThirdLevel(subcourse.name)}
+                    className="block w-full text-left text-lg text-black font-poppins hover:text-[#1775EE] py-2 flex items-center justify-between"
+                  >
+                    {subcourse.name}
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </button>
+                ))}
+            </nav>
+          </div>
+        )}
+
+        {/* Training Level 3 - Course Options or Fourth Level Categories */}
+        {openThirdLevel && !openFourthLevel && (
+          <div className="fixed inset-0 bg-white z-50 flex flex-col">
+            <div className="flex items-center p-6 border-b border-gray-200">
+              <button
+                onClick={() => setOpenThirdLevel(null)}
+                className="focus:outline-none mr-4"
+              >
+                <svg
+                  className="w-6 h-6 text-[#1775EE]"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
+              </button>
+              <h2 className="text-xl font-bold text-[#1775EE] font-poppins">
+                Training/{openSubcourse}/{openThirdLevel}
+              </h2>
+            </div>
+
+            <nav className="flex-1 px-6 py-8 space-y-4">
+              {dropdownMenus.training
+                .find((cat) => cat.name === openSubcourse)
+                ?.subcourses.find((sub) => sub.name === openThirdLevel)
+                ?.subcourses?.map((option) =>
+                  option.subcourses ? (
+                    // Has another level (4th level - for Palo Alto) - Show arrow with active state
+                    <button
+                      key={option.name}
+                      onClick={() => setOpenFourthLevel(option.name)}
+                      className={`block w-full text-left text-lg font-poppins py-2 px-4 rounded-lg flex items-center justify-between transition-colors ${
+                        openFourthLevel === option.name
+                          ? "bg-[#EBF5FD] text-black"
+                          : "text-black hover:text-[#1775EE]"
+                      }`}
+                    >
+                      {option.name}
+                      <svg
+                        className={`w-4 h-4 ${openFourthLevel === option.name ? "stroke-[#1775EE]" : ""}`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        strokeWidth={openFourthLevel === option.name ? 3 : 2}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
+                    </button>
+                  ) : (
+                    // Final link - NO arrow icon
+                    <Link
+                      key={option.name}
+                      to={option.path}
+                      onClick={() => {
+                        setIsOpen(false);
+                        setOpenDropdown(null);
+                        setOpenSubcourse(null);
+                        setOpenThirdLevel(null);
+                      }}
+                      className="block text-lg text-black font-poppins hover:text-[#1775EE] py-2 px-4"
+                    >
+                      {option.name}
+                    </Link>
+                  ),
+                )}
+            </nav>
+          </div>
+        )}
+
+        {/* Training Level 4 - Final Options (for Palo Alto 4-level structure) */}
+        {openFourthLevel && (
+          <div className="fixed inset-0 bg-white z-50 flex flex-col">
+            <div className="flex items-center p-6 border-b border-gray-200">
+              <button
+                onClick={() => setOpenFourthLevel(null)}
+                className="focus:outline-none mr-4"
+              >
+                <svg
+                  className="w-6 h-6 text-[#1775EE]"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
+              </button>
+              <h2 className="text-xl font-bold text-[#1775EE] font-poppins">
+                Training/{openSubcourse}/{openFourthLevel}
+              </h2>
+            </div>
+
+            <nav className="flex-1 px-6 py-8 space-y-4">
+              {dropdownMenus.training
+                .find((cat) => cat.name === openSubcourse)
+                ?.subcourses.find((sub) => sub.name === openThirdLevel)
+                ?.subcourses?.find((fourth) => fourth.name === openFourthLevel)
+                ?.subcourses?.map((option) => (
+                  <Link
+                    key={option.name}
+                    to={option.path}
+                    onClick={() => {
+                      setIsOpen(false);
+                      setOpenDropdown(null);
+                      setOpenSubcourse(null);
+                      setOpenThirdLevel(null);
+                      setOpenFourthLevel(null);
+                    }}
+                    className="block text-lg text-black font-poppins hover:text-[#1775EE] py-2 px-4"
+                  >
+                    {option.name}
+                  </Link>
+                ))}
             </nav>
           </div>
         )}
