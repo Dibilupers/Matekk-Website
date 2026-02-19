@@ -399,9 +399,9 @@ export default function Home() {
       {/* Trusted by our customers & clients */}
       <section id="" className="flex bg-[#EBF5FD] justify-center items-center text-center py-10">
         {/* Title and description */}
-        <div className="mx-[7.438rem] space-y-5">
+        <div className="mx-[2.063rem] md:mx-16 space-y-5">
           <div>
-            <div className="flex flex-row justify-center items-center space-x-2 font-bold text-3xl">
+            <div className="flex flex-col md:flex-row justify-center items-center space-x-2 font-bold text-3xl">
               <h3 className="">Trusted by Our</h3>
               <h3 className="text-[#1775EE]">Customers & Partners</h3>
             </div>

@@ -12,10 +12,10 @@ function Partners() {
     ];
 
     return (
-        <div className="grid grid-cols-6 grid-rows-3 gap-4">
+        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 lg:grid-rows-5 md:grid-rows-3 gap-3 sm:gap-1 md:gap-4 lg:gap-4">
             {partnerLogos.map((logo, index) => (
                 <div key={index} className="partner-logos-format">
-                    <img src={logo.src} alt={logo.alt} className="w-16"></img>
+                    <img src={logo.src} alt={logo.alt} className="w-12 md:w-16"></img>
                 </div>
             ))}
         </div>
