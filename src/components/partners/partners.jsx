@@ -40,11 +40,15 @@ function Partners() {
         const calculateLogosPerPage = () => {
             const width = window.innerWidth;
             
-            // Mobile (< 640px): 3 columns × 3 rows = 9 logos per page
+            // Mobile 
             if (width < 640) {
-                setLogosPerPage(9);
+                setLogosPerPage(12);
             } 
-            // Desktop (≥ 640px): 6 columns × 3 rows = 18 logos per page
+            // Tablet
+            else if (width >= 620 && width < 1024) {
+                setLogosPerPage(12);
+            }
+            // Desktop 
             else {
                 setLogosPerPage(18);
             }
@@ -61,15 +65,12 @@ function Partners() {
     }, []);
 
     // Calculate total number of pages needed (rounds up so no logos are left out)
-    // OPTIMIZED: Wrap in useMemo to prevent recalculation on every render
-    // UPDATED: Now depends on logosPerPage which changes based on screen size
     const totalPages = useMemo(() =>
         Math.ceil(partnerLogos.length / logosPerPage),
         [partnerLogos.length, logosPerPage] // Recalculate when screen size changes
     );
 
     // Function to scroll to a specific page when dot is clicked
-    // OPTIMIZED: Wrap in useCallback to prevent function recreation on every render
     const scrollToPage = useCallback((pageIndex) => {
         // Safety check: make sure scrollRef exists
         if (!scrollRef.current) return;
@@ -88,7 +89,6 @@ function Partners() {
     }, []); // No dependencies, function never recreates
 
     // Function called automatically when user scrolls/swipes
-    // OPTIMIZED: Wrap in useCallback to prevent function recreation
     const handleScroll = useCallback(() => {
         // Safety check: make sure scrollRef exists
         if (!scrollRef.current) return;
@@ -100,12 +100,10 @@ function Partners() {
         const pageWidth = scrollRef.current.offsetWidth;
 
         // Calculate which page we're currently on
-        // Formula: scroll distance ÷ page width = page number
         // Math.round() handles in-between positions (e.g., 1.5 becomes 2)
         const currentPage = Math.round(scrollPosition / pageWidth);
 
         // Update the active dot indicator
-        // OPTIMIZED: Only update if page actually changed (reduces unnecessary re-renders)
         setCurrentDot(prev => prev !== currentPage ? currentPage : prev);
     }, []);
 
@@ -124,31 +122,18 @@ function Partners() {
                     <div
                         key={pageIndex}
                         // ADDED: flex-shrink-0 prevents page compression during scroll
-                        className="min-w-full snap-start flex items-center justify-center flex-shrink-0"
+                        className="min-w-full snap-start flex items-start justify-center shrink-0"
                     >
-                        {/* UPDATED: Responsive grid - 3×3 on mobile, 6×3 on desktop */}
-                        <div className="grid grid-cols-3 grid-rows-3 sm:grid-cols-6 sm:grid-rows-3 gap-4">
-                            {/* Mobile: 3 columns × 3 rows = 9 logos */}
-                            {/* Desktop: 6 columns × 3 rows = 18 logos */}
-                            {/* gap-4: space between logos */}
+                        <div className="grid grid-cols-3 grid-rows-4 sm:grid-cols-4 sm:grid-rows-3 lg:grid-cols-6 lg:grid-rows-3 gap-2 md:gap-4">
 
                             {/* Slice the logos array to get only the logos for this specific page */}
                             {partnerLogos
-                                // .slice(start, end) extracts a portion of the array
-                                // Mobile example with 9 logos per page:
-                                // Page 0: slice(0, 9) → logos 0-8
-                                // Page 1: slice(9, 18) → logos 9-17
-                                // Page 2: slice(18, 27) → logo 18 only
-                                // Desktop example with 18 logos per page:
-                                // Page 0: slice(0, 18) → logos 0-17
-                                // Page 1: slice(18, 36) → logo 18 only
                                 .slice(pageIndex * logosPerPage, (pageIndex + 1) * logosPerPage)
                                 .map((logo, logoIndex) => (
                                     // Render each individual logo
                                     <div
                                         key={logoIndex}  // Unique key for React
                                         className="partner-logos-format flex items-center justify-center"
-                                        // flex items-center justify-center: centers logo in its grid cell
                                         // ADDED: GPU acceleration for each logo container (smoother rendering)
                                         style={{ transform: 'translateZ(0)' }}
                                     >

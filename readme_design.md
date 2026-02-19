@@ -13,5 +13,5 @@
 
 ### Spacing
 - Margin (all sections): mx-[2.063rem] lg:mx-[7.438rem]
-
+- Padding (all sections): py-10
 
