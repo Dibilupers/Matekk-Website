@@ -899,6 +899,304 @@ export default function Home() {
         </div>
       </section>
 
+           {/* Our Working Process */}
+      <section className="py-16 lg:py-20 bg-white">
+        {/* 
+          ADJUST SECTION PADDING:
+          - py-16 lg:py-20 = vertical padding (top/bottom)
+          - bg-white = background color (change to bg-gray-50 for light gray)
+        */}
+        <div className="mx-4 sm:mx-6 lg:mx-[7.438rem]">
+          
+          {/* ==================== SECTION HEADING ==================== */}
+          <div className="text-center mb-12 lg:mb-16">
+            {/* 
+              ADJUST HEADING:
+              - text-3xl lg:text-4xl = font size
+              - font-bold = weight
+              - text-gray-900 = "Our" color
+              - text-[#1775EE] = "Working Process" color (blue)
+            */}
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900">
+              Our <span className="text-[#1775EE]">Working Process</span>
+            </h2>
+            
+            {/* 
+              ADJUST DESCRIPTION:
+              - text-base lg:text-lg = font size
+              - text-gray-600 = color
+              - mt-4 = top margin
+              - max-w-2xl = maximum width
+              - mx-auto = centers the text
+            */}
+            <p className="text-base lg:text-lg text-gray-600 mt-4 max-w-2xl mx-auto">
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+            </p>
+          </div>
+
+          {/* ==================== PROCESS TIMELINE ==================== */}
+          {/* 
+            ADJUST TIMELINE LAYOUT:
+            - This uses a horizontal flow with connected circles
+            - On mobile, it will stack vertically
+            - hidden lg:block = shows connecting line only on desktop
+          */}
+          <div className="relative">
+            
+            {/* Desktop Version - Horizontal Timeline */}
+            <div className="hidden lg:block relative">
+              {/* 
+                ADJUST DESKTOP LAYOUT:
+                - Uses positioned divs to create the exact layout from the design
+                - Curved connecting lines using SVG
+                - Staggered vertical positioning for visual flow
+              */}
+              
+              {/* Container for all steps with relative positioning */}
+              <div className="relative h-[500px]">
+                {/* 
+                  ADJUST CONTAINER HEIGHT:
+                  - h-[500px] = total height (change to h-[400px] for shorter, h-[600px] for taller)
+                */}
+                
+                {/* SVG for Connecting Lines */}
+                {/* 
+                  ADJUST LINES HERE:
+                  Each path connects two circles with a curved line
+                  Format: M startX startY Q curveX curveY endX endY
+                  
+                  TO MOVE LINES:
+                  - Change start point (M values)
+                  - Change curve point (Q values) 
+                  - Change end point (final values)
+                  - Adjust strokeWidth for thickness (currently 6)
+                */}
+                <svg className="absolute inset-0 w-full h-full z-0" viewBox="0 0 1200 500">
+                  {/* Line 1: Initiation to Planning */}
+                  {/* Start: top-left circle, End: 20% left circle */}
+                  <path d="M 1 5 C 120 100, 200 1, 335 110" stroke="#3B82F6" strokeWidth="8" fill="none" strokeLinecap="round" />
+                  
+                  {/* Line 2: Planning to Implementation */}
+                  {/* Start: 20% circle, End: 40% circle */}
+                  <path d="M 350 120 C 430 130, 500 190, 600 150" stroke="#3B82F6" strokeWidth="8" fill="none" strokeLinecap="round" />
+                  
+                  {/* Line 3: Implementation to Monitor */}
+                  {/* Start: 40% circle, End: 60% circle */}
+                  <path d="M 600 190 C 600 130, 800 200, 860 200" stroke="#3B82F6" strokeWidth="8" fill="none" strokeLinecap="round" />
+                  
+                  {/* Line 4: Monitor to Optimization */}
+                  {/* Start: 60% circle, End: right circle */}
+                  <path d="M 830 200 C 800 130, 845 350, 1500 275" stroke="#3B82F6" strokeWidth="8" fill="none" strokeLinecap="round" />
+                </svg>
+
+                {/* Step 1: Initiation & Consultancy (Top Left) */}
+                <div className="absolute left-0 top-5 flex flex-col items-center max-w-[200px] z-10">
+                  <div className="w-22 h-22 bg-blue-500 rounded-full flex items-center justify-center shadow-xl mb-4">
+                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900 text-center mb-2">
+                    Initiation & Consultancy
+                  </h3>
+                  <p className="text-sm text-gray-600 text-center">
+                    Understand requirements and define project direction.
+                  </p>
+                </div>
+
+                {/* Step 2: Planning & Design (Lower position) */}
+                <div className="absolute left-[20%] top-[75px] flex flex-col items-center max-w-[200px] z-10">
+                  <div className="w-22 h-22 bg-blue-500 rounded-full flex items-center justify-center shadow-xl mb-4">
+                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900 text-center mb-2">
+                    Planning & Design
+                  </h3>
+                  <p className="text-sm text-gray-600 text-center">
+                    Create structured plans and system designs.
+                  </p>
+                </div>
+
+                {/* Step 3: Implementation (Middle) */}
+                <div className="absolute left-[40%] top-[130px] flex flex-col items-center max-w-[200px] z-10">
+                  <div className="w-22 h-22 bg-blue-500 rounded-full flex items-center justify-center shadow-xl mb-4">
+                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900 text-center mb-2">
+                    Implementation
+                  </h3>
+                  <p className="text-sm text-gray-600 text-center">
+                    Deploy and configure approved solutions.
+                  </p>
+                </div>
+
+                {/* Step 4: Monitor and Control (Lower right) */}
+                <div className="absolute left-[60%] top-[160px] flex flex-col items-center max-w-[200px] z-10">
+                  <div className="w-22 h-22 bg-blue-500 rounded-full flex items-center justify-center shadow-xl mb-4">
+                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900 text-center mb-2">
+                    Monitor and Control
+                  </h3>
+                  <p className="text-sm text-gray-600 text-center">
+                    Track performance and ensure proper operation.
+                  </p>
+                </div>
+
+                {/* Step 5: Optimization (Bottom Right) */}
+                <div className="absolute right-0 top-[230px] flex flex-col items-center max-w-[200px] z-10">
+                  <div className="w-22 h-22 bg-blue-500 rounded-full flex items-center justify-center shadow-xl mb-4">
+                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900 text-center mb-2">
+                    Optimization
+                  </h3>
+                  <p className="text-sm text-gray-600 text-center">
+                    Improve systems through testing and refinement.
+                  </p>
+                </div>
+
+              </div>
+            </div>
+
+            {/* Mobile Version - Vertical Timeline */}
+            {/* 
+              ADJUST MOBILE LAYOUT:
+              - lg:hidden = hidden on desktop, shown on mobile
+              - space-y-8 = vertical spacing between steps
+            */}
+            <div className="lg:hidden space-y-8">
+              
+              {/* Step 1: Initiation & Consultancy */}
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0">
+                  <div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
+                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <h5 className="text-lg font-bold text-gray-900 mb-2">
+                    Initiation & Consultancy
+                  </h5>
+                  <p className="text-sm text-gray-600">
+                    Understand requirements and define project direction.
+                  </p>
+                </div>
+              </div>
+
+              {/* Connecting Line */}
+              <div className="flex justify-start pl-10">
+                <div className="w-0.5 h-8 bg-blue-500"></div>
+              </div>
+
+              {/* Step 2: Planning & Design */}
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0">
+                  <div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
+                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <h5 className="text-lg font-bold text-gray-900 mb-2">
+                    Planning & Design
+                  </h5>
+                  <p className="text-sm text-gray-600">
+                    Create structured plans and system designs.
+                  </p>
+                </div>
+              </div>
+
+              {/* Connecting Line */}
+              <div className="flex justify-start pl-10">
+                <div className="w-0.5 h-8 bg-blue-500"></div>
+              </div>
+
+              {/* Step 3: Implementation */}
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0">
+                  <div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
+                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <h5 className="text-lg font-bold text-gray-900 mb-2">
+                    Implementation
+                  </h5>
+                  <p className="text-sm text-gray-600">
+                    Deploy and configure approved solutions.
+                  </p>
+                </div>
+              </div>
+
+              {/* Connecting Line */}
+              <div className="flex justify-start pl-10">
+                <div className="w-0.5 h-8 bg-blue-500"></div>
+              </div>
+
+              {/* Step 4: Monitor and Control */}
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0">
+                  <div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
+                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <h5 className="text-lg font-bold text-gray-900 mb-2">
+                    Monitor and Control
+                  </h5>
+                  <p className="text-sm text-gray-600">
+                    Track performance and ensure proper operation.
+                  </p>
+                </div>
+              </div>
+
+              {/* Connecting Line */}
+              <div className="flex justify-start pl-10">
+                <div className="w-0.5 h-8 bg-blue-500"></div>
+              </div>
+
+              {/* Step 5: Optimization */}
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0">
+                  <div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
+                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <h5 className="text-lg font-bold text-gray-900 mb-2">
+                    Optimization
+                  </h5>
+                  <p className="text-sm text-gray-600">
+                    Improve systems through testing and refinement.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
       {/* About the Company */}
       <section></section>
 
