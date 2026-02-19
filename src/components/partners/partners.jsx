@@ -1,5 +1,5 @@
-// ADDED: Import useCallback and useMemo for performance optimization
-import { useState, useRef, useCallback, useMemo } from 'react';
+// ADDED: Import useCallback, useMemo, and useEffect for performance optimization
+import { useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import DOH from '../../assets/DOH.svg';
 
 function Partners() {
@@ -32,15 +32,40 @@ function Partners() {
     // Track which page/dot is currently active (starts at 0 = first page)
     const [currentDot, setCurrentDot] = useState(0);
 
-    // Calculate pagination: 3 rows × 6 columns = 18 logos per page
-    const logosPerPage = 18;
+    // ADDED: Track screen size to calculate logos per page dynamically
+    const [logosPerPage, setLogosPerPage] = useState(18);
+
+    // ADDED: Calculate logos per page based on screen size
+    useEffect(() => {
+        const calculateLogosPerPage = () => {
+            const width = window.innerWidth;
+            
+            // Mobile (< 640px): 3 columns × 3 rows = 9 logos per page
+            if (width < 640) {
+                setLogosPerPage(9);
+            } 
+            // Desktop (≥ 640px): 6 columns × 3 rows = 18 logos per page
+            else {
+                setLogosPerPage(18);
+            }
+        };
+
+        // Calculate on mount
+        calculateLogosPerPage();
+
+        // Recalculate on window resize
+        window.addEventListener('resize', calculateLogosPerPage);
+        
+        // Cleanup listener on unmount
+        return () => window.removeEventListener('resize', calculateLogosPerPage);
+    }, []);
 
     // Calculate total number of pages needed (rounds up so no logos are left out)
-    // Example: 40 logos ÷ 18 per page = 2.22 → rounds up to 3 pages
     // OPTIMIZED: Wrap in useMemo to prevent recalculation on every render
+    // UPDATED: Now depends on logosPerPage which changes based on screen size
     const totalPages = useMemo(() =>
         Math.ceil(partnerLogos.length / logosPerPage),
-        [partnerLogos.length, logosPerPage] // Only recalculate if these change
+        [partnerLogos.length, logosPerPage] // Recalculate when screen size changes
     );
 
     // Function to scroll to a specific page when dot is clicked
@@ -50,7 +75,6 @@ function Partners() {
         if (!scrollRef.current) return;
 
         // Calculate how far to scroll (container width × page number)
-        // Example: If container is 1000px wide and pageIndex is 2, scroll 2000px
         const scrollAmount = scrollRef.current.offsetWidth * pageIndex;
 
         // Perform the actual scroll with smooth animation
@@ -102,17 +126,22 @@ function Partners() {
                         // ADDED: flex-shrink-0 prevents page compression during scroll
                         className="min-w-full snap-start flex items-center justify-center flex-shrink-0"
                     >
-                        <div className="grid grid-cols-6 grid-rows-3 gap-4">
-                            {/* grid-cols-6: 6 columns */}
-                            {/* grid-rows-3: 3 rows */}
+                        {/* UPDATED: Responsive grid - 3×3 on mobile, 6×3 on desktop */}
+                        <div className="grid grid-cols-3 grid-rows-3 sm:grid-cols-6 sm:grid-rows-3 gap-4">
+                            {/* Mobile: 3 columns × 3 rows = 9 logos */}
+                            {/* Desktop: 6 columns × 3 rows = 18 logos */}
                             {/* gap-4: space between logos */}
 
                             {/* Slice the logos array to get only the logos for this specific page */}
                             {partnerLogos
                                 // .slice(start, end) extracts a portion of the array
+                                // Mobile example with 9 logos per page:
+                                // Page 0: slice(0, 9) → logos 0-8
+                                // Page 1: slice(9, 18) → logos 9-17
+                                // Page 2: slice(18, 27) → logo 18 only
+                                // Desktop example with 18 logos per page:
                                 // Page 0: slice(0, 18) → logos 0-17
-                                // Page 1: slice(18, 36) → logos 18-35
-                                // Page 2: slice(36, 54) → logos 36-39 (only 4 left)
+                                // Page 1: slice(18, 36) → logo 18 only
                                 .slice(pageIndex * logosPerPage, (pageIndex + 1) * logosPerPage)
                                 .map((logo, logoIndex) => (
                                     // Render each individual logo
@@ -126,7 +155,8 @@ function Partners() {
                                         <img
                                             src={logo.src}
                                             alt={logo.alt}
-                                            className="w-16"  // Logo width: 64px
+                                            // UPDATED: Responsive sizing - smaller on mobile, larger on desktop
+                                            className="w-10 sm:w-16"  // Mobile: 40px, Desktop: 64px
                                             // ADDED: Prevents image dragging which can cause lag during scroll
                                             draggable="false"
                                         />
@@ -141,15 +171,18 @@ function Partners() {
             {/* Dot indicators at the bottom */}
             <div className="flex justify-center gap-2">
                 {/* Create one dot button for each page */}
+                {/* Note: Number of dots changes based on screen size since logosPerPage changes */}
                 {Array(totalPages).fill(null).map((_, index) => (
                     <button
                         key={index}
                         onClick={() => scrollToPage(index)}
-                        className={`w-2 h-2 rounded-full transition-all ${currentDot === index ? 'bg-blue-600 w-6' : 'bg-gray-300 hover:bg-gray-400'
-                            }`}
+                        className={`w-2 h-2 rounded-full transition-all ${
+                            currentDot === index 
+                                ? 'bg-blue-600 w-6'  // Active dot: blue and wider
+                                : 'bg-gray-300 hover:bg-gray-400'  // Inactive dot: gray
+                        }`}
                         aria-label={`Go to page ${index + 1}`}
                     >
-
                     </button>
                 ))}
             </div>
