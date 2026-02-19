@@ -865,7 +865,7 @@ export default function Home() {
 
                 {/* Step 1: Initiation & Consultancy (Top Left) */}
                 <div className="absolute left-0 top-5 flex flex-col items-center max-w-50 z-10">
-                  <div className="w-22 h-22 bg-blue-500 rounded-full flex items-center justify-center shadow-xl mb-4">
+                  <div className="w-22 h-22 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl mb-4">
                     <svg
                       className="w-10 h-10 text-white"
                       fill="none"
@@ -890,7 +890,7 @@ export default function Home() {
 
                 {/* Step 2: Planning & Design (Lower position) */}
                 <div className="absolute left-[20%] top-18.75 flex flex-col items-center max-w-50 z-10">
-                  <div className="w-22 h-22 bg-blue-500 rounded-full flex items-center justify-center shadow-xl mb-4">
+                  <div className="w-22 h-22 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl mb-4">
                     <svg
                       className="w-10 h-10 text-white"
                       fill="none"
@@ -915,7 +915,7 @@ export default function Home() {
 
                 {/* Step 3: Implementation (Middle) */}
                 <div className="absolute left-[40%] top-32.5 flex flex-col items-center max-w-50 z-10">
-                  <div className="w-22 h-22 bg-blue-500 rounded-full flex items-center justify-center shadow-xl mb-4">
+                  <div className="w-22 h-22 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl mb-4">
                     <svg
                       className="w-10 h-10 text-white"
                       fill="none"
@@ -946,7 +946,7 @@ export default function Home() {
 
                 {/* Step 4: Monitor and Control (Lower right) */}
                 <div className="absolute left-[60%] top-40 flex flex-col items-center max-w-50 z-10">
-                  <div className="w-22 h-22 bg-blue-500 rounded-full flex items-center justify-center shadow-xl mb-4">
+                  <div className="w-22 h-22 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl mb-4">
                     <svg
                       className="w-10 h-10 text-white"
                       fill="none"
@@ -971,7 +971,7 @@ export default function Home() {
 
                 {/* Step 5: Optimization (Bottom Right) */}
                 <div className="absolute right-0 top-57.5 flex flex-col items-center max-w-50 z-10">
-                  <div className="w-22 h-22 bg-blue-500 rounded-full flex items-center justify-center shadow-xl mb-4">
+                  <div className="w-22 h-22 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl mb-4">
                     <svg
                       className="w-10 h-10 text-white"
                       fill="none"
