@@ -71,10 +71,11 @@ export default function Home() {
                 - text-base lg:text-xl = font size (text-sm for smaller, text-2xl for larger)
                 - leading-relaxed = line height
                 - max-w-lg = maximum width (max-w-md for narrower, max-w-2xl for wider)
-                - mx-auto lg:mx-0 = centered on mobile, left-aligned on desktop
+                - NO mx-auto = removes centering margin
+                - text-left = left-aligned text
                 - text-gray-600 = text color
               */}
-              <p className="text-gray-600 text-base lg:text-xl leading-relaxed max-w-lg mx-auto lg:mx-0">
+              <p className="text-gray-600 text-base lg:text-xl leading-relaxed max-w-lg text-left">
                 Cutting-edge ICT and Engineering Solutions. Industry-relevant
                 Training. Built on over a decade of expertise.
               </p>
@@ -91,7 +92,7 @@ export default function Home() {
                 - justify-start = left-align buttons
                 - justify-end = right-align buttons
               */}
-              <div className="flex sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
+              <div className="flex sm:flex-row gap-3 sm:gap-4 justify-left lg:justify-start">
                 {/* PRIMARY BUTTON */}
                 {/* 
                   ADJUST PRIMARY BUTTON SIZE:
@@ -128,42 +129,42 @@ export default function Home() {
                 - justify-start = left-align stats
                 - justify-between = space stats evenly
               */}
-              <div className="flex flex-nowrap justify-center lg:justify-start items-center gap-4 lg:gap-8 pt-6">
+              <div className="flex flex-nowrap justify-start lg:justify-start items-center gap-4 lg:gap-8 pt-6">
 
-              {/* STAT 1: YEARS OF EXPERIENCE */}
-              <div className="flex items-center gap-1">
-                <h2 className="text-3xl lg:text-5xl font-bold text-gray-900">13+</h2>
-                <div className="text-xs lg:text-sm text-gray-600 leading-tight">
-                  <p className="font-medium whitespace-nowrap">Years of</p>
-                  <p className="font-medium whitespace-nowrap">Experience</p>
+                {/* STAT 1: YEARS OF EXPERIENCE */}
+                <div className="flex items-center gap-1">
+                  <h2 className="text-3xl lg:text-5xl font-bold text-gray-900">13+</h2>
+                  <div className="text-xs lg:text-sm text-gray-600 leading-tight">
+                    <p className="font-medium whitespace-nowrap">Years of</p>
+                    <p className="font-medium whitespace-nowrap">Experience</p>
+                  </div>
                 </div>
-              </div>
 
-              {/* DIVIDER LINE */}
-              <div className="h-10 lg:h-12 w-px bg-gray-300 shrink-0"></div>
+                {/* DIVIDER LINE */}
+                <div className="h-10 lg:h-12 w-px bg-gray-300 shrink-0"></div>
 
-              {/* STAT 2: DATA CENTERS */}
-              <div className="flex items-center gap-2">
-                <h2 className="text-3xl lg:text-5xl font-bold text-gray-900">3</h2>
-                <div className="text-xs lg:text-sm text-gray-600 leading-tight">
-                  <p className="font-medium whitespace-nowrap">Data Centers</p>
-                  <p className="font-medium whitespace-nowrap">Deployed</p>
+                {/* STAT 2: DATA CENTERS */}
+                <div className="flex items-center gap-2">
+                  <h2 className="text-3xl lg:text-5xl font-bold text-gray-900">3</h2>
+                  <div className="text-xs lg:text-sm text-gray-600 leading-tight">
+                    <p className="font-medium whitespace-nowrap">Data Centers</p>
+                    <p className="font-medium whitespace-nowrap">Deployed</p>
+                  </div>
                 </div>
-              </div>
 
-              {/* DIVIDER LINE */}
-              <div className="h-10 lg:h-12 w-px bg-gray-300 shrink-0"></div>
+                {/* DIVIDER LINE */}
+                <div className="h-10 lg:h-12 w-px bg-gray-300 shrink-0"></div>
 
-              {/* STAT 3: ACTIVE COURSES */}
-              <div className="flex items-center gap-2">
-                <h2 className="text-3xl lg:text-5xl font-bold text-gray-900">10</h2>
-                <div className="text-xs lg:text-sm text-gray-600 leading-tight">
-                  <p className="font-medium whitespace-nowrap">Total Active</p>
-                  <p className="font-medium whitespace-nowrap">Courses</p>
+                {/* STAT 3: ACTIVE COURSES */}
+                <div className="flex items-center gap-2">
+                  <h2 className="text-3xl lg:text-5xl font-bold text-gray-900">10</h2>
+                  <div className="text-xs lg:text-sm text-gray-600 leading-tight">
+                    <p className="font-medium whitespace-nowrap">Total Active</p>
+                    <p className="font-medium whitespace-nowrap">Courses</p>
+                  </div>
                 </div>
-              </div>
 
-            </div>
+              </div>
             </div>
 
             {/* ==================== RIGHT SIDE - VISUAL SECTION ==================== */}
