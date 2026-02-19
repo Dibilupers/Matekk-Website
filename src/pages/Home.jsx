@@ -263,7 +263,7 @@ export default function Home() {
       </section>
 
       {/* Services we provide */}
-      <section className="flex flex-col p-10 h-full mx-[2.063rem] lg:mx-[7.438rem]">
+      <section className="flex flex-col py-10 h-full mx-[2.063rem] lg:mx-[7.438rem]">
         <div className="text-center w-[60vw] sm:w-[27vw] self-center md:w-auto lg:w-auto">
           <h3>
             Services We Provide to
@@ -748,7 +748,7 @@ export default function Home() {
       </section>
 
       {/* Featured Solutions */}
-      <section className="flex flex-col p-10 h-full mx-[2.063rem] lg:mx-[7.438rem]">
+      <section className="flex flex-col py-10 h-full mx-[2.063rem] lg:mx-[7.438rem]">
         <div className="text-center w-[65vw] self-center sm:w-[45vw] md:w-auto lg:w-auto">
           <h3>
             Our Featured
