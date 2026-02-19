@@ -692,7 +692,7 @@ export default function Home() {
             </div>
 
             {/* RIGHT SIDE - FEATURES */}
-            <div className="order-2 lg:order-2 space-y-4 lg:-mt-46">
+            <div className="order-2 lg:order-2 space-y-4 lg:-mt-52">
               <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
                 <h3 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
                   Experience
