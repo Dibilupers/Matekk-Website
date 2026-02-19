@@ -1,29 +1,57 @@
 // ADDED: Import useCallback, useMemo, and useEffect for performance optimization
 import { useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import DOH from '../../assets/DOH.svg';
+import DICT from '../../assets/DICT.svg';
+import PHIVOLCS from '../../assets/PHIVOLCS.png';
+import OCD from '../../assets/OCD.svg';
+import DND from '../../assets/DND.svg';
+import DOF from '../../assets/DOF.svg';
+import MOREPOWER from '../../assets/MOREPOWER.png';
+import MARSTECH from '../../assets/MARSTECH.png';
+import ATI from '../../assets/ATI.jpg';
+import EM from '../../assets/EM.avif';
+import MIZELA from '../../assets/MIZELA.png';
+import HIKVISION from '../../assets/HIKVISION.svg';
+import USTDI from '../../assets/USTDI.webp';
+import ASENWARE from '../../assets/ASENWARE.jpg';
+import SCALEEXPERTS from '../../assets/SCALEEXPERTS.png';
+import COMMSOURCE from '../../assets/COMMSOURCE.png';
+import IECEP from '../../assets/IECEP.png';
+import USTP from '../../assets/USTP.png';
+import CICC from '../../assets/CICC.jpg';
+import STELLARSAT from '../../assets/STELLARSAT.avif';
+import MISAMIS from '../../assets/MISAMIS.jpg';
+import MARIKINA from '../../assets/MARIKINA.jpg';
+import SLSU from '../../assets/SLSU.png';
+import ICCT from '../../assets/ICCT.jpg';
 
 function Partners() {
     // OPTIMIZED: Wrap array in useMemo to prevent recreation on every render
     const partnerLogos = useMemo(() => [
-        { src: DOH, alt: "DOH Logo" },
-        { src: DOH, alt: "DOH Logo" },
-        { src: DOH, alt: "DOH Logo" },
-        { src: DOH, alt: "DOH Logo" },
-        { src: DOH, alt: "DOH Logo" },
-        { src: DOH, alt: "DOH Logo" },
-        { src: DOH, alt: "DOH Logo" },
-        { src: DOH, alt: "DOH Logo" },
-        { src: DOH, alt: "DOH Logo" },
-        { src: DOH, alt: "DOH Logo" },
-        { src: DOH, alt: "DOH Logo" },
-        { src: DOH, alt: "DOH Logo" },
-        { src: DOH, alt: "DOH Logo" },
-        { src: DOH, alt: "DOH Logo" },
-        { src: DOH, alt: "DOH Logo" },
-        { src: DOH, alt: "DOH Logo" },
-        { src: DOH, alt: "DOH Logo" },
-        { src: DOH, alt: "DOH Logo" },
-        { src: DOH, alt: "DOH Logo" },
+        { src: DOH, alt: "DOH Logo", size: "w-10 sm:w-16" },
+        { src: DICT, alt: "DICT Logo", size: "w-10 sm:w-16" },
+        { src: PHIVOLCS, alt: "PHIVOLCS Logo", size: "w-10 sm:w-32" },
+        { src: OCD, alt: "OCD Logo", size: "w-10 sm:w-16" },
+        { src: DND, alt: "DND Logo", size: "w-10 sm:w-16" },
+        { src: DOF, alt: "DOF Logo", size: "w-10 sm:w-16" },
+        { src: MOREPOWER, alt: "MOREPOWER Logo", size: "w-10 sm:w-32" },
+        { src: MARSTECH, alt: "MARSTECH Logo", size: "w-10 sm:w-32" },
+        { src: ATI, alt: "ATI Logo", size: "w-10 sm:w-20" },
+        { src: EM, alt: "E.M. CUERPO Logo", size: "w-10 sm:w-32" },
+        { src: MIZELA, alt: "MIZELA Logo", size: "w-10 sm:w-16" },
+        { src: HIKVISION, alt: "HIKVISION Logo", size: "w-10 sm:w-32" },
+        { src: USTDI, alt: "USTDI Logo", size: "w-10 sm:w-20" },
+        { src: ASENWARE, alt: "ASENWARE Logo", size: "w-10 sm:w-32" },
+        { src: SCALEEXPERTS, alt: "SCALEEXPERTS Logo", size: "w-10 sm:w-32" },
+        { src: COMMSOURCE, alt: "COMMSOURCE Logo", size: "w-10 sm:w-32" },
+        { src: IECEP, alt: "IECEP Logo", size: "w-10 sm:w-18" },
+        { src: USTP, alt: "USTP Logo", size: "w-10 sm:w-16" },
+        { src: CICC, alt: "CICC Logo", size: "w-10 sm:w-18" },
+        { src: STELLARSAT, alt: "STELLARSAT Logo", size: "w-10 sm:w-32" },
+        { src: MISAMIS, alt: "MISAMIS Logo", size: "w-10 sm:w-18" },
+        { src: MARIKINA, alt: "MARIKINA Logo", size: "w-10 sm:w-18" },
+        { src: SLSU, alt: "SLSU Logo", size: "w-10 sm:w-18" },
+        { src: ICCT, alt: "ICCT Logo", size: "w-10 sm:w-18" },
     ], []); // Empty dependency array means this only creates once
 
     // Reference to the scrollable container so we can control scrolling programmatically
@@ -174,7 +202,7 @@ function Partners() {
                                             src={logo.src}
                                             alt={logo.alt}
                                             // UPDATED: Responsive sizing - smaller on mobile, larger on desktop
-                                            className="w-10 sm:w-16"  // Mobile: 40px, Desktop: 64px
+                                            className={logo.size}  // Mobile: 40px, Desktop: 64px
                                             // ADDED: Prevents image dragging which can cause lag during scroll
                                             draggable="false"
                                         />
