@@ -9,16 +9,44 @@ import { useState, useEffect } from "react";
 export default function Home() {
   const totalSlides = 3;
   const totalMobileSlides = 4;
+  const totalTabletSlides = 4;
   const totalMobileBottomSlides = 4;
   const [topSlide, setTopSlide] = useState(0);
   const [bottomSlide, setBottomSlide] = useState(0);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isTablet, setIsTablet] = useState(
+    window.innerWidth >= 768 && window.innerWidth < 1180,
+  );
 
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+      setIsTablet(window.innerWidth >= 768 && window.innerWidth < 1180);
+    };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  const topMax = isMobile
+    ? totalMobileSlides
+    : isTablet
+      ? totalTabletSlides
+      : totalSlides;
+  const bottomMax = isMobile
+    ? totalMobileBottomSlides
+    : isTablet
+      ? totalTabletSlides
+      : totalSlides;
+  const topStep = isMobile
+    ? "(85vw + 2.5rem)"
+    : isTablet
+      ? "(52vw + 2.5rem)"
+      : "(24vw + 2.5rem)";
+  const bottomStep = isMobile
+    ? "(85vw + 2.5rem)"
+    : isTablet
+      ? "(52vw + 2.5rem)"
+      : "(24vw + 2.5rem)";
 
   return (
     <main>
@@ -58,7 +86,9 @@ export default function Home() {
 
               <div className="flex flex-nowrap justify-start lg:justify-start items-center gap-2 lg:gap-8 pt-6">
                 <div className="flex items-center gap-1">
-                  <h2 className="text-3xl lg:text-5xl font-bold text-gray-900">13+</h2>
+                  <h2 className="text-3xl lg:text-5xl font-bold text-gray-900">
+                    13+
+                  </h2>
                   <div className="text-xs lg:text-sm text-gray-600 leading-tight">
                     <p className="font-medium whitespace-nowrap">Years of</p>
                     <p className="font-medium whitespace-nowrap">Experience</p>
@@ -66,17 +96,25 @@ export default function Home() {
                 </div>
                 <div className="h-10 lg:h-12 w-px bg-gray-300 shrink-0"></div>
                 <div className="flex items-center gap-2">
-                  <h2 className="text-3xl lg:text-5xl font-bold text-gray-900">3</h2>
+                  <h2 className="text-3xl lg:text-5xl font-bold text-gray-900">
+                    3
+                  </h2>
                   <div className="text-xs lg:text-sm text-gray-600 leading-tight">
-                    <p className="font-medium whitespace-nowrap">Data Centers</p>
+                    <p className="font-medium whitespace-nowrap">
+                      Data Centers
+                    </p>
                     <p className="font-medium whitespace-nowrap">Deployed</p>
                   </div>
                 </div>
                 <div className="h-10 lg:h-12 w-px bg-gray-300 shrink-0"></div>
                 <div className="flex items-center gap-2">
-                  <h2 className="text-3xl lg:text-5xl font-bold text-gray-900">10</h2>
+                  <h2 className="text-3xl lg:text-5xl font-bold text-gray-900">
+                    10
+                  </h2>
                   <div className="text-xs lg:text-sm text-gray-600 leading-tight">
-                    <p className="font-medium whitespace-nowrap">Total Active</p>
+                    <p className="font-medium whitespace-nowrap">
+                      Total Active
+                    </p>
                     <p className="font-medium whitespace-nowrap">Courses</p>
                   </div>
                 </div>
@@ -96,12 +134,18 @@ export default function Home() {
                     <div>
                       <div className="flex gap-1">
                         {[...Array(5)].map((_, i) => (
-                          <svg key={i} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                          <svg
+                            key={i}
+                            className="w-4 h-4 text-yellow-400 fill-current"
+                            viewBox="0 0 20 20"
+                          >
                             <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
                           </svg>
                         ))}
                       </div>
-                      <p className="text-xs text-gray-500 font-medium">Passing Rate</p>
+                      <p className="text-xs text-gray-500 font-medium">
+                        Passing Rate
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -132,8 +176,12 @@ export default function Home() {
                       className="w-14 h-14 rounded-full object-cover"
                     />
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-bold text-[#1775EE] text-sm truncate">Clyde Nelson R.</h4>
-                      <p className="text-xs text-gray-600 mt-0.3">just passed the CCNA certification!</p>
+                      <h4 className="font-bold text-[#1775EE] text-sm truncate">
+                        Clyde Nelson R.
+                      </h4>
+                      <p className="text-xs text-gray-600 mt-0.3">
+                        just passed the CCNA certification!
+                      </p>
                     </div>
                   </div>
                   <button className="mt-2 w-full py-2.5 bg-[#1775EE] text-white rounded-xl text-sm font-semibold hover:bg-blue-700 transition-colors shadow-md">
@@ -169,7 +217,8 @@ export default function Home() {
           <h2 className="font-bold text-3xl">
             Services We Provide to
             <span className="text-[#1775EE] font-rubik font-bold text-3xl">
-              {" "}Elevate Your Business
+              {" "}
+              Elevate Your Business
             </span>
           </h2>
         </div>
@@ -183,9 +232,9 @@ export default function Home() {
         {/* ── TOP CAROUSEL ── */}
         <div className="max-w-6xl mx-1 flex flex-col md:flex-row justify-center items-center gap-10 mt-[6vh] md:mx-auto lg:mx-auto">
           {/* Controls — LEFT */}
-          <div className="flex flex-col relative md:w-[20vw] self-start gap-y-[1vh]">
+          <div className="flex flex-col relative md:w-[20vw] self-start gap-y-[1vh] items-start">
             <div className="absolute -top-10 md:-left-10 w-90 h-90 md:w-72 md:h-72 bg-[#C2DDFF] opacity-50 rounded-full blur-3xl -z-10" />
-            <p className="font-inter text-sm bg-[#EBF5FD] border border-[#EBF5FD] rounded-full py-[0.7vh] px-[0.781vw] w-[20vw] md:w-[8.323vw] xl:w-[6.323vw] text-center shadow-[0_0_14px_rgba(0,0,0,0.25)]">
+            <p className="font-inter text-sm bg-[#EBF5FD] border border-[#EBF5FD] rounded-full py-[0.7vh] px-4 inline-flex text-center shadow-[0_0_14px_rgba(0,0,0,0.25)]">
               Solutions
             </p>
             <h1 className="font-rubik font-bold text-2xl w-[50vw] md:w-auto">
@@ -202,21 +251,41 @@ export default function Home() {
                 disabled={topSlide === 0}
                 className="w-12 h-12 flex items-center justify-center rounded-full border border-[#1775EE] bg-white text-[#1775EE] transition-all duration-300 hover:bg-[#1775EE] hover:text-white disabled:opacity-30 disabled:cursor-not-allowed"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15 19l-7-7 7-7"
+                  />
                 </svg>
               </button>
               <button
                 onClick={() =>
-                  setTopSlide((prev) =>
-                    Math.min(prev + 1, (isMobile ? totalMobileSlides : totalSlides) - 1)
-                  )
+                  setTopSlide((prev) => Math.min(prev + 1, topMax - 1))
                 }
-                disabled={topSlide === (isMobile ? totalMobileSlides : totalSlides) - 1}
+                disabled={topSlide === topMax - 1}
                 className="w-12 h-12 flex items-center justify-center rounded-full border border-[#1775EE] bg-white text-[#1775EE] transition-all duration-300 hover:bg-[#1775EE] hover:text-white disabled:opacity-30 disabled:cursor-not-allowed"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </button>
             </div>
@@ -227,72 +296,111 @@ export default function Home() {
             <div
               className="flex gap-x-10 transition-transform duration-500 ease-in-out"
               style={{
-                transform: isMobile
-                  ? `translateX(calc(-${topSlide} * (85vw + 2.5rem)))`
-                  : `translateX(calc(-${topSlide} * (24vw + 2.5rem)))`,
+                transform: `translateX(calc(-${topSlide} * ${topStep}))`,
               }}
             >
               {/* Card 1 */}
-              <div className="group relative flex-shrink-0 w-[85vw] md:w-[24vw] rounded-xl overflow-hidden">
+              <div className="group relative flex-shrink-0 w-[85vw] md:w-[52vw] lg:w-[24vw] rounded-xl overflow-hidden">
                 <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
                 <div className="absolute inset-0 bg-gradient-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
                   <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
-                    <img src={ictImage} alt="ICT Consultancy" className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                    <img
+                      src={ictImage}
+                      alt="ICT Consultancy"
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
                   </div>
-                  <h1 className="font-inter font-bold text-xl">ICT Consultancy</h1>
+                  <h1 className="font-inter font-bold text-xl">
+                    ICT Consultancy
+                  </h1>
                   <p className="font-poppins text-sm mb-[3vh]">
-                    MGKK provides ICT consultancy services using the Plan, Build, Operate, Optimize, and Test (PBOOT) approach to support the design, implementation, and improvement of ICT infrastructures.
+                    MGKK provides ICT consultancy services using the Plan,
+                    Build, Operate, Optimize, and Test (PBOOT) approach to
+                    support the design, implementation, and improvement of ICT
+                    infrastructures.
                   </p>
-                  <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">See more</Link>
+                  <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
+                    See more
+                  </Link>
                 </div>
               </div>
 
               {/* Card 2 */}
-              <div className="group relative flex-shrink-0 w-[85vw] md:w-[24vw] rounded-xl overflow-hidden">
+              <div className="group relative flex-shrink-0 w-[85vw] md:w-[52vw] lg:w-[24vw] rounded-xl overflow-hidden">
                 <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
                 <div className="absolute inset-0 bg-gradient-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
                   <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
-                    <img src={webImage} alt="Web and Software Development" className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                    <img
+                      src={webImage}
+                      alt="Web and Software Development"
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
                   </div>
-                  <h1 className="font-inter font-bold text-xl">Web and Software Development</h1>
+                  <h1 className="font-inter font-bold text-xl">
+                    Web and Software Development
+                  </h1>
                   <p className="font-poppins text-sm mb-[3vh]">
-                    We develop web and software solutions that support organizational requirements, using modern technologies to deliver reliable and functional digital systems.
+                    We develop web and software solutions that support
+                    organizational requirements, using modern technologies to
+                    deliver reliable and functional digital systems.
                   </p>
-                  <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">See more</Link>
+                  <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
+                    See more
+                  </Link>
                 </div>
               </div>
 
               {/* Card 3 */}
-              <div className="group relative flex-shrink-0 w-[85vw] md:w-[24vw] rounded-xl overflow-hidden">
+              <div className="group relative flex-shrink-0 w-[85vw] md:w-[52vw] lg:w-[24vw] rounded-xl overflow-hidden">
                 <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
                 <div className="absolute inset-0 bg-gradient-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
                   <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
-                    <img src={webImage} alt="Network Infrastructure" className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                    <img
+                      src={webImage}
+                      alt="Network Infrastructure"
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
                   </div>
-                  <h1 className="font-inter font-bold text-xl">Network Infrastructure</h1>
+                  <h1 className="font-inter font-bold text-xl">
+                    Network Infrastructure
+                  </h1>
                   <p className="font-poppins text-sm mb-[3vh]">
-                    We design and deploy robust network infrastructure solutions that ensure seamless connectivity, security, and scalability for businesses of all sizes.
+                    We design and deploy robust network infrastructure solutions
+                    that ensure seamless connectivity, security, and scalability
+                    for businesses of all sizes.
                   </p>
-                  <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">See more</Link>
+                  <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
+                    See more
+                  </Link>
                 </div>
               </div>
 
               {/* Card 4 */}
-              <div className="group relative flex-shrink-0 w-[85vw] md:w-[24vw] rounded-xl overflow-hidden">
+              <div className="group relative flex-shrink-0 w-[85vw] md:w-[52vw] lg:w-[24vw] rounded-xl overflow-hidden">
                 <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
                 <div className="absolute inset-0 bg-gradient-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
                   <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
-                    <img src={ictImage} alt="Training and Development" className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                    <img
+                      src={ictImage}
+                      alt="Training and Development"
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
                   </div>
-                  <h1 className="font-inter font-bold text-xl">Training & Development</h1>
+                  <h1 className="font-inter font-bold text-xl">
+                    Training & Development
+                  </h1>
                   <p className="font-poppins text-sm mb-[3vh]">
-                    MGKK offers comprehensive ICT training programs tailored to industry demands, equipping professionals with the skills needed to thrive in a rapidly evolving digital landscape.
+                    MGKK offers comprehensive ICT training programs tailored to
+                    industry demands, equipping professionals with the skills
+                    needed to thrive in a rapidly evolving digital landscape.
                   </p>
-                  <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">See more</Link>
+                  <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
+                    See more
+                  </Link>
                 </div>
               </div>
             </div>
@@ -301,7 +409,7 @@ export default function Home() {
 
         {/* Top Dot Indicators */}
         <div className="flex justify-center gap-x-2 mt-6">
-          {Array.from({ length: isMobile ? totalMobileSlides : totalSlides }).map((_, i) => (
+          {Array.from({ length: topMax }).map((_, i) => (
             <button
               key={i}
               onClick={() => setTopSlide(i)}
@@ -316,8 +424,8 @@ export default function Home() {
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-center items-center gap-10 mt-[4vh] md:mt-[8vh]">
           {/* Controls — on mobile: top + right-aligned | on desktop: right column */}
           <div className="flex flex-col relative w-full md:w-[20vw] self-start gap-y-[1vh] items-end text-right order-first md:order-last">
-            <div className="absolute -top-10 -right-10 w-72 h-72 bg-[#C2DDFF] opacity-50 rounded-full blur-3xl -z-10" />
-            <p className="font-inter text-sm bg-[#EBF5FD] border border-[#EBF5FD] rounded-full py-[0.7vh] w-auto md:w-[7.323vw] px-4 text-center shadow-[0_0_14px_rgba(0,0,0,0.25)]">
+            <div className="absolute -top-10 -right-5 w-72 h-72 bg-[#C2DDFF] opacity-50 rounded-full blur-3xl -z-10" />
+            <p className="font-inter text-sm bg-[#EBF5FD] border border-[#EBF5FD] rounded-full py-[0.7vh] px-4 text-center shadow-[0_0_14px_rgba(0,0,0,0.25)]">
               Training
             </p>
             <h1 className="font-rubik font-bold text-2xl w-[50vw] md:w-auto text-right">
@@ -331,15 +439,24 @@ export default function Home() {
             <div className="flex flex-row gap-x-[2vh]">
               <button
                 onClick={() =>
-                  setBottomSlide((prev) =>
-                    Math.min(prev + 1, (isMobile ? totalMobileBottomSlides : totalSlides) - 1)
-                  )
+                  setBottomSlide((prev) => Math.min(prev + 1, bottomMax - 1))
                 }
-                disabled={bottomSlide === (isMobile ? totalMobileBottomSlides : totalSlides) - 1}
+                disabled={bottomSlide === bottomMax - 1}
                 className="w-12 h-12 flex items-center justify-center rounded-full border border-[#1775EE] bg-white text-[#1775EE] transition-all duration-300 hover:bg-[#1775EE] hover:text-white disabled:opacity-30 disabled:cursor-not-allowed"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15 19l-7-7 7-7"
+                  />
                 </svg>
               </button>
               <button
@@ -347,8 +464,19 @@ export default function Home() {
                 disabled={bottomSlide === 0}
                 className="w-12 h-12 flex items-center justify-center rounded-full border border-[#1775EE] bg-white text-[#1775EE] transition-all duration-300 hover:bg-[#1775EE] hover:text-white disabled:opacity-30 disabled:cursor-not-allowed"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </button>
             </div>
@@ -359,72 +487,111 @@ export default function Home() {
             <div
               className="flex flex-row-reverse gap-x-10 transition-transform duration-500 ease-in-out"
               style={{
-                transform: isMobile
-                  ? `translateX(calc(${bottomSlide} * (85vw + 2.5rem)))`
-                  : `translateX(calc(${bottomSlide} * (24vw + 2.5rem)))`,
+                transform: `translateX(calc(${bottomSlide} * ${bottomStep}))`,
               }}
             >
               {/* Card 4 */}
-              <div className="group relative flex-shrink-0 w-[85vw] md:w-[24vw] rounded-xl overflow-hidden">
+              <div className="group relative flex-shrink-0 w-[85vw] md:w-[52vw] lg:w-[24vw] rounded-xl overflow-hidden">
                 <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
                 <div className="absolute inset-0 bg-gradient-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
                   <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
-                    <img src={ictImage} alt="Training and Development" className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                    <img
+                      src={ictImage}
+                      alt="Training and Development"
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
                   </div>
-                  <h1 className="font-inter font-bold text-xl">Cybersecurity Training</h1>
+                  <h1 className="font-inter font-bold text-xl">
+                    Cybersecurity Training
+                  </h1>
                   <p className="font-poppins text-sm mb-[3vh]">
-                    Our cybersecurity training covers cybersecurity fundamentals, ethical hacking, vulnerability assessment and penetration testing (VAPT), and risk management.
+                    Our cybersecurity training covers cybersecurity
+                    fundamentals, ethical hacking, vulnerability assessment and
+                    penetration testing (VAPT), and risk management.
                   </p>
-                  <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">See more</Link>
+                  <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
+                    See more
+                  </Link>
                 </div>
               </div>
 
               {/* Card 3 */}
-              <div className="group relative flex-shrink-0 w-[85vw] md:w-[24vw] rounded-xl overflow-hidden">
+              <div className="group relative flex-shrink-0 w-[85vw] md:w-[52vw] lg:w-[24vw] rounded-xl overflow-hidden">
                 <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
                 <div className="absolute inset-0 bg-gradient-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
                   <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
-                    <img src={webImage} alt="Network Infrastructure" className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                    <img
+                      src={webImage}
+                      alt="Network Infrastructure"
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
                   </div>
-                  <h1 className="font-inter font-bold text-xl">Cloud Computing Training</h1>
+                  <h1 className="font-inter font-bold text-xl">
+                    Cloud Computing Training
+                  </h1>
                   <p className="font-poppins text-sm mb-[3vh]">
-                    We provide cloud computing training on platforms such as AWS, Microsoft Azure, and Google Cloud through face-to-face and online programs.
+                    We provide cloud computing training on platforms such as
+                    AWS, Microsoft Azure, and Google Cloud through face-to-face
+                    and online programs.
                   </p>
-                  <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">See more</Link>
+                  <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
+                    See more
+                  </Link>
                 </div>
               </div>
 
               {/* Card 2 */}
-              <div className="group relative flex-shrink-0 w-[85vw] md:w-[24vw] rounded-xl overflow-hidden">
+              <div className="group relative flex-shrink-0 w-[85vw] md:w-[52vw] lg:w-[24vw] rounded-xl overflow-hidden">
                 <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
                 <div className="absolute inset-0 bg-gradient-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
                   <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
-                    <img src={webImage} alt="Web and Software Development" className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                    <img
+                      src={webImage}
+                      alt="Web and Software Development"
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
                   </div>
-                  <h1 className="font-inter font-bold text-xl">Web and Software Development</h1>
+                  <h1 className="font-inter font-bold text-xl">
+                    Web and Software Development
+                  </h1>
                   <p className="font-poppins text-sm mb-[3vh]">
-                    We develop web and software solutions that support organizational requirements, using modern technologies to deliver reliable and functional digital systems.
+                    We develop web and software solutions that support
+                    organizational requirements, using modern technologies to
+                    deliver reliable and functional digital systems.
                   </p>
-                  <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">See more</Link>
+                  <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
+                    See more
+                  </Link>
                 </div>
               </div>
 
               {/* Card 1 */}
-              <div className="group relative flex-shrink-0 w-[85vw] md:w-[24vw] rounded-xl overflow-hidden">
+              <div className="group relative flex-shrink-0 w-[85vw] md:w-[52vw] lg:w-[24vw] rounded-xl overflow-hidden">
                 <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
                 <div className="absolute inset-0 bg-gradient-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
                   <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
-                    <img src={ictImage} alt="ICT Consultancy" className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                    <img
+                      src={ictImage}
+                      alt="ICT Consultancy"
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
                   </div>
-                  <h1 className="font-inter font-bold text-xl">ICT Consultancy</h1>
+                  <h1 className="font-inter font-bold text-xl">
+                    ICT Consultancy
+                  </h1>
                   <p className="font-poppins text-sm mb-[3vh]">
-                    MGKK provides ICT consultancy services using the Plan, Build, Operate, Optimize, and Test (PBOOT) approach to support the design, implementation, and improvement of ICT infrastructures.
+                    MGKK provides ICT consultancy services using the Plan,
+                    Build, Operate, Optimize, and Test (PBOOT) approach to
+                    support the design, implementation, and improvement of ICT
+                    infrastructures.
                   </p>
-                  <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">See more</Link>
+                  <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
+                    See more
+                  </Link>
                 </div>
               </div>
             </div>
@@ -433,7 +600,7 @@ export default function Home() {
 
         {/* Bottom Dot Indicators */}
         <div className="flex justify-center flex-row-reverse gap-x-2 mt-6">
-          {Array.from({ length: isMobile ? totalMobileBottomSlides : totalSlides }).map((_, i) => (
+          {Array.from({ length: bottomMax }).map((_, i) => (
             <button
               key={i}
               onClick={() => setBottomSlide(i)}
@@ -479,33 +646,52 @@ export default function Home() {
             {/* RIGHT SIDE - FEATURES */}
             <div className="order-2 lg:order-2 space-y-4 lg:-mt-46">
               <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
-                <h3 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">Experience</h3>
+                <h3 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
+                  Experience
+                </h3>
                 <p className="text-sm lg:text-base text-[#000000] leading-relaxed">
-                  Over a decade of providing ICT and engineering solutions and professional training since our establishment in 2013.
+                  Over a decade of providing ICT and engineering solutions and
+                  professional training since our establishment in 2013.
                 </p>
               </div>
               <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
-                <h3 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">Expertise</h3>
+                <h3 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
+                  Expertise
+                </h3>
                 <p className="text-sm lg:text-base text-[#000000] leading-relaxed">
-                  Led by a Professional Electronics Engineer and supported by certified engineers, technicians, and instructors with strong industry and academic backgrounds.
+                  Led by a Professional Electronics Engineer and supported by
+                  certified engineers, technicians, and instructors with strong
+                  industry and academic backgrounds.
                 </p>
               </div>
               <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
-                <h3 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">Quality Training</h3>
+                <h3 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
+                  Quality Training
+                </h3>
                 <p className="text-sm lg:text-base text-[#000000] leading-relaxed">
-                  We offer face-to-face and online training programs aligned with industry standards and globally recognized certifications.
+                  We offer face-to-face and online training programs aligned
+                  with industry standards and globally recognized
+                  certifications.
                 </p>
               </div>
               <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
-                <h3 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">End-to-End Approach</h3>
+                <h3 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
+                  End-to-End Approach
+                </h3>
                 <p className="text-sm lg:text-base text-[#000000] leading-relaxed">
-                  We follow the Plan, Build, Operate, Optimize, and Test (PBOOT) methodology to ensure structured and effective delivery of ICT solutions.
+                  We follow the Plan, Build, Operate, Optimize, and Test (PBOOT)
+                  methodology to ensure structured and effective delivery of ICT
+                  solutions.
                 </p>
               </div>
               <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
-                <h3 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">Innovation & Integrity</h3>
+                <h3 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
+                  Innovation & Integrity
+                </h3>
                 <p className="text-sm lg:text-base text-[#000000] leading-relaxed">
-                  Our work is guided by core values that emphasize innovation, ethical practices, excellence, collaboration, and continuous improvement.
+                  Our work is guided by core values that emphasize innovation,
+                  ethical practices, excellence, collaboration, and continuous
+                  improvement.
                 </p>
               </div>
             </div>
