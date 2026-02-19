@@ -1,8 +1,10 @@
-import { useState, useRef } from 'react';
+// ADDED: Import useCallback and useMemo for performance optimization
+import { useState, useRef, useCallback, useMemo } from 'react';
 import DOH from '../../assets/DOH.svg';
 
 function Partners() {
-    const partnerLogos = [
+    // OPTIMIZED: Wrap array in useMemo to prevent recreation on every render
+    const partnerLogos = useMemo(() => [
         { src: DOH, alt: "DOH Logo" },
         { src: DOH, alt: "DOH Logo" },
         { src: DOH, alt: "DOH Logo" },
@@ -22,7 +24,7 @@ function Partners() {
         { src: DOH, alt: "DOH Logo" },
         { src: DOH, alt: "DOH Logo" },
         { src: DOH, alt: "DOH Logo" },
-    ];
+    ], []); // Empty dependency array means this only creates once
 
     // Reference to the scrollable container so we can control scrolling programmatically
     const scrollRef = useRef(null);
@@ -35,10 +37,15 @@ function Partners() {
 
     // Calculate total number of pages needed (rounds up so no logos are left out)
     // Example: 40 logos ÷ 18 per page = 2.22 → rounds up to 3 pages
-    const totalPages = Math.ceil(partnerLogos.length / logosPerPage)
+    // OPTIMIZED: Wrap in useMemo to prevent recalculation on every render
+    const totalPages = useMemo(() =>
+        Math.ceil(partnerLogos.length / logosPerPage),
+        [partnerLogos.length, logosPerPage] // Only recalculate if these change
+    );
 
     // Function to scroll to a specific page when dot is clicked
-    const scrollToPage = (pageIndex) => {
+    // OPTIMIZED: Wrap in useCallback to prevent function recreation on every render
+    const scrollToPage = useCallback((pageIndex) => {
         // Safety check: make sure scrollRef exists
         if (!scrollRef.current) return;
 
@@ -53,11 +60,12 @@ function Partners() {
         });
 
         // Update which dot should be highlighted as active
-        setCurrentDot(pageIndex)
-    };
+        setCurrentDot(pageIndex);
+    }, []); // No dependencies, function never recreates
 
     // Function called automatically when user scrolls/swipes
-    const handleScroll = () => {
+    // OPTIMIZED: Wrap in useCallback to prevent function recreation
+    const handleScroll = useCallback(() => {
         // Safety check: make sure scrollRef exists
         if (!scrollRef.current) return;
 
@@ -73,8 +81,9 @@ function Partners() {
         const currentPage = Math.round(scrollPosition / pageWidth);
 
         // Update the active dot indicator
-        setCurrentDot(currentPage);
-    };
+        // OPTIMIZED: Only update if page actually changed (reduces unnecessary re-renders)
+        setCurrentDot(prev => prev !== currentPage ? currentPage : prev);
+    }, []);
 
     return (
         <div className="space-y-8 justify-center items-center">
@@ -83,12 +92,15 @@ function Partners() {
                 ref={scrollRef}
                 onScroll={handleScroll}
                 className="overflow-x-hidden overflow-y-hidden scrollbar-hide snap-x snap-mandatory flex"
+                // ADDED: Hardware acceleration for smoother scrolling (tells browser to optimize)
+                style={{ willChange: 'scroll-position' }}
             >
                 {/* Loop through each page and create a separate grid for each */}
                 {Array(totalPages).fill(null).map((_, pageIndex) => (
                     <div
                         key={pageIndex}
-                        className="min-w-full snap-start flex items-center justify-center"
+                        // ADDED: flex-shrink-0 prevents page compression during scroll
+                        className="min-w-full snap-start flex items-center justify-center flex-shrink-0"
                     >
                         <div className="grid grid-cols-6 grid-rows-3 gap-4">
                             {/* grid-cols-6: 6 columns */}
@@ -107,12 +119,16 @@ function Partners() {
                                     <div
                                         key={logoIndex}  // Unique key for React
                                         className="partner-logos-format flex items-center justify-center"
-                                    // flex items-center justify-center: centers logo in its grid cell
+                                        // flex items-center justify-center: centers logo in its grid cell
+                                        // ADDED: GPU acceleration for each logo container (smoother rendering)
+                                        style={{ transform: 'translateZ(0)' }}
                                     >
                                         <img
                                             src={logo.src}
                                             alt={logo.alt}
                                             className="w-16"  // Logo width: 64px
+                                            // ADDED: Prevents image dragging which can cause lag during scroll
+                                            draggable="false"
                                         />
                                     </div>
                                 ))
