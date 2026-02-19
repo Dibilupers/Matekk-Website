@@ -47,6 +47,57 @@ export default function Home() {
     : isTablet
       ? "(52vw + 2.5rem)"
       : "(24vw + 2.5rem)";
+  const [hoveredRow, setHoveredRow] = useState(null);
+  const [tappedCard, setTappedCard] = useState(null);
+  const galleryItems = [
+    {
+      id: 1,
+      src: ictImage,
+      alt: "Network and Security Infrastructure Projects",
+      title: "Network and Security Infrastructure Projects",
+      desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
+      link: "/solutions/network", // add link to every item
+    },
+    {
+      id: 2,
+      src: webImage,
+      alt: "SLSU Delegates",
+      title: "SLSU Delegates Welcome",
+      desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
+    },
+    {
+      id: 3,
+      src: ictImage,
+      alt: "Team Celebration",
+      title: "Team Celebration",
+      desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
+    },
+    {
+      id: 4,
+      src: webImage,
+      alt: "Ideas Workshop",
+      title: "Ideas Workshop",
+      desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
+    },
+    {
+      id: 5,
+      src: ictImage,
+      alt: "Conference Panel",
+      title: "Conference Panel",
+      desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
+    },
+    // Just add more objects here if needed
+  ];
+
+  const ITEMS_PER_ROW = 3; // change to 2 or 4 if needed
+
+  // Chunk array into rows
+  const rows = galleryItems.reduce((acc, item, i) => {
+    const rowIndex = Math.floor(i / ITEMS_PER_ROW);
+    if (!acc[rowIndex]) acc[rowIndex] = [];
+    acc[rowIndex].push(item);
+    return acc;
+  }, []);
 
   return (
     <main>
@@ -212,17 +263,14 @@ export default function Home() {
       </section>
 
       {/* Services we provide */}
-      <section className="flex flex-col p-10 h-full w-full">
-        <div className="text-center w-[27vh] self-center md:w-auto lg:w-auto">
-          <h2 className="font-bold text-3xl">
+      <section className="flex flex-col p-10 h-full mx-[2.063rem] lg:mx-[7.438rem]">
+        <div className="text-center w-[60vw] sm:w-[27vw] self-center md:w-auto lg:w-auto">
+          <h3>
             Services We Provide to
-            <span className="text-[#1775EE] font-rubik font-bold text-3xl">
-              {" "}
-              Elevate Your Business
-            </span>
-          </h2>
+            <span className="text-[#1775EE]"> Elevate Your Business</span>
+          </h3>
         </div>
-        <p className="font-poppins text-sm w-[70vw] md:w-[56.406vw] xl:w-[56.406vw] self-center mt-[1.1vh] text-center">
+        <p className="w-[70vw] md:w-[56.406vw] xl:w-[56.406vw] self-center mt-[1.1vh] text-center">
           MGKK Information Communication Technology Services delivers end-to-end
           ICT and engineering solutions alongside comprehensive training
           programs designed to meet industry demands and support digital
@@ -233,13 +281,13 @@ export default function Home() {
         <div className="max-w-6xl mx-1 flex flex-col md:flex-row justify-center items-center gap-10 mt-[6vh] md:mx-auto lg:mx-auto">
           {/* Controls — LEFT */}
           <div className="flex flex-col relative md:w-[20vw] self-start gap-y-[1vh] items-start">
-            <div className="absolute -top-10 md:-left-10 w-90 h-90 md:w-72 md:h-72 bg-[#C2DDFF] opacity-50 rounded-full blur-3xl -z-10" />
-            <p className="font-inter text-sm bg-[#EBF5FD] border border-[#EBF5FD] rounded-full py-[0.7vh] px-4 inline-flex text-center shadow-[0_0_14px_rgba(0,0,0,0.25)]">
+            <div className="absolute -top-10 md:-left-10 w-70 h-70 md:w-72 md:h-72 bg-[#C2DDFF] opacity-50 rounded-full blur-3xl -z-10" />
+            <h6 className="text-sm bg-[#EBF5FD] border border-[#EBF5FD] rounded-full py-[0.7vh] px-4 inline-flex text-center shadow-[0_0_14px_rgba(0,0,0,0.25)]">
               Solutions
-            </p>
-            <h1 className="font-rubik font-bold text-2xl w-[50vw] md:w-auto">
+            </h6>
+            <h5 className="font-rubik font-bold text-2xl w-[50vw] md:w-auto">
               End-to-End ICT & Engineering Solutions
-            </h1>
+            </h5>
             <p className="font-poppins text-sm mb-[1.5vh] md:mb-[3vh]">
               We provide ICT consultancy and engineering solutions focused on
               planning, building, operating, optimizing, and testing technology
@@ -311,9 +359,9 @@ export default function Home() {
                       className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                   </div>
-                  <h1 className="font-inter font-bold text-xl">
+                  <h5 className="font-inter font-bold text-xl">
                     ICT Consultancy
-                  </h1>
+                  </h5>
                   <p className="font-poppins text-sm mb-[3vh]">
                     MGKK provides ICT consultancy services using the Plan,
                     Build, Operate, Optimize, and Test (PBOOT) approach to
@@ -338,9 +386,9 @@ export default function Home() {
                       className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                   </div>
-                  <h1 className="font-inter font-bold text-xl">
+                  <h5 className="font-inter font-bold text-xl">
                     Web and Software Development
-                  </h1>
+                  </h5>
                   <p className="font-poppins text-sm mb-[3vh]">
                     We develop web and software solutions that support
                     organizational requirements, using modern technologies to
@@ -364,9 +412,9 @@ export default function Home() {
                       className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                   </div>
-                  <h1 className="font-inter font-bold text-xl">
+                  <h5 className="font-inter font-bold text-xl">
                     Network Infrastructure
-                  </h1>
+                  </h5>
                   <p className="font-poppins text-sm mb-[3vh]">
                     We design and deploy robust network infrastructure solutions
                     that ensure seamless connectivity, security, and scalability
@@ -390,9 +438,9 @@ export default function Home() {
                       className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                   </div>
-                  <h1 className="font-inter font-bold text-xl">
+                  <h5 className="font-inter font-bold text-xl">
                     Training & Development
-                  </h1>
+                  </h5>
                   <p className="font-poppins text-sm mb-[3vh]">
                     MGKK offers comprehensive ICT training programs tailored to
                     industry demands, equipping professionals with the skills
@@ -421,17 +469,17 @@ export default function Home() {
         </div>
 
         {/* ── BOTTOM CAROUSEL ── */}
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-center items-center gap-10 mt-[4vh] md:mt-[8vh]">
+        <div className="max-w-6xl flex flex-col md:flex-row justify-center items-center gap-10 mt-[4vh] md:mt-[8vh]">
           {/* Controls — on mobile: top + right-aligned | on desktop: right column */}
-          <div className="flex flex-col relative w-full md:w-[20vw] self-start gap-y-[1vh] items-end text-right order-first md:order-last">
+          <div className="flex flex-col relative md:w-[20vw] self-start gap-y-[1vh] items-end text-right order-first md:order-last">
             <div className="absolute -top-10 -right-5 w-72 h-72 bg-[#C2DDFF] opacity-50 rounded-full blur-3xl -z-10" />
-            <p className="font-inter text-sm bg-[#EBF5FD] border border-[#EBF5FD] rounded-full py-[0.7vh] px-4 text-center shadow-[0_0_14px_rgba(0,0,0,0.25)]">
+            <h6 className="text-sm bg-[#EBF5FD] border border-[#EBF5FD] rounded-full py-[0.7vh] px-4 text-center shadow-[0_0_14px_rgba(0,0,0,0.25)]">
               Training
-            </p>
-            <h1 className="font-rubik font-bold text-2xl w-[50vw] md:w-auto text-right">
+            </h6>
+            <h5 className="font-rubik font-bold text-2xl w-[50vw] md:w-auto text-right">
               ICT Training & Skills Development
-            </h1>
-            <p className="font-poppins text-sm mb-[1vh] md:mb-[3vh] w-[85vw] md:w-auto">
+            </h5>
+            <p className="font-poppins text-sm w-full mb-[1vh] md:mb-[3vh] md:w-auto">
               We offers face-to-face and online training programs designed to
               equip individuals and organizations with cutting-edge
               technological knowledge and practical skills.
@@ -502,9 +550,9 @@ export default function Home() {
                       className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                   </div>
-                  <h1 className="font-inter font-bold text-xl">
+                  <h5 className="font-inter font-bold text-xl">
                     Cybersecurity Training
-                  </h1>
+                  </h5>
                   <p className="font-poppins text-sm mb-[3vh]">
                     Our cybersecurity training covers cybersecurity
                     fundamentals, ethical hacking, vulnerability assessment and
@@ -528,9 +576,9 @@ export default function Home() {
                       className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                   </div>
-                  <h1 className="font-inter font-bold text-xl">
+                  <h5 className="font-inter font-bold text-xl">
                     Cloud Computing Training
-                  </h1>
+                  </h5>
                   <p className="font-poppins text-sm mb-[3vh]">
                     We provide cloud computing training on platforms such as
                     AWS, Microsoft Azure, and Google Cloud through face-to-face
@@ -554,9 +602,9 @@ export default function Home() {
                       className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                   </div>
-                  <h1 className="font-inter font-bold text-xl">
+                  <h5 className="font-inter font-bold text-xl">
                     Web and Software Development
-                  </h1>
+                  </h5>
                   <p className="font-poppins text-sm mb-[3vh]">
                     We develop web and software solutions that support
                     organizational requirements, using modern technologies to
@@ -580,9 +628,9 @@ export default function Home() {
                       className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                   </div>
-                  <h1 className="font-inter font-bold text-xl">
+                  <h5 className="font-inter font-bold text-xl">
                     ICT Consultancy
-                  </h1>
+                  </h5>
                   <p className="font-poppins text-sm mb-[3vh]">
                     MGKK provides ICT consultancy services using the Plan,
                     Build, Operate, Optimize, and Test (PBOOT) approach to
@@ -696,6 +744,158 @@ export default function Home() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Featured Solutions */}
+      <section className="flex flex-col p-10 h-full mx-[2.063rem] lg:mx-[7.438rem]">
+        <div className="text-center w-[65vw] self-center sm:w-[45vw] md:w-auto lg:w-auto">
+          <h3>
+            Our Featured
+            <span className="text-[#1775EE]"> Solutions and Training</span>
+          </h3>
+        </div>
+        <p className="w-[90vw] md:w-[56.406vw] xl:w-[60vw] self-center mt-[1.1vh] text-center">
+          MGKK Information Communication Technology Services delivers end-to-end
+          ICT and engineering solutions alongside comprehensive training
+          programs designed to meet industry demands and support digital
+          transformation.
+        </p>
+        {/* Gallery */}
+        <div className="mt-[4vh]">
+          {isMobile ? (
+            /* ── MOBILE ── */
+            /* ── MOBILE: single column ── */
+            <div className="flex flex-col gap-3">
+              {galleryItems.map((item) => (
+                <div
+                  key={item.id}
+                  onClick={() =>
+                    setTappedCard(tappedCard === item.id ? null : item.id)
+                  }
+                  className="relative self-center rounded-2xl overflow-hidden cursor-pointer w-[90vw] h-[30vh]"
+                >
+                  <img
+                    src={item.src}
+                    alt={item.alt}
+                    className="w-full h-full object-cover"
+                  />
+
+                  {/* Full blur overlay */}
+                  <div
+                    className={`absolute inset-0 rounded-2xl backdrop-blur-[8px] bg-black/1 transition-opacity duration-500 ${
+                      tappedCard === item.id ? "opacity-100" : "opacity-0"
+                    }`}
+                  />
+
+                  {/* Content */}
+                  <div
+                    className={`absolute inset-0 px-5 flex flex-col justify-center transition-opacity duration-500 ${
+                      tappedCard === item.id ? "opacity-100" : "opacity-0"
+                    }`}
+                  >
+                    {/* Title row */}
+                    <div className="flex items-center justify-between gap-2">
+                      <h5 className="text-white leading-tight flex-1">
+                        {item.title}
+                      </h5>
+                      <Link
+                        to={item.link}
+                        onClick={(e) => e.stopPropagation()}
+                        className="flex-shrink-0 flex items-center justify-center"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="w-7 h-7 text-white"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M7 17L17 7M17 7H7M17 7v10"
+                          />
+                        </svg>
+                      </Link>
+                    </div>
+
+                    {/* Description below title */}
+                    <p className="text-white/80 mt-2 line-clamp-3">
+                      {item.desc}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            /* ── DESKTOP/TABLET ── */
+            <div className="flex flex-col gap-3">
+              {rows.map((row, rowIndex) => (
+                <div
+                  key={rowIndex}
+                  onMouseEnter={() => setHoveredRow(rowIndex)}
+                  onMouseLeave={() => setHoveredRow(null)}
+                  className="flex gap-3 transition-all duration-500 ease-in-out"
+                  style={{
+                    height:
+                      hoveredRow === rowIndex
+                        ? "340px"
+                        : hoveredRow !== null
+                          ? "220px"
+                          : "280px",
+                  }}
+                >
+                  {row.map((item) => (
+                    <div
+                      key={item.id}
+                      className="group relative rounded-2xl overflow-hidden cursor-pointer flex-1 transition-all duration-500 ease-in-out hover:flex-[2]"
+                    >
+                      <img
+                        src={item.src}
+                        alt={item.alt}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+
+                      {/* Blur */}
+                      <div className="absolute inset-x-0 bottom-0 h-[35%] bg-black/1 to-transparent backdrop-blur-[10px] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                      {/* Content */}
+                      <div className="absolute bottom-0 inset-x-0 px-4 py-6 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
+                        <div className="flex items-end justify-between gap-3">
+                          <div className="flex-1">
+                            <h5 className="text-white font-bold">
+                              {item.title}
+                            </h5>
+                            <p className="text-white/80 mt-1 line-clamp-2">
+                              {item.desc}
+                            </p>
+                          </div>
+                          <div className="flex-shrink-0 flex items-center justify-center">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="w-12 h-12 text-white"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M7 17L17 7M17 7H7M17 7v10"
+                              />
+                            </svg>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
