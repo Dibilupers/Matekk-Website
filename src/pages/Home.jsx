@@ -825,7 +825,7 @@ export default function Home() {
                   {/* Line 1: Initiation to Planning */}
                   {/* Start: top-left circle, End: 20% left circle */}
                   <path
-                    d="M 1 5 C 120 100, 200 1, 335 110"
+                    d="M 1 1 C 120 100, 200 1, 335 110"
                     stroke="#3B82F6"
                     strokeWidth="8"
                     fill="none"
@@ -855,7 +855,7 @@ export default function Home() {
                   {/* Line 4: Monitor to Optimization */}
                   {/* Start: 60% circle, End: right circle */}
                   <path
-                    d="M 830 200 C 800 130, 845 350, 1500 275"
+                    d="M 830 200 C 800 150, 845 350, 1500 275"
                     stroke="#3B82F6"
                     strokeWidth="8"
                     fill="none"
