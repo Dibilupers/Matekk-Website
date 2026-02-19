@@ -35,6 +35,9 @@ function Partners() {
     // ADDED: Track screen size to calculate logos per page dynamically
     const [logosPerPage, setLogosPerPage] = useState(18);
 
+    // ADDED: Track if user has manually interacted (to pause auto-scroll)
+    const [hasUserInteracted, setHasUserInteracted] = useState(false);
+
     // ADDED: Calculate logos per page based on screen size
     useEffect(() => {
         const calculateLogosPerPage = () => {
@@ -107,12 +110,42 @@ function Partners() {
         setCurrentDot(prev => prev !== currentPage ? currentPage : prev);
     }, []);
 
+    // ADDED: Handle user interaction to pause auto-scroll
+    const handleUserInteraction = useCallback(() => {
+        setHasUserInteracted(true);
+    }, []);
+
+    // ADDED: Auto-scroll effect - scrolls to next page every 2 seconds
+    useEffect(() => {
+        // Don't auto-scroll if user has manually interacted
+        if (hasUserInteracted) return;
+
+        // Set up interval to auto-scroll every 2 seconds
+        const autoScrollInterval = setInterval(() => {
+            setCurrentDot(prev => {
+                // Calculate next page (loop back to 0 after last page)
+                const nextPage = (prev + 1) % totalPages;
+                
+                // Scroll to next page
+                scrollToPage(nextPage);
+                
+                return nextPage;
+            });
+        }, 2000); // 2000ms = 2 seconds
+
+        // Cleanup interval on unmount or when user interacts
+        return () => clearInterval(autoScrollInterval);
+    }, [totalPages, scrollToPage, hasUserInteracted]);
+
     return (
         <div className="space-y-8 justify-center items-center">
             {/* Main scrollable container */}
             <div
                 ref={scrollRef}
                 onScroll={handleScroll}
+                // ADDED: Pause auto-scroll when user manually scrolls or touches
+                onTouchStart={handleUserInteraction}
+                onMouseDown={handleUserInteraction}
                 className="overflow-x-hidden overflow-y-hidden scrollbar-hide snap-x snap-mandatory flex"
                 // ADDED: Hardware acceleration for smoother scrolling (tells browser to optimize)
                 style={{ willChange: 'scroll-position' }}
@@ -160,7 +193,11 @@ function Partners() {
                 {Array(totalPages).fill(null).map((_, index) => (
                     <button
                         key={index}
-                        onClick={() => scrollToPage(index)}
+                        // UPDATED: Pause auto-scroll when clicking dots
+                        onClick={() => {
+                            handleUserInteraction();
+                            scrollToPage(index);
+                        }}
                         className={`w-2 h-2 rounded-full transition-all ${
                             currentDot === index 
                                 ? 'bg-blue-600 w-6'  // Active dot: blue and wider
