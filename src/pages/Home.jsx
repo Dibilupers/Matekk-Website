@@ -104,7 +104,7 @@ export default function Home() {
       {/* Hero Section */}
       <section
         id="home"
-        className="relative overflow-hidden bg-gradient-to-b from-gray-50 to-white py-14"
+        className="relative overflow-hidden bg-linear-to-b from-gray-50 to-white py-14"
       >
         <div className="mx-4 sm:mx-6 lg:mx-[7.438rem]">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
@@ -173,9 +173,9 @@ export default function Home() {
             </div>
 
             {/* RIGHT SIDE - IMAGE & OVERLAYS */}
-            <div className="hidden lg:flex relative lg:h-[600px] items-center justify-center">
+            <div className="hidden lg:flex relative lg:h-150 items-center justify-center">
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-[500px] h-[500px] bg-gradient-to-br from-blue-300 via-blue-400 to-blue-500 rounded-full opacity-20 blur-3xl"></div>
+                <div className="w-125 h-125 bg-linear-to-br from-blue-300 via-blue-400 to-blue-500 rounded-full opacity-20 blur-3xl"></div>
               </div>
 
               <div className="relative w-full max-w-md">
@@ -205,7 +205,7 @@ export default function Home() {
                   <img
                     src="/src/assets/maamgrace2.png"
                     alt="Professional holding laptop with ICT solutions"
-                    className="w-full h-auto aspect-[4/5] object-cover"
+                    className="w-full h-auto aspect-4/5 object-cover"
                   />
                 </div>
 
@@ -348,9 +348,9 @@ export default function Home() {
               }}
             >
               {/* Card 1 */}
-              <div className="group relative flex-shrink-0 w-[85vw] md:w-[52vw] lg:w-[24vw] rounded-xl overflow-hidden">
+              <div className="group relative shrink-0 w-[85vw] md:w-[52vw] lg:w-[24vw] rounded-xl overflow-hidden">
                 <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
-                <div className="absolute inset-0 bg-gradient-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                <div className="absolute inset-0 bg-linear-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
                   <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
                     <img
@@ -375,9 +375,9 @@ export default function Home() {
               </div>
 
               {/* Card 2 */}
-              <div className="group relative flex-shrink-0 w-[85vw] md:w-[52vw] lg:w-[24vw] rounded-xl overflow-hidden">
+              <div className="group relative shrink-0 w-[85vw] md:w-[52vw] lg:w-[24vw] rounded-xl overflow-hidden">
                 <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
-                <div className="absolute inset-0 bg-gradient-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                <div className="absolute inset-0 bg-linear-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
                   <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
                     <img
@@ -401,9 +401,9 @@ export default function Home() {
               </div>
 
               {/* Card 3 */}
-              <div className="group relative flex-shrink-0 w-[85vw] md:w-[52vw] lg:w-[24vw] rounded-xl overflow-hidden">
+              <div className="group relative shrink-0 w-[85vw] md:w-[52vw] lg:w-[24vw] rounded-xl overflow-hidden">
                 <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
-                <div className="absolute inset-0 bg-gradient-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                <div className="absolute inset-0 bg-linear-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
                   <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
                     <img
@@ -427,9 +427,9 @@ export default function Home() {
               </div>
 
               {/* Card 4 */}
-              <div className="group relative flex-shrink-0 w-[85vw] md:w-[52vw] lg:w-[24vw] rounded-xl overflow-hidden">
+              <div className="group relative shrink-0 w-[85vw] md:w-[52vw] lg:w-[24vw] rounded-xl overflow-hidden">
                 <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
-                <div className="absolute inset-0 bg-gradient-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                <div className="absolute inset-0 bg-linear-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
                   <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
                     <img
@@ -539,9 +539,9 @@ export default function Home() {
               }}
             >
               {/* Card 4 */}
-              <div className="group relative flex-shrink-0 w-[85vw] md:w-[52vw] lg:w-[24vw] rounded-xl overflow-hidden">
+              <div className="group relative shrink-0 w-[85vw] md:w-[52vw] lg:w-[24vw] rounded-xl overflow-hidden">
                 <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
-                <div className="absolute inset-0 bg-gradient-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                <div className="absolute inset-0 bg-linear-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
                   <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
                     <img
@@ -565,9 +565,9 @@ export default function Home() {
               </div>
 
               {/* Card 3 */}
-              <div className="group relative flex-shrink-0 w-[85vw] md:w-[52vw] lg:w-[24vw] rounded-xl overflow-hidden">
+              <div className="group relative shrink-0 w-[85vw] md:w-[52vw] lg:w-[24vw] rounded-xl overflow-hidden">
                 <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
-                <div className="absolute inset-0 bg-gradient-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                <div className="absolute inset-0 bg-linear-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
                   <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
                     <img
@@ -591,9 +591,9 @@ export default function Home() {
               </div>
 
               {/* Card 2 */}
-              <div className="group relative flex-shrink-0 w-[85vw] md:w-[52vw] lg:w-[24vw] rounded-xl overflow-hidden">
+              <div className="group relative shrink-0 w-[85vw] md:w-[52vw] lg:w-[24vw] rounded-xl overflow-hidden">
                 <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
-                <div className="absolute inset-0 bg-gradient-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                <div className="absolute inset-0 bg-linear-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
                   <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
                     <img
@@ -617,9 +617,9 @@ export default function Home() {
               </div>
 
               {/* Card 1 */}
-              <div className="group relative flex-shrink-0 w-[85vw] md:w-[52vw] lg:w-[24vw] rounded-xl overflow-hidden">
+              <div className="group relative shrink-0 w-[85vw] md:w-[52vw] lg:w-[24vw] rounded-xl overflow-hidden">
                 <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
-                <div className="absolute inset-0 bg-gradient-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                <div className="absolute inset-0 bg-linear-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
                   <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
                     <img
@@ -685,7 +685,7 @@ export default function Home() {
                 <img
                   src="/src/assets/handshake.png"
                   alt="Professional handshake - MGKK ICT Services team"
-                  className="relative z-10 w-full h-auto rounded-2xl sm:rounded-3xl object-cover aspect-[4/5]"
+                  className="relative z-10 w-full h-auto rounded-2xl sm:rounded-3xl object-cover aspect-4/5"
                 />
                 <div className="absolute -bottom-4 -left-4 sm:-bottom-6 sm:-left-6 w-32 h-32 sm:w-40 sm:h-40 lg:w-50 lg:h-50 border-b-4 border-l-4 sm:border-b-6 sm:border-l-6 border-blue-500 rounded-bl-3xl z-0"></div>
               </div>
@@ -800,7 +800,7 @@ export default function Home() {
               */}
 
               {/* Container for all steps with relative positioning */}
-              <div className="relative h-[500px]">
+              <div className="relative h-125">
                 {/* 
                   ADJUST CONTAINER HEIGHT:
                   - h-[500px] = total height (change to h-[400px] for shorter, h-[600px] for taller)
@@ -864,7 +864,7 @@ export default function Home() {
                 </svg>
 
                 {/* Step 1: Initiation & Consultancy (Top Left) */}
-                <div className="absolute left-0 top-5 flex flex-col items-center max-w-[200px] z-10">
+                <div className="absolute left-0 top-5 flex flex-col items-center max-w-50 z-10">
                   <div className="w-22 h-22 bg-blue-500 rounded-full flex items-center justify-center shadow-xl mb-4">
                     <svg
                       className="w-10 h-10 text-white"
@@ -889,7 +889,7 @@ export default function Home() {
                 </div>
 
                 {/* Step 2: Planning & Design (Lower position) */}
-                <div className="absolute left-[20%] top-[75px] flex flex-col items-center max-w-[200px] z-10">
+                <div className="absolute left-[20%] top-18.75 flex flex-col items-center max-w-50 z-10">
                   <div className="w-22 h-22 bg-blue-500 rounded-full flex items-center justify-center shadow-xl mb-4">
                     <svg
                       className="w-10 h-10 text-white"
@@ -914,7 +914,7 @@ export default function Home() {
                 </div>
 
                 {/* Step 3: Implementation (Middle) */}
-                <div className="absolute left-[40%] top-[130px] flex flex-col items-center max-w-[200px] z-10">
+                <div className="absolute left-[40%] top-32.5 flex flex-col items-center max-w-50 z-10">
                   <div className="w-22 h-22 bg-blue-500 rounded-full flex items-center justify-center shadow-xl mb-4">
                     <svg
                       className="w-10 h-10 text-white"
@@ -945,7 +945,7 @@ export default function Home() {
                 </div>
 
                 {/* Step 4: Monitor and Control (Lower right) */}
-                <div className="absolute left-[60%] top-[160px] flex flex-col items-center max-w-[200px] z-10">
+                <div className="absolute left-[60%] top-40 flex flex-col items-center max-w-50 z-10">
                   <div className="w-22 h-22 bg-blue-500 rounded-full flex items-center justify-center shadow-xl mb-4">
                     <svg
                       className="w-10 h-10 text-white"
@@ -970,7 +970,7 @@ export default function Home() {
                 </div>
 
                 {/* Step 5: Optimization (Bottom Right) */}
-                <div className="absolute right-0 top-[230px] flex flex-col items-center max-w-[200px] z-10">
+                <div className="absolute right-0 top-57.5 flex flex-col items-center max-w-50 z-10">
                   <div className="w-22 h-22 bg-blue-500 rounded-full flex items-center justify-center shadow-xl mb-4">
                     <svg
                       className="w-10 h-10 text-white"
@@ -1005,7 +1005,7 @@ export default function Home() {
             <div className="lg:hidden space-y-8">
               {/* Step 1: Initiation & Consultancy */}
               <div className="flex items-start gap-4">
-                <div className="flex-shrink-0">
+                <div className="shrink-0">
                   <div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
                     <svg
                       className="w-10 h-10 text-white"
@@ -1039,7 +1039,7 @@ export default function Home() {
 
               {/* Step 2: Planning & Design */}
               <div className="flex items-start gap-4">
-                <div className="flex-shrink-0">
+                <div className="shrink-0">
                   <div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
                     <svg
                       className="w-10 h-10 text-white"
@@ -1073,7 +1073,7 @@ export default function Home() {
 
               {/* Step 3: Implementation */}
               <div className="flex items-start gap-4">
-                <div className="flex-shrink-0">
+                <div className="shrink-0">
                   <div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
                     <svg
                       className="w-10 h-10 text-white"
@@ -1113,7 +1113,7 @@ export default function Home() {
 
               {/* Step 4: Monitor and Control */}
               <div className="flex items-start gap-4">
-                <div className="flex-shrink-0">
+                <div className="shrink-0">
                   <div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
                     <svg
                       className="w-10 h-10 text-white"
@@ -1147,7 +1147,7 @@ export default function Home() {
 
               {/* Step 5: Optimization */}
               <div className="flex items-start gap-4">
-                <div className="flex-shrink-0">
+                <div className="shrink-0">
                   <div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
                     <svg
                       className="w-10 h-10 text-white"
@@ -1215,7 +1215,7 @@ export default function Home() {
 
                     {/* Full blur overlay */}
                     <div
-                      className={`absolute inset-0 rounded-2xl backdrop-blur-[8px] bg-black/1 transition-opacity duration-500 ${
+                      className={`absolute inset-0 rounded-2xl backdrop-blur-sm bg-black/1 transition-opacity duration-500 ${
                         tappedCard === item.id ? "opacity-100" : "opacity-0"
                       }`}
                     />
@@ -1234,7 +1234,7 @@ export default function Home() {
                         <Link
                           to={item.link}
                           onClick={(e) => e.stopPropagation()}
-                          className="flex-shrink-0 flex items-center justify-center"
+                          className="shrink-0 flex items-center justify-center"
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -1282,7 +1282,7 @@ export default function Home() {
                     {row.map((item) => (
                       <div
                         key={item.id}
-                        className="group relative rounded-2xl overflow-hidden cursor-pointer flex-1 transition-all duration-500 ease-in-out hover:flex-[2]"
+                        className="group relative rounded-2xl overflow-hidden cursor-pointer flex-1 transition-all duration-500 ease-in-out hover:flex-2"
                       >
                         <img
                           src={item.src}
@@ -1304,7 +1304,7 @@ export default function Home() {
                                 {item.desc}
                               </p>
                             </div>
-                            <div className="flex-shrink-0 flex items-center justify-center">
+                            <div className="shrink-0 flex items-center justify-center">
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 className="w-12 h-12 text-white"
