@@ -412,6 +412,10 @@ export default function Home() {
           <Partners />
         </div>
       </section>
+      {/* Services we provide */}
+      <section>
+        
+      </section>
 
       {/* About the Company */}
       <section></section>
