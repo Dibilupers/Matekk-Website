@@ -24,7 +24,7 @@ export default function Home() {
           - px-4 sm:px-6 lg:px-8 = side padding
           - py-12 lg:py-8 = top/bottom padding (increase for more space)
         */}
-         <div className="mx-4 sm:mx-6 lg:mx-[7.438rem]">
+        <div className="mx-4 sm:mx-6 lg:mx-[7.438rem]">
           {/* 
             ADJUST GRID LAYOUT:
             - gap-8 lg:gap-16 = space between left and right columns
@@ -53,7 +53,6 @@ export default function Home() {
 
               {/* ==================== CTA BUTTONS ==================== */}
               <div className="flex sm:flex-row gap-3 sm:gap-4 justify-left lg:justify-start">
-
                 <button className="px-3 py-3 sm:px-8 sm:py-4 bg-blue-600 text-white rounded-full font-medium hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl text-sm sm:text-base">
                   Explore Our Solutions
                 </button>
@@ -110,14 +109,13 @@ export default function Home() {
               </div>
             </div>
 
-              {/* ==================== RIGHT SIDE - IMAGE & OVERLAYS ==================== */} 
+            {/* ==================== RIGHT SIDE - IMAGE & OVERLAYS ==================== */}
             <div className="hidden lg:flex relative lg:h-[600px] items-center justify-center">
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="w-[500px] h-[500px] bg-gradient-to-br from-blue-300 via-blue-400 to-blue-500 rounded-full opacity-20 blur-3xl"></div>
               </div>
 
               <div className="relative w-full max-w-md">
-
                 <div className="absolute top-45 left-4 lg:-left-30 bg-[#EBF5FD] rounded-2xl shadow-2xl px-4 py-4 z-20 hover:scale-105 transition-transform">
                   <div className="flex justify-center items-center gap-3">
                     <p className="text-4xl font-bold text-[#1775EE]">95%</p>
@@ -147,7 +145,7 @@ export default function Home() {
                     className="w-full h-auto aspect-[4/5] object-cover"
                   />
                 </div>
-                
+
                 <div className="absolute top-28 right-2 lg:right-15 bg-[#7DB6FF] p-2 lg:p-3 rounded-full shadow-lg hover:scale-110 transition-transform">
                   <Settings className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
                 </div>
@@ -617,94 +615,101 @@ export default function Home() {
       </section>
 
       {/* Why Choose MGKK ICT Services */}
-      <section className="py-16 lg:py-20 bg-gray-50">
+      <section className="py-16 lg:py-20 bg-[#EBF5FD]">
         <div className="mx-4 sm:mx-6 lg:mx-[7.438rem]">
-          
           {/* ==================== SECTION HEADING - AT TOP ==================== */}
-          <div className="mb-12 lg:mb-16 text-center lg:text-left">
-            <h2 className="text-3xl lg:text-3xl font-bold leading-tight text-gray-900">
-              Why Choose <span className="text-[#1775EE]">MGKK ICT Services?</span>
+          <div className="mb-12 lg:mb-16 text-left md:text-center sm:text-left lg:text-left">
+            <h2 className="text-3xl lg:text-3xl font-bold leading-tight text-[#000000]">
+              Why Choose <span className="text-[#1775EE]">MGKK</span>
+              <br className="sm:hidden" />
+              <span className="text-[#1775EE]"> ICT Services?</span>
             </h2>
-            
-            <p className="text-base lg:text-sm leading-relaxed text-gray-600 mt-4 max-w-133 mx-auto lg:mx-0 text-justify">
-              MGKK Information Communication Technology Services is committed to delivering reliable ICT solutions 
-              and high-quality training through experienced professionals, 
-              proven methodologies, and a strong focus on innovation, integrity, and excellence.
+
+            <p className="text-base lg:text-sm leading-relaxed text-[#000000] mt-4 max-w-133 mx-auto lg:mx-0 text-justify">
+              MGKK Information Communication Technology Services is committed to
+              delivering reliable ICT solutions and high-quality training
+              through experienced professionals, proven methodologies, and a
+              strong focus on innovation, integrity, and excellence.
             </p>
           </div>
-          
+
           {/* ==================== IMAGE AND FEATURES SIDE BY SIDE ==================== */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start">
+            {/* ==================== LEFT SIDE - IMAGE ==================== */}
+            <div className="order-1 lg:order-1">
+              <div className="relative max-w-xs sm:max-w-md lg:max-w-lg mx-auto">
+                <div className="absolute -top-4 -right-4 sm:-top-6 sm:-right-6 w-32 h-32 sm:w-40 sm:h-40 lg:w-50 lg:h-50 border-t-4 border-r-4 sm:border-t-6 sm:border-r-6 border-blue-500 rounded-tr-3xl z-0"></div>
+                {/* Main Image */}
+                <img
+                  src="/src/assets/handshake.png"
+                  alt="Professional handshake - MGKK ICT Services team"
+                  className="relative z-10 w-full h-auto rounded-2xl sm:rounded-3xl object-cover aspect-[4/5]"
+                />
 
-          {/* ==================== LEFT SIDE - IMAGE ==================== */}
-          <div className="order-2 lg:order-1">
-            <div className="relative max-w-lg mx-auto">
-              {/* Top-Right Corner Border */}
-              <div className="absolute -top-6 -right-6 w-50 h-50 border-t-6 border-r-6 border-blue-500 rounded-tr-3xl z-0"></div>
-              
-              {/* Main Image */}
-              <img 
-                src="/src/assets/handshake.png" 
-                alt="Professional handshake - MGKK ICT Services team"
-                className="relative z-10 w-full h-auto rounded-3xl shadow-2xl object-cover aspect-[4/5]"
-              />
-              <div className="absolute -bottom-6 -left-6 w-50 h-50 border-b-6 border-l-6 border-blue-500 rounded-bl-3xl z-0"></div>
-              
+                <div className="absolute -bottom-4 -left-4 sm:-bottom-6 sm:-left-6 w-32 h-32 sm:w-40 sm:h-40 lg:w-50 lg:h-50 border-b-4 border-l-4 sm:border-b-6 sm:border-l-6 border-blue-500 rounded-bl-3xl z-0"></div>
+              </div>
             </div>
-          </div>
 
             {/* ==================== RIGHT SIDE - FEATURES ==================== */}
-            <div className="order-1 lg:order-2 space-y-4 lg:-mt-46">
+            <div className="order-2 lg:order-2 space-y-4 lg:-mt-46">
               {/* FEATURE 1: EXPERIENCE */}
               <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
-                <h3 className="text-lg lg:text-xl font-bold text-gray-900 mb-2">
+                <h3 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
                   Experience
                 </h3>
-                <p className="text-sm lg:text-base text-gray-600 leading-relaxed">
-                  Over a decade of providing ICT and engineering solutions and professional training since our establishment in 2013.
+                <p className="text-sm lg:text-base text-[#000000] leading-relaxed">
+                  Over a decade of providing ICT and engineering solutions and
+                  professional training since our establishment in 2013.
                 </p>
               </div>
 
               {/* FEATURE 2: EXPERTISE */}
               <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
-                <h3 className="text-lg lg:text-xl font-bold text-gray-900 mb-2">
-                  Expertise   
+                <h3 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
+                  Expertise
                 </h3>
-                <p className="text-sm lg:text-base text-gray-600 leading-relaxed">
-                  Led by a Professional Electronics Engineer and supported by certified engineers, technicians, and instructors with strong industry and academic backgrounds.
+                <p className="text-sm lg:text-base text-[#000000] leading-relaxed">
+                  Led by a Professional Electronics Engineer and supported by
+                  certified engineers, technicians, and instructors with strong
+                  industry and academic backgrounds.
                 </p>
               </div>
 
               {/* FEATURE 3: QUALITY TRAINING */}
               <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
-                <h3 className="text-lg lg:text-xl font-bold text-gray-900 mb-2">
+                <h3 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
                   Quality Training
                 </h3>
-                <p className="text-sm lg:text-base text-gray-600 leading-relaxed">
-                  We offer face-to-face and online training programs aligned with industry standards and globally recognized certifications.
+                <p className="text-sm lg:text-base text-[#000000] leading-relaxed">
+                  We offer face-to-face and online training programs aligned
+                  with industry standards and globally recognized
+                  certifications.
                 </p>
               </div>
 
               {/* FEATURE 4: END-TO-END APPROACH */}
               <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
-                <h3 className="text-lg lg:text-xl font-bold text-gray-900 mb-2">
+                <h3 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
                   End-to-End Approach
                 </h3>
-                <p className="text-sm lg:text-base text-gray-600 leading-relaxed">
-                  We follow the Plan, Build, Operate, Optimize, and Test (PBOOT) methodology to ensure structured and effective delivery of ICT solutions.
+                <p className="text-sm lg:text-base text-[#000000] leading-relaxed">
+                  We follow the Plan, Build, Operate, Optimize, and Test (PBOOT)
+                  methodology to ensure structured and effective delivery of ICT
+                  solutions.
                 </p>
               </div>
 
               {/* FEATURE 5: INNOVATION & INTEGRITY */}
               <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
-                <h3 className="text-lg lg:text-xl font-bold text-gray-900 mb-2">
+                <h3 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
                   Innovation & Integrity
                 </h3>
-                <p className="text-sm lg:text-base text-gray-600 leading-relaxed">
-                  Our work is guided by core values that emphasize innovation, ethical practices, excellence, collaboration, and continuous improvement.
+                <p className="text-sm lg:text-base text-[#000000] leading-relaxed">
+                  Our work is guided by core values that emphasize innovation,
+                  ethical practices, excellence, collaboration, and continuous
+                  improvement.
                 </p>
               </div>
-
             </div>
           </div>
         </div>
