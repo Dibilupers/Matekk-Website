@@ -150,11 +150,11 @@ export default function Home() {
       <section className="flex bg-[#EBF5FD] justify-center items-center text-center py-10">
         <div className="mx-[2.063rem] md:mx-16 space-y-5">
           <div>
-            <div className="flex flex-col md:flex-row justify-center items-center space-x-2 text-xl sm:text-2xl md:text-3xl lg:text-2xl xl:text-[2rem] 2xl:text-[2.5rem] font-bold">
-              <h3 className="">Trusted by Our</h3>
+            <div className="flex flex-col md:flex-row justify-center items-center space-x-2 font-bold text-3xl">
+              <h3>Trusted by Our</h3>
               <h3 className="text-[#1775EE]">Customers & Partners</h3>
             </div>
-            <p className="text-[0.87rem] sm:text-[1rem] md:text-[0.93rem]">
+            <p>
               We collaborate with recognized technology partners to ensure
               quality, reliability, and up-to-date ICT solutions.
             </p>
