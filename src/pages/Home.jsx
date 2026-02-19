@@ -661,8 +661,8 @@ export default function Home() {
       </section>
 
       {/* Why Choose MGKK ICT Services */}
-      <section className="py-16 lg:py-20 bg-[#EBF5FD]">
-        <div className="mx-4 sm:mx-6 lg:mx-[7.438rem]">
+      <section className="py-16 lg:py-20 bg-[#EBF5FD] ">
+        <div className="mx-[2.063rem] lg:mx-[7.438rem]">
           <div className="mb-12 lg:mb-16 text-left md:text-center sm:text-left lg:text-left">
             <h2 className="text-3xl lg:text-3xl font-bold leading-tight text-[#000000]">
               Why Choose <span className="text-[#1775EE]">MGKK</span>
