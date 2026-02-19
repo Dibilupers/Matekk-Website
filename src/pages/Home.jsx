@@ -263,7 +263,7 @@ export default function Home() {
       </section>
 
       {/* Services we provide */}
-      <section className="flex flex-col p-10 h-full mx-[2.063rem] lg:mx-[7.438rem]">
+      <section className="flex flex-col py-10 h-full mx-[2.063rem] lg:mx-[7.438rem]">
         <div className="text-center w-[60vw] sm:w-[27vw] self-center md:w-auto lg:w-auto">
           <h3>
             Services We Provide to
@@ -747,159 +747,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured Solutions */}
-      <section className="flex flex-col p-10 h-full mx-[2.063rem] lg:mx-[7.438rem]">
-        <div className="text-center w-[65vw] self-center sm:w-[45vw] md:w-auto lg:w-auto">
-          <h3>
-            Our Featured
-            <span className="text-[#1775EE]"> Solutions and Training</span>
-          </h3>
-        </div>
-        <p className="w-[90vw] md:w-[56.406vw] xl:w-[60vw] self-center mt-[1.1vh] text-center">
-          MGKK Information Communication Technology Services delivers end-to-end
-          ICT and engineering solutions alongside comprehensive training
-          programs designed to meet industry demands and support digital
-          transformation.
-        </p>
-        {/* Gallery */}
-        <div className="mt-[4vh]">
-          {isMobile ? (
-            /* ── MOBILE ── */
-            /* ── MOBILE: single column ── */
-            <div className="flex flex-col gap-3">
-              {galleryItems.map((item) => (
-                <div
-                  key={item.id}
-                  onClick={() =>
-                    setTappedCard(tappedCard === item.id ? null : item.id)
-                  }
-                  className="relative self-center rounded-2xl overflow-hidden cursor-pointer w-[90vw] h-[30vh]"
-                >
-                  <img
-                    src={item.src}
-                    alt={item.alt}
-                    className="w-full h-full object-cover"
-                  />
-
-                  {/* Full blur overlay */}
-                  <div
-                    className={`absolute inset-0 rounded-2xl backdrop-blur-[8px] bg-black/1 transition-opacity duration-500 ${
-                      tappedCard === item.id ? "opacity-100" : "opacity-0"
-                    }`}
-                  />
-
-                  {/* Content */}
-                  <div
-                    className={`absolute inset-0 px-5 flex flex-col justify-center transition-opacity duration-500 ${
-                      tappedCard === item.id ? "opacity-100" : "opacity-0"
-                    }`}
-                  >
-                    {/* Title row */}
-                    <div className="flex items-center justify-between gap-2">
-                      <h5 className="text-white leading-tight flex-1">
-                        {item.title}
-                      </h5>
-                      <Link
-                        to={item.link}
-                        onClick={(e) => e.stopPropagation()}
-                        className="flex-shrink-0 flex items-center justify-center"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="w-7 h-7 text-white"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M7 17L17 7M17 7H7M17 7v10"
-                          />
-                        </svg>
-                      </Link>
-                    </div>
-
-                    {/* Description below title */}
-                    <p className="text-white/80 mt-2 line-clamp-3">
-                      {item.desc}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            /* ── DESKTOP/TABLET ── */
-            <div className="flex flex-col gap-3">
-              {rows.map((row, rowIndex) => (
-                <div
-                  key={rowIndex}
-                  onMouseEnter={() => setHoveredRow(rowIndex)}
-                  onMouseLeave={() => setHoveredRow(null)}
-                  className="flex gap-3 transition-all duration-500 ease-in-out"
-                  style={{
-                    height:
-                      hoveredRow === rowIndex
-                        ? "340px"
-                        : hoveredRow !== null
-                          ? "220px"
-                          : "280px",
-                  }}
-                >
-                  {row.map((item) => (
-                    <div
-                      key={item.id}
-                      className="group relative rounded-2xl overflow-hidden cursor-pointer flex-1 transition-all duration-500 ease-in-out hover:flex-[2]"
-                    >
-                      <img
-                        src={item.src}
-                        alt={item.alt}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-
-                      {/* Blur */}
-                      <div className="absolute inset-x-0 bottom-0 h-[35%] bg-black/1 to-transparent backdrop-blur-[10px] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                      {/* Content */}
-                      <div className="absolute bottom-0 inset-x-0 px-4 py-6 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
-                        <div className="flex items-end justify-between gap-3">
-                          <div className="flex-1">
-                            <h5 className="text-white font-bold">
-                              {item.title}
-                            </h5>
-                            <p className="text-white/80 mt-1 line-clamp-2">
-                              {item.desc}
-                            </p>
-                          </div>
-                          <div className="flex-shrink-0 flex items-center justify-center">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="w-12 h-12 text-white"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M7 17L17 7M17 7H7M17 7v10"
-                              />
-                            </svg>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
-
-           {/* Our Working Process */}
+      {/* Our Working Process */}
       <section className="py-16 lg:py-20 bg-white">
         {/* 
           ADJUST SECTION PADDING:
@@ -907,7 +755,6 @@ export default function Home() {
           - bg-white = background color (change to bg-gray-50 for light gray)
         */}
         <div className="mx-4 sm:mx-6 lg:mx-[7.438rem]">
-          
           {/* ==================== SECTION HEADING ==================== */}
           <div className="text-center mb-12 lg:mb-16">
             {/* 
@@ -920,7 +767,7 @@ export default function Home() {
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900">
               Our <span className="text-[#1775EE]">Working Process</span>
             </h2>
-            
+
             {/* 
               ADJUST DESCRIPTION:
               - text-base lg:text-lg = font size
@@ -930,7 +777,8 @@ export default function Home() {
               - mx-auto = centers the text
             */}
             <p className="text-base lg:text-lg text-gray-600 mt-4 max-w-2xl mx-auto">
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+              Lorem Ipsum is simply dummy text of the printing and typesetting
+              industry.
             </p>
           </div>
 
@@ -942,7 +790,6 @@ export default function Home() {
             - hidden lg:block = shows connecting line only on desktop
           */}
           <div className="relative">
-            
             {/* Desktop Version - Horizontal Timeline */}
             <div className="hidden lg:block relative">
               {/* 
@@ -951,14 +798,14 @@ export default function Home() {
                 - Curved connecting lines using SVG
                 - Staggered vertical positioning for visual flow
               */}
-              
+
               {/* Container for all steps with relative positioning */}
               <div className="relative h-[500px]">
                 {/* 
                   ADJUST CONTAINER HEIGHT:
                   - h-[500px] = total height (change to h-[400px] for shorter, h-[600px] for taller)
                 */}
-                
+
                 {/* SVG for Connecting Lines */}
                 {/* 
                   ADJUST LINES HERE:
@@ -971,29 +818,66 @@ export default function Home() {
                   - Change end point (final values)
                   - Adjust strokeWidth for thickness (currently 6)
                 */}
-                <svg className="absolute inset-0 w-full h-full z-0" viewBox="0 0 1200 500">
+                <svg
+                  className="absolute inset-0 w-full h-full z-0"
+                  viewBox="0 0 1200 500"
+                >
                   {/* Line 1: Initiation to Planning */}
                   {/* Start: top-left circle, End: 20% left circle */}
-                  <path d="M 1 5 C 120 100, 200 1, 335 110" stroke="#3B82F6" strokeWidth="8" fill="none" strokeLinecap="round" />
-                  
+                  <path
+                    d="M 1 5 C 120 100, 200 1, 335 110"
+                    stroke="#3B82F6"
+                    strokeWidth="8"
+                    fill="none"
+                    strokeLinecap="round"
+                  />
+
                   {/* Line 2: Planning to Implementation */}
                   {/* Start: 20% circle, End: 40% circle */}
-                  <path d="M 350 120 C 430 130, 500 190, 600 150" stroke="#3B82F6" strokeWidth="8" fill="none" strokeLinecap="round" />
-                  
+                  <path
+                    d="M 350 120 C 430 130, 500 190, 600 150"
+                    stroke="#3B82F6"
+                    strokeWidth="8"
+                    fill="none"
+                    strokeLinecap="round"
+                  />
+
                   {/* Line 3: Implementation to Monitor */}
                   {/* Start: 40% circle, End: 60% circle */}
-                  <path d="M 600 190 C 600 130, 800 200, 860 200" stroke="#3B82F6" strokeWidth="8" fill="none" strokeLinecap="round" />
-                  
+                  <path
+                    d="M 600 190 C 600 130, 800 200, 860 200"
+                    stroke="#3B82F6"
+                    strokeWidth="8"
+                    fill="none"
+                    strokeLinecap="round"
+                  />
+
                   {/* Line 4: Monitor to Optimization */}
                   {/* Start: 60% circle, End: right circle */}
-                  <path d="M 830 200 C 800 130, 845 350, 1500 275" stroke="#3B82F6" strokeWidth="8" fill="none" strokeLinecap="round" />
+                  <path
+                    d="M 830 200 C 800 130, 845 350, 1500 275"
+                    stroke="#3B82F6"
+                    strokeWidth="8"
+                    fill="none"
+                    strokeLinecap="round"
+                  />
                 </svg>
 
                 {/* Step 1: Initiation & Consultancy (Top Left) */}
                 <div className="absolute left-0 top-5 flex flex-col items-center max-w-[200px] z-10">
                   <div className="w-22 h-22 bg-blue-500 rounded-full flex items-center justify-center shadow-xl mb-4">
-                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    <svg
+                      className="w-10 h-10 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                      />
                     </svg>
                   </div>
                   <h3 className="text-lg font-bold text-gray-900 text-center mb-2">
@@ -1007,8 +891,18 @@ export default function Home() {
                 {/* Step 2: Planning & Design (Lower position) */}
                 <div className="absolute left-[20%] top-[75px] flex flex-col items-center max-w-[200px] z-10">
                   <div className="w-22 h-22 bg-blue-500 rounded-full flex items-center justify-center shadow-xl mb-4">
-                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
+                    <svg
+                      className="w-10 h-10 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"
+                      />
                     </svg>
                   </div>
                   <h3 className="text-lg font-bold text-gray-900 text-center mb-2">
@@ -1022,9 +916,24 @@ export default function Home() {
                 {/* Step 3: Implementation (Middle) */}
                 <div className="absolute left-[40%] top-[130px] flex flex-col items-center max-w-[200px] z-10">
                   <div className="w-22 h-22 bg-blue-500 rounded-full flex items-center justify-center shadow-xl mb-4">
-                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <svg
+                      className="w-10 h-10 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
                     </svg>
                   </div>
                   <h3 className="text-lg font-bold text-gray-900 text-center mb-2">
@@ -1038,8 +947,18 @@ export default function Home() {
                 {/* Step 4: Monitor and Control (Lower right) */}
                 <div className="absolute left-[60%] top-[160px] flex flex-col items-center max-w-[200px] z-10">
                   <div className="w-22 h-22 bg-blue-500 rounded-full flex items-center justify-center shadow-xl mb-4">
-                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    <svg
+                      className="w-10 h-10 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                      />
                     </svg>
                   </div>
                   <h3 className="text-lg font-bold text-gray-900 text-center mb-2">
@@ -1053,8 +972,18 @@ export default function Home() {
                 {/* Step 5: Optimization (Bottom Right) */}
                 <div className="absolute right-0 top-[230px] flex flex-col items-center max-w-[200px] z-10">
                   <div className="w-22 h-22 bg-blue-500 rounded-full flex items-center justify-center shadow-xl mb-4">
-                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    <svg
+                      className="w-10 h-10 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                      />
                     </svg>
                   </div>
                   <h3 className="text-lg font-bold text-gray-900 text-center mb-2">
@@ -1064,7 +993,6 @@ export default function Home() {
                     Improve systems through testing and refinement.
                   </p>
                 </div>
-
               </div>
             </div>
 
@@ -1075,13 +1003,22 @@ export default function Home() {
               - space-y-8 = vertical spacing between steps
             */}
             <div className="lg:hidden space-y-8">
-              
               {/* Step 1: Initiation & Consultancy */}
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0">
                   <div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
-                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    <svg
+                      className="w-10 h-10 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                      />
                     </svg>
                   </div>
                 </div>
@@ -1104,8 +1041,18 @@ export default function Home() {
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0">
                   <div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
-                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
+                    <svg
+                      className="w-10 h-10 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"
+                      />
                     </svg>
                   </div>
                 </div>
@@ -1128,9 +1075,24 @@ export default function Home() {
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0">
                   <div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
-                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <svg
+                      className="w-10 h-10 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
                     </svg>
                   </div>
                 </div>
@@ -1153,8 +1115,18 @@ export default function Home() {
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0">
                   <div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
-                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    <svg
+                      className="w-10 h-10 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                      />
                     </svg>
                   </div>
                 </div>
@@ -1177,8 +1149,18 @@ export default function Home() {
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0">
                   <div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
-                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    <svg
+                      className="w-10 h-10 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                      />
                     </svg>
                   </div>
                 </div>
@@ -1192,7 +1174,160 @@ export default function Home() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
 
+      {/* Featured Solutions */}
+      <section className="flex flex-col py-10 h-full bg-[#EBF5FD]">
+        <div className="mx-[2.063rem] lg:mx-[7.438rem]">
+          <div className="text-center w-[65vw] self-center sm:w-[45vw] md:w-auto lg:w-auto">
+            <h3>
+              Our Featured
+              <span className="text-[#1775EE]"> Solutions and Training</span>
+            </h3>
+          </div>
+          <p className="w-[90vw] md:w-[56.406vw] xl:w-[60vw] self-center mx-auto mt-[1.1vh] text-center">
+            MGKK Information Communication Technology Services delivers
+            end-to-end ICT and engineering solutions alongside comprehensive
+            training programs designed to meet industry demands and support
+            digital transformation.
+          </p>
+          {/* Gallery */}
+          <div className="mt-[4vh]">
+            {isMobile ? (
+              /* ── MOBILE ── */
+              /* ── MOBILE: single column ── */
+              <div className="flex flex-col gap-3">
+                {galleryItems.map((item) => (
+                  <div
+                    key={item.id}
+                    onClick={() =>
+                      setTappedCard(tappedCard === item.id ? null : item.id)
+                    }
+                    className="relative self-center rounded-2xl overflow-hidden cursor-pointer w-[90vw] h-[30vh]"
+                  >
+                    <img
+                      src={item.src}
+                      alt={item.alt}
+                      className="w-full h-full object-cover"
+                    />
+
+                    {/* Full blur overlay */}
+                    <div
+                      className={`absolute inset-0 rounded-2xl backdrop-blur-[8px] bg-black/1 transition-opacity duration-500 ${
+                        tappedCard === item.id ? "opacity-100" : "opacity-0"
+                      }`}
+                    />
+
+                    {/* Content */}
+                    <div
+                      className={`absolute inset-0 px-5 flex flex-col justify-center transition-opacity duration-500 ${
+                        tappedCard === item.id ? "opacity-100" : "opacity-0"
+                      }`}
+                    >
+                      {/* Title row */}
+                      <div className="flex items-center justify-between gap-2">
+                        <h5 className="text-white leading-tight flex-1">
+                          {item.title}
+                        </h5>
+                        <Link
+                          to={item.link}
+                          onClick={(e) => e.stopPropagation()}
+                          className="flex-shrink-0 flex items-center justify-center"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="w-7 h-7 text-white"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M7 17L17 7M17 7H7M17 7v10"
+                            />
+                          </svg>
+                        </Link>
+                      </div>
+
+                      {/* Description below title */}
+                      <p className="text-white/80 mt-2 line-clamp-3">
+                        {item.desc}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              /* ── DESKTOP/TABLET ── */
+              <div className="flex flex-col gap-3">
+                {rows.map((row, rowIndex) => (
+                  <div
+                    key={rowIndex}
+                    onMouseEnter={() => setHoveredRow(rowIndex)}
+                    onMouseLeave={() => setHoveredRow(null)}
+                    className="flex gap-3 transition-all duration-500 ease-in-out"
+                    style={{
+                      height:
+                        hoveredRow === rowIndex
+                          ? "340px"
+                          : hoveredRow !== null
+                            ? "220px"
+                            : "280px",
+                    }}
+                  >
+                    {row.map((item) => (
+                      <div
+                        key={item.id}
+                        className="group relative rounded-2xl overflow-hidden cursor-pointer flex-1 transition-all duration-500 ease-in-out hover:flex-[2]"
+                      >
+                        <img
+                          src={item.src}
+                          alt={item.alt}
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+
+                        {/* Blur */}
+                        <div className="absolute inset-x-0 bottom-0 h-[35%] bg-black/1 to-transparent backdrop-blur-[10px] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                        {/* Content */}
+                        <div className="absolute bottom-0 inset-x-0 px-4 py-6 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
+                          <div className="flex items-end justify-between gap-3">
+                            <div className="flex-1">
+                              <h5 className="text-white font-bold">
+                                {item.title}
+                              </h5>
+                              <p className="text-white/80 mt-1 line-clamp-2">
+                                {item.desc}
+                              </p>
+                            </div>
+                            <div className="flex-shrink-0 flex items-center justify-center">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="w-12 h-12 text-white"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M7 17L17 7M17 7H7M17 7v10"
+                                />
+                              </svg>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </section>
