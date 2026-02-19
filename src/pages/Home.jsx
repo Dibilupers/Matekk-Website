@@ -56,7 +56,7 @@ export default function Home() {
                 </button>
               </div>
 
-              <div className="flex flex-nowrap justify-start lg:justify-start items-center gap-4 lg:gap-8 pt-6">
+              <div className="flex flex-nowrap justify-start lg:justify-start items-center gap-2 lg:gap-8 pt-6">
                 <div className="flex items-center gap-1">
                   <h2 className="text-3xl lg:text-5xl font-bold text-gray-900">13+</h2>
                   <div className="text-xs lg:text-sm text-gray-600 leading-tight">
