@@ -4,12 +4,21 @@ import Partners from "../components/partners/partners";
 import { Link } from "react-router-dom";
 import ictImage from "../assets/ict.png";
 import webImage from "../assets/web.png";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Home() {
   const totalSlides = 3;
+  const totalMobileSlides = 4;
+  const totalMobileBottomSlides = 4;
   const [topSlide, setTopSlide] = useState(0);
   const [bottomSlide, setBottomSlide] = useState(0);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
     <main>
@@ -24,7 +33,7 @@ export default function Home() {
           - px-4 sm:px-6 lg:px-8 = side padding
           - py-12 lg:py-8 = top/bottom padding (increase for more space)
         */}
-         <div className="mx-4 sm:mx-6 lg:mx-[7.438rem]">
+        <div className="mx-4 sm:mx-6 lg:mx-[7.438rem]">
           {/* 
             ADJUST GRID LAYOUT:
             - gap-8 lg:gap-16 = space between left and right columns
@@ -53,7 +62,6 @@ export default function Home() {
 
               {/* ==================== CTA BUTTONS ==================== */}
               <div className="flex sm:flex-row gap-3 sm:gap-4 justify-left lg:justify-start">
-
                 <button className="px-3 py-3 sm:px-8 sm:py-4 bg-blue-600 text-white rounded-full font-medium hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl text-sm sm:text-base">
                   Explore Our Solutions
                 </button>
@@ -110,14 +118,13 @@ export default function Home() {
               </div>
             </div>
 
-              {/* ==================== RIGHT SIDE - IMAGE & OVERLAYS ==================== */} 
+            {/* ==================== RIGHT SIDE - IMAGE & OVERLAYS ==================== */}
             <div className="hidden lg:flex relative lg:h-[600px] items-center justify-center">
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="w-[500px] h-[500px] bg-gradient-to-br from-blue-300 via-blue-400 to-blue-500 rounded-full opacity-20 blur-3xl"></div>
               </div>
 
               <div className="relative w-full max-w-md">
-
                 <div className="absolute top-45 left-4 lg:-left-30 bg-[#EBF5FD] rounded-2xl shadow-2xl px-4 py-4 z-20 hover:scale-105 transition-transform">
                   <div className="flex justify-center items-center gap-3">
                     <p className="text-4xl font-bold text-[#1775EE]">95%</p>
@@ -147,7 +154,7 @@ export default function Home() {
                     className="w-full h-auto aspect-[4/5] object-cover"
                   />
                 </div>
-                
+
                 <div className="absolute top-28 right-2 lg:right-15 bg-[#7DB6FF] p-2 lg:p-3 rounded-full shadow-lg hover:scale-110 transition-transform">
                   <Settings className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
                 </div>
@@ -208,9 +215,10 @@ export default function Home() {
           <Partners />
         </div>
       </section>
+
       {/* Services we provide */}
-      <section className="flex flex-col p-10 h-full">
-        <div className="text-center">
+      <section className="flex flex-col p-10 h-full w-full">
+        <div className="text-center w-[27vh] self-center md:w-auto lg:w-auto">
           <h2 className="font-bold text-3xl">
             Services We Provide to
             <span className="text-[#1775EE] font-rubik font-bold text-3xl">
@@ -219,7 +227,7 @@ export default function Home() {
             </span>
           </h2>
         </div>
-        <p className="font-poppins text-sm w-[56.406vw] self-center mt-[1.1vh] text-center">
+        <p className="font-poppins text-sm w-[70vw] md:w-[56.406vw] xl:w-[56.406vw] self-center mt-[1.1vh] text-center">
           MGKK Information Communication Technology Services delivers end-to-end
           ICT and engineering solutions alongside comprehensive training
           programs designed to meet industry demands and support digital
@@ -227,17 +235,17 @@ export default function Home() {
         </p>
 
         {/* ── TOP CAROUSEL ── */}
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-center items-center gap-10 mt-[6vh]">
+        <div className="max-w-6xl mx-1 flex flex-col md:flex-row justify-center items-center gap-10 mt-[6vh] md:mx-auto lg:mx-auto">
           {/* Controls — LEFT */}
-          <div className="flex flex-col relative w-[20vw] h-[46.8vh] self-start gap-y-[1vh]">
-            <div className="absolute -top-10 -left-10 w-72 h-72 bg-[#C2DDFF] opacity-50 rounded-full blur-3xl -z-10" />
-            <p className="font-inter text-sm bg-[#EBF5FD] border border-[#EBF5FD] rounded-full py-[0.7vh] px-[0.781vw] w-[6.323vw] text-center shadow-[0_0_14px_rgba(0,0,0,0.25)]">
+          <div className="flex flex-col relative md:w-[20vw] self-start gap-y-[1vh]">
+            <div className="absolute -top-10 md:-left-10 w-90 h-90 md:w-72 md:h-72 bg-[#C2DDFF] opacity-50 rounded-full blur-3xl -z-10" />
+            <p className="font-inter text-sm bg-[#EBF5FD] border border-[#EBF5FD] rounded-full py-[0.7vh] px-[0.781vw] w-[20vw] md:w-[8.323vw] xl:w-[6.323vw] text-center shadow-[0_0_14px_rgba(0,0,0,0.25)]">
               Solutions
             </p>
-            <h1 className="font-rubik font-bold text-2xl">
+            <h1 className="font-rubik font-bold text-2xl w-[50vw] md:w-auto">
               End-to-End ICT & Engineering Solutions
             </h1>
-            <p className="font-poppins text-sm mb-[3vh]">
+            <p className="font-poppins text-sm mb-[1.5vh] md:mb-[3vh]">
               We provide ICT consultancy and engineering solutions focused on
               planning, building, operating, optimizing, and testing technology
               systems.
@@ -265,9 +273,16 @@ export default function Home() {
               </button>
               <button
                 onClick={() =>
-                  setTopSlide((prev) => Math.min(prev + 1, totalSlides - 1))
+                  setTopSlide((prev) =>
+                    Math.min(
+                      prev + 1,
+                      (isMobile ? totalMobileSlides : totalSlides) - 1,
+                    ),
+                  )
                 }
-                disabled={topSlide === totalSlides - 1}
+                disabled={
+                  topSlide === (isMobile ? totalMobileSlides : totalSlides) - 1
+                }
                 className="w-12 h-12 flex items-center justify-center rounded-full border border-[#1775EE] bg-white text-[#1775EE] transition-all duration-300 hover:bg-[#1775EE] hover:text-white disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 <svg
@@ -289,15 +304,18 @@ export default function Home() {
           </div>
 
           {/* Viewport */}
-          <div className="overflow-hidden w-[52vw]">
+          <div className="overflow-hidden w-[85vw] md:w-[52vw]">
             <div
               className="flex gap-x-10 transition-transform duration-500 ease-in-out"
               style={{
-                transform: `translateX(calc(-${topSlide} * (24vw + 2.5rem)))`,
+                transform:
+                  window.innerWidth < 768
+                    ? `translateX(calc(-${topSlide} * (85vw + 2.5rem)))`
+                    : `translateX(calc(-${topSlide} * (24vw + 2.5rem)))`,
               }}
             >
               {/* Card 1 */}
-              <div className="group relative flex-shrink-0 w-[24vw] rounded-xl overflow-hidden h-[56.8vh]">
+              <div className="group relative flex-shrink-0 w-[85vw] md:w-[24vw] rounded-xl overflow-hidden">
                 <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
                 <div className="absolute inset-0 bg-gradient-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
@@ -324,7 +342,7 @@ export default function Home() {
               </div>
 
               {/* Card 2 */}
-              <div className="group relative flex-shrink-0 w-[24vw] rounded-xl overflow-hidden h-[56.8vh]">
+              <div className="group relative flex-shrink-0 w-[85vw] md:w-[24vw] rounded-xl overflow-hidden">
                 <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
                 <div className="absolute inset-0 bg-gradient-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
@@ -350,7 +368,7 @@ export default function Home() {
               </div>
 
               {/* Card 3 */}
-              <div className="group relative flex-shrink-0 w-[24vw] rounded-xl overflow-hidden h-[56.8vh]">
+              <div className="group relative flex-shrink-0 w-[85vw] md:w-[24vw] rounded-xl overflow-hidden">
                 <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
                 <div className="absolute inset-0 bg-gradient-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
@@ -376,7 +394,7 @@ export default function Home() {
               </div>
 
               {/* Card 4 */}
-              <div className="group relative flex-shrink-0 w-[24vw] rounded-xl overflow-hidden h-[56.8vh]">
+              <div className="group relative flex-shrink-0 w-[85vw] md:w-[24vw] rounded-xl overflow-hidden">
                 <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
                 <div className="absolute inset-0 bg-gradient-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
@@ -406,7 +424,9 @@ export default function Home() {
 
         {/* Top Dot Indicators */}
         <div className="flex justify-center gap-x-2 mt-6">
-          {Array.from({ length: totalSlides }).map((_, i) => (
+          {Array.from({
+            length: window.innerWidth < 768 ? totalMobileSlides : totalSlides,
+          }).map((_, i) => (
             <button
               key={i}
               onClick={() => setTopSlide(i)}
@@ -418,22 +438,93 @@ export default function Home() {
         </div>
 
         {/* ── BOTTOM CAROUSEL ── */}
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-center items-center gap-10 mt-[8vh]">
-          {/* Viewport — comes FIRST in DOM so it sits on the LEFT visually */}
-          <div className="overflow-hidden w-[52vw]">
-            {/*
-        Cards are ordered RIGHT-TO-LEFT visually:
-        We use flex-row-reverse so Card 1 appears on the right,
-        and we translate in the POSITIVE direction to slide left.
-      */}
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-center items-center gap-10 mt-[4vh] md:mt-[8vh]">
+          {/* Controls — on mobile: top + right-aligned | on desktop: right column */}
+          <div className="flex flex-col relative w-full md:w-[20vw] self-start gap-y-[1vh] items-end text-right order-first md:order-last">
+            <div className="absolute -top-10 -right-10 w-72 h-72 bg-[#C2DDFF] opacity-50 rounded-full blur-3xl -z-10" />
+            <p className="font-inter text-sm bg-[#EBF5FD] border border-[#EBF5FD] rounded-full py-[0.7vh] w-auto md:w-[7.323vw] px-4 text-center shadow-[0_0_14px_rgba(0,0,0,0.25)]">
+              Training
+            </p>
+            <h1 className="font-rubik font-bold text-2xl w-[50vw] md:w-auto text-right">
+              ICT Training & Skills Development
+            </h1>
+            <p className="font-poppins text-sm mb-[1vh] md:mb-[3vh] w-[85vw] md:w-auto">
+              We offers face-to-face and online training programs designed to
+              equip individuals and organizations with cutting-edge
+              technological knowledge and practical skills.
+            </p>
+            <div className="flex flex-row gap-x-[2vh]">
+              <button
+                onClick={() =>
+                  setBottomSlide((prev) =>
+                    Math.min(
+                      prev + 1,
+                      (window.innerWidth < 768
+                        ? totalMobileBottomSlides
+                        : totalSlides) - 1,
+                    ),
+                  )
+                }
+                disabled={
+                  bottomSlide ===
+                  (window.innerWidth < 768
+                    ? totalMobileBottomSlides
+                    : totalSlides) -
+                    1
+                }
+                className="w-12 h-12 flex items-center justify-center rounded-full border border-[#1775EE] bg-white text-[#1775EE] transition-all duration-300 hover:bg-[#1775EE] hover:text-white disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
+              </button>
+              <button
+                onClick={() => setBottomSlide((prev) => Math.max(prev - 1, 0))}
+                disabled={bottomSlide === 0}
+                className="w-12 h-12 flex items-center justify-center rounded-full border border-[#1775EE] bg-white text-[#1775EE] transition-all duration-300 hover:bg-[#1775EE] hover:text-white disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          {/* Viewport */}
+          <div className="overflow-hidden w-[85vw] md:w-[52vw] order-last md:order-first">
             <div
               className="flex flex-row-reverse gap-x-10 transition-transform duration-500 ease-in-out"
               style={{
-                transform: `translateX(calc(${bottomSlide} * (24vw + 2.5rem)))`,
+                transform:
+                  window.innerWidth < 768
+                    ? `translateX(calc(${bottomSlide} * (85vw + 2.5rem)))`
+                    : `translateX(calc(${bottomSlide} * (24vw + 2.5rem)))`,
               }}
             >
               {/* Card 4 */}
-              <div className="group relative flex-shrink-0 w-[24vw] rounded-xl overflow-hidden h-[56.8vh]">
+              <div className="group relative flex-shrink-0 w-[85vw] md:w-[24vw] rounded-xl overflow-hidden">
                 <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
                 <div className="absolute inset-0 bg-gradient-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
@@ -445,12 +536,12 @@ export default function Home() {
                     />
                   </div>
                   <h1 className="font-inter font-bold text-xl">
-                    Training & Development
+                    Cybersecurity Training
                   </h1>
                   <p className="font-poppins text-sm mb-[3vh]">
-                    MGKK offers comprehensive ICT training programs tailored to
-                    industry demands, equipping professionals with the skills
-                    needed to thrive in a rapidly evolving digital landscape.
+                    Our cybersecurity training covers cybersecurity
+                    fundamentals, ethical hacking, vulnerability assessment and
+                    penetration testing (VAPT), and risk management.
                   </p>
                   <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
                     See more
@@ -459,7 +550,7 @@ export default function Home() {
               </div>
 
               {/* Card 3 */}
-              <div className="group relative flex-shrink-0 w-[24vw] rounded-xl overflow-hidden h-[56.8vh]">
+              <div className="group relative flex-shrink-0 w-[85vw] md:w-[24vw] rounded-xl overflow-hidden">
                 <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
                 <div className="absolute inset-0 bg-gradient-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
@@ -471,12 +562,12 @@ export default function Home() {
                     />
                   </div>
                   <h1 className="font-inter font-bold text-xl">
-                    Network Infrastructure
+                    Cloud Computing Training
                   </h1>
                   <p className="font-poppins text-sm mb-[3vh]">
-                    We design and deploy robust network infrastructure solutions
-                    that ensure seamless connectivity, security, and scalability
-                    for businesses of all sizes.
+                    We provide cloud computing training on platforms such as
+                    AWS, Microsoft Azure, and Google Cloud through face-to-face
+                    and online programs.
                   </p>
                   <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
                     See more
@@ -485,7 +576,7 @@ export default function Home() {
               </div>
 
               {/* Card 2 */}
-              <div className="group relative flex-shrink-0 w-[24vw] rounded-xl overflow-hidden h-[56.8vh]">
+              <div className="group relative flex-shrink-0 w-[85vw] md:w-[24vw] rounded-xl overflow-hidden">
                 <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
                 <div className="absolute inset-0 bg-gradient-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
@@ -511,7 +602,7 @@ export default function Home() {
               </div>
 
               {/* Card 1 */}
-              <div className="group relative flex-shrink-0 w-[24vw] rounded-xl overflow-hidden h-[56.8vh]">
+              <div className="group relative flex-shrink-0 w-[85vw] md:w-[24vw] rounded-xl overflow-hidden">
                 <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
                 <div className="absolute inset-0 bg-gradient-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
@@ -538,73 +629,14 @@ export default function Home() {
               </div>
             </div>
           </div>
-
-          {/* Controls — RIGHT */}
-          <div className="flex flex-col relative w-[20vw] h-[46.8vh] self-start gap-y-[1vh] items-end text-right">
-            <div className="absolute -top-10 -right-10 w-72 h-72 bg-[#C2DDFF] opacity-50 rounded-full blur-3xl -z-10" />
-            <p className="font-inter text-sm bg-[#EBF5FD] border border-[#EBF5FD] rounded-full py-[0.7vh] px-[0.781vw] w-[6.323vw] text-center shadow-[0_0_14px_rgba(0,0,0,0.25)]">
-              Solutions
-            </p>
-            <h1 className="font-rubik font-bold text-2xl">
-              End-to-End ICT & Engineering Solutions
-            </h1>
-            <p className="font-poppins text-sm mb-[3vh]">
-              We provide ICT consultancy and engineering solutions focused on
-              planning, building, operating, optimizing, and testing technology
-              systems.
-            </p>
-            <div className="flex flex-row gap-x-[2vh]">
-              {/* Left arrow → slides cards to the RIGHT (reveal previous) */}
-              <button
-                onClick={() =>
-                  setBottomSlide((prev) => Math.min(prev + 1, totalSlides - 1))
-                }
-                disabled={bottomSlide === totalSlides - 1}
-                className="w-12 h-12 flex items-center justify-center rounded-full border border-[#1775EE] bg-white text-[#1775EE] transition-all duration-300 hover:bg-[#1775EE] hover:text-white disabled:opacity-30 disabled:cursor-not-allowed"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-5 h-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15 19l-7-7 7-7"
-                  />
-                </svg>
-              </button>
-              {/* Right arrow → slides cards to the LEFT (reveal next) */}
-              <button
-                onClick={() => setBottomSlide((prev) => Math.max(prev - 1, 0))}
-                disabled={bottomSlide === 0}
-                className="w-12 h-12 flex items-center justify-center rounded-full border border-[#1775EE] bg-white text-[#1775EE] transition-all duration-300 hover:bg-[#1775EE] hover:text-white disabled:opacity-30 disabled:cursor-not-allowed"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-5 h-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-              </button>
-            </div>
-          </div>
         </div>
 
         {/* Bottom Dot Indicators */}
         <div className="flex justify-center flex-row-reverse gap-x-2 mt-6">
-          {Array.from({ length: totalSlides }).map((_, i) => (
+          {Array.from({
+            length:
+              window.innerWidth < 768 ? totalMobileBottomSlides : totalSlides,
+          }).map((_, i) => (
             <button
               key={i}
               onClick={() => setBottomSlide(i)}
@@ -619,39 +651,38 @@ export default function Home() {
       {/* Why Choose MGKK ICT Services */}
       <section className="py-16 lg:py-20 bg-gray-50">
         <div className="mx-4 sm:mx-6 lg:mx-[7.438rem]">
-          
           {/* ==================== SECTION HEADING - AT TOP ==================== */}
           <div className="mb-12 lg:mb-16 text-center lg:text-left">
             <h2 className="text-3xl lg:text-3xl font-bold leading-tight text-gray-900">
-              Why Choose <span className="text-[#1775EE]">MGKK ICT Services?</span>
+              Why Choose{" "}
+              <span className="text-[#1775EE]">MGKK ICT Services?</span>
             </h2>
-            
+
             <p className="text-base lg:text-sm leading-relaxed text-gray-600 mt-4 max-w-133 mx-auto lg:mx-0 text-justify">
-              MGKK Information Communication Technology Services is committed to delivering reliable ICT solutions 
-              and high-quality training through experienced professionals, 
-              proven methodologies, and a strong focus on innovation, integrity, and excellence.
+              MGKK Information Communication Technology Services is committed to
+              delivering reliable ICT solutions and high-quality training
+              through experienced professionals, proven methodologies, and a
+              strong focus on innovation, integrity, and excellence.
             </p>
           </div>
-          
+
           {/* ==================== IMAGE AND FEATURES SIDE BY SIDE ==================== */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start">
+            {/* ==================== LEFT SIDE - IMAGE ==================== */}
+            <div className="order-2 lg:order-1">
+              <div className="relative max-w-lg mx-auto">
+                {/* Top-Right Corner Border */}
+                <div className="absolute -top-6 -right-6 w-50 h-50 border-t-6 border-r-6 border-blue-500 rounded-tr-3xl z-0"></div>
 
-          {/* ==================== LEFT SIDE - IMAGE ==================== */}
-          <div className="order-2 lg:order-1">
-            <div className="relative max-w-lg mx-auto">
-              {/* Top-Right Corner Border */}
-              <div className="absolute -top-6 -right-6 w-50 h-50 border-t-6 border-r-6 border-blue-500 rounded-tr-3xl z-0"></div>
-              
-              {/* Main Image */}
-              <img 
-                src="/src/assets/handshake.png" 
-                alt="Professional handshake - MGKK ICT Services team"
-                className="relative z-10 w-full h-auto rounded-3xl shadow-2xl object-cover aspect-[4/5]"
-              />
-              <div className="absolute -bottom-6 -left-6 w-50 h-50 border-b-6 border-l-6 border-blue-500 rounded-bl-3xl z-0"></div>
-              
+                {/* Main Image */}
+                <img
+                  src="/src/assets/handshake.png"
+                  alt="Professional handshake - MGKK ICT Services team"
+                  className="relative z-10 w-full h-auto rounded-3xl shadow-2xl object-cover aspect-[4/5]"
+                />
+                <div className="absolute -bottom-6 -left-6 w-50 h-50 border-b-6 border-l-6 border-blue-500 rounded-bl-3xl z-0"></div>
+              </div>
             </div>
-          </div>
 
             {/* ==================== RIGHT SIDE - FEATURES ==================== */}
             <div className="order-1 lg:order-2 space-y-4 lg:-mt-46">
@@ -661,17 +692,20 @@ export default function Home() {
                   Experience
                 </h3>
                 <p className="text-sm lg:text-base text-gray-600 leading-relaxed">
-                  Over a decade of providing ICT and engineering solutions and professional training since our establishment in 2013.
+                  Over a decade of providing ICT and engineering solutions and
+                  professional training since our establishment in 2013.
                 </p>
               </div>
 
               {/* FEATURE 2: EXPERTISE */}
               <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
                 <h3 className="text-lg lg:text-xl font-bold text-gray-900 mb-2">
-                  Expertise   
+                  Expertise
                 </h3>
                 <p className="text-sm lg:text-base text-gray-600 leading-relaxed">
-                  Led by a Professional Electronics Engineer and supported by certified engineers, technicians, and instructors with strong industry and academic backgrounds.
+                  Led by a Professional Electronics Engineer and supported by
+                  certified engineers, technicians, and instructors with strong
+                  industry and academic backgrounds.
                 </p>
               </div>
 
@@ -681,7 +715,9 @@ export default function Home() {
                   Quality Training
                 </h3>
                 <p className="text-sm lg:text-base text-gray-600 leading-relaxed">
-                  We offer face-to-face and online training programs aligned with industry standards and globally recognized certifications.
+                  We offer face-to-face and online training programs aligned
+                  with industry standards and globally recognized
+                  certifications.
                 </p>
               </div>
 
@@ -691,7 +727,9 @@ export default function Home() {
                   End-to-End Approach
                 </h3>
                 <p className="text-sm lg:text-base text-gray-600 leading-relaxed">
-                  We follow the Plan, Build, Operate, Optimize, and Test (PBOOT) methodology to ensure structured and effective delivery of ICT solutions.
+                  We follow the Plan, Build, Operate, Optimize, and Test (PBOOT)
+                  methodology to ensure structured and effective delivery of ICT
+                  solutions.
                 </p>
               </div>
 
@@ -701,10 +739,11 @@ export default function Home() {
                   Innovation & Integrity
                 </h3>
                 <p className="text-sm lg:text-base text-gray-600 leading-relaxed">
-                  Our work is guided by core values that emphasize innovation, ethical practices, excellence, collaboration, and continuous improvement.
+                  Our work is guided by core values that emphasize innovation,
+                  ethical practices, excellence, collaboration, and continuous
+                  improvement.
                 </p>
               </div>
-
             </div>
           </div>
         </div>
