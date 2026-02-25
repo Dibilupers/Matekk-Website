@@ -308,11 +308,14 @@ function NavBar() {
     <header
       className={`flex flex-row items-center justify-between py-4 bg-white sticky top-0 z-50 transition-shadow ${scrolled ? "shadow-md" : ""}`}
     >
-      <Link to="/" className="ml-[2.063rem] md:ml-[7.438rem]">
+      {/* ↓ changed md:ml-[7.438rem] → lg:ml-[7.438rem] */}
+      <Link to="/" className="ml-[2.063rem] lg:ml-[7.438rem]">
         LOGO
       </Link>
 
-      <nav className="space-x-8 hidden md:flex font-poppins items-center">
+      {/* Desktop Nav — only visible at lg and above */}
+      {/* ↓ changed hidden md:flex → hidden lg:flex */}
+      <nav className="space-x-8 hidden lg:flex font-poppins items-center">
         <button
           onClick={() => scrollToSection("home")}
           className="hover:text-[#1775EE] hover:font-bold transition-colors cursor-pointer"
@@ -550,14 +553,18 @@ function NavBar() {
         </button>
       </nav>
 
+      {/* Enroll Now — only visible at lg and above */}
+      {/* ↓ changed hidden md:flex → hidden lg:flex  |  md:mr-[7.438rem] → lg:mr-[7.438rem] */}
       <Link
         to="/enroll"
-        className="hidden md:flex mr-0 md:mr-[7.438rem] font-inter border-2 border-[#1775EE] text-[#1775EE] py-2 px-5.5 rounded-3xl hover:bg-blue-600 hover:text-white transition-colors duration-300"
+        className="hidden lg:flex mr-0 lg:mr-[7.438rem] font-inter border-2 border-[#1775EE] text-[#1775EE] py-2 px-5.5 rounded-3xl hover:bg-blue-600 hover:text-white transition-colors duration-300"
       >
         Enroll Now
       </Link>
-      {/* Mobile Hamburger */}
-      <div className="flex md:hidden mr-[2.063rem] justify-center items-center">
+
+      {/* Mobile + Tablet Hamburger — visible below lg */}
+      {/* ↓ changed flex md:hidden → flex lg:hidden */}
+      <div className="flex lg:hidden mr-[2.063rem] justify-center items-center">
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="focus:outline-none"

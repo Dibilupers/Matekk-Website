@@ -110,7 +110,7 @@ export default function Home() {
       {/* Hero Section */}
       <section
         id="home"
-        className="py-40 md:py-20 lg:py-0"
+        className="py-40 md:py-20 lg:py-0 scroll-mt-18"
       >
         <div className=" mx-[2.063rem] md:mx-16 lg:mx-[7.438rem]">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
@@ -252,7 +252,7 @@ export default function Home() {
       </section>
 
       {/* Trusted by our customers & clients */}
-      <section className="flex bg-[#EBF5FD] justify-center items-center text-center py-10" id="partners">
+      <section className="flex bg-[#EBF5FD] justify-center items-center text-center py-10 scroll-mt-18" id="partners">
         <div className="mx-[2.063rem] md:mx-16 space-y-4 md:space-y-7">
           <div>
             <div className="flex flex-col md:flex-row justify-center items-center space-x-2 font-bold text-3xl">
@@ -269,7 +269,7 @@ export default function Home() {
       </section>
 
       {/* Services we provide */}
-      <section className="flex flex-col py-10 h-full mx-[2.063rem] lg:mx-[7.438rem]">
+      <section id="services" className="flex flex-col py-10 h-full mx-[2.063rem] lg:mx-[7.438rem] scroll-mt-18">
         <div className="text-center w-[60vw] sm:w-[27vw] self-center md:w-auto lg:w-auto">
           <h3>
             Services We Provide to
@@ -665,7 +665,7 @@ export default function Home() {
       </section>
 
       {/* Why Choose MGKK ICT Services */}
-      <section className="py-16 lg:py-20 bg-[#EBF5FD] ">
+      <section className="py-16 lg:py-20 bg-[#EBF5FD] scroll-mt-18">
         <div className="mx-[2.063rem] lg:mx-[7.438rem]">
           <div className="mb-12 lg:mb-16 text-left md:text-center sm:text-left lg:text-left">
             <h3 className="text-3xl lg:text-3xl font-bold leading-tight text-[#000000]">
@@ -752,7 +752,7 @@ export default function Home() {
       </section>
 
       {/* Our Working Process */}
-      <section className="py-10 lg:py-10 bg-white">
+      <section className="py-10 lg:py-10 bg-white scroll-mt-18">
         <div className="mx-4 sm:mx-6 lg:mx-[7.438rem]">
           {/* ==================== SECTION HEADING ==================== */}
           <div className="text-right mb-12 lg:mb-16">
@@ -1151,7 +1151,7 @@ export default function Home() {
       </section>
 
       {/* Featured Solutions */}
-      <section className="flex flex-col py-10 h-full bg-[#EBF5FD]">
+      <section id="training" className="flex flex-col py-10 h-full bg-[#EBF5FD] scroll-mt-18">
         <div className="mx-[2.063rem] lg:mx-[7.438rem]">
           <div className="text-center w-[65vw] self-center sm:w-[45vw] md:w-auto lg:w-auto">
             <h3>
@@ -1303,10 +1303,10 @@ export default function Home() {
       </section>
 
       {/* About the Company */}
-      <section></section>
+      <section id="about" className="scroll-mt-18"></section>
 
       {/* Frequently Asked Questions */}
-      <section className="flex flex-col md:flex-col lg:flex-row xl:flex-row justify-center items-start bg-white pb-16 md:py-12 lg:py-20 space-y-0 sm:space-y-[-2rem] md:space-y-10 lg:space-y-0">
+      <section className="flex flex-col md:flex-col scroll-mt-18 lg:flex-row xl:flex-row justify-center items-start bg-white pb-16 md:py-12 lg:py-20 space-y-0 sm:space-y-[-2rem] md:space-y-10 lg:space-y-0">
         {" "}
         <div className="mr-[2.063rem] ml-[2.063rem] mb-6 md:mb-0 md:ml-[1.5rem] lg:ml-[7.4rem] mt-[3rem] md:mt-10 lg:mt-0 w-[84%] md:w-[71%] lg:w-fit space-y-6 md:space-y-36 justify-center items-start">
           {" "}
@@ -1343,7 +1343,7 @@ export default function Home() {
       {/* Contact Us */}
       <section
         id="contact"
-        className="flex justify-center items-center py-16 lg:py-20 bg-[#EBF5FD]"
+        className="flex justify-center items-center py-16 lg:py-20 bg-[#EBF5FD] scroll-mt-18"
       >
         <div className="w-full h-full flex mx-[2.063rem] lg:mx-[7.438rem] flex-col-reverse md:flex-col-reverse lg:flex-row space-x-0 md:space-x-0 lg:space-x-16 items-center space-y-6 md:space-y-12 lg:space-y-0">
           <ContactForm />

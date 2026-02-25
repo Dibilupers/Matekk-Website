@@ -10,7 +10,7 @@ export default function Footer() {
   };
   return (
     <footer className="bg-white flex flex-col py-10 space-y-14  mx-[2.063rem] lg:mx-[7.438rem]">
-      <div className=" flex flex-col md:flex-col lg:flex-row body_margin justify-between items-start space-y-14 md:space-y-10 lg:space-y-0 ">
+      <div className=" flex flex-col md:flex-col lg:flex-row body_margin justify-between items-start space-y-14 md:space-y-10 lg:space-y-0 hover:mouse-pointer">
         {/* RIGHT SIDE */}
         <div className="space-y-8 w-fit md:w-full lg:w-[50%]">
           {/* LOGO AND DESCRIPTION */}
@@ -69,16 +69,16 @@ export default function Footer() {
               <ul className="space-y-3">
                 <li>
                   <button
-                    onClick={() => scrollToSection("home")}
-                    className="hover:underline"
+                    onClick={() => scrollToSection("services")}
+                    className="hover:underline hover:mouse-pointer"
                   >
                     Solutions
                   </button>
                 </li>
                 <li>
                   <button
-                    onClick={() => scrollToSection("services")}
-                    className="hover:underline"
+                    onClick={() => scrollToSection("training")}
+                    className="hover:underline hover:mouse-pointer"
                   >
                     Training
                   </button>
@@ -86,7 +86,7 @@ export default function Footer() {
                 <li>
                   <button
                     onClick={() => scrollToSection("partners")}
-                    className="hover:underline"
+                    className="hover:underline hover:mouse-pointer"
                   >
                     Partners
                   </button>
@@ -94,7 +94,7 @@ export default function Footer() {
                 <li>
                   <button
                     onClick={() => scrollToSection("about")}
-                    className="hover:underline"
+                    className="hover:underline hover:mouse-pointer"
                   >
                     About
                   </button>
