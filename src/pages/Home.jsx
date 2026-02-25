@@ -1,10 +1,16 @@
 import Navbar from "../components/navbar/navbar";
-import { Settings, Tag, MessageSquare } from "lucide-react";
+import { Settings, Tag, MessageSquare, Contact } from "lucide-react";
 import Partners from "../components/partners/partners";
 import { Link } from "react-router-dom";
 import ictImage from "../assets/ict.png";
 import webImage from "../assets/web.png";
 import { useState, useEffect } from "react";
+import FAQ from "../components/FAQ/faq";
+import ContactForm from "./Contact";
+import location from "../assets/location.svg";
+import phone from "../assets/phone.svg";
+import email from "../assets/email.svg";
+import availability from "../assets/availability.svg";
 
 export default function Home() {
   const totalSlides = 3;
@@ -194,9 +200,7 @@ export default function Home() {
                           </svg>
                         ))}
                       </div>
-                      <p className="text-xs text-gray-500 font-medium">
-                        Passing Rate
-                      </p>
+                      <p className="text-xs font-medium">Passing Rate</p>
                     </div>
                   </div>
                 </div>
@@ -246,7 +250,7 @@ export default function Home() {
       </section>
 
       {/* Trusted by our customers & clients */}
-      <section className="flex bg-[#EBF5FD] justify-center items-center text-center py-10">
+      <section className="flex bg-[#EBF5FD] justify-center items-center text-center py-10" id="partners">
         <div className="mx-[2.063rem] md:mx-16 space-y-4 md:space-y-7">
           <div>
             <div className="flex flex-col md:flex-row justify-center items-center space-x-2 font-bold text-3xl">
@@ -282,9 +286,9 @@ export default function Home() {
           {/* Controls — LEFT */}
           <div className="flex flex-col relative md:w-[20vw] self-start gap-y-[1vh] items-start">
             <div className="absolute -top-10 md:-left-10 w-70 h-70 md:w-72 md:h-72 bg-[#C2DDFF] opacity-50 rounded-full blur-3xl -z-10" />
-            <h6 className="text-sm bg-[#EBF5FD] border border-[#EBF5FD] rounded-full py-[0.7vh] px-4 inline-flex text-center shadow-[0_0_14px_rgba(0,0,0,0.25)]">
+            <h5 className="text-sm bg-[#EBF5FD] border border-[#EBF5FD] rounded-full py-[0.7vh] px-4 inline-flex text-center shadow-[0_0_14px_rgba(0,0,0,0.25)]">
               Solutions
-            </h6>
+            </h5>
             <h5 className="font-rubik font-bold text-2xl w-[50vw] md:w-auto">
               End-to-End ICT & Engineering Solutions
             </h5>
@@ -473,9 +477,9 @@ export default function Home() {
           {/* Controls — on mobile: top + right-aligned | on desktop: right column */}
           <div className="flex flex-col relative md:w-[20vw] self-start gap-y-[1vh] items-end text-right order-first md:order-last">
             <div className="absolute -top-10 -right-5 w-72 h-72 bg-[#C2DDFF] opacity-50 rounded-full blur-3xl -z-10" />
-            <h6 className="text-sm bg-[#EBF5FD] border border-[#EBF5FD] rounded-full py-[0.7vh] px-4 text-center shadow-[0_0_14px_rgba(0,0,0,0.25)]">
+            <h5 className="text-sm bg-[#EBF5FD] border border-[#EBF5FD] rounded-full py-[0.7vh] px-4 text-center shadow-[0_0_14px_rgba(0,0,0,0.25)]">
               Training
-            </h6>
+            </h5>
             <h5 className="font-rubik font-bold text-2xl w-[50vw] md:w-auto text-right">
               ICT Training & Skills Development
             </h5>
@@ -1304,10 +1308,115 @@ export default function Home() {
       <section></section>
 
       {/* Frequently Asked Questions */}
-      <section></section>
+      <section className="flex flex-col md:flex-col lg:flex-row xl:flex-row justify-center items-start bg-white pb-16 md:py-12 lg:py-20 space-y-0 sm:space-y-[-2rem] md:space-y-10 lg:space-y-0">
+        {" "}
+        <div className="mr-[2.063rem] ml-[2.063rem] mb-6 md:mb-0 md:ml-[1.5rem] lg:ml-[7.4rem] mt-[3rem] md:mt-10 lg:mt-0 w-[84%] md:w-[71%] lg:w-fit space-y-6 md:space-y-36 justify-center items-start">
+          {" "}
+          <div className=" w-full md:w-full space-y-2 ">
+            <h3 className="text-[1.5rem] md:text-3xl lg:text-[2rem] font-bold text-black w-[35vw] md:w-[15vw] lg:w-[22vw]">
+              Frequently <span className="text-[#1775EE]">Asked Questions</span>
+            </h3>
+          </div>
+          <div className="bg-[#EBF5FD] p-7.5 rounded-xl shadow-md border border-[#EBF5FD] hidden md:block w-full md:w-[90%] lg:w-[95%]">
+            <h5 className="mb-3.75">Still Have Questions?</h5>
+            <p className="w-[95%] md:w-[90%] lg:w-[78%] text-black mb-7.5">
+              To be a global leader in ICT and Engineering solutions, recognized
+              for excellence, innovation, and commitment to client success.
+            </p>
+            <button
+              title="Contact Us"
+              type="none"
+              buttonCustomStyle=" text-white bg-[#007EE6] hover:bg-[#1775EE] py-3 px-[5%] md:py-2 border-[#1775EE] hover:bg-white hover:border-white hover:text-[#1775EE] transition-all ease-in-out [box-shadow:0_4px_8px_rgba(1,0,0,0.2)] "
+              btnFunc={() => {
+                document.getElementById("contact")?.scrollIntoView({
+                  behavior: "smooth",
+                  block: "start",
+                });
+              }}
+            />
+          </div>
+        </div>
+        <div className="mr-[2.063rem] ml-[2.063rem] md:ml-[7rem] lg:ml-[2.063rem] md:mr-[7.438rem] w-[84%] md:w-[70%] justify-center items-start">
+          {" "}
+          <FAQ />
+        </div>
+      </section>
 
       {/* Contact Us */}
-      <section></section>
+      <section
+        id="contact"
+        className="flex justify-center items-center py-16 lg:py-20 bg-[#EBF5FD]"
+      >
+        <div className="w-full h-full flex mx-[2.063rem] lg:mx-[7.438rem] flex-col-reverse md:flex-col-reverse lg:flex-row space-x-0 md:space-x-0 lg:space-x-16 items-center space-y-6 md:space-y-12 lg:space-y-0">
+          <ContactForm />
+          <div className="w-full items-start">
+            <h6 className="text-sm bg-white border border-[#EBF5FD] rounded-full py-[0.7vh] px-4 inline-flex text-center shadow-md">
+              Contact Us
+            </h6>
+            <h3 className="text-[1.5rem] md:text-3xl lg:text-[2rem] my-2.5">
+              Get In Touch With Us <span className="text-[#1775EE]">Today</span>
+            </h3>
+            <p className="lg:w-[37vw] mb-10">
+              Get in touch with MGKK Information Communication Technology
+              Services to inquire about our ICT solutions, training programs, or
+              request a consultation. Our team is ready to assist you.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-[6.4vw] md:mb-0">
+              {/* Address */}
+              <div className="flex items-center space-x-4">
+                <div className="bg-[#1775EE] rounded-xl p-3 flex items-center justify-center shrink-0">
+                  <img src={location} alt="Location Icon" className="w-6 h-6" />
+                </div>
+                <div>
+                  <h5 className="font-semibold text-black text-sm">Address</h5>
+                  <p className="text-xs">
+                    10B Kalantiao Marikina, Metro Manila
+                  </p>
+                </div>
+              </div>
+
+              {/* Phone */}
+              <div className="flex items-center space-x-4">
+                <div className="bg-[#1775EE] rounded-xl p-3 flex items-center justify-center shrink-0">
+                  <img src={phone} alt="Phone Icon" className="w-6 h-6" />
+                </div>
+                <div>
+                  <h5 className="font-semibold text-black text-sm">Phone</h5>
+                  <p className="text-xs">09771968226</p>
+                </div>
+              </div>
+
+              {/* Email */}
+              <div className="flex items-center space-x-4">
+                <div className="bg-[#1775EE] rounded-xl p-3 flex items-center justify-center shrink-0">
+                  <img src={email} alt="Email Icon" className="w-6 h-6" />
+                </div>
+                <div>
+                  <h5 className="font-semibold text-black text-sm">Email</h5>
+                  <p className="text-xs">converge.training.it@gmail.com</p>
+                </div>
+              </div>
+
+              {/* Availability */}
+              <div className="flex items-center space-x-4">
+                <div className="bg-[#1775EE] rounded-xl p-3 flex items-center justify-center shrink-0">
+                  <img
+                    src={availability}
+                    alt="Availability Icon"
+                    className="w-6 h-6"
+                  />
+                </div>
+                <div>
+                  <h5 className="font-semibold text-black text-sm">
+                    Availability
+                  </h5>
+                  <p className="text-xs">Lorem Ipsum</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
   );
 }
