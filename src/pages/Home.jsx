@@ -258,9 +258,17 @@ export default function Home() {
                       </p>
                     </div>
                   </div>
-                  <button className="mt-2 w-full py-2.5 bg-[#1775EE] text-white rounded-full text-sm font-semibold hover:bg-blue-700 transition-colors shadow-md">
-                    View Certification
-                  </button>
+                  <Button
+                    title="View Certification"
+                    type="none"
+                    buttonCustomStyle="bg-[#1775EE] text-white hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl w-full"
+                    btnFunc={() => {
+                      document.getElementById("feedbacks")?.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                      });
+                    }}
+                  />
                 </div>
               </div>
             </div>
