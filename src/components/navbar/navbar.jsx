@@ -299,7 +299,17 @@ function NavBar() {
   };
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 10);
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+
+      setOpenDropdown(null);
+      setOpenSubcourse(null);
+      setOpenSubSubcourse(null);
+      setOpenSubSubSubcourse(null);
+      setOpenThirdLevel(null);
+      setOpenFourthLevel(null);
+    };
+
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
