@@ -1346,10 +1346,10 @@ export default function Home() {
               To be a global leader in ICT and Engineering solutions, recognized
               for excellence, innovation, and commitment to client success.
             </p>
-            <button
+            <Button
               title="Contact Us"
               type="none"
-              buttonCustomStyle=" text-white bg-[#007EE6] hover:bg-[#1775EE] py-3 px-[5%] md:py-2 border-[#1775EE] hover:bg-white hover:border-white hover:text-[#1775EE] transition-all ease-in-out [box-shadow:0_4px_8px_rgba(1,0,0,0.2)] "
+              buttonCustomStyle="text-white bg-[#1775EE] hover:bg-[#1775EE] py-3 px-[5%] md:py-2 border-[#1775EE] hover:bg-white hover:border-white hover:text-[#1775EE] transition-all ease-in-out [box-shadow:0_4px_8px_rgba(1,0,0,0.2)] "
               btnFunc={() => {
                 document.getElementById("contact")?.scrollIntoView({
                   behavior: "smooth",

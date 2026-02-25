@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import Button from "../ui/button";
 
 function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,6 +11,7 @@ function NavBar() {
   const [openSubSubSubcourse, setOpenSubSubSubcourse] = useState(null);
   const [openThirdLevel, setOpenThirdLevel] = useState(null);
   const [openFourthLevel, setOpenFourthLevel] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const dropdownMenus = {
     solutions: [
@@ -299,7 +301,17 @@ function NavBar() {
   };
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 10);
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+
+      setOpenDropdown(null);
+      setOpenSubcourse(null);
+      setOpenSubSubcourse(null);
+      setOpenSubSubSubcourse(null);
+      setOpenThirdLevel(null);
+      setOpenFourthLevel(null);
+    };
+
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -555,12 +567,14 @@ function NavBar() {
 
       {/* Enroll Now — only visible at lg and above */}
       {/* ↓ changed hidden md:flex → hidden lg:flex  |  md:mr-[7.438rem] → lg:mr-[7.438rem] */}
-      <Link
-        to="/enroll"
-        className="hidden lg:flex mr-0 lg:mr-[7.438rem] font-inter border-2 border-[#1775EE] text-[#1775EE] py-2 px-5.5 rounded-3xl hover:bg-blue-600 hover:text-white transition-colors duration-300"
+      <Button
+        title="Enroll Now"
+        type="none"
+        buttonCustomStyle="hidden lg:flex mr-0 lg:mr-[7.438rem] border-2 border-[#1775EE] text-[#1775EE] py-2 px-5.5 rounded-3xl hover:bg-blue-600 hover:text-white transition-colors duration-300"
+        btnFunc={() => setIsModalOpen(true)}
       >
         Enroll Now
-      </Link>
+      </Button>
 
       {/* Mobile + Tablet Hamburger — visible below lg */}
       {/* ↓ changed flex md:hidden → flex lg:hidden */}
@@ -1010,6 +1024,19 @@ function NavBar() {
           </div>
         )}
       </div>
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-white rounded-2xl p-8 shadow-xl flex flex-col items-center gap-4">
+            <p className="text-xl font-poppins font-semibold">Hello</p>
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className="text-sm text-white bg-[#1775EE] px-6 py-2 rounded-full hover:bg-blue-700 transition-colors"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
