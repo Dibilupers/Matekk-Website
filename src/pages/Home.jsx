@@ -250,7 +250,7 @@ export default function Home() {
       </section>
 
       {/* Trusted by our customers & clients */}
-      <section className="flex bg-[#EBF5FD] justify-center items-center text-center py-10">
+      <section className="flex bg-[#EBF5FD] justify-center items-center text-center py-10" id="partners">
         <div className="mx-[2.063rem] md:mx-16 space-y-4 md:space-y-7">
           <div>
             <div className="flex flex-col md:flex-row justify-center items-center space-x-2 font-bold text-3xl">
