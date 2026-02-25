@@ -104,39 +104,40 @@ export default function Home() {
       {/* Hero Section */}
       <section
         id="home"
-        className="bg-linear-to-b from-gray-50 to-white py-40 lg:py-0"
+        className="py-40 md:py-20 lg:py-0"
       >
         <div className=" mx-[2.063rem] lg:mx-[7.438rem]">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
             {/* LEFT SIDE - CONTENT */}
-            <div className="space-y-6 lg:space-y-4 text-left">
-              <div>
-                <span className="px-5 py-2.5 bg-blue-50 text-blue-600 rounded-full text-sm font-semibold ">
-                  ICT & Engineering
-                </span>
+            <div className="space-y-10 lg:space-y-4 text-left">
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <h6 className="w-fit px-5 py-2.5 bg-blue-50 text-black rounded-full font-thin ">
+                    ICT & Engineering
+                  </h6>
+
+                  <h1 className="pr-7 sm:pr-8 lg:pr-7 font-bold leading-tight text-gray-900 space-x-2">
+                    Empowering Businesses
+                    <span> and Individuals</span>
+                    <span className="text-[#1775EE]">Through ICT Excellence</span>
+                  </h1>
+
+                  <p className="text-gray-600 text-base lg:text-xl leading-relaxed max-w-lg text-left">
+                    Cutting-edge ICT and Engineering Solutions. Industry-relevant
+                    Training. Built on over a decade of expertise.
+                  </p>
+                </div>
+                <div className="flex sm:flex-row gap-3 sm:gap-4 justify-left lg:justify-start">
+                  <button className="px-3 py-3 sm:px-8 sm:py-4 text-[0.87rem] sm:text-[1rem] md:text-[0.93rem] bg-blue-600 text-white rounded-full font-medium hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl ">
+                    Explore Our Solutions
+                  </button>
+                  <button className="px-3 py-3 sm:px-8 sm:py-4 bg-white text-blue-600 border-2 border-blue-600 rounded-full font-medium hover:bg-blue-50 transition-all duration-300 text-sm sm:text-base">
+                    View Training Programs
+                  </button>
+                </div>
               </div>
 
-              <h1 className="pr-7 sm:pr-8 lg:pr-7 font-bold leading-tight text-gray-900 space-x-2">
-                Empowering Businesses 
-                <span> and Individuals</span>
-                <span className="text-[#1775EE]">Through ICT Excellence</span>
-              </h1>
-
-              <p className="text-gray-600 text-base lg:text-xl leading-relaxed max-w-lg text-left">
-                Cutting-edge ICT and Engineering Solutions. Industry-relevant
-                Training. Built on over a decade of expertise.
-              </p>
-
-              <div className="flex sm:flex-row gap-3 sm:gap-4 justify-left lg:justify-start">
-                <button className="px-3 py-3 sm:px-8 sm:py-4 text-[0.87rem] sm:text-[1rem] md:text-[0.93rem] bg-blue-600 text-white rounded-full font-medium hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl ">
-                  Explore Our Solutions
-                </button>
-                <button className="px-3 py-3 sm:px-8 sm:py-4 bg-white text-blue-600 border-2 border-blue-600 rounded-full font-medium hover:bg-blue-50 transition-all duration-300 text-sm sm:text-base">
-                  View Training Programs
-                </button>
-              </div>
-
-              <div className="flex flex-nowrap justify-start lg:justify-start items-center gap-2 lg:gap-8 pt-6">
+              <div className="flex space-x-4">
                 <div className="flex flex-col sm:flex-row sm:items-center gap-1">
                   <h3 className="text-3xl lg:text-5xl font-bold text-gray-900">
                     13+
@@ -146,8 +147,8 @@ export default function Home() {
                     <p className="font-medium whitespace-nowrap">Experience</p>
                   </div>
                 </div>
-                <div className="h-10 lg:h-12 w-px bg-gray-300 shrink-0"></div>
-                <div className="flex flex flex-col sm:flex-row  items-center gap-2">
+                <div className="h-18 lg:h-12 w-px bg-black shrink-0"></div>
+                <div className="flex flex-col sm:flex-row  items-center gap-2">
                   <h3 className="text-3xl lg:text-5xl font-bold text-gray-900">
                     3
                   </h3>
@@ -158,7 +159,7 @@ export default function Home() {
                     <p className="font-medium whitespace-nowrap">Deployed</p>
                   </div>
                 </div>
-                <div className="h-10 lg:h-12 w-px bg-gray-300 shrink-0"></div>
+                <div className="h-18 lg:h-12 w-px bg-black shrink-0"></div>
                 <div className="flex flex-col sm:flex-row items-center gap-2">
                   <h3 className="text-3xl lg:text-5xl font-bold text-gray-900">
                     10
@@ -174,15 +175,15 @@ export default function Home() {
             </div>
 
             {/* RIGHT SIDE - IMAGE & OVERLAYS */}
-            <div className="hidden lg:flex relative lg:h-150 items-center justify-center">
+            <div className="hidden lg:flex relative lg:h-135 items-center justify-center">
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="w-80 h-80 bg-linear-to-br from-blue-300 via-blue-400 to-blue-500 rounded-full opacity-20 blur-3xl"></div>
               </div>
 
               <div className="relative w-full max-w-md">
-                <div className="absolute top-45 left-4 lg:-left-30 bg-[#EBF5FD] rounded-2xl shadow-2xl px-4 py-4 z-20 hover:scale-105 transition-transform">
+                <div className="absolute top-35 left-4 lg:-left-30 bg-[#EBF5FD] rounded-2xl shadow-xl/10 px-4 py-4 z-20 hover:scale-105 transition-transform cursor-pointer">
                   <div className="flex justify-center items-center gap-3">
-                    <p className="text-4xl font-bold text-[#1775EE]">95%</p>
+                    <h1 className="text-4xl font-bold text-[#1775EE]">95%</h1>
                     <div>
                       <div className="flex gap-1">
                         {[...Array(5)].map((_, i) => (
@@ -195,28 +196,28 @@ export default function Home() {
                           </svg>
                         ))}
                       </div>
-                      <p className="text-xs text-gray-500 font-medium">
+                      <p>
                         Passing Rate
                       </p>
                     </div>
                   </div>
                 </div>
 
-                <div className="relative mt-16">
+                <div className="relative">
                   <img
                     src="/src/assets/maamgrace2.png"
                     alt="Professional holding laptop with ICT solutions"
-                    className="w-full h-auto aspect-square object-cover"
+                    className="w-[90%]"
                   />
                 </div>
 
-                <div className="absolute top-28 right-2 lg:right-15 bg-[#7DB6FF] p-2 lg:p-3 rounded-full shadow-lg hover:scale-110 transition-transform">
+                <div className="absolute top-10 right-2 lg:right-22 bg-linear-to-b from-[#7DB6FF] to-[#5192E6] p-2 lg:p-3 rounded-full shadow-lg hover:scale-110 transition-transform">
                   <Settings className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
                 </div>
-                <div className="absolute top-50 -right-2 lg:-right-5 bg-[#7DB6FF] p-2 lg:p-3 rounded-full shadow-lg hover:scale-110 transition-transform">
+                <div className="absolute top-26 -right-2 lg:right-4 bg-linear-to-b from-[#7DB6FF] to-[#5192E6] p-2 lg:p-3 rounded-full shadow-lg hover:scale-110 transition-transform">
                   <Tag className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
                 </div>
-                <div className="absolute top-78 right-0 lg:-right-14 bg-[#7DB6FF] p-2 lg:p-3 rounded-full shadow-lg hover:scale-110 transition-transform">
+                <div className="absolute top-48 right-0 lg:-right-6 bg-linear-to-b from-[#7DB6FF] to-[#5192E6] p-2 lg:p-3 rounded-full shadow-lg hover:scale-110 transition-transform">
                   <MessageSquare className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
                 </div>
 
@@ -228,10 +229,10 @@ export default function Home() {
                       className="w-14 h-14 rounded-full object-cover"
                     />
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-bold text-[#1775EE] text-sm truncate">
+                      <h6 className="font-bold text-[#1775EE] text-sm truncate">
                         Clyde Nelson R.
-                      </h4>
-                      <p className="text-xs text-gray-600 mt-0.3">
+                      </h6>
+                      <p className=" ">
                         just passed the CCNA certification!
                       </p>
                     </div>
