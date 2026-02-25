@@ -30,12 +30,12 @@ export default function ContactForm() {
     };
 
     return (
-        <form onSubmit={sendMessage} className="bg-gradient-to-b from-[#004D8C] to-[#027FE5] space-y-6 md:space-y-4 h-full w-full md:w-full lg:w-[50%] flex flex-col p-8 rounded-2xl">
+        <form onSubmit={sendMessage} className="bg-white space-y-6 md:space-y-4 h-full w-full md:w-full lg:w-[50%] flex flex-col p-8 rounded-2xl">
 
             {/* Full Name */}
             <div className="flex flex-col space-y-1">
                 <div className="flex items-center space-x-1">
-                    <label htmlFor="name" className="label_style">
+                    <label htmlFor="name">
                         Full Name
                     </label>
                     <span className="text-red-400">*</span>
@@ -44,7 +44,7 @@ export default function ContactForm() {
                     id="name"
                     name="user_name"
                     type="text"
-                    className="input_style"
+                    className="border border-[#1775EE] rounded-md h-[3.5vh] md:h-[2vh] lg:h-[2vh] xl:h-[4.8vh]"
                     required
                 />
             </div>
@@ -53,7 +53,7 @@ export default function ContactForm() {
             <div className="flex flex-col md:flex-row space-x-0 md:space-x-4 space-y-4 md:space-y-0">
                 <div className="flex flex-col space-y-1 w-full">
                     <div className="flex items-center space-x-1">
-                        <label htmlFor="email" className="label_style">
+                        <label htmlFor="email">
                             Email
                         </label>
                         <span className="text-red-400">*</span>
@@ -62,14 +62,14 @@ export default function ContactForm() {
                         id="email"
                         name="user_email"
                         type="email"
-                        className="input_style"
+                        className="border border-[#1775EE] rounded-md h-[3.5vh] md:h-[2vh] lg:h-[2vh xl:h-[4.8vh]"
                         required
                     />
                 </div>
 
                 <div className="flex flex-col space-y-1 w-full">
                     <div className="flex items-center space-x-1">
-                        <label htmlFor="phone" className="label_style">
+                        <label htmlFor="phone">
                             Mobile Number
                         </label>
                         <span className="text-red-400">*</span>
@@ -78,16 +78,33 @@ export default function ContactForm() {
                         id="phone"
                         name="user_phone"
                         type="tel"
-                        className="input_style"
+                        className="border border-[#1775EE] rounded-md h-[3.5vh] md:h-[2vh] lg:h-[2vh xl:h-[4.8vh]"
                         required
                     />
                 </div>
             </div>
 
+            {/* Subject */}
+            <div className="flex flex-col space-y-1">
+                <div className="flex items-center space-x-1">
+                    <label htmlFor="subject">
+                        Subject
+                    </label>
+                    <span className="text-red-400">*</span>
+                </div>
+                <input
+                    id="subject"
+                    name="subject"
+                    type="text"
+                    className="border border-[#1775EE] rounded-md h-[3.5vh] md:h-[2vh] lg:h-[2vh xl:h-[4.8vh]"
+                    required
+                />
+            </div>
+
             {/* Message */}
             <div className="flex flex-col space-y-1">
                 <div className="flex items-center space-x-1">
-                    <label htmlFor="message" className="label_style">
+                    <label htmlFor="message">
                         Message
                     </label>
                     <span className="text-red-400">*</span>
@@ -95,7 +112,7 @@ export default function ContactForm() {
                 <textarea
                     id="message"
                     name="message"
-                    className="input_style h-[8rem] resize-none"
+                    className="border border-[#1775EE] rounded-md h-[8rem] resize-none"
                     required
                 />
             </div>
@@ -110,7 +127,7 @@ export default function ContactForm() {
             <button
                 type="submit"
                 disabled={loading}
-                className="bg-white text-[#007EE6] hover:bg-[#DDE7EF] py-3 px-[42.5%] md:py-2 md:px-[46%] rounded shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-[#1775EE] text-white hover:bg-[#007EE6] py-3 px-[42.5%] md:py-2 md:px-[46%] rounded-md shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
             >
                 {loading ? "Sending..." : "Send"}
             </button>
