@@ -106,13 +106,13 @@ export default function Home() {
         id="home"
         className="py-40 md:py-20 lg:py-0"
       >
-        <div className=" mx-[2.063rem] lg:mx-[7.438rem]">
+        <div className=" mx-[2.063rem] md:mx-16 lg:mx-[7.438rem]">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
             {/* LEFT SIDE - CONTENT */}
-            <div className="space-y-10 lg:space-y-4 text-left">
+            <div className="space-y-10 lg:space-y-12 text-left">
               <div className="space-y-6">
                 <div className="space-y-2">
-                  <h6 className="w-fit px-5 py-2.5 bg-blue-50 text-black rounded-full font-thin ">
+                  <h6 className="w-fit px-5 py-2.5 bg-blue-50 rounded-full">
                     ICT & Engineering
                   </h6>
 
@@ -138,11 +138,11 @@ export default function Home() {
               </div>
 
               <div className="flex space-x-4">
-                <div className="flex flex-col sm:flex-row sm:items-center gap-1">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2">
                   <h3 className="text-3xl lg:text-5xl font-bold text-gray-900">
                     13+
                   </h3>
-                  <div className="text-xs lg:text-sm text-gray-600 leading-tight">
+                  <div className="text-gray-600 leading-tight">
                     <p className="font-medium whitespace-nowrap">Years of</p>
                     <p className="font-medium whitespace-nowrap">Experience</p>
                   </div>
@@ -177,33 +177,31 @@ export default function Home() {
             {/* RIGHT SIDE - IMAGE & OVERLAYS */}
             <div className="hidden lg:flex relative lg:h-135 items-center justify-center">
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-80 h-80 bg-linear-to-br from-blue-300 via-blue-400 to-blue-500 rounded-full opacity-20 blur-3xl"></div>
+                <div className="w-70 h-70 bg-linear-to-br from-[#3084F0] to-[#DAEBFC] rounded-full blur-3xl"></div>
               </div>
 
               <div className="relative w-full max-w-md">
-                <div className="absolute top-35 left-4 lg:-left-30 bg-[#EBF5FD] rounded-2xl shadow-xl/10 px-4 py-4 z-20 hover:scale-105 transition-transform cursor-pointer">
-                  <div className="flex justify-center items-center gap-3">
-                    <h1 className="text-4xl font-bold text-[#1775EE]">95%</h1>
-                    <div>
-                      <div className="flex gap-1">
-                        {[...Array(5)].map((_, i) => (
-                          <svg
-                            key={i}
-                            className="w-4 h-4 text-yellow-400 fill-current"
-                            viewBox="0 0 20 20"
-                          >
-                            <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
-                          </svg>
-                        ))}
-                      </div>
-                      <p>
-                        Passing Rate
-                      </p>
+                <div className="absolute top-31 left-4 lg:-left-35 bg-[#EBF5FD] rounded-xl shadow-xl/10 px-4 py-3 z-20 hover:scale-105 transition-transform cursor-pointer flex justify-center items-center gap-3">
+                  <h3 className="font-bold text-[#1775EE]">95%</h3>
+                  <div>
+                    <div className="flex gap-1">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          key={i}
+                          className="w-4 h-4 text-yellow-400 fill-current"
+                          viewBox="0 0 20 20"
+                        >
+                          <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                        </svg>
+                      ))}
                     </div>
+                    <p>
+                      Passing Rate
+                    </p>
                   </div>
                 </div>
 
-                <div className="relative">
+                <div className="relative right-6">
                   <img
                     src="/src/assets/maamgrace2.png"
                     alt="Professional holding laptop with ICT solutions"
@@ -211,33 +209,33 @@ export default function Home() {
                   />
                 </div>
 
-                <div className="absolute top-10 right-2 lg:right-22 bg-linear-to-b from-[#7DB6FF] to-[#5192E6] p-2 lg:p-3 rounded-full shadow-lg hover:scale-110 transition-transform">
+                <div className="absolute top-10 right-1 lg:right-30 bg-linear-to-b from-[#7DB6FF] to-[#5192E6] p-2 rounded-full shadow-lg hover:scale-110 transition-transform">
                   <Settings className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
                 </div>
-                <div className="absolute top-26 -right-2 lg:right-4 bg-linear-to-b from-[#7DB6FF] to-[#5192E6] p-2 lg:p-3 rounded-full shadow-lg hover:scale-110 transition-transform">
+                <div className="absolute top-26 -right-2 lg:right-11 bg-linear-to-b from-[#7DB6FF] to-[#5192E6] p-2 rounded-full shadow-lg hover:scale-110 transition-transform">
                   <Tag className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
                 </div>
-                <div className="absolute top-48 right-0 lg:-right-6 bg-linear-to-b from-[#7DB6FF] to-[#5192E6] p-2 lg:p-3 rounded-full shadow-lg hover:scale-110 transition-transform">
+                <div className="absolute top-48 right-0 lg:right-1 bg-linear-to-b from-[#7DB6FF] to-[#5192E6] p-2 rounded-full shadow-lg hover:scale-110 transition-transform">
                   <MessageSquare className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
                 </div>
 
-                <div className="absolute bottom-15 -right-4 lg:-right-20 bg-[#EBF5FD] rounded-xl shadow-2xl px-4 py-2 max-w-65 z-20 hover:scale-105 transition-transform">
+                <div className="absolute bottom-15 -right-4 lg:-right-10 bg-[#EBF5FD] rounded-xl shadow-2xl px-3 py-2 max-w-61 z-20 hover:scale-105 transition-transform flex flex-col justify-center items-center">
                   <div className="flex items-start gap-3">
                     <img
                       src="/src/assets/maamgrace2.png"
                       alt="Clyde Nelson R."
                       className="w-14 h-14 rounded-full object-cover"
                     />
-                    <div className="flex-1 min-w-0">
-                      <h6 className="font-bold text-[#1775EE] text-sm truncate">
+                    <div className="flex-1 pr-2">
+                      <p className="text-[#1775EE] truncate font-bold">
                         Clyde Nelson R.
-                      </h6>
-                      <p className=" ">
+                      </p>
+                      <p className="text-xs">
                         just passed the CCNA certification!
                       </p>
                     </div>
                   </div>
-                  <button className="mt-2 w-full py-2.5 bg-[#1775EE] text-white rounded-xl text-sm font-semibold hover:bg-blue-700 transition-colors shadow-md">
+                  <button className="mt-2 w-full py-2.5 bg-[#1775EE] text-white rounded-full text-sm font-semibold hover:bg-blue-700 transition-colors shadow-md">
                     View Certification
                   </button>
                 </div>
