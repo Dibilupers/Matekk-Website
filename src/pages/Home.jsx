@@ -1499,7 +1499,7 @@ export default function Home() {
       </section>
 
       {/* About the Company */}
-      <section id="about" className="scroll-mt-18" className="py-16 bg-[#EBF5FD]">
+      <section id="about" className="py-16 bg-[#EBF5FD] scroll-mt-18">
         <div className="mx-4 sm:mx-6 lg:mx-[7.438rem] mx-[2.063rem]">
           {/* Section Heading */}
           <div className="text-center mb-12">
