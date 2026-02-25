@@ -159,7 +159,7 @@ function Partners() {
                 
                 return nextPage;
             });
-        }, 2000); // 2000ms = 2 seconds
+        }, 1500); // 2000ms = 2 seconds
 
         // Cleanup interval on unmount or when user interacts
         return () => clearInterval(autoScrollInterval);
