@@ -694,18 +694,18 @@ export default function Home() {
             {/* RIGHT SIDE - FEATURES */}
             <div className="order-2 lg:order-2 space-y-4 lg:-mt-52">
               <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
-                <h3 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
+                <h5 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
                   Experience
-                </h3>
+                </h5>
                 <p className="text-sm lg:text-base text-[#000000] leading-relaxed">
                   Over a decade of providing ICT and engineering solutions and
                   professional training since our establishment in 2013.
                 </p>
               </div>
               <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
-                <h3 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
+                <h5 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
                   Expertise
-                </h3>
+                </h5>
                 <p className="text-sm lg:text-base text-[#000000] leading-relaxed">
                   Led by a Professional Electronics Engineer and supported by
                   certified engineers, technicians, and instructors with strong
@@ -713,9 +713,9 @@ export default function Home() {
                 </p>
               </div>
               <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
-                <h3 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
+                <h5 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
                   Quality Training
-                </h3>
+                </h5>
                 <p className="text-sm lg:text-base text-[#000000] leading-relaxed">
                   We offer face-to-face and online training programs aligned
                   with industry standards and globally recognized
@@ -723,9 +723,9 @@ export default function Home() {
                 </p>
               </div>
               <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
-                <h3 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
+                <h5 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
                   End-to-End Approach
-                </h3>
+                </h5>
                 <p className="text-sm lg:text-base text-[#000000] leading-relaxed">
                   We follow the Plan, Build, Operate, Optimize, and Test (PBOOT)
                   methodology to ensure structured and effective delivery of ICT
@@ -733,9 +733,9 @@ export default function Home() {
                 </p>
               </div>
               <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
-                <h3 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
+                <h5 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
                   Innovation & Integrity
-                </h3>
+                </h5>
                 <p className="text-sm lg:text-base text-[#000000] leading-relaxed">
                   Our work is guided by core values that emphasize innovation,
                   ethical practices, excellence, collaboration, and continuous
@@ -748,76 +748,22 @@ export default function Home() {
       </section>
 
       {/* Our Working Process */}
-      <section className="py-16 lg:py-20 bg-white">
-        {/* 
-          ADJUST SECTION PADDING:
-          - py-16 lg:py-20 = vertical padding (top/bottom)
-          - bg-white = background color (change to bg-gray-50 for light gray)
-        */}
+      <section className="py-10 lg:py-10 bg-white">
         <div className="mx-4 sm:mx-6 lg:mx-[7.438rem]">
           {/* ==================== SECTION HEADING ==================== */}
-          <div className="text-center mb-12 lg:mb-16">
-            {/* 
-              ADJUST HEADING:
-              - text-3xl lg:text-4xl = font size
-              - font-bold = weight
-              - text-gray-900 = "Our" color
-              - text-[#1775EE] = "Working Process" color (blue)
-            */}
+          <div className="text-right mb-12 lg:mb-16">
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900">
               Our <span className="text-[#1775EE]">Working Process</span>
             </h2>
-
-            {/* 
-              ADJUST DESCRIPTION:
-              - text-base lg:text-lg = font size
-              - text-gray-600 = color
-              - mt-4 = top margin
-              - max-w-2xl = maximum width
-              - mx-auto = centers the text
-            */}
-            <p className="text-base lg:text-lg text-gray-600 mt-4 max-w-2xl mx-auto">
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-              industry.
+            <p className="text-base lg:text-lg text-gray-600 mt-4 max-w-2xl ml-auto">
+              We follow a structured service delivery process to ensure reliable implementation, performance, and long-term value.
             </p>
           </div>
 
-          {/* ==================== PROCESS TIMELINE ==================== */}
-          {/* 
-            ADJUST TIMELINE LAYOUT:
-            - This uses a horizontal flow with connected circles
-            - On mobile, it will stack vertically
-            - hidden lg:block = shows connecting line only on desktop
-          */}
           <div className="relative">
             {/* Desktop Version - Horizontal Timeline */}
             <div className="hidden lg:block relative">
-              {/* 
-                ADJUST DESKTOP LAYOUT:
-                - Uses positioned divs to create the exact layout from the design
-                - Curved connecting lines using SVG
-                - Staggered vertical positioning for visual flow
-              */}
-
-              {/* Container for all steps with relative positioning */}
               <div className="relative h-125">
-                {/* 
-                  ADJUST CONTAINER HEIGHT:
-                  - h-[500px] = total height (change to h-[400px] for shorter, h-[600px] for taller)
-                */}
-
-                {/* SVG for Connecting Lines */}
-                {/* 
-                  ADJUST LINES HERE:
-                  Each path connects two circles with a curved line
-                  Format: M startX startY Q curveX curveY endX endY
-                  
-                  TO MOVE LINES:
-                  - Change start point (M values)
-                  - Change curve point (Q values) 
-                  - Change end point (final values)
-                  - Adjust strokeWidth for thickness (currently 6)
-                */}
                 <svg
                   className="absolute inset-0 w-full h-full z-0"
                   viewBox="0 0 1200 500"
@@ -825,7 +771,7 @@ export default function Home() {
                   {/* Line 1: Initiation to Planning */}
                   {/* Start: top-left circle, End: 20% left circle */}
                   <path
-                    d="M 1 1 C 120 100, 200 1, 335 110"
+                    d="M -80 30 C 120 100, 200 1, 335 110"
                     stroke="#3B82F6"
                     strokeWidth="8"
                     fill="none"
@@ -880,9 +826,9 @@ export default function Home() {
                       />
                     </svg>
                   </div>
-                  <h3 className="text-lg font-bold text-gray-900 text-center mb-2">
+                  <h5 className="text-lg font-bold text-gray-900 text-center mb-2">
                     Initiation & Consultancy
-                  </h3>
+                  </h5>
                   <p className="text-sm text-gray-600 text-center">
                     Understand requirements and define project direction.
                   </p>
@@ -905,9 +851,9 @@ export default function Home() {
                       />
                     </svg>
                   </div>
-                  <h3 className="text-lg font-bold text-gray-900 text-center mb-2">
+                  <h5 className="text-lg font-bold text-gray-900 text-center mb-2">
                     Planning & Design
-                  </h3>
+                  </h5>
                   <p className="text-sm text-gray-600 text-center">
                     Create structured plans and system designs.
                   </p>
@@ -936,9 +882,9 @@ export default function Home() {
                       />
                     </svg>
                   </div>
-                  <h3 className="text-lg font-bold text-gray-900 text-center mb-2">
+                  <h5 className="text-lg font-bold text-gray-900 text-center mb-2">
                     Implementation
-                  </h3>
+                  </h5>
                   <p className="text-sm text-gray-600 text-center">
                     Deploy and configure approved solutions.
                   </p>
@@ -961,9 +907,9 @@ export default function Home() {
                       />
                     </svg>
                   </div>
-                  <h3 className="text-lg font-bold text-gray-900 text-center mb-2">
+                  <h5 className="text-lg font-bold text-gray-900 text-center mb-2">
                     Monitor and Control
-                  </h3>
+                  </h5>
                   <p className="text-sm text-gray-600 text-center">
                     Track performance and ensure proper operation.
                   </p>
@@ -986,9 +932,9 @@ export default function Home() {
                       />
                     </svg>
                   </div>
-                  <h3 className="text-lg font-bold text-gray-900 text-center mb-2">
+                  <h5 className="text-lg font-bold text-gray-900 text-center mb-2">
                     Optimization
-                  </h3>
+                  </h5>
                   <p className="text-sm text-gray-600 text-center">
                     Improve systems through testing and refinement.
                   </p>
@@ -1002,175 +948,103 @@ export default function Home() {
               - lg:hidden = hidden on desktop, shown on mobile
               - space-y-8 = vertical spacing between steps
             */}
-            <div className="lg:hidden space-y-8">
-              {/* Step 1: Initiation & Consultancy */}
-              <div className="flex items-start gap-4">
-                <div className="shrink-0">
-                  <div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
-                    <svg
-                      className="w-10 h-10 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                      />
-                    </svg>
-                  </div>
+            {/* Mobile Version - Alternating Zigzag Timeline */}
+            <div className="lg:hidden relative">
+              {/* SVG Connecting Lines */}
+              <svg
+                className="absolute inset-0 w-full h-full z-0 pointer-events-none"
+                viewBox="0 0 400 1100"
+                preserveAspectRatio="none"
+              >
+                {/* Line 1→2: Left to Right */}
+                <path
+                  d="M 120 10 C 210 180, 330 30, 290 270"
+                  stroke="#3B82F6" strokeWidth="5" fill="none" strokeLinecap="round"
+                />
+                <path
+                  d="M 310 250 C 310 250, 90 250, 125 440"
+                  stroke="#3B82F6" strokeWidth="5" fill="none" strokeLinecap="round"
+                />
+                {/* Line 3→4: Left to Right */}
+                <path
+                  d="M 140 490 C 250 560, 305 490, 290 740"
+                  stroke="#3B82F6" strokeWidth="5" fill="none" strokeLinecap="round"
+                />
+                {/* Line 4→5: Right to Left */}
+                <path
+                  d="M 310 720 C 310 720, 90 720, 140 910"
+                  stroke="#3B82F6" strokeWidth="5" fill="none" strokeLinecap="round"
+                />
+
+              </svg>
+
+              {/* Step 1: Left — Initiation & Consultancy */}
+              <div className="relative z-10 flex flex-col items-center mb-1 pr-41">
+                <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
+                  <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
                 </div>
-                <div className="flex-1">
-                  <h5 className="text-lg font-bold text-gray-900 mb-2">
-                    Initiation & Consultancy
-                  </h5>
-                  <p className="text-sm text-gray-600">
-                    Understand requirements and define project direction.
-                  </p>
+                <div className="mt-3 max-w-[16rem] text-center">
+                  <h5 className="text-base font-bold text-gray-900 mb-1">Initiation & Consultancy</h5>
+                  <p className="text-sm text-gray-600">Understand requirements and define project direction.</p>
                 </div>
               </div>
 
-              {/* Connecting Line */}
-              <div className="flex justify-start pl-10">
-                <div className="w-0.5 h-8 bg-blue-500"></div>
-              </div>
-
-              {/* Step 2: Planning & Design */}
-              <div className="flex items-start gap-4">
-                <div className="shrink-0">
-                  <div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
-                    <svg
-                      className="w-10 h-10 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"
-                      />
-                    </svg>
-                  </div>
+              {/* Step 2: Right — Planning & Design */}
+              <div className="relative z-10 flex flex-col items-center mb-1 pl-50 -mt-6">
+                <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
+                  <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                      d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
+                  </svg>
                 </div>
-                <div className="flex-1">
-                  <h5 className="text-lg font-bold text-gray-900 mb-2">
-                    Planning & Design
-                  </h5>
-                  <p className="text-sm text-gray-600">
-                    Create structured plans and system designs.
-                  </p>
+                <div className="mt-3 max-w-[16rem] text-center">
+                  <h5 className="text-base font-bold text-gray-900 mb-1">Planning & Design</h5>
+                  <p className="text-sm text-gray-600">Create structured plans and system designs.</p>
                 </div>
               </div>
 
-              {/* Connecting Line */}
-              <div className="flex justify-start pl-10">
-                <div className="w-0.5 h-8 bg-blue-500"></div>
-              </div>
-
-              {/* Step 3: Implementation */}
-              <div className="flex items-start gap-4">
-                <div className="shrink-0">
-                  <div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
-                    <svg
-                      className="w-10 h-10 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                    </svg>
-                  </div>
+              {/* Step 3: Left — Implementation */}
+              <div className="relative z-10 flex flex-col items-center mb-1 pr-40 -mt-6">
+                <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
+                  <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                      d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
                 </div>
-                <div className="flex-1">
-                  <h5 className="text-lg font-bold text-gray-900 mb-2">
-                    Implementation
-                  </h5>
-                  <p className="text-sm text-gray-600">
-                    Deploy and configure approved solutions.
-                  </p>
+                <div className="mt-3 max-w-[16rem] text-center">
+                  <h5 className="text-base font-bold text-gray-900 mb-1">Implementation</h5>
+                  <p className="text-sm text-gray-600">Deploy and configure approved solutions.</p>
                 </div>
               </div>
 
-              {/* Connecting Line */}
-              <div className="flex justify-start pl-10">
-                <div className="w-0.5 h-8 bg-blue-500"></div>
-              </div>
-
-              {/* Step 4: Monitor and Control */}
-              <div className="flex items-start gap-4">
-                <div className="shrink-0">
-                  <div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
-                    <svg
-                      className="w-10 h-10 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                      />
-                    </svg>
-                  </div>
+              {/* Step 4: Right — Monitor and Control */}
+              <div className="relative z-10 flex flex-col items-center mb-1 pl-50 -mt-6">
+                <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
+                  <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
                 </div>
-                <div className="flex-1">
-                  <h5 className="text-lg font-bold text-gray-900 mb-2">
-                    Monitor and Control
-                  </h5>
-                  <p className="text-sm text-gray-600">
-                    Track performance and ensure proper operation.
-                  </p>
+                <div className="mt-3 max-w-[16rem] text-center">
+                  <h5 className="text-base font-bold text-gray-900 mb-1">Monitor and Control</h5>
+                  <p className="text-sm text-gray-600">Track performance and ensure proper operation.</p>
                 </div>
               </div>
 
-              {/* Connecting Line */}
-              <div className="flex justify-start pl-10">
-                <div className="w-0.5 h-8 bg-blue-500"></div>
-              </div>
-
-              {/* Step 5: Optimization */}
-              <div className="flex items-start gap-4">
-                <div className="shrink-0">
-                  <div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
-                    <svg
-                      className="w-10 h-10 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                      />
-                    </svg>
-                  </div>
+              {/* Step 5: Left — Optimization */}
+              <div className="relative z-10 flex flex-col items-center pr-40 -mt-6">
+                <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
+                  <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                  </svg>
                 </div>
-                <div className="flex-1">
-                  <h5 className="text-lg font-bold text-gray-900 mb-2">
-                    Optimization
-                  </h5>
-                  <p className="text-sm text-gray-600">
-                    Improve systems through testing and refinement.
-                  </p>
+                <div className="mt-3 max-w-[16rem] text-center">
+                  <h5 className="text-base font-bold text-gray-900 mb-1">Optimization</h5>
+                  <p className="text-sm text-gray-600">Improve systems through testing and refinement.</p>
                 </div>
               </div>
             </div>
