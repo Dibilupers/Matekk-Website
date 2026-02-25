@@ -104,20 +104,21 @@ export default function Home() {
       {/* Hero Section */}
       <section
         id="home"
-        className="relative overflow-hidden bg-linear-to-b from-gray-50 to-white py-14"
+        className="bg-linear-to-b from-gray-50 to-white py-40 lg:py-0"
       >
-        <div className="mx-4 sm:mx-6 lg:mx-[7.438rem]">
+        <div className=" mx-[2.063rem] lg:mx-[7.438rem]">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
             {/* LEFT SIDE - CONTENT */}
-            <div className="space-y-6 lg:space-y-4 text-left lg:text-left">
-              <div className="inline-block">
-                <span className="px-5 py-2.5 bg-blue-50 text-blue-600 rounded-full text-sm font-semibold tracking-wide">
+            <div className="space-y-6 lg:space-y-4 text-left">
+              <div>
+                <span className="px-5 py-2.5 bg-blue-50 text-blue-600 rounded-full text-sm font-semibold ">
                   ICT & Engineering
                 </span>
               </div>
 
-              <h1 className="text-4xl sm:text-5xl lg:text-5xl font-bold leading-tight text-gray-900">
-                Empowering Businesses and Individuals{" "}
+              <h1 className="pr-7 sm:pr-8 lg:pr-7 font-bold leading-tight text-gray-900 space-x-2">
+                Empowering Businesses 
+                <span> and Individuals</span>
                 <span className="text-[#1775EE]">Through ICT Excellence</span>
               </h1>
 
@@ -127,7 +128,7 @@ export default function Home() {
               </p>
 
               <div className="flex sm:flex-row gap-3 sm:gap-4 justify-left lg:justify-start">
-                <button className="px-3 py-3 sm:px-8 sm:py-4 bg-blue-600 text-white rounded-full font-medium hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl text-sm sm:text-base">
+                <button className="px-3 py-3 sm:px-8 sm:py-4 text-[0.87rem] sm:text-[1rem] md:text-[0.93rem] bg-blue-600 text-white rounded-full font-medium hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl ">
                   Explore Our Solutions
                 </button>
                 <button className="px-3 py-3 sm:px-8 sm:py-4 bg-white text-blue-600 border-2 border-blue-600 rounded-full font-medium hover:bg-blue-50 transition-all duration-300 text-sm sm:text-base">
@@ -136,20 +137,20 @@ export default function Home() {
               </div>
 
               <div className="flex flex-nowrap justify-start lg:justify-start items-center gap-2 lg:gap-8 pt-6">
-                <div className="flex items-center gap-1">
-                  <h2 className="text-3xl lg:text-5xl font-bold text-gray-900">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-1">
+                  <h3 className="text-3xl lg:text-5xl font-bold text-gray-900">
                     13+
-                  </h2>
+                  </h3>
                   <div className="text-xs lg:text-sm text-gray-600 leading-tight">
                     <p className="font-medium whitespace-nowrap">Years of</p>
                     <p className="font-medium whitespace-nowrap">Experience</p>
                   </div>
                 </div>
                 <div className="h-10 lg:h-12 w-px bg-gray-300 shrink-0"></div>
-                <div className="flex items-center gap-2">
-                  <h2 className="text-3xl lg:text-5xl font-bold text-gray-900">
+                <div className="flex flex flex-col sm:flex-row  items-center gap-2">
+                  <h3 className="text-3xl lg:text-5xl font-bold text-gray-900">
                     3
-                  </h2>
+                  </h3>
                   <div className="text-xs lg:text-sm text-gray-600 leading-tight">
                     <p className="font-medium whitespace-nowrap">
                       Data Centers
@@ -158,10 +159,10 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="h-10 lg:h-12 w-px bg-gray-300 shrink-0"></div>
-                <div className="flex items-center gap-2">
-                  <h2 className="text-3xl lg:text-5xl font-bold text-gray-900">
+                <div className="flex flex-col sm:flex-row items-center gap-2">
+                  <h3 className="text-3xl lg:text-5xl font-bold text-gray-900">
                     10
-                  </h2>
+                  </h3>
                   <div className="text-xs lg:text-sm text-gray-600 leading-tight">
                     <p className="font-medium whitespace-nowrap">
                       Total Active
@@ -175,7 +176,7 @@ export default function Home() {
             {/* RIGHT SIDE - IMAGE & OVERLAYS */}
             <div className="hidden lg:flex relative lg:h-150 items-center justify-center">
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-125 h-125 bg-linear-to-br from-blue-300 via-blue-400 to-blue-500 rounded-full opacity-20 blur-3xl"></div>
+                <div className="w-80 h-80 bg-linear-to-br from-blue-300 via-blue-400 to-blue-500 rounded-full opacity-20 blur-3xl"></div>
               </div>
 
               <div className="relative w-full max-w-md">
@@ -205,7 +206,7 @@ export default function Home() {
                   <img
                     src="/src/assets/maamgrace2.png"
                     alt="Professional holding laptop with ICT solutions"
-                    className="w-full h-auto aspect-4/5 object-cover"
+                    className="w-full h-auto aspect-square object-cover"
                   />
                 </div>
 
@@ -461,9 +462,8 @@ export default function Home() {
             <button
               key={i}
               onClick={() => setTopSlide(i)}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                topSlide === i ? "bg-[#1775EE] w-4" : "bg-[#C2DDFF] w-2"
-              }`}
+              className={`h-2 rounded-full transition-all duration-300 ${topSlide === i ? "bg-[#1775EE] w-4" : "bg-[#C2DDFF] w-2"
+                }`}
             />
           ))}
         </div>
@@ -652,9 +652,8 @@ export default function Home() {
             <button
               key={i}
               onClick={() => setBottomSlide(i)}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                bottomSlide === i ? "bg-[#1775EE] w-4" : "bg-[#C2DDFF] w-2"
-              }`}
+              className={`h-2 rounded-full transition-all duration-300 ${bottomSlide === i ? "bg-[#1775EE] w-4" : "bg-[#C2DDFF] w-2"
+                }`}
             />
           ))}
         </div>
@@ -664,11 +663,11 @@ export default function Home() {
       <section className="py-16 lg:py-20 bg-[#EBF5FD] ">
         <div className="mx-[2.063rem] lg:mx-[7.438rem]">
           <div className="mb-12 lg:mb-16 text-left md:text-center sm:text-left lg:text-left">
-            <h2 className="text-3xl lg:text-3xl font-bold leading-tight text-[#000000]">
+            <h3 className="text-3xl lg:text-3xl font-bold leading-tight text-[#000000]">
               Why Choose <span className="text-[#1775EE]">MGKK</span>
               <br className="sm:hidden" />
               <span className="text-[#1775EE]"> ICT Services?</span>
-            </h2>
+            </h3>
             <p className="text-base lg:text-sm leading-relaxed text-[#000000] mt-4 max-w-133 mx-auto lg:mx-0 text-justify">
               MGKK Information Communication Technology Services is committed to
               delivering reliable ICT solutions and high-quality training
@@ -764,9 +763,9 @@ export default function Home() {
               - text-gray-900 = "Our" color
               - text-[#1775EE] = "Working Process" color (blue)
             */}
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900">
+            <h3 className="text-3xl lg:text-4xl font-bold text-gray-900">
               Our <span className="text-[#1775EE]">Working Process</span>
-            </h2>
+            </h3>
 
             {/* 
               ADJUST DESCRIPTION:
@@ -876,7 +875,7 @@ export default function Home() {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         strokeWidth={2}
-                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20h3v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
                       />
                     </svg>
                   </div>
@@ -957,7 +956,7 @@ export default function Home() {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         strokeWidth={2}
-                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h3a2 2 0 002-2zm0 0V9a2 2 0 012-2h3a2 2 0 012 2v10m-6 0a2 2 0 002 2h3a2 2 0 002-2m0 0V5a2 2 0 012-2h3a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
                       />
                     </svg>
                   </div>
@@ -1017,7 +1016,7 @@ export default function Home() {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         strokeWidth={2}
-                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20h3v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
                       />
                     </svg>
                   </div>
@@ -1125,7 +1124,7 @@ export default function Home() {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         strokeWidth={2}
-                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h3a2 2 0 002-2zm0 0V9a2 2 0 012-2h3a2 2 0 012 2v10m-6 0a2 2 0 002 2h3a2 2 0 002-2m0 0V5a2 2 0 012-2h3a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
                       />
                     </svg>
                   </div>
@@ -1215,16 +1214,14 @@ export default function Home() {
 
                     {/* Full blur overlay */}
                     <div
-                      className={`absolute inset-0 rounded-2xl backdrop-blur-sm bg-black/1 transition-opacity duration-500 ${
-                        tappedCard === item.id ? "opacity-100" : "opacity-0"
-                      }`}
+                      className={`absolute inset-0 rounded-2xl backdrop-blur-sm bg-black/1 transition-opacity duration-500 ${tappedCard === item.id ? "opacity-100" : "opacity-0"
+                        }`}
                     />
 
                     {/* Content */}
                     <div
-                      className={`absolute inset-0 px-5 flex flex-col justify-center transition-opacity duration-500 ${
-                        tappedCard === item.id ? "opacity-100" : "opacity-0"
-                      }`}
+                      className={`absolute inset-0 px-5 flex flex-col justify-center transition-opacity duration-500 ${tappedCard === item.id ? "opacity-100" : "opacity-0"
+                        }`}
                     >
                       {/* Title row */}
                       <div className="flex items-center justify-between gap-2">
