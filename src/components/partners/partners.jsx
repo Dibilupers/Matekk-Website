@@ -54,119 +54,141 @@ function Partners() {
         { src: ICCT, alt: "ICCT Logo", size: "w-10 sm:w-18" },
     ], []); // Empty dependency array means this only creates once
 
-    // Reference to the scrollable container so we can control scrolling programmatically
+    // Reference to the scrollable container
     const scrollRef = useRef(null);
 
-    // Track which page/dot is currently active (starts at 0 = first page)
+    // ADDED: Reference to the entire Partners section container
+    const sectionRef = useRef(null);
+
+    // Track which page/dot is currently active
     const [currentDot, setCurrentDot] = useState(0);
 
-    // ADDED: Track screen size to calculate logos per page dynamically
+    // Track screen size to calculate logos per page dynamically
     const [logosPerPage, setLogosPerPage] = useState(18);
 
-    // ADDED: Track if user has manually interacted (to pause auto-scroll)
+    // Track if user has manually interacted (to pause auto-scroll)
     const [hasUserInteracted, setHasUserInteracted] = useState(false);
 
-    // ADDED: Calculate logos per page based on screen size
+    // ADDED: Track if Partners section is visible in viewport
+    const [isInView, setIsInView] = useState(false);
+
+    // ADDED: Intersection Observer to detect when section is in view
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                // entries[0] is our Partners section
+                // isIntersecting = true when section is visible in viewport
+                const inView = entries[0].isIntersecting;
+                setIsInView(inView);
+
+                // Resets the to first page when leaving the section
+                if (!inView) {
+                    setCurrentDot(0);
+                    if (scrollRef.current) {
+                        scrollRef.current.scrollTo({
+                            left: 0,
+                            behavior: "smooth"
+                        });
+                    }
+                }
+            },
+            {
+                // Trigger when at least 50% of the section is visible
+                threshold: 0.5
+            }
+        );
+
+        // Start observing the Partners section
+        if (sectionRef.current) {
+            observer.observe(sectionRef.current);
+        }
+
+        // Cleanup: stop observing when component unmounts
+        return () => {
+            if (sectionRef.current) {
+                observer.unobserve(sectionRef.current);
+            }
+        };
+    }, []);
+
+    // Calculate logos per page based on screen size
     useEffect(() => {
         const calculateLogosPerPage = () => {
             const width = window.innerWidth;
-            
-            // Mobile 
+
             if (width < 640) {
                 setLogosPerPage(12);
-            } 
-            // Tablet
+            }
             else if (width >= 620 && width < 1024) {
                 setLogosPerPage(12);
             }
-            // Desktop 
             else {
                 setLogosPerPage(18);
             }
         };
 
-        // Calculate on mount
         calculateLogosPerPage();
-
-        // Recalculate on window resize
         window.addEventListener('resize', calculateLogosPerPage);
-        
-        // Cleanup listener on unmount
+
         return () => window.removeEventListener('resize', calculateLogosPerPage);
     }, []);
 
-    // Calculate total number of pages needed (rounds up so no logos are left out)
+    // Calculate total number of pages needed
     const totalPages = useMemo(() =>
         Math.ceil(partnerLogos.length / logosPerPage),
-        [partnerLogos.length, logosPerPage] // Recalculate when screen size changes
+        [partnerLogos.length, logosPerPage]
     );
 
     // Function to scroll to a specific page when dot is clicked
     const scrollToPage = useCallback((pageIndex) => {
-        // Safety check: make sure scrollRef exists
         if (!scrollRef.current) return;
 
-        // Calculate how far to scroll (container width × page number)
         const scrollAmount = scrollRef.current.offsetWidth * pageIndex;
 
-        // Perform the actual scroll with smooth animation
         scrollRef.current.scrollTo({
             left: scrollAmount,
             behavior: 'smooth'
         });
 
-        // Update which dot should be highlighted as active
         setCurrentDot(pageIndex);
-    }, []); // No dependencies, function never recreates
+    }, []);
 
     // Function called automatically when user scrolls/swipes
     const handleScroll = useCallback(() => {
-        // Safety check: make sure scrollRef exists
         if (!scrollRef.current) return;
 
-        // Get current scroll position (how far left we've scrolled in pixels)
         const scrollPosition = scrollRef.current.scrollLeft;
-
-        // Get the width of one page
         const pageWidth = scrollRef.current.offsetWidth;
-
-        // Calculate which page we're currently on
-        // Math.round() handles in-between positions (e.g., 1.5 becomes 2)
         const currentPage = Math.round(scrollPosition / pageWidth);
 
-        // Update the active dot indicator
         setCurrentDot(prev => prev !== currentPage ? currentPage : prev);
     }, []);
 
-    // ADDED: Handle user interaction to pause auto-scroll
+    // Handle user interaction to pause auto-scroll
     const handleUserInteraction = useCallback(() => {
         setHasUserInteracted(true);
     }, []);
 
-    // ADDED: Auto-scroll effect - scrolls to next page every 2 seconds
+    // UPDATED: Auto-scroll effect - only runs when section is in view
     useEffect(() => {
-        // Don't auto-scroll if user has manually interacted
-        if (hasUserInteracted) return;
+        // ADDED: Don't auto-scroll if section is not in viewport
+        if (!isInView) return;
 
         // Set up interval to auto-scroll every 2 seconds
         const autoScrollInterval = setInterval(() => {
             setCurrentDot(prev => {
-                // Calculate next page (loop back to 0 after last page)
                 const nextPage = (prev + 1) % totalPages;
-                
-                // Scroll to next page
                 scrollToPage(nextPage);
-                
                 return nextPage;
             });
-        }, 2000); // 2000ms = 2 seconds
+        }, 1000);
 
-        // Cleanup interval on unmount or when user interacts
+        // Cleanup interval on unmount or when user interacts or leaves viewport
         return () => clearInterval(autoScrollInterval);
-    }, [totalPages, scrollToPage, hasUserInteracted]);
-
+    }, [totalPages, scrollToPage, hasUserInteracted, isInView]);
+    
     return (
-        <div className="space-y-8 justify-center items-center">
+        <div ref={sectionRef} className="space-y-8 justify-center items-center">
             {/* Main scrollable container */}
             <div
                 ref={scrollRef}
@@ -226,11 +248,10 @@ function Partners() {
                             handleUserInteraction();
                             scrollToPage(index);
                         }}
-                        className={`w-2 h-2 rounded-full transition-all ${
-                            currentDot === index 
+                        className={`w-2 h-2 rounded-full transition-all ${currentDot === index
                                 ? 'bg-blue-600 w-6'  // Active dot: blue and wider
                                 : 'bg-gray-300 hover:bg-gray-400'  // Inactive dot: gray
-                        }`}
+                            }`}
                         aria-label={`Go to page ${index + 1}`}
                     >
                     </button>
