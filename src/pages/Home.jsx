@@ -11,6 +11,7 @@ import location from "../assets/location.svg";
 import phone from "../assets/phone.svg";
 import email from "../assets/email.svg";
 import availability from "../assets/availability.svg";
+import Button from '../../src/components/ui/button';
 
 export default function Home() {
   const totalSlides = 3;
@@ -116,7 +117,7 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
             {/* LEFT SIDE - CONTENT */}
             <div className="space-y-10 lg:space-y-12 text-left">
-              <div className="space-y-6">
+              <div className="space-y-4">
                 <div className="space-y-2">
                   <h6 className="w-fit px-5 py-2.5 bg-blue-50 rounded-full">
                     ICT & Engineering
@@ -134,12 +135,28 @@ export default function Home() {
                   </p>
                 </div>
                 <div className="flex sm:flex-row gap-3 sm:gap-4 justify-left lg:justify-start">
-                  <button className="px-3 py-3 sm:px-8 sm:py-4 text-[0.87rem] sm:text-[1rem] md:text-[0.93rem] bg-blue-600 text-white rounded-full font-medium hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl ">
-                    Explore Our Solutions
-                  </button>
-                  <button className="px-3 py-3 sm:px-8 sm:py-4 bg-white text-blue-600 border-2 border-blue-600 rounded-full font-medium hover:bg-blue-50 transition-all duration-300 text-sm sm:text-base">
-                    View Training Programs
-                  </button>
+                  <Button
+                    title="Explore Our Solutions"
+                    type="none"
+                    buttonCustomStyle="bg-[#1775EE] text-white hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+                    btnFunc={() => {
+                      document.getElementById("services")?.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                      });
+                    }}
+                  />
+                  <Button
+                    title="View Training Programs"
+                    type="none"
+                    buttonCustomStyle="bg-white text-blue-600 border-2 border-blue-600 hover:bg-blue-50 transition-all duration-300 text-sm sm:text-base"
+                    btnFunc={() => {
+                      document.getElementById("services")?.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                      });
+                    }}
+                  />
                 </div>
               </div>
 
