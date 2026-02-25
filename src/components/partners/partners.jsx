@@ -24,6 +24,8 @@ import MISAMIS from '../../assets/MISAMIS.jpg';
 import MARIKINA from '../../assets/MARIKINA.jpg';
 import SLSU from '../../assets/SLSU.png';
 import ICCT from '../../assets/ICCT.jpg';
+import NAMRIA from '../../assets/NAMRIA.svg';
+import EASYTECH from '../../assets/easytech.svg';
 
 function Partners() {
     // OPTIMIZED: Wrap array in useMemo to prevent recreation on every render
@@ -52,6 +54,8 @@ function Partners() {
         { src: MARIKINA, alt: "MARIKINA Logo", size: "w-10 sm:w-18" },
         { src: SLSU, alt: "SLSU Logo", size: "w-10 sm:w-18" },
         { src: ICCT, alt: "ICCT Logo", size: "w-10 sm:w-18" },
+        { src: NAMRIA, alt: "NAMRIA Logo", size: "w-10 sm:w-18" },
+        { src: EASYTECH, alt: "EASYTECH Logo", size: "w-10 sm:w-26" },
     ], []); // Empty dependency array means this only creates once
 
     // Reference to the scrollable container so we can control scrolling programmatically
