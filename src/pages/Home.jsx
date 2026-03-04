@@ -1328,7 +1328,93 @@ export default function Home() {
       </section>
 
       {/* About the Company */}
-      <section id="about" className="scroll-mt-18"></section>
+      <section id="about" className="scroll-mt-18 py-16 bg-[#EBF5FD]">
+        <div className="mx-4 sm:mx-6 lg:mx-[7.438rem] mx-[2.063rem]">
+          {/* Section Heading */}
+          <div className="text-center mb-12">
+            <span className="inline-block border border-gray-300 rounded-full px-5 py-1.5 text-sm text-black bg-white mb-4">
+              Solutions
+            </span>
+            <h3 className="text-3xl lg:text-4xl font-bold text-gray-900">
+              About the <span className="text-[#1775EE]">Company</span>
+            </h3>
+            <p className="text-base text-gray-600 mt-4 max-w-2xl mx-auto">
+              MGKK Information Communication Technology Services is a trusted
+              provider of ICT and engineering solutions and a premier ICT
+              training center, committed to empowering businesses and
+              individuals through innovation and education since 2013.
+            </p>
+          </div>
+
+          {/* 3-Column Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+            {/* Left Column */}
+            <div className="flex flex-col gap-6 md:h-full xl:h-full 2xl:h-full">
+              {/* Text Card */}
+              <div className="bg-white rounded-2xl p-6 shadow-sm order-2 md:order-1 shrink-0">
+                <p className="text-sm text-gray-700 leading-relaxed">
+                  Founded in 2013, MGKK ICT Services has grown into a reputable
+                  firm delivering innovative ICT solutions and professional
+                  training programs that enhance efficiency, connectivity, and
+                  technological capability across industries.
+                </p>
+              </div>
+
+              {/* Person Image */}
+              <div className="rounded-2xl overflow-hidden shadow-sm order-1 md:order-2 md:flex-1 xl:flex-1 2xl:flex-1 min-h-0 2xl:max-h-[387px]">
+                <img
+                  src="/src/assets/Mark_Anthony_Valenzuela_Melendres.png"
+                  alt="Company Representative"
+                  className="w-full h-107 md:h-full object-cover object-top"
+                />
+              </div>
+            </div>
+
+            <div className="rounded-2xl overflow-hidden shadow-sm order-3 md:order-none self-stretch min-h-0 2xl:max-h-[580px]">
+              <img
+                src="/src/assets/MGGK_Building.png"
+                alt="Company Building"
+                className="w-full h-full object-cover object-top"
+              />
+            </div>
+
+            {/* Right Column */}
+            <div className="flex flex-col gap-6 order-4 md:order-none">
+              {/* Mission Card */}
+              <div className="bg-white rounded-2xl p-6 shadow-sm">
+                <h5 className="text-lg font-bold text-gray-900 mb-4">
+                  Mission
+                </h5>
+                <p className="text-sm text-gray-700 leading-relaxed mb-3">
+                  To empower businesses through innovative ICT and engineering
+                  solutions that enhance operational efficiency, drive
+                  technological advancement, and support sustainable growth.
+                </p>
+                <p className="text-sm text-gray-700 leading-relaxed">
+                  To deliver high-quality ICT education and training that
+                  enables individuals and organizations to achieve their full
+                  potential and stay competitive in the digital era.
+                </p>
+              </div>
+
+              {/* Vision Card */}
+              <div className="bg-white rounded-2xl p-6 shadow-sm">
+                <h5 className="text-lg font-bold text-gray-900 mb-4">Vision</h5>
+                <p className="text-sm text-gray-700 leading-relaxed mb-3">
+                  To be a global leader in ICT and Engineering solutions,
+                  recognized for excellence, innovation, and commitment to
+                  client success.
+                </p>
+                <p className="text-sm text-gray-700 leading-relaxed">
+                  To be a globally recognized leader in ICT training, known for
+                  excellence, innovation, and transformative educational
+                  experiences.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Frequently Asked Questions */}
       <section className="flex flex-col md:flex-col scroll-mt-18 lg:flex-row xl:flex-row justify-center items-start bg-white pb-16 md:py-12 lg:py-20 space-y-0 sm:space-y-[-2rem] md:space-y-10 lg:space-y-0">
