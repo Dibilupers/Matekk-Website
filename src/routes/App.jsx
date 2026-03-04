@@ -4,6 +4,7 @@ import NotFound from "../pages/NotFound";
 import NavBar from "../components/navbar/navbar";
 import Footer from "../components/footer/footer";
 import CCNA from "../pages/training/cisco/ccna/ccna";
+import CCNAAutomation from "../pages/training/cisco/ccna/automation";
 
 export default function App() {
   return (
@@ -12,6 +13,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/training/cisco/ccna/ccna" element={<CCNA />} />
+        <Route path="/training/cisco/ccna/automation" element={<CCNAAutomation />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
