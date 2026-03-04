@@ -980,7 +980,7 @@ export default function Home() {
               >
                 {/* Line 1→2 */}
                 <path
-                  d="M 180 10 C 300 180, 500 30, 490 270"
+                  d="M 200 20 C 300 180, 500 30, 490 270"
                   stroke="#3B82F6" strokeWidth="5" fill="none" strokeLinecap="round"
                 />
                 {/* Line 2→3 */}
