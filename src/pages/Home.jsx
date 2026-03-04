@@ -258,9 +258,17 @@ export default function Home() {
                       </p>
                     </div>
                   </div>
-                  <button className="mt-2 w-full py-2.5 bg-[#1775EE] text-white rounded-full text-sm font-semibold hover:bg-blue-700 transition-colors shadow-md">
-                    View Certification
-                  </button>
+                  <Button
+                    title="View Certification"
+                    type="none"
+                    buttonCustomStyle="bg-[#1775EE] text-white hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl w-full"
+                    btnFunc={() => {
+                      document.getElementById("feedbacks")?.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                      });
+                    }}
+                  />
                 </div>
               </div>
             </div>
@@ -305,9 +313,9 @@ export default function Home() {
           {/* Controls — LEFT */}
           <div className="flex flex-col relative md:w-[20vw] self-start gap-y-[1vh] items-start">
             <div className="absolute -top-10 md:-left-10 w-70 h-70 md:w-72 md:h-72 bg-[#C2DDFF] opacity-50 rounded-full blur-3xl -z-10" />
-            <h5 className="text-sm bg-[#EBF5FD] border border-[#EBF5FD] rounded-full py-[0.7vh] px-4 inline-flex text-center shadow-[0_0_14px_rgba(0,0,0,0.25)]">
+            <h6 className="text-sm bg-[#EBF5FD] border border-[#EBF5FD] rounded-full py-[0.7vh] px-4 inline-flex text-center shadow-[0_0_3px_rgba(0,0,0,0.25)]">
               Solutions
-            </h5>
+            </h6>
             <h5 className="font-rubik font-bold text-2xl w-[50vw] md:w-auto">
               End-to-End ICT & Engineering Solutions
             </h5>
@@ -495,9 +503,9 @@ export default function Home() {
           {/* Controls — on mobile: top + right-aligned | on desktop: right column */}
           <div className="flex flex-col relative md:w-[20vw] self-start gap-y-[1vh] items-end text-right order-first md:order-last">
             <div className="absolute -top-10 -right-5 w-72 h-72 bg-[#C2DDFF] opacity-50 rounded-full blur-3xl -z-10" />
-            <h5 className="text-sm bg-[#EBF5FD] border border-[#EBF5FD] rounded-full py-[0.7vh] px-4 text-center shadow-[0_0_14px_rgba(0,0,0,0.25)]">
+            <h6 className="text-sm bg-[#EBF5FD] border border-[#EBF5FD] rounded-full py-[0.7vh] px-4 text-center shadow-[0_0_3px_rgba(0,0,0,0.25)]">
               Training
-            </h5>
+            </h6>
             <h5 className="font-rubik font-bold text-2xl w-[50vw] md:w-auto text-right">
               ICT Training & Skills Development
             </h5>
@@ -972,7 +980,7 @@ export default function Home() {
               >
                 {/* Line 1→2 */}
                 <path
-                  d="M 180 10 C 300 180, 500 30, 490 270"
+                  d="M 200 20 C 300 180, 500 30, 490 270"
                   stroke="#3B82F6" strokeWidth="5" fill="none" strokeLinecap="round"
                 />
                 {/* Line 2→3 */}
@@ -1320,7 +1328,93 @@ export default function Home() {
       </section>
 
       {/* About the Company */}
-      <section id="about" className="scroll-mt-18"></section>
+      <section id="about" className="scroll-mt-18 py-16 bg-[#EBF5FD]">
+        <div className="mx-4 sm:mx-6 lg:mx-[7.438rem] mx-[2.063rem]">
+          {/* Section Heading */}
+          <div className="text-center mb-12">
+            <span className="inline-block border border-gray-300 rounded-full px-5 py-1.5 text-sm text-black bg-white mb-4">
+              Solutions
+            </span>
+            <h3 className="text-3xl lg:text-4xl font-bold text-gray-900">
+              About the <span className="text-[#1775EE]">Company</span>
+            </h3>
+            <p className="text-base text-gray-600 mt-4 max-w-2xl mx-auto">
+              MGKK Information Communication Technology Services is a trusted
+              provider of ICT and engineering solutions and a premier ICT
+              training center, committed to empowering businesses and
+              individuals through innovation and education since 2013.
+            </p>
+          </div>
+
+          {/* 3-Column Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+            {/* Left Column */}
+            <div className="flex flex-col gap-6 md:h-full xl:h-full 2xl:h-full">
+              {/* Text Card */}
+              <div className="bg-white rounded-2xl p-6 shadow-sm order-2 md:order-1 shrink-0">
+                <p className="text-sm text-gray-700 leading-relaxed">
+                  Founded in 2013, MGKK ICT Services has grown into a reputable
+                  firm delivering innovative ICT solutions and professional
+                  training programs that enhance efficiency, connectivity, and
+                  technological capability across industries.
+                </p>
+              </div>
+
+              {/* Person Image */}
+              <div className="rounded-2xl overflow-hidden shadow-sm order-1 md:order-2 md:flex-1 xl:flex-1 2xl:flex-1 min-h-0 2xl:max-h-[387px]">
+                <img
+                  src="/src/assets/Mark_Anthony_Valenzuela_Melendres.png"
+                  alt="Company Representative"
+                  className="w-full h-107 md:h-full object-cover object-top"
+                />
+              </div>
+            </div>
+
+            <div className="rounded-2xl overflow-hidden shadow-sm order-3 md:order-none self-stretch min-h-0 2xl:max-h-[580px]">
+              <img
+                src="/src/assets/MGGK_Building.png"
+                alt="Company Building"
+                className="w-full h-full object-cover object-top"
+              />
+            </div>
+
+            {/* Right Column */}
+            <div className="flex flex-col gap-6 order-4 md:order-none">
+              {/* Mission Card */}
+              <div className="bg-white rounded-2xl p-6 shadow-sm">
+                <h5 className="text-lg font-bold text-gray-900 mb-4">
+                  Mission
+                </h5>
+                <p className="text-sm text-gray-700 leading-relaxed mb-3">
+                  To empower businesses through innovative ICT and engineering
+                  solutions that enhance operational efficiency, drive
+                  technological advancement, and support sustainable growth.
+                </p>
+                <p className="text-sm text-gray-700 leading-relaxed">
+                  To deliver high-quality ICT education and training that
+                  enables individuals and organizations to achieve their full
+                  potential and stay competitive in the digital era.
+                </p>
+              </div>
+
+              {/* Vision Card */}
+              <div className="bg-white rounded-2xl p-6 shadow-sm">
+                <h5 className="text-lg font-bold text-gray-900 mb-4">Vision</h5>
+                <p className="text-sm text-gray-700 leading-relaxed mb-3">
+                  To be a global leader in ICT and Engineering solutions,
+                  recognized for excellence, innovation, and commitment to
+                  client success.
+                </p>
+                <p className="text-sm text-gray-700 leading-relaxed">
+                  To be a globally recognized leader in ICT training, known for
+                  excellence, innovation, and transformative educational
+                  experiences.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Frequently Asked Questions */}
       <section className="flex flex-col md:flex-col scroll-mt-18 lg:flex-row xl:flex-row justify-center items-start bg-white pb-16 md:py-12 lg:py-20 space-y-0 sm:space-y-[-2rem] md:space-y-10 lg:space-y-0">
@@ -1338,10 +1432,10 @@ export default function Home() {
               To be a global leader in ICT and Engineering solutions, recognized
               for excellence, innovation, and commitment to client success.
             </p>
-            <Button
+            <button
               title="Contact Us"
               type="none"
-              buttonCustomStyle="text-white bg-[#1775EE] hover:bg-[#1775EE] py-3 px-[5%] md:py-2 border-[#1775EE] hover:bg-white hover:border-white hover:text-[#1775EE] transition-all ease-in-out [box-shadow:0_4px_8px_rgba(1,0,0,0.2)] "
+              buttonCustomStyle=" text-white bg-[#007EE6] hover:bg-[#1775EE] py-3 px-[5%] md:py-2 border-[#1775EE] hover:bg-white hover:border-white hover:text-[#1775EE] transition-all ease-in-out [box-shadow:0_4px_8px_rgba(1,0,0,0.2)] "
               btnFunc={() => {
                 document.getElementById("contact")?.scrollIntoView({
                   behavior: "smooth",
