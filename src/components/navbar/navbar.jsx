@@ -322,6 +322,16 @@ function NavBar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const resetMenu = () => {
+    setIsOpen(false);
+    setOpenDropdown(null);
+    setOpenSubcourse(null);
+    setOpenSubSubcourse(null);
+    setOpenSubSubSubcourse(null);
+    setOpenThirdLevel(null);
+    setOpenFourthLevel(null);
+  };
+
   const handleHomeClick = () => {
     if (location.pathname === "/") {
       scrollToSection("home");
@@ -335,7 +345,10 @@ function NavBar() {
       className={`flex flex-row items-center justify-between py-4 bg-white sticky top-0 z-50 transition-shadow ${scrolled ? "shadow-md" : ""}`}
     >
       {/* ↓ changed md:ml-[7.438rem] → lg:ml-[7.438rem] */}
-      <button onClick={handleHomeClick} className="ml-[2.063rem] lg:ml-[7.438rem] cursor-pointer">
+      <button
+        onClick={handleHomeClick}
+        className="ml-[2.063rem] lg:ml-[7.438rem] cursor-pointer"
+      >
         LOGO
       </button>
 
@@ -377,6 +390,7 @@ function NavBar() {
                 <Link
                   key={item.name}
                   to={item.path}
+                  onClick={resetMenu}
                   className="block px-4 py-2 hover:bg-[#1775EE] hover:text-white hover:font-bold transition-colors"
                 >
                   {item.name}
@@ -495,31 +509,24 @@ function NavBar() {
                         const hasSubSubcourses =
                           subSub.subcourses && subSub.subcourses.length > 0;
 
-                        return (
-                          <button
-                            key={subSub.name}
-                            onClick={() => {
-                              if (hasSubSubcourses) {
+                        if (hasSubSubcourses) {
+                          return (
+                            <button
+                              key={subSub.name}
+                              onClick={() =>
                                 setOpenSubSubSubcourse(
                                   openSubSubSubcourse === subSub.name
                                     ? null
                                     : subSub.name,
-                                );
+                                )
                               }
-                            }}
-                            className={`w-full text-left px-6 py-2 transition-colors rounded-[0.35rem] flex items-center justify-between
-              ${
-                hasSubSubcourses
-                  ? openSubSubSubcourse === subSub.name
-                    ? "bg-[#1775EE] text-white font-bold"
-                    : "hover:bg-[#1775EE] hover:text-white hover:font-bold"
-                  : "hover:text-[#1775EE] hover:font-bold"
-              }
-            `}
-                          >
-                            {subSub.name}
-
-                            {hasSubSubcourses && (
+                              className={`w-full text-left px-6 py-2 transition-colors rounded-[0.35rem] flex items-center justify-between ${
+                                openSubSubSubcourse === subSub.name
+                                  ? "bg-[#1775EE] text-white font-bold"
+                                  : "hover:bg-[#1775EE] hover:text-white hover:font-bold"
+                              }`}
+                            >
+                              {subSub.name}
                               <svg
                                 className="w-4 h-4"
                                 fill="none"
@@ -533,8 +540,19 @@ function NavBar() {
                                   d="M9 5l7 7-7 7"
                                 />
                               </svg>
-                            )}
-                          </button>
+                            </button>
+                          );
+                        }
+
+                        return (
+                          <Link
+                            key={subSub.name}
+                            to={subSub.path}
+                            onClick={resetMenu}
+                            className="block w-full text-left px-6 py-2 rounded-[0.35rem] hover:text-[#1775EE] hover:font-bold transition-colors"
+                          >
+                            {subSub.name}
+                          </Link>
                         );
                       })}
                   </div>
@@ -553,6 +571,7 @@ function NavBar() {
                         <Link
                           key={finalItem.name}
                           to={finalItem.path || "#"}
+                          onClick={resetMenu}
                           className="block w-full text-left px-6 py-2 rounded-[0.35rem] hover:text-[#1775EE] hover:font-bold transition-colors"
                         >
                           {finalItem.name}

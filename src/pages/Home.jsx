@@ -1178,7 +1178,7 @@ export default function Home() {
       {/* Featured Solutions */}
       <section id="training" className="flex flex-col py-10 h-full bg-[#EBF5FD] scroll-mt-18">
         <div className="mx-[2.063rem] lg:mx-[7.438rem]">
-          <div className="text-center w-[65vw] self-center sm:w-[45vw] md:w-auto lg:w-auto">
+          <div className="text-center w-full self-center px-10 lg:px-0 sm:w-full md:w-auto lg:w-auto">
             <h3>
               Our Featured
               <span className="text-[#1775EE]"> Solutions and Training</span>
