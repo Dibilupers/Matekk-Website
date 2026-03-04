@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Button from "../ui/button";
+import { useNavigate, useLocation } from "react-router-dom";
 
 function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,6 +13,8 @@ function NavBar() {
   const [openThirdLevel, setOpenThirdLevel] = useState(null);
   const [openFourthLevel, setOpenFourthLevel] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const dropdownMenus = {
     solutions: [
@@ -27,7 +30,7 @@ function NavBar() {
           {
             name: "CCNA",
             subcourses: [
-              { name: "CCNA", path: "/training/cisco/ccna" },
+              { name: "CCNA", path: "/training/cisco/ccna/ccna" },
               {
                 name: "CCNA Automation",
                 path: "/training/cisco/ccna/automation",
@@ -62,60 +65,63 @@ function NavBar() {
             subcourses: [
               {
                 name: "A+ (Core 1 & 2)",
-                path: "/training/comptia/aplus/core12",
+                path: "/training/cisco/comptia/aplus",
               },
-              { name: "Network+", path: "/training/comptia/network" },
-              { name: "Security+", path: "/training/comptia/security" },
-              { name: "CySA+", path: "/training/comptia/cysa" },
-              { name: "PenTest+", path: "/training/comptia/pentest" },
-              { name: "Linux+", path: "/training/comptia/linux" },
+              { name: "Network+", path: "/training/cisco/comptia/network" },
+              { name: "Security+", path: "/training/cisco/comptia/security" },
+              { name: "CySA+", path: "/training/cisco/comptia/cysa" },
+              { name: "PenTest+", path: "/training/cisco/comptia/pentest" },
+              { name: "Linux+", path: "/training/cisco/comptia/linux" },
             ],
           },
           {
             name: "Fortinet",
             subcourses: [
-              { name: "NSE 1", path: "/training/fortinet/nse1" },
-              { name: "NSE 2", path: "/training/fortinet/nse2" },
-              { name: "NSE 3", path: "/training/fortinet/nse3" },
-              { name: "NSE 4 (all tracks)", path: "/training/fortinet/nse4" },
+              { name: "NSE 1", path: "/training/cisco/fortinet/nse1" },
+              { name: "NSE 2", path: "/training/cisco/fortinet/nse2" },
+              { name: "NSE 3", path: "/training/cisco/fortinet/nse3" },
+              {
+                name: "NSE 4 (all tracks)",
+                path: "/training/cisco/fortinet/nse4",
+              },
               {
                 name: "NSE 5 Secure Networking",
-                path: "/training/fortinet/nse5securenetworking",
+                path: "/training/cisco/fortinet/nse5securenetworking",
               },
-              { name: "NSE 5 SASE", path: "/training/fortinet/nse5sase" },
+              { name: "NSE 5 SASE", path: "/training/cisco/fortinet/nse5sase" },
               {
                 name: "NSE 5 Cloud Security",
-                path: "/training/fortinet/nse5cloudsecurity",
+                path: "/training/cisco/fortinet/nse5cloudsecurity",
               },
               {
                 name: "NSE 5 Secure Operations",
-                path: "/training/fortinet/nse5secureoperations",
+                path: "/training/cisco/fortinet/nse5secureoperations",
               },
               {
                 name: "NSE 6 Secure Networking",
-                path: "/training/fortinet/nse6securenetworking",
+                path: "/training/cisco/fortinet/nse6securenetworking",
               },
-              { name: "NSE 6 SASE", path: "/training/fortinet/nse6sase" },
+              { name: "NSE 6 SASE", path: "/training/cisco/fortinet/nse6sase" },
               {
                 name: "NSE 6 Cloud Security",
-                path: "/training/fortinet/nse6cloudsecurity",
+                path: "/training/cisco/fortinet/nse6cloudsecurity",
               },
               {
                 name: "NSE 6 Secure Operations",
-                path: "/training/fortinet/nse6secureoperations",
+                path: "/training/cisco/fortinet/nse6secureoperations",
               },
               {
                 name: "NSE 7 Secure Networking",
-                path: "/training/fortinet/nse7securenetworking",
+                path: "/training/cisco/fortinet/nse7securenetworking",
               },
-              { name: "NSE 7 SASE", path: "/training/fortinet/nse7sase" },
+              { name: "NSE 7 SASE", path: "/training/cisco/fortinet/nse7sase" },
               {
                 name: "NSE 7 Cloud Security",
-                path: "/training/fortinet/nse7cloudsecurity",
+                path: "/training/cisco/fortinet/nse7cloudsecurity",
               },
               {
                 name: "NSE 7 Secure Operations",
-                path: "/training/fortinet/nse7secureoperations",
+                path: "/training/cisco/fortinet/nse7secureoperations",
               },
             ],
           },
@@ -127,35 +133,35 @@ function NavBar() {
                 subcourses: [
                   {
                     name: "Cybersecurity Apprentice",
-                    path: "/training/paloalto/networksecurity/essentials",
+                    path: "/training/cisco/paloalto/networksecurity/apprentice",
                   },
                   {
                     name: "Cybersecurity Practitioner",
-                    path: "/training/paloalto/networksecurity/practitioner",
+                    path: "/training/cisco/paloalto/networksecurity/practitioner",
                   },
                   {
                     name: "Network Security Professional",
-                    path: "/training/paloalto/networksecurity/professional",
+                    path: "/training/cisco/paloalto/networksecurity/professional",
                   },
                   {
                     name: "Network Security Analyst",
-                    path: "/training/paloalto/networksecurity/analyst",
+                    path: "/training/cisco/paloalto/networksecurity/analyst",
                   },
                   {
                     name: "Next-Generation Firewall Engineer",
-                    path: "/training/paloalto/networksecurity/nextgenerationfirewallengineer",
+                    path: "/training/cisco/paloalto/networksecurity/nextgenerationfirewallengineer",
                   },
                   {
                     name: "SD-WAN Engineer",
-                    path: "/training/paloalto/networksecurity/sdwanengineer",
+                    path: "/training/cisco/paloalto/networksecurity/sdwanengineer",
                   },
                   {
                     name: "Security Service Edge Engineer",
-                    path: "/training/paloalto/networksecurity/securityserviceedgeengineer",
+                    path: "/training/cisco/paloalto/networksecurity/securityserviceedgeengineer",
                   },
                   {
                     name: "Network Security Architect",
-                    path: "/training/paloalto/networksecurity/architect",
+                    path: "/training/cisco/paloalto/networksecurity/architect",
                   },
                 ],
               },
@@ -164,31 +170,31 @@ function NavBar() {
                 subcourses: [
                   {
                     name: "Cybersecurity Practitioner",
-                    path: "/training/paloalto/securityoperations/practitioner",
+                    path: "/training/cisco/paloalto/securityoperations/practitioner",
                   },
                   {
                     name: "Security Operations Professional",
-                    path: "/training/paloalto/securityoperations/professional",
+                    path: "/training/cisco/paloalto/securityoperations/professional",
                   },
                   {
                     name: "XSIAM Analyst",
-                    path: "/training/paloalto/securityoperations/xsiamanalyst",
+                    path: "/training/cisco/paloalto/securityoperations/xsiamanalyst",
                   },
                   {
                     name: "XDR Analyst",
-                    path: "/training/paloalto/securityoperations/xdranalyst",
+                    path: "/training/cisco/paloalto/securityoperations/xdranalyst",
                   },
                   {
                     name: "XSIAM Engineer",
-                    path: "/training/paloalto/securityoperations/xsiamengineer",
+                    path: "/training/cisco/paloalto/securityoperations/xsiamengineer",
                   },
                   {
                     name: "XDR Engineer",
-                    path: "/training/paloalto/securityoperations/xdrengineer",
+                    path: "/training/cisco/paloalto/securityoperations/xdrengineer",
                   },
                   {
                     name: "XSOAR Engineer",
-                    path: "/training/paloalto/securityoperations/xsoarengineer",
+                    path: "/training/cisco/paloalto/securityoperations/xsoarengineer",
                   },
                 ],
               },
@@ -197,7 +203,7 @@ function NavBar() {
                 subcourses: [
                   {
                     name: "Cloud Security Professional",
-                    path: "/training/paloalto/cloudsecurity/professional",
+                    path: "/training/cisco/paloalto/cloudsecurity/professional",
                   },
                 ],
               },
@@ -211,11 +217,11 @@ function NavBar() {
                 subcourses: [
                   {
                     name: "Penetration Testing",
-                    path: "/training/peh/fundamentals/pentest",
+                    path: "/training/cisco/peh/fundamentals/pentest",
                   },
                   {
                     name: "Web App Security",
-                    path: "/training/peh/fundamentals/webapp",
+                    path: "/training/cisco/peh/fundamentals/webapp",
                   },
                 ],
               },
@@ -226,15 +232,15 @@ function NavBar() {
             subcourses: [
               {
                 name: "Data Centre Foundation Certificate",
-                path: "/training/cdcp/dcfc",
+                path: "/training/cisco/cdcp/dcfc",
               },
               {
                 name: "Certified Data Centre Professional",
-                path: "/training/cdcp/cdcp",
+                path: "/training/cisco/cdcp/cdcp",
               },
               {
                 name: "Certified Data Centre Specialist",
-                path: "/training/cdcp/cdcs",
+                path: "/training/cisco/cdcp/cdcs",
               },
             ],
           },
@@ -273,7 +279,7 @@ function NavBar() {
               { name: "Foundation", path: "/training/itil4/foundation" },
               {
                 name: "Specialist: Create, Deliver and Support",
-                path: "/training/itil4/advanced",
+                path: "/training/itil4/specialist",
               },
               {
                 name: "Strategist: Direct, Plan and Improve",
@@ -316,20 +322,28 @@ function NavBar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const handleHomeClick = () => {
+    if (location.pathname === "/") {
+      scrollToSection("home");
+    } else {
+      navigate("/", { state: { scrollTo: "home" } });
+    }
+  };
+
   return (
     <header
       className={`flex flex-row items-center justify-between py-4 bg-white sticky top-0 z-50 transition-shadow ${scrolled ? "shadow-md" : ""}`}
     >
       {/* ↓ changed md:ml-[7.438rem] → lg:ml-[7.438rem] */}
-      <Link to="/" className="ml-[2.063rem] lg:ml-[7.438rem]">
+      <button onClick={handleHomeClick} className="ml-[2.063rem] lg:ml-[7.438rem] cursor-pointer">
         LOGO
-      </Link>
+      </button>
 
       {/* Desktop Nav — only visible at lg and above */}
       {/* ↓ changed hidden md:flex → hidden lg:flex */}
       <nav className="space-x-8 hidden lg:flex font-poppins items-center">
         <button
-          onClick={() => scrollToSection("home")}
+          onClick={handleHomeClick}
           className="hover:text-[#1775EE] hover:font-bold transition-colors cursor-pointer"
         >
           Home
