@@ -704,7 +704,7 @@ export default function Home() {
               <br className="sm:hidden" />
               <span className="text-[#1775EE]"> ICT Services?</span>
             </h3>
-            <p className="text-base lg:text-sm leading-relaxed text-[#000000] mt-4 max-w-133 mx-auto lg:mx-0 text-justify">
+            <p className="leading-relaxed text-[#000000] mt-4 max-w-133 mx-auto lg:mx-0 text-justify">
               MGKK Information Communication Technology Services is committed to
               delivering reliable ICT solutions and high-quality training
               through experienced professionals, proven methodologies, and a
