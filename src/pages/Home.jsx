@@ -119,7 +119,7 @@ export default function Home() {
             <div className="space-y-10 lg:space-y-12 text-left">
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <h6 className="w-fit px-5 py-2 bg-blue-50 rounded-full shadow-[0px_4px_5px_-3px_rgba(0,0,0,0.2)]">
+                  <h6 className="w-fit px-5 py-2 bg-blue-50 rounded-full shadow-[0px_0px_6px_-3px_rgba(0,0,0,0.5)]">
                     ICT & Engineering
                   </h6>
 
