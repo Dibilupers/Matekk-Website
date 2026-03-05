@@ -12,6 +12,7 @@ import phone from "../assets/phone.svg";
 import email from "../assets/email.svg";
 import availability from "../assets/availability.svg";
 import Button from '../../src/components/ui/button';
+import TestimonialSection from "../components/section/TestimonialsSection.jsx";
 
 export default function Home() {
   const totalSlides = 3;
@@ -1331,6 +1332,10 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Hear from our successful learners */}
+      <TestimonialSection />
+      
 
       {/* About the Company */}
       <section id="about" className="scroll-mt-18 py-16 bg-[#EBF5FD]">
