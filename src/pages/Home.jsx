@@ -161,7 +161,7 @@ export default function Home() {
               </div>
 
               <div className="flex space-x-4 justify-center items-center md:justify-start md:items-start">
-                <div className="flex flex-col sm:flex-row items-center gap-2">
+                <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
                   <h3 className="font-bold text-gray-900">
                     13
                   </h3>
@@ -173,7 +173,7 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="h-18 md:h-10 lg:h-12 w-px bg-black shrink-0"></div>
-                <div className="flex flex-col sm:flex-row items-center gap-2">
+                <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
                   <h3 className="font-bold text-gray-900">
                     3
                   </h3>
@@ -185,7 +185,7 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="h-18 md:h-10 lg:h-12 w-px bg-black shrink-0"></div>
-                <div className="flex flex-col sm:flex-row items-center gap-2">
+                <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
                   <h3 className="font-bold text-gray-900">
                     10
                   </h3>
@@ -281,12 +281,12 @@ export default function Home() {
       {/* Trusted by our customers & clients */}
       <section className="flex bg-[#EBF5FD] justify-center items-center text-center py-10 scroll-mt-18" id="partners">
         <div className="mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] space-y-4 md:space-y-7">
-          <div>
-            <div className="flex flex-col md:flex-row justify-center items-center space-x-2 font-bold text-3xl">
+          <div className="flex flex-col justify-center items-center space-y-1">
+            <div className="flex flex-col sm:flex-row space-x-2 font-bold text-3xl">
               <h3>Trusted by Our</h3>
               <h3 className="text-[#1775EE]">Customers & Partners</h3>
             </div>
-            <p>
+            <p className="w-78 sm:w-lg md:w-lg lg:w-xl xl:w-full">
               We collaborate with recognized technology partners to ensure
               quality, reliability, and up-to-date ICT solutions.
             </p>
@@ -296,14 +296,14 @@ export default function Home() {
       </section>
 
       {/* Services we provide */}
-      <section id="services" className="flex flex-col py-10 h-full mx-[2.063rem] lg:mx-[7.438rem] scroll-mt-18">
-        <div className="text-center w-[60vw] sm:w-[27vw] self-center md:w-auto lg:w-auto">
+      <section id="services" className="bg-amber-100 flex flex-col justify-center items-center space-y-1 py-10 h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem]">
+        <div className="w-70 md:w-full flex justify-center text-center bg-yellow-400">
           <h3>
             Services We Provide to
             <span className="text-[#1775EE]"> Elevate Your Business</span>
           </h3>
         </div>
-        <p className="w-[70vw] md:w-[56.406vw] xl:w-[56.406vw] self-center mt-[1.1vh] text-center">
+        <p className="bg-red-50 w-78 sm:w-full md:w-xl xl:w-4xl self-center text-center">
           MGKK Information Communication Technology Services delivers end-to-end
           ICT and engineering solutions alongside comprehensive training
           programs designed to meet industry demands and support digital
@@ -503,6 +503,7 @@ export default function Home() {
         {/* ── BOTTOM CAROUSEL ── */}
         <div className="max-w-6xl flex flex-col md:flex-row justify-center items-center gap-10 mt-[4vh] md:mt-[8vh]">
           {/* Controls — on mobile: top + right-aligned | on desktop: right column */}
+          {/* Training title */}
           <div className="flex flex-col relative md:w-[20vw] self-start gap-y-[1vh] items-end text-right order-first md:order-last">
             <div className="absolute -top-10 -right-5 w-72 h-72 bg-[#C2DDFF] opacity-50 rounded-full blur-3xl -z-10" />
             <h6 className="text-sm bg-[#EBF5FD] border border-[#EBF5FD] rounded-full py-[0.7vh] px-4 text-center shadow-[0_0_3px_rgba(0,0,0,0.25)]">
@@ -570,8 +571,10 @@ export default function Home() {
                 transform: `translateX(calc(${bottomSlide} * ${bottomStep}))`,
               }}
             >
-              {/* Card 4 */}
-              <div className="group relative shrink-0 w-[85vw] md:w-[52vw] lg:w-[24vw] rounded-xl overflow-hidden">
+              {/* Card 4 - Training section */}
+              {/* Size of container */}
+              <div className="group relative shrink-0 w-[85vw] md:w-[40vw] lg:w-[24vw] rounded-xl overflow-hidden">
+                {/* Color of the container */}
                 <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
                 <div className="absolute inset-0 bg-linear-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
