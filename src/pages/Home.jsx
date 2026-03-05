@@ -322,7 +322,7 @@ export default function Home() {
         </p>
 
         {/* ── TOP CAROUSEL ── */}
-        <div className="max-w-6xl mx-1 flex flex-col md:flex-row justify-center items-center gap-10 mt-[6vh] md:mx-0 lg:mx-auto">
+        <div className="w-full mx-1 flex flex-col md:flex-row justify-center items-center gap-10 mt-[6vh] md:mx-0 lg:mx-auto">
           {/* Controls — LEFT */}
           <div className="flex flex-col relative md:w-[35vw] lg:w-[20vw] xl:w-[20vw] self-start gap-y-[1vh] items-start">
             <div className="absolute -top-10 md:-left-10 w-70 h-70 md:w-72 md:h-72 bg-[#C2DDFF] opacity-50 rounded-full blur-3xl -z-10" />
@@ -513,7 +513,7 @@ export default function Home() {
         </div>
 
         {/* ── BOTTOM CAROUSEL ── */}
-        <div className="max-w-6xl flex flex-col md:flex-row md:m-0 md:w-full justify-center items-center gap-10 mt-[4vh] md:mt-[8vh] lg:mx-auto">
+        <div className="w-full flex flex-col md:flex-row md:m-0 md:w-full justify-center items-center gap-10 mt-[4vh] md:mt-[8vh] lg:mx-auto">
           {/* Controls — on mobile: top + right-aligned | on desktop: right column */}
           {/* Training title */}
           <div className="flex flex-col relative md:w-[20vw] self-start gap-y-[1vh] items-end text-right order-first md:order-last">
