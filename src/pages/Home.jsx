@@ -119,8 +119,11 @@ export default function Home() {
   return (
     <main>
       {/* Hero Section */}
-      <section id="home" className="py-40 md:py-20 lg:py-0 scroll-mt-18">
-        <div className=" mx-[2.063rem] md:mx-16 lg:mx-[7.438rem]">
+      <section
+        id="home"
+        className="py-40 md:py-20 lg:py-0 scroll-mt-18"
+      >
+        <div className=" mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem]">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
             {/* LEFT SIDE - CONTENT */}
             <div className="space-y-10 lg:space-y-12 text-left">
@@ -170,34 +173,36 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="flex space-x-4">
-                <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-                  <h3 className="text-3xl lg:text-5xl font-bold text-gray-900">
-                    13+
+              <div className="flex space-x-4 justify-center items-center md:justify-start md:items-start">
+                <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
+                  <h3 className="font-bold text-gray-900">
+                    13
                   </h3>
-                  <div className="text-gray-600 leading-tight">
-                    <p className="font-medium whitespace-nowrap">Years of</p>
+                  <div className="text-gray-600 leading-tight flex flex-col justify-center lg:justify-start items-center md:items-start">
+                    <p className="font-medium whitespace-nowrap">
+                      Years of
+                    </p>
                     <p className="font-medium whitespace-nowrap">Experience</p>
                   </div>
                 </div>
-                <div className="h-18 lg:h-12 w-px bg-black shrink-0"></div>
-                <div className="flex flex-col sm:flex-row  items-center gap-2">
-                  <h3 className="text-3xl lg:text-5xl font-bold text-gray-900">
+                <div className="h-18 md:h-10 lg:h-12 w-px bg-black shrink-0"></div>
+                <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
+                  <h3 className="font-bold text-gray-900">
                     3
                   </h3>
-                  <div className="text-xs lg:text-sm text-gray-600 leading-tight">
+                  <div className="text-gray-600 leading-tight flex flex-col justify-center lg:justify-start items-center md:items-start">
                     <p className="font-medium whitespace-nowrap">
                       Data Centers
                     </p>
                     <p className="font-medium whitespace-nowrap">Deployed</p>
                   </div>
                 </div>
-                <div className="h-18 lg:h-12 w-px bg-black shrink-0"></div>
-                <div className="flex flex-col sm:flex-row items-center gap-2">
-                  <h3 className="text-3xl lg:text-5xl font-bold text-gray-900">
+                <div className="h-18 md:h-10 lg:h-12 w-px bg-black shrink-0"></div>
+                <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
+                  <h3 className="font-bold text-gray-900">
                     10
                   </h3>
-                  <div className="text-xs lg:text-sm text-gray-600 leading-tight">
+                  <div className="text-gray-600 leading-tight flex flex-col justify-center lg:justify-start items-center md:items-start">
                     <p className="font-medium whitespace-nowrap">
                       Total Active
                     </p>
@@ -214,7 +219,7 @@ export default function Home() {
               </div>
 
               <div className="relative w-full max-w-md">
-                <div className="absolute top-31 left-4 lg:-left-35 bg-[#EBF5FD] rounded-xl shadow-xl/10 px-4 py-3 z-20 hover:scale-105 transition-transform cursor-pointer flex justify-center items-center gap-3">
+                <div className="hidden xl:flex absolute top-31 left-4 lg:-left-35 bg-[#EBF5FD] rounded-xl shadow-xl/10 px-4 py-3 z-20 hover:scale-105 transition-transform cursor-pointer justify-center items-center gap-3">
                   <h3 className="font-bold text-[#1775EE]">95%</h3>
                   <div>
                     <div className="flex gap-1">
@@ -240,17 +245,17 @@ export default function Home() {
                   />
                 </div>
 
-                <div className="absolute top-10 right-1 lg:right-30 bg-linear-to-b from-[#7DB6FF] to-[#5192E6] p-2 rounded-full shadow-lg hover:scale-110 transition-transform">
+                <div className="hidden md:flex absolute top-10 right-1 lg:right-30 bg-linear-to-b from-[#7DB6FF] to-[#5192E6] p-2 rounded-full shadow-lg hover:scale-110 transition-transform">
                   <Settings className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
                 </div>
-                <div className="absolute top-26 -right-2 lg:right-11 bg-linear-to-b from-[#7DB6FF] to-[#5192E6] p-2 rounded-full shadow-lg hover:scale-110 transition-transform">
+                <div className="hidden md:flex  absolute top-26 -right-2 lg:right-11 bg-linear-to-b from-[#7DB6FF] to-[#5192E6] p-2 rounded-full shadow-lg hover:scale-110 transition-transform">
                   <Tag className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
                 </div>
-                <div className="absolute top-48 right-0 lg:right-1 bg-linear-to-b from-[#7DB6FF] to-[#5192E6] p-2 rounded-full shadow-lg hover:scale-110 transition-transform">
+                <div className="hidden md:flex absolute top-48 right-0 lg:right-1 bg-linear-to-b from-[#7DB6FF] to-[#5192E6] p-2 rounded-full shadow-lg hover:scale-110 transition-transform">
                   <MessageSquare className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
                 </div>
 
-                <div className="absolute bottom-15 -right-4 lg:-right-10 bg-[#EBF5FD] rounded-xl shadow-2xl px-3 py-2 max-w-61 z-20 hover:scale-105 transition-transform flex flex-col justify-center items-center">
+                <div className="hidden xl:flex absolute bottom-15 -right-4 lg:-right-10 bg-[#EBF5FD] rounded-xl shadow-2xl px-3 py-2 max-w-61 z-20 hover:scale-105 transition-transform flex-col justify-center items-center">
                   <div className="flex items-start gap-3">
                     <img
                       src="/src/assets/maamgrace2.png"
@@ -285,17 +290,14 @@ export default function Home() {
       </section>
 
       {/* Trusted by our customers & clients */}
-      <section
-        className="flex bg-[#EBF5FD] justify-center items-center text-center py-10 scroll-mt-18"
-        id="partners"
-      >
-        <div className="mx-[2.063rem] md:mx-16 space-y-4 md:space-y-7">
-          <div>
-            <div className="flex flex-col md:flex-row justify-center items-center space-x-2 font-bold text-3xl">
+      <section className="flex bg-[#EBF5FD] justify-center items-center text-center py-10 scroll-mt-18" id="partners">
+        <div className="mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] space-y-4 md:space-y-7">
+          <div className="flex flex-col justify-center items-center space-y-1">
+            <div className="flex flex-col sm:flex-row space-x-2 font-bold text-3xl">
               <h3>Trusted by Our</h3>
               <h3 className="text-[#1775EE]">Customers & Partners</h3>
             </div>
-            <p>
+            <p className="w-78 sm:w-lg md:w-lg lg:w-xl xl:w-full">
               We collaborate with recognized technology partners to ensure
               quality, reliability, and up-to-date ICT solutions.
             </p>
@@ -305,17 +307,14 @@ export default function Home() {
       </section>
 
       {/* Services we provide */}
-      <section
-        id="services"
-        className="flex flex-col py-10 h-full mx-[2.063rem] lg:mx-[7.438rem]  scroll-mt-18"
-      >
-        <div className="text-center w-[60vw] sm:w-[27vw] self-center md:w-auto lg:w-auto">
+      <section id="services" className="flex flex-col justify-center items-center space-y-1 py-10 h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem]">
+        <div className="w-70 md:w-full flex justify-center text-center">
           <h3>
             Services We Provide to
             <span className="text-[#1775EE]"> Elevate Your Business</span>
           </h3>
         </div>
-        <p className="w-[70vw] md:w-[56.406vw] xl:w-[56.406vw] self-center mt-[1.1vh] text-center">
+        <p className="w-78 sm:w-80 md:w-xl xl:w-4xl self-center text-center">
           MGKK Information Communication Technology Services delivers end-to-end
           ICT and engineering solutions alongside comprehensive training
           programs designed to meet industry demands and support digital
@@ -516,7 +515,8 @@ export default function Home() {
         {/* ── BOTTOM CAROUSEL ── */}
         <div className="max-w-6xl flex flex-col md:flex-row md:m-0 md:w-full justify-center items-center gap-10 mt-[4vh] md:mt-[8vh] lg:mx-auto">
           {/* Controls — on mobile: top + right-aligned | on desktop: right column */}
-          <div className="flex flex-col relative md:w-[35vw] lg:w-[20vw] xl:w-[20vw] self-start gap-y-[1vh] items-end text-right order-first md:order-last">
+          {/* Training title */}
+          <div className="flex flex-col relative md:w-[20vw] self-start gap-y-[1vh] items-end text-right order-first md:order-last">
             <div className="absolute -top-10 -right-5 w-72 h-72 bg-[#C2DDFF] opacity-50 rounded-full blur-3xl -z-10" />
             <h6 className="text-sm bg-[#EBF5FD] border border-[#EBF5FD] rounded-full py-[0.7vh] px-4 text-center shadow-[0_0_3px_rgba(0,0,0,0.25)]">
               Training
@@ -583,8 +583,10 @@ export default function Home() {
                 transform: `translateX(calc(${bottomSlide} * ${bottomStep}))`,
               }}
             >
-              {/* Card 4 */}
-              <div className="group relative shrink-0 w-[85vw] md:w-[40vw] lg:w-[24vw] xl:w-[24vw] rounded-xl overflow-hidden">
+              {/* Card 4 - Training section */}
+              {/* Size of container */}
+              <div className="group relative shrink-0 w-[85vw] md:w-[40vw] lg:w-[24vw] rounded-xl overflow-hidden">
+                {/* Color of the container */}
                 <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
                 <div className="absolute inset-0 bg-linear-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
