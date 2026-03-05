@@ -1,9 +1,22 @@
+// ==================== IMPORTS - UPDATE FOR EACH COURSE ====================
+// Change these imports based on the specific course
 import Button from "../../../../components/ui/button";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
+// COURSE-SPECIFIC ASSETS - Replace these for different courses
+import ccnaBadge from "../../../../assets/CCNAAutomation.png"; // Course badge image
+import ccnaHero from "../../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
+import ccnaFooter from "../../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
+import MealIcon from "../../../../assets/Meal.svg";
+import ReviewIcon from "../../../../assets/Review.svg";
+import InstitutionalIcon from "../../../../assets/InsitutionalAccount.svg";
+import WorkstationIcon from "../../../../assets/Workstation.svg";
+import MedalIcon from "../../../../assets/Medal.svg";
+
+// ==================== COMPONENT NAME - CHANGE FOR EACH COURSE ====================
 export default function CCNAAutomation() {
   const [openSection, setOpenSection] = useState(null);
 
@@ -11,6 +24,8 @@ export default function CCNAAutomation() {
     setOpenSection(openSection === index ? null : index);
   };
 
+  // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
+  // Replace this entire array with the course-specific curriculum
   const courseModules = [
     {
       title: "1.0 Network Fundamentals",
@@ -179,40 +194,36 @@ export default function CCNAAutomation() {
 
   return (
     <div className="flex flex-col py-10 h-full mx-[2.063rem] lg:mx-[7.438rem] scroll-mt-18">
-      {/* Hero Banner with Background Image */}
+      {/* ==================== HERO BANNER - UPDATE TEXT AND IMAGES ====================*/}
       <div className="relative p-8 lg:pr-12 rounded-2xl shadow-lg flex flex-col gap-2.5 overflow-hidden min-h-[250px]">
-        {/* Background image */}
+        {/* Background image - uses ccnaHero variable */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: "url('/assets/ccna-automation-bg.jpg')",
+            backgroundImage: `url(${ccnaHero})`, // CHANGE: Hero background image
           }}
         />
-
-        {/* Gradient overlay - C2DDFF at left 70%, transparent at 67%, CDE3FF at right 70% */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(to right, rgba(194, 221, 255, 0.7), rgba(255, 255, 255, 0) 67%, rgba(205, 227, 255, 0.7))",
-          }}
-        />
+        <div className="absolute inset-0 bg-linear-to-r from-[#C2DDFF] to-transparent"></div>
 
         {/* Content */}
-        <div className="relative z-10 flex flex-col gap-4 pl-8">
+        <div className="relative z-10 flex flex-col gap-4 pl-1 sm:pl-8">
+          {/* CHANGE: Badge text */}
           <h6 className="w-fit text-sm text-[#1775EE] bg-white border border-[#EBF5FD] rounded-full py-[0.40vh] px-4 inline-flex text-center shadow-[0_0_3px_rgba(0,0,0,0.25)]">
             CISCO
           </h6>
-          <h1 className="text-[#1775EE] font-bold text-3xl lg:text-4xl">
-            CCNA AUTOMATION
-          </h1>
+          
+          {/* CHANGE: Course title */}
+          <h1 className="text-[#1775EE] font-bold">CCNA AUTOMATION</h1>
+          
+          {/* CHANGE: Course description */}
           <p className="lg:w-[30vw] xl:w-[35vw] text-gray-900">
             Automating Networks Using Cisco Platforms (200-901 CCNAUTO) v1.1 is
             a 120-minute exam that assesses a candidate's knowledge of software
             development basics, API, application security, and network
             automation using Cisco platforms.
           </p>
-          <div className="flex flex-col sm:flex-row gap-2.5 mt-1">
+          
+          <div className="flex flex-row sm:flex-row gap-2.5 mt-1">
             <Button
               title="Enroll Now"
               type="none"
@@ -226,7 +237,7 @@ export default function CCNAAutomation() {
             <Button
               title="Learn More"
               type="none"
-              buttonCustomStyle="bg-white text-blue-600 border-2 border-blue-600 hover:bg-blue-50 transition-all duration-300 px-6 py-3"
+              buttonCustomStyle="bg-transparent text-blue-600 border-2 border-blue-600 hover:bg-white hover:text-blue-600 transition-all duration-300 px-6 py-3"
               btnFunc={() => {
                 document
                   .getElementById("services")
@@ -241,11 +252,12 @@ export default function CCNAAutomation() {
       <div className="flex flex-col lg:flex-row gap-8 mt-7.5 lg:mt-10">
         {/* LEFT: Main Content */}
         <div className="flex flex-col gap-y-8 flex-1">
-          {/* About */}
+          {/* ==================== ABOUT SECTION - UPDATE TEXT ====================*/}
           <div className="flex flex-col gap-y-3">
-            <h3 className="text-2xl font-bold">
+            <h3>
               About This <span className="text-[#1775EE]">Course</span>
             </h3>
+            {/* CHANGE: Course description paragraphs */}
             <p className="text-gray-700 leading-relaxed">
               This course is designed to help learners prepare for the updated
               CCNA 200-901 certification exam through instructor-led training
@@ -262,11 +274,12 @@ export default function CCNAAutomation() {
             </p>
           </div>
 
-          {/* What You Will Learn */}
+          {/* ==================== WHAT YOU WILL LEARN - UPDATE ITEMS ====================*/}
           <div className="flex flex-col gap-y-5">
-            <h3 className="text-2xl font-bold">
+            <h3>
               What You Will <span className="text-[#1775EE]">Learn</span>
             </h3>
+            {/* CHANGE: Learning outcomes - add or remove items as needed */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <p className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
@@ -287,9 +300,9 @@ export default function CCNAAutomation() {
             </div>
           </div>
 
-          {/* Course Content */}
+          {/* Course Content - Uses courseModules array defined above */}
           <div className="flex flex-col gap-y-3">
-            <h3 className="text-2xl font-bold">
+            <h3>
               Course <span className="text-[#1775EE]">Content</span>
             </h3>
             <div className="flex flex-col gap-3">
@@ -300,19 +313,30 @@ export default function CCNAAutomation() {
                 >
                   <button
                     onClick={() => toggleSection(index)}
-                    className="w-full px-6 py-4 flex items-center justify-between bg-[#1775EE] text-white hover:bg-blue-700 transition-colors"
+                    className={`w-full px-6 py-4 flex items-center justify-between transition-all duration-300 ${
+                      openSection === index
+                        ? "bg-[#1775EE] text-white"
+                        : "bg-[#EBF5FD] text-gray-900 hover:bg-blue-50"
+                    }`}
                   >
                     <span className="font-semibold text-left">
                       {module.title}
                     </span>
                     {openSection === index ? (
-                      <ChevronUp className="w-5 h-5 shrink-0" />
+                      <ChevronUp className="w-5 h-5 shrink-0 transition-transform duration-300" />
                     ) : (
-                      <ChevronDown className="w-5 h-5 shrink-0" />
+                      <ChevronDown className="w-5 h-5 shrink-0 transition-transform duration-300" />
                     )}
                   </button>
-                  {openSection === index && module.items.length > 0 && (
-                    <div className="px-6 py-4 bg-[#F5F9FF]">
+
+                  <div
+                    className={`transition-all duration-500 ease-in-out overflow-hidden ${
+                      openSection === index && module.items.length > 0
+                        ? "max-h-[2000px] opacity-100"
+                        : "max-h-0 opacity-0"
+                    }`}
+                  >
+                    <div className="px-6 py-4 bg-[#EFF6FF]">
                       <ul className="flex flex-col gap-2">
                         {module.items.map((item, itemIndex) => (
                           <li key={itemIndex} className="text-sm text-gray-700">
@@ -334,7 +358,7 @@ export default function CCNAAutomation() {
                         ))}
                       </ul>
                     </div>
-                  )}
+                  </div>
                 </div>
               ))}
             </div>
@@ -343,27 +367,20 @@ export default function CCNAAutomation() {
 
         {/* RIGHT: Sidebar */}
         <div className="flex flex-col gap-6 lg:w-72 xl:w-80 shrink-0">
-          {/* Cert Badge */}
-          <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center">
-            <div className="flex flex-col items-center">
-              <div className="relative w-32 h-32 rounded-full bg-white flex items-center justify-center border-4 border-[#1775EE]">
-                <div className="text-center">
-                  <p className="text-xs font-semibold text-gray-600">CISCO</p>
-                  <p className="text-xs font-semibold text-gray-600">
-                    CERTIFIED
-                  </p>
-                  <p className="text-2xl font-bold text-[#1775EE] mt-1">CCNA</p>
-                  <p className="text-xs text-gray-500 mt-1">200-301</p>
-                </div>
-              </div>
-            </div>
+          {/* ==================== CERT BADGE - UPDATE IMAGE ====================*/}
+          <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
+            {/* CHANGE: Badge image - uses ccnaBadge variable */}
+            <img
+              src={ccnaBadge}
+              alt="CCNA Automation Certification Badge"
+              className="w-[400px] h-[400px] object-contain"
+            />
           </div>
 
-          {/* Job Opportunities */}
+          {/* ==================== JOB OPPORTUNITIES - UPDATE LIST ====================*/}
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-3">
-            <h5 className="text-[#1775EE] font-bold text-lg">
-              Job Opportunities
-            </h5>
+            <h5 className="text-[#1775EE] font-bold">Job Opportunities</h5>
+            {/* CHANGE: Job titles - add or remove items as needed */}
             {[
               "Network Automation Technician",
               "Junior DevNet Associate",
@@ -377,20 +394,20 @@ export default function CCNAAutomation() {
             ))}
           </div>
 
-          {/* Target Learners */}
+          {/* ==================== TARGET LEARNERS - UPDATE TEXT ====================*/}
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-3">
-            <h5 className="text-[#1775EE] font-bold text-lg">
-              Target Learners
-            </h5>
+            <h5 className="text-[#1775EE] font-bold">Target Learners</h5>
+            {/* CHANGE: Target audience - add or remove items as needed */}
             <p className="flex items-start gap-2.5">
               <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
               <span className="text-sm">Beginners</span>
             </p>
           </div>
 
-          {/* Schedule */}
+          {/* ==================== SCHEDULE - UPDATE DETAILS ====================*/}
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-3">
-            <h5 className="text-[#1775EE] font-bold text-lg">Schedule</h5>
+            <h5 className="text-[#1775EE] font-bold">Schedule</h5>
+            {/* CHANGE: Schedule details */}
             <div className="flex flex-col gap-2 text-sm">
               <div className="flex justify-start gap-3">
                 <span className="font-bold">Modality:</span>
@@ -411,23 +428,46 @@ export default function CCNAAutomation() {
             </div>
           </div>
 
-          {/* Inclusions */}
+          {/* Inclusions - Uses icon imports (same for all courses) */}
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-3">
-            <h5 className="text-[#1775EE] font-bold text-lg">Inclusions</h5>
-            {[
-              "Lunch & snacks (onsite)",
-              "Reviewers & exercises",
-              "Institutional Accounts",
-              "Workstation per student",
-              "Certificate of Completion",
-            ].map((item, index) => (
-              <p key={index} className="flex items-start gap-2.5">
-                <span className="text-[#1775EE] shrink-0 w-6 h-6 rounded-full bg-white flex items-center justify-center text-xs font-bold">
-                  {index + 1}
-                </span>
-                <span className="text-sm">{item}</span>
-              </p>
-            ))}
+            <h5 className="text-[#1775EE] font-bold">Inclusions</h5>
+
+            <p className="flex items-start gap-2.5">
+              <span className="text-[#1775EE] shrink-0 w-6 h-6 rounded-full bg-white flex items-center justify-center">
+                <img src={MealIcon} alt="Meal" className="w-4 h-4" />
+              </span>
+              <span className="text-sm">Lunch & snacks (onsite)</span>
+            </p>
+
+            <p className="flex items-start gap-2.5">
+               <span className="text-[#1775EE] shrink-0 w-6 h-6 rounded-full bg-white flex items-center justify-center">
+                <img src={ReviewIcon} alt="Review" className="w-4 h-4" />
+              </span>
+              <span className="text-sm">Reviewers & exercises</span>
+            </p>
+
+            <p className="flex items-start gap-2.5">
+              <span className="text-[#1775EE] shrink-0 w-6 h-6 rounded-full bg-white flex items-center justify-center">
+                <img src={InstitutionalIcon} alt="Institutional Account" className="w-4 h-4" />
+              </span>
+              <span className="text-sm">Institutional Accounts</span>
+            </p>
+
+            <p className="flex items-start gap-2.5">
+             <span className="text-[#1775EE] shrink-0 w-6 h-6 rounded-full bg-white flex items-center justify-center">
+                <img src={WorkstationIcon} alt="Workstation" className="w-4 h-4" />
+              </span>
+              <span className="text-sm">Workstation per student</span>
+            </p>
+
+            <p className="flex items-start gap-2.5">
+               <span className="text-[#1775EE] shrink-0 w-6 h-6 rounded-full bg-white flex items-center justify-center">
+                <img src={MedalIcon} alt="Medal" className="w-4 h-4" />
+              </span>
+              <span className="text-sm">Certificate of Completion</span>
+            </p>
+
+            {/* CHANGE: Download link text and URL */}
             <a
               href="#"
               className="text-[#1775EE] text-sm font-medium underline mt-2"
@@ -438,32 +478,37 @@ export default function CCNAAutomation() {
         </div>
       </div>
 
-      {/* Call to Action Banner */}
+      {/* ==================== CALL TO ACTION BANNER - UPDATE TEXT AND IMAGE ====================*/}
       <div className="relative p-8 lg:pr-12 rounded-2xl shadow-lg flex flex-col items-center gap-2.5 overflow-hidden mt-10 min-h-[300px]">
-        {/* Background image */}
+        {/* Background image - uses ccnaFooter variable */}
         <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('/assets/cta-background.jpg')" }}
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: `url(${ccnaFooter})`, // CHANGE: Footer background image
+          }}
         />
 
-        {/* Gradient overlay */}
         <div
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(to right, rgba(194, 221, 255, 0.7), rgba(255, 255, 255, 0) 67%, rgba(205, 227, 255, 0.7))",
+              "linear-gradient(to right, #C2DDFF70, #FFFFFF00 67%, #CDE3FF70)",
           }}
         />
 
-        {/* Content */}
         <div className="relative z-10 flex flex-col items-center gap-2.5 mt-7.5 lg:mt-[5vh]">
-          <h1 className="text-3xl lg:text-4xl font-bold text-center">
-            Start Learning <span className="text-[#1775EE]">Today</span>
+          {/* CHANGE: CTA heading */}
+          <h1 className="text-center">
+            <span className="text-[#ffffff]">Start Learning</span>{" "}
+            <span className="text-[#1775EE]">Today</span>
           </h1>
-          <p className="lg:w-[30vw] xl:w-[35vw] text-center text-gray-900">
+          
+          {/* CHANGE: CTA description */}
+          <p className="lg:w-[30vw] xl:w-[35vw] text-center text-white">
             Build essential networking knowledge and prepare for the CCNA
             200-901 v1.1 exam through instructor-led, hands-on training.
           </p>
+          
           <Button
             title="Enroll Now"
             type="none"
