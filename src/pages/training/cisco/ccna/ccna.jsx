@@ -1,43 +1,61 @@
 import Button from "../../../../components/ui/button";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
+import heroBg from "../../../../assets/Mark_Anthony_Valenzuela_Melendres.png";
 
 export default function CCNA() {
   return (
     <div className="flex flex-col py-10 h-full mx-[2.063rem] lg:mx-[7.438rem] scroll-mt-18">
       {/* Hero Banner */}
-      <div className="p-8 pr-12 bg-linear-to-r from-[#C2DDFF] to-[#FFFFFF] rounded-2xl shadow-lg flex flex-col gap-2.5">
-        <h6 className="w-fit text-sm text-[#1775EE] bg-[#EBF5FD] border border-[#EBF5FD] rounded-full py-[0.7vh] px-4 inline-flex text-center shadow-[0_0_3px_rgba(0,0,0,0.25)]">
-          Cisco
-        </h6>
-        <h1 className="text-[#1775EE]">CCNA</h1>
-        <p className="lg:w-[30vw] xl:w-[35vw]">
-          Implementing and Administering Cisco Solutions (200-301 CCNA) v1.1 is
-          a 120-minute exam that tests a candidate's knowledge and skills
-          related to network fundamentals, network access, IP connectivity, IP
-          services, security fundamentals, and automation and programmability.
-        </p>
-        <div className="flex gap-x-2.5 mt-5">
-          <Button
-            title="Enroll Now"
-            type="none"
-            buttonCustomStyle="bg-[#1775EE] text-white hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl"
-            btnFunc={() => {
-              document
-                .getElementById("services")
-                ?.scrollIntoView({ behavior: "smooth", block: "start" });
-            }}
-          />
-          <Button
-            title="Learn More"
-            type="none"
-            buttonCustomStyle="bg-transparent text-blue-600 border-2 border-blue-600 hover:bg-blue-50 transition-all duration-300 text-sm sm:text-base"
-            btnFunc={() => {
-              document
-                .getElementById("services")
-                ?.scrollIntoView({ behavior: "smooth", block: "start" });
-            }}
-          />
+      <div className="relative p-8 pr-12 rounded-2xl shadow-lg flex flex-col gap-2.5 overflow-hidden">
+        {/* Background Image */}
+        <img
+          src={heroBg}
+          alt="CCNA background"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-linear-to-r from-[#C2DDFF] to-transparent"></div>
+
+        {/* Content */}
+        <div className="relative z-10 flex flex-col gap-2.5">
+          <h6 className="w-fit text-sm text-[#1775EE] bg-[#EBF5FD] border border-[#EBF5FD] rounded-full py-[0.7vh] px-4 inline-flex text-center shadow-[0_0_3px_rgba(0,0,0,0.25)]">
+            Cisco
+          </h6>
+
+          <h1 className="text-[#1775EE]">CCNA</h1>
+
+          <p className="lg:w-[30vw] xl:w-[35vw]">
+            Implementing and Administering Cisco Solutions (200-301 CCNA) v1.1
+            is a 120-minute exam that tests a candidate's knowledge and skills
+            related to network fundamentals, network access, IP connectivity, IP
+            services, security fundamentals, and automation and programmability.
+          </p>
+
+          <div className="flex gap-x-2.5 mt-5">
+            <Button
+              title="Enroll Now"
+              type="none"
+              buttonCustomStyle="bg-[#1775EE] text-white hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+              btnFunc={() => {
+                document
+                  .getElementById("services")
+                  ?.scrollIntoView({ behavior: "smooth", block: "start" });
+              }}
+            />
+
+            <Button
+              title="Learn More"
+              type="none"
+              buttonCustomStyle="bg-transparent text-blue-600 border-2 border-blue-600 hover:bg-blue-50 transition-all duration-300 text-sm sm:text-base"
+              btnFunc={() => {
+                document
+                  .getElementById("services")
+                  ?.scrollIntoView({ behavior: "smooth", block: "start" });
+              }}
+            />
+          </div>
         </div>
       </div>
 
@@ -138,11 +156,13 @@ export default function CCNA() {
           </div>
         </div>
       </div>
+
+      {/* Footer Banner */}
       <div className="relative p-8 pr-12 rounded-2xl shadow-lg flex flex-col items-center gap-2.5 overflow-hidden">
         {/* Background image */}
         <div
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('/assets/your-image.jpg')" }}
+          style={{ backgroundImage: `url(${heroBg})` }}
         />
 
         {/* Figma gradient overlay — C2DDFF at 70%, transparent at 67%, CDE3FF at 70% */}
