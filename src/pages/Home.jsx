@@ -6,7 +6,6 @@ import webImage from "../assets/web.png";
 import { useState, useEffect } from "react";
 import FAQ from "../components/FAQ/faq";
 import ContactForm from "./Contact";
-import location from "../assets/location.svg";
 import phone from "../assets/phone.svg";
 import email from "../assets/email.svg";
 import availability from "../assets/availability.svg";
@@ -22,10 +21,10 @@ export default function Home() {
   const [bottomSlide, setBottomSlide] = useState(0);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [isTablet, setIsTablet] = useState(
-    window.innerWidth >= 768 && window.innerWidth < 1180,
+    window.innerWidth >= 768 && window.innerWidth < 1024,
   );
   const location = useLocation();
-/* Scroll function for when user comes form another page scrolls to home */
+  /* Scroll function for when user comes form another page scrolls to home */
   useEffect(() => {
     if (location.state?.scrollTo) {
       const element = document.getElementById(location.state.scrollTo);
@@ -39,7 +38,7 @@ export default function Home() {
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
-      setIsTablet(window.innerWidth >= 768 && window.innerWidth < 1180);
+      setIsTablet(window.innerWidth >= 768 && window.innerWidth < 1024);
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -58,12 +57,12 @@ export default function Home() {
   const topStep = isMobile
     ? "(85vw + 2.5rem)"
     : isTablet
-      ? "(52vw + 2.5rem)"
+      ? "(40vw + 2.5rem)"
       : "(24vw + 2.5rem)";
   const bottomStep = isMobile
     ? "(85vw + 2.5rem)"
     : isTablet
-      ? "(52vw + 2.5rem)"
+      ? "(40vw + 2.5rem)"
       : "(24vw + 2.5rem)";
   const [hoveredRow, setHoveredRow] = useState(null);
   const [tappedCard, setTappedCard] = useState(null);
@@ -308,7 +307,7 @@ export default function Home() {
       {/* Services we provide */}
       <section
         id="services"
-        className="flex flex-col py-10 h-full mx-[2.063rem] lg:mx-[7.438rem] scroll-mt-18"
+        className="flex flex-col py-10 h-full mx-[2.063rem] lg:mx-[7.438rem]  scroll-mt-18"
       >
         <div className="text-center w-[60vw] sm:w-[27vw] self-center md:w-auto lg:w-auto">
           <h3>
@@ -324,17 +323,17 @@ export default function Home() {
         </p>
 
         {/* ── TOP CAROUSEL ── */}
-        <div className="max-w-6xl mx-1 flex flex-col md:flex-row justify-center items-center gap-10 mt-[6vh] md:mx-auto lg:mx-auto">
+        <div className="max-w-6xl mx-1 flex flex-col md:flex-row justify-center items-center gap-10 mt-[6vh] md:mx-0 lg:mx-auto">
           {/* Controls — LEFT */}
-          <div className="flex flex-col relative md:w-[20vw] self-start gap-y-[1vh] items-start">
+          <div className="flex flex-col relative md:w-[35vw] lg:w-[20vw] xl:w-[20vw] self-start gap-y-[1vh] items-start">
             <div className="absolute -top-10 md:-left-10 w-70 h-70 md:w-72 md:h-72 bg-[#C2DDFF] opacity-50 rounded-full blur-3xl -z-10" />
             <h6 className="text-sm bg-[#EBF5FD] border border-[#EBF5FD] rounded-full py-[0.7vh] px-4 inline-flex text-center shadow-[0_0_3px_rgba(0,0,0,0.25)]">
               Solutions
             </h6>
-            <h5 className="font-rubik font-bold text-2xl w-[50vw] md:w-auto">
+            <h5 className="w-[50vw] md:w-auto">
               End-to-End ICT & Engineering Solutions
             </h5>
-            <p className="font-poppins text-sm mb-[1.5vh] md:mb-[3vh]">
+            <p className="text-sm mb-[1.5vh] md:mb-[3vh]">
               We provide ICT consultancy and engineering solutions focused on
               planning, building, operating, optimizing, and testing technology
               systems.
@@ -386,7 +385,7 @@ export default function Home() {
           </div>
 
           {/* Viewport */}
-          <div className="overflow-hidden w-[85vw] md:w-[52vw]">
+          <div className="overflow-hidden w-[85vw] md:w-[40vw] lg:w-[52vw]">
             <div
               className="flex gap-x-10 transition-transform duration-500 ease-in-out"
               style={{
@@ -394,7 +393,7 @@ export default function Home() {
               }}
             >
               {/* Card 1 */}
-              <div className="group relative shrink-0 w-[85vw] md:w-[52vw] lg:w-[24vw] rounded-xl overflow-hidden">
+              <div className="group relative shrink-0 w-[85vw] md:w-[40vw] lg:w-[24vw] xl:w-[24vw] rounded-xl overflow-hidden">
                 <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
                 <div className="absolute inset-0 bg-linear-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
@@ -421,7 +420,7 @@ export default function Home() {
               </div>
 
               {/* Card 2 */}
-              <div className="group relative shrink-0 w-[85vw] md:w-[52vw] lg:w-[24vw] rounded-xl overflow-hidden">
+              <div className="group relative shrink-0 w-[85vw] md:w-[40vw] lg:w-[24vw] xl:w-[24vw] rounded-xl overflow-hidden">
                 <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
                 <div className="absolute inset-0 bg-linear-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
@@ -447,7 +446,7 @@ export default function Home() {
               </div>
 
               {/* Card 3 */}
-              <div className="group relative shrink-0 w-[85vw] md:w-[52vw] lg:w-[24vw] rounded-xl overflow-hidden">
+              <div className="group relative shrink-0 w-[85vw] md:w-[40vw] lg:w-[24vw] xl:w-[24vw] rounded-xl overflow-hidden">
                 <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
                 <div className="absolute inset-0 bg-linear-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
@@ -473,7 +472,7 @@ export default function Home() {
               </div>
 
               {/* Card 4 */}
-              <div className="group relative shrink-0 w-[85vw] md:w-[52vw] lg:w-[24vw] rounded-xl overflow-hidden">
+              <div className="group relative shrink-0 w-[85vw] md:w-[40vw] lg:w-[24vw] xl:w-[24vw] rounded-xl overflow-hidden">
                 <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
                 <div className="absolute inset-0 bg-linear-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
@@ -515,9 +514,9 @@ export default function Home() {
         </div>
 
         {/* ── BOTTOM CAROUSEL ── */}
-        <div className="max-w-6xl flex flex-col md:flex-row justify-center items-center gap-10 mt-[4vh] md:mt-[8vh]">
+        <div className="max-w-6xl flex flex-col md:flex-row md:m-0 md:w-full justify-center items-center gap-10 mt-[4vh] md:mt-[8vh] lg:mx-auto">
           {/* Controls — on mobile: top + right-aligned | on desktop: right column */}
-          <div className="flex flex-col relative md:w-[20vw] self-start gap-y-[1vh] items-end text-right order-first md:order-last">
+          <div className="flex flex-col relative md:w-[35vw] lg:w-[20vw] xl:w-[20vw] self-start gap-y-[1vh] items-end text-right order-first md:order-last">
             <div className="absolute -top-10 -right-5 w-72 h-72 bg-[#C2DDFF] opacity-50 rounded-full blur-3xl -z-10" />
             <h6 className="text-sm bg-[#EBF5FD] border border-[#EBF5FD] rounded-full py-[0.7vh] px-4 text-center shadow-[0_0_3px_rgba(0,0,0,0.25)]">
               Training
@@ -577,7 +576,7 @@ export default function Home() {
           </div>
 
           {/* Viewport */}
-          <div className="overflow-hidden w-[85vw] md:w-[52vw] order-last md:order-first">
+          <div className="overflow-hidden w-[85vw] md:w-[40vw] lg:w-[52vw] order-last md:order-first">
             <div
               className="flex flex-row-reverse gap-x-10 transition-transform duration-500 ease-in-out"
               style={{
@@ -585,7 +584,7 @@ export default function Home() {
               }}
             >
               {/* Card 4 */}
-              <div className="group relative shrink-0 w-[85vw] md:w-[52vw] lg:w-[24vw] rounded-xl overflow-hidden">
+              <div className="group relative shrink-0 w-[85vw] md:w-[40vw] lg:w-[24vw] xl:w-[24vw] rounded-xl overflow-hidden">
                 <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
                 <div className="absolute inset-0 bg-linear-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
@@ -611,7 +610,7 @@ export default function Home() {
               </div>
 
               {/* Card 3 */}
-              <div className="group relative shrink-0 w-[85vw] md:w-[52vw] lg:w-[24vw] rounded-xl overflow-hidden">
+              <div className="group relative shrink-0 w-[85vw] md:w-[40vw] lg:w-[24vw] xl:w-[24vw] rounded-xl overflow-hidden">
                 <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
                 <div className="absolute inset-0 bg-linear-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
@@ -637,7 +636,7 @@ export default function Home() {
               </div>
 
               {/* Card 2 */}
-              <div className="group relative shrink-0 w-[85vw] md:w-[52vw] lg:w-[24vw] rounded-xl overflow-hidden">
+              <div className="group relative shrink-0 w-[85vw] md:w-[40vw] lg:w-[24vw] xl:w-[24vw] rounded-xl overflow-hidden">
                 <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
                 <div className="absolute inset-0 bg-linear-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
@@ -663,7 +662,7 @@ export default function Home() {
               </div>
 
               {/* Card 1 */}
-              <div className="group relative shrink-0 w-[85vw] md:w-[52vw] lg:w-[24vw] rounded-xl overflow-hidden">
+              <div className="group relative shrink-0 w-[85vw] md:w-[40vw] lg:w-[24vw] xl:w-[24vw] rounded-xl overflow-hidden">
                 <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
                 <div className="absolute inset-0 bg-linear-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
