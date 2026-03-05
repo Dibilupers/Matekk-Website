@@ -6,6 +6,7 @@ import webImage from "../assets/web.png";
 import { useState, useEffect } from "react";
 import FAQ from "../components/FAQ/faq";
 import ContactForm from "./Contact";
+import address from "../assets/location.svg";
 import phone from "../assets/phone.svg";
 import email from "../assets/email.svg";
 import availability from "../assets/availability.svg";
@@ -1621,15 +1622,14 @@ export default function Home() {
               To be a global leader in ICT and Engineering solutions, recognized
               for excellence, innovation, and commitment to client success.
             </p>
-            <button
+            <Button
               title="Contact Us"
               type="none"
-              buttonCustomStyle=" text-white bg-[#007EE6] hover:bg-[#1775EE] py-3 px-[5%] md:py-2 border-[#1775EE] hover:bg-white hover:border-white hover:text-[#1775EE] transition-all ease-in-out [box-shadow:0_4px_8px_rgba(1,0,0,0.2)] "
+              buttonCustomStyle="bg-[#1775EE] text-white hover:bg-white hover:text-blue-600 transition-all duration-300 shadow-lg hover:shadow-xl px-6 py-3"
               btnFunc={() => {
-                document.getElementById("contact")?.scrollIntoView({
-                  behavior: "smooth",
-                  block: "start",
-                });
+                document
+                  .getElementById("services")
+                  ?.scrollIntoView({ behavior: "smooth", block: "start" });
               }}
             />
           </div>
@@ -1663,7 +1663,7 @@ export default function Home() {
               {/* Address */}
               <div className="flex items-center space-x-4">
                 <div className="bg-[#1775EE] rounded-xl p-3 flex items-center justify-center shrink-0">
-                  <img src={location} alt="Location Icon" className="w-6 h-6" />
+                  <img src={address} alt="Location Icon" className="w-6 h-6" />
                 </div>
                 <div>
                   <h5 className="font-semibold text-black text-sm">Address</h5>

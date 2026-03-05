@@ -18,10 +18,61 @@ function NavBar() {
 
   const dropdownMenus = {
     solutions: [
-      { name: "Enterprise Solutions", path: "/solutions/enterprise" },
-      { name: "Cloud Services", path: "/solutions/cloud" },
-      { name: "Cybersecurity", path: "/solutions/cybersecurity" },
-      { name: "Data Analytics", path: "/solutions/analytics" },
+      {
+        name: "ICT Consultancy (PBOOT)",
+        subcourses: [
+          { name: "Data Center Facilities", path: "/solutions/ict/datacenter" },
+          {
+            name: "ICT Network and Security Infrastructure",
+            path: "/solutions/ict/network",
+          },
+          { name: "Cybersecurity", path: "/solutions/ict/cybersecurity" },
+          {
+            name: "Vulnerability Assessment and Penetration Testing (VAPT)",
+            path: "/solutions/ict/vapt",
+          },
+          {
+            name: "Web and Software Development",
+            path: "/solutions/ict/webdev",
+          },
+          { name: "Cloud Computing Services", path: "/solutions/ict/cloud" },
+          {
+            name: "SMART Environment Automation (IoT)",
+            path: "/solutions/ict/iot",
+          },
+        ],
+      },
+      {
+        name: "Auxiliary Systems and PECE Consultancy",
+        subcourses: [
+          { name: "Auxiliary Systems", path: "/solutions/auxiliary/systems" },
+          { name: "PECE Consultancy", path: "/solutions/auxiliary/pece" },
+        ],
+      },
+      {
+        name: "Cloud Computing",
+        subcourses: [
+          {
+            name: "Cloud Infrastructure",
+            path: "/solutions/cloud/infrastructure",
+          },
+          { name: "Cloud Migration", path: "/solutions/cloud/migration" },
+        ],
+      },
+      {
+        name: "IT Management",
+        subcourses: [
+          { name: "IT Strategy", path: "/solutions/itmanagement/strategy" },
+          { name: "IT Operations", path: "/solutions/itmanagement/operations" },
+        ],
+      },
+      {
+        name: "Customized Training Solutions",
+        subcourses: [
+          { name: "Corporate Training", path: "/solutions/training/corporate" },
+          { name: "Custom Curriculum", path: "/solutions/training/curriculum" },
+        ],
+      },
     ],
     training: [
       {
@@ -384,18 +435,66 @@ function NavBar() {
               />
             </svg>
           </button>
+
           {openDropdown === "solutions" && (
-            <div className="absolute top-full right-0 mt-2 w-56 bg-white shadow-lg rounded-lg py-2 border font-inter border-gray-100">
-              {dropdownMenus.solutions.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.path}
-                  onClick={resetMenu}
-                  className="block px-4 py-2 hover:bg-[#1775EE] hover:text-white hover:font-bold transition-colors"
-                >
-                  {item.name}
-                </Link>
-              ))}
+            <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 p-5 bg-white shadow-lg rounded-2xl border border-gray-100 overflow-hidden font-inter">
+              <div className="flex space-x-[2.313rem]">
+                {/* Column 1 — categories */}
+                <div className="w-100">
+                  {dropdownMenus.solutions.map((category) => (
+                    <button
+                      key={category.name}
+                      className={`w-full text-left px-6 py-2 transition-colors rounded-[0.35rem] flex items-center justify-between ${
+                        openSubcourse === category.name
+                          ? "bg-[#1775EE] text-white font-bold"
+                          : "hover:bg-[#1775EE] hover:text-white hover:font-bold"
+                      }`}
+                      onClick={() =>
+                        setOpenSubcourse(
+                          openSubcourse === category.name
+                            ? null
+                            : category.name,
+                        )
+                      }
+                    >
+                      {category.name}
+                      {category.subcourses?.length > 0 && (
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      )}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Column 2 — subcourses */}
+                {openSubcourse && (
+                  <div className="w-123">
+                    {dropdownMenus.solutions
+                      .find((cat) => cat.name === openSubcourse)
+                      ?.subcourses?.map((item) => (
+                        <Link
+                          key={item.name}
+                          to={item.path}
+                          onClick={resetMenu}
+                          className="block w-full text-left px-6 py-2 rounded-[0.35rem] hover:text-[#1775EE] hover:font-bold transition-colors"
+                        >
+                          {item.name}
+                        </Link>
+                      ))}
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </div>
