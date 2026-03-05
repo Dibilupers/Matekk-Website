@@ -347,7 +347,7 @@ function NavBar() {
       {/* ↓ changed md:ml-[7.438rem] → lg:ml-[7.438rem] */}
       <button
         onClick={handleHomeClick}
-        className="ml-[2.063rem] lg:ml-[7.438rem] cursor-pointer"
+        className="ml-[2.063rem] md:ml-16 lg:ml-16 xl:ml-[7.438rem] cursor-pointer"
       >
         LOGO
       </button>
@@ -603,7 +603,7 @@ function NavBar() {
       <Button
         title="Enroll Now"
         type="none"
-        buttonCustomStyle="hidden lg:flex mr-0 lg:mr-[7.438rem] border-2 border-[#1775EE] text-[#1775EE] py-2 px-5.5 rounded-3xl hover:bg-blue-600 hover:text-white transition-colors duration-300"
+        buttonCustomStyle="hidden lg:flex mr-[2.063rem] md:mr-16 lg:mr-16 xl:mr-[7.438rem] border-2 border-[#1775EE] text-[#1775EE] py-2 px-5.5 rounded-3xl hover:bg-blue-600 hover:text-white transition-colors duration-300"
         btnFunc={() => setIsModalOpen(true)}
       >
         Enroll Now

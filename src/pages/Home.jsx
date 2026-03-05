@@ -113,7 +113,7 @@ export default function Home() {
         id="home"
         className="py-40 md:py-20 lg:py-0 scroll-mt-18"
       >
-        <div className=" mx-[2.063rem] md:mx-16 lg:mx-[7.438rem]">
+        <div className=" mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem]">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
             {/* LEFT SIDE - CONTENT */}
             <div className="space-y-10 lg:space-y-12 text-left">
@@ -234,13 +234,13 @@ export default function Home() {
                   />
                 </div>
 
-                <div className="md:hidden xl:flex absolute top-10 right-1 lg:right-30 bg-linear-to-b from-[#7DB6FF] to-[#5192E6] p-2 rounded-full shadow-lg hover:scale-110 transition-transform">
+                <div className="hidden md:flex absolute top-10 right-1 lg:right-30 bg-linear-to-b from-[#7DB6FF] to-[#5192E6] p-2 rounded-full shadow-lg hover:scale-110 transition-transform">
                   <Settings className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
                 </div>
-                <div className="md:hidden xl:flex absolute top-26 -right-2 lg:right-11 bg-linear-to-b from-[#7DB6FF] to-[#5192E6] p-2 rounded-full shadow-lg hover:scale-110 transition-transform">
+                <div className="hidden md:flex  absolute top-26 -right-2 lg:right-11 bg-linear-to-b from-[#7DB6FF] to-[#5192E6] p-2 rounded-full shadow-lg hover:scale-110 transition-transform">
                   <Tag className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
                 </div>
-                <div className="md:hidden xl:flex absolute top-48 right-0 lg:right-1 bg-linear-to-b from-[#7DB6FF] to-[#5192E6] p-2 rounded-full shadow-lg hover:scale-110 transition-transform">
+                <div className="hidden md:flex absolute top-48 right-0 lg:right-1 bg-linear-to-b from-[#7DB6FF] to-[#5192E6] p-2 rounded-full shadow-lg hover:scale-110 transition-transform">
                   <MessageSquare className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
                 </div>
 
@@ -280,7 +280,7 @@ export default function Home() {
 
       {/* Trusted by our customers & clients */}
       <section className="flex bg-[#EBF5FD] justify-center items-center text-center py-10 scroll-mt-18" id="partners">
-        <div className="mx-[2.063rem] md:mx-16 space-y-4 md:space-y-7">
+        <div className="mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] space-y-4 md:space-y-7">
           <div>
             <div className="flex flex-col md:flex-row justify-center items-center space-x-2 font-bold text-3xl">
               <h3>Trusted by Our</h3>
