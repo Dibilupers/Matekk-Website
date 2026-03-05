@@ -857,8 +857,8 @@ function NavBar() {
           </div>
         )}
 
-        {/* Solutions Submenu */}
-        {openDropdown === "solutions-mobile" && (
+        {/* Solutions Submenu — Level 1: Categories */}
+        {openDropdown === "solutions-mobile" && !openSubcourse && (
           <div className="fixed inset-0 bg-white z-50 flex flex-col">
             <div className="flex items-center p-6 border-b border-gray-200">
               <button
@@ -885,17 +885,13 @@ function NavBar() {
             </div>
 
             <nav className="flex-1 px-6 py-8 space-y-4">
-              {dropdownMenus.solutions.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.path}
-                  onClick={() => {
-                    setIsOpen(false);
-                    setOpenDropdown(null);
-                  }}
-                  className="block text-lg text-black font-poppins hover:text-[#1775EE] py-2 flex items-center justify-between"
+              {dropdownMenus.solutions.map((category) => (
+                <button
+                  key={category.name}
+                  onClick={() => setOpenSubcourse(category.name)}
+                  className="block w-full text-left text-lg text-black font-poppins hover:text-[#1775EE] py-2 flex items-center justify-between"
                 >
-                  {item.name}
+                  {category.name}
                   <svg
                     className="w-4 h-4"
                     fill="none"
@@ -909,8 +905,56 @@ function NavBar() {
                       d="M9 5l7 7-7 7"
                     />
                   </svg>
-                </Link>
+                </button>
               ))}
+            </nav>
+          </div>
+        )}
+
+        {/* Solutions Submenu — Level 2: Subcourses */}
+        {openDropdown === "solutions-mobile" && openSubcourse && (
+          <div className="fixed inset-0 bg-white z-50 flex flex-col">
+            <div className="flex items-center p-6 border-b border-gray-200">
+              <button
+                onClick={() => setOpenSubcourse(null)}
+                className="focus:outline-none mr-4"
+              >
+                <svg
+                  className="w-6 h-6 text-[#1775EE]"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
+              </button>
+              <h2 className="text-xl font-bold text-[#1775EE] font-poppins">
+                Solutions / {openSubcourse}
+              </h2>
+            </div>
+
+            <nav className="flex-1 px-6 py-8 space-y-4">
+              {dropdownMenus.solutions
+                .find((cat) => cat.name === openSubcourse)
+                ?.subcourses?.map((item) => (
+                  <Link
+                    key={item.name}
+                    to={item.path}
+                    onClick={() => {
+                      setIsOpen(false);
+                      setOpenDropdown(null);
+                      setOpenSubcourse(null);
+                    }}
+                    className="block text-lg text-black font-poppins hover:text-[#1775EE] py-2 px-4"
+                  >
+                    {item.name}
+                  </Link>
+                ))}
             </nav>
           </div>
         )}
@@ -970,7 +1014,7 @@ function NavBar() {
         )}
 
         {/* Training Level 2 - Subcourses (e.g., CCNA, CCNP) */}
-        {openSubcourse && !openThirdLevel && (
+        {openDropdown === "training-mobile" && openSubcourse && !openThirdLevel && (
           <div className="fixed inset-0 bg-white z-50 flex flex-col">
             <div className="flex items-center p-6 border-b border-gray-200">
               <button
@@ -1026,7 +1070,7 @@ function NavBar() {
         )}
 
         {/* Training Level 3 - Course Options or Fourth Level Categories */}
-        {openThirdLevel && !openFourthLevel && (
+        {openDropdown === "training-mobile" && openThirdLevel && !openFourthLevel && (
           <div className="fixed inset-0 bg-white z-50 flex flex-col">
             <div className="flex items-center p-6 border-b border-gray-200">
               <button
@@ -1105,7 +1149,7 @@ function NavBar() {
         )}
 
         {/* Training Level 4 - Final Options (for Palo Alto 4-level structure) */}
-        {openFourthLevel && (
+        {openDropdown === "training-mobile" && openFourthLevel && (
           <div className="fixed inset-0 bg-white z-50 flex flex-col">
             <div className="flex items-center p-6 border-b border-gray-200">
               <button
