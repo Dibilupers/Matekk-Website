@@ -12,6 +12,7 @@ import email from "../assets/email.svg";
 import availability from "../assets/availability.svg";
 import Button from "../../src/components/ui/button";
 import { useLocation } from "react-router-dom";
+import TestimonialSection from "../components/section/TestimonialsSection.jsx";
 
 export default function Home() {
   const totalSlides = 3;
@@ -130,7 +131,7 @@ export default function Home() {
             <div className="space-y-10 lg:space-y-12 text-left">
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <h6 className="w-fit px-5 py-2 bg-blue-50 rounded-full shadow-[0px_4px_5px_-3px_rgba(0,0,0,0.2)]">
+                  <h6 className="w-fit px-5 py-2 bg-blue-50 rounded-full shadow-[0px_0px_6px_-3px_rgba(0,0,0,0.5)]">
                     ICT & Engineering
                   </h6>
 
@@ -1516,6 +1517,10 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Hear from our successful learners */}
+      <TestimonialSection />
+      
 
       {/* About the Company */}
       <section id="about" className="scroll-mt-18 py-16 bg-[#EBF5FD]">
