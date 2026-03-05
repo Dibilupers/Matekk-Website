@@ -347,7 +347,7 @@ function NavBar() {
       {/* ↓ changed md:ml-[7.438rem] → lg:ml-[7.438rem] */}
       <button
         onClick={handleHomeClick}
-        className="ml-[2.063rem] md:ml-16 lg:ml-16 xl:ml-[7.438rem] cursor-pointer"
+        className="ml-[2.063rem] md:ml-16 xl:ml-[7.438rem] cursor-pointer"
       >
         LOGO
       </button>
