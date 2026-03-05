@@ -193,9 +193,9 @@ export default function CCNAAutomation() {
   ];
 
   return (
-    <div className="flex flex-col py-10 h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18">
+    <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER - UPDATE TEXT AND IMAGES ====================*/}
-      <section className="relative pl-8 py-18 rounded-2xl shadow-lg flex flex-col gap-2.5 overflow-hidden min-h-62.5">
+      <section className="relative pl-8 py-18 rounded-2xl shadow-lg flex flex-col gap-3 overflow-hidden min-h-62.5">
         {/* Background image - uses ccnaHero variable */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -250,123 +250,125 @@ export default function CCNAAutomation() {
         </div>
       </section>
 
-      {/* Main layout */}
-      <div className="flex flex-col lg:flex-row gap-8 mt-7.5 lg:mt-10">
-        {/* LEFT: Main Content */}
-        <div className="flex flex-col gap-y-8 flex-1">
-          {/* ==================== ABOUT SECTION - UPDATE TEXT ====================*/}
-          <div className="flex flex-col gap-y-3">
-            <h3>
-              About This <span className="text-[#1775EE]">Course</span>
-            </h3>
-            {/* CHANGE: Course description paragraphs */}
-            <p className="text-gray-700 leading-relaxed">
-              This course is designed to help learners prepare for the updated
-              CCNA 200-901 certification exam through instructor-led training
-              that combines guided discussions and interactive activities. It
-              covers essential topics such as network automation fundamentals,
-              Python programming principles, and basic DevOps concepts with
-              hands-on labs and real-world scenarios to build practical skills
-              and exam confidence.
-            </p>
-            <p className="text-gray-700 leading-relaxed">
-              The program also emphasizes troubleshooting techniques and best
-              practices to help participants apply their knowledge effectively
-              in real-world networking environments.
-            </p>
-          </div>
-
-          {/* ==================== WHAT YOU WILL LEARN - UPDATE ITEMS ====================*/}
-          <div className="flex flex-col gap-y-5">
-            <h3>
-              What You Will <span className="text-[#1775EE]">Learn</span>
-            </h3>
-            {/* CHANGE: Learning outcomes - add or remove items as needed */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              <p className="flex items-center gap-2.5">
-                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <span>Network Automation Fundamentals</span>
+      <div className="flex flex-col lg:flex-row justify-start items-start lg:items-stretch gap-6 lg:gap-8">
+        {/* Main layout */}
+        <section className="flex flex-col lg:flex-row gap-8">
+          {/* LEFT: Main Content */}
+          <div className="flex flex-col gap-y-8 flex-1">
+            {/* ==================== ABOUT SECTION - UPDATE TEXT ====================*/}
+            <div className="flex flex-col gap-y-3">
+              <h3>
+                About This <span className="text-[#1775EE]">Course</span>
+              </h3>
+              {/* CHANGE: Course description paragraphs */}
+              <p className="text-gray-700 leading-relaxed">
+                This course is designed to help learners prepare for the updated
+                CCNA 200-901 certification exam through instructor-led training
+                that combines guided discussions and interactive activities. It
+                covers essential topics such as network automation fundamentals,
+                Python programming principles, and basic DevOps concepts with
+                hands-on labs and real-world scenarios to build practical skills
+                and exam confidence.
               </p>
-              <p className="flex items-center gap-2.5">
-                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <span>API Integration Concepts</span>
-              </p>
-              <p className="flex items-center gap-2.5">
-                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <span>Python Programming Basics</span>
-              </p>
-              <p className="flex items-center gap-2.5">
-                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <span>Infrastructure as Code Principles</span>
+              <p className="text-gray-700 leading-relaxed">
+                The program also emphasizes troubleshooting techniques and best
+                practices to help participants apply their knowledge effectively
+                in real-world networking environments.
               </p>
             </div>
-          </div>
 
-          {/* Course Content - Uses courseModules array defined above */}
-          <div className="flex flex-col gap-y-3">
-            <h3>
-              Course <span className="text-[#1775EE]">Content</span>
-            </h3>
-            <div className="flex flex-col gap-3">
-              {courseModules.map((module, index) => (
-                <div
-                  key={index}
-                  className="rounded-xl overflow-hidden border border-gray-200"
-                >
-                  <button
-                    onClick={() => toggleSection(index)}
-                    className={`w-full px-6 py-4 flex items-center justify-between transition-all duration-300 ${openSection === index
-                      ? "bg-[#1775EE] text-white"
-                      : "bg-[#EBF5FD] text-gray-900 hover:bg-blue-50"
-                      }`}
-                  >
-                    <span className="font-semibold text-left">
-                      {module.title}
-                    </span>
-                    {openSection === index ? (
-                      <ChevronUp className="w-5 h-5 shrink-0 transition-transform duration-300" />
-                    ) : (
-                      <ChevronDown className="w-5 h-5 shrink-0 transition-transform duration-300" />
-                    )}
-                  </button>
+            {/* ==================== WHAT YOU WILL LEARN - UPDATE ITEMS ====================*/}
+            <div className="flex flex-col gap-y-5">
+              <h3>
+                What You Will <span className="text-[#1775EE]">Learn</span>
+              </h3>
+              {/* CHANGE: Learning outcomes - add or remove items as needed */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <p className="flex items-center gap-2.5">
+                  <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
+                  <span>Network Automation Fundamentals</span>
+                </p>
+                <p className="flex items-center gap-2.5">
+                  <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
+                  <span>API Integration Concepts</span>
+                </p>
+                <p className="flex items-center gap-2.5">
+                  <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
+                  <span>Python Programming Basics</span>
+                </p>
+                <p className="flex items-center gap-2.5">
+                  <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
+                  <span>Infrastructure as Code Principles</span>
+                </p>
+              </div>
+            </div>
 
+            {/* Course Content - Uses courseModules array defined above */}
+            <div className="flex flex-col gap-y-3">
+              <h3>
+                Course <span className="text-[#1775EE]">Content</span>
+              </h3>
+              <div className="flex flex-col gap-3">
+                {courseModules.map((module, index) => (
                   <div
-                    className={`transition-all duration-500 ease-in-out overflow-hidden ${openSection === index && module.items.length > 0
-                      ? "max-h-[2000px] opacity-100"
-                      : "max-h-0 opacity-0"
-                      }`}
+                    key={index}
+                    className="rounded-xl overflow-hidden border border-gray-200"
                   >
-                    <div className="px-6 py-4 bg-[#EFF6FF]">
-                      <ul className="flex flex-col gap-2">
-                        {module.items.map((item, itemIndex) => (
-                          <li key={itemIndex} className="text-sm text-gray-700">
-                            {typeof item === "string" ? (
-                              item
-                            ) : (
-                              <div>
-                                <p className="font-medium">{item.subTitle}</p>
-                                <ul className="ml-4 mt-1 flex flex-col gap-1">
-                                  {item.items.map((subItem, subIndex) => (
-                                    <li key={subIndex} className="text-sm">
-                                      {subItem}
-                                    </li>
-                                  ))}
-                                </ul>
-                              </div>
-                            )}
-                          </li>
-                        ))}
-                      </ul>
+                    <button
+                      onClick={() => toggleSection(index)}
+                      className={`w-full px-6 py-4 flex items-center justify-between transition-all duration-300 ${openSection === index
+                        ? "bg-[#1775EE] text-white"
+                        : "bg-[#EBF5FD] text-gray-900 hover:bg-blue-50"
+                        }`}
+                    >
+                      <span className="font-semibold text-left">
+                        {module.title}
+                      </span>
+                      {openSection === index ? (
+                        <ChevronUp className="w-5 h-5 shrink-0 transition-transform duration-300" />
+                      ) : (
+                        <ChevronDown className="w-5 h-5 shrink-0 transition-transform duration-300" />
+                      )}
+                    </button>
+
+                    <div
+                      className={`transition-all duration-500 ease-in-out overflow-hidden ${openSection === index && module.items.length > 0
+                        ? "max-h-[2000px] opacity-100"
+                        : "max-h-0 opacity-0"
+                        }`}
+                    >
+                      <div className="px-6 py-4 bg-[#EFF6FF]">
+                        <ul className="flex flex-col gap-2">
+                          {module.items.map((item, itemIndex) => (
+                            <li key={itemIndex} className="text-sm text-gray-700">
+                              {typeof item === "string" ? (
+                                item
+                              ) : (
+                                <div>
+                                  <p className="font-medium">{item.subTitle}</p>
+                                  <ul className="ml-4 mt-1 flex flex-col gap-1">
+                                    {item.items.map((subItem, subIndex) => (
+                                      <li key={subIndex} className="text-sm">
+                                        {subItem}
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+        </section>
 
         {/* RIGHT: Sidebar */}
-        <div className="flex flex-col gap-6 lg:w-72 xl:w-80 shrink-0">
+        <aside className="flex flex-col gap-6 lg:w-72 xl:w-80 shrink-0">
           {/* ==================== CERT BADGE - UPDATE IMAGE ====================*/}
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
             {/* CHANGE: Badge image - uses ccnaBadge variable */}
@@ -475,7 +477,7 @@ export default function CCNAAutomation() {
               Download the CCNA Exam Basics here
             </a>
           </div>
-        </div>
+        </aside>
       </div>
 
       {/* ==================== CALL TO ACTION BANNER - UPDATE TEXT AND IMAGE ====================*/}
@@ -521,6 +523,6 @@ export default function CCNAAutomation() {
           />
         </div>
       </div>
-    </div>
+    </main>
   );
 }
