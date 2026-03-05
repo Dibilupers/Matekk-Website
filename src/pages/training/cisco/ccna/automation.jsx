@@ -192,7 +192,7 @@ export default function CCNAAutomation() {
     },
   ];
 
-  return (
+  return (   
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER - UPDATE TEXT AND IMAGES ====================*/}
       <section className="relative pl-8 py-18 rounded-2xl shadow-lg flex flex-col gap-3 overflow-hidden min-h-62.5">
