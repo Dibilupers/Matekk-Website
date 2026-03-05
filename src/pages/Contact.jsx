@@ -44,7 +44,7 @@ export default function ContactForm() {
                     id="name"
                     name="user_name"
                     type="text"
-                    className="border border-[#1775EE] rounded-md h-[3.5vh] md:h-[2vh] lg:h-[2vh] xl:h-[4.8vh]"
+                    className="border border-[#1775EE] rounded-md h-[5vh] md:h-[4vh] lg:h-[2vh] xl:h-[4.8vh]"
                     required
                 />
             </div>
@@ -62,7 +62,7 @@ export default function ContactForm() {
                         id="email"
                         name="user_email"
                         type="email"
-                        className="border border-[#1775EE] rounded-md h-[3.5vh] md:h-[2vh] lg:h-[2vh xl:h-[4.8vh]"
+                        className="border border-[#1775EE] rounded-md h-[5vh] md:h-[4vh] lg:h-[2vh xl:h-[4.8vh]"
                         required
                     />
                 </div>
@@ -78,7 +78,7 @@ export default function ContactForm() {
                         id="phone"
                         name="user_phone"
                         type="tel"
-                        className="border border-[#1775EE] rounded-md h-[3.5vh] md:h-[2vh] lg:h-[2vh xl:h-[4.8vh]"
+                        className="border border-[#1775EE] rounded-md h-[5vh] md:h-[4vh] lg:h-[2vh xl:h-[4.8vh]"
                         required
                     />
                 </div>
@@ -96,7 +96,7 @@ export default function ContactForm() {
                     id="subject"
                     name="subject"
                     type="text"
-                    className="border border-[#1775EE] rounded-md h-[3.5vh] md:h-[2vh] lg:h-[2vh xl:h-[4.8vh]"
+                    className="border border-[#1775EE] rounded-md h-[5vh] md:h-[4vh] lg:h-[2vh xl:h-[4.8vh]"
                     required
                 />
             </div>
@@ -112,7 +112,7 @@ export default function ContactForm() {
                 <textarea
                     id="message"
                     name="message"
-                    className="border border-[#1775EE] rounded-md h-[8rem] resize-none"
+                    className="border border-[#1775EE] rounded-md h-32 resize-none"
                     required
                 />
             </div>
