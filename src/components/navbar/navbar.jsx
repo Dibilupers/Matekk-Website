@@ -611,7 +611,7 @@ function NavBar() {
 
       {/* Mobile + Tablet Hamburger — visible below lg */}
       {/* ↓ changed flex md:hidden → flex lg:hidden */}
-      <div className="flex lg:hidden mr-[2.063rem] justify-center items-center">
+      <div className="flex lg:hidden mr-[2.063rem] md:mr-16 lg:mr-16 xl:mr-[7.438rem] justify-center items-center">
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="focus:outline-none"
