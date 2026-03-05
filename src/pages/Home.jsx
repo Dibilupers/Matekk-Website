@@ -303,7 +303,7 @@ export default function Home() {
             <span className="text-[#1775EE]"> Elevate Your Business</span>
           </h3>
         </div>
-        <p className="bg-red-50 w-78 sm:w-80 md:w-xl xl:w-4xl self-center text-center">
+        <p className="w-78 sm:w-80 md:w-xl xl:w-4xl self-center text-center">
           MGKK Information Communication Technology Services delivers end-to-end
           ICT and engineering solutions alongside comprehensive training
           programs designed to meet industry demands and support digital
