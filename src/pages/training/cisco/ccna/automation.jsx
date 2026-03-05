@@ -389,7 +389,7 @@ export default function CCNAAutomation() {
             ].map((job) => (
               <p key={job} className="flex items-start gap-2.5">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
-                <span className="text-sm">{job}</span>
+                <span className="text-sm mt-1">{job}</span>
               </p>
             ))}
           </div>
@@ -400,7 +400,7 @@ export default function CCNAAutomation() {
             {/* CHANGE: Target audience - add or remove items as needed */}
             <p className="flex items-start gap-2.5">
               <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
-              <span className="text-sm">Beginners</span>
+              <span className="text-sm mt-1">Beginners</span>
             </p>
           </div>
 
