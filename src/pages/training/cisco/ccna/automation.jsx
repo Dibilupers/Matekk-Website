@@ -193,9 +193,9 @@ export default function CCNAAutomation() {
   ];
 
   return (
-    <div className="flex flex-col py-10 h-full mx-[2.063rem] lg:mx-[7.438rem] scroll-mt-18">
+    <div className="flex flex-col py-10 h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18">
       {/* ==================== HERO BANNER - UPDATE TEXT AND IMAGES ====================*/}
-      <div className="relative p-8 lg:pr-12 rounded-2xl shadow-lg flex flex-col gap-2.5 overflow-hidden min-h-[250px]">
+      <section className="relative pl-8 py-18 rounded-2xl shadow-lg flex flex-col gap-2.5 overflow-hidden min-h-62.5">
         {/* Background image - uses ccnaHero variable */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -203,26 +203,28 @@ export default function CCNAAutomation() {
             backgroundImage: `url(${ccnaHero})`, // CHANGE: Hero background image
           }}
         />
-        <div className="absolute inset-0 bg-linear-to-r from-[#C2DDFF] to-transparent"></div>
+        <div className="absolute inset-0 bg-linear-to-r from-[#cbddf5] via-[#cbddf5ce] to-transparent"></div>
 
         {/* Content */}
-        <div className="relative z-10 flex flex-col gap-4 pl-1 sm:pl-8">
+        <div className="relative z-10 flex flex-col gap-2 pl-1 sm:pl-8">
           {/* CHANGE: Badge text */}
-          <h6 className="w-fit text-sm text-[#1775EE] bg-white border border-[#EBF5FD] rounded-full py-[0.40vh] px-4 inline-flex text-center shadow-[0_0_3px_rgba(0,0,0,0.25)]">
-            CISCO
+          <h6 className="w-fit px-5 py-2 text-[#1775EE] bg-blue-50 rounded-full">
+            Cisco
           </h6>
-          
-          {/* CHANGE: Course title */}
-          <h1 className="text-[#1775EE] font-bold">CCNA AUTOMATION</h1>
-          
-          {/* CHANGE: Course description */}
-          <p className="lg:w-[30vw] xl:w-[35vw] text-gray-900">
-            Automating Networks Using Cisco Platforms (200-901 CCNAUTO) v1.1 is
-            a 120-minute exam that assesses a candidate's knowledge of software
-            development basics, API, application security, and network
-            automation using Cisco platforms.
-          </p>
-          
+
+          <div>
+            {/* CHANGE: Course title */}
+            <h1 className="text-[#1775EE] font-bold">CCNA AUTOMATION</h1>
+
+            {/* CHANGE: Course description */}
+            <p className="lg:w-[30vw] xl:w-lg text-gray-900">
+              Automating Networks Using Cisco Platforms (200-901 CCNAUTO) v1.1 is
+              a 120-minute exam that assesses a candidate's knowledge of software
+              development basics, API, application security, and network
+              automation using Cisco platforms.
+            </p>
+          </div>
+
           <div className="flex flex-row sm:flex-row gap-2.5 mt-1">
             <Button
               title="Enroll Now"
@@ -246,7 +248,7 @@ export default function CCNAAutomation() {
             />
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Main layout */}
       <div className="flex flex-col lg:flex-row gap-8 mt-7.5 lg:mt-10">
@@ -313,11 +315,10 @@ export default function CCNAAutomation() {
                 >
                   <button
                     onClick={() => toggleSection(index)}
-                    className={`w-full px-6 py-4 flex items-center justify-between transition-all duration-300 ${
-                      openSection === index
-                        ? "bg-[#1775EE] text-white"
-                        : "bg-[#EBF5FD] text-gray-900 hover:bg-blue-50"
-                    }`}
+                    className={`w-full px-6 py-4 flex items-center justify-between transition-all duration-300 ${openSection === index
+                      ? "bg-[#1775EE] text-white"
+                      : "bg-[#EBF5FD] text-gray-900 hover:bg-blue-50"
+                      }`}
                   >
                     <span className="font-semibold text-left">
                       {module.title}
@@ -330,11 +331,10 @@ export default function CCNAAutomation() {
                   </button>
 
                   <div
-                    className={`transition-all duration-500 ease-in-out overflow-hidden ${
-                      openSection === index && module.items.length > 0
-                        ? "max-h-[2000px] opacity-100"
-                        : "max-h-0 opacity-0"
-                    }`}
+                    className={`transition-all duration-500 ease-in-out overflow-hidden ${openSection === index && module.items.length > 0
+                      ? "max-h-[2000px] opacity-100"
+                      : "max-h-0 opacity-0"
+                      }`}
                   >
                     <div className="px-6 py-4 bg-[#EFF6FF]">
                       <ul className="flex flex-col gap-2">
@@ -440,7 +440,7 @@ export default function CCNAAutomation() {
             </p>
 
             <p className="flex items-start gap-2.5">
-               <span className="text-[#1775EE] shrink-0 w-6 h-6 rounded-full bg-white flex items-center justify-center">
+              <span className="text-[#1775EE] shrink-0 w-6 h-6 rounded-full bg-white flex items-center justify-center">
                 <img src={ReviewIcon} alt="Review" className="w-4 h-4" />
               </span>
               <span className="text-sm">Reviewers & exercises</span>
@@ -454,14 +454,14 @@ export default function CCNAAutomation() {
             </p>
 
             <p className="flex items-start gap-2.5">
-             <span className="text-[#1775EE] shrink-0 w-6 h-6 rounded-full bg-white flex items-center justify-center">
+              <span className="text-[#1775EE] shrink-0 w-6 h-6 rounded-full bg-white flex items-center justify-center">
                 <img src={WorkstationIcon} alt="Workstation" className="w-4 h-4" />
               </span>
               <span className="text-sm">Workstation per student</span>
             </p>
 
             <p className="flex items-start gap-2.5">
-               <span className="text-[#1775EE] shrink-0 w-6 h-6 rounded-full bg-white flex items-center justify-center">
+              <span className="text-[#1775EE] shrink-0 w-6 h-6 rounded-full bg-white flex items-center justify-center">
                 <img src={MedalIcon} alt="Medal" className="w-4 h-4" />
               </span>
               <span className="text-sm">Certificate of Completion</span>
@@ -502,13 +502,13 @@ export default function CCNAAutomation() {
             <span className="text-[#ffffff]">Start Learning</span>{" "}
             <span className="text-[#1775EE]">Today</span>
           </h1>
-          
+
           {/* CHANGE: CTA description */}
           <p className="lg:w-[30vw] xl:w-[35vw] text-center text-white">
             Build essential networking knowledge and prepare for the CCNA
             200-901 v1.1 exam through instructor-led, hands-on training.
           </p>
-          
+
           <Button
             title="Enroll Now"
             type="none"
