@@ -296,14 +296,14 @@ export default function Home() {
       </section>
 
       {/* Services we provide */}
-      <section id="services" className="bg-amber-100 flex flex-col justify-center items-center space-y-1 py-10 h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem]">
-        <div className="w-70 md:w-full flex justify-center text-center bg-yellow-400">
+      <section id="services" className="flex flex-col justify-center items-center space-y-1 py-10 h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem]">
+        <div className="w-70 md:w-full flex justify-center text-center">
           <h3>
             Services We Provide to
             <span className="text-[#1775EE]"> Elevate Your Business</span>
           </h3>
         </div>
-        <p className="bg-red-50 w-78 sm:w-full md:w-xl xl:w-4xl self-center text-center">
+        <p className="bg-red-50 w-78 sm:w-80 md:w-xl xl:w-4xl self-center text-center">
           MGKK Information Communication Technology Services delivers end-to-end
           ICT and engineering solutions alongside comprehensive training
           programs designed to meet industry demands and support digital
