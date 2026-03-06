@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Button from "../ui/button";
 import { useNavigate, useLocation } from "react-router-dom";
+import EnrollModal from "../ui/EnrollModal";
 
 function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,7 +13,7 @@ function NavBar() {
   const [openSubSubSubcourse, setOpenSubSubSubcourse] = useState(null);
   const [openThirdLevel, setOpenThirdLevel] = useState(null);
   const [openFourthLevel, setOpenFourthLevel] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -703,7 +704,7 @@ function NavBar() {
         title="Enroll Now"
         type="none"
         buttonCustomStyle="hidden lg:flex mr-[2.063rem] md:mr-16 lg:mr-16 xl:mr-[7.438rem] border-2 border-[#1775EE] text-[#1775EE] py-2 px-5.5 rounded-3xl hover:bg-blue-600 hover:text-white transition-colors duration-300"
-        btnFunc={() => setIsModalOpen(true)}
+        btnFunc={() => setOpen(true)}
       >
         Enroll Now
       </Button>
@@ -1014,139 +1015,143 @@ function NavBar() {
         )}
 
         {/* Training Level 2 - Subcourses (e.g., CCNA, CCNP) */}
-        {openDropdown === "training-mobile" && openSubcourse && !openThirdLevel && (
-          <div className="fixed inset-0 bg-white z-50 flex flex-col">
-            <div className="flex items-center p-6 border-b border-gray-200">
-              <button
-                onClick={() => setOpenSubcourse(null)}
-                className="focus:outline-none mr-4"
-              >
-                <svg
-                  className="w-6 h-6 text-[#1775EE]"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+        {openDropdown === "training-mobile" &&
+          openSubcourse &&
+          !openThirdLevel && (
+            <div className="fixed inset-0 bg-white z-50 flex flex-col">
+              <div className="flex items-center p-6 border-b border-gray-200">
+                <button
+                  onClick={() => setOpenSubcourse(null)}
+                  className="focus:outline-none mr-4"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 19l-7-7 7-7"
-                  />
-                </svg>
-              </button>
-              <h2 className="text-xl font-bold text-[#1775EE] font-poppins">
-                Training/{openSubcourse}
-              </h2>
-            </div>
-
-            <nav className="flex-1 px-6 py-8 space-y-4">
-              {dropdownMenus.training
-                .find((cat) => cat.name === openSubcourse)
-                ?.subcourses.map((subcourse) => (
-                  <button
-                    key={subcourse.name}
-                    onClick={() => setOpenThirdLevel(subcourse.name)}
-                    className="block w-full text-left text-lg text-black font-poppins hover:text-[#1775EE] py-2 flex items-center justify-between"
+                  <svg
+                    className="w-6 h-6 text-[#1775EE]"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
                   >
-                    {subcourse.name}
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
-                  </button>
-                ))}
-            </nav>
-          </div>
-        )}
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 19l-7-7 7-7"
+                    />
+                  </svg>
+                </button>
+                <h2 className="text-xl font-bold text-[#1775EE] font-poppins">
+                  Training/{openSubcourse}
+                </h2>
+              </div>
 
-        {/* Training Level 3 - Course Options or Fourth Level Categories */}
-        {openDropdown === "training-mobile" && openThirdLevel && !openFourthLevel && (
-          <div className="fixed inset-0 bg-white z-50 flex flex-col">
-            <div className="flex items-center p-6 border-b border-gray-200">
-              <button
-                onClick={() => setOpenThirdLevel(null)}
-                className="focus:outline-none mr-4"
-              >
-                <svg
-                  className="w-6 h-6 text-[#1775EE]"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 19l-7-7 7-7"
-                  />
-                </svg>
-              </button>
-              <h2 className="text-xl font-bold text-[#1775EE] font-poppins">
-                Training/{openSubcourse}/{openThirdLevel}
-              </h2>
-            </div>
-
-            <nav className="flex-1 px-6 py-8 space-y-4">
-              {dropdownMenus.training
-                .find((cat) => cat.name === openSubcourse)
-                ?.subcourses.find((sub) => sub.name === openThirdLevel)
-                ?.subcourses?.map((option) =>
-                  option.subcourses ? (
-                    // Has another level (4th level - for Palo Alto) - Show arrow with active state
+              <nav className="flex-1 px-6 py-8 space-y-4">
+                {dropdownMenus.training
+                  .find((cat) => cat.name === openSubcourse)
+                  ?.subcourses.map((subcourse) => (
                     <button
-                      key={option.name}
-                      onClick={() => setOpenFourthLevel(option.name)}
-                      className={`block w-full text-left text-lg font-poppins py-2 px-4 rounded-lg flex items-center justify-between transition-colors ${
-                        openFourthLevel === option.name
-                          ? "bg-[#EBF5FD] text-black"
-                          : "text-black hover:text-[#1775EE]"
-                      }`}
+                      key={subcourse.name}
+                      onClick={() => setOpenThirdLevel(subcourse.name)}
+                      className="block w-full text-left text-lg text-black font-poppins hover:text-[#1775EE] py-2 flex items-center justify-between"
                     >
-                      {option.name}
+                      {subcourse.name}
                       <svg
-                        className={`w-4 h-4 ${openFourthLevel === option.name ? "stroke-[#1775EE]" : ""}`}
+                        className="w-4 h-4"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
-                        strokeWidth={openFourthLevel === option.name ? 3 : 2}
                       >
                         <path
                           strokeLinecap="round"
                           strokeLinejoin="round"
+                          strokeWidth={2}
                           d="M9 5l7 7-7 7"
                         />
                       </svg>
                     </button>
-                  ) : (
-                    // Final link - NO arrow icon
-                    <Link
-                      key={option.name}
-                      to={option.path}
-                      onClick={() => {
-                        setIsOpen(false);
-                        setOpenDropdown(null);
-                        setOpenSubcourse(null);
-                        setOpenThirdLevel(null);
-                      }}
-                      className="block text-lg text-black font-poppins hover:text-[#1775EE] py-2 px-4"
-                    >
-                      {option.name}
-                    </Link>
-                  ),
-                )}
-            </nav>
-          </div>
-        )}
+                  ))}
+              </nav>
+            </div>
+          )}
+
+        {/* Training Level 3 - Course Options or Fourth Level Categories */}
+        {openDropdown === "training-mobile" &&
+          openThirdLevel &&
+          !openFourthLevel && (
+            <div className="fixed inset-0 bg-white z-50 flex flex-col">
+              <div className="flex items-center p-6 border-b border-gray-200">
+                <button
+                  onClick={() => setOpenThirdLevel(null)}
+                  className="focus:outline-none mr-4"
+                >
+                  <svg
+                    className="w-6 h-6 text-[#1775EE]"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 19l-7-7 7-7"
+                    />
+                  </svg>
+                </button>
+                <h2 className="text-xl font-bold text-[#1775EE] font-poppins">
+                  Training/{openSubcourse}/{openThirdLevel}
+                </h2>
+              </div>
+
+              <nav className="flex-1 px-6 py-8 space-y-4">
+                {dropdownMenus.training
+                  .find((cat) => cat.name === openSubcourse)
+                  ?.subcourses.find((sub) => sub.name === openThirdLevel)
+                  ?.subcourses?.map((option) =>
+                    option.subcourses ? (
+                      // Has another level (4th level - for Palo Alto) - Show arrow with active state
+                      <button
+                        key={option.name}
+                        onClick={() => setOpenFourthLevel(option.name)}
+                        className={`block w-full text-left text-lg font-poppins py-2 px-4 rounded-lg flex items-center justify-between transition-colors ${
+                          openFourthLevel === option.name
+                            ? "bg-[#EBF5FD] text-black"
+                            : "text-black hover:text-[#1775EE]"
+                        }`}
+                      >
+                        {option.name}
+                        <svg
+                          className={`w-4 h-4 ${openFourthLevel === option.name ? "stroke-[#1775EE]" : ""}`}
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          strokeWidth={openFourthLevel === option.name ? 3 : 2}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      </button>
+                    ) : (
+                      // Final link - NO arrow icon
+                      <Link
+                        key={option.name}
+                        to={option.path}
+                        onClick={() => {
+                          setIsOpen(false);
+                          setOpenDropdown(null);
+                          setOpenSubcourse(null);
+                          setOpenThirdLevel(null);
+                        }}
+                        className="block text-lg text-black font-poppins hover:text-[#1775EE] py-2 px-4"
+                      >
+                        {option.name}
+                      </Link>
+                    ),
+                  )}
+              </nav>
+            </div>
+          )}
 
         {/* Training Level 4 - Final Options (for Palo Alto 4-level structure) */}
         {openDropdown === "training-mobile" && openFourthLevel && (
@@ -1200,19 +1205,7 @@ function NavBar() {
           </div>
         )}
       </div>
-      {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white rounded-2xl p-8 shadow-xl flex flex-col items-center gap-4">
-            <p className="text-xl font-poppins font-semibold">Hello</p>
-            <button
-              onClick={() => setIsModalOpen(false)}
-              className="text-sm text-white bg-[#1775EE] px-6 py-2 rounded-full hover:bg-blue-700 transition-colors"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
+      <EnrollModal isOpen={open} onClose={() => setOpen(false)} />
     </header>
   );
 }
