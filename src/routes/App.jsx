@@ -15,11 +15,11 @@ import SDSI from "../pages/training/cisco/ccnp/ccnp-security/300-745-SDSI-v1.1";
 import PaloaltoApprentice from "../pages/training/cisco/paloalto/networksecurity/apprentice";
 import PaloaltoPractitioner from "../pages/training/cisco/paloalto/networksecurity/practitioner";
 import NetworkSecurityProfessional from "../pages/training/cisco/paloalto/networksecurity/professional";
-import NextGenerationFirewallEngineer from "../pages/training/cisco/paloalto/networksecurity/nextgenerationfirewallengineer"; 
-import SDWanEngineer from "../pages/training/cisco/paloalto/networksecurity/sdwanengineer";  
-import SecurityServiceEdgeEngineer from "../pages/training/cisco/paloalto/networksecurity/securityserviceedgeengineer";  
+import NextGenerationFirewallEngineer from "../pages/training/cisco/paloalto/networksecurity/nextgenerationfirewallengineer";
+import SDWanEngineer from "../pages/training/cisco/paloalto/networksecurity/sdwanengineer";
+import SecurityServiceEdgeEngineer from "../pages/training/cisco/paloalto/networksecurity/securityserviceedgeengineer";
 /* import NetworkSecurityAnalyst from "../pages/training/cisco/paloalto/networksecurity/analyst"; */
-import NetworkSecurityArchitect from "../pages/training/cisco/paloalto/networksecurity/architect";  
+import NetworkSecurityArchitect from "../pages/training/cisco/paloalto/networksecurity/architect";
 import Network from "../pages/solutions/ict/network";
 import ScrollToTop from "../components/scroll/ScrollToTop";
 import CCNACybersecurity from "../pages/training/cisco/ccna/cybersecurity";
@@ -103,52 +103,71 @@ export default function App() {
         <Route path="/training/cisco/cdcp/dcfc" element={<DCFC />} />
         <Route path="/training/cisco/cdcp/cdcp" element={<CDCP />} />
         <Route path="/training/cisco/cdcp/cdcs" element={<CDCS />} />
-{/* Cybersecurity */}
+        {/* Cybersecurity */}
         <Route path="/training/cybersecurity/blueteam" element={<BlueTeam />} />
         <Route path="/training/cybersecurity/redteam" element={<RedTeam />} />
         {/* Cloud */}
-        <Route path="/training/cloud/microsoft/azurefundamentals" element={<AzureFundamentals />} />
-        <Route path="/training/cloud/aws/practitioner" element={<AWSPractitioner />} />
-
-        {/* ITIL 4 */}
-        <Route path="/training/itil4/foundation" element={<ITIL4Foundation />} />
-        <Route path="/training/itil4/specialist" element={<ITIL4Specialist />} />
-        <Route path="/training/itil4/strategist" element={<ITIL4Strategist />} />
-        <Route path="/training/itil4/practitioner" element={<ITIL4Practitioner />} />
-        <Route path="/training/itil4/leader" element={<ITIL4Leader />} />
+        <Route
+          path="/training/cloud/microsoft/azurefundamentals"
+          element={<AzureFundamentals />}
         />
         <Route
+          path="/training/cloud/aws/practitioner"
+          element={<AWSPractitioner />}
+        />
+
+        {/* ITIL 4 */}
+        <Route
+          path="/training/itil4/foundation"
+          element={<ITIL4Foundation />}
+        />
+        <Route
+          path="/training/itil4/specialist"
+          element={<ITIL4Specialist />}
+        />
+        <Route
+          path="/training/itil4/strategist"
+          element={<ITIL4Strategist />}
+        />
+        <Route
+          path="/training/itil4/practitioner"
+          element={<ITIL4Practitioner />}
+        />
+        <Route path="/training/itil4/leader" element={<ITIL4Leader />} />
+
+        <Route
           path="/training/cisco/paloalto/networksecurity/apprentice"
-          element={<PaloaltoApprentice />} 
-          />
-          <Route
+          element={<PaloaltoApprentice />}
+        />
+        <Route
           path="/training/cisco/paloalto/networksecurity/practitioner"
-          element={<PaloaltoPractitioner />} 
-          />
-          <Route
+          element={<PaloaltoPractitioner />}
+        />
+        <Route
           path="/training/cisco/paloalto/networksecurity/professional"
-          element={<NetworkSecurityProfessional />} 
-          />
-          <Route
+          element={<NetworkSecurityProfessional />}
+        />
+        <Route
           path="/training/cisco/paloalto/networksecurity/nextgenerationfirewallengineer"
-          element={<NextGenerationFirewallEngineer />} 
-          />
-          <Route
+          element={<NextGenerationFirewallEngineer />}
+        />
+        <Route
           path="/training/cisco/paloalto/networksecurity/sdwanengineer"
-          element={<SDWanEngineer />} 
-          />
-          <Route
+          element={<SDWanEngineer />}
+        />
+        <Route
           path="/training/cisco/paloalto/networksecurity/securityserviceedgeengineer"
-          element={<SecurityServiceEdgeEngineer />} 
-          />
-          {/* <Route
+          element={<SecurityServiceEdgeEngineer />}
+        />
+        {/* <Route
           path="/training/cisco/paloalto/networksecurity/analyst"
           element={<NetworkSecurityAnalyst />} 
           /> */}
-          <Route
+        <Route
           path="/training/cisco/paloalto/networksecurity/architect"
-          element={<NetworkSecurityArchitect />} 
-          {/* Project Management */}
+          element={<NetworkSecurityArchitect />}
+        />
+        {/* Project Management */}
         <Route path="/training/projectmanagement/pmp" element={<PMP />} />
         <Route path="/solutions/ict/network" element={<Network />} />
         <Route path="*" element={<NotFound />} />
