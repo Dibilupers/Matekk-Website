@@ -16,6 +16,7 @@ import InstitutionalIcon from "../../../../assets/InsitutionalAccount.svg";
 import WorkstationIcon from "../../../../assets/Workstation.svg";
 import MedalIcon from "../../../../assets/Medal.svg";
 import CourseModules from "../../../../components/training/courseModules";
+import TrainingTemplateFooter from "../../../../components/section/TrainingTemplateFooter";
 
 // ==================== COMPONENT NAME - CHANGE FOR EACH COURSE ====================
 export default function CCNPEnterprise() {
@@ -196,7 +197,6 @@ export default function CCNPEnterprise() {
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}
       <section className="relative pl-8 py-18 rounded-2xl shadow-lg flex flex-col gap-3 overflow-hidden min-h-62.5">
-
         {/* ==================== HERO BANNER - Image ====================*/}
         {/* Background Image */}
         <div
@@ -222,10 +222,11 @@ export default function CCNPEnterprise() {
 
             {/* Course description */}
             <p className="lg:w-[30vw] xl:w-lg text-gray-900">
-              Implementing Cisco Enterprise Network Core Technologies (350-401 ENCOR) 
-              v1.1 is a 120-minute exam that assesses a candidate’s 
-              knowledge of enterprise network technologies, including dual-stack 
-              (IPv4 and IPv6) architecture, virtualization, infrastructure, security, and automation.
+              Implementing Cisco Enterprise Network Core Technologies (350-401
+              ENCOR) v1.1 is a 120-minute exam that assesses a candidate’s
+              knowledge of enterprise network technologies, including dual-stack
+              (IPv4 and IPv6) architecture, virtualization, infrastructure,
+              security, and automation.
             </p>
           </div>
 
@@ -271,14 +272,17 @@ export default function CCNPEnterprise() {
             {/* About Section - Description */}
             {/* CHANGE: Course description paragraphs */}
             <p>
-              This course prepares learners for the Implementing Cisco Enterprise Network Core Technologies (350-401 ENCOR) 
-              exam through instructor-led training with hands-on labs and guided instruction. It covers core enterprise networking topics, 
-              including dual-stack architecture, virtualization, infrastructure, security, and automation.
+              This course prepares learners for the Implementing Cisco
+              Enterprise Network Core Technologies (350-401 ENCOR) exam through
+              instructor-led training with hands-on labs and guided instruction.
+              It covers core enterprise networking topics, including dual-stack
+              architecture, virtualization, infrastructure, security, and
+              automation.
             </p>
             <p>
-              The program emphasizes practical configuration, 
-              troubleshooting, and real-world scenarios to build 
-              the skills and confidence needed for exam success.
+              The program emphasizes practical configuration, troubleshooting,
+              and real-world scenarios to build the skills and confidence needed
+              for exam success.
             </p>
           </section>
 
@@ -357,9 +361,7 @@ export default function CCNPEnterprise() {
             {/* Target Learners - Title */}
             <h5 className="text-[#1775EE] font-bold">Target Learners</h5>
             {/* Target Learners - List */}
-            {[
-              "Beginners",
-            ].map((job) => (
+            {["Beginners"].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
                 <span className="text-sm">{job}</span>
@@ -414,14 +416,22 @@ export default function CCNPEnterprise() {
 
             <div className="inclusions">
               <span className="inclusions_icons">
-                <img src={InstitutionalIcon} alt="Institutional Account" className="w-4 h-4" />
+                <img
+                  src={InstitutionalIcon}
+                  alt="Institutional Account"
+                  className="w-4 h-4"
+                />
               </span>
               <p className="text-sm">Institutional Accounts</p>
             </div>
 
             <div className="inclusions">
               <span className="inclusions_icons">
-                <img src={WorkstationIcon} alt="Workstation" className="w-4 h-4" />
+                <img
+                  src={WorkstationIcon}
+                  alt="Workstation"
+                  className="w-4 h-4"
+                />
               </span>
               <p className="text-sm">Workstation per student</p>
             </div>
@@ -434,59 +444,18 @@ export default function CCNPEnterprise() {
             </div>
 
             {/* CHANGE: Download link text and URL */}
-            <a
-              href="#"
-              className="text-sm font-medium underline mt-2"
-            >
+            <a href="#" className="text-sm font-medium underline mt-2">
               Download the CCNP Exam Basics here
             </a>
           </div>
         </aside>
       </div>
 
-      {/* ==================== CALL TO ACTION BANNER - UPDATE TEXT AND IMAGE ====================*/}
-      <div className="relative p-8 lg:pr-12 rounded-2xl shadow-lg flex flex-col items-center gap-2.5 overflow-hidden mt-10 min-h-75">
-        {/* Background image - uses ccnaFooter variable */}
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: `url(${ccnaFooter})`, // CHANGE: Footer background image
-          }}
-        />
-
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(to right, #C2DDFF70, #FFFFFF00 67%, #CDE3FF70)",
-          }}
-        />
-
-        <div className="relative z-10 flex flex-col items-center gap-2.5 mt-7.5 lg:mt-[5vh]">
-          {/* CHANGE: CTA heading */}
-          <h1 className="text-center">
-            <span className="text-[#ffffff]">Start Learning</span>{" "}
-            <span className="text-[#1775EE]">Today</span>
-          </h1>
-
-          {/* CHANGE: CTA description */}
-          <p className="lg:w-[30vw] xl:w-[35vw] text-center text-white">
-            Build essential networking knowledge and prepare for the CCNA
-            200-901 v1.1 exam through instructor-led, hands-on training.
-          </p>
-
-          <Button
-            title="Enroll Now"
-            type="none"
-            buttonCustomStyle="bg-[#1775EE] text-white hover:bg-blue-700 transition-all transition ease-in-out duration-300 shadow-lg hover:bg-white hover:text-[#1775EE] hover:shadow-xl px-6 py-3"
-            btnFunc={() => {
-              document
-                .getElementById("services")
-                ?.scrollIntoView({ behavior: "smooth", block: "start" });
-            }}
-          />
-        </div>
-      </div>
+      {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
+      <TrainingTemplateFooter
+        bgImage={ccnaFooter} // CHANGE: Update background image for the footer banner
+        description="Advance your networking career and prepare for the CCNP Enterprise exam."
+      />
     </main>
   );
 }
