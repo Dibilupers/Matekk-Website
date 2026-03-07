@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import Button from "../ui/button";
 import { useNavigate, useLocation } from "react-router-dom";
-import EnrollModal from "../ui/EnrollModal";
+import EnrollNowButton from "../ui/EnrollNowButton";
 
 function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,7 +12,6 @@ function NavBar() {
   const [openSubSubSubcourse, setOpenSubSubSubcourse] = useState(null);
   const [openThirdLevel, setOpenThirdLevel] = useState(null);
   const [openFourthLevel, setOpenFourthLevel] = useState(null);
-  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -700,14 +698,7 @@ function NavBar() {
 
       {/* Enroll Now — only visible at lg and above */}
       {/* ↓ changed hidden md:flex → hidden lg:flex  |  md:mr-[7.438rem] → lg:mr-[7.438rem] */}
-      <Button
-        title="Enroll Now"
-        type="none"
-        buttonCustomStyle="hidden lg:flex mr-[2.063rem] md:mr-16 lg:mr-16 xl:mr-[7.438rem] border-2 border-[#1775EE] text-[#1775EE] py-2 px-5.5 rounded-3xl hover:bg-blue-600 hover:text-white transition-colors duration-300"
-        btnFunc={() => setOpen(true)}
-      >
-        Enroll Now
-      </Button>
+      <EnrollNowButton />
 
       {/* Mobile + Tablet Hamburger — visible below lg */}
       {/* ↓ changed flex md:hidden → flex lg:hidden */}
@@ -847,13 +838,7 @@ function NavBar() {
 
             {/* Enroll Button at Bottom */}
             <div className="p-6">
-              <Link
-                to="/enroll"
-                onClick={() => setIsOpen(false)}
-                className="block w-full text-[1.25rem] text-center font-poppins font-bold py-3 px-6 border-2 border-[#1775EE] text-[#1775EE] rounded-full hover:bg-[#1775EE] hover:text-white transition-colors"
-              >
-                Enroll Now
-              </Link>
+              <EnrollNowButton />
             </div>
           </div>
         )}
@@ -1205,7 +1190,6 @@ function NavBar() {
           </div>
         )}
       </div>
-      <EnrollModal isOpen={open} onClose={() => setOpen(false)} />
     </header>
   );
 }
