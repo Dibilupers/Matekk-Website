@@ -15,7 +15,7 @@ export default function Footer() {
         <div className="space-y-8 w-fit md:w-full lg:w-[50%]">
           {/* LOGO AND DESCRIPTION */}
           <div className=" flex flex-col md:flex-row lg:flex-col space-y-1 md:space-y-3 space-x-0 md:space-x-6 lg:space-x-0 w-full ">
-            <div className=" w-[6rem] md:w-[7.5rem] h-16 md:h-16">LOGO</div>
+            <div className=" w-24 md:w-30 h-16 md:h-16">LOGO</div>
             <p className="text-xl md:text-[1rem] w-full md:w-full lg:w-[70%]">
               We are the BEST Solution for your IT/Engineering Training's and
               Consultation needs at a very competitive price.
@@ -24,7 +24,6 @@ export default function Footer() {
         </div>
         <div className="w-full md:w-auto">
           <div className="grid grid-cols-2 gap-y-10 gap-x-10 md:flex md:flex-row md:space-y-0 md:space-x-5 lg:space-x-0 xl:space-x-18">
-            {" "}
             {/* Popular Courses */}
             <div className="w-fit space-y-4">
               <h5>Popular Courses</h5>
@@ -104,7 +103,7 @@ export default function Footer() {
             {/* INFORMATION LINK */}
             <div className="w-fit space-y-4">
               <h5>Follow Us</h5>
-              <div className=" items-center flex flex-row w-[100%] md:justify-end space-x-4">
+              <div className=" items-center flex flex-row w-full md:justify-end space-x-4">
                 {/* FACEBOOK */}
                 <a
                   href="https://www.facebook.com/profile.php?id=61573101443685"
