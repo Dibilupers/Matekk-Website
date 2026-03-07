@@ -8,6 +8,7 @@ import CCNAAutomation from "../pages/training/cisco/ccna/automation";
 import CCNPEnterprise from "../pages/training/cisco/ccnp/enterprise";
 import Network from "../pages/solutions/ict/network";
 import ScrollToTop from "../components/scroll/ScrollToTop";
+import CCNACybersecurity from "../pages/training/cisco/ccna/cybersecurity";
 
 export default function App() {
   return (
@@ -20,6 +21,10 @@ export default function App() {
         <Route
           path="/training/cisco/ccna/automation"
           element={<CCNAAutomation />}
+        />
+        <Route
+          path="/training/cisco/ccna/cybersecurity"
+          element={<CCNACybersecurity />}
         />
         <Route
           path="/training/cisco/ccnp/enterprise"
