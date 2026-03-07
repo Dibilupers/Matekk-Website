@@ -9,6 +9,12 @@ import CCNPEnterprise from "../pages/training/cisco/ccnp/enterprise";
 import Network from "../pages/solutions/ict/network";
 import ScrollToTop from "../components/scroll/ScrollToTop";
 import CCNACybersecurity from "../pages/training/cisco/ccna/cybersecurity";
+import Aplus from "../pages/training/cisco/comptia/aplus";
+import NetworkPlus from "../pages/training/cisco/comptia/network";
+import SecurityPlus from "../pages/training/cisco/comptia/security+";
+import CySA from "../pages/training/cisco/comptia/cysa";
+import PenTest from "../pages/training/cisco/comptia/pentest";
+import Linux from "../pages/training/cisco/comptia/linux";
 
 export default function App() {
   return (
@@ -29,6 +35,30 @@ export default function App() {
         <Route
           path="/training/cisco/ccnp/enterprise"
           element={<CCNPEnterprise />}
+        />
+        <Route
+          path="/training/cisco/comptia/aplus"
+          element={<Aplus />}
+        />
+        <Route
+          path="/training/cisco/comptia/network"
+          element={<NetworkPlus />}
+        />
+        <Route
+          path="/training/cisco/comptia/security+"
+          element={<SecurityPlus />}
+        />
+        <Route
+          path="/training/cisco/comptia/cysa"
+          element={<CySA />}
+        />
+        <Route
+          path="/training/cisco/comptia/pentest"
+          element={<PenTest />}
+        />
+        <Route
+          path="/training/cisco/comptia/linux"
+          element={<Linux />}
         />
         <Route path="/solutions/ict/network" element={<Network />} />
         <Route path="*" element={<NotFound />} />

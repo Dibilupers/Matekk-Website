@@ -5,7 +5,7 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
-import aPlusCerti from "../../../../assets/aplus.webp"; // Course badge image
+import security from "../../../../assets/security+.webp"; // Course badge image
 import ccnaHero from "../../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
 import ccnaFooter from "../../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
 import MealIcon from "../../../../assets/Meal.svg";
@@ -17,61 +17,60 @@ import TrainingTemplateFooter from "../../../../components/section/TrainingTempl
 import EnrollNowButton from "../../../../components/ui/EnrollNowButton";
 
 // ==================== COMPONENT NAME - CHANGE FOR EACH COURSE ====================
-export default function Aplus() {
+export default function SecurityPlus() {
   // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
   const modules = [
     {
-      title: "Core 1: Networking",
+      title: "General security concepts",
       items: [
-        "Protocols and ports: learning about networking protocols, ports, and wireless technologies.",
-        "SOHO networks: setting up small office/home office networks, including IP addressing and VPNs.",
-        "Networking tools: troubleshooting with crimpers, cable testers, and Wi-Fi analyzers.",
+        "Security controls: comparing technical, preventive, managerial, deterrent, operational, detective, physical, corrective, compensating, and directive controls.",
+        "Fundamental concepts: summarizing confidentiality, integrity, and availability (CIA), non-repudiation, authentication, authorization, and accounting (AAA), zero trust, and deceptive/disruption technology.",
+        "Change management: explaining business processes, technical implications of change, documentation, and version control.",
+        "Cryptographic solutions: using public-key infrastructure (PKI), encryption, obfuscation, hashing, digital signatures, and blockchain.",
       ],
     },
     {
-      title: "Core 1: Hardware",
+      title: "Threats, vulnerabilities, and mitigations",
       items: [
-        "Component installation: setting up RAM, CPUs, and storage devices.",
-        "Cables and connectors: working with HDMI, Ethernet, and USB cables.",
-        "Peripheral devices: installing and maintaining printers, scanners, and other peripherals.",
-        "Motherboards and power: configuring motherboards, power supplies, and cooling solutions.",
+        "Threat actors and motivations: comparing nation-states, unskilled attackers, hacktivists, insider threats, organized crime, and shadow IT; understanding their attributes, resources, espionage, and financial motivations.",
+        "Threat vectors and attack surfaces: explaining message-based, voice call, removable media, supply chain, network, wireless, cloud, and operational technology vectors.",
+        "Vulnerabilities: applying application, operating system, web, hardware, virtualization, operating system (OS), firmware, client-based, agentless, unsupported systems, and third-party vulnerabilities.",
+        "Malicious activity: analyzing malware attacks, password attacks, application attacks, advanced attacks, network attacks, and cryptographic attacks.",
+        "Mitigation techniques: using segmentation, access control, configuration enforcement, hardening, isolation, and patching.",
       ],
     },
     {
-      title: "Core 1: Virtualization and cloud computing",
+      title: "Security architecture",
       items: [
-        "Virtualization concepts: understanding virtual machines, hypervisors, and desktop virtualization.",
-        "Cloud models: learning about IaaS, SaaS, and PaaS.",
+        "Architecture models: comparing on-premises, cloud, virtualization, Internet of Things (IoT), industrial control systems (ICS), and microservices architecture.",
+        "Enterprise infrastructure: applying security principles to infrastructure considerations, secure selection, and network appliances.",
+        "Data protection: explaining data types, data classifications, general considerations, and data sovereignty.",
+        "Resilience and recovery: explaining high availability, site considerations, testing, power resilience, capacity, backups, and continuity of operations.",
       ],
     },
     {
-      title: "Core 1: Hardware and network troubleshooting",
+      title: "Security operations",
       items: [
-        "Diagnosing issues: identifying and fixing hardware, network, and connectivity problems.",
-        "Troubleshooting tools: using multimeters, cable testers, and loopback plugs.",
+        "Computing resources: applying secure baselines, mobile solutions, hardening, software security, application security, monitoring, and log monitoring.",
+        "Identity and access management: analyzing identity, authentication, authorization, and provisioning of hardware, software, and data assets.",
+        "Vulnerability management: identifying, analyzing, remediating, validating, and reporting vulnerabilities.",
+        "Alerting and monitoring: explaining monitoring tools and computing resource activities.",
+        "Enterprise security: involving firewalls, IDS/IPS, web filters, DNS (data loss prevention), DLP, (prevent content analysis), and SOAR (extended detection and response).",
+        "Identity and access management: implementing provisioning, PAM (single sign-on), MFA (multifactor authentication), and password vaults.",
+        "Automation and orchestration: explaining automation use cases, scripting benefits, and orchestration.",
+        "Incident response: explaining processes, training, testing, IOC, and threat hunting; root cause analysis, digital forensics.",
+        "Data sources: explaining log data and other sources to support investigations.",
       ],
     },
     {
-      title: "Core 2: Security",
+      title: "Security program management and oversight",
       items: [
-        "Security measures: using encryption, access controls, and wireless security protocols.",
-        "Malware prevention: detecting, removing, and preventing malware threats.",
-      ],
-    },
-    {
-      title: "Core 2: Software troubleshooting",
-      items: [
-        "OS issues: diagnosing and resolving problems with operating systems and applications.",
-        "Mobile troubleshooting: addressing connectivity, app, and performance issues.",
-        "Security concerns: fixing unauthorized access and malware issues.",
-      ],
-    },
-    {
-      title: "Core 2: Operational procedures",
-      items: [
-        "Documentation: using best practices for system changes and documentation.",
-        "Safety and communication: following safety protocols and communicating effectively.",
-        "Backup and recovery: setting up workstation backup and recovery processes.",
+        "Security governance: summarizing guidelines, policies, standards, procedures, external considerations, monitoring, and revisions; explaining incident response.",
+        "Risk management: explaining risk identification, assessment types, risk analysis, risk register, risk tolerance strategies, reporting, and business impact analysis (BIA).",
+        "Third-party risk: managing vendor assessment, selection, agreements, monitoring, questionnaires, and rules of engagement.",
+        "Security compliance: summarizing compliance reporting, consequences of non-compliance, monitoring, and privacy.",
+        "Security awareness: explaining infiltration, internal/external audits, and penetration testing.",
+        "Security discoveries: implementing phishing training, anomalous behavior recognition, user guidance, reporting, and monitoring.",
       ],
     },
   ];
@@ -101,14 +100,15 @@ export default function Aplus() {
           {/* ====== Course Title and Description ======*/}
           <div>
             {/* Course title */}
-            <h1 className="text-[#1775EE] font-bold">A+ (Core 1 & Core 2)</h1>
+            <h1 className="text-[#1775EE] font-bold">Security+</h1>
 
             {/* Course description */}
             <p className="lg:w-[30vw] xl:w-lg text-gray-900">
-              CompTIA A+ is a widely recognized certification for beginners that
-              will help you start your IT career. Employers from a variety of
-              industries value A+ because it fosters fundamental skills in
-              networking, hardware, software, problem-solving, and security.
+              CompTIA Security+ is a widely recognized certification that serves
+              as a starting point for a career in cybersecurity, showcasing
+              practical skills for protecting networks, applications, and data.
+              Vendor-neutral and acknowledged globally, it supports the
+              development of a long-term career in security.
             </p>
           </div>
 
@@ -145,18 +145,14 @@ export default function Aplus() {
             {/* About Section - Description */}
             {/* CHANGE: Course description paragraphs */}
             <p>
-              This intermediate specialization is designed for individuals who
-              have basic IT knowledge and some experience in setup and
-              troubleshooting. The competencies gained through the three courses
-              equip learners for the CompTIA A+ certification exams and enhance
-              their value for organizations in need of skilled IT professionals.
-            </p>
-            <p>
-              Students should possess a basic understanding of IT fundamentals
-              (ITF+) before starting this course. Those without this background
-              are advised to first complete the IBM IT Support Professional
-              Certificate or the IBM Information Technology and Cloud
-              Fundamentals Specialization to develop the necessary skills.
+              This leading international certification verifies the essential
+              abilities required for core security responsibilities and IT
+              security roles. It demonstrates a professional’s capability to
+              safeguard networks, applications, and devices while ensuring data
+              confidentiality, integrity, and availability. With a strong focus
+              on hands-on experience, Security+ equips individuals to address
+              real-world security challenges and is a key credential for
+              advancing in the dynamic field of cybersecurity.
             </p>
           </section>
 
@@ -172,31 +168,33 @@ export default function Aplus() {
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <p>
-                  Troubleshoot and fix problems involving laptops, mobile
-                  devices, video and display configurations, networking,
-                  storage, motherboards, CPUs, BIOS, and power supplies.
+                  Identify various threats, attacks, and vulnerabilities, such
+                  as malware, social engineering, and application-based
+                  exploits.
                 </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <p>
-                  Explain how Active Directory, Windows security utilities, and
-                  secure data deletion help safeguard mobile devices.
+                  Use security technologies and tools—including firewalls,
+                  intrusion detection systems, and endpoint protection—to defend
+                  systems.
                 </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <p>
-                  Identify and resolve issues with various printer types and
-                  setups, and recognize common features and commands across
-                  operating systems.
+                  Design secure network architectures, configure protected
+                  systems, and apply secure protocols in both system and network
+                  setups.
                 </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <p>
-                  Demonstrate mastery of CompTIA A+ Core 1 and Core 2 topics by
-                  completing practice certification exams successfully.
+                  Manage identity and access control by implementing
+                  authentication, authorization, and accounting to ensure secure
+                  access.
                 </p>
               </div>
             </div>
@@ -220,8 +218,8 @@ export default function Aplus() {
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
             {/* Cert Badge - Change/Update Image */}
             <img
-              src={aPlusCerti}
-              alt="A+ Certification Badge"
+              src={security}
+              alt="Security+ Certification Badge"
               className="w-100 h-100 object-contain"
             />
           </div>
@@ -232,10 +230,10 @@ export default function Aplus() {
             <h5 className="text-[#1775EE] font-bold">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
+              "Data Analyst",
               "IT Manager",
-              "Network Administrator",
-              "Cybersecurity Analyst",
-              "Database Administrator",
+              "E-Commerce Analyst",
+              "IT Project Manager",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />

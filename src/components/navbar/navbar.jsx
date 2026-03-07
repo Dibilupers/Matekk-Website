@@ -118,7 +118,7 @@ function NavBar() {
                 path: "/training/cisco/comptia/aplus",
               },
               { name: "Network+", path: "/training/cisco/comptia/network" },
-              { name: "Security+", path: "/training/cisco/comptia/security" },
+              { name: "Security+", path: "/training/cisco/comptia/security+" },
               { name: "CySA+", path: "/training/cisco/comptia/cysa" },
               { name: "PenTest+", path: "/training/cisco/comptia/pentest" },
               { name: "Linux+", path: "/training/cisco/comptia/linux" },
@@ -392,12 +392,12 @@ function NavBar() {
 
   return (
     <header
-      className={`flex flex-row items-center justify-between py-4 bg-white sticky top-0 z-50 transition-shadow ${scrolled ? "shadow-md" : ""}`}
+      className={`flex flex-row items-center justify-between py-4 bg-white sticky top-0 z-50 transition-shadow px-[2.063rem] md:px-16 xl:px-[7.438rem]  ${scrolled ? "shadow-md" : ""}`}
     >
       {/* ↓ changed md:ml-[7.438rem] → lg:ml-[7.438rem] */}
       <button
         onClick={handleHomeClick}
-        className="cursor-pointer ml-[2.063rem] md:ml-16 xl:ml-[7.438rem] "
+        className="cursor-pointer"
       >
         LOGO
       </button>
