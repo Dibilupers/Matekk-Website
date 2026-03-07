@@ -5,6 +5,7 @@ import NavBar from "../components/navbar/navbar";
 import Footer from "../components/footer/footer";
 import CCNA from "../pages/training/cisco/ccna/ccna";
 import CCNAAutomation from "../pages/training/cisco/ccna/automation";
+import CCNPEnterprise from "../pages/training/cisco/ccnp/enterprise";
 import Network from "../pages/solutions/ict/network";
 import ScrollToTop from "../components/scroll/ScrollToTop";
 
@@ -19,6 +20,10 @@ export default function App() {
         <Route
           path="/training/cisco/ccna/automation"
           element={<CCNAAutomation />}
+        />
+        <Route
+          path="/training/cisco/ccnp/enterprise"
+          element={<CCNPEnterprise />}
         />
         <Route path="/solutions/ict/network" element={<Network />} />
         <Route path="*" element={<NotFound />} />
