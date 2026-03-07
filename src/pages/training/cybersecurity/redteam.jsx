@@ -5,7 +5,7 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
-import leader from "../../../assets/itil4_leader.webp"; // Course badge image
+import redteam from "../../../assets/redteam.webp"; // Course badge image
 import ccnaHero from "../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
 import ccnaFooter from "../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
 import MealIcon from "../../../assets/Meal.svg";
@@ -17,72 +17,180 @@ import TrainingTemplateFooter from "../../../components/section/TrainingTemplate
 import EnrollNowButton from "../../../components/ui/EnrollNowButton";
 
 // ==================== COMPONENT NAME ====================
-export default function ITIL4Leader() {
+export default function RedTeam() {
   // ==================== COURSE MODULES ====================
   const modules = [
     {
-      title: "Introduction to Digital and IT Strategy",
+      title: "1.0 General Security Concepts (High-Impact Foundation)",
       items: [
-        "Overview of Digital and IT Strategy within the ITIL 4 framework",
-        "The role of strategic digital leadership and IT alignment",
+        {
+          subTitle: "1.1 Core Security Principles",
+          items: [
+            "CIA Triad",
+            "AAA (Authentication, Authorization, Accounting)",
+            "Least Privilege",
+            "Separation of Duties",
+            "Zero Trust Model",
+            "Defense in Depth",
+          ],
+        },
+        {
+          subTitle: "1.2 Security Controls",
+          items: [
+            "Preventive, Detective, Corrective",
+            "Administrative, Technical, Physical controls",
+            "Basic change management concepts",
+          ],
+        },
+        {
+          subTitle: "1.3 Cryptography Essentials",
+          items: [
+            "Symmetric vs Asymmetric encryption",
+            "AES and RSA concepts",
+            "Hashing and salting",
+            "Digital signatures",
+            "Public Key Infrastructure (PKI)",
+            "Certificates and TLS basics",
+          ],
+        },
       ],
     },
     {
-      title: "Module 1: ITIL Guiding Principles and Digital Strategy",
+      title: "2.0 Threats, Vulnerabilities & Mitigation (Critical Exam Domain)",
       items: [
-        "Applying ITIL's guiding principles to digital and IT strategy decisions and activities",
-        "Principles such as value focus, collaboration, and iterative progress in strategic contexts",
+        {
+          subTitle: "2.1 Threat Actors",
+          items: [
+            "Nation-state",
+            "Organized crime",
+            "Insider threats",
+            "Hacktivists",
+          ],
+        },
+        {
+          subTitle: "2.2 Social Engineering & Malware",
+          items: [
+            "Phishing & BEC",
+            "Vishing / Smishing",
+            "Ransomware",
+            "Trojans",
+            "Worms",
+            "Botnets",
+          ],
+        },
+        {
+          subTitle: "2.3 Vulnerability Concepts",
+          items: [
+            "CVE & CVSS basics",
+            "Zero-day vulnerabilities",
+            "Misconfigurations",
+            "Default credentials",
+            "Supply chain risks",
+          ],
+        },
+        {
+          subTitle: "2.4 Mitigation Strategies",
+          items: [
+            "Patch management",
+            "Hardening techniques",
+            "Network segmentation",
+            "Application control",
+          ],
+        },
       ],
     },
     {
-      title: "Module 2: Leveraging Digital Strategy to Respond to Disruption",
+      title: "3.0 Security Architecture & Design",
       items: [
-        "Core concepts: digital technology, digital transformation, business models",
-        "How digital strategy enables organisational response to external change",
+        {
+          subTitle: "3.1 Secure Network Design",
+          items: [
+            "Network segmentation",
+            "VLAN concepts",
+            "Secure protocols (HTTPS, SSH, TLS, IPSec)",
+            "Firewalls and DMZ basics",
+          ],
+        },
+        {
+          subTitle: "3.2 Cloud & Hybrid Security",
+          items: [
+            "IaaS, PaaS, SaaS models",
+            "Shared responsibility model",
+            "Virtualization basics",
+          ],
+        },
+        {
+          subTitle: "3.3 Data Protection",
+          items: [
+            "Encryption at rest and in transit",
+            "Data classification",
+            "Backups and recovery",
+            "High availability concepts",
+          ],
+        },
       ],
     },
     {
-      title: "Module 3: Relationship with the Service Value System",
+      title: "4.0 Security Operations & Monitoring (Most Heavily Tested)",
       items: [
-        "How digital and IT strategy links with the ITIL service value system and value chain",
-        "Environmental analysis: external (VUCA factors) and internal (four dimensions)",
+        {
+          subTitle: "4.1 Identity & Access Management",
+          items: ["MFA", "SSO", "Federation", "Role-Based Access Control"],
+        },
+        {
+          subTitle: "4.2 Vulnerability Management Lifecycle",
+          items: [
+            "Scanning",
+            "Risk prioritization",
+            "Remediation",
+            "Validation",
+          ],
+        },
+        {
+          subTitle: "4.3 Monitoring & Detection",
+          items: [
+            "SIEM concepts",
+            "IDS vs IPS",
+            "Log analysis basics",
+            "Indicators of Compromise (IoCs)",
+          ],
+        },
+        {
+          subTitle: "4.4 Incident Response",
+          items: [
+            "IR lifecycle",
+            "Containment & eradication",
+            "Root cause analysis",
+            "Documentation & reporting",
+          ],
+        },
       ],
     },
     {
-      title: "Module 4: Organisational Viability in Disrupted Environments",
+      title: "5.0 Governance, Risk & Compliance Essentials",
       items: [
-        "Achieving agility, resilience, lean operations and co-creation",
-        "Analysing different levels of disruption and adapting strategy accordingly",
-      ],
-    },
-    {
-      title:
-        "Module 5: Strategic Approaches for Customer Relevance and Operational Excellence",
-      items: [
-        "Approaches for customer/market relevance (customer journeys, analytics, agility)",
-        "Operational excellence across the four dimensions and financial planning",
-      ],
-    },
-    {
-      title: "Module 6: Risks and Opportunities",
-      items: [
-        "Understanding strategic risk management in digital contexts",
-        "Innovation concepts and techniques for sustaining competitive advantage",
-      ],
-    },
-    {
-      title: "Module 7: Defining and Advocating the Strategy",
-      items: [
-        "Digital readiness assessments and gap analysis",
-        "Communicating vision and strategy, building business cases",
-      ],
-    },
-    {
-      title: "Module 8: Implementing Digital and IT Strategy",
-      items: [
-        "Operating models, workforce strategies and leadership skills needed",
-        "Coordinating strategic initiatives (large-scale and incremental)",
-        "Assessing strategy success and improvement activities",
+        {
+          subTitle: "5.1 Risk Management",
+          items: [
+            "Risk identification",
+            "Risk assessment",
+            "Risk register",
+            "Risk treatment options",
+          ],
+        },
+        {
+          subTitle: "5.2 Business Impact Analysis",
+          items: ["Asset prioritization", "RTO and RPO concepts"],
+        },
+        {
+          subTitle: "5.3 Policies & Compliance",
+          items: [
+            "Security policies",
+            "Acceptable Use Policy",
+            "Vendor risk overview",
+            "Security awareness programs",
+          ],
+        },
       ],
     },
   ];
@@ -105,22 +213,22 @@ export default function ITIL4Leader() {
         <div className="relative z-10 flex flex-col gap-3 pl-1 sm:pl-8">
           {/* Course Category */}
           <h6 className="w-fit px-4 py-2 text-[#1775EE] bg-blue-50 rounded-full">
-            IT Management
+            Cybersecurity
           </h6>
 
           {/* ====== Course Title and Description ======*/}
           <div>
             {/* Course title */}
             <h1 className="text-[#1775EE] w-150">
-              ITIL4 Leader: Digital and IT Strategy
+              Red Team: CompTIA Security+ (SY0-701) Training
             </h1>
 
             {/* Course description */}
             <p className="lg:w-[30vw] xl:w-lg text-gray-900">
-              Improve your capabilities as a digital leader by aligning digital
-              strategies with overall business goals, learning how to navigate
-              volatile, uncertain, complex, and ambiguous (VUCA) environments,
-              and responding effectively to disruptions.
+              The CompTIA Security+ (SY0-701) is a 5-day intensive bootcamp that
+              prepares learners for the exam while building foundational,
+              job-ready cybersecurity skills for securing modern enterprise
+              environments.
             </p>
           </div>
 
@@ -157,15 +265,13 @@ export default function ITIL4Leader() {
             {/* About Section - Description */}
             {/* CHANGE: Course description paragraphs */}
             <p>
-              The ITIL 4 Leader: Digital and IT Strategy course equips IT and
-              business leaders with the skills to develop and implement digital
-              strategies that align with broader organisational objectives. It
-              focuses on building strategic capabilities to create a clear
-              digital vision, assess internal and external environments, drive
-              operational excellence, and respond to digital disruption in
-              dynamic business landscapes. This module also addresses strategic
-              risk management, continuous improvement, and leadership in
-              digitally enabled organisations.
+              This instructor-led training integrates structured discussions,
+              guided demonstrations, and practical exercises to strengthen core
+              cybersecurity principles—including security fundamentals, threat
+              identification and mitigation, secure network and cloud
+              architecture, vulnerability management, incident response, and
+              risk governance—while prioritizing clarity, confidence, and exam
+              readiness without unnecessary technical overload.
             </p>
           </section>
 
@@ -177,22 +283,30 @@ export default function ITIL4Leader() {
             </h3>
 
             {/* What You Will Learn Section - List */}
-            <div className="grid grid-cols-1 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Developing a Digital Vision and Strategy</p>
+                <p>Security fundamentals</p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Evaluating Digital Strategy</p>
+                <p>Threat identification and mitigation</p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Operationalising Strategy</p>
+                <p>Secure network and cloud architecture</p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Responding to Digital Disruption</p>
+                <p>Vulnerability management basics</p>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
+                <p>Incident response processes</p>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
+                <p>Risk and governance essentials.</p>
               </div>
             </div>
           </section>
@@ -215,8 +329,8 @@ export default function ITIL4Leader() {
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
             {/* Cert Badge - Change/Update Image */}
             <img
-              src={leader}
-              alt="Leader Certification Badge"
+              src={redteam}
+              alt="Red Team Certification Badge"
               className="w-60 h-60 object-contain"
             />
           </div>
@@ -227,10 +341,10 @@ export default function ITIL4Leader() {
             <h5 className="text-[#1775EE] font-bold">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
-              "Data Centre Technician",
-              "Data Centre Operations Assistant",
-              "IT Support Technician",
-              "NOC / Operations Support Engineer",
+              "Junior Penetration Tester",
+              "Red Team Analyst",
+              "Ethical Hacker",
+              "Security Analyst (Offensive Focus)",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />

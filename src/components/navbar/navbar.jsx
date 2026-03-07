@@ -296,7 +296,19 @@ function NavBar() {
           },
         ],
       },
-      { name: "Cybersecurity", subcourses: [] },
+      {
+        name: "Cybersecurity",
+        subcourses: [
+          {
+            name: "Blue Team: Security Operations & Defensive Cybersecurity Program",
+            path: "/training/cybersecurity/blueteam",
+          },
+          {
+            name: "Red Team: CompTIA Security+ (SY0-701) Training",
+            path: "/training/cybersecurity/redteam",
+          },
+        ],
+      },
       {
         name: "Cloud Computing",
         subcourses: [
@@ -344,6 +356,15 @@ function NavBar() {
                 path: "/training/itil4/leader",
               },
             ],
+          },
+        ],
+      },
+      {
+        name: "Project Management",
+        subcourses: [
+          {
+            name: "Project Management Professional",
+            path: "/training/projectmanagement/pmp",
           },
         ],
       },
@@ -395,10 +416,7 @@ function NavBar() {
       className={`flex flex-row items-center justify-between py-4 bg-white sticky top-0 z-50 transition-shadow px-[2.063rem] md:px-16 xl:px-[7.438rem]  ${scrolled ? "shadow-md" : ""}`}
     >
       {/* ↓ changed md:ml-[7.438rem] → lg:ml-[7.438rem] */}
-      <button
-        onClick={handleHomeClick}
-        className="cursor-pointer"
-      >
+      <button onClick={handleHomeClick} className="cursor-pointer">
         LOGO
       </button>
 
@@ -478,7 +496,7 @@ function NavBar() {
 
                 {/* Column 2 — subcourses */}
                 {openSubcourse && (
-                  <div className="w-123">
+                  <div className="w-fit">
                     {dropdownMenus.solutions
                       .find((cat) => cat.name === openSubcourse)
                       ?.subcourses?.map((item) => (
@@ -524,7 +542,7 @@ function NavBar() {
           {openDropdown === "training" && (
             <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 p-5 bg-white shadow-lg rounded-2xl border border-gray-100 overflow-hidden font-inter">
               <div className="flex space-x-[2.313rem]">
-                <div className="w-56">
+                <div className="w-57">
                   {dropdownMenus.training.map((category) => (
                     <button
                       key={category.name}
@@ -563,21 +581,21 @@ function NavBar() {
                   <div className="w-57">
                     {dropdownMenus.training
                       .find((cat) => cat.name === openSubcourse)
-                      ?.subcourses?.map((subcourse) => (
-                        <button
-                          key={subcourse.name}
-                          className={`w-full text-left px-6 py-2 transition-colors rounded-[0.35rem] flex items-center justify-between ${openSubSubcourse === subcourse.name ? "bg-[#1775EE] text-white font-bold" : "hover:bg-[#1775EE] hover:text-white hover:font-bold"}`}
-                          onClick={() => {
-                            setOpenSubSubcourse(
-                              openSubSubcourse === subcourse.name
-                                ? null
-                                : subcourse.name,
-                            );
-                            setOpenSubSubSubcourse(null);
-                          }}
-                        >
-                          {subcourse.name}
-                          {subcourse.subcourses?.length > 0 && (
+                      ?.subcourses?.map((subcourse) =>
+                        subcourse.subcourses ? (
+                          <button
+                            key={subcourse.name}
+                            className={`w-full text-left px-6 py-2 transition-colors rounded-[0.35rem] flex items-center justify-between ${openSubSubcourse === subcourse.name ? "bg-[#1775EE] text-white font-bold" : "hover:bg-[#1775EE] hover:text-white hover:font-bold"}`}
+                            onClick={() => {
+                              setOpenSubSubcourse(
+                                openSubSubcourse === subcourse.name
+                                  ? null
+                                  : subcourse.name,
+                              );
+                              setOpenSubSubSubcourse(null);
+                            }}
+                          >
+                            {subcourse.name}
                             <svg
                               className="w-4 h-4"
                               fill="none"
@@ -591,15 +609,24 @@ function NavBar() {
                                 d="M9 5l7 7-7 7"
                               />
                             </svg>
-                          )}
-                        </button>
-                      ))}
+                          </button>
+                        ) : (
+                          <Link
+                            key={subcourse.name}
+                            to={subcourse.path}
+                            onClick={resetMenu}
+                            className="block w-full text-left px-6 py-2 rounded-[0.35rem] hover:text-[#1775EE] hover:font-bold transition-colors"
+                          >
+                            {subcourse.name}
+                          </Link>
+                        ),
+                      )}
                   </div>
                 )}
 
                 {/* Third Column */}
                 {openSubSubcourse && (
-                  <div className="w-57">
+                  <div className="w-57 overflow-y-auto max-h-[70vh]">
                     {dropdownMenus.training
                       .find((cat) => cat.name === openSubcourse)
                       ?.subcourses?.find((sub) => sub.name === openSubSubcourse)
@@ -697,7 +724,7 @@ function NavBar() {
       </nav>
 
       {/* Enroll Now — only visible at lg and above */}
-      <EnrollNowButton buttonCustomStyle="hidden lg:block"/>
+      <EnrollNowButton buttonCustomStyle="hidden lg:block" />
 
       {/* Mobile + Tablet Hamburger — visible below lg */}
       {/* ↓ changed flex md:hidden → flex lg:hidden */}
@@ -870,28 +897,41 @@ function NavBar() {
             </div>
 
             <nav className="flex-1 px-6 py-8 space-y-4">
-              {dropdownMenus.solutions.map((category) => (
-                <button
-                  key={category.name}
-                  onClick={() => setOpenSubcourse(category.name)}
-                  className="block w-full text-left text-lg text-black font-poppins hover:text-[#1775EE] py-2 flex items-center justify-between"
-                >
-                  {category.name}
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </button>
-              ))}
+              {dropdownMenus.training
+                .find((cat) => cat.name === openSubcourse)
+                ?.subcourses.map((subcourse) =>
+                  subcourse.subcourses ? (
+                    <button
+                      key={subcourse.name}
+                      onClick={() => setOpenThirdLevel(subcourse.name)}
+                      className="block w-full text-left text-lg text-black font-poppins hover:text-[#1775EE] py-2 flex items-center justify-between"
+                    >
+                      {subcourse.name}
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
+                    </button>
+                  ) : (
+                    <Link
+                      key={subcourse.name}
+                      to={subcourse.path}
+                      onClick={resetMenu}
+                      className="block text-lg text-black font-poppins hover:text-[#1775EE] py-2 px-4"
+                    >
+                      {subcourse.name}
+                    </Link>
+                  ),
+                )}
             </nav>
           </div>
         )}

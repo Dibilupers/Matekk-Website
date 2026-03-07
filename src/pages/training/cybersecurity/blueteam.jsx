@@ -5,7 +5,7 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
-import leader from "../../../assets/itil4_leader.webp"; // Course badge image
+import blueteam from "../../../assets/blueteam.webp"; // Course badge image
 import ccnaHero from "../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
 import ccnaFooter from "../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
 import MealIcon from "../../../assets/Meal.svg";
@@ -17,72 +17,74 @@ import TrainingTemplateFooter from "../../../components/section/TrainingTemplate
 import EnrollNowButton from "../../../components/ui/EnrollNowButton";
 
 // ==================== COMPONENT NAME ====================
-export default function ITIL4Leader() {
+export default function BlueTeam() {
   // ==================== COURSE MODULES ====================
   const modules = [
     {
-      title: "Introduction to Digital and IT Strategy",
+      title: "1.0 Security Foundations",
       items: [
-        "Overview of Digital and IT Strategy within the ITIL 4 framework",
-        "The role of strategic digital leadership and IT alignment",
+        "Blue Team vs Red Team Concepts",
+        "SOC Structure and Roles",
+        "CIA Triad",
+        "Security Controls (Preventive, Detective, Corrective)",
+        "Introduction to MITRE ATT&CK",
+        "NIST Incident Response Lifecycle",
       ],
     },
     {
-      title: "Module 1: ITIL Guiding Principles and Digital Strategy",
+      title: "2.0 Security Operations & Monitoring",
       items: [
-        "Applying ITIL's guiding principles to digital and IT strategy decisions and activities",
-        "Principles such as value focus, collaboration, and iterative progress in strategic contexts",
+        "Log Management Concepts",
+        "Windows & Linux Log Analysis",
+        "Event ID Analysis",
+        "SIEM Fundamentals",
+        "Alert Correlation",
+        "Endpoint Detection and Response (EDR)",
+        "Network Traffic Analysis (Wireshark)",
       ],
     },
     {
-      title: "Module 2: Leveraging Digital Strategy to Respond to Disruption",
+      title: "3.0 Threat Detection & Threat Hunting",
       items: [
-        "Core concepts: digital technology, digital transformation, business models",
-        "How digital strategy enables organisational response to external change",
+        "Indicators of Compromise (IoC)",
+        "Behavioral Analysis",
+        "Threat Intelligence Integration",
+        "Mapping Attacks to MITRE ATT&CK",
+        "Brute Force & Credential Attack Detection",
+        "Command & Control Detection",
       ],
     },
     {
-      title: "Module 3: Relationship with the Service Value System",
+      title: "4.0 Vulnerability Management",
       items: [
-        "How digital and IT strategy links with the ITIL service value system and value chain",
-        "Environmental analysis: external (VUCA factors) and internal (four dimensions)",
+        "Vulnerability Scanning Concepts",
+        "CVSS Risk Scoring",
+        "Attack Surface Management",
+        "Patch Management",
+        "Remediation Planning",
+        "Security Hardening Techniques",
       ],
     },
     {
-      title: "Module 4: Organisational Viability in Disrupted Environments",
+      title: "5.0 Incident Response & Case Management",
       items: [
-        "Achieving agility, resilience, lean operations and co-creation",
-        "Analysing different levels of disruption and adapting strategy accordingly",
+        "Incident Detection & Analysis",
+        "Containment Strategies",
+        "Eradication & Recovery",
+        "Evidence Handling & Documentation",
+        "Root Cause Analysis",
+        "Incident Reporting & Escalation",
+        "Post-Incident Review",
       ],
     },
     {
-      title:
-        "Module 5: Strategic Approaches for Customer Relevance and Operational Excellence",
+      title: "6.0 Automation & SOC Maturity",
       items: [
-        "Approaches for customer/market relevance (customer journeys, analytics, agility)",
-        "Operational excellence across the four dimensions and financial planning",
-      ],
-    },
-    {
-      title: "Module 6: Risks and Opportunities",
-      items: [
-        "Understanding strategic risk management in digital contexts",
-        "Innovation concepts and techniques for sustaining competitive advantage",
-      ],
-    },
-    {
-      title: "Module 7: Defining and Advocating the Strategy",
-      items: [
-        "Digital readiness assessments and gap analysis",
-        "Communicating vision and strategy, building business cases",
-      ],
-    },
-    {
-      title: "Module 8: Implementing Digital and IT Strategy",
-      items: [
-        "Operating models, workforce strategies and leadership skills needed",
-        "Coordinating strategic initiatives (large-scale and incremental)",
-        "Assessing strategy success and improvement activities",
+        "SIEM vs SOAR Concepts",
+        "Automation Playbooks",
+        "Case Management Systems",
+        "KPIs (MTTD, MTTR)",
+        "SOC Maturity Models",
       ],
     },
   ];
@@ -105,22 +107,21 @@ export default function ITIL4Leader() {
         <div className="relative z-10 flex flex-col gap-3 pl-1 sm:pl-8">
           {/* Course Category */}
           <h6 className="w-fit px-4 py-2 text-[#1775EE] bg-blue-50 rounded-full">
-            IT Management
+            Cybersecurity
           </h6>
 
           {/* ====== Course Title and Description ======*/}
           <div>
             {/* Course title */}
             <h1 className="text-[#1775EE] w-150">
-              ITIL4 Leader: Digital and IT Strategy
+              Blue Team: Security Operations & Defensive Cybersecurity Program
             </h1>
 
             {/* Course description */}
             <p className="lg:w-[30vw] xl:w-lg text-gray-900">
-              Improve your capabilities as a digital leader by aligning digital
-              strategies with overall business goals, learning how to navigate
-              volatile, uncertain, complex, and ambiguous (VUCA) environments,
-              and responding effectively to disruptions.
+              Blue Team Training is a structured cybersecurity defense program
+              that builds practical skills in SOC monitoring, threat detection,
+              vulnerability management, and incident response.
             </p>
           </div>
 
@@ -157,15 +158,13 @@ export default function ITIL4Leader() {
             {/* About Section - Description */}
             {/* CHANGE: Course description paragraphs */}
             <p>
-              The ITIL 4 Leader: Digital and IT Strategy course equips IT and
-              business leaders with the skills to develop and implement digital
-              strategies that align with broader organisational objectives. It
-              focuses on building strategic capabilities to create a clear
-              digital vision, assess internal and external environments, drive
-              operational excellence, and respond to digital disruption in
-              dynamic business landscapes. This module also addresses strategic
-              risk management, continuous improvement, and leadership in
-              digitally enabled organisations.
+              This course equips learners for entry- to intermediate-level
+              defensive cybersecurity roles through instructor-led, hands-on
+              training that integrates real-world attack simulations, log
+              analysis, incident response scenarios, and practical use of
+              industry tools like SIEM platforms, network analyzers, and
+              vulnerability scanners to build operational readiness and
+              professional reporting skills.
             </p>
           </section>
 
@@ -177,22 +176,30 @@ export default function ITIL4Leader() {
             </h3>
 
             {/* What You Will Learn Section - List */}
-            <div className="grid grid-cols-1 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Developing a Digital Vision and Strategy</p>
+                <p>Monitor and analyze security logs.</p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Evaluating Digital Strategy</p>
+                <p>Detect and respond to cyber threats.</p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Operationalising Strategy</p>
+                <p>Conduct vulnerability assessments.</p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Responding to Digital Disruption</p>
+                <p>Perform structured incident response.</p>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
+                <p>Produce professional security reports.</p>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
+                <p>Align skills with international Blue Team certifications.</p>
               </div>
             </div>
           </section>
@@ -215,8 +222,8 @@ export default function ITIL4Leader() {
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
             {/* Cert Badge - Change/Update Image */}
             <img
-              src={leader}
-              alt="Leader Certification Badge"
+              src={blueteam}
+              alt="Blue Team Certification Badge"
               className="w-60 h-60 object-contain"
             />
           </div>
@@ -227,10 +234,10 @@ export default function ITIL4Leader() {
             <h5 className="text-[#1775EE] font-bold">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
-              "Data Centre Technician",
-              "Data Centre Operations Assistant",
-              "IT Support Technician",
-              "NOC / Operations Support Engineer",
+              "Security Operations Center (SOC) Analyst",
+              "Cybersecurity Analyst",
+              "Incident Response Analyst",
+              "Vulnerability Analyst",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />

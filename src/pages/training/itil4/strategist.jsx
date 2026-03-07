@@ -5,7 +5,7 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
-import leader from "../../../assets/itil4_leader.webp"; // Course badge image
+import strategist from "../../../assets/itil4_strategist.webp"; // Course badge image
 import ccnaHero from "../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
 import ccnaFooter from "../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
 import MealIcon from "../../../assets/Meal.svg";
@@ -17,72 +17,96 @@ import TrainingTemplateFooter from "../../../components/section/TrainingTemplate
 import EnrollNowButton from "../../../components/ui/EnrollNowButton";
 
 // ==================== COMPONENT NAME ====================
-export default function ITIL4Leader() {
+export default function ITIL4Strategist() {
   // ==================== COURSE MODULES ====================
   const modules = [
     {
-      title: "Introduction to Digital and IT Strategy",
+      title: "Introduction to Direct, Plan and Improve",
       items: [
-        "Overview of Digital and IT Strategy within the ITIL 4 framework",
-        "The role of strategic digital leadership and IT alignment",
+        "Overview of DPI within the ITIL 4 framework",
+        "Role of DPI in aligning strategy, governance, measurement, and improvement",
+        "DPI as a core module in the Managing Professional and Strategic Leader tracks",
       ],
     },
     {
-      title: "Module 1: ITIL Guiding Principles and Digital Strategy",
+      title: "Module 1: Core concepts of DPI",
       items: [
-        "Applying ITIL's guiding principles to digital and IT strategy decisions and activities",
-        "Principles such as value focus, collaboration, and iterative progress in strategic contexts",
-      ],
-    },
-    {
-      title: "Module 2: Leveraging Digital Strategy to Respond to Disruption",
-      items: [
-        "Core concepts: digital technology, digital transformation, business models",
-        "How digital strategy enables organisational response to external change",
-      ],
-    },
-    {
-      title: "Module 3: Relationship with the Service Value System",
-      items: [
-        "How digital and IT strategy links with the ITIL service value system and value chain",
-        "Environmental analysis: external (VUCA factors) and internal (four dimensions)",
-      ],
-    },
-    {
-      title: "Module 4: Organisational Viability in Disrupted Environments",
-      items: [
-        "Achieving agility, resilience, lean operations and co-creation",
-        "Analysing different levels of disruption and adapting strategy accordingly",
+        "Key definitions: direction, planning, improvement, scope",
+        "Relationships between value, outcomes, costs, and risks",
+        "Strategic vs operational scope of DPI",
       ],
     },
     {
       title:
-        "Module 5: Strategic Approaches for Customer Relevance and Operational Excellence",
+        "Module 2: DPI through service value system and guiding principles",
       items: [
-        "Approaches for customer/market relevance (customer journeys, analytics, agility)",
-        "Operational excellence across the four dimensions and financial planning",
+        "How DPI works within the Service Value System (SVS)",
+        "Applying the ITIL guiding principles to DPI work (e.g., start where you are, collaborate)",
       ],
     },
     {
-      title: "Module 6: Risks and Opportunities",
+      title: "Module 3: Role of direction in strategy management",
       items: [
-        "Understanding strategic risk management in digital contexts",
-        "Innovation concepts and techniques for sustaining competitive advantage",
+        "Identifying scope of what is to be directed/planned",
+        "Cascading objectives and controls",
+        "Policy, roles, and authority distribution for strategic alignment",
       ],
     },
     {
-      title: "Module 7: Defining and Advocating the Strategy",
+      title: "Module 4: Implementation of strategies",
       items: [
-        "Digital readiness assessments and gap analysis",
-        "Communicating vision and strategy, building business cases",
+        "Practical use of strategies in day-to-day operations",
+        "Governance integration, risk management, and compliance (GRC) linking to SVS",
       ],
     },
     {
-      title: "Module 8: Implementing Digital and IT Strategy",
+      title: "Module 5: Introduction to assessment and planning",
       items: [
-        "Operating models, workforce strategies and leadership skills needed",
-        "Coordinating strategic initiatives (large-scale and incremental)",
-        "Assessing strategy success and improvement activities",
+        "Assessment objectives, outputs, requirements and criteria",
+        "Selecting appropriate evaluation methods",
+        "Defining desired outcomes and scopes for planning",
+      ],
+    },
+    {
+      title: "Module 6: Assessment and planning through VSM",
+      items: [
+        "Evaluating parts of the SVS",
+        "Using data and feedback to refine planning and strategic direction",
+      ],
+    },
+    {
+      title: "Module 7: Measurement, reporting, and continual improvement",
+      items: [
+        "Definition and use of metrics, indicators, and reporting in DPI",
+        "Tools and practices to monitor performance",
+      ],
+    },
+    {
+      title:
+        "Module 8: Measurements and continual improvement through dimensions and SVS",
+      items: [
+        "Applying measurement across the four dimensions of service management",
+        "Driving improvement across value streams and practices",
+      ],
+    },
+    {
+      title: "Module 9: OCM principles and methods",
+      items: [
+        "OCM concepts and success factors",
+        "Stakeholder engagement and influence in change transitions",
+      ],
+    },
+    {
+      title: "Module 10: Communication principles and methods",
+      items: [
+        "Communication planning and channels",
+        "Feedback loops and effective two-way communication strategies",
+      ],
+    },
+    {
+      title: "Module 11: SVS development using four dimensions",
+      items: [
+        "How to use organisational culture, information & technology, value streams/processes, and partners/suppliers to enable DPI success across the SVS",
       ],
     },
   ];
@@ -112,15 +136,15 @@ export default function ITIL4Leader() {
           <div>
             {/* Course title */}
             <h1 className="text-[#1775EE] w-150">
-              ITIL4 Leader: Digital and IT Strategy
+              ITIL 4 Strategist: Direct, Plan and Improve
             </h1>
 
             {/* Course description */}
             <p className="lg:w-[30vw] xl:w-lg text-gray-900">
-              Improve your capabilities as a digital leader by aligning digital
-              strategies with overall business goals, learning how to navigate
-              volatile, uncertain, complex, and ambiguous (VUCA) environments,
-              and responding effectively to disruptions.
+              Develop the ability to streamline processes, lead organisational
+              change effectively, and align business objectives with IT
+              strategies, while encouraging teamwork and a culture of continuous
+              improvement.
             </p>
           </div>
 
@@ -157,15 +181,10 @@ export default function ITIL4Leader() {
             {/* About Section - Description */}
             {/* CHANGE: Course description paragraphs */}
             <p>
-              The ITIL 4 Leader: Digital and IT Strategy course equips IT and
-              business leaders with the skills to develop and implement digital
-              strategies that align with broader organisational objectives. It
-              focuses on building strategic capabilities to create a clear
-              digital vision, assess internal and external environments, drive
-              operational excellence, and respond to digital disruption in
-              dynamic business landscapes. This module also addresses strategic
-              risk management, continuous improvement, and leadership in
-              digitally enabled organisations.
+              This course provides the strategic and practical skills needed to
+              direct, plan, and continuously improve IT-enabled products and
+              services. It bridges the gap between strategic leadership and
+              operational execution.
             </p>
           </section>
 
@@ -180,19 +199,19 @@ export default function ITIL4Leader() {
             <div className="grid grid-cols-1 gap-4">
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Developing a Digital Vision and Strategy</p>
+                <p>Governance and Regulatory Compliance</p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Evaluating Digital Strategy</p>
+                <p>Service Performance Measurement and Metrics</p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Operationalising Strategy</p>
+                <p>Organisational Change Management</p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Responding to Digital Disruption</p>
+                <p>Risk Assessment and Management</p>
               </div>
             </div>
           </section>
@@ -215,8 +234,8 @@ export default function ITIL4Leader() {
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
             {/* Cert Badge - Change/Update Image */}
             <img
-              src={leader}
-              alt="Leader Certification Badge"
+              src={strategist}
+              alt="Strategist Certification Badge"
               className="w-60 h-60 object-contain"
             />
           </div>
@@ -227,10 +246,10 @@ export default function ITIL4Leader() {
             <h5 className="text-[#1775EE] font-bold">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
-              "Data Centre Technician",
-              "Data Centre Operations Assistant",
-              "IT Support Technician",
-              "NOC / Operations Support Engineer",
+              "IT Manager: Development",
+              "IT Manager: Operations",
+              "IT Leader",
+              "Transformation Manager",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
