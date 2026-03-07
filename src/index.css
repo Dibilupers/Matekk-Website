@@ -32,7 +32,7 @@ h5 {
 }
 
 h6 {
-  @apply text-[0.87rem] sm:text-[1rem] md:text-[0.93rem] font-light;
+  @apply text-[0.87rem] sm:text-[1rem] md:text-[0.8rem] font-light;
 }
 
 .partner-logos-format {
@@ -45,4 +45,8 @@ h6 {
 
 .inclusions_icons {
   @apply text-[#1775EE] shrink-0 w-8 h-8 rounded-full border border-[#1775EE] flex items-center justify-center;
+}
+
+.services_card {
+  @apply relative shrink-0 w-[85vw] md:w-[40vw] lg:w-[24vw] xl:w-[25vw] rounded-xl overflow-hidden bg-[#EBF5FD] cursor-pointer;
 }
