@@ -120,12 +120,14 @@ export default function Home() {
 
   return (
     <main>
-      {/* Hero Section */}
+      {/* ==================== HERO BANNER ====================*/}
       <section
         id="home"
         className="py-40 md:py-20 lg:py-0 scroll-mt-18"
       >
+        {/* Hero Banner - Margin */}
         <div className=" mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem]">
+          
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
             {/* LEFT SIDE - CONTENT */}
             <div className="space-y-10 lg:space-y-12 text-left">
@@ -153,7 +155,7 @@ export default function Home() {
                   <Button
                     title="Explore Our Solutions"
                     type="none"
-                    buttonCustomStyle="bg-[#1775EE] text-white hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+                    buttonCustomStyle="bg-[#1775EE] text-white transition-all duration-300 shadow-lg hover:bg-[#0062E0] px-6 py-3"
                     btnFunc={() => {
                       document.getElementById("services")?.scrollIntoView({
                         behavior: "smooth",
@@ -164,7 +166,7 @@ export default function Home() {
                   <Button
                     title="View Training Programs"
                     type="none"
-                    buttonCustomStyle="bg-white text-blue-600 border-2 border-blue-600 hover:bg-blue-50 transition-all duration-300 text-sm sm:text-base"
+                    buttonCustomStyle="text-blue-600 border border-blue-600 hover:bg-[#0062E0] hover:border-[#0062E0] hover:text-white  transition-all duration-300"
                     btnFunc={() => {
                       document.getElementById("services")?.scrollIntoView({
                         behavior: "smooth",
@@ -257,7 +259,7 @@ export default function Home() {
                   <MessageSquare className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
                 </div>
 
-                <div className="hidden xl:flex absolute bottom-15 -right-4 lg:-right-10 bg-[#EBF5FD] rounded-xl shadow-2xl px-3 py-2 max-w-61 z-20 hover:scale-105 transition-transform flex-col justify-center items-center">
+                <div className="hidden xl:flex absolute bottom-15 -right-4 lg:-right-10 bg-[#EBF5FD] rounded-xl shadow-2xl px-3 py-3 max-w-61 z-20 transition-transform flex-col justify-center items-center gap-2">
                   <div className="flex items-start gap-3">
                     <img
                       src="/src/assets/maamgrace2.png"
@@ -276,7 +278,7 @@ export default function Home() {
                   <Button
                     title="View Certification"
                     type="none"
-                    buttonCustomStyle="bg-[#1775EE] text-white hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl w-full"
+                    buttonCustomStyle="bg-[#1775EE] text-white transition-all duration-300 shadow-lg hover:bg-[#0062E0] px-6 py-3 w-full"
                     btnFunc={() => {
                       document.getElementById("feedbacks")?.scrollIntoView({
                         behavior: "smooth",
@@ -507,9 +509,8 @@ export default function Home() {
             <button
               key={i}
               onClick={() => setTopSlide(i)}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                topSlide === i ? "bg-[#1775EE] w-4" : "bg-[#C2DDFF] w-2"
-              }`}
+              className={`h-2 rounded-full transition-all duration-300 ${topSlide === i ? "bg-[#1775EE] w-4" : "bg-[#C2DDFF] w-2"
+                }`}
             />
           ))}
         </div>
@@ -701,9 +702,8 @@ export default function Home() {
             <button
               key={i}
               onClick={() => setBottomSlide(i)}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                bottomSlide === i ? "bg-[#1775EE] w-4" : "bg-[#C2DDFF] w-2"
-              }`}
+              className={`h-2 rounded-full transition-all duration-300 ${bottomSlide === i ? "bg-[#1775EE] w-4" : "bg-[#C2DDFF] w-2"
+                }`}
             />
           ))}
         </div>
@@ -1401,16 +1401,14 @@ export default function Home() {
 
                     {/* Full blur overlay */}
                     <div
-                      className={`absolute inset-0 rounded-2xl backdrop-blur-sm bg-black/1 transition-opacity duration-500 ${
-                        tappedCard === item.id ? "opacity-100" : "opacity-0"
-                      }`}
+                      className={`absolute inset-0 rounded-2xl backdrop-blur-sm bg-black/1 transition-opacity duration-500 ${tappedCard === item.id ? "opacity-100" : "opacity-0"
+                        }`}
                     />
 
                     {/* Content */}
                     <div
-                      className={`absolute inset-0 px-5 flex flex-col justify-center transition-opacity duration-500 ${
-                        tappedCard === item.id ? "opacity-100" : "opacity-0"
-                      }`}
+                      className={`absolute inset-0 px-5 flex flex-col justify-center transition-opacity duration-500 ${tappedCard === item.id ? "opacity-100" : "opacity-0"
+                        }`}
                     >
                       {/* Title row */}
                       <div className="flex items-center justify-between gap-2">
@@ -1520,7 +1518,7 @@ export default function Home() {
 
       {/* Hear from our successful learners */}
       <TestimonialSection />
-      
+
 
       {/* About the Company */}
       <section id="about" className="scroll-mt-18 py-16 bg-[#EBF5FD]">
