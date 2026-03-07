@@ -128,7 +128,7 @@ export default function Home() {
       >
         {/* Hero Banner - Margin */}
         <div className=" mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem]">
-          
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
             {/* LEFT SIDE - CONTENT */}
             <div className="space-y-10 lg:space-y-12 text-left">
@@ -294,7 +294,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Trusted by our customers & clients */}
+      {/* ==================== PARTNERS LOGO ====================*/}
       <section className="flex bg-[#EBF5FD] justify-center items-center text-center py-10 scroll-mt-18" id="partners">
         <div className="mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] space-y-4 md:space-y-7">
           <div className="flex flex-col justify-center items-center space-y-1">
@@ -311,7 +311,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Services we provide */}
+      {/* ==================== SERVICES ====================*/}
       <section id="services" className="flex flex-col justify-center items-center space-y-1 py-10 h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem]">
         <div className="w-70 md:w-full flex justify-center text-center">
           <h3>
@@ -710,7 +710,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Why Choose MGKK ICT Services */}
+      {/* ==================== WHY CHOOSE MGKK ICT SERVICES ====================*/}
       <section className="py-16 lg:py-20 bg-[#EBF5FD] scroll-mt-18">
         <div className="mx-[2.063rem] lg:mx-[7.438rem]">
           <div className="mb-12 lg:mb-16 text-left md:text-center sm:text-left lg:text-left">
@@ -797,7 +797,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Our Working Process */}
+      {/* ==================== OUR WORKING PROCESS ====================*/}
       <section className="py-10 lg:py-10 bg-white scroll-mt-18">
         <div className="mx-4 sm:mx-6 lg:mx-[7.438rem]">
           {/* ==================== SECTION HEADING ==================== */}
@@ -1362,7 +1362,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured Solutions */}
+      {/* ==================== FEATURED SOLUTIONS AND TRAINING ====================*/}
       <section
         id="training"
         className="flex flex-col py-10 h-full bg-[#EBF5FD] scroll-mt-18"
@@ -1517,11 +1517,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Hear from our successful learners */}
+      {/* ==================== FEEDBACKS ====================*/}
       <TestimonialSection />
 
 
-      {/* About the Company */}
+      {/* ==================== ABOUT THE COMPANY ====================*/}
       <section id="about" className="scroll-mt-18 py-16 bg-[#EBF5FD]">
         <div className="mx-4 sm:mx-6 lg:mx-[7.438rem] mx-[2.063rem]">
           {/* Section Heading */}
@@ -1610,7 +1610,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Frequently Asked Questions */}
+      {/* ==================== FREQUENTLY ASKED QUESTIONS ====================*/}
       <section className="flex flex-col md:flex-col scroll-mt-18 lg:flex-row xl:flex-row justify-center items-start bg-white pb-16 md:py-12 lg:py-20 space-y-0 sm:space-y-[-2rem] md:space-y-10 lg:space-y-0">
         {" "}
         <div className="mr-[2.063rem] ml-[2.063rem] mb-6 md:mb-0 md:ml-[1.5rem] lg:ml-[7.4rem] mt-[3rem] md:mt-10 lg:mt-0 w-[84%] md:w-[71%] lg:w-fit space-y-6 md:space-y-36 justify-center items-start">
@@ -1644,7 +1644,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Contact Us */}
+      {/* ==================== CONTACT US ====================*/}
       <section
         id="contact"
         className="flex justify-center items-center py-16 lg:py-20 bg-[#EBF5FD] scroll-mt-19"
@@ -1719,7 +1719,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <TrainingPage />
     </main>
   );
 }
