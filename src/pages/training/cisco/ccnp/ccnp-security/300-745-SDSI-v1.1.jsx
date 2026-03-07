@@ -1,25 +1,22 @@
-// ==================== IMPORTS - UPDATE FOR EACH COURSE ====================
-// Change these imports based on the specific course
-import Button from "../../../../components/ui/button";
+import Button from "../../../../../components/ui/button";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
-// COURSE-SPECIFIC ASSETS - Replace these for different courses
-import ccnaBadge from "../../../../assets/CCNPEnterprise.png"; // Course badge image
-import ccnaHero from "../../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
-import ccnaFooter from "../../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
-import MealIcon from "../../../../assets/Meal.svg";
-import ReviewIcon from "../../../../assets/Review.svg";
-import InstitutionalIcon from "../../../../assets/InsitutionalAccount.svg";
-import WorkstationIcon from "../../../../assets/Workstation.svg";
-import MedalIcon from "../../../../assets/Medal.svg";
-import CourseModules from "../../../../components/training/courseModules";
-import TrainingTemplateFooter from "../../../../components/section/TrainingTemplateFooter";
+import ccnaBadge from "../../../../../assets/CCNPSecurity.png";
+import ccnaHero from "../../../../../assets/CCNAHeroImageAutomation.png";
+import ccnaFooter from "../../../../../assets/CCNAFooterImageAutomation.png";
+import MealIcon from "../../../../../assets/Meal.svg";
+import ReviewIcon from "../../../../../assets/Review.svg";
+import InstitutionalIcon from "../../../../../assets/InsitutionalAccount.svg";
+import WorkstationIcon from "../../../../../assets/Workstation.svg";
+import MedalIcon from "../../../../../assets/Medal.svg";
+import CourseModules from "../../../../../components/training/courseModules";
+import TrainingTemplateFooter from "../../../../../components/section/TrainingTemplateFooter";
 
 // ==================== COMPONENT NAME - CHANGE FOR EACH COURSE ====================
-export default function CCNPEnterprise() {
+export default function SDSI() {
   const [openSection, setOpenSection] = useState(null);
 
   const toggleSection = (index) => {
@@ -29,135 +26,56 @@ export default function CCNPEnterprise() {
   // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
   const modules = [
     {
-      title: "1.0 Architecture",
+      title: "1.0 Secure Infrastructure",
       items: [
         {
           subTitle:
-            "1.1 Explain the different design principles used in an enterprise network",
+            "1.1 Select the security approaches to protect against threats",
           items: [
-            "1.1.a High-level enterprise network design such as 2-tier, 3-tier, fabric, and cloud",
-            "1.1.b High availability techniques such as redundancy, FHRP, and SSO",
-          ],
-        },
-        {
-          subTitle:
-            "1.2 Explain the working principles of the Cisco Catalyst SD-WAN solution",
-          items: [
-            "1.2.a SD-WAN control and data planes elements",
-            "1.2.b Benefits and limitations of Catalyst SD-WAN solution",
+            "1.1.a Endpoint and client devices (on-network, off-network, and remote)",
+            "1.1.b Identity such as MFA, passwordless, continuous trust, and identity intelligence",
+            "1.1.c Email (phishing, ransomware, business email compromise, malware, and spoofing)",
           ],
         },
         {
           subTitle:
-            "1.3 Explain the working principles of the Cisco SD-Access solution",
+            "1.2 Modify the security architecture to address technical requirements",
           items: [
-            "1.3.a SD-Access control and data planes elements",
-            "1.3.b Traditional campus interoperating with SD-Access",
+            "1.2.a Hybrid workers",
+            "1.2.b IoT",
+            "1.2.c SaaS",
+            "1.2.d Applications across data center and multi-cloud",
           ],
         },
-        "1.4 Interpret QoS configurations",
+        "1.3 Select a VPN and tunneling solution such as SD-WAN, IPsec, MPLS, GRE, DMVPN, and public cloud tunnel options based on business and technical requirements",
+        "1.4 Select the approach to secure the infrastructure management and control planes",
+        "1.5 Select the firewall feature or architecture such as traditional firewall, Nextgen firewall, Web Application Firewall, IPS/IDS, distributed firewall, eBPF, and host-based firewall given business and technical requirements",
       ],
     },
     {
-      title: "2.0 Virtualization",
+      title: "2.0 Applications",
       items: [
-        {
-          subTitle: "2.1 Describe device virtualization technologies",
-          items: [
-            "2.1.a Hypervisor type 1 and 2",
-            "2.1.b Virtual machine",
-            "2.1.c Virtual switching",
-          ],
-        },
-        {
-          subTitle:
-            "2.2 Configure and verify data path virtualization technologies",
-          items: ["2.2.a VRF", "2.2.b GRE and IPsec tunneling"],
-        },
-        {
-          subTitle: "2.3 Describe network virtualization concepts",
-          items: ["2.3.a LISP", "2.3.b VXLAN"],
-        },
+        "2.1 Select the security solution such as firewalls, SSL offloading, SSL decryption, DLP, and endpoint based on application and flow data, to protect an application",
+        "2.2 Select the design for cloud-native applications, microservices, containers, and serverless architectures to ensure segmentation/microsegmentation",
+        "2.3 Describe the design policies to address the impacts of emerging technologies such as generative AI, machine learning, and quantum computing",
       ],
     },
     {
-      title: "3.0 Infrastructure",
+      title: "3.0 Risk, Events, and Requirements",
       items: [
-        {
-          subTitle: "3.1 Layer 2",
-          items: [
-            "3.1.a Troubleshoot static and dynamic 802.1q trunking protocols",
-            "3.1.b Troubleshoot static and dynamic EtherChannels",
-            "3.1.c Configure and verify common Spanning Tree Protocols (RSTP, MST) and Spanning Tree enhancements such as root guard and BPDU guard",
-          ],
-        },
-        {
-          subTitle: "3.2 Layer 3",
-          items: [
-            "3.2.a Compare routing concepts of EIGRP and OSPF (advanced distance vector vs. link state, load balancing, path selection, path operations, metrics, and area types)",
-            "3.2.b Configure simple OSPFv2/v3 environments, including multiple normal areas, summarization, and filtering (neighbor adjacency, point-to-point, and broadcast network types, and passive-interface)",
-            "3.2.c Configure and verify eBGP between directly connected neighbors (best path selection algorithm and neighbor relationships)",
-            "3.2.d Describe policy-based routing",
-          ],
-        },
-        {
-          subTitle: "3.3 IP Services",
-          items: [
-            "3.3.a Interpret network time protocol configurations such as NTP and PTP",
-            "3.3.b Configure NAT/PAT",
-            "3.3.c Configure first hop redundancy protocols, such as HSRP, VRRP",
-            "3.3.d Describe multicast protocols, such as RPF check, PIM SM, IGMP v2/v3, SSM, bidir, and MSDP",
-          ],
-        },
+        "3.1 Describe how the SOC leverages incident handling and incident response tools",
+        "3.2 Modify a design to mitigate risk",
+        "3.3 Modify a security design following an incident",
+        "3.4 Describe the use of frameworks such as MITRE CAPEC, NIST SP 800-37, and SAFE in the lifecycle of a security design",
+        "3.5 Match the regulatory and industry compliance document to a given business or technical scenario",
       ],
     },
     {
-      title: "4.0 Network Assurance",
+      title: "4.0 Artificial Intelligence, Automation, and DevSecOps",
       items: [
-        "4.1 Diagnose network problems using tools such as debugs, conditional debugs, traceroute, ping, SNMP, and syslog",
-        "4.2 Configure and verify Flexible NetFlow",
-        "4.3 Configure SPAN/RSPAN/ERSPAN",
-        "4.4 Configure and verify IPSLA",
-        "4.5 Describe how Cisco Catalyst Center (formerly Cisco DNA Center) is used to apply network configuration, monitoring, and management using traditional and AI-powered workflows",
-        "4.6 Configure and verify NETCONF and RESTCONF",
-      ],
-    },
-    {
-      title: "5.0 Security",
-      items: [
-        {
-          subTitle: "5.1 Configure and verify device access control",
-          items: [
-            "5.1.a Lines and local user authentication",
-            "5.1.b Authentication and authorization using AAA",
-          ],
-        },
-        {
-          subTitle: "5.2 Configure and verify infrastructure security features",
-          items: ["5.2.a ACLs", "5.2.b CoPP"],
-        },
-        "5.3 Describe REST API security",
-        {
-          subTitle: "5.4 Configure and verify wireless security features",
-          items: [
-            "5.4.a Threat defense",
-            "5.4.b Endpoint security",
-            "5.4.c Next-generation firewall",
-            "5.4.d TrustSec and MACsec",
-          ],
-        },
-      ],
-    },
-    {
-      title: "6.0 Automation and Artificial Intelligence",
-      items: [
-        "6.1 Interpret basic Python components and scripts",
-        "6.2 Construct valid JSON-encoded files",
-        "6.3 Describe the high-level principles and benefits of a data modeling language, such as YANG",
-        "6.4 Describe APIs for Cisco Catalyst Center and SD-WAN Manager",
-        "6.5 Interpret REST API response codes and results in payload using Cisco Catalyst Center and RESTCONF",
-        "6.6 Construct an EEM applet to automate configuration, troubleshooting, or data collection",
-        "6.7 Compare agent vs. agentless orchestration tools",
+        "4.1 Describe the functions, uses, and role of AI in securing network infrastructure",
+        "4.2 Select the feature or element required to support automated security architecture/infrastructure such as API tooling, Infrastructure as Code, monitoring, container scanning, security telemetry, alerting, and SOAR",
+        "4.3 Select the next step in workflows and pipelines to be implemented by DevSecOps engineers to minimize risk from automated deployments",
       ],
     },
   ];
@@ -187,15 +105,14 @@ export default function CCNPEnterprise() {
           {/* ====== Course Title and Description ======*/}
           <div>
             {/* Course title */}
-            <h1 className="text-[#1775EE] font-bold">CCNP ENTERPRISE</h1>
+            <h1 className="text-[#1775EE] font-bold">300-745-SDSI-v1.1</h1>
 
             {/* Course description */}
             <p className="lg:w-[30vw] xl:w-lg text-gray-900">
-              Implementing Cisco Enterprise Network Core Technologies (350-401
-              ENCOR) v1.1 is a 120-minute exam that assesses a candidate’s
-              knowledge of enterprise network technologies, including dual-stack
-              (IPv4 and IPv6) architecture, virtualization, infrastructure,
-              security, and automation.
+              Designing Cisco Security Infrastructure (300-745 SDSI) v1.0 is a
+              90-minute CCNP Security exam assessing knowledge of security
+              architecture, including infrastructure, applications, risk,
+              events, automation, and DevSecOps.
             </p>
           </div>
 
@@ -241,17 +158,16 @@ export default function CCNPEnterprise() {
             {/* About Section - Description */}
             {/* CHANGE: Course description paragraphs */}
             <p>
-              This course prepares learners for the Implementing Cisco
-              Enterprise Network Core Technologies (350-401 ENCOR) exam through
-              instructor-led training with hands-on labs and guided instruction.
-              It covers core enterprise networking topics, including dual-stack
-              architecture, virtualization, infrastructure, security, and
-              automation.
+              This course prepares learners for the Designing Cisco Security
+              Infrastructure (300-745 SDSI) exam through instructor-led training
+              with hands-on labs and guided instruction. It covers key topics in
+              security architecture, including secure infrastructure,
+              applications, risk management, automation, and DevSecOps.
             </p>
             <p>
-              The program emphasizes practical configuration, troubleshooting,
-              and real-world scenarios to build the skills and confidence needed
-              for exam success.
+              The program emphasizes practical exercises and real-world
+              scenarios to build the skills and confidence needed for success in
+              the CCNP Security certification.
             </p>
           </section>
 
@@ -266,19 +182,19 @@ export default function CCNPEnterprise() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Network Access Concepts</p>
+                <p>SD-WAN Security Architecture</p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Infrastructure Security Fundamentals</p>
+                <p>Policy Enforcement and Encryption</p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Automation and Programmability Basics</p>
+                <p>Secure Routing and Segmentation</p>
               </div>
               <p className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <span>Advanced Routing Technologies</span>
+                <span>Centralized Management and Monitoring</span>
               </p>
             </div>
           </section>
@@ -313,10 +229,10 @@ export default function CCNPEnterprise() {
             <h5 className="text-[#1775EE] font-bold">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
-              "Network Engineer",
-              "Network Administrator",
-              "Network Architect",
+              "SD-WAN Security Engineer",
               "Network Security Engineer",
+              "Secure Network Architect",
+              "Security Infrastructure Engineer",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
