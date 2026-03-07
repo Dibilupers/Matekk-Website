@@ -1,3 +1,5 @@
+import EnrollNowButton from "../ui/EnrollNowButton";
+
 export default function TrainingTemplateFooter({ bgImage, description }) {
   return (
     <div
@@ -25,14 +27,7 @@ export default function TrainingTemplateFooter({ bgImage, description }) {
           {description}
         </p>
 
-        <button
-          title="Enroll Now"
-          type="none"
-          buttonCustomStyle="bg-[#1775EE] text-white hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl px-8 py-4 mt-4"
-          btnFunc={() => {
-            document.getElementById("services")?.scrollIntoView({ behavior: "smooth", block: "start" });
-          }}
-        />
+        <EnrollNowButton />
       </div>
     </div>
   );
