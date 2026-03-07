@@ -5,6 +5,7 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import TrainingTemplateFooter from "../../../../components/section/TrainingTemplateFooter";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
 import ccnaBadge from "../../../../assets/CCNAAutomation.png"; // Course badge image
@@ -480,49 +481,9 @@ export default function CCNAAutomation() {
         </aside>
       </div>
 
+
       {/* ==================== CALL TO ACTION BANNER - UPDATE TEXT AND IMAGE ====================*/}
-      <div className="relative p-8 lg:pr-12 rounded-2xl shadow-lg flex flex-col items-center gap-2.5 overflow-hidden mt-10 min-h-[300px]">
-        {/* Background image - uses ccnaFooter variable */}
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: `url(${ccnaFooter})`, // CHANGE: Footer background image
-          }}
-        />
-
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(to right, #C2DDFF70, #FFFFFF00 67%, #CDE3FF70)",
-          }}
-        />
-
-        <div className="relative z-10 flex flex-col items-center gap-2.5 mt-7.5 lg:mt-[5vh]">
-          {/* CHANGE: CTA heading */}
-          <h1 className="text-center">
-            <span className="text-[#ffffff]">Start Learning</span>{" "}
-            <span className="text-[#1775EE]">Today</span>
-          </h1>
-
-          {/* CHANGE: CTA description */}
-          <p className="lg:w-[30vw] xl:w-[35vw] text-center text-white">
-            Build essential networking knowledge and prepare for the CCNA
-            200-901 v1.1 exam through instructor-led, hands-on training.
-          </p>
-
-          <Button
-            title="Enroll Now"
-            type="none"
-            buttonCustomStyle="bg-[#1775EE] text-white hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl px-8 py-4 mt-4"
-            btnFunc={() => {
-              document
-                .getElementById("services")
-                ?.scrollIntoView({ behavior: "smooth", block: "start" });
-            }}
-          />
-        </div>
-      </div>
+      <TrainingTemplateFooter />
     </main>
   );
 }
