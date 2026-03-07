@@ -12,6 +12,10 @@ import SNCF from "../pages/training/cisco/ccnp/ccnp-security/300-710-SNCF-v1.1";
 import SISE from "../pages/training/cisco/ccnp/ccnp-security/300-715-SISE-v1.1";
 import SVPN from "../pages/training/cisco/ccnp/ccnp-security/300-730-SVPN-v1.1";
 import SDSI from "../pages/training/cisco/ccnp/ccnp-security/300-745-SDSI-v1.1";
+import PaloaltoApprentice from "../pages/training/cisco/paloalto/networksecurity/apprentice";
+import PaloaltoPractitioner from "../pages/training/cisco/paloalto/networksecurity/practitioner";
+import NetworkSecurityProfessional from "../pages/training/cisco/paloalto/networksecurity/professional";
+import NextGenerationFirewallEngineer from "../pages/training/cisco/paloalto/networksecurity/nextgenerationfirewallengineer";  
 import Network from "../pages/solutions/ict/network";
 import ScrollToTop from "../components/scroll/ScrollToTop";
 import CCNACybersecurity from "../pages/training/cisco/ccna/cybersecurity";
@@ -90,6 +94,22 @@ export default function App() {
           path="/training/cisco/comptia/linux"
           element={<Linux />}
         />
+        <Route
+          path="/training/cisco/paloalto/networksecurity/apprentice"
+          element={<PaloaltoApprentice />} 
+          />
+          <Route
+          path="/training/cisco/paloalto/networksecurity/practitioner"
+          element={<PaloaltoPractitioner />} 
+          />
+          <Route
+          path="/training/cisco/paloalto/networksecurity/professional"
+          element={<NetworkSecurityProfessional />} 
+          />
+          <Route
+          path="/training/cisco/paloalto/networksecurity/nextgenerationfirewallengineer"
+          element={<NextGenerationFirewallEngineer />} 
+          />
         <Route path="/solutions/ict/network" element={<Network />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
