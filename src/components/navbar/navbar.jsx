@@ -392,19 +392,19 @@ function NavBar() {
 
   return (
     <header
-      className={`flex flex-row items-center justify-between py-4 bg-white sticky top-0 z-50 transition-shadow "mx-[2.063rem] md:mx-16 xl:mx-[7.438rem] ${scrolled ? "shadow-md" : ""}`}
+      className={`flex flex-row items-center justify-between py-4 bg-white sticky top-0 z-50 transition-shadow ${scrolled ? "shadow-md" : ""}`}
     >
       {/* ↓ changed md:ml-[7.438rem] → lg:ml-[7.438rem] */}
       <button
         onClick={handleHomeClick}
-        className="cursor-pointer"
+        className="cursor-pointer ml-[2.063rem] md:ml-16 xl:ml-[7.438rem] "
       >
         LOGO
       </button>
 
       {/* Desktop Nav — only visible at lg and above */}
       {/* ↓ changed hidden md:flex → hidden lg:flex */}
-      <nav className="space-x-8 hidden lg:flex font-poppins items-center">
+      <nav className="space-x-8 hidden lg:flex font-poppins items-center mr-[2.063rem] md:mr-16 xl:mr-[7.438rem] ">
         <button
           onClick={handleHomeClick}
           className="hover:text-[#1775EE] hover:font-bold transition-colors cursor-pointer"
