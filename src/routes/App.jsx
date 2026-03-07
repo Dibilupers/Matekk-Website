@@ -21,6 +21,9 @@ import SecurityPlus from "../pages/training/cisco/comptia/security+";
 import CySA from "../pages/training/cisco/comptia/cysa";
 import PenTest from "../pages/training/cisco/comptia/pentest";
 import Linux from "../pages/training/cisco/comptia/linux";
+import DCFC from "../pages/training/cisco/cdcp/dcfc";
+import CDCP from "../pages/training/cisco/cdcp/cdcp";
+import CDCS from "../pages/training/cisco/cdcp/cdcs";
 
 export default function App() {
   return (
@@ -89,6 +92,19 @@ export default function App() {
         <Route
           path="/training/cisco/comptia/linux"
           element={<Linux />}
+        />
+        {/* CDCP */}
+        <Route
+          path="/training/cisco/cdcp/dcfc"
+          element={<DCFC />}
+        />
+        <Route
+          path="/training/cisco/cdcp/cdcp"
+          element={<CDCP />}
+        />
+        <Route
+          path="/training/cisco/cdcp/cdcs"
+          element={<CDCS />}
         />
         <Route path="/solutions/ict/network" element={<Network />} />
         <Route path="*" element={<NotFound />} />

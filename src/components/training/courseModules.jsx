@@ -26,7 +26,7 @@ export default function CourseModules({ modules }) {
 
           <div className={`transition-all duration-500 ease-in-out overflow-hidden ${
             openSection === index && module.items.length > 0
-              ? "max-h-[500px] opacity-100"
+              ? "max-h-150 opacity-100"
               : "max-h-0 opacity-0"
           }`}>
             <ul className="flex flex-col gap-2 px-6 py-4 bg-[#EFF6FF]">
