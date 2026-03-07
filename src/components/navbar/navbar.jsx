@@ -697,8 +697,7 @@ function NavBar() {
       </nav>
 
       {/* Enroll Now — only visible at lg and above */}
-      {/* ↓ changed hidden md:flex → hidden lg:flex  |  md:mr-[7.438rem] → lg:mr-[7.438rem] */}
-      <EnrollNowButton />
+      <EnrollNowButton buttonCustomStyle="hidden lg:block"/>
 
       {/* Mobile + Tablet Hamburger — visible below lg */}
       {/* ↓ changed flex md:hidden → flex lg:hidden */}
