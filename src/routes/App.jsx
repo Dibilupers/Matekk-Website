@@ -15,7 +15,11 @@ import SDSI from "../pages/training/cisco/ccnp/ccnp-security/300-745-SDSI-v1.1";
 import PaloaltoApprentice from "../pages/training/cisco/paloalto/networksecurity/apprentice";
 import PaloaltoPractitioner from "../pages/training/cisco/paloalto/networksecurity/practitioner";
 import NetworkSecurityProfessional from "../pages/training/cisco/paloalto/networksecurity/professional";
-import NextGenerationFirewallEngineer from "../pages/training/cisco/paloalto/networksecurity/nextgenerationfirewallengineer";  
+import NextGenerationFirewallEngineer from "../pages/training/cisco/paloalto/networksecurity/nextgenerationfirewallengineer"; 
+import SDWanEngineer from "../pages/training/cisco/paloalto/networksecurity/sdwanengineer";  
+import SecurityServiceEdgeEngineer from "../pages/training/cisco/paloalto/networksecurity/securityserviceedgeengineer";  
+/* import NetworkSecurityAnalyst from "../pages/training/cisco/paloalto/networksecurity/analyst"; */
+import NetworkSecurityArchitect from "../pages/training/cisco/paloalto/networksecurity/architect";  
 import Network from "../pages/solutions/ict/network";
 import ScrollToTop from "../components/scroll/ScrollToTop";
 import CCNACybersecurity from "../pages/training/cisco/ccna/cybersecurity";
@@ -109,6 +113,22 @@ export default function App() {
           <Route
           path="/training/cisco/paloalto/networksecurity/nextgenerationfirewallengineer"
           element={<NextGenerationFirewallEngineer />} 
+          />
+          <Route
+          path="/training/cisco/paloalto/networksecurity/sdwanengineer"
+          element={<SDWanEngineer />} 
+          />
+          <Route
+          path="/training/cisco/paloalto/networksecurity/securityserviceedgeengineer"
+          element={<SecurityServiceEdgeEngineer />} 
+          />
+          {/* <Route
+          path="/training/cisco/paloalto/networksecurity/analyst"
+          element={<NetworkSecurityAnalyst />} 
+          /> */}
+          <Route
+          path="/training/cisco/paloalto/networksecurity/architect"
+          element={<NetworkSecurityArchitect />} 
           />
         <Route path="/solutions/ict/network" element={<Network />} />
         <Route path="*" element={<NotFound />} />
