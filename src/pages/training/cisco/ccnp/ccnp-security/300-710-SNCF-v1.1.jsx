@@ -1,25 +1,22 @@
-// ==================== IMPORTS - UPDATE FOR EACH COURSE ====================
-// Change these imports based on the specific course
-import Button from "../../../../components/ui/button";
+import Button from "../../../../../components/ui/button";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
-// COURSE-SPECIFIC ASSETS - Replace these for different courses
-import ccnaBadge from "../../../../assets/CCNPEnterprise.png"; // Course badge image
-import ccnaHero from "../../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
-import ccnaFooter from "../../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
-import MealIcon from "../../../../assets/Meal.svg";
-import ReviewIcon from "../../../../assets/Review.svg";
-import InstitutionalIcon from "../../../../assets/InsitutionalAccount.svg";
-import WorkstationIcon from "../../../../assets/Workstation.svg";
-import MedalIcon from "../../../../assets/Medal.svg";
-import CourseModules from "../../../../components/training/courseModules";
-import TrainingTemplateFooter from "../../../../components/section/TrainingTemplateFooter";
+import ccnaBadge from "../../../../../assets/CCNPSecurity.png";
+import ccnaHero from "../../../../../assets/CCNAHeroImageAutomation.png";
+import ccnaFooter from "../../../../../assets/CCNAFooterImageAutomation.png";
+import MealIcon from "../../../../../assets/Meal.svg";
+import ReviewIcon from "../../../../../assets/Review.svg";
+import InstitutionalIcon from "../../../../../assets/InsitutionalAccount.svg";
+import WorkstationIcon from "../../../../../assets/Workstation.svg";
+import MedalIcon from "../../../../../assets/Medal.svg";
+import CourseModules from "../../../../../components/training/courseModules";
+import TrainingTemplateFooter from "../../../../../components/section/TrainingTemplateFooter";
 
 // ==================== COMPONENT NAME - CHANGE FOR EACH COURSE ====================
-export default function CCNPEnterprise() {
+export default function SNCF() {
   const [openSection, setOpenSection] = useState(null);
 
   const toggleSection = (index) => {
@@ -29,135 +26,108 @@ export default function CCNPEnterprise() {
   // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
   const modules = [
     {
-      title: "1.0 Architecture",
+      title: "1.0 Deployment",
       items: [
+        {
+          subTitle: "1.1 Implement Secure Firewall modes",
+          items: ["1.1.a Routed mode", "1.1.b Transparent mode"],
+        },
+        {
+          subTitle: "1.2 Implement NGIPS modes",
+          items: ["1.2.a Passive", "1.2.b Inline"],
+        },
+        {
+          subTitle: "1.3 Implement high availability options",
+          items: [
+            "1.3.a Port channels",
+            "1.3.b Failover",
+            "1.3.c Equal-Cost Multipath (ECMP) routing",
+            "1.3.d Static route tracking",
+            "1.3.e Clustering",
+          ],
+        },
+        "1.4 Describe virtual appliance on-premises and cloud deployment",
+      ],
+    },
+    {
+      title: "2.0 Configuration",
+      items: [
+        "2.1 Configure system settings in Secure Firewall Management Center",
         {
           subTitle:
-            "1.1 Explain the different design principles used in an enterprise network",
+            "2.2 Configure policies in Secure Firewall Management Center",
           items: [
-            "1.1.a High-level enterprise network design such as 2-tier, 3-tier, fabric, and cloud",
-            "1.1.b High availability techniques such as redundancy, FHRP, and SSO",
+            "2.2.a Access control",
+            "2.2.b Intrusion",
+            "2.2.c Malware & File",
+            "2.2.d DNS",
+            "2.2.e Identity",
+            "2.2.f Decryption",
+            "2.2.g Prefilter",
           ],
         },
         {
           subTitle:
-            "1.2 Explain the working principles of the Cisco Catalyst SD-WAN solution",
+            "2.3 Configure these features using Secure Firewall Management Center",
           items: [
-            "1.2.a SD-WAN control and data planes elements",
-            "1.2.b Benefits and limitations of Catalyst SD-WAN solution",
+            "2.3.a Network discovery",
+            "2.3.b Application detectors",
+            "2.3.c Correlation",
+            "2.3.d Encrypted visibility engine",
           ],
         },
         {
           subTitle:
-            "1.3 Explain the working principles of the Cisco SD-Access solution",
-          items: [
-            "1.3.a SD-Access control and data planes elements",
-            "1.3.b Traditional campus interoperating with SD-Access",
-          ],
-        },
-        "1.4 Interpret QoS configurations",
-      ],
-    },
-    {
-      title: "2.0 Virtualization",
-      items: [
-        {
-          subTitle: "2.1 Describe device virtualization technologies",
-          items: [
-            "2.1.a Hypervisor type 1 and 2",
-            "2.1.b Virtual machine",
-            "2.1.c Virtual switching",
-          ],
+            "2.4 Configure objects using Secure Firewall Management Center",
+          items: ["2.4.a Object management", "2.4.b Intrusion rules"],
         },
         {
           subTitle:
-            "2.2 Configure and verify data path virtualization technologies",
-          items: ["2.2.a VRF", "2.2.b GRE and IPsec tunneling"],
+            "2.5 Configure devices using Secure Firewall Management Center",
+          items: [
+            "2.5.a Device management",
+            "2.5.b NAT",
+            "2.5.c VPN",
+            "2.5.d QoS",
+            "2.5.e Platform settings",
+            "2.5.f Certificates",
+            "2.5.g Routing",
+          ],
         },
-        {
-          subTitle: "2.3 Describe network virtualization concepts",
-          items: ["2.3.a LISP", "2.3.b VXLAN"],
-        },
+        "2.6 Describe the use of Snort within Secure Firewall Threat Defense",
       ],
     },
     {
-      title: "3.0 Infrastructure",
+      title: "3.0 Management and Troubleshooting",
       items: [
+        "3.1 Troubleshoot with Secure Firewall Management Center GUI and device CLI",
+        "3.2 Configure dashboards and reporting in Secure Firewall Management Center",
         {
-          subTitle: "3.1 Layer 2",
-          items: [
-            "3.1.a Troubleshoot static and dynamic 802.1q trunking protocols",
-            "3.1.b Troubleshoot static and dynamic EtherChannels",
-            "3.1.c Configure and verify common Spanning Tree Protocols (RSTP, MST) and Spanning Tree enhancements such as root guard and BPDU guard",
-          ],
+          subTitle: "3.3 Troubleshoot using:",
+          items: ["3.3.a Packet capture procedures", "3.3.b Packet Tracer"],
         },
+        "3.4 Analyze risk and standard reports",
         {
-          subTitle: "3.2 Layer 3",
+          subTitle: "3.5 Describe management options",
           items: [
-            "3.2.a Compare routing concepts of EIGRP and OSPF (advanced distance vector vs. link state, load balancing, path selection, path operations, metrics, and area types)",
-            "3.2.b Configure simple OSPFv2/v3 environments, including multiple normal areas, summarization, and filtering (neighbor adjacency, point-to-point, and broadcast network types, and passive-interface)",
-            "3.2.c Configure and verify eBGP between directly connected neighbors (best path selection algorithm and neighbor relationships)",
-            "3.2.d Describe policy-based routing",
-          ],
-        },
-        {
-          subTitle: "3.3 IP Services",
-          items: [
-            "3.3.a Interpret network time protocol configurations such as NTP and PTP",
-            "3.3.b Configure NAT/PAT",
-            "3.3.c Configure first hop redundancy protocols, such as HSRP, VRRP",
-            "3.3.d Describe multicast protocols, such as RPF check, PIM SM, IGMP v2/v3, SSM, bidir, and MSDP",
+            "3.5.a Cisco Defense Orchestrator",
+            "3.5.b Cloud-delivered Firewall Management Center",
+            "3.5.c Secure Firewall Device Manager",
+            "3.5.d Secure Firewall Management Center",
           ],
         },
       ],
     },
     {
-      title: "4.0 Network Assurance",
+      title: "4.0 Integration",
       items: [
-        "4.1 Diagnose network problems using tools such as debugs, conditional debugs, traceroute, ping, SNMP, and syslog",
-        "4.2 Configure and verify Flexible NetFlow",
-        "4.3 Configure SPAN/RSPAN/ERSPAN",
-        "4.4 Configure and verify IPSLA",
-        "4.5 Describe how Cisco Catalyst Center (formerly Cisco DNA Center) is used to apply network configuration, monitoring, and management using traditional and AI-powered workflows",
-        "4.6 Configure and verify NETCONF and RESTCONF",
-      ],
-    },
-    {
-      title: "5.0 Security",
-      items: [
-        {
-          subTitle: "5.1 Configure and verify device access control",
-          items: [
-            "5.1.a Lines and local user authentication",
-            "5.1.b Authentication and authorization using AAA",
-          ],
-        },
-        {
-          subTitle: "5.2 Configure and verify infrastructure security features",
-          items: ["5.2.a ACLs", "5.2.b CoPP"],
-        },
-        "5.3 Describe REST API security",
-        {
-          subTitle: "5.4 Configure and verify wireless security features",
-          items: [
-            "5.4.a Threat defense",
-            "5.4.b Endpoint security",
-            "5.4.c Next-generation firewall",
-            "5.4.d TrustSec and MACsec",
-          ],
-        },
-      ],
-    },
-    {
-      title: "6.0 Automation and Artificial Intelligence",
-      items: [
-        "6.1 Interpret basic Python components and scripts",
-        "6.2 Construct valid JSON-encoded files",
-        "6.3 Describe the high-level principles and benefits of a data modeling language, such as YANG",
-        "6.4 Describe APIs for Cisco Catalyst Center and SD-WAN Manager",
-        "6.5 Interpret REST API response codes and results in payload using Cisco Catalyst Center and RESTCONF",
-        "6.6 Construct an EEM applet to automate configuration, troubleshooting, or data collection",
-        "6.7 Compare agent vs. agentless orchestration tools",
+        "4.1 Configure Cisco Secure Firewall Malware Defense (formerly AMP for Networks) in Secure Firewall Management Center",
+        "4.2 Configure Cisco Secure Endpoint (formerly AMP for Endpoints) integration with Secure Firewall Management Center",
+        "4.3 Implement Threat Intelligence Director for third-party security intelligence feeds",
+        "4.4 Describe using Cisco SecureX for security investigations",
+        "4.5 Describe Secure Firewall Management Center integration using pxGrid",
+        "4.6 Describe Rapid Threat Containment (RTC) functionality within Secure Firewall Management Center",
+        "4.7 Describe Cisco Security Analytics and Logging",
       ],
     },
   ];
@@ -187,15 +157,14 @@ export default function CCNPEnterprise() {
           {/* ====== Course Title and Description ======*/}
           <div>
             {/* Course title */}
-            <h1 className="text-[#1775EE] font-bold">CCNP ENTERPRISE</h1>
+            <h1 className="text-[#1775EE] font-bold">300-710 SNCF v1.1</h1>
 
             {/* Course description */}
             <p className="lg:w-[30vw] xl:w-lg text-gray-900">
-              Implementing Cisco Enterprise Network Core Technologies (350-401
-              ENCOR) v1.1 is a 120-minute exam that assesses a candidate’s
-              knowledge of enterprise network technologies, including dual-stack
-              (IPv4 and IPv6) architecture, virtualization, infrastructure,
-              security, and automation.
+              Securing Networks with Cisco Firewalls (300-710 SNCF) v1.1 is a
+              90-minute exam by Cisco Systems that tests skills in configuring,
+              deploying, managing, and troubleshooting Cisco Secure Firewall and
+              Firewall Management Center.
             </p>
           </div>
 
@@ -241,17 +210,18 @@ export default function CCNPEnterprise() {
             {/* About Section - Description */}
             {/* CHANGE: Course description paragraphs */}
             <p>
-              This course prepares learners for the Implementing Cisco
-              Enterprise Network Core Technologies (350-401 ENCOR) exam through
-              instructor-led training with hands-on labs and guided instruction.
-              It covers core enterprise networking topics, including dual-stack
-              architecture, virtualization, infrastructure, security, and
-              automation.
+              This course prepares learners for the Securing Networks with Cisco
+              Firewalls (300-710 SNCF) exam through instructor-led training with
+              hands-on labs and guided instruction. It covers core topics
+              related to Cisco Secure Firewall and Cisco Secure Firewall
+              Management Center, including policy configuration, deployment,
+              integration, management, and troubleshooting.
             </p>
             <p>
-              The program emphasizes practical configuration, troubleshooting,
-              and real-world scenarios to build the skills and confidence needed
-              for exam success.
+              The program emphasizes practical configuration, monitoring, and
+              troubleshooting using real-world scenarios to build the skills and
+              confidence needed for success in the CCNP Security certification
+              path.
             </p>
           </section>
 
@@ -266,19 +236,19 @@ export default function CCNPEnterprise() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Network Access Concepts</p>
+                <p>Firewall Deployment Concepts</p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Infrastructure Security Fundamentals</p>
+                <p>Firewall Management and Monitoring</p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Automation and Programmability Basics</p>
+                <p>VPN and Secure Connectivity Principles</p>
               </div>
               <p className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <span>Advanced Routing Technologies</span>
+                <span>Firewall Policy and Access Control Basics</span>
               </p>
             </div>
           </section>
@@ -313,10 +283,10 @@ export default function CCNPEnterprise() {
             <h5 className="text-[#1775EE] font-bold">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
-              "Network Engineer",
-              "Network Administrator",
-              "Network Architect",
               "Network Security Engineer",
+              "Firewall Administrator",
+              "Security Operations Engineer",
+              "Cybersecurity Consultant",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
