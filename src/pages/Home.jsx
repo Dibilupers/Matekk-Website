@@ -764,8 +764,9 @@ export default function Home() {
               </div>
             </div>
 
-            {/* RIGHT SIDE - FEATURES */}
+            {/* RIGHT SIDE - Reasons Why Choose Solverous */}
             <div className="order-2 lg:order-2 space-y-4 lg:-mt-52">
+              {/* ====== Experience ====== */}
               <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
                 <h5 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
                   Experience
@@ -775,6 +776,8 @@ export default function Home() {
                   professional training since our establishment in 2013.
                 </p>
               </div>
+
+              {/* ====== Expertise ====== */}
               <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
                 <h5 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
                   Expertise
@@ -785,6 +788,8 @@ export default function Home() {
                   industry and academic backgrounds.
                 </p>
               </div>
+
+              {/* ====== Quality Training ====== */}
               <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
                 <h5 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
                   Quality Training
@@ -795,6 +800,8 @@ export default function Home() {
                   certifications.
                 </p>
               </div>
+
+              {/* ====== End-to-End Approach ====== */}
               <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
                 <h5 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
                   End-to-End Approach
@@ -805,6 +812,8 @@ export default function Home() {
                   solutions.
                 </p>
               </div>
+
+              {/* ====== Innovation & Integrity ====== */}
               <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
                 <h5 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
                   Innovation & Integrity
@@ -823,27 +832,29 @@ export default function Home() {
       {/* ==================== OUR WORKING PROCESS ====================*/}
       <section className="py-10 lg:py-10 bg-white scroll-mt-18">
         <div className="mx-4 sm:mx-6 lg:mx-[7.438rem]">
-          {/* ==================== SECTION HEADING ==================== */}
+          {/* Text Content */}
           <div className="text-right mb-12 lg:mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900">
+            {/* Title */}
+            <h3 className="text-3xl lg:text-4xl font-bold text-gray-900">
               Our <span className="text-[#1775EE]">Working Process</span>
-            </h2>
+            </h3>
+            {/* Description */}
             <p className="text-base lg:text-lg text-gray-600 mt-4 max-w-2xl ml-auto">
               We follow a structured service delivery process to ensure reliable
               implementation, performance, and long-term value.
             </p>
           </div>
 
+          {/* ====== Working Process ====== */}
           <div className="relative">
-            {/* Desktop Version - Horizontal Timeline */}
+            {/* Desktop Version */}
             <div className="hidden lg:block relative">
               <div className="relative h-125">
                 <svg
                   className="absolute inset-0 w-full h-full z-0"
                   viewBox="0 0 1200 500"
                 >
-                  {/* Line 1: Initiation to Planning */}
-                  {/* Start: top-left circle, End: 20% left circle */}
+                  {/* Step 1: Initiation to Planning */}
                   <path
                     d="M -80 30 C 120 100, 200 1, 335 110"
                     stroke="#3B82F6"
@@ -852,8 +863,7 @@ export default function Home() {
                     strokeLinecap="round"
                   />
 
-                  {/* Line 2: Planning to Implementation */}
-                  {/* Start: 20% circle, End: 40% circle */}
+                  {/* Step 2: Planning to Implementation */}
                   <path
                     d="M 350 120 C 430 130, 500 190, 600 150"
                     stroke="#3B82F6"
@@ -862,8 +872,7 @@ export default function Home() {
                     strokeLinecap="round"
                   />
 
-                  {/* Line 3: Implementation to Monitor */}
-                  {/* Start: 40% circle, End: 60% circle */}
+                  {/* Step 3: Implementation to Monitor */}
                   <path
                     d="M 600 190 C 600 130, 800 200, 860 200"
                     stroke="#3B82F6"
@@ -872,8 +881,7 @@ export default function Home() {
                     strokeLinecap="round"
                   />
 
-                  {/* Line 4: Monitor to Optimization */}
-                  {/* Start: 60% circle, End: right circle */}
+                  {/* Step 4: Monitor to Optimization */}
                   <path
                     d="M 830 200 C 800 150, 845 350, 1500 275"
                     stroke="#3B82F6"
@@ -1016,7 +1024,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Tablet Version - md only */}
+            {/* Tablet Version */}
             <div className="hidden md:block lg:hidden relative">
               <svg
                 className="absolute inset-0 w-full h-full z-0 pointer-events-none"
@@ -1057,7 +1065,7 @@ export default function Home() {
                 />
               </svg>
 
-              {/* Step 1: Left */}
+              {/* Step 1: Initiation & Consultancy */}
               <div className="relative z-10 flex flex-col items-center mb-1 pr-72">
                 <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
                   <svg
@@ -1084,7 +1092,7 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Step 2: Right */}
+              {/* Step 2: Planning & Design */}
               <div className="relative z-10 flex flex-col items-center mb-1 pl-72 -mt-6">
                 <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
                   <svg
@@ -1111,7 +1119,7 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Step 3: Left */}
+              {/* Step 3: Implementation */}
               <div className="relative z-10 flex flex-col items-center mb-1 pr-72 -mt-6">
                 <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
                   <svg
@@ -1144,7 +1152,7 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Step 4: Right */}
+              {/* Step 4: Monitor and Control */}
               <div className="relative z-10 flex flex-col items-center mb-1 pl-72 -mt-6">
                 <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
                   <svg
@@ -1171,7 +1179,7 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Step 5: Left */}
+              {/* Step 5: Optimization */}
               <div className="relative z-10 flex flex-col items-center pr-72 -mt-6">
                 <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
                   <svg
@@ -1199,9 +1207,9 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Mobile Version - Vertical Timeline */}
+            {/* Mobile Version */}
             <div className="block md:hidden relative">
-              {/* SVG Connecting Lines */}
+              {/* Mobile Version SVG Connecting Lines */}
               <svg
                 className="absolute inset-0 w-full h-full z-0 pointer-events-none"
                 viewBox="0 0 400 1100"
@@ -1240,7 +1248,8 @@ export default function Home() {
                 />
               </svg>
 
-              {/* Step 1: Left — Initiation & Consultancy */}
+              {/* Mobile Version Icons */}
+              {/* Step 1: Initiation & Consultancy */}
               <div className="relative z-10 flex flex-col items-center mb-1 pr-41">
                 <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
                   <svg
@@ -1267,7 +1276,7 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Step 2: Right — Planning & Design */}
+              {/* Step 2: Planning & Design */}
               <div className="relative z-10 flex flex-col items-center mb-1 pl-50 -mt-6">
                 <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
                   <svg
@@ -1294,7 +1303,7 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Step 3: Left — Implementation */}
+              {/* Step 3: Implementation */}
               <div className="relative z-10 flex flex-col items-center mb-1 pr-40 -mt-6">
                 <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
                   <svg
@@ -1327,7 +1336,7 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Step 4: Right — Monitor and Control */}
+              {/* Step 4: Monitor and Control */}
               <div className="relative z-10 flex flex-col items-center mb-1 pl-50 -mt-6">
                 <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
                   <svg
@@ -1354,7 +1363,7 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Step 5: Left — Optimization */}
+              {/* Step 5: Optimization */}
               <div className="relative z-10 flex flex-col items-center pr-40 -mt-6">
                 <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
                   <svg
@@ -1390,13 +1399,16 @@ export default function Home() {
         id="training"
         className="flex flex-col py-10 h-full bg-[#EBF5FD] scroll-mt-18"
       >
+        {/* Margin */}
         <div className="mx-[2.063rem] lg:mx-[7.438rem]">
+          {/* Title */}
           <div className="text-center w-full self-center px-10 lg:px-0 sm:w-full md:w-auto lg:w-auto">
             <h3>
               Our Featured
               <span className="text-[#1775EE]"> Solutions and Training</span>
             </h3>
           </div>
+          {/* Description */}
           <p className="w-[90vw] md:w-[56.406vw] xl:w-[60vw] self-center mx-auto mt-[1.1vh] text-center">
             MGKK Information Communication Technology Services delivers
             end-to-end ICT and engineering solutions alongside comprehensive
@@ -1543,18 +1555,19 @@ export default function Home() {
       {/* ==================== FEEDBACKS ====================*/}
       <TestimonialSection />
 
-
       {/* ==================== ABOUT THE COMPANY ====================*/}
       <section id="about" className="scroll-mt-18 py-16 bg-[#EBF5FD]">
-        <div className="mx-4 sm:mx-6 lg:mx-[7.438rem] mx-[2.063rem]">
-          {/* Section Heading */}
+        <div className="sm:mx-6 lg:mx-[7.438rem] mx-[2.063rem]">
+          {/* Title and Description */}
           <div className="text-center mb-12">
             <span className="inline-block border border-gray-300 rounded-full px-5 py-1.5 text-sm text-black bg-white mb-4">
               Solutions
             </span>
+            {/* Title */}
             <h3 className="text-3xl lg:text-4xl font-bold text-gray-900">
               About the <span className="text-[#1775EE]">Company</span>
             </h3>
+            {/* Description */}
             <p className="text-base text-gray-600 mt-4 max-w-2xl mx-auto">
               MGKK Information Communication Technology Services is a trusted
               provider of ICT and engineering solutions and a premier ICT
@@ -1578,7 +1591,7 @@ export default function Home() {
               </div>
 
               {/* Person Image */}
-              <div className="rounded-2xl overflow-hidden shadow-sm order-1 md:order-2 md:flex-1 xl:flex-1 2xl:flex-1 min-h-0 2xl:max-h-[387px]">
+              <div className="rounded-2xl overflow-hidden shadow-sm order-1 md:order-2 md:flex-1 xl:flex-1 2xl:flex-1 min-h-0 2xl:max-h-96.75">
                 <img
                   src="/src/assets/Mark_Anthony_Valenzuela_Melendres.png"
                   alt="Company Representative"
@@ -1587,7 +1600,8 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="rounded-2xl overflow-hidden shadow-sm order-3 md:order-none self-stretch min-h-0 2xl:max-h-[580px]">
+            {/* Building Image */}
+            <div className="rounded-2xl overflow-hidden shadow-sm order-3 md:order-0 self-stretch min-h-0 2xl:max-h-145">
               <img
                 src="/src/assets/MGGK_Building.png"
                 alt="Company Building"
@@ -1596,7 +1610,7 @@ export default function Home() {
             </div>
 
             {/* Right Column */}
-            <div className="flex flex-col gap-6 order-4 md:order-none">
+            <div className="flex flex-col gap-6 order-4 md:order-0">
               {/* Mission Card */}
               <div className="bg-white rounded-2xl p-6 shadow-sm">
                 <h5 className="text-lg font-bold text-gray-900 mb-4">
@@ -1634,15 +1648,17 @@ export default function Home() {
       </section>
 
       {/* ==================== FREQUENTLY ASKED QUESTIONS ====================*/}
-      <section className="flex flex-col md:flex-col scroll-mt-18 lg:flex-row xl:flex-row justify-center items-start bg-white pb-16 md:py-12 lg:py-20 space-y-0 sm:space-y-[-2rem] md:space-y-10 lg:space-y-0">
-        {" "}
-        <div className="mr-[2.063rem] ml-[2.063rem] mb-6 md:mb-0 md:ml-[1.5rem] lg:ml-[7.4rem] mt-[3rem] md:mt-10 lg:mt-0 w-[84%] md:w-[71%] lg:w-fit space-y-6 md:space-y-36 justify-center items-start">
-          {" "}
+      <section className="flex flex-col md:flex-col scroll-mt-18 lg:flex-row xl:flex-row justify-center items-start bg-white pb-16 md:py-12 lg:py-20 space-y-0 sm:space-y-8 md:space-y-10 lg:space-y-0">
+        {/* Title and Still Have Questions Container */}
+        <div className=" mr-[2.063rem] ml-[2.063rem] mb-6 md:mb-0 md:ml-6 lg:ml-[7.4rem] mt-12 md:mt-10 lg:mt-0 w-[84%] md:w-[71%] lg:w-fit space-y-6 md:space-y-36 justify-center items-start">
+          {/* Title */}
           <div className=" w-full md:w-full space-y-2 ">
             <h3 className="text-[1.5rem] md:text-3xl lg:text-[2rem] font-bold text-black w-[35vw] md:w-[15vw] lg:w-[22vw]">
               Frequently <span className="text-[#1775EE]">Asked Questions</span>
             </h3>
           </div>
+
+          {/* Still Have Questions Container */}
           <div className="bg-[#EBF5FD] p-7.5 rounded-xl shadow-md border border-[#EBF5FD] hidden md:block w-full md:w-[90%] lg:w-[95%]">
             <h5 className="mb-3.75">Still Have Questions?</h5>
             <p className="w-[95%] md:w-[90%] lg:w-[78%] text-black mb-7.5">
@@ -1661,8 +1677,9 @@ export default function Home() {
             />
           </div>
         </div>
-        <div className="mr-[2.063rem] ml-[2.063rem] md:ml-[7rem] lg:ml-[2.063rem] md:mr-[7.438rem] w-[84%] md:w-[70%] justify-center items-start">
-          {" "}
+
+        {/* Frequently Asked Questions List */}
+        <div className="mr-[2.063rem] ml-[2.063rem] md:ml-28 lg:ml-[2.063rem] md:mr-[7.438rem] w-[84%] md:w-[70%] justify-center items-start">
           <FAQ />
         </div>
       </section>
@@ -1672,20 +1689,30 @@ export default function Home() {
         id="contact"
         className="flex justify-center items-center py-16 lg:py-20 bg-[#EBF5FD] scroll-mt-19"
       >
+
+        {/* CHANGE THIS CODE THERE SHOULDN'T BE ANOTHER DIV BECAUSE IT ALREADY HAS SECTION TAG */}
         <div className="w-full h-full flex mx-[2.063rem] lg:mx-[7.438rem] flex-col-reverse md:flex-col-reverse lg:flex-row space-x-0 md:space-x-0 lg:space-x-16 items-center space-y-6 md:space-y-12 lg:space-y-0">
           <ContactForm />
+
+          {/* Text Content */}
           <div className="w-full items-start">
+            {/* Subheading */}
             <h6 className="text-sm bg-white border border-[#EBF5FD] rounded-full py-[0.7vh] px-4 inline-flex text-center shadow-md">
               Contact Us
             </h6>
+            {/* Heading */}
             <h3 className="text-[1.5rem] md:text-3xl lg:text-[2rem] my-2.5">
               Get In Touch With Us <span className="text-[#1775EE]">Today</span>
             </h3>
+            {/* Description */}
             <p className="lg:w-[37vw] mb-10">
               Get in touch with MGKK Information Communication Technology
               Services to inquire about our ICT solutions, training programs, or
               request a consultation. Our team is ready to assist you.
             </p>
+
+            {/* EMAIL IS SO NEAR WITH THE AVAILABILITY INFO */}
+            {/* Company Information */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-[6.4vw] md:mb-0">
               {/* Address */}
               <div className="flex items-center space-x-4">
