@@ -1,7 +1,7 @@
 import EnrollModal from "../ui/EnrollModal";
 import { useState } from "react";
 
-export default function EnrollNowButton() {
+export default function EnrollNowButton({buttonCustomStyle }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -10,7 +10,7 @@ export default function EnrollNowButton() {
         title="Enroll Now"
         type="button"
         onClick={() => setOpen(true)}
-        className="block w-full text-[1.25rem] text-center py-3 px-6 rounded-full lg:flex lg:w-auto lg:text-base lg:py-2 lg:px-5.5 lg:rounded-3xl lg:mr-[2.063rem] md:lg:mr-16 xl:mr-[7.438rem] lg:hover:bg-blue-600 text-blue-600 border border-blue-600 hover:bg-[#0062E0] hover:border-[#0062E0] hover:text-white  transition-all duration-300 cursor-pointer"
+        className={`block w-full text-[1.25rem] text-center py-3 px-6 rounded-full lg:flex lg:w-auto lg:text-base lg:py-2 lg:px-5.5 lg:rounded-3xl lg:hover:bg-blue-600 text-blue-600 border border-blue-600 hover:bg-[#0062E0] hover:border-[#0062E0] hover:text-white  transition-all duration-300 cursor-pointer ${buttonCustomStyle}`}
       >
         Enroll Now
       </button>

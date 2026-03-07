@@ -13,6 +13,7 @@ import availability from "../assets/availability.svg";
 import Button from "../../src/components/ui/button";
 import { useLocation } from "react-router-dom";
 import TestimonialSection from "../components/section/TestimonialsSection.jsx";
+import TrainingPage from "../components/section/TrainingPage.jsx";
 
 export default function Home() {
   const totalSlides = 3;
@@ -1718,6 +1719,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      <TrainingPage />
     </main>
   );
 }

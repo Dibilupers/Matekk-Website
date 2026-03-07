@@ -392,12 +392,12 @@ function NavBar() {
 
   return (
     <header
-      className={`flex flex-row items-center justify-between py-4 bg-white sticky top-0 z-50 transition-shadow ${scrolled ? "shadow-md" : ""}`}
+      className={`flex flex-row items-center justify-between py-4 bg-white sticky top-0 z-50 transition-shadow "mx-[2.063rem] md:mx-16 xl:mx-[7.438rem] ${scrolled ? "shadow-md" : ""}`}
     >
       {/* ↓ changed md:ml-[7.438rem] → lg:ml-[7.438rem] */}
       <button
         onClick={handleHomeClick}
-        className="ml-[2.063rem] md:ml-16 xl:ml-[7.438rem] cursor-pointer"
+        className="cursor-pointer"
       >
         LOGO
       </button>
@@ -697,8 +697,7 @@ function NavBar() {
       </nav>
 
       {/* Enroll Now — only visible at lg and above */}
-      {/* ↓ changed hidden md:flex → hidden lg:flex  |  md:mr-[7.438rem] → lg:mr-[7.438rem] */}
-      <EnrollNowButton />
+      <EnrollNowButton buttonCustomStyle="hidden lg:block"/>
 
       {/* Mobile + Tablet Hamburger — visible below lg */}
       {/* ↓ changed flex md:hidden → flex lg:hidden */}
