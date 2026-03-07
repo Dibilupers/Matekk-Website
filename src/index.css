@@ -38,3 +38,11 @@ h6 {
 .partner-logos-format {
   @apply flex justify-center items-center w-26 sm:w-30 md:w-40 h-14 sm:h-16 md:h-24 shrink-0 bg-white p-3 rounded-xl;
 }
+
+.inclusions {
+  @apply flex flex-row justify-start items-center gap-2;
+}
+
+.inclusions_icons {
+  @apply text-[#1775EE] shrink-0 w-8 h-8 rounded-full border border-[#1775EE] flex items-center justify-center;
+}

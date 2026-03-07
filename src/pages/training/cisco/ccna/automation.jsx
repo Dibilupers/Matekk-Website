@@ -26,7 +26,6 @@ export default function CCNAAutomation() {
   };
 
   // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
-  // Replace this entire array with the course-specific curriculum
   const courseModules = [
     {
       title: "1.0 Network Fundamentals",
@@ -193,31 +192,35 @@ export default function CCNAAutomation() {
     },
   ];
 
-  return (   
+  return (
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
-      {/* ==================== HERO BANNER - UPDATE TEXT AND IMAGES ====================*/}
+      {/* ==================== HERO BANNER ====================*/}
       <section className="relative pl-8 py-18 rounded-2xl shadow-lg flex flex-col gap-3 overflow-hidden min-h-62.5">
-        {/* Background image - uses ccnaHero variable */}
+
+        {/* ==================== HERO BANNER - Image ====================*/}
+        {/* Background Image */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: `url(${ccnaHero})`, // CHANGE: Hero background image
+            backgroundImage: `url(${ccnaHero})`,
           }}
         />
+        {/* Hero Background Image Gradient */}
         <div className="absolute inset-0 bg-linear-to-r from-[#cbddf5] via-[#cbddf5ce] to-transparent"></div>
 
-        {/* Content */}
-        <div className="relative z-10 flex flex-col gap-2 pl-1 sm:pl-8">
-          {/* CHANGE: Badge text */}
-          <h6 className="w-fit px-5 py-2 text-[#1775EE] bg-blue-50 rounded-full">
+        {/* ==================== HERO BANNER - Text Content ====================*/}
+        <div className="relative z-10 flex flex-col gap-3 pl-1 sm:pl-8">
+          {/* Course Category */}
+          <h6 className="w-fit px-4 py-2 text-[#1775EE] bg-blue-50 rounded-full">
             Cisco
           </h6>
 
+          {/* ====== Course Title and Description ======*/}
           <div>
-            {/* CHANGE: Course title */}
+            {/* Course title */}
             <h1 className="text-[#1775EE] font-bold">CCNA AUTOMATION</h1>
 
-            {/* CHANGE: Course description */}
+            {/* Course description */}
             <p className="lg:w-[30vw] xl:w-lg text-gray-900">
               Automating Networks Using Cisco Platforms (200-901 CCNAUTO) v1.1 is
               a 120-minute exam that assesses a candidate's knowledge of software
@@ -226,21 +229,25 @@ export default function CCNAAutomation() {
             </p>
           </div>
 
+          {/* ====== Hero Button ====== */}
           <div className="flex flex-row sm:flex-row gap-2.5 mt-1">
+            {/* Enroll Now Button - When clicked, opens a modal */}
             <Button
               title="Enroll Now"
               type="none"
-              buttonCustomStyle="bg-[#1775EE] text-white hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl px-6 py-3"
+              buttonCustomStyle="bg-[#1775EE] text-white hover:bg-blue-700 transition-all transition ease-in-out duration-300 shadow-lg hover:bg-white hover:text-[#1775EE] hover:shadow-xl px-6 py-3"
               btnFunc={() => {
                 document
                   .getElementById("services")
                   ?.scrollIntoView({ behavior: "smooth", block: "start" });
               }}
             />
+
+            {/* Learn More Button - When clicked will scroll down to proceed on the other sections of the page */}
             <Button
               title="Learn More"
               type="none"
-              buttonCustomStyle="bg-transparent text-blue-600 border-2 border-blue-600 hover:bg-white hover:text-blue-600 transition-all duration-300 px-6 py-3"
+              buttonCustomStyle="bg-transparent text-blue-600 border-2 border-blue-600 hover:bg-white hover:border-white hover:text-blue-600 transition ease-in-out transition-all duration-300 px-6 py-3"
               btnFunc={() => {
                 document
                   .getElementById("services")
@@ -251,229 +258,245 @@ export default function CCNAAutomation() {
         </div>
       </section>
 
+      {/* ==================== CONTENT SECTION - Training Informations/Content ==================== */}
       <div className="flex flex-col lg:flex-row justify-start items-start lg:items-stretch gap-6 lg:gap-8">
-        {/* Main layout */}
-        <section className="flex flex-col lg:flex-row gap-8">
-          {/* LEFT: Main Content */}
-          <div className="flex flex-col gap-y-8 flex-1">
-            {/* ==================== ABOUT SECTION - UPDATE TEXT ====================*/}
-            <div className="flex flex-col gap-y-3">
-              <h3>
-                About This <span className="text-[#1775EE]">Course</span>
-              </h3>
-              {/* CHANGE: Course description paragraphs */}
-              <p className="text-gray-700 leading-relaxed">
-                This course is designed to help learners prepare for the updated
-                CCNA 200-901 certification exam through instructor-led training
-                that combines guided discussions and interactive activities. It
-                covers essential topics such as network automation fundamentals,
-                Python programming principles, and basic DevOps concepts with
-                hands-on labs and real-world scenarios to build practical skills
-                and exam confidence.
-              </p>
-              <p className="text-gray-700 leading-relaxed">
-                The program also emphasizes troubleshooting techniques and best
-                practices to help participants apply their knowledge effectively
-                in real-world networking environments.
-              </p>
-            </div>
+        {/* ==================== LEFT SIDE: Contents/Information ==================== */}
+        <div className="flex flex-col gap-8">
+          {/* ==================== ABOUT SECTION ==================== */}
+          <section className="flex flex-col gap-y-3">
+            {/* About Section - Title */}
+            <h3>
+              About This <span className="text-[#1775EE]">Course</span>
+            </h3>
+            {/* About Section - Description */}
+            {/* CHANGE: Course description paragraphs */}
+            <p>
+              This course is designed to help learners prepare for the updated
+              CCNA 200-901 certification exam through instructor-led training
+              that combines guided discussions and interactive activities. It
+              covers essential topics such as network automation fundamentals,
+              Python programming principles, and basic DevOps concepts with
+              hands-on labs and real-world scenarios to build practical skills
+              and exam confidence.
+            </p>
+            <p>
+              The program also emphasizes troubleshooting techniques and best
+              practices to help participants apply their knowledge effectively
+              in real-world networking environments.
+            </p>
+          </section>
 
-            {/* ==================== WHAT YOU WILL LEARN - UPDATE ITEMS ====================*/}
-            <div className="flex flex-col gap-y-5">
-              <h3>
-                What You Will <span className="text-[#1775EE]">Learn</span>
-              </h3>
-              {/* CHANGE: Learning outcomes - add or remove items as needed */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                <p className="flex items-center gap-2.5">
-                  <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                  <span>Network Automation Fundamentals</span>
-                </p>
-                <p className="flex items-center gap-2.5">
-                  <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                  <span>API Integration Concepts</span>
-                </p>
-                <p className="flex items-center gap-2.5">
-                  <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                  <span>Python Programming Basics</span>
-                </p>
-                <p className="flex items-center gap-2.5">
-                  <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                  <span>Infrastructure as Code Principles</span>
-                </p>
+          {/* ==================== WHAT YOU WILL LEARN ====================*/}
+          <section className="flex flex-col gap-y-5">
+            {/* What You Will Learn Section - Title */}
+            <h3>
+              What You Will <span className="text-[#1775EE]">Learn</span>
+            </h3>
+
+            {/* What You Will Learn Section - List */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <div className="flex items-center gap-2.5">
+                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
+                <p>Network Automation Fundamentals</p>
               </div>
+              <div className="flex items-center gap-2.5">
+                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
+                <p>API Integration Concepts</p>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
+                <p>Python Programming Basics</p>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
+                <p>API Integration Concepts</p>
+              </div>
+              <p className="flex items-center gap-2.5">
+                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
+                <span>Infrastructure as Code Principles</span>
+              </p>
             </div>
+          </section>
 
-            {/* Course Content - Uses courseModules array defined above */}
-            <div className="flex flex-col gap-y-3">
-              <h3>
-                Course <span className="text-[#1775EE]">Content</span>
-              </h3>
-              <div className="flex flex-col gap-3">
-                {courseModules.map((module, index) => (
+          {/* ==================== COURSE CONTENT ==================== */}
+          <section className="flex flex-col gap-y-5">
+            {/* Course Content - Title */}
+            <h3>
+              Course <span className="text-[#1775EE]">Content</span>
+            </h3>
+
+            {/* Course Content - List */}
+            <div className="flex flex-col gap-3">
+              {courseModules.map((module, index) => (
+                <div
+                  key={index}
+                  className="rounded-xl overflow-hidden border border-gray-200"
+                >
                   <div
-                    key={index}
-                    className="rounded-xl overflow-hidden border border-gray-200"
+                    onClick={() => toggleSection(index)}
+                    className={`w-full px-6 py-4 flex items-center justify-between transition-all duration-300 cursor-pointer ${openSection === index
+                      ? "bg-[#1775EE] text-white font-semibold"
+                      : "bg-[#EBF5FD] hover:bg-blue-50 font-normal"
+                      }`}
                   >
-                    <button
-                      onClick={() => toggleSection(index)}
-                      className={`w-full px-6 py-4 flex items-center justify-between transition-all duration-300 ${openSection === index
-                        ? "bg-[#1775EE] text-white"
-                        : "bg-[#EBF5FD] text-gray-900 hover:bg-blue-50"
-                        }`}
-                    >
-                      <span className="font-semibold text-left">
-                        {module.title}
-                      </span>
-                      {openSection === index ? (
-                        <ChevronUp className="w-5 h-5 shrink-0 transition-transform duration-300" />
-                      ) : (
-                        <ChevronDown className="w-5 h-5 shrink-0 transition-transform duration-300" />
-                      )}
-                    </button>
-
-                    <div
-                      className={`transition-all duration-500 ease-in-out overflow-hidden ${openSection === index && module.items.length > 0
-                        ? "max-h-[2000px] opacity-100"
-                        : "max-h-0 opacity-0"
-                        }`}
-                    >
-                      <div className="px-6 py-4 bg-[#EFF6FF]">
-                        <ul className="flex flex-col gap-2">
-                          {module.items.map((item, itemIndex) => (
-                            <li key={itemIndex} className="text-sm text-gray-700">
-                              {typeof item === "string" ? (
-                                item
-                              ) : (
-                                <div>
-                                  <p className="font-medium">{item.subTitle}</p>
-                                  <ul className="ml-4 mt-1 flex flex-col gap-1">
-                                    {item.items.map((subItem, subIndex) => (
-                                      <li key={subIndex} className="text-sm">
-                                        {subItem}
-                                      </li>
-                                    ))}
-                                  </ul>
-                                </div>
-                              )}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
+                    <span className="text-left">
+                      {module.title}
+                    </span>
+                    {openSection === index ? (
+                      <ChevronUp className="w-5 h-5 shrink-0 transition-transform duration-300" />
+                    ) : (
+                      <ChevronDown className="w-5 h-5 shrink-0 transition-transform duration-300" />
+                    )}
                   </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
 
-        {/* RIGHT: Sidebar */}
-        <aside className="flex flex-col gap-6 lg:w-72 xl:w-80 shrink-0">
-          {/* ==================== CERT BADGE - UPDATE IMAGE ====================*/}
+                  <div
+                    className={`transition-all duration-500 ease-in-out overflow-hidden ${openSection === index && module.items.length > 0
+                      ? "max-h-500 opacity-100"
+                      : "max-h-0 opacity-0"
+                      }`}
+                  >
+                    <ul className="flex flex-col gap-2 px-6 py-4 bg-[#EFF6FF]">
+                      {module.items.map((item, itemIndex) => (
+                        <li key={itemIndex} className="text-sm text-gray-700">
+                          {typeof item === "string" ? (
+                            item
+                          ) : (
+                            <div>
+                              <p className="font-medium">{item.subTitle}</p>
+                              <ul className="ml-4 mt-1 flex flex-col gap-1">
+                                {item.items.map((subItem, subIndex) => (
+                                  <li key={subIndex} className="text-sm">
+                                    {subItem}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        </div>
+
+        {/* ==================== RIGHT SIDEBAR: Contents/Information ==================== */}
+        <aside className="flex flex-col gap-5 lg:w-72 xl:w-80 shrink-0">
+          {/* ==================== CERT BADGE ====================*/}
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
-            {/* CHANGE: Badge image - uses ccnaBadge variable */}
+            {/* Cert Badge - Change/Update Image */}
             <img
               src={ccnaBadge}
               alt="CCNA Automation Certification Badge"
-              className="w-[400px] h-[400px] object-contain"
+              className="w-100 h-100 object-contain"
             />
           </div>
 
-          {/* ==================== JOB OPPORTUNITIES - UPDATE LIST ====================*/}
-          <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-3">
+          {/* ==================== JOB OPPORTUNITIES ====================*/}
+          <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-2">
+            {/* Job Opportunities - Title */}
             <h5 className="text-[#1775EE] font-bold">Job Opportunities</h5>
-            {/* CHANGE: Job titles - add or remove items as needed */}
+            {/* Job Opportunities - List */}
             {[
               "Network Automation Technician",
               "Junior DevNet Associate",
               "IT Automation Specialist",
               "NOC Automation Analyst",
             ].map((job) => (
-              <p key={job} className="flex items-start gap-2.5">
+              <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
-                <span className="text-sm mt-1">{job}</span>
+                <span className="text-sm">{job}</span>
               </p>
             ))}
           </div>
 
-          {/* ==================== TARGET LEARNERS - UPDATE TEXT ====================*/}
-          <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-3">
+          {/* ==================== TARGET LEARNERS ====================*/}
+          <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-2">
+            {/* Target Learners - Title */}
             <h5 className="text-[#1775EE] font-bold">Target Learners</h5>
-            {/* CHANGE: Target audience - add or remove items as needed */}
-            <p className="flex items-start gap-2.5">
-              <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
-              <span className="text-sm mt-1">Beginners</span>
-            </p>
+            {/* Target Learners - List */}
+            {[
+              "Beginners",
+            ].map((job) => (
+              <p key={job} className="flex gap-2 justify-left items-center">
+                <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
+                <span className="text-sm">{job}</span>
+              </p>
+            ))}
           </div>
 
-          {/* ==================== SCHEDULE - UPDATE DETAILS ====================*/}
-          <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-3">
+          {/* ==================== SCHEDULE ====================*/}
+          <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-2">
+            {/* Schedule - Title */}
             <h5 className="text-[#1775EE] font-bold">Schedule</h5>
-            {/* CHANGE: Schedule details */}
+            {/* Schedule - List */}
             <div className="flex flex-col gap-2 text-sm">
-              <div className="flex justify-start gap-3">
-                <span className="font-bold">Modality:</span>
-                <span>Face to Face/Online</span>
+              <div className="flex justify-start gap-2">
+                <p className="font-bold">Modality:</p>
+                <p>Face to Face/Online</p>
               </div>
-              <div className="flex justify-start gap-3">
-                <span className="font-bold">Duration:</span>
-                <span>7 Days</span>
+              <div className="flex justify-start gap-2">
+                <p className="font-bold">Duration:</p>
+                <p>7 Days</p>
               </div>
-              <div className="flex justify-start gap-3">
-                <span className="font-bold">Days:</span>
-                <span>Monday-Sunday</span>
+              <div className="flex justify-start gap-2">
+                <p className="font-bold">Days:</p>
+                <p>Monday-Sunday</p>
               </div>
-              <div className="flex justify-start gap-3">
+              <div className="flex justify-start gap-2">
                 <span className="font-bold">Time:</span>
                 <span>10:00 AM – 6:00 PM</span>
               </div>
             </div>
           </div>
 
-          {/* Inclusions - Uses icon imports (same for all courses) */}
-          <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-3">
+          {/* ==================== INCLUSIONS ====================*/}
+          <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-2">
+            {/* Inlcusions - Title */}
             <h5 className="text-[#1775EE] font-bold">Inclusions</h5>
 
-            <p className="flex items-start gap-2.5">
-              <span className="text-[#1775EE] shrink-0 w-6 h-6 rounded-full bg-white flex items-center justify-center">
+            {/* Inclusions - List */}
+            <div className="inclusions">
+              <span className="inclusions_icons">
                 <img src={MealIcon} alt="Meal" className="w-4 h-4" />
               </span>
-              <span className="text-sm">Lunch & snacks (onsite)</span>
-            </p>
+              <p className="text-sm">Lunch & snacks (onsite)</p>
+            </div>
 
-            <p className="flex items-start gap-2.5">
-              <span className="text-[#1775EE] shrink-0 w-6 h-6 rounded-full bg-white flex items-center justify-center">
+            <div className="inclusions">
+              <span className="inclusions_icons">
                 <img src={ReviewIcon} alt="Review" className="w-4 h-4" />
               </span>
-              <span className="text-sm">Reviewers & exercises</span>
-            </p>
+              <p className="text-sm">Reviewers & exercises</p>
+            </div>
 
-            <p className="flex items-start gap-2.5">
-              <span className="text-[#1775EE] shrink-0 w-6 h-6 rounded-full bg-white flex items-center justify-center">
+            <div className="inclusions">
+              <span className="inclusions_icons">
                 <img src={InstitutionalIcon} alt="Institutional Account" className="w-4 h-4" />
               </span>
-              <span className="text-sm">Institutional Accounts</span>
-            </p>
+              <p className="text-sm">Institutional Accounts</p>
+            </div>
 
-            <p className="flex items-start gap-2.5">
-              <span className="text-[#1775EE] shrink-0 w-6 h-6 rounded-full bg-white flex items-center justify-center">
+            <div className="inclusions">
+              <span className="inclusions_icons">
                 <img src={WorkstationIcon} alt="Workstation" className="w-4 h-4" />
               </span>
-              <span className="text-sm">Workstation per student</span>
-            </p>
+              <p className="text-sm">Workstation per student</p>
+            </div>
 
-            <p className="flex items-start gap-2.5">
-              <span className="text-[#1775EE] shrink-0 w-6 h-6 rounded-full bg-white flex items-center justify-center">
+            <div className="inclusions">
+              <span className="inclusions_icons">
                 <img src={MedalIcon} alt="Medal" className="w-4 h-4" />
               </span>
-              <span className="text-sm">Certificate of Completion</span>
-            </p>
+              <p className="text-sm">Certificate of Completion</p>
+            </div>
 
             {/* CHANGE: Download link text and URL */}
             <a
               href="#"
-              className="text-[#1775EE] text-sm font-medium underline mt-2"
+              className="text-sm font-medium underline mt-2"
             >
               Download the CCNA Exam Basics here
             </a>

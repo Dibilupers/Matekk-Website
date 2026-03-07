@@ -1634,7 +1634,7 @@ export default function Home() {
               buttonCustomStyle="bg-[#1775EE] text-white hover:bg-white hover:text-blue-600 transition-all duration-300 shadow-lg hover:shadow-xl px-6 py-3"
               btnFunc={() => {
                 document
-                  .getElementById("services")
+                  .getElementById("contact")
                   ?.scrollIntoView({ behavior: "smooth", block: "start" });
               }}
             />
@@ -1649,7 +1649,7 @@ export default function Home() {
       {/* Contact Us */}
       <section
         id="contact"
-        className="flex justify-center items-center py-16 lg:py-20 bg-[#EBF5FD] scroll-mt-18"
+        className="flex justify-center items-center py-16 lg:py-20 bg-[#EBF5FD] scroll-mt-19"
       >
         <div className="w-full h-full flex mx-[2.063rem] lg:mx-[7.438rem] flex-col-reverse md:flex-col-reverse lg:flex-row space-x-0 md:space-x-0 lg:space-x-16 items-center space-y-6 md:space-y-12 lg:space-y-0">
           <ContactForm />

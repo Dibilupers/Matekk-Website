@@ -72,7 +72,7 @@ export default function CCNAAutomation() {
   return (
     <div className="flex flex-col py-10 h-full scroll-mt-18">
       {/* ==================== HERO BANNER - UPDATE TEXT AND IMAGES ====================*/}
-      <section className="relative items-center pl-8 py-18 rounded-2xl shadow-lg flex flex-col gap-2.5 overflow-hidden min-h-62.5  mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem]">
+      <section className="relative items-center py-18 rounded-2xl shadow-lg flex flex-col gap-2.5 overflow-hidden min-h-62.5  mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem]">
         {/* Background image - uses ccnaHero variable */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -83,28 +83,26 @@ export default function CCNAAutomation() {
         <div className="absolute inset-0 backdrop-blur-sm bg-white/10"></div>{" "}
         {/* Blur effect */}
         {/* Content */}
-        <div className="relative justify-center items-center text-center z-10 flex flex-col gap-2 pl-1 sm:pl-8">
+        <div className="relative justify-center items-center text-center z-10 flex flex-col gap-2 mr-1">
           {/* CHANGE: Badge text */}
           <h6 className="w-fit px-5 py-2 text-[#1775EE] bg-blue-50 rounded-full">
             ICT Consultancy (PBOOT)
           </h6>
 
-          <div>
-            {/* CHANGE:  title */}
-            <h1 className="text-white font-bold px-50">
-              ICT Network & Security Infrastructure
-            </h1>
+          {/* CHANGE:  title */}
+          <h1 className="text-white font-bold px-50">
+            ICT Network & Security Infrastructure
+          </h1>
 
-            {/* CHANGE:  description */}
-            <p className="lg:w-[30vw] xl:w-full text-white px-78">
-              MGKK Information Communication Technology Services provides
-              end-to-end ICT network and security infrastructure services
-              designed to ensure stable connectivity, data protection, and
-              secure system operations for organizations.
-            </p>
-          </div>
+          {/* CHANGE:  description */}
+          <p className="lg:w-[30vw] xl:w-full text-white w-140 px-10 lg:px-78">
+            MGKK Information Communication Technology Services provides
+            end-to-end ICT network and security infrastructure services designed
+            to ensure stable connectivity, data protection, and secure system
+            operations for organizations.
+          </p>
 
-          <div className="flex flex-row sm:flex-row gap-2.5 mt-1">
+          <div className="flex flex-row sm:flex-row gap-2.5 mt-1 w-full justify-center">
             <Button
               title="Contact Us"
               type="none"
@@ -129,20 +127,20 @@ export default function CCNAAutomation() {
         </div>
       </section>
 
-      {/* Main layout */}
+      {/* Building Scalable */}
       <div className="flex flex-col lg:flex-row gap-8 mt-7.5 lg:mt-15 mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem]">
-        {/* Main Content */}
+        {/* Content */}
         <div className="flex flex-col gap-y-8 flex-1">
           {/* ==================== TEXT ====================*/}
-          <div className="flex items-center gap-x-16.5">
-            <h3 className="w-[45%] shrink-0">
+          <div className="flex flex-col lg:flex-row items-start lg:items-center gap-6 lg:gap-x-16.5">
+            <h3 className="w-full lg:w-[45%] shrink-0">
               Building Scalable and Secure Network Infrastructure to
               <span className="text-[#1775EE]">
                 {" "}
                 Support Business Continuity
               </span>
             </h3>
-            <p className="w-[60%] leading-relaxed bg-[#EBF5FD] p-7.5 rounded-2xl">
+            <p className="w-full lg:w-[60%] leading-relaxed bg-[#EBF5FD] p-7.5 rounded-2xl">
               Our ICT Network and Security Infrastructure service focuses on the
               design, implementation, configuration, and optimization of secure
               network environments. We help organizations build reliable network
@@ -198,7 +196,7 @@ export default function CCNAAutomation() {
           ].map((text) => (
             <div
               key={text}
-              className="flex items-center gap-3 bg-white rounded-2xl p-5 w-79 shadow-sm"
+              className="flex items-center gap-3 bg-white rounded-2xl p-5 w-87 lg:w-79 shadow-sm"
             >
               <div className="shrink-0 w-8 h-8 rounded-full bg-[#1775EE] flex items-center justify-center mt-0.5">
                 <svg
@@ -221,14 +219,14 @@ export default function CCNAAutomation() {
         </div>
       </div>
       {/* Scope and Key section */}
-      <div className="mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] flex gap-x-7.5">
-        {/* Left — title pinned to top */}
-        <h3 className="shrink-0 w-80">
+      <div className="mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] flex flex-col lg:flex-row gap-y-6 lg:gap-x-7.5">
+        {/* Title */}
+        <h3 className="shrink-0 lg:w-80">
           Scope and Key <span className="text-[#1775EE]">Deliverables</span>
         </h3>
 
-        {/* Right — 2-column grid of cards */}
-        <div className="grid grid-cols-2 gap-4 flex-1">
+        {/* Cards — 1 col on mobile, 2 cols on desktop */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 flex-1">
           {[
             {
               title: "Network and Security Infrastructure Assessment",
@@ -313,26 +311,6 @@ export default function CCNAAutomation() {
                       <h5 className="text-white leading-tight flex-1">
                         {item.title}
                       </h5>
-                      <Link
-                        to={item.link}
-                        onClick={(e) => e.stopPropagation()}
-                        className="shrink-0 flex items-center justify-center"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="w-7 h-7 text-white"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M7 17L17 7M17 7H7M17 7v10"
-                          />
-                        </svg>
-                      </Link>
                     </div>
 
                     {/* Description below title */}
@@ -401,8 +379,8 @@ export default function CCNAAutomation() {
           }}
         />
 
-        <div className="relative z-10 flex flex-col items-center gap-2.5 mt-7.5 lg:mt-[5vh] px-70">
-          {/* CHANGE: CTA heading */}
+        <div className="relative z-10 flex flex-col items-center gap-2.5 mt-7.5 lg:mt-[5vh] px-10 lg:px-70">
+          {/* FOOTER BANNER */}
           <h1 className="text-center">
             <span className="text-[#ffffff]">Contact Us Today To</span>{" "}
             <span className="text-[#1775EE]">Request a Consultation</span>
@@ -426,16 +404,18 @@ export default function CCNAAutomation() {
           />
         </div>
       </div>
+
+      {/* FAQ */}
       <section className="flex flex-col md:flex-col scroll-mt-18 lg:flex-row xl:flex-row justify-center items-start bg-white pb-16 md:py-12 lg:py-20 space-y-0 sm:space-y-[-2rem] md:space-y-10 lg:space-y-0">
         {" "}
-        <div className="mr-[2.063rem] ml-[2.063rem] mb-6 md:mb-0 md:ml-[1.5rem] lg:ml-[7.4rem] mt-[3rem] md:mt-10 lg:mt-0 w-[84%] md:w-[71%] lg:w-fit space-y-6 md:space-y-36 justify-center items-start">
+        <div className="mr-[2.063rem] ml-[2.063rem] md:mb-0 md:ml-[1.5rem] lg:ml-[7.4rem] w-[84%] md:w-[71%] lg:w-fit justify-center items-start">
           {" "}
-          <div className=" w-full md:w-full space-y-2 ">
-            <h3 className="text-[1.5rem] md:text-3xl lg:text-[2rem] font-bold text-black w-[35vw] md:w-[15vw] lg:w-[22vw]">
+          <div className=" w-full md:w-full">
+            <h3 className="w-[35vw] md:w-[15vw] lg:w-[22vw] mb-6 ml-10 lg:ml-0">
               Frequently <span className="text-[#1775EE]">Asked Questions</span>
             </h3>
           </div>
-          <div className="bg-[#EBF5FD] p-7.5 rounded-xl shadow-md border border-[#EBF5FD] hidden md:block w-full md:w-[90%] lg:w-[95%]">
+          <div className="bg-[#EBF5FD] p-7.5 rounded-xl shadow-md border border-[#EBF5FD] mt-6 hidden lg:block w-full md:w-[90%] lg:w-[95%]">
             <h5 className="mb-3.75">Still Have Questions?</h5>
             <p className="w-[95%] md:w-[90%] lg:w-[78%] text-black mb-7.5">
               To be a global leader in ICT and Engineering solutions, recognized
@@ -458,13 +438,15 @@ export default function CCNAAutomation() {
           <FAQ />
         </div>
       </section>
+
+      {/* Contact us */}
       <section
         id="contact"
         className="flex justify-center items-center py-16 lg:py-20 bg-[#EBF5FD] scroll-mt-18"
       >
         <div className="w-full h-full flex mx-[2.063rem] lg:mx-[7.438rem] flex-col-reverse md:flex-col-reverse lg:flex-row space-x-0 md:space-x-0 lg:space-x-16 items-center space-y-6 md:space-y-12 lg:space-y-0">
           <ContactForm />
-          <div className="w-full items-start">
+          <div className="w-full items-start mb-6.5 lg:mb-0">
             <h6 className="text-sm bg-white border border-[#EBF5FD] rounded-full py-[0.7vh] px-4 inline-flex text-center shadow-md">
               Contact Us
             </h6>
