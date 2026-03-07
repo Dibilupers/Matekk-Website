@@ -126,12 +126,14 @@ export default function Home() {
         id="home"
         className="py-40 md:py-20 lg:py-0 scroll-mt-18"
       >
-        {/* Hero Banner - Margin */}
+        {/* Section Margin */}
         <div className=" mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem]">
 
+          {/* ====== HERO BANNER - Content ======*/}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-            {/* LEFT SIDE - CONTENT */}
+            {/* ====== LEFT SIDE - Content (Title, description, buttons, images) ====== */}
             <div className="space-y-10 lg:space-y-12 text-left">
+              {/* Title to Buttons Content */}
               <div className="space-y-4">
                 <div className="space-y-2">
                   <h6 className="w-fit px-5 py-2 bg-blue-50 rounded-full shadow-[0px_0px_6px_-3px_rgba(0,0,0,0.5)]">
@@ -178,6 +180,7 @@ export default function Home() {
                 </div>
               </div>
 
+              {/* Experiences Content */}
               <div className="flex space-x-4 justify-center items-center md:justify-start md:items-start">
                 <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
                   <h3 className="font-bold text-gray-900">
@@ -217,12 +220,14 @@ export default function Home() {
               </div>
             </div>
 
-            {/* RIGHT SIDE - IMAGE & OVERLAYS */}
+            {/* ====== RIGHT SIDE - Images (Passing rate, Icons, Images, One feedback) ====== */}
             <div className="hidden lg:flex relative lg:h-135 items-center justify-center">
+              {/* Image Background Color */}
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="w-70 h-70 bg-linear-to-br from-[#3084F0] to-[#DAEBFC] rounded-full blur-3xl"></div>
               </div>
 
+              {/* Passing Rate */}
               <div className="relative w-full max-w-md">
                 <div className="hidden xl:flex absolute top-31 left-4 lg:-left-35 bg-[#EBF5FD] rounded-xl shadow-xl/10 px-4 py-3 z-20 hover:scale-105 transition-transform cursor-pointer justify-center items-center gap-3">
                   <h3 className="font-bold text-[#1775EE]">95%</h3>
@@ -242,6 +247,7 @@ export default function Home() {
                   </div>
                 </div>
 
+                {/* Person Image */}
                 <div className="relative right-6">
                   <img
                     src="/src/assets/maamgrace2.png"
@@ -250,6 +256,7 @@ export default function Home() {
                   />
                 </div>
 
+                {/* Side Icons */}
                 <div className="hidden md:flex absolute top-10 right-1 lg:right-30 bg-linear-to-b from-[#7DB6FF] to-[#5192E6] p-2 rounded-full shadow-lg hover:scale-110 transition-transform">
                   <Settings className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
                 </div>
@@ -260,6 +267,7 @@ export default function Home() {
                   <MessageSquare className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
                 </div>
 
+                {/* One Feedback and Its Exam Status */}
                 <div className="hidden xl:flex absolute bottom-15 -right-4 lg:-right-10 bg-[#EBF5FD] rounded-xl shadow-2xl px-3 py-3 max-w-61 z-20 transition-transform flex-col justify-center items-center gap-2">
                   <div className="flex items-start gap-3">
                     <img
@@ -296,29 +304,36 @@ export default function Home() {
 
       {/* ==================== PARTNERS LOGO ====================*/}
       <section className="flex bg-[#EBF5FD] justify-center items-center text-center py-10 scroll-mt-18" id="partners">
+        {/* Section Margin and Spacing */}
         <div className="mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] space-y-4 md:space-y-7">
+          {/* Text Content */}
           <div className="flex flex-col justify-center items-center space-y-1">
+            {/* Title */}
             <div className="flex flex-col sm:flex-row space-x-2 font-bold text-3xl">
               <h3>Trusted by Our</h3>
               <h3 className="text-[#1775EE]">Customers & Partners</h3>
             </div>
+            {/* Description */}
             <p className="w-78 sm:w-lg md:w-lg lg:w-xl xl:w-full">
               We collaborate with recognized technology partners to ensure
               quality, reliability, and up-to-date ICT solutions.
             </p>
           </div>
+          {/* Logos */}
           <Partners />
         </div>
       </section>
 
       {/* ==================== SERVICES ====================*/}
       <section id="services" className="flex flex-col justify-center items-center space-y-1 py-10 h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem]">
+        {/* Title */}
         <div className="w-70 md:w-full flex justify-center text-center">
           <h3>
             Services We Provide to
             <span className="text-[#1775EE]"> Elevate Your Business</span>
           </h3>
         </div>
+        {/* Description */}
         <p className="w-78 sm:w-80 md:w-xl xl:w-4xl self-center text-center">
           MGKK Information Communication Technology Services delivers end-to-end
           ICT and engineering solutions alongside comprehensive training
@@ -326,22 +341,27 @@ export default function Home() {
           transformation.
         </p>
 
-        {/* ── TOP CAROUSEL ── */}
+        {/* ====== SOLUTIONS - End-to-End ICT & Engineering Solutions ======*/}
         <div className="w-full mx-1 flex flex-col md:flex-row justify-center items-center gap-10 mt-[6vh] md:mx-0 lg:mx-auto">
-          {/* Controls — LEFT */}
+          {/* ====== CONTENT ====== */}
           <div className="flex flex-col relative md:w-[35vw] lg:w-[20vw] xl:w-[20vw] self-start gap-y-[1vh] items-start">
+            {/* Color Gradient - at the back of the title and description  */}
             <div className="absolute -top-10 md:-left-10 w-70 h-70 md:w-72 md:h-72 bg-[#C2DDFF] opacity-50 rounded-full blur-3xl -z-10" />
+            {/* Services Category Title */}
             <h6 className="text-sm bg-[#EBF5FD] border border-[#EBF5FD] rounded-full py-[0.7vh] px-4 inline-flex text-center shadow-[0_0_3px_rgba(0,0,0,0.25)]">
               Solutions
             </h6>
+            {/* Solutions Title */}
             <h5 className="w-[50vw] md:w-auto">
               End-to-End ICT & Engineering Solutions
             </h5>
+            {/* Solutions Category Description */}
             <p className="text-sm mb-[1.5vh] md:mb-[3vh]">
               We provide ICT consultancy and engineering solutions focused on
               planning, building, operating, optimizing, and testing technology
               systems.
             </p>
+            {/* Left and Right Button for List of Solutions */}
             <div className="flex flex-row gap-x-[2vh]">
               <button
                 onClick={() => setTopSlide((prev) => Math.max(prev - 1, 0))}
@@ -388,7 +408,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Viewport */}
+          {/* List of Solutions - In Slides */}
           <div className="overflow-hidden w-[85vw] md:w-[40vw] lg:w-[52vw]">
             <div
               className="flex gap-x-10 transition-transform duration-500 ease-in-out"
@@ -396,7 +416,7 @@ export default function Home() {
                 transform: `translateX(calc(-${topSlide} * ${topStep}))`,
               }}
             >
-              {/* Card 1 */}
+              {/* Solutions - Card 1 */}
               <div className="group relative shrink-0 w-[85vw] md:w-[40vw] lg:w-[24vw] xl:w-[24vw] rounded-xl overflow-hidden">
                 <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
                 <div className="absolute inset-0 bg-linear-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
@@ -423,7 +443,7 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Card 2 */}
+              {/* Solutions Card 2 */}
               <div className="group relative shrink-0 w-[85vw] md:w-[40vw] lg:w-[24vw] xl:w-[24vw] rounded-xl overflow-hidden">
                 <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
                 <div className="absolute inset-0 bg-linear-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
@@ -449,7 +469,7 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Card 3 */}
+              {/* Solutions - Card 3 */}
               <div className="group relative shrink-0 w-[85vw] md:w-[40vw] lg:w-[24vw] xl:w-[24vw] rounded-xl overflow-hidden">
                 <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
                 <div className="absolute inset-0 bg-linear-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
@@ -475,7 +495,7 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Card 4 */}
+              {/* Solutions - Card 4 */}
               <div className="group relative shrink-0 w-[85vw] md:w-[40vw] lg:w-[24vw] xl:w-[24vw] rounded-xl overflow-hidden">
                 <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
                 <div className="absolute inset-0 bg-linear-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
@@ -504,7 +524,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Top Dot Indicators */}
+        {/* TOP DOT INDICATORS */}
         <div className="flex justify-center gap-x-2 mt-6">
           {Array.from({ length: topMax }).map((_, i) => (
             <button
@@ -516,7 +536,7 @@ export default function Home() {
           ))}
         </div>
 
-        {/* ── BOTTOM CAROUSEL ── */}
+        {/* ====== TRAINING - ICT Training & Skills Development ======*/}
         <div className="w-full flex flex-col md:flex-row md:m-0 md:w-full justify-center items-center gap-10 mt-[4vh] md:mt-[8vh] lg:mx-auto">
           {/* Controls — on mobile: top + right-aligned | on desktop: right column */}
           {/* Training title */}
@@ -697,7 +717,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Bottom Dot Indicators */}
+        {/* BOTTOM DOT INDICATORS */}
         <div className="flex justify-center flex-row-reverse gap-x-2 mt-6">
           {Array.from({ length: bottomMax }).map((_, i) => (
             <button
@@ -712,13 +732,16 @@ export default function Home() {
 
       {/* ==================== WHY CHOOSE MGKK ICT SERVICES ====================*/}
       <section className="py-16 lg:py-20 bg-[#EBF5FD] scroll-mt-18">
+        {/* Section Margin */}
         <div className="mx-[2.063rem] lg:mx-[7.438rem]">
+          {/* Text Content */}
           <div className="mb-12 lg:mb-16 text-left md:text-center sm:text-left lg:text-left">
+            {/* Title */}
             <h3 className="text-3xl lg:text-3xl font-bold leading-tight text-[#000000]">
-              Why Choose <span className="text-[#1775EE]">MGKK</span>
-              <br className="sm:hidden" />
+              Why Choose MGKK
               <span className="text-[#1775EE]"> ICT Services?</span>
             </h3>
+            {/* Description */}
             <p className="leading-relaxed text-[#000000] mt-4 max-w-133 mx-auto lg:mx-0 text-justify">
               MGKK Information Communication Technology Services is committed to
               delivering reliable ICT solutions and high-quality training
@@ -726,7 +749,7 @@ export default function Home() {
               strong focus on innovation, integrity, and excellence.
             </p>
           </div>
-
+          {/* Text and Image Content */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start">
             {/* LEFT SIDE - IMAGE */}
             <div className="order-1 lg:order-1">
