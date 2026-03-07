@@ -136,7 +136,7 @@ export default function Home() {
               {/* Title to Buttons Content */}
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <h6 className="w-fit px-5 py-2 bg-blue-50 rounded-full shadow-[0px_0px_6px_-3px_rgba(0,0,0,0.5)]">
+                  <h6 className="w-fit px-3 py-1 bg-blue-50 rounded-full shadow-[0px_0px_6px_-3px_rgba(0,0,0,0.5)]">
                     ICT & Engineering
                   </h6>
 
@@ -325,408 +325,420 @@ export default function Home() {
       </section>
 
       {/* ==================== SERVICES ====================*/}
-      <section id="services" className="flex flex-col justify-center items-center space-y-1 py-10 h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem]">
-        {/* Title */}
-        <div className="w-70 md:w-full flex justify-center text-center">
-          <h3>
-            Services We Provide to
-            <span className="text-[#1775EE]"> Elevate Your Business</span>
-          </h3>
-        </div>
-        {/* Description */}
-        <p className="w-78 sm:w-80 md:w-xl xl:w-4xl self-center text-center">
-          MGKK Information Communication Technology Services delivers end-to-end
-          ICT and engineering solutions alongside comprehensive training
-          programs designed to meet industry demands and support digital
-          transformation.
-        </p>
-
-        {/* ====== SOLUTIONS - End-to-End ICT & Engineering Solutions ======*/}
-        <div className="w-full mx-1 flex flex-col md:flex-row justify-center items-center gap-10 mt-[6vh] md:mx-0 lg:mx-auto">
-          {/* ====== CONTENT ====== */}
-          <div className="flex flex-col relative md:w-[35vw] lg:w-[20vw] xl:w-[20vw] self-start gap-y-[1vh] items-start">
-            {/* Color Gradient - at the back of the title and description  */}
-            <div className="absolute -top-10 md:-left-10 w-70 h-70 md:w-72 md:h-72 bg-[#C2DDFF] opacity-50 rounded-full blur-3xl -z-10" />
-            {/* Services Category Title */}
-            <h6 className="text-sm bg-[#EBF5FD] border border-[#EBF5FD] rounded-full py-[0.7vh] px-4 inline-flex text-center shadow-[0_0_3px_rgba(0,0,0,0.25)]">
-              Solutions
-            </h6>
-            {/* Solutions Title */}
-            <h5 className="w-[50vw] md:w-auto">
-              End-to-End ICT & Engineering Solutions
-            </h5>
-            {/* Solutions Category Description */}
-            <p className="text-sm mb-[1.5vh] md:mb-[3vh]">
-              We provide ICT consultancy and engineering solutions focused on
-              planning, building, operating, optimizing, and testing technology
-              systems.
-            </p>
-            {/* Left and Right Button for List of Solutions */}
-            <div className="flex flex-row gap-x-[2vh]">
-              <button
-                onClick={() => setTopSlide((prev) => Math.max(prev - 1, 0))}
-                disabled={topSlide === 0}
-                className="w-12 h-12 flex items-center justify-center rounded-full border border-[#1775EE] bg-white text-[#1775EE] transition-all duration-300 hover:bg-[#1775EE] hover:text-white disabled:opacity-30 disabled:cursor-not-allowed"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-5 h-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15 19l-7-7 7-7"
-                  />
-                </svg>
-              </button>
-              <button
-                onClick={() =>
-                  setTopSlide((prev) => Math.min(prev + 1, topMax - 1))
-                }
-                disabled={topSlide === topMax - 1}
-                className="w-12 h-12 flex items-center justify-center rounded-full border border-[#1775EE] bg-white text-[#1775EE] transition-all duration-300 hover:bg-[#1775EE] hover:text-white disabled:opacity-30 disabled:cursor-not-allowed"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-5 h-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-              </button>
-            </div>
+      <section id="services" className="flex flex-col justify-center items-center space-y-12 py-10 h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem]">
+        {/* Title and Description Container */}
+        <div>
+          {/* Title */}
+          <div className="w-70 md:w-full flex justify-center text-center">
+            <h3>
+              Services We Provide to
+              <span className="text-[#1775EE]"> Elevate Your Business</span>
+            </h3>
           </div>
-
-          {/* List of Solutions - In Slides */}
-          <div className="overflow-hidden w-[85vw] md:w-[40vw] lg:w-[52vw]">
-            <div
-              className="flex gap-x-10 transition-transform duration-500 ease-in-out"
-              style={{
-                transform: `translateX(calc(-${topSlide} * ${topStep}))`,
-              }}
-            >
-              {/* Solutions - Card 1 */}
-              <div className="group relative shrink-0 w-[85vw] md:w-[40vw] lg:w-[24vw] xl:w-[24vw] rounded-xl overflow-hidden">
-                <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
-                <div className="absolute inset-0 bg-linear-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
-                  <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
-                    <img
-                      src={ictImage}
-                      alt="ICT Consultancy"
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                  </div>
-                  <h5 className="font-inter font-bold text-xl">
-                    ICT Consultancy
-                  </h5>
-                  <p className="font-poppins text-sm mb-[3vh]">
-                    MGKK provides ICT consultancy services using the Plan,
-                    Build, Operate, Optimize, and Test (PBOOT) approach to
-                    support the design, implementation, and improvement of ICT
-                    infrastructures.
-                  </p>
-                  <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
-                    See more
-                  </Link>
-                </div>
+          {/* Description */}
+          <p className="w-78 sm:w-80 md:w-xl xl:w-4xl self-center text-center">
+            MGKK Information Communication Technology Services delivers end-to-end
+            ICT and engineering solutions alongside comprehensive training
+            programs designed to meet industry demands and support digital
+            transformation.
+          </p>
+        </div>
+        <div>
+          {/* ====== SOLUTIONS - End-to-End ICT & Engineering Solutions ======*/}
+          <div className="flex flex-col md:flex-row justify-center items-center gap-10">
+            {/* ====== CONTENT ====== */}
+            <div className="flex flex-col relative md:w-[35vw] lg:w-[20vw] xl:w-[24vw] self-start gap-y-6 items-start">
+              {/* Color Gradient - at the back of the title and description  */}
+              <div className="absolute -top-10 md:-left-10 w-70 h-70 md:w-72 md:h-72 bg-[#C2DDFF] opacity-50 rounded-full blur-3xl -z-10" />
+              {/* Services Category Text Content Container */}
+              <div className="space-y-2">
+                {/* Services Category Title */}
+                <h6 className="bg-[#EBF5FD] border border-[#EBF5FD] rounded-full shadow-[0_0_3px_rgba(0,0,0,0.25)] w-fit px-3 py-1">
+                  Solutions
+                </h6>
+                {/* Solutions Title */}
+                <h5 className="w-[50vw] md:w-60">
+                  End-to-End ICT & Engineering Solutions
+                </h5>
+                {/* Solutions Category Description */}
+                <p className="">
+                  We provide ICT consultancy and engineering solutions focused on
+                  planning, building, operating, optimizing, and testing technology
+                  systems.
+                </p>
               </div>
-
-              {/* Solutions Card 2 */}
-              <div className="group relative shrink-0 w-[85vw] md:w-[40vw] lg:w-[24vw] xl:w-[24vw] rounded-xl overflow-hidden">
-                <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
-                <div className="absolute inset-0 bg-linear-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
-                  <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
-                    <img
-                      src={webImage}
-                      alt="Web and Software Development"
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+              {/* Left and Right Button for List of Solutions */}
+              <div className="flex flex-row gap-x-[2vh]">
+                <button
+                  onClick={() => setTopSlide((prev) => Math.max(prev - 1, 0))}
+                  disabled={topSlide === 0}
+                  className="w-12 h-12 flex items-center justify-center rounded-full border border-[#1775EE] bg-white text-[#1775EE] transition-all duration-300 hover:bg-[#1775EE] hover:text-white disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-5 h-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15 19l-7-7 7-7"
                     />
-                  </div>
-                  <h5 className="font-inter font-bold text-xl">
-                    Web and Software Development
-                  </h5>
-                  <p className="font-poppins text-sm mb-[3vh]">
-                    We develop web and software solutions that support
-                    organizational requirements, using modern technologies to
-                    deliver reliable and functional digital systems.
-                  </p>
-                  <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
-                    See more
-                  </Link>
-                </div>
-              </div>
-
-              {/* Solutions - Card 3 */}
-              <div className="group relative shrink-0 w-[85vw] md:w-[40vw] lg:w-[24vw] xl:w-[24vw] rounded-xl overflow-hidden">
-                <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
-                <div className="absolute inset-0 bg-linear-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
-                  <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
-                    <img
-                      src={webImage}
-                      alt="Network Infrastructure"
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  </svg>
+                </button>
+                <button
+                  onClick={() =>
+                    setTopSlide((prev) => Math.min(prev + 1, topMax - 1))
+                  }
+                  disabled={topSlide === topMax - 1}
+                  className="w-12 h-12 flex items-center justify-center rounded-full border border-[#1775EE] bg-white text-[#1775EE] transition-all duration-300 hover:bg-[#1775EE] hover:text-white disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-5 h-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M9 5l7 7-7 7"
                     />
-                  </div>
-                  <h5 className="font-inter font-bold text-xl">
-                    Network Infrastructure
-                  </h5>
-                  <p className="font-poppins text-sm mb-[3vh]">
-                    We design and deploy robust network infrastructure solutions
-                    that ensure seamless connectivity, security, and scalability
-                    for businesses of all sizes.
-                  </p>
-                  <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
-                    See more
-                  </Link>
-                </div>
-              </div>
-
-              {/* Solutions - Card 4 */}
-              <div className="group relative shrink-0 w-[85vw] md:w-[40vw] lg:w-[24vw] xl:w-[24vw] rounded-xl overflow-hidden">
-                <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
-                <div className="absolute inset-0 bg-linear-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
-                  <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
-                    <img
-                      src={ictImage}
-                      alt="Training and Development"
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                  </div>
-                  <h5 className="font-inter font-bold text-xl">
-                    Training & Development
-                  </h5>
-                  <p className="font-poppins text-sm mb-[3vh]">
-                    MGKK offers comprehensive ICT training programs tailored to
-                    industry demands, equipping professionals with the skills
-                    needed to thrive in a rapidly evolving digital landscape.
-                  </p>
-                  <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
-                    See more
-                  </Link>
-                </div>
+                  </svg>
+                </button>
               </div>
             </div>
-          </div>
-        </div>
 
-        {/* TOP DOT INDICATORS */}
-        <div className="flex justify-center gap-x-2 mt-6">
-          {Array.from({ length: topMax }).map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setTopSlide(i)}
-              className={`h-2 rounded-full transition-all duration-300 ${topSlide === i ? "bg-[#1775EE] w-4" : "bg-[#C2DDFF] w-2"
-                }`}
-            />
-          ))}
-        </div>
-
-        {/* ====== TRAINING - ICT Training & Skills Development ======*/}
-        <div className="w-full flex flex-col md:flex-row md:m-0 md:w-full justify-center items-center gap-10 mt-[4vh] md:mt-[8vh] lg:mx-auto">
-          {/* Controls — on mobile: top + right-aligned | on desktop: right column */}
-          {/* Training title */}
-          <div className="flex flex-col relative md:w-[20vw] self-start gap-y-[1vh] items-end text-right order-first md:order-last">
-            <div className="absolute -top-10 -right-5 w-72 h-72 bg-[#C2DDFF] opacity-50 rounded-full blur-3xl -z-10" />
-            <h6 className="text-sm bg-[#EBF5FD] border border-[#EBF5FD] rounded-full py-[0.7vh] px-4 text-center shadow-[0_0_3px_rgba(0,0,0,0.25)]">
-              Training
-            </h6>
-            <h5 className="font-rubik font-bold text-2xl w-[50vw] md:w-auto text-right">
-              ICT Training & Skills Development
-            </h5>
-            <p className="font-poppins text-sm w-full mb-[1vh] md:mb-[3vh] md:w-auto">
-              We offers face-to-face and online training programs designed to
-              equip individuals and organizations with cutting-edge
-              technological knowledge and practical skills.
-            </p>
-            <div className="flex flex-row gap-x-[2vh]">
-              <button
-                onClick={() =>
-                  setBottomSlide((prev) => Math.min(prev + 1, bottomMax - 1))
-                }
-                disabled={bottomSlide === bottomMax - 1}
-                className="w-12 h-12 flex items-center justify-center rounded-full border border-[#1775EE] bg-white text-[#1775EE] transition-all duration-300 hover:bg-[#1775EE] hover:text-white disabled:opacity-30 disabled:cursor-not-allowed"
+            {/* List of Solutions - In Slides */}
+            <div className="overflow-hidden w-[85vw] md:w-[40vw] lg:w-[52vw]">
+              <div
+                className="flex gap-x-5 transition-transform duration-500 ease-in-out"
+                style={{
+                  transform: `translateX(calc(-${topSlide} * ${topStep}))`,
+                }}
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-5 h-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15 19l-7-7 7-7"
-                  />
-                </svg>
-              </button>
-              <button
-                onClick={() => setBottomSlide((prev) => Math.max(prev - 1, 0))}
-                disabled={bottomSlide === 0}
-                className="w-12 h-12 flex items-center justify-center rounded-full border border-[#1775EE] bg-white text-[#1775EE] transition-all duration-300 hover:bg-[#1775EE] hover:text-white disabled:opacity-30 disabled:cursor-not-allowed"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-5 h-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          {/* Viewport */}
-          <div className="overflow-hidden w-[85vw] md:w-[40vw] lg:w-[52vw] order-last md:order-first">
-            <div
-              className="flex flex-row-reverse gap-x-10 transition-transform duration-500 ease-in-out"
-              style={{
-                transform: `translateX(calc(${bottomSlide} * ${bottomStep}))`,
-              }}
-            >
-              {/* Card 4 - Training section */}
-              {/* Size of container */}
-              <div className="group relative shrink-0 w-[85vw] md:w-[40vw] lg:w-[24vw] rounded-xl overflow-hidden">
-                {/* Color of the container */}
-                <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
-                <div className="absolute inset-0 bg-linear-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
-                  <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
-                    <img
-                      src={ictImage}
-                      alt="Training and Development"
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
+                {/* Solutions - Card 1 */}
+                <div className="group services_card">
+                  <div className="absolute inset-0  transition-opacity duration-300 group-hover:opacity-0" />
+                  <div className="absolute inset-0 bg-linear-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
+                    <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
+                      <img
+                        src={ictImage}
+                        alt="ICT Consultancy"
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                    </div>
+                    <h5 className="font-inter font-bold text-xl">
+                      ICT Consultancy
+                    </h5>
+                    <p className="font-poppins text-sm mb-[3vh]">
+                      MGKK provides ICT consultancy services using the Plan,
+                      Build, Operate, Optimize, and Test (PBOOT) approach to
+                      support the design, implementation, and improvement of ICT
+                      infrastructures.
+                    </p>
+                    <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
+                      See more
+                    </Link>
                   </div>
-                  <h5 className="font-inter font-bold text-xl">
-                    Cybersecurity Training
-                  </h5>
-                  <p className="font-poppins text-sm mb-[3vh]">
-                    Our cybersecurity training covers cybersecurity
-                    fundamentals, ethical hacking, vulnerability assessment and
-                    penetration testing (VAPT), and risk management.
-                  </p>
-                  <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
-                    See more
-                  </Link>
                 </div>
-              </div>
 
-              {/* Card 3 */}
-              <div className="group relative shrink-0 w-[85vw] md:w-[40vw] lg:w-[24vw] xl:w-[24vw] rounded-xl overflow-hidden">
-                <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
-                <div className="absolute inset-0 bg-linear-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
-                  <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
-                    <img
-                      src={webImage}
-                      alt="Network Infrastructure"
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
+                {/* Solutions Card 2 */}
+                <div className="group services_card">
+                  <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
+                  <div className="absolute inset-0 bg-linear-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
+                    <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
+                      <img
+                        src={webImage}
+                        alt="Web and Software Development"
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                    </div>
+                    <h5 className="font-inter font-bold text-xl">
+                      Web and Software Development
+                    </h5>
+                    <p className="font-poppins text-sm mb-[3vh]">
+                      We develop web and software solutions that support
+                      organizational requirements, using modern technologies to
+                      deliver reliable and functional digital systems.
+                    </p>
+                    <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
+                      See more
+                    </Link>
                   </div>
-                  <h5 className="font-inter font-bold text-xl">
-                    Cloud Computing Training
-                  </h5>
-                  <p className="font-poppins text-sm mb-[3vh]">
-                    We provide cloud computing training on platforms such as
-                    AWS, Microsoft Azure, and Google Cloud through face-to-face
-                    and online programs.
-                  </p>
-                  <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
-                    See more
-                  </Link>
                 </div>
-              </div>
 
-              {/* Card 2 */}
-              <div className="group relative shrink-0 w-[85vw] md:w-[40vw] lg:w-[24vw] xl:w-[24vw] rounded-xl overflow-hidden">
-                <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
-                <div className="absolute inset-0 bg-linear-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
-                  <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
-                    <img
-                      src={webImage}
-                      alt="Web and Software Development"
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
+                {/* Solutions - Card 3 */}
+                <div className="group services_card">
+                  <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
+                  <div className="absolute inset-0 bg-linear-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
+                    <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
+                      <img
+                        src={webImage}
+                        alt="Network Infrastructure"
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                    </div>
+                    <h5 className="font-inter font-bold text-xl">
+                      Network Infrastructure
+                    </h5>
+                    <p className="font-poppins text-sm mb-[3vh]">
+                      We design and deploy robust network infrastructure solutions
+                      that ensure seamless connectivity, security, and scalability
+                      for businesses of all sizes.
+                    </p>
+                    <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
+                      See more
+                    </Link>
                   </div>
-                  <h5 className="font-inter font-bold text-xl">
-                    Web and Software Development
-                  </h5>
-                  <p className="font-poppins text-sm mb-[3vh]">
-                    We develop web and software solutions that support
-                    organizational requirements, using modern technologies to
-                    deliver reliable and functional digital systems.
-                  </p>
-                  <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
-                    See more
-                  </Link>
                 </div>
-              </div>
 
-              {/* Card 1 */}
-              <div className="group relative shrink-0 w-[85vw] md:w-[40vw] lg:w-[24vw] xl:w-[24vw] rounded-xl overflow-hidden">
-                <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
-                <div className="absolute inset-0 bg-linear-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
-                  <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
-                    <img
-                      src={ictImage}
-                      alt="ICT Consultancy"
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
+                {/* Solutions - Card 4 */}
+                <div className="group services_card">
+                  <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
+                  <div className="absolute inset-0 bg-linear-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
+                    <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
+                      <img
+                        src={ictImage}
+                        alt="Training and Development"
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                    </div>
+                    <h5 className="font-inter font-bold text-xl">
+                      Training & Development
+                    </h5>
+                    <p className="font-poppins text-sm mb-[3vh]">
+                      MGKK offers comprehensive ICT training programs tailored to
+                      industry demands, equipping professionals with the skills
+                      needed to thrive in a rapidly evolving digital landscape.
+                    </p>
+                    <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
+                      See more
+                    </Link>
                   </div>
-                  <h5 className="font-inter font-bold text-xl">
-                    ICT Consultancy
-                  </h5>
-                  <p className="font-poppins text-sm mb-[3vh]">
-                    MGKK provides ICT consultancy services using the Plan,
-                    Build, Operate, Optimize, and Test (PBOOT) approach to
-                    support the design, implementation, and improvement of ICT
-                    infrastructures.
-                  </p>
-                  <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
-                    See more
-                  </Link>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* BOTTOM DOT INDICATORS */}
-        <div className="flex justify-center flex-row-reverse gap-x-2 mt-6">
-          {Array.from({ length: bottomMax }).map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setBottomSlide(i)}
-              className={`h-2 rounded-full transition-all duration-300 ${bottomSlide === i ? "bg-[#1775EE] w-4" : "bg-[#C2DDFF] w-2"
-                }`}
-            />
-          ))}
+          {/* TOP DOT INDICATORS */}
+          <div className="flex justify-center gap-x-2 mt-6">
+            {Array.from({ length: topMax }).map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setTopSlide(i)}
+                className={`h-2 rounded-full transition-all duration-300 ${topSlide === i ? "bg-[#1775EE] w-4" : "bg-[#C2DDFF] w-2"
+                  }`}
+              />
+            ))}
+          </div>
+
+
+
+
+
+          {/* NOT DONE CHECKING */}
+          {/* ====== TRAINING - ICT Training & Skills Development ======*/}
+          <div className="w-full flex flex-col md:flex-row md:m-0 md:w-full justify-center items-center gap-10 mt-[4vh] md:mt-[8vh] lg:mx-auto">
+            {/* Controls — on mobile: top + right-aligned | on desktop: right column */}
+            {/* Training title */}
+            <div className="flex flex-col relative md:w-[20vw] self-start gap-y-[1vh] items-end text-right order-first md:order-last">
+              <div className="absolute -top-10 -right-5 w-72 h-72 bg-[#C2DDFF] opacity-50 rounded-full blur-3xl -z-10" />
+              <h6 className="bg-[#EBF5FD] border border-[#EBF5FD] rounded-full w-fit px-3 py-1 shadow-[0_0_3px_rgba(0,0,0,0.25)]">
+                Training
+              </h6>
+              <h5 className="font-rubik font-bold text-2xl w-[50vw] md:w-auto text-right">
+                ICT Training & Skills Development
+              </h5>
+              <p className="font-poppins text-sm w-full mb-[1vh] md:mb-[3vh] md:w-auto">
+                We offers face-to-face and online training programs designed to
+                equip individuals and organizations with cutting-edge
+                technological knowledge and practical skills.
+              </p>
+              <div className="flex flex-row gap-x-[2vh]">
+                <button
+                  onClick={() =>
+                    setBottomSlide((prev) => Math.min(prev + 1, bottomMax - 1))
+                  }
+                  disabled={bottomSlide === bottomMax - 1}
+                  className="w-12 h-12 flex items-center justify-center rounded-full border border-[#1775EE] bg-white text-[#1775EE] transition-all duration-300 hover:bg-[#1775EE] hover:text-white disabled:opacity-30 disabled:cursor-not-allowed"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-5 h-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15 19l-7-7 7-7"
+                    />
+                  </svg>
+                </button>
+                <button
+                  onClick={() => setBottomSlide((prev) => Math.max(prev - 1, 0))}
+                  disabled={bottomSlide === 0}
+                  className="w-12 h-12 flex items-center justify-center rounded-full border border-[#1775EE] bg-white text-[#1775EE] transition-all duration-300 hover:bg-[#1775EE] hover:text-white disabled:opacity-30 disabled:cursor-not-allowed"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-5 h-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            {/* Viewport */}
+            <div className="overflow-hidden w-[85vw] md:w-[40vw] lg:w-[52vw] order-last md:order-first">
+              <div
+                className="flex flex-row-reverse gap-x-10 transition-transform duration-500 ease-in-out"
+                style={{
+                  transform: `translateX(calc(${bottomSlide} * ${bottomStep}))`,
+                }}
+              >
+                {/* Card 4 - Training section */}
+                {/* Size of container */}
+                <div className="group relative shrink-0 w-[85vw] md:w-[40vw] lg:w-[24vw] rounded-xl overflow-hidden">
+                  {/* Color of the container */}
+                  <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
+                  <div className="absolute inset-0 bg-linear-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
+                    <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
+                      <img
+                        src={ictImage}
+                        alt="Training and Development"
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                    </div>
+                    <h5 className="font-inter font-bold text-xl">
+                      Cybersecurity Training
+                    </h5>
+                    <p className="font-poppins text-sm mb-[3vh]">
+                      Our cybersecurity training covers cybersecurity
+                      fundamentals, ethical hacking, vulnerability assessment and
+                      penetration testing (VAPT), and risk management.
+                    </p>
+                    <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
+                      See more
+                    </Link>
+                  </div>
+                </div>
+
+                {/* Card 3 */}
+                <div className="group relative shrink-0 w-[85vw] md:w-[40vw] lg:w-[24vw] xl:w-[24vw] rounded-xl overflow-hidden">
+                  <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
+                  <div className="absolute inset-0 bg-linear-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
+                    <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
+                      <img
+                        src={webImage}
+                        alt="Network Infrastructure"
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                    </div>
+                    <h5 className="font-inter font-bold text-xl">
+                      Cloud Computing Training
+                    </h5>
+                    <p className="font-poppins text-sm mb-[3vh]">
+                      We provide cloud computing training on platforms such as
+                      AWS, Microsoft Azure, and Google Cloud through face-to-face
+                      and online programs.
+                    </p>
+                    <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
+                      See more
+                    </Link>
+                  </div>
+                </div>
+
+                {/* Card 2 */}
+                <div className="group relative shrink-0 w-[85vw] md:w-[40vw] lg:w-[24vw] xl:w-[24vw] rounded-xl overflow-hidden">
+                  <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
+                  <div className="absolute inset-0 bg-linear-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
+                    <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
+                      <img
+                        src={webImage}
+                        alt="Web and Software Development"
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                    </div>
+                    <h5 className="font-inter font-bold text-xl">
+                      Web and Software Development
+                    </h5>
+                    <p className="font-poppins text-sm mb-[3vh]">
+                      We develop web and software solutions that support
+                      organizational requirements, using modern technologies to
+                      deliver reliable and functional digital systems.
+                    </p>
+                    <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
+                      See more
+                    </Link>
+                  </div>
+                </div>
+
+                {/* Card 1 */}
+                <div className="group relative shrink-0 w-[85vw] md:w-[40vw] lg:w-[24vw] xl:w-[24vw] rounded-xl overflow-hidden">
+                  <div className="absolute inset-0 bg-[#EBF5FD] transition-opacity duration-300 group-hover:opacity-0" />
+                  <div className="absolute inset-0 bg-linear-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
+                    <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
+                      <img
+                        src={ictImage}
+                        alt="ICT Consultancy"
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                    </div>
+                    <h5 className="font-inter font-bold text-xl">
+                      ICT Consultancy
+                    </h5>
+                    <p className="font-poppins text-sm mb-[3vh]">
+                      MGKK provides ICT consultancy services using the Plan,
+                      Build, Operate, Optimize, and Test (PBOOT) approach to
+                      support the design, implementation, and improvement of ICT
+                      infrastructures.
+                    </p>
+                    <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
+                      See more
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* BOTTOM DOT INDICATORS */}
+          <div className="flex justify-center flex-row-reverse gap-x-2 mt-6">
+            {Array.from({ length: bottomMax }).map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setBottomSlide(i)}
+                className={`h-2 rounded-full transition-all duration-300 ${bottomSlide === i ? "bg-[#1775EE] w-4" : "bg-[#C2DDFF] w-2"
+                  }`}
+              />
+            ))}
+          </div>
         </div>
       </section>
 
