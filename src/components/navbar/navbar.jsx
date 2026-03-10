@@ -517,7 +517,7 @@ function NavBar() {
                 </div>
                 {/* Second Column */}
                 {openSubcourse && (
-                  <div className="w-57">
+                  <div className="w-57 overflow-y-auto max-h-[70vh]">
                     {dropdownMenus.training
                       .find((cat) => cat.name === openSubcourse)
                       ?.subcourses?.map((subcourse) =>
