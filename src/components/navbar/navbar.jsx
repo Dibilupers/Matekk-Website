@@ -175,90 +175,41 @@ function NavBar() {
         ],
       },
 
-      {
-        name: "Palo Alto",
-        subcourses: [
-          {
-            name: "Network Security",
-            subcourses: [
-              {
-                name: "Cybersecurity Apprentice",
-                path: "/training/paloalto/networksecurity/apprentice",
-              },
-              {
-                name: "Cybersecurity Practitioner",
-                path: "/training/paloalto/networksecurity/practitioner",
-              },
-              {
-                name: "Network Security Professional",
-                path: "/training/paloalto/networksecurity/professional",
-              },
-              {
-                name: "Network Security Analyst",
-                path: "/training/paloalto/networksecurity/analyst",
-              },
-              {
-                name: "Next-Generation Firewall Engineer",
-                path: "/training/paloalto/networksecurity/nextgenerationfirewallengineer",
-              },
-              {
-                name: "SD-WAN Engineer",
-                path: "/training/paloalto/networksecurity/sdwanengineer",
-              },
-              {
-                name: "Security Service Edge Engineer",
-                path: "/training/paloalto/networksecurity/securityserviceedgeengineer",
-              },
-              {
-                name: "Network Security Architect",
-                path: "/training/paloalto/networksecurity/architect",
-              },
-            ],
-          },
-          {
-            name: "Security Operations",
-            subcourses: [
-              {
-                name: "Cybersecurity Practitioner",
-                path: "/training/paloalto/securityoperations/practitioner",
-              },
-              {
-                name: "Security Operations Professional",
-                path: "/training/paloalto/securityoperations/professional",
-              },
-              {
-                name: "XSIAM Analyst",
-                path: "/training/paloalto/securityoperations/xsiamanalyst",
-              },
-              {
-                name: "XDR Analyst",
-                path: "/training/paloalto/securityoperations/xdranalyst",
-              },
-              {
-                name: "XSIAM Engineer",
-                path: "/training/paloalto/securityoperations/xsiamengineer",
-              },
-              {
-                name: "XDR Engineer",
-                path: "/training/paloalto/securityoperations/xdrengineer",
-              },
-              {
-                name: "XSOAR Engineer",
-                path: "/training/paloalto/securityoperations/xsoarengineer",
-              },
-            ],
-          },
-          {
-            name: "Cloud Security",
-            subcourses: [
-              {
-                name: "Cloud Security Professional",
-                path: "/training/paloalto/cloudsecurity/professional",
-              },
-            ],
-          },
-        ],
-      },
+    {
+      name: "Palo Alto",
+      subcourses: [
+        {
+          name: "Network Security",
+          subcourses: [
+            { name: "Cybersecurity Apprentice", path: "/training/paloalto/networksecurity/apprentice" },
+            { name: "Cybersecurity Practitioner", path: "/training/paloalto/networksecurity/practitioner" },
+            { name: "Network Security Professional", path: "/training/paloalto/networksecurity/professional" },
+            { name: "Network Security Analyst", path: "/training/paloalto/networksecurity/analyst" },
+            { name: "Next-Generation Firewall Engineer", path: "/training/paloalto/networksecurity/nextgenerationfirewallengineer" },
+            { name: "SD-WAN Engineer", path: "/training/paloalto/networksecurity/sdwanengineer" },
+            { name: "Security Service Edge Engineer", path: "/training/paloalto/networksecurity/securityserviceedgeengineer" },
+            { name: "Network Security Architect", path: "/training/paloalto/networksecurity/architect" },
+          ],
+        },
+        {
+          name: "Security Operations",
+          subcourses: [
+            { name: "Security Operations Professional", path: "/training/paloalto/securityoperations/professional" },
+            { name: "XSIAM Analyst", path: "/training/paloalto/securityoperations/xsiamanalyst" },
+            { name: "XDR Analyst", path: "/training/paloalto/securityoperations/xdranalyst" },
+            { name: "XSIAM Engineer", path: "/training/paloalto/securityoperations/xsiamengineer" },
+            { name: "XDR Engineer", path: "/training/paloalto/securityoperations/xdrengineer" },
+            { name: "XSOAR Engineer", path: "/training/paloalto/securityoperations/xsoarengineer" },
+          ],
+        },
+        {
+          name: "Cloud Security",
+          subcourses: [
+            { name: "Cloud Security Professional", path: "/training/paloalto/cloudsecurity/professional" },
+          ],
+        },
+      ],
+    },
 
       {
         name: "Practical Ethical Hacking",

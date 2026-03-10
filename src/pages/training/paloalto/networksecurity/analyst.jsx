@@ -2,7 +2,7 @@ import Button from "../../../../components/ui/button";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
-import ccnaBadge from "../../../../assets/PaloAltoSDWanEngineer.png";
+import ccnaBadge from "../../../../assets/PaloAltoNetworkSecurityAnalyst.png";
 import ccnaHero from "../../../../assets/CCNAHeroImageAutomation.png";
 import ccnaFooter from "../../../../assets/CCNAFooterImageAutomation.png";
 import MealIcon from "../../../../assets/Meal.svg";
@@ -19,68 +19,52 @@ export default function NetworkSecurityAnalyst() {
   // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
   const modules = [
     {
-      title: "1.0 PAN-OS Networking Configuration",
+      title: "1.0 Object Configuration Creation and Application",
       items: [
-        "1.1 Planning and Design",
-        "1.2 Demonstrate understanding of the bandwidth plan",
-        "1.3 Identify and describe device licensing options and tiers",
-        "1.4 Explain the assessment of existing network architecture",
-        "1.5 Identify and describe data center configuration and data center interconnection (DCI) options",
-        "1.6 Explain branch (gateway) configuration",
-        "1.7 Identify and describe security requirements and configuration",
-        "1.8 Explain the process of planning for interconnectivity and high availability (HA)",
+        "1.1 Create and apply security profiles and security profile groups",
+        "1.2 Create and apply decryption profiles",
+        "1.3 Create and apply external dynamic lists",
+        "1.4 Create and apply custom objects (e.g., URL categories, signatures, data patterns)",
+        "1.5 Create and apply Log Forwarding profile",
+        "1.6 Create and apply data security profiles",
+        "1.7 Create and apply internet of things (IoT) security profiles",
+        "1.8 Create and apply DoS protection profiles",
+        "1.9 Create and apply SD-WAN profiles and templates",
+      ],
+    },
+    {
+      title: "2.0 Policy Creation and Application",
+      items: [
+        "2.1 Create and apply Security policies (i.e., App-ID, User-ID, Content-ID)",
+        "2.2 Create and apply NAT policies",
+        "2.3 Create and apply decryption policies",
+        "2.4 Create and apply application override policies",
+        "2.5 Create and apply Policy Based Forwarding (PBF) policies",
+        "2.6 Create and apply SD-WAN routing and service-level agreement (SLA) policies",
+      ],
+    },
+    {
+      title: "3.0 Management and Operations",
+      items: [
         {
-          subTitle: "1.9 Explain policy design and management",
+          subTitle: "3.1 Use centralized management system",
           items: [
-            "1.9.1 Path policies",
-            "1.9.2 Security policies",
-            "1.9.3 Quality of Service (QoS)",
-            "1.9.4 Performance policies",
-            "1.9.5 NAT policies",
+            "3.1.1 Strata Cloud Manager (SCM)",
+            "3.1.2 Folders and snippets",
+            "3.1.3 Automations and variables",
+            "3.1.4 Strata Logging Service",
           ],
         },
+        "3.2 Use Command Center, Activity Insights, and Policy Optimizer to improve security posture",
+        "3.3 Use Log Viewer and the Incidents and Alerts page to remediate incidents and alerts",
       ],
     },
     {
-      title: "2.0 Deployment and Configuration",
+      title: "4.0 Troubleshooting",
       items: [
-        "2.1 Explain Prisma SD-WAN deployment and configuration",
-        "2.2 Identify and describe site-specific settings",
-        "2.3 Explain the process of developing configuration templates for data centers and branches",
-        "2.4 Explain dynamic and static routing protocol tuning",
-        "2.5 Explain VRF implementation for network segmentation",
-      ],
-    },
-    {
-      title: "3.0 Operations and Monitoring",
-      items: [
-        "3.1 Demonstrate understanding of device-level statistics monitoring",
-        "3.2 Explain controller-generated incident, alert, statistics, and audit log monitoring",
-        "3.3 Explain alert and notification configuration",
-        "3.4 Demonstrate understanding of WAN Clarity reports",
-        "3.5 Explain the implementation of network monitoring tools for real-time visibility",
-        "3.6 Demonstrate understanding of monitoring and managing SASE-related events",
-      ],
-    },
-    {
-      title: "4.0 Unified SASE",
-      items: [
-        "4.1 Explain the integration of Prisma SD-WAN with Prisma Access and Security policy setup",
-        "4.2 Explain ADEM configuration for monitoring application performance",
-        "4.3 Identify and describe network setting configurations to support IoT device connectivity based on Device-ID",
-        "4.4 Explain the integration of Prisma SD-WAN with Cloud Identity Engine (CIE)",
-        "4.5 Demonstrate understanding of path and Security policy implementation based on User / Group ID",
-      ],
-    },
-    {
-      title: "5.0 Troubleshooting",
-      items: [
-        "5.1 Explain the process of troubleshooting connectivity issues between sites",
-        "5.2 Demonstrate understanding of routing and forwarding issue resolution",
-        "5.3 Identify and describe application performance issues",
-        "5.4 Explain policy issue troubleshooting",
-        "5.5 Describe data analysis using the co-pilot",
-        "5.6 Explain the use of analytics to optimize network configurations and reporting",
+        "4.1 Troubleshoot misconfigurations across all management and on-box options",
+        "4.2 Troubleshoot runtime and commit / push errors",
+        "4.3 Troubleshoot device usage and health",
       ],
     },
   ];
@@ -110,14 +94,17 @@ export default function NetworkSecurityAnalyst() {
           {/* ====== Course Title and Description ======*/}
           <div>
             {/* Course title */}
-            <h1 className="text-[#1775EE] font-bold">SD-WAN Engineer</h1>
+            <h1 className="text-[#1775EE] font-bold">
+              Network Security Analyst
+            </h1>
 
             {/* Course description */}
             <p className="lg:w-[30vw] xl:w-lg text-gray-900">
-              The Palo Alto Networks Certified SD-WAN Engineer exam is designed
-              to validate the knowledge and skills required for engineers to
-              plan, deploy, configure, operate, monitor, and troubleshoot modern
-              SD-WAN environments and architectures.
+              The Palo Alto Networks Certified Network Security Analyst exam
+              validates the knowledge and skills required of analysts and
+              administrators in the areas of object configuration, policy
+              creation, and centralized management using Strata Cloud Manager
+              (SCM).
             </p>
           </div>
 
@@ -154,20 +141,17 @@ export default function NetworkSecurityAnalyst() {
             {/* About Section - Description */}
             {/* CHANGE: Course description paragraphs */}
             <p>
-              This course prepares learners for the Palo Alto Networks Certified
-              SD-WAN Engineer certification through guided instruction and
-              hands-on activities. It focuses on SD-WAN architecture,
-              pre-deployment planning, policy design and management, deployment
-              configuration, post-deployment operations, and performance
-              monitoring, including the use of analytics to support network
-              transformation goals.
+              The Palo Alto Networks Certified Network Security Analyst
+              certification validates the knowledge and skills required of
+              analysts and administrators in the areas of object configuration,
+              policy creation, and centralized management using Strata Cloud
+              Manager (SCM). The purpose of this document is to help you prepare
+              for the exam and attain the certification.
             </p>
             <p>
-              The program builds practical expertise in planning, deploying, and
-              managing modern SD-WAN environments, while exam guidelines outline
-              covered topics and recommended references and should be
-              supplemented with additional study resources for thorough
-              preparation.
+              It is intended to identify the topics covered and provide
+              resources for understanding them but should not be used as the
+              sole study material for the Network Security Analyst exam.
             </p>
           </section>
 
@@ -182,19 +166,19 @@ export default function NetworkSecurityAnalyst() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>SD-WAN Architecture Concepts</p>
+                <p>Network Security Object Configuration</p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Cloud and Hybrid Network Integration</p>
+                <p>Policy Creation and Management</p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Policy-Based Routing Principles</p>
+                <p>Strata Cloud Manager Administration</p>
               </div>
               <p className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <span>Secure WAN Connectivity Fundamentals</span>
+                <span>Centralized Security Policy Enforcement</span>
               </p>
             </div>
           </section>
@@ -229,10 +213,10 @@ export default function NetworkSecurityAnalyst() {
             <h5 className="text-[#1775EE] font-bold">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
-              "SD-WAN Network Engineer",
-              "Network Optimization Specialist",
-              "WAN Integration Engineer",
-              "Cloud WAN Engineer",
+              "Network Security Analyst",
+              "Security Policy Administrator",
+              "Strata Cloud Manager Engineer",
+              "Network Security Specialist",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
