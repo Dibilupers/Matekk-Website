@@ -1,219 +1,164 @@
-import Button from "../../../../../components/ui/button";
+import Button from "../../../../components/ui/button";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
-import ccnaBadge from "../../../../../assets/PaloAltoNetworkSecurityArchitect.png";
-import ccnaHero from "../../../../../assets/CCNAHeroImageAutomation.png";
-import ccnaFooter from "../../../../../assets/CCNAFooterImageAutomation.png";
-import MealIcon from "../../../../../assets/Meal.svg";
-import ReviewIcon from "../../../../../assets/Review.svg";
-import InstitutionalIcon from "../../../../../assets/InsitutionalAccount.svg";
-import WorkstationIcon from "../../../../../assets/Workstation.svg";
-import MedalIcon from "../../../../../assets/Medal.svg";
-import CourseModules from "../../../../../components/training/courseModules";
-import TrainingTemplateFooter from "../../../../../components/section/TrainingTemplateFooter";
-import EnrollNowButton from "../../../../../components/ui/EnrollNowButton";
+import ccnaBadge from "../../../../assets/PaloAltoCyberSecurityPractitioner.png";
+import ccnaHero from "../../../../assets/CCNAHeroImageAutomation.png";
+import ccnaFooter from "../../../../assets/CCNAFooterImageAutomation.png";
+import MealIcon from "../../../../assets/Meal.svg";
+import ReviewIcon from "../../../../assets/Review.svg";
+import InstitutionalIcon from "../../../../assets/InsitutionalAccount.svg";
+import WorkstationIcon from "../../../../assets/Workstation.svg";
+import MedalIcon from "../../../../assets/Medal.svg";
+import CourseModules from "../../../../components/training/courseModules";
+import TrainingTemplateFooter from "../../../../components/section/TrainingTemplateFooter";
+import EnrollNowButton from "../../../../components/ui/EnrollNowButton";
 
 // ==================== COMPONENT NAME - CHANGE FOR EACH COURSE ====================
-export default function NetworkSecurityArchitect() {
+export default function PaloaltoPractitioner() {
   // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
   const modules = [
     {
-      title: "1.0 Zero Trust Enterprise",
+      title: "1.0 Cybersecurity",
       items: [
-        "1.1 Design User-ID and device health, host information profile (HIP) and security posture, and Device-ID based least privilege access Security policy controls",
-        "1.2 Design and differentiate between network segmentation and microsegmentation",
-        "1.3 Differentiate access to specific applications",
-        "1.4 Implement continuous security scanning of allowed traffic to stop malware and exploits",
-        "1.5 Implement continuous monitoring and analytics of zero trust environment",
-      ],
-    },
-    {
-      title: "2.0 AI Security",
-      items: [
+        "1.1 Identify the components of the authentication, authorization, and accounting (AAA) framework",
+        "1.2 Categorize techniques used by malicious actors as defined by the MITRE ATT&CK framework",
         {
           subTitle:
-            "2.1 Differentiate between and explain the specific Palo Alto Networks products that make up Prisma AI Runtime Security (AIRS) and AI Access",
+            "1.3 Explain the concept of Zero Trust and define its key principles",
           items: [
-            "2.1.1 Prisma AIRS – AI red teaming, AI model scanning, AI runtime security, AI security, AI agents",
-            "2.1.2 Prisma AIRS – Kubernetes integration / microsegmentation",
-            "2.1.3 AI Access – App-ID Cloud Engine, Advanced Threat Prevention, Advanced URL Filtering, Enterprise DLP",
+            "1.3.1 Continuous monitoring and validation",
+            "1.3.2 Least privilege access enforcement",
+            "1.3.3 Breach assumption",
           ],
         },
+        "1.4 Identify and describe the characteristics of an advanced persistent threat (APT)",
         {
-          subTitle:
-            "2.2 Determine recommended standard architectures for AI security",
+          subTitle: "1.5 Explain the function of common security technologies",
           items: [
-            "2.2.1 AI products that solve specific AI architectures",
-            "2.2.2 AIRS form factors",
-            "2.2.3 AI security content and data security",
-          ],
-        },
-        {
-          subTitle:
-            "2.3 Identify and explain the classification and attributes of AI applications and apply security controls",
-          items: [
-            "2.3.1 Application sanctioning and controls of sanctioned applications, including data loss prevention (DLP)",
-            "2.3.2 AI applications and security frameworks (i.e., GDPR, NIST, EU Data Act, PCI DSS, HIPAA)",
+            "1.5.1 Identity Providers (IdP), identity and access management (IAM), and multi-factor authentication (MFA)",
+            "1.5.2 Mobile device management (MDM) and mobile application management (MAM)",
+            "1.5.3 Secure email gateways and integrated cloud email security",
           ],
         },
       ],
     },
     {
-      title: "3.0 Centralized Management and IAM",
+      title: "2.0 Network Security",
       items: [
-        {
-          subTitle: "3.1 Architect Panorama and log collectors",
-          items: [
-            "3.1.1 Panorama high availability (HA)",
-            "3.1.2 Log collection resilience and redundancy",
-          ],
-        },
-        "3.2 Architect Strata Cloud Manager (SCM), Strata Logging Service, and Cloud Identity Engine",
+        "2.1 Describe key characteristics of Zero Trust Network Access (ZTNA)",
+        "2.2 Explain the function of stateless firewalls and next-generation firewalls (NGFWs)",
+        "2.3 Explain the purpose of microsegmentation",
         {
           subTitle:
-            "3.3 Recommend Cloud Identity Engine directory sync options",
+            "2.4 Explain the purpose and function of common network security technologies",
           items: [
-            "3.3.1 On-premises agent",
-            "3.3.2 Cloud Directory / SAML 2.0, including Entra ID and Okta",
+            "2.4.1 Intrusion prevention system (IPS)",
+            "2.4.2 URL filtering",
+            "2.4.3 DNS Security",
+            "2.4.4 VPN",
+            "2.4.5 SSL/TLS Decryption (outbound / forward proxy)",
           ],
         },
-        "3.4 Recommend Strata Logging Service log forwarding methods and integrations (e.g., syslog over TLS, HTTP, email)",
-        "3.5 Recommend User identification and authentication methods (e.g., Cloud Identity Engine, CAS for SAML)",
-        {
-          subTitle: "3.6 Evaluate Cloud Identity Engine use cases",
-          items: ["3.6.1 NGFW", "3.6.2 Prisma Access", "3.6.3 Prisma SD-WAN"],
-        },
+        "2.5 Explain the limitations of signature-based network protection",
+        "2.6 Identify and describe the deployment options for NGFWs for networks operating on both bare metal and virtualized architectures",
+        "2.7 Identify and describe cybersecurity concerns unique to Operation Technology (OT) and internet of things (IoT) devices",
+        "2.8 Identify and describe Palo Alto Networks Cloud-Delivered Security Services (CDSS)",
+        "2.9 Explain the security function of Precision AI",
       ],
     },
     {
-      title: "4.0 SSE Private Application Access",
+      title: "3.0 Secure Access",
       items: [
-        "4.1 Architect Prisma Access in regional and global deployments",
+        "3.1 Define and explain Secure Access Service Edge (SASE) and differentiate from Secure Service Edge (SSE)",
         {
           subTitle:
-            "4.2 Differentiate between on-ramp and off-ramp architectures",
+            "3.2 Identify challenges related to confidentiality, integrity, and availability of information and applications",
           items: [
-            "4.2.1 Service connection routing modes (default and hot-potato) and failover modes",
-            "4.2.2 Zero Trust Network Access (ZTNA) Connectors (e.g., FQDN, wildcard, IP subnet, Connector IP Blocks, CSP scalability)",
-            "4.2.3 Colo-Connect and Google Cloud Network Connectivity Center (NCC)",
+            "3.2.1 Data and information",
+            "3.2.2 Private applications",
+            "3.2.3 Software-as-a-Service (SaaS) applications",
+            "3.2.4 Artificial Intelligence (AI) applications, tools, and platforms",
           ],
         },
-        "4.3 Determine private application access through Prisma Browser",
+        {
+          subTitle: "3.3 Explain the security function of common technologies",
+          items: [
+            "3.3.1 Secure Web Gateway",
+            "3.3.2 Enterprise Browser",
+            "3.3.3 Remote Browser Isolation",
+            "3.3.4 Data loss prevention (DLP)",
+            "3.3.5 Cloud Access Security Broker (CASB)",
+          ],
+        },
+        "3.4 Describe the purpose of Software-Defined Wide Area Networking (SD-WAN) solutions",
+        {
+          subTitle: "3.5 Describe Prisma SASE solutions",
+          items: [
+            "3.5.1 Prisma Access",
+            "3.5.2 Prisma SD-WAN",
+            "3.5.3 Prisma Access Browser",
+            "3.5.4 Enterprise DLP",
+            "3.5.5 AI Access",
+            "3.5.6 Prisma AIRS",
+          ],
+        },
       ],
     },
     {
-      title: "5.0 Mobile User Security",
+      title: "4.0 Cloud Security",
       items: [
-        "5.1 Evaluate Prisma Browser, Prisma Access Agent, explicit proxy, and GlobalProtect use cases",
-        "5.2 Architect GlobalProtect connection methods: On-demand, User-logon (Always On), Pre-logon (Always On)",
-        "5.3 Architect Prisma Access Mobile Users",
-        "5.4 Design AI-Powered Autonomous Digital Experience Manager (ADEM)",
-      ],
-    },
-    {
-      title: "6.0 Modernizing Branches",
-      items: [
+        "4.1 Identify and describe major cloud architectures and topologies",
         {
           subTitle:
-            "6.1 Compare and design branch architectures for SASE security and HA",
+            "4.2 Identify and describe major challenges related to cloud security",
           items: [
-            "6.1.1 Prisma Access remote networks",
-            "6.1.2 Prisma SD-WAN",
-            "6.1.3 PAN-OS SD-WAN",
-            "6.1.4 ADEM",
-            "6.1.5 Third-party edge / SD-WAN",
+            "4.2.1 Application Security",
+            "4.2.2 Cloud Posture Security",
+            "4.2.3 Cloud Runtime Security",
           ],
         },
-        {
-          subTitle: "6.2 Evaluate advanced security for Prisma SD-WAN",
-          items: ["6.2.1 App-ID, Device-ID, User-ID", "6.2.2 Threat, URL, DNS"],
-        },
+        "4.3 Identify and describe technologies used to secure cloud environments (e.g. CSPM, CWPP)",
+        "4.4 Identify and describe the functions of a Cloud Native Application Protection Platform (CNAPP)",
+        "4.5 Explain the features and functionality of Cortex Cloud",
       ],
     },
     {
-      title: "7.0 Data Security",
+      title: "5.0 Endpoint Security",
       items: [
+        "5.1 Identify and explain Indicators of Compromise (IOCs)",
+        "5.2 Explain the limitations of signature-based anti-malware software",
+        "5.3 Explain the concept of User and Entity Behavior Analytics (UEBA)",
+        "5.4 Explain endpoint detection and response (EDR) and extended detection and response (XDR)",
+        "5.5 Explain Behavioral Threat Prevention",
         {
           subTitle:
-            "7.1 Differentiate between SaaS Security Inline and SaaS API Security",
+            "5.6 Identify and describe cybersecurity threats mitigated by the following endpoint security technologies",
           items: [
-            "7.1.1 In-motion (inline)",
-            "7.1.2 At-rest (API)",
-            "7.1.3 SaaS Security Posture Management (SSPM)",
-            "7.1.4 Enterprise DLP and advanced web filtering",
+            "5.6.1 Host-based Firewall and Host-based Intrusion Prevention Systems (HIPS)",
+            "5.6.2 Device Control and USB Control",
+            "5.6.3 Application Control",
+            "5.6.4 Disk Encryption",
+            "5.6.5 Patch Management",
           ],
         },
-        "7.2 Determine the most secure approach for SaaS application usage control",
-        {
-          subTitle: "7.3 Analyze and architect to Enterprise DLP functionality",
-          items: [
-            "7.3.1 Classifiers",
-            "7.3.2 Traditional / Regex",
-            "7.3.3 Exact Data Matching (EDM), Indexed Document Matching (IDM), Optical Character Recognition (OCR)",
-            "7.3.4 Machine learning (ML) classification",
-            "7.3.5 Endpoint DLP",
-            "7.3.6 Policy-based DLP",
-          ],
-        },
+        "5.7 Explain the features and functionality of Cortex XDR",
       ],
     },
     {
-      title: "8.0 Securing IoT Environments",
+      title: "6.0 Security Operations",
       items: [
-        {
-          subTitle: "8.1 Architect Device Security",
-          items: [
-            "8.1.1 Visibility / discovery and risk assessment",
-            "8.1.2 Enforcement",
-          ],
-        },
-        "8.2 Differentiate between IoT sensor placement options",
-        "8.3 Explain visibility functionality (e.g., NGFW, virtual metadata collector, Prisma SD-WAN, PAN-OS SD-WAN)",
-        "8.4 Evaluate and design to Device-ID capabilities",
-        "8.5 Confirm and design to Device Security capabilities",
-      ],
-    },
-    {
-      title: "9.0 Public Cloud",
-      items: [
-        "9.1 Explain NGFW standard integrations, including AWS, Azure, GCP, and OCI",
+        "6.1 Identify and describe key characteristics of threat hunting",
+        "6.2 Explain the process and outcomes of incident response",
+        "6.3 Explain the functions of a security information and event management (SIEM) platform",
+        "6.4 Explain the functions of security orchestration, automation, and response (SOAR)",
+        "6.5 Explain the function of an Attack Surface Management (ASM) platform",
         {
           subTitle:
-            "9.2 Design for maintenance and security across CSP environments",
-          items: [
-            "9.2.1 Maintenance and OS upgrade process",
-            "9.2.2 VPN termination",
-            "9.2.3 SSL decryption",
-            "9.2.4 Centralized / decentralized architectures",
-          ],
+            "6.6 Explain the features and functionality of Cortex solutions",
+          items: ["6.6.1 XSOAR", "6.6.2 Xpanse", "6.6.3 XSIAM"],
         },
-        {
-          subTitle: "9.3 Design to AWS NGFW standards",
-          items: [
-            "9.3.1 Insertion options, AWS Gateway Load Balancer (GWLB), Transit Gateway Connect",
-            "9.3.2 HA and high resilience",
-            "9.3.3 NGFW subinterfaces",
-          ],
-        },
-        {
-          subTitle: "9.4 Design to Azure NGFW standards",
-          items: [
-            "9.4.1 Insertion options and load balancer",
-            "9.4.2 HA and high resilience",
-          ],
-        },
-        {
-          subTitle: "9.5 Design to GCP NGFW standards",
-          items: [
-            "9.5.1 Insertion options and load balancer",
-            "9.5.2 HA and high resilience",
-          ],
-        },
-        {
-          subTitle: "9.6 Justify VM-Series and Cloud NGFW solutions",
-          items: ["9.6.1 Cloud NGFW use cases", "9.6.2 VM-Series use cases"],
-        },
+        "6.7 Identify and describe the services provided by Unit 42",
       ],
     },
   ];
@@ -244,16 +189,16 @@ export default function NetworkSecurityArchitect() {
           <div>
             {/* Course title */}
             <h1 className="text-[#1775EE] font-bold">
-              Network Security Architect
+              Cybersecurity Practitioner
             </h1>
 
             {/* Course description */}
             <p className="lg:w-[30vw] xl:w-lg text-gray-900">
-              The Palo Alto Networks Certified Network Security Architect exam
-              validates the skills required to design secure, scalable, and
-              highly available systems using Palo Alto Networks solutions and to
-              oversee complex security architectures based on industry
-              frameworks.
+              The Palo Alto Networks Certified Cybersecurity Practitioner exam
+              validates a candidate’s knowledge and practical understanding of
+              cybersecurity principles, including network security, secure
+              access, endpoint protection, cloud security, security operations,
+              and the application of Palo Alto Networks solutions.
             </p>
           </div>
 
@@ -291,17 +236,15 @@ export default function NetworkSecurityArchitect() {
             {/* CHANGE: Course description paragraphs */}
             <p>
               This course prepares learners for the Palo Alto Networks Certified
-              Network Security Architect certification through guided
-              instruction and hands-on activities. It focuses on designing
-              secure, highly available, and scalable systems using Palo Alto
-              Networks solutions and overseeing complex security architectures
-              aligned with industry frameworks.
+              Cybersecurity Practitioner exam through structured instruction and
+              guided learning activities. It covers key areas such as
+              cybersecurity principles, network security, secure access,
+              endpoint security, cloud security, and security operations.
             </p>
             <p>
-              The program develops practical expertise in architecting advanced
-              network security solutions, while exam guidelines provide a
-              reference and should be supplemented with additional study
-              resources.
+              The program builds practical understanding to support exam
+              success, while exam guidelines should be used alongside additional
+              study resources for thorough preparation.
             </p>
           </section>
 
@@ -316,19 +259,19 @@ export default function NetworkSecurityArchitect() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Security Architecture Design Principles</p>
+                <p>Advanced Threat Prevention Concepts</p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Cloud and Hybrid Security Architecture</p>
+                <p>Security Policy Implementation Principles</p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Security Policy Design and Governance</p>
+                <p>Next-Generation Firewall Technologies</p>
               </div>
               <p className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <span>High Availability and Scalable Security Design</span>
+                <span>Cloud Security Architecture Fundamentals</span>
               </p>
             </div>
           </section>
@@ -363,10 +306,10 @@ export default function NetworkSecurityArchitect() {
             <h5 className="text-[#1775EE] font-bold">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
-              "Enterprise Security Architect",
-              "Cloud Security Architect",
-              "Security Solutions Architect",
-              "Solutions Delivery Specialist",
+              "Cybersecurity Analyst",
+              "Network Security Engineer",
+              "Security Operations Engineer",
+              "Cloud Security Engineer",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />

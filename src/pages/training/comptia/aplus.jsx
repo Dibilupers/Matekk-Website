@@ -1,86 +1,77 @@
-import Button from "../../../../../components/ui/button";
+// ==================== IMPORTS - UPDATE FOR EACH COURSE ====================
+// Change these imports based on the specific course
+import Button from "../../../components/ui/button";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
-import ccnaBadge from "../../../../../assets/PaloAltoSDWanEngineer.png";
-import ccnaHero from "../../../../../assets/CCNAHeroImageAutomation.png";
-import ccnaFooter from "../../../../../assets/CCNAFooterImageAutomation.png";
-import MealIcon from "../../../../../assets/Meal.svg";
-import ReviewIcon from "../../../../../assets/Review.svg";
-import InstitutionalIcon from "../../../../../assets/InsitutionalAccount.svg";
-import WorkstationIcon from "../../../../../assets/Workstation.svg";
-import MedalIcon from "../../../../../assets/Medal.svg";
-import CourseModules from "../../../../../components/training/courseModules";
-import TrainingTemplateFooter from "../../../../../components/section/TrainingTemplateFooter";
-import EnrollNowButton from "../../../../../components/ui/EnrollNowButton";
+// COURSE-SPECIFIC ASSETS - Replace these for different courses
+import aPlusCerti from "../../../assets/aplus.webp"; // Course badge image
+import ccnaHero from "../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
+import ccnaFooter from "../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
+import MealIcon from "../../../assets/Meal.svg";
+import ReviewIcon from "../../../assets/Review.svg";
+import WorkstationIcon from "../../../assets/Workstation.svg";
+import MedalIcon from "../../../assets/Medal.svg";
+import CourseModules from "../../../components/training/courseModules";
+import TrainingTemplateFooter from "../../../components/section/TrainingTemplateFooter";
+import EnrollNowButton from "../../../components/ui/EnrollNowButton";
 
 // ==================== COMPONENT NAME - CHANGE FOR EACH COURSE ====================
-export default function SDWanEngineer() {
+export default function Aplus() {
   // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
   const modules = [
     {
-      title: "1.0 PAN-OS Networking Configuration",
+      title: "Core 1: Networking",
       items: [
-        "1.1 Planning and Design",
-        "1.2 Demonstrate understanding of the bandwidth plan",
-        "1.3 Identify and describe device licensing options and tiers",
-        "1.4 Explain the assessment of existing network architecture",
-        "1.5 Identify and describe data center configuration and data center interconnection (DCI) options",
-        "1.6 Explain branch (gateway) configuration",
-        "1.7 Identify and describe security requirements and configuration",
-        "1.8 Explain the process of planning for interconnectivity and high availability (HA)",
-        {
-          subTitle: "1.9 Explain policy design and management",
-          items: [
-            "1.9.1 Path policies",
-            "1.9.2 Security policies",
-            "1.9.3 Quality of Service (QoS)",
-            "1.9.4 Performance policies",
-            "1.9.5 NAT policies",
-          ],
-        },
+        "Protocols and ports: learning about networking protocols, ports, and wireless technologies.",
+        "SOHO networks: setting up small office/home office networks, including IP addressing and VPNs.",
+        "Networking tools: troubleshooting with crimpers, cable testers, and Wi-Fi analyzers.",
       ],
     },
     {
-      title: "2.0 Deployment and Configuration",
+      title: "Core 1: Hardware",
       items: [
-        "2.1 Explain Prisma SD-WAN deployment and configuration",
-        "2.2 Identify and describe site-specific settings",
-        "2.3 Explain the process of developing configuration templates for data centers and branches",
-        "2.4 Explain dynamic and static routing protocol tuning",
-        "2.5 Explain VRF implementation for network segmentation",
+        "Component installation: setting up RAM, CPUs, and storage devices.",
+        "Cables and connectors: working with HDMI, Ethernet, and USB cables.",
+        "Peripheral devices: installing and maintaining printers, scanners, and other peripherals.",
+        "Motherboards and power: configuring motherboards, power supplies, and cooling solutions.",
       ],
     },
     {
-      title: "3.0 Operations and Monitoring",
+      title: "Core 1: Virtualization and cloud computing",
       items: [
-        "3.1 Demonstrate understanding of device-level statistics monitoring",
-        "3.2 Explain controller-generated incident, alert, statistics, and audit log monitoring",
-        "3.3 Explain alert and notification configuration",
-        "3.4 Demonstrate understanding of WAN Clarity reports",
-        "3.5 Explain the implementation of network monitoring tools for real-time visibility",
-        "3.6 Demonstrate understanding of monitoring and managing SASE-related events",
+        "Virtualization concepts: understanding virtual machines, hypervisors, and desktop virtualization.",
+        "Cloud models: learning about IaaS, SaaS, and PaaS.",
       ],
     },
     {
-      title: "4.0 Unified SASE",
+      title: "Core 1: Hardware and network troubleshooting",
       items: [
-        "4.1 Explain the integration of Prisma SD-WAN with Prisma Access and Security policy setup",
-        "4.2 Explain ADEM configuration for monitoring application performance",
-        "4.3 Identify and describe network setting configurations to support IoT device connectivity based on Device-ID",
-        "4.4 Explain the integration of Prisma SD-WAN with Cloud Identity Engine (CIE)",
-        "4.5 Demonstrate understanding of path and Security policy implementation based on User / Group ID",
+        "Diagnosing issues: identifying and fixing hardware, network, and connectivity problems.",
+        "Troubleshooting tools: using multimeters, cable testers, and loopback plugs.",
       ],
     },
     {
-      title: "5.0 Troubleshooting",
+      title: "Core 2: Security",
       items: [
-        "5.1 Explain the process of troubleshooting connectivity issues between sites",
-        "5.2 Demonstrate understanding of routing and forwarding issue resolution",
-        "5.3 Identify and describe application performance issues",
-        "5.4 Explain policy issue troubleshooting",
-        "5.5 Describe data analysis using the co-pilot",
-        "5.6 Explain the use of analytics to optimize network configurations and reporting",
+        "Security measures: using encryption, access controls, and wireless security protocols.",
+        "Malware prevention: detecting, removing, and preventing malware threats.",
+      ],
+    },
+    {
+      title: "Core 2: Software troubleshooting",
+      items: [
+        "OS issues: diagnosing and resolving problems with operating systems and applications.",
+        "Mobile troubleshooting: addressing connectivity, app, and performance issues.",
+        "Security concerns: fixing unauthorized access and malware issues.",
+      ],
+    },
+    {
+      title: "Core 2: Operational procedures",
+      items: [
+        "Documentation: using best practices for system changes and documentation.",
+        "Safety and communication: following safety protocols and communicating effectively.",
+        "Backup and recovery: setting up workstation backup and recovery processes.",
       ],
     },
   ];
@@ -104,20 +95,20 @@ export default function SDWanEngineer() {
         <div className="relative z-10 flex flex-col gap-3 pl-1 sm:pl-8">
           {/* Course Category */}
           <h6 className="w-fit px-4 py-2 text-[#1775EE] bg-blue-50 rounded-full">
-            Palo Alto
+            COMPTIA
           </h6>
 
           {/* ====== Course Title and Description ======*/}
           <div>
             {/* Course title */}
-            <h1 className="text-[#1775EE] font-bold">SD-WAN Engineer</h1>
+            <h1 className="text-[#1775EE] font-bold">A+ (Core 1 & Core 2)</h1>
 
             {/* Course description */}
             <p className="lg:w-[30vw] xl:w-lg text-gray-900">
-              The Palo Alto Networks Certified SD-WAN Engineer exam is designed
-              to validate the knowledge and skills required for engineers to
-              plan, deploy, configure, operate, monitor, and troubleshoot modern
-              SD-WAN environments and architectures.
+              CompTIA A+ is a widely recognized certification for beginners that
+              will help you start your IT career. Employers from a variety of
+              industries value A+ because it fosters fundamental skills in
+              networking, hardware, software, problem-solving, and security.
             </p>
           </div>
 
@@ -154,20 +145,18 @@ export default function SDWanEngineer() {
             {/* About Section - Description */}
             {/* CHANGE: Course description paragraphs */}
             <p>
-              This course prepares learners for the Palo Alto Networks Certified
-              SD-WAN Engineer certification through guided instruction and
-              hands-on activities. It focuses on SD-WAN architecture,
-              pre-deployment planning, policy design and management, deployment
-              configuration, post-deployment operations, and performance
-              monitoring, including the use of analytics to support network
-              transformation goals.
+              This intermediate specialization is designed for individuals who
+              have basic IT knowledge and some experience in setup and
+              troubleshooting. The competencies gained through the three courses
+              equip learners for the CompTIA A+ certification exams and enhance
+              their value for organizations in need of skilled IT professionals.
             </p>
             <p>
-              The program builds practical expertise in planning, deploying, and
-              managing modern SD-WAN environments, while exam guidelines outline
-              covered topics and recommended references and should be
-              supplemented with additional study resources for thorough
-              preparation.
+              Students should possess a basic understanding of IT fundamentals
+              (ITF+) before starting this course. Those without this background
+              are advised to first complete the IBM IT Support Professional
+              Certificate or the IBM Information Technology and Cloud
+              Fundamentals Specialization to develop the necessary skills.
             </p>
           </section>
 
@@ -179,23 +168,37 @@ export default function SDWanEngineer() {
             </h3>
 
             {/* What You Will Learn Section - List */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4">
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>SD-WAN Architecture Concepts</p>
+                <p>
+                  Troubleshoot and fix problems involving laptops, mobile
+                  devices, video and display configurations, networking,
+                  storage, motherboards, CPUs, BIOS, and power supplies.
+                </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Cloud and Hybrid Network Integration</p>
+                <p>
+                  Explain how Active Directory, Windows security utilities, and
+                  secure data deletion help safeguard mobile devices.
+                </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Policy-Based Routing Principles</p>
+                <p>
+                  Identify and resolve issues with various printer types and
+                  setups, and recognize common features and commands across
+                  operating systems.
+                </p>
               </div>
-              <p className="flex items-center gap-2.5">
+              <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <span>Secure WAN Connectivity Fundamentals</span>
-              </p>
+                <p>
+                  Demonstrate mastery of CompTIA A+ Core 1 and Core 2 topics by
+                  completing practice certification exams successfully.
+                </p>
+              </div>
             </div>
           </section>
 
@@ -217,9 +220,9 @@ export default function SDWanEngineer() {
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
             {/* Cert Badge - Change/Update Image */}
             <img
-              src={ccnaBadge}
-              alt="Palo Alto Networks Certified Cybersecurity Apprentice Certification Badge"
-              className="w-60 h-60 object-contain"
+              src={aPlusCerti}
+              alt="A+ Certification Badge"
+              className="w-100 h-100 object-contain"
             />
           </div>
 
@@ -229,10 +232,10 @@ export default function SDWanEngineer() {
             <h5 className="text-[#1775EE] font-bold">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
-              "SD-WAN Network Engineer",
-              "Network Optimization Specialist",
-              "WAN Integration Engineer",
-              "Cloud WAN Engineer",
+              "IT Manager",
+              "Network Administrator",
+              "Cybersecurity Analyst",
+              "Database Administrator",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
@@ -302,17 +305,6 @@ export default function SDWanEngineer() {
             <div className="inclusions">
               <span className="inclusions_icons">
                 <img
-                  src={InstitutionalIcon}
-                  alt="Institutional Account"
-                  className="w-4 h-4"
-                />
-              </span>
-              <p className="text-sm">Institutional Accounts</p>
-            </div>
-
-            <div className="inclusions">
-              <span className="inclusions_icons">
-                <img
                   src={WorkstationIcon}
                   alt="Workstation"
                   className="w-4 h-4"
@@ -330,7 +322,7 @@ export default function SDWanEngineer() {
 
             {/* CHANGE: Download link text and URL */}
             <a href="#" className="text-sm font-medium underline mt-2">
-              Download the Palo Alto Exam Basics here
+              Download the CCNP Exam Basics here
             </a>
           </div>
         </aside>

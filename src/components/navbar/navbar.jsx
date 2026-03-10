@@ -15,361 +15,230 @@ function NavBar() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const dropdownMenus = {
-    solutions: [
-      {
-        name: "ICT Consultancy (PBOOT)",
-        subcourses: [
-          { name: "Data Center Facilities", path: "/solutions/ict/datacenter" },
-          {
-            name: "ICT Network and Security Infrastructure",
-            path: "/solutions/ict/network",
-          },
-          { name: "Cybersecurity", path: "/solutions/ict/cybersecurity" },
-          {
-            name: "Vulnerability Assessment and Penetration Testing (VAPT)",
-            path: "/solutions/ict/vapt",
-          },
-          {
-            name: "Web and Software Development",
-            path: "/solutions/ict/webdev",
-          },
-          { name: "Cloud Computing Services", path: "/solutions/ict/cloud" },
-          {
-            name: "SMART Environment Automation (IoT)",
-            path: "/solutions/ict/iot",
-          },
-        ],
-      },
-      {
-        name: "Auxiliary Systems and PECE Consultancy",
-        subcourses: [
-          { name: "Auxiliary Systems", path: "/solutions/auxiliary/systems" },
-          { name: "PECE Consultancy", path: "/solutions/auxiliary/pece" },
-        ],
-      },
-      {
-        name: "Cloud Computing",
-        subcourses: [
-          {
-            name: "Cloud Infrastructure",
-            path: "/solutions/cloud/infrastructure",
-          },
-          { name: "Cloud Migration", path: "/solutions/cloud/migration" },
-        ],
-      },
-      {
-        name: "IT Management",
-        subcourses: [
-          { name: "IT Strategy", path: "/solutions/itmanagement/strategy" },
-          { name: "IT Operations", path: "/solutions/itmanagement/operations" },
-        ],
-      },
-      {
-        name: "Customized Training Solutions",
-        subcourses: [
-          { name: "Corporate Training", path: "/solutions/training/corporate" },
-          { name: "Custom Curriculum", path: "/solutions/training/curriculum" },
-        ],
-      },
-    ],
-    training: [
-      {
-        name: "Cisco",
-        subcourses: [
-          {
-            name: "CCNA",
-            subcourses: [
-              { name: "CCNA", path: "/training/cisco/ccna/ccna" },
-              {
-                name: "CCNA Automation",
-                path: "/training/cisco/ccna/automation",
-              },
-              {
-                name: "CCNA Cybersecurity",
-                path: "/training/cisco/ccna/cybersecurity",
-              },
-            ],
-          },
-          {
-            name: "CCNP",
-            subcourses: [
-              {
-                name: "CCNP Enterprise",
-                path: "/training/cisco/ccnp/enterprise",
-              },
-              { name: "CCNP Security", path: "/training/cisco/ccnp/security" },
-              {
-                name: "CCNP Cybersecurity",
-                path: "/training/cisco/ccnp/cybersecurity",
-              },
-              { name: "CCNP Wireless", path: "/training/cisco/ccnp/wireless" },
-              {
-                name: "CCNP Data Center",
-                path: "/training/cisco/ccnp/datacenter",
-              },
-            ],
-          },
-          {
-            name: "CompTIA",
-            subcourses: [
-              {
-                name: "A+ (Core 1 & 2)",
-                path: "/training/cisco/comptia/aplus",
-              },
-              { name: "Network+", path: "/training/cisco/comptia/network" },
-              { name: "Security+", path: "/training/cisco/comptia/security+" },
-              { name: "CySA+", path: "/training/cisco/comptia/cysa" },
-              { name: "PenTest+", path: "/training/cisco/comptia/pentest" },
-              { name: "Linux+", path: "/training/cisco/comptia/linux" },
-            ],
-          },
-          {
-            name: "Fortinet",
-            subcourses: [
-              { name: "NSE 1", path: "/training/cisco/fortinet/nse1" },
-              { name: "NSE 2", path: "/training/cisco/fortinet/nse2" },
-              { name: "NSE 3", path: "/training/cisco/fortinet/nse3" },
-              {
-                name: "NSE 4 (all tracks)",
-                path: "/training/cisco/fortinet/nse4",
-              },
-              {
-                name: "NSE 5 Secure Networking",
-                path: "/training/cisco/fortinet/nse5securenetworking",
-              },
-              { name: "NSE 5 SASE", path: "/training/cisco/fortinet/nse5sase" },
-              {
-                name: "NSE 5 Cloud Security",
-                path: "/training/cisco/fortinet/nse5cloudsecurity",
-              },
-              {
-                name: "NSE 5 Secure Operations",
-                path: "/training/cisco/fortinet/nse5secureoperations",
-              },
-              {
-                name: "NSE 6 Secure Networking",
-                path: "/training/cisco/fortinet/nse6securenetworking",
-              },
-              { name: "NSE 6 SASE", path: "/training/cisco/fortinet/nse6sase" },
-              {
-                name: "NSE 6 Cloud Security",
-                path: "/training/cisco/fortinet/nse6cloudsecurity",
-              },
-              {
-                name: "NSE 6 Secure Operations",
-                path: "/training/cisco/fortinet/nse6secureoperations",
-              },
-              {
-                name: "NSE 7 Secure Networking",
-                path: "/training/cisco/fortinet/nse7securenetworking",
-              },
-              { name: "NSE 7 SASE", path: "/training/cisco/fortinet/nse7sase" },
-              {
-                name: "NSE 7 Cloud Security",
-                path: "/training/cisco/fortinet/nse7cloudsecurity",
-              },
-              {
-                name: "NSE 7 Secure Operations",
-                path: "/training/cisco/fortinet/nse7secureoperations",
-              },
-            ],
-          },
-          {
-            name: "Palo Alto",
-            subcourses: [
-              {
-                name: "Network Security",
-                subcourses: [
-                  {
-                    name: "Cybersecurity Apprentice",
-                    path: "/training/cisco/paloalto/networksecurity/apprentice",
-                  },
-                  {
-                    name: "Cybersecurity Practitioner",
-                    path: "/training/cisco/paloalto/networksecurity/practitioner",
-                  },
-                  {
-                    name: "Network Security Professional",
-                    path: "/training/cisco/paloalto/networksecurity/professional",
-                  },
-                  {
-                    name: "Network Security Analyst",
-                    path: "/training/cisco/paloalto/networksecurity/analyst",
-                  },
-                  {
-                    name: "Next-Generation Firewall Engineer",
-                    path: "/training/cisco/paloalto/networksecurity/nextgenerationfirewallengineer",
-                  },
-                  {
-                    name: "SD-WAN Engineer",
-                    path: "/training/cisco/paloalto/networksecurity/sdwanengineer",
-                  },
-                  {
-                    name: "Security Service Edge Engineer",
-                    path: "/training/cisco/paloalto/networksecurity/securityserviceedgeengineer",
-                  },
-                  {
-                    name: "Network Security Architect",
-                    path: "/training/cisco/paloalto/networksecurity/architect",
-                  },
-                ],
-              },
-              {
-                name: "Security Operations",
-                subcourses: [
-                  {
-                    name: "Cybersecurity Practitioner",
-                    path: "/training/cisco/paloalto/securityoperations/practitioner",
-                  },
-                  {
-                    name: "Security Operations Professional",
-                    path: "/training/cisco/paloalto/securityoperations/professional",
-                  },
-                  {
-                    name: "XSIAM Analyst",
-                    path: "/training/cisco/paloalto/securityoperations/xsiamanalyst",
-                  },
-                  {
-                    name: "XDR Analyst",
-                    path: "/training/cisco/paloalto/securityoperations/xdranalyst",
-                  },
-                  {
-                    name: "XSIAM Engineer",
-                    path: "/training/cisco/paloalto/securityoperations/xsiamengineer",
-                  },
-                  {
-                    name: "XDR Engineer",
-                    path: "/training/cisco/paloalto/securityoperations/xdrengineer",
-                  },
-                  {
-                    name: "XSOAR Engineer",
-                    path: "/training/cisco/paloalto/securityoperations/xsoarengineer",
-                  },
-                ],
-              },
-              {
-                name: "Cloud Security",
-                subcourses: [
-                  {
-                    name: "Cloud Security Professional",
-                    path: "/training/cisco/paloalto/cloudsecurity/professional",
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            name: "Practical Ethical Hacking",
-            subcourses: [
-              {
-                name: "PEH Fundamentals",
-                subcourses: [
-                  {
-                    name: "Penetration Testing",
-                    path: "/training/cisco/peh/fundamentals/pentest",
-                  },
-                  {
-                    name: "Web App Security",
-                    path: "/training/cisco/peh/fundamentals/webapp",
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            name: "CDCP",
-            subcourses: [
-              {
-                name: "Data Centre Foundation Certificate",
-                path: "/training/cisco/cdcp/dcfc",
-              },
-              {
-                name: "Certified Data Centre Professional",
-                path: "/training/cisco/cdcp/cdcp",
-              },
-              {
-                name: "Certified Data Centre Specialist",
-                path: "/training/cisco/cdcp/cdcs",
-              },
-            ],
-          },
-        ],
-      },
-      {
-        name: "Cybersecurity",
-        subcourses: [
-          {
-            name: "Blue Team: Security Operations & Defensive Cybersecurity Program",
-            path: "/training/cybersecurity/blueteam",
-          },
-          {
-            name: "Red Team: CompTIA Security+ (SY0-701) Training",
-            path: "/training/cybersecurity/redteam",
-          },
-        ],
-      },
-      {
-        name: "Cloud Computing",
-        subcourses: [
-          {
-            name: "Microsoft",
-            subcourses: [
-              {
-                name: "Azure Fundamentals",
-                path: "/training/cloud/microsoft/azurefundamentals",
-              },
-            ],
-          },
-          {
-            name: "AWS",
-            subcourses: [
-              {
-                name: "Cloud Practitioner",
-                path: "/training/cloud/aws/practitioner",
-              },
-            ],
-          },
-        ],
-      },
-      {
-        name: "IT Management",
-        subcourses: [
-          {
-            name: "ITIL 4",
-            subcourses: [
-              { name: "Foundation", path: "/training/itil4/foundation" },
-              {
-                name: "Specialist: Create, Deliver and Support",
-                path: "/training/itil4/specialist",
-              },
-              {
-                name: "Strategist: Direct, Plan and Improve",
-                path: "/training/itil4/strategist",
-              },
-              {
-                name: "Practitioner: Incident Management",
-                path: "/training/itil4/practitioner",
-              },
-              {
-                name: "Leader: Digital and IT Strategy",
-                path: "/training/itil4/leader",
-              },
-            ],
-          },
-        ],
-      },
-      {
-        name: "Project Management",
-        subcourses: [
-          {
-            name: "Project Management Professional",
-            path: "/training/projectmanagement/pmp",
-          },
-        ],
-      },
-    ],
-  };
+const dropdownMenus = {
+  solutions: [
+    {
+      name: "ICT Consultancy (PBOOT)",
+      subcourses: [
+        { name: "Data Center Facilities", path: "/solutions/ict/datacenter" },
+        { name: "ICT Network and Security Infrastructure", path: "/solutions/ict/network" },
+        { name: "Cybersecurity", path: "/solutions/ict/cybersecurity" },
+        { name: "Vulnerability Assessment and Penetration Testing (VAPT)", path: "/solutions/ict/vapt" },
+        { name: "Web and Software Development", path: "/solutions/ict/webdev" },
+        { name: "Cloud Computing Services", path: "/solutions/ict/cloud" },
+        { name: "SMART Environment Automation (IoT)", path: "/solutions/ict/iot" },
+      ],
+    },
+    {
+      name: "Auxiliary Systems and PECE Consultancy",
+      subcourses: [
+        { name: "Auxiliary Systems", path: "/solutions/auxiliary/systems" },
+        { name: "PECE Consultancy", path: "/solutions/auxiliary/pece" },
+      ],
+    },
+    {
+      name: "Cloud Computing",
+      subcourses: [
+        { name: "Cloud Infrastructure", path: "/solutions/cloud/infrastructure" },
+        { name: "Cloud Migration", path: "/solutions/cloud/migration" },
+      ],
+    },
+    {
+      name: "IT Management",
+      subcourses: [
+        { name: "IT Strategy", path: "/solutions/itmanagement/strategy" },
+        { name: "IT Operations", path: "/solutions/itmanagement/operations" },
+      ],
+    },
+    {
+      name: "Customized Training Solutions",
+      subcourses: [
+        { name: "Corporate Training", path: "/solutions/training/corporate" },
+        { name: "Custom Curriculum", path: "/solutions/training/curriculum" },
+      ],
+    },
+  ],
+
+  training: [
+    {
+      name: "Cisco",
+      subcourses: [
+        {
+          name: "CCNA",
+          subcourses: [
+            { name: "CCNA", path: "/training/cisco/ccna/ccna" },
+            { name: "CCNA Automation", path: "/training/cisco/ccna/automation" },
+            { name: "CCNA Cybersecurity", path: "/training/cisco/ccna/cybersecurity" },
+          ],
+        },
+        {
+          name: "CCNP",
+          subcourses: [
+            { name: "CCNP Enterprise", path: "/training/cisco/ccnp/enterprise" },
+            { name: "CCNP Security", path: "/training/cisco/ccnp/security" },
+            { name: "CCNP Cybersecurity", path: "/training/cisco/ccnp/cybersecurity" },
+            { name: "CCNP Wireless", path: "/training/cisco/ccnp/wireless" },
+            { name: "CCNP Data Center", path: "/training/cisco/ccnp/datacenter" },
+          ],
+        },
+      ],
+    },
+
+    {
+      name: "CompTIA",
+      subcourses: [
+        { name: "A+ (Core 1 & 2)", path: "/training/comptia/aplus" },
+        { name: "Network+", path: "/training/comptia/network" },
+        { name: "Security+", path: "/training/comptia/security+" },
+        { name: "CySA+", path: "/training/comptia/cysa" },
+        { name: "PenTest+", path: "/training/comptia/pentest" },
+        { name: "Linux+", path: "/training/comptia/linux" },
+      ],
+    },
+
+    {
+      name: "Fortinet",
+      subcourses: [
+        { name: "NSE 1", path: "/training/fortinet/nse1" },
+        { name: "NSE 2", path: "/training/fortinet/nse2" },
+        { name: "NSE 3", path: "/training/fortinet/nse3" },
+        { name: "NSE 4 (all tracks)", path: "/training/fortinet/nse4" },
+        { name: "NSE 5 Secure Networking", path: "/training/fortinet/nse5securenetworking" },
+        { name: "NSE 5 SASE", path: "/training/fortinet/nse5sase" },
+        { name: "NSE 5 Cloud Security", path: "/training/fortinet/nse5cloudsecurity" },
+        { name: "NSE 5 Secure Operations", path: "/training/fortinet/nse5secureoperations" },
+        { name: "NSE 6 Secure Networking", path: "/training/fortinet/nse6securenetworking" },
+        { name: "NSE 6 SASE", path: "/training/fortinet/nse6sase" },
+        { name: "NSE 6 Cloud Security", path: "/training/fortinet/nse6cloudsecurity" },
+        { name: "NSE 6 Secure Operations", path: "/training/fortinet/nse6secureoperations" },
+        { name: "NSE 7 Secure Networking", path: "/training/fortinet/nse7securenetworking" },
+        { name: "NSE 7 SASE", path: "/training/fortinet/nse7sase" },
+        { name: "NSE 7 Cloud Security", path: "/training/fortinet/nse7cloudsecurity" },
+        { name: "NSE 7 Secure Operations", path: "/training/fortinet/nse7secureoperations" },
+      ],
+    },
+
+    {
+      name: "Palo Alto",
+      subcourses: [
+        {
+          name: "Network Security",
+          subcourses: [
+            { name: "Cybersecurity Apprentice", path: "/training/paloalto/networksecurity/apprentice" },
+            { name: "Cybersecurity Practitioner", path: "/training/paloalto/networksecurity/practitioner" },
+            { name: "Network Security Professional", path: "/training/paloalto/networksecurity/professional" },
+            { name: "Network Security Analyst", path: "/training/paloalto/networksecurity/analyst" },
+            { name: "Next-Generation Firewall Engineer", path: "/training/paloalto/networksecurity/nextgenerationfirewallengineer" },
+            { name: "SD-WAN Engineer", path: "/training/paloalto/networksecurity/sdwanengineer" },
+            { name: "Security Service Edge Engineer", path: "/training/paloalto/networksecurity/securityserviceedgeengineer" },
+            { name: "Network Security Architect", path: "/training/paloalto/networksecurity/architect" },
+          ],
+        },
+        {
+          name: "Security Operations",
+          subcourses: [
+            { name: "Cybersecurity Practitioner", path: "/training/paloalto/securityoperations/practitioner" },
+            { name: "Security Operations Professional", path: "/training/paloalto/securityoperations/professional" },
+            { name: "XSIAM Analyst", path: "/training/paloalto/securityoperations/xsiamanalyst" },
+            { name: "XDR Analyst", path: "/training/paloalto/securityoperations/xdranalyst" },
+            { name: "XSIAM Engineer", path: "/training/paloalto/securityoperations/xsiamengineer" },
+            { name: "XDR Engineer", path: "/training/paloalto/securityoperations/xdrengineer" },
+            { name: "XSOAR Engineer", path: "/training/paloalto/securityoperations/xsoarengineer" },
+          ],
+        },
+        {
+          name: "Cloud Security",
+          subcourses: [
+            { name: "Cloud Security Professional", path: "/training/paloalto/cloudsecurity/professional" },
+          ],
+        },
+      ],
+    },
+
+    {
+      name: "Practical Ethical Hacking",
+      subcourses: [
+        {
+          name: "PEH Fundamentals",
+          subcourses: [
+            { name: "Penetration Testing", path: "/training/peh/fundamentals/pentest" },
+            { name: "Web App Security", path: "/training/peh/fundamentals/webapp" },
+          ],
+        },
+      ],
+    },
+
+    {
+      name: "CDCP",
+      subcourses: [
+        { name: "Data Centre Foundation Certificate", path: "/training/cdcp/dcfc" },
+        { name: "Certified Data Centre Professional", path: "/training/cdcp/cdcp" },
+        { name: "Certified Data Centre Specialist", path: "/training/cdcp/cdcs" },
+      ],
+    },
+
+    {
+      name: "Cybersecurity",
+      subcourses: [
+        {
+          name: "Blue Team: Security Operations & Defensive Cybersecurity Program",
+          path: "/training/cybersecurity/blueteam",
+        },
+        {
+          name: "Red Team: CompTIA Security+ (SY0-701) Training",
+          path: "/training/cybersecurity/redteam",
+        },
+      ],
+    },
+
+    {
+      name: "Cloud Computing",
+      subcourses: [
+        {
+          name: "Microsoft",
+          subcourses: [
+            { name: "Azure Fundamentals", path: "/training/cloud/microsoft/azurefundamentals" },
+          ],
+        },
+        {
+          name: "AWS",
+          subcourses: [
+            { name: "Cloud Practitioner", path: "/training/cloud/aws/practitioner" },
+          ],
+        },
+      ],
+    },
+
+    {
+      name: "IT Management",
+      subcourses: [
+        {
+          name: "ITIL 4",
+          subcourses: [
+            { name: "Foundation", path: "/training/itil4/foundation" },
+            { name: "Specialist: Create, Deliver and Support", path: "/training/itil4/specialist" },
+            { name: "Strategist: Direct, Plan and Improve", path: "/training/itil4/strategist" },
+            { name: "Practitioner: Incident Management", path: "/training/itil4/practitioner" },
+            { name: "Leader: Digital and IT Strategy", path: "/training/itil4/leader" },
+          ],
+        },
+        {
+          name: "ITIL 5",
+          subcourses: [
+            { name: "Foundation", path: "training/itil5/foundation" },
+          ]
+        }
+      ],
+    },
+
+    {
+      name: "Project Management",
+      subcourses: [
+        { name: "Project Management Professional", path: "/training/projectmanagement/pmp" },
+      ],
+    },
+  ],
+};
 
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);

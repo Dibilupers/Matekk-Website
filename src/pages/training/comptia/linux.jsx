@@ -1,179 +1,82 @@
 // ==================== IMPORTS - UPDATE FOR EACH COURSE ====================
 // Change these imports based on the specific course
-import Button from "../../../../components/ui/button";
+import Button from "../../../components/ui/button";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
-import cdcs from "../../../../assets/cdcs.webp"; // Course badge image
-import ccnaHero from "../../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
-import ccnaFooter from "../../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
-import MealIcon from "../../../../assets/Meal.svg";
-import ReviewIcon from "../../../../assets/Review.svg";
-import WorkstationIcon from "../../../../assets/Workstation.svg";
-import MedalIcon from "../../../../assets/Medal.svg";
-import CourseModules from "../../../../components/training/courseModules";
-import TrainingTemplateFooter from "../../../../components/section/TrainingTemplateFooter";
-import EnrollNowButton from "../../../../components/ui/EnrollNowButton";
+import linux from "../../../assets/linux+.webp"; // Course badge image
+import ccnaHero from "../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
+import ccnaFooter from "../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
+import MealIcon from "../../../assets/Meal.svg";
+import ReviewIcon from "../../../assets/Review.svg";
+import WorkstationIcon from "../../../assets/Workstation.svg";
+import MedalIcon from "../../../assets/Medal.svg";
+import CourseModules from "../../../components/training/courseModules";
+import TrainingTemplateFooter from "../../../components/section/TrainingTemplateFooter";
+import EnrollNowButton from "../../../components/ui/EnrollNowButton";
 
 // ==================== COMPONENT NAME ====================
-export default function CDCS() {
+export default function Linux() {
   // ==================== COURSE MODULES ====================
   const modules = [
     {
-      title: "Data Centre Design/Life Cycle Overview",
-      items: ["Phases of the data centre life cycle"],
-    },
-    {
-      title: "Standards and Rating Level Definitions",
+      title: "System Management",
+      progress: 23,
       items: [
-        "Rating levels history and definitions",
-        "Standards and guideline comparison",
-        "N-redundancy options",
-        "Distributed redundant options",
-        "Concurrent maintainability",
-        "Fault tolerant",
-        "Substation requirements",
-        "Example topologies",
-        "Maintenance options",
+        "Linux basics: Identify boot process steps, kernel, filesystems, and architectures.",
+        "Device management: Manage kernel modules, hardware components, and device utilities.",
+        "Storage management: Configure LVM, RAID, partitions, and mounted storage.",
+        "Network configuration: Set up hosts, DNS, interfaces, and network tools.",
+        "Shell operations: Use navigation, editing, redirection, and environment variables.",
+        "Backups and restores: Perform archiving, compression, and data recovery.",
+        "Virtualization: Deploy hypervisors, create VMs, and manage disk images.",
       ],
     },
     {
-      title: "Building Considerations",
+      title: "Services and User Management",
       items: [
-        "Building location and floor loading considerations",
-        "Floor and hanging loads requirements",
-        "Firing rating for walls and glass",
-        "Blast protection and bullet proofing",
-        "Forced entry protection",
+        "Files & directories: Control permissions, create links, and manage special files.",
+        "Account management: Add, remove, and modify users and groups.",
+        "Process control: Monitor states, adjust priorities, and schedule jobs.",
+        "Software management: Install, update, or remove packages and repositories.",
+        "Systems management: Start, stop, and review services, logs, and timers.",
+        "Containers: Operate container runtimes, manage images, and create networks.",
       ],
     },
     {
-      title: "Advanced Raised Floor & Suspended Ceiling",
+      title: "Security",
       items: [
-        "Raised Floor installation requirements",
-        "Common raised floor problems",
-        "Seismic protection",
-        "Requirements for suspended ceiling",
+        "Auth & accounting: Configure PAM, LDAP, Kerberos, and enable auditing.",
+        "Firewalls: Set firewalls using iptables, nftables, UFW, and zone rules.",
+        "OS hardening: Apply permissions, configure sudo, and secure remote access.",
+        "Account security: Enforce password policies, restrict shells, and enable MFA.",
+        "Cryptography: Encrypt files, use hashing, and manage certificates.",
+        "Compliance: Verify integrity, run scans, and maintain standards.",
       ],
     },
     {
-      title: "Advanced Power",
+      title: "Automation, Orchestration, and Scripting",
       items: [
-        "Electrical formulae",
-        "Single Line Diagram (SLD)",
-        "Overcurrent protection devices",
-        "Earth Leakage protection",
-        "Sizing of protective components",
-        "Surge protection",
-        "Power cabling and PDU requirements",
-        "Types of generators",
-        "Generator components",
-        "Fuel storage and calculation",
-        "Generator parallelling",
-        "Required UPS specifications",
-        "UPS parallel configuration",
-        "Harmonic filters",
-        "Battery bank terminology",
-        "Calculating battery banks",
-        "Battery charging",
-        "Paralleilling battery banks",
-        "Battery testing",
-        "Battery case selection",
-        "Flywheel",
-        "Hydrogen fuel cells",
+        "Automation: Automate tasks with Ansible, Puppet, and CI/CD tools.",
+        "Shell scripting: Write and troubleshoot variables, functions, and logic flows.",
+        "Python basics: Develop scripts using environments, packages, and data types.",
+        "Version control: Manage code with Git workflows and tagging.",
+        "AI best practices: Apply code generation and prompt engineering responsibly.",
       ],
     },
     {
-      title: "Electrical/Earthing Integrity tests",
+      title: "Troubleshooting",
       items: [
-        "Sources of EMF",
-        "Single and three phase radiation",
-        "Measuring EMF",
-        "Safe distance guidance",
-        "Calculation of EMF attenuation factors",
-      ],
-    },
-    {
-      title: "Advanced Cooling",
-      items: [
-        "Cooling definitions",
-        "Psychrometric chart",
-        "ASHRAE recommendations",
-        "Heat dissipation",
-        "Equipment airflow",
-        "Floor plan set-up",
-        "Types of perforated tiles",
-        "Rack door construction",
-        "Delta-T and impact",
-        "Optimizing airflow",
-        "Thermal unit conversions",
-        "Calculating air volume displacement (CFM/CMH)",
-        "Cooling capacity calculations",
-        "Computational Fluid Dynamics (CFD)",
-        "Air-conditioner efficiency",
-        "SHR impact on OPEX",
-        "Efficiency indicators",
-        "Air-conditioner selection",
-        "Humidity control",
-        "Redundancy requirements",
-        "Installation requirements",
-        "Service corridor considerations",
-        "Set points and calibration",
-        "Advanced cooling technologies – air cooling",
-        "Advanced cooling technologies – liquid cooling",
-      ],
-    },
-    {
-      title: "Advanced Fire Protection",
-      items: [
-        "Fire triangle",
-        "Fire detection systems",
-        "Installation and testing of smoke sensors",
-        "Water-based suppression systems",
-        "Gas-based suppression systems",
-        "Calculate gas content",
-        "Release and hold times",
-        "Fire detection panel requirements",
-        "Verification of installation",
-        "Ongoing maintenance",
-        "Alternative systems",
-      ],
-    },
-    {
-      title: "Designing and Installing Scalable Network Cabling Systems",
-      items: [
-        "TIA-942 cabling structure topology",
-        "Copper and fibre cabling",
-        "ToR and EoR design",
-        "Installation best practices",
-        "Grounding and bonding",
-        "Cables labelling and administration",
-      ],
-    },
-    {
-      title: "Environmental Specifications / Contamination Control",
-      items: [
-        "Acoustic noise effects, regulations, specifications and limits",
-        "Data centre contamination categories",
-        "Contamination measurements, standards and limits",
-        "Preventive measures",
-      ],
-    },
-    {
-      title: "Data Centre Efficiency",
-      items: [
-        "Business drivers for environmental sustainability",
-        "Green standards and guidelines",
-        "Power Usage Effectiveness (PUE)",
-        "PUE categories",
-        "Additional performance metrics",
-        "Open Compute Project (OCP)",
-        "Savings on cooling infrastructure",
-        "Savings on light infrastructure",
+        "System monitoring: Monitor health, logs, and event alerts.",
+        "Hardware/storage: Diagnose boot, mount, and repair issues.",
+        "Networking: Resolve firewall, routing, DNS, and connectivity problems.",
+        "Security: Fix SELinux, permission, and vulnerability issues.",
+        "Performance: Analyze CPU, memory, I/O, and optimize response times.",
       ],
     },
   ];
+
   return (
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}
@@ -193,22 +96,20 @@ export default function CDCS() {
         <div className="relative z-10 flex flex-col gap-3 pl-1 sm:pl-8">
           {/* Course Category */}
           <h6 className="w-fit px-4 py-2 text-[#1775EE] bg-blue-50 rounded-full">
-            CDCP
+            COMPTIA
           </h6>
 
           {/* ====== Course Title and Description ======*/}
           <div>
             {/* Course title */}
-            <h1 className="text-[#1775EE] font-bold">
-              Certified Data Centre Specialist
-            </h1>
+            <h1 className="text-[#1775EE] font-bold">Linux+</h1>
 
             {/* Course description */}
             <p className="lg:w-[30vw] xl:w-lg text-gray-900">
-              CDCS® is a key certification for data centre professionals looking
-              to strengthen their technical expertise and decision-making
-              skills. It also serves as a prerequisite for those pursuing the
-              advanced Certified Data Centre Expert (CDCE®) designation.
+              CompTIA Linux+ shows you how to manage, secure, and troubleshoot
+              Linux systems in cloud and hybrid environments. With skills in
+              automation, containers, and orchestration, it prepares you for
+              high-demand roles that support critical business platforms.
             </p>
           </div>
 
@@ -245,13 +146,13 @@ export default function CDCS() {
             {/* About Section - Description */}
             {/* CHANGE: Course description paragraphs */}
             <p>
-              The Certified Data Centre Specialist (CDCS®) is an intensive
-              three-day course that provides participants with the knowledge and
-              skills to effectively engage in data centre design and operations,
-              particularly in high-demand environments. Learners gain the
-              ability to assess design proposals for accuracy, efficiency, and
-              effectiveness, including solutions for power and cooling
-              infrastructure.
+              CompTIA Linux+ (V8) validates your skills in managing, securing,
+              automating, and troubleshooting Linux systems across cloud and
+              hybrid environments. Gain hands-on experience with automation,
+              orchestration, security, and containers, preparing you for roles
+              like Linux systems administrator, systems engineer, or network
+              engineer, while demonstrating your ability to support critical
+              business platforms.
             </p>
           </section>
 
@@ -267,29 +168,29 @@ export default function CDCS() {
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <p>
-                  Gain a clear understanding of the data centre design lifecycle
-                  and its key stages.
+                  Set up and manage Linux systems, storage, networks, and
+                  services in cloud and hybrid environments.
                 </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <p>
-                  Communicate detailed data centre requirements with vendors,
-                  suppliers, and contractors to ensure they are met.
+                  Implement best practices for permissions, authentication,
+                  firewalls, and system hardening.
                 </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <p>
-                  Review and validate design documents, cost estimates, and
-                  technical proposals for compliance with specifications.
+                  Automate administrative tasks and improve workflows using
+                  shell scripting, Python, and configuration management tools.
                 </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <p>
-                  Understand redundancy levels in both data centre design and
-                  ongoing maintenance.
+                  Deploy, maintain, and monitor containers and virtual machines
+                  with top industry technologies.
                 </p>
               </div>
             </div>
@@ -313,9 +214,9 @@ export default function CDCS() {
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
             {/* Cert Badge - Change/Update Image */}
             <img
-              src={cdcs}
-              alt="CDCS Certification Badge"
-              className="w-60 h-60 object-contain"
+              src={linux}
+              alt="PenTest+ Certification Badge"
+              className="w-100 h-100 object-contain"
             />
           </div>
 
@@ -325,10 +226,10 @@ export default function CDCS() {
             <h5 className="text-[#1775EE] font-bold">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
-              "Data Center Shift Supervisor",
-              "Site Planning Engineer",
-              "Data Center Specialist",
-              "Infrastructure & Operations Roles",
+              "Cybersecurity Analyst",
+              "Penetration Tester",
+              "Cybersecurity Specialist",
+              "IT Auditor",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />

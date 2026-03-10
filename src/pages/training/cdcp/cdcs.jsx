@@ -1,118 +1,179 @@
 // ==================== IMPORTS - UPDATE FOR EACH COURSE ====================
 // Change these imports based on the specific course
-import Button from "../../../../components/ui/button";
+import Button from "../../../components/ui/button";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
-import dcfc from "../../../../assets/dcfc.webp"; // Course badge image
-import ccnaHero from "../../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
-import ccnaFooter from "../../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
-import MealIcon from "../../../../assets/Meal.svg";
-import ReviewIcon from "../../../../assets/Review.svg";
-import WorkstationIcon from "../../../../assets/Workstation.svg";
-import MedalIcon from "../../../../assets/Medal.svg";
-import CourseModules from "../../../../components/training/courseModules";
-import TrainingTemplateFooter from "../../../../components/section/TrainingTemplateFooter";
-import EnrollNowButton from "../../../../components/ui/EnrollNowButton";
+import cdcs from "../../../assets/cdcs.webp"; // Course badge image
+import ccnaHero from "../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
+import ccnaFooter from "../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
+import MealIcon from "../../../assets/Meal.svg";
+import ReviewIcon from "../../../assets/Review.svg";
+import WorkstationIcon from "../../../assets/Workstation.svg";
+import MedalIcon from "../../../assets/Medal.svg";
+import CourseModules from "../../../components/training/courseModules";
+import TrainingTemplateFooter from "../../../components/section/TrainingTemplateFooter";
+import EnrollNowButton from "../../../components/ui/EnrollNowButton";
 
 // ==================== COMPONENT NAME ====================
-export default function DCFC() {
+export default function CDCS() {
   // ==================== COURSE MODULES ====================
   const modules = [
     {
-      title: "Introduction to Data Centres",
+      title: "Data Centre Design/Life Cycle Overview",
+      items: ["Phases of the data centre life cycle"],
+    },
+    {
+      title: "Standards and Rating Level Definitions",
       items: [
-        "History of data centres",
-        "Denition of dierent type data centres",
+        "Rating levels history and definitions",
+        "Standards and guideline comparison",
+        "N-redundancy options",
+        "Distributed redundant options",
+        "Concurrent maintainability",
+        "Fault tolerant",
+        "Substation requirements",
+        "Example topologies",
+        "Maintenance options",
       ],
     },
     {
-      title: "The Data Centre and its Relation to Business",
-      items: [],
-    },
-    {
-      title: "Data Centre Standards",
-      items: ["List of standards", "Rating definitions"],
-    },
-    {
-      title: "Data Centre Site Selection",
-      items: [],
-    },
-    {
-      title: "Data Centre Facilities Areas",
-      items: ["Listing of all areas and their functions"],
-    },
-    {
-      title: "Topology Designs",
-      items: ["Selection of fittings"],
-    },
-    {
-      title: "Components of the Power Infrastructure",
+      title: "Building Considerations",
       items: [
-        "Utility power",
-        "Transformers",
-        "Generators",
-        "Fuel systems",
-        "UPS",
-        "STS systems",
-        "Batteries",
-        "Panel panels",
-        "Cabling/busbar systems",
-        "Power rails/Strips",
+        "Building location and floor loading considerations",
+        "Floor and hanging loads requirements",
+        "Firing rating for walls and glass",
+        "Blast protection and bullet proofing",
+        "Forced entry protection",
       ],
     },
     {
-      title: "Lights",
-      items: ["Lights", "Emergency lights"],
-    },
-    {
-      title: "Cooling Infrastructure",
+      title: "Advanced Raised Floor & Suspended Ceiling",
       items: [
-        "Chillers",
-        "DX Systems",
-        "Evaporators",
-        "CRACs/CRAHs/HVAC",
-        "Adiabatic",
-        "Near natural air",
-        "Curtain/room",
+        "Raised Floor installation requirements",
+        "Common raised floor problems",
+        "Seismic protection",
+        "Requirements for suspended ceiling",
       ],
     },
     {
-      title: "ICT/Network Infrastructure",
+      title: "Advanced Power",
       items: [
-        "Equipment racks",
-        "Network cabling (inc support)",
-        "Cable trays and pathways",
-        "Tip-145 labelling",
+        "Electrical formulae",
+        "Single Line Diagram (SLD)",
+        "Overcurrent protection devices",
+        "Earth Leakage protection",
+        "Sizing of protective components",
+        "Surge protection",
+        "Power cabling and PDU requirements",
+        "Types of generators",
+        "Generator components",
+        "Fuel storage and calculation",
+        "Generator parallelling",
+        "Required UPS specifications",
+        "UPS parallel configuration",
+        "Harmonic filters",
+        "Battery bank terminology",
+        "Calculating battery banks",
+        "Battery charging",
+        "Paralleilling battery banks",
+        "Battery testing",
+        "Battery case selection",
+        "Flywheel",
+        "Hydrogen fuel cells",
       ],
     },
     {
-      title: "Data Centre Security",
+      title: "Electrical/Earthing Integrity tests",
       items: [
-        "Perimeter security",
-        "Physical protection",
-        "CCTV",
-        "Access control",
-        "Security management",
+        "Sources of EMF",
+        "Single and three phase radiation",
+        "Measuring EMF",
+        "Safe distance guidance",
+        "Calculation of EMF attenuation factors",
       ],
     },
     {
-      title: "Fire Suppression",
+      title: "Advanced Cooling",
       items: [
-        "Detection systems",
-        "Suppression systems",
-        "Prevention systems",
-        "Fire extinguishers",
-        "Fire Safety",
+        "Cooling definitions",
+        "Psychrometric chart",
+        "ASHRAE recommendations",
+        "Heat dissipation",
+        "Equipment airflow",
+        "Floor plan set-up",
+        "Types of perforated tiles",
+        "Rack door construction",
+        "Delta-T and impact",
+        "Optimizing airflow",
+        "Thermal unit conversions",
+        "Calculating air volume displacement (CFM/CMH)",
+        "Cooling capacity calculations",
+        "Computational Fluid Dynamics (CFD)",
+        "Air-conditioner efficiency",
+        "SHR impact on OPEX",
+        "Efficiency indicators",
+        "Air-conditioner selection",
+        "Humidity control",
+        "Redundancy requirements",
+        "Installation requirements",
+        "Service corridor considerations",
+        "Set points and calibration",
+        "Advanced cooling technologies – air cooling",
+        "Advanced cooling technologies – liquid cooling",
       ],
     },
     {
-      title: "Monitoring and reporting",
-      items: ["DCIM", "Itel/Alert"],
+      title: "Advanced Fire Protection",
+      items: [
+        "Fire triangle",
+        "Fire detection systems",
+        "Installation and testing of smoke sensors",
+        "Water-based suppression systems",
+        "Gas-based suppression systems",
+        "Calculate gas content",
+        "Release and hold times",
+        "Fire detection panel requirements",
+        "Verification of installation",
+        "Ongoing maintenance",
+        "Alternative systems",
+      ],
+    },
+    {
+      title: "Designing and Installing Scalable Network Cabling Systems",
+      items: [
+        "TIA-942 cabling structure topology",
+        "Copper and fibre cabling",
+        "ToR and EoR design",
+        "Installation best practices",
+        "Grounding and bonding",
+        "Cables labelling and administration",
+      ],
+    },
+    {
+      title: "Environmental Specifications / Contamination Control",
+      items: [
+        "Acoustic noise effects, regulations, specifications and limits",
+        "Data centre contamination categories",
+        "Contamination measurements, standards and limits",
+        "Preventive measures",
+      ],
+    },
+    {
+      title: "Data Centre Efficiency",
+      items: [
+        "Business drivers for environmental sustainability",
+        "Green standards and guidelines",
+        "Power Usage Effectiveness (PUE)",
+        "PUE categories",
+        "Additional performance metrics",
+        "Open Compute Project (OCP)",
+        "Savings on cooling infrastructure",
+        "Savings on light infrastructure",
+      ],
     },
   ];
-
   return (
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}
@@ -139,14 +200,15 @@ export default function DCFC() {
           <div>
             {/* Course title */}
             <h1 className="text-[#1775EE] font-bold">
-              Data Centre Foundation Certificate
+              Certified Data Centre Specialist
             </h1>
 
             {/* Course description */}
             <p className="lg:w-[30vw] xl:w-lg text-gray-900">
-              The Data Centre Foundation Certificate (DCFC®) is a 2-day course
-              that provides essential knowledge of data centre facilities and
-              infrastructure.
+              CDCS® is a key certification for data centre professionals looking
+              to strengthen their technical expertise and decision-making
+              skills. It also serves as a prerequisite for those pursuing the
+              advanced Certified Data Centre Expert (CDCE®) designation.
             </p>
           </div>
 
@@ -183,18 +245,13 @@ export default function DCFC() {
             {/* About Section - Description */}
             {/* CHANGE: Course description paragraphs */}
             <p>
-              The data centre sector is one of the fastest-growing areas within
-              the ICT industry. Fueled by the rising demand for integrated
-              communication solutions, social media, online content, and cloud
-              infrastructure, the industry continues to expand rapidly, with new
-              data centres being built to support this growth.
-            </p>
-            <p>
-              Industry reports highlight a shortage of skilled data centre
-              professionals. This gap is driven both by rapidly evolving
-              technologies, which can leave current personnel with outdated
-              skills, and by the expansion of the data centre market, creating a
-              need for more trained professionals.
+              The Certified Data Centre Specialist (CDCS®) is an intensive
+              three-day course that provides participants with the knowledge and
+              skills to effectively engage in data centre design and operations,
+              particularly in high-demand environments. Learners gain the
+              ability to assess design proposals for accuracy, efficiency, and
+              effectiveness, including solutions for power and cooling
+              infrastructure.
             </p>
           </section>
 
@@ -209,19 +266,31 @@ export default function DCFC() {
             <div className="grid grid-cols-1 gap-4">
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Fundamentals of data centre infrastructure</p>
+                <p>
+                  Gain a clear understanding of the data centre design lifecycle
+                  and its key stages.
+                </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Power, cooling, and environmental management</p>
+                <p>
+                  Communicate detailed data centre requirements with vendors,
+                  suppliers, and contractors to ensure they are met.
+                </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Physical security and access control</p>
+                <p>
+                  Review and validate design documents, cost estimates, and
+                  technical proposals for compliance with specifications.
+                </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Industry standards and best practice guidelines</p>
+                <p>
+                  Understand redundancy levels in both data centre design and
+                  ongoing maintenance.
+                </p>
               </div>
             </div>
           </section>
@@ -244,8 +313,8 @@ export default function DCFC() {
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
             {/* Cert Badge - Change/Update Image */}
             <img
-              src={dcfc}
-              alt="DCFC Certification Badge"
+              src={cdcs}
+              alt="CDCS Certification Badge"
               className="w-60 h-60 object-contain"
             />
           </div>
@@ -256,10 +325,10 @@ export default function DCFC() {
             <h5 className="text-[#1775EE] font-bold">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
-              "Data Centre Technician",
-              "Data Centre Operations Assistant",
-              "IT Support Technician",
-              "NOC / Operations Support Engineer",
+              "Data Center Shift Supervisor",
+              "Site Planning Engineer",
+              "Data Center Specialist",
+              "Infrastructure & Operations Roles",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />

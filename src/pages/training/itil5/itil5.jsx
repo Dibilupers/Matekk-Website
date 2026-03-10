@@ -1,189 +1,115 @@
 // ==================== IMPORTS - UPDATE FOR EACH COURSE ====================
 // Change these imports based on the specific course
-import Button from "../../../../components/ui/button";
+import Button from "../../../components/ui/button";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
-import cdcp from "../../../../assets/cdcp.webp"; // Course badge image
-import ccnaHero from "../../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
-import ccnaFooter from "../../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
-import MealIcon from "../../../../assets/Meal.svg";
-import ReviewIcon from "../../../../assets/Review.svg";
-import WorkstationIcon from "../../../../assets/Workstation.svg";
-import MedalIcon from "../../../../assets/Medal.svg";
-import CourseModules from "../../../../components/training/courseModules";
-import TrainingTemplateFooter from "../../../../components/section/TrainingTemplateFooter";
-import EnrollNowButton from "../../../../components/ui/EnrollNowButton";
+import itil5 from "../../../assets/itil5.webp"; // Course badge image
+import ccnaHero from "../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
+import ccnaFooter from "../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
+import MealIcon from "../../../assets/Meal.svg";
+import ReviewIcon from "../../../assets/Review.svg";
+import WorkstationIcon from "../../../assets/Workstation.svg";
+import MedalIcon from "../../../assets/Medal.svg";
+import CourseModules from "../../../components/training/courseModules";
+import TrainingTemplateFooter from "../../../components/section/TrainingTemplateFooter";
+import EnrollNowButton from "../../../components/ui/EnrollNowButton";
 
 // ==================== COMPONENT NAME ====================
-export default function CDCP() {
+export default function ITIL5() {
   // ==================== COURSE MODULES ====================
   const modules = [
     {
-      title: "The Mission Critical Site",
+      title: "Introduction to Direct, Plan and Improve",
       items: [
-        "Business organization",
-        "Types of data centres",
-        "Importance of a data centre",
-        "Elements of data centre",
-        "Causes of unavailability",
+        "Overview of DPI within the ITIL 4 framework",
+        "Role of DPI in aligning strategy, governance, measurement, and improvement",
+        "DPI as a core module in the Managing Professional and Strategic Leader tracks",
       ],
     },
     {
-      title: "Data Centre Standards",
+      title: "Module 1: Core concepts of DPI",
       items: [
-        "Standards and guidelines",
-        "Standards for sub-components",
-        "International vs. national standards",
+        "Key definitions: direction, planning, improvement, scope",
+        "Relationships between value, outcomes, costs, and risks",
+        "Strategic vs operational scope of DPI",
       ],
     },
     {
-      title: "Data Centre Location, Building and Construction",
+      title:
+        "Module 2: DPI through service value system and guiding principles",
       items: [
-        "Criteria for selecting site location (the data centre location)",
-        "Criteria for facility",
-        "Supporting facilities and function",
+        "How DPI works within the Service Value System (SVS)",
+        "Applying the ITIL guiding principles to DPI work (e.g., start where you are, collaborate)",
       ],
     },
     {
-      title: "Raised Access Flooring and Suspended Ceiling",
+      title: "Module 3: Role of direction in strategy management",
       items: [
-        "Standards",
-        "Types of raised floors",
-        "Loading factors",
-        "General guidelines",
-        "Grounding",
-        "Ramp and landing platform",
-        "Suspended ceiling",
-        "Raised floor and suspended ceiling impact on cooling",
+        "Identifying scope of what is to be directed/planned",
+        "Cascading objectives and controls",
+        "Policy, roles, and authority distribution for strategic alignment",
       ],
     },
     {
-      title: "Light",
+      title: "Module 4: Implementation of strategies",
       items: [
-        "Measurements of light",
-        "Standards",
-        "Connecting and positioning of light textures",
-        "Emergency light",
-        "Types of emergency light",
+        "Practical use of strategies in day-to-day operations",
+        "Governance integration, risk management, and compliance (GRC) linking to SVS",
       ],
     },
     {
-      title: "Power Infrastructure",
+      title: "Module 5: Introduction to assessment and planning",
       items: [
-        "Sustainability",
-        "Microgrid",
-        "Transformers",
-        "Generators",
-        "Automatic Transfer Switch (ATS) and Static Transfer Switch (STS)",
-        "Power redundancy levels and techniques",
-        "Power distribution / Busbar trunking",
-        "Single phase and three phase power",
-        "Grounding and bonding",
-        "Isolation transformer",
-        "PDU form factors",
-        "Ingress Protection (IP) grades",
-        "Power quality parameters",
-        "Power sizing",
-        "High Performance Computing",
-        "UPS systems",
-        "UPS parallel configurations",
-        "Batteries",
-        "Battery Energy Storage System (BESS)",
-        "Thermographic scanning",
+        "Assessment objectives, outputs, requirements and criteria",
+        "Selecting appropriate evaluation methods",
+        "Defining desired outcomes and scopes for planning",
       ],
     },
     {
-      title: "Centre Magnetic Fields (EMF)",
+      title: "Module 6: Assessment and planning through VSM",
       items: [
-        "Types of EMF",
-        "Units of measurements",
-        "Standards and best practices",
-        "Sources of EMF",
-        "Shielding",
+        "Evaluating parts of the SVS",
+        "Using data and feedback to refine planning and strategic direction",
       ],
     },
     {
-      title: "Equipment Racks",
+      title: "Module 7: Measurement, reporting, and continual improvement",
       items: [
-        "Standards",
-        "Dimensions",
-        "Types of racks",
-        "Security",
-        "Power strips / rails",
+        "Definition and use of metrics, indicators, and reporting in DPI",
+        "Tools and practices to monitor performance",
       ],
     },
     {
-      title: "Cooling Infrastructure",
+      title:
+        "Module 8: Measurements and continual improvement through dimensions and SVS",
       items: [
-        "Cooling principles",
-        "Temperature and humidity",
-        "Types of cooling systems",
-        "Raised floor cooling",
-        "Non-raised floor cooling",
-        "Supplemental cooling",
-        "Containment",
-        "Liquid cooling",
-        "Seasonal thermal energy storage (STER)",
+        "Applying measurement across the four dimensions of service management",
+        "Driving improvement across value streams and practices",
       ],
     },
     {
-      title: "Water Supply",
-      items: ["Importance of water", "Backup water supply"],
-    },
-    {
-      title: "Designing a Scalable Network Infrastructure",
+      title: "Module 9: OCM principles and methods",
       items: [
-        "Importance network cabling infrastructure",
-        "Planning considerations",
-        "Copper Cabling",
-        "Fibre Cabling",
-        "TIA-942 cabling systems topology",
-        "Testing and verication of cabling system",
-        "Redundancy",
-        "Site-to-site connectivity",
+        "OCM concepts and success factors",
+        "Stakeholder engagement and influence in change transitions",
       ],
     },
     {
-      title: "Fire Protection",
+      title: "Module 10: Communication principles and methods",
       items: [
-        "Common causes of fire",
-        "Requirements for fire suppression systems",
-        "Standards",
-        "Fire detection systems",
-        "Water based fire suppression systems",
-        "Gas based fire suppression systems",
-        "Classes of fire",
-        "Best practices",
-        "Fire safety extinguishers",
-        "Requirements for signage and safety",
-        "Regulatory requirements",
+        "Communication planning and channels",
+        "Feedback loops and effective two-way communication strategies",
       ],
     },
     {
-      title: "Physical Security and Safety",
+      title: "Module 11: SVS development using four dimensions",
       items: [
-        "Components for physical security",
-        "Components for physical safety",
-      ],
-    },
-    {
-      title: "Auxiliary Systems",
-      items: [
-        "Monitoring challenges",
-        "Monitoring requirements",
-        "Environment Monitoring System (EMS)",
-        "Building Management System (BMS)",
-        "Data Centre Infrastructure Management (DCIM)",
-        "Water leak detection",
-        "Alarm panels",
-        "Notication",
-        "Best practices",
+        "How to use organisational culture, information & technology, value streams/processes, and partners/suppliers to enable DPI success across the SVS",
       ],
     },
   ];
-
   return (
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}
@@ -203,22 +129,22 @@ export default function CDCP() {
         <div className="relative z-10 flex flex-col gap-3 pl-1 sm:pl-8">
           {/* Course Category */}
           <h6 className="w-fit px-4 py-2 text-[#1775EE] bg-blue-50 rounded-full">
-            CDCP
+            IT Management
           </h6>
 
           {/* ====== Course Title and Description ======*/}
           <div>
             {/* Course title */}
-            <h1 className="text-[#1775EE] font-bold">
-              Certified Data Centre Professional
+            <h1 className="text-[#1775EE] w-150">
+              ITIL Foundation Bridge (Version 5)
             </h1>
 
             {/* Course description */}
             <p className="lg:w-[30vw] xl:w-lg text-gray-900">
-              The CDCP® (Certified Data Centre Professional) course is an
-              intensive 2-day program that provides participants with key
-              knowledge of the critical components of data centre
-              infrastructure.
+              A streamlined, targeted pathway designed for ITIL 4 certification
+              holders to transition smoothly to ITIL Foundation (Version 5),
+              focusing exclusively on the new updates and changes introduced in
+              the latest version.
             </p>
           </div>
 
@@ -255,10 +181,19 @@ export default function CDCP() {
             {/* About Section - Description */}
             {/* CHANGE: Course description paragraphs */}
             <p>
-              This course covers power and cooling systems, security, cabling,
-              safety procedures, and efficiency improvements, equipping data
-              centre professionals to effectively manage and optimize current
-              facilities while preparing for future developments.
+              This course is tailored to help ITIL 4 professionals quickly and
+              efficiently align with the latest ITIL Foundation (Version 5)
+              framework. Rather than revisiting the foundational content you
+              already know, it zeroes in on the key changes, emerging trends,
+              and updated practices that reflect the evolving landscape of
+              digital service management. By highlighting how value creation,
+              digital service delivery, and management concepts have been
+              refined, the course ensures you stay current and confident in
+              applying ITIL principles in modern IT environments. With a
+              practical approach, interactive examples, and real-world
+              applications, you’ll be equipped to understand and leverage
+              Version 5 enhancements without spending unnecessary time on
+              material you’ve already mastered.
             </p>
           </section>
 
@@ -273,33 +208,24 @@ export default function CDCP() {
             <div className="grid grid-cols-1 gap-4">
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
+                <p>Major updates and enhancements in ITIL (Version 5)</p>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <p>
-                  Describe various types of data centres, their role in business
-                  continuity, and factors influencing availability.
+                  Evolution of digital product and service management practices
                 </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <p>
-                  Review international and national standards, industry
-                  guidelines, and compliance requirements for data centre design
-                  and components.
+                  Advanced approaches to value creation and service optimization
                 </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <p>
-                  Understand site selection, building specifications, and
-                  supporting infrastructure needed to create a resilient,
-                  high-performance data centre.
-                </p>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>
-                  Implement raised floors and suspended ceilings, taking into
-                  account cooling, grounding, load distribution, and airflow
-                  optimization.
+                  Refined terminology, core principles, and updated concepts
                 </p>
               </div>
             </div>
@@ -323,8 +249,8 @@ export default function CDCP() {
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
             {/* Cert Badge - Change/Update Image */}
             <img
-              src={cdcp}
-              alt="CDCP Certification Badge"
+              src={itil5}
+              alt="ITIL Certification Badge"
               className="w-60 h-60 object-contain"
             />
           </div>
@@ -335,10 +261,10 @@ export default function CDCP() {
             <h5 className="text-[#1775EE] font-bold">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
-              "Data Centre Technician",
-              "Data Centre Engineer",
-              "Data Centre Operations Manager",
-              "Infrastructure Operations Manager",
+              "IT Operations Specialist",
+              "IT Development Manager",
+              "Chief Digital Officer",
+              "IT Specialist Change Management",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />

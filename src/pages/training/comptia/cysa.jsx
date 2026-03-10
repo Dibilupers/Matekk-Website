@@ -1,78 +1,58 @@
 // ==================== IMPORTS - UPDATE FOR EACH COURSE ====================
 // Change these imports based on the specific course
-import Button from "../../../../components/ui/button";
+import Button from "../../../components/ui/button";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
-import linux from "../../../../assets/linux+.webp"; // Course badge image
-import ccnaHero from "../../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
-import ccnaFooter from "../../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
-import MealIcon from "../../../../assets/Meal.svg";
-import ReviewIcon from "../../../../assets/Review.svg";
-import WorkstationIcon from "../../../../assets/Workstation.svg";
-import MedalIcon from "../../../../assets/Medal.svg";
-import CourseModules from "../../../../components/training/courseModules";
-import TrainingTemplateFooter from "../../../../components/section/TrainingTemplateFooter";
-import EnrollNowButton from "../../../../components/ui/EnrollNowButton";
+import cysa from "../../../assets/cysa.webp"; // Course badge image
+import ccnaHero from "../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
+import ccnaFooter from "../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
+import MealIcon from "../../../assets/Meal.svg";
+import ReviewIcon from "../../../assets/Review.svg";
+import WorkstationIcon from "../../../assets/Workstation.svg";
+import MedalIcon from "../../../assets/Medal.svg";
+import CourseModules from "../../../components/training/courseModules";
+import TrainingTemplateFooter from "../../../components/section/TrainingTemplateFooter";
+import EnrollNowButton from "../../../components/ui/EnrollNowButton";
 
 // ==================== COMPONENT NAME ====================
-export default function Linux() {
+export default function CySA() {
   // ==================== COURSE MODULES ====================
-  const modules = [
+const modules = [
     {
-      title: "System Management",
-      progress: 23,
+      title: "Security operations",
       items: [
-        "Linux basics: Identify boot process steps, kernel, filesystems, and architectures.",
-        "Device management: Manage kernel modules, hardware components, and device utilities.",
-        "Storage management: Configure LVM, RAID, partitions, and mounted storage.",
-        "Network configuration: Set up hosts, DNS, interfaces, and network tools.",
-        "Shell operations: Use navigation, editing, redirection, and environment variables.",
-        "Backups and restores: Perform archiving, compression, and data recovery.",
-        "Virtualization: Deploy hypervisors, create VMs, and manage disk images.",
+        "System and network architecture: explaining log ingestion, operating system (OS) concepts, infrastructure, network architecture, identity and access management (IAM), encryption, and sensitive data protection.",
+        "Malicious activity indicators: analyzing network anomalies like bandwidth spikes and rogue devices, host issues like unauthorized software and data exfiltration, application irregularities like unexpected communication and service interruptions, and threats like social engineering attacks.",
+        "Tools and techniques: detecting malicious activity using tools like Wireshark, security information and event management (SIEM), and VirusTotal, along with techniques like pattern recognition and email analysis, supported by scripting languages like Python and PowerShell.",
+        "Threat intelligence and hunting: comparing threat actors, tactics, techniques, and procedures (TTP); confidence levels; collection methods; intelligence sharing; and hunting techniques.",
+        "Process improvement: standardizing processes, streamlining operations, integrating tools, and using a single pane of glass.",
       ],
     },
     {
-      title: "Services and User Management",
+      title: "Vulnerability management",
       items: [
-        "Files & directories: Control permissions, create links, and manage special files.",
-        "Account management: Add, remove, and modify users and groups.",
-        "Process control: Monitor states, adjust priorities, and schedule jobs.",
-        "Software management: Install, update, or remove packages and repositories.",
-        "Systems management: Start, stop, and review services, logs, and timers.",
-        "Containers: Operate container runtimes, manage images, and create networks.",
+        "Vulnerability scanning: implementing asset discovery, internal vs. external scanning, agent vs. agentless, credentialed vs. non-credentialed, passive vs. active, static vs. dynamic, and critical infrastructure scanning.",
+        "Assessment tool output: analyzing network scanning, web application scanners, vulnerability scanners, debuggers, multiprocess tools, and cloud infrastructure assessments.",
+        "Vulnerability prioritization: interpreting common vulnerability scoring system (CVSS), validating findings, assessing exploitability, and considering asset value and zero-day vulnerabilities.",
+        "Mitigation controls: recommending controls for cross-site scripting (XSS), overflow vulnerabilities, and data poisoning.",
+        "Vulnerability response: explaining compensating controls, patching, configuration management, maintenance windows, exceptions, governance, service-level objectives (SLOs), secure software development life cycle (SDLC), and threat modeling.",
       ],
     },
     {
-      title: "Security",
+      title: "Incident response management",
       items: [
-        "Auth & accounting: Configure PAM, LDAP, Kerberos, and enable auditing.",
-        "Firewalls: Set firewalls using iptables, nftables, UFW, and zone rules.",
-        "OS hardening: Apply permissions, configure sudo, and secure remote access.",
-        "Account security: Enforce password policies, restrict shells, and enable MFA.",
-        "Cryptography: Encrypt files, use hashing, and manage certificates.",
-        "Compliance: Verify integrity, run scans, and maintain standards.",
+        "Attack methodology frameworks: explaining cyber kill chains, diamond model of intrusion analysis, MITRE ATT&CK, Open Source Security Testing Methodology Manual (OSSTMM), and OWASP testing guide.",
+        "Incident response activities: performing detection, analysis, containment, eradication, and recovery.",
+        "Incident management life cycle: explaining incident response plans, tools, playbooks, tabletop exercises, training, business continuity (BC), disaster recovery (DR), forensic system analysis, and root cause analysis.",
       ],
     },
     {
-      title: "Automation, Orchestration, and Scripting",
+      title: "Reporting and communication",
       items: [
-        "Automation: Automate tasks with Ansible, Puppet, and CI/CD tools.",
-        "Shell scripting: Write and troubleshoot variables, functions, and logic flows.",
-        "Python basics: Develop scripts using environments, packages, and data types.",
-        "Version control: Manage code with Git workflows and tagging.",
-        "AI best practices: Apply code generation and prompt engineering responsibly.",
-      ],
-    },
-    {
-      title: "Troubleshooting",
-      items: [
-        "System monitoring: Monitor health, logs, and event alerts.",
-        "Hardware/storage: Diagnose boot, mount, and repair issues.",
-        "Networking: Resolve firewall, routing, DNS, and connectivity problems.",
-        "Security: Fix SELinux, permission, and vulnerability issues.",
-        "Performance: Analyze CPU, memory, I/O, and optimize response times.",
+        "Vulnerability management reporting: explaining compliance reports, action plans, inhibitors to remediation, metrics, key performance indicators (KPIs), and stakeholder communication.",
+        "Incident response reporting: explaining incident declaration, escalation, reporting, communication, root cause analysis, lessons learned, and metrics and KPIs.",
       ],
     },
   ];
@@ -102,14 +82,14 @@ export default function Linux() {
           {/* ====== Course Title and Description ======*/}
           <div>
             {/* Course title */}
-            <h1 className="text-[#1775EE] font-bold">Linux+</h1>
+            <h1 className="text-[#1775EE] font-bold">CySA+</h1>
 
             {/* Course description */}
             <p className="lg:w-[30vw] xl:w-lg text-gray-900">
-              CompTIA Linux+ shows you how to manage, secure, and troubleshoot
-              Linux systems in cloud and hybrid environments. With skills in
-              automation, containers, and orchestration, it prepares you for
-              high-demand roles that support critical business platforms.
+              CompTIA CySA+ shows you how to detect, analyze, and respond to
+              threats in real time. From vulnerability management to incident
+              response, it equips you with the skills SOCs rely on to turn
+              security data into actionable defense strategies.
             </p>
           </div>
 
@@ -146,13 +126,12 @@ export default function Linux() {
             {/* About Section - Description */}
             {/* CHANGE: Course description paragraphs */}
             <p>
-              CompTIA Linux+ (V8) validates your skills in managing, securing,
-              automating, and troubleshooting Linux systems across cloud and
-              hybrid environments. Gain hands-on experience with automation,
-              orchestration, security, and containers, preparing you for roles
-              like Linux systems administrator, systems engineer, or network
-              engineer, while demonstrating your ability to support critical
-              business platforms.
+              CompTIA Cybersecurity Analyst (CySA+) is a leading certification
+              for professionals responsible for identifying, preventing, and
+              responding to security incidents through continuous monitoring. It
+              validates expertise in incident response and vulnerability
+              management while emphasizing the communication skills required for
+              effective analysis and regulatory compliance.
             </p>
           </section>
 
@@ -168,29 +147,25 @@ export default function Linux() {
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <p>
-                  Set up and manage Linux systems, storage, networks, and
-                  services in cloud and hybrid environments.
+                Improve security operations processes, distinguish between threat intelligence and threat hunting, and detect malicious activity using the right tools.
                 </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <p>
-                  Implement best practices for permissions, authentication,
-                  firewalls, and system hardening.
+                  Perform vulnerability assessments, prioritize risks, and recommend effective mitigation strategies.
                 </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <p>
-                  Automate administrative tasks and improve workflows using
-                  shell scripting, Python, and configuration management tools.
+                 Apply attack frameworks, conduct incident response, and understand the full incident management lifecycle to manage security events efficiently.
                 </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <p>
-                  Deploy, maintain, and monitor containers and virtual machines
-                  with top industry technologies.
+                Use best practices in communication to report on vulnerabilities and incidents, providing stakeholders with actionable insights and clear metrics.
                 </p>
               </div>
             </div>
@@ -214,8 +189,8 @@ export default function Linux() {
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
             {/* Cert Badge - Change/Update Image */}
             <img
-              src={linux}
-              alt="PenTest+ Certification Badge"
+              src={cysa}
+              alt="CySA+ Certification Badge"
               className="w-100 h-100 object-contain"
             />
           </div>
@@ -226,10 +201,10 @@ export default function Linux() {
             <h5 className="text-[#1775EE] font-bold">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
-              "Cybersecurity Analyst",
-              "Penetration Tester",
-              "Cybersecurity Specialist",
-              "IT Auditor",
+              "Data Analyst",
+              "IT Manager",
+              "E-Commerce Analyst",
+              "IT Project Manager",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />

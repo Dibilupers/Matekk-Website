@@ -1,18 +1,18 @@
-import Button from "../../../../../components/ui/button";
+import Button from "../../../../components/ui/button";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
-import ccnaBadge from "../../../../../assets/PaloAltoSecurityServiceEdgeEngineer.png";
-import ccnaHero from "../../../../../assets/CCNAHeroImageAutomation.png";
-import ccnaFooter from "../../../../../assets/CCNAFooterImageAutomation.png";
-import MealIcon from "../../../../../assets/Meal.svg";
-import ReviewIcon from "../../../../../assets/Review.svg";
-import InstitutionalIcon from "../../../../../assets/InsitutionalAccount.svg";
-import WorkstationIcon from "../../../../../assets/Workstation.svg";
-import MedalIcon from "../../../../../assets/Medal.svg";
-import CourseModules from "../../../../../components/training/courseModules";
-import TrainingTemplateFooter from "../../../../../components/section/TrainingTemplateFooter";
-import EnrollNowButton from "../../../../../components/ui/EnrollNowButton";
+import ccnaBadge from "../../../../assets/PaloAltoSecurityServiceEdgeEngineer.png";
+import ccnaHero from "../../../../assets/CCNAHeroImageAutomation.png";
+import ccnaFooter from "../../../../assets/CCNAFooterImageAutomation.png";
+import MealIcon from "../../../../assets/Meal.svg";
+import ReviewIcon from "../../../../assets/Review.svg";
+import InstitutionalIcon from "../../../../assets/InsitutionalAccount.svg";
+import WorkstationIcon from "../../../../assets/Workstation.svg";
+import MedalIcon from "../../../../assets/Medal.svg";
+import CourseModules from "../../../../components/training/courseModules";
+import TrainingTemplateFooter from "../../../../components/section/TrainingTemplateFooter";
+import EnrollNowButton from "../../../../components/ui/EnrollNowButton";
 
 // ==================== COMPONENT NAME - CHANGE FOR EACH COURSE ====================
 export default function SecurityServiceEdgeEngineer() {

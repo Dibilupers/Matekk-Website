@@ -1,87 +1,115 @@
-import Button from "../../../../../components/ui/button";
+// ==================== IMPORTS - UPDATE FOR EACH COURSE ====================
+// Change these imports based on the specific course
+import Button from "../../../components/ui/button";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
-import ccnaBadge from "../../../../../assets/PaloAltoSDWanEngineer.png";
-import ccnaHero from "../../../../../assets/CCNAHeroImageAutomation.png";
-import ccnaFooter from "../../../../../assets/CCNAFooterImageAutomation.png";
-import MealIcon from "../../../../../assets/Meal.svg";
-import ReviewIcon from "../../../../../assets/Review.svg";
-import InstitutionalIcon from "../../../../../assets/InsitutionalAccount.svg";
-import WorkstationIcon from "../../../../../assets/Workstation.svg";
-import MedalIcon from "../../../../../assets/Medal.svg";
-import CourseModules from "../../../../../components/training/courseModules";
-import TrainingTemplateFooter from "../../../../../components/section/TrainingTemplateFooter";
-import EnrollNowButton from "../../../../../components/ui/EnrollNowButton";
+// COURSE-SPECIFIC ASSETS - Replace these for different courses
+import dcfc from "../../../assets/dcfc.webp"; // Course badge image
+import ccnaHero from "../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
+import ccnaFooter from "../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
+import MealIcon from "../../../assets/Meal.svg";
+import ReviewIcon from "../../../assets/Review.svg";
+import WorkstationIcon from "../../../assets/Workstation.svg";
+import MedalIcon from "../../../assets/Medal.svg";
+import CourseModules from "../../../components/training/courseModules";
+import TrainingTemplateFooter from "../../../components/section/TrainingTemplateFooter";
+import EnrollNowButton from "../../../components/ui/EnrollNowButton";
 
-// ==================== COMPONENT NAME - CHANGE FOR EACH COURSE ====================
-export default function NetworkSecurityAnalyst() {
-  // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
+// ==================== COMPONENT NAME ====================
+export default function DCFC() {
+  // ==================== COURSE MODULES ====================
   const modules = [
     {
-      title: "1.0 PAN-OS Networking Configuration",
+      title: "Introduction to Data Centres",
       items: [
-        "1.1 Planning and Design",
-        "1.2 Demonstrate understanding of the bandwidth plan",
-        "1.3 Identify and describe device licensing options and tiers",
-        "1.4 Explain the assessment of existing network architecture",
-        "1.5 Identify and describe data center configuration and data center interconnection (DCI) options",
-        "1.6 Explain branch (gateway) configuration",
-        "1.7 Identify and describe security requirements and configuration",
-        "1.8 Explain the process of planning for interconnectivity and high availability (HA)",
-        {
-          subTitle: "1.9 Explain policy design and management",
-          items: [
-            "1.9.1 Path policies",
-            "1.9.2 Security policies",
-            "1.9.3 Quality of Service (QoS)",
-            "1.9.4 Performance policies",
-            "1.9.5 NAT policies",
-          ],
-        },
+        "History of data centres",
+        "Denition of dierent type data centres",
       ],
     },
     {
-      title: "2.0 Deployment and Configuration",
+      title: "The Data Centre and its Relation to Business",
+      items: [],
+    },
+    {
+      title: "Data Centre Standards",
+      items: ["List of standards", "Rating definitions"],
+    },
+    {
+      title: "Data Centre Site Selection",
+      items: [],
+    },
+    {
+      title: "Data Centre Facilities Areas",
+      items: ["Listing of all areas and their functions"],
+    },
+    {
+      title: "Topology Designs",
+      items: ["Selection of fittings"],
+    },
+    {
+      title: "Components of the Power Infrastructure",
       items: [
-        "2.1 Explain Prisma SD-WAN deployment and configuration",
-        "2.2 Identify and describe site-specific settings",
-        "2.3 Explain the process of developing configuration templates for data centers and branches",
-        "2.4 Explain dynamic and static routing protocol tuning",
-        "2.5 Explain VRF implementation for network segmentation",
+        "Utility power",
+        "Transformers",
+        "Generators",
+        "Fuel systems",
+        "UPS",
+        "STS systems",
+        "Batteries",
+        "Panel panels",
+        "Cabling/busbar systems",
+        "Power rails/Strips",
       ],
     },
     {
-      title: "3.0 Operations and Monitoring",
+      title: "Lights",
+      items: ["Lights", "Emergency lights"],
+    },
+    {
+      title: "Cooling Infrastructure",
       items: [
-        "3.1 Demonstrate understanding of device-level statistics monitoring",
-        "3.2 Explain controller-generated incident, alert, statistics, and audit log monitoring",
-        "3.3 Explain alert and notification configuration",
-        "3.4 Demonstrate understanding of WAN Clarity reports",
-        "3.5 Explain the implementation of network monitoring tools for real-time visibility",
-        "3.6 Demonstrate understanding of monitoring and managing SASE-related events",
+        "Chillers",
+        "DX Systems",
+        "Evaporators",
+        "CRACs/CRAHs/HVAC",
+        "Adiabatic",
+        "Near natural air",
+        "Curtain/room",
       ],
     },
     {
-      title: "4.0 Unified SASE",
+      title: "ICT/Network Infrastructure",
       items: [
-        "4.1 Explain the integration of Prisma SD-WAN with Prisma Access and Security policy setup",
-        "4.2 Explain ADEM configuration for monitoring application performance",
-        "4.3 Identify and describe network setting configurations to support IoT device connectivity based on Device-ID",
-        "4.4 Explain the integration of Prisma SD-WAN with Cloud Identity Engine (CIE)",
-        "4.5 Demonstrate understanding of path and Security policy implementation based on User / Group ID",
+        "Equipment racks",
+        "Network cabling (inc support)",
+        "Cable trays and pathways",
+        "Tip-145 labelling",
       ],
     },
     {
-      title: "5.0 Troubleshooting",
+      title: "Data Centre Security",
       items: [
-        "5.1 Explain the process of troubleshooting connectivity issues between sites",
-        "5.2 Demonstrate understanding of routing and forwarding issue resolution",
-        "5.3 Identify and describe application performance issues",
-        "5.4 Explain policy issue troubleshooting",
-        "5.5 Describe data analysis using the co-pilot",
-        "5.6 Explain the use of analytics to optimize network configurations and reporting",
+        "Perimeter security",
+        "Physical protection",
+        "CCTV",
+        "Access control",
+        "Security management",
       ],
+    },
+    {
+      title: "Fire Suppression",
+      items: [
+        "Detection systems",
+        "Suppression systems",
+        "Prevention systems",
+        "Fire extinguishers",
+        "Fire Safety",
+      ],
+    },
+    {
+      title: "Monitoring and reporting",
+      items: ["DCIM", "Itel/Alert"],
     },
   ];
 
@@ -104,20 +132,21 @@ export default function NetworkSecurityAnalyst() {
         <div className="relative z-10 flex flex-col gap-3 pl-1 sm:pl-8">
           {/* Course Category */}
           <h6 className="w-fit px-4 py-2 text-[#1775EE] bg-blue-50 rounded-full">
-            Palo Alto
+            CDCP
           </h6>
 
           {/* ====== Course Title and Description ======*/}
           <div>
             {/* Course title */}
-            <h1 className="text-[#1775EE] font-bold">SD-WAN Engineer</h1>
+            <h1 className="text-[#1775EE] font-bold">
+              Data Centre Foundation Certificate
+            </h1>
 
             {/* Course description */}
             <p className="lg:w-[30vw] xl:w-lg text-gray-900">
-              The Palo Alto Networks Certified SD-WAN Engineer exam is designed
-              to validate the knowledge and skills required for engineers to
-              plan, deploy, configure, operate, monitor, and troubleshoot modern
-              SD-WAN environments and architectures.
+              The Data Centre Foundation Certificate (DCFC®) is a 2-day course
+              that provides essential knowledge of data centre facilities and
+              infrastructure.
             </p>
           </div>
 
@@ -154,20 +183,18 @@ export default function NetworkSecurityAnalyst() {
             {/* About Section - Description */}
             {/* CHANGE: Course description paragraphs */}
             <p>
-              This course prepares learners for the Palo Alto Networks Certified
-              SD-WAN Engineer certification through guided instruction and
-              hands-on activities. It focuses on SD-WAN architecture,
-              pre-deployment planning, policy design and management, deployment
-              configuration, post-deployment operations, and performance
-              monitoring, including the use of analytics to support network
-              transformation goals.
+              The data centre sector is one of the fastest-growing areas within
+              the ICT industry. Fueled by the rising demand for integrated
+              communication solutions, social media, online content, and cloud
+              infrastructure, the industry continues to expand rapidly, with new
+              data centres being built to support this growth.
             </p>
             <p>
-              The program builds practical expertise in planning, deploying, and
-              managing modern SD-WAN environments, while exam guidelines outline
-              covered topics and recommended references and should be
-              supplemented with additional study resources for thorough
-              preparation.
+              Industry reports highlight a shortage of skilled data centre
+              professionals. This gap is driven both by rapidly evolving
+              technologies, which can leave current personnel with outdated
+              skills, and by the expansion of the data centre market, creating a
+              need for more trained professionals.
             </p>
           </section>
 
@@ -179,23 +206,23 @@ export default function NetworkSecurityAnalyst() {
             </h3>
 
             {/* What You Will Learn Section - List */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4">
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>SD-WAN Architecture Concepts</p>
+                <p>Fundamentals of data centre infrastructure</p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Cloud and Hybrid Network Integration</p>
+                <p>Power, cooling, and environmental management</p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Policy-Based Routing Principles</p>
+                <p>Physical security and access control</p>
               </div>
-              <p className="flex items-center gap-2.5">
+              <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <span>Secure WAN Connectivity Fundamentals</span>
-              </p>
+                <p>Industry standards and best practice guidelines</p>
+              </div>
             </div>
           </section>
 
@@ -217,8 +244,8 @@ export default function NetworkSecurityAnalyst() {
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
             {/* Cert Badge - Change/Update Image */}
             <img
-              src={ccnaBadge}
-              alt="Palo Alto Networks Certified Cybersecurity Apprentice Certification Badge"
+              src={dcfc}
+              alt="DCFC Certification Badge"
               className="w-60 h-60 object-contain"
             />
           </div>
@@ -229,10 +256,10 @@ export default function NetworkSecurityAnalyst() {
             <h5 className="text-[#1775EE] font-bold">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
-              "SD-WAN Network Engineer",
-              "Network Optimization Specialist",
-              "WAN Integration Engineer",
-              "Cloud WAN Engineer",
+              "Data Centre Technician",
+              "Data Centre Operations Assistant",
+              "IT Support Technician",
+              "NOC / Operations Support Engineer",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
@@ -302,17 +329,6 @@ export default function NetworkSecurityAnalyst() {
             <div className="inclusions">
               <span className="inclusions_icons">
                 <img
-                  src={InstitutionalIcon}
-                  alt="Institutional Account"
-                  className="w-4 h-4"
-                />
-              </span>
-              <p className="text-sm">Institutional Accounts</p>
-            </div>
-
-            <div className="inclusions">
-              <span className="inclusions_icons">
-                <img
                   src={WorkstationIcon}
                   alt="Workstation"
                   className="w-4 h-4"
@@ -330,7 +346,7 @@ export default function NetworkSecurityAnalyst() {
 
             {/* CHANGE: Download link text and URL */}
             <a href="#" className="text-sm font-medium underline mt-2">
-              Download the Palo Alto Exam Basics here
+              Download the CCNP Exam Basics here
             </a>
           </div>
         </aside>

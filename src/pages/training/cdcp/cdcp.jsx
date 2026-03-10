@@ -1,139 +1,185 @@
-import Button from "../../../../../components/ui/button";
+// ==================== IMPORTS - UPDATE FOR EACH COURSE ====================
+// Change these imports based on the specific course
+import Button from "../../../components/ui/button";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
-import ccnaBadge from "../../../../../assets/PaloAltoProfessional.png";
-import ccnaHero from "../../../../../assets/CCNAHeroImageAutomation.png";
-import ccnaFooter from "../../../../../assets/CCNAFooterImageAutomation.png";
-import MealIcon from "../../../../../assets/Meal.svg";
-import ReviewIcon from "../../../../../assets/Review.svg";
-import InstitutionalIcon from "../../../../../assets/InsitutionalAccount.svg";
-import WorkstationIcon from "../../../../../assets/Workstation.svg";
-import MedalIcon from "../../../../../assets/Medal.svg";
-import CourseModules from "../../../../../components/training/courseModules";
-import TrainingTemplateFooter from "../../../../../components/section/TrainingTemplateFooter";
-import EnrollNowButton from "../../../../../components/ui/EnrollNowButton";
+// COURSE-SPECIFIC ASSETS - Replace these for different courses
+import cdcp from "../../../assets/cdcp.webp"; // Course badge image
+import ccnaHero from "../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
+import ccnaFooter from "../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
+import MealIcon from "../../../assets/Meal.svg";
+import ReviewIcon from "../../../assets/Review.svg";
+import WorkstationIcon from "../../../assets/Workstation.svg";
+import MedalIcon from "../../../assets/Medal.svg";
+import CourseModules from "../../../components/training/courseModules";
+import TrainingTemplateFooter from "../../../components/section/TrainingTemplateFooter";
+import EnrollNowButton from "../../../components/ui/EnrollNowButton";
 
-// ==================== COMPONENT NAME - CHANGE FOR EACH COURSE ====================
-export default function NetworkSecurityProfessional() {
-  // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
+// ==================== COMPONENT NAME ====================
+export default function CDCP() {
+  // ==================== COURSE MODULES ====================
   const modules = [
     {
-      title: "1.0 Cybersecurity",
+      title: "The Mission Critical Site",
       items: [
-        "1.1 Identify and describe vulnerabilities and exploits",
-        {
-          subTitle:
-            "1.2 Identify and describe the stages of the cyber attack lifecycle",
-          items: [
-            "1.2.1 Reconnaissance",
-            "1.2.2 Weaponization and Delivery",
-            "1.2.3 Exploitation",
-            "1.2.4 Installation",
-            "1.2.5 Command-and-Control (C2)",
-            "1.2.6 Actions on the Objective",
-          ],
-        },
-        "1.3 Identify and describe common attack types (e.g., malware, insider threat, C2, social engineering, AI-powered)",
-        {
-          subTitle: "1.4 Identify and describe common threat detection systems",
-          items: [
-            "1.4.1 Intrusion Detection System (IDS)",
-            "1.4.2 Host-Based Intrusion Detection System (HIDS)",
-            "1.4.3 Network-Based Intrusion Detection System (NIDS)",
-          ],
-        },
-        "1.5 Identify and describe threat prevention systems and practices (e.g., end user awareness, security updates, antivirus, intrusion prevention systems, firewalls)",
-        "1.6 Explain the purpose of a DMZ",
-        "1.7 Explain the purpose of Zero Trust",
+        "Business organization",
+        "Types of data centres",
+        "Importance of a data centre",
+        "Elements of data centre",
+        "Causes of unavailability",
       ],
     },
     {
-      title: "2.0 Network Fundamentals",
+      title: "Data Centre Standards",
       items: [
-        {
-          subTitle: "2.1 Identify and describe types of area networks",
-          items: ["2.1.1 WAN", "2.1.2 LAN", "2.1.3 SD-WAN"],
-        },
-        "2.2 Explain external (north-south) and internal (east-west) traffic flow patterns for environments",
-        "2.3 Explain the function of a default gateway",
-        "2.4 Explain the function of NAT, DNS, and DHCP",
-        "2.5 Explain routed protocols and routing protocols",
-        "2.6 Explain the TCP/IP model and the OSI model",
-        "2.7 Identify and describe devices that operate in Layer 1 through Layer 4 of the OSI model",
+        "Standards and guidelines",
+        "Standards for sub-components",
+        "International vs. national standards",
       ],
     },
     {
-      title: "3.0 Network Security",
+      title: "Data Centre Location, Building and Construction",
       items: [
-        "3.1 Identify and describe network segmentation methods (e.g., IP subnetting, VLAN)",
-        "3.2 Explain the function of stateful firewalls and next-generation firewalls (NGFWs)",
-        "3.3 Explain the function of URL filtering",
-        "3.4 Explain the function of a VPN",
-        "3.5 Explain the function of a proxy",
-        {
-          subTitle: "3.6 Identify and describe tunneling protocols",
-          items: ["3.6.1 SSH", "3.6.2 TLS", "3.6.3 IKE"],
-        },
-        "3.7 Explain the function of data loss prevention (DLP)",
-        "3.8 Explain the function of enterprise browsers",
+        "Criteria for selecting site location (the data centre location)",
+        "Criteria for facility",
+        "Supporting facilities and function",
       ],
     },
     {
-      title: "4.0 Endpoint Security",
+      title: "Raised Access Flooring and Suspended Ceiling",
       items: [
-        "4.1 Identify and describe internet of things (IoT) devices and endpoints",
-        "4.2 Explain the objectives of endpoint security and network security",
-        {
-          subTitle: "4.3 Identify and describe endpoint security components",
-          items: [
-            "4.3.1 Security updates",
-            "4.3.2 Antivirus",
-            "4.3.3 Host-based firewalls",
-          ],
-        },
-        "4.4 Differentiate between single-factor authentication and multi-factor authentication",
-        "4.5 Describe identity and access management (IAM)",
+        "Standards",
+        "Types of raised floors",
+        "Loading factors",
+        "General guidelines",
+        "Grounding",
+        "Ramp and landing platform",
+        "Suspended ceiling",
+        "Raised floor and suspended ceiling impact on cooling",
       ],
     },
     {
-      title: "5.0 Cloud Security",
+      title: "Light",
       items: [
-        "5.1 Identify and describe the four cloud-computing deployment models",
-        {
-          subTitle: "5.2 Identify and describe common cloud service models",
-          items: [
-            "5.2.1 Software as a service (SaaS)",
-            "5.2.2 Platform as a service (PaaS)",
-            "5.2.3 Infrastructure as a service (IaaS)",
-            "5.2.4 Network as a service (NaaS)",
-          ],
-        },
-        "5.3 Explain the cloud shared responsibility model",
-        "5.4 Explain cloud security and cloud-native security",
-        "5.5 Define common cloud terms (e.g., hosted, virtualization, virtual machine, container, microservice, API)",
-        "5.6 Explain the cloud native security platform (CNSP)",
-        "5.7 Explain the function of continuous integration and continuous delivery / deployment (CI/CD)",
+        "Measurements of light",
+        "Standards",
+        "Connecting and positioning of light textures",
+        "Emergency light",
+        "Types of emergency light",
       ],
     },
     {
-      title: "6.0 Security Operations",
+      title: "Power Infrastructure",
       items: [
-        {
-          subTitle: "6.1 Explain security operations functions",
-          items: [
-            "6.1.1 Identify / detect",
-            "6.1.2 Investigate",
-            "6.1.3 Mitigate",
-            "6.1.4 Improve",
-          ],
-        },
-        "6.2 Identify methods to optimize security operations center (SOC) performance (e.g., automation and AI, collaboration and information sharing, regular security policy updates, security framework alignment)",
-        "6.3 Define common security operations terms (e.g., event, alert, SOC, DevSecOps, incident response plan, disaster recovery plan)",
-        "6.4 Explain the concepts of false positive alerts and false negative alerts",
-        "6.5 Explain the function of syslog",
-        "6.6 Explain security orchestration, automation, and response (SOAR) and security information and event management (SIEM)",
-        "6.7 Explain AI as it relates to alert analysis",
+        "Sustainability",
+        "Microgrid",
+        "Transformers",
+        "Generators",
+        "Automatic Transfer Switch (ATS) and Static Transfer Switch (STS)",
+        "Power redundancy levels and techniques",
+        "Power distribution / Busbar trunking",
+        "Single phase and three phase power",
+        "Grounding and bonding",
+        "Isolation transformer",
+        "PDU form factors",
+        "Ingress Protection (IP) grades",
+        "Power quality parameters",
+        "Power sizing",
+        "High Performance Computing",
+        "UPS systems",
+        "UPS parallel configurations",
+        "Batteries",
+        "Battery Energy Storage System (BESS)",
+        "Thermographic scanning",
+      ],
+    },
+    {
+      title: "Centre Magnetic Fields (EMF)",
+      items: [
+        "Types of EMF",
+        "Units of measurements",
+        "Standards and best practices",
+        "Sources of EMF",
+        "Shielding",
+      ],
+    },
+    {
+      title: "Equipment Racks",
+      items: [
+        "Standards",
+        "Dimensions",
+        "Types of racks",
+        "Security",
+        "Power strips / rails",
+      ],
+    },
+    {
+      title: "Cooling Infrastructure",
+      items: [
+        "Cooling principles",
+        "Temperature and humidity",
+        "Types of cooling systems",
+        "Raised floor cooling",
+        "Non-raised floor cooling",
+        "Supplemental cooling",
+        "Containment",
+        "Liquid cooling",
+        "Seasonal thermal energy storage (STER)",
+      ],
+    },
+    {
+      title: "Water Supply",
+      items: ["Importance of water", "Backup water supply"],
+    },
+    {
+      title: "Designing a Scalable Network Infrastructure",
+      items: [
+        "Importance network cabling infrastructure",
+        "Planning considerations",
+        "Copper Cabling",
+        "Fibre Cabling",
+        "TIA-942 cabling systems topology",
+        "Testing and verication of cabling system",
+        "Redundancy",
+        "Site-to-site connectivity",
+      ],
+    },
+    {
+      title: "Fire Protection",
+      items: [
+        "Common causes of fire",
+        "Requirements for fire suppression systems",
+        "Standards",
+        "Fire detection systems",
+        "Water based fire suppression systems",
+        "Gas based fire suppression systems",
+        "Classes of fire",
+        "Best practices",
+        "Fire safety extinguishers",
+        "Requirements for signage and safety",
+        "Regulatory requirements",
+      ],
+    },
+    {
+      title: "Physical Security and Safety",
+      items: [
+        "Components for physical security",
+        "Components for physical safety",
+      ],
+    },
+    {
+      title: "Auxiliary Systems",
+      items: [
+        "Monitoring challenges",
+        "Monitoring requirements",
+        "Environment Monitoring System (EMS)",
+        "Building Management System (BMS)",
+        "Data Centre Infrastructure Management (DCIM)",
+        "Water leak detection",
+        "Alarm panels",
+        "Notication",
+        "Best practices",
       ],
     },
   ];
@@ -157,22 +203,22 @@ export default function NetworkSecurityProfessional() {
         <div className="relative z-10 flex flex-col gap-3 pl-1 sm:pl-8">
           {/* Course Category */}
           <h6 className="w-fit px-4 py-2 text-[#1775EE] bg-blue-50 rounded-full">
-            Palo Alto
+            CDCP
           </h6>
 
           {/* ====== Course Title and Description ======*/}
           <div>
             {/* Course title */}
             <h1 className="text-[#1775EE] font-bold">
-              Network Security Professional
+              Certified Data Centre Professional
             </h1>
 
             {/* Course description */}
             <p className="lg:w-[30vw] xl:w-lg text-gray-900">
-              The Palo Alto Networks Certified Network Security Professional
-              exam validates knowledge of Palo Alto Networks security solutions,
-              including installation, configuration, deployment, and maintenance
-              in enterprise environments.
+              The CDCP® (Certified Data Centre Professional) course is an
+              intensive 2-day program that provides participants with key
+              knowledge of the critical components of data centre
+              infrastructure.
             </p>
           </div>
 
@@ -209,16 +255,10 @@ export default function NetworkSecurityProfessional() {
             {/* About Section - Description */}
             {/* CHANGE: Course description paragraphs */}
             <p>
-              This course prepares learners for the Palo Alto Networks Certified
-              Network Security Professional certification through guided
-              instruction and hands-on activities. It covers core network
-              security solutions, including installation, configuration,
-              deployment, and basic maintenance of Palo Alto Networks products.
-            </p>
-            <p>
-              The program develops practical skills and understanding to support
-              exam success, with guidelines provided as a reference alongside
-              additional study resources.
+              This course covers power and cooling systems, security, cabling,
+              safety procedures, and efficiency improvements, equipping data
+              centre professionals to effectively manage and optimize current
+              facilities while preparing for future developments.
             </p>
           </section>
 
@@ -230,23 +270,38 @@ export default function NetworkSecurityProfessional() {
             </h3>
 
             {/* What You Will Learn Section - List */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4">
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Advanced Firewall Deployment Strategies</p>
+                <p>
+                  Describe various types of data centres, their role in business
+                  continuity, and factors influencing availability.
+                </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Threat Intelligence Integration Concepts</p>
+                <p>
+                  Review international and national standards, industry
+                  guidelines, and compliance requirements for data centre design
+                  and components.
+                </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Zero Trust Architecture Principles</p>
+                <p>
+                  Understand site selection, building specifications, and
+                  supporting infrastructure needed to create a resilient,
+                  high-performance data centre.
+                </p>
               </div>
-              <p className="flex items-center gap-2.5">
+              <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <span>Network Security Policy Optimization</span>
-              </p>
+                <p>
+                  Implement raised floors and suspended ceilings, taking into
+                  account cooling, grounding, load distribution, and airflow
+                  optimization.
+                </p>
+              </div>
             </div>
           </section>
 
@@ -268,8 +323,8 @@ export default function NetworkSecurityProfessional() {
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
             {/* Cert Badge - Change/Update Image */}
             <img
-              src={ccnaBadge}
-              alt="Palo Alto Networks Certified Cybersecurity Apprentice Certification Badge"
+              src={cdcp}
+              alt="CDCP Certification Badge"
               className="w-60 h-60 object-contain"
             />
           </div>
@@ -280,10 +335,10 @@ export default function NetworkSecurityProfessional() {
             <h5 className="text-[#1775EE] font-bold">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
-              "Senior Network Security Engineer",
-              "Security Solutions Architect",
-              "Threat Prevention Specialist",
-              "Security Infrastructure Manager",
+              "Data Centre Technician",
+              "Data Centre Engineer",
+              "Data Centre Operations Manager",
+              "Infrastructure Operations Manager",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
@@ -353,17 +408,6 @@ export default function NetworkSecurityProfessional() {
             <div className="inclusions">
               <span className="inclusions_icons">
                 <img
-                  src={InstitutionalIcon}
-                  alt="Institutional Account"
-                  className="w-4 h-4"
-                />
-              </span>
-              <p className="text-sm">Institutional Accounts</p>
-            </div>
-
-            <div className="inclusions">
-              <span className="inclusions_icons">
-                <img
                   src={WorkstationIcon}
                   alt="Workstation"
                   className="w-4 h-4"
@@ -381,7 +425,7 @@ export default function NetworkSecurityProfessional() {
 
             {/* CHANGE: Download link text and URL */}
             <a href="#" className="text-sm font-medium underline mt-2">
-              Download the Palo Alto Exam Basics here
+              Download the CCNP Exam Basics here
             </a>
           </div>
         </aside>

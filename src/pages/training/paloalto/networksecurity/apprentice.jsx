@@ -1,15 +1,13 @@
-// ==================== IMPORTS - UPDATE FOR EACH COURSE ====================
-// Change these imports based on the specific course
 import Button from "../../../../components/ui/button";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
-// COURSE-SPECIFIC ASSETS - Replace these for different courses
-import security from "../../../../assets/security+.webp"; // Course badge image
-import ccnaHero from "../../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
-import ccnaFooter from "../../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
+import ccnaBadge from "../../../../assets/PaloAltoCyberSecurityApprentice.png";
+import ccnaHero from "../../../../assets/CCNAHeroImageAutomation.png";
+import ccnaFooter from "../../../../assets/CCNAFooterImageAutomation.png";
 import MealIcon from "../../../../assets/Meal.svg";
 import ReviewIcon from "../../../../assets/Review.svg";
+import InstitutionalIcon from "../../../../assets/InsitutionalAccount.svg";
 import WorkstationIcon from "../../../../assets/Workstation.svg";
 import MedalIcon from "../../../../assets/Medal.svg";
 import CourseModules from "../../../../components/training/courseModules";
@@ -17,60 +15,124 @@ import TrainingTemplateFooter from "../../../../components/section/TrainingTempl
 import EnrollNowButton from "../../../../components/ui/EnrollNowButton";
 
 // ==================== COMPONENT NAME - CHANGE FOR EACH COURSE ====================
-export default function SecurityPlus() {
+export default function PaloaltoApprentice() {
   // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
   const modules = [
     {
-      title: "General security concepts",
+      title: "1.0 Cybersecurity",
       items: [
-        "Security controls: comparing technical, preventive, managerial, deterrent, operational, detective, physical, corrective, compensating, and directive controls.",
-        "Fundamental concepts: summarizing confidentiality, integrity, and availability (CIA), non-repudiation, authentication, authorization, and accounting (AAA), zero trust, and deceptive/disruption technology.",
-        "Change management: explaining business processes, technical implications of change, documentation, and version control.",
-        "Cryptographic solutions: using public-key infrastructure (PKI), encryption, obfuscation, hashing, digital signatures, and blockchain.",
+        "1.1 Identify and describe vulnerabilities and exploits",
+        {
+          subTitle:
+            "1.2 Identify and describe the stages of the cyber attack lifecycle",
+          items: [
+            "1.2.1 Reconnaissance",
+            "1.2.2 Weaponization and Delivery",
+            "1.2.3 Exploitation",
+            "1.2.4 Installation",
+            "1.2.5 Command-and-Control (C2)",
+            "1.2.6 Actions on the Objective",
+          ],
+        },
+        "1.3 Identify and describe common attack types (e.g., malware, insider threat, C2, social engineering, AI-powered)",
+        {
+          subTitle: "1.4 Identify and describe threat detection systems",
+          items: [
+            "1.4.1 Intrusion Detection System (IDS)",
+            "1.4.2 Host-Based Intrusion Detection System (HIDS)",
+            "1.4.3 Network-Based Intrusion Detection System (NIDS)",
+          ],
+        },
+        "1.5 Identify and describe threat prevention systems and practices (e.g., end user awareness, security updates, antivirus, intrusion prevention systems, firewalls)",
+        "1.6 Explain the purpose of a DMZ",
+        "1.7 Explain the purpose of Zero Trust",
       ],
     },
     {
-      title: "Threats, vulnerabilities, and mitigations",
+      title: "2.0 Network Fundamentals",
       items: [
-        "Threat actors and motivations: comparing nation-states, unskilled attackers, hacktivists, insider threats, organized crime, and shadow IT; understanding their attributes, resources, espionage, and financial motivations.",
-        "Threat vectors and attack surfaces: explaining message-based, voice call, removable media, supply chain, network, wireless, cloud, and operational technology vectors.",
-        "Vulnerabilities: applying application, operating system, web, hardware, virtualization, operating system (OS), firmware, client-based, agentless, unsupported systems, and third-party vulnerabilities.",
-        "Malicious activity: analyzing malware attacks, password attacks, application attacks, advanced attacks, network attacks, and cryptographic attacks.",
-        "Mitigation techniques: using segmentation, access control, configuration enforcement, hardening, isolation, and patching.",
+        {
+          subTitle: "2.1 Identify and describe types of area networks",
+          items: ["2.1.1 WAN", "2.1.2 LAN", "2.1.3 SD-WAN"],
+        },
+        "2.2 Explain external (north-south) and internal (east-west) traffic flow patterns for environments",
+        "2.3 Explain the function of a default gateway",
+        "2.4 Explain the function of NAT, DNS, and DHCP",
+        "2.5 Explain routed protocols and routing protocols",
+        "2.6 Explain the TCP/IP model and the OSI model",
+        "2.7 Identify and describe devices that operate in Layer 1 through Layer 4 of the OSI model",
       ],
     },
     {
-      title: "Security architecture",
+      title: "3.0 Network Security",
       items: [
-        "Architecture models: comparing on-premises, cloud, virtualization, Internet of Things (IoT), industrial control systems (ICS), and microservices architecture.",
-        "Enterprise infrastructure: applying security principles to infrastructure considerations, secure selection, and network appliances.",
-        "Data protection: explaining data types, data classifications, general considerations, and data sovereignty.",
-        "Resilience and recovery: explaining high availability, site considerations, testing, power resilience, capacity, backups, and continuity of operations.",
+        "3.1 Identify and describe network segmentation methods (e.g., IP subnetting, VLAN)",
+        "3.2 Explain the function of stateful firewalls and next-generation firewalls (NGFWs)",
+        "3.3 Explain the function of URL filtering",
+        "3.4 Explain the function of a VPN",
+        "3.5 Explain the function of a proxy",
+        {
+          subTitle: "3.6 Identify and describe tunneling protocols",
+          items: ["3.6.1 SSH", "3.6.2 TLS", "3.6.3 IKE"],
+        },
+        "3.7 Explain the function of data loss prevention (DLP)",
+        "3.8 Explain the function of enterprise browsers",
       ],
     },
     {
-      title: "Security operations",
+      title: "4.0 Endpoint Security",
       items: [
-        "Computing resources: applying secure baselines, mobile solutions, hardening, software security, application security, monitoring, and log monitoring.",
-        "Identity and access management: analyzing identity, authentication, authorization, and provisioning of hardware, software, and data assets.",
-        "Vulnerability management: identifying, analyzing, remediating, validating, and reporting vulnerabilities.",
-        "Alerting and monitoring: explaining monitoring tools and computing resource activities.",
-        "Enterprise security: involving firewalls, IDS/IPS, web filters, DNS (data loss prevention), DLP, (prevent content analysis), and SOAR (extended detection and response).",
-        "Identity and access management: implementing provisioning, PAM (single sign-on), MFA (multifactor authentication), and password vaults.",
-        "Automation and orchestration: explaining automation use cases, scripting benefits, and orchestration.",
-        "Incident response: explaining processes, training, testing, IOC, and threat hunting; root cause analysis, digital forensics.",
-        "Data sources: explaining log data and other sources to support investigations.",
+        "4.1 Identify and describe internet of things (IoT) devices and endpoints",
+        "4.2 Explain the objectives of endpoint security and network security",
+        {
+          subTitle: "4.3 Identify and describe endpoint security components",
+          items: [
+            "4.3.1 Security updates",
+            "4.3.2 Antivirus",
+            "4.3.3 Host-based firewalls",
+          ],
+        },
+        "4.4 Differentiate between single-factor authentication and multi-factor authentication",
+        "4.5 Describe identity and access management (IAM)",
       ],
     },
     {
-      title: "Security program management and oversight",
+      title: "5.0 Cloud Security",
       items: [
-        "Security governance: summarizing guidelines, policies, standards, procedures, external considerations, monitoring, and revisions; explaining incident response.",
-        "Risk management: explaining risk identification, assessment types, risk analysis, risk register, risk tolerance strategies, reporting, and business impact analysis (BIA).",
-        "Third-party risk: managing vendor assessment, selection, agreements, monitoring, questionnaires, and rules of engagement.",
-        "Security compliance: summarizing compliance reporting, consequences of non-compliance, monitoring, and privacy.",
-        "Security awareness: explaining infiltration, internal/external audits, and penetration testing.",
-        "Security discoveries: implementing phishing training, anomalous behavior recognition, user guidance, reporting, and monitoring.",
+        "5.1 Identify and describe the four cloud-computing deployment models",
+        {
+          subTitle: "5.2 Identify and describe common cloud service models",
+          items: [
+            "5.2.1 Software as a service (SaaS)",
+            "5.2.2 Platform as a service (PaaS)",
+            "5.2.3 Infrastructure as a service (IaaS)",
+            "5.2.4 Network as a service (NaaS)",
+          ],
+        },
+        "5.3 Explain the cloud shared responsibility model",
+        "5.5 Define common cloud terms (e.g., hosted, virtualization, virtual machine, container, microservice, API)",
+        "5.6 Explain the cloud native security platform (CNSP)",
+        "5.7 Explain the function of continuous integration and continuous delivery / deployment (CI/CD)",
+      ],
+    },
+    {
+      title: "6.0 Security Operations",
+      items: [
+        {
+          subTitle: "6.1 Explain security operations functions",
+          items: [
+            "6.1.1 Identify / detect",
+            "6.1.2 Investigate",
+            "6.1.3 Mitigate",
+            "6.1.4 Improve",
+          ],
+        },
+        "6.2 Identify methods to optimize security operations center (SOC) performance (e.g., automation and AI, collaboration)",
+        "6.3 Define common security operations terms (e.g., event, alert, SOC, DevSecOps, incident response plan, disaster recovery plan)",
+        "6.4 Explain the concepts of false positive alerts and false negative alerts",
+        "6.5 Explain the function of syslog",
+        "6.6 Explain security orchestration, automation, and response (SOAR) and security information and event management (SIEM)",
+        "6.7 Explain AI as it relates to alert analysis",
       ],
     },
   ];
@@ -94,21 +156,24 @@ export default function SecurityPlus() {
         <div className="relative z-10 flex flex-col gap-3 pl-1 sm:pl-8">
           {/* Course Category */}
           <h6 className="w-fit px-4 py-2 text-[#1775EE] bg-blue-50 rounded-full">
-            COMPTIA
+            Palo Alto
           </h6>
 
           {/* ====== Course Title and Description ======*/}
           <div>
             {/* Course title */}
-            <h1 className="text-[#1775EE] font-bold">Security+</h1>
+            <h1 className="text-[#1775EE] font-bold">
+              Cybersecurity Apprentice
+            </h1>
 
             {/* Course description */}
             <p className="lg:w-[30vw] xl:w-lg text-gray-900">
-              CompTIA Security+ is a widely recognized certification that serves
-              as a starting point for a career in cybersecurity, showcasing
-              practical skills for protecting networks, applications, and data.
-              Vendor-neutral and acknowledged globally, it supports the
-              development of a long-term career in security.
+              The Palo Alto Networks Certified Cybersecurity Apprentice exam
+              validates a candidate’s foundational knowledge of cybersecurity
+              concepts, including network security principles, threat
+              prevention, basic firewall operations, cloud security
+              fundamentals, and security best practices using Palo Alto Networks
+              technologies.
             </p>
           </div>
 
@@ -145,14 +210,19 @@ export default function SecurityPlus() {
             {/* About Section - Description */}
             {/* CHANGE: Course description paragraphs */}
             <p>
-              This leading international certification verifies the essential
-              abilities required for core security responsibilities and IT
-              security roles. It demonstrates a professional’s capability to
-              safeguard networks, applications, and devices while ensuring data
-              confidentiality, integrity, and availability. With a strong focus
-              on hands-on experience, Security+ equips individuals to address
-              real-world security challenges and is a key credential for
-              advancing in the dynamic field of cybersecurity.
+              This course prepares learners for the Palo Alto Networks Certified
+              Cybersecurity Apprentice exam through structured instruction and
+              guided learning activities. It is ideal for individuals entering
+              or transitioning into cybersecurity roles and covers foundational
+              topics such as cybersecurity concepts, network fundamentals,
+              endpoint security, security operations, network security, and
+              cloud security.
+            </p>
+            <p>
+              The program builds practical knowledge and real-world
+              understanding to support exam success, while exam guidelines serve
+              as a reference and should be supplemented with additional study
+              resources.
             </p>
           </section>
 
@@ -164,39 +234,23 @@ export default function SecurityPlus() {
             </h3>
 
             {/* What You Will Learn Section - List */}
-            <div className="grid grid-cols-1 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>
-                  Identify various threats, attacks, and vulnerabilities, such
-                  as malware, social engineering, and application-based
-                  exploits.
-                </p>
+                <p>Cybersecurity Foundations Concepts</p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>
-                  Use security technologies and tools—including firewalls,
-                  intrusion detection systems, and endpoint protection—to defend
-                  systems.
-                </p>
+                <p>Firewall Configuration Basics</p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>
-                  Design secure network architectures, configure protected
-                  systems, and apply secure protocols in both system and network
-                  setups.
-                </p>
+                <p>Network Threat Detection Principles</p>
               </div>
-              <div className="flex items-center gap-2.5">
+              <p className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>
-                  Manage identity and access control by implementing
-                  authentication, authorization, and accounting to ensure secure
-                  access.
-                </p>
-              </div>
+                <span>Security Operations Fundamentals</span>
+              </p>
             </div>
           </section>
 
@@ -218,9 +272,9 @@ export default function SecurityPlus() {
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
             {/* Cert Badge - Change/Update Image */}
             <img
-              src={security}
-              alt="Security+ Certification Badge"
-              className="w-100 h-100 object-contain"
+              src={ccnaBadge}
+              alt="Palo Alto Networks Certified Cybersecurity Apprentice Certification Badge"
+              className="w-60 h-60 object-contain"
             />
           </div>
 
@@ -230,10 +284,10 @@ export default function SecurityPlus() {
             <h5 className="text-[#1775EE] font-bold">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
-              "Data Analyst",
-              "IT Manager",
-              "E-Commerce Analyst",
-              "IT Project Manager",
+              "Security Operations Center",
+              "Junior Cybersecurity Analyst",
+              "Network Security Specialist",
+              "Threat Intelligence Assistant",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
@@ -303,6 +357,17 @@ export default function SecurityPlus() {
             <div className="inclusions">
               <span className="inclusions_icons">
                 <img
+                  src={InstitutionalIcon}
+                  alt="Institutional Account"
+                  className="w-4 h-4"
+                />
+              </span>
+              <p className="text-sm">Institutional Accounts</p>
+            </div>
+
+            <div className="inclusions">
+              <span className="inclusions_icons">
+                <img
                   src={WorkstationIcon}
                   alt="Workstation"
                   className="w-4 h-4"
@@ -320,7 +385,7 @@ export default function SecurityPlus() {
 
             {/* CHANGE: Download link text and URL */}
             <a href="#" className="text-sm font-medium underline mt-2">
-              Download the CCNP Exam Basics here
+              Download the Palo Alto Exam Basics here
             </a>
           </div>
         </aside>

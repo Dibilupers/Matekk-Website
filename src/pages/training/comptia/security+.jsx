@@ -1,142 +1,76 @@
-import Button from "../../../../../components/ui/button";
+// ==================== IMPORTS - UPDATE FOR EACH COURSE ====================
+// Change these imports based on the specific course
+import Button from "../../../components/ui/button";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
-import ccnaBadge from "../../../../../assets/PaloAltoNextGenFirewallEngineer.png";
-import ccnaHero from "../../../../../assets/CCNAHeroImageAutomation.png";
-import ccnaFooter from "../../../../../assets/CCNAFooterImageAutomation.png";
-import MealIcon from "../../../../../assets/Meal.svg";
-import ReviewIcon from "../../../../../assets/Review.svg";
-import InstitutionalIcon from "../../../../../assets/InsitutionalAccount.svg";
-import WorkstationIcon from "../../../../../assets/Workstation.svg";
-import MedalIcon from "../../../../../assets/Medal.svg";
-import CourseModules from "../../../../../components/training/courseModules";
-import TrainingTemplateFooter from "../../../../../components/section/TrainingTemplateFooter";
-import EnrollNowButton from "../../../../../components/ui/EnrollNowButton";
+// COURSE-SPECIFIC ASSETS - Replace these for different courses
+import security from "../../../assets/security+.webp"; // Course badge image
+import ccnaHero from "../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
+import ccnaFooter from "../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
+import MealIcon from "../../../assets/Meal.svg";
+import ReviewIcon from "../../../assets/Review.svg";
+import WorkstationIcon from "../../../assets/Workstation.svg";
+import MedalIcon from "../../../assets/Medal.svg";
+import CourseModules from "../../../components/training/courseModules";
+import TrainingTemplateFooter from "../../../components/section/TrainingTemplateFooter";
+import EnrollNowButton from "../../../components/ui/EnrollNowButton";
 
 // ==================== COMPONENT NAME - CHANGE FOR EACH COURSE ====================
-export default function NextGenerationFirewallEngineer() {
+export default function SecurityPlus() {
   // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
   const modules = [
     {
-      title: "1.0 PAN-OS Networking Configuration",
+      title: "General security concepts",
       items: [
-        {
-          subTitle: "1.1 Configure interface",
-          items: [
-            "1.1.1 Layer 2",
-            "1.1.2 Layer 3",
-            "1.1.3 Virtual wire",
-            "1.1.4 Tunnel interfaces",
-            "1.1.5 Aggregate Ethernet (AE)",
-            "1.1.6 Management",
-          ],
-        },
-        "1.2 Configure zones",
-        {
-          subTitle: "1.3 Configure high availability (HA)",
-          items: [
-            "1.3.1 Active/active",
-            "1.3.2 Active/passive",
-            "1.3.3 Link and path monitoring",
-          ],
-        },
-        {
-          subTitle: "1.4 Configure routing",
-          items: [
-            "1.4.1 Dynamic routing protocols",
-            "1.4.2 Redistribution and policies",
-            "1.4.3 Route monitoring",
-            "1.4.4 Advanced Routing Engine",
-          ],
-        },
-        {
-          subTitle: "1.5 Configure GlobalProtect",
-          items: [
-            "1.5.1 Portals",
-            "1.5.2 Gateways",
-            "1.5.3 Authentication",
-            "1.5.4 Split tunneling",
-          ],
-        },
-        {
-          subTitle: "1.6 Configure tunnels",
-          items: [
-            "1.6.1 IPSec",
-            "1.6.2 Quantum-resistant cryptography",
-            "1.6.3 Generic Routing Encapsulation (GRE)",
-          ],
-        },
+        "Security controls: comparing technical, preventive, managerial, deterrent, operational, detective, physical, corrective, compensating, and directive controls.",
+        "Fundamental concepts: summarizing confidentiality, integrity, and availability (CIA), non-repudiation, authentication, authorization, and accounting (AAA), zero trust, and deceptive/disruption technology.",
+        "Change management: explaining business processes, technical implications of change, documentation, and version control.",
+        "Cryptographic solutions: using public-key infrastructure (PKI), encryption, obfuscation, hashing, digital signatures, and blockchain.",
       ],
     },
     {
-      title: "2.0 PAN-OS Device Setting Configuration",
+      title: "Threats, vulnerabilities, and mitigations",
       items: [
-        "2.1 Implement authentication roles, profiles, and sequences",
-        {
-          subTitle: "2.2 Configure virtual systems (VSYS)",
-          items: [
-            "2.2.1 Interfaces and zones",
-            "2.2.2 Virtual routers",
-            "2.2.3 Logical routers",
-            "2.2.4 Inter-VSYS routing and security",
-          ],
-        },
-        {
-          subTitle: "2.3 Configure logging",
-          items: [
-            "2.3.1 Strata Logging Service",
-            "2.3.2 Log forwarding",
-            "2.3.3 Log collectors and log collector groups",
-          ],
-        },
-        "2.4 Implement PAN-OS software updates",
-        {
-          subTitle: "2.5 Configure certificates",
-          items: [
-            "2.5.1 PKI integration",
-            "2.5.2 Authentication",
-            "2.5.3 SSL/TLS profiles",
-            "2.5.4 Decryption (e.g., subordinate CA, forward trust/untrust)",
-            "2.5.5 Certificate profiles",
-          ],
-        },
-        {
-          subTitle:
-            "2.6 Configure on-premises and Cloud Identity Engine User-ID",
-          items: [
-            "2.6.1 Group mapping and directory sync",
-            "2.6.2 User-to-IP mapping and user context",
-            "2.6.3 Redistribution and segments",
-          ],
-        },
-        "2.7 Configure web proxy on PAN-OS",
+        "Threat actors and motivations: comparing nation-states, unskilled attackers, hacktivists, insider threats, organized crime, and shadow IT; understanding their attributes, resources, espionage, and financial motivations.",
+        "Threat vectors and attack surfaces: explaining message-based, voice call, removable media, supply chain, network, wireless, cloud, and operational technology vectors.",
+        "Vulnerabilities: applying application, operating system, web, hardware, virtualization, operating system (OS), firmware, client-based, agentless, unsupported systems, and third-party vulnerabilities.",
+        "Malicious activity: analyzing malware attacks, password attacks, application attacks, advanced attacks, network attacks, and cryptographic attacks.",
+        "Mitigation techniques: using segmentation, access control, configuration enforcement, hardening, isolation, and patching.",
       ],
     },
     {
-      title: "3.0 Integration and Automation",
+      title: "Security architecture",
       items: [
-        {
-          subTitle: "3.1 Install the selected deployment option",
-          items: [
-            "3.1.1 PA-Series",
-            "3.1.2 VM-Series",
-            "3.1.3 CN-Series",
-            "3.1.4 Cloud NGFW",
-            "3.1.5 AI Runtime Security",
-          ],
-        },
-        "3.2 Use APIs to automate deployment",
-        "3.3 Manage third-party services to deploy NGFWs (e.g., Kubernetes, hypervisors, CSPs, Terraform, Ansible)",
-        {
-          subTitle: "3.4 Use on-premises centralized management",
-          items: [
-            "3.4.1 Panorama",
-            "3.4.2 Templates and device groups",
-            "3.4.3 Pre- and post-ruleset",
-          ],
-        },
-        "3.5 Build Application Command Center (ACC) dashboards and custom reports",
+        "Architecture models: comparing on-premises, cloud, virtualization, Internet of Things (IoT), industrial control systems (ICS), and microservices architecture.",
+        "Enterprise infrastructure: applying security principles to infrastructure considerations, secure selection, and network appliances.",
+        "Data protection: explaining data types, data classifications, general considerations, and data sovereignty.",
+        "Resilience and recovery: explaining high availability, site considerations, testing, power resilience, capacity, backups, and continuity of operations.",
+      ],
+    },
+    {
+      title: "Security operations",
+      items: [
+        "Computing resources: applying secure baselines, mobile solutions, hardening, software security, application security, monitoring, and log monitoring.",
+        "Identity and access management: analyzing identity, authentication, authorization, and provisioning of hardware, software, and data assets.",
+        "Vulnerability management: identifying, analyzing, remediating, validating, and reporting vulnerabilities.",
+        "Alerting and monitoring: explaining monitoring tools and computing resource activities.",
+        "Enterprise security: involving firewalls, IDS/IPS, web filters, DNS (data loss prevention), DLP, (prevent content analysis), and SOAR (extended detection and response).",
+        "Identity and access management: implementing provisioning, PAM (single sign-on), MFA (multifactor authentication), and password vaults.",
+        "Automation and orchestration: explaining automation use cases, scripting benefits, and orchestration.",
+        "Incident response: explaining processes, training, testing, IOC, and threat hunting; root cause analysis, digital forensics.",
+        "Data sources: explaining log data and other sources to support investigations.",
+      ],
+    },
+    {
+      title: "Security program management and oversight",
+      items: [
+        "Security governance: summarizing guidelines, policies, standards, procedures, external considerations, monitoring, and revisions; explaining incident response.",
+        "Risk management: explaining risk identification, assessment types, risk analysis, risk register, risk tolerance strategies, reporting, and business impact analysis (BIA).",
+        "Third-party risk: managing vendor assessment, selection, agreements, monitoring, questionnaires, and rules of engagement.",
+        "Security compliance: summarizing compliance reporting, consequences of non-compliance, monitoring, and privacy.",
+        "Security awareness: explaining infiltration, internal/external audits, and penetration testing.",
+        "Security discoveries: implementing phishing training, anomalous behavior recognition, user guidance, reporting, and monitoring.",
       ],
     },
   ];
@@ -160,23 +94,21 @@ export default function NextGenerationFirewallEngineer() {
         <div className="relative z-10 flex flex-col gap-3 pl-1 sm:pl-8">
           {/* Course Category */}
           <h6 className="w-fit px-4 py-2 text-[#1775EE] bg-blue-50 rounded-full">
-            Palo Alto
+            COMPTIA
           </h6>
 
           {/* ====== Course Title and Description ======*/}
           <div>
             {/* Course title */}
-            <h1 className="text-[#1775EE] font-bold">
-              Next-Generation Firewall Engineer
-            </h1>
+            <h1 className="text-[#1775EE] font-bold">Security+</h1>
 
             {/* Course description */}
             <p className="lg:w-[30vw] xl:w-lg text-gray-900">
-              The Palo Alto Networks Certified Next-Generation Firewall Engineer
-              exam validates the skills of engineers and administrators in
-              firewall deployment, device configuration, integration,
-              automation, and centralized management using Panorama, templates,
-              and rulesets.
+              CompTIA Security+ is a widely recognized certification that serves
+              as a starting point for a career in cybersecurity, showcasing
+              practical skills for protecting networks, applications, and data.
+              Vendor-neutral and acknowledged globally, it supports the
+              development of a long-term career in security.
             </p>
           </div>
 
@@ -213,19 +145,14 @@ export default function NextGenerationFirewallEngineer() {
             {/* About Section - Description */}
             {/* CHANGE: Course description paragraphs */}
             <p>
-              This course prepares learners for the Palo Alto Networks Certified
-              Next-Generation Firewall (NGFW) Engineer certification through
-              guided instruction and hands-on activities. It focuses on PAN-OS
-              configuration, networking and device settings, object and policy
-              creation, integration and automation, and the management and
-              operation of next-generation firewalls in secure network
-              environments.
-            </p>
-            <p>
-              The program strengthens practical engineering skills to support
-              exam readiness, while the exam guidelines help identify covered
-              topics and recommended references and should be supplemented with
-              additional study resources for comprehensive preparation.
+              This leading international certification verifies the essential
+              abilities required for core security responsibilities and IT
+              security roles. It demonstrates a professional’s capability to
+              safeguard networks, applications, and devices while ensuring data
+              confidentiality, integrity, and availability. With a strong focus
+              on hands-on experience, Security+ equips individuals to address
+              real-world security challenges and is a key credential for
+              advancing in the dynamic field of cybersecurity.
             </p>
           </section>
 
@@ -237,23 +164,39 @@ export default function NextGenerationFirewallEngineer() {
             </h3>
 
             {/* What You Will Learn Section - List */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4">
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Next-Generation Firewall Concepts</p>
+                <p>
+                  Identify various threats, attacks, and vulnerabilities, such
+                  as malware, social engineering, and application-based
+                  exploits.
+                </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Security Policy Configuration Basics</p>
+                <p>
+                  Use security technologies and tools—including firewalls,
+                  intrusion detection systems, and endpoint protection—to defend
+                  systems.
+                </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Threat Prevention and Detection Principles</p>
+                <p>
+                  Design secure network architectures, configure protected
+                  systems, and apply secure protocols in both system and network
+                  setups.
+                </p>
               </div>
-              <p className="flex items-center gap-2.5">
+              <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <span>VPN and Remote Access Fundamentals</span>
-              </p>
+                <p>
+                  Manage identity and access control by implementing
+                  authentication, authorization, and accounting to ensure secure
+                  access.
+                </p>
+              </div>
             </div>
           </section>
 
@@ -275,9 +218,9 @@ export default function NextGenerationFirewallEngineer() {
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
             {/* Cert Badge - Change/Update Image */}
             <img
-              src={ccnaBadge}
-              alt="Palo Alto Networks Certified Cybersecurity Apprentice Certification Badge"
-              className="w-60 h-60 object-contain"
+              src={security}
+              alt="Security+ Certification Badge"
+              className="w-100 h-100 object-contain"
             />
           </div>
 
@@ -287,10 +230,10 @@ export default function NextGenerationFirewallEngineer() {
             <h5 className="text-[#1775EE] font-bold">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
-              "Firewall Engineer",
-              "Network Security Engineer",
-              "Security Operations Engineer",
-              "Cybersecurity Consultant",
+              "Data Analyst",
+              "IT Manager",
+              "E-Commerce Analyst",
+              "IT Project Manager",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
@@ -360,17 +303,6 @@ export default function NextGenerationFirewallEngineer() {
             <div className="inclusions">
               <span className="inclusions_icons">
                 <img
-                  src={InstitutionalIcon}
-                  alt="Institutional Account"
-                  className="w-4 h-4"
-                />
-              </span>
-              <p className="text-sm">Institutional Accounts</p>
-            </div>
-
-            <div className="inclusions">
-              <span className="inclusions_icons">
-                <img
                   src={WorkstationIcon}
                   alt="Workstation"
                   className="w-4 h-4"
@@ -388,7 +320,7 @@ export default function NextGenerationFirewallEngineer() {
 
             {/* CHANGE: Download link text and URL */}
             <a href="#" className="text-sm font-medium underline mt-2">
-              Download the Palo Alto Exam Basics here
+              Download the CCNP Exam Basics here
             </a>
           </div>
         </aside>

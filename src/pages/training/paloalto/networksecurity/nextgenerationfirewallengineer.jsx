@@ -1,15 +1,13 @@
-// ==================== IMPORTS - UPDATE FOR EACH COURSE ====================
-// Change these imports based on the specific course
 import Button from "../../../../components/ui/button";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
-// COURSE-SPECIFIC ASSETS - Replace these for different courses
-import network from "../../../../assets/network+.webp"; // Course badge image
-import ccnaHero from "../../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
-import ccnaFooter from "../../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
+import ccnaBadge from "../../../../assets/PaloAltoNextGenFirewallEngineer.png";
+import ccnaHero from "../../../../assets/CCNAHeroImageAutomation.png";
+import ccnaFooter from "../../../../assets/CCNAFooterImageAutomation.png";
 import MealIcon from "../../../../assets/Meal.svg";
 import ReviewIcon from "../../../../assets/Review.svg";
+import InstitutionalIcon from "../../../../assets/InsitutionalAccount.svg";
 import WorkstationIcon from "../../../../assets/Workstation.svg";
 import MedalIcon from "../../../../assets/Medal.svg";
 import CourseModules from "../../../../components/training/courseModules";
@@ -17,71 +15,128 @@ import TrainingTemplateFooter from "../../../../components/section/TrainingTempl
 import EnrollNowButton from "../../../../components/ui/EnrollNowButton";
 
 // ==================== COMPONENT NAME - CHANGE FOR EACH COURSE ====================
-export default function NetworkPlus() {
+export default function NextGenerationFirewallEngineer() {
   // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
   const modules = [
     {
-      title: "Networking concepts",
+      title: "1.0 PAN-OS Networking Configuration",
       items: [
-        "OSI model layers: physical, data link, network, transport, session, presentation, application.",
-        "Networking appliances: routers, switches, firewalls, IDS/IPS, load balancers, proxies, NAS, SAN, and wireless devices.",
-        "Cloud concepts: NFV, VPC, network security groups, cloud gateways, deployment models (public, private, hybrid), service models (SaaS, IaaS, PaaS).",
-        "Ports and protocols: FTP, SFTP, SSH, Telnet, SMTP, DNS, DHCP, HTTP, HTTPS, SNMP, LDAP, RDP, SIP.",
-        "Traffic types: unicast, multicast, anycast, broadcast.",
-        "Transmission media: wireless (802.11, cellular, satellite), wired (fiber, coaxial, DAC).",
-        "Transceivers and connectors: SC, LC, ST, MPO, RJ11, RJ45, F-type, BNC.",
-        "Network topologies: mesh, hybrid, star/hub-and-spoke, spine and leaf, point-to-point, three-tier, and collapsed core.",
-        "IPv4 addressing: public vs. private, APIPA, RFC1918, loopback, subnetting (VLSM, CIDR), and address classes (A, B, C, D, E).",
+        {
+          subTitle: "1.1 Configure interface",
+          items: [
+            "1.1.1 Layer 2",
+            "1.1.2 Layer 3",
+            "1.1.3 Virtual wire",
+            "1.1.4 Tunnel interfaces",
+            "1.1.5 Aggregate Ethernet (AE)",
+            "1.1.6 Management",
+          ],
+        },
+        "1.2 Configure zones",
+        {
+          subTitle: "1.3 Configure high availability (HA)",
+          items: [
+            "1.3.1 Active/active",
+            "1.3.2 Active/passive",
+            "1.3.3 Link and path monitoring",
+          ],
+        },
+        {
+          subTitle: "1.4 Configure routing",
+          items: [
+            "1.4.1 Dynamic routing protocols",
+            "1.4.2 Redistribution and policies",
+            "1.4.3 Route monitoring",
+            "1.4.4 Advanced Routing Engine",
+          ],
+        },
+        {
+          subTitle: "1.5 Configure GlobalProtect",
+          items: [
+            "1.5.1 Portals",
+            "1.5.2 Gateways",
+            "1.5.3 Authentication",
+            "1.5.4 Split tunneling",
+          ],
+        },
+        {
+          subTitle: "1.6 Configure tunnels",
+          items: [
+            "1.6.1 IPSec",
+            "1.6.2 Quantum-resistant cryptography",
+            "1.6.3 Generic Routing Encapsulation (GRE)",
+          ],
+        },
       ],
     },
     {
-      title: "Network implementation",
+      title: "2.0 PAN-OS Device Setting Configuration",
       items: [
-        "OSI model layers: physical, data link, network, transport, session, presentation, application.",
-        "Networking appliances: routers, switches, firewalls, IDS/IPS, load balancers, proxies, NAS, SAN, and wireless devices.",
-        "Cloud concepts: NFV, VPC, network security groups, cloud gateways, deployment models (public, private, hybrid), service models (SaaS, IaaS, PaaS).",
-        "Ports and protocols: FTP, SFTP, SSH, Telnet, SMTP, DNS, DHCP, HTTP, HTTPS, SNMP, LDAP, RDP, SIP.",
-        "Traffic types: unicast, multicast, anycast, broadcast.",
-        "Transmission media: wireless (802.11, cellular, satellite), wired (fiber, coaxial, DAC).",
-        "Transceivers and connectors: SC, LC, ST, MPO, RJ11, RJ45, F-type, BNC.",
-        "Network topologies: mesh, hybrid, star/hub and spoke, spine and leaf, point-to-point, three-tier, and collapsed core.",
-        "IPv4 addressing: public vs. private, APIPA, RFC1918, loopback, subnetting (VLSM, CIDR), and address classes (A, B, C, D, E).",
+        "2.1 Implement authentication roles, profiles, and sequences",
+        {
+          subTitle: "2.2 Configure virtual systems (VSYS)",
+          items: [
+            "2.2.1 Interfaces and zones",
+            "2.2.2 Virtual routers",
+            "2.2.3 Logical routers",
+            "2.2.4 Inter-VSYS routing and security",
+          ],
+        },
+        {
+          subTitle: "2.3 Configure logging",
+          items: [
+            "2.3.1 Strata Logging Service",
+            "2.3.2 Log forwarding",
+            "2.3.3 Log collectors and log collector groups",
+          ],
+        },
+        "2.4 Implement PAN-OS software updates",
+        {
+          subTitle: "2.5 Configure certificates",
+          items: [
+            "2.5.1 PKI integration",
+            "2.5.2 Authentication",
+            "2.5.3 SSL/TLS profiles",
+            "2.5.4 Decryption (e.g., subordinate CA, forward trust/untrust)",
+            "2.5.5 Certificate profiles",
+          ],
+        },
+        {
+          subTitle:
+            "2.6 Configure on-premises and Cloud Identity Engine User-ID",
+          items: [
+            "2.6.1 Group mapping and directory sync",
+            "2.6.2 User-to-IP mapping and user context",
+            "2.6.3 Redistribution and segments",
+          ],
+        },
+        "2.7 Configure web proxy on PAN-OS",
       ],
     },
     {
-      title: "Network operations",
+      title: "3.0 Integration and Automation",
       items: [
-        "Documentation: physical vs. logical diagrams, rack diagrams, cable maps, network diagrams, asset inventory, IPAM, SLA, and wireless surveys.",
-        "Life-cycle management: EOL, EOS, software management, and decommissioning.",
-        "Change management: structured process for changes.",
-        "Configuration management: production, backup, baseline configurations.",
-        "Network monitoring: SNMP, flow data, packet capture, baseline metrics, log aggregation, API integration, and port mirroring.",
-        "Disaster recovery: RPO, RTO, MTTR, MTBF, cold/warm/hot sites, active-active/passive, and testing.",
-        "Network services: NTP, DHCP, DNS, NTP, PTP, and NFS.",
-        "Access and management: VPN, SSL, GUI, API, and console.",
-      ],
-    },
-    {
-      title: "Network security",
-      items: [
-        "Logical security: encryption (data in transit/rest), PKI, IAM, MFA, SSO, RADIUS, LDAP, SAML, TACACS+, time-based authentication, authorization, least privilege, role-based access control, and geofencing.",
-        "Physical security: cameras and locks.",
-        "Deception technologies: honeypot and honeywet.",
-        "Security terminology: risk, vulnerability, exploit, threat, and CIA triad.",
-        "Audit and compliance: data locality, PCI-DSS, and GDPR.",
-        "Network segmentation: IoT, IIoT, SCADA, ICS, OT, guest, and BYOD.",
-        "Types of attacks: DoS/DDoS, VLAN hopping, MAC flooding, ARP poisoning/spoofing, DNS poisoning/spoofing, rogue devices/services, evil twin, on-path attack, and social engineering (phishing, dumpster diving, shoulder surfing, tailgating).",
-        "Security features and defense: device hardening, NAC, key management, ACL, URL/content filtering, trusted vs. untrusted zones, and screened subnet.",
-      ],
-    },
-    {
-      title: "Network troubleshooting",
-      items: [
-        "Troubleshooting methodology: identifying the problem, establishing a theory, testing, planning, and implementing a solution, verifying functionality, and documenting findings.",
-        "Cabling and physical issues: cable issues (incorrect type, signal degradation, improper termination, TX/RX transposed), interface issues (increasing counters, port status), and hardware issues (PoE, transceiver mismatch, signal strength).",
-        "Network services: switching issues (STP, VLAN assignment, ACLs), routing issues (routing table and default routes), address pool exhaustion, and incorrect gateway/IP/subnet mask.",
-        "Performance issues: network latency, packet loss, and wireless interference.",
-        "Tools and protocols: protocol analyzers, command line tools, cable testers, and Wi-Fi analyzers.",
+        {
+          subTitle: "3.1 Install the selected deployment option",
+          items: [
+            "3.1.1 PA-Series",
+            "3.1.2 VM-Series",
+            "3.1.3 CN-Series",
+            "3.1.4 Cloud NGFW",
+            "3.1.5 AI Runtime Security",
+          ],
+        },
+        "3.2 Use APIs to automate deployment",
+        "3.3 Manage third-party services to deploy NGFWs (e.g., Kubernetes, hypervisors, CSPs, Terraform, Ansible)",
+        {
+          subTitle: "3.4 Use on-premises centralized management",
+          items: [
+            "3.4.1 Panorama",
+            "3.4.2 Templates and device groups",
+            "3.4.3 Pre- and post-ruleset",
+          ],
+        },
+        "3.5 Build Application Command Center (ACC) dashboards and custom reports",
       ],
     },
   ];
@@ -105,21 +160,23 @@ export default function NetworkPlus() {
         <div className="relative z-10 flex flex-col gap-3 pl-1 sm:pl-8">
           {/* Course Category */}
           <h6 className="w-fit px-4 py-2 text-[#1775EE] bg-blue-50 rounded-full">
-            COMPTIA
+            Palo Alto
           </h6>
 
           {/* ====== Course Title and Description ======*/}
           <div>
             {/* Course title */}
-            <h1 className="text-[#1775EE] font-bold">Network+</h1>
+            <h1 className="text-[#1775EE] font-bold">
+              Next-Generation Firewall Engineer
+            </h1>
 
             {/* Course description */}
             <p className="lg:w-[30vw] xl:w-lg text-gray-900">
-              CompTIA Network+ provides the knowledge and skills needed to
-              configure, manage, and secure networks of any scale. Recognized
-              worldwide, it opens doors to careers in IT support, operations,
-              and administration, offering flexibility across various
-              technologies and platforms.
+              The Palo Alto Networks Certified Next-Generation Firewall Engineer
+              exam validates the skills of engineers and administrators in
+              firewall deployment, device configuration, integration,
+              automation, and centralized management using Panorama, templates,
+              and rulesets.
             </p>
           </div>
 
@@ -156,13 +213,19 @@ export default function NetworkPlus() {
             {/* About Section - Description */}
             {/* CHANGE: Course description paragraphs */}
             <p>
-              As a prominent certification, CompTIA Network+ validates your
-              grasp of essential networking principles and tools. It assesses
-              your abilities in network connectivity, documentation, service
-              deployment, data center and cloud environments, virtual
-              networking, monitoring, troubleshooting, and security. This
-              certification equips you for positions in technical support,
-              network operations, and system administration.
+              This course prepares learners for the Palo Alto Networks Certified
+              Next-Generation Firewall (NGFW) Engineer certification through
+              guided instruction and hands-on activities. It focuses on PAN-OS
+              configuration, networking and device settings, object and policy
+              creation, integration and automation, and the management and
+              operation of next-generation firewalls in secure network
+              environments.
+            </p>
+            <p>
+              The program strengthens practical engineering skills to support
+              exam readiness, while the exam guidelines help identify covered
+              topics and recommended references and should be supplemented with
+              additional study resources for comprehensive preparation.
             </p>
           </section>
 
@@ -174,36 +237,23 @@ export default function NetworkPlus() {
             </h3>
 
             {/* What You Will Learn Section - List */}
-            <div className="grid grid-cols-1 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>
-                  Configure wired and wireless devices, covering IP addressing,
-                  ports, protocols, and network design for efficient
-                  implementation.
-                </p>
+                <p>Next-Generation Firewall Concepts</p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>
-                  Gain knowledge of documentation methods and procedures for
-                  managing lifecycle, change, and configuration.
-                </p>
+                <p>Security Policy Configuration Basics</p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>
-                  Explore virtualization, cloud service models, scalability, and
-                  elasticity to effectively apply cloud computing principles.
-                </p>
+                <p>Threat Prevention and Detection Principles</p>
               </div>
-              <div className="flex items-center gap-2.5">
+              <p className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>
-                  Track network performance, resolve connectivity problems, and
-                  maintain reliable, high-availability systems.
-                </p>
-              </div>
+                <span>VPN and Remote Access Fundamentals</span>
+              </p>
             </div>
           </section>
 
@@ -225,9 +275,9 @@ export default function NetworkPlus() {
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
             {/* Cert Badge - Change/Update Image */}
             <img
-              src={network}
-              alt="Network+ Certification Badge"
-              className="w-100 h-100 object-contain"
+              src={ccnaBadge}
+              alt="Palo Alto Networks Certified Cybersecurity Apprentice Certification Badge"
+              className="w-60 h-60 object-contain"
             />
           </div>
 
@@ -237,10 +287,10 @@ export default function NetworkPlus() {
             <h5 className="text-[#1775EE] font-bold">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
-              "Cybersecurity Specialist",
-              "Cybersecurity Analyst",
-              "Penetration Tester",
-              "IT Auditor",
+              "Firewall Engineer",
+              "Network Security Engineer",
+              "Security Operations Engineer",
+              "Cybersecurity Consultant",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
@@ -310,6 +360,17 @@ export default function NetworkPlus() {
             <div className="inclusions">
               <span className="inclusions_icons">
                 <img
+                  src={InstitutionalIcon}
+                  alt="Institutional Account"
+                  className="w-4 h-4"
+                />
+              </span>
+              <p className="text-sm">Institutional Accounts</p>
+            </div>
+
+            <div className="inclusions">
+              <span className="inclusions_icons">
+                <img
                   src={WorkstationIcon}
                   alt="Workstation"
                   className="w-4 h-4"
@@ -327,7 +388,7 @@ export default function NetworkPlus() {
 
             {/* CHANGE: Download link text and URL */}
             <a href="#" className="text-sm font-medium underline mt-2">
-              Download the CCNP Exam Basics here
+              Download the Palo Alto Exam Basics here
             </a>
           </div>
         </aside>

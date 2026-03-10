@@ -1,68 +1,139 @@
-// ==================== IMPORTS - UPDATE FOR EACH COURSE ====================
-// Change these imports based on the specific course
 import Button from "../../../../components/ui/button";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
-// COURSE-SPECIFIC ASSETS - Replace these for different courses
-import pentest from "../../../../assets/pentest.webp"; // Course badge image
-import ccnaHero from "../../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
-import ccnaFooter from "../../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
+import ccnaBadge from "../../../../assets/PaloAltoProfessional.png";
+import ccnaHero from "../../../../assets/CCNAHeroImageAutomation.png";
+import ccnaFooter from "../../../../assets/CCNAFooterImageAutomation.png";
 import MealIcon from "../../../../assets/Meal.svg";
 import ReviewIcon from "../../../../assets/Review.svg";
+import InstitutionalIcon from "../../../../assets/InsitutionalAccount.svg";
 import WorkstationIcon from "../../../../assets/Workstation.svg";
 import MedalIcon from "../../../../assets/Medal.svg";
 import CourseModules from "../../../../components/training/courseModules";
 import TrainingTemplateFooter from "../../../../components/section/TrainingTemplateFooter";
 import EnrollNowButton from "../../../../components/ui/EnrollNowButton";
 
-// ==================== COMPONENT NAME ====================
-export default function PenTest() {
-  // ==================== COURSE MODULES ====================
+// ==================== COMPONENT NAME - CHANGE FOR EACH COURSE ====================
+export default function NetworkSecurityProfessional() {
+  // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
   const modules = [
     {
-      title: "Engagement management",
-      progress: 13,
+      title: "1.0 Cybersecurity",
       items: [
-        "Planning and scoping: defining rules of engagement, testing windows, and target selection.",
-        "Legal and ethical compliance: ensuring authorization letters, mandatory reporting, and adherence to regulations.",
-        "Collaboration and communication: aligning with stakeholders through peer reviews, escalation paths, and risk articulation.",
-        "Penetration test reports: creating reports with executive summaries, findings, and remediation recommendations.",
+        "1.1 Identify and describe vulnerabilities and exploits",
+        {
+          subTitle:
+            "1.2 Identify and describe the stages of the cyber attack lifecycle",
+          items: [
+            "1.2.1 Reconnaissance",
+            "1.2.2 Weaponization and Delivery",
+            "1.2.3 Exploitation",
+            "1.2.4 Installation",
+            "1.2.5 Command-and-Control (C2)",
+            "1.2.6 Actions on the Objective",
+          ],
+        },
+        "1.3 Identify and describe common attack types (e.g., malware, insider threat, C2, social engineering, AI-powered)",
+        {
+          subTitle: "1.4 Identify and describe common threat detection systems",
+          items: [
+            "1.4.1 Intrusion Detection System (IDS)",
+            "1.4.2 Host-Based Intrusion Detection System (HIDS)",
+            "1.4.3 Network-Based Intrusion Detection System (NIDS)",
+          ],
+        },
+        "1.5 Identify and describe threat prevention systems and practices (e.g., end user awareness, security updates, antivirus, intrusion prevention systems, firewalls)",
+        "1.6 Explain the purpose of a DMZ",
+        "1.7 Explain the purpose of Zero Trust",
       ],
     },
     {
-      title: "Reconnaissance and enumeration",
+      title: "2.0 Network Fundamentals",
       items: [
-        "Active and passive reconnaissance: gathering information using open-source intelligence (OSINT), network sniffing, and protocol scanning.",
-        "Enumeration techniques: performing DNS enumeration, service discovery, and directory enumeration.",
-        "Reconnaissance tools: using tools like Nmap, Wireshark, and Shodan for information gathering.",
-        "Script modification: customizing Python, PowerShell, and Bash scripts for reconnaissance and enumeration.",
+        {
+          subTitle: "2.1 Identify and describe types of area networks",
+          items: ["2.1.1 WAN", "2.1.2 LAN", "2.1.3 SD-WAN"],
+        },
+        "2.2 Explain external (north-south) and internal (east-west) traffic flow patterns for environments",
+        "2.3 Explain the function of a default gateway",
+        "2.4 Explain the function of NAT, DNS, and DHCP",
+        "2.5 Explain routed protocols and routing protocols",
+        "2.6 Explain the TCP/IP model and the OSI model",
+        "2.7 Identify and describe devices that operate in Layer 1 through Layer 4 of the OSI model",
       ],
     },
     {
-      title: "Vulnerability discovery and analysis",
+      title: "3.0 Network Security",
       items: [
-        "Vulnerability scans: conducting authenticated, unauthenticated, static application security testing (SAST) and dynamic application security testing (DAST).",
-        "Result analysis: validating findings, troubleshooting configurations, and identifying false positives.",
-        "Discovery tools: using tools like Nessus, Nikto, and OpenVAS for vulnerability discovery.",
+        "3.1 Identify and describe network segmentation methods (e.g., IP subnetting, VLAN)",
+        "3.2 Explain the function of stateful firewalls and next-generation firewalls (NGFWs)",
+        "3.3 Explain the function of URL filtering",
+        "3.4 Explain the function of a VPN",
+        "3.5 Explain the function of a proxy",
+        {
+          subTitle: "3.6 Identify and describe tunneling protocols",
+          items: ["3.6.1 SSH", "3.6.2 TLS", "3.6.3 IKE"],
+        },
+        "3.7 Explain the function of data loss prevention (DLP)",
+        "3.8 Explain the function of enterprise browsers",
       ],
     },
     {
-      title: "Attacks and exploits",
+      title: "4.0 Endpoint Security",
       items: [
-        "Network attacks: performing VLAN hopping, on-path attacks, and service exploitation.",
-        "Authentication attacks: executing brute-force attacks, pass-the-hash, and credential stuffing.",
-        "Host-based attacks: conducting privilege escalation, process injection, and credential dumping.",
-        "Web application attacks: performing SQL injection, cross-site scripting (XSS), and directory traversal.",
-        "Cloud-based attacks: exploiting container escapes, metadata service attacks, and identity and access management (IAM) misconfiguration.",
-        "AI attacks: explaining prompt injection and model manipulation against artificial intelligence systems.",
+        "4.1 Identify and describe internet of things (IoT) devices and endpoints",
+        "4.2 Explain the objectives of endpoint security and network security",
+        {
+          subTitle: "4.3 Identify and describe endpoint security components",
+          items: [
+            "4.3.1 Security updates",
+            "4.3.2 Antivirus",
+            "4.3.3 Host-based firewalls",
+          ],
+        },
+        "4.4 Differentiate between single-factor authentication and multi-factor authentication",
+        "4.5 Describe identity and access management (IAM)",
       ],
     },
     {
-      title: "Engagement management",
+      title: "5.0 Cloud Security",
       items: [
-        "Post-exploitation activities: establishing persistence, performing lateral movement, and cleaning up artifacts.",
-        "Documentation: creating attack narratives and providing remediation recommendations.",
+        "5.1 Identify and describe the four cloud-computing deployment models",
+        {
+          subTitle: "5.2 Identify and describe common cloud service models",
+          items: [
+            "5.2.1 Software as a service (SaaS)",
+            "5.2.2 Platform as a service (PaaS)",
+            "5.2.3 Infrastructure as a service (IaaS)",
+            "5.2.4 Network as a service (NaaS)",
+          ],
+        },
+        "5.3 Explain the cloud shared responsibility model",
+        "5.4 Explain cloud security and cloud-native security",
+        "5.5 Define common cloud terms (e.g., hosted, virtualization, virtual machine, container, microservice, API)",
+        "5.6 Explain the cloud native security platform (CNSP)",
+        "5.7 Explain the function of continuous integration and continuous delivery / deployment (CI/CD)",
+      ],
+    },
+    {
+      title: "6.0 Security Operations",
+      items: [
+        {
+          subTitle: "6.1 Explain security operations functions",
+          items: [
+            "6.1.1 Identify / detect",
+            "6.1.2 Investigate",
+            "6.1.3 Mitigate",
+            "6.1.4 Improve",
+          ],
+        },
+        "6.2 Identify methods to optimize security operations center (SOC) performance (e.g., automation and AI, collaboration and information sharing, regular security policy updates, security framework alignment)",
+        "6.3 Define common security operations terms (e.g., event, alert, SOC, DevSecOps, incident response plan, disaster recovery plan)",
+        "6.4 Explain the concepts of false positive alerts and false negative alerts",
+        "6.5 Explain the function of syslog",
+        "6.6 Explain security orchestration, automation, and response (SOAR) and security information and event management (SIEM)",
+        "6.7 Explain AI as it relates to alert analysis",
       ],
     },
   ];
@@ -86,20 +157,22 @@ export default function PenTest() {
         <div className="relative z-10 flex flex-col gap-3 pl-1 sm:pl-8">
           {/* Course Category */}
           <h6 className="w-fit px-4 py-2 text-[#1775EE] bg-blue-50 rounded-full">
-            COMPTIA
+            Palo Alto
           </h6>
 
           {/* ====== Course Title and Description ======*/}
           <div>
             {/* Course title */}
-            <h1 className="text-[#1775EE] font-bold">PenTest+</h1>
+            <h1 className="text-[#1775EE] font-bold">
+              Network Security Professional
+            </h1>
 
             {/* Course description */}
             <p className="lg:w-[30vw] xl:w-lg text-gray-900">
-              CompTIA PenTest+ shows you how to think like an attacker to
-              strengthen defenses. Covering cloud, web apps, APIs, and IoT, it
-              validates hands-on skills for identifying risks and providing
-              actionable security insights.
+              The Palo Alto Networks Certified Network Security Professional
+              exam validates knowledge of Palo Alto Networks security solutions,
+              including installation, configuration, deployment, and maintenance
+              in enterprise environments.
             </p>
           </div>
 
@@ -136,12 +209,16 @@ export default function PenTest() {
             {/* About Section - Description */}
             {/* CHANGE: Course description paragraphs */}
             <p>
-              CompTIA PenTest+ validates your skills in identifying, mitigating,
-              and reporting system vulnerabilities. Covering all stages of
-              penetration testing across cloud, web apps, APIs, and IoT, it
-              emphasizes hands-on abilities like vulnerability management and
-              lateral movement, preparing you for a career as a penetration
-              tester or security consultant.
+              This course prepares learners for the Palo Alto Networks Certified
+              Network Security Professional certification through guided
+              instruction and hands-on activities. It covers core network
+              security solutions, including installation, configuration,
+              deployment, and basic maintenance of Palo Alto Networks products.
+            </p>
+            <p>
+              The program develops practical skills and understanding to support
+              exam success, with guidelines provided as a reference alongside
+              additional study resources.
             </p>
           </section>
 
@@ -153,36 +230,23 @@ export default function PenTest() {
             </h3>
 
             {/* What You Will Learn Section - List */}
-            <div className="grid grid-cols-1 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>
-                  Plan and scope penetration tests, follow legal and ethical
-                  standards, and create detailed reports with remediation
-                  recommendations.
-                </p>
+                <p>Advanced Firewall Deployment Strategies</p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>
-                  Perform active and passive reconnaissance, collect
-                  information, and enumerate systems to uncover vulnerabilities.
-                </p>
+                <p>Threat Intelligence Integration Concepts</p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>
-                  Conduct vulnerability scans, analyze results, and validate
-                  findings to address security gaps.
-                </p>
+                <p>Zero Trust Architecture Principles</p>
               </div>
-              <div className="flex items-center gap-2.5">
+              <p className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>
-                  Execute network, host, web application, and cloud attacks
-                  using the right tools and techniques to test defenses.
-                </p>
-              </div>
+                <span>Network Security Policy Optimization</span>
+              </p>
             </div>
           </section>
 
@@ -204,9 +268,9 @@ export default function PenTest() {
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
             {/* Cert Badge - Change/Update Image */}
             <img
-              src={pentest}
-              alt="PenTest+ Certification Badge"
-              className="w-100 h-100 object-contain"
+              src={ccnaBadge}
+              alt="Palo Alto Networks Certified Cybersecurity Apprentice Certification Badge"
+              className="w-60 h-60 object-contain"
             />
           </div>
 
@@ -216,10 +280,10 @@ export default function PenTest() {
             <h5 className="text-[#1775EE] font-bold">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
-              "Data Analyst",
-              "IT Manager",
-              "E-Commerce Analyst",
-              "IT Project Manager",
+              "Senior Network Security Engineer",
+              "Security Solutions Architect",
+              "Threat Prevention Specialist",
+              "Security Infrastructure Manager",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
@@ -289,6 +353,17 @@ export default function PenTest() {
             <div className="inclusions">
               <span className="inclusions_icons">
                 <img
+                  src={InstitutionalIcon}
+                  alt="Institutional Account"
+                  className="w-4 h-4"
+                />
+              </span>
+              <p className="text-sm">Institutional Accounts</p>
+            </div>
+
+            <div className="inclusions">
+              <span className="inclusions_icons">
+                <img
                   src={WorkstationIcon}
                   alt="Workstation"
                   className="w-4 h-4"
@@ -306,7 +381,7 @@ export default function PenTest() {
 
             {/* CHANGE: Download link text and URL */}
             <a href="#" className="text-sm font-medium underline mt-2">
-              Download the CCNP Exam Basics here
+              Download the Palo Alto Exam Basics here
             </a>
           </div>
         </aside>
