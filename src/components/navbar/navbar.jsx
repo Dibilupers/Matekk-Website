@@ -137,7 +137,6 @@ const dropdownMenus = {
         {
           name: "Security Operations",
           subcourses: [
-            { name: "Cybersecurity Practitioner", path: "/training/paloalto/securityoperations/practitioner" },
             { name: "Security Operations Professional", path: "/training/paloalto/securityoperations/professional" },
             { name: "XSIAM Analyst", path: "/training/paloalto/securityoperations/xsiamanalyst" },
             { name: "XDR Analyst", path: "/training/paloalto/securityoperations/xdranalyst" },

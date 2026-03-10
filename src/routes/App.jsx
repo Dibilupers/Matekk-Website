@@ -37,10 +37,17 @@ import NetworkSecurityProfessional from "../pages/training/paloalto/networksecur
 import NextGenerationFirewallEngineer from "../pages/training/paloalto/networksecurity/nextgenerationfirewallengineer";
 import SDWanEngineer from "../pages/training/paloalto/networksecurity/sdwanengineer";
 import SecurityServiceEdgeEngineer from "../pages/training/paloalto/networksecurity/securityserviceedgeengineer";
-/* import NetworkSecurityAnalyst from "../pages/training/paloalto/networksecurity/analyst"; */
+import NetworkSecurityAnalyst from "../pages/training/paloalto/networksecurity/analyst"; 
 import NetworkSecurityArchitect from "../pages/training/paloalto/networksecurity/architect";
+import SecurityOperationsProfessional from "../pages/training/paloalto/securityoperations/professional";
+import XsiamAnalyst from "../pages/training/paloalto/securityoperations/xsiamanalyst";
+import XDRAnalyst from "../pages/training/paloalto/securityoperations/xdranalyst";
+import XsiamEngineer from "../pages/training/paloalto/securityoperations/xsiamengineer";
+import XDREngineer from "../pages/training/paloalto/securityoperations/xdrengineer";
+import XsoarEngineer from "../pages/training/paloalto/securityoperations/xsoarengineer";
+import CloudSecurityProfessional from "../pages/training/paloalto/cloudsecurity/professional";
 
-/* PROJECT MANAGEMENT */
+/* PROJECT MANAGEMENT  */
 import PMP from "../pages/training/projectmanagement/pmp";
 
 /* IT MANAGEMENT */
@@ -53,7 +60,7 @@ import ITIL4Leader from "../pages/training/itil4/leader";
 /* Cloud */
 import AzureFundamentals from "../pages/training/cloud/microsoft/azurefundamentals";
 import AWSPractitioner from "../pages/training/cloud/aws/practitioner";
-/* Cyberssecurity */
+/* Cybersecurity */
 import BlueTeam from "../pages/training/cybersecurity/blueteam";
 import RedTeam from "../pages/training/cybersecurity/redteam";
 
@@ -103,8 +110,15 @@ export default function App() {
         <Route path="/training/paloalto/networksecurity/nextgenerationfirewallengineer" element={<NextGenerationFirewallEngineer />} />
         <Route path="/training/paloalto/networksecurity/sdwanengineer" element={<SDWanEngineer />} />
         <Route path="/training/paloalto/networksecurity/securityserviceedgeengineer" element={<SecurityServiceEdgeEngineer />} />
-        {/* <Route path="/training/paloalto/networksecurity/analyst" element={<NetworkSecurityAnalyst />} /> */}
+        <Route path="/training/paloalto/networksecurity/analyst" element={<NetworkSecurityAnalyst />} /> 
         <Route path="/training/paloalto/networksecurity/architect" element={<NetworkSecurityArchitect />} />
+        <Route path="/training/paloalto/securityoperations/professional" element={<SecurityOperationsProfessional />} />
+        <Route path="/training/paloalto/securityoperations/xsiamanalyst" element={<XsiamAnalyst />} />
+        <Route path="/training/paloalto/securityoperations/xdranalyst" element={<XDRAnalyst />} />
+        <Route path="/training/paloalto/securityoperations/xsiamengineer" element={<XsiamEngineer />} />
+        <Route path="/training/paloalto/securityoperations/xdrengineer" element={<XDREngineer />} />
+        <Route path="/training/paloalto/securityoperations/xsoarengineer" element={<XsoarEngineer />} />
+        <Route path="/training/paloalto/cloudsecurity/professional" element={<CloudSecurityProfessional />} />
 
         {/* Cybersecurity */}
         <Route path="/training/cybersecurity/blueteam" element={<BlueTeam />} />
