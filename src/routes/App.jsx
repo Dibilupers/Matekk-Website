@@ -45,11 +45,6 @@ import PMP from "../pages/training/projectmanagement/pmp";
 
 /* IT MANAGEMENT */
 import ITIL5 from "../pages/training/itil5/itil5";
-import ITIL4Foundation from "../pages/training/itil4/foundation";
-import ITIL4Specialist from "../pages/training/itil4/specialist";
-import ITIL4Strategist from "../pages/training/itil4/strategist";
-import ITIL4Practitioner from "../pages/training/itil4/practitioner";
-import ITIL4Leader from "../pages/training/itil4/leader";
 /* Cloud */
 import AzureFundamentals from "../pages/training/cloud/microsoft/azurefundamentals";
 import AWSPractitioner from "../pages/training/cloud/aws/practitioner";
@@ -116,11 +111,6 @@ export default function App() {
 
         {/* ITIL */}
         <Route path="/training/itil5/foundation" element={<ITIL5 />} />
-        <Route path="/training/itil4/foundation" element={<ITIL4Foundation />} />
-        <Route path="/training/itil4/specialist" element={<ITIL4Specialist />} />
-        <Route path="/training/itil4/strategist" element={<ITIL4Strategist />} />
-        <Route path="/training/itil4/practitioner" element={<ITIL4Practitioner />} />
-        <Route path="/training/itil4/leader" element={<ITIL4Leader />} />
 
         {/* Project Management */}
         <Route path="/training/projectmanagement/pmp" element={<PMP />} />

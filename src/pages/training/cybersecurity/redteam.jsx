@@ -219,7 +219,7 @@ export default function RedTeam() {
           {/* ====== Course Title and Description ======*/}
           <div>
             {/* Course title */}
-            <h1 className="text-[#1775EE] w-150">
+            <h1 className="text-[#1775EE] lg:w-150">
               Red Team: CompTIA Security+ (SY0-701) Training
             </h1>
 

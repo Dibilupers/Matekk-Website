@@ -15,230 +15,349 @@ function NavBar() {
   const navigate = useNavigate();
   const location = useLocation();
 
-const dropdownMenus = {
-  solutions: [
-    {
-      name: "ICT Consultancy (PBOOT)",
-      subcourses: [
-        { name: "Data Center Facilities", path: "/solutions/ict/datacenter" },
-        { name: "ICT Network and Security Infrastructure", path: "/solutions/ict/network" },
-        { name: "Cybersecurity", path: "/solutions/ict/cybersecurity" },
-        { name: "Vulnerability Assessment and Penetration Testing (VAPT)", path: "/solutions/ict/vapt" },
-        { name: "Web and Software Development", path: "/solutions/ict/webdev" },
-        { name: "Cloud Computing Services", path: "/solutions/ict/cloud" },
-        { name: "SMART Environment Automation (IoT)", path: "/solutions/ict/iot" },
-      ],
-    },
-    {
-      name: "Auxiliary Systems and PECE Consultancy",
-      subcourses: [
-        { name: "Auxiliary Systems", path: "/solutions/auxiliary/systems" },
-        { name: "PECE Consultancy", path: "/solutions/auxiliary/pece" },
-      ],
-    },
-    {
-      name: "Cloud Computing",
-      subcourses: [
-        { name: "Cloud Infrastructure", path: "/solutions/cloud/infrastructure" },
-        { name: "Cloud Migration", path: "/solutions/cloud/migration" },
-      ],
-    },
-    {
-      name: "IT Management",
-      subcourses: [
-        { name: "IT Strategy", path: "/solutions/itmanagement/strategy" },
-        { name: "IT Operations", path: "/solutions/itmanagement/operations" },
-      ],
-    },
-    {
-      name: "Customized Training Solutions",
-      subcourses: [
-        { name: "Corporate Training", path: "/solutions/training/corporate" },
-        { name: "Custom Curriculum", path: "/solutions/training/curriculum" },
-      ],
-    },
-  ],
+  const dropdownMenus = {
+    solutions: [
+      {
+        name: "ICT Consultancy (PBOOT)",
+        subcourses: [
+          { name: "Data Center Facilities", path: "/solutions/ict/datacenter" },
+          {
+            name: "ICT Network and Security Infrastructure",
+            path: "/solutions/ict/network",
+          },
+          { name: "Cybersecurity", path: "/solutions/ict/cybersecurity" },
+          {
+            name: "Vulnerability Assessment and Penetration Testing (VAPT)",
+            path: "/solutions/ict/vapt",
+          },
+          {
+            name: "Web and Software Development",
+            path: "/solutions/ict/webdev",
+          },
+          { name: "Cloud Computing Services", path: "/solutions/ict/cloud" },
+          {
+            name: "SMART Environment Automation (IoT)",
+            path: "/solutions/ict/iot",
+          },
+        ],
+      },
+      {
+        name: "Auxiliary Systems and PECE Consultancy",
+        subcourses: [
+          { name: "Auxiliary Systems", path: "/solutions/auxiliary/systems" },
+          { name: "PECE Consultancy", path: "/solutions/auxiliary/pece" },
+        ],
+      },
+      {
+        name: "Cloud Computing",
+        subcourses: [
+          {
+            name: "Cloud Infrastructure",
+            path: "/solutions/cloud/infrastructure",
+          },
+          { name: "Cloud Migration", path: "/solutions/cloud/migration" },
+        ],
+      },
+      {
+        name: "IT Management",
+        subcourses: [
+          { name: "IT Strategy", path: "/solutions/itmanagement/strategy" },
+          { name: "IT Operations", path: "/solutions/itmanagement/operations" },
+        ],
+      },
+      {
+        name: "Customized Training Solutions",
+        subcourses: [
+          { name: "Corporate Training", path: "/solutions/training/corporate" },
+          { name: "Custom Curriculum", path: "/solutions/training/curriculum" },
+        ],
+      },
+    ],
 
-  training: [
-    {
-      name: "Cisco",
-      subcourses: [
-        {
-          name: "CCNA",
-          subcourses: [
-            { name: "CCNA", path: "/training/cisco/ccna/ccna" },
-            { name: "CCNA Automation", path: "/training/cisco/ccna/automation" },
-            { name: "CCNA Cybersecurity", path: "/training/cisco/ccna/cybersecurity" },
-          ],
-        },
-        {
-          name: "CCNP",
-          subcourses: [
-            { name: "CCNP Enterprise", path: "/training/cisco/ccnp/enterprise" },
-            { name: "CCNP Security", path: "/training/cisco/ccnp/security" },
-            { name: "CCNP Cybersecurity", path: "/training/cisco/ccnp/cybersecurity" },
-            { name: "CCNP Wireless", path: "/training/cisco/ccnp/wireless" },
-            { name: "CCNP Data Center", path: "/training/cisco/ccnp/datacenter" },
-          ],
-        },
-      ],
-    },
+    training: [
+      {
+        name: "Cisco",
+        subcourses: [
+          {
+            name: "CCNA",
+            subcourses: [
+              { name: "CCNA", path: "/training/cisco/ccna/ccna" },
+              {
+                name: "CCNA Automation",
+                path: "/training/cisco/ccna/automation",
+              },
+              {
+                name: "CCNA Cybersecurity",
+                path: "/training/cisco/ccna/cybersecurity",
+              },
+            ],
+          },
+          {
+            name: "CCNP",
+            subcourses: [
+              {
+                name: "CCNP Enterprise",
+                path: "/training/cisco/ccnp/enterprise",
+              },
+              { name: "CCNP Security", path: "/training/cisco/ccnp/security" },
+              {
+                name: "CCNP Cybersecurity",
+                path: "/training/cisco/ccnp/cybersecurity",
+              },
+              { name: "CCNP Wireless", path: "/training/cisco/ccnp/wireless" },
+              {
+                name: "CCNP Data Center",
+                path: "/training/cisco/ccnp/datacenter",
+              },
+            ],
+          },
+        ],
+      },
 
-    {
-      name: "CompTIA",
-      subcourses: [
-        { name: "A+ (Core 1 & 2)", path: "/training/comptia/aplus" },
-        { name: "Network+", path: "/training/comptia/network" },
-        { name: "Security+", path: "/training/comptia/security+" },
-        { name: "CySA+", path: "/training/comptia/cysa" },
-        { name: "PenTest+", path: "/training/comptia/pentest" },
-        { name: "Linux+", path: "/training/comptia/linux" },
-      ],
-    },
+      {
+        name: "CompTIA",
+        subcourses: [
+          { name: "A+ (Core 1 & 2)", path: "/training/comptia/aplus" },
+          { name: "Network+", path: "/training/comptia/network" },
+          { name: "Security+", path: "/training/comptia/security+" },
+          { name: "CySA+", path: "/training/comptia/cysa" },
+          { name: "PenTest+", path: "/training/comptia/pentest" },
+          { name: "Linux+", path: "/training/comptia/linux" },
+        ],
+      },
 
-    {
-      name: "Fortinet",
-      subcourses: [
-        { name: "NSE 1", path: "/training/fortinet/nse1" },
-        { name: "NSE 2", path: "/training/fortinet/nse2" },
-        { name: "NSE 3", path: "/training/fortinet/nse3" },
-        { name: "NSE 4 (all tracks)", path: "/training/fortinet/nse4" },
-        { name: "NSE 5 Secure Networking", path: "/training/fortinet/nse5securenetworking" },
-        { name: "NSE 5 SASE", path: "/training/fortinet/nse5sase" },
-        { name: "NSE 5 Cloud Security", path: "/training/fortinet/nse5cloudsecurity" },
-        { name: "NSE 5 Secure Operations", path: "/training/fortinet/nse5secureoperations" },
-        { name: "NSE 6 Secure Networking", path: "/training/fortinet/nse6securenetworking" },
-        { name: "NSE 6 SASE", path: "/training/fortinet/nse6sase" },
-        { name: "NSE 6 Cloud Security", path: "/training/fortinet/nse6cloudsecurity" },
-        { name: "NSE 6 Secure Operations", path: "/training/fortinet/nse6secureoperations" },
-        { name: "NSE 7 Secure Networking", path: "/training/fortinet/nse7securenetworking" },
-        { name: "NSE 7 SASE", path: "/training/fortinet/nse7sase" },
-        { name: "NSE 7 Cloud Security", path: "/training/fortinet/nse7cloudsecurity" },
-        { name: "NSE 7 Secure Operations", path: "/training/fortinet/nse7secureoperations" },
-      ],
-    },
+      {
+        name: "Fortinet",
+        subcourses: [
+          { name: "NSE 1", path: "/training/fortinet/nse1" },
+          { name: "NSE 2", path: "/training/fortinet/nse2" },
+          { name: "NSE 3", path: "/training/fortinet/nse3" },
+          { name: "NSE 4 (all tracks)", path: "/training/fortinet/nse4" },
+          {
+            name: "NSE 5 Secure Networking",
+            path: "/training/fortinet/nse5securenetworking",
+          },
+          { name: "NSE 5 SASE", path: "/training/fortinet/nse5sase" },
+          {
+            name: "NSE 5 Cloud Security",
+            path: "/training/fortinet/nse5cloudsecurity",
+          },
+          {
+            name: "NSE 5 Secure Operations",
+            path: "/training/fortinet/nse5secureoperations",
+          },
+          {
+            name: "NSE 6 Secure Networking",
+            path: "/training/fortinet/nse6securenetworking",
+          },
+          { name: "NSE 6 SASE", path: "/training/fortinet/nse6sase" },
+          {
+            name: "NSE 6 Cloud Security",
+            path: "/training/fortinet/nse6cloudsecurity",
+          },
+          {
+            name: "NSE 6 Secure Operations",
+            path: "/training/fortinet/nse6secureoperations",
+          },
+          {
+            name: "NSE 7 Secure Networking",
+            path: "/training/fortinet/nse7securenetworking",
+          },
+          { name: "NSE 7 SASE", path: "/training/fortinet/nse7sase" },
+          {
+            name: "NSE 7 Cloud Security",
+            path: "/training/fortinet/nse7cloudsecurity",
+          },
+          {
+            name: "NSE 7 Secure Operations",
+            path: "/training/fortinet/nse7secureoperations",
+          },
+        ],
+      },
 
-    {
-      name: "Palo Alto",
-      subcourses: [
-        {
-          name: "Network Security",
-          subcourses: [
-            { name: "Cybersecurity Apprentice", path: "/training/paloalto/networksecurity/apprentice" },
-            { name: "Cybersecurity Practitioner", path: "/training/paloalto/networksecurity/practitioner" },
-            { name: "Network Security Professional", path: "/training/paloalto/networksecurity/professional" },
-            { name: "Network Security Analyst", path: "/training/paloalto/networksecurity/analyst" },
-            { name: "Next-Generation Firewall Engineer", path: "/training/paloalto/networksecurity/nextgenerationfirewallengineer" },
-            { name: "SD-WAN Engineer", path: "/training/paloalto/networksecurity/sdwanengineer" },
-            { name: "Security Service Edge Engineer", path: "/training/paloalto/networksecurity/securityserviceedgeengineer" },
-            { name: "Network Security Architect", path: "/training/paloalto/networksecurity/architect" },
-          ],
-        },
-        {
-          name: "Security Operations",
-          subcourses: [
-            { name: "Cybersecurity Practitioner", path: "/training/paloalto/securityoperations/practitioner" },
-            { name: "Security Operations Professional", path: "/training/paloalto/securityoperations/professional" },
-            { name: "XSIAM Analyst", path: "/training/paloalto/securityoperations/xsiamanalyst" },
-            { name: "XDR Analyst", path: "/training/paloalto/securityoperations/xdranalyst" },
-            { name: "XSIAM Engineer", path: "/training/paloalto/securityoperations/xsiamengineer" },
-            { name: "XDR Engineer", path: "/training/paloalto/securityoperations/xdrengineer" },
-            { name: "XSOAR Engineer", path: "/training/paloalto/securityoperations/xsoarengineer" },
-          ],
-        },
-        {
-          name: "Cloud Security",
-          subcourses: [
-            { name: "Cloud Security Professional", path: "/training/paloalto/cloudsecurity/professional" },
-          ],
-        },
-      ],
-    },
+      {
+        name: "Palo Alto",
+        subcourses: [
+          {
+            name: "Network Security",
+            subcourses: [
+              {
+                name: "Cybersecurity Apprentice",
+                path: "/training/paloalto/networksecurity/apprentice",
+              },
+              {
+                name: "Cybersecurity Practitioner",
+                path: "/training/paloalto/networksecurity/practitioner",
+              },
+              {
+                name: "Network Security Professional",
+                path: "/training/paloalto/networksecurity/professional",
+              },
+              {
+                name: "Network Security Analyst",
+                path: "/training/paloalto/networksecurity/analyst",
+              },
+              {
+                name: "Next-Generation Firewall Engineer",
+                path: "/training/paloalto/networksecurity/nextgenerationfirewallengineer",
+              },
+              {
+                name: "SD-WAN Engineer",
+                path: "/training/paloalto/networksecurity/sdwanengineer",
+              },
+              {
+                name: "Security Service Edge Engineer",
+                path: "/training/paloalto/networksecurity/securityserviceedgeengineer",
+              },
+              {
+                name: "Network Security Architect",
+                path: "/training/paloalto/networksecurity/architect",
+              },
+            ],
+          },
+          {
+            name: "Security Operations",
+            subcourses: [
+              {
+                name: "Cybersecurity Practitioner",
+                path: "/training/paloalto/securityoperations/practitioner",
+              },
+              {
+                name: "Security Operations Professional",
+                path: "/training/paloalto/securityoperations/professional",
+              },
+              {
+                name: "XSIAM Analyst",
+                path: "/training/paloalto/securityoperations/xsiamanalyst",
+              },
+              {
+                name: "XDR Analyst",
+                path: "/training/paloalto/securityoperations/xdranalyst",
+              },
+              {
+                name: "XSIAM Engineer",
+                path: "/training/paloalto/securityoperations/xsiamengineer",
+              },
+              {
+                name: "XDR Engineer",
+                path: "/training/paloalto/securityoperations/xdrengineer",
+              },
+              {
+                name: "XSOAR Engineer",
+                path: "/training/paloalto/securityoperations/xsoarengineer",
+              },
+            ],
+          },
+          {
+            name: "Cloud Security",
+            subcourses: [
+              {
+                name: "Cloud Security Professional",
+                path: "/training/paloalto/cloudsecurity/professional",
+              },
+            ],
+          },
+        ],
+      },
 
-    {
-      name: "Practical Ethical Hacking",
-      subcourses: [
-        {
-          name: "PEH Fundamentals",
-          subcourses: [
-            { name: "Penetration Testing", path: "/training/peh/fundamentals/pentest" },
-            { name: "Web App Security", path: "/training/peh/fundamentals/webapp" },
-          ],
-        },
-      ],
-    },
+      {
+        name: "Practical Ethical Hacking",
+        subcourses: [
+          {
+            name: "PEH Fundamentals",
+            subcourses: [
+              {
+                name: "Penetration Testing",
+                path: "/training/peh/fundamentals/pentest",
+              },
+              {
+                name: "Web App Security",
+                path: "/training/peh/fundamentals/webapp",
+              },
+            ],
+          },
+        ],
+      },
 
-    {
-      name: "CDCP",
-      subcourses: [
-        { name: "Data Centre Foundation Certificate", path: "/training/cdcp/dcfc" },
-        { name: "Certified Data Centre Professional", path: "/training/cdcp/cdcp" },
-        { name: "Certified Data Centre Specialist", path: "/training/cdcp/cdcs" },
-      ],
-    },
+      {
+        name: "CDCP",
+        subcourses: [
+          {
+            name: "Data Centre Foundation Certificate",
+            path: "/training/cdcp/dcfc",
+          },
+          {
+            name: "Certified Data Centre Professional",
+            path: "/training/cdcp/cdcp",
+          },
+          {
+            name: "Certified Data Centre Specialist",
+            path: "/training/cdcp/cdcs",
+          },
+        ],
+      },
 
-    {
-      name: "Cybersecurity",
-      subcourses: [
-        {
-          name: "Blue Team: Security Operations & Defensive Cybersecurity Program",
-          path: "/training/cybersecurity/blueteam",
-        },
-        {
-          name: "Red Team: CompTIA Security+ (SY0-701) Training",
-          path: "/training/cybersecurity/redteam",
-        },
-      ],
-    },
+      {
+        name: "Cybersecurity",
+        subcourses: [
+          {
+            name: "Blue Team: Security Operations & Defensive Cybersecurity Program",
+            path: "/training/cybersecurity/blueteam",
+          },
+          {
+            name: "Red Team: CompTIA Security+ (SY0-701) Training",
+            path: "/training/cybersecurity/redteam",
+          },
+        ],
+      },
 
-    {
-      name: "Cloud Computing",
-      subcourses: [
-        {
-          name: "Microsoft",
-          subcourses: [
-            { name: "Azure Fundamentals", path: "/training/cloud/microsoft/azurefundamentals" },
-          ],
-        },
-        {
-          name: "AWS",
-          subcourses: [
-            { name: "Cloud Practitioner", path: "/training/cloud/aws/practitioner" },
-          ],
-        },
-      ],
-    },
+      {
+        name: "Cloud Computing",
+        subcourses: [
+          {
+            name: "Microsoft",
+            subcourses: [
+              {
+                name: "Azure Fundamentals",
+                path: "/training/cloud/microsoft/azurefundamentals",
+              },
+            ],
+          },
+          {
+            name: "AWS",
+            subcourses: [
+              {
+                name: "Cloud Practitioner",
+                path: "/training/cloud/aws/practitioner",
+              },
+            ],
+          },
+        ],
+      },
 
-    {
-      name: "IT Management",
-      subcourses: [
-        {
-          name: "ITIL 4",
-          subcourses: [
-            { name: "Foundation", path: "/training/itil4/foundation" },
-            { name: "Specialist: Create, Deliver and Support", path: "/training/itil4/specialist" },
-            { name: "Strategist: Direct, Plan and Improve", path: "/training/itil4/strategist" },
-            { name: "Practitioner: Incident Management", path: "/training/itil4/practitioner" },
-            { name: "Leader: Digital and IT Strategy", path: "/training/itil4/leader" },
-          ],
-        },
-        {
-          name: "ITIL 5",
-          subcourses: [
-            { name: "Foundation", path: "training/itil5/foundation" },
-          ]
-        }
-      ],
-    },
+      {
+        name: "IT Management",
+        subcourses: [
+          {
+            name: "ITIL 5",
+            subcourses: [
+              { name: "Foundation", path: "training/itil5/foundation" },
+            ],
+          },
+        ],
+      },
 
-    {
-      name: "Project Management",
-      subcourses: [
-        { name: "Project Management Professional", path: "/training/projectmanagement/pmp" },
-      ],
-    },
-  ],
-};
+      {
+        name: "Project Management",
+        subcourses: [
+          {
+            name: "Project Management Professional",
+            path: "/training/projectmanagement/pmp",
+          },
+        ],
+      },
+    ],
+  };
 
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
@@ -596,7 +715,6 @@ const dropdownMenus = {
       <EnrollNowButton buttonCustomStyle="hidden lg:block" />
 
       {/* Mobile + Tablet Hamburger — visible below lg */}
-      {/* ↓ changed flex md:hidden → flex lg:hidden */}
       <div className="flex lg:hidden mr-[2.063rem] md:mr-16 lg:mr-16 xl:mr-[7.438rem] justify-center items-center">
         <button
           onClick={() => setIsOpen(!isOpen)}
@@ -766,41 +884,32 @@ const dropdownMenus = {
             </div>
 
             <nav className="flex-1 px-6 py-8 space-y-4">
-              {dropdownMenus.training
-                .find((cat) => cat.name === openSubcourse)
-                ?.subcourses.map((subcourse) =>
-                  subcourse.subcourses ? (
-                    <button
-                      key={subcourse.name}
-                      onClick={() => setOpenThirdLevel(subcourse.name)}
-                      className="block w-full text-left text-lg text-black font-poppins hover:text-[#1775EE] py-2 flex items-center justify-between"
+              {dropdownMenus.solutions.map(
+                (
+                  category, // ← was dropdownMenus.training
+                ) => (
+                  <button
+                    key={category.name}
+                    onClick={() => setOpenSubcourse(category.name)}
+                    className="block w-full text-left text-lg text-black font-poppins hover:text-[#1775EE] py-2 flex items-center justify-between"
+                  >
+                    {category.name}
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
                     >
-                      {subcourse.name}
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 5l7 7-7 7"
-                        />
-                      </svg>
-                    </button>
-                  ) : (
-                    <Link
-                      key={subcourse.name}
-                      to={subcourse.path}
-                      onClick={resetMenu}
-                      className="block text-lg text-black font-poppins hover:text-[#1775EE] py-2 px-4"
-                    >
-                      {subcourse.name}
-                    </Link>
-                  ),
-                )}
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </button>
+                ),
+              )}
             </nav>
           </div>
         )}
@@ -907,7 +1016,7 @@ const dropdownMenus = {
           </div>
         )}
 
-        {/* Training Level 2 - Subcourses (e.g., CCNA, CCNP) */}
+        {/* Training Level 2 - Subcourses */}
         {openDropdown === "training-mobile" &&
           openSubcourse &&
           !openThirdLevel && (
@@ -939,28 +1048,39 @@ const dropdownMenus = {
               <nav className="flex-1 px-6 py-8 space-y-4">
                 {dropdownMenus.training
                   .find((cat) => cat.name === openSubcourse)
-                  ?.subcourses.map((subcourse) => (
-                    <button
-                      key={subcourse.name}
-                      onClick={() => setOpenThirdLevel(subcourse.name)}
-                      className="block w-full text-left text-lg text-black font-poppins hover:text-[#1775EE] py-2 flex items-center justify-between"
-                    >
-                      {subcourse.name}
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
+                  ?.subcourses.map((subcourse) =>
+                    subcourse.subcourses ? (
+                      <button
+                        key={subcourse.name}
+                        onClick={() => setOpenThirdLevel(subcourse.name)}
+                        className="block w-full text-left text-lg text-black font-poppins hover:text-[#1775EE] py-2 flex items-center justify-between"
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 5l7 7-7 7"
-                        />
-                      </svg>
-                    </button>
-                  ))}
+                        {subcourse.name}
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      </button>
+                    ) : (
+                      <Link
+                        key={subcourse.name}
+                        to={subcourse.path}
+                        onClick={resetMenu}
+                        className="block text-lg text-black font-poppins hover:text-[#1775EE] py-2 px-4"
+                      >
+                        {subcourse.name}
+                      </Link>
+                    ),
+                  )}
               </nav>
             </div>
           )}

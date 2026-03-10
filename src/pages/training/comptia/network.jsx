@@ -111,7 +111,7 @@ export default function NetworkPlus() {
           {/* ====== Course Title and Description ======*/}
           <div>
             {/* Course title */}
-            <h1 className="text-[#1775EE] font-bold">Network+</h1>
+            <h1 className="text-[#1775EE]">Network+</h1>
 
             {/* Course description */}
             <p className="lg:w-[30vw] xl:w-lg text-gray-900">

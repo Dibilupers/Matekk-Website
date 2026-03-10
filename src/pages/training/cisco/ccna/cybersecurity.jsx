@@ -177,7 +177,7 @@ export default function CCNACybersecurity() {
           {/* ====== Course Title and Description ======*/}
           <div>
             {/* Course title */}
-            <h1 className="text-[#1775EE] font-bold">CCNA CYBERSECURITY</h1>
+            <h1 className="text-[#1775EE]">CCNA CYBERSECURITY</h1>
 
             {/* Course description */}
             <p className="lg:w-[30vw] xl:w-lg text-gray-900">

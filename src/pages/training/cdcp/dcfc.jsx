@@ -138,7 +138,7 @@ export default function DCFC() {
           {/* ====== Course Title and Description ======*/}
           <div>
             {/* Course title */}
-            <h1 className="text-[#1775EE] font-bold">
+            <h1 className="text-[#1775EE]">
               Data Centre Foundation Certificate
             </h1>
 

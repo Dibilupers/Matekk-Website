@@ -135,7 +135,7 @@ export default function ITIL5() {
           {/* ====== Course Title and Description ======*/}
           <div>
             {/* Course title */}
-            <h1 className="text-[#1775EE] w-150">
+            <h1 className="text-[#1775EE] lg:w-150 pr-20 lg:pr-0">
               ITIL Foundation Bridge (Version 5)
             </h1>
 
@@ -189,11 +189,7 @@ export default function ITIL5() {
               digital service management. By highlighting how value creation,
               digital service delivery, and management concepts have been
               refined, the course ensures you stay current and confident in
-              applying ITIL principles in modern IT environments. With a
-              practical approach, interactive examples, and real-world
-              applications, you’ll be equipped to understand and leverage
-              Version 5 enhancements without spending unnecessary time on
-              material you’ve already mastered.
+              applying ITIL principles in modern IT environments.
             </p>
           </section>
 

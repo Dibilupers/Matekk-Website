@@ -88,7 +88,7 @@ export default function AzureFundamentals() {
           {/* ====== Course Title and Description ======*/}
           <div>
             {/* Course title */}
-            <h1 className="text-[#1775EE] w-150">Azure Fundamentals</h1>
+            <h1 className="text-[#1775EE] lg:w-150">Azure Fundamentals</h1>
 
             {/* Course description */}
             <p className="lg:w-[30vw] xl:w-lg text-gray-900">

@@ -177,7 +177,7 @@ export default function CCNAAutomation() {
           {/* ====== Course Title and Description ======*/}
           <div>
             {/* Course title */}
-            <h1 className="text-[#1775EE] font-bold">CCNA AUTOMATION</h1>
+            <h1 className="text-[#1775EE]">CCNA AUTOMATION</h1>
 
             {/* Course description */}
             <p className="lg:w-[30vw] xl:w-lg text-gray-900">

@@ -209,7 +209,7 @@ export default function CDCP() {
           {/* ====== Course Title and Description ======*/}
           <div>
             {/* Course title */}
-            <h1 className="text-[#1775EE] font-bold">
+            <h1 className="text-[#1775EE]">
               Certified Data Centre Professional
             </h1>
 

@@ -113,7 +113,7 @@ export default function BlueTeam() {
           {/* ====== Course Title and Description ======*/}
           <div>
             {/* Course title */}
-            <h1 className="text-[#1775EE] w-150">
+            <h1 className="text-[#1775EE] lg:w-150">
               Blue Team: Security Operations & Defensive Cybersecurity Program
             </h1>
 
