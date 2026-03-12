@@ -13,6 +13,7 @@ import MedalIcon from "../../../assets/Medal.svg";
 import CourseModules from "../../../components/training/courseModules";
 import TrainingTemplateFooter from "../../../components/section/TrainingTemplateFooter";
 import EnrollNowButton from "../../../components/ui/EnrollNowButton";
+import TrainingHeroBanner from "../../../components/section/TrainingHeroBanner";
 
 // ==================== COMPONENT NAME - CHANGE FOR EACH COURSE ====================
 export default function NSE5SASE() {
@@ -135,59 +136,13 @@ export default function NSE5SASE() {
   return (
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}
-      <section className="relative pl-8 py-18 rounded-2xl shadow-lg flex flex-col gap-3 overflow-hidden min-h-62.5">
-        {/* ==================== HERO BANNER - Image ====================*/}
-        {/* Background Image */}
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: `url(${ccnaHero})`,
-          }}
-        />
-        {/* Hero Background Image Gradient */}
-        <div className="absolute inset-0 bg-linear-to-r from-[#cbddf5] via-[#cbddf5ce] to-transparent"></div>
-
-        {/* ==================== HERO BANNER - Text Content ====================*/}
-        <div className="relative z-10 flex flex-col gap-3 pl-1 sm:pl-8">
-          {/* Course Category */}
-          <h6 className="w-fit px-4 py-2 text-[#1775EE] bg-blue-50 rounded-full">
-            FORTINET
-          </h6>
-
-          {/* ====== Course Title and Description ======*/}
-          <div>
-            {/* Course title */}
-            <h1 className="text-[#1775EE] font-bold">
-              NSE 5 SASE
-            </h1>
-
-            {/* Course description */}
-            <p className="lg:w-[30vw] xl:w-lg text-gray-900">
-             Learn to deploy and manage FortiSASE to secure internet access and protect SaaS 
-             applications for on-site and remote users. This course builds foundational knowledge 
-             of FortiSASE and how to enforce security policies.
-            </p>
-          </div>
-
-          {/* ====== Hero Button ====== */}
-          <div className="flex flex-row sm:flex-row gap-2.5 mt-1">
-            {/* Enroll Now Button - When clicked, opens a modal */}
-            <EnrollNowButton />
-
-            {/* Learn More Button - When clicked will scroll down to proceed on the other sections of the page */}
-            <Button
-              title="Learn More"
-              type="none"
-              buttonCustomStyle="bg-transparent text-blue-600 border-2 border-blue-600 hover:bg-white hover:border-white hover:text-blue-600 transition ease-in-out transition-all duration-300 px-6 py-3"
-              btnFunc={() => {
-                document
-                  .getElementById("services")
-                  ?.scrollIntoView({ behavior: "smooth", block: "start" });
-              }}
-            />
-          </div>
-        </div>
-      </section>
+      <TrainingHeroBanner
+        bgImage={ccnaHero}
+        category="FORTINET"
+        title="NSE 5 SASE"
+        description="Learn to deploy and manage FortiSASE to secure internet access and protect SaaS applications for on-site and remote users. This course builds foundational knowledge of FortiSASE and how to enforce security policies.
+                                          "
+      />
 
       {/* ==================== CONTENT SECTION - Training Informations/Content ==================== */}
       <div className="flex flex-col lg:flex-row justify-start items-start lg:items-stretch gap-6 lg:gap-8">
@@ -202,13 +157,15 @@ export default function NSE5SASE() {
             {/* About Section - Description */}
             {/* CHANGE: Course description paragraphs */}
             <p>
-              In this course, you will gain practical skills to implement and manage FortiSASE, delivering secure 
-              internet access and protecting SaaS applications for both on-site and remote users. You will explore its core 
-              architecture and security capabilities.
+              In this course, you will gain practical skills to implement and
+              manage FortiSASE, delivering secure internet access and protecting
+              SaaS applications for both on-site and remote users. You will
+              explore its core architecture and security capabilities.
             </p>
             <p>
-              Aligned with Fortinet training, you will learn how to apply security policies using endpoint profiles 
-              and content inspection to ensure consistent and effective protection.
+              Aligned with Fortinet training, you will learn how to apply
+              security policies using endpoint profiles and content inspection
+              to ensure consistent and effective protection.
             </p>
           </section>
 
@@ -227,7 +184,10 @@ export default function NSE5SASE() {
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Use control features for network access and automated policy enforcement</p>
+                <p>
+                  Use control features for network access and automated policy
+                  enforcement
+                </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
@@ -235,7 +195,10 @@ export default function NSE5SASE() {
               </div>
               <p className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <span>Combine visibility and control with security device integrations to automate threat responses</span>
+                <span>
+                  Combine visibility and control with security device
+                  integrations to automate threat responses
+                </span>
               </p>
             </div>
           </section>
