@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate, useLocation } from "react-router-dom";
 import EnrollNowButton from "../ui/EnrollNowButton";
+import MGKKLogo from "../../assets/MGKK_logo.png";
 
 function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -175,41 +176,41 @@ function NavBar() {
         ],
       },
 
-    {
-      name: "Palo Alto",
-      subcourses: [
-        {
-          name: "Network Security",
-          subcourses: [
-            { name: "Cybersecurity Apprentice", path: "/training/paloalto/networksecurity/apprentice" },
-            { name: "Cybersecurity Practitioner", path: "/training/paloalto/networksecurity/practitioner" },
-            { name: "Network Security Professional", path: "/training/paloalto/networksecurity/professional" },
-            { name: "Network Security Analyst", path: "/training/paloalto/networksecurity/analyst" },
-            { name: "Next-Generation Firewall Engineer", path: "/training/paloalto/networksecurity/nextgenerationfirewallengineer" },
-            { name: "SD-WAN Engineer", path: "/training/paloalto/networksecurity/sdwanengineer" },
-            { name: "Security Service Edge Engineer", path: "/training/paloalto/networksecurity/securityserviceedgeengineer" },
-            { name: "Network Security Architect", path: "/training/paloalto/networksecurity/architect" },
-          ],
-        },
-        {
-          name: "Security Operations",
-          subcourses: [
-            { name: "Security Operations Professional", path: "/training/paloalto/securityoperations/professional" },
-            { name: "XSIAM Analyst", path: "/training/paloalto/securityoperations/xsiamanalyst" },
-            { name: "XDR Analyst", path: "/training/paloalto/securityoperations/xdranalyst" },
-            { name: "XSIAM Engineer", path: "/training/paloalto/securityoperations/xsiamengineer" },
-            { name: "XDR Engineer", path: "/training/paloalto/securityoperations/xdrengineer" },
-            { name: "XSOAR Engineer", path: "/training/paloalto/securityoperations/xsoarengineer" },
-          ],
-        },
-        {
-          name: "Cloud Security",
-          subcourses: [
-            { name: "Cloud Security Professional", path: "/training/paloalto/cloudsecurity/professional" },
-          ],
-        },
-      ],
-    },
+      {
+        name: "Palo Alto",
+        subcourses: [
+          {
+            name: "Network Security",
+            subcourses: [
+              { name: "Cybersecurity Apprentice", path: "/training/paloalto/networksecurity/apprentice" },
+              { name: "Cybersecurity Practitioner", path: "/training/paloalto/networksecurity/practitioner" },
+              { name: "Network Security Professional", path: "/training/paloalto/networksecurity/professional" },
+              { name: "Network Security Analyst", path: "/training/paloalto/networksecurity/analyst" },
+              { name: "Next-Generation Firewall Engineer", path: "/training/paloalto/networksecurity/nextgenerationfirewallengineer" },
+              { name: "SD-WAN Engineer", path: "/training/paloalto/networksecurity/sdwanengineer" },
+              { name: "Security Service Edge Engineer", path: "/training/paloalto/networksecurity/securityserviceedgeengineer" },
+              { name: "Network Security Architect", path: "/training/paloalto/networksecurity/architect" },
+            ],
+          },
+          {
+            name: "Security Operations",
+            subcourses: [
+              { name: "Security Operations Professional", path: "/training/paloalto/securityoperations/professional" },
+              { name: "XSIAM Analyst", path: "/training/paloalto/securityoperations/xsiamanalyst" },
+              { name: "XDR Analyst", path: "/training/paloalto/securityoperations/xdranalyst" },
+              { name: "XSIAM Engineer", path: "/training/paloalto/securityoperations/xsiamengineer" },
+              { name: "XDR Engineer", path: "/training/paloalto/securityoperations/xdrengineer" },
+              { name: "XSOAR Engineer", path: "/training/paloalto/securityoperations/xsoarengineer" },
+            ],
+          },
+          {
+            name: "Cloud Security",
+            subcourses: [
+              { name: "Cloud Security Professional", path: "/training/paloalto/cloudsecurity/professional" },
+            ],
+          },
+        ],
+      },
 
       {
         name: "Practical Ethical Hacking",
@@ -356,7 +357,10 @@ function NavBar() {
     >
       {/* ↓ changed md:ml-[7.438rem] → lg:ml-[7.438rem] */}
       <button onClick={handleHomeClick} className="cursor-pointer">
-        LOGO
+        <img
+          src={MGKKLogo}
+          alt="MGKK Logo"
+          class="w-12 md:w-10 lg:w-10 xl:w-8 2xl:w-16" />
       </button>
 
       {/* Desktop Nav — only visible at lg and above */}
@@ -400,11 +404,10 @@ function NavBar() {
                   {dropdownMenus.solutions.map((category) => (
                     <button
                       key={category.name}
-                      className={`w-full text-left px-6 py-2 transition-colors rounded-[0.35rem] flex items-center justify-between ${
-                        openSubcourse === category.name
-                          ? "bg-[#1775EE] text-white font-bold"
-                          : "hover:bg-[#1775EE] hover:text-white hover:font-bold"
-                      }`}
+                      className={`w-full text-left px-6 py-2 transition-colors rounded-[0.35rem] flex items-center justify-between ${openSubcourse === category.name
+                        ? "bg-[#1775EE] text-white font-bold"
+                        : "hover:bg-[#1775EE] hover:text-white hover:font-bold"
+                        }`}
                       onClick={() =>
                         setOpenSubcourse(
                           openSubcourse === category.name
@@ -584,11 +587,10 @@ function NavBar() {
                                     : subSub.name,
                                 )
                               }
-                              className={`w-full text-left px-6 py-2 transition-colors rounded-[0.35rem] flex items-center justify-between ${
-                                openSubSubSubcourse === subSub.name
-                                  ? "bg-[#1775EE] text-white font-bold"
-                                  : "hover:bg-[#1775EE] hover:text-white hover:font-bold"
-                              }`}
+                              className={`w-full text-left px-6 py-2 transition-colors rounded-[0.35rem] flex items-center justify-between ${openSubSubSubcourse === subSub.name
+                                ? "bg-[#1775EE] text-white font-bold"
+                                : "hover:bg-[#1775EE] hover:text-white hover:font-bold"
+                                }`}
                             >
                               {subSub.name}
                               <svg
@@ -1075,11 +1077,10 @@ function NavBar() {
                       <button
                         key={option.name}
                         onClick={() => setOpenFourthLevel(option.name)}
-                        className={`block w-full text-left text-lg font-poppins py-2 px-4 rounded-lg flex items-center justify-between transition-colors ${
-                          openFourthLevel === option.name
-                            ? "bg-[#EBF5FD] text-black"
-                            : "text-black hover:text-[#1775EE]"
-                        }`}
+                        className={`block w-full text-left text-lg font-poppins py-2 px-4 rounded-lg flex items-center justify-between transition-colors ${openFourthLevel === option.name
+                          ? "bg-[#EBF5FD] text-black"
+                          : "text-black hover:text-[#1775EE]"
+                          }`}
                       >
                         {option.name}
                         <svg
