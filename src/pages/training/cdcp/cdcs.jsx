@@ -315,7 +315,7 @@ export default function CDCS() {
             <img
               src={cdcs}
               alt="CDCS Certification Badge"
-              className="w-60 h-60 object-contain"
+              className="w-50 h-50 object-contain"
             />
           </div>
 

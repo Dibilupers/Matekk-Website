@@ -222,7 +222,7 @@ export default function Aplus() {
             <img
               src={aPlusCerti}
               alt="A+ Certification Badge"
-              className="w-100 h-100 object-contain"
+              className="w-60 h-60 object-contain"
             />
           </div>
 

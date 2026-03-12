@@ -5,7 +5,7 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
-import ccnaBadge from "../../../../assets/CCNAAutomation.png"; // Course badge image
+import ccnaBadge from "../../../../assets/CCNACybersecurity.webp"; // Course badge image
 import ccnaHero from "../../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
 import ccnaFooter from "../../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
 import MealIcon from "../../../../assets/Meal.svg";
@@ -218,7 +218,7 @@ export default function CCNACybersecurity() {
             {/* Cert Badge - Change/Update Image */}
             <img
               src={ccnaBadge}
-              alt="CCNA Automation Certification Badge"
+              alt="CCNA Cybersecurity Certification Badge"
               className="w-100 h-100 object-contain"
             />
           </div>

@@ -171,7 +171,7 @@ export default function AWSPractitioner() {
             <img
               src={awspractitioner}
               alt="AWS Practitioner Certification Badge"
-              className="w-60 h-60 object-contain"
+              className="w-55 h-55 object-contain"
             />
           </div>
 

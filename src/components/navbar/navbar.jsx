@@ -99,12 +99,31 @@ function NavBar() {
                 name: "CCNP Enterprise",
                 path: "/training/cisco/ccnp/enterprise",
               },
-              { name: "CCNP Security", path: "/training/cisco/ccnp/security" },
               {
-                name: "CCNP Cybersecurity",
-                path: "/training/cisco/ccnp/cybersecurity",
+                name: "CCNP Security",
+                subcourses: [
+                  {
+                    name: "Security",
+                    path: "/training/cisco/ccnp/ccnp-security/security",
+                  },
+                  {
+                    name: "SNCF",
+                    path: "/training/cisco/ccnp/ccnp-security/sncf",
+                  },
+                  {
+                    name: "SISE",
+                    path: "/training/cisco/ccnp/ccnp-security/sise",
+                  },
+                  {
+                    name: "SVPN",
+                    path: "/training/cisco/ccnp/ccnp-security/svpn",
+                  },
+                  {
+                    name: "SDSI",
+                    path: "/training/cisco/ccnp/ccnp-security/sdsi",
+                  },
+                ],
               },
-              { name: "CCNP Wireless", path: "/training/cisco/ccnp/wireless" },
               {
                 name: "CCNP Data Center",
                 path: "/training/cisco/ccnp/datacenter",
@@ -156,8 +175,8 @@ function NavBar() {
             path: "/training/fortinet/nse6cloudsecurity",
           },
           {
-            name: "NSE 6 Secure Operations",
-            path: "/training/fortinet/nse6secureoperations",
+            name: "NSE 6 Security Operations",
+            path: "/training/fortinet/nse6securityoperations",
           },
           {
             name: "NSE 7 Secure Networking",
@@ -169,47 +188,96 @@ function NavBar() {
             path: "/training/fortinet/nse7cloudsecurity",
           },
           {
-            name: "NSE 7 Secure Operations",
-            path: "/training/fortinet/nse7secureoperations",
+            name: "NSE 7 Security Operations",
+            path: "/training/fortinet/nse7securityoperations",
+          },
+          {
+            name: "NSE 8",
+            path: "/training/fortinet/nse8",
           },
         ],
       },
 
-    {
-      name: "Palo Alto",
-      subcourses: [
-        {
-          name: "Network Security",
-          subcourses: [
-            { name: "Cybersecurity Apprentice", path: "/training/paloalto/networksecurity/apprentice" },
-            { name: "Cybersecurity Practitioner", path: "/training/paloalto/networksecurity/practitioner" },
-            { name: "Network Security Professional", path: "/training/paloalto/networksecurity/professional" },
-            { name: "Network Security Analyst", path: "/training/paloalto/networksecurity/analyst" },
-            { name: "Next-Generation Firewall Engineer", path: "/training/paloalto/networksecurity/nextgenerationfirewallengineer" },
-            { name: "SD-WAN Engineer", path: "/training/paloalto/networksecurity/sdwanengineer" },
-            { name: "Security Service Edge Engineer", path: "/training/paloalto/networksecurity/securityserviceedgeengineer" },
-            { name: "Network Security Architect", path: "/training/paloalto/networksecurity/architect" },
-          ],
-        },
-        {
-          name: "Security Operations",
-          subcourses: [
-            { name: "Security Operations Professional", path: "/training/paloalto/securityoperations/professional" },
-            { name: "XSIAM Analyst", path: "/training/paloalto/securityoperations/xsiamanalyst" },
-            { name: "XDR Analyst", path: "/training/paloalto/securityoperations/xdranalyst" },
-            { name: "XSIAM Engineer", path: "/training/paloalto/securityoperations/xsiamengineer" },
-            { name: "XDR Engineer", path: "/training/paloalto/securityoperations/xdrengineer" },
-            { name: "XSOAR Engineer", path: "/training/paloalto/securityoperations/xsoarengineer" },
-          ],
-        },
-        {
-          name: "Cloud Security",
-          subcourses: [
-            { name: "Cloud Security Professional", path: "/training/paloalto/cloudsecurity/professional" },
-          ],
-        },
-      ],
-    },
+      {
+        name: "Palo Alto",
+        subcourses: [
+          {
+            name: "Network Security",
+            subcourses: [
+              {
+                name: "Cybersecurity Apprentice",
+                path: "/training/paloalto/networksecurity/apprentice",
+              },
+              {
+                name: "Cybersecurity Practitioner",
+                path: "/training/paloalto/networksecurity/practitioner",
+              },
+              {
+                name: "Network Security Professional",
+                path: "/training/paloalto/networksecurity/professional",
+              },
+              {
+                name: "Network Security Analyst",
+                path: "/training/paloalto/networksecurity/analyst",
+              },
+              {
+                name: "Next-Generation Firewall Engineer",
+                path: "/training/paloalto/networksecurity/nextgenerationfirewallengineer",
+              },
+              {
+                name: "SD-WAN Engineer",
+                path: "/training/paloalto/networksecurity/sdwanengineer",
+              },
+              {
+                name: "Security Service Edge Engineer",
+                path: "/training/paloalto/networksecurity/securityserviceedgeengineer",
+              },
+              {
+                name: "Network Security Architect",
+                path: "/training/paloalto/networksecurity/architect",
+              },
+            ],
+          },
+          {
+            name: "Security Operations",
+            subcourses: [
+              {
+                name: "Security Operations Professional",
+                path: "/training/paloalto/securityoperations/professional",
+              },
+              {
+                name: "XSIAM Analyst",
+                path: "/training/paloalto/securityoperations/xsiamanalyst",
+              },
+              {
+                name: "XDR Analyst",
+                path: "/training/paloalto/securityoperations/xdranalyst",
+              },
+              {
+                name: "XSIAM Engineer",
+                path: "/training/paloalto/securityoperations/xsiamengineer",
+              },
+              {
+                name: "XDR Engineer",
+                path: "/training/paloalto/securityoperations/xdrengineer",
+              },
+              {
+                name: "XSOAR Engineer",
+                path: "/training/paloalto/securityoperations/xsoarengineer",
+              },
+            ],
+          },
+          {
+            name: "Cloud Security",
+            subcourses: [
+              {
+                name: "Cloud Security Professional",
+                path: "/training/paloalto/cloudsecurity/professional",
+              },
+            ],
+          },
+        ],
+      },
 
       {
         name: "Practical Ethical Hacking",
@@ -403,7 +471,7 @@ function NavBar() {
                       className={`w-full text-left px-6 py-2 transition-colors rounded-[0.35rem] flex items-center justify-between ${
                         openSubcourse === category.name
                           ? "bg-[#1775EE] text-white font-bold"
-                          : "hover:bg-[#1775EE] hover:text-white hover:font-bold"
+                          : "hover:text-[#1775EE] hover:font-bold"
                       }`}
                       onClick={() =>
                         setOpenSubcourse(
@@ -485,7 +553,7 @@ function NavBar() {
                   {dropdownMenus.training.map((category) => (
                     <button
                       key={category.name}
-                      className={`w-full text-left px-6 py-2 transition-colors rounded-[0.35rem] flex items-center justify-between ${openSubcourse === category.name ? "bg-[#1775EE] text-white font-bold" : "hover:bg-[#1775EE] hover:text-white hover:font-bold"}`}
+                      className={`w-full text-left px-6 py-2 transition-colors rounded-[0.35rem] flex items-center justify-between ${openSubcourse === category.name ? "bg-[#1775EE] text-white font-bold" : "hover:text-[#1775EE] hover:font-bold"}`}
                       onClick={() => {
                         setOpenSubcourse(
                           openSubcourse === category.name
@@ -524,7 +592,7 @@ function NavBar() {
                         subcourse.subcourses ? (
                           <button
                             key={subcourse.name}
-                            className={`w-full text-left px-6 py-2 transition-colors rounded-[0.35rem] flex items-center justify-between ${openSubSubcourse === subcourse.name ? "bg-[#1775EE] text-white font-bold" : "hover:bg-[#1775EE] hover:text-white hover:font-bold"}`}
+                            className={`w-full text-left px-6 py-2 transition-colors rounded-[0.35rem] flex items-center justify-between ${openSubSubcourse === subcourse.name ? "bg-[#1775EE] text-white font-bold" : " hover:text-[#1775EE] hover:font-bold"}`}
                             onClick={() => {
                               setOpenSubSubcourse(
                                 openSubSubcourse === subcourse.name
@@ -584,10 +652,10 @@ function NavBar() {
                                     : subSub.name,
                                 )
                               }
-                              className={`w-full text-left px-6 py-2 transition-colors rounded-[0.35rem] flex items-center justify-between ${
+                              className={`w-full text-left px-6 py-2 flex items-center cursor-pointer justify-between rounded-[0.35rem] transition-colors ${
                                 openSubSubSubcourse === subSub.name
                                   ? "bg-[#1775EE] text-white font-bold"
-                                  : "hover:bg-[#1775EE] hover:text-white hover:font-bold"
+                                  : "hover:text-[#1775EE] hover:font-bold"
                               }`}
                             >
                               {subSub.name}

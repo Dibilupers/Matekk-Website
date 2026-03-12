@@ -224,7 +224,7 @@ export default function BlueTeam() {
             <img
               src={blueteam}
               alt="Blue Team Certification Badge"
-              className="w-60 h-60 object-contain"
+              className="w-55 h-55 object-contain"
             />
           </div>
 
