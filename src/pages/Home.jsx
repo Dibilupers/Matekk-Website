@@ -746,7 +746,7 @@ export default function Home() {
         {/* Section Margin */}
         <div className="flex flex-col lg:flex-row space-x-0 lg:space-x-8 space-y-10 md:space-y-14 lg:space-y-0 mx-[2.063rem] md:mx-16 xl:mx-[7.438rem]">
           {/* Text and Image Container */}
-          <div className="flex flex-col md:flex-row lg:flex-col justify-center items-center space-x-0 md:space-x-18 lg:space-x-5 space-y-8 md:space-y-15">
+          <div className="flex flex-col md:flex-row lg:flex-col justify-center items-center space-x-0 md:space-x-18 lg:space-x-0 space-y-8 md:space-y-15">
             {/* Text Content */}
             <div className="justify-center md:justify-left space-y-2 w-full md:w-md lg:w-fit">
               {/* Title */}
