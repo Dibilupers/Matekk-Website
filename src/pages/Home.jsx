@@ -303,7 +303,7 @@ export default function Home() {
       </section>
 
       {/* ==================== PARTNERS LOGO ====================*/}
-      <section className="flex bg-[#EBF5FD] justify-center items-center text-center py-15 scroll-mt-18" id="partners">
+      <section className="flex bg-[#EBF5FD] justify-center items-center text-center py-10 md:py-15 scroll-mt-18" id="partners">
         {/* Section Margin and Spacing */}
         <div className="mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] space-y-4 md:space-y-7">
           {/* Text Content */}
@@ -325,7 +325,7 @@ export default function Home() {
       </section>
 
       {/* ==================== SERVICES ====================*/}
-      <section id="services" className="flex flex-col justify-center items-center space-y-12 py-15 h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem]">
+      <section id="services" className="flex flex-col justify-center items-center space-y-12 py-10 md:py-15 h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem]">
         {/* Title and Description Container */}
         <div className="flex flex-col justify-center items-center text-center space-y-1">
           {/* Title */}
@@ -409,24 +409,6 @@ export default function Home() {
                   </button>
                 </div>
               </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
               {/* List of Solutions - In Slides */}
               <div className="overflow-hidden w-[85vw] md:w-[45vw] lg:w-[52vw]">
@@ -761,7 +743,7 @@ export default function Home() {
 
       {/* NOT DONE CHECKING */}
       {/* ==================== WHY CHOOSE MGKK ICT SERVICES ====================*/}
-      <section className="py-16 lg:py-20 bg-[#EBF5FD] scroll-mt-18">
+      <section className="py-10 md:py-15 bg-[#EBF5FD] scroll-mt-18">
         {/* Section Margin */}
         <div className="mx-[2.063rem] lg:mx-[7.438rem]">
           {/* Text Content */}
@@ -860,7 +842,7 @@ export default function Home() {
       </section>
 
       {/* ==================== OUR WORKING PROCESS ====================*/}
-      <section className="py-15 lg:py-15 bg-white scroll-mt-18">
+      <section className="py-10 md:py-15 bg-white scroll-mt-18">
         <div className="mx-4 sm:mx-6 lg:mx-[7.438rem]">
           {/* Text Content */}
           <div className="text-right mb-12 lg:mb-16">
@@ -1427,7 +1409,7 @@ export default function Home() {
       {/* ==================== FEATURED SOLUTIONS AND TRAINING ====================*/}
       <section
         id="training"
-        className="flex flex-col py-15 h-full bg-[#EBF5FD] scroll-mt-18"
+        className="flex flex-col py-10 md:py-15 h-full bg-[#EBF5FD] scroll-mt-18"
       >
         {/* Margin */}
         <div className="mx-[2.063rem] lg:mx-[7.438rem]">
