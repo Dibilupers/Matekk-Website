@@ -143,8 +143,8 @@ function NavBar() {
             path: "/training/fortinet/nse5cloudsecurity",
           },
           {
-            name: "NSE 5 Secure Operations",
-            path: "/training/fortinet/nse5secureoperations",
+            name: "NSE 5 Security Operations",
+            path: "/training/fortinet/nse5securityoperations",
           },
           {
             name: "NSE 6 Secure Networking",
