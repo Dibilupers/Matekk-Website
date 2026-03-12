@@ -1,27 +1,6 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import emailjs from "@emailjs/browser";
 import HCaptcha from "@hcaptcha/react-hcaptcha";
-
-/**
- * EnrollModal — Production Component
- *
- * Required .env variables:
- *   VITE_EMAILJS_SERVICE_ID=your_service_id
- *   VITE_EMAILJS_TEMPLATE_ID=your_template_id
- *   VITE_EMAILJS_PUBLIC_KEY=your_public_key
- *   VITE_HCAPTCHA_SITE_KEY=your_hcaptcha_site_key
- *
- * Install dependencies:
- *   npm install @emailjs/browser @hcaptcha/react-hcaptcha
- *
- * EmailJS template variables to map in your template:
- *   {{funding}}  {{attendees}}  {{from_name}}  {{from_email}}
- *   {{phone}}    {{course}}     {{message}}
- *
- * Usage:
- *   import EnrollModal from "@/components/modals/EnrollModal";
- *   <EnrollModal isOpen={open} onClose={() => setOpen(false)} />
- */
 
 // ─── Config ────────────────────────────────────────────────────────────────
 const EMAILJS_SERVICE_ID  = import.meta.env.VITE_EMAILJS_SERVICE_ID;
@@ -45,10 +24,36 @@ const COURSES = [
   "Cybersecurity Essentials",
 ];
 
+const INQUIRY_TYPE_OPTIONS = [
+  {
+    value: "training",
+    label: "Training",
+    description: "Enroll in a course or certification program",
+    icon: (
+      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+          d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+      </svg>
+    ),
+  },
+  {
+    value: "services",
+    label: "ICT Services",
+    description: "Inquire about network, security, or engineering solutions",
+    icon: (
+      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+          d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2v-4M9 21H5a2 2 0 01-2-2v-4m0 0h18" />
+      </svg>
+    ),
+  },
+];
+
 // ─── Custom Hook ───────────────────────────────────────────────────────────
 function useEnrollForm(onClose) {
-  const [step, setStep]               = useState(1);
-  const [status, setStatus]           = useState("idle"); // idle | loading | success | error
+  const [step, setStep]                 = useState(0);
+  const [inquiryType, setInquiryType]   = useState(null);
+  const [status, setStatus]             = useState("idle");
   const [captchaToken, setCaptchaToken] = useState(null);
   const captchaRef = useRef(null);
 
@@ -67,6 +72,11 @@ function useEnrollForm(onClose) {
   const update = (field) => (e) =>
     setForm((prev) => ({ ...prev, [field]: e.target.value }));
 
+  const selectInquiryType = (type) => {
+    setInquiryType(type);
+    setStep(1);
+  };
+
   const validateStep1 = () => {
     const e = {};
     if (!form.attendees || isNaN(form.attendees) || Number(form.attendees) < 1)
@@ -83,7 +93,7 @@ function useEnrollForm(onClose) {
 
   const validateStep2 = () => {
     const e = {};
-    if (!form.course)
+    if (inquiryType === "training" && !form.course)
       e.course = "Please select a course.";
     if (!captchaToken)
       e.captcha = "Please complete the CAPTCHA verification.";
@@ -93,6 +103,7 @@ function useEnrollForm(onClose) {
 
   const next = () => { if (validateStep1()) setStep(2); };
   const back = () => { setErrors({}); setStep(1); };
+  const backToSelection = () => { setErrors({}); setStep(0); setInquiryType(null); };
 
   const submit = async () => {
     if (!validateStep2()) return;
@@ -102,13 +113,14 @@ function useEnrollForm(onClose) {
         EMAILJS_SERVICE_ID,
         EMAILJS_TEMPLATE_ID,
         {
-          funding:    form.funding,
-          attendees:  form.attendees,
-          from_name:  form.name,
-          from_email: form.email,
-          phone:      form.phone,
-          course:     form.course,
-          message:    form.message || "No additional message.",
+          inquiry_type: inquiryType,
+          funding:      form.funding,
+          attendees:    form.attendees,
+          from_name:    form.name,
+          from_email:   form.email,
+          phone:        form.phone,
+          course:       form.course || "N/A",
+          message:      form.message || "No additional message.",
         },
         EMAILJS_PUBLIC_KEY
       );
@@ -127,17 +139,22 @@ function useEnrollForm(onClose) {
   const onCaptchaExpire = useCallback(() => setCaptchaToken(null), []);
 
   const reset = () => {
-    setStep(1);
+    setStep(0);
+    setInquiryType(null);
     setStatus("idle");
     setCaptchaToken(null);
     setErrors({});
-    setForm({ funding: FUNDING_OPTIONS[0], attendees: "", name: "", email: "", phone: "", course: "", message: "" });
+    setForm({
+      funding: FUNDING_OPTIONS[0],
+      attendees: "", name: "", email: "",
+      phone: "", course: "", message: "",
+    });
   };
 
   return {
-    step, form, errors, status, captchaToken, captchaRef,
-    update, next, back, submit, reset, onClose,
-    onCaptchaVerify, onCaptchaExpire,
+    step, inquiryType, form, errors, status, captchaToken, captchaRef,
+    update, selectInquiryType, next, back, backToSelection,
+    submit, reset, onClose, onCaptchaVerify, onCaptchaExpire,
   };
 }
 
@@ -196,6 +213,7 @@ function SelectField({ label, id, options, error, value, onChange, placeholder }
 }
 
 function ProgressBar({ step }) {
+  if (step === 0) return null;
   return (
     <div className="mb-6">
       <div className="flex justify-between items-center mb-2">
@@ -214,28 +232,70 @@ function ProgressBar({ step }) {
   );
 }
 
-function ModalHeader() {
+function ModalHeader({ title, subtitle }) {
   return (
     <div className="flex items-start justify-between mb-1">
       <div>
-        <h2 className="text-xl font-bold text-gray-900">
-          Begin Your <span className="text-blue-600">Learning Journey</span>
-        </h2>
-        <p className="text-sm text-gray-500 mt-1">
-          Fill out the form to secure your slot or learn more about the course.
-        </p>
+        <h2 className="text-xl font-bold text-gray-900">{title}</h2>
+        <p className="text-sm text-gray-500 mt-1">{subtitle}</p>
       </div>
-     
     </div>
   );
 }
 
 // ─── Step Screens ──────────────────────────────────────────────────────────
-function Step1({ form, errors, update, next, onClose }) {
+function Step0({ onSelect }) {
   return (
     <>
-      <ModalHeader onClose={onClose} />
-      <h3 className="text-xs font-bold text-gray-900 mt-5 mb-4 uppercase tracking-widest">
+      <ModalHeader
+        title={<>What are you <span className="text-blue-600">inquiring about?</span></>}
+        subtitle="Select the type of inquiry to get started."
+      />
+      <div className="flex flex-col gap-4 mt-6">
+        {INQUIRY_TYPE_OPTIONS.map((opt) => (
+          <button
+            key={opt.value}
+            onClick={() => onSelect(opt.value)}
+            className="flex items-center gap-4 p-4 rounded-xl border-2 border-gray-100
+              hover:border-blue-400 hover:bg-blue-50 active:scale-98 transition-all duration-200
+              text-left group"
+          >
+            <div className="w-12 h-12 rounded-xl bg-blue-50 group-hover:bg-blue-100
+              flex items-center justify-center text-blue-600 shrink-0 transition-colors duration-200">
+              {opt.icon}
+            </div>
+            <div>
+              <p className="font-semibold text-gray-900 group-hover:text-blue-700 transition-colors">
+                {opt.label}
+              </p>
+              <p className="text-sm text-gray-500 mt-0.5">{opt.description}</p>
+            </div>
+            <svg className="w-5 h-5 text-gray-300 group-hover:text-blue-400 ml-auto shrink-0 transition-colors"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        ))}
+      </div>
+    </>
+  );
+}
+
+function Step1({ form, errors, update, next, backToSelection, inquiryType }) {
+  return (
+    <>
+      <ModalHeader
+        title={<>Begin Your <span className="text-blue-600">Learning Journey</span></>}
+        subtitle="Fill out the form to secure your slot or learn more about the course."
+      />
+      {/* Inquiry type badge */}
+      <div className="mt-3 mb-5">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50
+          text-blue-600 text-xs font-semibold capitalize">
+          {inquiryType === "training" ? "📚" : "🖥️"} {inquiryType === "training" ? "Training Inquiry" : "ICT Services Inquiry"}
+        </span>
+      </div>
+      <h3 className="text-xs font-bold text-gray-900 mb-4 uppercase tracking-widest">
         Individual / Company Info
       </h3>
       <div className="flex flex-col gap-4">
@@ -263,7 +323,14 @@ function Step1({ form, errors, update, next, onClose }) {
           value={form.phone} onChange={update("phone")} error={errors.phone}
         />
       </div>
-      <div className="mt-6 flex justify-end">
+      <div className="mt-6 flex justify-between items-center">
+        <button
+          onClick={backToSelection}
+          className="px-5 py-2.5 rounded-lg border border-gray-200 text-sm font-semibold text-gray-600
+            hover:border-blue-400 hover:text-blue-600 active:scale-95 transition-all duration-150"
+        >
+          ← Back
+        </button>
         <button
           onClick={next}
           className="px-6 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-semibold
@@ -276,35 +343,52 @@ function Step1({ form, errors, update, next, onClose }) {
   );
 }
 
-function Step2({ form, errors, update, back, submit, status, captchaRef, onCaptchaVerify, onCaptchaExpire, onClose }) {
+function Step2({ form, errors, update, back, submit, status, captchaRef, onCaptchaVerify, onCaptchaExpire, inquiryType }) {
   const isLoading = status === "loading";
   return (
     <>
-      <ModalHeader onClose={onClose} />
-      <h3 className="text-xs font-bold text-gray-900 mt-5 mb-4 uppercase tracking-widest">
-        Course Details
+      <ModalHeader
+        title={<>Begin Your <span className="text-blue-600">Learning Journey</span></>}
+        subtitle="Fill out the form to secure your slot or learn more about the course."
+      />
+      <div className="mt-3 mb-5">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50
+          text-blue-600 text-xs font-semibold capitalize">
+          {inquiryType === "training" ? "📚 Training Inquiry" : "🖥️ ICT Services Inquiry"}
+        </span>
+      </div>
+      <h3 className="text-xs font-bold text-gray-900 mb-4 uppercase tracking-widest">
+        {inquiryType === "training" ? "Course Details" : "Service Details"}
       </h3>
       <div className="flex flex-col gap-4">
-        <SelectField
-          label="Course to Take" id="course"
-          options={COURSES} value={form.course}
-          onChange={update("course")} error={errors.course}
-          placeholder="Select a course"
-        />
+        {inquiryType === "training" && (
+          <SelectField
+            label="Course to Take" id="course"
+            options={COURSES} value={form.course}
+            onChange={update("course")} error={errors.course}
+            placeholder="Select a course"
+          />
+        )}
         <div className="flex flex-col gap-1">
           <label htmlFor="message" className="text-sm font-medium text-gray-700">
-            Message <span className="text-gray-400 font-normal">(optional)</span>
+            {inquiryType === "training"
+              ? <>Message <span className="text-gray-400 font-normal">(optional)</span></>
+              : "Describe your requirements"}
           </label>
           <textarea
             id="message" rows={3}
-            placeholder="Any specific topics, questions, or scheduling preferences..."
+            placeholder={
+              inquiryType === "training"
+                ? "Any specific topics, questions, or scheduling preferences..."
+                : "Describe the ICT services you need (e.g. network setup, cybersecurity, data center)..."
+            }
             value={form.message} onChange={update("message")}
             className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm outline-none
               resize-none transition hover:border-blue-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
 
-        {/* ── hCaptcha ── */}
+        {/* hCaptcha */}
         <div className="flex flex-col gap-1">
           <HCaptcha
             ref={captchaRef}
@@ -330,7 +414,7 @@ function Step2({ form, errors, update, back, submit, status, captchaRef, onCaptc
 
       <p className="mt-4 text-xs text-gray-400 leading-relaxed">
         We'll email you a quotation within 1–2 business days. By submitting, you agree to be
-        contacted about training and schedules.
+        contacted about our services and schedules.
       </p>
 
       <div className="mt-5 flex justify-between items-center">
@@ -400,6 +484,16 @@ export default function EnrollModal({ isOpen, onClose }) {
   const f = useEnrollForm(onClose);
   const handleClose = () => { f.reset(); onClose(); };
 
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (
@@ -409,13 +503,28 @@ export default function EnrollModal({ isOpen, onClose }) {
       onClick={(e) => { if (e.target === e.currentTarget) handleClose(); }}
     >
       <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto">
-        <div className="p-7">
+        {/* Close button */}
+        <div className="flex justify-end px-7 pt-5">
+          <button
+            onClick={handleClose}
+            className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center
+              justify-center text-gray-500 hover:text-gray-700 transition-colors duration-150"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <div className="px-7 pb-7">
           {f.status === "success" ? (
             <SuccessScreen onClose={handleClose} reset={f.reset} />
           ) : (
             <>
               <ProgressBar step={f.step} />
-              {f.step === 1
+              {f.step === 0
+                ? <Step0 onSelect={f.selectInquiryType} />
+                : f.step === 1
                 ? <Step1 {...f} onClose={handleClose} />
                 : <Step2 {...f} onClose={handleClose} />}
             </>
