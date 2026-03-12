@@ -15,124 +15,60 @@ import TrainingTemplateFooter from "../../../components/section/TrainingTemplate
 import EnrollNowButton from "../../../components/ui/EnrollNowButton";
 import TrainingHeroBanner from "../../../components/section/TrainingHeroBanner";
 
-
 // ==================== COMPONENT NAME - CHANGE FOR EACH COURSE ====================
 export default function NSE2() {
   // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
- const modules = [
-  {
-    title: "1.0 Networking Concepts",
-    items: [
-      {
-        subTitle: "1.1 OSI Model Layers",
-        items: [
-          "Physical",
-          "Data Link",
-          "Network",
-          "Transport",
-          "Session",
-          "Presentation",
-          "Application",
-        ],
-      },
-      {
-        subTitle: "1.2 Networking Appliances",
-        items: [
-          "Routers",
-          "Switches",
-          "Firewalls",
-          "IDS/IPS",
-          "Load Balancers",
-          "Proxies",
-          "NAS",
-          "SAN",
-          "Wireless Devices",
-        ],
-      },
-      {
-        subTitle: "1.3 Cloud Concepts",
-        items: [
-          "NFV",
-          "VPC",
-          "Network Security Groups",
-          "Cloud Gateways",
-          "Deployment Models: Public, Private, Hybrid",
-          "Service Models: SaaS, IaaS, PaaS",
-        ],
-      },
-      {
-        subTitle: "1.4 Ports and Protocols",
-        items: [
-          "FTP",
-          "SFTP",
-          "SSH",
-          "Telnet",
-          "SMTP",
-          "DNS",
-          "DHCP",
-          "HTTP",
-          "HTTPS",
-          "SNMP",
-          "LDAP",
-          "RDP",
-          "SIP",
-        ],
-      },
-      {
-        subTitle: "1.5 Traffic Types",
-        items: [
-          "Unicast",
-          "Multicast",
-          "Anycast",
-          "Broadcast",
-        ],
-      },
-      {
-        subTitle: "1.6 Transmission Media",
-        items: [
-          "Wireless: 802.11, Cellular, Satellite",
-          "Wired: Fiber, Coaxial, DAC",
-        ],
-      },
-      {
-        subTitle: "1.7 Transceivers and Connectors",
-        items: [
-          "SC",
-          "LC",
-          "ST",
-          "MPO",
-          "RJ11",
-          "RJ45",
-          "F-type",
-          "BNC",
-        ],
-      },
-      {
-        subTitle: "1.8 Network Topologies",
-        items: [
-          "Mesh",
-          "Hybrid",
-          "Star / Hub and Spoke",
-          "Spine and Leaf",
-          "Point-to-Point",
-          "Three-Tier",
-          "Collapsed Core",
-        ],
-      },
-      {
-        subTitle: "1.9 IPv4 Addressing",
-        items: [
-          "Public vs. Private",
-          "APIPA",
-          "RFC1918",
-          "Loopback",
-          "Subnetting: VLSM, CIDR",
-          "Address Classes: A, B, C, D, E",
-        ],
-      },
-    ],
-  },
-];
+  const modules = [
+    {
+      title: "Evolution of Cybersecurity",
+      items: [
+        "The changing cyber threat landscape",
+        "Shifts in cybersecurity strategies and technologies",
+        "Introduction to Fortinet's vision for integrated security",
+      ],
+    },
+    {
+      title: "Fortinet Security Fabric Overview",
+      items: [
+        "The changing cyber threat landscape",
+        "Shifts in cybersecurity strategies and technologies",
+        "Introduction to Fortinet's vision for integrated security",
+      ],
+    },
+    {
+      title: "Core Solutions within the Security Fabric",
+      items: [
+        "FortiGate: Next-Generation Firewalls (NGFW)",
+        "FortiSandbox advanced threat protection",
+        "FortiMail secure email gateway",
+        "FortiWeb: Web Application Firewall (WAF)",
+      ],
+    },
+    {
+      title: "Specialized Solutions and Advanced Technologies",
+      items: [
+        "FortiManager and FortiAnalyzer for centralized management and analytics",
+        "FortiClient for endpoint security",
+        "FortiSIEM: Security Information and Event Management",
+        "Introduction to Secure SD-WAN and Secure Access",
+      ],
+    },
+    {
+      title: "Addressing Key Security Challenges",
+      items: [
+        "Solutions for preventing and mitigating ransomware",
+        "Strategies for combating advanced persistent threats (APTs)",
+        "Enhancing security in cloud environments",
+      ],
+    },
+    {
+      title: "Integration and Automation",
+      items: [
+        "How Fortinet solutions integrate with third-party products",
+        "Automating threat response with the Security Fabric",
+      ],
+    },
+  ];
 
   return (
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
