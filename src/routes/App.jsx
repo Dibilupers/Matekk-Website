@@ -172,6 +172,8 @@ export default function App() {
           {/* Cybersecurity */}
           <Route path="/training/cybersecurity/blueteam" element={<BlueTeam />} />
           <Route path="/training/cybersecurity/redteam" element={<RedTeam />} />
+          <Route path="/training/cybersecurity/peh" element={<PEH />} />
+          <Route path="/training/cybersecurity/peh/cdth" element={<CDTH />} />
 
           {/* Cloud */}
           <Route path="/training/cloud/microsoft/azurefundamentals" element={<AzureFundamentals />} />
