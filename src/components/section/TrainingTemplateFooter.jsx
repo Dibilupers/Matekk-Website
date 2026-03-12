@@ -13,7 +13,8 @@ export default function TrainingTemplateFooter({ bgImage, description }) {
       <div
         className="absolute inset-0"
         style={{
-          background: "linear-gradient(to right, #C2DDFF70, #FFFFFF00 67%, #CDE3FF70)",
+          background:
+            "linear-gradient(to right, #C2DDFF70, #FFFFFF00 67%, #CDE3FF70)",
         }}
       />
 
@@ -26,8 +27,9 @@ export default function TrainingTemplateFooter({ bgImage, description }) {
         <p className="lg:w-[30vw] xl:w-[35vw] text-center text-white">
           {description}
         </p>
-
-        <EnrollNowButton className="w-fit"/>
+        <div className="w-fit text-sm">
+          <EnrollNowButton />
+        </div>
       </div>
     </div>
   );

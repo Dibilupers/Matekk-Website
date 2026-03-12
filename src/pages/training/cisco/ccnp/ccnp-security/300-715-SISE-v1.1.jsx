@@ -14,6 +14,7 @@ import WorkstationIcon from "../../../../../assets/Workstation.svg";
 import MedalIcon from "../../../../../assets/Medal.svg";
 import CourseModules from "../../../../../components/training/courseModules";
 import TrainingTemplateFooter from "../../../../../components/section/TrainingTemplateFooter";
+import TrainingHeroBanner from "../../../../../components/section/TrainingHeroBanner";
 
 // ==================== COMPONENT NAME - CHANGE FOR EACH COURSE ====================
 export default function SISE() {
@@ -25,160 +26,111 @@ export default function SISE() {
 
   // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
   const modules = [
-  {
-    title: "1.0 Architecture and Deployment",
-    items: [
-      "1.1 Configure personas",
-      "1.2 Describe deployment options",
-      "1.3 Describe hardware and virtual machine performance specifications",
-      "1.4 Describe zero-touch provisioning",
-    ],
-  },
-  {
-    title: "2.0 Policy and Enforcement",
-    items: [
-      "2.1 Configure native AD and LDAP",
-      {
-        subTitle: "2.2 Describe identity store options",
-        items: [
-          "2.2.a LDAP",
-          "2.2.b AD",
-          "2.2.c PKI",
-          "2.2.d Multifactor authentication",
-          "2.2.e Local",
-          "2.2.f SAML IDP",
-          "2.2.g Rest ID",
-        ],
-      },
-      "2.3 Configure wireless network access using 802.1X",
-      {
-        subTitle: "2.4 Configure wired network access using 802.1X and IBNS 2.0",
-        items: [
-          "2.4.a Monitor mode",
-          "2.4.b Low impact",
-          "2.4.c Closed mode",
-        ],
-      },
-      "2.5 Implement MAB",
-      "2.6 Configure Cisco TrustSec",
-      "2.7 Configure policies including authentication and authorization profiles",
-    ],
-  },
-  {
-    title: "3.0 Management and Troubleshooting",
-    items: [
-      "3.1 Configure web authentication",
-      "3.2 Configure guest access services",
-      "3.3 Configure sponsor and guest portals",
-    ],
-  },
-  {
-    title: "4.0 Profiler",
-    items: [
-      "4.1 Implement profiler services",
-      "4.2 Implement probes",
-      "4.3 Implement CoA",
-      "4.4 Configure endpoint identity management",
-    ],
-  },
-  {
-    title: "5.0 BYOD",
-    items: [
-      {
-        subTitle: "5.1 Describe Cisco BYOD functionality",
-        items: [
-          "5.1.a Use cases and requirements",
-          "5.1.b Solution components",
-          "5.1.c BYOD flow",
-        ],
-      },
-      "5.2 Configure BYOD device on-boarding using internal CA with Cisco switches and Cisco wireless LAN controllers",
-      "5.3 Configure certificates for BYOD",
-      "5.4 Configure block list/allow list",
-    ],
-  },
-  {
-    title: "6.0 Endpoint Compliance",
-    items: [
-      "6.1 Describe endpoint compliance, posture services, and client provisioning",
-      "6.2 Configure posture conditions and policy, and client provisioning",
-      "6.3 Configure the compliance module",
-      "6.4 Configure posture agents and operational modes",
-      "6.5 Describe supplicant, supplicant options, authenticator, and server",
-    ],
-  },
-  {
-    title: "7.0 Network Access Device Administration",
-    items: [
-      "7.1 Compare AAA protocols",
-      "7.2 Configure TACACS+ device administration and command authorization",
-    ],
-  },
-];
+    {
+      title: "1.0 Architecture and Deployment",
+      items: [
+        "1.1 Configure personas",
+        "1.2 Describe deployment options",
+        "1.3 Describe hardware and virtual machine performance specifications",
+        "1.4 Describe zero-touch provisioning",
+      ],
+    },
+    {
+      title: "2.0 Policy and Enforcement",
+      items: [
+        "2.1 Configure native AD and LDAP",
+        {
+          subTitle: "2.2 Describe identity store options",
+          items: [
+            "2.2.a LDAP",
+            "2.2.b AD",
+            "2.2.c PKI",
+            "2.2.d Multifactor authentication",
+            "2.2.e Local",
+            "2.2.f SAML IDP",
+            "2.2.g Rest ID",
+          ],
+        },
+        "2.3 Configure wireless network access using 802.1X",
+        {
+          subTitle:
+            "2.4 Configure wired network access using 802.1X and IBNS 2.0",
+          items: [
+            "2.4.a Monitor mode",
+            "2.4.b Low impact",
+            "2.4.c Closed mode",
+          ],
+        },
+        "2.5 Implement MAB",
+        "2.6 Configure Cisco TrustSec",
+        "2.7 Configure policies including authentication and authorization profiles",
+      ],
+    },
+    {
+      title: "3.0 Management and Troubleshooting",
+      items: [
+        "3.1 Configure web authentication",
+        "3.2 Configure guest access services",
+        "3.3 Configure sponsor and guest portals",
+      ],
+    },
+    {
+      title: "4.0 Profiler",
+      items: [
+        "4.1 Implement profiler services",
+        "4.2 Implement probes",
+        "4.3 Implement CoA",
+        "4.4 Configure endpoint identity management",
+      ],
+    },
+    {
+      title: "5.0 BYOD",
+      items: [
+        {
+          subTitle: "5.1 Describe Cisco BYOD functionality",
+          items: [
+            "5.1.a Use cases and requirements",
+            "5.1.b Solution components",
+            "5.1.c BYOD flow",
+          ],
+        },
+        "5.2 Configure BYOD device on-boarding using internal CA with Cisco switches and Cisco wireless LAN controllers",
+        "5.3 Configure certificates for BYOD",
+        "5.4 Configure block list/allow list",
+      ],
+    },
+    {
+      title: "6.0 Endpoint Compliance",
+      items: [
+        "6.1 Describe endpoint compliance, posture services, and client provisioning",
+        "6.2 Configure posture conditions and policy, and client provisioning",
+        "6.3 Configure the compliance module",
+        "6.4 Configure posture agents and operational modes",
+        "6.5 Describe supplicant, supplicant options, authenticator, and server",
+      ],
+    },
+    {
+      title: "7.0 Network Access Device Administration",
+      items: [
+        "7.1 Compare AAA protocols",
+        "7.2 Configure TACACS+ device administration and command authorization",
+      ],
+    },
+  ];
 
   return (
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}
-      <section className="relative pl-8 py-18 rounded-2xl shadow-lg flex flex-col gap-3 overflow-hidden min-h-62.5">
-        {/* ==================== HERO BANNER - Image ====================*/}
-        {/* Background Image */}
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: `url(${ccnaHero})`,
-          }}
-        />
-        {/* Hero Background Image Gradient */}
-        <div className="absolute inset-0 bg-linear-to-r from-[#cbddf5] via-[#cbddf5ce] to-transparent"></div>
-
-        {/* ==================== HERO BANNER - Text Content ====================*/}
-        <div className="relative z-10 flex flex-col gap-3 pl-1 sm:pl-8">
-          {/* Course Category */}
-          <h6 className="w-fit px-4 py-2 text-[#1775EE] bg-blue-50 rounded-full">
-            CCNP
-          </h6>
-
-          {/* ====== Course Title and Description ======*/}
-          <div>
-            {/* Course title */}
-            <h1 className="text-[#1775EE] font-bold">300-715 SISE v1.1</h1>
-
-            {/* Course description */}
-            <p className="lg:w-[30vw] xl:w-lg text-gray-900">
-            Implementing and Configuring Cisco Identity Services Engine (300-715 SISE) 
-            v1.1 is a 90-minute CCNP Security exam that tests skills in deploying and managing 
-            Cisco Identity Services Engine, including access policies, BYOD, guest services, and 
-            endpoint compliance.            </p>
-          </div>
-
-          {/* ====== Hero Button ====== */}
-          <div className="flex flex-row sm:flex-row gap-2.5 mt-1">
-            {/* Enroll Now Button - When clicked, opens a modal */}
-            <Button
-              title="Enroll Now"
-              type="none"
-              buttonCustomStyle="bg-[#1775EE] text-white hover:bg-blue-700 transition-all transition ease-in-out duration-300 shadow-lg hover:bg-white hover:text-[#1775EE] hover:shadow-xl px-6 py-3"
-              btnFunc={() => {
-                document
-                  .getElementById("services")
-                  ?.scrollIntoView({ behavior: "smooth", block: "start" });
-              }}
-            />
-
-            {/* Learn More Button - When clicked will scroll down to proceed on the other sections of the page */}
-            <Button
-              title="Learn More"
-              type="none"
-              buttonCustomStyle="bg-transparent text-blue-600 border-2 border-blue-600 hover:bg-white hover:border-white hover:text-blue-600 transition ease-in-out transition-all duration-300 px-6 py-3"
-              btnFunc={() => {
-                document
-                  .getElementById("services")
-                  ?.scrollIntoView({ behavior: "smooth", block: "start" });
-              }}
-            />
-          </div>
-        </div>
-      </section>
+      <TrainingHeroBanner
+        bgImage={ccnaHero}
+        category="CCNP"
+        title="300-715 SISE v1.1"
+        description="Implementing and Configuring Cisco Identity Services Engine
+              (300-715 SISE) v1.1 is a 90-minute CCNP Security exam that tests
+              skills in deploying and managing Cisco Identity Services Engine,
+              including access policies, BYOD, guest services, and endpoint
+              compliance."
+      />
 
       {/* ==================== CONTENT SECTION - Training Informations/Content ==================== */}
       <div className="flex flex-col lg:flex-row justify-start items-start lg:items-stretch gap-6 lg:gap-8">
@@ -193,14 +145,17 @@ export default function SISE() {
             {/* About Section - Description */}
             {/* CHANGE: Course description paragraphs */}
             <p>
-              This course prepares learners for the Securing Networks with Cisco Firewalls (300-710 SNCF) 
-              exam through instructor-led training with hands-on labs and guided instruction. It covers 
-              key topics on Cisco Secure Firewall and Cisco Secure Firewall Management Center, including policy 
-              configuration, deployment, integration, management, and troubleshooting.
+              This course prepares learners for the Securing Networks with Cisco
+              Firewalls (300-710 SNCF) exam through instructor-led training with
+              hands-on labs and guided instruction. It covers key topics on
+              Cisco Secure Firewall and Cisco Secure Firewall Management Center,
+              including policy configuration, deployment, integration,
+              management, and troubleshooting.
             </p>
             <p>
-              The program focuses on practical skills and real-world scenarios to build the 
-              knowledge and confidence needed for success in the CCNP Security certification.
+              The program focuses on practical skills and real-world scenarios
+              to build the knowledge and confidence needed for success in the
+              CCNP Security certification.
             </p>
           </section>
 
@@ -252,7 +207,7 @@ export default function SISE() {
             <img
               src={ccnaBadge}
               alt="CCNA Automation Certification Badge"
-              className="w-100 h-100 object-contain"
+              className="w-55 h-55 lg:w-100 lg:h-100 object-contain"
             />
           </div>
 

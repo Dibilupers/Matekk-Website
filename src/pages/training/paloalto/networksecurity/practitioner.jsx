@@ -12,7 +12,7 @@ import WorkstationIcon from "../../../../assets/Workstation.svg";
 import MedalIcon from "../../../../assets/Medal.svg";
 import CourseModules from "../../../../components/training/courseModules";
 import TrainingTemplateFooter from "../../../../components/section/TrainingTemplateFooter";
-import EnrollNowButton from "../../../../components/ui/EnrollNowButton";
+import TrainingHeroBanner from "../../../../components/section/TrainingHeroBanner";
 
 // ==================== COMPONENT NAME - CHANGE FOR EACH COURSE ====================
 export default function PaloaltoPractitioner() {
@@ -166,61 +166,16 @@ export default function PaloaltoPractitioner() {
   return (
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}
-      <section className="relative pl-8 py-18 rounded-2xl shadow-lg flex flex-col gap-3 overflow-hidden min-h-62.5">
-        {/* ==================== HERO BANNER - Image ====================*/}
-        {/* Background Image */}
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: `url(${ccnaHero})`,
-          }}
-        />
-        {/* Hero Background Image Gradient */}
-        <div className="absolute inset-0 bg-linear-to-r from-[#cbddf5] via-[#cbddf5ce] to-transparent"></div>
-
-        {/* ==================== HERO BANNER - Text Content ====================*/}
-        <div className="relative z-10 flex flex-col gap-3 pl-1 sm:pl-8">
-          {/* Course Category */}
-          <h6 className="w-fit px-4 py-2 text-[#1775EE] bg-blue-50 rounded-full">
-            Palo Alto
-          </h6>
-
-          {/* ====== Course Title and Description ======*/}
-          <div>
-            {/* Course title */}
-            <h1 className="text-[#1775EE] font-bold">
-              Cybersecurity Practitioner
-            </h1>
-
-            {/* Course description */}
-            <p className="lg:w-[30vw] xl:w-lg text-gray-900">
-              The Palo Alto Networks Certified Cybersecurity Practitioner exam
+      <TrainingHeroBanner
+        bgImage={ccnaHero}
+        category="Palo Alto"
+        title="Cybersecurity Practitioner"
+        description="The Palo Alto Networks Certified Cybersecurity Practitioner exam
               validates a candidate’s knowledge and practical understanding of
               cybersecurity principles, including network security, secure
               access, endpoint protection, cloud security, security operations,
-              and the application of Palo Alto Networks solutions.
-            </p>
-          </div>
-
-          {/* ====== Hero Button ====== */}
-          <div className="flex flex-row sm:flex-row gap-2.5 mt-1">
-            {/* Enroll Now Button - When clicked, opens a modal */}
-            <EnrollNowButton />
-
-            {/* Learn More Button - When clicked will scroll down to proceed on the other sections of the page */}
-            <Button
-              title="Learn More"
-              type="none"
-              buttonCustomStyle="bg-transparent text-blue-600 border-2 border-blue-600 hover:bg-white hover:border-white hover:text-blue-600 transition ease-in-out transition-all duration-300 px-6 py-3"
-              btnFunc={() => {
-                document
-                  .getElementById("services")
-                  ?.scrollIntoView({ behavior: "smooth", block: "start" });
-              }}
-            />
-          </div>
-        </div>
-      </section>
+              and the application of Palo Alto Networks solutions."
+      />
 
       {/* ==================== CONTENT SECTION - Training Informations/Content ==================== */}
       <div className="flex flex-col lg:flex-row justify-start items-start lg:items-stretch gap-6 lg:gap-8">
@@ -296,7 +251,7 @@ export default function PaloaltoPractitioner() {
             <img
               src={ccnaBadge}
               alt="Palo Alto Networks Certified Cybersecurity Apprentice Certification Badge"
-              className="w-60 h-60 object-contain"
+              className="w-50 h-50 lg:w-60 lg:h-60 object-contain"
             />
           </div>
 

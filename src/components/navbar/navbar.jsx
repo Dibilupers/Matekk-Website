@@ -2,7 +2,9 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate, useLocation } from "react-router-dom";
 import EnrollNowButton from "../ui/EnrollNowButton";
-import MGKKLogo from "../../assets/MGKK_logo.png";
+import MainLogo from "../../assets/MATEKK_logo.png";
+import TrainingLogo from "../../assets/MATEKK_training_logo.png";
+import SolutionsLogo from "../../assets/MATEKK_services_logo.png";
 
 function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,6 +18,24 @@ function NavBar() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  /* If the user is on specific page then logo changes */
+  const getLogoElement = () => {
+    if (location.pathname.startsWith("/training")) {
+      return (
+        <img src={TrainingLogo} alt="Training Logo" className="w-11 md:w-12" />
+      );
+    }
+    if (location.pathname.startsWith("/solutions")) {
+      return (
+        <img
+          src={SolutionsLogo}
+          alt="Solutions Logo"
+          className="w-10 md:w-11"
+        />
+      );
+    }
+    return <img src={MainLogo} alt="MATEKK Logo" className="w-7 md:w-8" />;
+  };
   const dropdownMenus = {
     solutions: [
       {
@@ -205,31 +225,76 @@ function NavBar() {
           {
             name: "Network Security",
             subcourses: [
-              { name: "Cybersecurity Apprentice", path: "/training/paloalto/networksecurity/apprentice" },
-              { name: "Cybersecurity Practitioner", path: "/training/paloalto/networksecurity/practitioner" },
-              { name: "Network Security Professional", path: "/training/paloalto/networksecurity/professional" },
-              { name: "Network Security Analyst", path: "/training/paloalto/networksecurity/analyst" },
-              { name: "Next-Generation Firewall Engineer", path: "/training/paloalto/networksecurity/nextgenerationfirewallengineer" },
-              { name: "SD-WAN Engineer", path: "/training/paloalto/networksecurity/sdwanengineer" },
-              { name: "Security Service Edge Engineer", path: "/training/paloalto/networksecurity/securityserviceedgeengineer" },
-              { name: "Network Security Architect", path: "/training/paloalto/networksecurity/architect" },
+              {
+                name: "Cybersecurity Apprentice",
+                path: "/training/paloalto/networksecurity/apprentice",
+              },
+              {
+                name: "Cybersecurity Practitioner",
+                path: "/training/paloalto/networksecurity/practitioner",
+              },
+              {
+                name: "Network Security Professional",
+                path: "/training/paloalto/networksecurity/professional",
+              },
+              {
+                name: "Network Security Analyst",
+                path: "/training/paloalto/networksecurity/analyst",
+              },
+              {
+                name: "Next-Generation Firewall Engineer",
+                path: "/training/paloalto/networksecurity/nextgenerationfirewallengineer",
+              },
+              {
+                name: "SD-WAN Engineer",
+                path: "/training/paloalto/networksecurity/sdwanengineer",
+              },
+              {
+                name: "Security Service Edge Engineer",
+                path: "/training/paloalto/networksecurity/securityserviceedgeengineer",
+              },
+              {
+                name: "Network Security Architect",
+                path: "/training/paloalto/networksecurity/architect",
+              },
             ],
           },
           {
             name: "Security Operations",
             subcourses: [
-              { name: "Security Operations Professional", path: "/training/paloalto/securityoperations/professional" },
-              { name: "XSIAM Analyst", path: "/training/paloalto/securityoperations/xsiamanalyst" },
-              { name: "XDR Analyst", path: "/training/paloalto/securityoperations/xdranalyst" },
-              { name: "XSIAM Engineer", path: "/training/paloalto/securityoperations/xsiamengineer" },
-              { name: "XDR Engineer", path: "/training/paloalto/securityoperations/xdrengineer" },
-              { name: "XSOAR Engineer", path: "/training/paloalto/securityoperations/xsoarengineer" },
+              {
+                name: "Security Operations Professional",
+                path: "/training/paloalto/securityoperations/professional",
+              },
+              {
+                name: "XSIAM Analyst",
+                path: "/training/paloalto/securityoperations/xsiamanalyst",
+              },
+              {
+                name: "XDR Analyst",
+                path: "/training/paloalto/securityoperations/xdranalyst",
+              },
+              {
+                name: "XSIAM Engineer",
+                path: "/training/paloalto/securityoperations/xsiamengineer",
+              },
+              {
+                name: "XDR Engineer",
+                path: "/training/paloalto/securityoperations/xdrengineer",
+              },
+              {
+                name: "XSOAR Engineer",
+                path: "/training/paloalto/securityoperations/xsoarengineer",
+              },
             ],
           },
           {
             name: "Cloud Security",
             subcourses: [
-              { name: "Cloud Security Professional", path: "/training/paloalto/cloudsecurity/professional" },
+              {
+                name: "Cloud Security Professional",
+                path: "/training/paloalto/cloudsecurity/professional",
+              },
             ],
           },
         ],
@@ -341,6 +406,15 @@ function NavBar() {
   };
 
   useEffect(() => {
+    if (location.state?.scrollTo) {
+      setTimeout(() => {
+        const el = document.getElementById(location.state.scrollTo);
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100); // gives the page time to render first
+    }
+  }, [location]);
+
+  useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 10);
 
@@ -379,11 +453,9 @@ function NavBar() {
       className={`flex flex-row items-center justify-between py-4 bg-white sticky top-0 z-50 transition-shadow px-[2.063rem] md:px-16 xl:px-[7.438rem]  ${scrolled ? "shadow-md" : ""}`}
     >
       {/* ↓ changed md:ml-[7.438rem] → lg:ml-[7.438rem] */}
+      {/* Logo */}
       <button onClick={handleHomeClick} className="cursor-pointer">
-        <img
-          src={MGKKLogo}
-          alt="MGKK Logo"
-          class="w-6 md:w-8" />
+        {getLogoElement()}
       </button>
 
       {/* Desktop Nav — only visible at lg and above */}
@@ -676,13 +748,26 @@ function NavBar() {
         </div>
 
         <button
-          onClick={() => scrollToSection("about")}
+          onClick={() => {
+            if (location.pathname === "/") {
+              scrollToSection("about");
+            } else {
+              navigate("/", { state: { scrollTo: "about" } });
+            }
+          }}
           className="hover:text-[#1775EE] hover:font-bold transition-colors cursor-pointer"
         >
           About
         </button>
+
         <button
-          onClick={() => scrollToSection("contact")}
+          onClick={() => {
+            if (location.pathname === "/") {
+              scrollToSection("contact");
+            } else {
+              navigate("/", { state: { scrollTo: "contact" } });
+            }
+          }}
           className="hover:text-[#1775EE] hover:font-bold transition-colors cursor-pointer"
         >
           Contact Us
@@ -726,14 +811,10 @@ function NavBar() {
         {isOpen && !openDropdown && (
           <div className="fixed inset-0 bg-white z-50 flex flex-col">
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-gray-200">
-              <Link
-                to="/"
-                className="text-xl font-bold text-[#1775EE]"
-                onClick={() => setIsOpen(false)}
-              >
-                LOGO
-              </Link>
+            <div className="flex items-center justify-between py-4 px-8 border-b border-gray-200">
+              <button onClick={handleHomeClick} className="cursor-pointer">
+                {getLogoElement()}
+              </button>
               <button
                 onClick={() => setIsOpen(false)}
                 className="focus:outline-none"
@@ -808,8 +889,12 @@ function NavBar() {
 
               <button
                 onClick={() => {
-                  scrollToSection("about");
                   setIsOpen(false);
+                  if (location.pathname === "/") {
+                    scrollToSection("about");
+                  } else {
+                    navigate("/", { state: { scrollTo: "about" } });
+                  }
                 }}
                 className="text-2xl font-semibold text-left text-black hover:text-[#1775EE]"
               >
@@ -818,8 +903,12 @@ function NavBar() {
 
               <button
                 onClick={() => {
-                  scrollToSection("contact");
                   setIsOpen(false);
+                  if (location.pathname === "/") {
+                    scrollToSection("contact");
+                  } else {
+                    navigate("/", { state: { scrollTo: "contact" } });
+                  }
                 }}
                 className="text-2xl font-semibold text-left text-black hover:text-[#1775EE]"
               >
@@ -1102,10 +1191,11 @@ function NavBar() {
                       <button
                         key={option.name}
                         onClick={() => setOpenFourthLevel(option.name)}
-                        className={`block w-full text-left text-lg font-poppins py-2 px-4 rounded-lg flex items-center justify-between transition-colors ${openFourthLevel === option.name
-                          ? "bg-[#EBF5FD] text-black"
-                          : "text-black hover:text-[#1775EE]"
-                          }`}
+                        className={`block w-full text-left text-lg font-poppins py-2 px-4 rounded-lg flex items-center justify-between transition-colors ${
+                          openFourthLevel === option.name
+                            ? "bg-[#EBF5FD] text-black"
+                            : "text-black hover:text-[#1775EE]"
+                        }`}
                       >
                         {option.name}
                         <svg

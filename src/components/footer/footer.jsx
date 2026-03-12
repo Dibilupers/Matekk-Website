@@ -1,27 +1,58 @@
 import React from "react";
 import { FaFacebook, FaLinkedin } from "react-icons/fa6";
 import { FaInstagram } from "react-icons/fa";
-import { Link } from "react-router-dom";
-import MGKKLogo from "../../assets/MGKK_logo.png";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import MainLogo from "../../assets/MATEKK_logo.png";
+import TrainingLogo from "../../assets/MATEKK_training_logo.png";
+import SolutionsLogo from "../../assets/MATEKK_services_logo.png";
 
 export default function Footer() {
+  const location = useLocation();
+  const navigate = useNavigate();
   const scrollToSection = (sectionId) => {
-    const element = document.getElementById(sectionId);
-    if (element) element.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (location.pathname === "/") {
+      const element = document.getElementById(sectionId);
+      if (element)
+        element.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else {
+      navigate("/", { state: { scrollTo: sectionId } });
+    }
+  };
+  const getLogoElement = () => {
+    if (location.pathname.startsWith("/training")) {
+      return (
+        <img
+          src={TrainingLogo}
+          alt="Training Logo"
+          className="w-32 md:w-30 lg:w-10 xl:w-20 2xl:w-40"
+        />
+      );
+    }
+    if (location.pathname.startsWith("/solutions")) {
+      return (
+        <img
+          src={SolutionsLogo}
+          alt="Solutions Logo"
+          className="w-32 md:w-30 lg:w-10 xl:w-20 2xl:w-30"
+        />
+      );
+    }
+    return (
+      <img
+        src={MainLogo}
+        alt="MATEKK Logo"
+        className="w-24 md:w-20 lg:w-10 xl:w-20 2xl:w-25"
+      />
+    );
   };
   return (
     <footer className="bg-white flex flex-col py-10 space-y-14  mx-[2.063rem] lg:mx-[7.438rem]">
       <div className=" flex flex-col md:flex-col lg:flex-row body_margin justify-between items-start space-y-14 md:space-y-10 lg:space-y-0 hover:cursor-pointer">
         {/* RIGHT SIDE */}
-        <div className="space-y-8 w-fit md:w-full lg:w-[50%]">
+        <div className="space-y-8 w-fit md:w-full lg:w-[40%]">
           {/* LOGO AND DESCRIPTION */}
           <div className=" flex flex-col md:flex-row lg:flex-col space-y-1 md:space-y-3 space-x-0 md:space-x-6 lg:space-x-0 w-full ">
-            <button className="cursor-pointer">
-              <img
-                src={MGKKLogo}
-                alt="MGKK Logo"
-                class="w-12 md:w-10 lg:w-10 xl:w-20 2xl:w-16" />
-            </button>
+            <button className="cursor-pointer">{getLogoElement()}</button>
             <p className="text-xl md:text-[1rem] w-full md:w-full lg:w-[70%]">
               We are the BEST Solution for your IT/Engineering Training's and
               Consultation needs at a very competitive price.

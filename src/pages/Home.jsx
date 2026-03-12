@@ -325,7 +325,7 @@ export default function Home() {
       </section>
 
       {/* ==================== SERVICES ====================*/}
-      <section id="services" className="flex flex-col justify-center items-center space-y-12 py-15 h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem]">
+      <section id="services" className="flex flex-col justify-center scroll-mt-18 items-center space-y-12 py-15 h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem]">
         {/* Title and Description Container */}
         <div className="flex flex-col justify-center items-center text-center space-y-1">
           {/* Title */}

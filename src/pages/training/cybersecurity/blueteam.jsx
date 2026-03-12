@@ -14,7 +14,7 @@ import WorkstationIcon from "../../../assets/Workstation.svg";
 import MedalIcon from "../../../assets/Medal.svg";
 import CourseModules from "../../../components/training/courseModules";
 import TrainingTemplateFooter from "../../../components/section/TrainingTemplateFooter";
-import EnrollNowButton from "../../../components/ui/EnrollNowButton";
+import TrainingHeroBanner from "../../../components/section/TrainingHeroBanner";
 
 // ==================== COMPONENT NAME ====================
 export default function BlueTeam() {
@@ -91,59 +91,14 @@ export default function BlueTeam() {
   return (
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}
-      <section className="relative pl-8 py-18 rounded-2xl shadow-lg flex flex-col gap-3 overflow-hidden min-h-62.5">
-        {/* ==================== HERO BANNER - Image ====================*/}
-        {/* Background Image */}
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: `url(${ccnaHero})`,
-          }}
-        />
-        {/* Hero Background Image Gradient */}
-        <div className="absolute inset-0 bg-linear-to-r from-[#cbddf5] via-[#cbddf5ce] to-transparent"></div>
-
-        {/* ==================== HERO BANNER - Text Content ====================*/}
-        <div className="relative z-10 flex flex-col gap-3 pl-1 sm:pl-8">
-          {/* Course Category */}
-          <h6 className="w-fit px-4 py-2 text-[#1775EE] bg-blue-50 rounded-full">
-            Cybersecurity
-          </h6>
-
-          {/* ====== Course Title and Description ======*/}
-          <div>
-            {/* Course title */}
-            <h1 className="text-[#1775EE] lg:w-150">
-              Blue Team: Security Operations & Defensive Cybersecurity Program
-            </h1>
-
-            {/* Course description */}
-            <p className="lg:w-[30vw] xl:w-lg text-gray-900">
-              Blue Team Training is a structured cybersecurity defense program
+      <TrainingHeroBanner
+        bgImage={ccnaHero}
+        category="Cybersecurity"
+        title="Blue Team: Security Operations & Defensive Cybersecurity Program"
+        description="Blue Team Training is a structured cybersecurity defense program
               that builds practical skills in SOC monitoring, threat detection,
-              vulnerability management, and incident response.
-            </p>
-          </div>
-
-          {/* ====== Hero Button ====== */}
-          <div className="flex flex-row sm:flex-row gap-2.5 mt-1">
-            {/* Enroll Now Button - When clicked, opens a modal */}
-            <EnrollNowButton />
-
-            {/* Learn More Button - When clicked will scroll down to proceed on the other sections of the page */}
-            <Button
-              title="Learn More"
-              type="none"
-              buttonCustomStyle="bg-transparent text-blue-600 border-2 border-blue-600 hover:bg-white hover:border-white hover:text-blue-600 transition ease-in-out transition-all duration-300 px-6 py-3"
-              btnFunc={() => {
-                document
-                  .getElementById("services")
-                  ?.scrollIntoView({ behavior: "smooth", block: "start" });
-              }}
-            />
-          </div>
-        </div>
-      </section>
+              vulnerability management, and incident response."
+      />
 
       {/* ==================== CONTENT SECTION - Training Informations/Content ==================== */}
       <div className="flex flex-col lg:flex-row justify-start items-start lg:items-stretch gap-6 lg:gap-8">
@@ -224,7 +179,7 @@ export default function BlueTeam() {
             <img
               src={blueteam}
               alt="Blue Team Certification Badge"
-              className="w-55 h-55 object-contain"
+              className="w-50 h-50 lg:w-55 lg:h-55 object-contain"
             />
           </div>
 

@@ -15,7 +15,6 @@ import WorkstationIcon from "../../../../assets/Workstation.svg";
 import MedalIcon from "../../../../assets/Medal.svg";
 import CourseModules from "../../../../components/training/courseModules";
 import TrainingTemplateFooter from "../../../../components/section/TrainingTemplateFooter";
-import EnrollNowButton from "../../../../components/ui/EnrollNowButton";
 import TrainingHeroBanner from "../../../../components/section/TrainingHeroBanner";
 
 // ==================== COMPONENT NAME - CHANGE FOR EACH COURSE ====================
@@ -96,93 +95,128 @@ export default function CCNA() {
     {
       title: "2.0 Network Access",
       items: [
-        "2.1 Construct a REST API request to accomplish a task given API documentation",
-        "2.2 Describe common usage patterns related to webhooks",
-        "2.3 Describe the constraints when consuming APIs",
-        "2.4 Explain common HTTP response codes associated with REST APIs",
-        "2.5 Troubleshoot a problem given the HTTP response code, request and API documentation",
-        "2.6 Interpret the parts of an HTTP response (response code, headers, body)",
-        "2.7 Utilize common API authentication mechanisms: basic, custom token, and API keys",
-        "2.8 Compare common API styles (REST, RPC, synchronous, and asynchronous)",
-        "2.9 Construct a Python script that calls a REST API using the requests library",
+        {
+          subTitle:
+            "2.1 Configure and verify VLANs (normal range) spanning multiple switches",
+          items: [
+            "2.1.a Access ports (data and voice)",
+            "2.1.b Default VLAN",
+            "2.1.c InterVLAN connectivity",
+          ],
+        },
+        {
+          subTitle: "2.2 Configure and verify interswitch connectivity",
+          items: ["2.2.a Trunk ports", "2.2.b 802.1Q", "2.2.c Native VLAN"],
+        },
+        "2.3 Configure and verify Layer 2 discovery protocols (Cisco Discovery Protocol and LLDP)",
+        "2.4 Configure and verify (Layer 2/Layer 3) EtherChannel (LACP)",
+        {
+          subTitle:
+            "2.5 Interpret basic operations of Rapid PVST+ Spanning Tree Protocol",
+          items: [
+            "2.5.a Root port, root bridge (primary/secondary), and other port names",
+            "2.5.b Port states (forwarding/blocking)",
+            "2.5.c PortFast",
+            "2.5.d Root guard, loop guard, BPDU filter, and BPDU guard",
+          ],
+        },
+        "2.6 Describe Cisco Wireless Architectures and AP modes",
+        "2.7 Describe physical infrastructure connections of WLAN components (AP, WLC, access/trunk ports, and LAG)",
+        "2.8 Describe network device management access (Telnet, SSH, HTTP, HTTPS, console, TACACS+/RADIUS, and cloud managed)",
+        "2.9 Interpret the wireless LAN GUI configuration for client connectivity, such as WLAN creation, security settings, QoS profiles, and advanced settings",
       ],
     },
     {
       title: "3.0 IP Connectivity",
       items: [
-        "3.1 Construct a Python script that uses a Cisco SDK given SDK documentation",
-        "3.2 Describe the capabilities of Cisco network management platforms and APIs (Meraki, Cisco Catalyst Center, ACI, Cisco Catalyst SD-WAN, and NSO)",
-        "3.3 Describe the capabilities of Cisco compute management platforms and APIs (UCS Manager and Intersight)",
-        "3.4 Describe the capabilities of Cisco collaboration platforms and APIs (Webex, Webex devices, Cisco Unified Communication Manager including AXL and UDS interfaces)",
-        "3.5 Describe the capabilities of Cisco security platforms and APIs (XDR, Firepower, Secure Connect, Secure Endpoint, ISE, and Secure Malware Analytics)",
-        "3.6 Describe the device level APIs and dynamic interfaces for IOS XE and NX-OS",
-        "3.8 Apply concepts of model driven programmability (YANG, RESTCONF, and NETCONF) in a Cisco environment",
         {
-          subTitle:
-            "3.9 Construct code to perform a specific operation based on a set of requirements and given API reference documentation such as these:",
+          subTitle: "3.1 Interpret the components of routing table",
           items: [
-            "3.9.a Obtain a list of network devices by using Meraki, Cisco Catalyst Center, ACI, Cisco Catalyst SD-WAN, or NSO",
-            "3.9.b Manage spaces, participants, and messages in Webex",
-            "3.9.c Obtain a list of clients / hosts seen on a network using Meraki or Cisco Catalyst Center",
+            "3.1.a Routing protocol code",
+            "3.1.b Prefix",
+            "3.1.c Network mask",
+            "3.1.d Next hop",
+            "3.1.e Administrative distance",
+            "3.1.f Metric",
+            "3.1.g Gateway of last resort",
           ],
         },
+        {
+          subTitle:
+            "3.2 Determine how a router makes a forwarding decision by default",
+          items: [
+            "3.2.a Longest prefix match",
+            "3.2.b Administrative distance",
+            "3.2.c Routing protocol metric",
+          ],
+        },
+        {
+          subTitle: "3.3 Configure and verify IPv4 and IPv6 static routing",
+          items: [
+            "3.3.a Default route",
+            "3.3.b Network route",
+            "3.3.c Host route",
+            "3.3.d Floating static",
+          ],
+        },
+        {
+          subTitle: "3.4 Configure and verify single area OSPFv2",
+          items: [
+            "3.4.a Neighbor adjacencies",
+            "3.4.b Point-to-point",
+            "3.4.c Broadcast (DR/BDR selection)",
+            "3.4.d Router ID",
+          ],
+        },
+        "3.5 Describe the purpose, functions, and concepts of first hop redundancy protocols",
       ],
     },
     {
       title: "4.0 IP Services",
       items: [
-        "4.1 Describe the benefits of edge computing",
-        "4.2 Describe the attributes of different application deployment models (private cloud, public cloud, hybrid cloud, and edge)",
-        {
-          subTitle:
-            "4.3 Describe the attributes of these application deployment types",
-          items: [
-            "4.3.a Virtual machines",
-            "4.3.b Bare metal",
-            "4.3.c Containers",
-          ],
-        },
-        "4.4 Describe components for a CI/CD pipeline in application deployments",
-        "4.5 Construct a Python unit test",
-        "4.6 Interpret contents of a Dockerfile",
-        "4.7 Utilize Docker images in local developer environment",
-        "4.8 Describe application security issues related to secret protection, encryption (storage and transport), and data handling",
-        "4.9 Explain how firewall, DNS, load balancers, and reverse proxy in application deployment",
-        "4.10 Describe top OWASP threats (such as XSS, SQL injections, and CSRF)",
-        "4.11 Utilize Bash commands (file management, directory navigation, and environmental variables)",
-        "4.12 Describe the principles of DevOps practices",
+        "4.1 Configure and verify inside source NAT using static and pools",
+        "4.2 Configure and verify NTP operating in a client and server mode",
+        "4.3 Explain the role of DHCP and DNS within the network",
+        "4.4 Explain the function of SNMP in network operations",
+        "4.5 Describe the use of syslog features including facilities and levels",
+        "4.6 Configure and verify DHCP client and relay",
+        "4.7 Explain the forwarding per-hop behavior (PHB) for QoS, such as classification, marking, queuing, congestion, policing, and shaping",
+        "4.8 Configure network devices for remote access using SSH",
+        "4.9 Describe the capabilities and functions of TFTP/FTP in the network",
       ],
     },
     {
       title: "5.0 Security Fundamentals",
       items: [
-        "5.1 Describe the value of model driven programmability for infrastructure automation",
-        "5.2 Compare controller-level to device-level management",
-        "5.3 Describe the use and roles of network simulation and test tools (such as Cisco Modeling Labs and pyATS)",
-        "5.4 Describe the components and benefits of CI/CD pipeline in infrastructure automation",
-        "5.5 Describe principles of infrastructure as code",
-        "5.7 Identify the workflow being automated by a Python script that uses Cisco APIs including ACI, Meraki, Cisco Catalyst Center, and RESTCONF",
-        "5.8 Interpret the workflow being automated by an Ansible playbook (management packages, user management related to services, basic service configuration, and start/stop)",
-        "5.9 Interpret the workflow being automated by a bash script (such as file management, app install, user management, directory navigation)",
-        "5.10 Interpret the results of a RESTCONF or NETCONF query",
-        "5.11 Interpret basic YANG models",
-        "5.12 Interpret a unified diff",
-        "5.13 Describe the principles and benefits of a code review process",
-        "5.14 Interpret a sequence diagram that includes API calls",
+        "5.1 Define key security concepts (threats, vulnerabilities, exploits, and mitigation techniques)",
+        "5.2 Describe security program elements (user awareness, training, and physical access control)",
+        "5.3 Configure and verify device access control using local passwords",
+        "5.4 Describe security password policies elements, such as management, complexity, and password alternatives (multifactor authentication, certificates, and biometrics)",
+        "5.5 Describe IPsec remote access and site-to-site VPNs",
+        "5.6 Configure and verify access control lists",
+        "5.7 Configure and verify Layer 2 security features (DHCP snooping, dynamic ARP inspection, and port security)",
+        "5.8 Compare authentication, authorization, and accounting concepts",
+        "5.9 Describe wireless security protocols (WPA, WPA2, and WPA3)",
+        "5.10 Configure and verify WLAN within the GUI using WPA2 PSK",
       ],
     },
     {
       title: "6.0 Automation and Programmability",
       items: [
-        "6.1 Describe the purpose and usage of MAC addresses and VLANs",
-        "6.2 Describe the purpose and usage of IP addresses, routes, subnet mask / prefix, and gateways",
-        "6.3 Describe the function of common networking components (such as switches, routers, firewalls, and load balancers)",
-        "6.4 Interpret a basic network topology diagram with elements such as switches, routers, firewalls, load balancers, and port values",
-        "6.5 Describe the function of management, data, and control planes in a network device",
-        "6.6 Describe the functionality of these IP Services: DHCP, DNS, NAT, SNMP, NTP",
-        "6.7 Recognize common protocol port values (such as, SSH, Telnet, HTTP, HTTPS, and NETCONF)",
-        "6.8 Diagnose application connectivity issues (NAT problem, Transport Port blocked, proxy, and VPN)",
-        "6.9 Explain the impacts of network constraints on applications",
+        "6.1 Explain how automation impacts network management",
+        "6.2 Compare traditional networks with controller-based networking",
+        {
+          subTitle:
+            "6.3 Describe controller-based, software defined architecture (overlay, underlay, and fabric)",
+          items: [
+            "6.3.a Separation of control plane and data plane",
+            "6.3.b Northbound and Southbound APIs",
+          ],
+        },
+        "6.4 Explain AI (generative and predictive) and machine learning in network operations",
+        "6.5 Describe characteristics of REST-based APIs (authentication types, CRUD, HTTP verbs, and data encoding)",
+        "6.6 Recognize the capabilities of configuration management mechanisms, such as Ansible and Terraform",
+        "6.7 Recognize components of JSON-encoded data",
       ],
     },
   ];
@@ -273,7 +307,7 @@ export default function CCNA() {
             <img
               src={ccnaBadge}
               alt="CCNA Automation Certification Badge"
-              className="w-100 h-100 object-contain"
+              className="w-55 h-55 lg:w-100 lg:h-100 object-contain"
             />
           </div>
 
