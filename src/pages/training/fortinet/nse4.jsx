@@ -227,7 +227,7 @@ export default function NSE5() {
             <img
               src={badges[selectedBadge].src}
               alt={badges[selectedBadge].alt}
-              className={`w-50 h-50 object-contain transition-all duration-300 ${
+              className={`w-40 h-40 sm:w-45 sm:h-45 lg:w-50 lg:h-50 object-contain transition-all duration-300 ${
                 animating ? "opacity-0 scale-90" : "opacity-100 scale-100"
               }`}
             />
