@@ -128,19 +128,19 @@ function NavBar() {
                     path: "/training/cisco/ccnp/ccnp-security/security",
                   },
                   {
-                    name: "SNCF",
+                    name: "300-710-SNCF-v1.1",
                     path: "/training/cisco/ccnp/ccnp-security/sncf",
                   },
                   {
-                    name: "SISE",
+                    name: "300-715-SISE-v1.1",
                     path: "/training/cisco/ccnp/ccnp-security/sise",
                   },
                   {
-                    name: "SVPN",
+                    name: "300-730-SVPN-v1.1",
                     path: "/training/cisco/ccnp/ccnp-security/svpn",
                   },
                   {
-                    name: "SDSI",
+                    name: "300-745-SDSI-v1.1",
                     path: "/training/cisco/ccnp/ccnp-security/sdsi",
                   },
                 ],
@@ -300,7 +300,7 @@ function NavBar() {
         ],
       },
       {
-        name: "CDCP",
+        name: "Data Center",
         subcourses: [
           {
             name: "Data Centre Foundation Certificate (DCFC)",
