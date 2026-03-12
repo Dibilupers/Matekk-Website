@@ -58,6 +58,16 @@ import XDREngineer from "../pages/training/paloalto/securityoperations/xdrengine
 import XsoarEngineer from "../pages/training/paloalto/securityoperations/xsoarengineer";
 import CloudSecurityProfessional from "../pages/training/paloalto/cloudsecurity/professional";
 
+/* Fortinet */
+import NSE1 from "../pages/training/fortinet/nse1";
+import NSE2 from "../pages/training/fortinet/nse2";
+import NSE3 from "../pages/training/fortinet/nse3";
+import NSE4 from "../pages/training/fortinet/nse4";
+import NSE5securenetworking from "../pages/training/fortinet/nse5securenetworking";
+import NSE5CloudSecurity from "../pages/training/fortinet/nse5cloudsecurity";
+import NSE5SASE from "../pages/training/fortinet/nse5sase";
+import NSE5SecurityOperations from "../pages/training/fortinet/nse5securityoperations";
+
 /* PROJECT MANAGEMENT  */
 import PMP from "../pages/training/projectmanagement/pmp";
 
@@ -226,6 +236,16 @@ export default function App() {
           path="/training/paloalto/cloudsecurity/professional"
           element={<CloudSecurityProfessional />}
         />
+
+        {/* Fortinet */}
+        <Route path="/training/fortinet/nse1" element={<NSE1 />} />
+        <Route path="/training/fortinet/nse2" element={<NSE2 />} />
+        <Route path="/training/fortinet/nse3" element={<NSE3 />} />
+        <Route path="/training/fortinet/nse4" element={<NSE4 />} />
+        <Route path="/training/fortinet/nse5securenetworking" element={<NSE5securenetworking />} />
+        <Route path="/training/fortinet/nse5cloudsecurity" element={<NSE5CloudSecurity />} />
+        <Route path="/training/fortinet/nse5sase" element={<NSE5SASE />} />
+        <Route path="/training/fortinet/nse5securityoperations" element={<NSE5SecurityOperations />} />
 
         {/* Cybersecurity */}
         <Route path="/training/cybersecurity/blueteam" element={<BlueTeam />} />

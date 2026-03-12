@@ -2,6 +2,7 @@ import React from "react";
 import { FaFacebook, FaLinkedin } from "react-icons/fa6";
 import { FaInstagram } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import MGKKLogo from "../../assets/MGKK_logo.png";
 
 export default function Footer() {
   const scrollToSection = (sectionId) => {
@@ -15,7 +16,12 @@ export default function Footer() {
         <div className="space-y-8 w-fit md:w-full lg:w-[50%]">
           {/* LOGO AND DESCRIPTION */}
           <div className=" flex flex-col md:flex-row lg:flex-col space-y-1 md:space-y-3 space-x-0 md:space-x-6 lg:space-x-0 w-full ">
-            <div className=" w-24 md:w-30 h-16 md:h-16">LOGO</div>
+            <button className="cursor-pointer">
+              <img
+                src={MGKKLogo}
+                alt="MGKK Logo"
+                class="w-12 md:w-10 lg:w-10 xl:w-20 2xl:w-16" />
+            </button>
             <p className="text-xl md:text-[1rem] w-full md:w-full lg:w-[70%]">
               We are the BEST Solution for your IT/Engineering Training's and
               Consultation needs at a very competitive price.
@@ -140,7 +146,7 @@ export default function Footer() {
       <div className="space-y-3">
         <div className=" border-black border border-b-0.3 body_margin"></div>
         <div className=" body_margin flex flex-col md:flex-row justify-between space-y-4 md:space-y-0">
-          <p className="">© 2026 RivanCyber. All rights reserved. </p>
+          <p className="">© 2026 MATEKK. All rights reserved. </p>
         </div>
       </div>
     </footer>
