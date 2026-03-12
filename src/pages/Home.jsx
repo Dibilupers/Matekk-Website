@@ -606,8 +606,6 @@ export default function Home() {
               </div>
 
               {/* List of Solutions - In Slides */}
-
-              {/* put padding */}
               <div className="overflow-hidden w-[85vw] md:w-[40vw] lg:w-[52vw] order-last md:order-first">
                 <div
                   className="flex flex-row-reverse gap-x-5 transition-transform duration-500 ease-in-out"
