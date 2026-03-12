@@ -48,5 +48,5 @@ h6 {
 }
 
 .services_card {
-  @apply relative shrink-0 w-[85vw] md:w-[42vw] lg:w-[24vw] xl:w-[25vw] rounded-xl overflow-hidden bg-[#EBF5FD] cursor-pointer;
+  @apply relative shrink-0 w-[83vw] sm:w-[83vw] md:w-[42vw] lg:w-[24vw] xl:w-[25vw] rounded-xl overflow-hidden bg-[#EBF5FD] cursor-pointer;
 }
