@@ -305,7 +305,7 @@ export default function Home() {
       {/* ==================== PARTNERS LOGO ====================*/}
       <section className="flex bg-[#EBF5FD] justify-center items-center text-center py-10 md:py-15 scroll-mt-18" id="partners">
         {/* Section Margin and Spacing */}
-        <div className="mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] space-y-4 md:space-y-7">
+        <div className="mx-[2.063rem] md:mx-16 xl:mx-[7.438rem] space-y-4 md:space-y-7">
           {/* Text Content */}
           <div className="flex flex-col justify-center items-center space-y-1">
             {/* Title */}
@@ -325,7 +325,7 @@ export default function Home() {
       </section>
 
       {/* ==================== SERVICES ====================*/}
-      <section id="services" className="flex flex-col justify-center items-center space-y-12 py-10 md:py-15 h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem]">
+      <section id="services" className="flex flex-col justify-center items-center space-y-12 py-10 md:py-15 h-full mx-[2.063rem] md:mx-16 xl:mx-[7.438rem]">
         {/* Title and Description Container */}
         <div className="flex flex-col justify-center items-center text-center space-y-1">
           {/* Title */}
@@ -411,7 +411,7 @@ export default function Home() {
               </div>
 
               {/* List of Solutions - In Slides */}
-              <div className="overflow-hidden w-[85vw] md:w-[45vw] lg:w-[52vw]">
+              <div className="overflow-hidden w-[85vw] md:w-[45vw] lg:w-[60vw] xl:w-[53vw]">
                 <div
                   className="flex gap-x-5 transition-transform duration-500 ease-in-out"
                   style={{
@@ -606,7 +606,7 @@ export default function Home() {
               </div>
 
               {/* List of Trainings - In Slides */}
-              <div className="overflow-hidden w-[85vw] md:w-[45vw] lg:w-[52vw] order-last md:order-first">
+              <div className="overflow-hidden w-[85vw] md:w-[45vw] lg:w-[60vw] xl:w-[53vw] order-last md:order-first">
                 <div
                   className="flex flex-row-reverse gap-x-5 transition-transform duration-500 ease-in-out"
                   style={{
@@ -740,105 +740,103 @@ export default function Home() {
         </div>
       </section>
 
-
       {/* NOT DONE CHECKING */}
       {/* ==================== WHY CHOOSE MGKK ICT SERVICES ====================*/}
       <section className="py-10 md:py-15 bg-[#EBF5FD] scroll-mt-18">
         {/* Section Margin */}
-        <div className="mx-[2.063rem] lg:mx-[7.438rem]">
-          {/* Text Content */}
-          <div className="mb-12 lg:mb-16 text-left md:text-center sm:text-left lg:text-left">
-            {/* Title */}
-            <h3 className="text-3xl lg:text-3xl font-bold leading-tight text-[#000000]">
-              Why Choose MGKK
-              <span className="text-[#1775EE]"> ICT Services?</span>
-            </h3>
-            {/* Description */}
-            <p className="leading-relaxed text-[#000000] mt-4 max-w-133 mx-auto lg:mx-0 text-justify">
-              MGKK Information Communication Technology Services is committed to
-              delivering reliable ICT solutions and high-quality training
-              through experienced professionals, proven methodologies, and a
-              strong focus on innovation, integrity, and excellence.
-            </p>
-          </div>
-          {/* Text and Image Content */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start">
+        <div className="flex flex-col lg:flex-row space-x-0 lg:space-x-8 space-y-10 md:space-y-14 lg:space-y-0 mx-[2.063rem] md:mx-16 xl:mx-[7.438rem]">
+          {/* Text and Image Container */}
+          <div className="flex flex-col md:flex-row lg:flex-col justify-center items-center space-x-0 md:space-x-18 lg:space-x-5 space-y-8 md:space-y-15">
+            {/* Text Content */}
+            <div className="text-center md:text-left space-y-2 w-full md:w-md lg:w-full">
+              {/* Title */}
+              <h3>
+                Why Choose MGKK
+                <span className="text-[#1775EE]"> ICT Services?</span>
+              </h3>
+              {/* Description */}
+              <p>
+                MGKK Information Communication Technology Services is committed to
+                delivering reliable ICT solutions and high-quality training
+                through experienced professionals, proven methodologies, and a
+                strong focus on innovation, integrity, and excellence.
+              </p>
+            </div>
             {/* LEFT SIDE - IMAGE */}
-            <div className="order-1 lg:order-1">
-              <div className="relative max-w-xs sm:max-w-md lg:max-w-lg mx-auto">
-                <div className="absolute -top-4 -right-4 sm:-top-6 sm:-right-6 w-32 h-32 sm:w-40 sm:h-40 lg:w-50 lg:h-50 border-t-4 border-r-4 sm:border-t-6 sm:border-r-6 border-blue-500 rounded-tr-3xl z-0"></div>
-                <img
-                  src="/src/assets/handshake.png"
-                  alt="Professional handshake - MGKK ICT Services team"
-                  className="relative z-10 w-full h-auto rounded-2xl sm:rounded-3xl object-cover aspect-4/5"
-                />
-                <div className="absolute -bottom-4 -left-4 sm:-bottom-6 sm:-left-6 w-32 h-32 sm:w-40 sm:h-40 lg:w-50 lg:h-50 border-b-4 border-l-4 sm:border-b-6 sm:border-l-6 border-blue-500 rounded-bl-3xl z-0"></div>
-              </div>
+            <div className="relative max-w-xs sm:max-w-md lg:max-w-lg mx-auto">
+              <div className="absolute -top-4 -right-4 sm:-top-6 sm:-right-6 w-32 h-32 sm:w-40 sm:h-40 lg:w-50 lg:h-50 border-t-4 border-r-4 sm:border-t-6 sm:border-r-6 border-blue-500 rounded-tr-3xl z-0"></div>
+              <img
+                src="/src/assets/handshake.png"
+                alt="Professional handshake - MGKK ICT Services team"
+                className="z-10 w-[75vw] md:w-[50vw] lg:w-full h-auto rounded-2xl sm:rounded-3xl object-cover aspect-4/5"
+              />
+              <div className="absolute -bottom-4 -left-4 sm:-bottom-6 sm:-left-6 w-32 h-32 sm:w-40 sm:h-40 lg:w-50 lg:h-50 border-b-4 border-l-4 sm:border-b-6 sm:border-l-6 border-blue-500 rounded-bl-3xl z-0"></div>
+            </div>
+          </div>
+
+          {/* RIGHT SIDE - Reasons Why Choose Solverous */}
+          {/* ====== Experience ====== */}
+          <div className="space-y-4">
+            <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
+              <h5 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
+                Experience
+              </h5>
+              <p className="text-sm lg:text-base text-[#000000] leading-relaxed">
+                Over a decade of providing ICT and engineering solutions and
+                professional training since our establishment in 2013.
+              </p>
             </div>
 
-            {/* RIGHT SIDE - Reasons Why Choose Solverous */}
-            <div className="order-2 lg:order-2 space-y-4 lg:-mt-52">
-              {/* ====== Experience ====== */}
-              <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
-                <h5 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
-                  Experience
-                </h5>
-                <p className="text-sm lg:text-base text-[#000000] leading-relaxed">
-                  Over a decade of providing ICT and engineering solutions and
-                  professional training since our establishment in 2013.
-                </p>
-              </div>
+            {/* ====== Expertise ====== */}
+            <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
+              <h5 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
+                Expertise
+              </h5>
+              <p className="text-sm lg:text-base text-[#000000] leading-relaxed">
+                Led by a Professional Electronics Engineer and supported by
+                certified engineers, technicians, and instructors with strong
+                industry and academic backgrounds.
+              </p>
+            </div>
 
-              {/* ====== Expertise ====== */}
-              <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
-                <h5 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
-                  Expertise
-                </h5>
-                <p className="text-sm lg:text-base text-[#000000] leading-relaxed">
-                  Led by a Professional Electronics Engineer and supported by
-                  certified engineers, technicians, and instructors with strong
-                  industry and academic backgrounds.
-                </p>
-              </div>
+            {/* ====== Quality Training ====== */}
+            <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
+              <h5 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
+                Quality Training
+              </h5>
+              <p className="text-sm lg:text-base text-[#000000] leading-relaxed">
+                We offer face-to-face and online training programs aligned
+                with industry standards and globally recognized
+                certifications.
+              </p>
+            </div>
 
-              {/* ====== Quality Training ====== */}
-              <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
-                <h5 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
-                  Quality Training
-                </h5>
-                <p className="text-sm lg:text-base text-[#000000] leading-relaxed">
-                  We offer face-to-face and online training programs aligned
-                  with industry standards and globally recognized
-                  certifications.
-                </p>
-              </div>
+            {/* ====== End-to-End Approach ====== */}
+            <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
+              <h5 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
+                End-to-End Approach
+              </h5>
+              <p className="text-sm lg:text-base text-[#000000] leading-relaxed">
+                We follow the Plan, Build, Operate, Optimize, and Test (PBOOT)
+                methodology to ensure structured and effective delivery of ICT
+                solutions.
+              </p>
+            </div>
 
-              {/* ====== End-to-End Approach ====== */}
-              <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
-                <h5 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
-                  End-to-End Approach
-                </h5>
-                <p className="text-sm lg:text-base text-[#000000] leading-relaxed">
-                  We follow the Plan, Build, Operate, Optimize, and Test (PBOOT)
-                  methodology to ensure structured and effective delivery of ICT
-                  solutions.
-                </p>
-              </div>
-
-              {/* ====== Innovation & Integrity ====== */}
-              <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
-                <h5 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
-                  Innovation & Integrity
-                </h5>
-                <p className="text-sm lg:text-base text-[#000000] leading-relaxed">
-                  Our work is guided by core values that emphasize innovation,
-                  ethical practices, excellence, collaboration, and continuous
-                  improvement.
-                </p>
-              </div>
+            {/* ====== Innovation & Integrity ====== */}
+            <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
+              <h5 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
+                Innovation & Integrity
+              </h5>
+              <p className="text-sm lg:text-base text-[#000000] leading-relaxed">
+                Our work is guided by core values that emphasize innovation,
+                ethical practices, excellence, collaboration, and continuous
+                improvement.
+              </p>
             </div>
           </div>
         </div>
+
       </section>
 
       {/* ==================== OUR WORKING PROCESS ====================*/}
