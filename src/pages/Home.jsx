@@ -58,15 +58,15 @@ export default function Home() {
       ? totalTabletSlides
       : totalSlides;
   const topStep = isMobile
-    ? "(85vw + 2.5rem)"
+    ? "(78.2vw + 2.5rem)"
     : isTablet
-      ? "(40vw + 2.5rem)"
-      : "(24vw + 2.5rem)";
+      ? "(39vw + 2.5rem)"
+      : "(27vw + 2.5rem)";
   const bottomStep = isMobile
-    ? "(85vw + 2.5rem)"
+    ? "(77vw + 2.5rem)"
     : isTablet
-      ? "(40vw + 2.5rem)"
-      : "(24vw + 2.5rem)";
+      ? "(39vw + 2.5rem)"
+      : "(25vw + 2.5rem)";
   const [hoveredRow, setHoveredRow] = useState(null);
   const [tappedCard, setTappedCard] = useState(null);
   const galleryItems = [
@@ -410,8 +410,26 @@ export default function Home() {
                 </div>
               </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
               {/* List of Solutions - In Slides */}
-              <div className="overflow-hidden w-[85vw] md:w-[40vw] lg:w-[52vw]">
+              <div className="overflow-hidden w-[85vw] md:w-[45vw] lg:w-[52vw]">
                 <div
                   className="flex gap-x-5 transition-transform duration-500 ease-in-out"
                   style={{
@@ -605,8 +623,8 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* List of Solutions - In Slides */}
-              <div className="overflow-hidden w-[85vw] md:w-[40vw] lg:w-[52vw] order-last md:order-first">
+              {/* List of Trainings - In Slides */}
+              <div className="overflow-hidden w-[85vw] md:w-[45vw] lg:w-[52vw] order-last md:order-first">
                 <div
                   className="flex flex-row-reverse gap-x-5 transition-transform duration-500 ease-in-out"
                   style={{
