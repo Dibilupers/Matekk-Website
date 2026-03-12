@@ -1,20 +1,20 @@
 // ==================== IMPORTS - UPDATE FOR EACH COURSE ====================
 // Change these imports based on the specific course
-import Button from "../../../components/ui/button";
+import Button from "../../../../components/ui/button";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
-import itil5 from "../../../assets/itil5.webp"; // Course badge image
-import ccnaHero from "../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
-import ccnaFooter from "../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
-import MealIcon from "../../../assets/Meal.svg";
-import ReviewIcon from "../../../assets/Review.svg";
-import WorkstationIcon from "../../../assets/Workstation.svg";
-import MedalIcon from "../../../assets/Medal.svg";
-import CourseModules from "../../../components/training/courseModules";
-import TrainingTemplateFooter from "../../../components/section/TrainingTemplateFooter";
-import TrainingHeroBanner from "../../../components/section/TrainingHeroBanner";
+import itil5 from "../../../../assets/itil5.webp"; // Course badge image
+import ccnaHero from "../../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
+import ccnaFooter from "../../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
+import MealIcon from "../../../../assets/Meal.svg";
+import ReviewIcon from "../../../../assets/Review.svg";
+import WorkstationIcon from "../../../../assets/Workstation.svg";
+import MedalIcon from "../../../../assets/Medal.svg";
+import CourseModules from "../../../../components/training/courseModules";
+import TrainingTemplateFooter from "../../../../components/section/TrainingTemplateFooter";
+import TrainingHeroBanner from "../../../../components/section/TrainingHeroBanner";
 
 // ==================== COMPONENT NAME ====================
 export default function CDTH() {

@@ -299,21 +299,6 @@ function NavBar() {
           },
         ],
       },
-
-      {
-        name: "Practical Ethical Hacking",
-        subcourses: [
-          {
-            name: "Cyber Defense & Threat Hunting",
-            path: "/training/peh/cdth"
-          },
-          {
-            name: "Practical Ethical Hacking",
-            path: "/training/peh"
-          },
-        ],
-      },
-
       {
         name: "CDCP",
         subcourses: [
@@ -335,6 +320,19 @@ function NavBar() {
       {
         name: "Cybersecurity",
         subcourses: [
+          {
+            name: "Practical Ethical Hacking",
+            subcourses: [
+              {
+                name: "Cyber Defense & Threat Hunting",
+                path: "/training/cybersecurity/peh/cdth",
+              },
+              {
+                name: "Practical Ethical Hacking",
+                path: "/training/cybersecurity/peh",
+              },
+            ],
+          },
           {
             name: "Blue Team: Security Operations & Defensive Cybersecurity Program",
             path: "/training/cybersecurity/blueteam",

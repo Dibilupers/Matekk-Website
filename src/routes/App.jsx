@@ -58,10 +58,6 @@ import XDREngineer from "../pages/training/paloalto/securityoperations/xdrengine
 import XsoarEngineer from "../pages/training/paloalto/securityoperations/xsoarengineer";
 import CloudSecurityProfessional from "../pages/training/paloalto/cloudsecurity/professional";
 
-/* Practical Ethical Hacking */
-import PEH from "../pages/training/peh/PEH";
-import CDTH from "../pages/training/peh/CDTH";
-
 /* Fortinet */
 import NSE1 from "../pages/training/fortinet/nse1";
 import NSE2 from "../pages/training/fortinet/nse2";
@@ -83,6 +79,8 @@ import AWSPractitioner from "../pages/training/cloud/aws/practitioner";
 /* Cybersecurity */
 import BlueTeam from "../pages/training/cybersecurity/blueteam";
 import RedTeam from "../pages/training/cybersecurity/redteam";
+import PEH from "../pages/training/cybersecurity/peh/PEH";
+import CDTH from "../pages/training/cybersecurity/peh/CDTH";
 
 /* Solutions */
 import Network from "../pages/solutions/ict/network";
@@ -242,10 +240,6 @@ export default function App() {
           element={<CloudSecurityProfessional />}
         />
 
-        {/* Practical Ethical Hacking */}
-        <Route path="/training/peh" element={<PEH />} />
-        <Route path="/training/peh/cdth" element={<CDTH />} />
-
         {/* Fortinet */}
         <Route path="/training/fortinet/nse1" element={<NSE1 />} />
         <Route path="/training/fortinet/nse2" element={<NSE2 />} />
@@ -268,6 +262,8 @@ export default function App() {
         {/* Cybersecurity */}
         <Route path="/training/cybersecurity/blueteam" element={<BlueTeam />} />
         <Route path="/training/cybersecurity/redteam" element={<RedTeam />} />
+        <Route path="/training/cybersecurity/peh" element={<PEH />} />
+        <Route path="/training/cybersecurity/peh/cdth" element={<CDTH />} />
 
         {/* Cloud */}
         <Route
