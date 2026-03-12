@@ -236,8 +236,8 @@ function ModalHeader({ title, subtitle }) {
   return (
     <div className="flex items-start justify-between mb-1">
       <div>
-        <h2 className="text-xl font-bold text-gray-900">{title}</h2>
-        <p className="text-sm text-gray-500 mt-1">{subtitle}</p>
+        <h5 className="font-bold text-gray-900">{title}</h5>
+        <p className="text-gray-500 mt-1">{subtitle}</p>
       </div>
     </div>
   );
@@ -248,7 +248,7 @@ function Step0({ onSelect }) {
   return (
     <>
       <ModalHeader
-        title={<>What are you <span className="text-blue-600">inquiring about?</span></>}
+        title={<>What are you <span className="text-[#1775EE]">inquiring about?</span></>}
         subtitle="Select the type of inquiry to get started."
       />
       <div className="flex flex-col gap-4 mt-6">
@@ -295,9 +295,9 @@ function Step1({ form, errors, update, next, backToSelection, inquiryType }) {
           {inquiryType === "training" ? "📚" : "🖥️"} {inquiryType === "training" ? "Training Inquiry" : "ICT Services Inquiry"}
         </span>
       </div>
-      <h3 className="text-xs font-bold text-gray-900 mb-4 uppercase tracking-widest">
+      <h5 className="font-bold text-gray-900 mb-4">
         Individual / Company Info
-      </h3>
+      </h5>
       <div className="flex flex-col gap-4">
         <SelectField
           label="Choose Funding" id="funding"
@@ -351,15 +351,15 @@ function Step2({ form, errors, update, back, submit, status, captchaRef, onCaptc
         title={<>Begin Your <span className="text-blue-600">Learning Journey</span></>}
         subtitle="Fill out the form to secure your slot or learn more about the course."
       />
-      <div className="mt-3 mb-5">
+      <div className="mt-3 mb-3">
         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50
           text-blue-600 text-xs font-semibold capitalize">
           {inquiryType === "training" ? "📚 Training Inquiry" : "🖥️ ICT Services Inquiry"}
         </span>
       </div>
-      <h3 className="text-xs font-bold text-gray-900 mb-4 uppercase tracking-widest">
+      <h5 className="font-bold text-gray-900 mb-2">
         {inquiryType === "training" ? "Course Details" : "Service Details"}
-      </h3>
+      </h5>
       <div className="flex flex-col gap-4">
         {inquiryType === "training" && (
           <SelectField
