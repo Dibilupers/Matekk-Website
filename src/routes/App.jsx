@@ -4,7 +4,7 @@ import NavBar from "../components/navbar/navbar";
 import Footer from "../components/footer/footer";
 import ScrollToTop from "../components/scroll/ScrollToTop";
 
-/* Pages - Lazy Loaded */
+/* Pages */
 const Home = lazy(() => import("../pages/Home"));
 const NotFound = lazy(() => import("../pages/NotFound"));
 
@@ -69,44 +69,10 @@ const XDREngineer = lazy(() => import("../pages/training/paloalto/securityoperat
 const XsoarEngineer = lazy(() => import("../pages/training/paloalto/securityoperations/xsoarengineer"));
 const CloudSecurityProfessional = lazy(() => import("../pages/training/paloalto/cloudsecurity/professional"));
 
-import PaloaltoApprentice from "../pages/training/paloalto/networksecurity/apprentice";
-import PaloaltoPractitioner from "../pages/training/paloalto/networksecurity/practitioner";
-import NetworkSecurityProfessional from "../pages/training/paloalto/networksecurity/professional";
-import NextGenerationFirewallEngineer from "../pages/training/paloalto/networksecurity/nextgenerationfirewallengineer";
-import SDWanEngineer from "../pages/training/paloalto/networksecurity/sdwanengineer";
-import SecurityServiceEdgeEngineer from "../pages/training/paloalto/networksecurity/securityserviceedgeengineer";
-import NetworkSecurityAnalyst from "../pages/training/paloalto/networksecurity/analyst";
-import NetworkSecurityArchitect from "../pages/training/paloalto/networksecurity/architect";
-import SecurityOperationsProfessional from "../pages/training/paloalto/securityoperations/professional";
-import XsiamAnalyst from "../pages/training/paloalto/securityoperations/xsiamanalyst";
-import XDRAnalyst from "../pages/training/paloalto/securityoperations/xdranalyst";
-import XsiamEngineer from "../pages/training/paloalto/securityoperations/xsiamengineer";
-import XDREngineer from "../pages/training/paloalto/securityoperations/xdrengineer";
-import XsoarEngineer from "../pages/training/paloalto/securityoperations/xsoarengineer";
-import CloudSecurityProfessional from "../pages/training/paloalto/cloudsecurity/professional";
-
 /* Practical Ethical Hacking */
-import PEH from "../pages/training/peh/PEH";
-import CDTH from "../pages/training/peh/CDTH";
+const PEH = lazy(() => import("../pages/training/peh/PEH"));
+const CDTH = lazy(() => import("../pages/training/peh/CDTH"));
 
-/* Fortinet */
-import NSE1 from "../pages/training/fortinet/nse1";
-import NSE2 from "../pages/training/fortinet/nse2";
-import NSE3 from "../pages/training/fortinet/nse3";
-import NSE4 from "../pages/training/fortinet/nse4";
-import NSE5securenetworking from "../pages/training/fortinet/nse5securenetworking";
-import NSE5CloudSecurity from "../pages/training/fortinet/nse5cloudsecurity";
-import NSE5SASE from "../pages/training/fortinet/nse5sase";
-import NSE5SecurityOperations from "../pages/training/fortinet/nse5securityoperations";
-
-/* PROJECT MANAGEMENT  */
-import PMP from "../pages/training/projectmanagement/pmp";
-
-/* IT MANAGEMENT */
-import ITIL5 from "../pages/training/itil5/itil5";
-/* Cloud */
-import AzureFundamentals from "../pages/training/cloud/microsoft/azurefundamentals";
-import AWSPractitioner from "../pages/training/cloud/aws/practitioner";
 /* Cybersecurity */
 const BlueTeam = lazy(() => import("../pages/training/cybersecurity/blueteam"));
 const RedTeam = lazy(() => import("../pages/training/cybersecurity/redteam"));
@@ -123,7 +89,6 @@ const PMP = lazy(() => import("../pages/training/projectmanagement/pmp"));
 
 /* Solutions */
 const Network = lazy(() => import("../pages/solutions/ict/network"));
-
 
 export default function App() {
   return (
@@ -199,6 +164,10 @@ export default function App() {
           <Route path="/training/paloalto/securityoperations/xdrengineer" element={<XDREngineer />} />
           <Route path="/training/paloalto/securityoperations/xsoarengineer" element={<XsoarEngineer />} />
           <Route path="/training/paloalto/cloudsecurity/professional" element={<CloudSecurityProfessional />} />
+
+          {/* Practical Ethical Hacking */}
+          <Route path="/training/peh/peh" element={<PEH />} />
+          <Route path="/training/peh/cdth" element={<CDTH />} />
 
           {/* Cybersecurity */}
           <Route path="/training/cybersecurity/blueteam" element={<BlueTeam />} />
