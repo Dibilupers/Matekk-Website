@@ -202,7 +202,7 @@ export default function AzureFundamentals() {
             <img
               src={azure}
               alt="Azure Certification Badge"
-              className="w-60 h-60 object-contain"
+              className="w-55 h-55 object-contain"
             />
           </div>
 

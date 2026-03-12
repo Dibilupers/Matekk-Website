@@ -246,7 +246,7 @@ export default function DCFC() {
             <img
               src={dcfc}
               alt="DCFC Certification Badge"
-              className="w-60 h-60 object-contain"
+              className="w-50 h-50 object-contain"
             />
           </div>
 

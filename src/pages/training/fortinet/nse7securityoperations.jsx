@@ -17,7 +17,7 @@ import TrainingTemplateFooter from "../../../components/section/TrainingTemplate
 import EnrollNowButton from "../../../components/ui/EnrollNowButton";
 
 // ==================== COMPONENT NAME ====================
-export default function NSE6SecurityOperations() {
+export default function NSE7SecurityOperations() {
   // ==================== COURSE MODULES ====================
   const modules = [
     {
@@ -377,14 +377,14 @@ export default function NSE6SecurityOperations() {
           {/* ====== Course Title and Description ======*/}
           <div>
             {/* Course title */}
-            <h1 className="text-[#1775EE]">NSE 6 Security Operations</h1>
+            <h1 className="text-[#1775EE]">NSE 7 Security Operations</h1>
 
             {/* Course description */}
             <p className="lg:w-[30vw] xl:w-lg text-gray-900">
-              Learn to analyze and manage security events using FortiSIEM in a
-              managed security service provider (MSSP) environment. This course
-              provides hands-on experience in event analysis, incident
-              remediation, and advanced querying.
+              Learn to design, deploy, and manage a Fortinet SOC using FortiSIEM
+              and FortiSOAR. This course provides hands-on experience in
+              incident analysis, threat hunting, playbook development, and
+              incorporating FortiAI for automated security responses.
             </p>
           </div>
 
@@ -421,14 +421,15 @@ export default function NSE6SecurityOperations() {
             {/* About Section - Description */}
             {/* CHANGE: Course description paragraphs */}
             <p>
-              In this course, you will gain practical skills to use FortiSIEM
-              for searching, enriching, and analyzing security events within an
-              MSSP organization.
+              In this course, you will gain practical skills to implement and
+              manage a Fortinet Security Operations Center (SOC) using FortiSIEM
+              and FortiSOAR.
             </p>
             <p>
-              You will learn to perform real-time and historical searches, build
-              advanced queries, and analyze and remediate security incidents
-              using both traditional and machine learning-assisted methods.
+              You will learn to analyze and respond to security incidents
+              following industry best practices, develop SOC playbooks, conduct
+              threat hunting, and integrate FortiAI into your workflow for
+              automated threat response.
             </p>
           </section>
 
@@ -443,25 +444,21 @@ export default function NSE6SecurityOperations() {
             <div className="grid grid-cols-1 gap-4">
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>
-                  Explain how FortiSIEM addresses common cybersecurity
-                  challenges
-                </p>
+                <p>Explain the main functions and roles within a SOC</p>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
+                <p>Identify cybersecurity challenges addressed by a Fortinet SOC</p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <p>
-                  Describe the main components and unique database architecture
-                  of FortiSIEM
+                  Describe the MITRE ATT&CK Enterprise Matrix and the Cyber Kill Chain
                 </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Perform real-time and historical event searches</p>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Define structured search operators and search conditions</p>
+                <p>Explain methods to identify and reduce the attack surface</p>
               </div>
             </div>
           </section>

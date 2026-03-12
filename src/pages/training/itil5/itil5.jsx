@@ -247,7 +247,7 @@ export default function ITIL5() {
             <img
               src={itil5}
               alt="ITIL Certification Badge"
-              className="w-60 h-60 object-contain"
+              className="w-50 h-50 object-contain"
             />
           </div>
 

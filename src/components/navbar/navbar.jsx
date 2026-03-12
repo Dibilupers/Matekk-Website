@@ -100,12 +100,31 @@ function NavBar() {
                 name: "CCNP Enterprise",
                 path: "/training/cisco/ccnp/enterprise",
               },
-              { name: "CCNP Security", path: "/training/cisco/ccnp/security" },
               {
-                name: "CCNP Cybersecurity",
-                path: "/training/cisco/ccnp/cybersecurity",
+                name: "CCNP Security",
+                subcourses: [
+                  {
+                    name: "Security",
+                    path: "/training/cisco/ccnp/ccnp-security/security",
+                  },
+                  {
+                    name: "SNCF",
+                    path: "/training/cisco/ccnp/ccnp-security/sncf",
+                  },
+                  {
+                    name: "SISE",
+                    path: "/training/cisco/ccnp/ccnp-security/sise",
+                  },
+                  {
+                    name: "SVPN",
+                    path: "/training/cisco/ccnp/ccnp-security/svpn",
+                  },
+                  {
+                    name: "SDSI",
+                    path: "/training/cisco/ccnp/ccnp-security/sdsi",
+                  },
+                ],
               },
-              { name: "CCNP Wireless", path: "/training/cisco/ccnp/wireless" },
               {
                 name: "CCNP Data Center",
                 path: "/training/cisco/ccnp/datacenter",
@@ -157,8 +176,8 @@ function NavBar() {
             path: "/training/fortinet/nse6cloudsecurity",
           },
           {
-            name: "NSE 6 Secure Operations",
-            path: "/training/fortinet/nse6secureoperations",
+            name: "NSE 6 Security Operations",
+            path: "/training/fortinet/nse6securityoperations",
           },
           {
             name: "NSE 7 Secure Networking",
@@ -170,8 +189,12 @@ function NavBar() {
             path: "/training/fortinet/nse7cloudsecurity",
           },
           {
-            name: "NSE 7 Secure Operations",
-            path: "/training/fortinet/nse7secureoperations",
+            name: "NSE 7 Security Operations",
+            path: "/training/fortinet/nse7securityoperations",
+          },
+          {
+            name: "NSE 8",
+            path: "/training/fortinet/nse8",
           },
         ],
       },
@@ -404,10 +427,11 @@ function NavBar() {
                   {dropdownMenus.solutions.map((category) => (
                     <button
                       key={category.name}
-                      className={`w-full text-left px-6 py-2 transition-colors rounded-[0.35rem] flex items-center justify-between ${openSubcourse === category.name
-                        ? "bg-[#1775EE] text-white font-bold"
-                        : "hover:bg-[#1775EE] hover:text-white hover:font-bold"
-                        }`}
+                      className={`w-full text-left px-6 py-2 transition-colors rounded-[0.35rem] flex items-center justify-between ${
+                        openSubcourse === category.name
+                          ? "bg-[#1775EE] text-white font-bold"
+                          : "hover:text-[#1775EE] hover:font-bold"
+                      }`}
                       onClick={() =>
                         setOpenSubcourse(
                           openSubcourse === category.name
@@ -488,7 +512,7 @@ function NavBar() {
                   {dropdownMenus.training.map((category) => (
                     <button
                       key={category.name}
-                      className={`w-full text-left px-6 py-2 transition-colors rounded-[0.35rem] flex items-center justify-between ${openSubcourse === category.name ? "bg-[#1775EE] text-white font-bold" : "hover:bg-[#1775EE] hover:text-white hover:font-bold"}`}
+                      className={`w-full text-left px-6 py-2 transition-colors rounded-[0.35rem] flex items-center justify-between ${openSubcourse === category.name ? "bg-[#1775EE] text-white font-bold" : "hover:text-[#1775EE] hover:font-bold"}`}
                       onClick={() => {
                         setOpenSubcourse(
                           openSubcourse === category.name
@@ -527,7 +551,7 @@ function NavBar() {
                         subcourse.subcourses ? (
                           <button
                             key={subcourse.name}
-                            className={`w-full text-left px-6 py-2 transition-colors rounded-[0.35rem] flex items-center justify-between ${openSubSubcourse === subcourse.name ? "bg-[#1775EE] text-white font-bold" : "hover:bg-[#1775EE] hover:text-white hover:font-bold"}`}
+                            className={`w-full text-left px-6 py-2 transition-colors rounded-[0.35rem] flex items-center justify-between ${openSubSubcourse === subcourse.name ? "bg-[#1775EE] text-white font-bold" : " hover:text-[#1775EE] hover:font-bold"}`}
                             onClick={() => {
                               setOpenSubSubcourse(
                                 openSubSubcourse === subcourse.name
@@ -587,10 +611,11 @@ function NavBar() {
                                     : subSub.name,
                                 )
                               }
-                              className={`w-full text-left px-6 py-2 transition-colors rounded-[0.35rem] flex items-center justify-between ${openSubSubSubcourse === subSub.name
-                                ? "bg-[#1775EE] text-white font-bold"
-                                : "hover:bg-[#1775EE] hover:text-white hover:font-bold"
-                                }`}
+                              className={`w-full text-left px-6 py-2 flex items-center cursor-pointer justify-between rounded-[0.35rem] transition-colors ${
+                                openSubSubSubcourse === subSub.name
+                                  ? "bg-[#1775EE] text-white font-bold"
+                                  : "hover:text-[#1775EE] hover:font-bold"
+                              }`}
                             >
                               {subSub.name}
                               <svg
