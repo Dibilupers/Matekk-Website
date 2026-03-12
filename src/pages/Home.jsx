@@ -411,7 +411,7 @@ export default function Home() {
               </div>
 
               {/* List of Solutions - In Slides */}
-              <div className="overflow-hidden w-[85vw] md:w-[44vw] lg:w-[52vw]">
+              <div className="overflow-hidden w-[85vw] md:w-[40vw] lg:w-[52vw]">
                 <div
                   className="flex gap-x-5 transition-transform duration-500 ease-in-out"
                   style={{
@@ -420,7 +420,7 @@ export default function Home() {
                 >
                   {/* Solutions - Card 1 */}
                   <div className="group services_card">
-                    <div className="absolute transition-opacity duration-300 group-hover:opacity-0" />
+                    <div className="absolute inset-0  transition-opacity duration-300 group-hover:opacity-0" />
                     <div className="absolute inset-0 bg-linear-to-b from-[#5192E6] to-[#1775EE] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                     <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
                       <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
@@ -550,7 +550,7 @@ export default function Home() {
                   <h6 className="bg-[#EBF5FD] border border-[#EBF5FD] rounded-full shadow-[0_0_3px_rgba(0,0,0,0.25)] w-fit px-3 py-1">
                     Training
                   </h6>
-                  <h5 className="w-fit md:w-60">
+                  <h5 className="w-[50vw] md:w-60">
                     ICT Training & Skills Development
                   </h5>
                   <p className="">
@@ -606,7 +606,9 @@ export default function Home() {
               </div>
 
               {/* List of Solutions - In Slides */}
-              <div className="overflow-hidden w-[85vw] md:w-[44vw] lg:w-[52vw] order-last md:order-first">
+
+              {/* put padding */}
+              <div className="overflow-hidden w-[85vw] md:w-[40vw] lg:w-[52vw] order-last md:order-first">
                 <div
                   className="flex flex-row-reverse gap-x-5 transition-transform duration-500 ease-in-out"
                   style={{
