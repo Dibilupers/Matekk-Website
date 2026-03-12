@@ -303,15 +303,15 @@ function NavBar() {
         name: "CDCP",
         subcourses: [
           {
-            name: "Data Centre Foundation Certificate",
+            name: "Data Centre Foundation Certificate (DCFC)",
             path: "/training/cdcp/dcfc",
           },
           {
-            name: "Certified Data Centre Professional",
+            name: "Certified Data Centre Professional (CDCP)",
             path: "/training/cdcp/cdcp",
           },
           {
-            name: "Certified Data Centre Specialist",
+            name: "Certified Data Centre Specialist (CDCS)",
             path: "/training/cdcp/cdcs",
           },
         ],
@@ -372,10 +372,8 @@ function NavBar() {
         name: "IT Management",
         subcourses: [
           {
-            name: "ITIL 5",
-            subcourses: [
-              { name: "Foundation", path: "training/itil5/foundation" },
-            ],
+            name: "ITIL 5 Foundation",
+            path: "training/itil5/foundation",
           },
         ],
       },

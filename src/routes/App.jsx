@@ -69,13 +69,11 @@ const XDREngineer = lazy(() => import("../pages/training/paloalto/securityoperat
 const XsoarEngineer = lazy(() => import("../pages/training/paloalto/securityoperations/xsoarengineer"));
 const CloudSecurityProfessional = lazy(() => import("../pages/training/paloalto/cloudsecurity/professional"));
 
-/* Practical Ethical Hacking */
-const PEH = lazy(() => import("../pages/training/peh/PEH"));
-const CDTH = lazy(() => import("../pages/training/peh/CDTH"));
-
 /* Cybersecurity */
 const BlueTeam = lazy(() => import("../pages/training/cybersecurity/blueteam"));
 const RedTeam = lazy(() => import("../pages/training/cybersecurity/redteam"));
+const PEH = lazy(() => import("../pages/training/cybersecurity/peh/PEH"));
+const CDTH = lazy(() => import("../pages/training/cybersecurity/peh/CDTH"));
 
 /* Cloud */
 const AzureFundamentals = lazy(() => import("../pages/training/cloud/microsoft/azurefundamentals"));
