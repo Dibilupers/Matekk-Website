@@ -144,7 +144,7 @@ export default function NSE1() {
             <img
               src={ccnaBadge}
               alt="Fortinet NSE 1 Certification Badge"
-              className="w-50 h-50 object-contain"
+              className="w-0 h-0 lg:w-50 lg:h-50 object-contain"
             />
           </div>
 
