@@ -13,181 +13,121 @@ import MedalIcon from "../../../assets/Medal.svg";
 import CourseModules from "../../../components/training/courseModules";
 import TrainingTemplateFooter from "../../../components/section/TrainingTemplateFooter";
 import EnrollNowButton from "../../../components/ui/EnrollNowButton";
+import TrainingHeroBanner from "../../../components/section/TrainingHeroBanner";
 
 // ==================== COMPONENT NAME - CHANGE FOR EACH COURSE ====================
 export default function NSE5SecurityOperations() {
   // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
  const modules = [
-  {
-    title: "1.0 Networking Concepts",
-    items: [
-      {
-        subTitle: "1.1 OSI Model Layers",
-        items: [
-          "Physical",
-          "Data Link",
-          "Network",
-          "Transport",
-          "Session",
-          "Presentation",
-          "Application",
-        ],
-      },
-      {
-        subTitle: "1.2 Networking Appliances",
-        items: [
-          "Routers",
-          "Switches",
-          "Firewalls",
-          "IDS/IPS",
-          "Load Balancers",
-          "Proxies",
-          "NAS",
-          "SAN",
-          "Wireless Devices",
-        ],
-      },
-      {
-        subTitle: "1.3 Cloud Concepts",
-        items: [
-          "NFV",
-          "VPC",
-          "Network Security Groups",
-          "Cloud Gateways",
-          "Deployment Models: Public, Private, Hybrid",
-          "Service Models: SaaS, IaaS, PaaS",
-        ],
-      },
-      {
-        subTitle: "1.4 Ports and Protocols",
-        items: [
-          "FTP",
-          "SFTP",
-          "SSH",
-          "Telnet",
-          "SMTP",
-          "DNS",
-          "DHCP",
-          "HTTP",
-          "HTTPS",
-          "SNMP",
-          "LDAP",
-          "RDP",
-          "SIP",
-        ],
-      },
-      {
-        subTitle: "1.5 Traffic Types",
-        items: [
-          "Unicast",
-          "Multicast",
-          "Anycast",
-          "Broadcast",
-        ],
-      },
-      {
-        subTitle: "1.6 Transmission Media",
-        items: [
-          "Wireless: 802.11, Cellular, Satellite",
-          "Wired: Fiber, Coaxial, DAC",
-        ],
-      },
-      {
-        subTitle: "1.7 Transceivers and Connectors",
-        items: [
-          "SC",
-          "LC",
-          "ST",
-          "MPO",
-          "RJ11",
-          "RJ45",
-          "F-type",
-          "BNC",
-        ],
-      },
-      {
-        subTitle: "1.8 Network Topologies",
-        items: [
-          "Mesh",
-          "Hybrid",
-          "Star / Hub and Spoke",
-          "Spine and Leaf",
-          "Point-to-Point",
-          "Three-Tier",
-          "Collapsed Core",
-        ],
-      },
-      {
-        subTitle: "1.9 IPv4 Addressing",
-        items: [
-          "Public vs. Private",
-          "APIPA",
-          "RFC1918",
-          "Loopback",
-          "Subnetting: VLSM, CIDR",
-          "Address Classes: A, B, C, D, E",
-        ],
-      },
-    ],
-  },
-];
+   {
+     title: "1.0 Networking Concepts",
+     items: [
+       {
+         subTitle: "1.1 OSI Model Layers",
+         items: [
+           "Physical",
+           "Data Link",
+           "Network",
+           "Transport",
+           "Session",
+           "Presentation",
+           "Application",
+         ],
+       },
+       {
+         subTitle: "1.2 Networking Appliances",
+         items: [
+           "Routers",
+           "Switches",
+           "Firewalls",
+           "IDS/IPS",
+           "Load Balancers",
+           "Proxies",
+           "NAS",
+           "SAN",
+           "Wireless Devices",
+         ],
+       },
+       {
+         subTitle: "1.3 Cloud Concepts",
+         items: [
+           "NFV",
+           "VPC",
+           "Network Security Groups",
+           "Cloud Gateways",
+           "Deployment Models: Public, Private, Hybrid",
+           "Service Models: SaaS, IaaS, PaaS",
+         ],
+       },
+       {
+         subTitle: "1.4 Ports and Protocols",
+         items: [
+           "FTP",
+           "SFTP",
+           "SSH",
+           "Telnet",
+           "SMTP",
+           "DNS",
+           "DHCP",
+           "HTTP",
+           "HTTPS",
+           "SNMP",
+           "LDAP",
+           "RDP",
+           "SIP",
+         ],
+       },
+       {
+         subTitle: "1.5 Traffic Types",
+         items: ["Unicast", "Multicast", "Anycast", "Broadcast"],
+       },
+       {
+         subTitle: "1.6 Transmission Media",
+         items: [
+           "Wireless: 802.11, Cellular, Satellite",
+           "Wired: Fiber, Coaxial, DAC",
+         ],
+       },
+       {
+         subTitle: "1.7 Transceivers and Connectors",
+         items: ["SC", "LC", "ST", "MPO", "RJ11", "RJ45", "F-type", "BNC"],
+       },
+       {
+         subTitle: "1.8 Network Topologies",
+         items: [
+           "Mesh",
+           "Hybrid",
+           "Star / Hub and Spoke",
+           "Spine and Leaf",
+           "Point-to-Point",
+           "Three-Tier",
+           "Collapsed Core",
+         ],
+       },
+       {
+         subTitle: "1.9 IPv4 Addressing",
+         items: [
+           "Public vs. Private",
+           "APIPA",
+           "RFC1918",
+           "Loopback",
+           "Subnetting: VLSM, CIDR",
+           "Address Classes: A, B, C, D, E",
+         ],
+       },
+     ],
+   },
+ ];
 
   return (
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}
-      <section className="relative pl-8 py-18 rounded-2xl shadow-lg flex flex-col gap-3 overflow-hidden min-h-62.5">
-        {/* ==================== HERO BANNER - Image ====================*/}
-        {/* Background Image */}
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: `url(${ccnaHero})`,
-          }}
-        />
-        {/* Hero Background Image Gradient */}
-        <div className="absolute inset-0 bg-linear-to-r from-[#cbddf5] via-[#cbddf5ce] to-transparent"></div>
-
-        {/* ==================== HERO BANNER - Text Content ====================*/}
-        <div className="relative z-10 flex flex-col gap-3 pl-1 sm:pl-8">
-          {/* Course Category */}
-          <h6 className="w-fit px-4 py-2 text-[#1775EE] bg-blue-50 rounded-full">
-            FORTINET
-          </h6>
-
-          {/* ====== Course Title and Description ======*/}
-          <div>
-            {/* Course title */}
-            <h1 className="text-[#1775EE] font-bold">
-              NSE 5 Security Operations
-            </h1>
-
-            {/* Course description */}
-            <p className="lg:w-[30vw] xl:w-lg text-gray-900">
-             Learn practical SOC analyst skills using FortiAnalyzer for centralized logging, 
-             threat analysis, and automated responses. This course provides hands-on experience 
-             in managing security events, incident analysis, and generating reports.
-            </p>
-          </div>
-
-          {/* ====== Hero Button ====== */}
-          <div className="flex flex-row sm:flex-row gap-2.5 mt-1">
-            {/* Enroll Now Button - When clicked, opens a modal */}
-            <EnrollNowButton />
-
-            {/* Learn More Button - When clicked will scroll down to proceed on the other sections of the page */}
-            <Button
-              title="Learn More"
-              type="none"
-              buttonCustomStyle="bg-transparent text-blue-600 border-2 border-blue-600 hover:bg-white hover:border-white hover:text-blue-600 transition ease-in-out transition-all duration-300 px-6 py-3"
-              btnFunc={() => {
-                document
-                  .getElementById("services")
-                  ?.scrollIntoView({ behavior: "smooth", block: "start" });
-              }}
-            />
-          </div>
-        </div>
-      </section>
+      <TrainingHeroBanner
+        bgImage={ccnaHero}
+        category="FORTINET"
+        title="NSE 5 Security Operations"
+        description="Learn practical SOC analyst skills using FortiAnalyzer for centralized logging, threat analysis, and automated responses. This course provides hands-on experience in managing security events, incident analysis, and generating reports."
+      />
 
       {/* ==================== CONTENT SECTION - Training Informations/Content ==================== */}
       <div className="flex flex-col lg:flex-row justify-start items-start lg:items-stretch gap-6 lg:gap-8">

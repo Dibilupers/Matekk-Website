@@ -17,6 +17,7 @@ import MedalIcon from "../../../assets/Medal.svg";
 import CourseModules from "../../../components/training/courseModules";
 import TrainingTemplateFooter from "../../../components/section/TrainingTemplateFooter";
 import EnrollNowButton from "../../../components/ui/EnrollNowButton";
+import TrainingHeroBanner from "../../../components/section/TrainingHeroBanner";
 
 export default function NSE5() {
   const [selectedBadge, setSelectedBadge] = useState(0);
@@ -148,41 +149,17 @@ export default function NSE5() {
   return (
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}
-      <section className="relative pl-8 py-18 rounded-2xl shadow-lg flex flex-col gap-3 overflow-hidden min-h-62.5">
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${ccnaHero})` }}
-        />
-        <div className="absolute inset-0 bg-linear-to-r from-[#cbddf5] via-[#cbddf5ce] to-transparent"></div>
-        <div className="relative z-10 flex flex-col gap-3 pl-1 sm:pl-8">
-          <h6 className="w-fit px-4 py-2 text-[#1775EE] bg-blue-50 rounded-full">
-            FORTINET
-          </h6>
-          <div>
-            <h1 className="text-[#1775EE] font-bold">NSE 5</h1>
-            <p className="lg:w-[30vw] xl:w-lg text-gray-900">
-              Learn to administer FortiGate devices using key features and
+      <TrainingHeroBanner
+        bgImage={ccnaHero}
+        category="FORTINET"
+        title="NSE 4"
+        description="Learn to administer FortiGate devices using key features and
               security profiles. Through hands-on labs, you'll practice firewall
               policies, VPNs, user authentication, logging, and network
               protection, building a solid foundation for advanced FortiGate
               administration.
-            </p>
-          </div>
-          <div className="flex flex-row sm:flex-row gap-2.5 mt-1">
-            <EnrollNowButton />
-            <Button
-              title="Learn More"
-              type="none"
-              buttonCustomStyle="bg-transparent text-blue-600 border-2 border-blue-600 hover:bg-white hover:border-white hover:text-blue-600 transition ease-in-out transition-all duration-300 px-6 py-3"
-              btnFunc={() => {
-                document
-                  .getElementById("services")
-                  ?.scrollIntoView({ behavior: "smooth", block: "start" });
-              }}
-            />
-          </div>
-        </div>
-      </section>
+                              "
+      />
 
       {/* ==================== CONTENT SECTION ==================== */}
       <div className="flex flex-col lg:flex-row justify-start items-start lg:items-stretch gap-6 lg:gap-8">
@@ -251,9 +228,7 @@ export default function NSE5() {
               src={badges[selectedBadge].src}
               alt={badges[selectedBadge].alt}
               className={`w-50 h-50 object-contain transition-all duration-300 ${
-                animating
-                  ? "opacity-0 scale-90"
-                  : "opacity-100 scale-100"
+                animating ? "opacity-0 scale-90" : "opacity-100 scale-100"
               }`}
             />
             {/* DOT INDICATORS */}
@@ -339,13 +314,21 @@ export default function NSE5() {
             </div>
             <div className="inclusions">
               <span className="inclusions_icons">
-                <img src={InstitutionalIcon} alt="Institutional Account" className="w-4 h-4" />
+                <img
+                  src={InstitutionalIcon}
+                  alt="Institutional Account"
+                  className="w-4 h-4"
+                />
               </span>
               <p className="text-sm">Institutional Accounts</p>
             </div>
             <div className="inclusions">
               <span className="inclusions_icons">
-                <img src={WorkstationIcon} alt="Workstation" className="w-4 h-4" />
+                <img
+                  src={WorkstationIcon}
+                  alt="Workstation"
+                  className="w-4 h-4"
+                />
               </span>
               <p className="text-sm">Workstation per student</p>
             </div>
