@@ -360,7 +360,7 @@ function NavBar() {
         <img
           src={MGKKLogo}
           alt="MGKK Logo"
-          class="w-12 md:w-10 lg:w-10 xl:w-8 2xl:w-16" />
+          class="w-6 md:w-8" />
       </button>
 
       {/* Desktop Nav — only visible at lg and above */}
@@ -668,7 +668,7 @@ function NavBar() {
       <EnrollNowButton buttonCustomStyle="hidden lg:block" />
 
       {/* Mobile + Tablet Hamburger — visible below lg */}
-      <div className="flex lg:hidden mr-[2.063rem] md:mr-16 lg:mr-16 xl:mr-[7.438rem] justify-center items-center">
+      <div className="flex lg:hidden justify-center items-center">
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="focus:outline-none"

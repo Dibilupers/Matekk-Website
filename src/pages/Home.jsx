@@ -550,7 +550,7 @@ export default function Home() {
                   <h6 className="bg-[#EBF5FD] border border-[#EBF5FD] rounded-full shadow-[0_0_3px_rgba(0,0,0,0.25)] w-fit px-3 py-1">
                     Training
                   </h6>
-                  <h5 className="w-[50vw] md:w-60">
+                  <h5 className="w-fit md:w-60">
                     ICT Training & Skills Development
                   </h5>
                   <p className="">
