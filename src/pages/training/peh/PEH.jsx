@@ -1,93 +1,126 @@
+// ==================== IMPORTS - UPDATE FOR EACH COURSE ====================
+// Change these imports based on the specific course
 import Button from "../../../components/ui/button";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
-import ccnaBadge from "../../../assets/FortinetNSE3.png";
-import ccnaHero from "../../../assets/CCNAHeroImageAutomation.png";
-import ccnaFooter from "../../../assets/CCNAFooterImageAutomation.png";
+// COURSE-SPECIFIC ASSETS - Replace these for different courses
+import itil5 from "../../../assets/itil5.webp"; // Course badge image
+import ccnaHero from "../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
+import ccnaFooter from "../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
 import MealIcon from "../../../assets/Meal.svg";
 import ReviewIcon from "../../../assets/Review.svg";
-import InstitutionalIcon from "../../../assets/InsitutionalAccount.svg";
 import WorkstationIcon from "../../../assets/Workstation.svg";
 import MedalIcon from "../../../assets/Medal.svg";
 import CourseModules from "../../../components/training/courseModules";
 import TrainingTemplateFooter from "../../../components/section/TrainingTemplateFooter";
-import EnrollNowButton from "../../../components/ui/EnrollNowButton";
 import TrainingHeroBanner from "../../../components/section/TrainingHeroBanner";
 
-// ==================== COMPONENT NAME - CHANGE FOR EACH COURSE ====================
-export default function NSE3() {
-  // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
+// ==================== COMPONENT NAME ====================
+export default function PEH() {
+  // ==================== COURSE MODULES ====================
   const modules = [
     {
-      title: "Advanced Security for Networks",
+      title: "Introduction to Direct, Plan and Improve",
       items: [
-        "Deep dive into FortiGate NGFW capabilities and use cases",
-        "Configuring and managing VPNs with FortiGate",
-        "Advanced threat protection features and configurations",
+        "Overview of DPI within the ITIL 4 framework",
+        "Role of DPI in aligning strategy, governance, measurement, and improvement",
+        "DPI as a core module in the Managing Professional and Strategic Leader tracks",
       ],
     },
     {
-      title: "Securing the Cloud with Fortinet",
+      title: "Module 1: Core concepts of DPI",
       items: [
-        "FortiCASB Cloud Access Security Broker",
-        "Security solutions for public, private, and hybrid cloud environments",
-        "Integration of cloud security into the Security Fabric",
+        "Key definitions: direction, planning, improvement, scope",
+        "Relationships between value, outcomes, costs, and risks",
+        "Strategic vs operational scope of DPI",
       ],
     },
     {
-      title: "Endpoint and Mobile Security",
+      title:
+        "Module 2: DPI through service value system and guiding principles",
       items: [
-        "FortiClient unified endpoint protection",
-        "FortiEDR advanced endpoint threat detection and response",
-        "Securing mobile devices and remote access",
+        "How DPI works within the Service Value System (SVS)",
+        "Applying the ITIL guiding principles to DPI work (e.g., start where you are, collaborate)",
       ],
     },
     {
-      title: "Application Security",
+      title: "Module 3: Role of direction in strategy management",
       items: [
-        "FortiWeb Web Application Firewall (WAF) features and deployment",
-        "Protecting against OWASP Top 10 vulnerabilities",
-        "Application security within the Security Fabric",
+        "Identifying scope of what is to be directed/planned",
+        "Cascading objectives and controls",
+        "Policy, roles, and authority distribution for strategic alignment",
       ],
     },
     {
-      title: "Secure Wireless and WAN Solutions",
+      title: "Module 4: Implementation of strategies",
       items: [
-        "FortiAP secure wireless access points",
-        "FortiExtender cellular WAN connectivity",
-        "Secure SD-WAN",
+        "Practical use of strategies in day-to-day operations",
+        "Governance integration, risk management, and compliance (GRC) linking to SVS",
       ],
     },
     {
-      title: "Email and Web Security",
+      title: "Module 5: Introduction to assessment and planning",
       items: [
-        "FortiMail: Email security and anti-spam features",
-        "Identifying and mitigating advanced threats via email and web",
-        "Best practices for deploying email and web security solutions",
+        "Assessment objectives, outputs, requirements and criteria",
+        "Selecting appropriate evaluation methods",
+        "Defining desired outcomes and scopes for planning",
       ],
     },
     {
-      title: "Management, Analysis, and Reporting",
+      title: "Module 6: Assessment and planning through VSM",
       items: [
-        "FortiManager centralized security management",
-        "FortiAnalyzer security analytics and reporting",
-        "Leveraging analytics for proactive threat detection",
+        "Evaluating parts of the SVS",
+        "Using data and feedback to refine planning and strategic direction",
+      ],
+    },
+    {
+      title: "Module 7: Measurement, reporting, and continual improvement",
+      items: [
+        "Definition and use of metrics, indicators, and reporting in DPI",
+        "Tools and practices to monitor performance",
+      ],
+    },
+    {
+      title:
+        "Module 8: Measurements and continual improvement through dimensions and SVS",
+      items: [
+        "Applying measurement across the four dimensions of service management",
+        "Driving improvement across value streams and practices",
+      ],
+    },
+    {
+      title: "Module 9: OCM principles and methods",
+      items: [
+        "OCM concepts and success factors",
+        "Stakeholder engagement and influence in change transitions",
+      ],
+    },
+    {
+      title: "Module 10: Communication principles and methods",
+      items: [
+        "Communication planning and channels",
+        "Feedback loops and effective two-way communication strategies",
+      ],
+    },
+    {
+      title: "Module 11: SVS development using four dimensions",
+      items: [
+        "How to use organisational culture, information & technology, value streams/processes, and partners/suppliers to enable DPI success across the SVS",
       ],
     },
   ];
-
   return (
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}
       <TrainingHeroBanner
         bgImage={ccnaHero}
-        category="FORTINET"
-        title="NSE 3"
-        description="Learn how to strengthen network security using key FortiGate features. 
-                          Through hands-on demos and interactive simulations,
-                           you’ll practice basic operations and prepare to explore more advanced topics.
-                        "
+        category="Practical Ethical Hacking"
+        title="Practical Ethical Hacking (PEH)"
+        description="A streamlined, targeted pathway designed for ITIL 4 certification
+              holders to transition smoothly to ITIL Foundation (Version 5),
+              focusing exclusively on the new updates and changes introduced in
+              the latest version."
       />
 
       {/* ==================== CONTENT SECTION - Training Informations/Content ==================== */}
@@ -103,15 +136,15 @@ export default function NSE3() {
             {/* About Section - Description */}
             {/* CHANGE: Course description paragraphs */}
             <p>
-              In this course, you will gain practical skills to strengthen
-              network security using essential FortiGate features. Through
-              interactive simulations and guided demonstrations, you will learn
-              how to perform basic configuration and operational tasks.
-            </p>
-            <p>
-              Aligned with Fortinet NSE 3, this course builds your hands-on
-              experience and prepares you for more advanced FortiGate concepts
-              and security implementations.
+              This course is tailored to help ITIL 4 professionals quickly and
+              efficiently align with the latest ITIL Foundation (Version 5)
+              framework. Rather than revisiting the foundational content you
+              already know, it zeroes in on the key changes, emerging trends,
+              and updated practices that reflect the evolving landscape of
+              digital service management. By highlighting how value creation,
+              digital service delivery, and management concepts have been
+              refined, the course ensures you stay current and confident in
+              applying ITIL principles in modern IT environments.
             </p>
           </section>
 
@@ -123,26 +156,29 @@ export default function NSE3() {
             </h3>
 
             {/* What You Will Learn Section - List */}
-            <div className="grid flex-col lg:flex-col-2 gap-4">
+            <div className="grid grid-cols-1 gap-4">
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Set up common and key features on FortiGate devices</p>
+                <p>
+                  Understand the penetration testing methodology and the 5
+                  phases
+                </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Control access to network resources</p>
+                <p>Perform network reconnaissance, scanning, and enumeration</p>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
+                <p>Identify system and web application vulnerabilities</p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <p>
-                  Securely connect remote users to the corporate network via
-                  VPNs
+                  Exploit vulnerable services using real tools and custom
+                  payloads
                 </p>
               </div>
-              <p className="flex items-center gap-2.5">
-                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <span>Carry out basic system maintenance</span>
-              </p>
             </div>
           </section>
 
@@ -164,9 +200,9 @@ export default function NSE3() {
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
             {/* Cert Badge - Change/Update Image */}
             <img
-              src={ccnaBadge}
-              alt="Fortinet NSE 1 Certification Badge"
-              className="w-50 h-50 object-contain"
+              src={itil5}
+              alt="ITIL Certification Badge"
+              className="w-45 h-45 lg:w-50 lg:h-50 object-contain"
             />
           </div>
 
@@ -176,10 +212,10 @@ export default function NSE3() {
             <h5 className="text-[#1775EE] font-bold">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
-              "Entry-Level Security Analyst",
-              "Junior Network Administrator",
-              "IT Security Associate",
-              "Cybersecurity Intern",
+              "IT Operations Specialist",
+              "IT Development Manager",
+              "Chief Digital Officer",
+              "IT Specialist Change Management",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
@@ -193,7 +229,11 @@ export default function NSE3() {
             {/* Target Learners - Title */}
             <h5 className="text-[#1775EE] font-bold">Target Learners</h5>
             {/* Target Learners - List */}
-            {["Intermediate"].map((job) => (
+            {[
+              "Network and System Administrators",
+              "Security Analysts",
+              "Ethical Hacking Beginners",
+            ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
                 <span className="text-sm">{job}</span>
@@ -249,17 +289,6 @@ export default function NSE3() {
             <div className="inclusions">
               <span className="inclusions_icons">
                 <img
-                  src={InstitutionalIcon}
-                  alt="Institutional Account"
-                  className="w-4 h-4"
-                />
-              </span>
-              <p className="text-sm">Institutional Accounts</p>
-            </div>
-
-            <div className="inclusions">
-              <span className="inclusions_icons">
-                <img
                   src={WorkstationIcon}
                   alt="Workstation"
                   className="w-4 h-4"
@@ -277,7 +306,7 @@ export default function NSE3() {
 
             {/* CHANGE: Download link text and URL */}
             <a href="#" className="text-sm font-medium underline mt-2">
-              Download the Palo Alto Exam Basics here
+              Download the CCNP Exam Basics here
             </a>
           </div>
         </aside>

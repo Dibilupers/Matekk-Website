@@ -17,38 +17,56 @@ import TrainingHeroBanner from "../../../components/section/TrainingHeroBanner";
 // ==================== COMPONENT NAME - CHANGE FOR EACH COURSE ====================
 export default function NSE1() {
   // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
- const modules = [
-  {
-    title: "1.0 Cybersecurity",
-    items: [
-      "1.1 Identify and describe vulnerabilities and exploits",
-      {
-        subTitle: "1.2 Identify and describe the stages of the cyber attack lifecycle",
-        items: [
-          "1.2.1 Reconnaissance",
-          "1.2.2 Weaponization and Delivery",
-          "1.2.3 Exploitation",
-          "1.2.4 Installation",
-          "1.2.5 Command-and-Control (C2)",
-          "1.2.6 Actions on the Objective",
-        ],
-      },
-      "1.3 Identify and describe common attack types (e.g., malware, insider threat, C2, social engineering, AI-powered)",
-      {
-        subTitle: "1.4 Identify and describe intrusion detection systems",
-        items: [
-          "1.4.1 Intrusion Detection System (IDS)",
-          "1.4.2 Host-Based Intrusion Detection System (HIDS)",
-          "1.4.3 Network-Based Intrusion Detection System (NIDS)",
-        ],
-      },
-      "1.5 Identify and describe threat prevention systems and practices (e.g., end user awareness, security updates, antivirus, intrusion prevention systems, firewalls)",
-      "1.6 Explain the purpose of a DMZ",
-      "1.7 Explain the purpose of Zero Trust",
-    ],
-  },
-];
-
+  const modules = [
+    {
+      title: "Introduction to Cybersecurity",
+      items: [
+        "Understanding Cybersecurity and its importance",
+        "Overview of the threat landscape",
+        "Types of Cybersecurity threats",
+        "Cyber adversaries and their motivations",
+      ],
+    },
+    {
+      title: "Understanding Malware",
+      items: [
+        "Types of malware",
+        "How malware infects systems",
+        "Impact of malware on organizations and individuals",
+      ],
+    },
+    {
+      title: "Cyber Attacks and Techniques",
+      items: [
+        "Overview of common cyber attacks",
+        "Attack vectors and techniques",
+      ],
+    },
+    {
+      title: "Fundamentals of Network Security",
+      items: [
+        "Basic concepts of network security",
+        "Importance of a layered security approach",
+        "Introduction to encryption and firewalls",
+      ],
+    },
+    {
+      title: "Introduction to Fortinet Solutions",
+      items: [
+        "Overview of Fortinet's Security Fabric",
+        "Key components of the Fortinet Security Fabric",
+        "How Fortinet addresses Cybersecurity challenges",
+      ],
+    },
+    {
+      title: "Best Practices for Cybersecurity",
+      items: [
+        "Implementing effective security measures",
+        "The role of policies, procedures, and awareness",
+        "Importance of regular updates and patch management",
+      ],
+    },
+  ];
   return (
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}

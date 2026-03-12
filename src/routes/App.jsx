@@ -58,6 +58,10 @@ import XDREngineer from "../pages/training/paloalto/securityoperations/xdrengine
 import XsoarEngineer from "../pages/training/paloalto/securityoperations/xsoarengineer";
 import CloudSecurityProfessional from "../pages/training/paloalto/cloudsecurity/professional";
 
+/* Practical Ethical Hacking */
+import PEH from "../pages/training/peh/PEH";
+import CDTH from "../pages/training/peh/CDTH";
+
 /* Fortinet */
 import NSE1 from "../pages/training/fortinet/nse1";
 import NSE2 from "../pages/training/fortinet/nse2";
@@ -82,6 +86,7 @@ import RedTeam from "../pages/training/cybersecurity/redteam";
 
 /* Solutions */
 import Network from "../pages/solutions/ict/network";
+
 
 export default function App() {
   return (
@@ -237,15 +242,28 @@ export default function App() {
           element={<CloudSecurityProfessional />}
         />
 
+        {/* Practical Ethical Hacking */}
+        <Route path="/training/peh" element={<PEH />} />
+        <Route path="/training/peh/cdth" element={<CDTH />} />
+
         {/* Fortinet */}
         <Route path="/training/fortinet/nse1" element={<NSE1 />} />
         <Route path="/training/fortinet/nse2" element={<NSE2 />} />
         <Route path="/training/fortinet/nse3" element={<NSE3 />} />
         <Route path="/training/fortinet/nse4" element={<NSE4 />} />
-        <Route path="/training/fortinet/nse5securenetworking" element={<NSE5securenetworking />} />
-        <Route path="/training/fortinet/nse5cloudsecurity" element={<NSE5CloudSecurity />} />
+        <Route
+          path="/training/fortinet/nse5securenetworking"
+          element={<NSE5securenetworking />}
+        />
+        <Route
+          path="/training/fortinet/nse5cloudsecurity"
+          element={<NSE5CloudSecurity />}
+        />
         <Route path="/training/fortinet/nse5sase" element={<NSE5SASE />} />
-        <Route path="/training/fortinet/nse5securityoperations" element={<NSE5SecurityOperations />} />
+        <Route
+          path="/training/fortinet/nse5securityoperations"
+          element={<NSE5SecurityOperations />}
+        />
 
         {/* Cybersecurity */}
         <Route path="/training/cybersecurity/blueteam" element={<BlueTeam />} />

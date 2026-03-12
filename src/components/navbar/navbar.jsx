@@ -304,17 +304,12 @@ function NavBar() {
         name: "Practical Ethical Hacking",
         subcourses: [
           {
-            name: "PEH Fundamentals",
-            subcourses: [
-              {
-                name: "Penetration Testing",
-                path: "/training/peh/fundamentals/pentest",
-              },
-              {
-                name: "Web App Security",
-                path: "/training/peh/fundamentals/webapp",
-              },
-            ],
+            name: "Cyber Defense & Threat Hunting",
+            path: "/training/peh/cdth"
+          },
+          {
+            name: "Practical Ethical Hacking",
+            path: "/training/peh"
           },
         ],
       },
