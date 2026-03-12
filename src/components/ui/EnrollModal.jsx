@@ -261,7 +261,7 @@ function Step0({ onSelect }) {
               text-left group"
           >
             <div className="w-12 h-12 rounded-xl bg-blue-50 group-hover:bg-blue-100
-              flex items-center justify-center text-blue-600 shrink-0 transition-colors duration-200">
+              flex items-center justify-center text-[#1775EE] shrink-0 transition-colors duration-200">
               {opt.icon}
             </div>
             <div>
@@ -285,13 +285,13 @@ function Step1({ form, errors, update, next, backToSelection, inquiryType }) {
   return (
     <>
       <ModalHeader
-        title={<>Begin Your <span className="text-blue-600">Learning Journey</span></>}
+        title={<>Begin Your <span className="text-[#1775EE]">Learning Journey</span></>}
         subtitle="Fill out the form to secure your slot or learn more about the course."
       />
       {/* Inquiry type badge */}
       <div className="mt-3 mb-5">
         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50
-          text-blue-600 text-xs font-semibold capitalize">
+          text-[#1775EE] text-xs font-semibold capitalize">
           {inquiryType === "training" ? "📚" : "🖥️"} {inquiryType === "training" ? "Training Inquiry" : "ICT Services Inquiry"}
         </span>
       </div>
@@ -333,7 +333,7 @@ function Step1({ form, errors, update, next, backToSelection, inquiryType }) {
         </button>
         <button
           onClick={next}
-          className="px-6 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-semibold
+          className="px-6 py-2.5 rounded-lg bg-[#1775EE] text-white text-sm font-semibold
             hover:bg-blue-700 active:scale-95 transition-all duration-150 shadow-sm shadow-blue-200"
         >
           Next →
@@ -348,12 +348,12 @@ function Step2({ form, errors, update, back, submit, status, captchaRef, onCaptc
   return (
     <>
       <ModalHeader
-        title={<>Begin Your <span className="text-blue-600">Learning Journey</span></>}
+        title={<>Begin Your <span className="text-[#1775EE]">Learning Journey</span></>}
         subtitle="Fill out the form to secure your slot or learn more about the course."
       />
       <div className="mt-3 mb-3">
         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50
-          text-blue-600 text-xs font-semibold capitalize">
+          text-[#1775EE] text-xs font-semibold capitalize">
           {inquiryType === "training" ? "📚 Training Inquiry" : "🖥️ ICT Services Inquiry"}
         </span>
       </div>
