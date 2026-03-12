@@ -548,10 +548,10 @@ export default function Home() {
 
           {/* NOT DONE CHECKING */}
           {/* ====== TRAINING - ICT Training & Skills Development ======*/}
-          <div className="w-full flex flex-col md:flex-row md:m-0 md:w-full justify-center items-center gap-10 mt-[4vh] md:mt-[8vh] lg:mx-auto">
+          <div className="flex flex-col md:flex-row justify-center items-center gap-10">
             {/* Controls — on mobile: top + right-aligned | on desktop: right column */}
             {/* Training title */}
-            <div className="flex flex-col relative md:w-[20vw] self-start gap-y-[1vh] items-end text-right order-first md:order-last">
+            <div className="flex flex-col relative md:w-[35vw] lg:w-[20vw] xl:w-[24vw] self-start gap-y-6 items-start">
               <div className="absolute -top-10 -right-5 w-72 h-72 bg-[#C2DDFF] opacity-50 rounded-full blur-3xl -z-10" />
               <h6 className="bg-[#EBF5FD] border border-[#EBF5FD] rounded-full w-fit px-3 py-1 shadow-[0_0_3px_rgba(0,0,0,0.25)]">
                 Training
