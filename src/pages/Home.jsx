@@ -541,36 +541,33 @@ export default function Home() {
               />
             ))}
           </div>
-
-
-
-
-
-          {/* NOT DONE CHECKING */}
+          
           {/* ====== TRAINING - ICT Training & Skills Development ======*/}
           <div className="flex flex-col md:flex-row justify-center items-center gap-10">
             {/* Controls — on mobile: top + right-aligned | on desktop: right column */}
             {/* Training title */}
             <div className="flex flex-col relative md:w-[35vw] lg:w-[20vw] xl:w-[24vw] self-start gap-y-6 items-start">
-              <div className="absolute -top-10 -right-5 w-72 h-72 bg-[#C2DDFF] opacity-50 rounded-full blur-3xl -z-10" />
-              <h6 className="bg-[#EBF5FD] border border-[#EBF5FD] rounded-full w-fit px-3 py-1 shadow-[0_0_3px_rgba(0,0,0,0.25)]">
-                Training
-              </h6>
-              <h5 className="font-rubik font-bold text-2xl w-[50vw] md:w-auto text-right">
-                ICT Training & Skills Development
-              </h5>
-              <p className="font-poppins text-sm w-full mb-[1vh] md:mb-[3vh] md:w-auto">
-                We offers face-to-face and online training programs designed to
-                equip individuals and organizations with cutting-edge
-                technological knowledge and practical skills.
-              </p>
+              <div className="absolute -top-10 md:-left-10 w-70 h-70 md:w-72 md:h-72 bg-[#C2DDFF] opacity-50 rounded-full blur-3xl -z-10" />
+              <div className="space-y-2">
+                <h6 className="bg-[#EBF5FD] border border-[#EBF5FD] rounded-full shadow-[0_0_3px_rgba(0,0,0,0.25)] w-fit px-3 py-1">
+                  Training
+                </h6>
+                <h5 className="w-[50vw] md:w-60">
+                  ICT Training & Skills Development
+                </h5>
+                <p className="">
+                  We offers face-to-face and online training programs designed to
+                  equip individuals and organizations with cutting-edge
+                  technological knowledge and practical skills.
+                </p>
+              </div>
               <div className="flex flex-row gap-x-[2vh]">
                 <button
                   onClick={() =>
                     setBottomSlide((prev) => Math.min(prev + 1, bottomMax - 1))
                   }
                   disabled={bottomSlide === bottomMax - 1}
-                  className="w-12 h-12 flex items-center justify-center rounded-full border border-[#1775EE] bg-white text-[#1775EE] transition-all duration-300 hover:bg-[#1775EE] hover:text-white disabled:opacity-30 disabled:cursor-not-allowed"
+                  className="w-12 h-12 flex items-center justify-center rounded-full border border-[#1775EE] bg-white text-[#1775EE] transition-all duration-300 hover:bg-[#1775EE] hover:text-white disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -590,7 +587,7 @@ export default function Home() {
                 <button
                   onClick={() => setBottomSlide((prev) => Math.max(prev - 1, 0))}
                   disabled={bottomSlide === 0}
-                  className="w-12 h-12 flex items-center justify-center rounded-full border border-[#1775EE] bg-white text-[#1775EE] transition-all duration-300 hover:bg-[#1775EE] hover:text-white disabled:opacity-30 disabled:cursor-not-allowed"
+                  className="w-12 h-12 flex items-center justify-center rounded-full border border-[#1775EE] bg-white text-[#1775EE] transition-all duration-300 hover:bg-[#1775EE] hover:text-white disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -610,10 +607,10 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Viewport */}
+            {/* List of Solutions - In Slides */}
             <div className="overflow-hidden w-[85vw] md:w-[40vw] lg:w-[52vw] order-last md:order-first">
               <div
-                className="flex flex-row-reverse gap-x-10 transition-transform duration-500 ease-in-out"
+                className="flex flex-row-reverse gap-x-5 transition-transform duration-500 ease-in-out"
                 style={{
                   transform: `translateX(calc(${bottomSlide} * ${bottomStep}))`,
                 }}
@@ -728,6 +725,7 @@ export default function Home() {
             </div>
           </div>
 
+          {/* NOT DONE CHECKING */}
           {/* BOTTOM DOT INDICATORS */}
           <div className="flex justify-center flex-row-reverse gap-x-2 mt-6">
             {Array.from({ length: bottomMax }).map((_, i) => (
