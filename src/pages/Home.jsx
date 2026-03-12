@@ -748,7 +748,7 @@ export default function Home() {
           {/* Text and Image Container */}
           <div className="flex flex-col md:flex-row lg:flex-col justify-center items-center space-x-0 md:space-x-18 lg:space-x-5 space-y-8 md:space-y-15">
             {/* Text Content */}
-            <div className="text-center md:text-left space-y-2 w-full md:w-md lg:w-full">
+            <div className="justify-center md:justify-left space-y-2 w-full md:w-md lg:w-fit">
               {/* Title */}
               <h3>
                 Why Choose MGKK
