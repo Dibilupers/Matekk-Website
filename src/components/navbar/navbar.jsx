@@ -324,12 +324,12 @@ function NavBar() {
             name: "Practical Ethical Hacking",
             subcourses: [
               {
-                name: "Practical Ethical Hacking",
-                path: "/training/cybersecurity/peh/PEH",
+                name: "Cyber Defense & Threat Hunting",
+                path: "/training/cybersecurity/peh/cdth",
               },
               {
-                name: "Vulnerability Assessment & Penetration Testing (VAPT)",
-                path: "/training/cybersecurity/peh/VAPT",
+                name: "Practical Ethical Hacking",
+                path: "/training/cybersecurity/peh",
               },
             ],
           },
@@ -340,10 +340,6 @@ function NavBar() {
           {
             name: "Red Team: CompTIA Security+ (SY0-701) Training",
             path: "/training/cybersecurity/redteam",
-          },
-          {
-            name: "Cyber Defense & Threat Hunting (CDTH)",
-            path: "/training/cybersecurity/cdth",
           },
         ],
       },
@@ -405,14 +401,13 @@ function NavBar() {
       setTimeout(() => {
         const el = document.getElementById(location.state.scrollTo);
         if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 100); // gives the page time to render first
+      }, 100);
     }
   }, [location]);
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 10);
-
       setOpenDropdown(null);
       setOpenSubcourse(null);
       setOpenSubSubcourse(null);
@@ -443,36 +438,41 @@ function NavBar() {
     }
   };
 
+  // Shared transition class applied to every interactive element
+  const t = "transition duration-300 ease-in-out";
+
   return (
     <header
-      className={`flex flex-row items-center justify-between py-4 bg-white sticky top-0 z-50 transition-shadow px-[2.063rem] md:px-16 xl:px-[7.438rem]  ${scrolled ? "shadow-md" : ""}`}
+      className={`flex flex-row items-center justify-between py-4 bg-white sticky top-0 z-50 ${t} px-[2.063rem] md:px-16 xl:px-[7.438rem] ${scrolled ? "shadow-md" : ""}`}
     >
-      {/* ↓ changed md:ml-[7.438rem] → lg:ml-[7.438rem] */}
       {/* Logo */}
-      <button onClick={handleHomeClick} className="cursor-pointer">
+      <button
+        onClick={handleHomeClick}
+        className={`cursor-pointer ${t} hover:opacity-80`}
+      >
         {getLogoElement()}
       </button>
 
-      {/* Desktop Nav — only visible at lg and above */}
-      {/* ↓ changed hidden md:flex → hidden lg:flex */}
-      <nav className="space-x-8 hidden lg:flex font-poppins items-center mr-[2.063rem] md:mr-16 xl:mr-[7.438rem] ">
+      {/* Desktop Nav */}
+      <nav className="space-x-8 hidden lg:flex font-poppins items-center mr-[2.063rem] md:mr-16 xl:mr-[7.438rem]">
         <button
           onClick={handleHomeClick}
-          className="hover:text-[#1775EE] hover:font-bold transition-colors cursor-pointer"
+          className={`hover:text-[#1775EE] hover:font-bold cursor-pointer ${t}`}
         >
           Home
         </button>
 
+        {/* Solutions Dropdown */}
         <div className="relative">
           <button
             onClick={() =>
               setOpenDropdown(openDropdown === "solutions" ? null : "solutions")
             }
-            className="flex items-center gap-1 hover:font-bold hover:text-[#1775EE] transition-colors"
+            className={`flex items-center gap-1 hover:font-bold hover:text-[#1775EE] ${t}`}
           >
             Solutions
             <svg
-              className={`w-4 h-4 transition-transform ${openDropdown === "solutions" ? "rotate-180" : ""}`}
+              className={`w-4 h-4 ${t} ${openDropdown === "solutions" ? "rotate-180" : ""}`}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -487,14 +487,14 @@ function NavBar() {
           </button>
 
           {openDropdown === "solutions" && (
-            <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 p-5 bg-white shadow-lg rounded-2xl border border-gray-100 overflow-hidden font-inter">
+            <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 p-5 bg-white shadow-lg rounded-2xl border border-gray-100 overflow-hidden font-inter animate-in fade-in slide-in-from-top-2 duration-200">
               <div className="flex space-x-[2.313rem]">
                 {/* Column 1 — categories */}
-                <div className="w-100">
+                <div className="w-100 overflow-y-auto max-h-[70vh] animate-in fade-in slide-in-from-left-2 duration-200">
                   {dropdownMenus.solutions.map((category) => (
                     <button
                       key={category.name}
-                      className={`w-full text-left px-6 py-2 transition-colors rounded-[0.35rem] flex items-center justify-between ${
+                      className={`w-full text-left px-6 py-2 rounded-[0.35rem] flex items-center justify-between ${t} ${
                         openSubcourse === category.name
                           ? "bg-[#1775EE] text-white font-bold"
                           : "hover:text-[#1775EE] hover:font-bold"
@@ -510,7 +510,7 @@ function NavBar() {
                       {category.name}
                       {category.subcourses?.length > 0 && (
                         <svg
-                          className="w-4 h-4"
+                          className={`w-4 h-4 ${t}`}
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -529,7 +529,7 @@ function NavBar() {
 
                 {/* Column 2 — subcourses */}
                 {openSubcourse && (
-                  <div className="w-fit">
+                  <div className="w-fit animate-in fade-in slide-in-from-left-2 duration-200">
                     {dropdownMenus.solutions
                       .find((cat) => cat.name === openSubcourse)
                       ?.subcourses?.map((item) => (
@@ -537,7 +537,7 @@ function NavBar() {
                           key={item.name}
                           to={item.path}
                           onClick={resetMenu}
-                          className="block w-full text-left px-6 py-2 rounded-[0.35rem] hover:text-[#1775EE] hover:font-bold transition-colors"
+                          className={`block w-full text-left px-6 py-2 rounded-[0.35rem] hover:text-[#1775EE] hover:font-bold ${t}`}
                         >
                           {item.name}
                         </Link>
@@ -549,16 +549,17 @@ function NavBar() {
           )}
         </div>
 
+        {/* Training Dropdown */}
         <div className="relative">
           <button
             onClick={() =>
               setOpenDropdown(openDropdown === "training" ? null : "training")
             }
-            className="flex items-center gap-1 hover:text-[#1775EE] hover:font-bold transition-colors"
+            className={`flex items-center gap-1 hover:text-[#1775EE] hover:font-bold ${t}`}
           >
             Training
             <svg
-              className={`w-4 h-4 transition-transform ${openDropdown === "training" ? "rotate-180" : ""}`}
+              className={`w-4 h-4 ${t} ${openDropdown === "training" ? "rotate-180" : ""}`}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -571,15 +572,20 @@ function NavBar() {
               />
             </svg>
           </button>
-          {/* First Column */}
+
           {openDropdown === "training" && (
-            <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 p-5 bg-white shadow-lg rounded-2xl border border-gray-100 overflow-hidden font-inter">
+            <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 p-5 bg-white shadow-lg rounded-2xl border border-gray-100 overflow-hidden font-inter animate-in fade-in slide-in-from-top-2 duration-200">
               <div className="flex space-x-[2.313rem]">
-                <div className="w-57">
+                {/* Column 1 */}
+                <div className="w-57 overflow-y-auto max-h-[70vh] animate-in fade-in slide-in-from-left-2 duration-200">
                   {dropdownMenus.training.map((category) => (
                     <button
                       key={category.name}
-                      className={`w-full text-left px-6 py-2 transition-colors rounded-[0.35rem] flex items-center justify-between ${openSubcourse === category.name ? "bg-[#1775EE] text-white font-bold" : "hover:text-[#1775EE] hover:font-bold"}`}
+                      className={`w-full text-left px-6 py-2 rounded-[0.35rem] flex items-center justify-between ${t} ${
+                        openSubcourse === category.name
+                          ? "bg-[#1775EE] text-white font-bold"
+                          : "hover:text-[#1775EE] hover:font-bold"
+                      }`}
                       onClick={() => {
                         setOpenSubcourse(
                           openSubcourse === category.name
@@ -593,7 +599,7 @@ function NavBar() {
                       {category.name}
                       {category.subcourses?.length > 0 && (
                         <svg
-                          className="w-4 h-4"
+                          className={`w-4 h-4 ${t}`}
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -609,16 +615,21 @@ function NavBar() {
                     </button>
                   ))}
                 </div>
-                {/* Second Column */}
+
+                {/* Column 2 */}
                 {openSubcourse && (
-                  <div className="w-57 overflow-y-auto max-h-[70vh]">
+                  <div className="w-57 overflow-y-auto max-h-[70vh] animate-in fade-in slide-in-from-left-2 duration-200">
                     {dropdownMenus.training
                       .find((cat) => cat.name === openSubcourse)
                       ?.subcourses?.map((subcourse) =>
                         subcourse.subcourses ? (
                           <button
                             key={subcourse.name}
-                            className={`w-full text-left px-6 py-2 transition-colors rounded-[0.35rem] flex items-center justify-between ${openSubSubcourse === subcourse.name ? "bg-[#1775EE] text-white font-bold" : " hover:text-[#1775EE] hover:font-bold"}`}
+                            className={`w-full text-left px-6 py-2 rounded-[0.35rem] flex items-center justify-between ${t} ${
+                              openSubSubcourse === subcourse.name
+                                ? "bg-[#1775EE] text-white font-bold"
+                                : "hover:text-[#1775EE] hover:font-bold"
+                            }`}
                             onClick={() => {
                               setOpenSubSubcourse(
                                 openSubSubcourse === subcourse.name
@@ -630,7 +641,7 @@ function NavBar() {
                           >
                             {subcourse.name}
                             <svg
-                              className="w-4 h-4"
+                              className={`w-4 h-4 ${t}`}
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24"
@@ -648,7 +659,7 @@ function NavBar() {
                             key={subcourse.name}
                             to={subcourse.path}
                             onClick={resetMenu}
-                            className="block w-full text-left px-6 py-2 rounded-[0.35rem] hover:text-[#1775EE] hover:font-bold transition-colors"
+                            className={`block w-full text-left px-6 py-2 rounded-[0.35rem] hover:text-[#1775EE] hover:font-bold ${t}`}
                           >
                             {subcourse.name}
                           </Link>
@@ -657,16 +668,15 @@ function NavBar() {
                   </div>
                 )}
 
-                {/* Third Column */}
+                {/* Column 3 */}
                 {openSubSubcourse && (
-                  <div className="w-57 overflow-y-auto max-h-[70vh]">
+                  <div className="w-57 overflow-y-auto max-h-[70vh] animate-in fade-in slide-in-from-left-2 duration-200">
                     {dropdownMenus.training
                       .find((cat) => cat.name === openSubcourse)
                       ?.subcourses?.find((sub) => sub.name === openSubSubcourse)
                       ?.subcourses?.map((subSub) => {
                         const hasSubSubcourses =
                           subSub.subcourses && subSub.subcourses.length > 0;
-
                         if (hasSubSubcourses) {
                           return (
                             <button
@@ -678,7 +688,7 @@ function NavBar() {
                                     : subSub.name,
                                 )
                               }
-                              className={`w-full text-left px-6 py-2 flex items-center cursor-pointer justify-between rounded-[0.35rem] transition-colors ${
+                              className={`w-full text-left px-6 py-2 flex items-center cursor-pointer justify-between rounded-[0.35rem] ${t} ${
                                 openSubSubSubcourse === subSub.name
                                   ? "bg-[#1775EE] text-white font-bold"
                                   : "hover:text-[#1775EE] hover:font-bold"
@@ -686,7 +696,7 @@ function NavBar() {
                             >
                               {subSub.name}
                               <svg
-                                className="w-4 h-4"
+                                className={`w-4 h-4 ${t}`}
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -701,13 +711,12 @@ function NavBar() {
                             </button>
                           );
                         }
-
                         return (
                           <Link
                             key={subSub.name}
                             to={subSub.path}
                             onClick={resetMenu}
-                            className="block w-full text-left px-6 py-2 rounded-[0.35rem] hover:text-[#1775EE] hover:font-bold transition-colors"
+                            className={`block w-full text-left px-6 py-2 rounded-[0.35rem] hover:text-[#1775EE] hover:font-bold ${t}`}
                           >
                             {subSub.name}
                           </Link>
@@ -716,9 +725,9 @@ function NavBar() {
                   </div>
                 )}
 
-                {/* Fourth Column */}
+                {/* Column 4 */}
                 {openSubSubSubcourse && (
-                  <div className="w-57">
+                  <div className="w-57 overflow-y-auto max-h-[70vh] animate-in fade-in slide-in-from-left-2 duration-200">
                     {dropdownMenus.training
                       .find((cat) => cat.name === openSubcourse)
                       ?.subcourses?.find((sub) => sub.name === openSubSubcourse)
@@ -730,7 +739,7 @@ function NavBar() {
                           key={finalItem.name}
                           to={finalItem.path || "#"}
                           onClick={resetMenu}
-                          className="block w-full text-left px-6 py-2 rounded-[0.35rem] hover:text-[#1775EE] hover:font-bold transition-colors"
+                          className={`block w-full text-left px-6 py-2 rounded-[0.35rem] hover:text-[#1775EE] hover:font-bold ${t}`}
                         >
                           {finalItem.name}
                         </Link>
@@ -750,7 +759,7 @@ function NavBar() {
               navigate("/", { state: { scrollTo: "about" } });
             }
           }}
-          className="hover:text-[#1775EE] hover:font-bold transition-colors cursor-pointer"
+          className={`hover:text-[#1775EE] hover:font-bold cursor-pointer ${t}`}
         >
           About
         </button>
@@ -763,23 +772,23 @@ function NavBar() {
               navigate("/", { state: { scrollTo: "contact" } });
             }
           }}
-          className="hover:text-[#1775EE] hover:font-bold transition-colors cursor-pointer"
+          className={`hover:text-[#1775EE] hover:font-bold cursor-pointer ${t}`}
         >
           Contact Us
         </button>
       </nav>
 
-      {/* Enroll Now — only visible at lg and above */}
+      {/* Enroll Now */}
       <EnrollNowButton buttonCustomStyle="hidden lg:block" />
 
-      {/* Mobile + Tablet Hamburger — visible below lg */}
+      {/* Mobile + Tablet Hamburger */}
       <div className="flex lg:hidden justify-center items-center">
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="focus:outline-none"
         >
           <svg
-            className="w-7 h-7 text-[#1775EE]"
+            className={`w-7 h-7 text-[#1775EE] ${t}`}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -804,10 +813,12 @@ function NavBar() {
 
         {/* Main Menu - Full Screen */}
         {isOpen && !openDropdown && (
-          <div className="fixed inset-0 bg-white z-50 flex flex-col">
-            {/* Header */}
+          <div className="fixed inset-0 bg-white z-50 flex flex-col animate-in fade-in duration-300">
             <div className="flex items-center justify-between py-4 px-8 border-b border-gray-200">
-              <button onClick={handleHomeClick} className="cursor-pointer">
+              <button
+                onClick={handleHomeClick}
+                className={`cursor-pointer ${t} hover:opacity-80`}
+              >
                 {getLogoElement()}
               </button>
               <button
@@ -815,7 +826,7 @@ function NavBar() {
                 className="focus:outline-none"
               >
                 <svg
-                  className="w-6 h-6 text-[#1775EE]"
+                  className={`w-6 h-6 text-[#1775EE] ${t}`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -830,25 +841,24 @@ function NavBar() {
               </button>
             </div>
 
-            {/* Menu Items - Left Aligned */}
             <nav className="flex-1 flex flex-col mt-[6vh] px-6 space-y-6 font-poppins font-bold">
               <button
                 onClick={() => {
                   scrollToSection("home");
                   setIsOpen(false);
                 }}
-                className="text-2xl font-semibold text-left text-black hover:text-[#1775EE]"
+                className={`text-2xl font-semibold text-left text-black hover:text-[#1775EE] ${t}`}
               >
                 Home
               </button>
 
               <button
                 onClick={() => setOpenDropdown("solutions-mobile")}
-                className="text-2xl font-semibold text-left flex items-center justify-between text-black hover:text-[#1775EE]"
+                className={`text-2xl font-semibold text-left flex items-center justify-between text-black hover:text-[#1775EE] ${t}`}
               >
                 Solutions
                 <svg
-                  className="w-5 h-5"
+                  className={`w-5 h-5 ${t}`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -864,11 +874,11 @@ function NavBar() {
 
               <button
                 onClick={() => setOpenDropdown("training-mobile")}
-                className="text-2xl font-semibold text-left text-black flex items-center justify-between"
+                className={`text-2xl font-semibold text-left text-black flex items-center justify-between hover:text-[#1775EE] ${t}`}
               >
                 Training
                 <svg
-                  className="w-5 h-5"
+                  className={`w-5 h-5 ${t}`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -891,7 +901,7 @@ function NavBar() {
                     navigate("/", { state: { scrollTo: "about" } });
                   }
                 }}
-                className="text-2xl font-semibold text-left text-black hover:text-[#1775EE]"
+                className={`text-2xl font-semibold text-left text-black hover:text-[#1775EE] ${t}`}
               >
                 About
               </button>
@@ -905,20 +915,19 @@ function NavBar() {
                     navigate("/", { state: { scrollTo: "contact" } });
                   }
                 }}
-                className="text-2xl font-semibold text-left text-black hover:text-[#1775EE]"
+                className={`text-2xl font-semibold text-left text-black hover:text-[#1775EE] ${t}`}
               >
                 Contact Us
               </button>
             </nav>
 
-            {/* Enroll Button at Bottom */}
             <div className="p-6">
               <EnrollNowButton />
             </div>
           </div>
         )}
 
-        {/* Solutions Submenu — Level 1: Categories */}
+        {/* Solutions Mobile — Level 1 */}
         {openDropdown === "solutions-mobile" && !openSubcourse && (
           <div className="fixed inset-0 bg-white z-50 flex flex-col">
             <div className="flex items-center p-6 border-b border-gray-200">
@@ -927,7 +936,7 @@ function NavBar() {
                 className="focus:outline-none mr-4"
               >
                 <svg
-                  className="w-6 h-6 text-[#1775EE]"
+                  className={`w-6 h-6 text-[#1775EE] ${t}`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -946,37 +955,33 @@ function NavBar() {
             </div>
 
             <nav className="flex-1 px-6 py-8 space-y-4">
-              {dropdownMenus.solutions.map(
-                (
-                  category, // ← was dropdownMenus.training
-                ) => (
-                  <button
-                    key={category.name}
-                    onClick={() => setOpenSubcourse(category.name)}
-                    className="block w-full text-left text-lg text-black font-poppins hover:text-[#1775EE] py-2 flex items-center justify-between"
+              {dropdownMenus.solutions.map((category) => (
+                <button
+                  key={category.name}
+                  onClick={() => setOpenSubcourse(category.name)}
+                  className={`block w-full text-left text-lg text-black font-poppins hover:text-[#1775EE] py-2 flex items-center justify-between ${t}`}
+                >
+                  {category.name}
+                  <svg
+                    className={`w-4 h-4 ${t}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
                   >
-                    {category.name}
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
-                  </button>
-                ),
-              )}
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </button>
+              ))}
             </nav>
           </div>
         )}
 
-        {/* Solutions Submenu — Level 2: Subcourses */}
+        {/* Solutions Mobile — Level 2 */}
         {openDropdown === "solutions-mobile" && openSubcourse && (
           <div className="fixed inset-0 bg-white z-50 flex flex-col">
             <div className="flex items-center p-6 border-b border-gray-200">
@@ -985,7 +990,7 @@ function NavBar() {
                 className="focus:outline-none mr-4"
               >
                 <svg
-                  className="w-6 h-6 text-[#1775EE]"
+                  className={`w-6 h-6 text-[#1775EE] ${t}`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -1015,7 +1020,7 @@ function NavBar() {
                       setOpenDropdown(null);
                       setOpenSubcourse(null);
                     }}
-                    className="block text-lg text-black font-poppins hover:text-[#1775EE] py-2 px-4"
+                    className={`block text-lg text-black font-poppins hover:text-[#1775EE] py-2 px-4 ${t}`}
                   >
                     {item.name}
                   </Link>
@@ -1024,7 +1029,7 @@ function NavBar() {
           </div>
         )}
 
-        {/* Training Level 1 - Main Categories */}
+        {/* Training Mobile — Level 1 */}
         {openDropdown === "training-mobile" && !openSubcourse && (
           <div className="fixed inset-0 bg-white z-50 flex flex-col">
             <div className="flex items-center p-6 border-b border-gray-200">
@@ -1033,7 +1038,7 @@ function NavBar() {
                 className="focus:outline-none mr-4"
               >
                 <svg
-                  className="w-6 h-6 text-[#1775EE]"
+                  className={`w-6 h-6 text-[#1775EE] ${t}`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -1056,11 +1061,11 @@ function NavBar() {
                 <button
                   key={category.name}
                   onClick={() => setOpenSubcourse(category.name)}
-                  className="block w-full text-left text-lg text-black font-poppins hover:text-[#1775EE] py-2 flex items-center justify-between"
+                  className={`block w-full text-left text-lg text-black font-poppins hover:text-[#1775EE] py-2 flex items-center justify-between ${t}`}
                 >
                   {category.name}
                   <svg
-                    className="w-4 h-4"
+                    className={`w-4 h-4 ${t}`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -1078,7 +1083,7 @@ function NavBar() {
           </div>
         )}
 
-        {/* Training Level 2 - Subcourses */}
+        {/* Training Mobile — Level 2 */}
         {openDropdown === "training-mobile" &&
           openSubcourse &&
           !openThirdLevel && (
@@ -1089,7 +1094,7 @@ function NavBar() {
                   className="focus:outline-none mr-4"
                 >
                   <svg
-                    className="w-6 h-6 text-[#1775EE]"
+                    className={`w-6 h-6 text-[#1775EE] ${t}`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -1115,11 +1120,11 @@ function NavBar() {
                       <button
                         key={subcourse.name}
                         onClick={() => setOpenThirdLevel(subcourse.name)}
-                        className="block w-full text-left text-lg text-black font-poppins hover:text-[#1775EE] py-2 flex items-center justify-between"
+                        className={`block w-full text-left text-lg text-black font-poppins hover:text-[#1775EE] py-2 flex items-center justify-between ${t}`}
                       >
                         {subcourse.name}
                         <svg
-                          className="w-4 h-4"
+                          className={`w-4 h-4 ${t}`}
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -1137,7 +1142,7 @@ function NavBar() {
                         key={subcourse.name}
                         to={subcourse.path}
                         onClick={resetMenu}
-                        className="block text-lg text-black font-poppins hover:text-[#1775EE] py-2 px-4"
+                        className={`block text-lg text-black font-poppins hover:text-[#1775EE] py-2 px-4 ${t}`}
                       >
                         {subcourse.name}
                       </Link>
@@ -1147,7 +1152,7 @@ function NavBar() {
             </div>
           )}
 
-        {/* Training Level 3 - Course Options or Fourth Level Categories */}
+        {/* Training Mobile — Level 3 */}
         {openDropdown === "training-mobile" &&
           openThirdLevel &&
           !openFourthLevel && (
@@ -1158,7 +1163,7 @@ function NavBar() {
                   className="focus:outline-none mr-4"
                 >
                   <svg
-                    className="w-6 h-6 text-[#1775EE]"
+                    className={`w-6 h-6 text-[#1775EE] ${t}`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -1182,11 +1187,10 @@ function NavBar() {
                   ?.subcourses.find((sub) => sub.name === openThirdLevel)
                   ?.subcourses?.map((option) =>
                     option.subcourses ? (
-                      // Has another level (4th level - for Palo Alto) - Show arrow with active state
                       <button
                         key={option.name}
                         onClick={() => setOpenFourthLevel(option.name)}
-                        className={`block w-full text-left text-lg font-poppins py-2 px-4 rounded-lg flex items-center justify-between transition-colors ${
+                        className={`block w-full text-left text-lg font-poppins py-2 px-4 rounded-lg flex items-center justify-between ${t} ${
                           openFourthLevel === option.name
                             ? "bg-[#EBF5FD] text-black"
                             : "text-black hover:text-[#1775EE]"
@@ -1194,7 +1198,7 @@ function NavBar() {
                       >
                         {option.name}
                         <svg
-                          className={`w-4 h-4 ${openFourthLevel === option.name ? "stroke-[#1775EE]" : ""}`}
+                          className={`w-4 h-4 ${t} ${openFourthLevel === option.name ? "stroke-[#1775EE]" : ""}`}
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -1208,7 +1212,6 @@ function NavBar() {
                         </svg>
                       </button>
                     ) : (
-                      // Final link - NO arrow icon
                       <Link
                         key={option.name}
                         to={option.path}
@@ -1218,7 +1221,7 @@ function NavBar() {
                           setOpenSubcourse(null);
                           setOpenThirdLevel(null);
                         }}
-                        className="block text-lg text-black font-poppins hover:text-[#1775EE] py-2 px-4"
+                        className={`block text-lg text-black font-poppins hover:text-[#1775EE] py-2 px-4 ${t}`}
                       >
                         {option.name}
                       </Link>
@@ -1228,7 +1231,7 @@ function NavBar() {
             </div>
           )}
 
-        {/* Training Level 4 - Final Options (for Palo Alto 4-level structure) */}
+        {/* Training Mobile — Level 4 */}
         {openDropdown === "training-mobile" && openFourthLevel && (
           <div className="fixed inset-0 bg-white z-50 flex flex-col">
             <div className="flex items-center p-6 border-b border-gray-200">
@@ -1237,7 +1240,7 @@ function NavBar() {
                 className="focus:outline-none mr-4"
               >
                 <svg
-                  className="w-6 h-6 text-[#1775EE]"
+                  className={`w-6 h-6 text-[#1775EE] ${t}`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -1271,7 +1274,7 @@ function NavBar() {
                       setOpenThirdLevel(null);
                       setOpenFourthLevel(null);
                     }}
-                    className="block text-lg text-black font-poppins hover:text-[#1775EE] py-2 px-4"
+                    className={`block text-lg text-black font-poppins hover:text-[#1775EE] py-2 px-4 ${t}`}
                   >
                     {option.name}
                   </Link>
