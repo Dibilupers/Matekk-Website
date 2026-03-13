@@ -1,6 +1,13 @@
 import { Settings, Tag, MessageSquare, Contact } from "lucide-react";
 import Partners from "../components/partners/partners";
 import { Link } from "react-router-dom";
+/* Solutions Gallery Imgs */
+import gallery1 from "../assets/solutionsGallery1.webp";
+import gallery2 from "../assets/solutionsGallery2.webp";
+import gallery3 from "../assets/solutionsGallery3.webp";
+import gallery4 from "../assets/solutionsGallery4.webp";
+import gallery5 from "../assets/solutionsGallery5.webp";
+
 import ictImage from "../assets/ict.png";
 import webImage from "../assets/web.png";
 import { useState, useEffect } from "react";
@@ -13,7 +20,6 @@ import availability from "../assets/availability.svg";
 import Button from "../../src/components/ui/button";
 import { useLocation } from "react-router-dom";
 import TestimonialSection from "../components/section/TestimonialsSection.jsx";
-import TrainingPage from "../components/section/TrainingPage.jsx";
 
 export default function Home() {
   const totalSlides = 3;
@@ -26,6 +32,7 @@ export default function Home() {
   const [isTablet, setIsTablet] = useState(
     () => window.innerWidth >= 768 && window.innerWidth < 1024,
   );
+  const [is2xl, setIs2xl] = useState(() => window.innerWidth >= 1536);
   const location = useLocation();
   /* Scroll function for when user comes form another page scrolls to home */
   useEffect(() => {
@@ -42,6 +49,7 @@ export default function Home() {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
       setIsTablet(window.innerWidth >= 768 && window.innerWidth < 1024);
+      setIs2xl(window.innerWidth >= 1536);
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -66,18 +74,22 @@ export default function Home() {
     ? "(78.2vw + 2.5rem)"
     : isTablet
       ? "(39vw + 2.5rem)"
-      : "(27vw + 2.5rem)";
+      : is2xl
+        ? "(24vw + 2.5rem)"
+        : "(27vw + 2.5rem)";
   const bottomStep = isMobile
     ? "(77vw + 2.5rem)"
     : isTablet
       ? "(39vw + 2.5rem)"
-      : "(25vw + 2.5rem)";
+      : is2xl
+        ? "(24vw + 2.5rem)"
+        : "(25vw + 2.5rem)";
   const [hoveredRow, setHoveredRow] = useState(null);
   const [tappedCard, setTappedCard] = useState(null);
   const galleryItems = [
     {
       id: 1,
-      src: ictImage,
+      src: gallery1,
       alt: "Network and Security Infrastructure Projects",
       title: "Network and Security Infrastructure Projects",
       desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
@@ -85,28 +97,28 @@ export default function Home() {
     },
     {
       id: 2,
-      src: webImage,
+      src: gallery2,
       alt: "SLSU Delegates",
       title: "SLSU Delegates Welcome",
       desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
     },
     {
       id: 3,
-      src: ictImage,
+      src: gallery3,
       alt: "Team Celebration",
       title: "Team Celebration",
       desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
     },
     {
       id: 4,
-      src: webImage,
+      src: gallery4,
       alt: "Ideas Workshop",
       title: "Ideas Workshop",
       desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
     },
     {
       id: 5,
-      src: ictImage,
+      src: gallery5,
       alt: "Conference Panel",
       title: "Conference Panel",
       desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
@@ -413,7 +425,7 @@ export default function Home() {
               </div>
 
               {/* List of Solutions - In Slides */}
-              <div className="overflow-hidden w-[85vw] md:w-[45vw] lg:w-[60vw] xl:w-[53vw]">
+              <div className="overflow-hidden w-[85vw] md:w-[45vw] lg:w-[60vw] xl:w-[53vw] 2xl:w-[52vw]">
                 <div
                   className="flex gap-x-5 transition-transform duration-500 ease-in-out"
                   style={{
@@ -611,7 +623,7 @@ export default function Home() {
               </div>
 
               {/* List of Trainings - In Slides */}
-              <div className="overflow-hidden w-[85vw] md:w-[45vw] lg:w-[60vw] xl:w-[53vw] order-last md:order-first">
+              <div className="overflow-hidden w-[85vw] md:w-[45vw] lg:w-[60vw] xl:w-[53vw] 2xl:w-[52vw] order-last md:order-first">
                 <div
                   className="flex flex-row-reverse gap-x-5 transition-transform duration-500 ease-in-out"
                   style={{
@@ -774,9 +786,7 @@ export default function Home() {
           {/* ====== Experience ====== */}
           <div className="space-y-4">
             <div className="why_choose_card">
-              <h5>
-                Experience
-              </h5>
+              <h5>Experience</h5>
               <p>
                 Over a decade of providing ICT and engineering solutions and
                 professional training since our establishment in 2013.
@@ -785,9 +795,7 @@ export default function Home() {
 
             {/* ====== Expertise ====== */}
             <div className="why_choose_card">
-              <h5>
-                Expertise
-              </h5>
+              <h5>Expertise</h5>
               <p>
                 Led by a Professional Electronics Engineer and supported by
                 certified engineers, technicians, and instructors with strong
@@ -797,21 +805,16 @@ export default function Home() {
 
             {/* ====== Quality Training ====== */}
             <div className="why_choose_card">
-              <h5>
-                Quality Training
-              </h5>
+              <h5>Quality Training</h5>
               <p>
-                We offer face-to-face and online training programs aligned
-                with industry standards and globally recognized
-                certifications.
+                We offer face-to-face and online training programs aligned with
+                industry standards and globally recognized certifications.
               </p>
             </div>
 
             {/* ====== End-to-End Approach ====== */}
             <div className="why_choose_card">
-              <h5>
-                End-to-End Approach
-              </h5>
+              <h5>End-to-End Approach</h5>
               <p>
                 We follow the Plan, Build, Operate, Optimize, and Test (PBOOT)
                 methodology to ensure structured and effective delivery of ICT
@@ -821,9 +824,7 @@ export default function Home() {
 
             {/* ====== Innovation & Integrity ====== */}
             <div className="why_choose_card">
-              <h5>
-                Innovation & Integrity
-              </h5>
+              <h5>Innovation & Integrity</h5>
               <p>
                 Our work is guided by core values that emphasize innovation,
                 ethical practices, excellence, collaboration, and continuous
