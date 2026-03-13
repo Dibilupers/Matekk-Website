@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate, useLocation } from "react-router-dom";
-import EnrollNowButton from "../ui/EnrollNowButton";
+import InquireNowButton from "../ui/InquireNowButton";
 import MainLogo from "../../assets/MATEKK_logo.png";
 import TrainingLogo from "../../assets/MATEKK_training_logo.png";
 import SolutionsLogo from "../../assets/MATEKK_services_logo.png";
@@ -778,8 +778,8 @@ function NavBar() {
         </button>
       </nav>
 
-      {/* Enroll Now */}
-      <EnrollNowButton buttonCustomStyle="hidden lg:block" />
+      {/* Inquire Now */}
+      <InquireNowButton buttonCustomStyle="hidden lg:block" />
 
       {/* Mobile + Tablet Hamburger */}
       <div className="flex lg:hidden justify-center items-center">
@@ -922,7 +922,7 @@ function NavBar() {
             </nav>
 
             <div className="p-6">
-              <EnrollNowButton />
+              <InquireNowButton />
             </div>
           </div>
         )}
