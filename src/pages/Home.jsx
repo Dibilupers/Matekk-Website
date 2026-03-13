@@ -1335,21 +1335,26 @@ export default function Home() {
         className="flex flex-col py-10 md:py-15 h-full bg-[#EBF5FD] scroll-mt-18"
       >
         {/* Margin */}
-        <div className="mx-[2.063rem] md:mx-16 xl:mx-[7.438rem]">
-          {/* Title */}
-          <h3 className="text-center">
-            Our Featured
-            <span className="text-[#1775EE]"> Solutions and Training</span>
-          </h3>
-          {/* Description */}
-          <p className="w-[90vw] md:w-[56.406vw] xl:w-[60vw] self-center mx-auto mt-[1.1vh] text-center">
-            MGKK Information Communication Technology Services delivers
-            end-to-end ICT and engineering solutions alongside comprehensive
-            training programs designed to meet industry demands and support
-            digital transformation.
-          </p>
+        <div className="mx-[2.063rem] md:mx-16 xl:mx-[7.438rem] space-y-6">
+          {/* Text Content */}
+          <div>
+            {/* Title */}
+            <h3 className="text-center">
+              Our Featured
+              <span className="text-[#1775EE]"> Solutions and Training</span>
+            </h3>
+            {/* Description */}
+            <p className="text-center px-0 md:px-10 lg:px-20 ">
+              MGKK Information Communication Technology Services delivers
+              end-to-end ICT and engineering solutions alongside comprehensive
+              training programs designed to meet industry demands and support
+              digital transformation.
+            </p>
+          </div>
+
+          {/* NEED TO BE CHECKED MORE */}
           {/* Gallery */}
-          <div className="mt-[4vh]">
+          <div>
             {isMobile ? (
               /* ── MOBILE ── */
               /* ── MOBILE: single column ── */
@@ -1447,32 +1452,31 @@ export default function Home() {
                         <div className="absolute inset-x-0 bottom-0 h-[35%] bg-black/1 to-transparent backdrop-blur-[10px] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
                         {/* Content */}
-                        <div className="absolute bottom-0 inset-x-0 px-4 py-6 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
-                          <div className="flex items-end justify-between gap-3">
-                            <div className="flex-1">
-                              <h5 className="text-white font-bold">
-                                {item.title}
-                              </h5>
-                              <p className="text-white/80 mt-1 line-clamp-2">
-                                {item.desc}
-                              </p>
-                            </div>
-                            <div className="shrink-0 flex items-center justify-center">
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="w-12 h-12 text-white"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  d="M7 17L17 7M17 7H7M17 7v10"
-                                />
-                              </svg>
-                            </div>
+                        <div className="absolute bottom-0 inset-x-0 px-4 py-6 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-end justify-center gap-3 text-white">
+                          <div className="text-shadow-lg">
+                            {/* Text Content */}
+                            <h5>
+                              {item.title}
+                            </h5>
+                            <p className="line-clamp-2">
+                              {item.desc}
+                            </p>
+                          </div>
+                          <div className="shrink-0 flex items-center justify-center">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="w-12 h-12 text-white"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M7 17L17 7M17 7H7M17 7v10"
+                              />
+                            </svg>
                           </div>
                         </div>
                       </div>
