@@ -25,7 +25,7 @@ import MARIKINA from '../../assets/MARIKINA.jpg';
 import SLSU from '../../assets/SLSU.png';
 import ICCT from '../../assets/ICCT.jpg';
 import NAMRIA from '../../assets/NAMRIA.svg';
-import EASYTECH from '../../assets/easytech.svg';
+import EASYTECH from '../../assets/EASYTECH.svg';
 
 function Partners() {
     // OPTIMIZED: Wrap array in useMemo to prevent recreation on every render
