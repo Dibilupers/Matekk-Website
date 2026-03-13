@@ -222,7 +222,7 @@ export default function Home() {
 
               {/* Passing Rate */}
               <div className="relative w-full max-w-md">
-                <div className="hidden xl:flex absolute top-31 left-4 lg:-left-35 bg-[#EBF5FD] rounded-xl shadow-xl/10 px-4 py-3 z-20 hover:scale-105 transition-transform cursor-pointer justify-center items-center gap-3">
+                <div className="hidden xl:flex absolute top-31 left-4 lg:-left-35 bg-[#EBF5FD] rounded-xl shadow-xl/10 px-4 py-3 z-20 hover:scale-105 transition duration-300 ease-in-out justify-center items-center gap-3">
                   <h3 className="font-bold text-[#1775EE]">95%</h3>
                   <div>
                     <div className="flex gap-1">
@@ -250,13 +250,13 @@ export default function Home() {
                 </div>
 
                 {/* Side Icons */}
-                <div className="hidden md:flex absolute top-10 right-1 lg:right-30 bg-linear-to-b from-[#7DB6FF] to-[#5192E6] p-2 rounded-full shadow-lg hover:scale-110 transition-transform">
+                <div className="home_side_icons_container top-10 right-1 lg:right-30">
                   <Settings className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
                 </div>
-                <div className="hidden md:flex  absolute top-26 -right-2 lg:right-11 bg-linear-to-b from-[#7DB6FF] to-[#5192E6] p-2 rounded-full shadow-lg hover:scale-110 transition-transform">
+                <div className="home_side_icons_container top-26 -right-2 lg:right-11">
                   <Tag className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
                 </div>
-                <div className="hidden md:flex absolute top-48 right-0 lg:right-1 bg-linear-to-b from-[#7DB6FF] to-[#5192E6] p-2 rounded-full shadow-lg hover:scale-110 transition-transform">
+                <div className="home_side_icons_container top-48 right-0 lg:right-1">
                   <MessageSquare className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
                 </div>
 
