@@ -8,7 +8,7 @@ import gallery3 from "../assets/solutionsGallery3.webp";
 import gallery4 from "../assets/solutionsGallery4.webp";
 import gallery5 from "../assets/solutionsGallery5.webp";
 
-import MaamGrace from "../assets/Maam_Grace.svg";
+import MaamGrace from "../assets/Maam_Grace.webp";
 import ictImage from "../assets/ict.png";
 import webImage from "../assets/web.png";
 import { useState, useEffect } from "react";
@@ -262,20 +262,20 @@ export default function Home() {
                   />
                 </div>
                 {/* Side Icons */}
-                <div className="home_side_icons_container top-10 right-1 lg:right-50">
+                <div className="home_side_icons_container top-10 right-1 lg:right-20 2xl:right-50">
                   <Settings className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
                 </div>
-                <div className="home_side_icons_container top-26 -right-2 lg:right-30">
+                <div className="home_side_icons_container top-26 -right-2 lg:right-5 2xl:right-30">
                   <Tag className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
                 </div>
-                <div className="home_side_icons_container top-48 right-0 lg:right-20">
+                <div className="home_side_icons_container top-45 2xl:top-48 right-0 2xl:right-20">
                   <MessageSquare className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
                 </div>
                 {/* One Feedback and Its Exam Status */}
                 <div className="hidden xl:flex absolute bottom-15 -right-4 lg:-right-0 bg-[#EBF5FD] rounded-xl shadow-2xl px-3 py-3 max-w-61 z-20 transition-transform flex-col justify-center items-center gap-2">
                   <div className="flex items-start gap-3">
                     <img
-                      src="/src/assets/Maam_Grace.svg"
+                      src="/src/assets/Maam_Grace.webp"
                       alt="Clyde Nelson R."
                       className="w-14 h-14 rounded-full object-cover"
                     />
