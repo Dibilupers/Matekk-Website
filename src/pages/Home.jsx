@@ -834,7 +834,6 @@ export default function Home() {
         </div>
       </section>
 
-
       {/* NOT DONE CHECKING */}
       {/* ==================== OUR WORKING PROCESS ====================*/}
       <section className="py-10 md:py-15 bg-white scroll-mt-18 mx-[2.063rem] md:mx-16 xl:mx-[7.438rem] space-y-8 lg:space-y-2 overflow-hidden">
@@ -852,80 +851,82 @@ export default function Home() {
         </div>
         {/* ====== Working Process ====== */}
         <div className="relative overflow-hidden ">
+
           {/* Desktop Version */}
           <div className="hidden lg:block relative">
             <div className="relative">
-              {/* SVG Lines - kept absolute but now the container grows with content */}
               <svg
                 className="absolute inset-0 w-full h-full z-0 pointer-events-none"
                 viewBox="0 0 1200 500"
                 preserveAspectRatio="none"
               >
                 <path d="M -80 30 C 120 100, 200 1, 335 110" stroke="#3B82F6" strokeWidth="8" fill="none" strokeLinecap="round" />
-                <path d="M 350 120 C 430 130, 500 190, 600 180" stroke="#3B82F6" strokeWidth="8" fill="none" strokeLinecap="round" />
-                <path d="M 600 190 C 600 130, 800 200, 860 200" stroke="#3B82F6" strokeWidth="8" fill="none" strokeLinecap="round" />
-                <path d="M 830 200 C 800 150, 845 350, 1500 275" stroke="#3B82F6" strokeWidth="8" fill="none" strokeLinecap="round" />
+                <path d="M 350 120 C 430 130, 500 190, 600 190" stroke="#3B82F6" strokeWidth="8" fill="none" strokeLinecap="round" />
+                <path d="M 600 215 C 600 160, 800 200, 860 240" stroke="#3B82F6" strokeWidth="8" fill="none" strokeLinecap="round" />
+                <path d="M 800 250 C 800 150, 845 350, 1500 275" stroke="#3B82F6" strokeWidth="8" fill="none" strokeLinecap="round" />
               </svg>
-
-              {/* Steps using flex instead of absolute */}
               <div className="relative z-10 flex items-start justify-between gap-4 pb-8">
-
                 {/* Step 1 */}
-                <div className="flex flex-col items-center max-w-[180px] pt-0">
-                  <div className="w-22 h-22 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl mb-4">
-                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="desktop_process_steps">
+                  <div className="desktop_process_icons">
+                    <svg className="desktop_process_svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20h3v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                     </svg>
                   </div>
-                  <h5 className="text-lg font-bold text-gray-900 text-center mb-2">Initiation & Consultancy</h5>
-                  <p className="text-sm text-gray-600 text-center">Understand requirements and define project direction.</p>
+                  <div className="space-y-1 text-center">
+                    <h5>Initiation & Consultancy</h5>
+                    <p>Understand requirements and define project direction.</p>
+                  </div>
                 </div>
-
                 {/* Step 2 */}
-                <div className="flex flex-col items-center max-w-[180px] pt-16">
-                  <div className="w-22 h-22 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl mb-4">
-                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="desktop_process_steps pt-16">
+                  <div className="desktop_process_icons">
+                    <svg className="desktop_process_svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
                     </svg>
                   </div>
-                  <h5 className="text-lg font-bold text-gray-900 text-center mb-2">Planning & Design</h5>
-                  <p className="text-sm text-gray-600 text-center">Create structured plans and system designs.</p>
+                  <div className="space-y-1 text-center">
+                    <h5>Planning & Design</h5>
+                    <p>Create structured plans and system designs.</p>
+                  </div>
                 </div>
-
                 {/* Step 3 */}
-                <div className="flex flex-col items-center max-w-[180px] pt-28">
-                  <div className="w-22 h-22 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl mb-4">
-                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="desktop_process_steps pt-28">
+                  <div className="desktop_process_icons">
+                    <svg className="desktop_process_svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                   </div>
-                  <h5 className="text-lg font-bold text-gray-900 text-center mb-2">Implementation</h5>
-                  <p className="text-sm text-gray-600 text-center">Deploy and configure approved solutions.</p>
+                  <div className="space-y-1 text-center">
+                    <h5>Implementation</h5>
+                    <p>Deploy and configure approved solutions.</p>
+                  </div>
                 </div>
-
                 {/* Step 4 */}
-                <div className="flex flex-col items-center max-w-[180px] pt-36">
-                  <div className="w-22 h-22 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl mb-4">
-                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="desktop_process_steps pt-36">
+                  <div className="desktop_process_icons">
+                    <svg className="desktop_process_svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h3a2 2 0 002-2zm0 0V9a2 2 0 012-2h3a2 2 0 012 2v10m-6 0a2 2 0 002 2h3a2 2 0 002-2m0 0V5a2 2 0 012-2h3a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                     </svg>
                   </div>
-                  <h5 className="text-lg font-bold text-gray-900 text-center mb-2">Monitor and Control</h5>
-                  <p className="text-sm text-gray-600 text-center">Track performance and ensure proper operation.</p>
+                  <div className="space-y-1 text-center">
+                    <h5>Monitor and Control</h5>
+                    <p>Track performance and ensure proper operation.</p>
+                  </div>
                 </div>
-
                 {/* Step 5 */}
-                <div className="flex flex-col items-center max-w-[180px] pt-48">
-                  <div className="w-22 h-22 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl mb-4">
-                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="desktop_process_steps pt-48">
+                  <div className="desktop_process_icons">
+                    <svg className="desktop_process_svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                     </svg>
                   </div>
-                  <h5 className="text-lg font-bold text-gray-900 text-center mb-2">Optimization</h5>
-                  <p className="text-sm text-gray-600 text-center">Improve systems through testing and refinement.</p>
+                  <div className="space-y-1 text-center">
+                    <h5>Optimization</h5>
+                    <p>Improve systems through testing and refinement.</p>
+                  </div>
                 </div>
-
               </div>
             </div>
           </div>
@@ -975,7 +976,7 @@ export default function Home() {
             <div className="relative z-10 flex flex-col items-center mb-1 pr-72">
               <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
                 <svg
-                  className="w-10 h-10 text-white"
+                  className="desktop_process_svg"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -1002,7 +1003,7 @@ export default function Home() {
             <div className="relative z-10 flex flex-col items-center mb-1 pl-72 -mt-6">
               <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
                 <svg
-                  className="w-10 h-10 text-white"
+                  className="desktop_process_svg"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -1029,7 +1030,7 @@ export default function Home() {
             <div className="relative z-10 flex flex-col items-center mb-1 pr-72 -mt-6">
               <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
                 <svg
-                  className="w-10 h-10 text-white"
+                  className="desktop_process_svg"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -1062,7 +1063,7 @@ export default function Home() {
             <div className="relative z-10 flex flex-col items-center mb-1 pl-72 -mt-6">
               <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
                 <svg
-                  className="w-10 h-10 text-white"
+                  className="desktop_process_svg"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -1089,7 +1090,7 @@ export default function Home() {
             <div className="relative z-10 flex flex-col items-center pr-72 -mt-6">
               <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
                 <svg
-                  className="w-10 h-10 text-white"
+                  className="desktop_process_svg"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -1159,7 +1160,7 @@ export default function Home() {
             <div className="relative z-10 flex flex-col items-center mb-1 pr-41">
               <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
                 <svg
-                  className="w-10 h-10 text-white"
+                  className="desktop_process_svg"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -1186,7 +1187,7 @@ export default function Home() {
             <div className="relative z-10 flex flex-col items-center mb-1 pl-50 -mt-6">
               <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
                 <svg
-                  className="w-10 h-10 text-white"
+                  className="desktop_process_svg"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -1213,7 +1214,7 @@ export default function Home() {
             <div className="relative z-10 flex flex-col items-center mb-1 pr-40 -mt-6">
               <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
                 <svg
-                  className="w-10 h-10 text-white"
+                  className="desktop_process_svg"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -1246,7 +1247,7 @@ export default function Home() {
             <div className="relative z-10 flex flex-col items-center mb-1 pl-50 -mt-6">
               <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
                 <svg
-                  className="w-10 h-10 text-white"
+                  className="desktop_process_svg"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -1273,7 +1274,7 @@ export default function Home() {
             <div className="relative z-10 flex flex-col items-center pr-40 -mt-6">
               <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
                 <svg
-                  className="w-10 h-10 text-white"
+                  className="desktop_process_svg"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -1300,7 +1301,7 @@ export default function Home() {
       </section>
 
 
-      
+
       {/* ==================== FEATURED SOLUTIONS AND TRAINING ====================*/}
       <section
         id="training"
