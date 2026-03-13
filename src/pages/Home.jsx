@@ -544,9 +544,8 @@ export default function Home() {
                 <button
                   key={i}
                   onClick={() => setTopSlide(i)}
-                  className={`h-2 rounded-full transition-all duration-300 ${
-                    topSlide === i ? "bg-[#1775EE] w-4" : "bg-[#C2DDFF] w-2"
-                  }`}
+                  className={`h-2 rounded-full transition-all duration-300 ${topSlide === i ? "bg-[#1775EE] w-4" : "bg-[#C2DDFF] w-2"
+                    }`}
                 />
               ))}
             </div>
@@ -740,9 +739,8 @@ export default function Home() {
                 <button
                   key={i}
                   onClick={() => setBottomSlide(i)}
-                  className={`h-2 rounded-full transition-all duration-300 ${
-                    bottomSlide === i ? "bg-[#1775EE] w-4" : "bg-[#C2DDFF] w-2"
-                  }`}
+                  className={`h-2 rounded-full transition-all duration-300 ${bottomSlide === i ? "bg-[#1775EE] w-4" : "bg-[#C2DDFF] w-2"
+                    }`}
                 />
               ))}
             </div>
@@ -1339,12 +1337,10 @@ export default function Home() {
         {/* Margin */}
         <div className="mx-[2.063rem] md:mx-16 xl:mx-[7.438rem]">
           {/* Title */}
-          <div className="text-center w-full self-center px-10 lg:px-0 sm:w-full md:w-auto lg:w-auto">
-            <h3>
-              Our Featured
-              <span className="text-[#1775EE]"> Solutions and Training</span>
-            </h3>
-          </div>
+          <h3 className="text-center">
+            Our Featured
+            <span className="text-[#1775EE]"> Solutions and Training</span>
+          </h3>
           {/* Description */}
           <p className="w-[90vw] md:w-[56.406vw] xl:w-[60vw] self-center mx-auto mt-[1.1vh] text-center">
             MGKK Information Communication Technology Services delivers
@@ -1374,16 +1370,14 @@ export default function Home() {
 
                     {/* Full blur overlay */}
                     <div
-                      className={`absolute inset-0 rounded-2xl backdrop-blur-sm bg-black/1 transition-opacity duration-500 ${
-                        tappedCard === item.id ? "opacity-100" : "opacity-0"
-                      }`}
+                      className={`absolute inset-0 rounded-2xl backdrop-blur-sm bg-black/1 transition-opacity duration-500 ${tappedCard === item.id ? "opacity-100" : "opacity-0"
+                        }`}
                     />
 
                     {/* Content */}
                     <div
-                      className={`absolute inset-0 px-5 flex flex-col justify-center transition-opacity duration-500 ${
-                        tappedCard === item.id ? "opacity-100" : "opacity-0"
-                      }`}
+                      className={`absolute inset-0 px-5 flex flex-col justify-center transition-opacity duration-500 ${tappedCard === item.id ? "opacity-100" : "opacity-0"
+                        }`}
                     >
                       {/* Title row */}
                       <div className="flex items-center justify-between gap-2">
