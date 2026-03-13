@@ -1,6 +1,5 @@
 // ==================== IMPORTS - UPDATE FOR EACH COURSE ====================
 // Change these imports based on the specific course
-import Button from "../../../../components/ui/button";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
@@ -17,96 +16,111 @@ import TrainingTemplateFooter from "../../../../components/section/TrainingTempl
 import TrainingHeroBanner from "../../../../components/section/TrainingHeroBanner";
 
 // ==================== COMPONENT NAME ====================
-export default function CDTH() {
+export default function VAPT() {
   // ==================== COURSE MODULES ====================
   const modules = [
     {
-      title: "Introduction to Direct, Plan and Improve",
-      items: [
-        "Overview of DPI within the ITIL 4 framework",
-        "Role of DPI in aligning strategy, governance, measurement, and improvement",
-        "DPI as a core module in the Managing Professional and Strategic Leader tracks",
-      ],
-    },
-    {
-      title: "Module 1: Core concepts of DPI",
-      items: [
-        "Key definitions: direction, planning, improvement, scope",
-        "Relationships between value, outcomes, costs, and risks",
-        "Strategic vs operational scope of DPI",
-      ],
-    },
-    {
       title:
-        "Module 2: DPI through service value system and guiding principles",
+        "Information Security Fundamentals & Operating System Command Line",
       items: [
-        "How DPI works within the Service Value System (SVS)",
-        "Applying the ITIL guiding principles to DPI work (e.g., start where you are, collaborate)",
+        "Information Security Domains, CIA Triad, Threats, Risks & Vulnerabilities",
+        "Penetration Testing Methodology & 5 Phases",
+        "Linux Command Line Fundamentals (shortcuts, autocompletion, file structures, history)",
+        "Windows Command Line Fundamentals (netstat, whoami, net users, systeminfo)",
+        "VMware Lab Setup (Adding VMnet2, subnet configuration 192.168.2.0/24, NIC adapters)",
+        {
+          subTitle: "Hands-on Labs",
+          items: [
+            "Setting up Kali Linux penetration testing environment",
+            "Linux & Windows command-line mastery",
+            "Network discovery and basic enumeration",
+          ],
+        },
       ],
     },
     {
-      title: "Module 3: Role of direction in strategy management",
+      title: "Penetration Testing Process & Initial Foothold",
       items: [
-        "Identifying scope of what is to be directed/planned",
-        "Cascading objectives and controls",
-        "Policy, roles, and authority distribution for strategic alignment",
+        "Ethical Hacking & Types of Penetration Tests",
+        "Generating payloads with msfvenom (Meterpreter & Windows Shell)",
+        "File transfer techniques (SMB, SimpleHTTPServer, certutil)",
+        "Exploit Development Lab: SLMail 5.5 Buffer Overflow",
+        "Google Dorks for exploit research",
+        {
+          subTitle: "Hands-on Labs",
+          items: [
+            "Building and deploying reverse shells",
+            "Metasploit Multi/Handler listener",
+            "Initial system compromise techniques",
+          ],
+        },
       ],
     },
     {
-      title: "Module 4: Implementation of strategies",
+      title: "Establishing Foothold & Privilege Escalation Techniques",
       items: [
-        "Practical use of strategies in day-to-day operations",
-        "Governance integration, risk management, and compliance (GRC) linking to SVS",
+        "Windows Privilege Escalation (Kernel, Misconfigurations, Relay Attacks)",
+        "Privilege Escalation using Startup Applications (weak folder permissions)",
+        "Hot Potato Attack (NBNS spoofing + NTLM relay)",
+        "Kernel Exploitation with Sherlock.ps1 & MS15-051",
+        {
+          subTitle: "Hands-on Labs",
+          items: [
+            "Privilege escalation exercises on Windows 7 targets",
+            "Meterpreter file upload & Netcat shells",
+            "Post-exploitation system control",
+          ],
+        },
       ],
     },
     {
-      title: "Module 5: Introduction to assessment and planning",
+      title: "Fundamentals in Web & Web Application Technologies",
       items: [
-        "Assessment objectives, outputs, requirements and criteria",
-        "Selecting appropriate evaluation methods",
-        "Defining desired outcomes and scopes for planning",
+        "Web Application Security Fundamentals & OWASP Top 10",
+        "Manual SQL Injection techniques (Union-based)",
+        "Database enumeration and dumping",
+        {
+          subTitle: "Hands-on Labs",
+          items: [
+            "DVWA Low Security SQL Injection (single quote test, column counting, database(), tables, users, passwords)",
+            "Hash cracking (hashes.com)",
+            "Web vulnerability exploitation",
+          ],
+        },
       ],
     },
     {
-      title: "Module 6: Assessment and planning through VSM",
+      title: "Exploit Development Basics, PowerShell Fundamentals & Capstone",
       items: [
-        "Evaluating parts of the SVS",
-        "Using data and feedback to refine planning and strategic direction",
+        "Assembly x86 Fundamentals",
+        "Buffer Overflow process & Python exploit creation",
+        "PowerShell for Post-Exploitation",
+        "Living off the Land techniques",
+        "Penetration Test Reporting and Best Practices",
+        {
+          subTitle: "Hands-on Labs",
+          items: [
+            "Full SLMail 5.5 exploit development walkthrough",
+            "Advanced post-exploitation",
+            "Professional report writing",
+          ],
+        },
       ],
     },
     {
-      title: "Module 7: Measurement, reporting, and continual improvement",
+      title: "Final Project",
       items: [
-        "Definition and use of metrics, indicators, and reporting in DPI",
-        "Tools and practices to monitor performance",
-      ],
-    },
-    {
-      title:
-        "Module 8: Measurements and continual improvement through dimensions and SVS",
-      items: [
-        "Applying measurement across the four dimensions of service management",
-        "Driving improvement across value streams and practices",
-      ],
-    },
-    {
-      title: "Module 9: OCM principles and methods",
-      items: [
-        "OCM concepts and success factors",
-        "Stakeholder engagement and influence in change transitions",
-      ],
-    },
-    {
-      title: "Module 10: Communication principles and methods",
-      items: [
-        "Communication planning and channels",
-        "Feedback loops and effective two-way communication strategies",
-      ],
-    },
-    {
-      title: "Module 11: SVS development using four dimensions",
-      items: [
-        "How to use organisational culture, information & technology, value streams/processes, and partners/suppliers to enable DPI success across the SVS",
+        {
+          subTitle:
+            "Students will conduct a complete penetration test simulation on the Hack The Kingdom CTF environment, including:",
+          items: [
+            "Reconnaissance",
+            "Exploitation",
+            "Privilege escalation",
+            "Report generation",
+          ],
+        },
+        "Participants will present their findings similar to a real penetration testing engagement.",
       ],
     },
   ];
@@ -116,8 +130,8 @@ export default function CDTH() {
       <TrainingHeroBanner
         bgImage={ccnaHero}
         category="Practical Ethical Hacking"
-        title="Cyber Defense & Threat Hunting (CDTH)"
-        description="The Practical Ethical Hacking: Vulnerability Assessment & Penetration Testing (PEH-VAPT) course is designed to enable those who aspire to enter the Information Security field in understanding the core concepts of network hacking in order to safeguard a network infrastructure."
+        title="Vulnerability Assessment & Penetration Testing (VAPT)"
+        description="Participants will perform real penetration testing scenarios in controlled lab environments using 16 custom vulnerable VMs."
       />
 
       {/* ==================== CONTENT SECTION - Training Informations/Content ==================== */}
@@ -133,21 +147,21 @@ export default function CDTH() {
             {/* About Section - Description */}
             {/* CHANGE: Course description paragraphs */}
             <p>
-              This course provides all the fundamental skills needed to carry
-              out a thorough and professional penetration test against an
-              enterprise network. This is a purely practical training course
-              where students spend more time doing well-prepared hands-on
-              hacking exercises in conjunction with theoretical discussion.
+              The Practical Ethical Hacking: Vulnerability Assessment &
+              Penetration Testing (PEH-VAPT) course is designed to enable those
+              who aspire to enter the Information Security field in
+              understanding the core concepts of network hacking in order to
+              safeguard a network infrastructure. This course provides all the
+              fundamental skills needed to carry out a thorough and professional
+              penetration test against an enterprise network.
             </p>
             <p>
-              The training covers the full penetration testing lifecycle
-              including Reconnaissance, Vulnerability Assessment, Exploitation,
-              Privilege Escalation, Post-Exploitation, and Reporting.
-              Participants work in realistic attack labs using Kali Linux,
-              VMware custom networks (VMnet2), and vulnerable target systems
-              (Windows 7/10, DVWA, SLMail 5.5, etc.) to simulate real-world
-              security assessments performed by professional penetration
-              testers.
+              This is a purely practical training course where students spend
+              more time doing well-prepared hands-on hacking exercises in
+              conjunction with theoretical discussion. The training covers the
+              full penetration testing lifecycle including Reconnaissance,
+              Vulnerability Assessment, Exploitation, Privilege Escalation,
+              Post-Exploitation, and Reporting.
             </p>
           </section>
 
@@ -204,7 +218,7 @@ export default function CDTH() {
             {/* Cert Badge - Change/Update Image */}
             <img
               src={itil5}
-              alt="ITIL Certification Badge"
+              alt="Cyber Defense & Threat Hunting (CDTH) Bootcamp Certification Badge"
               className="w-45 h-45 lg:w-50 lg:h-50 object-contain"
             />
           </div>
@@ -215,10 +229,10 @@ export default function CDTH() {
             <h5 className="text-[#1775EE] font-bold">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
-              "IT Operations Specialist",
-              "IT Development Manager",
-              "Chief Digital Officer",
-              "IT Specialist Change Management",
+              "Penetration Tester",
+              "Ethical Hacker",
+              "Vulnerability Assessment Analyst",
+              "Red Team Operator",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
@@ -233,9 +247,9 @@ export default function CDTH() {
             <h5 className="text-[#1775EE] font-bold">Target Learners</h5>
             {/* Target Learners - List */}
             {[
+              "IT Students Pursuing Cybersecurity Careers",
               "Network and System Administrators",
               "Security Analysts",
-              "Ethical Hacking Beginners",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
@@ -309,7 +323,7 @@ export default function CDTH() {
 
             {/* CHANGE: Download link text and URL */}
             <a href="#" className="text-sm font-medium underline mt-2">
-              Download the CCNP Exam Basics here
+              Download the VAPT Exam Basics here
             </a>
           </div>
         </aside>

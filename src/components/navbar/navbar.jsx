@@ -324,12 +324,12 @@ function NavBar() {
             name: "Practical Ethical Hacking",
             subcourses: [
               {
-                name: "Cyber Defense & Threat Hunting",
-                path: "/training/cybersecurity/peh/cdth",
+                name: "Practical Ethical Hacking",
+                path: "/training/cybersecurity/peh/PEH",
               },
               {
-                name: "Practical Ethical Hacking",
-                path: "/training/cybersecurity/peh",
+                name: "Vulnerability Assessment & Penetration Testing (VAPT)",
+                path: "/training/cybersecurity/peh/VAPT",
               },
             ],
           },
@@ -340,6 +340,10 @@ function NavBar() {
           {
             name: "Red Team: CompTIA Security+ (SY0-701) Training",
             path: "/training/cybersecurity/redteam",
+          },
+          {
+            name: "Cyber Defense & Threat Hunting (CDTH)",
+            path: "/training/cybersecurity/cdth",
           },
         ],
       },
