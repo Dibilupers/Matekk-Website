@@ -13,8 +13,8 @@ import ContactForm from "../../Contact";
 import phone from "../../../assets/phone.svg";
 import email from "../../../assets/email.svg";
 import availability from "../../../assets/availability.svg";
-import { Link } from "react-router-dom";
-
+import SolutionsHeroBanner from "../../../components/section/SolutionsHeroBanner";
+import SolutionsFooterBanner from "../../../components/section/SolutionsFooterBanner";
 // ==================== COMPONENT NAME - CHANGE FOR EACH  ====================
 export default function CCNAAutomation() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768); // eslint-disable-line
@@ -72,60 +72,15 @@ export default function CCNAAutomation() {
   return (
     <div className="flex flex-col py-10 h-full scroll-mt-18">
       {/* ==================== HERO BANNER - UPDATE TEXT AND IMAGES ====================*/}
-      <section className="relative items-center py-18 rounded-2xl shadow-lg flex flex-col gap-2.5 overflow-hidden min-h-62.5  mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem]">
-        {/* Background image - uses ccnaHero variable */}
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: `url(${ccnaHero})`, // CHANGE: Hero background image
-          }}
-        />
-        <div className="absolute inset-0 backdrop-blur-sm bg-white/10"></div>{" "}
-        {/* Blur effect */}
-        {/* Content */}
-        <div className="relative justify-center items-center text-center z-10 flex flex-col gap-2 mr-1">
-          {/* CHANGE: Badge text */}
-          <h6 className="w-fit px-5 py-2 text-[#1775EE] bg-blue-50 rounded-full">
-            ICT Consultancy (PBOOT)
-          </h6>
-
-          {/* CHANGE:  title */}
-          <h1 className="text-white font-bold px-50">
-            ICT Network & Security Infrastructure
-          </h1>
-
-          {/* CHANGE:  description */}
-          <p className="lg:w-[30vw] xl:w-full text-white w-140 px-10 lg:px-78">
-            MGKK Information Communication Technology Services provides
+      <SolutionsHeroBanner
+        bgImage={ccnaHero}
+        category="ICT Consultancy (PBOOT)"
+        title="ICT Network & Security Infrastructure"
+        description="MATEKK provides
             end-to-end ICT network and security infrastructure services designed
             to ensure stable connectivity, data protection, and secure system
-            operations for organizations.
-          </p>
-
-          <div className="flex flex-row sm:flex-row gap-2.5 mt-1 w-full justify-center">
-            <Button
-              title="Contact Us"
-              type="none"
-              buttonCustomStyle="bg-transparent text-white border border-white hover:bg-white hover:text-blue-600 transition-all duration-300 shadow-lg hover:shadow-xl px-6 py-3"
-              btnFunc={() => {
-                document
-                  .getElementById("services")
-                  ?.scrollIntoView({ behavior: "smooth", block: "start" });
-              }}
-            />
-            <Button
-              title="Learn More"
-              type="none"
-              buttonCustomStyle="bg-transparent text-white border border-white hover:bg-white hover:text-blue-600 transition-all duration-300 px-6 py-3"
-              btnFunc={() => {
-                document
-                  .getElementById("services")
-                  ?.scrollIntoView({ behavior: "smooth", block: "start" });
-              }}
-            />
-          </div>
-        </div>
-      </section>
+            operations for organizations."
+      />
 
       {/* Building Scalable */}
       <div className="flex flex-col lg:flex-row gap-8 mt-7.5 lg:mt-15 mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem]">
@@ -370,52 +325,26 @@ export default function CCNAAutomation() {
       </div>
 
       {/* ==================== CALL TO ACTION BANNER - UPDATE TEXT AND IMAGE ====================*/}
-      <div className="relative p-8 lg:pr-12 rounded-2xl shadow-lg flex flex-col items-center gap-2.5 overflow-hidden mt-10 min-h-[300px] mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem]">
-        {/* Background image - uses ccnaFooter variable */}
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: `url(${ccnaFooter})`, // CHANGE: Footer background image
-          }}
-        />
-
-        <div className="relative z-10 flex flex-col items-center gap-2.5 mt-7.5 lg:mt-[5vh] px-10 lg:px-70">
-          {/* FOOTER BANNER */}
-          <h1 className="text-center">
-            <span className="text-[#ffffff]">Contact Us Today To</span>{" "}
-            <span className="text-[#1775EE]">Request a Consultation</span>
-          </h1>
-
-          {/* CHANGE: CTA description */}
-          <p className="lg:w-[30vw] xl:w-[35vw] text-center text-white">
-            Secure your organization’s network with MGKK Information
-            Communication Technology Services.
-          </p>
-
-          <Button
-            title="Contact Us"
-            type="none"
-            buttonCustomStyle="bg-[#1775EE] text-white hover:bg-white hover:text-[#1775EE] transition-all duration-300 shadow-lg hover:shadow-xl px-8 py-4 mt-4"
-            btnFunc={() => {
-              document
-                .getElementById("services")
-                ?.scrollIntoView({ behavior: "smooth", block: "start" });
-            }}
-          />
-        </div>
-      </div>
+      <SolutionsFooterBanner
+        bgImage={ccnaFooter}
+        title="Contact Us Today To"
+        highlightText="Request a Consultation"
+        description="Secure your organization's network with MGKK Information Communication Technology Services."
+      />
 
       {/* FAQ */}
-      <section className="flex flex-col md:flex-col scroll-mt-18 lg:flex-row xl:flex-row justify-center items-start bg-white pb-16 md:py-12 lg:py-20 space-y-0 sm:space-y-[-2rem] md:space-y-10 lg:space-y-0">
-        {" "}
-        <div className="mr-[2.063rem] ml-[2.063rem] md:mb-0 md:ml-[1.5rem] lg:ml-[7.4rem] w-[84%] md:w-[71%] lg:w-fit justify-center items-start">
-          {" "}
-          <div className=" w-full md:w-full">
-            <h3 className="w-[35vw] md:w-[15vw] lg:w-[22vw] mb-6 ml-10 lg:ml-0">
+      <section className="flex flex-col md:flex-col scroll-mt-18 mt-10 lg:mt-0 lg:flex-row xl:flex-row justify-center items-start bg-white pb-16 md:py-12 lg:py-20 space-y-0 sm:space-y-[-2rem] md:space-y-10 lg:space-y-0">
+        {/* Title and Still Have Questions Container */}
+        <div className=" mr-[2.063rem] ml-[2.063rem] mb-6 md:mb-0 md:ml-6 lg:ml-[7.4rem] mt-12 md:mt-10 lg:mt-0 w-[84%] md:w-[71%] lg:w-fit space-y-6 md:space-y-36 justify-center items-start">
+          {/* Title */}
+          <div className=" w-full md:w-full space-y-2 ">
+            <h3 className="text-[1.5rem] md:text-3xl lg:text-[2rem] font-bold text-black w-[35vw] md:w-[15vw] lg:w-[22vw]">
               Frequently <span className="text-[#1775EE]">Asked Questions</span>
             </h3>
           </div>
-          <div className="bg-[#EBF5FD] p-7.5 rounded-xl shadow-md border border-[#EBF5FD] mt-6 hidden lg:block w-full md:w-[90%] lg:w-[95%]">
+
+          {/* Still Have Questions Container */}
+          <div className="bg-[#EBF5FD] p-7.5 rounded-xl shadow-md border border-[#EBF5FD] hidden md:block w-full md:w-[90%] lg:w-[95%]">
             <h5 className="mb-3.75">Still Have Questions?</h5>
             <p className="w-[95%] md:w-[90%] lg:w-[78%] text-black mb-7.5">
               To be a global leader in ICT and Engineering solutions, recognized
@@ -427,14 +356,13 @@ export default function CCNAAutomation() {
               buttonCustomStyle="bg-[#1775EE] text-white hover:bg-white hover:text-blue-600 transition-all duration-300 shadow-lg hover:shadow-xl px-6 py-3"
               btnFunc={() => {
                 document
-                  .getElementById("services")
+                  .getElementById("contact")
                   ?.scrollIntoView({ behavior: "smooth", block: "start" });
               }}
             />
           </div>
         </div>
         <div className="mr-[2.063rem] ml-[2.063rem] md:ml-[7rem] lg:ml-[2.063rem] md:mr-[7.438rem] w-[84%] md:w-[70%] justify-center items-start">
-          {" "}
           <FAQ />
         </div>
       </section>

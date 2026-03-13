@@ -58,3 +58,15 @@ h6 {
 .why_choose_card {
   @apply p-6 rounded-xl shadow-md hover:shadow-lg bg-white hover:bg-[#1775EE] text-[#000000] hover:text-white transition duration-300 ease-in-out space-y-1;
 }
+
+.desktop_process_steps {
+  @apply flex flex-col items-center max-w-55;
+}
+
+.desktop_process_icons {
+  @apply w-22 h-22 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl mb-4;
+}
+
+.desktop_process_svg {
+  @apply w-10 h-10 text-white;
+}
