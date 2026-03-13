@@ -1375,18 +1375,13 @@ export default function Home() {
 
                     {/* Full blur overlay */}
                     <div
-                      className={`absolute inset-0 rounded-2xl backdrop-blur-sm bg-black/1 transition-opacity duration-500 ${tappedCard === item.id ? "opacity-100" : "opacity-0"
-                        }`}
-                    />
-
-                    {/* Content */}
-                    <div
-                      className={`absolute inset-0 px-5 flex flex-col justify-center transition-opacity duration-500 ${tappedCard === item.id ? "opacity-100" : "opacity-0"
+                      className={`flex flex-col justify-center items-center text-white p-6 absolute inset-0 rounded-2xl backdrop-blur-sm bg-black/1 transition-opacity duration-500 ${tappedCard === item.id ? "opacity-100" : "opacity-0"
                         }`}
                     >
+                      {/* Content */}
                       {/* Title row */}
-                      <div className="flex items-center justify-between gap-2">
-                        <h5 className="text-white leading-tight flex-1">
+                      <div className="flex items-center justify-between gap-4 w-full">
+                        <h5 className="text-shadow-lg">
                           {item.title}
                         </h5>
                         <Link
@@ -1412,7 +1407,7 @@ export default function Home() {
                       </div>
 
                       {/* Description below title */}
-                      <p className="text-white/80 mt-2 line-clamp-3">
+                      <p className="text-shadow-lg">
                         {item.desc}
                       </p>
                     </div>
@@ -1449,11 +1444,9 @@ export default function Home() {
                         />
 
                         {/* Blur */}
-                        <div className="absolute inset-x-0 bottom-0 h-[35%] bg-black/1 to-transparent backdrop-blur-[10px] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                        <div className="flex flex-row justify-center items-center absolute inset-x-0 bottom-0 p-5 text-white bg-black/1 to-transparent backdrop-blur-[10px] opacity-0 group-hover:opacity-100 transition-opacity duration-500">
 
-                        {/* Content */}
-                        <div className="absolute bottom-0 inset-x-0 px-4 py-6 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-end justify-center gap-3 text-white">
-                          <div className="text-shadow-lg">
+                          <div className="text-shadow-lg space-y-1">
                             {/* Text Content */}
                             <h5>
                               {item.title}
@@ -1465,7 +1458,7 @@ export default function Home() {
                           <div className="shrink-0 flex items-center justify-center">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
-                              className="w-12 h-12 text-white"
+                              className="w-10 h-10 text-white"
                               fill="none"
                               viewBox="0 0 24 24"
                               stroke="currentColor"
