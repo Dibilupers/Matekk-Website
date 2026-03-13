@@ -195,17 +195,14 @@ function Partners() {
                             {partnerLogos
                                 .slice(pageIndex * logosPerPage, (pageIndex + 1) * logosPerPage)
                                 .map((logo, logoIndex) => (
-                                    // Render each individual logo
                                     <div
-                                        key={logoIndex}  // Unique key for React
+                                        key={logoIndex}
                                         className="partner_logos_format flex items-center justify-center hover:scale-110 transition duration-300 ease-in-out"
-                                        // ADDED: GPU acceleration for each logo container (smoother rendering)
                                         style={{ transform: 'translateZ(0)' }}
                                     >
                                         <img
                                             src={logo.src}
                                             alt={logo.alt}
-                                            // UPDATED: Responsive sizing - smaller on mobile, larger on desktop
                                             className={logo.size}  // Mobile: 40px, Desktop: 64px
                                             // ADDED: Prevents image dragging which can cause lag during scroll
                                             draggable="false"
