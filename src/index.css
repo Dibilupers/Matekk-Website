@@ -64,7 +64,7 @@ h6 {
 }
 
 .desktop_process_icons {
-  @apply w-22 h-22 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl mb-4;
+  @apply w-22 h-22 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl mb-4  drop-shadow-[0px_4px_2px_rgba(0,0,0,0.3)];
 }
 
 .desktop_process_svg {
