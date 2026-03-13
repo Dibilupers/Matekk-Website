@@ -22,9 +22,9 @@ export default function Home() {
   const totalMobileBottomSlides = 4;
   const [topSlide, setTopSlide] = useState(0);
   const [bottomSlide, setBottomSlide] = useState(0);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
   const [isTablet, setIsTablet] = useState(
-    window.innerWidth >= 768 && window.innerWidth < 1024,
+    () => window.innerWidth >= 768 && window.innerWidth < 1024,
   );
   const location = useLocation();
   /* Scroll function for when user comes form another page scrolls to home */
@@ -46,7 +46,12 @@ export default function Home() {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
+  useEffect(() => {
+    // Only scroll to top on fresh page load (no scrollTo state)
+    if (!location.state?.scrollTo) {
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    }
+  }, []);
   const topMax = isMobile
     ? totalMobileSlides
     : isTablet
@@ -122,13 +127,9 @@ export default function Home() {
   return (
     <main>
       {/* ==================== HERO BANNER ====================*/}
-      <section
-        id="home"
-        className="py-40 md:py-20 lg:py-0 scroll-mt-18"
-      >
+      <section id="home" className="py-40 md:py-20 lg:py-0 scroll-mt-18">
         {/* Section Margin */}
         <div className=" mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem]">
-
           {/* ====== HERO BANNER - Content ======*/}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
             {/* ====== LEFT SIDE - Content (Title, description, buttons, images) ====== */}
@@ -183,21 +184,15 @@ export default function Home() {
               {/* Experiences Content */}
               <div className="flex space-x-4 justify-center items-center md:justify-start md:items-start">
                 <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
-                  <h3 className="font-bold text-gray-900">
-                    13
-                  </h3>
+                  <h3 className="font-bold text-gray-900">13</h3>
                   <div className="text-gray-600 leading-tight flex flex-col justify-center lg:justify-start items-center md:items-start">
-                    <p className="font-medium whitespace-nowrap">
-                      Years of
-                    </p>
+                    <p className="font-medium whitespace-nowrap">Years of</p>
                     <p className="font-medium whitespace-nowrap">Experience</p>
                   </div>
                 </div>
                 <div className="h-18 md:h-10 lg:h-12 w-px bg-black shrink-0"></div>
                 <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
-                  <h3 className="font-bold text-gray-900">
-                    3
-                  </h3>
+                  <h3 className="font-bold text-gray-900">3</h3>
                   <div className="text-gray-600 leading-tight flex flex-col justify-center lg:justify-start items-center md:items-start">
                     <p className="font-medium whitespace-nowrap">
                       Data Centers
@@ -207,9 +202,7 @@ export default function Home() {
                 </div>
                 <div className="h-18 md:h-10 lg:h-12 w-px bg-black shrink-0"></div>
                 <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
-                  <h3 className="font-bold text-gray-900">
-                    10
-                  </h3>
+                  <h3 className="font-bold text-gray-900">10</h3>
                   <div className="text-gray-600 leading-tight flex flex-col justify-center lg:justify-start items-center md:items-start">
                     <p className="font-medium whitespace-nowrap">
                       Total Active
@@ -303,7 +296,10 @@ export default function Home() {
       </section>
 
       {/* ==================== PARTNERS LOGO ====================*/}
-      <section className="flex bg-[#EBF5FD] justify-center items-center text-center py-10 md:py-15 scroll-mt-18" id="partners">
+      <section
+        className="flex bg-[#EBF5FD] justify-center items-center text-center py-10 md:py-15 scroll-mt-18"
+        id="partners"
+      >
         {/* Section Margin and Spacing */}
         <div className="mx-[2.063rem] md:mx-16 xl:mx-[7.438rem] space-y-4 md:space-y-7">
           {/* Text Content */}
@@ -325,7 +321,10 @@ export default function Home() {
       </section>
 
       {/* ==================== SERVICES ====================*/}
-      <section id="services" className="flex flex-col justify-center scroll-mt-18 items-center space-y-12 py-10 md:py-15 h-full mx-[2.063rem] md:mx-16 xl:mx-[7.438rem]">
+      <section
+        id="services"
+        className="flex flex-col justify-center scroll-mt-18 items-center space-y-12 py-10 md:py-15 h-full mx-[2.063rem] md:mx-16 xl:mx-[7.438rem]"
+      >
         {/* Title and Description Container */}
         <div className="flex flex-col justify-center items-center text-center space-y-1">
           {/* Title */}
@@ -335,7 +334,10 @@ export default function Home() {
           </div>
           {/* Description */}
           <p className="w-78 sm:w-lg md:w-2xl lg:w-xl xl:w-4xl">
-            MGKK Information Communication Technology Services delivers end-to-end ICT and engineering solutions alongside comprehensive training programs designed to meet industry demands and support digital transformation.
+            MGKK Information Communication Technology Services delivers
+            end-to-end ICT and engineering solutions alongside comprehensive
+            training programs designed to meet industry demands and support
+            digital transformation.
           </p>
         </div>
         <div className="flex flex-col space-y-14">
@@ -358,9 +360,9 @@ export default function Home() {
                   </h5>
                   {/* Solutions Category Description */}
                   <p className="">
-                    We provide ICT consultancy and engineering solutions focused on
-                    planning, building, operating, optimizing, and testing technology
-                    systems.
+                    We provide ICT consultancy and engineering solutions focused
+                    on planning, building, operating, optimizing, and testing
+                    technology systems.
                   </p>
                 </div>
                 {/* Left and Right Button for List of Solutions */}
@@ -430,14 +432,12 @@ export default function Home() {
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
                       </div>
-                      <h5 className="">
-                        ICT Consultancy
-                      </h5>
+                      <h5 className="">ICT Consultancy</h5>
                       <p className="">
                         MGKK provides ICT consultancy services using the Plan,
                         Build, Operate, Optimize, and Test (PBOOT) approach to
-                        support the design, implementation, and improvement of ICT
-                        infrastructures.
+                        support the design, implementation, and improvement of
+                        ICT infrastructures.
                       </p>
                       <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
                         See more
@@ -462,8 +462,8 @@ export default function Home() {
                       </h5>
                       <p className="font-poppins text-sm mb-[3vh]">
                         We develop web and software solutions that support
-                        organizational requirements, using modern technologies to
-                        deliver reliable and functional digital systems.
+                        organizational requirements, using modern technologies
+                        to deliver reliable and functional digital systems.
                       </p>
                       <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
                         See more
@@ -487,9 +487,9 @@ export default function Home() {
                         Network Infrastructure
                       </h5>
                       <p className="font-poppins text-sm mb-[3vh]">
-                        We design and deploy robust network infrastructure solutions
-                        that ensure seamless connectivity, security, and scalability
-                        for businesses of all sizes.
+                        We design and deploy robust network infrastructure
+                        solutions that ensure seamless connectivity, security,
+                        and scalability for businesses of all sizes.
                       </p>
                       <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
                         See more
@@ -513,9 +513,10 @@ export default function Home() {
                         Training & Development
                       </h5>
                       <p className="font-poppins text-sm mb-[3vh]">
-                        MGKK offers comprehensive ICT training programs tailored to
-                        industry demands, equipping professionals with the skills
-                        needed to thrive in a rapidly evolving digital landscape.
+                        MGKK offers comprehensive ICT training programs tailored
+                        to industry demands, equipping professionals with the
+                        skills needed to thrive in a rapidly evolving digital
+                        landscape.
                       </p>
                       <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
                         See more
@@ -532,8 +533,9 @@ export default function Home() {
                 <button
                   key={i}
                   onClick={() => setTopSlide(i)}
-                  className={`h-2 rounded-full transition-all duration-300 ${topSlide === i ? "bg-[#1775EE] w-4" : "bg-[#C2DDFF] w-2"
-                    }`}
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    topSlide === i ? "bg-[#1775EE] w-4" : "bg-[#C2DDFF] w-2"
+                  }`}
                 />
               ))}
             </div>
@@ -554,15 +556,17 @@ export default function Home() {
                     ICT Training & Skills Development
                   </h5>
                   <p className="">
-                    We offers face-to-face and online training programs designed to
-                    equip individuals and organizations with cutting-edge
+                    We offers face-to-face and online training programs designed
+                    to equip individuals and organizations with cutting-edge
                     technological knowledge and practical skills.
                   </p>
                 </div>
                 <div className="flex flex-row gap-x-[2vh]">
                   <button
                     onClick={() =>
-                      setBottomSlide((prev) => Math.min(prev + 1, bottomMax - 1))
+                      setBottomSlide((prev) =>
+                        Math.min(prev + 1, bottomMax - 1),
+                      )
                     }
                     disabled={bottomSlide === bottomMax - 1}
                     className="w-12 h-12 flex items-center justify-center rounded-full border border-[#1775EE] bg-white text-[#1775EE] transition-all duration-300 hover:bg-[#1775EE] hover:text-white disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed"
@@ -583,7 +587,9 @@ export default function Home() {
                     </svg>
                   </button>
                   <button
-                    onClick={() => setBottomSlide((prev) => Math.max(prev - 1, 0))}
+                    onClick={() =>
+                      setBottomSlide((prev) => Math.max(prev - 1, 0))
+                    }
                     disabled={bottomSlide === 0}
                     className="w-12 h-12 flex items-center justify-center rounded-full border border-[#1775EE] bg-white text-[#1775EE] transition-all duration-300 hover:bg-[#1775EE] hover:text-white disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed"
                   >
@@ -626,13 +632,11 @@ export default function Home() {
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
                       </div>
-                      <h5 className="">
-                        Cybersecurity Training
-                      </h5>
+                      <h5 className="">Cybersecurity Training</h5>
                       <p className="">
                         Our cybersecurity training covers cybersecurity
-                        fundamentals, ethical hacking, vulnerability assessment and
-                        penetration testing (VAPT), and risk management.
+                        fundamentals, ethical hacking, vulnerability assessment
+                        and penetration testing (VAPT), and risk management.
                       </p>
                       <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
                         See more
@@ -653,13 +657,11 @@ export default function Home() {
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
                       </div>
-                      <h5 className="">
-                        Cloud Computing Training
-                      </h5>
+                      <h5 className="">Cloud Computing Training</h5>
                       <p className="">
                         We provide cloud computing training on platforms such as
-                        AWS, Microsoft Azure, and Google Cloud through face-to-face
-                        and online programs.
+                        AWS, Microsoft Azure, and Google Cloud through
+                        face-to-face and online programs.
                       </p>
                       <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
                         See more
@@ -680,13 +682,11 @@ export default function Home() {
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
                       </div>
-                      <h5 className="">
-                        Web and Software Development
-                      </h5>
+                      <h5 className="">Web and Software Development</h5>
                       <p className="">
                         We develop web and software solutions that support
-                        organizational requirements, using modern technologies to
-                        deliver reliable and functional digital systems.
+                        organizational requirements, using modern technologies
+                        to deliver reliable and functional digital systems.
                       </p>
                       <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
                         See more
@@ -707,14 +707,12 @@ export default function Home() {
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
                       </div>
-                      <h5 className="">
-                        ICT Consultancy
-                      </h5>
+                      <h5 className="">ICT Consultancy</h5>
                       <p className="">
                         MGKK provides ICT consultancy services using the Plan,
                         Build, Operate, Optimize, and Test (PBOOT) approach to
-                        support the design, implementation, and improvement of ICT
-                        infrastructures.
+                        support the design, implementation, and improvement of
+                        ICT infrastructures.
                       </p>
                       <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
                         See more
@@ -731,8 +729,9 @@ export default function Home() {
                 <button
                   key={i}
                   onClick={() => setBottomSlide(i)}
-                  className={`h-2 rounded-full transition-all duration-300 ${bottomSlide === i ? "bg-[#1775EE] w-4" : "bg-[#C2DDFF] w-2"
-                    }`}
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    bottomSlide === i ? "bg-[#1775EE] w-4" : "bg-[#C2DDFF] w-2"
+                  }`}
                 />
               ))}
             </div>
@@ -756,8 +755,8 @@ export default function Home() {
               </h3>
               {/* Description */}
               <p>
-                MGKK Information Communication Technology Services is committed to
-                delivering reliable ICT solutions and high-quality training
+                MGKK Information Communication Technology Services is committed
+                to delivering reliable ICT solutions and high-quality training
                 through experienced professionals, proven methodologies, and a
                 strong focus on innovation, integrity, and excellence.
               </p>
@@ -805,9 +804,8 @@ export default function Home() {
                 Quality Training
               </h5>
               <p className="text-sm lg:text-base text-[#000000] leading-relaxed">
-                We offer face-to-face and online training programs aligned
-                with industry standards and globally recognized
-                certifications.
+                We offer face-to-face and online training programs aligned with
+                industry standards and globally recognized certifications.
               </p>
             </div>
 
@@ -836,7 +834,6 @@ export default function Home() {
             </div>
           </div>
         </div>
-
       </section>
 
       {/* ==================== OUR WORKING PROCESS ====================*/}
@@ -1447,14 +1444,16 @@ export default function Home() {
 
                     {/* Full blur overlay */}
                     <div
-                      className={`absolute inset-0 rounded-2xl backdrop-blur-sm bg-black/1 transition-opacity duration-500 ${tappedCard === item.id ? "opacity-100" : "opacity-0"
-                        }`}
+                      className={`absolute inset-0 rounded-2xl backdrop-blur-sm bg-black/1 transition-opacity duration-500 ${
+                        tappedCard === item.id ? "opacity-100" : "opacity-0"
+                      }`}
                     />
 
                     {/* Content */}
                     <div
-                      className={`absolute inset-0 px-5 flex flex-col justify-center transition-opacity duration-500 ${tappedCard === item.id ? "opacity-100" : "opacity-0"
-                        }`}
+                      className={`absolute inset-0 px-5 flex flex-col justify-center transition-opacity duration-500 ${
+                        tappedCard === item.id ? "opacity-100" : "opacity-0"
+                      }`}
                     >
                       {/* Title row */}
                       <div className="flex items-center justify-between gap-2">
@@ -1699,7 +1698,6 @@ export default function Home() {
         id="contact"
         className="flex justify-center items-center py-16 lg:py-20 bg-[#EBF5FD] scroll-mt-19"
       >
-
         {/* CHANGE THIS CODE THERE SHOULDN'T BE ANOTHER DIV BECAUSE IT ALREADY HAS SECTION TAG */}
         <div className="w-full h-full flex mx-[2.063rem] lg:mx-[7.438rem] flex-col-reverse md:flex-col-reverse lg:flex-row space-x-0 md:space-x-0 lg:space-x-16 items-center space-y-6 md:space-y-12 lg:space-y-0">
           <ContactForm />
