@@ -1352,7 +1352,6 @@ export default function Home() {
             </p>
           </div>
 
-          {/* NEED TO BE CHECKED MORE */}
           {/* Gallery */}
           <div>
             {isMobile ? (
