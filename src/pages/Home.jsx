@@ -129,7 +129,7 @@ export default function Home() {
       {/* ==================== HERO BANNER ====================*/}
       <section id="home" className="py-40 md:py-20 lg:py-0 scroll-mt-18">
         {/* Section Margin */}
-        <div className=" mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem]">
+        <div className=" mx-[2.063rem] md:mx-16 xl:mx-[7.438rem]">
           {/* ====== HERO BANNER - Content ======*/}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
             {/* ====== LEFT SIDE - Content (Title, description, buttons, images) ====== */}
@@ -1398,13 +1398,15 @@ export default function Home() {
         </div>
       </section>
 
+
+      
       {/* ==================== FEATURED SOLUTIONS AND TRAINING ====================*/}
       <section
         id="training"
         className="flex flex-col py-10 md:py-15 h-full bg-[#EBF5FD] scroll-mt-18"
       >
         {/* Margin */}
-        <div className="mx-[2.063rem] lg:mx-[7.438rem]">
+        <div className="mx-[2.063rem] md:mx-16 xl:mx-[7.438rem]">
           {/* Title */}
           <div className="text-center w-full self-center px-10 lg:px-0 sm:w-full md:w-auto lg:w-auto">
             <h3>
@@ -1561,7 +1563,7 @@ export default function Home() {
 
       {/* ==================== ABOUT THE COMPANY ====================*/}
       <section id="about" className="scroll-mt-18 py-16 bg-[#EBF5FD]">
-        <div className="sm:mx-6 lg:mx-[7.438rem] mx-[2.063rem]">
+        <div className="mx-[2.063rem] md:mx-16 xl:mx-[7.438rem]">
           {/* Title and Description */}
           <div className="text-center mb-12">
             <span className="inline-block border border-gray-300 rounded-full px-5 py-1.5 text-sm text-black bg-white mb-4">
@@ -1694,7 +1696,7 @@ export default function Home() {
         className="flex justify-center items-center py-16 lg:py-20 bg-[#EBF5FD] scroll-mt-19"
       >
         {/* CHANGE THIS CODE THERE SHOULDN'T BE ANOTHER DIV BECAUSE IT ALREADY HAS SECTION TAG */}
-        <div className="w-full h-full flex mx-[2.063rem] lg:mx-[7.438rem] flex-col-reverse md:flex-col-reverse lg:flex-row space-x-0 md:space-x-0 lg:space-x-16 items-center space-y-6 md:space-y-12 lg:space-y-0">
+        <div className="w-full h-full flex mx-[2.063rem] md:mx-16 xl:mx-[7.438rem] flex-col-reverse md:flex-col-reverse lg:flex-row space-x-0 md:space-x-0 lg:space-x-16 items-center space-y-6 md:space-y-12 lg:space-y-0">
           <ContactForm />
 
           {/* Text Content */}
