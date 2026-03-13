@@ -141,7 +141,7 @@ export default function Home() {
       {/* ==================== HERO BANNER ====================*/}
       <section id="home" className="py-40 md:py-20 lg:py-0 scroll-mt-18">
         {/* Section Margin */}
-        <div className=" mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem]">
+        <div className=" mx-[2.063rem] md:mx-16 xl:mx-[7.438rem]">
           {/* ====== HERO BANNER - Content ======*/}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
             {/* ====== LEFT SIDE - Content (Title, description, buttons, images) ====== */}
@@ -545,9 +545,8 @@ export default function Home() {
                 <button
                   key={i}
                   onClick={() => setTopSlide(i)}
-                  className={`h-2 rounded-full transition-all duration-300 ${
-                    topSlide === i ? "bg-[#1775EE] w-4" : "bg-[#C2DDFF] w-2"
-                  }`}
+                  className={`h-2 rounded-full transition-all duration-300 ${topSlide === i ? "bg-[#1775EE] w-4" : "bg-[#C2DDFF] w-2"
+                    }`}
                 />
               ))}
             </div>
@@ -741,9 +740,8 @@ export default function Home() {
                 <button
                   key={i}
                   onClick={() => setBottomSlide(i)}
-                  className={`h-2 rounded-full transition-all duration-300 ${
-                    bottomSlide === i ? "bg-[#1775EE] w-4" : "bg-[#C2DDFF] w-2"
-                  }`}
+                  className={`h-2 rounded-full transition-all duration-300 ${bottomSlide === i ? "bg-[#1775EE] w-4" : "bg-[#C2DDFF] w-2"
+                    }`}
                 />
               ))}
             </div>
@@ -751,7 +749,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* NOT DONE CHECKING */}
       {/* ==================== WHY CHOOSE MGKK ICT SERVICES ====================*/}
       <section className="py-10 md:py-15 bg-[#EBF5FD] scroll-mt-18">
         {/* Section Margin */}
@@ -838,578 +835,480 @@ export default function Home() {
         </div>
       </section>
 
+
+      {/* NOT DONE CHECKING */}
       {/* ==================== OUR WORKING PROCESS ====================*/}
-      <section className="py-10 md:py-15 bg-white scroll-mt-18">
-        <div className="mx-4 sm:mx-6 lg:mx-[7.438rem]">
-          {/* Text Content */}
-          <div className="text-right mb-12 lg:mb-16">
-            {/* Title */}
-            <h3 className="text-3xl lg:text-4xl font-bold text-gray-900">
-              Our <span className="text-[#1775EE]">Working Process</span>
-            </h3>
-            {/* Description */}
-            <p className="text-base lg:text-lg text-gray-600 mt-4 max-w-2xl ml-auto">
-              We follow a structured service delivery process to ensure reliable
-              implementation, performance, and long-term value.
-            </p>
+      <section className="py-10 md:py-15 bg-white scroll-mt-18 mx-[2.063rem] md:mx-16 xl:mx-[7.438rem] space-y-8 lg:space-y-2 overflow-hidden">
+        {/* Text Content */}
+        <div className="flex flex-col text-right ml-0 md:ml-38 lg:ml-auto items-end">
+          {/* Title */}
+          <h3>
+            Our <span className="text-[#1775EE]">Working Process</span>
+          </h3>
+          {/* Description */}
+          <p className="w-80 md:w-fit">
+            We follow a structured service delivery process to ensure reliable
+            implementation, performance, and long-term value.
+          </p>
+        </div>
+        {/* ====== Working Process ====== */}
+        <div className="relative overflow-hidden ">
+          {/* Desktop Version */}
+          <div className="hidden lg:block relative">
+            <div className="relative">
+              {/* SVG Lines - kept absolute but now the container grows with content */}
+              <svg
+                className="absolute inset-0 w-full h-full z-0 pointer-events-none"
+                viewBox="0 0 1200 500"
+                preserveAspectRatio="none"
+              >
+                <path d="M -80 30 C 120 100, 200 1, 335 110" stroke="#3B82F6" strokeWidth="8" fill="none" strokeLinecap="round" />
+                <path d="M 350 120 C 430 130, 500 190, 600 180" stroke="#3B82F6" strokeWidth="8" fill="none" strokeLinecap="round" />
+                <path d="M 600 190 C 600 130, 800 200, 860 200" stroke="#3B82F6" strokeWidth="8" fill="none" strokeLinecap="round" />
+                <path d="M 830 200 C 800 150, 845 350, 1500 275" stroke="#3B82F6" strokeWidth="8" fill="none" strokeLinecap="round" />
+              </svg>
+
+              {/* Steps using flex instead of absolute */}
+              <div className="relative z-10 flex items-start justify-between gap-4 pb-8">
+
+                {/* Step 1 */}
+                <div className="flex flex-col items-center max-w-[180px] pt-0">
+                  <div className="w-22 h-22 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl mb-4">
+                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20h3v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                  </div>
+                  <h5 className="text-lg font-bold text-gray-900 text-center mb-2">Initiation & Consultancy</h5>
+                  <p className="text-sm text-gray-600 text-center">Understand requirements and define project direction.</p>
+                </div>
+
+                {/* Step 2 */}
+                <div className="flex flex-col items-center max-w-[180px] pt-16">
+                  <div className="w-22 h-22 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl mb-4">
+                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
+                    </svg>
+                  </div>
+                  <h5 className="text-lg font-bold text-gray-900 text-center mb-2">Planning & Design</h5>
+                  <p className="text-sm text-gray-600 text-center">Create structured plans and system designs.</p>
+                </div>
+
+                {/* Step 3 */}
+                <div className="flex flex-col items-center max-w-[180px] pt-28">
+                  <div className="w-22 h-22 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl mb-4">
+                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </div>
+                  <h5 className="text-lg font-bold text-gray-900 text-center mb-2">Implementation</h5>
+                  <p className="text-sm text-gray-600 text-center">Deploy and configure approved solutions.</p>
+                </div>
+
+                {/* Step 4 */}
+                <div className="flex flex-col items-center max-w-[180px] pt-36">
+                  <div className="w-22 h-22 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl mb-4">
+                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h3a2 2 0 002-2zm0 0V9a2 2 0 012-2h3a2 2 0 012 2v10m-6 0a2 2 0 002 2h3a2 2 0 002-2m0 0V5a2 2 0 012-2h3a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                  </div>
+                  <h5 className="text-lg font-bold text-gray-900 text-center mb-2">Monitor and Control</h5>
+                  <p className="text-sm text-gray-600 text-center">Track performance and ensure proper operation.</p>
+                </div>
+
+                {/* Step 5 */}
+                <div className="flex flex-col items-center max-w-[180px] pt-48">
+                  <div className="w-22 h-22 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl mb-4">
+                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    </svg>
+                  </div>
+                  <h5 className="text-lg font-bold text-gray-900 text-center mb-2">Optimization</h5>
+                  <p className="text-sm text-gray-600 text-center">Improve systems through testing and refinement.</p>
+                </div>
+
+              </div>
+            </div>
           </div>
 
-          {/* ====== Working Process ====== */}
-          <div className="relative">
-            {/* Desktop Version */}
-            <div className="hidden lg:block relative">
-              <div className="relative h-125">
+          {/* Tablet Version */}
+          <div className="hidden md:block lg:hidden relative">
+            <svg
+              className="absolute inset-0 w-full h-full z-0 pointer-events-none"
+              viewBox="0 0 700 1100"
+              preserveAspectRatio="none"
+            >
+              {/* Line 1→2 */}
+              <path
+                d="M 200 20 C 300 180, 500 30, 490 270"
+                stroke="#3B82F6"
+                strokeWidth="5"
+                fill="none"
+                strokeLinecap="round"
+              />
+              {/* Line 2→3 */}
+              <path
+                d="M 510 250 C 510 250, 180 250, 210 440"
+                stroke="#3B82F6"
+                strokeWidth="5"
+                fill="none"
+                strokeLinecap="round"
+              />
+              {/* Line 3→4 */}
+              <path
+                d="M 220 490 C 350 560, 490 490, 480 740"
+                stroke="#3B82F6"
+                strokeWidth="5"
+                fill="none"
+                strokeLinecap="round"
+              />
+              {/* Line 4→5 */}
+              <path
+                d="M 510 720 C 510 720, 180 720, 220 910"
+                stroke="#3B82F6"
+                strokeWidth="5"
+                fill="none"
+                strokeLinecap="round"
+              />
+            </svg>
+
+            {/* Step 1: Initiation & Consultancy */}
+            <div className="relative z-10 flex flex-col items-center mb-1 pr-72">
+              <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
                 <svg
-                  className="absolute inset-0 w-full h-full z-0"
-                  viewBox="0 0 1200 500"
+                  className="w-10 h-10 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  {/* Step 1: Initiation to Planning */}
                   <path
-                    d="M -80 30 C 120 100, 200 1, 335 110"
-                    stroke="#3B82F6"
-                    strokeWidth="8"
-                    fill="none"
                     strokeLinecap="round"
-                  />
-
-                  {/* Step 2: Planning to Implementation */}
-                  <path
-                    d="M 350 120 C 430 130, 500 190, 600 150"
-                    stroke="#3B82F6"
-                    strokeWidth="8"
-                    fill="none"
-                    strokeLinecap="round"
-                  />
-
-                  {/* Step 3: Implementation to Monitor */}
-                  <path
-                    d="M 600 190 C 600 130, 800 200, 860 200"
-                    stroke="#3B82F6"
-                    strokeWidth="8"
-                    fill="none"
-                    strokeLinecap="round"
-                  />
-
-                  {/* Step 4: Monitor to Optimization */}
-                  <path
-                    d="M 830 200 C 800 150, 845 350, 1500 275"
-                    stroke="#3B82F6"
-                    strokeWidth="8"
-                    fill="none"
-                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
                   />
                 </svg>
-
-                {/* Step 1: Initiation & Consultancy (Top Left) */}
-                <div className="absolute left-0 top-5 flex flex-col items-center max-w-50 z-10">
-                  <div className="w-22 h-22 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl mb-4">
-                    <svg
-                      className="w-10 h-10 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20h3v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                      />
-                    </svg>
-                  </div>
-                  <h5 className="text-lg font-bold text-gray-900 text-center mb-2">
-                    Initiation & Consultancy
-                  </h5>
-                  <p className="text-sm text-gray-600 text-center">
-                    Understand requirements and define project direction.
-                  </p>
-                </div>
-
-                {/* Step 2: Planning & Design (Lower position) */}
-                <div className="absolute left-[20%] top-18.75 flex flex-col items-center max-w-50 z-10">
-                  <div className="w-22 h-22 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl mb-4">
-                    <svg
-                      className="w-10 h-10 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"
-                      />
-                    </svg>
-                  </div>
-                  <h5 className="text-lg font-bold text-gray-900 text-center mb-2">
-                    Planning & Design
-                  </h5>
-                  <p className="text-sm text-gray-600 text-center">
-                    Create structured plans and system designs.
-                  </p>
-                </div>
-
-                {/* Step 3: Implementation (Middle) */}
-                <div className="absolute left-[40%] top-32.5 flex flex-col items-center max-w-50 z-10">
-                  <div className="w-22 h-22 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl mb-4">
-                    <svg
-                      className="w-10 h-10 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                    </svg>
-                  </div>
-                  <h5 className="text-lg font-bold text-gray-900 text-center mb-2">
-                    Implementation
-                  </h5>
-                  <p className="text-sm text-gray-600 text-center">
-                    Deploy and configure approved solutions.
-                  </p>
-                </div>
-
-                {/* Step 4: Monitor and Control (Lower right) */}
-                <div className="absolute left-[60%] top-40 flex flex-col items-center max-w-50 z-10">
-                  <div className="w-22 h-22 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl mb-4">
-                    <svg
-                      className="w-10 h-10 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h3a2 2 0 002-2zm0 0V9a2 2 0 012-2h3a2 2 0 012 2v10m-6 0a2 2 0 002 2h3a2 2 0 002-2m0 0V5a2 2 0 012-2h3a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                      />
-                    </svg>
-                  </div>
-                  <h5 className="text-lg font-bold text-gray-900 text-center mb-2">
-                    Monitor and Control
-                  </h5>
-                  <p className="text-sm text-gray-600 text-center">
-                    Track performance and ensure proper operation.
-                  </p>
-                </div>
-
-                {/* Step 5: Optimization (Bottom Right) */}
-                <div className="absolute right-0 top-57.5 flex flex-col items-center max-w-50 z-10">
-                  <div className="w-22 h-22 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl mb-4">
-                    <svg
-                      className="w-10 h-10 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                      />
-                    </svg>
-                  </div>
-                  <h5 className="text-lg font-bold text-gray-900 text-center mb-2">
-                    Optimization
-                  </h5>
-                  <p className="text-sm text-gray-600 text-center">
-                    Improve systems through testing and refinement.
-                  </p>
-                </div>
+              </div>
+              <div className="mt-3 max-w-[16rem] text-center">
+                <h5 className="text-base font-bold text-gray-900 mb-1">
+                  Initiation & Consultancy
+                </h5>
+                <p className="text-sm text-gray-600">
+                  Understand requirements and define project direction.
+                </p>
               </div>
             </div>
 
-            {/* Tablet Version */}
-            <div className="hidden md:block lg:hidden relative">
-              <svg
-                className="absolute inset-0 w-full h-full z-0 pointer-events-none"
-                viewBox="0 0 700 1100"
-                preserveAspectRatio="none"
-              >
-                {/* Line 1→2 */}
-                <path
-                  d="M 200 20 C 300 180, 500 30, 490 270"
-                  stroke="#3B82F6"
-                  strokeWidth="5"
+            {/* Step 2: Planning & Design */}
+            <div className="relative z-10 flex flex-col items-center mb-1 pl-72 -mt-6">
+              <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
+                <svg
+                  className="w-10 h-10 text-white"
                   fill="none"
-                  strokeLinecap="round"
-                />
-                {/* Line 2→3 */}
-                <path
-                  d="M 510 250 C 510 250, 180 250, 210 440"
-                  stroke="#3B82F6"
-                  strokeWidth="5"
-                  fill="none"
-                  strokeLinecap="round"
-                />
-                {/* Line 3→4 */}
-                <path
-                  d="M 220 490 C 350 560, 490 490, 480 740"
-                  stroke="#3B82F6"
-                  strokeWidth="5"
-                  fill="none"
-                  strokeLinecap="round"
-                />
-                {/* Line 4→5 */}
-                <path
-                  d="M 510 720 C 510 720, 180 720, 220 910"
-                  stroke="#3B82F6"
-                  strokeWidth="5"
-                  fill="none"
-                  strokeLinecap="round"
-                />
-              </svg>
-
-              {/* Step 1: Initiation & Consultancy */}
-              <div className="relative z-10 flex flex-col items-center mb-1 pr-72">
-                <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
-                  <svg
-                    className="w-10 h-10 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                    />
-                  </svg>
-                </div>
-                <div className="mt-3 max-w-[16rem] text-center">
-                  <h5 className="text-base font-bold text-gray-900 mb-1">
-                    Initiation & Consultancy
-                  </h5>
-                  <p className="text-sm text-gray-600">
-                    Understand requirements and define project direction.
-                  </p>
-                </div>
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"
+                  />
+                </svg>
               </div>
-
-              {/* Step 2: Planning & Design */}
-              <div className="relative z-10 flex flex-col items-center mb-1 pl-72 -mt-6">
-                <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
-                  <svg
-                    className="w-10 h-10 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"
-                    />
-                  </svg>
-                </div>
-                <div className="mt-3 max-w-[16rem] text-center">
-                  <h5 className="text-base font-bold text-gray-900 mb-1">
-                    Planning & Design
-                  </h5>
-                  <p className="text-sm text-gray-600">
-                    Create structured plans and system designs.
-                  </p>
-                </div>
-              </div>
-
-              {/* Step 3: Implementation */}
-              <div className="relative z-10 flex flex-col items-center mb-1 pr-72 -mt-6">
-                <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
-                  <svg
-                    className="w-10 h-10 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                  </svg>
-                </div>
-                <div className="mt-3 max-w-[16rem] text-center">
-                  <h5 className="text-base font-bold text-gray-900 mb-1">
-                    Implementation
-                  </h5>
-                  <p className="text-sm text-gray-600">
-                    Deploy and configure approved solutions.
-                  </p>
-                </div>
-              </div>
-
-              {/* Step 4: Monitor and Control */}
-              <div className="relative z-10 flex flex-col items-center mb-1 pl-72 -mt-6">
-                <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
-                  <svg
-                    className="w-10 h-10 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                    />
-                  </svg>
-                </div>
-                <div className="mt-3 max-w-[16rem] text-center">
-                  <h5 className="text-base font-bold text-gray-900 mb-1">
-                    Monitor and Control
-                  </h5>
-                  <p className="text-sm text-gray-600">
-                    Track performance and ensure proper operation.
-                  </p>
-                </div>
-              </div>
-
-              {/* Step 5: Optimization */}
-              <div className="relative z-10 flex flex-col items-center pr-72 -mt-6">
-                <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
-                  <svg
-                    className="w-10 h-10 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                    />
-                  </svg>
-                </div>
-                <div className="mt-3 max-w-[16rem] text-center">
-                  <h5 className="text-base font-bold text-gray-900 mb-1">
-                    Optimization
-                  </h5>
-                  <p className="text-sm text-gray-600">
-                    Improve systems through testing and refinement.
-                  </p>
-                </div>
+              <div className="mt-3 max-w-[16rem] text-center">
+                <h5 className="text-base font-bold text-gray-900 mb-1">
+                  Planning & Design
+                </h5>
+                <p className="text-sm text-gray-600">
+                  Create structured plans and system designs.
+                </p>
               </div>
             </div>
 
-            {/* Mobile Version */}
-            <div className="block md:hidden relative">
-              {/* Mobile Version SVG Connecting Lines */}
-              <svg
-                className="absolute inset-0 w-full h-full z-0 pointer-events-none"
-                viewBox="0 0 400 1100"
-                preserveAspectRatio="none"
-              >
-                {/* Line 1→2: Left to Right */}
-                <path
-                  d="M 120 10 C 210 180, 330 30, 290 270"
-                  stroke="#3B82F6"
-                  strokeWidth="5"
+            {/* Step 3: Implementation */}
+            <div className="relative z-10 flex flex-col items-center mb-1 pr-72 -mt-6">
+              <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
+                <svg
+                  className="w-10 h-10 text-white"
                   fill="none"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M 310 250 C 310 250, 90 250, 125 440"
-                  stroke="#3B82F6"
-                  strokeWidth="5"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                </svg>
+              </div>
+              <div className="mt-3 max-w-[16rem] text-center">
+                <h5 className="text-base font-bold text-gray-900 mb-1">
+                  Implementation
+                </h5>
+                <p className="text-sm text-gray-600">
+                  Deploy and configure approved solutions.
+                </p>
+              </div>
+            </div>
+
+            {/* Step 4: Monitor and Control */}
+            <div className="relative z-10 flex flex-col items-center mb-1 pl-72 -mt-6">
+              <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
+                <svg
+                  className="w-10 h-10 text-white"
                   fill="none"
-                  strokeLinecap="round"
-                />
-                {/* Line 3→4: Left to Right */}
-                <path
-                  d="M 140 490 C 250 560, 305 490, 290 740"
-                  stroke="#3B82F6"
-                  strokeWidth="5"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                  />
+                </svg>
+              </div>
+              <div className="mt-3 max-w-[16rem] text-center">
+                <h5 className="text-base font-bold text-gray-900 mb-1">
+                  Monitor and Control
+                </h5>
+                <p className="text-sm text-gray-600">
+                  Track performance and ensure proper operation.
+                </p>
+              </div>
+            </div>
+
+            {/* Step 5: Optimization */}
+            <div className="relative z-10 flex flex-col items-center pr-72 -mt-6">
+              <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
+                <svg
+                  className="w-10 h-10 text-white"
                   fill="none"
-                  strokeLinecap="round"
-                />
-                {/* Line 4→5: Right to Left */}
-                <path
-                  d="M 310 720 C 310 720, 90 720, 140 910"
-                  stroke="#3B82F6"
-                  strokeWidth="5"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                  />
+                </svg>
+              </div>
+              <div className="mt-3 max-w-[16rem] text-center">
+                <h5 className="text-base font-bold text-gray-900 mb-1">
+                  Optimization
+                </h5>
+                <p className="text-sm text-gray-600">
+                  Improve systems through testing and refinement.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile Version */}
+          <div className="block md:hidden relative">
+            {/* Mobile Version SVG Connecting Lines */}
+            <svg
+              className="absolute inset-0 w-full h-full z-0 pointer-events-none"
+              viewBox="0 0 400 1100"
+              preserveAspectRatio="none"
+            >
+              {/* Line 1→2: Left to Right */}
+              <path
+                d="M 120 10 C 210 180, 330 30, 290 270"
+                stroke="#3B82F6"
+                strokeWidth="5"
+                fill="none"
+                strokeLinecap="round"
+              />
+              <path
+                d="M 310 250 C 310 250, 90 250, 125 440"
+                stroke="#3B82F6"
+                strokeWidth="5"
+                fill="none"
+                strokeLinecap="round"
+              />
+              {/* Line 3→4: Left to Right */}
+              <path
+                d="M 140 490 C 250 560, 305 490, 290 740"
+                stroke="#3B82F6"
+                strokeWidth="5"
+                fill="none"
+                strokeLinecap="round"
+              />
+              {/* Line 4→5: Right to Left */}
+              <path
+                d="M 310 720 C 310 720, 90 720, 140 910"
+                stroke="#3B82F6"
+                strokeWidth="5"
+                fill="none"
+                strokeLinecap="round"
+              />
+            </svg>
+
+            {/* Mobile Version Icons */}
+            {/* Step 1: Initiation & Consultancy */}
+            <div className="relative z-10 flex flex-col items-center mb-1 pr-41">
+              <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
+                <svg
+                  className="w-10 h-10 text-white"
                   fill="none"
-                  strokeLinecap="round"
-                />
-              </svg>
-
-              {/* Mobile Version Icons */}
-              {/* Step 1: Initiation & Consultancy */}
-              <div className="relative z-10 flex flex-col items-center mb-1 pr-41">
-                <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
-                  <svg
-                    className="w-10 h-10 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                    />
-                  </svg>
-                </div>
-                <div className="mt-3 max-w-[16rem] text-center">
-                  <h5 className="text-base font-bold text-gray-900 mb-1">
-                    Initiation & Consultancy
-                  </h5>
-                  <p className="text-sm text-gray-600">
-                    Understand requirements and define project direction.
-                  </p>
-                </div>
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                  />
+                </svg>
               </div>
-
-              {/* Step 2: Planning & Design */}
-              <div className="relative z-10 flex flex-col items-center mb-1 pl-50 -mt-6">
-                <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
-                  <svg
-                    className="w-10 h-10 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"
-                    />
-                  </svg>
-                </div>
-                <div className="mt-3 max-w-[16rem] text-center">
-                  <h5 className="text-base font-bold text-gray-900 mb-1">
-                    Planning & Design
-                  </h5>
-                  <p className="text-sm text-gray-600">
-                    Create structured plans and system designs.
-                  </p>
-                </div>
+              <div className="mt-3 max-w-[16rem] text-center">
+                <h5 className="text-base font-bold text-gray-900 mb-1">
+                  Initiation & Consultancy
+                </h5>
+                <p className="text-sm text-gray-600">
+                  Understand requirements and define project direction.
+                </p>
               </div>
+            </div>
 
-              {/* Step 3: Implementation */}
-              <div className="relative z-10 flex flex-col items-center mb-1 pr-40 -mt-6">
-                <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
-                  <svg
-                    className="w-10 h-10 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                  </svg>
-                </div>
-                <div className="mt-3 max-w-[16rem] text-center">
-                  <h5 className="text-base font-bold text-gray-900 mb-1">
-                    Implementation
-                  </h5>
-                  <p className="text-sm text-gray-600">
-                    Deploy and configure approved solutions.
-                  </p>
-                </div>
+            {/* Step 2: Planning & Design */}
+            <div className="relative z-10 flex flex-col items-center mb-1 pl-50 -mt-6">
+              <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
+                <svg
+                  className="w-10 h-10 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"
+                  />
+                </svg>
               </div>
-
-              {/* Step 4: Monitor and Control */}
-              <div className="relative z-10 flex flex-col items-center mb-1 pl-50 -mt-6">
-                <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
-                  <svg
-                    className="w-10 h-10 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                    />
-                  </svg>
-                </div>
-                <div className="mt-3 max-w-[16rem] text-center">
-                  <h5 className="text-base font-bold text-gray-900 mb-1">
-                    Monitor and Control
-                  </h5>
-                  <p className="text-sm text-gray-600">
-                    Track performance and ensure proper operation.
-                  </p>
-                </div>
+              <div className="mt-3 max-w-[16rem] text-center">
+                <h5 className="text-base font-bold text-gray-900 mb-1">
+                  Planning & Design
+                </h5>
+                <p className="text-sm text-gray-600">
+                  Create structured plans and system designs.
+                </p>
               </div>
+            </div>
 
-              {/* Step 5: Optimization */}
-              <div className="relative z-10 flex flex-col items-center pr-40 -mt-6">
-                <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
-                  <svg
-                    className="w-10 h-10 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                    />
-                  </svg>
-                </div>
-                <div className="mt-3 max-w-[16rem] text-center">
-                  <h5 className="text-base font-bold text-gray-900 mb-1">
-                    Optimization
-                  </h5>
-                  <p className="text-sm text-gray-600">
-                    Improve systems through testing and refinement.
-                  </p>
-                </div>
+            {/* Step 3: Implementation */}
+            <div className="relative z-10 flex flex-col items-center mb-1 pr-40 -mt-6">
+              <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
+                <svg
+                  className="w-10 h-10 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                </svg>
+              </div>
+              <div className="mt-3 max-w-[16rem] text-center">
+                <h5 className="text-base font-bold text-gray-900 mb-1">
+                  Implementation
+                </h5>
+                <p className="text-sm text-gray-600">
+                  Deploy and configure approved solutions.
+                </p>
+              </div>
+            </div>
+
+            {/* Step 4: Monitor and Control */}
+            <div className="relative z-10 flex flex-col items-center mb-1 pl-50 -mt-6">
+              <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
+                <svg
+                  className="w-10 h-10 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                  />
+                </svg>
+              </div>
+              <div className="mt-3 max-w-[16rem] text-center">
+                <h5 className="text-base font-bold text-gray-900 mb-1">
+                  Monitor and Control
+                </h5>
+                <p className="text-sm text-gray-600">
+                  Track performance and ensure proper operation.
+                </p>
+              </div>
+            </div>
+
+            {/* Step 5: Optimization */}
+            <div className="relative z-10 flex flex-col items-center pr-40 -mt-6">
+              <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
+                <svg
+                  className="w-10 h-10 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                  />
+                </svg>
+              </div>
+              <div className="mt-3 max-w-[16rem] text-center">
+                <h5 className="text-base font-bold text-gray-900 mb-1">
+                  Optimization
+                </h5>
+                <p className="text-sm text-gray-600">
+                  Improve systems through testing and refinement.
+                </p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
+
+      
       {/* ==================== FEATURED SOLUTIONS AND TRAINING ====================*/}
       <section
         id="training"
         className="flex flex-col py-10 md:py-15 h-full bg-[#EBF5FD] scroll-mt-18"
       >
         {/* Margin */}
-        <div className="mx-[2.063rem] lg:mx-[7.438rem]">
+        <div className="mx-[2.063rem] md:mx-16 xl:mx-[7.438rem]">
           {/* Title */}
           <div className="text-center w-full self-center px-10 lg:px-0 sm:w-full md:w-auto lg:w-auto">
             <h3>
@@ -1446,16 +1345,14 @@ export default function Home() {
 
                     {/* Full blur overlay */}
                     <div
-                      className={`absolute inset-0 rounded-2xl backdrop-blur-sm bg-black/1 transition-opacity duration-500 ${
-                        tappedCard === item.id ? "opacity-100" : "opacity-0"
-                      }`}
+                      className={`absolute inset-0 rounded-2xl backdrop-blur-sm bg-black/1 transition-opacity duration-500 ${tappedCard === item.id ? "opacity-100" : "opacity-0"
+                        }`}
                     />
 
                     {/* Content */}
                     <div
-                      className={`absolute inset-0 px-5 flex flex-col justify-center transition-opacity duration-500 ${
-                        tappedCard === item.id ? "opacity-100" : "opacity-0"
-                      }`}
+                      className={`absolute inset-0 px-5 flex flex-col justify-center transition-opacity duration-500 ${tappedCard === item.id ? "opacity-100" : "opacity-0"
+                        }`}
                     >
                       {/* Title row */}
                       <div className="flex items-center justify-between gap-2">
@@ -1568,7 +1465,7 @@ export default function Home() {
 
       {/* ==================== ABOUT THE COMPANY ====================*/}
       <section id="about" className="scroll-mt-18 py-16 bg-[#EBF5FD]">
-        <div className="sm:mx-6 lg:mx-[7.438rem] mx-[2.063rem]">
+        <div className="mx-[2.063rem] md:mx-16 xl:mx-[7.438rem]">
           {/* Title and Description */}
           <div className="text-center mb-12">
             <span className="inline-block border border-gray-300 rounded-full px-5 py-1.5 text-sm text-black bg-white mb-4">
@@ -1701,7 +1598,7 @@ export default function Home() {
         className="flex justify-center items-center py-16 lg:py-20 bg-[#EBF5FD] scroll-mt-19"
       >
         {/* CHANGE THIS CODE THERE SHOULDN'T BE ANOTHER DIV BECAUSE IT ALREADY HAS SECTION TAG */}
-        <div className="w-full h-full flex mx-[2.063rem] lg:mx-[7.438rem] flex-col-reverse md:flex-col-reverse lg:flex-row space-x-0 md:space-x-0 lg:space-x-16 items-center space-y-6 md:space-y-12 lg:space-y-0">
+        <div className="w-full h-full flex mx-[2.063rem] md:mx-16 xl:mx-[7.438rem] flex-col-reverse md:flex-col-reverse lg:flex-row space-x-0 md:space-x-0 lg:space-x-16 items-center space-y-6 md:space-y-12 lg:space-y-0">
           <ContactForm />
 
           {/* Text Content */}

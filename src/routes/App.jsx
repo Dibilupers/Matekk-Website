@@ -66,20 +66,20 @@ const NSE6SecureNetworking = lazy(
 );
 const NSE6SASE = lazy(() => import("../pages/training/fortinet/nse6sase"));
 const NSE6CloudSecurity = lazy(
-  () => import("../pages/training/fortinet/NSE6CloudSecurity"),
+  () => import("../pages/training/fortinet/nse6cloudsecurity"),
 );
 const NSE6SecurityOperations = lazy(
   () => import("../pages/training/fortinet/nse6securityoperations"),
 );
 const NSE7SecureNetworking = lazy(
-  () => import("../pages/training/fortinet/NSE7SecureNetworking"),
+  () => import("../pages/training/fortinet/nse7securenetworking"),
 );
-const NSE7SASE = lazy(() => import("../pages/training/fortinet/NSE7SASE"));
+const NSE7SASE = lazy(() => import("../pages/training/fortinet/nse7sase"));
 const NSE7CloudSecurity = lazy(
-  () => import("../pages/training/fortinet/NSE7CloudSecurity"),
+  () => import("../pages/training/fortinet/nse7cloudsecurity"),
 );
 const NSE7SecurityOperations = lazy(
-  () => import("../pages/training/fortinet/NSE7SecurityOperations"),
+  () => import("../pages/training/fortinet/nse7securityoperations"),
 );
 const NSE8 = lazy(() => import("../pages/training/fortinet/nse8"));
 
