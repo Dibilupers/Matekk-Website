@@ -1,6 +1,13 @@
 import { Settings, Tag, MessageSquare, Contact } from "lucide-react";
 import Partners from "../components/partners/partners";
 import { Link } from "react-router-dom";
+/* Solutions Gallery Imgs */
+import gallery1 from "../assets/solutionsGallery1.webp";
+import gallery2 from "../assets/solutionsGallery2.webp";
+import gallery3 from "../assets/solutionsGallery3.webp";
+import gallery4 from "../assets/solutionsGallery4.webp";
+import gallery5 from "../assets/solutionsGallery5.webp";
+
 import ictImage from "../assets/ict.png";
 import webImage from "../assets/web.png";
 import { useState, useEffect } from "react";
@@ -13,7 +20,6 @@ import availability from "../assets/availability.svg";
 import Button from "../../src/components/ui/button";
 import { useLocation } from "react-router-dom";
 import TestimonialSection from "../components/section/TestimonialsSection.jsx";
-import TrainingPage from "../components/section/TrainingPage.jsx";
 
 export default function Home() {
   const totalSlides = 3;
@@ -77,7 +83,7 @@ export default function Home() {
   const galleryItems = [
     {
       id: 1,
-      src: ictImage,
+      src: gallery1,
       alt: "Network and Security Infrastructure Projects",
       title: "Network and Security Infrastructure Projects",
       desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
@@ -85,28 +91,28 @@ export default function Home() {
     },
     {
       id: 2,
-      src: webImage,
+      src: gallery2,
       alt: "SLSU Delegates",
       title: "SLSU Delegates Welcome",
       desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
     },
     {
       id: 3,
-      src: ictImage,
+      src: gallery3,
       alt: "Team Celebration",
       title: "Team Celebration",
       desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
     },
     {
       id: 4,
-      src: webImage,
+      src: gallery4,
       alt: "Ideas Workshop",
       title: "Ideas Workshop",
       desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
     },
     {
       id: 5,
-      src: ictImage,
+      src: gallery5,
       alt: "Conference Panel",
       title: "Conference Panel",
       desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
