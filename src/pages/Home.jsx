@@ -8,6 +8,7 @@ import gallery3 from "../assets/solutionsGallery3.webp";
 import gallery4 from "../assets/solutionsGallery4.webp";
 import gallery5 from "../assets/solutionsGallery5.webp";
 
+import MaamGrace from "../assets/Maam_Grace.png"
 import ictImage from "../assets/ict.png";
 import webImage from "../assets/web.png";
 import { useState, useEffect } from "react";
@@ -255,7 +256,7 @@ export default function Home() {
                 {/* Person Image */}
                 <div className="relative right-6">
                   <img
-                    src="/src/assets/maamgrace2.png"
+                    src={MaamGrace}
                     alt="Professional holding laptop with ICT solutions"
                     className="w-[90%]"
                   />
