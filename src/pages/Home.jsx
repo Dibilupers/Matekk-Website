@@ -836,7 +836,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* NOT DONE CHECKING */}
       {/* ==================== OUR WORKING PROCESS ====================*/}
       <section className="py-10 md:py-15 bg-white scroll-mt-18 mx-[2.063rem] md:mx-16 xl:mx-[7.438rem] space-y-8 lg:space-y-2 overflow-hidden">
         {/* Text Content */}
@@ -872,7 +871,7 @@ export default function Home() {
                 <div className="desktop_process_steps">
                   <div className="desktop_process_icons">
                     <svg className="desktop_process_svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path  strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20h3v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20h3v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                     </svg>
                   </div>
                   <div className="space-y-1 text-center">
@@ -1116,6 +1115,8 @@ export default function Home() {
             </div>
           </div>
 
+
+          {/* NEED TO BE CHECKED MORE */}
           {/* Mobile Version */}
           <div className="block md:hidden relative">
             {/* Mobile Version SVG Connecting Lines */}
@@ -1159,7 +1160,7 @@ export default function Home() {
 
             {/* Mobile Version Icons */}
             {/* Step 1: Initiation & Consultancy */}
-            <div className="relative z-10 flex flex-col items-center mb-1 pr-41">
+            <div className="relative z-10 flex flex-col items-center mb-1 pr-41 space-y-2">
               <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
                 <svg
                   className="desktop_process_svg"
@@ -1186,7 +1187,7 @@ export default function Home() {
             </div>
 
             {/* Step 2: Planning & Design */}
-            <div className="relative z-10 flex flex-col items-center mb-1 pl-50 -mt-6">
+            <div className="relative z-10 flex flex-col items-center mb-1 pl-50 -mt-6 space-y-2">
               <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
                 <svg
                   className="desktop_process_svg"
@@ -1202,18 +1203,14 @@ export default function Home() {
                   />
                 </svg>
               </div>
-              <div className="mt-3 max-w-[16rem] text-center">
-                <h5 className="text-base font-bold text-gray-900 mb-1">
-                  Planning & Design
-                </h5>
-                <p className="text-sm text-gray-600">
-                  Create structured plans and system designs.
-                </p>
+              <div className="space-y-1 text-center">
+                <h5>Planning & Design</h5>
+                <p>Create structured plans and system designs.</p>
               </div>
             </div>
 
             {/* Step 3: Implementation */}
-            <div className="relative z-10 flex flex-col items-center mb-1 pr-40 -mt-6">
+            <div className="relative z-10 flex flex-col items-center mb-1 pr-40 -mt-6 space-y-2">
               <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
                 <svg
                   className="desktop_process_svg"
@@ -1235,18 +1232,14 @@ export default function Home() {
                   />
                 </svg>
               </div>
-              <div className="mt-3 max-w-[16rem] text-center">
-                <h5 className="text-base font-bold text-gray-900 mb-1">
-                  Implementation
-                </h5>
-                <p className="text-sm text-gray-600">
-                  Deploy and configure approved solutions.
-                </p>
+              <div className="space-y-1 text-center">
+                <h5>Implementation</h5>
+                <p>Deploy and configure approved solutions.</p>
               </div>
             </div>
 
             {/* Step 4: Monitor and Control */}
-            <div className="relative z-10 flex flex-col items-center mb-1 pl-50 -mt-6">
+            <div className="relative z-10 flex flex-col items-center mb-1 pl-50 -mt-6 space-y-2">
               <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
                 <svg
                   className="desktop_process_svg"
@@ -1262,18 +1255,14 @@ export default function Home() {
                   />
                 </svg>
               </div>
-              <div className="mt-3 max-w-[16rem] text-center">
-                <h5 className="text-base font-bold text-gray-900 mb-1">
-                  Monitor and Control
-                </h5>
-                <p className="text-sm text-gray-600">
-                  Track performance and ensure proper operation.
-                </p>
+              <div className="space-y-1 text-center">
+                <h5>Monitor and Control</h5>
+                <p>Track performance and ensure proper operation.</p>
               </div>
             </div>
 
             {/* Step 5: Optimization */}
-            <div className="relative z-10 flex flex-col items-center pr-40 -mt-6">
+            <div className="relative z-10 flex flex-col items-center pr-40 -mt-6 space-y-2">
               <div className="w-20 h-20 bg-[#5192E6] rounded-full flex items-center justify-center shadow-xl">
                 <svg
                   className="desktop_process_svg"
@@ -1289,20 +1278,14 @@ export default function Home() {
                   />
                 </svg>
               </div>
-              <div className="mt-3 max-w-[16rem] text-center">
-                <h5 className="text-base font-bold text-gray-900 mb-1">
-                  Optimization
-                </h5>
-                <p className="text-sm text-gray-600">
-                  Improve systems through testing and refinement.
-                </p>
+              <div className="space-y-1 text-center">
+                <h5>Optimization</h5>
+                <p>Improve systems through testing and refinement.</p>
               </div>
             </div>
           </div>
         </div>
       </section>
-
-
 
       {/* ==================== FEATURED SOLUTIONS AND TRAINING ====================*/}
       <section
