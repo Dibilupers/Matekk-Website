@@ -776,22 +776,22 @@ export default function Home() {
           {/* RIGHT SIDE - Reasons Why Choose Solverous */}
           {/* ====== Experience ====== */}
           <div className="space-y-4">
-            <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
-              <h5 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
+            <div className="why_choose_card">
+              <h5>
                 Experience
               </h5>
-              <p className="text-sm lg:text-base text-[#000000] leading-relaxed">
+              <p>
                 Over a decade of providing ICT and engineering solutions and
                 professional training since our establishment in 2013.
               </p>
             </div>
 
             {/* ====== Expertise ====== */}
-            <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
-              <h5 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
+            <div className="why_choose_card">
+              <h5>
                 Expertise
               </h5>
-              <p className="text-sm lg:text-base text-[#000000] leading-relaxed">
+              <p>
                 Led by a Professional Electronics Engineer and supported by
                 certified engineers, technicians, and instructors with strong
                 industry and academic backgrounds.
@@ -799,22 +799,23 @@ export default function Home() {
             </div>
 
             {/* ====== Quality Training ====== */}
-            <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
-              <h5 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
+            <div className="why_choose_card">
+              <h5>
                 Quality Training
               </h5>
-              <p className="text-sm lg:text-base text-[#000000] leading-relaxed">
-                We offer face-to-face and online training programs aligned with
-                industry standards and globally recognized certifications.
+              <p>
+                We offer face-to-face and online training programs aligned
+                with industry standards and globally recognized
+                certifications.
               </p>
             </div>
 
             {/* ====== End-to-End Approach ====== */}
-            <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
-              <h5 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
+            <div className="why_choose_card">
+              <h5>
                 End-to-End Approach
               </h5>
-              <p className="text-sm lg:text-base text-[#000000] leading-relaxed">
+              <p>
                 We follow the Plan, Build, Operate, Optimize, and Test (PBOOT)
                 methodology to ensure structured and effective delivery of ICT
                 solutions.
@@ -822,11 +823,11 @@ export default function Home() {
             </div>
 
             {/* ====== Innovation & Integrity ====== */}
-            <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
-              <h5 className="text-lg lg:text-xl font-bold text-[#000000] mb-2">
+            <div className="why_choose_card">
+              <h5>
                 Innovation & Integrity
               </h5>
-              <p className="text-sm lg:text-base text-[#000000] leading-relaxed">
+              <p>
                 Our work is guided by core values that emphasize innovation,
                 ethical practices, excellence, collaboration, and continuous
                 improvement.
