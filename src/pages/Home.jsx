@@ -32,6 +32,7 @@ export default function Home() {
   const [isTablet, setIsTablet] = useState(
     () => window.innerWidth >= 768 && window.innerWidth < 1024,
   );
+  const [is2xl, setIs2xl] = useState(() => window.innerWidth >= 1536);
   const location = useLocation();
   /* Scroll function for when user comes form another page scrolls to home */
   useEffect(() => {
@@ -48,6 +49,7 @@ export default function Home() {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
       setIsTablet(window.innerWidth >= 768 && window.innerWidth < 1024);
+      setIs2xl(window.innerWidth >= 1536);
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -72,12 +74,16 @@ export default function Home() {
     ? "(78.2vw + 2.5rem)"
     : isTablet
       ? "(39vw + 2.5rem)"
-      : "(27vw + 2.5rem)";
+      : is2xl
+        ? "(24vw + 2.5rem)"
+        : "(27vw + 2.5rem)";
   const bottomStep = isMobile
     ? "(77vw + 2.5rem)"
     : isTablet
       ? "(39vw + 2.5rem)"
-      : "(25vw + 2.5rem)";
+      : is2xl
+        ? "(24vw + 2.5rem)"
+        : "(25vw + 2.5rem)";
   const [hoveredRow, setHoveredRow] = useState(null);
   const [tappedCard, setTappedCard] = useState(null);
   const galleryItems = [
@@ -419,7 +425,7 @@ export default function Home() {
               </div>
 
               {/* List of Solutions - In Slides */}
-              <div className="overflow-hidden w-[85vw] md:w-[45vw] lg:w-[60vw] xl:w-[53vw]">
+              <div className="overflow-hidden w-[85vw] md:w-[45vw] lg:w-[60vw] xl:w-[53vw] 2xl:w-[52vw]">
                 <div
                   className="flex gap-x-5 transition-transform duration-500 ease-in-out"
                   style={{
@@ -618,7 +624,7 @@ export default function Home() {
               </div>
 
               {/* List of Trainings - In Slides */}
-              <div className="overflow-hidden w-[85vw] md:w-[45vw] lg:w-[60vw] xl:w-[53vw] order-last md:order-first">
+              <div className="overflow-hidden w-[85vw] md:w-[45vw] lg:w-[60vw] xl:w-[53vw] 2xl:w-[52vw] order-last md:order-first">
                 <div
                   className="flex flex-row-reverse gap-x-5 transition-transform duration-500 ease-in-out"
                   style={{
@@ -783,9 +789,7 @@ export default function Home() {
           {/* ====== Experience ====== */}
           <div className="space-y-4">
             <div className="why_choose_card">
-              <h5>
-                Experience
-              </h5>
+              <h5>Experience</h5>
               <p>
                 Over a decade of providing ICT and engineering solutions and
                 professional training since our establishment in 2013.
@@ -794,9 +798,7 @@ export default function Home() {
 
             {/* ====== Expertise ====== */}
             <div className="why_choose_card">
-              <h5>
-                Expertise
-              </h5>
+              <h5>Expertise</h5>
               <p>
                 Led by a Professional Electronics Engineer and supported by
                 certified engineers, technicians, and instructors with strong
@@ -806,21 +808,16 @@ export default function Home() {
 
             {/* ====== Quality Training ====== */}
             <div className="why_choose_card">
-              <h5>
-                Quality Training
-              </h5>
+              <h5>Quality Training</h5>
               <p>
-                We offer face-to-face and online training programs aligned
-                with industry standards and globally recognized
-                certifications.
+                We offer face-to-face and online training programs aligned with
+                industry standards and globally recognized certifications.
               </p>
             </div>
 
             {/* ====== End-to-End Approach ====== */}
             <div className="why_choose_card">
-              <h5>
-                End-to-End Approach
-              </h5>
+              <h5>End-to-End Approach</h5>
               <p>
                 We follow the Plan, Build, Operate, Optimize, and Test (PBOOT)
                 methodology to ensure structured and effective delivery of ICT
@@ -830,9 +827,7 @@ export default function Home() {
 
             {/* ====== Innovation & Integrity ====== */}
             <div className="why_choose_card">
-              <h5>
-                Innovation & Integrity
-              </h5>
+              <h5>Innovation & Integrity</h5>
               <p>
                 Our work is guided by core values that emphasize innovation,
                 ethical practices, excellence, collaboration, and continuous
