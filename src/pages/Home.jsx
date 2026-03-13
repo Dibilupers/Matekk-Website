@@ -837,7 +837,7 @@ export default function Home() {
 
       {/* NOT DONE CHECKING */}
       {/* ==================== OUR WORKING PROCESS ====================*/}
-      <section className="py-10 md:py-15 bg-white scroll-mt-18 mx-[2.063rem] md:mx-16 xl:mx-[7.438rem] space-y-8 lg:space-y-2">
+      <section className="py-10 md:py-15 bg-white scroll-mt-18 mx-[2.063rem] md:mx-16 xl:mx-[7.438rem] space-y-8 lg:space-y-2 overflow-hidden">
         {/* Text Content */}
         <div className="flex flex-col text-right ml-0 md:ml-38 lg:ml-auto items-end">
           {/* Title */}
@@ -851,10 +851,10 @@ export default function Home() {
           </p>
         </div>
         {/* ====== Working Process ====== */}
-        <div className="relative">
+        <div className="relative overflow-hidden ">
           {/* Desktop Version */}
-          <div className="hidden lg:block relative">
-            <div className="relative h-125">
+          <div className="hidden lg:block relative overflow-hidden">
+            <div className="h-110 relative">
               <svg
                 className="absolute inset-0 w-full h-full z-0"
                 viewBox="0 0 1200 500"
@@ -870,7 +870,7 @@ export default function Home() {
 
                 {/* Step 2: Planning to Implementation */}
                 <path
-                  d="M 350 120 C 430 130, 500 190, 600 150"
+                  d="M 350 120 C 430 130, 500 190, 600 180"
                   stroke="#3B82F6"
                   strokeWidth="8"
                   fill="none"
