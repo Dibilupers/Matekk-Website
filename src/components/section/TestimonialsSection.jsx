@@ -164,7 +164,7 @@ function TestimonialCard({ item, isLarge, cardPadding }) {
           style={{ borderColor: avatarBorder, transition: bdT }}
         />
 
-        <div className="flex-1 min-w-0">
+        <div className="flex-1">
           <p
             className={`font-semibold leading-tight ${textSm}`}
             style={{ color: nameClr, transition: fgT }}
@@ -376,7 +376,7 @@ function ContactButton() {
     <Button
       title="Contact Us"
       type="none"
-      buttonCustomStyle="bg-[#1775EE] text-white hover:bg-white hover:text-blue-600 transition-all duration-300 shadow-lg hover:shadow-xl px-6 py-3"
+      buttonCustomStyle="bg-[#1775EE] text-white transition-all duration-300 shadow-lg hover:bg-[#0062E0] px-6 py-3"
       btnFunc={() => {
         document
           .getElementById("contact")
@@ -405,18 +405,6 @@ export default function TestimonialsSection() {
   const isDesktop = width >= 1024;
   const is2xl = width >= 1559;
 
-  const sectionPadding = is2xl
-    ? { padding: "4rem 7rem" }
-    : isDesktop
-      ? { padding: "3rem 3.5rem" }
-      : isTablet
-        ? { padding: "3rem 2.5rem" }
-        : width >= 480
-          ? { padding: "2.5rem 1.75rem" }
-          : width >= 430
-            ? { padding: "2.5rem 1.25rem" }
-            : { padding: "2rem 1rem" };
-
   const mobileCardPadding = isTablet
     ? "1.75rem"
     : width >= 480
@@ -426,7 +414,7 @@ export default function TestimonialsSection() {
         : "1rem";
 
   return (
-    <section className="bg-gray-50" style={sectionPadding}>
+    <section className="mx-[2.063rem] md:mx-16 xl:mx-[7.438rem] py-10 md:py-15">
       {/* ── Header ── */}
       <div
         className="flex gap-4 mb-8"
