@@ -8,7 +8,7 @@ import gallery3 from "../assets/solutionsGallery3.webp";
 import gallery4 from "../assets/solutionsGallery4.webp";
 import gallery5 from "../assets/solutionsGallery5.webp";
 
-import MaamGrace from "../assets/Maam_Grace.webp";
+import MaamGrace from "../assets/person_holding_laptop.png";
 import ictImage from "../assets/ict.png";
 import webImage from "../assets/web.png";
 import { useState, useEffect } from "react";
@@ -235,8 +235,8 @@ export default function Home() {
               </div>
 
               {/* Passing Rate */}
-              <div className="relative w-full max-w-lg xl:max-w-xl 2xl:max-w-2xl">
-                <div className="hidden xl:flex absolute top-31 left-4 lg:-left-5 bg-[#EBF5FD] rounded-xl shadow-xl/10 px-4 py-3 z-20 hover:scale-105 transition duration-300 ease-in-out justify-center items-center gap-3">
+              <div className="relative w-full max-w-md">
+                <div className="hidden xl:flex absolute top-31 left-4 lg:-left-35 bg-[#EBF5FD] rounded-xl shadow-xl/10 px-4 py-3 z-20 hover:scale-105 transition duration-300 ease-in-out justify-center items-center gap-3">
                   <h3 className="font-bold text-[#1775EE]">95%</h3>
                   <div>
                     <div className="flex gap-1">
@@ -254,25 +254,25 @@ export default function Home() {
                   </div>
                 </div>
                 {/* Person Image */}
-                <div className="relative right-6 xl:-right-4 2xl:-right-2">
+                <div className="relative right-6">
                   <img
                     src={MaamGrace}
                     alt="Professional holding laptop with ICT solutions"
-                    className="relative w-full 2xl:w-[90%] z-10"
+                    className="w-[90%]"
                   />
                 </div>
                 {/* Side Icons */}
-                <div className="home_side_icons_container top-10 right-1 lg:right-20 2xl:right-50">
+                <div className="home_side_icons_container top-9 right-1 lg:right-30">
                   <Settings className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
                 </div>
-                <div className="home_side_icons_container top-26 -right-2 lg:right-5 2xl:right-30">
+                <div className="home_side_icons_container top-24 -right-2 lg:right-13">
                   <Tag className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
                 </div>
-                <div className="home_side_icons_container top-45 2xl:top-48 right-0 2xl:right-20">
+                <div className="home_side_icons_container top-45 right-0 lg:right-4">
                   <MessageSquare className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
                 </div>
                 {/* One Feedback and Its Exam Status */}
-                <div className="hidden xl:flex absolute bottom-15 -right-4 lg:-right-0 bg-[#EBF5FD] rounded-xl shadow-2xl px-3 py-3 max-w-61 z-20 transition-transform flex-col justify-center items-center gap-2">
+                <div className="hidden xl:flex absolute bottom-15 -right-4 lg:-right-10 bg-[#EBF5FD] rounded-xl shadow-2xl px-3 py-3 max-w-61 z-20 transition-transform flex-col justify-center items-center gap-2">
                   <div className="flex items-start gap-3">
                     <img
                       src="/src/assets/Maam_Grace.webp"
