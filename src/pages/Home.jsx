@@ -19,6 +19,7 @@ import phone from "../assets/phone.svg";
 import email from "../assets/email.svg";
 import availability from "../assets/availability.svg";
 import Button from "../../src/components/ui/button";
+import Handshake from "../../src/assets/handshake.png"
 import { useLocation } from "react-router-dom";
 import TestimonialSection from "../components/section/TestimonialsSection.jsx";
 
@@ -773,7 +774,7 @@ export default function Home() {
             <div className="relative max-w-xs sm:max-w-md lg:max-w-lg mx-auto">
               <div className="absolute -top-4 -right-4 sm:-top-6 sm:-right-6 w-32 h-32 sm:w-40 sm:h-40 lg:w-50 lg:h-50 border-t-4 border-r-4 sm:border-t-6 sm:border-r-6 border-blue-500 rounded-tr-3xl z-0"></div>
               <img
-                src="/src/assets/handshake.png"
+                src={Handshake}
                 alt="Professional handshake - MGKK ICT Services team"
                 className="z-10 w-[75vw] md:w-[50vw] lg:w-full h-auto rounded-2xl sm:rounded-3xl object-cover aspect-4/5"
               />
