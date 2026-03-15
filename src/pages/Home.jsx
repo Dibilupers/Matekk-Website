@@ -1161,7 +1161,7 @@ export default function Home() {
               />
               {/* Line 3→4: Left to Right */}
               <path
-                d="M 140 500 C 260 560, 305 490, 290 740"
+                d="M 100 490 C 190 560, 305 490, 305 700"
                 stroke="#3B82F6"
                 strokeWidth="5"
                 fill="none"
@@ -1169,7 +1169,7 @@ export default function Home() {
               />
               {/* Line 4→5: Right to Left */}
               <path
-                d="M 310 720 C 310 720, 90 720, 140 910"
+                d="M 310 720 C 310 720, 90 720, 110 910"
                 stroke="#3B82F6"
                 strokeWidth="5"
                 fill="none"
