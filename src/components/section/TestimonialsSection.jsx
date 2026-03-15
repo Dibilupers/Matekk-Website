@@ -160,7 +160,7 @@ function TestimonialCard({ item, isLarge, cardPadding }) {
         <img
           src={item.avatar}
           alt={item.name}
-          className={`${avatarSz} rounded-full border-2 object-cover flex-shrink-0`}
+          className={`${avatarSz} rounded-full border-2 object-cover shrink-0`}
           style={{ borderColor: avatarBorder, transition: bdT }}
         />
 
@@ -460,7 +460,7 @@ export default function TestimonialsSection() {
         </div>
 
         <div
-          className="flex-shrink-0"
+          className="shrink-0"
           style={{ paddingTop: isMobile ? 0 : "0.125rem" }}
         >
           <ContactButton is2xl={is2xl} />
