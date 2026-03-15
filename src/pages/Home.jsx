@@ -339,11 +339,11 @@ export default function Home() {
         {/* Title and Description Container */}
         <div className="flex flex-col justify-center items-center text-center space-y-1">
           {/* Title */}
-          <div className="flex flex-col sm:flex-row space-x-2 font-bold text-3xl">
+          <div className="flex flex-col sm:flex-row space-x-2 font-bold text-3xl px-8 sm:px-0">
             <h3>Services We Provide to <span className="text-[#1775EE]">Elevate Your Business</span></h3>
           </div>
           {/* Description */}
-          <p className="w-78 sm:w-lg md:w-2xl lg:w-xl xl:w-4xl">
+          <p className="max-w-4xl mx-auto">
             MGKK Information Communication Technology Services delivers
             end-to-end ICT and engineering solutions alongside comprehensive
             training programs designed to meet industry demands and support
