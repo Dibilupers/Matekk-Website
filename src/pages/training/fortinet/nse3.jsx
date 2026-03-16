@@ -1,0 +1,293 @@
+import Button from "../../../components/ui/button";
+import { FaCircleCheck } from "react-icons/fa6";
+import { IoIosCheckmarkCircleOutline } from "react-icons/io";
+
+import ccnaBadge from "../../../assets/FortinetNSE3.png";
+import ccnaHero from "../../../assets/CCNAHeroImageAutomation.png";
+import ccnaFooter from "../../../assets/CCNAFooterImageAutomation.png";
+import MealIcon from "../../../assets/Meal.svg";
+import ReviewIcon from "../../../assets/Review.svg";
+import InstitutionalIcon from "../../../assets/InsitutionalAccount.svg";
+import WorkstationIcon from "../../../assets/Workstation.svg";
+import MedalIcon from "../../../assets/Medal.svg";
+import CourseModules from "../../../components/training/courseModules";
+import TrainingTemplateFooter from "../../../components/section/TrainingTemplateFooter";
+import EnrollNowButton from "../../../components/ui/EnrollNowButton";
+import TrainingHeroBanner from "../../../components/section/TrainingHeroBanner";
+
+// ==================== COMPONENT NAME - CHANGE FOR EACH COURSE ====================
+export default function NSE3() {
+  // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
+  const modules = [
+    {
+      title: "Advanced Security for Networks",
+      items: [
+        "Deep dive into FortiGate NGFW capabilities and use cases",
+        "Configuring and managing VPNs with FortiGate",
+        "Advanced threat protection features and configurations",
+      ],
+    },
+    {
+      title: "Securing the Cloud with Fortinet",
+      items: [
+        "FortiCASB Cloud Access Security Broker",
+        "Security solutions for public, private, and hybrid cloud environments",
+        "Integration of cloud security into the Security Fabric",
+      ],
+    },
+    {
+      title: "Endpoint and Mobile Security",
+      items: [
+        "FortiClient unified endpoint protection",
+        "FortiEDR advanced endpoint threat detection and response",
+        "Securing mobile devices and remote access",
+      ],
+    },
+    {
+      title: "Application Security",
+      items: [
+        "FortiWeb Web Application Firewall (WAF) features and deployment",
+        "Protecting against OWASP Top 10 vulnerabilities",
+        "Application security within the Security Fabric",
+      ],
+    },
+    {
+      title: "Secure Wireless and WAN Solutions",
+      items: [
+        "FortiAP secure wireless access points",
+        "FortiExtender cellular WAN connectivity",
+        "Secure SD-WAN",
+      ],
+    },
+    {
+      title: "Email and Web Security",
+      items: [
+        "FortiMail: Email security and anti-spam features",
+        "Identifying and mitigating advanced threats via email and web",
+        "Best practices for deploying email and web security solutions",
+      ],
+    },
+    {
+      title: "Management, Analysis, and Reporting",
+      items: [
+        "FortiManager centralized security management",
+        "FortiAnalyzer security analytics and reporting",
+        "Leveraging analytics for proactive threat detection",
+      ],
+    },
+  ];
+
+  return (
+    <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
+      {/* ==================== HERO BANNER ====================*/}
+      <TrainingHeroBanner
+        bgImage={ccnaHero}
+        category="FORTINET"
+        title="NSE 3"
+        description="Learn how to strengthen network security using key FortiGate features. 
+                          Through hands-on demos and interactive simulations,
+                           you’ll practice basic operations and prepare to explore more advanced topics.
+                        "
+      />
+
+      {/* ==================== CONTENT SECTION - Training Informations/Content ==================== */}
+      <div className="flex flex-col lg:flex-row justify-start items-start lg:items-stretch gap-6 lg:gap-8">
+        {/* ==================== LEFT SIDE: Contents/Information ==================== */}
+        <div className="flex flex-col gap-8">
+          {/* ==================== ABOUT SECTION ==================== */}
+          <section className="flex flex-col gap-y-3">
+            {/* About Section - Title */}
+            <h3>
+              About This <span className="text-[#1775EE]">Course</span>
+            </h3>
+            {/* About Section - Description */}
+            {/* CHANGE: Course description paragraphs */}
+            <p>
+              In this course, you will gain practical skills to strengthen
+              network security using essential FortiGate features. Through
+              interactive simulations and guided demonstrations, you will learn
+              how to perform basic configuration and operational tasks.
+            </p>
+            <p>
+              Aligned with Fortinet NSE 3, this course builds your hands-on
+              experience and prepares you for more advanced FortiGate concepts
+              and security implementations.
+            </p>
+          </section>
+
+          {/* ==================== WHAT YOU WILL LEARN ====================*/}
+          <section className="flex flex-col gap-y-5">
+            {/* What You Will Learn Section - Title */}
+            <h3>
+              What You Will <span className="text-[#1775EE]">Learn</span>
+            </h3>
+
+            {/* What You Will Learn Section - List */}
+            <div className="grid flex-col lg:flex-col-2 gap-4">
+              <div className="flex items-center gap-2.5">
+                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
+                <p>Set up common and key features on FortiGate devices</p>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
+                <p>Control access to network resources</p>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
+                <p>
+                  Securely connect remote users to the corporate network via
+                  VPNs
+                </p>
+              </div>
+              <p className="flex items-center gap-2.5">
+                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
+                <span>Carry out basic system maintenance</span>
+              </p>
+            </div>
+          </section>
+
+          {/* ==================== COURSE CONTENT ==================== */}
+          <section className="flex flex-col gap-y-5">
+            {/* Course Content - Title */}
+            <h3>
+              Course <span className="text-[#1775EE]">Content</span>
+            </h3>
+
+            {/* Course Content - List */}
+            <CourseModules modules={modules} />
+          </section>
+        </div>
+
+        {/* ==================== RIGHT SIDEBAR: Contents/Information ==================== */}
+        <aside className="flex flex-col gap-5 lg:w-72 xl:w-80 shrink-0">
+          {/* ==================== CERT BADGE ====================*/}
+          <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
+            {/* Cert Badge - Change/Update Image */}
+            <img
+              src={ccnaBadge}
+              alt="Fortinet NSE 1 Certification Badge"
+              className="w-50 h-50 object-contain"
+            />
+          </div>
+
+          {/* ==================== JOB OPPORTUNITIES ====================*/}
+          <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-2">
+            {/* Job Opportunities - Title */}
+            <h5 className="text-[#1775EE] font-bold">Job Opportunities</h5>
+            {/* Job Opportunities - List */}
+            {[
+              "Entry-Level Security Analyst",
+              "Junior Network Administrator",
+              "IT Security Associate",
+              "Cybersecurity Intern",
+            ].map((job) => (
+              <p key={job} className="flex gap-2 justify-left items-center">
+                <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
+                <span className="text-sm">{job}</span>
+              </p>
+            ))}
+          </div>
+
+          {/* ==================== TARGET LEARNERS ====================*/}
+          <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-2">
+            {/* Target Learners - Title */}
+            <h5 className="text-[#1775EE] font-bold">Target Learners</h5>
+            {/* Target Learners - List */}
+            {["Intermediate"].map((job) => (
+              <p key={job} className="flex gap-2 justify-left items-center">
+                <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
+                <span className="text-sm">{job}</span>
+              </p>
+            ))}
+          </div>
+
+          {/* ==================== SCHEDULE ====================*/}
+          <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-2">
+            {/* Schedule - Title */}
+            <h5 className="text-[#1775EE] font-bold">Schedule</h5>
+            {/* Schedule - List */}
+            <div className="flex flex-col gap-2 text-sm">
+              <div className="flex justify-start gap-2">
+                <p className="font-bold">Modality:</p>
+                <p>Face to Face/Online</p>
+              </div>
+              <div className="flex justify-start gap-2">
+                <p className="font-bold">Duration:</p>
+                <p>7 Days</p>
+              </div>
+              <div className="flex justify-start gap-2">
+                <p className="font-bold">Days:</p>
+                <p>Monday-Sunday</p>
+              </div>
+              <div className="flex justify-start gap-2">
+                <span className="font-bold">Time:</span>
+                <span>10:00 AM – 6:00 PM</span>
+              </div>
+            </div>
+          </div>
+
+          {/* ==================== INCLUSIONS ====================*/}
+          <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-2">
+            {/* Inlcusions - Title */}
+            <h5 className="text-[#1775EE] font-bold">Inclusions</h5>
+
+            {/* Inclusions - List */}
+            <div className="inclusions">
+              <span className="inclusions_icons">
+                <img src={MealIcon} alt="Meal" className="w-4 h-4" />
+              </span>
+              <p className="text-sm">Lunch & snacks (onsite)</p>
+            </div>
+
+            <div className="inclusions">
+              <span className="inclusions_icons">
+                <img src={ReviewIcon} alt="Review" className="w-4 h-4" />
+              </span>
+              <p className="text-sm">Reviewers & exercises</p>
+            </div>
+
+            <div className="inclusions">
+              <span className="inclusions_icons">
+                <img
+                  src={InstitutionalIcon}
+                  alt="Institutional Account"
+                  className="w-4 h-4"
+                />
+              </span>
+              <p className="text-sm">Institutional Accounts</p>
+            </div>
+
+            <div className="inclusions">
+              <span className="inclusions_icons">
+                <img
+                  src={WorkstationIcon}
+                  alt="Workstation"
+                  className="w-4 h-4"
+                />
+              </span>
+              <p className="text-sm">Workstation per student</p>
+            </div>
+
+            <div className="inclusions">
+              <span className="inclusions_icons">
+                <img src={MedalIcon} alt="Medal" className="w-4 h-4" />
+              </span>
+              <p className="text-sm">Certificate of Completion</p>
+            </div>
+
+            {/* CHANGE: Download link text and URL */}
+            <a href="#" className="text-sm font-medium underline mt-2">
+              Download the Palo Alto Exam Basics here
+            </a>
+          </div>
+        </aside>
+      </div>
+
+      {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
+      <TrainingTemplateFooter
+        bgImage={ccnaFooter} // CHANGE: Update background image for the footer banner
+        description="Advance your networking career and prepare for the CCNP Enterprise exam."
+      />
+    </main>
+  );
+}

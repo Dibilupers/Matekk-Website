@@ -1,11 +1,54 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Rubik:wght@400;500;600;700&display=swap');
 
 @import "tailwindcss";
 
 
 
 @theme {
-  --font-inter: "Inter", sans-serif; 
   --font-poppins: "Poppins", sans-serif;
-    --font-rubik: "Rubik", sans-serif;
+  --font-rubik: "Rubik", sans-serif;
+  --font-body: var(--font-poppins);
+  --font-heading: var(--font-rubik);
+}
+
+p, body {
+  font-family: var(--font-body);
+  @apply text-[0.87rem] sm:text-[1rem] md:text-[0.93rem];
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: bold;
+}
+
+h1 {
+  @apply text-[2rem] md:text-3xl lg:text-3xl xl:text-4xl 2xl:text-5xl;
+}
+
+h3 {
+  @apply text-xl sm:text-2xl md:text-3xl lg:text-2xl xl:text-[2rem] 2xl:text-[2.5rem];
+}
+
+h5 {
+  @apply text-[1rem] sm:text-[1rem] md:text-[1rem] lg:text-[1.2rem] xl:text-[1.2rem] 2xl:text-[1.25rem];
+}
+
+h6 {
+  @apply text-[0.87rem] sm:text-[1rem] md:text-[0.8rem] font-light;
+}
+
+.partner-logos-format {
+  @apply flex justify-center items-center w-26 sm:w-30 md:w-40 h-14 sm:h-16 md:h-24 shrink-0 bg-white p-3 rounded-xl;
+}
+
+.inclusions {
+  @apply flex flex-row justify-start items-center gap-2;
+}
+
+.inclusions_icons {
+  @apply text-[#1775EE] shrink-0 w-8 h-8 rounded-full border border-[#1775EE] flex items-center justify-center;
+}
+
+.services_card {
+  @apply relative shrink-0 w-[83vw] sm:w-[83vw] md:w-[42vw] lg:w-[24vw] xl:w-[25vw] rounded-xl overflow-hidden bg-[#EBF5FD] cursor-pointer;
 }

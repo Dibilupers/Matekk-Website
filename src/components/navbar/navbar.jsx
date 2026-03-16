@@ -1,65 +1,785 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom'; // Make sure you have react-router-dom installed
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import EnrollNowButton from "../ui/EnrollNowButton";
+import MainLogo from "../../assets/MATEKK_logo.png";
+import TrainingLogo from "../../assets/MATEKK_training_logo.png";
+import SolutionsLogo from "../../assets/MATEKK_services_logo.png";
 
-function Navbar() {
-  // Opening of hamburger menu
+function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
-  // Scrolled effect 
   const [scrolled, setScrolled] = useState(false);
-  // Updated nav links with routes
-  const navLinks = [
-    { name: "Home", path: "/" },
-    { name: "Solutions", path: "/solutions" },
-    { name: "Training", path: "/training" },
-    { name: "About", path: "/about" },
-    { name: "Contact", path: "/contact" }
-  ];
+  const [openDropdown, setOpenDropdown] = useState(null);
+  const [openSubcourse, setOpenSubcourse] = useState(null);
+  const [openSubSubcourse, setOpenSubSubcourse] = useState(null);
+  const [openSubSubSubcourse, setOpenSubSubSubcourse] = useState(null);
+  const [openThirdLevel, setOpenThirdLevel] = useState(null);
+  const [openFourthLevel, setOpenFourthLevel] = useState(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  /* If the user is on specific page then logo changes */
+  const getLogoElement = () => {
+    if (location.pathname.startsWith("/training")) {
+      return (
+        <img src={TrainingLogo} alt="Training Logo" className="w-11 md:w-12" />
+      );
+    }
+    if (location.pathname.startsWith("/solutions")) {
+      return (
+        <img
+          src={SolutionsLogo}
+          alt="Solutions Logo"
+          className="w-10 md:w-11"
+        />
+      );
+    }
+    return <img src={MainLogo} alt="MATEKK Logo" className="w-7 md:w-8" />;
+  };
+  const dropdownMenus = {
+    solutions: [
+      {
+        name: "ICT Consultancy (PBOOT)",
+        subcourses: [
+          { name: "Data Center Facilities", path: "/solutions/ict/datacenter" },
+          {
+            name: "ICT Network and Security Infrastructure",
+            path: "/solutions/ict/network",
+          },
+          { name: "Cybersecurity", path: "/solutions/ict/cybersecurity" },
+          {
+            name: "Vulnerability Assessment and Penetration Testing (VAPT)",
+            path: "/solutions/ict/vapt",
+          },
+          {
+            name: "Web and Software Development",
+            path: "/solutions/ict/webdev",
+          },
+          { name: "Cloud Computing Services", path: "/solutions/ict/cloud" },
+          {
+            name: "SMART Environment Automation (IoT)",
+            path: "/solutions/ict/iot",
+          },
+        ],
+      },
+      {
+        name: "Auxiliary Systems and PECE Consultancy",
+        subcourses: [
+          { name: "Auxiliary Systems", path: "/solutions/auxiliary/systems" },
+          { name: "PECE Consultancy", path: "/solutions/auxiliary/pece" },
+        ],
+      },
+      {
+        name: "Cloud Computing",
+        subcourses: [
+          {
+            name: "Cloud Infrastructure",
+            path: "/solutions/cloud/infrastructure",
+          },
+          { name: "Cloud Migration", path: "/solutions/cloud/migration" },
+        ],
+      },
+      {
+        name: "IT Management",
+        subcourses: [
+          { name: "IT Strategy", path: "/solutions/itmanagement/strategy" },
+          { name: "IT Operations", path: "/solutions/itmanagement/operations" },
+        ],
+      },
+      {
+        name: "Customized Training Solutions",
+        subcourses: [
+          { name: "Corporate Training", path: "/solutions/training/corporate" },
+          { name: "Custom Curriculum", path: "/solutions/training/curriculum" },
+        ],
+      },
+    ],
+
+    training: [
+      {
+        name: "Cisco",
+        subcourses: [
+          {
+            name: "CCNA",
+            subcourses: [
+              { name: "CCNA", path: "/training/cisco/ccna/ccna" },
+              {
+                name: "CCNA Automation",
+                path: "/training/cisco/ccna/automation",
+              },
+              {
+                name: "CCNA Cybersecurity",
+                path: "/training/cisco/ccna/cybersecurity",
+              },
+            ],
+          },
+          {
+            name: "CCNP",
+            subcourses: [
+              {
+                name: "CCNP Enterprise",
+                path: "/training/cisco/ccnp/enterprise",
+              },
+              {
+                name: "CCNP Security",
+                subcourses: [
+                  {
+                    name: "Security",
+                    path: "/training/cisco/ccnp/ccnp-security/security",
+                  },
+                  {
+                    name: "SNCF",
+                    path: "/training/cisco/ccnp/ccnp-security/sncf",
+                  },
+                  {
+                    name: "SISE",
+                    path: "/training/cisco/ccnp/ccnp-security/sise",
+                  },
+                  {
+                    name: "SVPN",
+                    path: "/training/cisco/ccnp/ccnp-security/svpn",
+                  },
+                  {
+                    name: "SDSI",
+                    path: "/training/cisco/ccnp/ccnp-security/sdsi",
+                  },
+                ],
+              },
+              {
+                name: "CCNP Data Center",
+                path: "/training/cisco/ccnp/datacenter",
+              },
+            ],
+          },
+        ],
+      },
+
+      {
+        name: "CompTIA",
+        subcourses: [
+          { name: "A+ (Core 1 & 2)", path: "/training/comptia/aplus" },
+          { name: "Network+", path: "/training/comptia/network" },
+          { name: "Security+", path: "/training/comptia/security+" },
+          { name: "CySA+", path: "/training/comptia/cysa" },
+          { name: "PenTest+", path: "/training/comptia/pentest" },
+          { name: "Linux+", path: "/training/comptia/linux" },
+        ],
+      },
+
+      {
+        name: "Fortinet",
+        subcourses: [
+          { name: "NSE 1", path: "/training/fortinet/nse1" },
+          { name: "NSE 2", path: "/training/fortinet/nse2" },
+          { name: "NSE 3", path: "/training/fortinet/nse3" },
+          { name: "NSE 4 (all tracks)", path: "/training/fortinet/nse4" },
+          {
+            name: "NSE 5 Secure Networking",
+            path: "/training/fortinet/nse5securenetworking",
+          },
+          { name: "NSE 5 SASE", path: "/training/fortinet/nse5sase" },
+          {
+            name: "NSE 5 Cloud Security",
+            path: "/training/fortinet/nse5cloudsecurity",
+          },
+          {
+            name: "NSE 5 Security Operations",
+            path: "/training/fortinet/nse5securityoperations",
+          },
+          {
+            name: "NSE 6 Secure Networking",
+            path: "/training/fortinet/nse6securenetworking",
+          },
+          { name: "NSE 6 SASE", path: "/training/fortinet/nse6sase" },
+          {
+            name: "NSE 6 Cloud Security",
+            path: "/training/fortinet/nse6cloudsecurity",
+          },
+          {
+            name: "NSE 6 Security Operations",
+            path: "/training/fortinet/nse6securityoperations",
+          },
+          {
+            name: "NSE 7 Secure Networking",
+            path: "/training/fortinet/nse7securenetworking",
+          },
+          { name: "NSE 7 SASE", path: "/training/fortinet/nse7sase" },
+          {
+            name: "NSE 7 Cloud Security",
+            path: "/training/fortinet/nse7cloudsecurity",
+          },
+          {
+            name: "NSE 7 Security Operations",
+            path: "/training/fortinet/nse7securityoperations",
+          },
+          {
+            name: "NSE 8",
+            path: "/training/fortinet/nse8",
+          },
+        ],
+      },
+
+      {
+        name: "Palo Alto",
+        subcourses: [
+          {
+            name: "Network Security",
+            subcourses: [
+              {
+                name: "Cybersecurity Apprentice",
+                path: "/training/paloalto/networksecurity/apprentice",
+              },
+              {
+                name: "Cybersecurity Practitioner",
+                path: "/training/paloalto/networksecurity/practitioner",
+              },
+              {
+                name: "Network Security Professional",
+                path: "/training/paloalto/networksecurity/professional",
+              },
+              {
+                name: "Network Security Analyst",
+                path: "/training/paloalto/networksecurity/analyst",
+              },
+              {
+                name: "Next-Generation Firewall Engineer",
+                path: "/training/paloalto/networksecurity/nextgenerationfirewallengineer",
+              },
+              {
+                name: "SD-WAN Engineer",
+                path: "/training/paloalto/networksecurity/sdwanengineer",
+              },
+              {
+                name: "Security Service Edge Engineer",
+                path: "/training/paloalto/networksecurity/securityserviceedgeengineer",
+              },
+              {
+                name: "Network Security Architect",
+                path: "/training/paloalto/networksecurity/architect",
+              },
+            ],
+          },
+          {
+            name: "Security Operations",
+            subcourses: [
+              {
+                name: "Security Operations Professional",
+                path: "/training/paloalto/securityoperations/professional",
+              },
+              {
+                name: "XSIAM Analyst",
+                path: "/training/paloalto/securityoperations/xsiamanalyst",
+              },
+              {
+                name: "XDR Analyst",
+                path: "/training/paloalto/securityoperations/xdranalyst",
+              },
+              {
+                name: "XSIAM Engineer",
+                path: "/training/paloalto/securityoperations/xsiamengineer",
+              },
+              {
+                name: "XDR Engineer",
+                path: "/training/paloalto/securityoperations/xdrengineer",
+              },
+              {
+                name: "XSOAR Engineer",
+                path: "/training/paloalto/securityoperations/xsoarengineer",
+              },
+            ],
+          },
+          {
+            name: "Cloud Security",
+            subcourses: [
+              {
+                name: "Cloud Security Professional",
+                path: "/training/paloalto/cloudsecurity/professional",
+              },
+            ],
+          },
+        ],
+      },
+
+      {
+        name: "Practical Ethical Hacking",
+        subcourses: [
+          {
+            name: "Cyber Defense & Threat Hunting",
+            path: "/training/peh/cdth"
+          },
+          {
+            name: "Practical Ethical Hacking",
+            path: "/training/peh"
+          },
+        ],
+      },
+
+      {
+        name: "CDCP",
+        subcourses: [
+          {
+            name: "Data Centre Foundation Certificate",
+            path: "/training/cdcp/dcfc",
+          },
+          {
+            name: "Certified Data Centre Professional",
+            path: "/training/cdcp/cdcp",
+          },
+          {
+            name: "Certified Data Centre Specialist",
+            path: "/training/cdcp/cdcs",
+          },
+        ],
+      },
+
+      {
+        name: "Cybersecurity",
+        subcourses: [
+          {
+            name: "Blue Team: Security Operations & Defensive Cybersecurity Program",
+            path: "/training/cybersecurity/blueteam",
+          },
+          {
+            name: "Red Team: CompTIA Security+ (SY0-701) Training",
+            path: "/training/cybersecurity/redteam",
+          },
+        ],
+      },
+
+      {
+        name: "Cloud Computing",
+        subcourses: [
+          {
+            name: "Microsoft",
+            subcourses: [
+              {
+                name: "Azure Fundamentals",
+                path: "/training/cloud/microsoft/azurefundamentals",
+              },
+            ],
+          },
+          {
+            name: "AWS",
+            subcourses: [
+              {
+                name: "Cloud Practitioner",
+                path: "/training/cloud/aws/practitioner",
+              },
+            ],
+          },
+        ],
+      },
+
+      {
+        name: "IT Management",
+        subcourses: [
+          {
+            name: "ITIL 5",
+            subcourses: [
+              { name: "Foundation", path: "training/itil5/foundation" },
+            ],
+          },
+        ],
+      },
+
+      {
+        name: "Project Management",
+        subcourses: [
+          {
+            name: "Project Management Professional",
+            path: "/training/projectmanagement/pmp",
+          },
+        ],
+      },
+    ],
+  };
+
+  const scrollToSection = (sectionId) => {
+    const element = document.getElementById(sectionId);
+    if (element) element.scrollIntoView({ behavior: "smooth", block: "start" });
+    setIsOpen(false);
+  };
+
+  useEffect(() => {
+    if (location.state?.scrollTo) {
+      setTimeout(() => {
+        const el = document.getElementById(location.state.scrollTo);
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100); // gives the page time to render first
+    }
+  }, [location]);
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 10);
+
+      setOpenDropdown(null);
+      setOpenSubcourse(null);
+      setOpenSubSubcourse(null);
+      setOpenSubSubSubcourse(null);
+      setOpenThirdLevel(null);
+      setOpenFourthLevel(null);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  return (
-    <header className='flex items-center justify-between sticky top-0 bg-white z-50 px-[2.063rem] md:px-[7.438rem] py-[1rem] md:py-3'>
-      {/* Logo - Left */}
-      <Link to='/' className='font-bold active:scale-95'>
-        LOGO
-      </Link>
+  const resetMenu = () => {
+    setIsOpen(false);
+    setOpenDropdown(null);
+    setOpenSubcourse(null);
+    setOpenSubSubcourse(null);
+    setOpenSubSubSubcourse(null);
+    setOpenThirdLevel(null);
+    setOpenFourthLevel(null);
+  };
 
-      {/* Desktop Navigation - Center */}
-      <nav className='hidden md:flex items-center space-x-8 lg:space-x-12 absolute left-1/2 transform -translate-x-1/2'>
-        {navLinks.map((link) => (
-          <Link
-            key={link.name}
-            to={link.path}
-            className="hover:font-bold hover:underline transition-all duration-200 active:scale-95"
+  const handleHomeClick = () => {
+    if (location.pathname === "/") {
+      scrollToSection("home");
+    } else {
+      navigate("/", { state: { scrollTo: "home" } });
+    }
+  };
+
+  return (
+    <header
+      className={`flex flex-row items-center justify-between py-4 bg-white sticky top-0 z-50 transition-shadow px-[2.063rem] md:px-16 xl:px-[7.438rem]  ${scrolled ? "shadow-md" : ""}`}
+    >
+      {/* ↓ changed md:ml-[7.438rem] → lg:ml-[7.438rem] */}
+      {/* Logo */}
+      <button onClick={handleHomeClick} className="cursor-pointer">
+        {getLogoElement()}
+      </button>
+
+      {/* Desktop Nav — only visible at lg and above */}
+      {/* ↓ changed hidden md:flex → hidden lg:flex */}
+      <nav className="space-x-8 hidden lg:flex font-poppins items-center mr-[2.063rem] md:mr-16 xl:mr-[7.438rem] ">
+        <button
+          onClick={handleHomeClick}
+          className="hover:text-[#1775EE] hover:font-bold transition-colors cursor-pointer"
+        >
+          Home
+        </button>
+
+        <div className="relative">
+          <button
+            onClick={() =>
+              setOpenDropdown(openDropdown === "solutions" ? null : "solutions")
+            }
+            className="flex items-center gap-1 hover:font-bold hover:text-[#1775EE] transition-colors"
           >
-            {link.name}
-          </Link>
-        ))}
+            Solutions
+            <svg
+              className={`w-4 h-4 transition-transform ${openDropdown === "solutions" ? "rotate-180" : ""}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </button>
+
+          {openDropdown === "solutions" && (
+            <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 p-5 bg-white shadow-lg rounded-2xl border border-gray-100 overflow-hidden font-inter">
+              <div className="flex space-x-[2.313rem]">
+                {/* Column 1 — categories */}
+                <div className="w-100">
+                  {dropdownMenus.solutions.map((category) => (
+                    <button
+                      key={category.name}
+                      className={`w-full text-left px-6 py-2 transition-colors rounded-[0.35rem] flex items-center justify-between ${
+                        openSubcourse === category.name
+                          ? "bg-[#1775EE] text-white font-bold"
+                          : "hover:text-[#1775EE] hover:font-bold"
+                      }`}
+                      onClick={() =>
+                        setOpenSubcourse(
+                          openSubcourse === category.name
+                            ? null
+                            : category.name,
+                        )
+                      }
+                    >
+                      {category.name}
+                      {category.subcourses?.length > 0 && (
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      )}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Column 2 — subcourses */}
+                {openSubcourse && (
+                  <div className="w-fit">
+                    {dropdownMenus.solutions
+                      .find((cat) => cat.name === openSubcourse)
+                      ?.subcourses?.map((item) => (
+                        <Link
+                          key={item.name}
+                          to={item.path}
+                          onClick={resetMenu}
+                          className="block w-full text-left px-6 py-2 rounded-[0.35rem] hover:text-[#1775EE] hover:font-bold transition-colors"
+                        >
+                          {item.name}
+                        </Link>
+                      ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="relative">
+          <button
+            onClick={() =>
+              setOpenDropdown(openDropdown === "training" ? null : "training")
+            }
+            className="flex items-center gap-1 hover:text-[#1775EE] hover:font-bold transition-colors"
+          >
+            Training
+            <svg
+              className={`w-4 h-4 transition-transform ${openDropdown === "training" ? "rotate-180" : ""}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </button>
+          {/* First Column */}
+          {openDropdown === "training" && (
+            <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 p-5 bg-white shadow-lg rounded-2xl border border-gray-100 overflow-hidden font-inter">
+              <div className="flex space-x-[2.313rem]">
+                <div className="w-57">
+                  {dropdownMenus.training.map((category) => (
+                    <button
+                      key={category.name}
+                      className={`w-full text-left px-6 py-2 transition-colors rounded-[0.35rem] flex items-center justify-between ${openSubcourse === category.name ? "bg-[#1775EE] text-white font-bold" : "hover:text-[#1775EE] hover:font-bold"}`}
+                      onClick={() => {
+                        setOpenSubcourse(
+                          openSubcourse === category.name
+                            ? null
+                            : category.name,
+                        );
+                        setOpenSubSubcourse(null);
+                        setOpenSubSubSubcourse(null);
+                      }}
+                    >
+                      {category.name}
+                      {category.subcourses?.length > 0 && (
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      )}
+                    </button>
+                  ))}
+                </div>
+                {/* Second Column */}
+                {openSubcourse && (
+                  <div className="w-57 overflow-y-auto max-h-[70vh]">
+                    {dropdownMenus.training
+                      .find((cat) => cat.name === openSubcourse)
+                      ?.subcourses?.map((subcourse) =>
+                        subcourse.subcourses ? (
+                          <button
+                            key={subcourse.name}
+                            className={`w-full text-left px-6 py-2 transition-colors rounded-[0.35rem] flex items-center justify-between ${openSubSubcourse === subcourse.name ? "bg-[#1775EE] text-white font-bold" : " hover:text-[#1775EE] hover:font-bold"}`}
+                            onClick={() => {
+                              setOpenSubSubcourse(
+                                openSubSubcourse === subcourse.name
+                                  ? null
+                                  : subcourse.name,
+                              );
+                              setOpenSubSubSubcourse(null);
+                            }}
+                          >
+                            {subcourse.name}
+                            <svg
+                              className="w-4 h-4"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M9 5l7 7-7 7"
+                              />
+                            </svg>
+                          </button>
+                        ) : (
+                          <Link
+                            key={subcourse.name}
+                            to={subcourse.path}
+                            onClick={resetMenu}
+                            className="block w-full text-left px-6 py-2 rounded-[0.35rem] hover:text-[#1775EE] hover:font-bold transition-colors"
+                          >
+                            {subcourse.name}
+                          </Link>
+                        ),
+                      )}
+                  </div>
+                )}
+
+                {/* Third Column */}
+                {openSubSubcourse && (
+                  <div className="w-57 overflow-y-auto max-h-[70vh]">
+                    {dropdownMenus.training
+                      .find((cat) => cat.name === openSubcourse)
+                      ?.subcourses?.find((sub) => sub.name === openSubSubcourse)
+                      ?.subcourses?.map((subSub) => {
+                        const hasSubSubcourses =
+                          subSub.subcourses && subSub.subcourses.length > 0;
+
+                        if (hasSubSubcourses) {
+                          return (
+                            <button
+                              key={subSub.name}
+                              onClick={() =>
+                                setOpenSubSubSubcourse(
+                                  openSubSubSubcourse === subSub.name
+                                    ? null
+                                    : subSub.name,
+                                )
+                              }
+                              className={`w-full text-left px-6 py-2 flex items-center cursor-pointer justify-between rounded-[0.35rem] transition-colors ${
+                                openSubSubSubcourse === subSub.name
+                                  ? "bg-[#1775EE] text-white font-bold"
+                                  : "hover:text-[#1775EE] hover:font-bold"
+                              }`}
+                            >
+                              {subSub.name}
+                              <svg
+                                className="w-4 h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M9 5l7 7-7 7"
+                                />
+                              </svg>
+                            </button>
+                          );
+                        }
+
+                        return (
+                          <Link
+                            key={subSub.name}
+                            to={subSub.path}
+                            onClick={resetMenu}
+                            className="block w-full text-left px-6 py-2 rounded-[0.35rem] hover:text-[#1775EE] hover:font-bold transition-colors"
+                          >
+                            {subSub.name}
+                          </Link>
+                        );
+                      })}
+                  </div>
+                )}
+
+                {/* Fourth Column */}
+                {openSubSubSubcourse && (
+                  <div className="w-57">
+                    {dropdownMenus.training
+                      .find((cat) => cat.name === openSubcourse)
+                      ?.subcourses?.find((sub) => sub.name === openSubSubcourse)
+                      ?.subcourses?.find(
+                        (subSub) => subSub.name === openSubSubSubcourse,
+                      )
+                      ?.subcourses?.map((finalItem) => (
+                        <Link
+                          key={finalItem.name}
+                          to={finalItem.path || "#"}
+                          onClick={resetMenu}
+                          className="block w-full text-left px-6 py-2 rounded-[0.35rem] hover:text-[#1775EE] hover:font-bold transition-colors"
+                        >
+                          {finalItem.name}
+                        </Link>
+                      ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <button
+          onClick={() => {
+            if (location.pathname === "/") {
+              scrollToSection("about");
+            } else {
+              navigate("/", { state: { scrollTo: "about" } });
+            }
+          }}
+          className="hover:text-[#1775EE] hover:font-bold transition-colors cursor-pointer"
+        >
+          About
+        </button>
+
+        <button
+          onClick={() => {
+            if (location.pathname === "/") {
+              scrollToSection("contact");
+            } else {
+              navigate("/", { state: { scrollTo: "contact" } });
+            }
+          }}
+          className="hover:text-[#1775EE] hover:font-bold transition-colors cursor-pointer"
+        >
+          Contact Us
+        </button>
       </nav>
 
-      {/* Enroll Now Button - Right (Desktop) */}
-      <Link 
-        to="/enroll" 
-        className='hidden md:block text-[#007EE6] bg-transparent border border-[#007EE6] hover:bg-[#007EE6] hover:text-white py-2 px-6 rounded-lg transition-all duration-200 active:scale-95'
-      >
-        Enroll Now
-      </Link>
+      {/* Enroll Now — only visible at lg and above */}
+      <EnrollNowButton buttonCustomStyle="hidden lg:block" />
 
-      {/* Mobile Hamburger */}
-      <div className="md:hidden">
+      {/* Mobile + Tablet Hamburger — visible below lg */}
+      <div className="flex lg:hidden justify-center items-center">
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="focus:outline-none"
         >
           <svg
-            className="w-7 h-7 text-[#003058]"
+            className="w-7 h-7 text-[#1775EE]"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -81,38 +801,487 @@ function Navbar() {
             )}
           </svg>
         </button>
-      </div>
 
-      {/* Mobile Menu */}
-      <div
-        className={`absolute top-16 left-0 w-full bg-white md:hidden shadow-lg overflow-hidden transition-all duration-500 ease-in-out`}
-        style={{
-          maxHeight: isOpen ? "500px" : "0px",
-          opacity: isOpen ? 1 : 0,
-        }}
-      >
-        <div className="flex flex-col items-center py-4 space-y-4">
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              to={link.path}
-              className="hover:font-bold hover:underline transition-all duration-200 active:scale-95"
-              onClick={() => setIsOpen(false)}
-            >
-              {link.name}
-            </Link>
-          ))}
-          <Link 
-            to="/enroll" 
-            className='text-[#007EE6] bg-transparent border border-[#007EE6] hover:bg-[#007EE6] hover:text-white py-3 px-12 rounded-lg transition-all duration-200'
-            onClick={() => setIsOpen(false)}
-          >
-            Enroll Now
-          </Link>
-        </div>
+        {/* Main Menu - Full Screen */}
+        {isOpen && !openDropdown && (
+          <div className="fixed inset-0 bg-white z-50 flex flex-col">
+            {/* Header */}
+            <div className="flex items-center justify-between py-4 px-8 border-b border-gray-200">
+              <button onClick={handleHomeClick} className="cursor-pointer">
+                {getLogoElement()}
+              </button>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="focus:outline-none"
+              >
+                <svg
+                  className="w-6 h-6 text-[#1775EE]"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            {/* Menu Items - Left Aligned */}
+            <nav className="flex-1 flex flex-col mt-[6vh] px-6 space-y-6 font-poppins font-bold">
+              <button
+                onClick={() => {
+                  scrollToSection("home");
+                  setIsOpen(false);
+                }}
+                className="text-2xl font-semibold text-left text-black hover:text-[#1775EE]"
+              >
+                Home
+              </button>
+
+              <button
+                onClick={() => setOpenDropdown("solutions-mobile")}
+                className="text-2xl font-semibold text-left flex items-center justify-between text-black hover:text-[#1775EE]"
+              >
+                Solutions
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </button>
+
+              <button
+                onClick={() => setOpenDropdown("training-mobile")}
+                className="text-2xl font-semibold text-left text-black flex items-center justify-between"
+              >
+                Training
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </button>
+
+              <button
+                onClick={() => {
+                  setIsOpen(false);
+                  if (location.pathname === "/") {
+                    scrollToSection("about");
+                  } else {
+                    navigate("/", { state: { scrollTo: "about" } });
+                  }
+                }}
+                className="text-2xl font-semibold text-left text-black hover:text-[#1775EE]"
+              >
+                About
+              </button>
+
+              <button
+                onClick={() => {
+                  setIsOpen(false);
+                  if (location.pathname === "/") {
+                    scrollToSection("contact");
+                  } else {
+                    navigate("/", { state: { scrollTo: "contact" } });
+                  }
+                }}
+                className="text-2xl font-semibold text-left text-black hover:text-[#1775EE]"
+              >
+                Contact Us
+              </button>
+            </nav>
+
+            {/* Enroll Button at Bottom */}
+            <div className="p-6">
+              <EnrollNowButton />
+            </div>
+          </div>
+        )}
+
+        {/* Solutions Submenu — Level 1: Categories */}
+        {openDropdown === "solutions-mobile" && !openSubcourse && (
+          <div className="fixed inset-0 bg-white z-50 flex flex-col">
+            <div className="flex items-center p-6 border-b border-gray-200">
+              <button
+                onClick={() => setOpenDropdown(null)}
+                className="focus:outline-none mr-4"
+              >
+                <svg
+                  className="w-6 h-6 text-[#1775EE]"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
+              </button>
+              <h2 className="text-xl font-bold text-[#1775EE] font-poppins">
+                Solutions
+              </h2>
+            </div>
+
+            <nav className="flex-1 px-6 py-8 space-y-4">
+              {dropdownMenus.solutions.map(
+                (
+                  category, // ← was dropdownMenus.training
+                ) => (
+                  <button
+                    key={category.name}
+                    onClick={() => setOpenSubcourse(category.name)}
+                    className="block w-full text-left text-lg text-black font-poppins hover:text-[#1775EE] py-2 flex items-center justify-between"
+                  >
+                    {category.name}
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </button>
+                ),
+              )}
+            </nav>
+          </div>
+        )}
+
+        {/* Solutions Submenu — Level 2: Subcourses */}
+        {openDropdown === "solutions-mobile" && openSubcourse && (
+          <div className="fixed inset-0 bg-white z-50 flex flex-col">
+            <div className="flex items-center p-6 border-b border-gray-200">
+              <button
+                onClick={() => setOpenSubcourse(null)}
+                className="focus:outline-none mr-4"
+              >
+                <svg
+                  className="w-6 h-6 text-[#1775EE]"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
+              </button>
+              <h2 className="text-xl font-bold text-[#1775EE] font-poppins">
+                Solutions / {openSubcourse}
+              </h2>
+            </div>
+
+            <nav className="flex-1 px-6 py-8 space-y-4">
+              {dropdownMenus.solutions
+                .find((cat) => cat.name === openSubcourse)
+                ?.subcourses?.map((item) => (
+                  <Link
+                    key={item.name}
+                    to={item.path}
+                    onClick={() => {
+                      setIsOpen(false);
+                      setOpenDropdown(null);
+                      setOpenSubcourse(null);
+                    }}
+                    className="block text-lg text-black font-poppins hover:text-[#1775EE] py-2 px-4"
+                  >
+                    {item.name}
+                  </Link>
+                ))}
+            </nav>
+          </div>
+        )}
+
+        {/* Training Level 1 - Main Categories */}
+        {openDropdown === "training-mobile" && !openSubcourse && (
+          <div className="fixed inset-0 bg-white z-50 flex flex-col">
+            <div className="flex items-center p-6 border-b border-gray-200">
+              <button
+                onClick={() => setOpenDropdown(null)}
+                className="focus:outline-none mr-4"
+              >
+                <svg
+                  className="w-6 h-6 text-[#1775EE]"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
+              </button>
+              <h2 className="text-xl font-bold text-[#1775EE] font-poppins">
+                Training
+              </h2>
+            </div>
+
+            <nav className="flex-1 px-6 py-8 space-y-4">
+              {dropdownMenus.training.map((category) => (
+                <button
+                  key={category.name}
+                  onClick={() => setOpenSubcourse(category.name)}
+                  className="block w-full text-left text-lg text-black font-poppins hover:text-[#1775EE] py-2 flex items-center justify-between"
+                >
+                  {category.name}
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </button>
+              ))}
+            </nav>
+          </div>
+        )}
+
+        {/* Training Level 2 - Subcourses */}
+        {openDropdown === "training-mobile" &&
+          openSubcourse &&
+          !openThirdLevel && (
+            <div className="fixed inset-0 bg-white z-50 flex flex-col">
+              <div className="flex items-center p-6 border-b border-gray-200">
+                <button
+                  onClick={() => setOpenSubcourse(null)}
+                  className="focus:outline-none mr-4"
+                >
+                  <svg
+                    className="w-6 h-6 text-[#1775EE]"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 19l-7-7 7-7"
+                    />
+                  </svg>
+                </button>
+                <h2 className="text-xl font-bold text-[#1775EE] font-poppins">
+                  Training/{openSubcourse}
+                </h2>
+              </div>
+
+              <nav className="flex-1 px-6 py-8 space-y-4">
+                {dropdownMenus.training
+                  .find((cat) => cat.name === openSubcourse)
+                  ?.subcourses.map((subcourse) =>
+                    subcourse.subcourses ? (
+                      <button
+                        key={subcourse.name}
+                        onClick={() => setOpenThirdLevel(subcourse.name)}
+                        className="block w-full text-left text-lg text-black font-poppins hover:text-[#1775EE] py-2 flex items-center justify-between"
+                      >
+                        {subcourse.name}
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      </button>
+                    ) : (
+                      <Link
+                        key={subcourse.name}
+                        to={subcourse.path}
+                        onClick={resetMenu}
+                        className="block text-lg text-black font-poppins hover:text-[#1775EE] py-2 px-4"
+                      >
+                        {subcourse.name}
+                      </Link>
+                    ),
+                  )}
+              </nav>
+            </div>
+          )}
+
+        {/* Training Level 3 - Course Options or Fourth Level Categories */}
+        {openDropdown === "training-mobile" &&
+          openThirdLevel &&
+          !openFourthLevel && (
+            <div className="fixed inset-0 bg-white z-50 flex flex-col">
+              <div className="flex items-center p-6 border-b border-gray-200">
+                <button
+                  onClick={() => setOpenThirdLevel(null)}
+                  className="focus:outline-none mr-4"
+                >
+                  <svg
+                    className="w-6 h-6 text-[#1775EE]"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 19l-7-7 7-7"
+                    />
+                  </svg>
+                </button>
+                <h2 className="text-xl font-bold text-[#1775EE] font-poppins">
+                  Training/{openSubcourse}/{openThirdLevel}
+                </h2>
+              </div>
+
+              <nav className="flex-1 px-6 py-8 space-y-4">
+                {dropdownMenus.training
+                  .find((cat) => cat.name === openSubcourse)
+                  ?.subcourses.find((sub) => sub.name === openThirdLevel)
+                  ?.subcourses?.map((option) =>
+                    option.subcourses ? (
+                      // Has another level (4th level - for Palo Alto) - Show arrow with active state
+                      <button
+                        key={option.name}
+                        onClick={() => setOpenFourthLevel(option.name)}
+                        className={`block w-full text-left text-lg font-poppins py-2 px-4 rounded-lg flex items-center justify-between transition-colors ${
+                          openFourthLevel === option.name
+                            ? "bg-[#EBF5FD] text-black"
+                            : "text-black hover:text-[#1775EE]"
+                        }`}
+                      >
+                        {option.name}
+                        <svg
+                          className={`w-4 h-4 ${openFourthLevel === option.name ? "stroke-[#1775EE]" : ""}`}
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          strokeWidth={openFourthLevel === option.name ? 3 : 2}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      </button>
+                    ) : (
+                      // Final link - NO arrow icon
+                      <Link
+                        key={option.name}
+                        to={option.path}
+                        onClick={() => {
+                          setIsOpen(false);
+                          setOpenDropdown(null);
+                          setOpenSubcourse(null);
+                          setOpenThirdLevel(null);
+                        }}
+                        className="block text-lg text-black font-poppins hover:text-[#1775EE] py-2 px-4"
+                      >
+                        {option.name}
+                      </Link>
+                    ),
+                  )}
+              </nav>
+            </div>
+          )}
+
+        {/* Training Level 4 - Final Options (for Palo Alto 4-level structure) */}
+        {openDropdown === "training-mobile" && openFourthLevel && (
+          <div className="fixed inset-0 bg-white z-50 flex flex-col">
+            <div className="flex items-center p-6 border-b border-gray-200">
+              <button
+                onClick={() => setOpenFourthLevel(null)}
+                className="focus:outline-none mr-4"
+              >
+                <svg
+                  className="w-6 h-6 text-[#1775EE]"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
+              </button>
+              <h2 className="text-xl font-bold text-[#1775EE] font-poppins">
+                Training/{openSubcourse}/{openFourthLevel}
+              </h2>
+            </div>
+
+            <nav className="flex-1 px-6 py-8 space-y-4">
+              {dropdownMenus.training
+                .find((cat) => cat.name === openSubcourse)
+                ?.subcourses.find((sub) => sub.name === openThirdLevel)
+                ?.subcourses?.find((fourth) => fourth.name === openFourthLevel)
+                ?.subcourses?.map((option) => (
+                  <Link
+                    key={option.name}
+                    to={option.path}
+                    onClick={() => {
+                      setIsOpen(false);
+                      setOpenDropdown(null);
+                      setOpenSubcourse(null);
+                      setOpenThirdLevel(null);
+                      setOpenFourthLevel(null);
+                    }}
+                    className="block text-lg text-black font-poppins hover:text-[#1775EE] py-2 px-4"
+                  >
+                    {option.name}
+                  </Link>
+                ))}
+            </nav>
+          </div>
+        )}
       </div>
     </header>
   );
 }
 
-export default Navbar;
+export default NavBar;
