@@ -30,7 +30,7 @@ export default function ContactForm() {
     };
 
     return (
-        <form onSubmit={sendMessage} className="bg-white space-y-6 md:space-y-4 h-full w-full md:w-full lg:w-[50%] flex flex-col p-8 rounded-2xl">
+        <form onSubmit={sendMessage} className="bg-white space-y-6 md:space-y-4 flex flex-col p-8 rounded-2xl w-full">
 
             {/* Full Name */}
             <div className="flex flex-col space-y-1">
@@ -51,7 +51,7 @@ export default function ContactForm() {
 
             {/* Email & Phone */}
             <div className="flex flex-col md:flex-row space-x-0 md:space-x-4 space-y-4 md:space-y-0">
-                <div className="flex flex-col space-y-1 w-full">
+                <div className="flex flex-col space-y-1">
                     <div className="flex items-center space-x-1">
                         <label htmlFor="email">
                             Email
@@ -67,7 +67,7 @@ export default function ContactForm() {
                     />
                 </div>
 
-                <div className="flex flex-col space-y-1 w-full">
+                <div className="flex flex-col space-y-1 ">
                     <div className="flex items-center space-x-1">
                         <label htmlFor="phone">
                             Mobile Number
