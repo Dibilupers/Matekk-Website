@@ -1465,7 +1465,7 @@ export default function Home() {
         <div className="mx-[2.063rem] md:mx-16 xl:mx-[7.438rem] space-y-6">
           {/* Title and Description */}
           <div className="flex flex-col justify-center items-center space-y-2">
-            <h6 className="inline-block border border-gray-300 rounded-full px-5 py-1.5 text-sm text-black bg-white">
+            <h6 className="w-fit border border-gray-300 rounded-full px-3 py-1.5 text-sm text-black bg-white">
               Solutions
             </h6>
             <div className="space-y-1">
@@ -1594,70 +1594,72 @@ export default function Home() {
       {/* ==================== CONTACT US ====================*/}
       <section
         id="contact"
-        className="flex justify-center items-center py-16 lg:py-20 bg-[#EBF5FD] scroll-mt-19"
+        className="flex justify-center items-center py-10 md:py-15 bg-[#EBF5FD] scroll-mt-19"
       >
-        {/* CHANGE THIS CODE THERE SHOULDN'T BE ANOTHER DIV BECAUSE IT ALREADY HAS SECTION TAG */}
-        <div className="w-full h-full flex mx-[2.063rem] md:mx-16 xl:mx-[7.438rem] flex-col-reverse md:flex-col-reverse lg:flex-row space-x-0 md:space-x-0 lg:space-x-16 items-center space-y-6 md:space-y-12 lg:space-y-0">
+        <div className="flex mx-[2.063rem] md:mx-16 xl:mx-[7.438rem] flex-col-reverse md:flex-col-reverse gap-8 lg:flex-row space-x-0 md:space-x-0 lg:space-x-8 items-center">
           <ContactForm />
 
           {/* Text Content */}
-          <div className="w-full items-start">
-            {/* Subheading */}
-            <h6 className="text-sm bg-white border border-[#EBF5FD] rounded-full py-[0.7vh] px-4 inline-flex text-center shadow-md">
-              Contact Us
-            </h6>
-            {/* Heading */}
-            <h3 className="text-[1.5rem] md:text-3xl lg:text-[2rem] my-2.5">
-              Get In Touch With Us <span className="text-[#1775EE]">Today</span>
-            </h3>
-            {/* Description */}
-            <p className="lg:w-[37vw] mb-10">
-              Get in touch with MGKK Information Communication Technology
-              Services to inquire about our ICT solutions, training programs, or
-              request a consultation. Our team is ready to assist you.
-            </p>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              {/* Subheading */}
+              <h6 className="w-fit border border-gray-300 rounded-full px-3 py-1.5 text-sm text-black bg-white">
+                Contact Us
+              </h6>
+              {/* Heading */}
+              <div className="space-y-1">
+                <h3>
+                  Get In Touch With Us <span className="text-[#1775EE]">Today</span>
+                </h3>
+                {/* Description */}
+                <p>
+                  Get in touch with MGKK Information Communication Technology
+                  Services to inquire about our ICT solutions, training programs, or
+                  request a consultation. Our team is ready to assist you.
+                </p>
+              </div>
+            </div>
 
-            {/* EMAIL IS SO NEAR WITH THE AVAILABILITY INFO */}
             {/* Company Information */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-[6.4vw] md:mb-0">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 gap-x-0 md:gap-x-20">
               {/* Address */}
-              <div className="flex items-center space-x-4">
-                <div className="bg-[#1775EE] rounded-xl p-3 flex items-center justify-center shrink-0">
+              <div className="contact_infos">
+                <div className="contact_infos_icons">
                   <img src={address} alt="Location Icon" className="w-6 h-6" />
                 </div>
                 <div>
-                  <h5 className="font-semibold text-black text-sm">Address</h5>
-                  <p className="text-xs">
+                  <h5>Address</h5>
+                  <p>
                     10B Kalantiao Marikina, Metro Manila
                   </p>
                 </div>
               </div>
 
               {/* Phone */}
-              <div className="flex items-center space-x-4">
-                <div className="bg-[#1775EE] rounded-xl p-3 flex items-center justify-center shrink-0">
+              <div className="contact_infos">
+                <div className="contact_infos_icons">
                   <img src={phone} alt="Phone Icon" className="w-6 h-6" />
                 </div>
                 <div>
-                  <h5 className="font-semibold text-black text-sm">Phone</h5>
-                  <p className="text-xs">09771968226</p>
+                  <h5>Phone</h5>
+                  <p>09771968226</p>
                 </div>
               </div>
 
               {/* Email */}
-              <div className="flex items-center space-x-4">
-                <div className="bg-[#1775EE] rounded-xl p-3 flex items-center justify-center shrink-0">
+              <div className="contact_infos">
+                <div className="contact_infos_icons">
                   <img src={email} alt="Email Icon" className="w-6 h-6" />
                 </div>
                 <div>
-                  <h5 className="font-semibold text-black text-sm">Email</h5>
-                  <p className="text-xs">converge.training.it@gmail.com</p>
+                  <h5>Email</h5>
+                  <p>converge.training.it@gmail.com</p>
                 </div>
               </div>
 
               {/* Availability */}
-              <div className="flex items-center space-x-4">
-                <div className="bg-[#1775EE] rounded-xl p-3 flex items-center justify-center shrink-0">
+              <div className="contact_infos">
+                <div className="contact_infos_icons">
                   <img
                     src={availability}
                     alt="Availability Icon"
@@ -1665,10 +1667,10 @@ export default function Home() {
                   />
                 </div>
                 <div>
-                  <h5 className="font-semibold text-black text-sm">
+                  <h5>
                     Availability
                   </h5>
-                  <p className="text-xs">Lorem Ipsum</p>
+                  <p>10:00 AM – 6:00 PM</p>
                 </div>
               </div>
             </div>

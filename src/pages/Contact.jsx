@@ -44,7 +44,7 @@ export default function ContactForm() {
                     id="name"
                     name="user_name"
                     type="text"
-                    className="border px-2 border-[#1775EE] rounded-md h-[5vh] md:h-[4vh] lg:h-[2vh] xl:h-[4.8vh]"
+                    className="contact_form_input"
                     required
                 />
             </div>
@@ -62,7 +62,7 @@ export default function ContactForm() {
                         id="email"
                         name="user_email"
                         type="email"
-                        className="border px-2 border-[#1775EE] rounded-md h-[5vh] md:h-[4vh] lg:h-[2vh xl:h-[4.8vh]"
+                        className="contact_form_input"
                         required
                     />
                 </div>
@@ -78,7 +78,7 @@ export default function ContactForm() {
                         id="phone"
                         name="user_phone"
                         type="tel"
-                        className="border px-2 border-[#1775EE] rounded-md h-[5vh] md:h-[4vh] lg:h-[2vh xl:h-[4.8vh]"
+                        className="contact_form_input"
                         required
                     />
                 </div>
@@ -96,7 +96,7 @@ export default function ContactForm() {
                     id="subject"
                     name="subject"
                     type="text"
-                    className="border px-2 border-[#1775EE] rounded-md h-[5vh] md:h-[4vh] lg:h-[2vh xl:h-[4.8vh]"
+                    className="contact_form_input"
                     required
                 />
             </div>
@@ -112,7 +112,7 @@ export default function ContactForm() {
                 <textarea
                     id="message"
                     name="message"
-                    className="border px-2 border-[#1775EE] rounded-md h-32 resize-none"
+                    className="contact_form_input h-32 resize-none"
                     required
                 />
             </div>
