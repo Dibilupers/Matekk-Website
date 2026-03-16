@@ -165,7 +165,7 @@ export default function Home() {
                     </span>
                   </h1>
 
-                  <p className="text-gray-600 text-base lg:text-xl leading-relaxed max-w-lg text-left">
+                  <p className="max-w-lg text-left">
                     Cutting-edge ICT and Engineering Solutions.
                     Industry-relevant Training. Built on over a decade of
                     expertise.
@@ -1460,7 +1460,6 @@ export default function Home() {
       {/* ==================== FEEDBACKS ====================*/}
       <TestimonialSection />
 
-      {/* NEED TO BE CHECKED MORE */}
       {/* ==================== ABOUT THE COMPANY ====================*/}
       <section id="about" className="scroll-mt-18 py-16 bg-[#EBF5FD]">
         <div className="mx-[2.063rem] md:mx-16 xl:mx-[7.438rem] space-y-6">
@@ -1489,8 +1488,8 @@ export default function Home() {
             {/* Left Column */}
             <div className="flex flex-col gap-4 md:h-full xl:h-full 2xl:h-full">
               {/* Text Card */}
-              <div className="bg-white rounded-2xl p-6 shadow-sm order-2 md:order-1 shrink-0">
-                <p className="leading-relaxed">
+              <div className="about_cards order-2 md:order-1 shrink-0">
+                <p>
                   Founded in 2013, MGKK ICT Services has grown into a reputable
                   firm delivering innovative ICT solutions and professional
                   training programs that enhance efficiency, connectivity, and
@@ -1520,16 +1519,16 @@ export default function Home() {
             {/* Right Column */}
             <div className="flex flex-col gap-4 order-4 md:order-0">
               {/* Mission Card */}
-              <div className="bg-white rounded-2xl p-6 shadow-sm">
-                <h5 className="mb-4">
+              <div className="about_cards space-y-2">
+                <h5>
                   Mission
                 </h5>
-                <p className="text-s leading-relaxed mb-3">
+                <p>
                   To empower businesses through innovative ICT and engineering
                   solutions that enhance operational efficiency, drive
                   technological advancement, and support sustainable growth.
                 </p>
-                <p className="text-s leading-relaxed">
+                <p>
                   To deliver high-quality ICT education and training that
                   enables individuals and organizations to achieve their full
                   potential and stay competitive in the digital era.
@@ -1537,14 +1536,14 @@ export default function Home() {
               </div>
 
               {/* Vision Card */}
-              <div className="bg-white rounded-2xl p-6 shadow-sm">
-                <h5 className="text-lg font-bold mb-4">Vision</h5>
-                <p className="text-s leading-relaxed mb-3">
+              <div className="about_cards space-y-2">
+                <h5>Vision</h5>
+                <p>
                   To be a global leader in ICT and Engineering solutions,
                   recognized for excellence, innovation, and commitment to
                   client success.
                 </p>
-                <p className="text-s leading-relaxed">
+                <p>
                   To be a globally recognized leader in ICT training, known for
                   excellence, innovation, and transformative educational
                   experiences.
@@ -1556,27 +1555,27 @@ export default function Home() {
       </section>
 
       {/* ==================== FREQUENTLY ASKED QUESTIONS ====================*/}
-      <section className="flex flex-col md:flex-col scroll-mt-18 lg:flex-row xl:flex-row justify-center items-start bg-white pb-16 md:py-12 lg:py-20 space-y-0 sm:space-y-8 md:space-y-10 lg:space-y-0">
+      <section className="flex flex-col lg:flex-row justify-center items-start mx-[2.063rem] md:mx-16 xl:mx-[7.438rem] py-10 md:py-15 scroll-mt-18 bg-white space-x-0 md:space-x-18 space-y-0 sm:space-y-8 md:space-y-10 lg:space-y-0">
         {/* Title and Still Have Questions Container */}
-        <div className=" mr-[2.063rem] ml-[2.063rem] mb-6 md:mb-0 md:ml-6 lg:ml-[7.4rem] mt-12 md:mt-10 lg:mt-0 w-[84%] md:w-[71%] lg:w-fit space-y-6 md:space-y-36 justify-center items-start">
+        <div className="space-y-6 lg:space-y-36 justify-center items-start">
           {/* Title */}
-          <div className=" w-full md:w-full space-y-2 ">
-            <h3 className="text-[1.5rem] md:text-3xl lg:text-[2rem] font-bold text-black w-[35vw] md:w-[15vw] lg:w-[22vw]">
-              Frequently <span className="text-[#1775EE]">Asked Questions</span>
-            </h3>
-          </div>
+          <h3 >
+            Frequently <span className="text-[#1775EE]">Asked Questions</span>
+          </h3>
 
           {/* Still Have Questions Container */}
-          <div className="bg-[#EBF5FD] p-7.5 rounded-xl shadow-md border border-[#EBF5FD] hidden md:block w-full md:w-[90%] lg:w-[95%]">
-            <h5 className="mb-3.75">Still Have Questions?</h5>
-            <p className="w-[95%] md:w-[90%] lg:w-[78%] text-black mb-7.5">
-              To be a global leader in ICT and Engineering solutions, recognized
-              for excellence, innovation, and commitment to client success.
-            </p>
+          <div className="bg-[#EBF5FD] p-7.5 rounded-xl shadow-md hidden md:block space-y-4 max-w-xl">
+            <div className="space-y-1">
+              <h5>Still Have Questions?</h5>
+              <p>
+                To be a global leader in ICT and Engineering solutions, recognized
+                for excellence, innovation, and commitment to client success.
+              </p>
+            </div>
             <Button
               title="Contact Us"
               type="none"
-              buttonCustomStyle="bg-[#1775EE] text-white hover:bg-white hover:text-blue-600 transition-all duration-300 shadow-lg hover:shadow-xl px-6 py-3"
+              buttonCustomStyle="bg-[#1775EE] text-white transition-all duration-300 shadow-lg hover:bg-[#0062E0] ease-in-out px-6 py-3"
               btnFunc={() => {
                 document
                   .getElementById("contact")
@@ -1587,7 +1586,7 @@ export default function Home() {
         </div>
 
         {/* Frequently Asked Questions List */}
-        <div className="mr-[2.063rem] ml-[2.063rem] md:ml-28 lg:ml-[2.063rem] md:mr-[7.438rem] w-[84%] md:w-[70%] justify-center items-start">
+        <div className="justify-center items-start max-w-152">
           <FAQ />
         </div>
       </section>
