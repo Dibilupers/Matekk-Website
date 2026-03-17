@@ -5,7 +5,7 @@ export default function HeroBanner({ bgImage, category, title, description }) {
   return (
     <>
       {/* ==================== HERO BANNER ====================*/}
-      <section className="relative pl-8 py-18 rounded-2xl shadow-lg flex flex-col gap-3 overflow-hidden min-h-62.5">
+      <section className="relative pl-8 py-16 rounded-2xl shadow-lg flex flex-col gap-3 overflow-hidden min-h-62.5">
         {/* ==================== HERO BANNER - Image ====================*/}
         {/* Background Image */}
         <div
@@ -25,25 +25,23 @@ export default function HeroBanner({ bgImage, category, title, description }) {
           </h6>
 
           {/* ====== Course Title and Description ======*/}
-          <div>
+          <div className="space-y-1">
             {/* Course title */}
-            <h1 className="text-[#1775EE] w-fit lg:w-160">{title}</h1>
+            <h1 className="text-[#1775EE] max-w-40 md:max-w-md">{title}</h1>
 
             {/* Course description */}
-            <p className="lg:w-[30vw] xl:w-lg text-gray-900">{description}</p>
+            <p className="max-w-65 sm:max-w-sm md:max-w-md lg:max-w-lg">{description}</p>
           </div>
 
           {/* ====== Hero Button ====== */}
-          <div className="flex flex-row sm:flex-row gap-2.5 mt-1">
+          <div className="flex flex-row gap-2.5">
             {/* Enroll Now Button - When clicked, opens a modal */}
-            <div className="w-fit">
-              <EnrollNowButton />
-            </div>
+            <EnrollNowButton />
             {/* Learn More Button - When clicked will scroll down to proceed on the other sections of the page */}
             <Button
               title="Learn More"
               type="none"
-              buttonCustomStyle="bg-transparent text-blue-600 border-2 border-blue-600 hover:bg-white hover:border-white hover:text-blue-600 transition ease-in-out transition-all duration-300 px-6 py-3"
+              buttonCustomStyle="text-blue-600 border border-blue-600 hover:bg-[#0062E0] hover:border-[#0062E0] hover:text-white transition-all duration-300"
               btnFunc={() => {
                 document
                   .getElementById("services")
