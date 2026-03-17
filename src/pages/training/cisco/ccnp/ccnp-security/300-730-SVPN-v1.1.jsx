@@ -162,7 +162,7 @@ export default function SVPN() {
         </div>
 
         {/* ==================== RIGHT SIDEBAR: Contents/Information ==================== */}
-        <aside className="flex flex-col gap-5 lg:w-72 xl:w-80 shrink-0">
+        <aside className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-1 gap-3 lg:w-72 xl:w-80 shrink-0">
           {/* ==================== CERT BADGE ====================*/}
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
             {/* Cert Badge - Change/Update Image */}
@@ -211,19 +211,19 @@ export default function SVPN() {
             {/* Schedule - List */}
             <div className="flex flex-col gap-2 text-sm">
               <div className="flex justify-start gap-2">
-                <p className="">Modality:</p>
+                <p>Modality:</p>
                 <p>Face to Face/Online</p>
               </div>
               <div className="flex justify-start gap-2">
-                <p className="">Duration:</p>
+                <p>Duration:</p>
                 <p>7 Days</p>
               </div>
               <div className="flex justify-start gap-2">
-                <p className="">Days:</p>
+                <p>Days:</p>
                 <p>Monday-Sunday</p>
               </div>
               <div className="flex justify-start gap-2">
-                <span className="">Time:</span>
+                <span>Time:</span>
                 <span>10:00 AM – 6:00 PM</span>
               </div>
             </div>
