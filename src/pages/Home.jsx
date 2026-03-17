@@ -1625,7 +1625,9 @@ export default function Home() {
               {/* Address */}
               <div className="contact_infos">
                 <div className="contact_infos_icons">
-                  <img src={address} alt="Location Icon" className="w-6 h-6" />
+                  <Link to="https://maps.app.goo.gl/EvBzK1BBNEnBo6fh8" target="_blank" className="cursor-pointer">
+                    <img src={address} alt="Location Icon" className="w-6 h-6" />
+                  </Link>
                 </div>
                 <div>
                   <h5>Address</h5>
