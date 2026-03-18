@@ -4,7 +4,7 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
-import itil5 from "../../../../assets/itil5.webp"; // Course badge image
+import cdth from "../../../../assets/cdth.png"; // Course badge image
 import ccnaHero from "../../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
 import ccnaFooter from "../../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
 import MealIcon from "../../../../assets/Meal.svg";
@@ -203,7 +203,7 @@ export default function CDTH() {
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
             {/* Cert Badge - Change/Update Image */}
             <img
-              src={itil5}
+              src={cdth}
               alt="Cyber Defense & Threat Hunting (CDTH) Bootcamp Certification Badge"
               className="w-45 h-45 lg:w-50 lg:h-50 object-contain"
             />
