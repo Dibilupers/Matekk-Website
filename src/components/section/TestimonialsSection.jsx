@@ -1,29 +1,75 @@
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import TestimonialCard from "../cards/TestimonialCard";
 import { testimonials } from "../data/testimonials";
 import Button from "../ui/button";
 
-const CARDS_PER_SLIDE = 3;
-
 export default function TestimonialsSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [animating, setAnimating] = useState(false);
+  const [hasUserInteracted, setHasUserInteracted] = useState(false);
+  const [cardsPerSlide, setCardsPerSlide] = useState(3);
 
-  const totalSlides = Math.ceil(testimonials.length / CARDS_PER_SLIDE);
+  // Dynamic cards per slide based on screen size — same as Partners logosPerPage
+  useEffect(() => {
+    const calculateCardsPerSlide = () => {
+      const width = window.innerWidth;
+      if (width < 768) {
+        setCardsPerSlide(1); // Mobile: 1 card
+      } else if (width >= 768 && width < 1024) {
+        setCardsPerSlide(2); // Tablet: 2 cards
+      } else {
+        setCardsPerSlide(3); // Desktop: 3 cards
+      }
+    };
+
+    calculateCardsPerSlide();
+    window.addEventListener("resize", calculateCardsPerSlide);
+    return () => window.removeEventListener("resize", calculateCardsPerSlide);
+  }, []);
+
+  // Reset to slide 0 when cardsPerSlide changes to avoid out-of-range slide
+  useEffect(() => {
+    setCurrentSlide(0);
+  }, [cardsPerSlide]);
+
+  const totalSlides = Math.ceil(testimonials.length / cardsPerSlide);
 
   const visibleTestimonials = testimonials.slice(
-    currentSlide * CARDS_PER_SLIDE,
-    currentSlide * CARDS_PER_SLIDE + CARDS_PER_SLIDE,
+    currentSlide * cardsPerSlide,
+    currentSlide * cardsPerSlide + cardsPerSlide,
   );
 
-  const handleSlideChange = (i) => {
-    if (animating || i === currentSlide) return;
-    setAnimating(true);
-    setTimeout(() => {
-      setCurrentSlide(i);
-      setAnimating(false);
-    }, 300);
-  };
+  const handleUserInteraction = useCallback(() => {
+    setHasUserInteracted(true);
+  }, []);
+
+  const handleSlideChange = useCallback(
+    (i) => {
+      if (animating || i === currentSlide) return;
+      setAnimating(true);
+      setTimeout(() => {
+        setCurrentSlide(i);
+        setAnimating(false);
+      }, 300);
+    },
+    [animating, currentSlide],
+  );
+
+  // Auto-scroll — same logic as Partners
+  useEffect(() => {
+    if (hasUserInteracted) return;
+
+    const autoScrollInterval = setInterval(() => {
+      setCurrentSlide((prev) => {
+        const nextSlide = (prev + 1) % totalSlides;
+        setAnimating(true);
+        setTimeout(() => setAnimating(false), 300);
+        return nextSlide;
+      });
+    }, 6000);
+
+    return () => clearInterval(autoScrollInterval);
+  }, [totalSlides, hasUserInteracted]);
 
   return (
     <section className="py-10 md:py-15 mx-[2.063rem] md:mx-16 xl:mx-[7.438rem] space-y-8">
@@ -32,7 +78,9 @@ export default function TestimonialsSection() {
         <div className="flex flex-col gap-2 max-w-2xl">
           <h3>
             Hear From Our{" "}
-            <span className="text-[#1775EE]">Successful Learners</span>
+            <span className="text-[#1775EE] block sm:inline">
+              Successful Learners
+            </span>
           </h3>
           <p className="text-gray-600">
             MGKK ICT Services has successfully delivered critical ICT
@@ -51,7 +99,11 @@ export default function TestimonialsSection() {
       </div>
 
       {/* Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div
+        onMouseDown={handleUserInteraction}
+        onTouchStart={handleUserInteraction}
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
+      >
         {visibleTestimonials.map((testimonial) => (
           <TestimonialCard
             key={testimonial.id}
@@ -69,14 +121,17 @@ export default function TestimonialsSection() {
             .map((_, i) => (
               <button
                 key={i}
-                onClick={() => handleSlideChange(i)}
+                onClick={() => {
+                  handleUserInteraction();
+                  handleSlideChange(i);
+                }}
                 disabled={animating || i === currentSlide}
                 className={`h-2 rounded-full transition-all duration-300 hover:scale-125
-    disabled:cursor-default ${
-      currentSlide === i
-        ? "bg-[#1775EE] w-6"
-        : "bg-gray-300 hover:bg-[#1775EE] w-2"
-    }`}
+                disabled:cursor-default ${
+                  currentSlide === i
+                    ? "bg-[#1775EE] w-6"
+                    : "bg-gray-300 hover:bg-[#1775EE] w-2"
+                }`}
                 aria-label={`Go to page ${i + 1}`}
               />
             ))}
