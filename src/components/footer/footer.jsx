@@ -3,8 +3,8 @@ import { FaFacebook, FaLinkedin } from "react-icons/fa6";
 import { FaInstagram } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import MainLogo from "../../assets/main_logo_footer.png";
-import TrainingLogo from "../../assets/MATEKK_training_logo.png";
-import SolutionsLogo from "../../assets/MATEKK_services_logo.png";
+import TrainingLogo from "../../assets/training_logo_footer.png";
+import SolutionsLogo from "../../assets/services_logo_footer.png";
 
 export default function Footer() {
   const location = useLocation();
@@ -24,7 +24,7 @@ export default function Footer() {
         <img
           src={TrainingLogo}
           alt="Training Logo"
-          className="w-32 md:w-30 lg:w-10 xl:w-20 2xl:w-40"
+          className="max-w-70 md:max-w-90"
         />
       );
     }
@@ -33,7 +33,7 @@ export default function Footer() {
         <img
           src={SolutionsLogo}
           alt="Solutions Logo"
-          className="w-32 md:w-30 lg:w-10 xl:w-20 2xl:w-30"
+          className="max-w-70 md:max-w-90"
         />
       );
     }
@@ -41,7 +41,7 @@ export default function Footer() {
       <img
         src={MainLogo}
         alt="MATEKK Logo"
-        className="max-w-90"
+        className="max-w-70 md:max-w-90"
       />
     );
   };
