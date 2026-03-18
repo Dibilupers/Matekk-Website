@@ -341,41 +341,6 @@ export default function CCNAAutomation() {
         />
       </section>
 
-      {/* FAQ */}
-      <section className="flex flex-col md:flex-col scroll-mt-18 mt-10 lg:mt-0 lg:flex-row xl:flex-row justify-center items-start bg-white pb-16 md:py-12 lg:py-20 space-y-0 sm:space-y-[-2rem] md:space-y-10 lg:space-y-0">
-        {/* Title and Still Have Questions Container */}
-        <div className=" mr-[2.063rem] ml-[2.063rem] mb-6 md:mb-0 md:ml-6 lg:ml-[7.4rem] mt-12 md:mt-10 lg:mt-0 w-[84%] md:w-[71%] lg:w-fit space-y-6 md:space-y-36 justify-center items-start">
-          {/* Title */}
-          <div className=" w-full md:w-full space-y-2 ">
-            <h3 className="text-[1.5rem] md:text-3xl lg:text-[2rem] font-bold text-black w-[35vw] md:w-[15vw] lg:w-[22vw]">
-              Frequently <span className="text-[#1775EE]">Asked Questions</span>
-            </h3>
-          </div>
-
-          {/* Still Have Questions Container */}
-          <div className="bg-[#EBF5FD] p-7.5 rounded-xl shadow-md border border-[#EBF5FD] hidden md:block w-full md:w-[90%] lg:w-[95%]">
-            <h5 className="Centralized monitoring and control of interconnected substations via SCADA and ICT, improving grid reliability, reducing downtime, and automating power distribution.">Still Have Questions?</h5>
-            <p className="w-[95%] md:w-[90%] lg:w-[78%] text-black mb-7.5">
-              To be a global leader in ICT and Engineering solutions, recognized
-              for excellence, innovation, and commitment to client success.
-            </p>
-            <Button
-              title="Contact Us"
-              type="none"
-              buttonCustomStyle="bg-[#1775EE] text-white hover:bg-white hover:text-blue-600 transition-all duration-300 shadow-lg hover:shadow-xl px-6 py-3"
-              btnFunc={() => {
-                document
-                  .getElementById("contact")
-                  ?.scrollIntoView({ behavior: "smooth", block: "start" });
-              }}
-            />
-          </div>
-        </div>
-        <div className="mr-[2.063rem] ml-[2.063rem] md:ml-[7rem] lg:ml-[2.063rem] md:mr-[7.438rem] w-[84%] md:w-[70%] justify-center items-start">
-          <FAQ />
-        </div>
-      </section>
-
       {/* Contact us */}
       <section
         id="contact"
