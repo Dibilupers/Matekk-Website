@@ -363,6 +363,10 @@ function NavBar() {
                 name: "Cloud Practitioner",
                 path: "/training/cloud/aws/practitioner",
               },
+              {
+                name: "Technical Essentials",
+                path: "/training/cloud/aws/essentials",
+              },
             ],
           },
         ],
