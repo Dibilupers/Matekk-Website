@@ -10,7 +10,7 @@ export default function TestimonialCard({ name, course, rating, feedback, image,
     <div
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className={`h-[320px] overflow-hidden rounded-2xl p-6 flex flex-col gap-4 shadow-sm
+      className={`min-h-[280px] md:h-[320px] overflow-hidden rounded-2xl p-6 flex flex-col gap-4 shadow-sm
         transition-all duration-300 cursor-default hover:scale-105 hover:shadow-xl
         ${animating ? "opacity-0 translate-x-4" : "opacity-100 translate-x-0"}
         ${isBlue ? "bg-[#1775EE] text-white" : "bg-[#EBF5FD] text-gray-800"}`}
