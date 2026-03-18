@@ -2,7 +2,7 @@ import Button from "../ui/button";
 
 export default function SolutionsFooterBanner({ bgImage, title, highlightText, description }) {
   return (
-    <div className="relative p-8 lg:pr-12 rounded-2xl shadow-lg flex flex-col items-center gap-2.5 overflow-hidden mt-10 min-h-[300px] mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem]">
+    <section className="relative p-8 lg:pr-12 rounded-2xl shadow-lg flex flex-col items-center gap-2.5 overflow-hidden mt-10 min-h-[300px] mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem]">
       {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -31,6 +31,6 @@ export default function SolutionsFooterBanner({ bgImage, title, highlightText, d
           }}
         />
       </div>
-    </div>
+    </section>
   );
 }
