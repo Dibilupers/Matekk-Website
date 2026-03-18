@@ -222,7 +222,7 @@ export default function CCNA() {
   ];
 
   return (
-    <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
+    <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}
       <TrainingHeroBanner
         bgImage={ccnaHero}

@@ -2,24 +2,29 @@ import Button from "../ui/button";
 
 export default function SolutionsFooterBanner({ bgImage, title, highlightText, description }) {
   return (
-    <section className="relative p-8 lg:pr-12 rounded-2xl shadow-lg flex flex-col items-center gap-2.5 overflow-hidden mt-10 min-h-[300px] mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem]">
-      {/* Background Image */}
+    <div
+      className="relative p-8 lg:pr-12 rounded-2xl shadow-lg flex flex-col justify-center items-center gap-2.5 overflow-hidden min-h-75"
+      style={{
+        backgroundImage: `url(${bgImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
       <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${bgImage})` }}
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(to right, #C2DDFF99, #FFFFFF00 67%, #C2DDFF99)",
+        }}
       />
 
-      {/* Content */}
-      <div className="relative z-10 flex flex-col items-center gap-2.5 mt-7.5 lg:mt-[5vh] px-10 lg:px-70">
-        <h1 className="text-center">
-          <span className="text-white">{title} </span>
-          <span className="text-[#1775EE]">{highlightText}</span>
-        </h1>
-
-        <p className="lg:w-[30vw] xl:w-[35vw] text-center text-white">
-          {description}
-        </p>
-
+      <div className="relative z-10 flex flex-col items-center justify-center text-center space-y-1">
+        <div className="flex flex-col justify-center items-center">
+          <h3 className="text-[#ffffff] text-shadow-[0px_4px_8px_rgba(0,0,0,0.5)] max-w-60 md:max-w-90 xl:max-w-full">{title} <span className="text-[#1775EE]">{highlightText}</span></h3>
+          <p className="text-white text-shadow-[0px_4px_8px_rgba(0,0,0,0.5)] max-w-60 md:max-w-90 xl:max-w-full">
+            {description}
+          </p>
+        </div>
         <Button
           title="Contact Us"
           type="none"
@@ -31,6 +36,6 @@ export default function SolutionsFooterBanner({ bgImage, title, highlightText, d
           }}
         />
       </div>
-    </section>
+    </div>
   );
 }

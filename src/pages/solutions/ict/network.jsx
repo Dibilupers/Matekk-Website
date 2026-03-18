@@ -223,7 +223,7 @@ export default function CCNAAutomation() {
       </section>
 
       {/* Relevant Experience */}
-      <section className="bg-[#EBF5FD] py-10 md:py-15 flex flex-col items-center">
+      <section className="bg-[#EBF5FD] flex flex-col items-center py-10 md:py-15">
         <div className="mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] space-y-6">
           <div className="flex flex-col justify-center items-center space-y-1">
             <h3>
@@ -332,12 +332,14 @@ export default function CCNAAutomation() {
       </section>
 
       {/* ==================== CALL TO ACTION BANNER - UPDATE TEXT AND IMAGE ====================*/}
-      <SolutionsFooterBanner
-        bgImage={ccnaFooter}
-        title="Contact Us Today To"
-        highlightText="Request a Consultation"
-        description="Secure your organization's network with MGKK Information Communication Technology Services."
-      />
+      <section className="mx-[2.063rem] md:mx-16 xl:mx-[7.438rem] py-10 md:py-15">
+        <SolutionsFooterBanner
+          bgImage={ccnaFooter}
+          title="Contact Us Today To"
+          highlightText="Request a Consultation"
+          description="Secure your organization's network with MGKK Information Communication Technology Services."
+        />
+      </section>
 
       {/* FAQ */}
       <section className="flex flex-col md:flex-col scroll-mt-18 mt-10 lg:mt-0 lg:flex-row xl:flex-row justify-center items-start bg-white pb-16 md:py-12 lg:py-20 space-y-0 sm:space-y-[-2rem] md:space-y-10 lg:space-y-0">
@@ -352,7 +354,7 @@ export default function CCNAAutomation() {
 
           {/* Still Have Questions Container */}
           <div className="bg-[#EBF5FD] p-7.5 rounded-xl shadow-md border border-[#EBF5FD] hidden md:block w-full md:w-[90%] lg:w-[95%]">
-            <h5 className="mb-3.75">Still Have Questions?</h5>
+            <h5 className="Centralized monitoring and control of interconnected substations via SCADA and ICT, improving grid reliability, reducing downtime, and automating power distribution.">Still Have Questions?</h5>
             <p className="w-[95%] md:w-[90%] lg:w-[78%] text-black mb-7.5">
               To be a global leader in ICT and Engineering solutions, recognized
               for excellence, innovation, and commitment to client success.
