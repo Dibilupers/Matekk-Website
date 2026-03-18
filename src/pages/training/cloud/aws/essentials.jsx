@@ -190,7 +190,7 @@ const modules = [
             <img
               src={awsessentials}
               alt="AWS Technical Essentials"
-              className="w-100 h-100 lg:w-55 lg:h-55 object-contain"
+              className="w-70 h-70 object-contain"
             />
           </div>
 
