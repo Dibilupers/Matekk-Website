@@ -22,7 +22,7 @@ import availability from "../assets/availability.svg";
 import Button from "../../src/components/ui/button";
 import Handshake from "../../src/assets/handshake.png"
 import { useLocation } from "react-router-dom";
-import TestimonialSection from "../components/section/TestimonialsSection.jsx";
+import TestimonialsSection from "../components/section/TestimonialsSection.jsx";
 
 export default function Home() {
   const totalSlides = 3;
@@ -1458,7 +1458,7 @@ export default function Home() {
       </section>
 
       {/* ==================== FEEDBACKS ====================*/}
-      <TestimonialSection />
+      <TestimonialsSection />
 
       {/* ==================== ABOUT THE COMPANY ====================*/}
       <section id="about" className="scroll-mt-18 py-16 bg-[#EBF5FD]">
