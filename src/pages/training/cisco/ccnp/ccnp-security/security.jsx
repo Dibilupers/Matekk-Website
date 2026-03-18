@@ -12,7 +12,6 @@ import ccnaHero from "../../../../../assets/CCNAHeroImageAutomation.png"; // Her
 import ccnaFooter from "../../../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
 import MealIcon from "../../../../../assets/Meal.svg";
 import ReviewIcon from "../../../../../assets/Review.svg";
-import InstitutionalIcon from "../../../../../assets/InsitutionalAccount.svg";
 import WorkstationIcon from "../../../../../assets/Workstation.svg";
 import MedalIcon from "../../../../../assets/Medal.svg";
 import CourseModules from "../../../../../components/training/courseModules";
@@ -323,17 +322,6 @@ export default function CCNPSecurity() {
                 <img src={ReviewIcon} alt="Review" className="w-4 h-4" />
               </span>
               <p>Reviewers & exercises</p>
-            </div>
-
-            <div className="inclusions">
-              <span className="inclusions_icons">
-                <img
-                  src={InstitutionalIcon}
-                  alt="Institutional Account"
-                  className="w-4 h-4"
-                />
-              </span>
-              <p>Institutional Accounts</p>
             </div>
 
             <div className="inclusions">

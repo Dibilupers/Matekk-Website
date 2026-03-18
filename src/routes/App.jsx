@@ -84,9 +84,9 @@ const NSE7SecurityOperations = lazy(
 const NSE8 = lazy(() => import("../pages/training/fortinet/nse8"));
 
 /* CDCP */
-const DCFC = lazy(() => import("../pages/training/cdcp/dcfc"));
-const CDCP = lazy(() => import("../pages/training/cdcp/cdcp"));
-const CDCS = lazy(() => import("../pages/training/cdcp/cdcs"));
+const DCFC = lazy(() => import("../pages/training/datacenter/dcfc"));
+const CDCP = lazy(() => import("../pages/training/datacenter/cdcp"));
+const CDCS = lazy(() => import("../pages/training/datacenter/cdcs"));
 
 /* Palo Alto */
 const PaloaltoApprentice = lazy(
@@ -140,9 +140,9 @@ const CloudSecurityProfessional = lazy(
 /* Cybersecurity */
 const BlueTeam = lazy(() => import("../pages/training/cybersecurity/blueteam"));
 const RedTeam = lazy(() => import("../pages/training/cybersecurity/redteam"));
-const CDTH = lazy(() => import("../pages/training/cybersecurity/CDTH"));
 /* Practical Ethical Hacking */
 const PEH = lazy(() => import("../pages/training/cybersecurity/peh/PEH"));
+const CDTH = lazy(() => import("../pages/training/cybersecurity/peh/CDTH"));
 const VAPT = lazy(() => import("../pages/training/cybersecurity/peh/VAPT"));
 
 /* Cloud */
@@ -276,10 +276,10 @@ export default function App() {
           />
           <Route path="/training/fortinet/nse8" element={<NSE8 />} />
 
-          {/* CDCP */}
-          <Route path="/training/cdcp/dcfc" element={<DCFC />} />
-          <Route path="/training/cdcp/cdcp" element={<CDCP />} />
-          <Route path="/training/cdcp/cdcs" element={<CDCS />} />
+          {/* Data Center */}
+          <Route path="/training/datacenter/dcfc" element={<DCFC />} />
+          <Route path="/training/datacenter/cdcp" element={<CDCP />} />
+          <Route path="/training/datacenter/cdcs" element={<CDCS />} />
 
           {/* Palo Alto */}
           <Route
@@ -346,6 +346,7 @@ export default function App() {
           {/* Practical Ethical Hacking */}
           <Route path="/training/cybersecurity/peh/PEH" element={<PEH />} />
           <Route path="/training/cybersecurity/peh/VAPT" element={<VAPT />} />
+          <Route path="/training/cybersecurity/peh/cdth" element={<CDTH />} />
 
           {/* Cybersecurity */}
           <Route
@@ -353,7 +354,6 @@ export default function App() {
             element={<BlueTeam />}
           />
           <Route path="/training/cybersecurity/redteam" element={<RedTeam />} />
-          <Route path="/training/cybersecurity/cdth" element={<CDTH />} />
 
           {/* Cloud */}
           <Route
