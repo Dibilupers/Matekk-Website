@@ -16,7 +16,7 @@ export default function HeroBanner({ bgImage, category, title, description }) {
         />
         {/* Hero Background Image Gradient */}
         <div className="absolute inset-0 bg-linear-to-r from-[#cbddf5] via-[#cbddf5ce] to-transparent"></div>
-
+ 
         {/* ==================== HERO BANNER - Text Content ====================*/}
         <div className="relative z-10 flex flex-col gap-3 pl-1 sm:pl-8">
           {/* Course Category */}

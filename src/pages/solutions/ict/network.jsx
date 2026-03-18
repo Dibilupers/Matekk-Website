@@ -81,7 +81,7 @@ export default function CCNAAutomation() {
             to ensure stable connectivity, data protection, and secure system
             operations for organizations."
       />
-
+ 
       {/* Building Scalable */}
       <div className="flex flex-col lg:flex-row gap-8 mt-7.5 lg:mt-15 mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem]">
         {/* Content */}

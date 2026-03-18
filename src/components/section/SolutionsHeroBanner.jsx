@@ -15,7 +15,7 @@ export default function SolutionsHeroBanner({
       />
       {/* Blur effect */}
       <div className="absolute inset-0 backdrop-blur-sm bg-white/10"></div>{" "}
-      
+       
       {/* Content */}
       <div className="relative justify-center items-center text-center z-10 flex flex-col gap-2 mr-1">
         {/* Category badge */}
@@ -44,7 +44,7 @@ export default function SolutionsHeroBanner({
           <Button
             title="Learn More"
             type="none"
-            buttonCustomStyle="bg-transparent text-blue-600 border-2 border-blue-600 hover:bg-white hover:border-white hover:text-blue-600 transition-all duration-300 px-6 py-3"
+            buttonCustomStyle="text-blue-600 border border-blue-600 hover:bg-[#0062E0] hover:border-[#0062E0] hover:text-white transition-all duration-300"
             btnFunc={() => {
               document
                 .getElementById("services")

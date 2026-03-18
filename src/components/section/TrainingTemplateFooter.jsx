@@ -3,7 +3,7 @@ import EnrollNowButton from "../ui/EnrollNowButton";
 export default function TrainingTemplateFooter({ bgImage, description }) {
   return (
     <div
-      className="relative p-8 lg:pr-12 rounded-2xl shadow-lg flex flex-col items-center gap-2.5 overflow-hidden mt-10 min-h-[300px]"
+      className="relative p-8 lg:pr-12 rounded-2xl shadow-lg flex flex-col justify-center items-center gap-2.5 overflow-hidden min-h-75"
       style={{
         backgroundImage: `url(${bgImage})`,
         backgroundSize: "cover",
@@ -14,22 +14,18 @@ export default function TrainingTemplateFooter({ bgImage, description }) {
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(to right, #C2DDFF70, #FFFFFF00 67%, #CDE3FF70)",
+            "linear-gradient(to right, #C2DDFF99, #FFFFFF00 67%, #C2DDFF99)",
         }}
       />
 
-      <div className="relative z-10 flex flex-col items-center gap-2.5 mt-7.5 lg:mt-[5vh]">
-        <h1 className="text-center">
-          <span className="text-[#ffffff]">Start Learning</span>{" "}
-          <span className="text-[#1775EE]">Today</span>
-        </h1>
-
-        <p className="lg:w-[30vw] xl:w-[35vw] text-center text-white">
-          {description}
-        </p>
-        <div className="w-fit text-sm">
-          <EnrollNowButton />
+      <div className="relative z-10 flex flex-col items-center justify-center text-center space-y-5">
+        <div>
+          <h3 className="text-[#ffffff] text-shadow-[0px_4px_8px_rgba(0,0,0,0.5)]">Start Learning <span className="text-[#1775EE]">Today</span></h3>
+          <p className="text-white text-shadow-[0px_4px_8px_rgba(0,0,0,0.5)] max-w-80">
+            {description}
+          </p>
         </div>
+        <EnrollNowButton />
       </div>
     </div>
   );
