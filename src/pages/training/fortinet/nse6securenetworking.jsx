@@ -10,13 +10,13 @@ import ccnaHero from "../../../assets/CCNAHeroImageAutomation.png"; // Hero bann
 import ccnaFooter from "../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
 import MealIcon from "../../../assets/Meal.svg";
 import ReviewIcon from "../../../assets/Review.svg";
+import InstitutionalIcon from "../../../assets/InsitutionalAccount.svg";
 import WorkstationIcon from "../../../assets/Workstation.svg";
 import MedalIcon from "../../../assets/Medal.svg";
 import CourseModules from "../../../components/training/courseModules";
 import TrainingTemplateFooter from "../../../components/section/TrainingTemplateFooter";
 import EnrollNowButton from "../../../components/ui/EnrollNowButton";
 import TrainingHeroBanner from "../../../components/section/TrainingHeroBanner";
-
 
 // ==================== COMPONENT NAME ====================
 export default function NSE6SecureNetworking() {
@@ -381,12 +381,12 @@ export default function NSE6SecureNetworking() {
               operational technology (OT) environments using Fortinet solutions.
               You will learn to design, deploy, administer, and monitor
               FortiGate, FortiNAC, FortiAnalyzer, and FortiSIEM devices to
-              protect OT infrastructures. 
+              protect OT infrastructures.
             </p>
             <p>
-              These skills provide a strong
-              foundation for designing, implementing, and operating a
-              comprehensive OT security solution using Fortinet products.
+              These skills provide a strong foundation for designing,
+              implementing, and operating a comprehensive OT security solution
+              using Fortinet products.
             </p>
           </section>
 
@@ -409,13 +409,14 @@ export default function NSE6SecureNetworking() {
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>
-                  Use FortiGate and FortiNAC to identify and manage devices
-                </p>
+                <p>Use FortiGate and FortiNAC to identify and manage devices</p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Implement segmentation and microsegmentation within an OT network</p>
+                <p>
+                  Implement segmentation and microsegmentation within an OT
+                  network
+                </p>
               </div>
             </div>
           </section>
@@ -523,6 +524,17 @@ export default function NSE6SecureNetworking() {
             <div className="inclusions">
               <span className="inclusions_icons">
                 <img
+                  src={InstitutionalIcon}
+                  alt="Institutional Account"
+                  className="w-4 h-4"
+                />
+              </span>
+              <p className="text-sm">Institutional Accounts</p>
+            </div>
+
+            <div className="inclusions">
+              <span className="inclusions_icons">
+                <img
                   src={WorkstationIcon}
                   alt="Workstation"
                   className="w-4 h-4"
@@ -540,7 +552,7 @@ export default function NSE6SecureNetworking() {
 
             {/* CHANGE: Download link text and URL */}
             <a href="#" className="text-sm font-medium underline mt-2">
-              Download the CCNP Exam Basics here
+              Download the Fortinet Exam Basics here
             </a>
           </div>
         </aside>
@@ -549,7 +561,7 @@ export default function NSE6SecureNetworking() {
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
         bgImage={ccnaFooter} // CHANGE: Update background image for the footer banner
-        description="Advance your networking career and prepare for the CCNP Enterprise exam."
+        description="Advance your networking career and prepare for the Fortinet Enterprise exam."
       />
     </main>
   );

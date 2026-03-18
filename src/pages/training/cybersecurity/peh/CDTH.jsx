@@ -1,129 +1,139 @@
 // ==================== IMPORTS - UPDATE FOR EACH COURSE ====================
 // Change these imports based on the specific course
-import Button from "../../../components/ui/button";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
-import dcfc from "../../../assets/dcfc.webp"; // Course badge image
-import ccnaHero from "../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
-import ccnaFooter from "../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
-import MealIcon from "../../../assets/Meal.svg";
-import ReviewIcon from "../../../assets/Review.svg";
-import WorkstationIcon from "../../../assets/Workstation.svg";
-import MedalIcon from "../../../assets/Medal.svg";
-import CourseModules from "../../../components/training/courseModules";
-import TrainingTemplateFooter from "../../../components/section/TrainingTemplateFooter";
-import TrainingHeroBanner from "../../../components/section/TrainingHeroBanner";
+import itil5 from "../../../../assets/itil5.webp"; // Course badge image
+import ccnaHero from "../../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
+import ccnaFooter from "../../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
+import MealIcon from "../../../../assets/Meal.svg";
+import ReviewIcon from "../../../../assets/Review.svg";
+import WorkstationIcon from "../../../../assets/Workstation.svg";
+import MedalIcon from "../../../../assets/Medal.svg";
+import CourseModules from "../../../../components/training/courseModules";
+import TrainingTemplateFooter from "../../../../components/section/TrainingTemplateFooter";
+import TrainingHeroBanner from "../../../../components/section/TrainingHeroBanner";
 
 // ==================== COMPONENT NAME ====================
-export default function DCFC() {
+export default function CDTH() {
   // ==================== COURSE MODULES ====================
   const modules = [
     {
-      title: "Introduction to Data Centres",
+      title: "SOC Foundations & Log Investigation",
       items: [
-        "History of data centres",
-        "Denition of dierent type data centres",
+        "Introduction to Security Operations Center",
+        "SOC Analyst Roles (L1, L2, L3)",
+        "Types of security logs",
+        "Linux authentication logs",
+        "Identifying suspicious activities in logs",
+        {
+          subTitle: "Hands-on Labs",
+          items: [
+            "Investigating login attempts",
+            "Detecting failed SSH authentication",
+            "Log analysis using Linux tools",
+            "Basic threat investigation",
+          ],
+        },
       ],
     },
     {
-      title: "The Data Centre and its Relation to Business",
-      items: [],
-    },
-    {
-      title: "Data Centre Standards",
-      items: ["List of standards", "Rating definitions"],
-    },
-    {
-      title: "Data Centre Site Selection",
-      items: [],
-    },
-    {
-      title: "Data Centre Facilities Areas",
-      items: ["Listing of all areas and their functions"],
-    },
-    {
-      title: "Topology Designs",
-      items: ["Selection of fittings"],
-    },
-    {
-      title: "Components of the Power Infrastructure",
+      title: "SIEM Deployment & Security Monitoring",
       items: [
-        "Utility power",
-        "Transformers",
-        "Generators",
-        "Fuel systems",
-        "UPS",
-        "STS systems",
-        "Batteries",
-        "Panel panels",
-        "Cabling/busbar systems",
-        "Power rails/Strips",
+        "Introduction to SIEM technology",
+        "Installing and configuring Wazuh SIEM",
+        "• Connecting endpoints (agents)",
+        "• Monitoring security events in real time",
+        {
+          subTitle: "Hands-on Labs",
+          items: [
+            "Deploy Wazuh server",
+            "Connect Ubuntu endpoint as agent",
+            "Generate security events",
+            "Monitor alerts in SIEM dashboard",
+          ],
+        },
       ],
     },
     {
-      title: "Lights",
-      items: ["Lights", "Emergency lights"],
-    },
-    {
-      title: "Cooling Infrastructure",
+      title:
+        "Network Monitoring & Threat Detection",
       items: [
-        "Chillers",
-        "DX Systems",
-        "Evaporators",
-        "CRACs/CRAHs/HVAC",
-        "Adiabatic",
-        "Near natural air",
-        "Curtain/room",
+        "Network traffic analysis fundamentals",
+        "Detecting suspicious network activity",
+        "Identifying reconnaissance and scanning attacks",
+        {
+          subTitle: "Hands-on Labs",
+          items: [
+            "Wireshark traffic capture",
+            "Detecting HTTP traffic and suspicious activity",
+            "Simulating network scanning attacks",
+            "Analyzing network indicators of compromise",
+          ],
+        },
       ],
     },
     {
-      title: "ICT/Network Infrastructure",
+      title: "Attack Simulation & Detection",
       items: [
-        "Equipment racks",
-        "Network cabling (inc support)",
-        "Cable trays and pathways",
-        "Tip-145 labelling",
+        "Understanding attacker techniques",
+        "Using MITRE ATT&CK to map attacks",
+        "Detecting malicious behavior in SIEM",
+        {
+          subTitle: "Hands-on Labs",
+          items: [
+            "Kali Linux attack simulation",
+            "Port scanning detection",
+            "Brute-force attack detection",
+            "File integrity monitoring alerts",
+          ],
+        },
       ],
     },
     {
-      title: "Data Centre Security",
+      title: "Threat Hunting & Incident Response",
       items: [
-        "Perimeter security",
-        "Physical protection",
-        "CCTV",
-        "Access control",
-        "Security management",
+        "Introduction to Threat Hunting",
+        "Indicators of Compromise (IOC)",
+        "Incident investigation workflow",
+        "SOC reporting and documentation",
+        {
+          subTitle: "Hands-on Labs",
+          items: [
+            "Investigate simulated attack incidents",
+            "Correlate logs and alerts",
+            "Build incident reports",
+            "Present investigation findings",
+          ],
+        },
       ],
     },
     {
-      title: "Fire Suppression",
+      title: "Final Outcome",
       items: [
-        "Detection systems",
-        "Suppression systems",
-        "Prevention systems",
-        "Fire extinguishers",
-        "Fire Safety",
-      ],
-    },
-    {
-      title: "Monitoring and reporting",
-      items: ["DCIM", "Itel/Alert"],
+        {
+          subTitle: "After completing the program, students will be able to:",
+          items: [
+            "Monitor security events using SIEM",
+            "Detect real cyber attacks",
+            "Investigate security alerts",
+            "Understand attacker techniques",
+            "Perform basic threat hunting",
+          ],
+        },
+      "These are the core skills required for SOC Analyst roles.", ],
     },
   ];
-
   return (
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}
       <TrainingHeroBanner
-              bgImage={ccnaHero}
-              category="CDCP"
-              title="Data Centre Foundation Certificate"
-              description="The Data Centre Foundation Certificate (DCFC®) is a 2-day course
-              that provides essential knowledge of data centre facilities and
-              infrastructure."
-            />
+        bgImage={ccnaHero}
+        category="Cybersecurity"
+        title="Cyber Defense & Threat Hunting (CDTH)"
+        description="Learn to detect, investigate, and respond to real cyber attacks using industry SOC tools."
+      />
 
       {/* ==================== CONTENT SECTION - Training Informations/Content ==================== */}
       <div className="flex flex-col lg:flex-row justify-start items-start lg:items-stretch gap-6 lg:gap-8">
@@ -138,18 +148,10 @@ export default function DCFC() {
             {/* About Section - Description */}
             {/* CHANGE: Course description paragraphs */}
             <p>
-              The data centre sector is one of the fastest-growing areas within
-              the ICT industry. Fueled by the rising demand for integrated
-              communication solutions, social media, online content, and cloud
-              infrastructure, the industry continues to expand rapidly, with new
-              data centres being built to support this growth.
-            </p>
-            <p>
-              Industry reports highlight a shortage of skilled data centre
-              professionals. This gap is driven both by rapidly evolving
-              technologies, which can leave current personnel with outdated
-              skills, and by the expansion of the data centre market, creating a
-              need for more trained professionals.
+              The Cyber Defense & Threat Hunting (CDTH) Bootcamp is designed to
+              prepare aspiring cybersecurity professionals for Security
+              Operations Center (SOC) roles such as SOC Analyst, Threat Hunter,
+              and Incident Responder.
             </p>
           </section>
 
@@ -164,19 +166,21 @@ export default function DCFC() {
             <div className="grid grid-cols-1 gap-4">
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Fundamentals of data centre infrastructure</p>
+                <p>Understand how a Security Operations Center (SOC) works</p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Power, cooling, and environmental management</p>
+                <p>
+                  Use the MITRE ATT&CK framework to understand attacker behavior
+                </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Physical security and access control</p>
+                <p>Perform basic threat hunting</p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Industry standards and best practice guidelines</p>
+                <p>Investigate security logs and alerts using SIEM</p>
               </div>
             </div>
           </section>
@@ -199,9 +203,9 @@ export default function DCFC() {
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
             {/* Cert Badge - Change/Update Image */}
             <img
-              src={dcfc}
-              alt="DCFC Certification Badge"
-              className="w-50 h-50 object-contain"
+              src={itil5}
+              alt="Cyber Defense & Threat Hunting (CDTH) Bootcamp Certification Badge"
+              className="w-45 h-45 lg:w-50 lg:h-50 object-contain"
             />
           </div>
 
@@ -211,10 +215,10 @@ export default function DCFC() {
             <h5 className="text-[#1775EE] ">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
-              "Data Centre Technician",
-              "Data Centre Operations Assistant",
-              "IT Support Technician",
-              "NOC / Operations Support Engineer",
+              "SOC Analyst (L1)",
+              "Security Monitoring Analyst",
+              "Threat Detection Analyst",
+              "Incident Response Assistant",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
@@ -228,7 +232,11 @@ export default function DCFC() {
             {/* Target Learners - Title */}
             <h5 className="text-[#1775EE] ">Target Learners</h5>
             {/* Target Learners - List */}
-            {["Beginners"].map((job) => (
+            {[
+              "SOC Analyst beginners (L1)",
+              "System / Network Administrators",
+              "Cybersecurity Enthusiasts",
+            ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
                 <span>{job}</span>
@@ -241,7 +249,7 @@ export default function DCFC() {
             {/* Schedule - Title */}
             <h5 className="text-[#1775EE] ">Schedule</h5>
             {/* Schedule - List */}
-            <div className="flex flex-col gap-2 ">
+            <div className="flex flex-col gap-2 text-sm">
               <div className="flex justify-start gap-2">
                 <p>Modality:</p>
                 <p>Face to Face/Online</p>
@@ -300,8 +308,8 @@ export default function DCFC() {
             </div>
 
             {/* CHANGE: Download link text and URL */}
-            <a href="#" className=" font-medium underline mt-2">
-              Download the CCNP Exam Basics here
+            <a href="#" className="text-sm font-medium underline mt-2">
+              Download the Practical Ethical Hacking Exam Basics here
             </a>
           </div>
         </aside>
@@ -310,7 +318,7 @@ export default function DCFC() {
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
         bgImage={ccnaFooter} // CHANGE: Update background image for the footer banner
-        description="Advance your networking career and prepare for the CCNP Enterprise exam."
+        description="Advance your networking career and prepare for the Practical Ethical Hacking Enterprise exam."
       />
     </main>
   );

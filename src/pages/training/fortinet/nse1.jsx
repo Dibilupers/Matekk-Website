@@ -273,7 +273,7 @@ export default function NSE1() {
 
             {/* CHANGE: Download link text and URL */}
             <a href="#" className="text-sm font-medium underline mt-2">
-              Download the Palo Alto Exam Basics here
+              Download the Fortinet Exam Basics here
             </a>
           </div>
         </aside>
@@ -282,7 +282,7 @@ export default function NSE1() {
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
         bgImage={ccnaFooter} // CHANGE: Update background image for the footer banner
-        description="Advance your networking career and prepare for the CCNP Enterprise exam."
+        description="Advance your networking career and prepare for the Fortinet Enterprise exam."
       />
     </main>
   );

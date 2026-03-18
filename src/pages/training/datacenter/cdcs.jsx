@@ -1,10 +1,11 @@
 // ==================== IMPORTS - UPDATE FOR EACH COURSE ====================
 // Change these imports based on the specific course
+import Button from "../../../components/ui/button";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
-import itil5 from "../../../assets/itil5.webp"; // Course badge image
+import cdcs from "../../../assets/cdcs.webp"; // Course badge image
 import ccnaHero from "../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
 import ccnaFooter from "../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
 import MealIcon from "../../../assets/Meal.svg";
@@ -16,113 +17,161 @@ import TrainingTemplateFooter from "../../../components/section/TrainingTemplate
 import TrainingHeroBanner from "../../../components/section/TrainingHeroBanner";
 
 // ==================== COMPONENT NAME ====================
-export default function CDTH() {
+export default function CDCS() {
   // ==================== COURSE MODULES ====================
   const modules = [
     {
-      title: "SOC Foundations & Log Investigation",
+      title: "Data Centre Design/Life Cycle Overview",
+      items: ["Phases of the data centre life cycle"],
+    },
+    {
+      title: "Standards and Rating Level Definitions",
       items: [
-        "Introduction to Security Operations Center",
-        "SOC Analyst Roles (L1, L2, L3)",
-        "Types of security logs",
-        "Linux authentication logs",
-        "Identifying suspicious activities in logs",
-        {
-          subTitle: "Hands-on Labs",
-          items: [
-            "Investigating login attempts",
-            "Detecting failed SSH authentication",
-            "Log analysis using Linux tools",
-            "Basic threat investigation",
-          ],
-        },
+        "Rating levels history and definitions",
+        "Standards and guideline comparison",
+        "N-redundancy options",
+        "Distributed redundant options",
+        "Concurrent maintainability",
+        "Fault tolerant",
+        "Substation requirements",
+        "Example topologies",
+        "Maintenance options",
       ],
     },
     {
-      title: "SIEM Deployment & Security Monitoring",
+      title: "Building Considerations",
       items: [
-        "Introduction to SIEM technology",
-        "Installing and configuring Wazuh SIEM",
-        "• Connecting endpoints (agents)",
-        "• Monitoring security events in real time",
-        {
-          subTitle: "Hands-on Labs",
-          items: [
-            "Deploy Wazuh server",
-            "Connect Ubuntu endpoint as agent",
-            "Generate security events",
-            "Monitor alerts in SIEM dashboard",
-          ],
-        },
+        "Building location and floor loading considerations",
+        "Floor and hanging loads requirements",
+        "Firing rating for walls and glass",
+        "Blast protection and bullet proofing",
+        "Forced entry protection",
       ],
     },
     {
-      title:
-        "Network Monitoring & Threat Detection",
+      title: "Advanced Raised Floor & Suspended Ceiling",
       items: [
-        "Network traffic analysis fundamentals",
-        "Detecting suspicious network activity",
-        "Identifying reconnaissance and scanning attacks",
-        {
-          subTitle: "Hands-on Labs",
-          items: [
-            "Wireshark traffic capture",
-            "Detecting HTTP traffic and suspicious activity",
-            "Simulating network scanning attacks",
-            "Analyzing network indicators of compromise",
-          ],
-        },
+        "Raised Floor installation requirements",
+        "Common raised floor problems",
+        "Seismic protection",
+        "Requirements for suspended ceiling",
       ],
     },
     {
-      title: "Attack Simulation & Detection",
+      title: "Advanced Power",
       items: [
-        "Understanding attacker techniques",
-        "Using MITRE ATT&CK to map attacks",
-        "Detecting malicious behavior in SIEM",
-        {
-          subTitle: "Hands-on Labs",
-          items: [
-            "Kali Linux attack simulation",
-            "Port scanning detection",
-            "Brute-force attack detection",
-            "File integrity monitoring alerts",
-          ],
-        },
+        "Electrical formulae",
+        "Single Line Diagram (SLD)",
+        "Overcurrent protection devices",
+        "Earth Leakage protection",
+        "Sizing of protective components",
+        "Surge protection",
+        "Power cabling and PDU requirements",
+        "Types of generators",
+        "Generator components",
+        "Fuel storage and calculation",
+        "Generator parallelling",
+        "Required UPS specifications",
+        "UPS parallel configuration",
+        "Harmonic filters",
+        "Battery bank terminology",
+        "Calculating battery banks",
+        "Battery charging",
+        "Paralleilling battery banks",
+        "Battery testing",
+        "Battery case selection",
+        "Flywheel",
+        "Hydrogen fuel cells",
       ],
     },
     {
-      title: "Threat Hunting & Incident Response",
+      title: "Electrical/Earthing Integrity tests",
       items: [
-        "Introduction to Threat Hunting",
-        "Indicators of Compromise (IOC)",
-        "Incident investigation workflow",
-        "SOC reporting and documentation",
-        {
-          subTitle: "Hands-on Labs",
-          items: [
-            "Investigate simulated attack incidents",
-            "Correlate logs and alerts",
-            "Build incident reports",
-            "Present investigation findings",
-          ],
-        },
+        "Sources of EMF",
+        "Single and three phase radiation",
+        "Measuring EMF",
+        "Safe distance guidance",
+        "Calculation of EMF attenuation factors",
       ],
     },
     {
-      title: "Final Outcome",
+      title: "Advanced Cooling",
       items: [
-        {
-          subTitle: "After completing the program, students will be able to:",
-          items: [
-            "Monitor security events using SIEM",
-            "Detect real cyber attacks",
-            "Investigate security alerts",
-            "Understand attacker techniques",
-            "Perform basic threat hunting",
-          ],
-        },
-      "These are the core skills required for SOC Analyst roles.", ],
+        "Cooling definitions",
+        "Psychrometric chart",
+        "ASHRAE recommendations",
+        "Heat dissipation",
+        "Equipment airflow",
+        "Floor plan set-up",
+        "Types of perforated tiles",
+        "Rack door construction",
+        "Delta-T and impact",
+        "Optimizing airflow",
+        "Thermal unit conversions",
+        "Calculating air volume displacement (CFM/CMH)",
+        "Cooling capacity calculations",
+        "Computational Fluid Dynamics (CFD)",
+        "Air-conditioner efficiency",
+        "SHR impact on OPEX",
+        "Efficiency indicators",
+        "Air-conditioner selection",
+        "Humidity control",
+        "Redundancy requirements",
+        "Installation requirements",
+        "Service corridor considerations",
+        "Set points and calibration",
+        "Advanced cooling technologies – air cooling",
+        "Advanced cooling technologies – liquid cooling",
+      ],
+    },
+    {
+      title: "Advanced Fire Protection",
+      items: [
+        "Fire triangle",
+        "Fire detection systems",
+        "Installation and testing of smoke sensors",
+        "Water-based suppression systems",
+        "Gas-based suppression systems",
+        "Calculate gas content",
+        "Release and hold times",
+        "Fire detection panel requirements",
+        "Verification of installation",
+        "Ongoing maintenance",
+        "Alternative systems",
+      ],
+    },
+    {
+      title: "Designing and Installing Scalable Network Cabling Systems",
+      items: [
+        "TIA-942 cabling structure topology",
+        "Copper and fibre cabling",
+        "ToR and EoR design",
+        "Installation best practices",
+        "Grounding and bonding",
+        "Cables labelling and administration",
+      ],
+    },
+    {
+      title: "Environmental Specifications / Contamination Control",
+      items: [
+        "Acoustic noise effects, regulations, specifications and limits",
+        "Data centre contamination categories",
+        "Contamination measurements, standards and limits",
+        "Preventive measures",
+      ],
+    },
+    {
+      title: "Data Centre Efficiency",
+      items: [
+        "Business drivers for environmental sustainability",
+        "Green standards and guidelines",
+        "Power Usage Effectiveness (PUE)",
+        "PUE categories",
+        "Additional performance metrics",
+        "Open Compute Project (OCP)",
+        "Savings on cooling infrastructure",
+        "Savings on light infrastructure",
+      ],
     },
   ];
   return (
@@ -130,9 +179,12 @@ export default function CDTH() {
       {/* ==================== HERO BANNER ====================*/}
       <TrainingHeroBanner
         bgImage={ccnaHero}
-        category="Cybersecurity"
-        title="Cyber Defense & Threat Hunting (CDTH)"
-        description="Learn to detect, investigate, and respond to real cyber attacks using industry SOC tools."
+        category="CDCP"
+        title="Certified Data Centre Specialist"
+        description="CDCS® is a key certification for data centre professionals looking
+              to strengthen their technical expertise and decision-making
+              skills. It also serves as a prerequisite for those pursuing the
+              advanced Certified Data Centre Expert (CDCE®) designation."
       />
 
       {/* ==================== CONTENT SECTION - Training Informations/Content ==================== */}
@@ -148,10 +200,13 @@ export default function CDTH() {
             {/* About Section - Description */}
             {/* CHANGE: Course description paragraphs */}
             <p>
-              The Cyber Defense & Threat Hunting (CDTH) Bootcamp is designed to
-              prepare aspiring cybersecurity professionals for Security
-              Operations Center (SOC) roles such as SOC Analyst, Threat Hunter,
-              and Incident Responder.
+              The Certified Data Centre Specialist (CDCS®) is an intensive
+              three-day course that provides participants with the knowledge and
+              skills to effectively engage in data centre design and operations,
+              particularly in high-demand environments. Learners gain the
+              ability to assess design proposals for accuracy, efficiency, and
+              effectiveness, including solutions for power and cooling
+              infrastructure.
             </p>
           </section>
 
@@ -166,21 +221,31 @@ export default function CDTH() {
             <div className="grid grid-cols-1 gap-4">
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Understand how a Security Operations Center (SOC) works</p>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <p>
-                  Use the MITRE ATT&CK framework to understand attacker behavior
+                  Gain a clear understanding of the data centre design lifecycle
+                  and its key stages.
                 </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Perform basic threat hunting</p>
+                <p>
+                  Communicate detailed data centre requirements with vendors,
+                  suppliers, and contractors to ensure they are met.
+                </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Investigate security logs and alerts using SIEM</p>
+                <p>
+                  Review and validate design documents, cost estimates, and
+                  technical proposals for compliance with specifications.
+                </p>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
+                <p>
+                  Understand redundancy levels in both data centre design and
+                  ongoing maintenance.
+                </p>
               </div>
             </div>
           </section>
@@ -203,9 +268,9 @@ export default function CDTH() {
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
             {/* Cert Badge - Change/Update Image */}
             <img
-              src={itil5}
-              alt="Cyber Defense & Threat Hunting (CDTH) Bootcamp Certification Badge"
-              className="w-45 h-45 lg:w-50 lg:h-50 object-contain"
+              src={cdcs}
+              alt="CDCS Certification Badge"
+              className="w-50 h-50 object-contain"
             />
           </div>
 
@@ -215,10 +280,10 @@ export default function CDTH() {
             <h5 className="text-[#1775EE] ">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
-              "SOC Analyst (L1)",
-              "Security Monitoring Analyst",
-              "Threat Detection Analyst",
-              "Incident Response Assistant",
+              "Data Center Shift Supervisor",
+              "Site Planning Engineer",
+              "Data Center Specialist",
+              "Infrastructure & Operations Roles",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
@@ -232,11 +297,7 @@ export default function CDTH() {
             {/* Target Learners - Title */}
             <h5 className="text-[#1775EE] ">Target Learners</h5>
             {/* Target Learners - List */}
-            {[
-              "SOC Analyst beginners (L1)",
-              "System / Network Administrators",
-              "Cybersecurity Enthusiasts",
-            ].map((job) => (
+            {["Beginners"].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
                 <span>{job}</span>
@@ -249,7 +310,7 @@ export default function CDTH() {
             {/* Schedule - Title */}
             <h5 className="text-[#1775EE] ">Schedule</h5>
             {/* Schedule - List */}
-            <div className="flex flex-col gap-2 text-sm">
+            <div className="flex flex-col gap-2 ">
               <div className="flex justify-start gap-2">
                 <p>Modality:</p>
                 <p>Face to Face/Online</p>
@@ -308,8 +369,8 @@ export default function CDTH() {
             </div>
 
             {/* CHANGE: Download link text and URL */}
-            <a href="#" className="text-sm font-medium underline mt-2">
-              Download the CDTH Exam Basics here
+            <a href="#" className="font-medium underline mt-2">
+              Download the CDCS Exam Basics here
             </a>
           </div>
         </aside>
@@ -318,7 +379,7 @@ export default function CDTH() {
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
         bgImage={ccnaFooter} // CHANGE: Update background image for the footer banner
-        description="Advance your networking career and prepare for the CCNP Enterprise exam."
+        description="Advance your networking career and prepare for the CDCS Enterprise exam."
       />
     </main>
   );

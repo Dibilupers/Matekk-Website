@@ -379,8 +379,8 @@ export default function CDCP() {
             </div>
 
             {/* CHANGE: Download link text and URL */}
-            <a href="#" className=" font-medium underline mt-2">
-              Download the CCNP Exam Basics here
+            <a href="#" className="font-medium underline mt-2">
+              Download the CDCP Exam Basics here
             </a>
           </div>
         </aside>
@@ -389,7 +389,7 @@ export default function CDCP() {
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
         bgImage={ccnaFooter} // CHANGE: Update background image for the footer banner
-        description="Advance your networking career and prepare for the CCNP Enterprise exam."
+        description="Advance your networking career and prepare for the CDCP Enterprise exam."
       />
     </main>
   );

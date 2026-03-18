@@ -9,7 +9,7 @@ import ictImage from "../../../assets/ict.png";
 import webImage from "../../../assets/web.png";
 import FAQ from "../../../components/FAQ/faq";
 import address from "../../../assets/location.svg";
-import ContactForm from "../../Contact";
+import ContactForm from "../../../components/contact/Contact.jsx";
 import phone from "../../../assets/phone.svg";
 import email from "../../../assets/email.svg";
 import availability from "../../../assets/availability.svg";

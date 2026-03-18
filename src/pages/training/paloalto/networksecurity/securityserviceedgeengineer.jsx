@@ -7,7 +7,6 @@ import ccnaHero from "../../../../assets/CCNAHeroImageAutomation.png";
 import ccnaFooter from "../../../../assets/CCNAFooterImageAutomation.png";
 import MealIcon from "../../../../assets/Meal.svg";
 import ReviewIcon from "../../../../assets/Review.svg";
-import InstitutionalIcon from "../../../../assets/InsitutionalAccount.svg";
 import WorkstationIcon from "../../../../assets/Workstation.svg";
 import MedalIcon from "../../../../assets/Medal.svg";
 import CourseModules from "../../../../components/training/courseModules";
@@ -353,17 +352,6 @@ export default function SecurityServiceEdgeEngineer() {
             <div className="inclusions">
               <span className="inclusions_icons">
                 <img
-                  src={InstitutionalIcon}
-                  alt="Institutional Account"
-                  className="w-4 h-4"
-                />
-              </span>
-              <p >Institutional Accounts</p>
-            </div>
-
-            <div className="inclusions">
-              <span className="inclusions_icons">
-                <img
                   src={WorkstationIcon}
                   alt="Workstation"
                   className="w-4 h-4"
@@ -390,7 +378,7 @@ export default function SecurityServiceEdgeEngineer() {
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
         bgImage={ccnaFooter} // CHANGE: Update background image for the footer banner
-        description="Advance your networking career and prepare for the CCNP Enterprise exam."
+        description="Advance your networking career and prepare for the Palo Alto Enterprise exam."
       />
     </main>
   );
