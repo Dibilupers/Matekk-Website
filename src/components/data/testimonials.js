@@ -82,7 +82,7 @@ export const testimonials = [
     feedback: "Just recently passed CCNA 200-301! Sa mga balak mag-review for CCNA exam, highly recommended dito. Simula training hanggang day before ka mag-exam, hindi ka pababayaan ni Engr. Melendres.",
     image: ClydeNelsonRocillo,
     featured: false,
-    link: null,
+    link: "https://www.facebook.com/share/p/17QmhgY3as/",
   },
   {
     id: 6,
@@ -92,7 +92,7 @@ export const testimonials = [
     feedback: "Big shout out for their bonus industry certificates! I highly recommend this training service for those looking for a supportive way to prepare for the exams.",
     image: EugineTomas,
     featured: false,
-    link: null,
+    link: "https://www.facebook.com/share/p/1Ffn3Dx8Nq/",
   },
   {
     id: 7,
@@ -102,7 +102,7 @@ export const testimonials = [
     feedback: "Special thanks to Engr. Mark Anthony Melendres, whose ability to explain complex topics with real-world relevance continues to amaze me. The hands-on labs and access to actual devices really deepened my understanding and boosted my confidence!",
     image: JunielBucad,
     featured: false,
-    link: null,
+    link: "https://www.facebook.com/share/p/1JyrJ2D6qo/",
   },
   // ── 2024 ──────────────────────────────────────────
   {
@@ -113,7 +113,7 @@ export const testimonials = [
     feedback: "At a very reasonable price you'll get to experience handling real networking equipment. Highly recommended for beginners and professionals aiming to pass different certifications!",
     image: EdwinMontesur,
     featured: false,
-    link: null,
+    link: "https://www.facebook.com/share/p/1CLvtysj6p/",
   },
   // ── 2023 ──────────────────────────────────────────
   {
@@ -124,7 +124,7 @@ export const testimonials = [
     feedback: "I strongly recommend Converge Training and IT Services! They provide quality lectures, challenging experiences that test your knowledge, and tips based on actual real-world experience.",
     image: CharlieRamosArsenio,
     featured: false,
-    link: null,
+    link: "https://www.facebook.com/share/p/1Aj6MPLYLd/",
   },
   {
     id: 10,
@@ -134,7 +134,7 @@ export const testimonials = [
     feedback: "You will know that your mentor wanted the best for you — not just the top-notch teachings and training, but also the daily meals. They are truly one of the best!",
     image: JrChupungco,
     featured: false,
-    link: null,
+    link: "https://www.facebook.com/share/p/18MySACCJC/",
   },
   // ── 2022 ──────────────────────────────────────────
   {
@@ -145,7 +145,7 @@ export const testimonials = [
     feedback: "Just passed my CCNA! Highly recommend Converge Training. It's not just lectures — they provide ways to study smart and gain deeper understanding. The bootcamp identifies your weak topics so you can improve them.",
     image: JohnKeanuMorales,
     featured: false,
-    link: null,
+    link: "https://www.facebook.com/share/p/18USut4zYP/",
   },
   {
     id: 12,
@@ -155,7 +155,7 @@ export const testimonials = [
     feedback: "Sa una wala talaga akong alam about Cisco — halos bago lahat sakin. Pero grabe yung turo, kahit ako na walang alam, absorb ko paunti-unti hanggang naging maalam na ako sa equipment and configuration.",
     image: MarcoPrilaAlfonso,
     featured: false,
-    link: null,
+    link: "https://www.facebook.com/share/p/1AsXJvpWaN/",
   },
   {
     id: 13,
@@ -165,7 +165,7 @@ export const testimonials = [
     feedback: "Finally!! Passed on my 1st try! Big thanks to Engr. Mark Anthony Melendres — grabe solid yung turo, highly recommended talaga. All the basic and advanced topics about CCNA 200-301 madali ko lang na gets, walang kahirap-hirap!",
     image: ErwinGuillermo,
     featured: false,
-    link: null,
+    link: "https://www.facebook.com/share/p/18A7VdM7wL/",
   },
   {
     id: 14,
@@ -175,7 +175,7 @@ export const testimonials = [
     feedback: "Maganda sa pakiramdam yung ikaw mismo yung gumawa ng mga exercises kaharap yung equipment. Kapag may sablay, masaya parin magtroubleshoot dahil dun ka mas matututo — and Engr. Mark Anthony Melendres is always there to assist!",
     image: ElmerGaba,
     featured: false,
-    link: null,
+    link: "https://www.facebook.com/share/p/1F7faDD8ZG/",
   },
   // ── 2021 ──────────────────────────────────────────
   {
@@ -186,7 +186,7 @@ export const testimonials = [
     feedback: "Just passed ITIL 4 Foundation! Taking it remotely is challenging, but with a great trainer who guides you and provides quality training, nothing is impossible.",
     image: ChristopherLanoria,
     featured: false,
-    link: null,
+    link: "https://www.facebook.com/share/p/18LJCaazMB/",
   },
   {
     id: 16,
@@ -196,7 +196,7 @@ export const testimonials = [
     feedback: "Thank you Engr. Mark Anthony Melendres for the ITIL 4 Foundation training, guidance, and for sharing your experience with us. The review materials provided were a great help.",
     image: RichardPerez,
     featured: false,
-    link: null,
+    link: "https://www.facebook.com/share/p/1aupimUzN6/",
   },
   {
     id: 17,
@@ -206,7 +206,7 @@ export const testimonials = [
     feedback: "Sobrang husay magturo ng trainer dito! Di lang basta nagtuturo si Engr. Mark — gusto niyang ma-apply mo sa skills mo yung tinuturo niya. Sobrang approachable at passionate sa pag-teach.",
     image: PauloCaperal,
     featured: false,
-    link: null,
+    link: "https://www.facebook.com/share/p/1AuM3cvVpY/",
   },
   // ── 2020 ──────────────────────────────────────────
   {
@@ -217,7 +217,7 @@ export const testimonials = [
     feedback: "Just passed my three CCNP exams! Best training center and professor dito mga kapatid! 100% sure na papasa ka with the guidance of Sir Mark Melendres!",
     image: NhadSanPascual,
     featured: false,
-    link: null,
+    link: "https://www.facebook.com/share/p/16yJKETjT1/",
   },
   {
     id: 19,
@@ -227,7 +227,7 @@ export const testimonials = [
     feedback: "Highly recommended training center. Quality for a great price. Complete equipment para mas madaling matuto at maunawaan ang mga topics. Sulit na sulit!",
     image: RollyMondero,
     featured: false,
-    link: null,
+    link: "https://www.facebook.com/share/p/1BBfcNDdAL/",
   },
   {
     id: 20,
@@ -237,7 +237,7 @@ export const testimonials = [
     feedback: "Highly recommended bootcamp for beginners or refresher. Uses actual Cisco equipment and has an excellent training program. From day 1 up to exam day, Engr. Mark was very helpful and supportive.",
     image: JCJose,
     featured: false,
-    link: null,
+    link: "https://www.facebook.com/share/p/18SQLYYQTh/",
   },
   // ── 2019 ──────────────────────────────────────────
   {
@@ -248,17 +248,17 @@ export const testimonials = [
     feedback: "Facilities are good, kompleto sa equipment, masarap ang food. Complete lahat ng kakailanganin mo — reviewers, book, guidance, hanggang sa exam scheduling. Thank you Converge!",
     image: GerryMendoza,
     featured: false,
-    link: null,
+    link: "https://www.facebook.com/share/p/17L8xZb8rw/",
   },
   {
     id: 22,
-    name: "RapRap Bedano",
+    name: "RapRap Bedaño",
     course: "CCNA Passer - Jan. 2019",
     rating: 5,
     feedback: "Sobrang sulit! Food, materials, lesson, knowledge ni Sir na super ok ang credentials — at hindi kayo ganun kadami so tutok ka talaga. May tanong ka, ma-accommodate ka agad ni Sir.",
     image: RapRapBedano,
     featured: false,
-    link: null,
+    link: "https://www.facebook.com/share/p/18LMEvyPXZ/",
   },
   {
     id: 23,
@@ -268,7 +268,7 @@ export const testimonials = [
     feedback: "Solid yung equipment, review materials, and lecture — from basic hanggang sa application ng mga concepts with extra topics pa. Everything you need to pass is covered.",
     image: FerdinandJosue,
     featured: false,
-    link: null,
+    link: "https://www.facebook.com/share/p/1FVpVmHMFQ/",
   },
   // ── 2018 ──────────────────────────────────────────
   {
@@ -279,7 +279,7 @@ export const testimonials = [
     feedback: "One of the best training centers for CCNA. Engr. Mark is very knowledgeable and Cisco network devices are complete — no sharing of any devices. Each student gets their own equipment during training.",
     image: PhilipGamit,
     featured: false,
-    link: null,
+    link: "https://www.facebook.com/share/p/18GvXHDLqN/",
   },
   {
     id: 25,
@@ -289,7 +289,7 @@ export const testimonials = [
     feedback: "Great training center for a refresher or career shifter. Provides all the knowledge and information needed from day 1 up to the last day. Very comprehensive and well-structured program.",
     image: MichaelCaigas,
     featured: false,
-    link: null,
+    link: "https://www.facebook.com/share/p/1CQGFpYemM/",
   },
   {
     id: 26,
@@ -299,7 +299,7 @@ export const testimonials = [
     feedback: "Small classroom advantage — limited students so communication is easy. Most budget-friendly with excellent training sessions. Includes bonus topics: VoIP, Access Points, and Fiber Optic Splicing!",
     image: MatthewFloresBlanco,
     featured: false,
-    link: null,
+    link: "https://www.facebook.com/share/p/1BTKbScy4g/",
   },
   // ── 2017 ──────────────────────────────────────────
   {
@@ -310,7 +310,7 @@ export const testimonials = [
     feedback: "I recommend this training school for the intense 1-week training that equips you with everything you need — not just for the exam but also for your future work.",
     image: RonmarGalvez,
     featured: false,
-    link: null,
+    link: "https://www.facebook.com/share/p/1AxyBeedSv/",
   },
   {
     id: 28,
@@ -320,7 +320,7 @@ export const testimonials = [
     feedback: "After training at Converge, I knew a lot more and gained hands-on troubleshooting experience. Engr. Melendres' guidance extends even to taking the exam and job application. Truly above and beyond!",
     image: VictorBaculi,
     featured: false,
-    link: null,
+    link: "https://www.facebook.com/share/p/17wjoy5Pha/",
   },
   {
     id: 29,
@@ -330,7 +330,7 @@ export const testimonials = [
     feedback: "Topics go beyond the CCNA scope — you even get to configure VoIP and wireless devices. The money you pay is worth it! Got an astonishing 990/1000 score in the CCNA exam. Thank you Converge IT!",
     image: RichardPascual,
     featured: false,
-    link: null,
+    link: "https://www.facebook.com/share/p/17uEqx3D5P/",
   },
   // ── 2016 ──────────────────────────────────────────
   {
@@ -341,7 +341,7 @@ export const testimonials = [
     feedback: "Engr. Mark Melendres is an expert in teaching. He doesn't spoon-feed the students — he wants them to learn on their own, especially in troubleshooting. That approach makes the learning stick.",
     image: KristoffeAbellera,
     featured: false,
-    link: null,
+    link: "https://www.facebook.com/share/p/1RDiJV5CRM/",
   },
   {
     id: 31,
@@ -351,7 +351,7 @@ export const testimonials = [
     feedback: "The best training IT center. From training, food, equipment, and teaching — Sir Mark will always guide you before and after the exam. Madaling lapitan at tanungan. If it is Converge, passing CCNA is ABSOLUTE.",
     image: MorwinGapud,
     featured: false,
-    link: null,
+    link: "https://www.facebook.com/share/p/1Cu7hVcCso/",
   },
   {
     id: 32,
@@ -361,6 +361,6 @@ export const testimonials = [
     feedback: "Just passed my CCNA! Converge Training is excellent in providing knowledge and tips to understand Computer Networks — and of course the accommodation and free lunch!",
     image: DeEl,
     featured: false,
-    link: null,
+    link: "https://www.facebook.com/share/p/1AecyY814v/",
   },
 ];
