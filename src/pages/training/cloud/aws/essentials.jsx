@@ -5,7 +5,7 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
-import awspractitioner from "../../../../assets/awspractitioner.webp"; // Course badge image
+import awsessentials from "../../../../assets/awsessentials.png"; // Course badge image
 import ccnaHero from "../../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
 import ccnaFooter from "../../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
 import MealIcon from "../../../../assets/Meal.svg";
@@ -19,34 +19,79 @@ import TrainingHeroBanner from "../../../../components/section/TrainingHeroBanne
 // ==================== COMPONENT NAME ====================
 export default function AWSEssentials() {
   // ==================== COURSE MODULES ====================
-  const modules = [
-    {
-      title: "AWS Cloud Practitioner Essentials",
-      items: [
-        "Overview and working definition of AWS",
-        "Differences between on-premises, hybrid cloud, and all-in cloud models",
-        "Basic global infrastructure of the AWS Cloud",
-        "Six key benefits of the AWS Cloud",
-        "Core AWS services and examples, including compute, networking, databases, and storage",
-        "Identifying appropriate solutions using AWS Cloud services for various use cases",
-        "Introduction to the AWS Well-Architected Framework",
-        "Explanation of the shared responsibility model",
-        "Core security services within the AWS Cloud",
-        "Basics of AWS Cloud migration",
-        "Financial benefits of AWS Cloud for organizational cost management",
-        "Core billing, account management, and pricing models",
-        "Using pricing tools to make cost-effective choices for AWS services",
-      ],
-    },
-  ];
+const modules = [
+  {
+    title: "Module 1: Introduction to Amazon Web Services",
+    items: [
+      "Introduction to Cloud Computing",
+      "Introduction to AWS Cloud Services",
+      "Security in the AWS Cloud",
+      "Introduction to AWS IAM",
+      "Hands-On Lab: Introduction to AWS Identity and Access Management (IAM)",
+    ],
+  },
+  {
+    title: "Module 2: AWS Compute",
+    items: [
+      "Compute as a service in AWS",
+      "Introduction to Amazon Elastic Compute Cloud",
+      "Amazon EC2 instance lifecycle",
+      "AWS container services",
+      "What is serverless?",
+      "Introduction to AWS Lambda",
+    ],
+  },
+  {
+    title: "Module 3: AWS Networking",
+    items: [
+      "Introduction to Amazon Virtual Private Cloud (Amazon VPC)",
+      "AWS Direct Connect",
+      "Amazon VPC routing",
+      "AWS Routing Table Demonstration",
+      "Amazon VPC security",
+      "Hands-On Lab: Create a VPC and Relaunch the Corporate Directory Application in Amazon EC2",
+    ],
+  },
+  {
+    title: "Module 4: AWS Storage",
+    items: [
+      "AWS storage types",
+      "Amazon EC2 instance storage and Amazon Elastic Block Store (Amazon EBS)",
+      "Object storage with Amazon S3",
+    ],
+  },
+  {
+    title: "Module 5: Databases",
+    items: [
+      "Benefits of databases in AWS",
+      "Amazon Relational Database Service",
+      "Purpose-built databases",
+      "Introduction to Amazon DynamoDB",
+      "Hands-On Lab: Configure a Web Application to use an Amazon S3 Bucket and DynamoDB Table",
+    ],
+  },
+  {
+    title: "Module 6: Monitoring, Load Balancing and Scaling",
+    items: [
+      "Monitoring",
+      "Load Balancing",
+      "Scaling",
+      "Hands-On Lab: Configure High Availability for Your Application",
+    ],
+  },
+  {
+    title: "Module 7: Course Summary",
+    items: [],
+  },
+];
   return (
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}
       <TrainingHeroBanner
         bgImage={ccnaHero}
         category="Cloud Computing"
-        title="AWS Cloud Practitioner"
-        description="Exhibit fundamental knowledge of cloud computing and AWS services."
+        title="AWS Technical Essentials"
+        description="Introduction to core AWS services and concepts for building scalable, secure, and cost-efficient cloud solutions."
       />
 
       {/* ==================== CONTENT SECTION - Training Informations/Content ==================== */}
@@ -62,10 +107,10 @@ export default function AWSEssentials() {
             {/* About Section - Description */}
             {/* CHANGE: Course description paragraphs */}
             <p>
-              The AWS Certified Cloud Practitioner demonstrates a foundational
-              understanding of AWS Cloud, its services, and terminology, making
-              it an ideal starting point for those new to IT or cloud careers,
-              or for business professionals seeking basic cloud literacy.
+              This course introduces the essential services and foundational concepts of Amazon Web Services, 
+              covering compute, storage, databases, networking, monitoring, and security while providing hands-on 
+              learning experiences that help you understand how to evaluate, compare, and design highly available, 
+              fault-tolerant, scalable, and cost-effective cloud architectures that meet real business requirements.
             </p>
           </section>
 
@@ -81,28 +126,45 @@ export default function AWSEssentials() {
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <p>
-                  Understand fundamental cloud computing concepts and the value
-                  of AWS Cloud.
+                  Describe terminology and concepts related to AWS services.
                 </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <p>
-                  Gain familiarity with core AWS services and their use cases.
+                  Navigate the AWS Management Console.
                 </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <p>
-                  Learn basic security, compliance, pricing, and billing
-                  practices in AWS.
+                  Articulate key concepts of AWS security measures and AWS Identity and Access Management (IAM).
                 </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <p>
-                  Explore AWS deployment principles, support options, and
-                  available resources.
+                  Distinguish among AWS compute services, Amazon Elastic Compute Cloud (Amazon EC2), AWS Lambda, 
+                  Amazon Elastic Container Service (Amazon ECS), Amazon Elastic Kubernetes Service (Amazon EKS).
+                </p>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
+                <p>
+                  Understand AWS database and storage offerings, including Amazon Relational Database Service 
+                  (Amazon RDS), Amazon DynamoDB, and Amazon Simple Storage Service (Amazon S3).
+                </p>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
+                <p>
+                  Explore AWS networking services.
+                </p>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
+                <p>
+                  Access and configure Amazon CloudWatch monitoring features.
                 </p>
               </div>
             </div>
@@ -126,9 +188,9 @@ export default function AWSEssentials() {
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
             {/* Cert Badge - Change/Update Image */}
             <img
-              src={awspractitioner}
-              alt="AWS Practitioner Certification Badge"
-              className="w-50 h-50 lg:w-55 lg:h-55 object-contain"
+              src={awsessentials}
+              alt="AWS Technical Essentials"
+              className="w-100 h-100 lg:w-55 lg:h-55 object-contain"
             />
           </div>
 
@@ -138,10 +200,10 @@ export default function AWSEssentials() {
             <h5 className="text-[#1775EE] ">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
-              "Cloud Support Associate",
-              "Cloud Sales",
-              "Solutions Architect",
-              "Cloud Developer",
+              "Cloud Support Associate / Cloud Support Engineer",
+              "Cloud Engineer",
+              "DevOps Engineer (Junior)",
+              "Solutions Architect (Junior / Associate)",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />

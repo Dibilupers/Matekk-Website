@@ -140,8 +140,8 @@ const CloudSecurityProfessional = lazy(
 /* Cybersecurity */
 const BlueTeam = lazy(() => import("../pages/training/cybersecurity/blueteam"));
 const RedTeam = lazy(() => import("../pages/training/cybersecurity/redteam"));
-const CDTH = lazy(() => import("../pages/training/cybersecurity/CDTH"));
 /* Practical Ethical Hacking */
+const CDTH = lazy(() => import("../pages/training/cybersecurity/peh/CDTH"));
 const PEH = lazy(() => import("../pages/training/cybersecurity/peh/PEH"));
 const VAPT = lazy(() => import("../pages/training/cybersecurity/peh/VAPT"));
 
