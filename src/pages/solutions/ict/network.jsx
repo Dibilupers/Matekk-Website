@@ -88,14 +88,11 @@ export default function CCNAAutomation() {
         <div className="flex flex-col gap-y-8 flex-1">
           {/* ==================== TEXT ====================*/}
           <div className="flex flex-col lg:flex-row items-start lg:items-center gap-6 lg:gap-x-16.5">
-            <h3 className="max-w-lg">
+            <h3 className="max-w-xl">
               Building Scalable and Secure Network Infrastructure to
-              <span className="text-[#1775EE]">
-                {" "}
-                Support Business Continuity
-              </span>
+              <span className="text-[#1775EE]"> Support Business Continuity</span>
             </h3>
-            <p className="w-full lg:w-[60%] leading-relaxed bg-[#EBF5FD] p-7.5 rounded-2xl">
+            <p className="bg-[#EBF5FD] p-7 rounded-2xl">
               Our ICT Network and Security Infrastructure service focuses on the
               design, implementation, configuration, and optimization of secure
               network environments. We help organizations build reliable network
@@ -107,16 +104,16 @@ export default function CCNAAutomation() {
       </section>
 
       {/* Challenges Section */}
-      <section className="bg-[#EBF5FD] py-10 md:py-15 flex flex-col items-center">
-        <div className="mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] space-y-4">
-          <h3 className="text-center">
+      <section className="bg-[#EBF5FD] py-10 md:py-15">
+        <div className="flex flex-col justify-center items-center mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] space-y-4">
+          <h3 className="text-center max-w-60 md:max-w-xl xl:max-w-2xl 2xl:max-w-3xl">
             <span className="text-[#1775EE]">Challenges Addressed</span> by This
             Service
           </h3>
 
           {/* Row 1 — 3 cards */}
-          <div className="space-y-4">
-            <div className="flex flex-wrap justify-center space-x-4">
+          <div className="flex flex-col justify-center items-center space-y-2 lg:space-y-4">
+            <div className="flex flex-col lg:flex-row justify-center items-center space-x-0 lg:space-x-4 space-y-2 lg:space-y-0">
               {[
                 "Unstable or poorly designed network infrastructure",
                 "Security risks due to misconfigured or outdated systems",
@@ -147,7 +144,7 @@ export default function CCNAAutomation() {
             </div>
 
             {/* Row 2 — 2 cards centered */}
-            <div className="flex flex-wrap justify-center space-x-4">
+            <div className="flex flex-col lg:flex-row justify-center items-center space-x-0 lg:space-x-4 space-y-2 lg:space-y-0">
               {[
                 "Scalability issues as organizational needs grow",
                 "Compliance and security policy concerns",
@@ -180,7 +177,7 @@ export default function CCNAAutomation() {
       </section>
 
       {/* Scope and Key section */}
-      <section className="py-10 md:py-15 mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] flex flex-col lg:flex-row gap-y-6 lg:gap-x-7.5">
+      <section className="py-10 md:py-15 mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] flex flex-col lg:flex-row space-y-4">
         {/* Title */}
         <h3 className="shrink-0 lg:w-80">
           Scope and Key <span className="text-[#1775EE]">Deliverables</span>
@@ -216,7 +213,7 @@ export default function CCNAAutomation() {
           ].map((item) => (
             <div
               key={item.title}
-              className="shadow-[0px_0px_3px_rgba(0,0,0,0.1)] rounded-2xl p-6 flex flex-col space-y-1 hover:scale-105 transition-all duration-300 ease-in-out"
+              className="shadow-[0px_0px_4px_rgba(0,0,0,0.2)] rounded-2xl p-6 flex flex-col space-y-1 hover:scale-105 transition-all duration-300 ease-in-out"
             >
               <h5 className="text-[#1775EE]">{item.title}</h5>
               <p>{item.desc}</p>
@@ -226,15 +223,19 @@ export default function CCNAAutomation() {
       </section>
 
       {/* Relevant Experience */}
-      <section className="bg-[#EBF5FD] py-10 px-[2.063rem] md:px-16 lg:px-16 xl:px-[7.438rem] flex flex-col items-center gap-y-6 my-15">
-        <h3>
-          Relevant Project <span className="text-[#1775EE]"> Experience</span>
-        </h3>
-        <p className="text-center w-[55%]">
-          This section highlights selected projects demonstrating our experience
-          in delivering similar ICT services, including the scope of work
-          performed and the types of organizations served.
-        </p>
+      <section className="bg-[#EBF5FD] py-10 px-[2.063rem] md:px-16 lg:px-16 xl:px-[7.438rem] flex flex-col items-center gap-y-4">
+        <div className="flex flex-col justify-center items-center space-y-1">
+          <h3>
+            Relevant Project <span className="text-[#1775EE]"> Experience</span>
+          </h3>
+          <p className="text-center max-w-3xl">
+            This section highlights selected projects demonstrating our experience
+            in delivering similar ICT services, including the scope of work
+            performed and the types of organizations served.
+          </p>
+        </div>
+
+        {/* NEED TO BE CHECKED */}
         <div className="mt-[4vh]">
           {isMobile ? (
             /* ── MOBILE ── */
