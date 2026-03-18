@@ -48,10 +48,6 @@ function NavBar() {
           },
           { name: "Cybersecurity", path: "/solutions/ict/cybersecurity" },
           {
-            name: "Vulnerability Assessment and Penetration Testing (VAPT)",
-            path: "/solutions/ict/vapt",
-          },
-          {
             name: "Web and Software Development",
             path: "/solutions/ict/webdev",
           },
@@ -304,15 +300,15 @@ function NavBar() {
         subcourses: [
           {
             name: "Data Centre Foundation Certificate (DCFC)",
-            path: "/training/cdcp/dcfc",
+            path: "/training/datacenter/dcfc",
           },
           {
             name: "Certified Data Centre Professional (CDCP)",
-            path: "/training/cdcp/cdcp",
+            path: "/training/datacenter/cdcp",
           },
           {
             name: "Certified Data Centre Specialist (CDCS)",
-            path: "/training/cdcp/cdcs",
+            path: "/training/datacenter/cdcs",
           },
         ],
       },
@@ -329,7 +325,11 @@ function NavBar() {
               },
               {
                 name: "Practical Ethical Hacking",
-                path: "/training/cybersecurity/peh",
+                path: "/training/cybersecurity/peh/PEH",
+              },
+              {
+                name: "Vulnerability Assessment and Penetration Testing (VAPT)",
+                path: "/training/cybersecurity/peh/vapt",
               },
             ],
           },

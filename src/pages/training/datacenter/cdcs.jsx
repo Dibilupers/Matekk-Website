@@ -5,7 +5,7 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
-import cdcp from "../../../assets/cdcp.webp"; // Course badge image
+import cdcs from "../../../assets/cdcs.webp"; // Course badge image
 import ccnaHero from "../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
 import ccnaFooter from "../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
 import MealIcon from "../../../assets/Meal.svg";
@@ -17,184 +17,174 @@ import TrainingTemplateFooter from "../../../components/section/TrainingTemplate
 import TrainingHeroBanner from "../../../components/section/TrainingHeroBanner";
 
 // ==================== COMPONENT NAME ====================
-export default function CDCP() {
+export default function CDCS() {
   // ==================== COURSE MODULES ====================
   const modules = [
     {
-      title: "The Mission Critical Site",
+      title: "Data Centre Design/Life Cycle Overview",
+      items: ["Phases of the data centre life cycle"],
+    },
+    {
+      title: "Standards and Rating Level Definitions",
       items: [
-        "Business organization",
-        "Types of data centres",
-        "Importance of a data centre",
-        "Elements of data centre",
-        "Causes of unavailability",
+        "Rating levels history and definitions",
+        "Standards and guideline comparison",
+        "N-redundancy options",
+        "Distributed redundant options",
+        "Concurrent maintainability",
+        "Fault tolerant",
+        "Substation requirements",
+        "Example topologies",
+        "Maintenance options",
       ],
     },
     {
-      title: "Data Centre Standards",
+      title: "Building Considerations",
       items: [
-        "Standards and guidelines",
-        "Standards for sub-components",
-        "International vs. national standards",
+        "Building location and floor loading considerations",
+        "Floor and hanging loads requirements",
+        "Firing rating for walls and glass",
+        "Blast protection and bullet proofing",
+        "Forced entry protection",
       ],
     },
     {
-      title: "Data Centre Location, Building and Construction",
+      title: "Advanced Raised Floor & Suspended Ceiling",
       items: [
-        "Criteria for selecting site location (the data centre location)",
-        "Criteria for facility",
-        "Supporting facilities and function",
+        "Raised Floor installation requirements",
+        "Common raised floor problems",
+        "Seismic protection",
+        "Requirements for suspended ceiling",
       ],
     },
     {
-      title: "Raised Access Flooring and Suspended Ceiling",
+      title: "Advanced Power",
       items: [
-        "Standards",
-        "Types of raised floors",
-        "Loading factors",
-        "General guidelines",
-        "Grounding",
-        "Ramp and landing platform",
-        "Suspended ceiling",
-        "Raised floor and suspended ceiling impact on cooling",
+        "Electrical formulae",
+        "Single Line Diagram (SLD)",
+        "Overcurrent protection devices",
+        "Earth Leakage protection",
+        "Sizing of protective components",
+        "Surge protection",
+        "Power cabling and PDU requirements",
+        "Types of generators",
+        "Generator components",
+        "Fuel storage and calculation",
+        "Generator parallelling",
+        "Required UPS specifications",
+        "UPS parallel configuration",
+        "Harmonic filters",
+        "Battery bank terminology",
+        "Calculating battery banks",
+        "Battery charging",
+        "Paralleilling battery banks",
+        "Battery testing",
+        "Battery case selection",
+        "Flywheel",
+        "Hydrogen fuel cells",
       ],
     },
     {
-      title: "Light",
+      title: "Electrical/Earthing Integrity tests",
       items: [
-        "Measurements of light",
-        "Standards",
-        "Connecting and positioning of light textures",
-        "Emergency light",
-        "Types of emergency light",
-      ],
-    },
-    {
-      title: "Power Infrastructure",
-      items: [
-        "Sustainability",
-        "Microgrid",
-        "Transformers",
-        "Generators",
-        "Automatic Transfer Switch (ATS) and Static Transfer Switch (STS)",
-        "Power redundancy levels and techniques",
-        "Power distribution / Busbar trunking",
-        "Single phase and three phase power",
-        "Grounding and bonding",
-        "Isolation transformer",
-        "PDU form factors",
-        "Ingress Protection (IP) grades",
-        "Power quality parameters",
-        "Power sizing",
-        "High Performance Computing",
-        "UPS systems",
-        "UPS parallel configurations",
-        "Batteries",
-        "Battery Energy Storage System (BESS)",
-        "Thermographic scanning",
-      ],
-    },
-    {
-      title: "Centre Magnetic Fields (EMF)",
-      items: [
-        "Types of EMF",
-        "Units of measurements",
-        "Standards and best practices",
         "Sources of EMF",
-        "Shielding",
+        "Single and three phase radiation",
+        "Measuring EMF",
+        "Safe distance guidance",
+        "Calculation of EMF attenuation factors",
       ],
     },
     {
-      title: "Equipment Racks",
+      title: "Advanced Cooling",
       items: [
-        "Standards",
-        "Dimensions",
-        "Types of racks",
-        "Security",
-        "Power strips / rails",
+        "Cooling definitions",
+        "Psychrometric chart",
+        "ASHRAE recommendations",
+        "Heat dissipation",
+        "Equipment airflow",
+        "Floor plan set-up",
+        "Types of perforated tiles",
+        "Rack door construction",
+        "Delta-T and impact",
+        "Optimizing airflow",
+        "Thermal unit conversions",
+        "Calculating air volume displacement (CFM/CMH)",
+        "Cooling capacity calculations",
+        "Computational Fluid Dynamics (CFD)",
+        "Air-conditioner efficiency",
+        "SHR impact on OPEX",
+        "Efficiency indicators",
+        "Air-conditioner selection",
+        "Humidity control",
+        "Redundancy requirements",
+        "Installation requirements",
+        "Service corridor considerations",
+        "Set points and calibration",
+        "Advanced cooling technologies – air cooling",
+        "Advanced cooling technologies – liquid cooling",
       ],
     },
     {
-      title: "Cooling Infrastructure",
+      title: "Advanced Fire Protection",
       items: [
-        "Cooling principles",
-        "Temperature and humidity",
-        "Types of cooling systems",
-        "Raised floor cooling",
-        "Non-raised floor cooling",
-        "Supplemental cooling",
-        "Containment",
-        "Liquid cooling",
-        "Seasonal thermal energy storage (STER)",
-      ],
-    },
-    {
-      title: "Water Supply",
-      items: ["Importance of water", "Backup water supply"],
-    },
-    {
-      title: "Designing a Scalable Network Infrastructure",
-      items: [
-        "Importance network cabling infrastructure",
-        "Planning considerations",
-        "Copper Cabling",
-        "Fibre Cabling",
-        "TIA-942 cabling systems topology",
-        "Testing and verication of cabling system",
-        "Redundancy",
-        "Site-to-site connectivity",
-      ],
-    },
-    {
-      title: "Fire Protection",
-      items: [
-        "Common causes of fire",
-        "Requirements for fire suppression systems",
-        "Standards",
+        "Fire triangle",
         "Fire detection systems",
-        "Water based fire suppression systems",
-        "Gas based fire suppression systems",
-        "Classes of fire",
-        "Best practices",
-        "Fire safety extinguishers",
-        "Requirements for signage and safety",
-        "Regulatory requirements",
+        "Installation and testing of smoke sensors",
+        "Water-based suppression systems",
+        "Gas-based suppression systems",
+        "Calculate gas content",
+        "Release and hold times",
+        "Fire detection panel requirements",
+        "Verification of installation",
+        "Ongoing maintenance",
+        "Alternative systems",
       ],
     },
     {
-      title: "Physical Security and Safety",
+      title: "Designing and Installing Scalable Network Cabling Systems",
       items: [
-        "Components for physical security",
-        "Components for physical safety",
+        "TIA-942 cabling structure topology",
+        "Copper and fibre cabling",
+        "ToR and EoR design",
+        "Installation best practices",
+        "Grounding and bonding",
+        "Cables labelling and administration",
       ],
     },
     {
-      title: "Auxiliary Systems",
+      title: "Environmental Specifications / Contamination Control",
       items: [
-        "Monitoring challenges",
-        "Monitoring requirements",
-        "Environment Monitoring System (EMS)",
-        "Building Management System (BMS)",
-        "Data Centre Infrastructure Management (DCIM)",
-        "Water leak detection",
-        "Alarm panels",
-        "Notication",
-        "Best practices",
+        "Acoustic noise effects, regulations, specifications and limits",
+        "Data centre contamination categories",
+        "Contamination measurements, standards and limits",
+        "Preventive measures",
+      ],
+    },
+    {
+      title: "Data Centre Efficiency",
+      items: [
+        "Business drivers for environmental sustainability",
+        "Green standards and guidelines",
+        "Power Usage Effectiveness (PUE)",
+        "PUE categories",
+        "Additional performance metrics",
+        "Open Compute Project (OCP)",
+        "Savings on cooling infrastructure",
+        "Savings on light infrastructure",
       ],
     },
   ];
-
   return (
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}
       <TrainingHeroBanner
         bgImage={ccnaHero}
         category="CDCP"
-        title="Certified Data Centre Professional"
-        description="The CDCP® (Certified Data Centre Professional) course is an
-              intensive 2-day program that provides participants with key
-              knowledge of the critical components of data centre
-              infrastructure."
+        title="Certified Data Centre Specialist"
+        description="CDCS® is a key certification for data centre professionals looking
+              to strengthen their technical expertise and decision-making
+              skills. It also serves as a prerequisite for those pursuing the
+              advanced Certified Data Centre Expert (CDCE®) designation."
       />
 
       {/* ==================== CONTENT SECTION - Training Informations/Content ==================== */}
@@ -210,10 +200,13 @@ export default function CDCP() {
             {/* About Section - Description */}
             {/* CHANGE: Course description paragraphs */}
             <p>
-              This course covers power and cooling systems, security, cabling,
-              safety procedures, and efficiency improvements, equipping data
-              centre professionals to effectively manage and optimize current
-              facilities while preparing for future developments.
+              The Certified Data Centre Specialist (CDCS®) is an intensive
+              three-day course that provides participants with the knowledge and
+              skills to effectively engage in data centre design and operations,
+              particularly in high-demand environments. Learners gain the
+              ability to assess design proposals for accuracy, efficiency, and
+              effectiveness, including solutions for power and cooling
+              infrastructure.
             </p>
           </section>
 
@@ -229,32 +222,29 @@ export default function CDCP() {
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <p>
-                  Describe various types of data centres, their role in business
-                  continuity, and factors influencing availability.
+                  Gain a clear understanding of the data centre design lifecycle
+                  and its key stages.
                 </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <p>
-                  Review international and national standards, industry
-                  guidelines, and compliance requirements for data centre design
-                  and components.
+                  Communicate detailed data centre requirements with vendors,
+                  suppliers, and contractors to ensure they are met.
                 </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <p>
-                  Understand site selection, building specifications, and
-                  supporting infrastructure needed to create a resilient,
-                  high-performance data centre.
+                  Review and validate design documents, cost estimates, and
+                  technical proposals for compliance with specifications.
                 </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <p>
-                  Implement raised floors and suspended ceilings, taking into
-                  account cooling, grounding, load distribution, and airflow
-                  optimization.
+                  Understand redundancy levels in both data centre design and
+                  ongoing maintenance.
                 </p>
               </div>
             </div>
@@ -278,8 +268,8 @@ export default function CDCP() {
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
             {/* Cert Badge - Change/Update Image */}
             <img
-              src={cdcp}
-              alt="CDCP Certification Badge"
+              src={cdcs}
+              alt="CDCS Certification Badge"
               className="w-50 h-50 object-contain"
             />
           </div>
@@ -290,10 +280,10 @@ export default function CDCP() {
             <h5 className="text-[#1775EE] font-bold">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
-              "Data Centre Technician",
-              "Data Centre Engineer",
-              "Data Centre Operations Manager",
-              "Infrastructure Operations Manager",
+              "Data Center Shift Supervisor",
+              "Site Planning Engineer",
+              "Data Center Specialist",
+              "Infrastructure & Operations Roles",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
@@ -380,7 +370,7 @@ export default function CDCP() {
 
             {/* CHANGE: Download link text and URL */}
             <a href="#" className="text-sm font-medium underline mt-2">
-              Download the CCNP Exam Basics here
+              Download the CDCS Exam Basics here
             </a>
           </div>
         </aside>
@@ -389,7 +379,7 @@ export default function CDCP() {
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
         bgImage={ccnaFooter} // CHANGE: Update background image for the footer banner
-        description="Advance your networking career and prepare for the CCNP Enterprise exam."
+        description="Advance your networking career and prepare for the CDCS Enterprise exam."
       />
     </main>
   );

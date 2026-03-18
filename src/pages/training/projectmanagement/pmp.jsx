@@ -539,7 +539,7 @@ export default function PMP() {
 
             {/* CHANGE: Download link text and URL */}
             <a href="#" className="text-sm font-medium underline mt-2">
-              Download the CCNP Exam Basics here
+              Download the Project Management Exam Basics here
             </a>
           </div>
         </aside>
@@ -548,7 +548,7 @@ export default function PMP() {
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
         bgImage={ccnaFooter} // CHANGE: Update background image for the footer banner
-        description="Advance your networking career and prepare for the CCNP Enterprise exam."
+        description="Advance your networking career and prepare for the Project Management Enterprise exam."
       />
     </main>
   );

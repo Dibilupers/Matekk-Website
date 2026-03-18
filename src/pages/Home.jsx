@@ -13,7 +13,7 @@ import ictImage from "../assets/ict.png";
 import webImage from "../assets/web.png";
 import { useState, useEffect } from "react";
 import FAQ from "../components/FAQ/faq";
-import ContactForm from "./Contact";
+import ContactForm from "../components/contact/Contact.jsx";
 import address from "../assets/location.svg";
 import phone from "../assets/phone.svg";
 import email from "../assets/email.svg";

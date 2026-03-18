@@ -5,7 +5,7 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
-import dcfc from "../../../assets/dcfc.webp"; // Course badge image
+import cdcp from "../../../assets/cdcp.webp"; // Course badge image
 import ccnaHero from "../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
 import ccnaFooter from "../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
 import MealIcon from "../../../assets/Meal.svg";
@@ -17,99 +17,170 @@ import TrainingTemplateFooter from "../../../components/section/TrainingTemplate
 import TrainingHeroBanner from "../../../components/section/TrainingHeroBanner";
 
 // ==================== COMPONENT NAME ====================
-export default function DCFC() {
+export default function CDCP() {
   // ==================== COURSE MODULES ====================
   const modules = [
     {
-      title: "Introduction to Data Centres",
+      title: "The Mission Critical Site",
       items: [
-        "History of data centres",
-        "Denition of dierent type data centres",
+        "Business organization",
+        "Types of data centres",
+        "Importance of a data centre",
+        "Elements of data centre",
+        "Causes of unavailability",
       ],
-    },
-    {
-      title: "The Data Centre and its Relation to Business",
-      items: [],
     },
     {
       title: "Data Centre Standards",
-      items: ["List of standards", "Rating definitions"],
-    },
-    {
-      title: "Data Centre Site Selection",
-      items: [],
-    },
-    {
-      title: "Data Centre Facilities Areas",
-      items: ["Listing of all areas and their functions"],
-    },
-    {
-      title: "Topology Designs",
-      items: ["Selection of fittings"],
-    },
-    {
-      title: "Components of the Power Infrastructure",
       items: [
-        "Utility power",
-        "Transformers",
-        "Generators",
-        "Fuel systems",
-        "UPS",
-        "STS systems",
-        "Batteries",
-        "Panel panels",
-        "Cabling/busbar systems",
-        "Power rails/Strips",
+        "Standards and guidelines",
+        "Standards for sub-components",
+        "International vs. national standards",
       ],
     },
     {
-      title: "Lights",
-      items: ["Lights", "Emergency lights"],
+      title: "Data Centre Location, Building and Construction",
+      items: [
+        "Criteria for selecting site location (the data centre location)",
+        "Criteria for facility",
+        "Supporting facilities and function",
+      ],
+    },
+    {
+      title: "Raised Access Flooring and Suspended Ceiling",
+      items: [
+        "Standards",
+        "Types of raised floors",
+        "Loading factors",
+        "General guidelines",
+        "Grounding",
+        "Ramp and landing platform",
+        "Suspended ceiling",
+        "Raised floor and suspended ceiling impact on cooling",
+      ],
+    },
+    {
+      title: "Light",
+      items: [
+        "Measurements of light",
+        "Standards",
+        "Connecting and positioning of light textures",
+        "Emergency light",
+        "Types of emergency light",
+      ],
+    },
+    {
+      title: "Power Infrastructure",
+      items: [
+        "Sustainability",
+        "Microgrid",
+        "Transformers",
+        "Generators",
+        "Automatic Transfer Switch (ATS) and Static Transfer Switch (STS)",
+        "Power redundancy levels and techniques",
+        "Power distribution / Busbar trunking",
+        "Single phase and three phase power",
+        "Grounding and bonding",
+        "Isolation transformer",
+        "PDU form factors",
+        "Ingress Protection (IP) grades",
+        "Power quality parameters",
+        "Power sizing",
+        "High Performance Computing",
+        "UPS systems",
+        "UPS parallel configurations",
+        "Batteries",
+        "Battery Energy Storage System (BESS)",
+        "Thermographic scanning",
+      ],
+    },
+    {
+      title: "Centre Magnetic Fields (EMF)",
+      items: [
+        "Types of EMF",
+        "Units of measurements",
+        "Standards and best practices",
+        "Sources of EMF",
+        "Shielding",
+      ],
+    },
+    {
+      title: "Equipment Racks",
+      items: [
+        "Standards",
+        "Dimensions",
+        "Types of racks",
+        "Security",
+        "Power strips / rails",
+      ],
     },
     {
       title: "Cooling Infrastructure",
       items: [
-        "Chillers",
-        "DX Systems",
-        "Evaporators",
-        "CRACs/CRAHs/HVAC",
-        "Adiabatic",
-        "Near natural air",
-        "Curtain/room",
+        "Cooling principles",
+        "Temperature and humidity",
+        "Types of cooling systems",
+        "Raised floor cooling",
+        "Non-raised floor cooling",
+        "Supplemental cooling",
+        "Containment",
+        "Liquid cooling",
+        "Seasonal thermal energy storage (STER)",
       ],
     },
     {
-      title: "ICT/Network Infrastructure",
+      title: "Water Supply",
+      items: ["Importance of water", "Backup water supply"],
+    },
+    {
+      title: "Designing a Scalable Network Infrastructure",
       items: [
-        "Equipment racks",
-        "Network cabling (inc support)",
-        "Cable trays and pathways",
-        "Tip-145 labelling",
+        "Importance network cabling infrastructure",
+        "Planning considerations",
+        "Copper Cabling",
+        "Fibre Cabling",
+        "TIA-942 cabling systems topology",
+        "Testing and verication of cabling system",
+        "Redundancy",
+        "Site-to-site connectivity",
       ],
     },
     {
-      title: "Data Centre Security",
+      title: "Fire Protection",
       items: [
-        "Perimeter security",
-        "Physical protection",
-        "CCTV",
-        "Access control",
-        "Security management",
+        "Common causes of fire",
+        "Requirements for fire suppression systems",
+        "Standards",
+        "Fire detection systems",
+        "Water based fire suppression systems",
+        "Gas based fire suppression systems",
+        "Classes of fire",
+        "Best practices",
+        "Fire safety extinguishers",
+        "Requirements for signage and safety",
+        "Regulatory requirements",
       ],
     },
     {
-      title: "Fire Suppression",
+      title: "Physical Security and Safety",
       items: [
-        "Detection systems",
-        "Suppression systems",
-        "Prevention systems",
-        "Fire extinguishers",
-        "Fire Safety",
+        "Components for physical security",
+        "Components for physical safety",
       ],
     },
     {
-      title: "Monitoring and reporting",
-      items: ["DCIM", "Itel/Alert"],
+      title: "Auxiliary Systems",
+      items: [
+        "Monitoring challenges",
+        "Monitoring requirements",
+        "Environment Monitoring System (EMS)",
+        "Building Management System (BMS)",
+        "Data Centre Infrastructure Management (DCIM)",
+        "Water leak detection",
+        "Alarm panels",
+        "Notication",
+        "Best practices",
+      ],
     },
   ];
 
@@ -117,13 +188,14 @@ export default function DCFC() {
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}
       <TrainingHeroBanner
-              bgImage={ccnaHero}
-              category="CDCP"
-              title="Data Centre Foundation Certificate"
-              description="The Data Centre Foundation Certificate (DCFC®) is a 2-day course
-              that provides essential knowledge of data centre facilities and
+        bgImage={ccnaHero}
+        category="CDCP"
+        title="Certified Data Centre Professional"
+        description="The CDCP® (Certified Data Centre Professional) course is an
+              intensive 2-day program that provides participants with key
+              knowledge of the critical components of data centre
               infrastructure."
-            />
+      />
 
       {/* ==================== CONTENT SECTION - Training Informations/Content ==================== */}
       <div className="flex flex-col lg:flex-row justify-start items-start lg:items-stretch gap-6 lg:gap-8">
@@ -138,18 +210,10 @@ export default function DCFC() {
             {/* About Section - Description */}
             {/* CHANGE: Course description paragraphs */}
             <p>
-              The data centre sector is one of the fastest-growing areas within
-              the ICT industry. Fueled by the rising demand for integrated
-              communication solutions, social media, online content, and cloud
-              infrastructure, the industry continues to expand rapidly, with new
-              data centres being built to support this growth.
-            </p>
-            <p>
-              Industry reports highlight a shortage of skilled data centre
-              professionals. This gap is driven both by rapidly evolving
-              technologies, which can leave current personnel with outdated
-              skills, and by the expansion of the data centre market, creating a
-              need for more trained professionals.
+              This course covers power and cooling systems, security, cabling,
+              safety procedures, and efficiency improvements, equipping data
+              centre professionals to effectively manage and optimize current
+              facilities while preparing for future developments.
             </p>
           </section>
 
@@ -164,19 +228,34 @@ export default function DCFC() {
             <div className="grid grid-cols-1 gap-4">
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Fundamentals of data centre infrastructure</p>
+                <p>
+                  Describe various types of data centres, their role in business
+                  continuity, and factors influencing availability.
+                </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Power, cooling, and environmental management</p>
+                <p>
+                  Review international and national standards, industry
+                  guidelines, and compliance requirements for data centre design
+                  and components.
+                </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Physical security and access control</p>
+                <p>
+                  Understand site selection, building specifications, and
+                  supporting infrastructure needed to create a resilient,
+                  high-performance data centre.
+                </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Industry standards and best practice guidelines</p>
+                <p>
+                  Implement raised floors and suspended ceilings, taking into
+                  account cooling, grounding, load distribution, and airflow
+                  optimization.
+                </p>
               </div>
             </div>
           </section>
@@ -199,8 +278,8 @@ export default function DCFC() {
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
             {/* Cert Badge - Change/Update Image */}
             <img
-              src={dcfc}
-              alt="DCFC Certification Badge"
+              src={cdcp}
+              alt="CDCP Certification Badge"
               className="w-50 h-50 object-contain"
             />
           </div>
@@ -212,9 +291,9 @@ export default function DCFC() {
             {/* Job Opportunities - List */}
             {[
               "Data Centre Technician",
-              "Data Centre Operations Assistant",
-              "IT Support Technician",
-              "NOC / Operations Support Engineer",
+              "Data Centre Engineer",
+              "Data Centre Operations Manager",
+              "Infrastructure Operations Manager",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
@@ -301,7 +380,7 @@ export default function DCFC() {
 
             {/* CHANGE: Download link text and URL */}
             <a href="#" className="text-sm font-medium underline mt-2">
-              Download the CCNP Exam Basics here
+              Download the CDCP Exam Basics here
             </a>
           </div>
         </aside>
@@ -310,7 +389,7 @@ export default function DCFC() {
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
         bgImage={ccnaFooter} // CHANGE: Update background image for the footer banner
-        description="Advance your networking career and prepare for the CCNP Enterprise exam."
+        description="Advance your networking career and prepare for the CDCP Enterprise exam."
       />
     </main>
   );

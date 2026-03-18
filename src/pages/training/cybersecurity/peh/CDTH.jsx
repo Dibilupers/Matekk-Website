@@ -4,16 +4,16 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
-import itil5 from "../../../assets/itil5.webp"; // Course badge image
-import ccnaHero from "../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
-import ccnaFooter from "../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
-import MealIcon from "../../../assets/Meal.svg";
-import ReviewIcon from "../../../assets/Review.svg";
-import WorkstationIcon from "../../../assets/Workstation.svg";
-import MedalIcon from "../../../assets/Medal.svg";
-import CourseModules from "../../../components/training/courseModules";
-import TrainingTemplateFooter from "../../../components/section/TrainingTemplateFooter";
-import TrainingHeroBanner from "../../../components/section/TrainingHeroBanner";
+import itil5 from "../../../../assets/itil5.webp"; // Course badge image
+import ccnaHero from "../../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
+import ccnaFooter from "../../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
+import MealIcon from "../../../../assets/Meal.svg";
+import ReviewIcon from "../../../../assets/Review.svg";
+import WorkstationIcon from "../../../../assets/Workstation.svg";
+import MedalIcon from "../../../../assets/Medal.svg";
+import CourseModules from "../../../../components/training/courseModules";
+import TrainingTemplateFooter from "../../../../components/section/TrainingTemplateFooter";
+import TrainingHeroBanner from "../../../../components/section/TrainingHeroBanner";
 
 // ==================== COMPONENT NAME ====================
 export default function CDTH() {
@@ -309,7 +309,7 @@ export default function CDTH() {
 
             {/* CHANGE: Download link text and URL */}
             <a href="#" className="text-sm font-medium underline mt-2">
-              Download the CDTH Exam Basics here
+              Download the Practical Ethical Hacking Exam Basics here
             </a>
           </div>
         </aside>
@@ -318,7 +318,7 @@ export default function CDTH() {
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
         bgImage={ccnaFooter} // CHANGE: Update background image for the footer banner
-        description="Advance your networking career and prepare for the CCNP Enterprise exam."
+        description="Advance your networking career and prepare for the Practical Ethical Hacking Enterprise exam."
       />
     </main>
   );
