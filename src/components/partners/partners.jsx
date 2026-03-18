@@ -26,6 +26,7 @@ import SLSU from '../../assets/SLSU.png';
 import ICCT from '../../assets/ICCT.jpg';
 import NAMRIA from '../../assets/NAMRIA.svg';
 import EASYTECH from '../../assets/EASYTECH.svg';
+import EZTECH from '../../assets/EZTECH.png';
 
 function Partners() {
     // OPTIMIZED: Wrap array in useMemo to prevent recreation on every render
@@ -56,6 +57,7 @@ function Partners() {
         { src: ICCT, alt: "ICCT Logo", size: "w-10 md:w-18" },
         { src: NAMRIA, alt: "NAMRIA Logo", size: "w-10 md:w-18" },
         { src: EASYTECH, alt: "EASYTECH Logo", size: "w-10 md:w-26" },
+        { src: EZTECH, alt: "EZTECH Logo", size: "w-10 md:w-26" },
     ], []); // Empty dependency array means this only creates once
 
     // Reference to the scrollable container so we can control scrolling programmatically
