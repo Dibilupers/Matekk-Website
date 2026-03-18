@@ -27,9 +27,7 @@ export default function TrainingTemplateFooter({ bgImage, description }) {
         <p className="lg:w-[30vw] xl:w-[35vw] text-center text-white">
           {description}
         </p>
-        <div className="w-fit text-sm">
-          <EnrollNowButton />
-        </div>
+        <EnrollNowButton />
       </div>
     </div>
   );
