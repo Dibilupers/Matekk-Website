@@ -70,7 +70,7 @@ export default function CCNAAutomation() {
   }, []);
 
   return (
-    <div className="flex flex-col py-10 h-full scroll-mt-18">
+    <main className="flex flex-col scroll-mt-18">
       {/* ==================== HERO BANNER - UPDATE TEXT AND IMAGES ====================*/}
       <SolutionsHeroBanner
         bgImage={ccnaHero}
@@ -81,14 +81,14 @@ export default function CCNAAutomation() {
             to ensure stable connectivity, data protection, and secure system
             operations for organizations."
       />
- 
+
       {/* Building Scalable */}
-      <div className="flex flex-col lg:flex-row gap-8 mt-7.5 lg:mt-15 mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem]">
+      <section className="flex flex-col lg:flex-row py-10 md:py-15 mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem]">
         {/* Content */}
         <div className="flex flex-col gap-y-8 flex-1">
           {/* ==================== TEXT ====================*/}
           <div className="flex flex-col lg:flex-row items-start lg:items-center gap-6 lg:gap-x-16.5">
-            <h3 className="w-full lg:w-[45%] shrink-0">
+            <h3 className="max-w-lg">
               Building Scalable and Secure Network Infrastructure to
               <span className="text-[#1775EE]">
                 {" "}
@@ -104,84 +104,90 @@ export default function CCNAAutomation() {
             </p>
           </div>
         </div>
-      </div>
+      </section>
+
       {/* Challenges Section */}
-      <div className="bg-[#EBF5FD] py-10 px-[2.063rem] md:px-16 lg:px-16 xl:px-[7.438rem] flex flex-col items-center gap-y-6 my-15">
-        <h3 className="text-center">
-          <span className="text-[#1775EE]">Challenges Addressed</span> by This
-          Service
-        </h3>
+      <section className="bg-[#EBF5FD] py-10 md:py-15 flex flex-col items-center">
+        <div className="mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] space-y-4">
+          <h3 className="text-center">
+            <span className="text-[#1775EE]">Challenges Addressed</span> by This
+            Service
+          </h3>
 
-        {/* Row 1 — 3 cards */}
-        <div className="flex flex-wrap justify-center gap-4">
-          {[
-            "Unstable or poorly designed network infrastructure",
-            "Security risks due to misconfigured or outdated systems",
-            "Limited network visibility and monitoring",
-          ].map((text) => (
-            <div
-              key={text}
-              className="flex items-center gap-3 bg-white rounded-2xl p-5 w-87 shadow-sm"
-            >
-              <div className="shrink-0 w-8 h-8 rounded-full bg-[#1775EE] flex items-center justify-center mt-0.5">
-                <svg
-                  className="w-5.5 h-5.5 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  strokeWidth={3}
+          {/* Row 1 — 3 cards */}
+          <div className="space-y-4">
+            <div className="flex flex-wrap justify-center space-x-4">
+              {[
+                "Unstable or poorly designed network infrastructure",
+                "Security risks due to misconfigured or outdated systems",
+                "Limited network visibility and monitoring",
+              ].map((text) => (
+                <div
+                  key={text}
+                  className="flex items-center space-x-4 hover:scale-105 transition-all duration-300 ease-in-out bg-white rounded-2xl p-5 w-87 shadow-sm"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-              </div>
-              <p className="text-sm font-medium leading-snug">{text}</p>
+                  <div className="shrink-0 w-8 h-8 rounded-full bg-[#1775EE] flex items-center justify-center mt-0.5">
+                    <svg
+                      className="w-5.5 h-5.5 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      strokeWidth={3}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  </div>
+                  <p>{text}</p>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
 
-        {/* Row 2 — 2 cards centered */}
-        <div className="flex flex-wrap justify-center gap-4">
-          {[
-            "Scalability issues as organizational needs grow",
-            "Compliance and security policy concerns",
-          ].map((text) => (
-            <div
-              key={text}
-              className="flex items-center gap-3 bg-white rounded-2xl p-5 w-87 lg:w-79 shadow-sm"
-            >
-              <div className="shrink-0 w-8 h-8 rounded-full bg-[#1775EE] flex items-center justify-center mt-0.5">
-                <svg
-                  className="w-5.5 h-5.5 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  strokeWidth={3}
+            {/* Row 2 — 2 cards centered */}
+            <div className="flex flex-wrap justify-center space-x-4">
+              {[
+                "Scalability issues as organizational needs grow",
+                "Compliance and security policy concerns",
+              ].map((text) => (
+                <div
+                  key={text}
+                  className="flex items-center space-x-4 hover:scale-105 transition-all duration-300 ease-in-out bg-white rounded-2xl p-5 w-87 lg:w-79 shadow-sm"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-              </div>
-              <p className="text-sm font-medium leading-snug">{text}</p>
+                  <div className="shrink-0 w-8 h-8 rounded-full bg-[#1775EE] flex items-center justify-center">
+                    <svg
+                      className="w-5.5 h-5.5 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      strokeWidth={3}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  </div>
+                  <p>{text}</p>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
-      </div>
+      </section>
+
       {/* Scope and Key section */}
-      <div className="mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] flex flex-col lg:flex-row gap-y-6 lg:gap-x-7.5">
+      <section className="py-10 md:py-15 mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] flex flex-col lg:flex-row gap-y-6 lg:gap-x-7.5">
         {/* Title */}
         <h3 className="shrink-0 lg:w-80">
           Scope and Key <span className="text-[#1775EE]">Deliverables</span>
         </h3>
 
         {/* Cards — 1 col on mobile, 2 cols on desktop */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 flex-1">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 flex-1">
           {[
             {
               title: "Network and Security Infrastructure Assessment",
@@ -210,17 +216,17 @@ export default function CCNAAutomation() {
           ].map((item) => (
             <div
               key={item.title}
-              className="shadow-md rounded-2xl p-6 flex flex-col gap-y-3"
+              className="shadow-[0px_0px_3px_rgba(0,0,0,0.1)] rounded-2xl p-6 flex flex-col space-y-1 hover:scale-105 transition-all duration-300 ease-in-out"
             >
               <h5 className="text-[#1775EE]">{item.title}</h5>
-              <p className="leading-relaxed">{item.desc}</p>
+              <p>{item.desc}</p>
             </div>
           ))}
         </div>
-      </div>
+      </section>
 
       {/* Relevant Experience */}
-      <div className="bg-[#EBF5FD] py-10 px-[2.063rem] md:px-16 lg:px-16 xl:px-[7.438rem] flex flex-col items-center gap-y-6 my-15">
+      <section className="bg-[#EBF5FD] py-10 px-[2.063rem] md:px-16 lg:px-16 xl:px-[7.438rem] flex flex-col items-center gap-y-6 my-15">
         <h3>
           Relevant Project <span className="text-[#1775EE]"> Experience</span>
         </h3>
@@ -250,16 +256,14 @@ export default function CCNAAutomation() {
 
                   {/* Full blur overlay */}
                   <div
-                    className={`absolute inset-0 rounded-2xl backdrop-blur-sm bg-black/1 transition-opacity duration-500 ${
-                      tappedCard === item.id ? "opacity-100" : "opacity-0"
-                    }`}
+                    className={`absolute inset-0 rounded-2xl backdrop-blur-sm bg-black/1 transition-opacity duration-500 ${tappedCard === item.id ? "opacity-100" : "opacity-0"
+                      }`}
                   />
 
                   {/* Content */}
                   <div
-                    className={`absolute inset-0 px-5 flex flex-col justify-center transition-opacity duration-500 ${
-                      tappedCard === item.id ? "opacity-100" : "opacity-0"
-                    }`}
+                    className={`absolute inset-0 px-5 flex flex-col justify-center transition-opacity duration-500 ${tappedCard === item.id ? "opacity-100" : "opacity-0"
+                      }`}
                   >
                     {/* Title row */}
                     <div className="flex items-center justify-between gap-2">
@@ -322,7 +326,7 @@ export default function CCNAAutomation() {
             </div>
           )}
         </div>
-      </div>
+      </section>
 
       {/* ==================== CALL TO ACTION BANNER - UPDATE TEXT AND IMAGE ====================*/}
       <SolutionsFooterBanner
@@ -442,6 +446,6 @@ export default function CCNAAutomation() {
           </div>
         </div>
       </section>
-    </div>
+    </main>
   );
 }

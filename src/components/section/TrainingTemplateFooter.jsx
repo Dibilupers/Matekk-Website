@@ -2,7 +2,7 @@ import EnrollNowButton from "../ui/EnrollNowButton";
 
 export default function TrainingTemplateFooter({ bgImage, description }) {
   return (
-    <div
+    <section
       className="relative p-8 lg:pr-12 rounded-2xl shadow-lg flex flex-col justify-center items-center gap-2.5 overflow-hidden min-h-75"
       style={{
         backgroundImage: `url(${bgImage})`,
@@ -27,6 +27,6 @@ export default function TrainingTemplateFooter({ bgImage, description }) {
         </div>
         <EnrollNowButton />
       </div>
-    </div>
+    </section>
   );
 }
