@@ -43,7 +43,7 @@ export default function TestimonialCard({ name, course, rating, feedback, image,
           "
         </span>
       </div>
-      <p className={"text-sm leading-relaxed text-justify transition-all duration-300 " + (isBlue ? "text-blue-50" : "text-gray-600")}>
+      <p className={"text-sm leading-relaxed text-left transition-all duration-300 " + (isBlue ? "text-blue-50" : "text-gray-600")}>
         {feedback}
       </p>
     </>
