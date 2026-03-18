@@ -30,7 +30,7 @@ export default function ContactForm() {
     };
 
     return (
-        <form onSubmit={sendMessage} className="bg-white space-y-6 md:space-y-4 h-full w-full md:w-full lg:w-[50%] flex flex-col p-8 rounded-2xl">
+        <form onSubmit={sendMessage} className="bg-white space-y-6 md:space-y-4 flex flex-col p-8 rounded-2xl w-full">
 
             {/* Full Name */}
             <div className="flex flex-col space-y-1">
@@ -44,14 +44,14 @@ export default function ContactForm() {
                     id="name"
                     name="user_name"
                     type="text"
-                    className="border px-2 border-[#1775EE] rounded-md h-[5vh] md:h-[4vh] lg:h-[2vh] xl:h-[4.8vh]"
+                    className="contact_form_input"
                     required
                 />
             </div>
 
             {/* Email & Phone */}
             <div className="flex flex-col md:flex-row space-x-0 md:space-x-4 space-y-4 md:space-y-0">
-                <div className="flex flex-col space-y-1 w-full">
+                <div className="flex flex-col space-y-1">
                     <div className="flex items-center space-x-1">
                         <label htmlFor="email">
                             Email
@@ -62,12 +62,12 @@ export default function ContactForm() {
                         id="email"
                         name="user_email"
                         type="email"
-                        className="border px-2 border-[#1775EE] rounded-md h-[5vh] md:h-[4vh] lg:h-[2vh xl:h-[4.8vh]"
+                        className="contact_form_input"
                         required
                     />
                 </div>
 
-                <div className="flex flex-col space-y-1 w-full">
+                <div className="flex flex-col space-y-1 ">
                     <div className="flex items-center space-x-1">
                         <label htmlFor="phone">
                             Mobile Number
@@ -78,7 +78,7 @@ export default function ContactForm() {
                         id="phone"
                         name="user_phone"
                         type="tel"
-                        className="border px-2 border-[#1775EE] rounded-md h-[5vh] md:h-[4vh] lg:h-[2vh xl:h-[4.8vh]"
+                        className="contact_form_input"
                         required
                     />
                 </div>
@@ -96,7 +96,7 @@ export default function ContactForm() {
                     id="subject"
                     name="subject"
                     type="text"
-                    className="border px-2 border-[#1775EE] rounded-md h-[5vh] md:h-[4vh] lg:h-[2vh xl:h-[4.8vh]"
+                    className="contact_form_input"
                     required
                 />
             </div>
@@ -112,7 +112,7 @@ export default function ContactForm() {
                 <textarea
                     id="message"
                     name="message"
-                    className="border px-2 border-[#1775EE] rounded-md h-32 resize-none"
+                    className="contact_form_input h-32 resize-none"
                     required
                 />
             </div>
@@ -127,7 +127,7 @@ export default function ContactForm() {
             <button
                 type="submit"
                 disabled={loading}
-                className="bg-[#1775EE] text-white hover:bg-[#007EE6] py-3 px-[42.5%] md:py-2 md:px-[46%] rounded-md shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                className="cursor-pointer bg-[#1775EE] text-white hover:bg-[#007EE6] py-3 px-[42.5%] md:py-2 md:px-[46%] rounded-md shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
             >
                 {loading ? "Sending..." : "Send"}
             </button>

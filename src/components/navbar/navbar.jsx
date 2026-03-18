@@ -468,7 +468,7 @@ function NavBar() {
             onClick={() =>
               setOpenDropdown(openDropdown === "solutions" ? null : "solutions")
             }
-            className={`flex items-center gap-1 hover:font-bold hover:text-[#1775EE] ${t}`}
+            className={`flex items-center gap-1 hover:font-bold hover:text-[#1775EE] cursor-pointer ${t}`}
           >
             Solutions
             <svg
@@ -494,7 +494,7 @@ function NavBar() {
                   {dropdownMenus.solutions.map((category) => (
                     <button
                       key={category.name}
-                      className={`w-full text-left px-6 py-2 rounded-[0.35rem] flex items-center justify-between ${t} ${
+                      className={`w-full text-left px-6 py-2 rounded-[0.35rem] flex items-center justify-between cursor-pointer ${t} ${
                         openSubcourse === category.name
                           ? "bg-[#1775EE] text-white font-bold"
                           : "hover:text-[#1775EE] hover:font-bold"
@@ -555,7 +555,7 @@ function NavBar() {
             onClick={() =>
               setOpenDropdown(openDropdown === "training" ? null : "training")
             }
-            className={`flex items-center gap-1 hover:text-[#1775EE] hover:font-bold ${t}`}
+            className={`flex items-center gap-1 hover:text-[#1775EE] hover:font-bold cursor-pointer ${t}`}
           >
             Training
             <svg
@@ -581,7 +581,7 @@ function NavBar() {
                   {dropdownMenus.training.map((category) => (
                     <button
                       key={category.name}
-                      className={`w-full text-left px-6 py-2 rounded-[0.35rem] flex items-center justify-between ${t} ${
+                      className={`w-full text-left px-6 py-2 rounded-[0.35rem] flex items-center justify-between cursor-pointer ${t} ${
                         openSubcourse === category.name
                           ? "bg-[#1775EE] text-white font-bold"
                           : "hover:text-[#1775EE] hover:font-bold"
@@ -625,7 +625,7 @@ function NavBar() {
                         subcourse.subcourses ? (
                           <button
                             key={subcourse.name}
-                            className={`w-full text-left px-6 py-2 rounded-[0.35rem] flex items-center justify-between ${t} ${
+                            className={`w-full text-left px-6 py-2 rounded-[0.35rem] flex items-center justify-between cursor-pointer ${t} ${
                               openSubSubcourse === subcourse.name
                                 ? "bg-[#1775EE] text-white font-bold"
                                 : "hover:text-[#1775EE] hover:font-bold"

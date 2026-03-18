@@ -433,7 +433,7 @@ export default function NSE7SASE() {
         </div>
 
         {/* ==================== RIGHT SIDEBAR: Contents/Information ==================== */}
-        <aside className="flex flex-col gap-5 lg:w-72 xl:w-80 shrink-0">
+        <aside className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-1 gap-3 lg:w-72 xl:w-80 shrink-0">
           {/* ==================== CERT BADGE ====================*/}
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
             {/* Cert Badge - Change/Update Image */}
@@ -447,7 +447,7 @@ export default function NSE7SASE() {
           {/* ==================== JOB OPPORTUNITIES ====================*/}
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-2">
             {/* Job Opportunities - Title */}
-            <h5 className="text-[#1775EE] font-bold">Job Opportunities</h5>
+            <h5 className="text-[#1775EE] ">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
               "Junior Network Administrator",
@@ -457,7 +457,7 @@ export default function NSE7SASE() {
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
-                <span className="text-sm">{job}</span>
+                <span>{job}</span>
               </p>
             ))}
           </div>
@@ -465,12 +465,12 @@ export default function NSE7SASE() {
           {/* ==================== TARGET LEARNERS ====================*/}
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-2">
             {/* Target Learners - Title */}
-            <h5 className="text-[#1775EE] font-bold">Target Learners</h5>
+            <h5 className="text-[#1775EE] ">Target Learners</h5>
             {/* Target Learners - List */}
             {["Beginners"].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
-                <span className="text-sm">{job}</span>
+                <span>{job}</span>
               </p>
             ))}
           </div>
@@ -478,23 +478,23 @@ export default function NSE7SASE() {
           {/* ==================== SCHEDULE ====================*/}
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-2">
             {/* Schedule - Title */}
-            <h5 className="text-[#1775EE] font-bold">Schedule</h5>
+            <h5 className="text-[#1775EE] ">Schedule</h5>
             {/* Schedule - List */}
             <div className="flex flex-col gap-2 text-sm">
               <div className="flex justify-start gap-2">
-                <p className="font-bold">Modality:</p>
+                <p className="">Modality:</p>
                 <p>Face to Face/Online</p>
               </div>
               <div className="flex justify-start gap-2">
-                <p className="font-bold">Duration:</p>
+                <p className="">Duration:</p>
                 <p>7 Days</p>
               </div>
               <div className="flex justify-start gap-2">
-                <p className="font-bold">Days:</p>
+                <p className="">Days:</p>
                 <p>Monday-Sunday</p>
               </div>
               <div className="flex justify-start gap-2">
-                <span className="font-bold">Time:</span>
+                <span className="">Time:</span>
                 <span>10:00 AM – 6:00 PM</span>
               </div>
             </div>
@@ -503,21 +503,21 @@ export default function NSE7SASE() {
           {/* ==================== INCLUSIONS ====================*/}
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-2">
             {/* Inlcusions - Title */}
-            <h5 className="text-[#1775EE] font-bold">Inclusions</h5>
+            <h5 className="text-[#1775EE] ">Inclusions</h5>
 
             {/* Inclusions - List */}
             <div className="inclusions">
               <span className="inclusions_icons">
                 <img src={MealIcon} alt="Meal" className="w-4 h-4" />
               </span>
-              <p className="text-sm">Lunch & snacks (onsite)</p>
+              <p>Lunch & snacks (onsite)</p>
             </div>
 
             <div className="inclusions">
               <span className="inclusions_icons">
                 <img src={ReviewIcon} alt="Review" className="w-4 h-4" />
               </span>
-              <p className="text-sm">Reviewers & exercises</p>
+              <p>Reviewers & exercises</p>
             </div>
 
             <div className="inclusions">
@@ -539,14 +539,14 @@ export default function NSE7SASE() {
                   className="w-4 h-4"
                 />
               </span>
-              <p className="text-sm">Workstation per student</p>
+              <p>Workstation per student</p>
             </div>
 
             <div className="inclusions">
               <span className="inclusions_icons">
                 <img src={MedalIcon} alt="Medal" className="w-4 h-4" />
               </span>
-              <p className="text-sm">Certificate of Completion</p>
+              <p>Certificate of Completion</p>
             </div>
 
             {/* CHANGE: Download link text and URL */}

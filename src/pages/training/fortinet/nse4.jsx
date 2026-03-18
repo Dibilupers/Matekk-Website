@@ -217,7 +217,7 @@ export default function NSE5() {
         </div>
 
         {/* ==================== RIGHT SIDEBAR ==================== */}
-        <aside className="flex flex-col gap-5 lg:w-72 xl:w-80 shrink-0">
+        <aside className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-1 gap-3 lg:w-72 xl:w-80 shrink-0">
           {/* ==================== CERT BADGE WITH SELECTOR ==================== */}
           <div
             className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col items-center justify-center h-64 gap-4"
@@ -249,7 +249,7 @@ export default function NSE5() {
 
           {/* ==================== JOB OPPORTUNITIES ==================== */}
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-2">
-            <h5 className="text-[#1775EE] font-bold">Job Opportunities</h5>
+            <h5 className="text-[#1775EE] ">Job Opportunities</h5>
             {[
               "Entry-Level Security Analyst",
               "Junior Network Administrator",
@@ -258,40 +258,40 @@ export default function NSE5() {
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
-                <span className="text-sm">{job}</span>
+                <span>{job}</span>
               </p>
             ))}
           </div>
 
           {/* ==================== TARGET LEARNERS ==================== */}
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-2">
-            <h5 className="text-[#1775EE] font-bold">Target Learners</h5>
+            <h5 className="text-[#1775EE] ">Target Learners</h5>
             {["Intermediate"].map((level) => (
               <p key={level} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
-                <span className="text-sm">{level}</span>
+                <span>{level}</span>
               </p>
             ))}
           </div>
 
           {/* ==================== SCHEDULE ==================== */}
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-2">
-            <h5 className="text-[#1775EE] font-bold">Schedule</h5>
+            <h5 className="text-[#1775EE] ">Schedule</h5>
             <div className="flex flex-col gap-2 text-sm">
               <div className="flex justify-start gap-2">
-                <p className="font-bold">Modality:</p>
+                <p>Modality:</p>
                 <p>Face to Face/Online</p>
               </div>
               <div className="flex justify-start gap-2">
-                <p className="font-bold">Duration:</p>
+                <p>Duration:</p>
                 <p>7 Days</p>
               </div>
               <div className="flex justify-start gap-2">
-                <p className="font-bold">Days:</p>
+                <p>Days:</p>
                 <p>Monday-Sunday</p>
               </div>
               <div className="flex justify-start gap-2">
-                <span className="font-bold">Time:</span>
+                <span>Time:</span>
                 <span>10:00 AM – 6:00 PM</span>
               </div>
             </div>
@@ -299,18 +299,18 @@ export default function NSE5() {
 
           {/* ==================== INCLUSIONS ==================== */}
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-2">
-            <h5 className="text-[#1775EE] font-bold">Inclusions</h5>
+            <h5 className="text-[#1775EE] ">Inclusions</h5>
             <div className="inclusions">
               <span className="inclusions_icons">
                 <img src={MealIcon} alt="Meal" className="w-4 h-4" />
               </span>
-              <p className="text-sm">Lunch & snacks (onsite)</p>
+              <p>Lunch & snacks (onsite)</p>
             </div>
             <div className="inclusions">
               <span className="inclusions_icons">
                 <img src={ReviewIcon} alt="Review" className="w-4 h-4" />
               </span>
-              <p className="text-sm">Reviewers & exercises</p>
+              <p>Reviewers & exercises</p>
             </div>
             <div className="inclusions">
               <span className="inclusions_icons">
@@ -320,7 +320,7 @@ export default function NSE5() {
                   className="w-4 h-4"
                 />
               </span>
-              <p className="text-sm">Institutional Accounts</p>
+              <p>Institutional Accounts</p>
             </div>
             <div className="inclusions">
               <span className="inclusions_icons">
@@ -330,13 +330,13 @@ export default function NSE5() {
                   className="w-4 h-4"
                 />
               </span>
-              <p className="text-sm">Workstation per student</p>
+              <p>Workstation per student</p>
             </div>
             <div className="inclusions">
               <span className="inclusions_icons">
                 <img src={MedalIcon} alt="Medal" className="w-4 h-4" />
               </span>
-              <p className="text-sm">Certificate of Completion</p>
+              <p>Certificate of Completion</p>
             </div>
             <a href="#" className="text-sm font-medium underline mt-2">
               Download the Fortinet Exam Basics here

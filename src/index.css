@@ -70,3 +70,19 @@ h6 {
 .desktop_process_svg {
   @apply w-10 h-10 text-white;
 }
+
+.about_cards {
+  @apply bg-white rounded-2xl p-6 shadow-sm;
+}
+
+.contact_infos {
+  @apply flex items-center space-x-3;
+}
+
+.contact_infos_icons {
+  @apply bg-[#1775EE] rounded-xl p-3 flex items-center justify-center shrink-0;
+}
+
+.contact_form_input {
+  @apply border px-2 py-2 border-[#1775EE] rounded-lg;
+}
