@@ -51,7 +51,7 @@ export default function Footer() {
         {/* RIGHT SIDE */}
         <div className="space-y-1 w-fit md:w-full lg:w-[40%]">
           {/* LOGO AND DESCRIPTION */}
-          <button className="cursor-pointer">{getLogoElement()}</button>
+          <button>{getLogoElement()}</button>
           <p className="max-w-lg">
             We are the BEST Solution for your IT/Engineering Training's and
             Consultation needs at a very competitive price.
@@ -65,7 +65,7 @@ export default function Footer() {
               <li>
                 <Link
                   to="/training/cisco/ccna/automation"
-                  className="hover:underline"
+                  className="hover:underline cursor-pointer"
                 >
                   CCNA Automation
                 </Link>
@@ -73,7 +73,7 @@ export default function Footer() {
               <li>
                 <Link
                   to="/training/cisco/ccna/cybersecurity"
-                  className="hover:underline"
+                  className="hover:underline cursor-pointer"
                 >
                   CCNA Cybersecurity
                 </Link>
@@ -81,7 +81,7 @@ export default function Footer() {
               <li>
                 <Link
                   to="/training/cisco/ccnp/enterprise"
-                  className="hover:underline"
+                  className="hover:underline cursor-pointer"
                 >
                   CCNP Enterprise
                 </Link>
@@ -89,7 +89,7 @@ export default function Footer() {
               <li>
                 <Link
                   to="/training/cisco/ccnp/security"
-                  className="hover:underline"
+                  className="hover:underline cursor-pointer"
                 >
                   CCNP Security
                 </Link>
@@ -103,7 +103,7 @@ export default function Footer() {
               <li>
                 <button
                   onClick={() => scrollToSection("services")}
-                  className="hover:underline hover:cursor-pointer"
+                  className="hover:underline cursor-pointer"
                 >
                   Solutions
                 </button>
@@ -111,7 +111,7 @@ export default function Footer() {
               <li>
                 <button
                   onClick={() => scrollToSection("training")}
-                  className="hover:underline hover:cursor-pointer"
+                  className="hover:underline cursor-pointer"
                 >
                   Training
                 </button>
@@ -119,7 +119,7 @@ export default function Footer() {
               <li>
                 <button
                   onClick={() => scrollToSection("partners")}
-                  className="hover:underline hover:cursor-pointer"
+                  className="hover:underline cursor-pointer"
                 >
                   Partners
                 </button>
@@ -127,7 +127,7 @@ export default function Footer() {
               <li>
                 <button
                   onClick={() => scrollToSection("about")}
-                  className="hover:underline hover:cursor-pointer"
+                  className="hover:underline cursor-pointer"
                 >
                   About
                 </button>
