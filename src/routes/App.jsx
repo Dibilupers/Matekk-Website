@@ -140,9 +140,9 @@ const CloudSecurityProfessional = lazy(
 /* Cybersecurity */
 const BlueTeam = lazy(() => import("../pages/training/cybersecurity/blueteam"));
 const RedTeam = lazy(() => import("../pages/training/cybersecurity/redteam"));
+const CDTH = lazy(() => import("../pages/training/cybersecurity/CDTH"));
 /* Practical Ethical Hacking */
 const PEH = lazy(() => import("../pages/training/cybersecurity/peh/PEH"));
-const CDTH = lazy(() => import("../pages/training/cybersecurity/peh/CDTH"));
 const VAPT = lazy(() => import("../pages/training/cybersecurity/peh/VAPT"));
 
 /* Cloud */
@@ -151,6 +151,9 @@ const AzureFundamentals = lazy(
 );
 const AWSPractitioner = lazy(
   () => import("../pages/training/cloud/aws/practitioner"),
+);
+const AWSEssentials= lazy(
+  () => import("../pages/training/cloud/aws/essentials"),
 );
 
 /* IT Management */
@@ -276,10 +279,10 @@ export default function App() {
           />
           <Route path="/training/fortinet/nse8" element={<NSE8 />} />
 
-          {/* Data Center */}
-          <Route path="/training/datacenter/dcfc" element={<DCFC />} />
-          <Route path="/training/datacenter/cdcp" element={<CDCP />} />
-          <Route path="/training/datacenter/cdcs" element={<CDCS />} />
+          {/* CDCP */}
+          <Route path="/training/cdcp/dcfc" element={<DCFC />} />
+          <Route path="/training/cdcp/cdcp" element={<CDCP />} />
+          <Route path="/training/cdcp/cdcs" element={<CDCS />} />
 
           {/* Palo Alto */}
           <Route
@@ -346,7 +349,6 @@ export default function App() {
           {/* Practical Ethical Hacking */}
           <Route path="/training/cybersecurity/peh/PEH" element={<PEH />} />
           <Route path="/training/cybersecurity/peh/VAPT" element={<VAPT />} />
-          <Route path="/training/cybersecurity/peh/cdth" element={<CDTH />} />
 
           {/* Cybersecurity */}
           <Route
@@ -354,6 +356,7 @@ export default function App() {
             element={<BlueTeam />}
           />
           <Route path="/training/cybersecurity/redteam" element={<RedTeam />} />
+          <Route path="/training/cybersecurity/cdth" element={<CDTH />} />
 
           {/* Cloud */}
           <Route
@@ -363,6 +366,10 @@ export default function App() {
           <Route
             path="/training/cloud/aws/practitioner"
             element={<AWSPractitioner />}
+          />
+          <Route
+            path="/training/cloud/aws/essentials"
+            element={<AWSEssentials />}
           />
 
           {/* IT Management */}
