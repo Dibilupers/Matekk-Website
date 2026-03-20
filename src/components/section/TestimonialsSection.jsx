@@ -77,12 +77,9 @@ export default function TestimonialsSection() {
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div className="flex flex-col gap-2 max-w-2xl">
           <h3>
-            Hear From Our{" "}
-            <span className="text-[#1775EE] block sm:inline">
-              Successful Learners
-            </span>
+            Hear From Our <span className="text-[#1775EE] block sm:inline"> Successful Learners</span>
           </h3>
-          <p className="text-gray-600">
+          <p>
             MGKK ICT Services has successfully delivered critical ICT
             infrastructure and training solutions for government agencies and
             private organizations, maintaining a strong focus on quality,

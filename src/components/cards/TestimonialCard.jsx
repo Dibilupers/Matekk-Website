@@ -26,24 +26,24 @@ export default function TestimonialCard({ name, course, rating, feedback, image,
             {avatar}
           </div>
           <div>
-            <p className={"font-bold text-sm transition-all duration-300 " + (isBlue ? "text-white" : "text-gray-900")}>
+            <p className={"font-bold transition-all duration-300 " + (isBlue ? "text-white" : "text-black")}>
               {name}
             </p>
-            <p className={"text-xs transition-all duration-300 " + (isBlue ? "text-blue-100" : "text-gray-500")}>
+            <p className={"transition-all duration-300 " + (isBlue ? "text-blue-100" : "text-gray-500")}>
               {course}
             </p>
-            <div className="flex gap-0.5 mt-1">
+            <div className="flex gap-0.5">
               {Array.from({ length: 5 }).map((_, i) => (
                 <FaStar key={i} className={"w-3.5 h-3.5 " + (i < rating ? "text-yellow-400" : "text-gray-300")} />
               ))}
             </div>
           </div>
         </div>
-        <span className={"text-4xl font-serif leading-none transition-all duration-300 " + (isBlue ? "text-blue-200" : "text-blue-300")}>
+        <span className={"text-6xl font-serif leading-none transition-all duration-300 " + (isBlue ? "text-white" : "text-[#1775EE]")}>
           "
         </span>
       </div>
-      <p className={"text-sm leading-relaxed text-left transition-all duration-300 " + (isBlue ? "text-blue-50" : "text-gray-600")}>
+      <p className={"leading-relaxed text-left transition-all duration-300 " + (isBlue ? "text-blue-50" : "text-black")}>
         {feedback}
       </p>
     </>
