@@ -1655,7 +1655,7 @@ export default function Home() {
                 </div>
                 <div>
                   <h5>Email</h5>
-                  <p>converge.training.it@gmail.com</p>
+                  <p>info@matekk.com</p>
                 </div>
               </div>
 
