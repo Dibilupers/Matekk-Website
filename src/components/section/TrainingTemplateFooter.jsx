@@ -21,7 +21,7 @@ export default function TrainingTemplateFooter({ bgImage, description }) {
       <div className="relative z-10 flex flex-col items-center justify-center text-center space-y-5">
         <div>
           <h3 className="text-[#ffffff] text-shadow-[0px_4px_8px_rgba(0,0,0,0.5)]">Start Learning <span className="text-[#1775EE]">Today</span></h3>
-          <p className="text-white text-shadow-[0px_4px_8px_rgba(0,0,0,0.5)] max-w-80">
+          <p className="text-white text-shadow-[0px_4px_8px_rgba(0,0,0,0.5)] w-80 lg:w-100">
             {description}
           </p>
         </div>

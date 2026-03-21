@@ -106,15 +106,42 @@ export default function App() {
 
         {/* Cisco */}
         <Route path="/training/cisco/ccna/ccna" element={<CCNA />} />
-        <Route path="/training/cisco/ccna/automation" element={<CCNAAutomation />} />
-        <Route path="/training/cisco/ccna/cybersecurity" element={<CCNACybersecurity />} />
-        <Route path="/training/cisco/ccnp/enterprise" element={<CCNPEnterprise />} />
-        <Route path="/training/cisco/ccnp/datacenter" element={<CCNPDatacenter />} />
-        <Route path="/training/cisco/ccnp/ccnp-security/security" element={<CCNPSecurity />} />
-        <Route path="/training/cisco/ccnp/ccnp-security/sncf" element={<SNCF />} />
-        <Route path="/training/cisco/ccnp/ccnp-security/sise" element={<SISE />} />
-        <Route path="/training/cisco/ccnp/ccnp-security/svpn" element={<SVPN />} />
-        <Route path="/training/cisco/ccnp/ccnp-security/sdsi" element={<SDSI />} />
+        <Route
+          path="/training/cisco/ccna/automation"
+          element={<CCNAAutomation />}
+        />
+        <Route
+          path="/training/cisco/ccna/cybersecurity"
+          element={<CCNACybersecurity />}
+        />
+        <Route
+          path="/training/cisco/ccnp/enterprise"
+          element={<CCNPEnterprise />}
+        />
+        <Route
+          path="/training/cisco/ccnp/datacenter"
+          element={<CCNPDatacenter />}
+        />
+        <Route
+          path="/training/cisco/ccnp/ccnp-security/security"
+          element={<CCNPSecurity />}
+        />
+        <Route
+          path="/training/cisco/ccnp/ccnp-security/sncf"
+          element={<SNCF />}
+        />
+        <Route
+          path="/training/cisco/ccnp/ccnp-security/sise"
+          element={<SISE />}
+        />
+        <Route
+          path="/training/cisco/ccnp/ccnp-security/svpn"
+          element={<SVPN />}
+        />
+        <Route
+          path="/training/cisco/ccnp/ccnp-security/sdsi"
+          element={<SDSI />}
+        />
 
         {/* CompTIA */}
         <Route path="/training/comptia/aplus" element={<Aplus />} />
@@ -129,55 +156,136 @@ export default function App() {
         <Route path="/training/fortinet/nse2" element={<NSE2 />} />
         <Route path="/training/fortinet/nse3" element={<NSE3 />} />
         <Route path="/training/fortinet/nse4" element={<NSE4 />} />
-        <Route path="/training/fortinet/nse5securenetworking" element={<NSE5securenetworking />} />
-        <Route path="/training/fortinet/nse5cloudsecurity" element={<NSE5CloudSecurity />} />
+        <Route
+          path="/training/fortinet/nse5securenetworking"
+          element={<NSE5securenetworking />}
+        />
+        <Route
+          path="/training/fortinet/nse5cloudsecurity"
+          element={<NSE5CloudSecurity />}
+        />
         <Route path="/training/fortinet/nse5sase" element={<NSE5SASE />} />
-        <Route path="/training/fortinet/nse5securityoperations" element={<NSE5SecurityOperations />} />
-        <Route path="/training/fortinet/nse6securenetworking" element={<NSE6SecureNetworking />} />
+        <Route
+          path="/training/fortinet/nse5securityoperations"
+          element={<NSE5SecurityOperations />}
+        />
+        <Route
+          path="/training/fortinet/nse6securenetworking"
+          element={<NSE6SecureNetworking />}
+        />
         <Route path="/training/fortinet/nse6sase" element={<NSE6SASE />} />
-        <Route path="/training/fortinet/nse6cloudsecurity" element={<NSE6CloudSecurity />} />
-        <Route path="/training/fortinet/nse6securityoperations" element={<NSE6SecurityOperations />} />
-        <Route path="/training/fortinet/nse7securenetworking" element={<NSE7SecureNetworking />} />
+        <Route
+          path="/training/fortinet/nse6cloudsecurity"
+          element={<NSE6CloudSecurity />}
+        />
+        <Route
+          path="/training/fortinet/nse6securityoperations"
+          element={<NSE6SecurityOperations />}
+        />
+        <Route
+          path="/training/fortinet/nse7securenetworking"
+          element={<NSE7SecureNetworking />}
+        />
         <Route path="/training/fortinet/nse7sase" element={<NSE7SASE />} />
-        <Route path="/training/fortinet/nse7cloudsecurity" element={<NSE7CloudSecurity />} />
-        <Route path="/training/fortinet/nse7securityoperations" element={<NSE7SecurityOperations />} />
+        <Route
+          path="/training/fortinet/nse7cloudsecurity"
+          element={<NSE7CloudSecurity />}
+        />
+        <Route
+          path="/training/fortinet/nse7securityoperations"
+          element={<NSE7SecurityOperations />}
+        />
         <Route path="/training/fortinet/nse8" element={<NSE8 />} />
 
         {/* CDCP */}
-        <Route path="/training/cdcp/dcfc" element={<DCFC />} />
-        <Route path="/training/cdcp/cdcp" element={<CDCP />} />
-        <Route path="/training/cdcp/cdcs" element={<CDCS />} />
+        <Route path="/training/datacenter/dcfc" element={<DCFC />} />
+        <Route path="/training/datacenter/cdcp" element={<CDCP />} />
+        <Route path="/training/datacenter/cdcs" element={<CDCS />} />
 
         {/* Palo Alto */}
-        <Route path="/training/paloalto/networksecurity/apprentice" element={<PaloaltoApprentice />} />
-        <Route path="/training/paloalto/networksecurity/practitioner" element={<PaloaltoPractitioner />} />
-        <Route path="/training/paloalto/networksecurity/professional" element={<NetworkSecurityProfessional />} />
-        <Route path="/training/paloalto/networksecurity/nextgenerationfirewallengineer" element={<NextGenerationFirewallEngineer />} />
-        <Route path="/training/paloalto/networksecurity/sdwanengineer" element={<SDWanEngineer />} />
-        <Route path="/training/paloalto/networksecurity/securityserviceedgeengineer" element={<SecurityServiceEdgeEngineer />} />
-        <Route path="/training/paloalto/networksecurity/analyst" element={<NetworkSecurityAnalyst />} />
-        <Route path="/training/paloalto/networksecurity/architect" element={<NetworkSecurityArchitect />} />
-        <Route path="/training/paloalto/securityoperations/professional" element={<SecurityOperationsProfessional />} />
-        <Route path="/training/paloalto/securityoperations/xsiamanalyst" element={<XsiamAnalyst />} />
-        <Route path="/training/paloalto/securityoperations/xdranalyst" element={<XDRAnalyst />} />
-        <Route path="/training/paloalto/securityoperations/xsiamengineer" element={<XsiamEngineer />} />
-        <Route path="/training/paloalto/securityoperations/xdrengineer" element={<XDREngineer />} />
-        <Route path="/training/paloalto/securityoperations/xsoarengineer" element={<XsoarEngineer />} />
-        <Route path="/training/paloalto/cloudsecurity/professional" element={<CloudSecurityProfessional />} />
+        <Route
+          path="/training/paloalto/networksecurity/apprentice"
+          element={<PaloaltoApprentice />}
+        />
+        <Route
+          path="/training/paloalto/networksecurity/practitioner"
+          element={<PaloaltoPractitioner />}
+        />
+        <Route
+          path="/training/paloalto/networksecurity/professional"
+          element={<NetworkSecurityProfessional />}
+        />
+        <Route
+          path="/training/paloalto/networksecurity/nextgenerationfirewallengineer"
+          element={<NextGenerationFirewallEngineer />}
+        />
+        <Route
+          path="/training/paloalto/networksecurity/sdwanengineer"
+          element={<SDWanEngineer />}
+        />
+        <Route
+          path="/training/paloalto/networksecurity/securityserviceedgeengineer"
+          element={<SecurityServiceEdgeEngineer />}
+        />
+        <Route
+          path="/training/paloalto/networksecurity/analyst"
+          element={<NetworkSecurityAnalyst />}
+        />
+        <Route
+          path="/training/paloalto/networksecurity/architect"
+          element={<NetworkSecurityArchitect />}
+        />
+        <Route
+          path="/training/paloalto/securityoperations/professional"
+          element={<SecurityOperationsProfessional />}
+        />
+        <Route
+          path="/training/paloalto/securityoperations/xsiamanalyst"
+          element={<XsiamAnalyst />}
+        />
+        <Route
+          path="/training/paloalto/securityoperations/xdranalyst"
+          element={<XDRAnalyst />}
+        />
+        <Route
+          path="/training/paloalto/securityoperations/xsiamengineer"
+          element={<XsiamEngineer />}
+        />
+        <Route
+          path="/training/paloalto/securityoperations/xdrengineer"
+          element={<XDREngineer />}
+        />
+        <Route
+          path="/training/paloalto/securityoperations/xsoarengineer"
+          element={<XsoarEngineer />}
+        />
+        <Route
+          path="/training/paloalto/cloudsecurity/professional"
+          element={<CloudSecurityProfessional />}
+        />
 
         {/* Practical Ethical Hacking */}
+        <Route path="/training/cybersecurity/peh/cdth" element={<CDTH />} />
         <Route path="/training/cybersecurity/peh/PEH" element={<PEH />} />
         <Route path="/training/cybersecurity/peh/VAPT" element={<VAPT />} />
 
         {/* Cybersecurity */}
         <Route path="/training/cybersecurity/blueteam" element={<BlueTeam />} />
         <Route path="/training/cybersecurity/redteam" element={<RedTeam />} />
-        <Route path="/training/cybersecurity/cdth" element={<CDTH />} />
 
         {/* Cloud */}
-        <Route path="/training/cloud/microsoft/azurefundamentals" element={<AzureFundamentals />} />
-        <Route path="/training/cloud/aws/practitioner" element={<AWSPractitioner />} />
-        <Route path="/training/cloud/aws/essentials" element={<AWSEssentials />} />
+        <Route
+          path="/training/cloud/microsoft/azurefundamentals"
+          element={<AzureFundamentals />}
+        />
+        <Route
+          path="/training/cloud/aws/practitioner"
+          element={<AWSPractitioner />}
+        />
+        <Route
+          path="/training/cloud/aws/essentials"
+          element={<AWSEssentials />}
+        />
 
         {/* IT Management */}
         <Route path="/training/itil5/foundation" element={<ITIL5 />} />

@@ -88,7 +88,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  to="/training/cisco/ccnp/security"
+                  to="/training/cisco/ccnp/ccnp-security/security"
                   className="hover:underline cursor-pointer"
                 >
                   CCNP Security

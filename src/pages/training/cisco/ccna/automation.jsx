@@ -157,7 +157,7 @@ export default function CCNAAutomation() {
       <TrainingHeroBanner
         bgImage={ccnaHero}
         category="CISCO"
-        title="CCNA AUTOMATION"
+        title="CCNA Automation"
         description="Automating Networks Using Cisco Platforms (200-901 CCNAAUTO) v1.1
               is a 120-minute exam that assesses a candidate’s knowledge of
               software development basics, APIs, application security, and

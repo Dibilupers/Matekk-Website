@@ -168,7 +168,7 @@ export default function CCNPEnterprise() {
       <TrainingHeroBanner
         bgImage={ccnaHero}
         category="CISCO"
-        title="CCNP ENTERPRISE"
+        title="CCNP Enterprise"
         description="Implementing Cisco Enterprise Network Core Technologies (350-401
               ENCOR) v1.1 is a 120-minute exam that assesses a candidate’s
               knowledge of enterprise network technologies, including dual-stack
