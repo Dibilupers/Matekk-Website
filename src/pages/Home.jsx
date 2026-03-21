@@ -345,7 +345,7 @@ export default function Home() {
           </div>
           {/* Description */}
           <p className="max-w-4xl mx-auto">
-            MGKK Information Communication Technology Services delivers
+            Matekk Cybercore Academy delivers
             end-to-end ICT and engineering solutions alongside comprehensive
             training programs designed to meet industry demands and support
             digital transformation.
@@ -445,7 +445,7 @@ export default function Home() {
                       </div>
                       <h5 className="">ICT Consultancy</h5>
                       <p className="">
-                        MGKK provides ICT consultancy services using the Plan,
+                        Matekk provides ICT consultancy services using the Plan,
                         Build, Operate, Optimize, and Test (PBOOT) approach to
                         support the design, implementation, and improvement of
                         ICT infrastructures.
@@ -524,7 +524,7 @@ export default function Home() {
                         Training & Development
                       </h5>
                       <p className="font-poppins text-sm mb-[3vh]">
-                        MGKK offers comprehensive ICT training programs tailored
+                        Matekk offers comprehensive ICT training programs tailored
                         to industry demands, equipping professionals with the
                         skills needed to thrive in a rapidly evolving digital
                         landscape.
@@ -719,7 +719,7 @@ export default function Home() {
                       </div>
                       <h5 className="">ICT Consultancy</h5>
                       <p className="">
-                        MGKK provides ICT consultancy services using the Plan,
+                        Matekk provides ICT consultancy services using the Plan,
                         Build, Operate, Optimize, and Test (PBOOT) approach to
                         support the design, implementation, and improvement of
                         ICT infrastructures.
@@ -748,7 +748,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ==================== WHY CHOOSE MGKK ICT SERVICES ====================*/}
+      {/* ==================== WHY CHOOSE Matekk Cybercore Academy ====================*/}
       <section className="py-10 md:py-15 bg-[#EBF5FD] scroll-mt-18">
         {/* Section Margin */}
         <div className="flex flex-col lg:flex-row space-x-0 lg:space-x-8 space-y-8 md:space-y-12 mx-[2.063rem] md:mx-16 xl:mx-[7.438rem]">
@@ -758,12 +758,12 @@ export default function Home() {
             <div className="justify-center md:justify-left w-full md:w-md lg:w-fit space-y-1">
               {/* Title */}
               <h3>
-                Why Choose MGKK
+                Why Choose Matekk
                 <span className="text-[#1775EE]"> ICT Services?</span>
               </h3>
               {/* Description */}
               <p>
-                Matekk Cybercore Academy Services is committed
+                Matekk Cybercore Academy is committed
                 to delivering reliable ICT solutions and high-quality training
                 through experienced professionals, proven methodologies, and a
                 strong focus on innovation, integrity, and excellence.
@@ -774,7 +774,7 @@ export default function Home() {
               <div className="absolute -top-4 -right-4 sm:-top-6 sm:-right-6 w-32 h-32 sm:w-40 sm:h-40 lg:w-50 lg:h-50 border-t-4 border-r-4 sm:border-t-6 sm:border-r-6 border-blue-500 rounded-tr-3xl z-0"></div>
               <img
                 src={Handshake}
-                alt="Professional handshake - MGKK ICT Services team"
+                alt="Professional handshake - Matekk Cybercore Academy team"
                 className="z-10 w-[75vw] md:w-[50vw] lg:w-full h-auto rounded-2xl sm:rounded-3xl object-cover aspect-4/5"
               />
               <div className="absolute -bottom-4 -left-4 sm:-bottom-6 sm:-left-6 w-32 h-32 sm:w-40 sm:h-40 lg:w-50 lg:h-50 border-b-4 border-l-4 sm:border-b-6 sm:border-l-6 border-blue-500 rounded-bl-3xl z-0"></div>
@@ -1321,7 +1321,7 @@ export default function Home() {
             </h3>
             {/* Description */}
             <p className="text-center max-w-240 mx-auto">
-              MGKK Information Communication Technology Services delivers
+              Matekk Cybercore Academy delivers
               end-to-end ICT and engineering solutions alongside comprehensive
               training programs designed to meet industry demands and support
               digital transformation.
@@ -1475,7 +1475,7 @@ export default function Home() {
               </h3>
               {/* Description */}
               <p className="text-center max-w-240 mx-auto">
-                MGKK Information Communication Technology Services is a trusted
+                Matekk Cybercore Academy is a trusted
                 provider of ICT and engineering solutions and a premier ICT
                 training center, committed to empowering businesses and
                 individuals through innovation and education since 2013.
@@ -1490,7 +1490,7 @@ export default function Home() {
               {/* Text Card */}
               <div className="about_cards order-2 md:order-1 shrink-0">
                 <p>
-                  Founded in 2013, MGKK ICT Services has grown into a reputable
+                  Founded in 2013, Matekk Cybercore Academy has grown into a reputable
                   firm delivering innovative ICT solutions and professional
                   training programs that enhance efficiency, connectivity, and
                   technological capability across industries.
@@ -1613,8 +1613,8 @@ export default function Home() {
                 </h3>
                 {/* Description */}
                 <p>
-                  Get in touch with MGKK Information Communication Technology
-                  Services to inquire about our ICT solutions, training programs, or
+                  Get in touch with Matekk Cybercore Academy
+                  to inquire about our ICT solutions, training programs, or
                   request a consultation. Our team is ready to assist you.
                 </p>
               </div>
