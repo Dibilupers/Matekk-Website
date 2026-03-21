@@ -1,4 +1,10 @@
 import { Routes, Route } from "react-router-dom";
+<<<<<<< HEAD
+import Home from "../pages/Home";
+import About from "../pages/About";
+import NotFound from "../pages/NotFound";
+import NavBar from "../components/layout/navbar";
+=======
 import NavBar from "../components/navbar/navbar";
 import Footer from "../components/footer/footer";
 import ScrollToTop from "../components/scroll/ScrollToTop";
@@ -98,6 +104,14 @@ if ("scrollRestoration" in history) {
 export default function App() {
   return (
     <>
+<<<<<<< HEAD
+      <NavBar></NavBar>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+=======
       <NavBar />
       <ScrollToTop />
 
@@ -300,6 +314,7 @@ export default function App() {
       </Routes>
 
       <Footer />
+>>>>>>> 79e52be8eefefcc594ed25e8bbdf31261de697f8
     </>
   );
 }
