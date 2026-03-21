@@ -9,8 +9,10 @@ import gallery4 from "../assets/solutionsGallery4.webp";
 import gallery5 from "../assets/solutionsGallery5.webp";
 
 import MaamGrace from "../assets/person_holding_laptop.png";
+import ClydeNelsonRocillo from "../assets/Clyde_Nelson_Rocillo.jpg";
 import SirMark from "../assets/Mark_Anthony_Valenzuela_Melendres.png";
 import ictImage from "../assets/ict.png";
+import CompanyBuilding from "../assets/MGGK_Building.png";
 import webImage from "../assets/web.png";
 import { useState, useEffect } from "react";
 import FAQ from "../components/FAQ/faq";
@@ -277,7 +279,7 @@ export default function Home() {
                 <div className="hidden xl:flex absolute bottom-15 -right-4 lg:-right-10 bg-[#EBF5FD] rounded-xl shadow-2xl px-3 py-3 max-w-61 z-20 transition-transform flex-col justify-center items-center gap-2">
                   <div className="flex items-start gap-3">
                     <img
-                      src="/src/assets/Clyde_Nelson_Rocillo.jpg"
+                      src={ClydeNelsonRocillo}
                       alt="Clyde Nelson R."
                       className="w-14 h-14 rounded-full object-cover"
                     />
@@ -1510,8 +1512,8 @@ export default function Home() {
             {/* Building Image */}
             <div className="rounded-2xl overflow-hidden shadow-sm order-3 md:order-0 self-stretch min-h-0 2xl:max-h-145">
               <img
-                src="/src/assets/MGGK_Building.png"
-                alt="Company Building"
+                src={CompanyBuilding}
+                alt="Matekk Academy Company Building"
                 className="w-full h-full object-cover object-top"
               />
             </div>
