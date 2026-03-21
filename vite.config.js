@@ -16,9 +16,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
       manifest: {
-        name: 'MGKK ICT Services',
-        short_name: 'MGKK',
-        description: 'MGKK ICT Training and Services',
+        name: 'Matekk Cybercore Academy',
+        short_name: 'Matekk Cybercore Academy',
+        description: 'Matekk Cybercore Academy Training and ICT Services',
         theme_color: '#1775EE',
         icons: [
           {
