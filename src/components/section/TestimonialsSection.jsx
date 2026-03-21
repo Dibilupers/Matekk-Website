@@ -80,7 +80,7 @@ export default function TestimonialsSection() {
             Hear From Our <span className="text-[#1775EE] block sm:inline"> Successful Learners</span>
           </h3>
           <p>
-            MGKK ICT Services has successfully delivered critical ICT
+            Matekk Cybercore Academy has successfully delivered critical ICT
             infrastructure and training solutions for government agencies and
             private organizations, maintaining a strong focus on quality,
             reliability, and customer satisfaction.

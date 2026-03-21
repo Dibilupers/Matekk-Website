@@ -277,7 +277,7 @@ export default function Home() {
                 <div className="hidden xl:flex absolute bottom-15 -right-4 lg:-right-10 bg-[#EBF5FD] rounded-xl shadow-2xl px-3 py-3 max-w-61 z-20 transition-transform flex-col justify-center items-center gap-2">
                   <div className="flex items-start gap-3">
                     <img
-                      src="/src/assets/Maam_Grace.webp"
+                      src="/src/assets/Clyde_Nelson_Rocillo.jpg"
                       alt="Clyde Nelson R."
                       className="w-14 h-14 rounded-full object-cover"
                     />
@@ -763,7 +763,7 @@ export default function Home() {
               </h3>
               {/* Description */}
               <p>
-                MGKK Information Communication Technology Services is committed
+                Matekk Cybercore Academy Services is committed
                 to delivering reliable ICT solutions and high-quality training
                 through experienced professionals, proven methodologies, and a
                 strong focus on innovation, integrity, and excellence.
