@@ -88,3 +88,7 @@ h6 {
 .contact_form_input {
   @apply border px-2 py-2 border-[#1775EE] rounded-lg;
 }
+
+.aside_contents {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-1 gap-3 lg:w-72 xl:w-80 shrink-0 self-start;
+}
