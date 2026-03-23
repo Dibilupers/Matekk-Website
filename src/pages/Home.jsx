@@ -145,165 +145,163 @@ export default function Home() {
   return (
     <main>
       {/* ==================== HERO BANNER ====================*/}
-      <section id="home" className="flex justify-center items-center py-25 md:py-20 lg:py-0 scroll-mt-18">
+      <section id="home" className="flex justify-center items-center py-25 md:py-20 lg:py-0 scroll-mt-18 px-[2.063rem] sm:px-[2.063rem] md:px-16 xl:px-[7.438rem] w-full">
         {/* Section Margin */}
-        <div className="mx-[2.063rem] sm:mx-[2.063rem] md:mx-16 xl:mx-[7.438rem] mr-[2.063rem] sm:mr-[2.063rem] md:mr-16 xl:mr-[7.438rem]">
-          {/* ====== HERO BANNER - Content ======*/}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-            {/* ====== LEFT SIDE - Content (Title, description, buttons, images) ====== */}
-            <div className="space-y-10 lg:space-y-12 text-left">
-              {/* Title to Buttons Content */}
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <h6 className="w-fit px-3 py-1 bg-blue-50 rounded-full shadow-[0px_0px_6px_-3px_rgba(0,0,0,0.5)]">
-                    ICT & Engineering
-                  </h6>
+        {/* ====== HERO BANNER - Content ======*/}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+          {/* ====== LEFT SIDE - Content (Title, description, buttons, images) ====== */}
+          <div className="space-y-10 lg:space-y-12 text-left">
+            {/* Title to Buttons Content */}
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <h6 className="w-fit px-3 py-1 bg-blue-50 rounded-full shadow-[0px_0px_6px_-3px_rgba(0,0,0,0.5)]">
+                  ICT & Engineering
+                </h6>
 
-                  <h1 className="pr-7 sm:pr-8 lg:pr-7 font-bold leading-tight space-x-2">
-                    Empowering Businesses
-                    <span> and Individuals</span>
-                    <span className="text-[#1775EE]">
-                      Through ICT Excellence
-                    </span>
-                  </h1>
+                <h1 className="pr-7 sm:pr-8 lg:pr-7 font-bold leading-tight space-x-2">
+                  Empowering Businesses
+                  <span> and Individuals</span>
+                  <span className="text-[#1775EE]">
+                    Through ICT Excellence
+                  </span>
+                </h1>
 
-                  <p className="max-w-lg text-left">
-                    Cutting-edge ICT and Engineering Solutions.
-                    Industry-relevant Training. Built on over a decade of
-                    expertise.
-                  </p>
-                </div>
-                <div className="flex sm:flex-row gap-3 sm:gap-4 justify-left lg:justify-start">
-                  <Button
-                    title="Explore Our Solutions"
-                    type="none"
-                    buttonCustomStyle="bg-[#1775EE] text-white transition-all duration-300 shadow-lg hover:bg-[#0062E0] px-6 py-3"
-                    btnFunc={() => {
-                      document.getElementById("services")?.scrollIntoView({
-                        behavior: "smooth",
-                        block: "start",
-                      });
-                    }}
-                  />
-                  <Button
-                    title="View Training Programs"
-                    type="none"
-                    buttonCustomStyle="text-blue-600 border border-blue-600 hover:bg-[#0062E0] hover:border-[#0062E0] hover:text-white  transition-all duration-300"
-                    btnFunc={() => {
-                      document.getElementById("services")?.scrollIntoView({
-                        behavior: "smooth",
-                        block: "start",
-                      });
-                    }}
-                  />
-                </div>
+                <p className="max-w-lg text-left">
+                  Cutting-edge ICT and Engineering Solutions.
+                  Industry-relevant Training. Built on over a decade of
+                  expertise.
+                </p>
               </div>
-
-              {/* Experiences Content */}
-              <div className="flex space-x-4 justify-center items-center md:justify-start md:items-start">
-                <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
-                  <h3 className="font-bold">13</h3>
-                  <div className="text-gray-600 leading-tight flex flex-col justify-center lg:justify-start items-center md:items-start">
-                    <p className="font-medium whitespace-nowrap">Years of</p>
-                    <p className="font-medium whitespace-nowrap">Experience</p>
-                  </div>
-                </div>
-                <div className="h-18 md:h-10 lg:h-12 w-px bg-black shrink-0"></div>
-                <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
-                  <h3 className="font-bold">3</h3>
-                  <div className="text-gray-600 leading-tight flex flex-col justify-center lg:justify-start items-center md:items-start">
-                    <p className="font-medium whitespace-nowrap">
-                      Data Centers
-                    </p>
-                    <p className="font-medium whitespace-nowrap">Deployed</p>
-                  </div>
-                </div>
-                <div className="h-18 md:h-10 lg:h-12 w-px bg-black shrink-0"></div>
-                <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
-                  <h3 className="font-bold">10</h3>
-                  <div className="text-gray-600 leading-tight flex flex-col justify-center lg:justify-start items-center md:items-start">
-                    <p className="font-medium whitespace-nowrap">
-                      Total Active
-                    </p>
-                    <p className="font-medium whitespace-nowrap">Courses</p>
-                  </div>
-                </div>
+              <div className="flex sm:flex-row gap-3 sm:gap-4 justify-left lg:justify-start">
+                <Button
+                  title="Explore Our Solutions"
+                  type="none"
+                  buttonCustomStyle="bg-[#1775EE] text-white transition-all duration-300 shadow-lg hover:bg-[#0062E0] px-6 py-3"
+                  btnFunc={() => {
+                    document.getElementById("services")?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                  }}
+                />
+                <Button
+                  title="View Training Programs"
+                  type="none"
+                  buttonCustomStyle="text-blue-600 border border-blue-600 hover:bg-[#0062E0] hover:border-[#0062E0] hover:text-white  transition-all duration-300"
+                  btnFunc={() => {
+                    document.getElementById("services")?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                  }}
+                />
               </div>
             </div>
 
-            {/* ====== RIGHT SIDE - Images (Passing rate, Icons, Images, One feedback) ====== */}
-            <div className="hidden lg:flex relative lg:h-135 items-center justify-center">
-              {/* Image Background Color */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-70 h-70 bg-linear-to-br from-[#3084F0] to-[#DAEBFC] rounded-full blur-3xl"></div>
+            {/* Experiences Content */}
+            <div className="flex space-x-4 justify-center items-center md:justify-start md:items-start">
+              <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
+                <h3 className="font-bold">13</h3>
+                <div className="text-gray-600 leading-tight flex flex-col justify-center lg:justify-start items-center md:items-start">
+                  <p className="font-medium whitespace-nowrap">Years of</p>
+                  <p className="font-medium whitespace-nowrap">Experience</p>
+                </div>
               </div>
+              <div className="h-18 md:h-10 lg:h-12 w-px bg-black shrink-0"></div>
+              <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
+                <h3 className="font-bold">3</h3>
+                <div className="text-gray-600 leading-tight flex flex-col justify-center lg:justify-start items-center md:items-start">
+                  <p className="font-medium whitespace-nowrap">
+                    Data Centers
+                  </p>
+                  <p className="font-medium whitespace-nowrap">Deployed</p>
+                </div>
+              </div>
+              <div className="h-18 md:h-10 lg:h-12 w-px bg-black shrink-0"></div>
+              <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
+                <h3 className="font-bold">10</h3>
+                <div className="text-gray-600 leading-tight flex flex-col justify-center lg:justify-start items-center md:items-start">
+                  <p className="font-medium whitespace-nowrap">
+                    Total Active
+                  </p>
+                  <p className="font-medium whitespace-nowrap">Courses</p>
+                </div>
+              </div>
+            </div>
+          </div>
 
-              {/* Passing Rate */}
-              <div className="relative w-full max-w-md">
-                <div className="hidden xl:flex absolute top-31 left-4 lg:-left-35 bg-[#EBF5FD] rounded-xl shadow-xl/10 px-4 py-3 z-20 hover:scale-105 transition duration-300 ease-in-out justify-center items-center gap-3">
-                  <h3 className="font-bold text-[#1775EE]">95%</h3>
-                  <div>
-                    <div className="flex gap-1">
-                      {[...Array(5)].map((_, i) => (
-                        <svg
-                          key={i}
-                          className="w-4 h-4 text-yellow-400 fill-current"
-                          viewBox="0 0 20 20"
-                        >
-                          <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
-                        </svg>
-                      ))}
-                    </div>
-                    <p>Passing Rate</p>
+          {/* ====== RIGHT SIDE - Images (Passing rate, Icons, Images, One feedback) ====== */}
+          <div className="hidden lg:flex relative lg:h-135 items-center justify-center">
+            {/* Image Background Color */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-70 h-70 bg-linear-to-br from-[#3084F0] to-[#DAEBFC] rounded-full blur-3xl"></div>
+            </div>
+
+            {/* Passing Rate */}
+            <div className="relative w-full max-w-md">
+              <div className="hidden xl:flex absolute top-31 left-4 lg:-left-35 bg-[#EBF5FD] rounded-xl shadow-xl/10 px-4 py-3 z-20 hover:scale-105 transition duration-300 ease-in-out justify-center items-center gap-3">
+                <h3 className="font-bold text-[#1775EE]">95%</h3>
+                <div>
+                  <div className="flex gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <svg
+                        key={i}
+                        className="w-4 h-4 text-yellow-400 fill-current"
+                        viewBox="0 0 20 20"
+                      >
+                        <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                      </svg>
+                    ))}
                   </div>
+                  <p>Passing Rate</p>
                 </div>
-                {/* Person Image */}
-                <div className="relative right-6">
+              </div>
+              {/* Person Image */}
+              <div className="relative right-6">
+                <img
+                  src={MaamGrace}
+                  alt="Professional holding laptop with ICT solutions"
+                  className="w-[90%]"
+                />
+              </div>
+              {/* Side Icons */}
+              <div className="home_side_icons_container top-9 right-1 lg:right-30">
+                <Settings className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
+              </div>
+              <div className="home_side_icons_container top-24 -right-2 lg:right-13">
+                <Tag className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
+              </div>
+              <div className="home_side_icons_container top-45 right-0 lg:right-4">
+                <MessageSquare className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
+              </div>
+              {/* One Feedback and Its Exam Status */}
+              <div className="hidden xl:flex absolute bottom-15 -right-4 lg:-right-10 bg-[#EBF5FD] rounded-xl shadow-2xl px-3 py-3 max-w-61 z-20 transition-transform flex-col justify-center items-center gap-2">
+                <div className="flex items-start gap-3">
                   <img
-                    src={MaamGrace}
-                    alt="Professional holding laptop with ICT solutions"
-                    className="w-[90%]"
+                    src={ClydeNelsonRocillo}
+                    alt="Clyde Nelson R."
+                    className="w-14 h-14 rounded-full object-cover"
                   />
-                </div>
-                {/* Side Icons */}
-                <div className="home_side_icons_container top-9 right-1 lg:right-30">
-                  <Settings className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
-                </div>
-                <div className="home_side_icons_container top-24 -right-2 lg:right-13">
-                  <Tag className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
-                </div>
-                <div className="home_side_icons_container top-45 right-0 lg:right-4">
-                  <MessageSquare className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
-                </div>
-                {/* One Feedback and Its Exam Status */}
-                <div className="hidden xl:flex absolute bottom-15 -right-4 lg:-right-10 bg-[#EBF5FD] rounded-xl shadow-2xl px-3 py-3 max-w-61 z-20 transition-transform flex-col justify-center items-center gap-2">
-                  <div className="flex items-start gap-3">
-                    <img
-                      src={ClydeNelsonRocillo}
-                      alt="Clyde Nelson R."
-                      className="w-14 h-14 rounded-full object-cover"
-                    />
-                    <div className="flex-1 pr-2">
-                      <p className="text-[#1775EE] truncate font-bold">
-                        Clyde Nelson R.
-                      </p>
-                      <p className="text-xs">
-                        just passed the CCNA certification!
-                      </p>
-                    </div>
+                  <div className="flex-1 pr-2">
+                    <p className="text-[#1775EE] truncate font-bold">
+                      Clyde Nelson R.
+                    </p>
+                    <p className="text-xs">
+                      just passed the CCNA certification!
+                    </p>
                   </div>
-                  <Button
-                    title="View Certification"
-                    type="none"
-                    buttonCustomStyle="bg-[#1775EE] text-white transition-all duration-300 shadow-lg hover:bg-[#0062E0] px-6 py-3 w-full"
-                    btnFunc={() => {
-                      document.getElementById("feedbacks")?.scrollIntoView({
-                        behavior: "smooth",
-                        block: "start",
-                      });
-                    }}
-                  />
                 </div>
+                <Button
+                  title="View Certification"
+                  type="none"
+                  buttonCustomStyle="bg-[#1775EE] text-white transition-all duration-300 shadow-lg hover:bg-[#0062E0] px-6 py-3 w-full"
+                  btnFunc={() => {
+                    document.getElementById("feedbacks")?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                  }}
+                />
               </div>
             </div>
           </div>
@@ -1596,86 +1594,84 @@ export default function Home() {
       {/* ==================== CONTACT US ====================*/}
       <section
         id="contact"
-        className="flex justify-center items-center py-10 md:py-15 bg-[#EBF5FD] scroll-mt-19 px-[2.063rem] md:px-16 xl:px-[7.438rem]"
+        className="flex flex-col-reverse md:flex-col-reverse gap-8 lg:flex-row space-x-0 md:space-x-0 lg:space-x-8 justify-center items-center py-10 md:py-15 bg-[#EBF5FD] scroll-mt-19 w-full px-[2.063rem] md:px-16 xl:px-[7.438rem]"
       >
-        <div className="flex flex-col-reverse md:flex-col-reverse gap-8 lg:flex-row space-x-0 md:space-x-0 lg:space-x-8 items-center">
-          <ContactForm />
+        <ContactForm />
 
-          {/* Text Content */}
-          <div className="space-y-4">
-            <div className="space-y-2">
-              {/* Subheading */}
-              <h6 className="w-fit border border-gray-300 rounded-full px-3 py-1.5 text-sm text-black bg-white">
-                Contact Us
-              </h6>
-              {/* Heading */}
-              <div className="space-y-1">
-                <h3>
-                  Get In Touch With Us <span className="text-[#1775EE]">Today</span>
-                </h3>
-                {/* Description */}
+        {/* Text Content */}
+        <div className="space-y-4">
+          <div className="space-y-2">
+            {/* Subheading */}
+            <h6 className="w-fit border border-gray-300 rounded-full px-3 py-1.5 text-sm text-black bg-white">
+              Contact Us
+            </h6>
+            {/* Heading */}
+            <div className="space-y-1">
+              <h3>
+                Get In Touch With Us <span className="text-[#1775EE]">Today</span>
+              </h3>
+              {/* Description */}
+              <p>
+                Get in touch with Matekk Cybercore Academy
+                to inquire about our ICT solutions, training programs, or
+                request a consultation. Our team is ready to assist you.
+              </p>
+            </div>
+          </div>
+
+          {/* Company Information */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 gap-x-0 md:gap-x-20">
+            {/* Address */}
+            <div className="contact_infos">
+              <div className="contact_infos_icons">
+                <Link to="https://maps.app.goo.gl/EvBzK1BBNEnBo6fh8" target="_blank" className="cursor-pointer">
+                  <img src={address} alt="Location Icon" className="w-6 h-6" />
+                </Link>
+              </div>
+              <div>
+                <h5>Address</h5>
                 <p>
-                  Get in touch with Matekk Cybercore Academy
-                  to inquire about our ICT solutions, training programs, or
-                  request a consultation. Our team is ready to assist you.
+                  10B Kalantiao Marikina, Metro Manila
                 </p>
               </div>
             </div>
 
-            {/* Company Information */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 gap-x-0 md:gap-x-20">
-              {/* Address */}
-              <div className="contact_infos">
-                <div className="contact_infos_icons">
-                  <Link to="https://maps.app.goo.gl/EvBzK1BBNEnBo6fh8" target="_blank" className="cursor-pointer">
-                    <img src={address} alt="Location Icon" className="w-6 h-6" />
-                  </Link>
-                </div>
-                <div>
-                  <h5>Address</h5>
-                  <p>
-                    10B Kalantiao Marikina, Metro Manila
-                  </p>
-                </div>
+            {/* Phone */}
+            <div className="contact_infos">
+              <div className="contact_infos_icons">
+                <img src={phone} alt="Phone Icon" className="w-6 h-6" />
               </div>
-
-              {/* Phone */}
-              <div className="contact_infos">
-                <div className="contact_infos_icons">
-                  <img src={phone} alt="Phone Icon" className="w-6 h-6" />
-                </div>
-                <div>
-                  <h5>Phone</h5>
-                  <p>09771968226</p>
-                </div>
+              <div>
+                <h5>Phone</h5>
+                <p>09771968226</p>
               </div>
+            </div>
 
-              {/* Email */}
-              <div className="contact_infos">
-                <div className="contact_infos_icons">
-                  <img src={email} alt="Email Icon" className="w-6 h-6" />
-                </div>
-                <div>
-                  <h5>Email</h5>
-                  <p>info@matekk.com</p>
-                </div>
+            {/* Email */}
+            <div className="contact_infos">
+              <div className="contact_infos_icons">
+                <img src={email} alt="Email Icon" className="w-6 h-6" />
               </div>
+              <div>
+                <h5>Email</h5>
+                <p>info@matekk.com</p>
+              </div>
+            </div>
 
-              {/* Availability */}
-              <div className="contact_infos">
-                <div className="contact_infos_icons">
-                  <img
-                    src={availability}
-                    alt="Availability Icon"
-                    className="w-6 h-6"
-                  />
-                </div>
-                <div>
-                  <h5>
-                    Availability
-                  </h5>
-                  <p>10:00 AM – 6:00 PM</p>
-                </div>
+            {/* Availability */}
+            <div className="contact_infos">
+              <div className="contact_infos_icons">
+                <img
+                  src={availability}
+                  alt="Availability Icon"
+                  className="w-6 h-6"
+                />
+              </div>
+              <div>
+                <h5>
+                  Availability
+                </h5>
+                <p>10:00 AM – 6:00 PM</p>
               </div>
             </div>
           </div>
