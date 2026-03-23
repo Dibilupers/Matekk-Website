@@ -145,7 +145,7 @@ export default function Home() {
   return (
     <main>
       {/* ==================== HERO BANNER ====================*/}
-      <section id="home" className="py-25 md:py-20 lg:py-0 scroll-mt-18 mx-[2.063rem] md:mx-16 xl:mx-[7.438rem]">
+      <section id="home" className="py-25 md:py-20 lg:py-0 scroll-mt-18">
         {/* Section Margin */}
         <div className="mx-[2.063rem] md:mx-16 xl:mx-[7.438rem]">
           {/* ====== HERO BANNER - Content ======*/}
