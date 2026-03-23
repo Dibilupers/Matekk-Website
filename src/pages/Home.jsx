@@ -143,7 +143,7 @@ export default function Home() {
   return (
     <main>
       {/* ==================== HERO BANNER ====================*/}
-      <section id="home" className="py-40 md:py-20 lg:py-0 scroll-mt-18">
+      <section id="home" className="py-25 md:py-20 lg:py-0 scroll-mt-18">
         {/* Section Margin */}
         <div className=" mx-[2.063rem] md:mx-16 xl:mx-[7.438rem]">
           {/* ====== HERO BANNER - Content ======*/}
@@ -1146,7 +1146,7 @@ export default function Home() {
             >
               {/* Line 1→2: Left to Right */}
               <path
-                d="M 110 45 C 210 80, 330 30, 300 320"
+                d="M 110 45 C 210 80, 330 30, 300 270"
                 stroke="#3B82F6"
                 strokeWidth="5"
                 fill="none"
@@ -1594,9 +1594,9 @@ export default function Home() {
       {/* ==================== CONTACT US ====================*/}
       <section
         id="contact"
-        className="flex justify-center items-center py-10 md:py-15 bg-[#EBF5FD] scroll-mt-19"
+        className="flex justify-center items-center py-10 md:py-15 bg-[#EBF5FD] scroll-mt-19 px-[2.063rem] md:px-16 xl:px-[7.438rem]"
       >
-        <div className="flex mx-[2.063rem] md:mx-16 xl:mx-[7.438rem] flex-col-reverse md:flex-col-reverse gap-8 lg:flex-row space-x-0 md:space-x-0 lg:space-x-8 items-center">
+        <div className="flex flex-col-reverse md:flex-col-reverse gap-8 lg:flex-row space-x-0 md:space-x-0 lg:space-x-8 items-center">
           <ContactForm />
 
           {/* Text Content */}

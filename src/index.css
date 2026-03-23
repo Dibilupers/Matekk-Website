@@ -40,7 +40,7 @@ h6 {
 }
 
 .partner_logos_format {
-  @apply flex justify-center items-center w-26 sm:w-30 md:w-40 h-14 sm:h-16 md:h-24 shrink-0 bg-white p-3 rounded-xl;
+  @apply flex justify-center items-center w-22 sm:w-30 md:w-40 h-14 sm:h-16 md:h-24 shrink-0 bg-white p-3 rounded-xl;
 }
 
 .inclusions {
