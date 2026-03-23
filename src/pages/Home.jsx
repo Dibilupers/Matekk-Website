@@ -147,7 +147,7 @@ export default function Home() {
       {/* ==================== HERO BANNER ====================*/}
       <section id="home" className="flex justify-center items-center py-25 md:py-20 lg:py-0 scroll-mt-18">
         {/* Section Margin */}
-        <div className="mx-[2.063rem] md:mx-16 xl:mx-[7.438rem]">
+        <div className="mx-[2.063rem] sm:mx-[2.063rem] md:mx-16 xl:mx-[7.438rem] mr-[2.063rem] sm:mr-[2.063rem] md:mr-16 xl:mr-[7.438rem]">
           {/* ====== HERO BANNER - Content ======*/}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
             {/* ====== LEFT SIDE - Content (Title, description, buttons, images) ====== */}
