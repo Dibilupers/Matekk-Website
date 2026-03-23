@@ -72,7 +72,7 @@ export default function TestimonialsSection() {
   }, [totalSlides, hasUserInteracted]);
 
   return (
-    <section className="py-10 md:py-15 mx-[2.063rem] md:mx-16 xl:mx-[7.438rem] space-y-8">
+    <section id="feedbacks" className="py-10 md:py-15 mx-[2.063rem] md:mx-16 xl:mx-[7.438rem] space-y-8">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div className="flex flex-col gap-2 max-w-2xl">
@@ -80,7 +80,7 @@ export default function TestimonialsSection() {
             Hear From Our <span className="text-[#1775EE] block sm:inline"> Successful Learners</span>
           </h3>
           <p>
-            MGKK ICT Services has successfully delivered critical ICT
+            Matekk Cybercore Academy has successfully delivered critical ICT
             infrastructure and training solutions for government agencies and
             private organizations, maintaining a strong focus on quality,
             reliability, and customer satisfaction.

@@ -392,7 +392,7 @@ export default function CCNAAutomation() {
                 </div>
                 <div>
                   <h5 className="font-semibold text-black text-sm">Email</h5>
-                  <p className="text-xs">converge.training.it@gmail.com</p>
+                  <p className="text-xs">info@matekk.com</p>
                 </div>
               </div>
 

@@ -88,7 +88,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  to="/training/cisco/ccnp/security"
+                  to="/training/cisco/ccnp/ccnp-security/security"
                   className="hover:underline cursor-pointer"
                 >
                   CCNP Security
@@ -140,7 +140,7 @@ export default function Footer() {
             <div className=" items-center flex flex-row w-full md:justify-end space-x-4">
               {/* FACEBOOK */}
               <a
-                href="https://www.facebook.com/profile.php?id=61573101443685"
+                href="#"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 rounded-md border border-[#1775EE] flex items-center justify-center hover:bg-[#1775EE] transition-colors duration-300 group w-10 h-10"
@@ -149,7 +149,7 @@ export default function Footer() {
               </a>
               {/* WHATSAPP */}
               <a
-                href="https://web.whatsapp.com/"
+                href="#"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 rounded-md border border-[#1775EE] flex items-center justify-center hover:bg-[#1775EE] transition-colors duration-300 group w-10 h-10"
@@ -158,7 +158,7 @@ export default function Footer() {
               </a>
               {/* LINKEDIN */}
               <a
-                href="https://www.linkedin.com/company/solverous"
+                href="#"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 rounded-md border border-[#1775EE] flex items-center justify-center hover:bg-[#1775EE] transition-colors duration-300 group w-10 h-10"
