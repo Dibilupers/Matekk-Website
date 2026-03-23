@@ -145,7 +145,7 @@ export default function Home() {
   return (
     <main>
       {/* ==================== HERO BANNER ====================*/}
-      <section id="home" className="flex justify-center items-center py-25 md:py-20 lg:py-0 scroll-mt-18 px-[2.063rem] sm:px-[2.063rem] md:px-16 xl:px-[7.438rem] w-full bg-amber-100">
+      <section id="home" className="flex justify-center items-center py-25 md:py-20 lg:py-0 scroll-mt-18 px-[2.063rem] sm:px-[2.063rem] md:px-16 xl:px-[7.438rem] w-full">
         {/* Section Margin */}
         {/* ====== HERO BANNER - Content ======*/}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
@@ -158,9 +158,8 @@ export default function Home() {
                   ICT & Engineering
                 </h6>
 
-                <h1 className="pr-7 sm:pr-8 lg:pr-7 font-bold leading-tight space-x-2">
-                  Empowering Businesses
-                  <span> and Individuals</span>
+                <h1 className="pr-9 sm:pr-8 lg:pr-7 font-bold leading-tight space-x-2">
+                  Empowering Businesses and Individuals
                   <span className="text-[#1775EE]">
                     Through ICT Excellence
                   </span>
