@@ -159,10 +159,7 @@ export default function Home() {
                 </h6>
 
                 <h1 className="pr-9 sm:pr-8 lg:pr-7 font-bold leading-tight space-x-2">
-                  Empowering Businesses and Individuals
-                  <span className="text-[#1775EE]">
-                    Through ICT Excellence
-                  </span>
+                  Empowering Businesses and Individuals<span className="text-[#1775EE]"> Through ICT Excellence</span>
                 </h1>
 
                 <p className="max-w-lg text-left">
