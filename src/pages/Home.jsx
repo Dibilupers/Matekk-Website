@@ -1596,7 +1596,7 @@ export default function Home() {
       {/* ==================== CONTACT US ====================*/}
       <section
         id="contact"
-        className="flex justify-center items-center py-10 md:py-15 bg-[#EBF5FD] scroll-mt-19 px-[2.063rem] md:px-16 xl:px-[7.438rem]"
+        className="flex justify-center items-center py-10 md:py-15 bg-[#4d7291] scroll-mt-19 px-[2.063rem] md:px-16 xl:px-[7.438rem]"
       >
         <div className="flex flex-col-reverse md:flex-col-reverse gap-8 lg:flex-row space-x-0 md:space-x-0 lg:space-x-8 items-center">
           <ContactForm />
