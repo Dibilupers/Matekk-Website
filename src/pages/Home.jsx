@@ -145,9 +145,9 @@ export default function Home() {
   return (
     <main>
       {/* ==================== HERO BANNER ====================*/}
-      <section id="home" className="py-25 md:py-20 lg:py-0 scroll-mt-18">
+      <section id="home" className="py-25 md:py-20 lg:py-0 scroll-mt-18 mx-[2.063rem] md:mx-16 xl:mx-[7.438rem]">
         {/* Section Margin */}
-        <div className=" mx-[2.063rem] md:mx-16 xl:mx-[7.438rem]">
+        <div className="mx-[2.063rem] md:mx-16 xl:mx-[7.438rem]">
           {/* ====== HERO BANNER - Content ======*/}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
             {/* ====== LEFT SIDE - Content (Title, description, buttons, images) ====== */}
@@ -1596,7 +1596,7 @@ export default function Home() {
       {/* ==================== CONTACT US ====================*/}
       <section
         id="contact"
-        className="flex justify-center items-center py-10 md:py-15 bg-[#4d7291] scroll-mt-19 px-[2.063rem] md:px-16 xl:px-[7.438rem]"
+        className="flex justify-center items-center py-10 md:py-15 bg-[#EBF5FD] scroll-mt-19 px-[2.063rem] md:px-16 xl:px-[7.438rem]"
       >
         <div className="flex flex-col-reverse md:flex-col-reverse gap-8 lg:flex-row space-x-0 md:space-x-0 lg:space-x-8 items-center">
           <ContactForm />
