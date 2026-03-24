@@ -1452,7 +1452,7 @@ export default function Home() {
         {/* Title and Description */}
         <div className="flex flex-col justify-center items-center space-y-2">
           <h6 className="w-fit border border-gray-300 rounded-full px-3 py-1.5 text-sm text-black bg-white">
-            Solutions
+            About
           </h6>
           <div className="space-y-1">
             <h3 className="text-center">
