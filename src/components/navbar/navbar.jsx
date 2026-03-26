@@ -5,7 +5,11 @@ import InquireNowButton from "../ui/InquireNowButton";
 import MainLogo from "../../assets/MATEKK_logo.png";
 import TrainingLogo from "../../assets/MATEKK_training_logo.png";
 import SolutionsLogo from "../../assets/MATEKK_services_logo.png";
-import { TRAINING_COURSES, FLAT_COURSES, PATH_TO_COURSE } from "../training/courses";
+import {
+  TRAINING_COURSES,
+  FLAT_COURSES,
+  PATH_TO_COURSE,
+} from "../training/courses";
 
 function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -484,7 +488,13 @@ function NavBar() {
       </nav>
 
       {/* Inquire Now */}
-      <InquireNowButton buttonCustomStyle="hidden lg:block" />
+      <InquireNowButton
+        buttonCustomStyle="hidden lg:block w-full text-[1.25rem] text-center py-3 px-6 rounded-full
+          lg:flex lg:w-auto lg:text-base lg:py-2 lg:px-5.5 lg:rounded-3xl
+          text-blue-600 border border-blue-600 hover:bg-[#0062E0]
+          hover:border-[#0062E0] hover:text-white transition-all duration-300
+          cursor-pointer"
+      />
 
       {/* Mobile + Tablet Hamburger */}
       <div className="flex lg:hidden justify-center items-center">
@@ -627,7 +637,13 @@ function NavBar() {
             </nav>
 
             <div className="p-6">
-              <InquireNowButton />
+              <InquireNowButton
+                buttonCustomStyle={`block w-full text-[1.25rem] text-center py-3 px-6 rounded-full
+          lg:flex lg:w-auto lg:text-base lg:py-2 lg:px-5.5 lg:rounded-3xl
+          text-blue-600 border border-blue-600 hover:bg-[#0062E0]
+          hover:border-[#0062E0] hover:text-white transition-all duration-300
+          cursor-pointer`}
+              />
             </div>
           </div>
         )}

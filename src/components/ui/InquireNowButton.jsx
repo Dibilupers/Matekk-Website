@@ -1,21 +1,43 @@
 import InquireModal from "../ui/InquireModal";
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 
-export default function InquireNowButton({buttonCustomStyle }) {
+export default function InquireNowButton({ buttonCustomStyle }) {
   const [open, setOpen] = useState(false);
+  const location = useLocation();
+
+  const path = location.pathname.toLowerCase();
+
+  const isSolutionsPage = path.includes("/solutions");
+  const isTrainingPage  = path.includes("/training");
+
+  // Determine config
+  const initialStep =
+    isSolutionsPage || isTrainingPage ? 1 : 0;
+
+  const initialInquiryType =
+    isSolutionsPage
+      ? "solutions"
+      : isTrainingPage
+      ? "training"
+      : null;
 
   return (
     <>
       <button
-        title="Inquire Now"
         type="button"
         onClick={() => setOpen(true)}
-        className={`block w-full text-[1.25rem] text-center py-3 px-6 rounded-full lg:flex lg:w-auto lg:text-base lg:py-2 lg:px-5.5 lg:rounded-3xl lg:hover:bg-blue-600 text-blue-600 border border-blue-600 hover:bg-[#0062E0] hover:border-[#0062E0] hover:text-white  transition-all duration-300 cursor-pointer  ${buttonCustomStyle}`}
+        className={buttonCustomStyle}
       >
         Inquire Now
       </button>
 
-      <InquireModal isOpen={open} onClose={() => setOpen(false)} />
+      <InquireModal
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        initialStep={initialStep}
+        initialInquiryType={initialInquiryType}
+      />
     </>
   );
 }
