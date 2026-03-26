@@ -231,7 +231,7 @@ export default function NSE5CloudSecurity() {
         </div>
 
         {/* ==================== RIGHT SIDEBAR: Contents/Information ==================== */}
-        <aside className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-1 gap-3 lg:w-72 xl:w-80 shrink-0">
+        <aside className="aside_contents">
           {/* ==================== CERT BADGE ====================*/}
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
             {/* Cert Badge - Change/Update Image */}

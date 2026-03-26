@@ -140,7 +140,7 @@ export default function Footer() {
             <div className=" items-center flex flex-row w-full md:justify-end space-x-4">
               {/* FACEBOOK */}
               <a
-                href="#"
+                href="https://www.facebook.com/MATEKKCybercore"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 rounded-md border border-[#1775EE] flex items-center justify-center hover:bg-[#1775EE] transition-colors duration-300 group w-10 h-10"
