@@ -7,8 +7,8 @@ import badge1 from "../../../assets/FortinetNSE5SecureNetworking.png";
 import badge2 from "../../../assets/FortinetNSE5SASE.png";
 import badge3 from "../../../assets/FortinetNSE5ClousSecurity.png";
 import badge4 from "../../../assets/FortinetNSE5SecurityOperations.png";
-import ccnaHero from "../../../assets/CCNAHeroImageAutomation.png";
-import ccnaFooter from "../../../assets/CCNAFooterImageAutomation.png";
+import FortinetHero from "../../../assets/FortinetHeader.png";
+import FortinetFooter from "../../../assets/FortinetFooter.png";
 import MealIcon from "../../../assets/Meal.svg";
 import ReviewIcon from "../../../assets/Review.svg";
 import InstitutionalIcon from "../../../assets/InsitutionalAccount.svg";
@@ -440,7 +440,7 @@ export default function NSE5() {
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}
       <TrainingHeroBanner
-        bgImage={ccnaHero}
+        bgImage={FortinetHero}
         category="FORTINET"
         title="NSE 4"
         description="Learn to administer FortiGate devices using key features and
@@ -637,7 +637,7 @@ export default function NSE5() {
 
       {/* ==================== FOOTER BANNER ==================== */}
       <TrainingTemplateFooter
-        bgImage={ccnaFooter}
+        bgImage={FortinetFooter}
         description="Advance your network security career and prepare for the Fortinet NSE 5 certification exam."
       />
     </main>

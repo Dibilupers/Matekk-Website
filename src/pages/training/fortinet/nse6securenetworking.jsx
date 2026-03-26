@@ -6,8 +6,8 @@ import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
 import SecureNetworking from "../../../assets/nsesecurenetworking.webp"; // Course badge image
-import ccnaHero from "../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
-import ccnaFooter from "../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
+import FortinetHero from "../../../assets/FortinetHeader.png";
+import FortinetFooter from "../../../assets/FortinetFooter.png";
 import MealIcon from "../../../assets/Meal.svg";
 import ReviewIcon from "../../../assets/Review.svg";
 import InstitutionalIcon from "../../../assets/InsitutionalAccount.svg";
@@ -157,7 +157,7 @@ export default function NSE6SecureNetworking() {
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}
       <TrainingHeroBanner
-        bgImage={ccnaHero}
+        bgImage={FortinetHero}
         category="FORTINET"
         title="NSE 6 Secure Networking"
         description="Learn to protect operational technology (OT) infrastructures using Fortinet solutions. This course provides hands-on experience in designing, deploying, and managing FortiGate, FortiNAC, FortiAnalyzer, and FortiSIEM devices for OT security."
@@ -359,7 +359,7 @@ export default function NSE6SecureNetworking() {
 
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
-        bgImage={ccnaFooter} // CHANGE: Update background image for the footer banner
+        bgImage={FortinetFooter} // CHANGE: Update background image for the footer banner
         description="Advance your networking career and prepare for the Fortinet Enterprise exam."
       />
     </main>

@@ -3,8 +3,8 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 import ccnaBadge from "../../../../assets/PaloAltoProfessional.png";
-import ccnaHero from "../../../../assets/CCNAHeroImageAutomation.png";
-import ccnaFooter from "../../../../assets/CCNAFooterImageAutomation.png";
+import PaloAltoHero from "../../../../assets/PaloAltoHeader.png";
+import PaloAltoFooter from "../../../../assets/PaloAltoFooter.png";
 import MealIcon from "../../../../assets/Meal.svg";
 import ReviewIcon from "../../../../assets/Review.svg";
 import WorkstationIcon from "../../../../assets/Workstation.svg";
@@ -141,7 +141,7 @@ export default function NetworkSecurityProfessional() {
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}
       <TrainingHeroBanner
-        bgImage={ccnaHero}
+        bgImage={PaloAltoHero}
         category="Palo Alto"
         title="Network Security Professional"
         description="The Palo Alto Networks Certified Network Security Professional
@@ -332,7 +332,7 @@ export default function NetworkSecurityProfessional() {
 
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
-        bgImage={ccnaFooter} // CHANGE: Update background image for the footer banner
+        bgImage={PaloAltoFooter} // CHANGE: Update background image for the footer banner
         description="Advance your networking career and prepare for the Palo Alto Enterprise exam."
       />
     </main>

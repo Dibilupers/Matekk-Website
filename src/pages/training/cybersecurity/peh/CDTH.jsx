@@ -5,8 +5,8 @@ import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
 import cdth from "../../../../assets/cdth.png"; // Course badge image
-import ccnaHero from "../../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
-import ccnaFooter from "../../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
+import CybersecurityHero from "../../../../assets/CyberSecurityheader.png"; // Hero banner background
+import CybersecurityFooter from "../../../../assets/CybersecurityFooter.png"; // Footer banner background
 import MealIcon from "../../../../assets/Meal.svg";
 import ReviewIcon from "../../../../assets/Review.svg";
 import WorkstationIcon from "../../../../assets/Workstation.svg";
@@ -129,7 +129,7 @@ export default function CDTH() {
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}
       <TrainingHeroBanner
-        bgImage={ccnaHero}
+        bgImage={CybersecurityHero}
         category="Cybersecurity"
         title="Cyber Defense & Threat Hunting (CDTH)"
         description="Learn to detect, investigate, and respond to real cyber attacks using industry SOC tools."
@@ -317,7 +317,7 @@ export default function CDTH() {
 
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
-        bgImage={ccnaFooter} // CHANGE: Update background image for the footer banner
+        bgImage={CybersecurityFooter} // CHANGE: Update background image for the footer banner
         description="Advance your networking career and prepare for the Practical Ethical Hacking Enterprise exam."
       />
     </main>
