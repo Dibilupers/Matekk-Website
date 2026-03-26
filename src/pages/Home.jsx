@@ -145,165 +145,158 @@ export default function Home() {
   return (
     <main>
       {/* ==================== HERO BANNER ====================*/}
-      <section id="home" className="py-25 md:py-20 lg:py-0 scroll-mt-18">
-        {/* Section Margin */}
-        <div className=" mx-[2.063rem] md:mx-16 xl:mx-[7.438rem]">
-          {/* ====== HERO BANNER - Content ======*/}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-            {/* ====== LEFT SIDE - Content (Title, description, buttons, images) ====== */}
-            <div className="space-y-10 lg:space-y-12 text-left">
-              {/* Title to Buttons Content */}
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <h6 className="w-fit px-3 py-1 bg-blue-50 rounded-full shadow-[0px_0px_6px_-3px_rgba(0,0,0,0.5)]">
-                    ICT & Engineering
-                  </h6>
+      <section id="home" className="flex justify-center items-center py-25 md:py-20 lg:py-0 scroll-mt-18 px-[2.063rem] sm:px-[2.063rem] md:px-16 xl:px-[7.438rem] w-full">
+        {/* ====== HERO BANNER - Content ======*/}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+          {/* ====== LEFT SIDE - Content (Title, description, buttons, images) ====== */}
+          <div className="space-y-10 lg:space-y-12 text-left">
+            {/* Title to Buttons Content */}
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <h6 className="w-fit px-3 py-1 bg-blue-50 rounded-full shadow-[0px_0px_6px_-3px_rgba(0,0,0,0.5)]">
+                  ICT & Engineering
+                </h6>
 
-                  <h1 className="pr-7 sm:pr-8 lg:pr-7 font-bold leading-tight space-x-2">
-                    Empowering Businesses
-                    <span> and Individuals</span>
-                    <span className="text-[#1775EE]">
-                      Through ICT Excellence
-                    </span>
-                  </h1>
+                <h1 className="pr-9 sm:pr-8 lg:pr-7 font-bold leading-tight space-x-2">
+                  Empowering Businesses and Individuals<span className="text-[#1775EE]"> Through ICT Excellence</span>
+                </h1>
 
-                  <p className="max-w-lg text-left">
-                    Cutting-edge ICT and Engineering Solutions.
-                    Industry-relevant Training. Built on over a decade of
-                    expertise.
-                  </p>
-                </div>
-                <div className="flex sm:flex-row gap-3 sm:gap-4 justify-left lg:justify-start">
-                  <Button
-                    title="Explore Our Solutions"
-                    type="none"
-                    buttonCustomStyle="bg-[#1775EE] text-white transition-all duration-300 shadow-lg hover:bg-[#0062E0] px-6 py-3"
-                    btnFunc={() => {
-                      document.getElementById("services")?.scrollIntoView({
-                        behavior: "smooth",
-                        block: "start",
-                      });
-                    }}
-                  />
-                  <Button
-                    title="View Training Programs"
-                    type="none"
-                    buttonCustomStyle="text-blue-600 border border-blue-600 hover:bg-[#0062E0] hover:border-[#0062E0] hover:text-white  transition-all duration-300"
-                    btnFunc={() => {
-                      document.getElementById("services")?.scrollIntoView({
-                        behavior: "smooth",
-                        block: "start",
-                      });
-                    }}
-                  />
-                </div>
+                <p className="max-w-lg text-left">
+                  Cutting-edge ICT and Engineering Solutions.
+                  Industry-relevant Training. Built on over a decade of
+                  expertise.
+                </p>
               </div>
-
-              {/* Experiences Content */}
-              <div className="flex space-x-4 justify-center items-center md:justify-start md:items-start">
-                <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
-                  <h3 className="font-bold">13</h3>
-                  <div className="text-gray-600 leading-tight flex flex-col justify-center lg:justify-start items-center md:items-start">
-                    <p className="font-medium whitespace-nowrap">Years of</p>
-                    <p className="font-medium whitespace-nowrap">Experience</p>
-                  </div>
-                </div>
-                <div className="h-18 md:h-10 lg:h-12 w-px bg-black shrink-0"></div>
-                <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
-                  <h3 className="font-bold">3</h3>
-                  <div className="text-gray-600 leading-tight flex flex-col justify-center lg:justify-start items-center md:items-start">
-                    <p className="font-medium whitespace-nowrap">
-                      Data Centers
-                    </p>
-                    <p className="font-medium whitespace-nowrap">Deployed</p>
-                  </div>
-                </div>
-                <div className="h-18 md:h-10 lg:h-12 w-px bg-black shrink-0"></div>
-                <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
-                  <h3 className="font-bold">10</h3>
-                  <div className="text-gray-600 leading-tight flex flex-col justify-center lg:justify-start items-center md:items-start">
-                    <p className="font-medium whitespace-nowrap">
-                      Total Active
-                    </p>
-                    <p className="font-medium whitespace-nowrap">Courses</p>
-                  </div>
-                </div>
+              <div className="flex sm:flex-row gap-3 sm:gap-4 justify-left lg:justify-start">
+                <Button
+                  title="Explore Our Solutions"
+                  type="none"
+                  buttonCustomStyle="bg-[#1775EE] text-white transition-all duration-300 shadow-lg hover:bg-[#0062E0] px-6 py-3"
+                  btnFunc={() => {
+                    document.getElementById("services")?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                  }}
+                />
+                <Button
+                  title="View Training Programs"
+                  type="none"
+                  buttonCustomStyle="text-blue-600 border border-blue-600 hover:bg-[#0062E0] hover:border-[#0062E0] hover:text-white  transition-all duration-300"
+                  btnFunc={() => {
+                    document.getElementById("services")?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                  }}
+                />
               </div>
             </div>
 
-            {/* ====== RIGHT SIDE - Images (Passing rate, Icons, Images, One feedback) ====== */}
-            <div className="hidden lg:flex relative lg:h-135 items-center justify-center">
-              {/* Image Background Color */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-70 h-70 bg-linear-to-br from-[#3084F0] to-[#DAEBFC] rounded-full blur-3xl"></div>
+            {/* Experiences Content */}
+            <div className="flex space-x-4 justify-center items-center md:justify-start md:items-start">
+              <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
+                <h3 className="font-bold">13</h3>
+                <div className="text-gray-600 leading-tight flex flex-col justify-center lg:justify-start items-center md:items-start">
+                  <p className="font-medium whitespace-nowrap">Years of</p>
+                  <p className="font-medium whitespace-nowrap">Experience</p>
+                </div>
               </div>
+              <div className="h-18 md:h-10 lg:h-12 w-px bg-black shrink-0"></div>
+              <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
+                <h3 className="font-bold">3</h3>
+                <div className="text-gray-600 leading-tight flex flex-col justify-center lg:justify-start items-center md:items-start">
+                  <p className="font-medium whitespace-nowrap">
+                    Data Centers
+                  </p>
+                  <p className="font-medium whitespace-nowrap">Deployed</p>
+                </div>
+              </div>
+              <div className="h-18 md:h-10 lg:h-12 w-px bg-black shrink-0"></div>
+              <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
+                <h3 className="font-bold">10</h3>
+                <div className="text-gray-600 leading-tight flex flex-col justify-center lg:justify-start items-center md:items-start">
+                  <p className="font-medium whitespace-nowrap">
+                    Total Active
+                  </p>
+                  <p className="font-medium whitespace-nowrap">Courses</p>
+                </div>
+              </div>
+            </div>
+          </div>
 
-              {/* Passing Rate */}
-              <div className="relative w-full max-w-md">
-                <div className="hidden xl:flex absolute top-31 left-4 lg:-left-35 bg-[#EBF5FD] rounded-xl shadow-xl/10 px-4 py-3 z-20 hover:scale-105 transition duration-300 ease-in-out justify-center items-center gap-3">
-                  <h3 className="font-bold text-[#1775EE]">95%</h3>
-                  <div>
-                    <div className="flex gap-1">
-                      {[...Array(5)].map((_, i) => (
-                        <svg
-                          key={i}
-                          className="w-4 h-4 text-yellow-400 fill-current"
-                          viewBox="0 0 20 20"
-                        >
-                          <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
-                        </svg>
-                      ))}
-                    </div>
-                    <p>Passing Rate</p>
+          {/* ====== RIGHT SIDE - Images (Passing rate, Icons, Images, One feedback) ====== */}
+          <div className="hidden lg:flex relative lg:h-135 items-center justify-center">
+            {/* Image Background Color */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-70 h-70 bg-linear-to-br from-[#3084F0] to-[#DAEBFC] rounded-full blur-3xl"></div>
+            </div>
+
+            {/* Passing Rate */}
+            <div className="relative w-full max-w-md">
+              <div className="hidden xl:flex absolute top-31 left-4 lg:-left-35 bg-[#EBF5FD] rounded-xl shadow-xl/10 px-4 py-3 z-20 hover:scale-105 transition duration-300 ease-in-out justify-center items-center gap-3">
+                <h3 className="font-bold text-[#1775EE]">95%</h3>
+                <div>
+                  <div className="flex gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <svg
+                        key={i}
+                        className="w-4 h-4 text-yellow-400 fill-current"
+                        viewBox="0 0 20 20"
+                      >
+                        <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                      </svg>
+                    ))}
                   </div>
+                  <p>Passing Rate</p>
                 </div>
-                {/* Person Image */}
-                <div className="relative right-6">
+              </div>
+              {/* Person Image */}
+              <div className="relative right-6">
+                <img
+                  src={MaamGrace}
+                  alt="Professional holding laptop with ICT solutions"
+                  className="w-[90%]"
+                />
+              </div>
+              {/* Side Icons */}
+              <div className="home_side_icons_container top-9 right-1 lg:right-30">
+                <Settings className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
+              </div>
+              <div className="home_side_icons_container top-24 -right-2 lg:right-13">
+                <Tag className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
+              </div>
+              <div className="home_side_icons_container top-45 right-0 lg:right-4">
+                <MessageSquare className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
+              </div>
+              {/* One Feedback and Its Exam Status */}
+              <div className="hidden xl:flex absolute bottom-15 -right-4 lg:-right-10 bg-[#EBF5FD] rounded-xl shadow-2xl px-3 py-3 max-w-61 z-20 transition-transform flex-col justify-center items-center gap-2">
+                <div className="flex items-start gap-3">
                   <img
-                    src={MaamGrace}
-                    alt="Professional holding laptop with ICT solutions"
-                    className="w-[90%]"
+                    src={ClydeNelsonRocillo}
+                    alt="Clyde Nelson R."
+                    className="w-14 h-14 rounded-full object-cover"
                   />
-                </div>
-                {/* Side Icons */}
-                <div className="home_side_icons_container top-9 right-1 lg:right-30">
-                  <Settings className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
-                </div>
-                <div className="home_side_icons_container top-24 -right-2 lg:right-13">
-                  <Tag className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
-                </div>
-                <div className="home_side_icons_container top-45 right-0 lg:right-4">
-                  <MessageSquare className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
-                </div>
-                {/* One Feedback and Its Exam Status */}
-                <div className="hidden xl:flex absolute bottom-15 -right-4 lg:-right-10 bg-[#EBF5FD] rounded-xl shadow-2xl px-3 py-3 max-w-61 z-20 transition-transform flex-col justify-center items-center gap-2">
-                  <div className="flex items-start gap-3">
-                    <img
-                      src={ClydeNelsonRocillo}
-                      alt="Clyde Nelson R."
-                      className="w-14 h-14 rounded-full object-cover"
-                    />
-                    <div className="flex-1 pr-2">
-                      <p className="text-[#1775EE] truncate font-bold">
-                        Clyde Nelson R.
-                      </p>
-                      <p className="text-xs">
-                        just passed the CCNA certification!
-                      </p>
-                    </div>
+                  <div className="flex-1 pr-2">
+                    <p className="text-[#1775EE] truncate font-bold">
+                      Clyde Nelson R.
+                    </p>
+                    <p className="text-xs">
+                      just passed the CCNA certification!
+                    </p>
                   </div>
-                  <Button
-                    title="View Certification"
-                    type="none"
-                    buttonCustomStyle="bg-[#1775EE] text-white transition-all duration-300 shadow-lg hover:bg-[#0062E0] px-6 py-3 w-full"
-                    btnFunc={() => {
-                      document.getElementById("feedbacks")?.scrollIntoView({
-                        behavior: "smooth",
-                        block: "start",
-                      });
-                    }}
-                  />
                 </div>
+                <Button
+                  title="View Certification"
+                  type="none"
+                  buttonCustomStyle="bg-[#1775EE] text-white transition-all duration-300 shadow-lg hover:bg-[#0062E0] px-6 py-3 w-full"
+                  btnFunc={() => {
+                    document.getElementById("feedbacks")?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                  }}
+                />
               </div>
             </div>
           </div>
@@ -312,32 +305,29 @@ export default function Home() {
 
       {/* ==================== PARTNERS LOGO ====================*/}
       <section
-        className="flex bg-[#EBF5FD] justify-center items-center text-center py-10 md:py-15 scroll-mt-18"
+        className="flex flex-col space-y-4 md:space-y-7 bg-[#EBF5FD] justify-center items-center text-center py-10 md:py-15 scroll-mt-18 px-[2.063rem] sm:px-[2.063rem] md:px-16 xl:px-[7.438rem] w-full"
         id="partners"
       >
-        {/* Section Margin and Spacing */}
-        <div className="mx-[2.063rem] md:mx-16 xl:mx-[7.438rem] space-y-4 md:space-y-7">
-          {/* Text Content */}
-          <div className="flex flex-col justify-center items-center space-y-1">
-            {/* Title */}
-            <div className="flex flex-col sm:flex-row space-x-2">
-              <h3>Trusted by Our <span className="text-[#1775EE]">Customers & Partners</span></h3>
-            </div>
-            {/* Description */}
-            <p className="w-78 sm:w-lg md:w-lg lg:w-xl xl:w-full">
-              We collaborate with recognized technology partners to ensure
-              quality, reliability, and up-to-date ICT solutions.
-            </p>
+        {/* Text Content */}
+        <div className="flex flex-col justify-center items-center space-y-1">
+          {/* Title */}
+          <div className="flex flex-col sm:flex-row space-x-2">
+            <h3>Trusted by Our <span className="text-[#1775EE]">Customers & Partners</span></h3>
           </div>
-          {/* Logos */}
-          <Partners />
+          {/* Description */}
+          <p className="w-78 sm:w-lg md:w-lg lg:w-xl xl:w-full">
+            We collaborate with recognized technology partners to ensure
+            quality, reliability, and up-to-date ICT solutions.
+          </p>
         </div>
+        {/* Logos */}
+        <Partners />
       </section>
 
       {/* ==================== SERVICES ====================*/}
       <section
         id="services"
-        className="flex flex-col justify-center scroll-mt-18 items-center space-y-6 md:space-y-7 py-10 md:py-15 h-full mx-[2.063rem] md:mx-16 xl:mx-[7.438rem]"
+        className="flex flex-col justify-center scroll-mt-18 items-center space-y-6 md:space-y-7 py-10 md:py-15 h-full px-[2.063rem] sm:px-[2.063rem] md:px-16 xl:px-[7.438rem] w-full"
       >
         {/* Title and Description Container */}
         <div className="flex flex-col justify-center items-center text-center space-y-1">
@@ -751,93 +741,91 @@ export default function Home() {
       </section>
 
       {/* ==================== WHY CHOOSE Matekk Cybercore Academy ====================*/}
-      <section className="py-10 md:py-15 bg-[#EBF5FD] scroll-mt-18">
+      <section className="flex flex-col lg:flex-row space-x-0 lg:space-x-8 space-y-8 md:space-y-12 px-[2.063rem] sm:px-[2.063rem] md:px-16 xl:px-[7.438rem] w-full py-10 md:py-15 bg-[#EBF5FD] scroll-mt-18">
         {/* Section Margin */}
-        <div className="flex flex-col lg:flex-row space-x-0 lg:space-x-8 space-y-8 md:space-y-12 mx-[2.063rem] md:mx-16 xl:mx-[7.438rem]">
-          {/* Text and Image Container */}
-          <div className="flex flex-col md:flex-row lg:flex-col justify-center items-center space-x-0 md:space-x-18 lg:space-x-0 space-y-8 md:space-y-15">
-            {/* Text Content */}
-            <div className="justify-center md:justify-left w-full md:w-md lg:w-fit space-y-1">
-              {/* Title */}
-              <h3>
-                Why Choose Matekk
-                <span className="text-[#1775EE]"> ICT Services?</span>
-              </h3>
-              {/* Description */}
-              <p>
-                Matekk Cybercore Academy is committed
-                to delivering reliable ICT solutions and high-quality training
-                through experienced professionals, proven methodologies, and a
-                strong focus on innovation, integrity, and excellence.
-              </p>
-            </div>
-            {/* LEFT SIDE - IMAGE */}
-            <div className="relative max-w-xs sm:max-w-md lg:max-w-lg mx-auto">
-              <div className="absolute -top-4 -right-4 sm:-top-6 sm:-right-6 w-32 h-32 sm:w-40 sm:h-40 lg:w-50 lg:h-50 border-t-4 border-r-4 sm:border-t-6 sm:border-r-6 border-blue-500 rounded-tr-3xl z-0"></div>
-              <img
-                src={Handshake}
-                alt="Professional handshake - Matekk Cybercore Academy team"
-                className="z-10 w-[75vw] md:w-[50vw] lg:w-full h-auto rounded-2xl sm:rounded-3xl object-cover aspect-4/5"
-              />
-              <div className="absolute -bottom-4 -left-4 sm:-bottom-6 sm:-left-6 w-32 h-32 sm:w-40 sm:h-40 lg:w-50 lg:h-50 border-b-4 border-l-4 sm:border-b-6 sm:border-l-6 border-blue-500 rounded-bl-3xl z-0"></div>
-            </div>
+        {/* Text and Image Container */}
+        <div className="flex flex-col md:flex-row lg:flex-col justify-center items-center space-x-0 md:space-x-18 lg:space-x-0 space-y-8 md:space-y-15">
+          {/* Text Content */}
+          <div className="justify-center md:justify-left w-full md:w-md lg:w-fit space-y-1">
+            {/* Title */}
+            <h3>
+              Why Choose Matekk
+              <span className="text-[#1775EE]"> ICT Services?</span>
+            </h3>
+            {/* Description */}
+            <p>
+              Matekk Cybercore Academy is committed
+              to delivering reliable ICT solutions and high-quality training
+              through experienced professionals, proven methodologies, and a
+              strong focus on innovation, integrity, and excellence.
+            </p>
+          </div>
+          {/* LEFT SIDE - IMAGE */}
+          <div className="relative max-w-xs sm:max-w-md lg:max-w-lg mx-auto">
+            <div className="absolute -top-4 -right-4 sm:-top-6 sm:-right-6 w-32 h-32 sm:w-40 sm:h-40 lg:w-50 lg:h-50 border-t-4 border-r-4 sm:border-t-6 sm:border-r-6 border-blue-500 rounded-tr-3xl z-0"></div>
+            <img
+              src={Handshake}
+              alt="Professional handshake - Matekk Cybercore Academy team"
+              className="z-10 w-[75vw] md:w-[50vw] lg:w-full h-auto rounded-2xl sm:rounded-3xl object-cover aspect-4/5"
+            />
+            <div className="absolute -bottom-4 -left-4 sm:-bottom-6 sm:-left-6 w-32 h-32 sm:w-40 sm:h-40 lg:w-50 lg:h-50 border-b-4 border-l-4 sm:border-b-6 sm:border-l-6 border-blue-500 rounded-bl-3xl z-0"></div>
+          </div>
+        </div>
+
+        {/* RIGHT SIDE - Reasons Why Choose Solverous */}
+        {/* ====== Experience ====== */}
+        <div className="space-y-4">
+          <div className="why_choose_card">
+            <h5>Experience</h5>
+            <p>
+              Over a decade of providing ICT and engineering solutions and
+              professional training since our establishment in 2013.
+            </p>
           </div>
 
-          {/* RIGHT SIDE - Reasons Why Choose Solverous */}
-          {/* ====== Experience ====== */}
-          <div className="space-y-4">
-            <div className="why_choose_card">
-              <h5>Experience</h5>
-              <p>
-                Over a decade of providing ICT and engineering solutions and
-                professional training since our establishment in 2013.
-              </p>
-            </div>
+          {/* ====== Expertise ====== */}
+          <div className="why_choose_card">
+            <h5>Expertise</h5>
+            <p>
+              Led by a Professional Electronics Engineer and supported by
+              certified engineers, technicians, and instructors with strong
+              industry and academic backgrounds.
+            </p>
+          </div>
 
-            {/* ====== Expertise ====== */}
-            <div className="why_choose_card">
-              <h5>Expertise</h5>
-              <p>
-                Led by a Professional Electronics Engineer and supported by
-                certified engineers, technicians, and instructors with strong
-                industry and academic backgrounds.
-              </p>
-            </div>
+          {/* ====== Quality Training ====== */}
+          <div className="why_choose_card">
+            <h5>Quality Training</h5>
+            <p>
+              We offer face-to-face and online training programs aligned with
+              industry standards and globally recognized certifications.
+            </p>
+          </div>
 
-            {/* ====== Quality Training ====== */}
-            <div className="why_choose_card">
-              <h5>Quality Training</h5>
-              <p>
-                We offer face-to-face and online training programs aligned with
-                industry standards and globally recognized certifications.
-              </p>
-            </div>
+          {/* ====== End-to-End Approach ====== */}
+          <div className="why_choose_card">
+            <h5>End-to-End Approach</h5>
+            <p>
+              We follow the Plan, Build, Operate, Optimize, and Test (PBOOT)
+              methodology to ensure structured and effective delivery of ICT
+              solutions.
+            </p>
+          </div>
 
-            {/* ====== End-to-End Approach ====== */}
-            <div className="why_choose_card">
-              <h5>End-to-End Approach</h5>
-              <p>
-                We follow the Plan, Build, Operate, Optimize, and Test (PBOOT)
-                methodology to ensure structured and effective delivery of ICT
-                solutions.
-              </p>
-            </div>
-
-            {/* ====== Innovation & Integrity ====== */}
-            <div className="why_choose_card">
-              <h5>Innovation & Integrity</h5>
-              <p>
-                Our work is guided by core values that emphasize innovation,
-                ethical practices, excellence, collaboration, and continuous
-                improvement.
-              </p>
-            </div>
+          {/* ====== Innovation & Integrity ====== */}
+          <div className="why_choose_card">
+            <h5>Innovation & Integrity</h5>
+            <p>
+              Our work is guided by core values that emphasize innovation,
+              ethical practices, excellence, collaboration, and continuous
+              improvement.
+            </p>
           </div>
         </div>
       </section>
 
       {/* ==================== OUR WORKING PROCESS ====================*/}
-      <section className="py-10 md:py-15 bg-white scroll-mt-18 mx-[2.063rem] md:mx-16 xl:mx-[7.438rem] space-y-8 lg:space-y-2 overflow-hidden">
+      <section className="py-10 md:py-15 bg-white scroll-mt-18 px-[2.063rem] sm:px-[2.063rem] md:px-16 xl:px-[7.438rem] w-full space-y-8 lg:space-y-2 overflow-hidden">
         {/* Text Content */}
         <div className="flex flex-col text-right ml-0 md:ml-38 lg:ml-auto items-end">
           {/* Title */}
@@ -1310,65 +1298,130 @@ export default function Home() {
       {/* ==================== FEATURED SOLUTIONS AND TRAINING ====================*/}
       <section
         id="training"
-        className="flex flex-col py-10 md:py-15 h-full bg-[#EBF5FD] scroll-mt-18"
+        className="flex flex-col py-10 md:py-15 h-full bg-[#EBF5FD] scroll-mt-18 px-[2.063rem] sm:px-[2.063rem] md:px-16 xl:px-[7.438rem] w-full space-y-6"
       >
-        {/* Margin */}
-        <div className="mx-[2.063rem] md:mx-16 xl:mx-[7.438rem] space-y-6">
-          {/* Text Content */}
-          <div>
-            {/* Title */}
-            <h3 className="text-center">
-              Our Featured
-              <span className="text-[#1775EE]"> Solutions and Training</span>
-            </h3>
-            {/* Description */}
-            <p className="text-center max-w-240 mx-auto">
-              Matekk Cybercore Academy delivers
-              end-to-end ICT and engineering solutions alongside comprehensive
-              training programs designed to meet industry demands and support
-              digital transformation.
-            </p>
-          </div>
+        {/* Text Content */}
+        <div>
+          {/* Title */}
+          <h3 className="text-center">
+            Our Featured
+            <span className="text-[#1775EE]"> Solutions and Training</span>
+          </h3>
+          {/* Description */}
+          <p className="text-center max-w-240 mx-auto">
+            Matekk Cybercore Academy delivers
+            end-to-end ICT and engineering solutions alongside comprehensive
+            training programs designed to meet industry demands and support
+            digital transformation.
+          </p>
+        </div>
 
-          {/* Gallery */}
-          <div>
-            {isMobile ? (
-              /* ── MOBILE ── */
-              /* ── MOBILE: single column ── */
-              <div className="flex flex-col gap-3">
-                {galleryItems.map((item) => (
+        {/* Gallery */}
+        <div>
+          {isMobile ? (
+            /* ── MOBILE ── */
+            /* ── MOBILE: single column ── */
+            <div className="flex flex-col gap-3">
+              {galleryItems.map((item) => (
+                <div
+                  key={item.id}
+                  onClick={() =>
+                    setTappedCard(tappedCard === item.id ? null : item.id)
+                  }
+                  className="relative self-center rounded-2xl overflow-hidden cursor-pointer max-w-[85vw] h-[30vh]"
+                >
+                  <img
+                    src={item.src}
+                    alt={item.alt}
+                    className="w-full h-full object-cover"
+                  />
+
+                  {/* Full blur overlay */}
                   <div
-                    key={item.id}
-                    onClick={() =>
-                      setTappedCard(tappedCard === item.id ? null : item.id)
-                    }
-                    className="relative self-center rounded-2xl overflow-hidden cursor-pointer w-[90vw] h-[30vh]"
+                    className={`flex flex-col justify-center items-center text-white p-6 absolute inset-0 rounded-2xl backdrop-blur-sm bg-black/1 transition-opacity duration-500 ${tappedCard === item.id ? "opacity-100" : "opacity-0"
+                      }`}
                   >
-                    <img
-                      src={item.src}
-                      alt={item.alt}
-                      className="w-full h-full object-cover"
-                    />
-
-                    {/* Full blur overlay */}
-                    <div
-                      className={`flex flex-col justify-center items-center text-white p-6 absolute inset-0 rounded-2xl backdrop-blur-sm bg-black/1 transition-opacity duration-500 ${tappedCard === item.id ? "opacity-100" : "opacity-0"
-                        }`}
-                    >
-                      {/* Content */}
-                      {/* Title row */}
-                      <div className="flex items-center justify-between gap-4 w-full">
-                        <h5 className="text-shadow-lg">
-                          {item.title}
-                        </h5>
-                        <Link
-                          to={item.link}
-                          onClick={(e) => e.stopPropagation()}
-                          className="shrink-0 flex items-center justify-center"
+                    {/* Content */}
+                    {/* Title row */}
+                    <div className="flex items-center justify-between gap-4 w-full">
+                      <h5 className="text-shadow-lg">
+                        {item.title}
+                      </h5>
+                      <Link
+                        to={item.link}
+                        onClick={(e) => e.stopPropagation()}
+                        className="shrink-0 flex items-center justify-center"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="w-7 h-7 text-white"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth="2"
                         >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M7 17L17 7M17 7H7M17 7v10"
+                          />
+                        </svg>
+                      </Link>
+                    </div>
+
+                    {/* Description below title */}
+                    <p className="text-shadow-lg">
+                      {item.desc}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            /* ── DESKTOP/TABLET ── */
+            <div className="flex flex-col gap-3">
+              {rows.map((row, rowIndex) => (
+                <div
+                  key={rowIndex}
+                  onMouseEnter={() => setHoveredRow(rowIndex)}
+                  onMouseLeave={() => setHoveredRow(null)}
+                  className="flex gap-3 transition-all duration-500 ease-in-out"
+                  style={{
+                    height:
+                      hoveredRow === rowIndex
+                        ? "340px"
+                        : hoveredRow !== null
+                          ? "220px"
+                          : "280px",
+                  }}
+                >
+                  {row.map((item) => (
+                    <div
+                      key={item.id}
+                      className="group relative rounded-2xl overflow-hidden cursor-pointer flex-1 transition-all duration-500 ease-in-out hover:flex-2"
+                    >
+                      <img
+                        src={item.src}
+                        alt={item.alt}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+
+                      {/* Blur */}
+                      <div className="flex flex-row justify-center items-center absolute inset-x-0 bottom-0 p-5 text-white bg-black/1 to-transparent backdrop-blur-[10px] opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+
+                        <div className="text-shadow-lg space-y-1">
+                          {/* Text Content */}
+                          <h5>
+                            {item.title}
+                          </h5>
+                          <p className="line-clamp-2">
+                            {item.desc}
+                          </p>
+                        </div>
+                        <div className="shrink-0 flex items-center justify-center">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            className="w-7 h-7 text-white"
+                            className="w-10 h-10 text-white"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
@@ -1380,82 +1433,14 @@ export default function Home() {
                               d="M7 17L17 7M17 7H7M17 7v10"
                             />
                           </svg>
-                        </Link>
-                      </div>
-
-                      {/* Description below title */}
-                      <p className="text-shadow-lg">
-                        {item.desc}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              /* ── DESKTOP/TABLET ── */
-              <div className="flex flex-col gap-3">
-                {rows.map((row, rowIndex) => (
-                  <div
-                    key={rowIndex}
-                    onMouseEnter={() => setHoveredRow(rowIndex)}
-                    onMouseLeave={() => setHoveredRow(null)}
-                    className="flex gap-3 transition-all duration-500 ease-in-out"
-                    style={{
-                      height:
-                        hoveredRow === rowIndex
-                          ? "340px"
-                          : hoveredRow !== null
-                            ? "220px"
-                            : "280px",
-                    }}
-                  >
-                    {row.map((item) => (
-                      <div
-                        key={item.id}
-                        className="group relative rounded-2xl overflow-hidden cursor-pointer flex-1 transition-all duration-500 ease-in-out hover:flex-2"
-                      >
-                        <img
-                          src={item.src}
-                          alt={item.alt}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
-
-                        {/* Blur */}
-                        <div className="flex flex-row justify-center items-center absolute inset-x-0 bottom-0 p-5 text-white bg-black/1 to-transparent backdrop-blur-[10px] opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-
-                          <div className="text-shadow-lg space-y-1">
-                            {/* Text Content */}
-                            <h5>
-                              {item.title}
-                            </h5>
-                            <p className="line-clamp-2">
-                              {item.desc}
-                            </p>
-                          </div>
-                          <div className="shrink-0 flex items-center justify-center">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="w-10 h-10 text-white"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M7 17L17 7M17 7H7M17 7v10"
-                              />
-                            </svg>
-                          </div>
                         </div>
                       </div>
-                    ))}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -1463,101 +1448,99 @@ export default function Home() {
       <TestimonialsSection />
 
       {/* ==================== ABOUT THE COMPANY ====================*/}
-      <section id="about" className="scroll-mt-18 py-16 bg-[#EBF5FD]">
-        <div className="mx-[2.063rem] md:mx-16 xl:mx-[7.438rem] space-y-6">
-          {/* Title and Description */}
-          <div className="flex flex-col justify-center items-center space-y-2">
-            <h6 className="w-fit border border-gray-300 rounded-full px-3 py-1.5 text-sm text-black bg-white">
-              Solutions
-            </h6>
-            <div className="space-y-1">
-              <h3 className="text-center">
-                About the
-                <span className="text-[#1775EE]"> Company</span>
-              </h3>
-              {/* Description */}
-              <p className="text-center max-w-240 mx-auto">
-                Matekk Cybercore Academy is a trusted
-                provider of ICT and engineering solutions and a premier ICT
-                training center, committed to empowering businesses and
-                individuals through innovation and education since 2013.
+      <section id="about" className="scroll-mt-18 py-16 bg-[#EBF5FD] px-[2.063rem] sm:px-[2.063rem] md:px-16 xl:px-[7.438rem] space-y-6 ">
+        {/* Title and Description */}
+        <div className="flex flex-col justify-center items-center space-y-2">
+          <h6 className="w-fit border border-gray-300 rounded-full px-3 py-1.5 text-sm text-black bg-white">
+            About
+          </h6>
+          <div className="space-y-1">
+            <h3 className="text-center">
+              About the
+              <span className="text-[#1775EE]"> Company</span>
+            </h3>
+            {/* Description */}
+            <p className="text-center max-w-240 mx-auto">
+              Matekk Cybercore Academy is a trusted
+              provider of ICT and engineering solutions and a premier ICT
+              training center, committed to empowering businesses and
+              individuals through innovation and education since 2013.
+            </p>
+          </div>
+        </div>
+
+        {/* 3-Column Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-stretch">
+          {/* Left Column */}
+          <div className="flex flex-col gap-4 md:h-full xl:h-full 2xl:h-full">
+            {/* Text Card */}
+            <div className="about_cards order-2 md:order-1 shrink-0">
+              <p>
+                Founded in 2013, Matekk Cybercore Academy has grown into a reputable
+                firm delivering innovative ICT solutions and professional
+                training programs that enhance efficiency, connectivity, and
+                technological capability across industries.
               </p>
+            </div>
+
+            {/* Person Image */}
+            <div className="rounded-2xl overflow-hidden shadow-sm order-1 md:order-2 md:flex-1 xl:flex-1 2xl:flex-1 min-h-0 2xl:max-h-96.75">
+              <img
+                src={SirMark}
+                alt="Company Representative"
+                className="w-full h-107 md:h-full object-cover"
+              />
             </div>
           </div>
 
-          {/* 3-Column Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-stretch">
-            {/* Left Column */}
-            <div className="flex flex-col gap-4 md:h-full xl:h-full 2xl:h-full">
-              {/* Text Card */}
-              <div className="about_cards order-2 md:order-1 shrink-0">
-                <p>
-                  Founded in 2013, Matekk Cybercore Academy has grown into a reputable
-                  firm delivering innovative ICT solutions and professional
-                  training programs that enhance efficiency, connectivity, and
-                  technological capability across industries.
-                </p>
-              </div>
+          {/* Building Image */}
+          <div className="rounded-2xl overflow-hidden shadow-sm order-3 md:order-0 self-stretch min-h-0 2xl:max-h-145">
+            <img
+              src={CompanyBuilding}
+              alt="Matekk Academy Company Building"
+              className="w-full h-full object-cover object-top"
+            />
+          </div>
 
-              {/* Person Image */}
-              <div className="rounded-2xl overflow-hidden shadow-sm order-1 md:order-2 md:flex-1 xl:flex-1 2xl:flex-1 min-h-0 2xl:max-h-96.75">
-                <img
-                  src={SirMark}
-                  alt="Company Representative"
-                  className="w-full h-107 md:h-full object-cover"
-                />
-              </div>
+          {/* Right Column */}
+          <div className="flex flex-col gap-4 order-4 md:order-0">
+            {/* Mission Card */}
+            <div className="about_cards space-y-2">
+              <h5>
+                Mission
+              </h5>
+              <p>
+                To empower businesses through innovative ICT and engineering
+                solutions that enhance operational efficiency, drive
+                technological advancement, and support sustainable growth.
+              </p>
+              <p>
+                To deliver high-quality ICT education and training that
+                enables individuals and organizations to achieve their full
+                potential and stay competitive in the digital era.
+              </p>
             </div>
 
-            {/* Building Image */}
-            <div className="rounded-2xl overflow-hidden shadow-sm order-3 md:order-0 self-stretch min-h-0 2xl:max-h-145">
-              <img
-                src={CompanyBuilding}
-                alt="Matekk Academy Company Building"
-                className="w-full h-full object-cover object-top"
-              />
-            </div>
-
-            {/* Right Column */}
-            <div className="flex flex-col gap-4 order-4 md:order-0">
-              {/* Mission Card */}
-              <div className="about_cards space-y-2">
-                <h5>
-                  Mission
-                </h5>
-                <p>
-                  To empower businesses through innovative ICT and engineering
-                  solutions that enhance operational efficiency, drive
-                  technological advancement, and support sustainable growth.
-                </p>
-                <p>
-                  To deliver high-quality ICT education and training that
-                  enables individuals and organizations to achieve their full
-                  potential and stay competitive in the digital era.
-                </p>
-              </div>
-
-              {/* Vision Card */}
-              <div className="about_cards space-y-2">
-                <h5>Vision</h5>
-                <p>
-                  To be a global leader in ICT and Engineering solutions,
-                  recognized for excellence, innovation, and commitment to
-                  client success.
-                </p>
-                <p>
-                  To be a globally recognized leader in ICT training, known for
-                  excellence, innovation, and transformative educational
-                  experiences.
-                </p>
-              </div>
+            {/* Vision Card */}
+            <div className="about_cards space-y-2">
+              <h5>Vision</h5>
+              <p>
+                To be a global leader in ICT and Engineering solutions,
+                recognized for excellence, innovation, and commitment to
+                client success.
+              </p>
+              <p>
+                To be a globally recognized leader in ICT training, known for
+                excellence, innovation, and transformative educational
+                experiences.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
       {/* ==================== FREQUENTLY ASKED QUESTIONS ====================*/}
-      <section className="flex flex-col lg:flex-row justify-center items-start mx-[2.063rem] md:mx-16 xl:mx-[7.438rem] py-10 md:py-15 scroll-mt-18 bg-white space-x-0 md:space-x-18 space-y-0 sm:space-y-8 md:space-y-10 lg:space-y-0">
+      <section className="flex flex-col lg:flex-row justify-center items-start px-[2.063rem] sm:px-[2.063rem] md:px-16 xl:px-[7.438rem] w-full py-10 md:py-15 scroll-mt-18 bg-white space-x-0 md:space-x-18 space-y-0 sm:space-y-8 md:space-y-10 lg:space-y-0">
         {/* Title and Still Have Questions Container */}
         <div className="space-y-6 lg:space-y-36 justify-center items-start">
           {/* Title */}
@@ -1596,86 +1579,84 @@ export default function Home() {
       {/* ==================== CONTACT US ====================*/}
       <section
         id="contact"
-        className="flex justify-center items-center py-10 md:py-15 bg-[#EBF5FD] scroll-mt-19 px-[2.063rem] md:px-16 xl:px-[7.438rem]"
+        className="flex flex-col-reverse md:flex-col-reverse gap-8 lg:flex-row space-x-0 md:space-x-0 lg:space-x-8 justify-center items-center py-10 md:py-15 bg-[#EBF5FD] scroll-mt-19 w-full px-[2.063rem] md:px-16 xl:px-[7.438rem]"
       >
-        <div className="flex flex-col-reverse md:flex-col-reverse gap-8 lg:flex-row space-x-0 md:space-x-0 lg:space-x-8 items-center">
-          <ContactForm />
+        <ContactForm />
 
-          {/* Text Content */}
-          <div className="space-y-4">
-            <div className="space-y-2">
-              {/* Subheading */}
-              <h6 className="w-fit border border-gray-300 rounded-full px-3 py-1.5 text-sm text-black bg-white">
-                Contact Us
-              </h6>
-              {/* Heading */}
-              <div className="space-y-1">
-                <h3>
-                  Get In Touch With Us <span className="text-[#1775EE]">Today</span>
-                </h3>
-                {/* Description */}
+        {/* Text Content */}
+        <div className="space-y-4">
+          <div className="space-y-2">
+            {/* Subheading */}
+            <h6 className="w-fit border border-gray-300 rounded-full px-3 py-1.5 text-sm text-black bg-white">
+              Contact Us
+            </h6>
+            {/* Heading */}
+            <div className="space-y-1">
+              <h3>
+                Get In Touch With Us <span className="text-[#1775EE]">Today</span>
+              </h3>
+              {/* Description */}
+              <p>
+                Get in touch with Matekk Cybercore Academy
+                to inquire about our ICT solutions, training programs, or
+                request a consultation. Our team is ready to assist you.
+              </p>
+            </div>
+          </div>
+
+          {/* Company Information */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 gap-x-0 md:gap-x-20">
+            {/* Address */}
+            <div className="contact_infos">
+              <div className="contact_infos_icons">
+                <Link to="https://maps.app.goo.gl/EvBzK1BBNEnBo6fh8" target="_blank" className="cursor-pointer">
+                  <img src={address} alt="Location Icon" className="w-6 h-6" />
+                </Link>
+              </div>
+              <div>
+                <h5>Address</h5>
                 <p>
-                  Get in touch with Matekk Cybercore Academy
-                  to inquire about our ICT solutions, training programs, or
-                  request a consultation. Our team is ready to assist you.
+                  10B Kalantiao Marikina, Metro Manila
                 </p>
               </div>
             </div>
 
-            {/* Company Information */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 gap-x-0 md:gap-x-20">
-              {/* Address */}
-              <div className="contact_infos">
-                <div className="contact_infos_icons">
-                  <Link to="https://maps.app.goo.gl/EvBzK1BBNEnBo6fh8" target="_blank" className="cursor-pointer">
-                    <img src={address} alt="Location Icon" className="w-6 h-6" />
-                  </Link>
-                </div>
-                <div>
-                  <h5>Address</h5>
-                  <p>
-                    10B Kalantiao Marikina, Metro Manila
-                  </p>
-                </div>
+            {/* Phone */}
+            <div className="contact_infos">
+              <div className="contact_infos_icons">
+                <img src={phone} alt="Phone Icon" className="w-6 h-6" />
               </div>
-
-              {/* Phone */}
-              <div className="contact_infos">
-                <div className="contact_infos_icons">
-                  <img src={phone} alt="Phone Icon" className="w-6 h-6" />
-                </div>
-                <div>
-                  <h5>Phone</h5>
-                  <p>09771968226</p>
-                </div>
+              <div>
+                <h5>Phone</h5>
+                <p>09771968226</p>
               </div>
+            </div>
 
-              {/* Email */}
-              <div className="contact_infos">
-                <div className="contact_infos_icons">
-                  <img src={email} alt="Email Icon" className="w-6 h-6" />
-                </div>
-                <div>
-                  <h5>Email</h5>
-                  <p>info@matekk.com</p>
-                </div>
+            {/* Email */}
+            <div className="contact_infos">
+              <div className="contact_infos_icons">
+                <img src={email} alt="Email Icon" className="w-6 h-6" />
               </div>
+              <div>
+                <h5>Email</h5>
+                <p>info@matekk.com</p>
+              </div>
+            </div>
 
-              {/* Availability */}
-              <div className="contact_infos">
-                <div className="contact_infos_icons">
-                  <img
-                    src={availability}
-                    alt="Availability Icon"
-                    className="w-6 h-6"
-                  />
-                </div>
-                <div>
-                  <h5>
-                    Availability
-                  </h5>
-                  <p>10:00 AM – 6:00 PM</p>
-                </div>
+            {/* Availability */}
+            <div className="contact_infos">
+              <div className="contact_infos_icons">
+                <img
+                  src={availability}
+                  alt="Availability Icon"
+                  className="w-6 h-6"
+                />
+              </div>
+              <div>
+                <h5>
+                  Availability
+                </h5>
+                <p>10:00 AM – 6:00 PM</p>
               </div>
             </div>
           </div>
