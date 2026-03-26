@@ -21,172 +21,20 @@ import TrainingHeroBanner from "../../../components/section/TrainingHeroBanner";
 export default function NSE6SecurityOperations() {
   // ==================== COURSE MODULES ====================
   const modules = [
-    {
-      title: "1.0 Security Operations — Advanced FortiAnalyzer",
-      items: [
-        {
-          subTitle: "1.1 FortiAnalyzer Advanced Architecture",
-          items: [
-            "Collector and Analyzer mode design",
-            "FortiAnalyzer HA cluster configuration",
-            "ADOM quota and log storage management",
-            "Log fetching and archiving",
-            "FortiAnalyzer Fabric integration",
-          ],
-        },
-        {
-          subTitle: "1.2 Advanced Log Analysis",
-          items: [
-            "Custom log field extraction",
-            "Advanced filter syntax and search operators",
-            "Statistical analysis and trend reporting",
-            "SQL-based log queries in FortiAnalyzer",
-            "Cross-ADOM reporting and aggregation",
-          ],
-        },
-        {
-          subTitle: "1.3 Event Management and Alerting",
-          items: [
-            "Event handler creation and tuning",
-            "Correlation event rules",
-            "Alert notification channels: email, syslog, SNMP",
-            "Reducing alert fatigue with suppression rules",
-            "FortiAnalyzer playbook automation",
-          ],
-        },
-      ],
-    },
-    {
-      title: "2.0 Security Operations — Advanced FortiSIEM",
-      items: [
-        {
-          subTitle: "2.1 Advanced FortiSIEM Deployment",
-          items: [
-            "FortiSIEM cluster sizing and scaling",
-            "Elasticsearch backend tuning",
-            "Multi-tenant FortiSIEM for MSSPs",
-            "Collector high availability",
-            "Disaster recovery for FortiSIEM",
-          ],
-        },
-        {
-          subTitle: "2.2 Advanced Correlation and Detection",
-          items: [
-            "Writing custom FortiSIEM correlation rules",
-            "Machine learning-based anomaly detection",
-            "User and entity behavior analytics (UEBA)",
-            "Watch list automation and dynamic grouping",
-            "MITRE ATT&CK technique mapping to rules",
-          ],
-        },
-        {
-          subTitle: "2.3 FortiSIEM Integrations",
-          items: [
-            "Bi-directional FortiSOAR integration",
-            "Ticketing system integration: ServiceNow, Jira, PagerDuty",
-            "Threat intelligence feed ingestion (STIX/TAXII)",
-            "Custom parser development for unsupported devices",
-            "FortiSIEM API for external automation",
-          ],
-        },
-      ],
-    },
-    {
-      title: "3.0 Security Operations — Advanced FortiSOAR",
-      items: [
-        {
-          subTitle: "3.1 Advanced Playbook Development",
-          items: [
-            "Complex conditional logic and loops in playbooks",
-            "Nested playbook design patterns",
-            "Error handling and retry mechanisms",
-            "Dynamic variable passing between playbook steps",
-            "Playbook performance optimization",
-          ],
-        },
-        {
-          subTitle: "3.2 Connector Development",
-          items: [
-            "FortiSOAR connector SDK overview",
-            "Building custom connectors for third-party tools",
-            "REST API connector configuration",
-            "OAuth and API key authentication in connectors",
-            "Testing and publishing custom connectors",
-          ],
-        },
-        {
-          subTitle: "3.3 Case Management and Collaboration",
-          items: [
-            "War room and collaborative investigation",
-            "Evidence management and chain of custody",
-            "SLA tracking for incident resolution",
-            "Reporting and executive dashboards",
-            "FortiSOAR multi-tenancy for MSSPs",
-          ],
-        },
-      ],
-    },
-    {
-      title: "4.0 Security Operations — Threat Hunting and Intelligence",
-      items: [
-        {
-          subTitle: "4.1 Proactive Threat Hunting",
-          items: [
-            "Hypothesis-driven threat hunting methodology",
-            "Hunting with FortiAnalyzer log queries",
-            "Hunting with FortiSIEM behavioral baselines",
-            "Living-off-the-land attack detection",
-            "Lateral movement and persistence indicators",
-          ],
-        },
-        {
-          subTitle: "4.2 Threat Intelligence Operations",
-          items: [
-            "STIX/TAXII threat intelligence platform integration",
-            "FortiGuard threat intelligence consumption",
-            "IoC lifecycle management",
-            "Threat intelligence sharing and ISACs",
-            "Attribution and adversary profiling",
-          ],
-        },
-        {
-          subTitle: "4.3 Digital Forensics and Incident Response (DFIR)",
-          items: [
-            "DFIR methodology and chain of custody",
-            "Memory and disk forensics fundamentals",
-            "Network forensics with packet captures",
-            "FortiEDR forensic data collection",
-            "Post-incident reporting and lessons learned",
-          ],
-        },
-      ],
-    },
-    {
-      title: "5.0 Security Operations — Advanced EDR and Endpoint",
-      items: [
-        {
-          subTitle: "5.1 Advanced FortiEDR",
-          items: [
-            "FortiEDR threat hunting console",
-            "Custom detection policy tuning",
-            "Forensic snapshot analysis",
-            "FortiEDR playbook automated response",
-            "FortiEDR integration with FortiSIEM and FortiSOAR",
-          ],
-        },
-        {
-          subTitle: "5.2 Advanced FortiClient EMS",
-          items: [
-            "EMS multi-site and HA deployment",
-            "Endpoint compliance scoring",
-            "Application inventory and software control",
-            "FortiClient XML profile management",
-            "EMS telemetry and Security Fabric tagging",
-          ],
-        },
-      ],
-    },
+    { title: "Introduction to FortiSIEM", items: [] },
+    { title: "Analytics", items: [] },
+    { title: "Nested Queries and Lookup Tables", items: [] },
+    { title: "Rules and Subpatterns", items: [] },
+    { title: "Incidents", items: [] },
+    { title: "Clear Conditions and Remediation", items: [] },
+    { title: "Threat Hunting", items: [] },
+    { title: "Performance Metrics and Baselines", items: [] },
+    { title: "Machine Learning", items: [] },
+    { title: "User and Entity Behavior Analytics", items: [] },
+    { title: "FortiSIEM ZTNA", items: [] },
+    { title: "Reports and Dashboards", items: [] },
   ];
+
   return (
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}

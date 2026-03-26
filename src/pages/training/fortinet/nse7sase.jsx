@@ -22,127 +22,13 @@ import TrainingHeroBanner from "../../../components/section/TrainingHeroBanner";
 export default function NSE7SASE() {
   // ==================== COURSE MODULES ====================
   const modules = [
-    {
-      title: "1.0 SASE — Enterprise SASE Design",
-      items: [
-        {
-          subTitle: "1.1 SASE Architecture at Enterprise Scale",
-          items: [
-            "SASE maturity model and phased adoption",
-            "Single-vendor vs. best-of-breed SASE trade-offs",
-            "SASE integration with existing MPLS and SD-WAN infrastructure",
-            "Designing for global workforce and multi-region coverage",
-            "SASE capacity planning and PoP selection strategy",
-          ],
-        },
-        {
-          subTitle: "1.2 SASE Security Policy Framework",
-          items: [
-            "Unified policy model across SASE components",
-            "Policy lifecycle management in SASE",
-            "Risk-based access policy design",
-            "Policy consistency across on-premises and cloud",
-            "Regulatory compliance mapping in SASE policy",
-          ],
-        },
-        {
-          subTitle: "1.3 SASE Transformation Strategy",
-          items: [
-            "Migration from legacy VPN to ZTNA",
-            "Phased decommission of on-premises web proxies",
-            "User change management for SASE adoption",
-            "SASE pilot design and success metrics",
-            "Total cost of ownership (TCO) analysis for SASE",
-          ],
-        },
-      ],
-    },
-    {
-      title: "2.0 SASE — Advanced Zero Trust Architecture",
-      items: [
-        {
-          subTitle: "2.1 Zero Trust Maturity Model",
-          items: [
-            "NIST SP 800-207 Zero Trust Architecture framework",
-            "CISA Zero Trust Maturity Model alignment",
-            "Identity, device, network, application, and data pillars",
-            "Zero Trust roadmap development",
-            "Measuring Zero Trust effectiveness with metrics",
-          ],
-        },
-        {
-          subTitle: "2.2 Continuous Trust Verification",
-          items: [
-            "Adaptive authentication based on risk signals",
-            "Behavioral analytics for continuous trust scoring",
-            "Step-up authentication triggers",
-            "Session invalidation on trust score degradation",
-            "User risk signals: location, device, behavior",
-          ],
-        },
-        {
-          subTitle: "2.3 Micro-Segmentation at Scale",
-          items: [
-            "Software-defined micro-segmentation design",
-            "Application dependency mapping for segmentation",
-            "Micro-segmentation in hybrid environments",
-            "Policy automation for dynamic workloads",
-            "Validating micro-segmentation effectiveness",
-          ],
-        },
-      ],
-    },
-    {
-      title: "3.0 SASE — Advanced Threat Prevention in SASE",
-      items: [
-        {
-          subTitle: "3.1 Advanced Content Inspection",
-          items: [
-            "Cloud-based sandboxing with FortiSandbox Cloud",
-            "Encrypted traffic analysis without decryption",
-            "AI/ML-based threat detection in SASE",
-            "Advanced DLP for structured and unstructured data",
-            "Real-time threat intelligence feed integration",
-          ],
-        },
-        {
-          subTitle: "3.2 Insider Threat Detection in SASE",
-          items: [
-            "User activity monitoring in SaaS applications",
-            "Anomalous data exfiltration detection",
-            "Privileged user behavior analytics",
-            "DLP policy enforcement for departing employees",
-            "UEBA integration with FortiSIEM in SASE context",
-          ],
-        },
-      ],
-    },
-    {
-      title: "4.0 SASE — SASE Operations and Governance",
-      items: [
-        {
-          subTitle: "4.1 SASE SLA and Performance Management",
-          items: [
-            "PoP performance benchmarking and SLA definition",
-            "User experience monitoring for SASE traffic",
-            "Digital experience monitoring (DEM) integration",
-            "Proactive SASE performance alerting",
-            "Capacity scaling based on utilization trends",
-          ],
-        },
-        {
-          subTitle: "4.2 SASE Governance and Risk",
-          items: [
-            "SASE security governance framework",
-            "Risk assessment for SASE third-party providers",
-            "Data privacy obligations in SASE cloud processing",
-            "SASE audit and evidence collection for compliance",
-            "Vendor management and contractual security requirements",
-          ],
-        },
-      ],
-    },
+    { title: "Advanced Deployment Features", items: [] },
+    { title: "SPA", items: [] },
+    { title: "Endpoint Management", items: [] },
+    { title: "Central Management, Central Analytics, and Security Operations", items: [] },
+    { title: "Troubleshooting", items: [] },
   ];
+
   return (
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}

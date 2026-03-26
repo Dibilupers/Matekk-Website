@@ -22,137 +22,17 @@ import TrainingHeroBanner from "../../../components/section/TrainingHeroBanner";
 export default function NSE6SASE() {
   // ==================== COURSE MODULES ====================
   const modules = [
-    {
-      title: "1.0 SASE — Advanced FortiSASE Architecture",
-      items: [
-        {
-          subTitle: "1.1 FortiSASE Deep Dive",
-          items: [
-            "FortiSASE global PoP infrastructure",
-            "Traffic steering and PoP selection logic",
-            "Tenant isolation and multi-tenancy",
-            "FortiSASE integration with on-premises FortiGate",
-            "Hybrid SASE architecture design",
-          ],
-        },
-        {
-          subTitle: "1.2 Secure Web Gateway (SWG) Advanced",
-          items: [
-            "Explicit proxy vs. transparent proxy modes",
-            "SSL/TLS inspection in the cloud proxy",
-            "Web filtering category customization",
-            "Bandwidth throttling per application category",
-            "PAC file configuration and distribution",
-          ],
-        },
-        {
-          subTitle: "1.3 Advanced CASB",
-          items: [
-            "Inline CASB for real-time enforcement",
-            "API-mode CASB for out-of-band visibility",
-            "DLP policies for cloud application data",
-            "Shadow IT risk scoring and reporting",
-            "Microsoft 365 and Google Workspace deep inspection",
-          ],
-        },
-      ],
-    },
-    {
-      title: "2.0 SASE — Advanced ZTNA",
-      items: [
-        {
-          subTitle: "2.1 ZTNA Advanced Configuration",
-          items: [
-            "ZTNA access proxy with multiple backend services",
-            "TCP forwarding access proxy",
-            "ZTNA bookmarks and application portal",
-            "Per-application MFA enforcement",
-            "ZTNA wildcard and FQDN-based application tags",
-          ],
-        },
-        {
-          subTitle: "2.2 Device Posture and Trust Scoring",
-          items: [
-            "EMS-based device posture checks",
-            "OS version and patch level enforcement",
-            "Antivirus and EDR compliance checks",
-            "Dynamic trust scoring with continuous evaluation",
-            "Non-compliant device quarantine and remediation",
-          ],
-        },
-        {
-          subTitle: "2.3 Identity Federation in ZTNA",
-          items: [
-            "SAML 2.0 IdP integration (Azure AD, Okta, Ping)",
-            "OAuth 2.0 and OpenID Connect",
-            "Conditional access based on identity risk",
-            "Group-based ZTNA policy assignment",
-            "MFA enforcement with FortiToken and third-party MFA",
-          ],
-        },
-      ],
-    },
-    {
-      title: "3.0 SASE — SD-WAN and SASE Convergence",
-      items: [
-        {
-          subTitle: "3.1 SD-WAN Integration with FortiSASE",
-          items: [
-            "FortiGate SD-WAN steering to FortiSASE PoP",
-            "ADVPN with FortiSASE as hub",
-            "SD-WAN SLA monitoring to SASE PoPs",
-            "Breakout policies for direct internet access",
-            "Overlay routing with BGP and SASE",
-          ],
-        },
-        {
-          subTitle: "3.2 Branch Security with SASE",
-          items: [
-            "Thin branch architecture with SASE",
-            "Security policy centralization in the cloud",
-            "Local breakout vs. cloud-forwarded traffic",
-            "FortiExtender integration with SASE",
-            "LTE and 5G WAN links to SASE PoPs",
-          ],
-        },
-      ],
-    },
-    {
-      title: "4.0 SASE — Operations and Troubleshooting",
-      items: [
-        {
-          subTitle: "4.1 FortiSASE Monitoring",
-          items: [
-            "FortiSASE unified dashboard",
-            "User risk scoring and behavioral analytics",
-            "Application usage heatmaps",
-            "Security event correlation in FortiSASE",
-            "Log forwarding to FortiAnalyzer from SASE",
-          ],
-        },
-        {
-          subTitle: "4.2 SASE Troubleshooting",
-          items: [
-            "FortiClient tunnel establishment failures",
-            "PoP latency and performance degradation",
-            "Certificate chain validation errors",
-            "Policy shadowing in SASE rule base",
-            "Split tunneling misconfiguration resolution",
-          ],
-        },
-        {
-          subTitle: "4.3 SASE Governance and Compliance",
-          items: [
-            "Audit logging for SASE user activity",
-            "Data residency and sovereignty requirements",
-            "GDPR compliance in SASE environments",
-            "Access reviews and entitlement management",
-            "SASE SLA reporting and KPI tracking",
-          ],
-        },
-      ],
-    },
+    { title: "Product Overview and Installation", items: [] },
+    { title: "Administration", items: [] },
+    { title: "Security Policies", items: [] },
+    { title: "Fortinet Cloud Security and Playbooks", items: [] },
+    { title: "Communication Control", items: [] },
+    { title: "Events and Incidents", items: [] },
+    { title: "Threat Hunting", items: [] },
+    { title: "RESTful API", items: [] },
+    { title: "Troubleshooting", items: [] },
   ];
+
   return (
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}

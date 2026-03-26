@@ -22,137 +22,15 @@ import TrainingHeroBanner from "../../../components/section/TrainingHeroBanner";
 export default function NSE6SecureNetworking() {
   // ==================== COURSE MODULES ====================
   const modules = [
-    {
-      title: "1.0 Secure Networking — Advanced SD-WAN",
-      items: [
-        {
-          subTitle: "1.1 Advanced SD-WAN Design",
-          items: [
-            "SD-WAN hub-and-spoke with ADVPN",
-            "Regional hub design and traffic steering",
-            "Dual-hub redundancy and failover",
-            "Overlay and underlay BGP design",
-            "Multi-region SD-WAN topology planning",
-          ],
-        },
-        {
-          subTitle: "1.2 SD-WAN Orchestration with FortiManager",
-          items: [
-            "SD-WAN template configuration in FortiManager",
-            "CLI and GUI template stacking",
-            "Per-device variable mapping",
-            "Centralized SLA policy management",
-            "Zero-touch provisioning (ZTP) with FortiManager",
-          ],
-        },
-        {
-          subTitle: "1.3 Advanced Traffic Engineering",
-          items: [
-            "Per-IP and per-session load balancing",
-            "Adaptive session routing under link degradation",
-            "Application steering with FortiGuard ISDB",
-            "Traffic shaping and per-policy QoS",
-            "Jitter and packet loss compensation techniques",
-          ],
-        },
-      ],
-    },
-    {
-      title: "2.0 Secure Networking — Advanced LAN Edge",
-      items: [
-        {
-          subTitle: "2.1 Advanced FortiSwitch",
-          items: [
-            "Multi-tier FortiSwitch stacking",
-            "FortiSwitch MCLAG configuration",
-            "Private VLANs and port isolation",
-            "IGMP snooping and multicast on FortiSwitch",
-            "FortiSwitch ACL and QoS policies",
-          ],
-        },
-        {
-          subTitle: "2.2 Advanced FortiAP and Wi-Fi",
-          items: [
-            "WPA3 and Enhanced Open deployment",
-            "Wi-Fi 6 and 6E radio planning",
-            "FortiAP mesh networking",
-            "Band steering and airtime fairness",
-            "WIDS and wireless intrusion prevention",
-          ],
-        },
-        {
-          subTitle: "2.3 Advanced NAC",
-          items: [
-            "FortiNAC profiling methods: DHCP, SNMP, CDP, LLDP",
-            "Custom device profiling rules",
-            "Role-based network access enforcement",
-            "Automated threat response with FortiNAC",
-            "FortiNAC integration with FortiGate and Security Fabric",
-          ],
-        },
-      ],
-    },
-    {
-      title: "3.0 Secure Networking — Advanced OT Security",
-      items: [
-        {
-          subTitle: "3.1 OT Network Segmentation",
-          items: [
-            "Purdue model enforcement with FortiGate",
-            "OT DMZ design and implementation",
-            "Micro-segmentation for SCADA environments",
-            "FortiGate Rugged Series deployment",
-            "Unidirectional gateway and data diode concepts",
-          ],
-        },
-        {
-          subTitle: "3.2 OT Protocol Inspection",
-          items: [
-            "Deep packet inspection for Modbus and DNP3",
-            "EtherNet/IP and PROFINET protocol signatures",
-            "OT-specific IPS signatures",
-            "Allowlisting OT communications",
-            "Anomaly detection in OT traffic",
-          ],
-        },
-        {
-          subTitle: "3.3 OT Incident Response",
-          items: [
-            "OT-specific threat hunting",
-            "Forensic data collection in OT environments",
-            "Coordinating IT/OT incident response",
-            "OT backup and recovery strategies",
-            "OT security frameworks: IEC 62443, NERC CIP",
-          ],
-        },
-      ],
-    },
-    {
-      title: "4.0 Secure Networking — Network Automation",
-      items: [
-        {
-          subTitle: "4.1 FortiManager Automation",
-          items: [
-            "FortiManager ADOM architecture",
-            "Policy package management and installation",
-            "FortiManager workflow approvals",
-            "Script execution across device groups",
-            "FortiManager REST API deep dive",
-          ],
-        },
-        {
-          subTitle: "4.2 Automation Tools Integration",
-          items: [
-            "Ansible collections for Fortinet",
-            "Terraform provider for FortiManager",
-            "Python scripting with FortiOS API",
-            "Webhook-based event-driven automation",
-            "GitOps for network policy version control",
-          ],
-        },
-      ],
-    },
+    { title: "Introduction", items: [] },
+    { title: "Asset Management", items: [] },
+    { title: "Access Control", items: [] },
+    { title: "Segmentation", items: [] },
+    { title: "Protection", items: [] },
+    { title: "Logging and Monitoring", items: [] },
+    { title: "Risk Assessment", items: [] },
   ];
+
   return (
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}
