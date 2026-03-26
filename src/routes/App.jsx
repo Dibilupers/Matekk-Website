@@ -89,7 +89,7 @@ import ITIL5 from "../pages/training/itil5/itil5";
 import PMP from "../pages/training/projectmanagement/pmp";
 
 /* Solutions */
-import Network from "../pages/solutions/ict/network";
+
 
 if ("scrollRestoration" in history) {
   history.scrollRestoration = "manual";
@@ -294,8 +294,8 @@ export default function App() {
         <Route path="/training/projectmanagement/pmp" element={<PMP />} />
 
         {/* Solutions */}
-        <Route path="/solutions/ict/network" element={<Network />} />
-
+        {/* <Route path="/solutions/ict/network" element={<Network />} />
+ */}
         <Route path="*" element={<NotFound />} />
       </Routes>
 
