@@ -10,9 +10,9 @@ import gallery5 from "../assets/solutionsGallery5.webp";
 
 import MaamGrace from "../assets/person_holding_laptop.png";
 import ClydeNelsonRocillo from "../assets/Clyde_Nelson_Rocillo.jpg";
-import SirMark from "../assets/Mark_Anthony_Valenzuela_Melendres.png";
+import SirMark from "../assets/Founder.webp";
 import ictImage from "../assets/ict.png";
-import CompanyBuilding from "../assets/MGGK_Building.png";
+import CompanyBuilding from "../assets/Building.webp";
 import webImage from "../assets/web.png";
 import { useState, useEffect } from "react";
 import FAQ from "../components/FAQ/faq";

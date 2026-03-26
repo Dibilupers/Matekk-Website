@@ -276,6 +276,7 @@ export default function SDSI() {
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
         bgImage={ccnaFooter} // CHANGE: Update background image for the footer banner
+        bgPosition="90%"
         description="Advance your networking career and prepare for the CCNP Enterprise exam."
       />
     </main>

@@ -6,8 +6,8 @@ import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
 import network from "../../../assets/network+.webp"; // Course badge image
-import ccnaHero from "../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
-import ccnaFooter from "../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
+import comptiaHero from "../../../assets/COMPTIAherobg.webp"; // Hero banner background
+import comptiaFooter from "../../../assets/COMPTIAFooter.webp"; // Footer banner background
 import MealIcon from "../../../assets/Meal.svg";
 import ReviewIcon from "../../../assets/Review.svg";
 import InstitutionalIcon from "../../../assets/InsitutionalAccount.svg";
@@ -91,7 +91,7 @@ export default function NetworkPlus() {
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}
       <TrainingHeroBanner
-        bgImage={ccnaHero}
+        bgImage={comptiaHero}
         category="COMPTIA"
         title="Network+"
         description="CompTIA Network+ provides the knowledge and skills needed to
@@ -304,7 +304,8 @@ export default function NetworkPlus() {
 
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
-        bgImage={ccnaFooter} // CHANGE: Update background image for the footer banner
+        bgImage={comptiaFooter} // CHANGE: Update background image for the footer banner
+        bgPosition="90%"
         description="Advance your networking career and prepare for the COMPTIA Enterprise exam."
       />
     </main>
