@@ -18,120 +18,128 @@ import TrainingHeroBanner from "../../../components/section/TrainingHeroBanner";
 // ==================== COMPONENT NAME - CHANGE FOR EACH COURSE ====================
 export default function NSE5CloudSecurity() {
   // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
- const modules = [
-  {
-    title: "1.0 Networking Concepts",
-    items: [
-      {
-        subTitle: "1.1 OSI Model Layers",
-        items: [
-          "Physical",
-          "Data Link",
-          "Network",
-          "Transport",
-          "Session",
-          "Presentation",
-          "Application",
-        ],
-      },
-      {
-        subTitle: "1.2 Networking Appliances",
-        items: [
-          "Routers",
-          "Switches",
-          "Firewalls",
-          "IDS/IPS",
-          "Load Balancers",
-          "Proxies",
-          "NAS",
-          "SAN",
-          "Wireless Devices",
-        ],
-      },
-      {
-        subTitle: "1.3 Cloud Concepts",
-        items: [
-          "NFV",
-          "VPC",
-          "Network Security Groups",
-          "Cloud Gateways",
-          "Deployment Models: Public, Private, Hybrid",
-          "Service Models: SaaS, IaaS, PaaS",
-        ],
-      },
-      {
-        subTitle: "1.4 Ports and Protocols",
-        items: [
-          "FTP",
-          "SFTP",
-          "SSH",
-          "Telnet",
-          "SMTP",
-          "DNS",
-          "DHCP",
-          "HTTP",
-          "HTTPS",
-          "SNMP",
-          "LDAP",
-          "RDP",
-          "SIP",
-        ],
-      },
-      {
-        subTitle: "1.5 Traffic Types",
-        items: [
-          "Unicast",
-          "Multicast",
-          "Anycast",
-          "Broadcast",
-        ],
-      },
-      {
-        subTitle: "1.6 Transmission Media",
-        items: [
-          "Wireless: 802.11, Cellular, Satellite",
-          "Wired: Fiber, Coaxial, DAC",
-        ],
-      },
-      {
-        subTitle: "1.7 Transceivers and Connectors",
-        items: [
-          "SC",
-          "LC",
-          "ST",
-          "MPO",
-          "RJ11",
-          "RJ45",
-          "F-type",
-          "BNC",
-        ],
-      },
-      {
-        subTitle: "1.8 Network Topologies",
-        items: [
-          "Mesh",
-          "Hybrid",
-          "Star / Hub and Spoke",
-          "Spine and Leaf",
-          "Point-to-Point",
-          "Three-Tier",
-          "Collapsed Core",
-        ],
-      },
-      {
-        subTitle: "1.9 IPv4 Addressing",
-        items: [
-          "Public vs. Private",
-          "APIPA",
-          "RFC1918",
-          "Loopback",
-          "Subnetting: VLSM, CIDR",
-          "Address Classes: A, B, C, D, E",
-        ],
-      },
-    ],
-  },
-];
+  const modules = [
+    {
+      title: "1.0 Cloud Security — Cloud Fundamentals",
+      items: [
+        {
+          subTitle: "1.1 Cloud Architecture Overview",
+          items: [
+            "Public, private, and hybrid cloud models",
+            "Shared responsibility model",
+            "Cloud-native vs. cloud-enabled security",
+            "Multi-cloud strategy and challenges",
+            "Cloud security posture management (CSPM)",
+          ],
+        },
+        {
+          subTitle: "1.2 Major Cloud Platforms",
+          items: [
+            "Amazon Web Services (AWS) core services",
+            "Microsoft Azure networking and security services",
+            "Google Cloud Platform (GCP) fundamentals",
+            "Cloud provider identity and access management",
+            "Comparing security controls across providers",
+          ],
+        },
+        {
+          subTitle: "1.3 Cloud Networking Concepts",
+          items: [
+            "Virtual Private Cloud (VPC) and subnets",
+            "Transit gateways and VPC peering",
+            "Cloud-native load balancers",
+            "Network security groups and access control lists",
+            "Private endpoints and service links",
+          ],
+        },
+      ],
+    },
+    {
+      title: "2.0 Cloud Security — FortiGate in the Cloud",
+      items: [
+        {
+          subTitle: "2.1 Deploying FortiGate on Cloud Platforms",
+          items: [
+            "FortiGate VM deployment on AWS, Azure, and GCP",
+            "Marketplace deployment and BYOL vs. PAYG licensing",
+            "Bootstrap configuration for cloud instances",
+            "Auto-scaling FortiGate groups",
+            "FortiGate CNF (Cloud-Native Firewall)",
+          ],
+        },
+        {
+          subTitle: "2.2 Cloud VPN and Connectivity",
+          items: [
+            "IPsec VPN between on-premises and cloud",
+            "SD-WAN integration with cloud gateways",
+            "AWS Transit Gateway with FortiGate",
+            "Azure Virtual WAN integration",
+            "GCP Cloud Interconnect and VPN",
+          ],
+        },
+        {
+          subTitle: "2.3 Cloud High Availability",
+          items: [
+            "Active-passive HA in cloud environments",
+            "External and internal load balancer HA patterns",
+            "SDN connector for failover automation",
+            "IP address failover using cloud APIs",
+            "Auto-scaling and horizontal scaling patterns",
+          ],
+        },
+      ],
+    },
+    {
+      title: "3.0 Cloud Security — FortiCASB and SaaS Protection",
+      items: [
+        {
+          subTitle: "3.1 Cloud Access Security Broker (CASB)",
+          items: [
+            "CASB concepts and deployment modes",
+            "Inline vs. API-based CASB",
+            "Shadow IT discovery",
+            "Data loss prevention (DLP) in SaaS",
+            "FortiCASB for Microsoft 365 and Google Workspace",
+          ],
+        },
+        {
+          subTitle: "3.2 SaaS Application Control",
+          items: [
+            "Application visibility and risk scoring",
+            "Policy enforcement for SaaS applications",
+            "User activity monitoring in cloud apps",
+            "Sanctioned vs. unsanctioned application management",
+            "Compliance reporting for SaaS usage",
+          ],
+        },
+      ],
+    },
+    {
+      title: "4.0 Cloud Security — Cloud Workload Protection",
+      items: [
+        {
+          subTitle: "4.1 Container and Kubernetes Security",
+          items: [
+            "Container security fundamentals",
+            "Kubernetes network policies",
+            "FortiGate as a Kubernetes ingress controller",
+            "Runtime protection for containers",
+            "Image scanning and vulnerability management",
+          ],
+        },
+        {
+          subTitle: "4.2 DevSecOps Integration",
+          items: [
+            "Infrastructure as Code (IaC) security",
+            "CI/CD pipeline security scanning",
+            "Terraform templates for FortiGate deployment",
+            "API-driven security policy management",
+            "CloudFormation and ARM template integration",
+          ],
+        },
+      ],
+    },
+  ];
 
   return (
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">

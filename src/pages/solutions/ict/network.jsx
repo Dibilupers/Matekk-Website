@@ -1,18 +1,11 @@
 // ==================== IMPORTS - UPDATE FOR EACH  ====================
 // Change these imports based on the specific
-import Button from "../../../components/ui/button";
 import { useState } from "react";
 // Replace these for different pages
 import ccnaHero from "../../../assets/CCNAHeroImageAutomation.png";
 import ccnaFooter from "../../../assets/CCNAFooterImageAutomation.png";
 import ictImage from "../../../assets/ict.png";
 import webImage from "../../../assets/web.png";
-import FAQ from "../../../components/FAQ/faq";
-import address from "../../../assets/location.svg";
-import ContactForm from "../../../components/contact/Contact.jsx";
-import phone from "../../../assets/phone.svg";
-import email from "../../../assets/email.svg";
-import availability from "../../../assets/availability.svg";
 import SolutionsHeroBanner from "../../../components/section/SolutionsHeroBanner";
 import SolutionsFooterBanner from "../../../components/section/SolutionsFooterBanner";
 // ==================== COMPONENT NAME - CHANGE FOR EACH  ====================
@@ -83,7 +76,7 @@ export default function CCNAAutomation() {
       />
 
       {/* Building Scalable */}
-      <section className="flex flex-col lg:flex-row py-10 md:py-15 mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem]">
+      <section id="description" className="flex flex-col lg:flex-row py-10 md:py-15 mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18">
         {/* Content */}
         <div className="flex flex-col gap-y-8 flex-1">
           {/* ==================== TEXT ====================*/}
@@ -303,7 +296,7 @@ export default function CCNAAutomation() {
                     {row.map((item) => (
                       <div
                         key={item.id}
-                        className="group relative rounded-2xl overflow-hidden cursor-pointer flex-1 transition-all duration-500 ease-in-out hover:flex-2"
+                        className="group relative rounded-2xl overflow-hidden flex-1 transition-all duration-500 ease-in-out hover:flex-2"
                       >
                         <img
                           src={item.src}
@@ -339,82 +332,6 @@ export default function CCNAAutomation() {
           highlightText="Request a Consultation"
           description="Secure your organization's network with MGKK Information Communication Technology Services."
         />
-      </section>
-
-      {/* Contact us */}
-      <section
-        id="contact"
-        className="flex justify-center items-center py-16 lg:py-20 bg-[#EBF5FD] scroll-mt-18"
-      >
-        <div className="w-full h-full flex mx-[2.063rem] lg:mx-[7.438rem] flex-col-reverse md:flex-col-reverse lg:flex-row space-x-0 md:space-x-0 lg:space-x-16 items-center space-y-6 md:space-y-12 lg:space-y-0">
-          <ContactForm />
-          <div className="w-full items-start mb-6.5 lg:mb-0">
-            <h6 className="text-sm bg-white border border-[#EBF5FD] rounded-full py-[0.7vh] px-4 inline-flex text-center shadow-md">
-              Contact Us
-            </h6>
-            <h3 className="text-[1.5rem] md:text-3xl lg:text-[2rem] my-2.5">
-              Get In Touch With Us <span className="text-[#1775EE]">Today</span>
-            </h3>
-            <p className="lg:w-[37vw] mb-10">
-              Get in touch with MGKK Information Communication Technology
-              Services to inquire about our ICT solutions, training programs, or
-              request a consultation. Our team is ready to assist you.
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-[6.4vw] md:mb-0">
-              {/* Address */}
-              <div className="flex items-center space-x-4">
-                <div className="bg-[#1775EE] rounded-xl p-3 flex items-center justify-center shrink-0">
-                  <img src={address} alt="Location Icon" className="w-6 h-6" />
-                </div>
-                <div>
-                  <h5 className="font-semibold text-black text-sm">Address</h5>
-                  <p className="text-xs">
-                    10B Kalantiao Marikina, Metro Manila
-                  </p>
-                </div>
-              </div>
-
-              {/* Phone */}
-              <div className="flex items-center space-x-4">
-                <div className="bg-[#1775EE] rounded-xl p-3 flex items-center justify-center shrink-0">
-                  <img src={phone} alt="Phone Icon" className="w-6 h-6" />
-                </div>
-                <div>
-                  <h5 className="font-semibold text-black text-sm">Phone</h5>
-                  <p className="text-xs">09771968226</p>
-                </div>
-              </div>
-
-              {/* Email */}
-              <div className="flex items-center space-x-4">
-                <div className="bg-[#1775EE] rounded-xl p-3 flex items-center justify-center shrink-0">
-                  <img src={email} alt="Email Icon" className="w-6 h-6" />
-                </div>
-                <div>
-                  <h5 className="font-semibold text-black text-sm">Email</h5>
-                  <p className="text-xs">info@matekk.com</p>
-                </div>
-              </div>
-
-              {/* Availability */}
-              <div className="flex items-center space-x-4">
-                <div className="bg-[#1775EE] rounded-xl p-3 flex items-center justify-center shrink-0">
-                  <img
-                    src={availability}
-                    alt="Availability Icon"
-                    className="w-6 h-6"
-                  />
-                </div>
-                <div>
-                  <h5 className="font-semibold text-black text-sm">
-                    Availability
-                  </h5>
-                  <p className="text-xs">Lorem Ipsum</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </section>
     </main>
   );
