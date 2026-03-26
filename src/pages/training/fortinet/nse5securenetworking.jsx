@@ -18,120 +18,103 @@ import TrainingHeroBanner from "../../../components/section/TrainingHeroBanner";
 // ==================== COMPONENT NAME - CHANGE FOR EACH COURSE ====================
 export default function NSE5securenetworking() {
   // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
- const modules = [
-  {
-    title: "1.0 Networking Concepts",
-    items: [
-      {
-        subTitle: "1.1 OSI Model Layers",
-        items: [
-          "Physical",
-          "Data Link",
-          "Network",
-          "Transport",
-          "Session",
-          "Presentation",
-          "Application",
-        ],
-      },
-      {
-        subTitle: "1.2 Networking Appliances",
-        items: [
-          "Routers",
-          "Switches",
-          "Firewalls",
-          "IDS/IPS",
-          "Load Balancers",
-          "Proxies",
-          "NAS",
-          "SAN",
-          "Wireless Devices",
-        ],
-      },
-      {
-        subTitle: "1.3 Cloud Concepts",
-        items: [
-          "NFV",
-          "VPC",
-          "Network Security Groups",
-          "Cloud Gateways",
-          "Deployment Models: Public, Private, Hybrid",
-          "Service Models: SaaS, IaaS, PaaS",
-        ],
-      },
-      {
-        subTitle: "1.4 Ports and Protocols",
-        items: [
-          "FTP",
-          "SFTP",
-          "SSH",
-          "Telnet",
-          "SMTP",
-          "DNS",
-          "DHCP",
-          "HTTP",
-          "HTTPS",
-          "SNMP",
-          "LDAP",
-          "RDP",
-          "SIP",
-        ],
-      },
-      {
-        subTitle: "1.5 Traffic Types",
-        items: [
-          "Unicast",
-          "Multicast",
-          "Anycast",
-          "Broadcast",
-        ],
-      },
-      {
-        subTitle: "1.6 Transmission Media",
-        items: [
-          "Wireless: 802.11, Cellular, Satellite",
-          "Wired: Fiber, Coaxial, DAC",
-        ],
-      },
-      {
-        subTitle: "1.7 Transceivers and Connectors",
-        items: [
-          "SC",
-          "LC",
-          "ST",
-          "MPO",
-          "RJ11",
-          "RJ45",
-          "F-type",
-          "BNC",
-        ],
-      },
-      {
-        subTitle: "1.8 Network Topologies",
-        items: [
-          "Mesh",
-          "Hybrid",
-          "Star / Hub and Spoke",
-          "Spine and Leaf",
-          "Point-to-Point",
-          "Three-Tier",
-          "Collapsed Core",
-        ],
-      },
-      {
-        subTitle: "1.9 IPv4 Addressing",
-        items: [
-          "Public vs. Private",
-          "APIPA",
-          "RFC1918",
-          "Loopback",
-          "Subnetting: VLSM, CIDR",
-          "Address Classes: A, B, C, D, E",
-        ],
-      },
-    ],
-  },
-];
+  const modules = [
+    {
+      title: "1.0 Secure Networking — SD-WAN",
+      items: [
+        {
+          subTitle: "1.1 SD-WAN Fundamentals",
+          items: [
+            "SD-WAN architecture and components",
+            "Underlay vs. overlay networking",
+            "WAN link types: MPLS, broadband, LTE, satellite",
+            "SD-WAN use cases and benefits",
+            "Fortinet SD-WAN solution overview",
+          ],
+        },
+        {
+          subTitle: "1.2 SD-WAN Configuration",
+          items: [
+            "SD-WAN interface members and zones",
+            "Performance SLA health checks",
+            "SD-WAN rules and traffic steering",
+            "Load balancing algorithms",
+            "Application-aware path selection",
+          ],
+        },
+        {
+          subTitle: "1.3 SD-WAN Advanced Features",
+          items: [
+            "Adaptive session routing",
+            "SD-WAN Orchestrator (FortiManager)",
+            "Dynamic BGP with SD-WAN",
+            "Quality of Service (QoS) and traffic shaping",
+            "SD-WAN reporting and SLA monitoring",
+          ],
+        },
+      ],
+    },
+    {
+      title: "2.0 Secure Networking — LAN Edge",
+      items: [
+        {
+          subTitle: "2.1 FortiSwitch",
+          items: [
+            "FortiSwitch managed vs. standalone mode",
+            "FortiLink protocol and topology",
+            "VLAN configuration and trunking",
+            "Spanning Tree Protocol (STP) on FortiSwitch",
+            "FortiSwitch security features: NAC, 802.1X",
+          ],
+        },
+        {
+          subTitle: "2.2 FortiAP and Wireless",
+          items: [
+            "FortiAP deployment modes: thin vs. local",
+            "Wireless profiles and SSIDs",
+            "Radio frequency management",
+            "Rogue AP detection",
+            "FortiAP captive portal and guest access",
+          ],
+        },
+        {
+          subTitle: "2.3 Network Access Control (NAC)",
+          items: [
+            "NAC concepts and policy enforcement",
+            "FortiNAC overview and deployment",
+            "Device profiling and classification",
+            "802.1X port-based authentication",
+            "Quarantine and remediation workflows",
+          ],
+        },
+      ],
+    },
+    {
+      title: "3.0 Secure Networking — OT and IoT Security",
+      items: [
+        {
+          subTitle: "3.1 OT Security Fundamentals",
+          items: [
+            "IT vs. OT network differences",
+            "Purdue model for industrial networks",
+            "SCADA and ICS security challenges",
+            "OT protocols: Modbus, DNP3, EtherNet/IP",
+            "Fortinet OT security solution overview",
+          ],
+        },
+        {
+          subTitle: "3.2 IoT Device Security",
+          items: [
+            "IoT device discovery and profiling",
+            "IoT segmentation strategies",
+            "Vulnerability management for IoT",
+            "FortiNAC IoT enforcement",
+            "IoT threat detection with FortiGate",
+          ],
+        },
+      ],
+    },
+  ];
 
   return (
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">

@@ -23,332 +23,121 @@ export default function NSE7SASE() {
   // ==================== COURSE MODULES ====================
   const modules = [
     {
-      title: "1.0 People",
+      title: "1.0 SASE — Enterprise SASE Design",
       items: [
         {
-          subTitle: "1.1 Manage conflict",
+          subTitle: "1.1 SASE Architecture at Enterprise Scale",
           items: [
-            "1.1.1 Interpret the source and stage of the conflict",
-            "1.1.2 Analyze the context for the conflict",
-            "1.1.3 Evaluate/recommend/reconcile the appropriate conflict resolution solution",
+            "SASE maturity model and phased adoption",
+            "Single-vendor vs. best-of-breed SASE trade-offs",
+            "SASE integration with existing MPLS and SD-WAN infrastructure",
+            "Designing for global workforce and multi-region coverage",
+            "SASE capacity planning and PoP selection strategy",
           ],
         },
         {
-          subTitle: "1.2 Lead a team",
+          subTitle: "1.2 SASE Security Policy Framework",
           items: [
-            "1.2.1 Set a clear vision and mission",
-            "1.2.2 Support the team's varied experiences",
-            "1.2.3 Value servant leadership (e.g., relate the tenets of servant leadership to the team)",
-            "1.2.4 Determine an appropriate leadership style (e.g., directive, collaborative)",
-            "1.2.5 Inspire, motivate, and influence team members/stakeholders (e.g., team contract, social contract, reward system)",
-            "1.2.6 Analyze team members and stakeholders' influence",
-            "1.2.7 Distinguish various options to lead various team members and stakeholders",
+            "Unified policy model across SASE components",
+            "Policy lifecycle management in SASE",
+            "Risk-based access policy design",
+            "Policy consistency across on-premises and cloud",
+            "Regulatory compliance mapping in SASE policy",
           ],
         },
         {
-          subTitle: "1.3 Support team performance",
+          subTitle: "1.3 SASE Transformation Strategy",
           items: [
-            "1.3.1 Appraise team member performance against key performance",
-            "1.3.2 Support and recognize team member growth and development",
-            "1.3.3 Determine appropriate feedback approach",
-            "1.3.4 Verify performance improvements",
-          ],
-        },
-        {
-          subTitle: "1.4 Empower team members and stakeholders",
-          items: [
-            "1.4.1 Organize around team strengths",
-            "1.4.2 Support team task accountability",
-            "1.4.3 Evaluate demonstration of task accountability",
-            "1.4.4 Determine and bestow level(s) of decision-making authority",
-          ],
-        },
-        {
-          subTitle:
-            "1.5 Ensure team members/stakeholders are adequately trained",
-          items: [
-            "1.5.1 Determine required competencies and elements of training",
-            "1.5.2 Determine training options based on training needs",
-            "1.5.3 Allocate resources for training",
-            "1.5.4 Measure training outcomes",
-          ],
-        },
-        {
-          subTitle: "1.6 Build a team",
-          items: [
-            "1.6.1 Appraise stakeholder skills",
-            "1.6.2 Deduce project resource requirements",
-            "1.6.3 Continuously assess and refresh team skills to meet project needs",
-            "1.6.4 Maintain team and knowledge transfer",
-          ],
-        },
-        {
-          subTitle:
-            "1.7 Address and remove impediments, obstacles, and blockers for the team",
-          items: [
-            "1.7.1 Determine critical impediments, obstacles, and blockers for the team",
-            "1.7.2 Prioritize critical impediments, obstacles, and blockers for the team",
-            "1.7.3 Use network to implement solutions to remove impediments, obstacles, and blockers for the team",
-            "1.7.4 Re-assess continually to ensure impediments, obstacles, and blockers for the team are being addressed",
-          ],
-        },
-        {
-          subTitle: "1.8 Negotiate project agreements",
-          items: [
-            "1.8.1 Analyze the bounds of the negotiations for agreement",
-            "1.8.2 Assess priorities and ultimate objective(s)",
-            "1.8.3 Participate in agreement negotiations",
-            "1.8.4 Re-assess continually to ensure impediments, obstacles, and blockers for the team are being addressed",
-            "1.8.5 Determine a negotiation strategy",
-          ],
-        },
-        {
-          subTitle: "1.9 Collaborate with stakeholders",
-          items: [
-            "1.9.1 Evaluate engagement needs for stakeholders",
-            "1.9.2 Optimize alignment between stakeholder needs, expectations, and project objectives",
-            "1.9.3 Build trust and influence stakeholders to accomplish project objectives",
-          ],
-        },
-        {
-          subTitle: "1.10 Build shared understanding",
-          items: [
-            "1.10.1 Break down situation to identify the root cause of a misunderstanding",
-            "1.10.2 Survey all necessary parties to reach consensus",
-            "1.10.3 Support outcome of party agreement",
-            "1.10.4 Investigate potential misunderstandings",
-          ],
-        },
-        {
-          subTitle: "1.11 Engage and support virtual teams",
-          items: [
-            "1.11.1 Examine virtual team member needs (e.g., environment, geography, culture, global, etc.)",
-            "1.11.2 Investigate alternatives (e.g., communication tools, colocation) for virtual team member engagement",
-            "1.11.3 Implement options for virtual team member engagement",
-            "1.11.4 Continually evaluate effectiveness of virtual team member engagement",
-          ],
-        },
-        {
-          subTitle: "1.12 Define team ground rules",
-          items: [
-            "1.12.1 Communicate organizational principles with team and external stakeholders",
-            "1.12.2 Establish an environment that fosters adherence to the ground rules",
-            "1.12.3 Manage and rectify ground rule violations",
-          ],
-        },
-        {
-          subTitle: "1.13 Mentor relevant stakeholders",
-          items: [
-            "1.13.1 Allocate the time to mentoring",
-            "1.13.2 Recognize and act on mentoring opportunities",
-          ],
-        },
-        {
-          subTitle:
-            "1.14 Promote team performance through the application of emotional intelligence",
-          items: [
-            "1.14.1 Assess behavior through the lens of emotional indicators",
-            "1.14.2 Analyze personality indicators and adjust to the emotional needs of key project stakeholders",
+            "Migration from legacy VPN to ZTNA",
+            "Phased decommission of on-premises web proxies",
+            "User change management for SASE adoption",
+            "SASE pilot design and success metrics",
+            "Total cost of ownership (TCO) analysis for SASE",
           ],
         },
       ],
     },
     {
-      title: "2.0 Process",
+      title: "2.0 SASE — Advanced Zero Trust Architecture",
       items: [
         {
-          subTitle:
-            "2.1 Execute project with the urgency required to deliver business value",
+          subTitle: "2.1 Zero Trust Maturity Model",
           items: [
-            "2.1.1 Assess opportunities to deliver value incrementally",
-            "2.1.2 Examine the business value throughout the project",
-            "2.1.3 Examine and decompose individuals project tasks as necessary to find the minimum viable product",
+            "NIST SP 800-207 Zero Trust Architecture framework",
+            "CISA Zero Trust Maturity Model alignment",
+            "Identity, device, network, application, and data pillars",
+            "Zero Trust roadmap development",
+            "Measuring Zero Trust effectiveness with metrics",
           ],
         },
         {
-          subTitle: "2.2 Manage communications",
+          subTitle: "2.2 Continuous Trust Verification",
           items: [
-            "2.2.1 Analyze communication needs of all stakeholders",
-            "2.2.2 Determine communication methods, channels, frequency, and level of detail for all stakeholders",
-            "2.2.3 Communicate project information and updates effectively",
-            "2.2.4 Confirm communication is understood and feedback is received",
+            "Adaptive authentication based on risk signals",
+            "Behavioral analytics for continuous trust scoring",
+            "Step-up authentication triggers",
+            "Session invalidation on trust score degradation",
+            "User risk signals: location, device, behavior",
           ],
         },
         {
-          subTitle: "2.3 Assess and manage risks",
+          subTitle: "2.3 Micro-Segmentation at Scale",
           items: [
-            "2.3.1 Determine risk management options",
-            "2.3.2 Iteratively assess and prioritize risks",
-          ],
-        },
-        {
-          subTitle: "2.4 Engage stakeholders",
-          items: [
-            "2.4.1 Analyze stakeholders (e.g., power interest grid, influence, impact)",
-            "2.4.2 Categorize stakeholders",
-            "2.4.3 Engage stakeholders by category",
-            "2.4.4 Develop, execute, and validate a strategy for stakeholder engagement",
-          ],
-        },
-        {
-          subTitle: "2.5 Plan and manage budget and resources",
-          items: [
-            "2.5.1 Estimate budgetary needs based on the scope of the project and lessons learned from past projects",
-            "2.5.2 Anticipate future budget challenges",
-            "2.5.3 Monitor budget variations and work with governance structure to adjust as necessary",
-            "2.5.4 Plan and manage resources",
-          ],
-        },
-        {
-          subTitle: "2.6 Plan and manage schedule",
-          items: [
-            "2.6.1 Estimate project tasks (milestones, dependencies, story points)",
-            "2.6.2 Utilize benchmarks and historical data",
-            "2.6.3 Prepare schedule based on methodology",
-            "2.6.4 Measure ongoing progress based on methodology",
-            "2.6.5 Modify schedule, as needed, based on methodology",
-            "2.6.6 Coordinate with other projects and other operations",
-            "2.6.7 Measure quality of products/deliverables",
-          ],
-        },
-        {
-          subTitle: "2.7 Plan and manage quality of products/deliverables",
-          items: [
-            "2.7.1 Determine quality standard for project deliverables",
-            "2.7.2 Recommend options for improvement based on quality gaps",
-            "2.7.3 Continually survey project deliverable quality",
-          ],
-        },
-        {
-          subTitle: "2.8 Plan and manage scope",
-          items: [
-            "2.8.1 Determine and prioritize requirements",
-            "2.8.2 Break down scope (e.g., WBS, backlog)",
-            "2.8.3 Monitor and validate scope",
-          ],
-        },
-        {
-          subTitle: "2.9 Integrate project planning activities",
-          items: [
-            "2.9.1 Consolidate the project/phase plans",
-            "2.9.2 Assess consolidated project plans for dependencies, gaps, and continued business value",
-            "2.9.3 Analyze the data collected",
-            "2.9.4 Collect and analyze data to make informed project decisions",
-            "2.9.5 Determine critical information requirements",
-          ],
-        },
-        {
-          subTitle: "2.10 Manage project changes",
-          items: [
-            "2.10.1 Anticipate and embrace the need for change (e.g., follow change management practices)",
-            "2.10.2 Determine strategy to handle change",
-            "2.10.3 Execute change management strategy according to the methodology",
-            "2.10.4 Determine if change expense to move the project forward",
-          ],
-        },
-        {
-          subTitle: "2.11 Plan and manage procurement",
-          items: [
-            "2.11.1 Define resource requirements and needs",
-            "2.11.2 Communicate resource requirements",
-            "2.11.3 Manage suppliers/contracts",
-            "2.11.4 Plan and manage procurement strategy",
-            "2.11.5 Develop a delivery solution",
-          ],
-        },
-        {
-          subTitle: "2.12 Manage project artifacts",
-          items: [
-            "2.12.1 Determine the requirements (what, when, where, etc.) for managing the project artifacts",
-            "2.12.2 Validate that the project information is kept up to date (i.e., version control) and accessible to all stakeholders",
-            "2.12.3 Continually assess the effectiveness of the management of the project artifacts",
-          ],
-        },
-        {
-          subTitle:
-            "2.13 Determine appropriate project methodology/methods and practices",
-          items: [
-            "2.13.1 Assess project needs, complexity, and magnitude",
-            "2.13.2 Recommend project execution strategy (e.g., contracting, finance)",
-            "2.13.3 Recommend a project methodology/approach (predictive, agile, hybrid)",
-            "2.13.4 Use iterative, incremental practices throughout the project life cycle (e.g., lessons learned, stakeholder engagement, risk)",
-          ],
-        },
-        {
-          subTitle: "2.14 Establish project governance structure",
-          items: [
-            "2.14.1 Determine appropriate governance for a project (e.g., replicate organizational governance)",
-            "2.14.2 Define escalation paths and thresholds",
-          ],
-        },
-        {
-          subTitle: "2.15 Manage project issues",
-          items: [
-            "2.15.1 Recognize when a team member is on issue",
-            "2.15.2 Attack the issue with the optimal action to achieve project success",
-            "2.15.3 Collaborate with relevant stakeholders on the approach to resolve the issues",
-          ],
-        },
-        {
-          subTitle: "2.16 Ensure knowledge transfer for project continuity",
-          items: [
-            "2.16.1 Discuss project responsibilities within team",
-            "2.16.2 Outline expectations for working environment",
-            "2.16.3 Confirm approach for knowledge transfers",
-          ],
-        },
-        {
-          subTitle: "2.17 Plan and manage project/phase closure or transitions",
-          items: [
-            "2.17.1 Determine criteria to successfully close the project or phase",
-            "2.17.2 Validate readiness for transitions (e.g., go-live readiness, hand off phase)",
-            "2.17.3 Conclude activities to close out project or phase (e.g., final lessons learned, retrospective, procurement, financials, resources)",
+            "Software-defined micro-segmentation design",
+            "Application dependency mapping for segmentation",
+            "Micro-segmentation in hybrid environments",
+            "Policy automation for dynamic workloads",
+            "Validating micro-segmentation effectiveness",
           ],
         },
       ],
     },
     {
-      title: "3.0 Business Environment",
+      title: "3.0 SASE — Advanced Threat Prevention in SASE",
       items: [
         {
-          subTitle: "3.1 Plan and manage project compliance",
+          subTitle: "3.1 Advanced Content Inspection",
           items: [
-            "3.1.1 Confirm compliance requirements (e.g., security, health and safety, regulatory compliance)",
-            "3.1.2 Classify compliance categories",
-            "3.1.3 Determine potential threats to compliance",
-            "3.1.4 Use methods to support compliance",
-            "3.1.5 Analyze the consequences of noncompliance",
-            "3.1.6 Determine necessary approach and action to address compliance needs (e.g., risk, legal)",
-            "3.1.7 Measure the extent to which the project is in compliance",
+            "Cloud-based sandboxing with FortiSandbox Cloud",
+            "Encrypted traffic analysis without decryption",
+            "AI/ML-based threat detection in SASE",
+            "Advanced DLP for structured and unstructured data",
+            "Real-time threat intelligence feed integration",
           ],
         },
         {
-          subTitle: "3.2 Evaluate and deliver project benefits and value",
+          subTitle: "3.2 Insider Threat Detection in SASE",
           items: [
-            "3.2.1 Investigate that benefits are identified",
-            "3.2.2 Document agreement on ownership for ongoing benefit realization",
-            "3.2.3 Verify measurement system is in place to track benefits",
-            "3.2.4 Evaluate delivery options to demonstrate value",
-            "3.2.5 Appraise stakeholders of value gain progress",
+            "User activity monitoring in SaaS applications",
+            "Anomalous data exfiltration detection",
+            "Privileged user behavior analytics",
+            "DLP policy enforcement for departing employees",
+            "UEBA integration with FortiSIEM in SASE context",
+          ],
+        },
+      ],
+    },
+    {
+      title: "4.0 SASE — SASE Operations and Governance",
+      items: [
+        {
+          subTitle: "4.1 SASE SLA and Performance Management",
+          items: [
+            "PoP performance benchmarking and SLA definition",
+            "User experience monitoring for SASE traffic",
+            "Digital experience monitoring (DEM) integration",
+            "Proactive SASE performance alerting",
+            "Capacity scaling based on utilization trends",
           ],
         },
         {
-          subTitle:
-            "3.3 Evaluate and address external business environment changes for impact on scope",
+          subTitle: "4.2 SASE Governance and Risk",
           items: [
-            "3.3.1 Survey changes to external business environment (e.g., regulations, technology, geopolitical, fiscal)",
-            "3.3.2 Assess and prioritize impact on project scope/backlog based on changes in external business environment",
-            "3.3.3 Recommend options for scope/backlog changes (e.g., schedule, cost changes)",
-            "3.3.4 Continually review external business environment for impacts on project scope/backlog",
-          ],
-        },
-        {
-          subTitle: "3.4 Support organizational change",
-          items: [
-            "3.4.1 Assess organizational culture",
-            "3.4.2 Evaluate impact of organizational changes to project and determine required actions",
-            "3.4.3 Engage stakeholders by category",
-            "3.4.4 Evaluate impact of the project to the organization and determine required actions",
+            "SASE security governance framework",
+            "Risk assessment for SASE third-party providers",
+            "Data privacy obligations in SASE cloud processing",
+            "SASE audit and evidence collection for compliance",
+            "Vendor management and contractual security requirements",
           ],
         },
       ],

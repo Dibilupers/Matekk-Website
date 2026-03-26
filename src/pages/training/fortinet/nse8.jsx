@@ -22,332 +22,396 @@ export default function NSE8() {
   // ==================== COURSE MODULES ====================
   const modules = [
     {
-      title: "1.0 People",
+      title: "1.0 NSE 8 — Enterprise Security Design",
       items: [
         {
-          subTitle: "1.1 Manage conflict",
+          subTitle: "1.1 Security Architecture Principles",
           items: [
-            "1.1.1 Interpret the source and stage of the conflict",
-            "1.1.2 Analyze the context for the conflict",
-            "1.1.3 Evaluate/recommend/reconcile the appropriate conflict resolution solution",
+            "Defense-in-depth architecture at enterprise scale",
+            "Security architecture frameworks: SABSA, TOGAF, Zachman",
+            "Threat modeling methodologies: STRIDE, PASTA, DREAD",
+            "Security design patterns for hybrid environments",
+            "Architecture review and risk acceptance processes",
           ],
         },
         {
-          subTitle: "1.2 Lead a team",
+          subTitle: "1.2 Enterprise Network Security Design",
           items: [
-            "1.2.1 Set a clear vision and mission",
-            "1.2.2 Support the team's varied experiences",
-            "1.2.3 Value servant leadership (e.g., relate the tenets of servant leadership to the team)",
-            "1.2.4 Determine an appropriate leadership style (e.g., directive, collaborative)",
-            "1.2.5 Inspire, motivate, and influence team members/stakeholders (e.g., team contract, social contract, reward system)",
-            "1.2.6 Analyze team members and stakeholders' influence",
-            "1.2.7 Distinguish various options to lead various team members and stakeholders",
+            "End-to-end enterprise security architecture blueprints",
+            "Segmentation strategy across campus, data center, and cloud",
+            "Security domain design and trust boundary definition",
+            "Resilient security architecture with no single point of failure",
+            "Security architecture documentation and stakeholder communication",
           ],
         },
         {
-          subTitle: "1.3 Support team performance",
+          subTitle: "1.3 Risk Management and Governance",
           items: [
-            "1.3.1 Appraise team member performance against key performance",
-            "1.3.2 Support and recognize team member growth and development",
-            "1.3.3 Determine appropriate feedback approach",
-            "1.3.4 Verify performance improvements",
-          ],
-        },
-        {
-          subTitle: "1.4 Empower team members and stakeholders",
-          items: [
-            "1.4.1 Organize around team strengths",
-            "1.4.2 Support team task accountability",
-            "1.4.3 Evaluate demonstration of task accountability",
-            "1.4.4 Determine and bestow level(s) of decision-making authority",
-          ],
-        },
-        {
-          subTitle:
-            "1.5 Ensure team members/stakeholders are adequately trained",
-          items: [
-            "1.5.1 Determine required competencies and elements of training",
-            "1.5.2 Determine training options based on training needs",
-            "1.5.3 Allocate resources for training",
-            "1.5.4 Measure training outcomes",
-          ],
-        },
-        {
-          subTitle: "1.6 Build a team",
-          items: [
-            "1.6.1 Appraise stakeholder skills",
-            "1.6.2 Deduce project resource requirements",
-            "1.6.3 Continuously assess and refresh team skills to meet project needs",
-            "1.6.4 Maintain team and knowledge transfer",
-          ],
-        },
-        {
-          subTitle:
-            "1.7 Address and remove impediments, obstacles, and blockers for the team",
-          items: [
-            "1.7.1 Determine critical impediments, obstacles, and blockers for the team",
-            "1.7.2 Prioritize critical impediments, obstacles, and blockers for the team",
-            "1.7.3 Use network to implement solutions to remove impediments, obstacles, and blockers for the team",
-            "1.7.4 Re-assess continually to ensure impediments, obstacles, and blockers for the team are being addressed",
-          ],
-        },
-        {
-          subTitle: "1.8 Negotiate project agreements",
-          items: [
-            "1.8.1 Analyze the bounds of the negotiations for agreement",
-            "1.8.2 Assess priorities and ultimate objective(s)",
-            "1.8.3 Participate in agreement negotiations",
-            "1.8.4 Re-assess continually to ensure impediments, obstacles, and blockers for the team are being addressed",
-            "1.8.5 Determine a negotiation strategy",
-          ],
-        },
-        {
-          subTitle: "1.9 Collaborate with stakeholders",
-          items: [
-            "1.9.1 Evaluate engagement needs for stakeholders",
-            "1.9.2 Optimize alignment between stakeholder needs, expectations, and project objectives",
-            "1.9.3 Build trust and influence stakeholders to accomplish project objectives",
-          ],
-        },
-        {
-          subTitle: "1.10 Build shared understanding",
-          items: [
-            "1.10.1 Break down situation to identify the root cause of a misunderstanding",
-            "1.10.2 Survey all necessary parties to reach consensus",
-            "1.10.3 Support outcome of party agreement",
-            "1.10.4 Investigate potential misunderstandings",
-          ],
-        },
-        {
-          subTitle: "1.11 Engage and support virtual teams",
-          items: [
-            "1.11.1 Examine virtual team member needs (e.g., environment, geography, culture, global, etc.)",
-            "1.11.2 Investigate alternatives (e.g., communication tools, colocation) for virtual team member engagement",
-            "1.11.3 Implement options for virtual team member engagement",
-            "1.11.4 Continually evaluate effectiveness of virtual team member engagement",
-          ],
-        },
-        {
-          subTitle: "1.12 Define team ground rules",
-          items: [
-            "1.12.1 Communicate organizational principles with team and external stakeholders",
-            "1.12.2 Establish an environment that fosters adherence to the ground rules",
-            "1.12.3 Manage and rectify ground rule violations",
-          ],
-        },
-        {
-          subTitle: "1.13 Mentor relevant stakeholders",
-          items: [
-            "1.13.1 Allocate the time to mentoring",
-            "1.13.2 Recognize and act on mentoring opportunities",
-          ],
-        },
-        {
-          subTitle:
-            "1.14 Promote team performance through the application of emotional intelligence",
-          items: [
-            "1.14.1 Assess behavior through the lens of emotional indicators",
-            "1.14.2 Analyze personality indicators and adjust to the emotional needs of key project stakeholders",
+            "Enterprise risk management (ERM) frameworks",
+            "ISO 27001, NIST CSF, and CIS Controls alignment",
+            "Risk quantification: FAIR model",
+            "Security investment prioritization by risk reduction value",
+            "Third-party and supply chain risk governance",
           ],
         },
       ],
     },
     {
-      title: "2.0 Process",
+      title: "2.0 NSE 8 — Advanced FortiOS and FortiGate",
       items: [
         {
-          subTitle:
-            "2.1 Execute project with the urgency required to deliver business value",
+          subTitle: "2.1 FortiOS Internals",
           items: [
-            "2.1.1 Assess opportunities to deliver value incrementally",
-            "2.1.2 Examine the business value throughout the project",
-            "2.1.3 Examine and decompose individuals project tasks as necessary to find the minimum viable product",
+            "FortiOS kernel architecture and process model",
+            "NP7 and CP9 hardware offload pipeline deep dive",
+            "Session table internals and state machine",
+            "FortiOS memory management and conserve mode behavior",
+            "Kernel routing table vs. FortiGate routing table reconciliation",
           ],
         },
         {
-          subTitle: "2.2 Manage communications",
+          subTitle: "2.2 Advanced Policy and NAT",
           items: [
-            "2.2.1 Analyze communication needs of all stakeholders",
-            "2.2.2 Determine communication methods, channels, frequency, and level of detail for all stakeholders",
-            "2.2.3 Communicate project information and updates effectively",
-            "2.2.4 Confirm communication is understood and feedback is received",
+            "Complex NAT scenarios: double NAT, hairpin NAT",
+            "Overlapping subnet resolution across VPN tunnels",
+            "Policy-based routing with multiple ISPs and complex conditions",
+            "Central NAT table advanced use cases",
+            "NAT46, NAT64, and DNS64 design and troubleshooting",
           ],
         },
         {
-          subTitle: "2.3 Assess and manage risks",
+          subTitle: "2.3 Advanced Security Profiles",
           items: [
-            "2.3.1 Determine risk management options",
-            "2.3.2 Iteratively assess and prioritize risks",
+            "Custom IPS signature development",
+            "Advanced application control with custom signatures",
+            "SSL inspection certificate chain troubleshooting",
+            "ICAP integration for external content inspection",
+            "Advanced antivirus with FortiSandbox inline blocking",
           ],
         },
         {
-          subTitle: "2.4 Engage stakeholders",
+          subTitle: "2.4 Advanced Authentication",
           items: [
-            "2.4.1 Analyze stakeholders (e.g., power interest grid, influence, impact)",
-            "2.4.2 Categorize stakeholders",
-            "2.4.3 Engage stakeholders by category",
-            "2.4.4 Develop, execute, and validate a strategy for stakeholder engagement",
-          ],
-        },
-        {
-          subTitle: "2.5 Plan and manage budget and resources",
-          items: [
-            "2.5.1 Estimate budgetary needs based on the scope of the project and lessons learned from past projects",
-            "2.5.2 Anticipate future budget challenges",
-            "2.5.3 Monitor budget variations and work with governance structure to adjust as necessary",
-            "2.5.4 Plan and manage resources",
-          ],
-        },
-        {
-          subTitle: "2.6 Plan and manage schedule",
-          items: [
-            "2.6.1 Estimate project tasks (milestones, dependencies, story points)",
-            "2.6.2 Utilize benchmarks and historical data",
-            "2.6.3 Prepare schedule based on methodology",
-            "2.6.4 Measure ongoing progress based on methodology",
-            "2.6.5 Modify schedule, as needed, based on methodology",
-            "2.6.6 Coordinate with other projects and other operations",
-            "2.6.7 Measure quality of products/deliverables",
-          ],
-        },
-        {
-          subTitle: "2.7 Plan and manage quality of products/deliverables",
-          items: [
-            "2.7.1 Determine quality standard for project deliverables",
-            "2.7.2 Recommend options for improvement based on quality gaps",
-            "2.7.3 Continually survey project deliverable quality",
-          ],
-        },
-        {
-          subTitle: "2.8 Plan and manage scope",
-          items: [
-            "2.8.1 Determine and prioritize requirements",
-            "2.8.2 Break down scope (e.g., WBS, backlog)",
-            "2.8.3 Monitor and validate scope",
-          ],
-        },
-        {
-          subTitle: "2.9 Integrate project planning activities",
-          items: [
-            "2.9.1 Consolidate the project/phase plans",
-            "2.9.2 Assess consolidated project plans for dependencies, gaps, and continued business value",
-            "2.9.3 Analyze the data collected",
-            "2.9.4 Collect and analyze data to make informed project decisions",
-            "2.9.5 Determine critical information requirements",
-          ],
-        },
-        {
-          subTitle: "2.10 Manage project changes",
-          items: [
-            "2.10.1 Anticipate and embrace the need for change (e.g., follow change management practices)",
-            "2.10.2 Determine strategy to handle change",
-            "2.10.3 Execute change management strategy according to the methodology",
-            "2.10.4 Determine if change expense to move the project forward",
-          ],
-        },
-        {
-          subTitle: "2.11 Plan and manage procurement",
-          items: [
-            "2.11.1 Define resource requirements and needs",
-            "2.11.2 Communicate resource requirements",
-            "2.11.3 Manage suppliers/contracts",
-            "2.11.4 Plan and manage procurement strategy",
-            "2.11.5 Develop a delivery solution",
-          ],
-        },
-        {
-          subTitle: "2.12 Manage project artifacts",
-          items: [
-            "2.12.1 Determine the requirements (what, when, where, etc.) for managing the project artifacts",
-            "2.12.2 Validate that the project information is kept up to date (i.e., version control) and accessible to all stakeholders",
-            "2.12.3 Continually assess the effectiveness of the management of the project artifacts",
-          ],
-        },
-        {
-          subTitle:
-            "2.13 Determine appropriate project methodology/methods and practices",
-          items: [
-            "2.13.1 Assess project needs, complexity, and magnitude",
-            "2.13.2 Recommend project execution strategy (e.g., contracting, finance)",
-            "2.13.3 Recommend a project methodology/approach (predictive, agile, hybrid)",
-            "2.13.4 Use iterative, incremental practices throughout the project life cycle (e.g., lessons learned, stakeholder engagement, risk)",
-          ],
-        },
-        {
-          subTitle: "2.14 Establish project governance structure",
-          items: [
-            "2.14.1 Determine appropriate governance for a project (e.g., replicate organizational governance)",
-            "2.14.2 Define escalation paths and thresholds",
-          ],
-        },
-        {
-          subTitle: "2.15 Manage project issues",
-          items: [
-            "2.15.1 Recognize when a team member is on issue",
-            "2.15.2 Attack the issue with the optimal action to achieve project success",
-            "2.15.3 Collaborate with relevant stakeholders on the approach to resolve the issues",
-          ],
-        },
-        {
-          subTitle: "2.16 Ensure knowledge transfer for project continuity",
-          items: [
-            "2.16.1 Discuss project responsibilities within team",
-            "2.16.2 Outline expectations for working environment",
-            "2.16.3 Confirm approach for knowledge transfers",
-          ],
-        },
-        {
-          subTitle: "2.17 Plan and manage project/phase closure or transitions",
-          items: [
-            "2.17.1 Determine criteria to successfully close the project or phase",
-            "2.17.2 Validate readiness for transitions (e.g., go-live readiness, hand off phase)",
-            "2.17.3 Conclude activities to close out project or phase (e.g., final lessons learned, retrospective, procurement, financials, resources)",
+            "FSSO advanced deployment: DCAgent, WMI, NTLM polling",
+            "SAML SP and IdP configuration on FortiGate",
+            "OAuth 2.0 integration with FortiGate",
+            "Multi-realm and multi-portal SSL VPN design",
+            "Certificate-based admin and user authentication at scale",
           ],
         },
       ],
     },
     {
-      title: "3.0 Business Environment",
+      title: "3.0 NSE 8 — Advanced Routing and Switching",
       items: [
         {
-          subTitle: "3.1 Plan and manage project compliance",
+          subTitle: "3.1 Advanced BGP",
           items: [
-            "3.1.1 Confirm compliance requirements (e.g., security, health and safety, regulatory compliance)",
-            "3.1.2 Classify compliance categories",
-            "3.1.3 Determine potential threats to compliance",
-            "3.1.4 Use methods to support compliance",
-            "3.1.5 Analyze the consequences of noncompliance",
-            "3.1.6 Determine necessary approach and action to address compliance needs (e.g., risk, legal)",
-            "3.1.7 Measure the extent to which the project is in compliance",
+            "BGP route policy with complex prefix lists and route maps",
+            "BGP communities and extended communities",
+            "BGP graceful restart and BFD integration",
+            "iBGP route reflection and confederation design",
+            "BGP security: RPKI, route filtering, and max-prefix limits",
           ],
         },
         {
-          subTitle: "3.2 Evaluate and deliver project benefits and value",
+          subTitle: "3.2 Advanced OSPF",
           items: [
-            "3.2.1 Investigate that benefits are identified",
-            "3.2.2 Document agreement on ownership for ongoing benefit realization",
-            "3.2.3 Verify measurement system is in place to track benefits",
-            "3.2.4 Evaluate delivery options to demonstrate value",
-            "3.2.5 Appraise stakeholders of value gain progress",
+            "OSPF multi-area design with ABRs and ASBRs",
+            "OSPF route summarization and filtering",
+            "OSPF authentication and security hardening",
+            "OSPF convergence tuning: timers and fast hello",
+            "OSPF and BGP redistribution in complex topologies",
           ],
         },
         {
-          subTitle:
-            "3.3 Evaluate and address external business environment changes for impact on scope",
+          subTitle: "3.3 Multicast Routing",
           items: [
-            "3.3.1 Survey changes to external business environment (e.g., regulations, technology, geopolitical, fiscal)",
-            "3.3.2 Assess and prioritize impact on project scope/backlog based on changes in external business environment",
-            "3.3.3 Recommend options for scope/backlog changes (e.g., schedule, cost changes)",
-            "3.3.4 Continually review external business environment for impacts on project scope/backlog",
+            "PIM-SM and PIM-SSM design principles",
+            "Rendezvous point (RP) selection: static, Auto-RP, BSR",
+            "Multicast routing with FortiGate",
+            "IGMP version support and querier election",
+            "Multicast security and filtering",
           ],
         },
         {
-          subTitle: "3.4 Support organizational change",
+          subTitle: "3.4 Advanced VRF and Segmentation",
           items: [
-            "3.4.1 Assess organizational culture",
-            "3.4.2 Evaluate impact of organizational changes to project and determine required actions",
-            "3.4.3 Engage stakeholders by category",
-            "3.4.4 Evaluate impact of the project to the organization and determine required actions",
+            "VRF-lite design for multi-tenant environments",
+            "Inter-VRF route leaking with security controls",
+            "MPLS VPN concepts and FortiGate integration",
+            "VRF-aware IPsec VPN design",
+            "VRF integration with SD-WAN overlays",
+          ],
+        },
+      ],
+    },
+    {
+      title: "4.0 NSE 8 — Advanced IPsec and VPN",
+      items: [
+        {
+          subTitle: "4.1 Complex IPsec Topologies",
+          items: [
+            "Recursive IPsec tunnel design",
+            "IPsec over SD-WAN with dynamic routing",
+            "ADVPN with spoke-to-spoke shortcut routing",
+            "Overlapping IP address resolution in IPsec",
+            "IPsec with asymmetric routing resolution",
+          ],
+        },
+        {
+          subTitle: "4.2 IPsec Performance and Scalability",
+          items: [
+            "NP7 IPsec hardware offload tuning",
+            "IPsec aggregate interfaces for throughput scaling",
+            "IKEv2 fragmentation and PMTUD in IPsec",
+            "Large-scale dial-up VPN with certificate authentication",
+            "IPsec scalability limits and design trade-offs",
+          ],
+        },
+        {
+          subTitle: "4.3 Advanced SSL VPN and ZTNA",
+          items: [
+            "SSL VPN multi-realm advanced design",
+            "ZTNA application proxy with complex backend services",
+            "Migrating SSL VPN to ZTNA at enterprise scale",
+            "ZTNA with conditional access and identity federation",
+            "VPN and ZTNA coexistence strategy",
+          ],
+        },
+      ],
+    },
+    {
+      title: "5.0 NSE 8 — Advanced High Availability",
+      items: [
+        {
+          subTitle: "5.1 Advanced FGCP HA",
+          items: [
+            "HA session synchronization internals and tuning",
+            "HA with asymmetric routing resolution",
+            "FortiGate HA in cloud environments: GWLB, SDN failover",
+            "HA firmware upgrade procedures with zero downtime",
+            "HA split-brain detection and prevention",
+          ],
+        },
+        {
+          subTitle: "5.2 FGSP and Session Synchronization",
+          items: [
+            "FortiGate Session Life Support Protocol (FGSP) design",
+            "FGSP vs. FGCP selection criteria",
+            "FGSP with external load balancer integration",
+            "Standalone session synchronization across chassis",
+            "FGSP troubleshooting and session table verification",
+          ],
+        },
+        {
+          subTitle: "5.3 Business Continuity Design",
+          items: [
+            "RTO and RPO requirements mapping to HA design",
+            "Disaster recovery site security architecture",
+            "Geo-redundant FortiGate deployment strategies",
+            "HA testing and failover validation procedures",
+            "Documentation and runbook design for HA operations",
+          ],
+        },
+      ],
+    },
+    {
+      title: "6.0 NSE 8 — Advanced SD-WAN",
+      items: [
+        {
+          subTitle: "6.1 SD-WAN Complex Design Scenarios",
+          items: [
+            "Dual-hub dual-region ADVPN design",
+            "SD-WAN with private MPLS and public internet overlays",
+            "SD-WAN integration with SASE and cloud security",
+            "Application SLA enforcement across 10+ WAN links",
+            "SD-WAN brownfield migration from MPLS",
+          ],
+        },
+        {
+          subTitle: "6.2 SD-WAN Troubleshooting at Scale",
+          items: [
+            "ADVPN shortcut failure root cause analysis",
+            "BGP overlay route flapping diagnosis",
+            "SLA probe false-positive and dead detection tuning",
+            "Traffic steering regression after policy change",
+            "Multi-region SD-WAN performance degradation analysis",
+          ],
+        },
+      ],
+    },
+    {
+      title: "7.0 NSE 8 — Security Fabric at Scale",
+      items: [
+        {
+          subTitle: "7.1 Enterprise Security Fabric Design",
+          items: [
+            "Multi-tier Security Fabric topology design",
+            "Fabric across data center, campus, branch, and cloud",
+            "Fabric trust model and certificate management",
+            "Security Fabric with third-party integrations",
+            "Fabric automation stitch design for enterprise workflows",
+          ],
+        },
+        {
+          subTitle: "7.2 FortiManager Enterprise Deployment",
+          items: [
+            "FortiManager HA and disaster recovery design",
+            "Multi-ADOM policy architecture for large organizations",
+            "Policy package inheritance hierarchy design",
+            "FortiManager as SD-WAN orchestrator at scale",
+            "FortiManager API-driven automation architecture",
+          ],
+        },
+        {
+          subTitle: "7.3 FortiAnalyzer Enterprise Deployment",
+          items: [
+            "FortiAnalyzer fabric deployment with collector nodes",
+            "Log storage architecture and retention design",
+            "FortiAnalyzer and FortiSIEM integration architecture",
+            "High-volume logging performance optimization",
+            "Compliance reporting automation at enterprise scale",
+          ],
+        },
+      ],
+    },
+    {
+      title: "8.0 NSE 8 — Advanced Cloud Security",
+      items: [
+        {
+          subTitle: "8.1 Multi-Cloud Security Architecture",
+          items: [
+            "Cloud-agnostic security architecture design",
+            "Cross-cloud identity federation and access control",
+            "Multi-cloud network segmentation strategy",
+            "Cloud security posture management (CSPM) at scale",
+            "Multi-cloud incident response coordination",
+          ],
+        },
+        {
+          subTitle: "8.2 Cloud-Native Security Integration",
+          items: [
+            "FortiGate CNF across multiple cloud accounts",
+            "Kubernetes security policy at enterprise scale",
+            "CI/CD security gate design for large engineering teams",
+            "Cloud workload protection program design",
+            "DevSecOps culture and toolchain integration",
+          ],
+        },
+      ],
+    },
+    {
+      title: "9.0 NSE 8 — Advanced Security Operations",
+      items: [
+        {
+          subTitle: "9.1 Enterprise SOC Architecture",
+          items: [
+            "Tiered SOC design for 24/7 global coverage",
+            "SOC toolchain integration architecture",
+            "Detection engineering program and governance",
+            "Threat intelligence program design and management",
+            "SOC metrics framework and continuous improvement",
+          ],
+        },
+        {
+          subTitle: "9.2 Advanced Incident Response",
+          items: [
+            "Enterprise IR program aligned with NIST SP 800-61",
+            "Major incident command structure and war room design",
+            "Regulatory breach notification workflow automation",
+            "Cross-organizational incident coordination",
+            "Post-incident program improvement methodology",
+          ],
+        },
+        {
+          subTitle: "9.3 Adversary Simulation and Validation",
+          items: [
+            "Red team program design and rules of engagement",
+            "Purple team exercise methodology at enterprise scale",
+            "Breach and attack simulation (BAS) integration",
+            "Continuous control validation program",
+            "Detection gap remediation lifecycle management",
+          ],
+        },
+      ],
+    },
+    {
+      title: "10.0 NSE 8 — Advanced Troubleshooting and Diagnostics",
+      items: [
+        {
+          subTitle: "10.1 Complex Troubleshooting Methodology",
+          items: [
+            "Structured troubleshooting methodology for enterprise issues",
+            "OSI layer-by-layer elimination approach",
+            "Divide and conquer isolation techniques",
+            "Reproducing intermittent failures in lab environments",
+            "Documenting and escalating complex vendor issues",
+          ],
+        },
+        {
+          subTitle: "10.2 FortiGate Advanced Diagnostics",
+          items: [
+            "Debug flow advanced filter combinations",
+            "Hardware offload verification and bypass diagnostics",
+            "Memory leak and process crash investigation",
+            "CPU spike root cause identification",
+            "Conserve mode root cause analysis and remediation",
+          ],
+        },
+        {
+          subTitle: "10.3 Network Protocol Troubleshooting",
+          items: [
+            "Wireshark advanced dissector usage for protocol analysis",
+            "BGP and OSPF convergence failure analysis",
+            "IPsec IKE negotiation failure deep dive",
+            "SSL/TLS handshake failure analysis",
+            "Asymmetric routing detection and resolution",
+          ],
+        },
+        {
+          subTitle: "10.4 Performance Troubleshooting",
+          items: [
+            "Throughput degradation root cause analysis",
+            "Latency and jitter troubleshooting across the path",
+            "NP7 offload pipeline bottleneck identification",
+            "Session table exhaustion diagnosis and remediation",
+            "Interface queue drops and QoS misconfiguration resolution",
+          ],
+        },
+      ],
+    },
+    {
+      title: "11.0 NSE 8 — Written and Practical Exam Preparation",
+      items: [
+        {
+          subTitle: "11.1 Written Exam Strategy",
+          items: [
+            "NSE 8 written exam domain weighting and coverage",
+            "Approaching scenario-based exam questions",
+            "Time management for the written examination",
+            "Identifying distractors in complex multiple-choice questions",
+            "Knowledge gap identification and targeted study planning",
+          ],
+        },
+        {
+          subTitle: "11.2 Practical Exam Strategy",
+          items: [
+            "NSE 8 practical lab exam format and expectations",
+            "Time management across multiple practical scenarios",
+            "Verification methodology after configuration changes",
+            "Recovering from misconfigurations under exam conditions",
+            "Documenting configurations clearly for examiner review",
+          ],
+        },
+        {
+          subTitle: "11.3 Lab Practice Scenarios",
+          items: [
+            "End-to-end enterprise network security lab design",
+            "Complex IPsec and SD-WAN combined scenario",
+            "HA failover with routing and VPN validation",
+            "Security Fabric with FortiManager and FortiAnalyzer integration",
+            "Cloud security deployment with on-premises connectivity",
           ],
         },
       ],

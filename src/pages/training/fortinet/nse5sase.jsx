@@ -18,120 +18,118 @@ import TrainingHeroBanner from "../../../components/section/TrainingHeroBanner";
 // ==================== COMPONENT NAME - CHANGE FOR EACH COURSE ====================
 export default function NSE5SASE() {
   // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
- const modules = [
-  {
-    title: "1.0 Networking Concepts",
-    items: [
-      {
-        subTitle: "1.1 OSI Model Layers",
-        items: [
-          "Physical",
-          "Data Link",
-          "Network",
-          "Transport",
-          "Session",
-          "Presentation",
-          "Application",
-        ],
-      },
-      {
-        subTitle: "1.2 Networking Appliances",
-        items: [
-          "Routers",
-          "Switches",
-          "Firewalls",
-          "IDS/IPS",
-          "Load Balancers",
-          "Proxies",
-          "NAS",
-          "SAN",
-          "Wireless Devices",
-        ],
-      },
-      {
-        subTitle: "1.3 Cloud Concepts",
-        items: [
-          "NFV",
-          "VPC",
-          "Network Security Groups",
-          "Cloud Gateways",
-          "Deployment Models: Public, Private, Hybrid",
-          "Service Models: SaaS, IaaS, PaaS",
-        ],
-      },
-      {
-        subTitle: "1.4 Ports and Protocols",
-        items: [
-          "FTP",
-          "SFTP",
-          "SSH",
-          "Telnet",
-          "SMTP",
-          "DNS",
-          "DHCP",
-          "HTTP",
-          "HTTPS",
-          "SNMP",
-          "LDAP",
-          "RDP",
-          "SIP",
-        ],
-      },
-      {
-        subTitle: "1.5 Traffic Types",
-        items: [
-          "Unicast",
-          "Multicast",
-          "Anycast",
-          "Broadcast",
-        ],
-      },
-      {
-        subTitle: "1.6 Transmission Media",
-        items: [
-          "Wireless: 802.11, Cellular, Satellite",
-          "Wired: Fiber, Coaxial, DAC",
-        ],
-      },
-      {
-        subTitle: "1.7 Transceivers and Connectors",
-        items: [
-          "SC",
-          "LC",
-          "ST",
-          "MPO",
-          "RJ11",
-          "RJ45",
-          "F-type",
-          "BNC",
-        ],
-      },
-      {
-        subTitle: "1.8 Network Topologies",
-        items: [
-          "Mesh",
-          "Hybrid",
-          "Star / Hub and Spoke",
-          "Spine and Leaf",
-          "Point-to-Point",
-          "Three-Tier",
-          "Collapsed Core",
-        ],
-      },
-      {
-        subTitle: "1.9 IPv4 Addressing",
-        items: [
-          "Public vs. Private",
-          "APIPA",
-          "RFC1918",
-          "Loopback",
-          "Subnetting: VLSM, CIDR",
-          "Address Classes: A, B, C, D, E",
-        ],
-      },
-    ],
-  },
-];
+  const modules = [
+    {
+      title: "1.0 SASE — Secure Access Service Edge Fundamentals",
+      items: [
+        {
+          subTitle: "1.1 SASE Architecture",
+          items: [
+            "SASE definition and core principles",
+            "Convergence of networking and security",
+            "Single-vendor vs. multi-vendor SASE",
+            "Fortinet SASE architecture overview",
+            "SASE vs. traditional perimeter security",
+          ],
+        },
+        {
+          subTitle: "1.2 SASE Components",
+          items: [
+            "Secure Web Gateway (SWG)",
+            "Cloud Access Security Broker (CASB)",
+            "Zero Trust Network Access (ZTNA)",
+            "SD-WAN as the networking foundation",
+            "Firewall as a Service (FWaaS)",
+          ],
+        },
+      ],
+    },
+    {
+      title: "2.0 SASE — FortiSASE Configuration",
+      items: [
+        {
+          subTitle: "2.1 FortiSASE Deployment",
+          items: [
+            "FortiSASE portal and tenant management",
+            "FortiClient integration with FortiSASE",
+            "Agent-based and agentless deployment",
+            "Point of Presence (PoP) selection",
+            "Licensing and subscription management",
+          ],
+        },
+        {
+          subTitle: "2.2 Security Policies in FortiSASE",
+          items: [
+            "Web filtering in the SASE cloud",
+            "Application control and CASB policies",
+            "DLP policies for cloud traffic",
+            "DNS security in FortiSASE",
+            "SSL deep inspection in the cloud",
+          ],
+        },
+        {
+          subTitle: "2.3 User Identity and Access in SASE",
+          items: [
+            "Identity provider (IdP) integration",
+            "SAML-based SSO for SASE",
+            "User and device posture checks",
+            "Conditional access policies",
+            "Guest and contractor access management",
+          ],
+        },
+      ],
+    },
+    {
+      title: "3.0 SASE — Zero Trust Network Access (ZTNA)",
+      items: [
+        {
+          subTitle: "3.1 ZTNA Principles",
+          items: [
+            "Never trust, always verify concept",
+            "Micro-segmentation with ZTNA",
+            "Continuous trust evaluation",
+            "Identity-centric access control",
+            "ZTNA vs. traditional VPN",
+          ],
+        },
+        {
+          subTitle: "3.2 ZTNA Implementation",
+          items: [
+            "ZTNA access proxy configuration",
+            "Application tags and ZTNA rules",
+            "Device certificate enforcement",
+            "FortiClient as ZTNA agent",
+            "Inline ZTNA and implicit discovery",
+          ],
+        },
+      ],
+    },
+    {
+      title: "4.0 SASE — Monitoring and Troubleshooting",
+      items: [
+        {
+          subTitle: "4.1 SASE Visibility",
+          items: [
+            "FortiSASE dashboards and reporting",
+            "User traffic logs and session visibility",
+            "Shadow IT reports",
+            "Bandwidth and application usage analytics",
+            "Security incident reporting in SASE",
+          ],
+        },
+        {
+          subTitle: "4.2 Troubleshooting SASE Connectivity",
+          items: [
+            "FortiClient connection diagnostics",
+            "PoP connectivity issues",
+            "Policy misconfiguration troubleshooting",
+            "Split tunneling verification",
+            "Certificate and authentication errors",
+          ],
+        },
+      ],
+    },
+  ];
 
   return (
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
