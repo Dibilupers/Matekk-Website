@@ -1,7 +1,7 @@
 import SolutionsTemplate from "../../../components/solution_template/solutions_template";
 import RelevantProjects from "../../../components/solution_template/releveantprojects";
-import dcHero from "../../../assets/CCNAHeroImageAutomation.webp";
-import dcFooter from "../../../assets/CCNAFooterImageAutomation.webp";
+import PECEhero from "../../../assets/PECEHeroImage.webp";
+import PECEfooter from "../../../assets/PECEFooterImage.webp";
 import ictImage from "../../../assets/ict.webp";
 import webImage from "../../../assets/web.webp";
 
@@ -87,7 +87,7 @@ export default function Renewable() {
   return (
     <SolutionsTemplate
       // Hero
-      heroBgImage={dcHero}
+      heroBgImage={PECEhero}
       category="PECE Consultancy (PBOOT)"
       heroTitle="Renewable Energy Solutions"
       heroDescription="MATEKK provides sustainable and efficient renewable energy solutions that help organizations reduce operational costs, improve energy reliability, and support environmental responsibility."
@@ -103,7 +103,7 @@ export default function Renewable() {
       deliverablesHighlight="Deliverables"
       deliverables={DELIVERABLES}
       // Footer banner
-      footerBgImage={dcFooter}
+      footerBgImage={PECEfooter}
       footerTitle="Contact Us Today To"
       footerHighlightText="Request a Consultation"
       footerDescription="Secure your organization's network with MGKK Information Communication Technology Services."

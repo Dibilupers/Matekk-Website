@@ -1,7 +1,7 @@
 import SolutionsTemplate from "../../../components/solution_template/solutions_template";
 import RelevantProjects from "../../../components/solution_template/releveantprojects";
-import dcHero from "../../../assets/CCNAHeroImageAutomation.webp";
-import dcFooter from "../../../assets/CCNAFooterImageAutomation.webp";
+import PECEhero from "../../../assets/PECEHeroImage.webp";
+import PECEfooter from "../../../assets/PECEFooterImage.webp";
 import ictImage from "../../../assets/ict.webp";
 import webImage from "../../../assets/web.webp";
 
@@ -83,7 +83,7 @@ export default function IPCCTV() {
   return (
     <SolutionsTemplate
       // Hero
-      heroBgImage={dcHero}
+      heroBgImage={PECEhero}
       category="PECE Consultancy (PBOOT)"
       heroTitle="IPCCTV and Analog CCTV"
       heroDescription="MATEKK provides reliable surveillance solutions through IP and Analog CCTV systems, helping organizations enhance security, monitor operations, and protect assets with confidence."
@@ -99,7 +99,7 @@ export default function IPCCTV() {
       deliverablesHighlight="Deliverables"
       deliverables={DELIVERABLES}
       // Footer banner
-      footerBgImage={dcFooter}
+      footerBgImage={PECEfooter}
       footerTitle="Contact Us Today To"
       footerHighlightText="Request a Consultation"
       footerDescription="Secure your organization's network with MGKK Information Communication Technology Services."
