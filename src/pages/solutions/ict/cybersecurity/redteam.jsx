@@ -1,69 +1,67 @@
 import SolutionsTemplate from "../../../../components/solution_template/solutions_template";
-import dcHero from "../../../../assets/CCNAHeroImageAutomation.webp";
-import dcFooter from "../../../../assets/CCNAFooterImageAutomation.webp";
+import ICTConsultancyHero from "../../../../assets/ICTConsultancyHero.webp";
+import ICTConsultancyFooter from "../../../../assets/ICTConsultancyFooter.webp";
 
 const CHALLENGES = [
-  "Aging or inefficient data center infrastructure",
-  "Limited redundancy and risk of downtime",
-  "Security vulnerabilities in network and storage systems",
-  "Inadequate monitoring and operational visibility",
-  "Difficulty scaling infrastructure with business growth",
+  "Unknown or untested security gaps across systems and processes",
+  "Overreliance on defensive tools without real-world validation",
+  "Lack of preparedness against advanced persistent threats (APTs)",
+  "Weak incident detection and response capabilities",
+  "Limited awareness of social engineering and human-factor risks",
 ];
 
 const DELIVERABLES = [
   {
-    title: "Data Center Assessment and Consultancy",
-    desc: "Analyze current infrastructure, identify gaps, and provide expert recommendations.",
+    title: "Red Team Engagement Planning",
+    desc: "Define objectives, scope, and attack scenarios.",
   },
   {
-    title: "Facility Planning and Layout Design",
-    desc: "Optimize physical and virtual layouts for maximum efficiency and space utilization.",
+    title: "Adversary Simulation",
+    desc: "Execute real-world attack techniques across networks, applications, and personnel.",
   },
   {
-    title: "Installation and Configuration of Servers, Storage, and Networking Equipment",
-    desc: "Ensure seamless integration and reliability.",
+    title: "Social Engineering Testing",
+    desc: "Assess susceptibility to phishing and human-based attacks.",
   },
   {
-    title: "Power, Cooling, and Environmental Control Systems Integration",
-    desc: " Implement efficient systems to maintain uptime and operational stability.",
+    title: "Physical Security Testing",
+    desc: "Evaluate on-site security controls and access points.",
   },
   {
-    title: "Testing, Validation, and Optimization",
-    desc: "Confirm that systems meet performance, security, and reliability standards.",
+    title: "Detection and Response Evaluation",
+    desc: "Measure effectiveness of existing security monitoring and response.",
   },
   {
-    title: "Ongoing Monitoring and Improvement",
-    desc: "Continuous support to ensure operational excellence and quick issue resolution.",
+    title: "Comprehensive Reporting and Remediation Guidance",
+    desc: "Deliver detailed findings with actionable improvements.",
   },
 ];
 
-
-export default function RedTeamSolution(){
-    return (
-        <SolutionsTemplate
-          // Hero
-          heroBgImage={dcHero}
-          category="ICT Consultancy (PBOOT)"
-          heroTitle="Data Center Facilities"
-          heroDescription="MATEKK delivers end-to-end Data Center Facilities solutions that help organizations establish secure, efficient, and resilient infrastructure to support critical IT operations."
-          // Building section
-          buildingTitle="Building Scalable and Secure Network Infrastructure to"
-          buildingTitleHighlight="Support Business Continuity"
-          buildingDescription="Our Data Center Facilities service covers planning, design, implementation, and optimization of physical and virtual data center infrastructure. We help organizations ensure high availability, scalability, and operational efficiency for all mission-critical systems."
-          // Challenges section
-          challengesHighlight="Challenges Addressed"
-          challengesSuffix="by This Service"
-          challenges={CHALLENGES}
-          // Deliverables section
-          deliverablesHighlight="Deliverables"
-          deliverables={DELIVERABLES}
-          // Footer banner
-          footerBgImage={dcFooter}
-          footerTitle="Contact Us Today To"
-          footerHighlightText="Request a Consultation"
-          footerDescription="Secure your organization's network with MGKK Information Communication Technology Services."
-        >
-
-        </SolutionsTemplate>
-      );
+export default function RedTeamSolution() {
+  return (
+    <SolutionsTemplate
+      // Hero
+      heroBgImage={ICTConsultancyHero}
+      category="ICT Consultancy (PBOOT)"
+      heroTitle="Red Team"
+      heroDescription="MATEKK delivers advanced Red Team operations that simulate real-world cyberattacks to test your organization's defenses, uncover hidden vulnerabilities, and strengthen overall security resilience."
+      // Building section
+      buildingTitle="Realistic, Offensive, and Intelligence-Led"
+      buildingTitleHighlight="Security Testing"
+      buildingDescription="Our Red Team services go beyond traditional testing by mimicking sophisticated attackers using real tactics, techniques, and procedures. MGKK evaluates not only your systems but also your people and processes, providing a comprehensive view of your organization's true security posture."
+      // Challenges section
+      challengesHighlight="Challenges Addressed"
+      challengesSuffix="by This Service"
+      challenges={CHALLENGES}
+      // Deliverables section
+      deliverablesHighlight="Deliverables"
+      deliverables={DELIVERABLES}
+      // Footer banner
+      footerBgImage={ICTConsultancyFooter}
+      footerTitle="Contact Us Today To"
+      footerHighlightText="Request a Consultation"
+      footerDescription="Secure your organization's network with MGKK Information Communication Technology Services."
+    >
+    </SolutionsTemplate>
+  );
 }

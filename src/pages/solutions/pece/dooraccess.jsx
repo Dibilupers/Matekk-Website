@@ -5,44 +5,42 @@ import dcFooter from "../../../assets/CCNAFooterImageAutomation.webp";
 import ictImage from "../../../assets/ict.webp";
 import webImage from "../../../assets/web.webp";
 
-// ==================== PAGE DATA ====================
-
 const CHALLENGES = [
-  "Aging or inefficient data center infrastructure",
-  "Limited redundancy and risk of downtime",
-  "Security vulnerabilities in network and storage systems",
-  "Inadequate monitoring and operational visibility",
-  "Difficulty scaling infrastructure with business growth",
+  "Unauthorized access to restricted areas",
+  "Lack of visibility and control over entry points",
+  "Security risks with traditional lock-and-key systems",
+  "Difficulty managing employee or visitor access",
+  "Limited tracking and audit of access activities",
 ];
 
 const DELIVERABLES = [
   {
-    title: "Data Center Assessment and Consultancy",
-    desc: "Analyze current infrastructure, identify gaps, and provide expert recommendations.",
+    title: "Access Control System Design and Planning",
+    desc: "Create secure and efficient entry management solutions.",
   },
   {
-    title: "Facility Planning and Layout Design",
-    desc: "Optimize physical and virtual layouts for maximum efficiency and space utilization.",
+    title: "Installation of Access Devices",
+    desc: "Deploy RFID, biometric, and keypad-based systems.",
   },
   {
-    title: "Installation and Configuration of Servers, Storage, and Networking Equipment",
-    desc: "Ensure seamless integration and reliability.",
+    title: "User Access Management Setup",
+    desc: "Configure roles, permissions, and authentication levels.",
   },
   {
-    title: "Power, Cooling, and Environmental Control Systems Integration",
-    desc: " Implement efficient systems to maintain uptime and operational stability.",
+    title: "Integration with CCTV and Security Systems",
+    desc: "Enhance monitoring and incident response.",
   },
   {
-    title: "Testing, Validation, and Optimization",
-    desc: "Confirm that systems meet performance, security, and reliability standards.",
+    title: "Real-Time Monitoring and Reporting",
+    desc: "Track access logs and generate audit reports.",
   },
   {
-    title: "Ongoing Monitoring and Improvement",
-    desc: "Continuous support to ensure operational excellence and quick issue resolution.",
+    title: "Maintenance and Technical Support",
+    desc: "Ensure continuous system performance and reliability.",
   },
 ];
 
-const DC_PROJECTS = [
+const RELEVANT_PROJECTS = [
   {
     id: 1,
     src: ictImage,
@@ -81,20 +79,18 @@ const DC_PROJECTS = [
   },
 ];
 
-// ==================== PAGE COMPONENT ====================
-
-export default function DoorAccess() {
+export default function DoorAccessControl() {
   return (
     <SolutionsTemplate
       // Hero
       heroBgImage={dcHero}
-      category="ICT Consultancy (PBOOT)"
-      heroTitle="Data Center Facilities"
-      heroDescription="MATEKK delivers end-to-end Data Center Facilities solutions that help organizations establish secure, efficient, and resilient infrastructure to support critical IT operations."
+      category="PECE Consultancy (PBOOT)"
+      heroTitle="Door Access Control Systems"
+      heroDescription="MATEKK provides secure and efficient door access control solutions that help organizations manage, monitor, and restrict entry to critical areas, ensuring safety and accountability."
       // Building section
-      buildingTitle="Building Scalable and Secure Network Infrastructure to"
-      buildingTitleHighlight="Support Business Continuity"
-      buildingDescription="Our Data Center Facilities service covers planning, design, implementation, and optimization of physical and virtual data center infrastructure. We help organizations ensure high availability, scalability, and operational efficiency for all mission-critical systems."
+      buildingTitle="Secure, Controlled, and Intelligent"
+      buildingTitleHighlight="Access Management"
+      buildingDescription="Our door access systems use advanced technologies such as RFID, biometrics, and keypad authentication to regulate entry points. MGKK enables organizations to maintain full control over who enters their premises, improve security, and track access activity in real time."
       // Challenges section
       challengesHighlight="Challenges Addressed"
       challengesSuffix="by This Service"
@@ -108,7 +104,7 @@ export default function DoorAccess() {
       footerHighlightText="Request a Consultation"
       footerDescription="Secure your organization's network with MGKK Information Communication Technology Services."
     >
-      <RelevantProjects projects={DC_PROJECTS} />
+      <RelevantProjects projects={RELEVANT_PROJECTS} />
     </SolutionsTemplate>
   );
 }

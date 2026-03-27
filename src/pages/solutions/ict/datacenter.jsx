@@ -1,7 +1,7 @@
 import SolutionsTemplate from "../../../components/solution_template/solutions_template";
 import RelevantProjects from "../../../components/solution_template/releveantprojects";
-import dcHero from "../../../assets/CCNAHeroImageAutomation.webp";
-import dcFooter from "../../../assets/CCNAFooterImageAutomation.webp";
+import ICTConsultancyHero from "../../../assets/ICTConsultancyHero.webp";
+import ICTConsultancyFooter from "../../../assets/ICTConsultancyFooter.webp";
 import ictImage from "../../../assets/ict.webp";
 import webImage from "../../../assets/web.webp";
 
@@ -42,7 +42,7 @@ const DELIVERABLES = [
   },
 ];
 
-const DC_PROJECTS = [
+const RELEVANT_PROJECTS = [
   {
     id: 1,
     src: ictImage,
@@ -87,13 +87,13 @@ export default function DataCenter() {
   return (
     <SolutionsTemplate
       // Hero
-      heroBgImage={dcHero}
+      heroBgImage={ICTConsultancyHero}
       category="ICT Consultancy (PBOOT)"
       heroTitle="Data Center Facilities"
       heroDescription="MATEKK delivers end-to-end Data Center Facilities solutions that help organizations establish secure, efficient, and resilient infrastructure to support critical IT operations."
       // Building section
-      buildingTitle="Building Scalable and Secure Network Infrastructure to"
-      buildingTitleHighlight="Support Business Continuity"
+      buildingTitle="Reliable, Secure, and Scalable"
+      buildingTitleHighlight="Data Center Solutions"
       buildingDescription="Our Data Center Facilities service covers planning, design, implementation, and optimization of physical and virtual data center infrastructure. We help organizations ensure high availability, scalability, and operational efficiency for all mission-critical systems."
       // Challenges section
       challengesHighlight="Challenges Addressed"
@@ -103,12 +103,12 @@ export default function DataCenter() {
       deliverablesHighlight="Deliverables"
       deliverables={DELIVERABLES}
       // Footer banner
-      footerBgImage={dcFooter}
+      footerBgImage={ICTConsultancyFooter}
       footerTitle="Contact Us Today To"
       footerHighlightText="Request a Consultation"
       footerDescription="Secure your organization's network with MGKK Information Communication Technology Services."
     >
-      <RelevantProjects projects={DC_PROJECTS} />
+      <RelevantProjects projects={RELEVANT_PROJECTS} />
     </SolutionsTemplate>
   );
 }

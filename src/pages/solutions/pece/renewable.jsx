@@ -8,41 +8,41 @@ import webImage from "../../../assets/web.webp";
 // ==================== PAGE DATA ====================
 
 const CHALLENGES = [
-  "Aging or inefficient data center infrastructure",
-  "Limited redundancy and risk of downtime",
-  "Security vulnerabilities in network and storage systems",
-  "Inadequate monitoring and operational visibility",
-  "Difficulty scaling infrastructure with business growth",
+  "Rising energy costs and operational expenses",
+  "Dependence on unreliable or non-sustainable power sources",
+  "Lack of energy efficiency and optimization",
+  "Environmental and regulatory compliance pressures",
+  "Difficulty integrating renewable energy with existing systems",
 ];
 
 const DELIVERABLES = [
   {
-    title: "Data Center Assessment and Consultancy",
-    desc: "Analyze current infrastructure, identify gaps, and provide expert recommendations.",
+    title: "Energy Assessment and Feasibility Study",
+    desc: "Evaluate energy needs and identify suitable renewable solutions.",
   },
   {
-    title: "Facility Planning and Layout Design",
-    desc: "Optimize physical and virtual layouts for maximum efficiency and space utilization.",
+    title: "Solar Power System Design and Installation",
+    desc: "Implement efficient and scalable solar energy systems.",
   },
   {
-    title: "Installation and Configuration of Servers, Storage, and Networking Equipment",
-    desc: "Ensure seamless integration and reliability.",
+    title: "Energy Storage Solutions",
+    desc: "Integrate battery systems for reliable power supply and backup.",
   },
   {
-    title: "Power, Cooling, and Environmental Control Systems Integration",
-    desc: " Implement efficient systems to maintain uptime and operational stability.",
+    title: "System Integration and Optimization",
+    desc: "Ensure seamless integration with existing infrastructure.",
   },
   {
-    title: "Testing, Validation, and Optimization",
-    desc: "Confirm that systems meet performance, security, and reliability standards.",
+    title: "Monitoring and Performance Analysis",
+    desc: "Track energy usage and system efficiency in real-time.",
   },
   {
-    title: "Ongoing Monitoring and Improvement",
-    desc: "Continuous support to ensure operational excellence and quick issue resolution.",
+    title: "Maintenance and Support Services",
+    desc: "Provide ongoing maintenance to ensure long-term reliability and performance.",
   },
 ];
 
-const DC_PROJECTS = [
+const RELEVANT_PROJECTS = [
   {
     id: 1,
     src: ictImage,
@@ -88,13 +88,13 @@ export default function Renewable() {
     <SolutionsTemplate
       // Hero
       heroBgImage={dcHero}
-      category="ICT Consultancy (PBOOT)"
-      heroTitle="Data Center Facilities"
-      heroDescription="MATEKK delivers end-to-end Data Center Facilities solutions that help organizations establish secure, efficient, and resilient infrastructure to support critical IT operations."
+      category="PECE Consultancy (PBOOT)"
+      heroTitle="Renewable Energy Solutions"
+      heroDescription="MATEKK provides sustainable and efficient renewable energy solutions that help organizations reduce operational costs, improve energy reliability, and support environmental responsibility."
       // Building section
-      buildingTitle="Building Scalable and Secure Network Infrastructure to"
-      buildingTitleHighlight="Support Business Continuity"
-      buildingDescription="Our Data Center Facilities service covers planning, design, implementation, and optimization of physical and virtual data center infrastructure. We help organizations ensure high availability, scalability, and operational efficiency for all mission-critical systems."
+      buildingTitle="Sustainable, Efficient, and Future-Ready"
+      buildingTitleHighlight="Energy Solutions"
+      buildingDescription="Our renewable energy services focus on designing and implementing energy systems that harness clean and reliable sources such as solar power. MGKK helps organizations transition to greener operations while ensuring consistent performance, long-term savings, and reduced environmental impact."
       // Challenges section
       challengesHighlight="Challenges Addressed"
       challengesSuffix="by This Service"
@@ -108,7 +108,7 @@ export default function Renewable() {
       footerHighlightText="Request a Consultation"
       footerDescription="Secure your organization's network with MGKK Information Communication Technology Services."
     >
-      <RelevantProjects projects={DC_PROJECTS} />
+      <RelevantProjects projects={RELEVANT_PROJECTS} />
     </SolutionsTemplate>
   );
 }

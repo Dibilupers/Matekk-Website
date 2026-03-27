@@ -1,46 +1,46 @@
 import SolutionsTemplate from "../../../../components/solution_template/solutions_template";
 import RelevantProjects from "../../../../components/solution_template/releveantprojects";
-import dcHero from "../../../../assets/CCNAHeroImageAutomation.webp";
-import dcFooter from "../../../../assets/CCNAFooterImageAutomation.webp";
+import ICTConsultancyHero from "../../../../assets/ICTConsultancyHero.webp";
+import ICTConsultancyFooter from "../../../../assets/ICTConsultancyFooter.webp";
 import ictImage from "../../../../assets/ict.webp";
 import webImage from "../../../../assets/web.webp";
 
 const CHALLENGES = [
-  "Aging or inefficient data center infrastructure",
-  "Limited redundancy and risk of downtime",
-  "Security vulnerabilities in network and storage systems",
-  "Inadequate monitoring and operational visibility",
-  "Difficulty scaling infrastructure with business growth",
+  "Disorganized and inefficient cabling systems",
+  "Frequent network issues due to poor cable management",
+  "Difficulty troubleshooting and maintaining network infrastructure",
+  "Limited scalability for future expansion",
+  "Reduced performance due to cable interference or improper installation",
 ];
 
 const DELIVERABLES = [
   {
-    title: "Data Center Assessment and Consultancy",
-    desc: "Analyze current infrastructure, identify gaps, and provide expert recommendations.",
+    title: "Cabling Design and Planning",
+    desc: "Develop structured layouts aligned with industry standards.",
   },
   {
-    title: "Facility Planning and Layout Design",
-    desc: "Optimize physical and virtual layouts for maximum efficiency and space utilization.",
+    title: "Installation of Copper and Fiber Cabling",
+    desc: "Deploy high-quality cabling for voice and data networks.",
   },
   {
-    title: "Installation and Configuration of Servers, Storage, and Networking Equipment",
-    desc: "Ensure seamless integration and reliability.",
+    title: "Rack and Patch Panel Setup",
+    desc: "Organize and manage network connections efficiently.",
   },
   {
-    title: "Power, Cooling, and Environmental Control Systems Integration",
-    desc: " Implement efficient systems to maintain uptime and operational stability.",
+    title: "Cable Management and Labeling",
+    desc: "Ensure proper identification and easy maintenance.",
   },
   {
-    title: "Testing, Validation, and Optimization",
-    desc: "Confirm that systems meet performance, security, and reliability standards.",
+    title: "Testing and Certification",
+    desc: "Validate performance and compliance with standards.",
   },
   {
-    title: "Ongoing Monitoring and Improvement",
-    desc: "Continuous support to ensure operational excellence and quick issue resolution.",
+    title: "Maintenance and Upgrades",
+    desc: "Provide ongoing support and system enhancements for long-term reliability.",
   },
 ];
 
-const DC_PROJECTS = [
+const RELEVANT_PROJECTS = [
   {
     id: 1,
     src: ictImage,
@@ -78,32 +78,33 @@ const DC_PROJECTS = [
     desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
   },
 ];
-export default function StructuredCabling(){
-    return (
-        <SolutionsTemplate
-          // Hero
-          heroBgImage={dcHero}
-          category="ICT Consultancy (PBOOT)"
-          heroTitle="Data Center Facilities"
-          heroDescription="MATEKK delivers end-to-end Data Center Facilities solutions that help organizations establish secure, efficient, and resilient infrastructure to support critical IT operations."
-          // Building section
-          buildingTitle="Building Scalable and Secure Network Infrastructure to"
-          buildingTitleHighlight="Support Business Continuity"
-          buildingDescription="Our Data Center Facilities service covers planning, design, implementation, and optimization of physical and virtual data center infrastructure. We help organizations ensure high availability, scalability, and operational efficiency for all mission-critical systems."
-          // Challenges section
-          challengesHighlight="Challenges Addressed"
-          challengesSuffix="by This Service"
-          challenges={CHALLENGES}
-          // Deliverables section
-          deliverablesHighlight="Deliverables"
-          deliverables={DELIVERABLES}
-          // Footer banner
-          footerBgImage={dcFooter}
-          footerTitle="Contact Us Today To"
-          footerHighlightText="Request a Consultation"
-          footerDescription="Secure your organization's network with MGKK Information Communication Technology Services."
-        >
-          <RelevantProjects projects={DC_PROJECTS} />
-        </SolutionsTemplate>
-      );
+
+export default function StructuredCabling() {
+  return (
+    <SolutionsTemplate
+      // Hero
+      heroBgImage={ICTConsultancyHero}
+      category="ICT Consultancy (PBOOT)"
+      heroTitle="Structured Cabling"
+      heroDescription="MATEKK delivers organized and standards-based structured cabling solutions that provide a reliable foundation for voice, data, and network communication across your entire infrastructure."
+      // Building section
+      buildingTitle="Organized, Scalable, and Standards-Compliant"
+      buildingTitleHighlight="Cabling Solutions"
+      buildingDescription="Our structured cabling services ensure a well-planned and efficiently managed cabling system that supports current and future network requirements. MGKK designs and implements structured cabling that improves network performance, simplifies maintenance, and allows for easy scalability and upgrades."
+      // Challenges section
+      challengesHighlight="Challenges Addressed"
+      challengesSuffix="by This Service"
+      challenges={CHALLENGES}
+      // Deliverables section
+      deliverablesHighlight="Deliverables"
+      deliverables={DELIVERABLES}
+      // Footer banner
+      footerBgImage={ICTConsultancyFooter}
+      footerTitle="Contact Us Today To"
+      footerHighlightText="Request a Consultation"
+      footerDescription="Secure your organization's network with MGKK Information Communication Technology Services."
+    >
+      <RelevantProjects projects={RELEVANT_PROJECTS} />
+    </SolutionsTemplate>
+  );
 }

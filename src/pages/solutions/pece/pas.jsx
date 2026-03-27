@@ -5,44 +5,42 @@ import dcFooter from "../../../assets/CCNAFooterImageAutomation.webp";
 import ictImage from "../../../assets/ict.webp";
 import webImage from "../../../assets/web.webp";
 
-// ==================== PAGE DATA ====================
-
 const CHALLENGES = [
-  "Aging or inefficient data center infrastructure",
-  "Limited redundancy and risk of downtime",
-  "Security vulnerabilities in network and storage systems",
-  "Inadequate monitoring and operational visibility",
-  "Difficulty scaling infrastructure with business growth",
+  "Poor audio clarity and uneven sound coverage",
+  "Ineffective communication during emergencies",
+  "Outdated or unreliable PA systems",
+  "Difficulty managing announcements across large areas",
+  "Lack of integration with safety and security systems",
 ];
 
 const DELIVERABLES = [
   {
-    title: "Data Center Assessment and Consultancy",
-    desc: "Analyze current infrastructure, identify gaps, and provide expert recommendations.",
+    title: "PA System Design and Planning",
+    desc: "Develop layouts for optimal sound coverage and clarity.",
   },
   {
-    title: "Facility Planning and Layout Design",
-    desc: "Optimize physical and virtual layouts for maximum efficiency and space utilization.",
+    title: "Speaker and Amplifier Installation",
+    desc: "Deploy high-quality audio equipment tailored to the environment.",
   },
   {
-    title: "Installation and Configuration of Servers, Storage, and Networking Equipment",
-    desc: "Ensure seamless integration and reliability.",
+    title: "Centralized Control System Setup",
+    desc: "Enable easy management of announcements and broadcasts.",
   },
   {
-    title: "Power, Cooling, and Environmental Control Systems Integration",
-    desc: " Implement efficient systems to maintain uptime and operational stability.",
+    title: "Integration with FDAS and Security Systems",
+    desc: "Connect PA systems with emergency and safety solutions.",
   },
   {
-    title: "Testing, Validation, and Optimization",
-    desc: "Confirm that systems meet performance, security, and reliability standards.",
+    title: "System Testing and Audio Optimization",
+    desc: "Ensure clear, consistent, and reliable sound performance.",
   },
   {
-    title: "Ongoing Monitoring and Improvement",
-    desc: "Continuous support to ensure operational excellence and quick issue resolution.",
+    title: "Maintenance and Technical Support",
+    desc: "Provide ongoing service to maintain system reliability and efficiency.",
   },
 ];
 
-const DC_PROJECTS = [
+const RELEVANT_PROJECTS = [
   {
     id: 1,
     src: ictImage,
@@ -81,20 +79,18 @@ const DC_PROJECTS = [
   },
 ];
 
-// ==================== PAGE COMPONENT ====================
-
-export default function PAS() {
+export default function PublicAddressSystems() {
   return (
     <SolutionsTemplate
       // Hero
       heroBgImage={dcHero}
       category="PECE Consultancy (PBOOT)"
-      heroTitle="Data Center Facilities"
-      heroDescription="MATEKK delivers end-to-end Data Center Facilities solutions that help organizations establish secure, efficient, and resilient infrastructure to support critical IT operations."
+      heroTitle="Public Address Systems"
+      heroDescription="MATEKK delivers high-quality public address solutions that enable clear, reliable communication across facilities, ensuring effective announcements, emergency alerts, and coordinated operations."
       // Building section
-      buildingTitle="Building Scalable and Secure Network Infrastructure to"
-      buildingTitleHighlight="Support Business Continuity"
-      buildingDescription="Our Data Center Facilities service covers planning, design, implementation, and optimization of physical and virtual data center infrastructure. We help organizations ensure high availability, scalability, and operational efficiency for all mission-critical systems."
+      buildingTitle="Clear, Scalable, and Mission-Critical"
+      buildingTitleHighlight="Audio Solutions"
+      buildingDescription="Our Public Address (PA) systems are designed to provide consistent and intelligible audio coverage for various environments. From routine announcements to emergency broadcasts, MGKK ensures your communication systems are dependable, easy to manage, and scalable to meet your operational needs."
       // Challenges section
       challengesHighlight="Challenges Addressed"
       challengesSuffix="by This Service"
@@ -108,7 +104,7 @@ export default function PAS() {
       footerHighlightText="Request a Consultation"
       footerDescription="Secure your organization's network with MGKK Information Communication Technology Services."
     >
-      <RelevantProjects projects={DC_PROJECTS} />
+      <RelevantProjects projects={RELEVANT_PROJECTS} />
     </SolutionsTemplate>
   );
 }

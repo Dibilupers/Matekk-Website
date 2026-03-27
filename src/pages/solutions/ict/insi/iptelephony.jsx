@@ -1,46 +1,46 @@
 import SolutionsTemplate from "../../../../components/solution_template/solutions_template";
 import RelevantProjects from "../../../../components/solution_template/releveantprojects";
-import dcHero from "../../../../assets/CCNAHeroImageAutomation.webp";
-import dcFooter from "../../../../assets/CCNAFooterImageAutomation.webp";
+import ICTConsultancyHero from "../../../../assets/ICTConsultancyHero.webp";
+import ICTConsultancyFooter from "../../../../assets/ICTConsultancyFooter.webp";
 import ictImage from "../../../../assets/ict.webp";
 import webImage from "../../../../assets/web.webp";
 
 const CHALLENGES = [
-  "Aging or inefficient data center infrastructure",
-  "Limited redundancy and risk of downtime",
-  "Security vulnerabilities in network and storage systems",
-  "Inadequate monitoring and operational visibility",
-  "Difficulty scaling infrastructure with business growth",
+  "High costs of traditional telephony systems",
+  "Poor call quality and unreliable communication lines",
+  "Limited scalability for growing organizations",
+  "Difficulty integrating voice with data and digital systems",
+  "Lack of mobility and remote communication capabilities",
 ];
 
 const DELIVERABLES = [
   {
-    title: "Data Center Assessment and Consultancy",
-    desc: "Analyze current infrastructure, identify gaps, and provide expert recommendations.",
+    title: "IP Telephony System Design and Planning",
+    desc: "Develop tailored voice communication architectures.",
   },
   {
-    title: "Facility Planning and Layout Design",
-    desc: "Optimize physical and virtual layouts for maximum efficiency and space utilization.",
+    title: "VoIP Deployment and Configuration",
+    desc: "Implement internet-based voice communication systems.",
   },
   {
-    title: "Installation and Configuration of Servers, Storage, and Networking Equipment",
-    desc: "Ensure seamless integration and reliability.",
+    title: "IP PBX Installation and Setup",
+    desc: "Configure centralized call management systems.",
   },
   {
-    title: "Power, Cooling, and Environmental Control Systems Integration",
-    desc: " Implement efficient systems to maintain uptime and operational stability.",
+    title: "Integration with Existing Network Infrastructure",
+    desc: "Ensure seamless voice and data communication.",
   },
   {
-    title: "Testing, Validation, and Optimization",
-    desc: "Confirm that systems meet performance, security, and reliability standards.",
+    title: "Call Quality Optimization and Monitoring",
+    desc: "Maintain clear, stable, and reliable voice performance.",
   },
   {
-    title: "Ongoing Monitoring and Improvement",
-    desc: "Continuous support to ensure operational excellence and quick issue resolution.",
+    title: "Maintenance and Technical Support",
+    desc: "Provide ongoing support to ensure uninterrupted communication services.",
   },
 ];
 
-const DC_PROJECTS = [
+const RELEVANT_PROJECTS = [
   {
     id: 1,
     src: ictImage,
@@ -78,32 +78,33 @@ const DC_PROJECTS = [
     desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
   },
 ];
-export default function IPTelephony(){
-    return (
-        <SolutionsTemplate
-          // Hero
-          heroBgImage={dcHero}
-          category="ICT Consultancy (PBOOT)"
-          heroTitle="Data Center Facilities"
-          heroDescription="MATEKK delivers end-to-end Data Center Facilities solutions that help organizations establish secure, efficient, and resilient infrastructure to support critical IT operations."
-          // Building section
-          buildingTitle="Building Scalable and Secure Network Infrastructure to"
-          buildingTitleHighlight="Support Business Continuity"
-          buildingDescription="Our Data Center Facilities service covers planning, design, implementation, and optimization of physical and virtual data center infrastructure. We help organizations ensure high availability, scalability, and operational efficiency for all mission-critical systems."
-          // Challenges section
-          challengesHighlight="Challenges Addressed"
-          challengesSuffix="by This Service"
-          challenges={CHALLENGES}
-          // Deliverables section
-          deliverablesHighlight="Deliverables"
-          deliverables={DELIVERABLES}
-          // Footer banner
-          footerBgImage={dcFooter}
-          footerTitle="Contact Us Today To"
-          footerHighlightText="Request a Consultation"
-          footerDescription="Secure your organization's network with MGKK Information Communication Technology Services."
-        >
-          <RelevantProjects projects={DC_PROJECTS} />
-        </SolutionsTemplate>
-      );
+
+export default function IPTelephony() {
+  return (
+    <SolutionsTemplate
+      // Hero
+      heroBgImage={ICTConsultancyHero}
+      category="ICT Consultancy (PBOOT)"
+      heroTitle="IP Telephony Networks"
+      heroDescription="MATEKK delivers modern IP telephony solutions that enable reliable, cost-effective, and high-quality voice communication over your existing data network."
+      // Building section
+      buildingTitle="Smart, Scalable, and Unified"
+      buildingTitleHighlight="Communication Solutions"
+      buildingDescription="Our IP telephony services integrate voice, data, and communication systems into a unified platform, allowing seamless and efficient communication across your organization. MGKK ensures clear voice quality, flexible scalability, and enhanced collaboration for both on-site and remote teams."
+      // Challenges section
+      challengesHighlight="Challenges Addressed"
+      challengesSuffix="by This Service"
+      challenges={CHALLENGES}
+      // Deliverables section
+      deliverablesHighlight="Deliverables"
+      deliverables={DELIVERABLES}
+      // Footer banner
+      footerBgImage={ICTConsultancyFooter}
+      footerTitle="Contact Us Today To"
+      footerHighlightText="Request a Consultation"
+      footerDescription="Secure your organization's network with MGKK Information Communication Technology Services."
+    >
+      <RelevantProjects projects={RELEVANT_PROJECTS} />
+    </SolutionsTemplate>
+  );
 }

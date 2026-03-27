@@ -1,46 +1,46 @@
 import SolutionsTemplate from "../../../../components/solution_template/solutions_template";
 import RelevantProjects from "../../../../components/solution_template/releveantprojects";
-import dcHero from "../../../../assets/CCNAHeroImageAutomation.webp";
-import dcFooter from "../../../../assets/CCNAFooterImageAutomation.webp";
+import ICTConsultancyHero from "../../../../assets/ICTConsultancyHero.webp";
+import ICTConsultancyFooter from "../../../../assets/ICTConsultancyFooter.webp";
 import ictImage from "../../../../assets/ict.webp";
 import webImage from "../../../../assets/web.webp";
 
 const CHALLENGES = [
-  "Aging or inefficient data center infrastructure",
-  "Limited redundancy and risk of downtime",
-  "Security vulnerabilities in network and storage systems",
-  "Inadequate monitoring and operational visibility",
-  "Difficulty scaling infrastructure with business growth",
+  "Limited control over data in third-party or cloud environments",
+  "Security and compliance concerns with sensitive information",
+  "Dependence on external providers for infrastructure management",
+  "Performance issues due to shared or virtualized resources",
+  "Difficulty customizing infrastructure to specific business needs",
 ];
 
 const DELIVERABLES = [
   {
-    title: "Data Center Assessment and Consultancy",
-    desc: "Analyze current infrastructure, identify gaps, and provide expert recommendations.",
+    title: "Server Design and Infrastructure Planning",
+    desc: "Develop customized on-site server solutions.",
   },
   {
-    title: "Facility Planning and Layout Design",
-    desc: "Optimize physical and virtual layouts for maximum efficiency and space utilization.",
+    title: "Server Installation and Configuration",
+    desc: "Deploy and set up physical servers based on requirements.",
   },
   {
-    title: "Installation and Configuration of Servers, Storage, and Networking Equipment",
-    desc: "Ensure seamless integration and reliability.",
+    title: "Virtualization and Resource Management",
+    desc: "Optimize server usage and efficiency.",
   },
   {
-    title: "Power, Cooling, and Environmental Control Systems Integration",
-    desc: " Implement efficient systems to maintain uptime and operational stability.",
+    title: "Data Security and Backup Solutions",
+    desc: "Implement robust protection and disaster recovery systems.",
   },
   {
-    title: "Testing, Validation, and Optimization",
-    desc: "Confirm that systems meet performance, security, and reliability standards.",
+    title: "Performance Monitoring and Optimization",
+    desc: "Ensure reliable and high-performing server operations.",
   },
   {
-    title: "Ongoing Monitoring and Improvement",
-    desc: "Continuous support to ensure operational excellence and quick issue resolution.",
+    title: "Maintenance and Technical Support",
+    desc: "Provide ongoing support to maintain system stability and uptime.",
   },
 ];
 
-const DC_PROJECTS = [
+const RELEVANT_PROJECTS = [
   {
     id: 1,
     src: ictImage,
@@ -78,32 +78,33 @@ const DC_PROJECTS = [
     desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
   },
 ];
-export default function OnPremise(){
-    return (
-        <SolutionsTemplate
-          // Hero
-          heroBgImage={dcHero}
-          category="ICT Consultancy (PBOOT)"
-          heroTitle="Data Center Facilities"
-          heroDescription="MATEKK delivers end-to-end Data Center Facilities solutions that help organizations establish secure, efficient, and resilient infrastructure to support critical IT operations."
-          // Building section
-          buildingTitle="Building Scalable and Secure Network Infrastructure to"
-          buildingTitleHighlight="Support Business Continuity"
-          buildingDescription="Our Data Center Facilities service covers planning, design, implementation, and optimization of physical and virtual data center infrastructure. We help organizations ensure high availability, scalability, and operational efficiency for all mission-critical systems."
-          // Challenges section
-          challengesHighlight="Challenges Addressed"
-          challengesSuffix="by This Service"
-          challenges={CHALLENGES}
-          // Deliverables section
-          deliverablesHighlight="Deliverables"
-          deliverables={DELIVERABLES}
-          // Footer banner
-          footerBgImage={dcFooter}
-          footerTitle="Contact Us Today To"
-          footerHighlightText="Request a Consultation"
-          footerDescription="Secure your organization's network with MGKK Information Communication Technology Services."
-        >
-          <RelevantProjects projects={DC_PROJECTS} />
-        </SolutionsTemplate>
-      );
+
+export default function OnPremise() {
+  return (
+    <SolutionsTemplate
+      // Hero
+      heroBgImage={ICTConsultancyHero}
+      category="ICT Consultancy (PBOOT)"
+      heroTitle="On-Premise Servers"
+      heroDescription="MATEKK delivers reliable on-premise server solutions that give organizations full control over their data, applications, and infrastructure, ensuring security, performance, and compliance within their own environment."
+      // Building section
+      buildingTitle="Secure, Controlled, and High-Performance"
+      buildingTitleHighlight="Server Solutions"
+      buildingDescription="Our on-premise server services are designed to provide dedicated infrastructure tailored to your organization's needs. MGKK ensures optimal performance, enhanced data security, and complete control over your systems, making it ideal for businesses that require strict data governance and localized infrastructure."
+      // Challenges section
+      challengesHighlight="Challenges Addressed"
+      challengesSuffix="by This Service"
+      challenges={CHALLENGES}
+      // Deliverables section
+      deliverablesHighlight="Deliverables"
+      deliverables={DELIVERABLES}
+      // Footer banner
+      footerBgImage={ICTConsultancyFooter}
+      footerTitle="Contact Us Today To"
+      footerHighlightText="Request a Consultation"
+      footerDescription="Secure your organization's network with MGKK Information Communication Technology Services."
+    >
+      <RelevantProjects projects={RELEVANT_PROJECTS} />
+    </SolutionsTemplate>
+  );
 }

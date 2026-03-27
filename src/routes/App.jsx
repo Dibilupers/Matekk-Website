@@ -106,7 +106,7 @@ import BlueTeamSolution from "../pages/solutions/ict/cybersecurity/blueteam";
 import WebDev from "../pages/solutions/ict/webdev";
 import CloudSolution from "../pages/solutions/ict/cloudsolution";
 /* SMART IOT */
-import SMARTHome from "../pages/solutions/ict/smart/building";
+import SMARTHome from "../pages/solutions/ict/smart/smarthome";
 import SMARTBuilding from "../pages/solutions/ict/smart/building";
 import SMARTCity from "../pages/solutions/ict/smart/city";
 /* PECE (PBOOT) */

@@ -1,46 +1,46 @@
 import SolutionsTemplate from "../../../../components/solution_template/solutions_template";
 import RelevantProjects from "../../../../components/solution_template/releveantprojects";
-import dcHero from "../../../../assets/CCNAHeroImageAutomation.webp";
-import dcFooter from "../../../../assets/CCNAFooterImageAutomation.webp";
+import ICTConsultancyHero from "../../../../assets/ICTConsultancyHero.webp";
+import ICTConsultancyFooter from "../../../../assets/ICTConsultancyFooter.webp";
 import ictImage from "../../../../assets/ict.webp";
 import webImage from "../../../../assets/web.webp";
 
 const CHALLENGES = [
-  "Aging or inefficient data center infrastructure",
-  "Limited redundancy and risk of downtime",
-  "Security vulnerabilities in network and storage systems",
-  "Inadequate monitoring and operational visibility",
-  "Difficulty scaling infrastructure with business growth",
+  "Inconsistent or unstable network connectivity",
+  "Bottlenecks in data transmission and bandwidth usage",
+  "Poorly structured network distribution systems",
+  "Difficulty scaling networks to support expansion",
+  "Limited visibility into network performance and traffic",
 ];
 
 const DELIVERABLES = [
   {
-    title: "Data Center Assessment and Consultancy",
-    desc: "Analyze current infrastructure, identify gaps, and provide expert recommendations.",
+    title: "Network Backbone and Distribution Design",
+    desc: "Create efficient architectures for data flow and connectivity.",
   },
   {
-    title: "Facility Planning and Layout Design",
-    desc: "Optimize physical and virtual layouts for maximum efficiency and space utilization.",
+    title: "Structured Cabling and Network Deployment",
+    desc: "Implement organized and reliable network infrastructure.",
   },
   {
-    title: "Installation and Configuration of Servers, Storage, and Networking Equipment",
-    desc: "Ensure seamless integration and reliability.",
+    title: "Switching and Routing Configuration",
+    desc: "Optimize traffic flow across the network.",
   },
   {
-    title: "Power, Cooling, and Environmental Control Systems Integration",
-    desc: " Implement efficient systems to maintain uptime and operational stability.",
+    title: "Bandwidth Management and Optimization",
+    desc: "Ensure efficient utilization of network resources.",
   },
   {
-    title: "Testing, Validation, and Optimization",
-    desc: "Confirm that systems meet performance, security, and reliability standards.",
+    title: "Network Monitoring and Performance Analysis",
+    desc: "Provide visibility into network health and usage.",
   },
   {
-    title: "Ongoing Monitoring and Improvement",
-    desc: "Continuous support to ensure operational excellence and quick issue resolution.",
+    title: "Maintenance and Support Services",
+    desc: "Ensure continuous performance and reliability of the network.",
   },
 ];
 
-const DC_PROJECTS = [
+const RELEVANT_PROJECTS = [
   {
     id: 1,
     src: ictImage,
@@ -79,18 +79,18 @@ const DC_PROJECTS = [
   },
 ];
 
-export default function IPBackbone(){
-return (
+export default function IPBackbone() {
+  return (
     <SolutionsTemplate
       // Hero
-      heroBgImage={dcHero}
+      heroBgImage={ICTConsultancyHero}
       category="ICT Consultancy (PBOOT)"
-      heroTitle="Data Center Facilities"
-      heroDescription="MATEKK delivers end-to-end Data Center Facilities solutions that help organizations establish secure, efficient, and resilient infrastructure to support critical IT operations."
+      heroTitle="IP Backbone and Distribution Networks"
+      heroDescription="MATEKK delivers reliable IP backbone and distribution network solutions that ensure seamless connectivity, efficient data flow, and consistent network performance across your organization."
       // Building section
-      buildingTitle="Building Scalable and Secure Network Infrastructure to"
-      buildingTitleHighlight="Support Business Continuity"
-      buildingDescription="Our Data Center Facilities service covers planning, design, implementation, and optimization of physical and virtual data center infrastructure. We help organizations ensure high availability, scalability, and operational efficiency for all mission-critical systems."
+      buildingTitle="Efficient, Reliable, and Scalable"
+      buildingTitleHighlight="Network Distribution Solutions"
+      buildingDescription="Our services focus on designing and implementing structured network backbones and distribution systems that connect core infrastructure to end users. MGKK ensures optimized bandwidth utilization, stable connectivity, and scalable network architecture to support your growing operational needs."
       // Challenges section
       challengesHighlight="Challenges Addressed"
       challengesSuffix="by This Service"
@@ -99,12 +99,12 @@ return (
       deliverablesHighlight="Deliverables"
       deliverables={DELIVERABLES}
       // Footer banner
-      footerBgImage={dcFooter}
+      footerBgImage={ICTConsultancyFooter}
       footerTitle="Contact Us Today To"
       footerHighlightText="Request a Consultation"
       footerDescription="Secure your organization's network with MGKK Information Communication Technology Services."
     >
-      <RelevantProjects projects={DC_PROJECTS} />
+      <RelevantProjects projects={RELEVANT_PROJECTS} />
     </SolutionsTemplate>
   );
 }

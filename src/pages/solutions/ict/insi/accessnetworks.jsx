@@ -1,46 +1,46 @@
 import SolutionsTemplate from "../../../../components/solution_template/solutions_template";
 import RelevantProjects from "../../../../components/solution_template/releveantprojects";
-import dcHero from "../../../../assets/CCNAHeroImageAutomation.webp";
-import dcFooter from "../../../../assets/CCNAFooterImageAutomation.webp";
+import ICTConsultancyHero from "../../../../assets/ICTConsultancyHero.webp";
+import ICTConsultancyFooter from "../../../../assets/ICTConsultancyFooter.webp";
 import ictImage from "../../../../assets/ict.webp";
 import webImage from "../../../../assets/web.webp";
 
 const CHALLENGES = [
-  "Aging or inefficient data center infrastructure",
-  "Limited redundancy and risk of downtime",
-  "Security vulnerabilities in network and storage systems",
-  "Inadequate monitoring and operational visibility",
-  "Difficulty scaling infrastructure with business growth",
+  "Unstable or slow end-user connectivity",
+  "Limited network access control and security",
+  "Network congestion and performance issues",
+  "Difficulty managing multiple devices and users",
+  "Lack of visibility at the access layer of the network",
 ];
 
 const DELIVERABLES = [
   {
-    title: "Data Center Assessment and Consultancy",
-    desc: "Analyze current infrastructure, identify gaps, and provide expert recommendations.",
+    title: "Access Network Design and Planning",
+    desc: "Develop efficient and secure user connectivity solutions.",
   },
   {
-    title: "Facility Planning and Layout Design",
-    desc: "Optimize physical and virtual layouts for maximum efficiency and space utilization.",
+    title: "LAN and Wireless Network Deployment",
+    desc: "Implement wired and wireless access solutions.",
   },
   {
-    title: "Installation and Configuration of Servers, Storage, and Networking Equipment",
-    desc: "Ensure seamless integration and reliability.",
+    title: "User Access Control and Authentication",
+    desc: "Secure network access with proper authorization mechanisms.",
   },
   {
-    title: "Power, Cooling, and Environmental Control Systems Integration",
-    desc: " Implement efficient systems to maintain uptime and operational stability.",
+    title: "Switch and Access Point Configuration",
+    desc: "Ensure reliable and high-performance connectivity.",
   },
   {
-    title: "Testing, Validation, and Optimization",
-    desc: "Confirm that systems meet performance, security, and reliability standards.",
+    title: "Network Monitoring and Optimization",
+    desc: "Track performance and resolve access issues efficiently.",
   },
   {
-    title: "Ongoing Monitoring and Improvement",
-    desc: "Continuous support to ensure operational excellence and quick issue resolution.",
+    title: "Maintenance and Support Services",
+    desc: "Provide continuous support to ensure stable and secure access networks.",
   },
 ];
 
-const DC_PROJECTS = [
+const RELEVANT_PROJECTS = [
   {
     id: 1,
     src: ictImage,
@@ -79,32 +79,32 @@ const DC_PROJECTS = [
   },
 ];
 
-export default function AccessNetworks(){
-    return (
-        <SolutionsTemplate
-          // Hero
-          heroBgImage={dcHero}
-          category="ICT Consultancy (PBOOT)"
-          heroTitle="Data Center Facilities"
-          heroDescription="MATEKK delivers end-to-end Data Center Facilities solutions that help organizations establish secure, efficient, and resilient infrastructure to support critical IT operations."
-          // Building section
-          buildingTitle="Building Scalable and Secure Network Infrastructure to"
-          buildingTitleHighlight="Support Business Continuity"
-          buildingDescription="Our Data Center Facilities service covers planning, design, implementation, and optimization of physical and virtual data center infrastructure. We help organizations ensure high availability, scalability, and operational efficiency for all mission-critical systems."
-          // Challenges section
-          challengesHighlight="Challenges Addressed"
-          challengesSuffix="by This Service"
-          challenges={CHALLENGES}
-          // Deliverables section
-          deliverablesHighlight="Deliverables"
-          deliverables={DELIVERABLES}
-          // Footer banner
-          footerBgImage={dcFooter}
-          footerTitle="Contact Us Today To"
-          footerHighlightText="Request a Consultation"
-          footerDescription="Secure your organization's network with MGKK Information Communication Technology Services."
-        >
-          <RelevantProjects projects={DC_PROJECTS} />
-        </SolutionsTemplate>
-      );
+export default function AccessNetworks() {
+  return (
+    <SolutionsTemplate
+      // Hero
+      heroBgImage={ICTConsultancyHero}
+      category="ICT Consultancy (PBOOT)"
+      heroTitle="Access Networks"
+      heroDescription="MATEKK delivers reliable and secure access network solutions that provide seamless connectivity between end users and core network infrastructure, ensuring efficient communication and optimal performance."
+      // Building section
+      buildingTitle="Reliable, Secure, and High-Performance"
+      buildingTitleHighlight="Access Connectivity"
+      buildingDescription="Our access network solutions focus on delivering stable and high-speed connectivity to users and devices across your organization. MGKK designs and implements access layer infrastructure that ensures secure connections, minimizes latency, and supports a wide range of endpoints and applications."
+      // Challenges section
+      challengesHighlight="Challenges Addressed"
+      challengesSuffix="by This Service"
+      challenges={CHALLENGES}
+      // Deliverables section
+      deliverablesHighlight="Deliverables"
+      deliverables={DELIVERABLES}
+      // Footer banner
+      footerBgImage={ICTConsultancyFooter}
+      footerTitle="Contact Us Today To"
+      footerHighlightText="Request a Consultation"
+      footerDescription="Secure your organization's network with MGKK Information Communication Technology Services."
+    >
+      <RelevantProjects projects={RELEVANT_PROJECTS} />
+    </SolutionsTemplate>
+  );
 }

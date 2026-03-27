@@ -1,109 +1,113 @@
 import SolutionsTemplate from "../../../../components/solution_template/solutions_template";
 import RelevantProjects from "../../../../components/solution_template/releveantprojects";
-import dcHero from "../../../../assets/CCNAHeroImageAutomation.webp";
-import dcFooter from "../../../../assets/CCNAFooterImageAutomation.webp";
+import ICTConsultancyHero from "../../../../assets/ICTConsultancyHero.webp";
+import ICTConsultancyFooter from "../../../../assets/ICTConsultancyFooter.webp";
 import ictImage from "../../../../assets/ict.webp";
 import webImage from "../../../../assets/web.webp";
 
 const CHALLENGES = [
-  "Aging or inefficient data center infrastructure",
-  "Limited redundancy and risk of downtime",
-  "Security vulnerabilities in network and storage systems",
-  "Inadequate monitoring and operational visibility",
-  "Difficulty scaling infrastructure with business growth",
+  "Inefficient management of building systems and resources",
+  "High operational and energy costs",
+  "Lack of centralized control over building infrastructure",
+  "Limited visibility into building performance and usage",
+  "Difficulty maintaining comfort, safety, and sustainability standards",
 ];
 
 const DELIVERABLES = [
   {
-    title: "Data Center Assessment and Consultancy",
-    desc: "Analyze current infrastructure, identify gaps, and provide expert recommendations.",
+    title: "Smart Building Design and Planning",
+    desc: "Develop integrated and scalable smart building architectures.",
   },
   {
-    title: "Facility Planning and Layout Design",
-    desc: "Optimize physical and virtual layouts for maximum efficiency and space utilization.",
+    title: "Automation and Control Systems Integration",
+    desc: "Connect and automate lighting, HVAC, and other systems.",
   },
   {
-    title: "Installation and Configuration of Servers, Storage, and Networking Equipment",
-    desc: "Ensure seamless integration and reliability.",
+    title: "Energy Management Solutions",
+    desc: "Optimize energy usage and reduce operational costs.",
   },
   {
-    title: "Power, Cooling, and Environmental Control Systems Integration",
-    desc: " Implement efficient systems to maintain uptime and operational stability.",
+    title: "Building Management System (BMS) Integration",
+    desc: "Centralize monitoring and control of all building systems.",
   },
   {
-    title: "Testing, Validation, and Optimization",
-    desc: "Confirm that systems meet performance, security, and reliability standards.",
+    title: "Security and Access Control Integration",
+    desc: "Enhance safety with integrated surveillance and access systems.",
   },
   {
-    title: "Ongoing Monitoring and Improvement",
-    desc: "Continuous support to ensure operational excellence and quick issue resolution.",
+    title: "Monitoring, Maintenance, and Optimization",
+    desc: "Ensure continuous performance, efficiency, and system improvements.",
   },
 ];
 
-const DC_PROJECTS = [
+const RELEVANT_PROJECTS = [
   {
     id: 1,
     src: ictImage,
-    alt: "Network and Security Infrastructure Projects",
-    title:
-      "Design, Consultancy, Build, Test and Acceptance of ICT Infrastructure",
-    desc: "Centralized monitoring and control of interconnected substations via SCADA and ICT, and automating power distribution.",
+    alt: "Smart Building Infrastructure",
+    title: "Integrated Smart Building Systems",
+    desc: "Centralized automation and monitoring of building systems including lighting, HVAC, and security.",
   },
   {
     id: 2,
     src: webImage,
-    alt: "SLSU Delegates",
-    title: "SLSU Delegates Welcome",
-    desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
+    alt: "Energy Optimization",
+    title: "Energy Efficiency Implementation",
+    desc: "Deployment of intelligent energy management solutions to reduce operational costs.",
   },
   {
     id: 3,
     src: ictImage,
-    alt: "Team Celebration",
-    title: "Team Celebration",
-    desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
+    alt: "Security Systems",
+    title: "Advanced Security Integration",
+    desc: "Implementation of surveillance and access control systems for enhanced safety.",
   },
   {
     id: 4,
     src: webImage,
-    alt: "Ideas Workshop",
-    title: "Ideas Workshop",
-    desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
+    alt: "Automation Systems",
+    title: "Building Automation",
+    desc: "Automation of building operations for improved efficiency and occupant comfort.",
   },
   {
     id: 5,
     src: ictImage,
-    alt: "Conference Panel",
-    title: "Conference Panel",
-    desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
+    alt: "Monitoring Systems",
+    title: "Real-Time Monitoring",
+    desc: "Continuous monitoring and analytics for performance optimization.",
   },
 ];
-export default function SMARTBuilding(){
-    return (
-        <SolutionsTemplate
-          // Hero
-          heroBgImage={dcHero}
-          category="ICT Consultancy (PBOOT)"
-          heroTitle="Data Center Facilities"
-          heroDescription="MATEKK delivers end-to-end Data Center Facilities solutions that help organizations establish secure, efficient, and resilient infrastructure to support critical IT operations."
-          // Building section
-          buildingTitle="Building Scalable and Secure Network Infrastructure to"
-          buildingTitleHighlight="Support Business Continuity"
-          buildingDescription="Our Data Center Facilities service covers planning, design, implementation, and optimization of physical and virtual data center infrastructure. We help organizations ensure high availability, scalability, and operational efficiency for all mission-critical systems."
-          // Challenges section
-          challengesHighlight="Challenges Addressed"
-          challengesSuffix="by This Service"
-          challenges={CHALLENGES}
-          // Deliverables section
-          deliverablesHighlight="Deliverables"
-          deliverables={DELIVERABLES}
-          // Footer banner
-          footerBgImage={dcFooter}
-          footerTitle="Contact Us Today To"
-          footerHighlightText="Request a Consultation"
-          footerDescription="Secure your organization's network with MGKK Information Communication Technology Services."
-        >
-          <RelevantProjects projects={DC_PROJECTS} />
-        </SolutionsTemplate>
-      );
+
+export default function SMARTBuilding() {
+  return (
+    <SolutionsTemplate
+      // Hero
+      heroBgImage={ICTConsultancyHero}
+      category="ICT Consultancy (PBOOT)"
+      heroTitle="SMART Building"
+      heroDescription="MATEKK delivers advanced smart building solutions that integrate automation, connectivity, and intelligent control systems to enhance efficiency, security, and sustainability across modern facilities."
+      
+      // Building section
+      buildingTitle="Intelligent, Automated, and Energy-Efficient Building"
+      buildingTitleHighlight="Solutions"
+      buildingDescription="Our smart building services unify building systems such as lighting, HVAC, security, and energy management into a centralized, intelligent platform. MGKK enables real-time monitoring, automation, and data-driven control to improve operational efficiency, occupant comfort, and overall building performance."
+      
+      // Challenges section
+      challengesHighlight="Challenges Addressed"
+      challengesSuffix="by This Service"
+      challenges={CHALLENGES}
+      
+      // Deliverables section
+      deliverablesHighlight="Scope and Key Deliverables"
+      deliverables={DELIVERABLES}
+      
+      // Footer banner
+      footerBgImage={ICTConsultancyFooter}
+      footerTitle="Contact Us Today To"
+      footerHighlightText="Request a Consultation"
+      footerDescription="Enhance your building operations with MATEKK Smart Building Solutions."
+    >
+      <RelevantProjects projects={RELEVANT_PROJECTS} />
+    </SolutionsTemplate>
+  );
 }

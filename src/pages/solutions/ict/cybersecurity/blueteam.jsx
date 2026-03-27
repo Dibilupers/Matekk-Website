@@ -1,67 +1,67 @@
 import SolutionsTemplate from "../../../../components/solution_template/solutions_template";
-import dcHero from "../../../../assets/CCNAHeroImageAutomation.webp";
-import dcFooter from "../../../../assets/CCNAFooterImageAutomation.webp";
+import ICTConsultancyHero from "../../../../assets/ICTConsultancyHero.webp";
+import ICTConsultancyFooter from "../../../../assets/ICTConsultancyFooter.webp";
 
 const CHALLENGES = [
-  "Aging or inefficient data center infrastructure",
-  "Limited redundancy and risk of downtime",
-  "Security vulnerabilities in network and storage systems",
-  "Inadequate monitoring and operational visibility",
-  "Difficulty scaling infrastructure with business growth",
+  "Limited real-time visibility into security threats and incidents",
+  "Slow or ineffective incident detection and response",
+  "Gaps in continuous monitoring and threat intelligence",
+  "Difficulty maintaining a strong and updated security posture",
+  "Lack of structured security operations and processes",
 ];
 
 const DELIVERABLES = [
   {
-    title: "Data Center Assessment and Consultancy",
-    desc: "Analyze current infrastructure, identify gaps, and provide expert recommendations.",
+    title: "Security Monitoring and Threat Detection",
+    desc: "Implement real-time monitoring to identify potential threats.",
   },
   {
-    title: "Facility Planning and Layout Design",
-    desc: "Optimize physical and virtual layouts for maximum efficiency and space utilization.",
+    title: "Incident Response and Management",
+    desc: "Rapidly contain and mitigate security incidents.",
   },
   {
-    title: "Installation and Configuration of Servers, Storage, and Networking Equipment",
-    desc: "Ensure seamless integration and reliability.",
+    title: "Security Information and Event Management (SIEM)",
+    desc: "Centralize and analyze security data for better visibility.",
   },
   {
-    title: "Power, Cooling, and Environmental Control Systems Integration",
-    desc: " Implement efficient systems to maintain uptime and operational stability.",
+    title: "Threat Intelligence Integration",
+    desc: "Leverage insights to anticipate and defend against emerging threats.",
   },
   {
-    title: "Testing, Validation, and Optimization",
-    desc: "Confirm that systems meet performance, security, and reliability standards.",
+    title: "Vulnerability Management Support",
+    desc: "Continuously assess and address security weaknesses.",
   },
   {
-    title: "Ongoing Monitoring and Improvement",
-    desc: "Continuous support to ensure operational excellence and quick issue resolution.",
+    title: "Ongoing Security Operations and Improvement",
+    desc: "Strengthen defenses through continuous evaluation and updates.",
   },
 ];
 
-export default function BlueTeamSolution(){
-    return (
-        <SolutionsTemplate
-          // Hero
-          heroBgImage={dcHero}
-          category="ICT Consultancy (PBOOT)"
-          heroTitle="Data Center Facilities"
-          heroDescription="MATEKK delivers end-to-end Data Center Facilities solutions that help organizations establish secure, efficient, and resilient infrastructure to support critical IT operations."
-          // Building section
-          buildingTitle="Building Scalable and Secure Network Infrastructure to"
-          buildingTitleHighlight="Support Business Continuity"
-          buildingDescription="Our Data Center Facilities service covers planning, design, implementation, and optimization of physical and virtual data center infrastructure. We help organizations ensure high availability, scalability, and operational efficiency for all mission-critical systems."
-          // Challenges section
-          challengesHighlight="Challenges Addressed"
-          challengesSuffix="by This Service"
-          challenges={CHALLENGES}
-          // Deliverables section
-          deliverablesHighlight="Deliverables"
-          deliverables={DELIVERABLES}
-          // Footer banner
-          footerBgImage={dcFooter}
-          footerTitle="Contact Us Today To"
-          footerHighlightText="Request a Consultation"
-          footerDescription="Secure your organization's network with MGKK Information Communication Technology Services."
-        >
-        </SolutionsTemplate>
-      );
+export default function BlueTeamSolution() {
+  return (
+    <SolutionsTemplate
+      // Hero
+      heroBgImage={ICTConsultancyHero}
+      category="ICT Consultancy (PBOOT)"
+      heroTitle="Blue Team"
+      heroDescription="MATEKK delivers dedicated Blue Team services focused on defending, monitoring, and continuously improving your organization's security posture against evolving cyber threats."
+      // Building section
+      buildingTitle="Defensive, Continuous, and Intelligence-Driven"
+      buildingTitleHighlight="Security Operations"
+      buildingDescription="Our Blue Team services strengthen your organization's ability to detect, respond to, and recover from cyber incidents. MGKK implements proactive monitoring, threat detection, and incident response strategies to ensure your systems remain protected, resilient, and operational at all times."
+      // Challenges section
+      challengesHighlight="Challenges Addressed"
+      challengesSuffix="by This Service"
+      challenges={CHALLENGES}
+      // Deliverables section
+      deliverablesHighlight="Deliverables"
+      deliverables={DELIVERABLES}
+      // Footer banner
+      footerBgImage={ICTConsultancyFooter}
+      footerTitle="Contact Us Today To"
+      footerHighlightText="Request a Consultation"
+      footerDescription="Secure your organization's network with MGKK Information Communication Technology Services."
+    >
+    </SolutionsTemplate>
+  );
 }

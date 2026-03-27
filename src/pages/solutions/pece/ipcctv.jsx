@@ -5,44 +5,42 @@ import dcFooter from "../../../assets/CCNAFooterImageAutomation.webp";
 import ictImage from "../../../assets/ict.webp";
 import webImage from "../../../assets/web.webp";
 
-// ==================== PAGE DATA ====================
-
 const CHALLENGES = [
-  "Aging or inefficient data center infrastructure",
-  "Limited redundancy and risk of downtime",
-  "Security vulnerabilities in network and storage systems",
-  "Inadequate monitoring and operational visibility",
-  "Difficulty scaling infrastructure with business growth",
+  "Limited visibility and monitoring of facilities",
+  "Security risks due to lack of surveillance systems",
+  "Poor image quality and unreliable recording systems",
+  "Difficulty managing and accessing surveillance footage",
+  "Inadequate coverage of critical areas",
 ];
 
 const DELIVERABLES = [
   {
-    title: "Data Center Assessment and Consultancy",
-    desc: "Analyze current infrastructure, identify gaps, and provide expert recommendations.",
+    title: "CCTV System Design and Planning",
+    desc: "Develop surveillance layouts for maximum coverage and efficiency.",
   },
   {
-    title: "Facility Planning and Layout Design",
-    desc: "Optimize physical and virtual layouts for maximum efficiency and space utilization.",
+    title: "IP and Analog Camera Installation",
+    desc: "Deploy high-quality cameras based on specific requirements.",
   },
   {
-    title: "Installation and Configuration of Servers, Storage, and Networking Equipment",
-    desc: "Ensure seamless integration and reliability.",
+    title: "Network Video Recorder (NVR) / Digital Video Recorder (DVR) Setup",
+    desc: "Configure reliable storage and playback systems.",
   },
   {
-    title: "Power, Cooling, and Environmental Control Systems Integration",
-    desc: " Implement efficient systems to maintain uptime and operational stability.",
+    title: "Remote Monitoring and Access Setup",
+    desc: "Enable real-time viewing from anywhere.",
   },
   {
-    title: "Testing, Validation, and Optimization",
-    desc: "Confirm that systems meet performance, security, and reliability standards.",
+    title: "System Integration and Optimization",
+    desc: "Ensure seamless operation with existing security systems.",
   },
   {
-    title: "Ongoing Monitoring and Improvement",
-    desc: "Continuous support to ensure operational excellence and quick issue resolution.",
+    title: "Maintenance and Technical Support",
+    desc: "Provide ongoing service to ensure continuous system performance.",
   },
 ];
 
-const DC_PROJECTS = [
+const RELEVANT_PROJECTS = [
   {
     id: 1,
     src: ictImage,
@@ -81,20 +79,18 @@ const DC_PROJECTS = [
   },
 ];
 
-// ==================== PAGE COMPONENT ====================
-
 export default function IPCCTV() {
   return (
     <SolutionsTemplate
       // Hero
       heroBgImage={dcHero}
-      category="ICT Consultancy (PBOOT)"
-      heroTitle="Data Center Facilities"
-      heroDescription="MATEKK delivers end-to-end Data Center Facilities solutions that help organizations establish secure, efficient, and resilient infrastructure to support critical IT operations."
+      category="PECE Consultancy (PBOOT)"
+      heroTitle="IPCCTV and Analog CCTV"
+      heroDescription="MATEKK provides reliable surveillance solutions through IP and Analog CCTV systems, helping organizations enhance security, monitor operations, and protect assets with confidence."
       // Building section
-      buildingTitle="Building Scalable and Secure Network Infrastructure to"
-      buildingTitleHighlight="Support Business Continuity"
-      buildingDescription="Our Data Center Facilities service covers planning, design, implementation, and optimization of physical and virtual data center infrastructure. We help organizations ensure high availability, scalability, and operational efficiency for all mission-critical systems."
+      buildingTitle="Clear, Reliable, and Intelligent"
+      buildingTitleHighlight="Surveillance Solutions"
+      buildingDescription="Our CCTV services deliver end-to-end surveillance systems tailored to your environment. From high-definition IP cameras to cost-effective analog setups, MGKK ensures optimal coverage, real-time monitoring, and secure recording, giving you complete visibility and control over your premises."
       // Challenges section
       challengesHighlight="Challenges Addressed"
       challengesSuffix="by This Service"
@@ -108,7 +104,7 @@ export default function IPCCTV() {
       footerHighlightText="Request a Consultation"
       footerDescription="Secure your organization's network with MGKK Information Communication Technology Services."
     >
-      <RelevantProjects projects={DC_PROJECTS} />
+      <RelevantProjects projects={RELEVANT_PROJECTS} />
     </SolutionsTemplate>
   );
 }

@@ -5,44 +5,42 @@ import dcFooter from "../../../assets/CCNAFooterImageAutomation.webp";
 import ictImage from "../../../assets/ict.webp";
 import webImage from "../../../assets/web.webp";
 
-// ==================== PAGE DATA ====================
-
 const CHALLENGES = [
-  "Aging or inefficient data center infrastructure",
-  "Limited redundancy and risk of downtime",
-  "Security vulnerabilities in network and storage systems",
-  "Inadequate monitoring and operational visibility",
-  "Difficulty scaling infrastructure with business growth",
+  "Delayed detection of fire hazards and emergencies",
+  "Inadequate or outdated fire alarm systems",
+  "High risk of property damage and safety incidents",
+  "Compliance issues with fire safety regulations",
+  "Lack of integration with other safety and building systems",
 ];
 
 const DELIVERABLES = [
   {
-    title: "Data Center Assessment and Consultancy",
-    desc: "Analyze current infrastructure, identify gaps, and provide expert recommendations.",
+    title: "FDAS Design and Planning",
+    desc: "Develop compliant and efficient fire detection system layouts.",
   },
   {
-    title: "Facility Planning and Layout Design",
-    desc: "Optimize physical and virtual layouts for maximum efficiency and space utilization.",
+    title: "Installation of Detectors and Alarm Devices",
+    desc: "Deploy smoke, heat, and flame detection systems.",
   },
   {
-    title: "Installation and Configuration of Servers, Storage, and Networking Equipment",
-    desc: "Ensure seamless integration and reliability.",
+    title: "Control Panel Configuration and Integration",
+    desc: "Set up centralized monitoring and control systems.",
   },
   {
-    title: "Power, Cooling, and Environmental Control Systems Integration",
-    desc: " Implement efficient systems to maintain uptime and operational stability.",
+    title: "System Testing and Commissioning",
+    desc: "Ensure proper functionality and reliability.",
   },
   {
-    title: "Testing, Validation, and Optimization",
-    desc: "Confirm that systems meet performance, security, and reliability standards.",
+    title: "Compliance and Safety Certification Support",
+    desc: "Assist in meeting fire safety standards and regulations.",
   },
   {
-    title: "Ongoing Monitoring and Improvement",
-    desc: "Continuous support to ensure operational excellence and quick issue resolution.",
+    title: "Maintenance and Inspection Services",
+    desc: "Provide regular system checks and preventive maintenance.",
   },
 ];
 
-const DC_PROJECTS = [
+const RELEVANT_PROJECTS = [
   {
     id: 1,
     src: ictImage,
@@ -81,20 +79,18 @@ const DC_PROJECTS = [
   },
 ];
 
-// ==================== PAGE COMPONENT ====================
-
 export default function FDAS() {
   return (
     <SolutionsTemplate
       // Hero
       heroBgImage={dcHero}
-      category="ICT Consultancy (PBOOT)"
-      heroTitle="Data Center Facilities"
-      heroDescription="MATEKK delivers end-to-end Data Center Facilities solutions that help organizations establish secure, efficient, and resilient infrastructure to support critical IT operations."
+      category="PECE Consultancy (PBOOT)"
+      heroTitle="Fire Detection and Alarm Systems (FDAS)"
+      heroDescription="MATEKK provides advanced fire detection and alarm solutions that ensure early warning, rapid response, and enhanced safety for people, assets, and facilities."
       // Building section
-      buildingTitle="Building Scalable and Secure Network Infrastructure to"
-      buildingTitleHighlight="Support Business Continuity"
-      buildingDescription="Our Data Center Facilities service covers planning, design, implementation, and optimization of physical and virtual data center infrastructure. We help organizations ensure high availability, scalability, and operational efficiency for all mission-critical systems."
+      buildingTitle="Fast, Reliable, and Life-Saving"
+      buildingTitleHighlight="Fire Protection Solutions"
+      buildingDescription="Our FDAS services are designed to detect fire hazards at the earliest stage and trigger immediate alerts. MGKK integrates intelligent sensors, alarm systems, and control panels to deliver accurate detection, minimize false alarms, and support quick emergency response for maximum protection."
       // Challenges section
       challengesHighlight="Challenges Addressed"
       challengesSuffix="by This Service"
@@ -108,7 +104,7 @@ export default function FDAS() {
       footerHighlightText="Request a Consultation"
       footerDescription="Secure your organization's network with MGKK Information Communication Technology Services."
     >
-      <RelevantProjects projects={DC_PROJECTS} />
+      <RelevantProjects projects={RELEVANT_PROJECTS} />
     </SolutionsTemplate>
   );
 }

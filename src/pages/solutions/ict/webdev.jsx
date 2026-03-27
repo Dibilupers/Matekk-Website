@@ -1,46 +1,46 @@
 import SolutionsTemplate from "../../../components/solution_template/solutions_template";
 import RelevantProjects from "../../../components/solution_template/releveantprojects";
-import dcHero from "../../../assets/CCNAHeroImageAutomation.webp";
-import dcFooter from "../../../assets/CCNAFooterImageAutomation.webp";
+import ICTConsultancyHero from "../../../assets/ICTConsultancyHero.webp";
+import ICTConsultancyFooter from "../../../assets/ICTConsultancyFooter.webp";
 import ictImage from "../../../assets/ict.webp";
 import webImage from "../../../assets/web.webp";
 
 const CHALLENGES = [
-  "Aging or inefficient data center infrastructure",
-  "Limited redundancy and risk of downtime",
-  "Security vulnerabilities in network and storage systems",
-  "Inadequate monitoring and operational visibility",
-  "Difficulty scaling infrastructure with business growth",
+  "Outdated or inefficient software systems slowing operations",
+  "Difficulty integrating multiple platforms or tools",
+  "Poor user experience affecting engagement and productivity",
+  "Limited scalability to support business growth",
+  "Challenges in maintaining software security and performance",
 ];
 
 const DELIVERABLES = [
   {
-    title: "Data Center Assessment and Consultancy",
-    desc: "Analyze current infrastructure, identify gaps, and provide expert recommendations.",
+    title: "Custom Web and Software Development",
+    desc: "Build applications tailored to your business requirements.",
   },
   {
-    title: "Facility Planning and Layout Design",
-    desc: "Optimize physical and virtual layouts for maximum efficiency and space utilization.",
+    title: "UI/UX Design and Optimization",
+    desc: "Design interfaces that are user-friendly and visually engaging.",
   },
   {
-    title: "Installation and Configuration of Servers, Storage, and Networking Equipment",
-    desc: "Ensure seamless integration and reliability.",
+    title: "System Integration and API Development",
+    desc: "Ensure seamless connectivity across platforms and services.",
   },
   {
-    title: "Power, Cooling, and Environmental Control Systems Integration",
-    desc: " Implement efficient systems to maintain uptime and operational stability.",
+    title: "Performance Optimization and Scalability",
+    desc: "Enhance speed, reliability, and capacity to grow with your business.",
   },
   {
-    title: "Testing, Validation, and Optimization",
-    desc: "Confirm that systems meet performance, security, and reliability standards.",
+    title: "Quality Assurance and Testing",
+    desc: "Guarantee software is secure, reliable, and bug-free.",
   },
   {
-    title: "Ongoing Monitoring and Improvement",
-    desc: "Continuous support to ensure operational excellence and quick issue resolution.",
+    title: "Maintenance and Continuous Improvement",
+    desc: "Provide ongoing support to keep solutions updated and efficient.",
   },
 ];
 
-const DC_PROJECTS = [
+const RELEVANT_PROJECTS = [
   {
     id: 1,
     src: ictImage,
@@ -82,14 +82,14 @@ export default function WebDev(){
     return (
         <SolutionsTemplate
           // Hero
-          heroBgImage={dcHero}
+          heroBgImage={ICTConsultancyHero}
           category="ICT Consultancy (PBOOT)"
-          heroTitle="Data Center Facilities"
-          heroDescription="MATEKK delivers end-to-end Data Center Facilities solutions that help organizations establish secure, efficient, and resilient infrastructure to support critical IT operations."
+          heroTitle="Web and Software Development"
+          heroDescription="MATEKK transforms ideas into robust digital solutions, delivering scalable, high-performance web and software applications that streamline operations, enhance user experiences, and drive measurable business growth."
           // Building section
-          buildingTitle="Building Scalable and Secure Network Infrastructure to"
-          buildingTitleHighlight="Support Business Continuity"
-          buildingDescription="Our Data Center Facilities service covers planning, design, implementation, and optimization of physical and virtual data center infrastructure. We help organizations ensure high availability, scalability, and operational efficiency for all mission-critical systems."
+          buildingTitle="Innovative, Scalable, and High-Performance"
+          buildingTitleHighlight="Digital Solutions"
+          buildingDescription="MGKK builds custom web and software solutions tailored to your organization’s needs. From intuitive user interfaces to seamless system integration, we deliver applications that are reliable, secure, and scalable, ensuring your business stays efficient and competitive in a digital-first world."
           // Challenges section
           challengesHighlight="Challenges Addressed"
           challengesSuffix="by This Service"
@@ -98,12 +98,12 @@ export default function WebDev(){
           deliverablesHighlight="Deliverables"
           deliverables={DELIVERABLES}
           // Footer banner
-          footerBgImage={dcFooter}
+          footerBgImage={ICTConsultancyFooter}
           footerTitle="Contact Us Today To"
           footerHighlightText="Request a Consultation"
           footerDescription="Secure your organization's network with MGKK Information Communication Technology Services."
         >
-          <RelevantProjects projects={DC_PROJECTS} />
+          <RelevantProjects projects={RELEVANT_PROJECTS} />
         </SolutionsTemplate>
       );
 }
