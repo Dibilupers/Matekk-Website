@@ -6,8 +6,8 @@ import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
 import awsessentials from "../../../../assets/awsessentials.png"; // Course badge image
-import ccnaHero from "../../../../assets/aws_technical_essentials.png"; // Hero banner background
-import ccnaFooter from "../../../../assets/aws_technical_essentials2.png"; // Footer banner background
+import ccnaHero from "../../../../assets/aws_technical_essentials.webp"; // Hero banner background
+import ccnaFooter from "../../../../assets/aws_technical_essentials2.webp"; // Footer banner background
 import MealIcon from "../../../../assets/Meal.svg";
 import ReviewIcon from "../../../../assets/Review.svg";
 import WorkstationIcon from "../../../../assets/Workstation.svg";

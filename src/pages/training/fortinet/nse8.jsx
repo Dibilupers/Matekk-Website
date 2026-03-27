@@ -6,8 +6,8 @@ import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
 import nse8 from "../../../assets/nse8.svg"; // Course badge image
-import FortinetHero from "../../../assets/FortinetHeader.png";
-import FortinetFooter from "../../../assets/FortinetFooter.png";
+import FortinetHero from "../../../assets/FortinetHeader.webp";
+import FortinetFooter from "../../../assets/FortinetFooter.webp";
 import MealIcon from "../../../assets/Meal.svg";
 import ReviewIcon from "../../../assets/Review.svg";
 import InstitutionalIcon from "../../../assets/InsitutionalAccount.svg";
