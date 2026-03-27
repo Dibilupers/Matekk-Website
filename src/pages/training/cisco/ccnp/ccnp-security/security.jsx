@@ -8,8 +8,8 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
 import ccnaBadge from "../../../../../assets/CCNPSecurity.png"; // Course badge image
-import ccnaHero from "../../../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
-import ccnaFooter from "../../../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
+import ccnaHero from "../../../../../assets/CCNAHeroImageAutomation.webp";
+import ccnaFooter from "../../../../../assets/CCNAFooterImageAutomation.webp";
 import MealIcon from "../../../../../assets/Meal.svg";
 import ReviewIcon from "../../../../../assets/Review.svg";
 import WorkstationIcon from "../../../../../assets/Workstation.svg";

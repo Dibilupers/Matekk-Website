@@ -5,8 +5,8 @@ import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
 import cdth from "../../../../assets/cdth.png"; // Course badge image
-import CybersecurityHero from "../../../../assets/CyberSecurityheader.png"; // Hero banner background
-import CybersecurityFooter from "../../../../assets/CybersecurityFooter.png"; // Footer banner background
+import CybersecurityHero from "../../../../assets/CyberSecurityheader.webp"; // Hero banner background
+import CybersecurityFooter from "../../../../assets/CybersecurityFooter.webp"; // Footer banner background
 import MealIcon from "../../../../assets/Meal.svg";
 import ReviewIcon from "../../../../assets/Review.svg";
 import WorkstationIcon from "../../../../assets/Workstation.svg";
