@@ -72,7 +72,7 @@ export default function TestimonialsSection() {
   }, [totalSlides, hasUserInteracted]);
 
   return (
-    <section id="feedbacks" className="py-10 md:py-15 mx-[2.063rem] md:mx-16 xl:mx-[7.438rem] space-y-8">
+    <section id="feedbacks" className="py-10 md:py-15 mx-[2.063rem] md:mx-16 xl:mx-[7.438rem] space-y-8 scroll-mt-18">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div className="flex flex-col gap-2 max-w-2xl">

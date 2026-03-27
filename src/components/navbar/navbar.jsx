@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate, useLocation } from "react-router-dom";
 import InquireNowButton from "../ui/InquireNowButton";
-import MainLogo from "../../assets/MATEKK_logo.png";
+import MainLogo from "../../assets/MATEKK_logo.webp";
 import TrainingLogo from "../../assets/MATEKK_training_logo.png";
 import SolutionsLogo from "../../assets/MATEKK_services_logo.png";
 import {
@@ -41,6 +41,7 @@ function NavBar() {
     }
     return <img src={MainLogo} alt="MATEKK Logo" className="w-7 md:w-8" />;
   };
+
   const dropdownMenus = {
     solutions: [
       {
@@ -49,9 +50,44 @@ function NavBar() {
           { name: "Data Center Facilities", path: "/solutions/ict/datacenter" },
           {
             name: "ICT Network and Security Infrastructure",
-            path: "/solutions/ict/network",
+            subcourses: [
+              {
+                name: "End-to-End Network Architecture",
+                path: "/solutions/ict/insi/e2e",
+              },
+              {
+                name: "Enterprise Security Architecture",
+                path: "/solutions/ict/insi/enterprise",
+              },
+              {
+                name: "WLAN and Wireless Backhaul Networks",
+                path: "/solutions/ict/insi/wlan",
+              },
+              {
+                name: "Optical Fiber Networks (LAN and WAN)",
+                path: "/solutions/ict/insi/opticalfiber",
+              },
+              {
+                name: "IP Telephony Networks",
+                path: "/solutions/ict/insi/iptelephony",
+              },
+              {
+                name: "On-premise Servers",
+                path: "/solutions/ict/insi/onpremise",
+              },
+              {
+                name: "Structured Cabling",
+                path: "/solutions/ict/insi/structuredcabling",
+              },
+            ],
           },
-          { name: "Cybersecurity", path: "/solutions/ict/cybersecurity" },
+          {
+            name: "Cybersecurity",
+            subcourses: [
+              { name: "Red Team (VAPT)", path: "/solutions/ict/cybersec/redteam" },
+              { name: "Blue Team (SOC)", path: "/solutions/ict/cybersec/blueteam" },
+            ],
+          },
           {
             name: "Web and Software Development",
             path: "/solutions/ict/webdev",
@@ -59,39 +95,31 @@ function NavBar() {
           { name: "Cloud Computing Services", path: "/solutions/ict/cloud" },
           {
             name: "SMART Environment Automation (IoT)",
-            path: "/solutions/ict/iot",
+            subcourses: [
+              { name: "SMART Home", path: "/solutions/ict/smart/home" },
+              {
+                name: "SMART Building",
+                path: "/solutions/ict/smart/building",
+              },
+              { name: "SMART City", path: "/solutions/ict/smart/city" },
+            ],
           },
         ],
       },
       {
-        name: "Auxiliary Systems and PECE Consultancy",
-        subcourses: [
-          { name: "Auxiliary Systems", path: "/solutions/auxiliary/systems" },
-          { name: "PECE Consultancy", path: "/solutions/auxiliary/pece" },
-        ],
-      },
-      {
-        name: "Cloud Computing",
+        name: "PECE Consultancy (PBOOT)",
         subcourses: [
           {
-            name: "Cloud Infrastructure",
-            path: "/solutions/cloud/infrastructure",
+            name: "Renewable Energy Solutions",
+            path: "/solutions/pece/renewable",
           },
-          { name: "Cloud Migration", path: "/solutions/cloud/migration" },
-        ],
-      },
-      {
-        name: "IT Management",
-        subcourses: [
-          { name: "IT Strategy", path: "/solutions/itmanagement/strategy" },
-          { name: "IT Operations", path: "/solutions/itmanagement/operations" },
-        ],
-      },
-      {
-        name: "Customized Training Solutions",
-        subcourses: [
-          { name: "Corporate Training", path: "/solutions/training/corporate" },
-          { name: "Custom Curriculum", path: "/solutions/training/curriculum" },
+          { name: "IPCCTV and Analog CCTV", path: "/solutions/pece/ipcctv" },
+          {
+            name: "Fire Detection and Alarm Systems (FDAS)",
+            path: "/solutions/pece/fdas",
+          },
+          { name: "Public Address Systems", path: "/solutions/pece/pas" },
+          { name: "Door Access", path: "/solutions/pece/dooraccess" },
         ],
       },
     ],
@@ -196,10 +224,10 @@ function NavBar() {
           </button>
 
           {openDropdown === "solutions" && (
-            <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 p-5 bg-white shadow-lg rounded-2xl border border-gray-100 overflow-hidden font-inter animate-in fade-in slide-in-from-top-2 duration-200">
+            <div className="absolute top-full -left-20 transform mt-2 py-5 px-2 bg-white shadow-lg rounded-2xl border border-gray-100 overflow-hidden font-inter animate-in fade-in slide-in-from-top-2 duration-200">
               <div className="flex space-x-[2.313rem]">
                 {/* Column 1 — categories */}
-                <div className="w-100 overflow-y-auto max-h-[70vh] animate-in fade-in slide-in-from-left-2 duration-200">
+                <div className="min-w-52 overflow-y-auto max-h-[70vh] animate-in fade-in slide-in-from-left-2 duration-200">
                   {dropdownMenus.solutions.map((category) => (
                     <button
                       key={category.name}
@@ -208,18 +236,19 @@ function NavBar() {
                           ? "bg-[#1775EE] text-white font-bold"
                           : "hover:text-[#1775EE] hover:font-bold"
                       }`}
-                      onClick={() =>
+                      onClick={() => {
                         setOpenSubcourse(
                           openSubcourse === category.name
                             ? null
-                            : category.name,
-                        )
-                      }
+                            : category.name
+                        );
+                        setOpenThirdLevel(null);
+                      }}
                     >
                       {category.name}
                       {category.subcourses?.length > 0 && (
                         <svg
-                          className={`w-4 h-4 ${t}`}
+                          className={`min-w-4 h-4 ${t}`}
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -238,17 +267,63 @@ function NavBar() {
 
                 {/* Column 2 — subcourses */}
                 {openSubcourse && (
-                  <div className="w-fit animate-in fade-in slide-in-from-left-2 duration-200">
+                  <div className="min-w-65 animate-in fade-in slide-in-from-left-2 duration-200">
                     {dropdownMenus.solutions
                       .find((cat) => cat.name === openSubcourse)
                       ?.subcourses?.map((item) => (
+                        <div key={item.name}>
+                          {item.subcourses ? (
+                            <button
+                              onClick={() =>
+                                setOpenThirdLevel(
+                                  openThirdLevel === item.name
+                                    ? null
+                                    : item.name,
+                                )
+                              }
+                              className={`w-full text-left px-6 py-2 rounded-[0.35rem] flex items-center justify-between cursor-pointer ${
+                                openThirdLevel === item.name
+                                  ? "text-[#1775EE] font-bold"
+                                  : "hover:text-[#1775EE] hover:font-bold"
+                              }`}
+                            >
+                              {item.name}
+                              <svg
+                                className="min-w-4 h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
+                            </button>
+                          ) : (
+                            <Link
+                              to={item.path}
+                              onClick={resetMenu}
+                              className="block px-6 py-2 hover:text-[#1775EE] hover:font-bold"
+                            >
+                              {item.name}
+                            </Link>
+                          )}
+                        </div>
+                      ))}
+                  </div>
+                )}
+                {/* Column 3 - solutions */}
+                {openThirdLevel && (
+                  <div className="min-w-55 animate-in fade-in slide-in-from-left-2 duration-200">
+                    {dropdownMenus.solutions
+                      .find((cat) => cat.name === openSubcourse)
+                      ?.subcourses?.find((item) => item.name === openThirdLevel)
+                      ?.subcourses?.map((sub) => (
                         <Link
-                          key={item.name}
-                          to={item.path}
+                          key={sub.name}
+                          to={sub.path}
                           onClick={resetMenu}
-                          className={`block w-full text-left px-6 py-2 rounded-[0.35rem] hover:text-[#1775EE] hover:font-bold ${t}`}
+                          className="block px-4 py-2 hover:text-[#1775EE] hover:font-bold cursor-pointer"
                         >
-                          {item.name}
+                          {sub.name}
                         </Link>
                       ))}
                   </div>

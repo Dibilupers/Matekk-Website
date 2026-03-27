@@ -6,8 +6,8 @@ import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
 import pmp from "../../../assets/pmp.webp"; // Course badge image
-import ccnaHero from "../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
-import ccnaFooter from "../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
+import ProjectManagementHero from "../../../assets/ProjectManagementHeader.webp" // Hero banner background
+import ccnaFooter from "../../../assets/project_management_professional.webp"; // Footer banner background
 import MealIcon from "../../../assets/Meal.svg";
 import ReviewIcon from "../../../assets/Review.svg";
 import WorkstationIcon from "../../../assets/Workstation.svg";
@@ -356,7 +356,7 @@ export default function PMP() {
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}
       <TrainingHeroBanner
-        bgImage={ccnaHero}
+        bgImage={ProjectManagementHero}
         category="Project Management"
         title="Project Management Professional"
         description="The certification from Project Management Institute validates

@@ -2,31 +2,32 @@
 import { useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import DOH from '../../assets/DOH.svg';
 import DICT from '../../assets/DICT.svg';
-import PHIVOLCS from '../../assets/PHIVOLCS.png';
+import PHIVOLCS from '../../assets/PHIVOLCS.webp';
 import OCD from '../../assets/OCD.svg';
 import DND from '../../assets/DND.svg';
 import DOF from '../../assets/DOF.svg';
-import MOREPOWER from '../../assets/MOREPOWER.png';
-import MARSTECH from '../../assets/MARSTECH.png';
-import ATI from '../../assets/ATI.jpg';
+import MOREPOWER from '../../assets/MOREPOWER.webp';
+import MARSTECH from '../../assets/MARSTECH.webp';
+import ATI from '../../assets/ATI.webp';
 import EM from '../../assets/EM.avif';
-import MIZELA from '../../assets/MIZELA.png';
+import MIZELA from '../../assets/MIZELA.webp';
 import HIKVISION from '../../assets/HIKVISION.svg';
 import USTDI from '../../assets/USTDI.webp';
-import ASENWARE from '../../assets/ASENWARE.jpg';
-import SCALEEXPERTS from '../../assets/SCALEEXPERTS.png';
-import COMMSOURCE from '../../assets/COMMSOURCE.png';
-import IECEP from '../../assets/IECEP.png';
-import USTP from '../../assets/USTP.png';
-import CICC from '../../assets/CICC.jpg';
-import STELLARSAT from '../../assets/STELLARSAT.avif';
-import MISAMIS from '../../assets/MISAMIS.jpg';
-import MARIKINA from '../../assets/MARIKINA.jpg';
-import SLSU from '../../assets/SLSU.png';
-import ICCT from '../../assets/ICCT.jpg';
+import ASENWARE from '../../assets/ASENWARE.webp';
+import SCALEEXPERTS from '../../assets/SCALEEXPERTS.webp';
+import COMMSOURCE from '../../assets/COMMSOURCE.webp';
+import IECEP from '../../assets/IECEP.webp';
+import USTP from '../../assets/USTP.webp';
+import CICC from '../../assets/CICC.webp';
+import STELLARSAT from '../../assets/STELLARSAT.webp';
+import MISAMIS from '../../assets/MISAMIS.webp';
+import MARIKINA from '../../assets/MARIKINA.webp';
+import SLSU from '../../assets/SLSU.webp';
+import ICCT from '../../assets/ICCT.webp';
 import NAMRIA from '../../assets/NAMRIA.svg';
 import EASYTECH from '../../assets/EASYTECH.svg';
-import EZTECH from '../../assets/EZTECH.png';
+import EZTECH from '../../assets/EZTECH.webp';
+import SOLVEROUS from '../../assets/SolverousLogo.webp';
 
 function Partners() {
     // OPTIMIZED: Wrap array in useMemo to prevent recreation on every render
@@ -37,25 +38,26 @@ function Partners() {
         { src: OCD, alt: "OCD Logo", size: "w-10 md:w-16" },
         { src: DND, alt: "DND Logo", size: "w-10 md:w-16" },
         { src: DOF, alt: "DOF Logo", size: "w-10 md:w-16" },
+        { src: IECEP, alt: "IECEP Logo", size: "w-10 md:w-18" },
+        { src: CICC, alt: "CICC Logo", size: "w-10 md:w-18" },
+        { src: NAMRIA, alt: "NAMRIA Logo", size: "w-10 md:w-18" },
+        { src: USTDI, alt: "USTDI Logo", size: "w-10 md:w-20" },
+        { src: USTP, alt: "USTP Logo", size: "w-10 md:w-16" },
+        { src: MARIKINA, alt: "MARIKINA Logo", size: "w-10 md:w-18" },
+        { src: SLSU, alt: "SLSU Logo", size: "w-10 md:w-18" },
+        { src: ICCT, alt: "ICCT Logo", size: "w-10 md:w-18" },
+        { src: MISAMIS, alt: "MISAMIS Logo", size: "w-10 md:w-18" },
         { src: MOREPOWER, alt: "MOREPOWER Logo", size: "w-10 md:w-32" },
         { src: MARSTECH, alt: "MARSTECH Logo", size: "w-10 md:w-32" },
         { src: ATI, alt: "ATI Logo", size: "w-10 md:w-20" },
         { src: EM, alt: "E.M. CUERPO Logo", size: "w-10 md:w-32" },
         { src: MIZELA, alt: "MIZELA Logo", size: "w-10 md:w-16" },
         { src: HIKVISION, alt: "HIKVISION Logo", size: "w-10 md:w-32" },
-        { src: USTDI, alt: "USTDI Logo", size: "w-10 md:w-20" },
         { src: ASENWARE, alt: "ASENWARE Logo", size: "w-10 md:w-32" },
         { src: SCALEEXPERTS, alt: "SCALEEXPERTS Logo", size: "w-10 md:w-32" },
         { src: COMMSOURCE, alt: "COMMSOURCE Logo", size: "w-10 md:w-32" },
-        { src: IECEP, alt: "IECEP Logo", size: "w-10 md:w-18" },
-        { src: USTP, alt: "USTP Logo", size: "w-10 md:w-16" },
-        { src: CICC, alt: "CICC Logo", size: "w-10 md:w-18" },
+        { src: SOLVEROUS, alt: "COMMSOURCE Logo", size: "w-10 md:w-20" },
         { src: STELLARSAT, alt: "STELLARSAT Logo", size: "w-10 md:w-32" },
-        { src: MISAMIS, alt: "MISAMIS Logo", size: "w-10 md:w-18" },
-        { src: MARIKINA, alt: "MARIKINA Logo", size: "w-10 md:w-18" },
-        { src: SLSU, alt: "SLSU Logo", size: "w-10 md:w-18" },
-        { src: ICCT, alt: "ICCT Logo", size: "w-10 md:w-18" },
-        { src: NAMRIA, alt: "NAMRIA Logo", size: "w-10 md:w-18" },
         { src: EASYTECH, alt: "EASYTECH Logo", size: "w-10 md:w-26" },
         { src: EZTECH, alt: "EZTECH Logo", size: "w-10 md:w-26" },
     ], []); // Empty dependency array means this only creates once

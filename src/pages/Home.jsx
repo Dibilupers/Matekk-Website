@@ -8,12 +8,10 @@ import gallery3 from "../assets/solutionsGallery3.webp";
 import gallery4 from "../assets/solutionsGallery4.webp";
 import gallery5 from "../assets/solutionsGallery5.webp";
 
-import MaamGrace from "../assets/person_holding_laptop.png";
-import ClydeNelsonRocillo from "../assets/Clyde_Nelson_Rocillo.jpg";
-import SirMark from "../assets/Mark_Anthony_Valenzuela_Melendres.png";
-import ictImage from "../assets/ict.png";
-import CompanyBuilding from "../assets/MGGK_Building.png";
-import webImage from "../assets/web.png";
+import MaamGrace from "../assets/person_holding_laptop.webp";
+import ClydeNelsonRocillo from "../assets/Clyde_Nelson_Rocillo.webp";
+import SirMark from "../assets/Founder.webp";
+import CompanyBuilding from "../assets/building.webp";
 import { useState, useEffect } from "react";
 import FAQ from "../components/FAQ/faq";
 import ContactForm from "../components/contact/Contact.jsx";
@@ -22,20 +20,36 @@ import phone from "../assets/phone.svg";
 import email from "../assets/email.svg";
 import availability from "../assets/availability.svg";
 import Button from "../../src/components/ui/button";
-import Handshake from "../../src/assets/handshake.png"
+import Handshake from "../../src/assets/handshake.png";
 import { useLocation } from "react-router-dom";
 import TestimonialsSection from "../components/section/TestimonialsSection.jsx";
+/* Services Section Images */
+/* Solutions */
+import DataCenterImage from "../assets/datacenterImage.webp";
+import WebDevImage from "../assets/webdevImage.webp";
+import CloudImage from "../assets/cloudImage.webp";
+import AcessNetworkImage from "../assets/accessnetworks.webp";
+/* Trainings */
+import CCNAImage from "../assets/CCNAFooterImageAutomation.webp";
+import ComptiaImage from "../assets/COMPTIAFooter.webp";
+import NSE4Image from "../assets/FortinetFooter.webp";
+import CDCPImage from "../assets/certified_data_centre_professional2.webp";
 
 export default function Home() {
   const totalSlides = 3;
   const totalMobileSlides = 4;
   const totalTabletSlides = 4;
+  const totalDesktopSlides = 2;
+  const totalDesktopBottomSlides = 2;
   const totalMobileBottomSlides = 4;
   const [topSlide, setTopSlide] = useState(0);
   const [bottomSlide, setBottomSlide] = useState(0);
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
   const [isTablet, setIsTablet] = useState(
     () => window.innerWidth >= 768 && window.innerWidth < 1024,
+  );
+  const [isDesktop, setIsDesktop] = useState(
+    () => window.innerWidth >= 1024 && window.innerWidth < 1536,
   );
   const [is2xl, setIs2xl] = useState(() => window.innerWidth >= 1536);
   const location = useLocation();
@@ -54,6 +68,7 @@ export default function Home() {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
       setIsTablet(window.innerWidth >= 768 && window.innerWidth < 1024);
+      setIsDesktop(window.innerWidth >= 1024 && window.innerWidth < 1536);
       setIs2xl(window.innerWidth >= 1536);
     };
     window.addEventListener("resize", handleResize);
@@ -66,40 +81,59 @@ export default function Home() {
     }
   }, []);
   /* Solutions Gallery Images */
+  const [isTouch, setIsTouch] = useState(
+    () => window.matchMedia("(hover: none) and (pointer: coarse)").matches,
+  );
+
+  useEffect(() => {
+    const touchQuery = window.matchMedia("(hover: none) and (pointer: coarse)");
+    const handleTouchChange = (e) => setIsTouch(e.matches);
+    touchQuery.addEventListener("change", handleTouchChange);
+    return () => touchQuery.removeEventListener("change", handleTouchChange);
+  }, []);
   const topMax = isMobile
     ? totalMobileSlides
     : isTablet
       ? totalTabletSlides
-      : totalSlides;
+      : isDesktop
+        ? totalDesktopSlides
+        : totalSlides;
   const bottomMax = isMobile
     ? totalMobileBottomSlides
     : isTablet
       ? totalTabletSlides
-      : totalSlides;
+      : isDesktop
+        ? totalDesktopSlides
+        : totalSlides;
   const topStep = isMobile
     ? "(78.2vw + 2.5rem)"
     : isTablet
-      ? "(39vw + 2.5rem)"
-      : is2xl
-        ? "(24vw + 2.5rem)"
-        : "(27vw + 2.5rem)";
+      ? "(39vw + 2.8rem)"
+      : isDesktop
+        ? "(50vw + 2rem)"
+        : is2xl
+          ? "(23vw + 3rem)"
+          : "(27vw + 2.5rem)";
   const bottomStep = isMobile
-    ? "(77vw + 2.5rem)"
+    ? "(78.2vw + 2.5rem)"
     : isTablet
-      ? "(39vw + 2.5rem)"
-      : is2xl
-        ? "(24vw + 2.5rem)"
-        : "(25vw + 2.5rem)";
+      ? "(39vw + 2.8rem)"
+      : isDesktop
+        ? "(50vw + 2rem)"
+        : is2xl
+          ? "(23vw + 3rem)"
+          : "(25vw + 2.5rem)";
   const [hoveredRow, setHoveredRow] = useState(null);
   const [tappedCard, setTappedCard] = useState(null);
+
   const galleryItems = [
     {
       id: 1,
       src: gallery1,
-      alt: "Network and Security Infrastructure Projects",
-      title: "Network and Security Infrastructure Projects",
+      alt: "CCNA Certification",
+      title: "CCNA Certification",
       desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
-      link: "/solutions/network", // add link to every item
+      link: "/training/cisco/ccna/ccna",
     },
     {
       id: 2,
@@ -107,6 +141,7 @@ export default function Home() {
       alt: "SLSU Delegates",
       title: "SLSU Delegates Welcome",
       desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
+      link: "/solutions/ict/datacenter",
     },
     {
       id: 3,
@@ -114,6 +149,7 @@ export default function Home() {
       alt: "Team Celebration",
       title: "Team Celebration",
       desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
+      link: "/solutions/pece/renewable",
     },
     {
       id: 4,
@@ -121,6 +157,7 @@ export default function Home() {
       alt: "Ideas Workshop",
       title: "Ideas Workshop",
       desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
+      link: "/solutions/ict/smart/home",
     },
     {
       id: 5,
@@ -128,6 +165,7 @@ export default function Home() {
       alt: "Conference Panel",
       title: "Conference Panel",
       desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
+      link: "/training/comptia/network",
     },
     // Just add more objects here if needed
   ];
@@ -145,7 +183,10 @@ export default function Home() {
   return (
     <main>
       {/* ==================== HERO BANNER ====================*/}
-      <section id="home" className="flex justify-center items-center py-25 md:py-20 lg:py-0 scroll-mt-18 px-[2.063rem] sm:px-[2.063rem] md:px-16 xl:px-[7.438rem] w-full">
+      <section
+        id="home"
+        className="flex justify-center items-center py-25 md:py-20 lg:py-0 scroll-mt-18 px-[2.063rem] sm:px-[2.063rem] md:px-16 xl:px-[7.438rem] w-full"
+      >
         {/* ====== HERO BANNER - Content ======*/}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           {/* ====== LEFT SIDE - Content (Title, description, buttons, images) ====== */}
@@ -158,13 +199,16 @@ export default function Home() {
                 </h6>
 
                 <h1 className="pr-9 sm:pr-8 lg:pr-7 font-bold leading-tight space-x-2">
-                  Empowering Businesses and Individuals<span className="text-[#1775EE]"> Through ICT Excellence</span>
+                  Empowering Businesses and Individuals
+                  <span className="text-[#1775EE]">
+                    {" "}
+                    Through ICT Excellence
+                  </span>
                 </h1>
 
                 <p className="max-w-lg text-left">
-                  Cutting-edge ICT and Engineering Solutions.
-                  Industry-relevant Training. Built on over a decade of
-                  expertise.
+                  Cutting-edge ICT and Engineering Solutions. Industry-relevant
+                  Training. Built on over a decade of expertise.
                 </p>
               </div>
               <div className="flex sm:flex-row gap-3 sm:gap-4 justify-left lg:justify-start">
@@ -206,9 +250,7 @@ export default function Home() {
               <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
                 <h3 className="font-bold">3</h3>
                 <div className="text-gray-600 leading-tight flex flex-col justify-center lg:justify-start items-center md:items-start">
-                  <p className="font-medium whitespace-nowrap">
-                    Data Centers
-                  </p>
+                  <p className="font-medium whitespace-nowrap">Data Centers</p>
                   <p className="font-medium whitespace-nowrap">Deployed</p>
                 </div>
               </div>
@@ -216,9 +258,7 @@ export default function Home() {
               <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
                 <h3 className="font-bold">10</h3>
                 <div className="text-gray-600 leading-tight flex flex-col justify-center lg:justify-start items-center md:items-start">
-                  <p className="font-medium whitespace-nowrap">
-                    Total Active
-                  </p>
+                  <p className="font-medium whitespace-nowrap">Total Active</p>
                   <p className="font-medium whitespace-nowrap">Courses</p>
                 </div>
               </div>
@@ -291,10 +331,7 @@ export default function Home() {
                   type="none"
                   buttonCustomStyle="bg-[#1775EE] text-white transition-all duration-300 shadow-lg hover:bg-[#0062E0] px-6 py-3 w-full"
                   btnFunc={() => {
-                    document.getElementById("feedbacks")?.scrollIntoView({
-                      behavior: "smooth",
-                      block: "start",
-                    });
+                    window.open("https://www.facebook.com/share/p/17QmhgY3as/", "_blank", "noopener,noreferrer");
                   }}
                 />
               </div>
@@ -312,7 +349,10 @@ export default function Home() {
         <div className="flex flex-col justify-center items-center space-y-1">
           {/* Title */}
           <div className="flex flex-col sm:flex-row space-x-2">
-            <h3>Trusted by Our <span className="text-[#1775EE]">Customers & Partners</span></h3>
+            <h3>
+              Trusted by Our{" "}
+              <span className="text-[#1775EE]">Customers & Partners</span>
+            </h3>
           </div>
           {/* Description */}
           <p className="w-78 sm:w-lg md:w-lg lg:w-xl xl:w-full">
@@ -333,14 +373,16 @@ export default function Home() {
         <div className="flex flex-col justify-center items-center text-center space-y-1">
           {/* Title */}
           <div className="flex flex-col sm:flex-row px-8 sm:px-0">
-            <h3>Services We Provide to <span className="text-[#1775EE]">Elevate Your Business</span></h3>
+            <h3>
+              Services We Provide to{" "}
+              <span className="text-[#1775EE]">Elevate Your Business</span>
+            </h3>
           </div>
           {/* Description */}
           <p className="max-w-4xl mx-auto">
-            Matekk Cybercore Academy delivers
-            end-to-end ICT and engineering solutions alongside comprehensive
-            training programs designed to meet industry demands and support
-            digital transformation.
+            Matekk Cybercore Academy delivers end-to-end ICT and engineering
+            solutions alongside comprehensive training programs designed to meet
+            industry demands and support digital transformation.
           </p>
         </div>
         <div className="flex flex-col space-y-14">
@@ -362,7 +404,7 @@ export default function Home() {
                     End-to-End ICT & Engineering Solutions
                   </h5>
                   {/* Solutions Category Description */}
-                  <p className="">
+                  <p>
                     We provide ICT consultancy and engineering solutions focused
                     on planning, building, operating, optimizing, and testing
                     technology systems.
@@ -416,7 +458,7 @@ export default function Home() {
               </div>
 
               {/* List of Solutions - In Slides */}
-              <div className="overflow-hidden w-[85vw] md:w-[45vw] lg:w-[60vw] xl:w-[53vw] 2xl:w-[52vw]">
+              <div className="overflow-hidden w-[85vw] md:w-[43.9vw] lg:w-[60vw] xl:w-[53vw] 2xl:w-[52vw]">
                 <div
                   className="flex gap-x-5 transition-transform duration-500 ease-in-out"
                   style={{
@@ -430,19 +472,22 @@ export default function Home() {
                     <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
                       <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
                         <img
-                          src={ictImage}
-                          alt="ICT Consultancy"
+                          src={DataCenterImage}
+                          alt="Data Center Facilities"
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
                       </div>
-                      <h5 className="">ICT Consultancy</h5>
-                      <p className="">
-                        Matekk provides ICT consultancy services using the Plan,
-                        Build, Operate, Optimize, and Test (PBOOT) approach to
-                        support the design, implementation, and improvement of
-                        ICT infrastructures.
+                      <h5>Data Center Facilities</h5>
+                      <p>
+                        MATEKK delivers end-to-end Data Center Facilities
+                        solutions that help organizations establish secure,
+                        efficient, and resilient infrastructure to support
+                        critical IT operations.
                       </p>
-                      <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
+                      <Link
+                        to="./solutions/ict/datacenter"
+                        className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white"
+                      >
                         See more
                       </Link>
                     </div>
@@ -455,9 +500,9 @@ export default function Home() {
                     <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
                       <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
                         <img
-                          src={webImage}
+                          src={WebDevImage}
                           alt="Web and Software Development"
-                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          className="w-full h-full object-cover object-[center_30%] transition-transform duration-300 group-hover:scale-105"
                         />
                       </div>
                       <h5 className="font-inter font-bold text-xl">
@@ -468,7 +513,10 @@ export default function Home() {
                         organizational requirements, using modern technologies
                         to deliver reliable and functional digital systems.
                       </p>
-                      <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
+                      <Link
+                        to="./solutions/ict/webdev"
+                        className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white"
+                      >
                         See more
                       </Link>
                     </div>
@@ -481,20 +529,25 @@ export default function Home() {
                     <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
                       <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
                         <img
-                          src={webImage}
-                          alt="Network Infrastructure"
+                          src={CloudImage}
+                          alt="Cloud Computing Services"
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
                       </div>
                       <h5 className="font-inter font-bold text-xl">
-                        Network Infrastructure
+                        Cloud Computing Services
                       </h5>
                       <p className="font-poppins text-sm mb-[3vh]">
-                        We design and deploy robust network infrastructure
-                        solutions that ensure seamless connectivity, security,
-                        and scalability for businesses of all sizes.
+                        MATEKK enables organizations to leverage the power of
+                        cloud computing, providing scalable, flexible, and
+                        cost-effective solutions that enhance collaboration,
+                        streamline operations, and support digital
+                        transformation initiatives.
                       </p>
-                      <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
+                      <Link
+                        to="/solutions/ict/cloud"
+                        className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white"
+                      >
                         See more
                       </Link>
                     </div>
@@ -507,21 +560,24 @@ export default function Home() {
                     <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
                       <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
                         <img
-                          src={ictImage}
-                          alt="Training and Development"
+                          src={AcessNetworkImage}
+                          alt="Access Networks"
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
                       </div>
                       <h5 className="font-inter font-bold text-xl">
-                        Training & Development
+                        Access Networks
                       </h5>
                       <p className="font-poppins text-sm mb-[3vh]">
-                        Matekk offers comprehensive ICT training programs tailored
-                        to industry demands, equipping professionals with the
-                        skills needed to thrive in a rapidly evolving digital
-                        landscape.
+                        MATEKK delivers reliable and secure access network
+                        solutions that provide seamless connectivity between end
+                        users and core network infrastructure, ensuring
+                        efficient communication and optimal performance.
                       </p>
-                      <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
+                      <Link
+                        to="./solutions/ict/insi/accessnetworks"
+                        className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white"
+                      >
                         See more
                       </Link>
                     </div>
@@ -557,7 +613,7 @@ export default function Home() {
                   <h5 className="w-[50vw] md:w-60">
                     ICT Training & Skills Development
                   </h5>
-                  <p className="">
+                  <p>
                     We offers face-to-face and online training programs designed
                     to equip individuals and organizations with cutting-edge
                     technological knowledge and practical skills.
@@ -614,7 +670,7 @@ export default function Home() {
               </div>
 
               {/* List of Trainings - In Slides */}
-              <div className="overflow-hidden w-[85vw] md:w-[45vw] lg:w-[60vw] xl:w-[53vw] 2xl:w-[52vw] order-last md:order-first">
+              <div className="overflow-hidden w-[85vw] md:w-[43.9vw] lg:w-[60vw] xl:w-[53vw] 2xl:w-[52vw] order-last md:order-first">
                 <div
                   className="flex flex-row-reverse gap-x-5 transition-transform duration-500 ease-in-out"
                   style={{
@@ -629,18 +685,23 @@ export default function Home() {
                     <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
                       <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
                         <img
-                          src={ictImage}
-                          alt="Training and Development"
+                          src={CCNAImage}
+                          alt="CCNA"
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
                       </div>
-                      <h5 className="">Cybersecurity Training</h5>
-                      <p className="">
-                        Our cybersecurity training covers cybersecurity
-                        fundamentals, ethical hacking, vulnerability assessment
-                        and penetration testing (VAPT), and risk management.
+                      <h5>CCNA</h5>
+                      <p>
+                        Implementing and Administering Cisco Solutions (200-301
+                        CCNA) v1.1 is a 120-minute exam that tests a candidate's
+                        knowledge and skills related to network fundamentals,
+                        network access, IP connectivity, IP services, security
+                        fundamentals, and automation and programmability.
                       </p>
-                      <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
+                      <Link
+                        to="./training/cisco/ccna/ccna"
+                        className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white"
+                      >
                         See more
                       </Link>
                     </div>
@@ -654,18 +715,23 @@ export default function Home() {
                     <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
                       <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
                         <img
-                          src={webImage}
-                          alt="Network Infrastructure"
+                          src={ComptiaImage}
+                          alt="A+ (Core 1 & 2)"
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
                       </div>
-                      <h5 className="">Cloud Computing Training</h5>
-                      <p className="">
-                        We provide cloud computing training on platforms such as
-                        AWS, Microsoft Azure, and Google Cloud through
-                        face-to-face and online programs.
+                      <h5>A+ (Core 1 & 2)</h5>
+                      <p>
+                        CompTIA A+ is a widely recognized certification for
+                        beginners that will help you start your IT career.
+                        Employers from a variety of industries value A+ because
+                        it fosters fundamental skills in networking, hardware,
+                        software, problem-solving, and security.
                       </p>
-                      <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
+                      <Link
+                        to="./training/comptia/aplus"
+                        className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white"
+                      >
                         See more
                       </Link>
                     </div>
@@ -679,18 +745,23 @@ export default function Home() {
                     <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
                       <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
                         <img
-                          src={webImage}
-                          alt="Web and Software Development"
+                          src={NSE4Image}
+                          alt="NSE 4 (All Tracks)"
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
                       </div>
-                      <h5 className="">Web and Software Development</h5>
-                      <p className="">
-                        We develop web and software solutions that support
-                        organizational requirements, using modern technologies
-                        to deliver reliable and functional digital systems.
+                      <h5>NSE 4 (All Tracks)</h5>
+                      <p>
+                        Learn to administer FortiGate devices using key features
+                        and security profiles. Through hands-on labs, you'll
+                        practice firewall policies, VPNs, user authentication,
+                        logging, and network protection, building a solid
+                        foundation for advanced FortiGate administration.
                       </p>
-                      <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
+                      <Link
+                        to="./training/fortinet/nse4"
+                        className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white"
+                      >
                         See more
                       </Link>
                     </div>
@@ -704,19 +775,22 @@ export default function Home() {
                     <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
                       <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
                         <img
-                          src={ictImage}
-                          alt="ICT Consultancy"
+                          src={CDCPImage}
+                          alt="CDCP"
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
                       </div>
-                      <h5 className="">ICT Consultancy</h5>
-                      <p className="">
-                        Matekk provides ICT consultancy services using the Plan,
-                        Build, Operate, Optimize, and Test (PBOOT) approach to
-                        support the design, implementation, and improvement of
-                        ICT infrastructures.
+                      <h5>Certified Data Centre Professional</h5>
+                      <p>
+                        The CDCP® (Certified Data Centre Professional) course is
+                        an intensive 2-day program that provides participants
+                        with key knowledge of the critical components of data
+                        centre infrastructure.
                       </p>
-                      <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
+                      <Link
+                        to="./training/datacenter/cdcp"
+                        className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white"
+                      >
                         See more
                       </Link>
                     </div>
@@ -754,10 +828,10 @@ export default function Home() {
             </h3>
             {/* Description */}
             <p>
-              Matekk Cybercore Academy is committed
-              to delivering reliable ICT solutions and high-quality training
-              through experienced professionals, proven methodologies, and a
-              strong focus on innovation, integrity, and excellence.
+              Matekk Cybercore Academy is committed to delivering reliable ICT
+              solutions and high-quality training through experienced
+              professionals, proven methodologies, and a strong focus on
+              innovation, integrity, and excellence.
             </p>
           </div>
           {/* LEFT SIDE - IMAGE */}
@@ -848,17 +922,55 @@ export default function Home() {
                 viewBox="0 0 1200 500"
                 preserveAspectRatio="none"
               >
-                <path className="drop-shadow-[0px_4px_4px_rgba(0,0,0,0.4)]" d="M 0 30 C 250 80, 190 50, 320 120" stroke="#3B82F6" strokeWidth="8" fill="none" strokeLinecap="round" />
-                <path className="drop-shadow-[0px_4px_4px_rgba(0,0,0,0.4)]" d="M 365 115 C 220 130, 500 190, 600 190" stroke="#3B82F6" strokeWidth="8" fill="none" strokeLinecap="round" />
-                <path className="drop-shadow-[0px_4px_4px_rgba(0,0,0,0.4)]" d="M 590 215 C 600 160, 800 200, 860 240" stroke="#3B82F6" strokeWidth="8" fill="none" strokeLinecap="round" />
-                <path className="drop-shadow-[0px_4px_4px_rgba(0,0,0,0.4)]" d="M 847 250 C 800 150, 845 350, 1500 275" stroke="#3B82F6" strokeWidth="8" fill="none" strokeLinecap="round" />
+                <path
+                  className="drop-shadow-[0px_4px_4px_rgba(0,0,0,0.4)]"
+                  d="M 0 30 C 250 80, 190 50, 320 120"
+                  stroke="#3B82F6"
+                  strokeWidth="8"
+                  fill="none"
+                  strokeLinecap="round"
+                />
+                <path
+                  className="drop-shadow-[0px_4px_4px_rgba(0,0,0,0.4)]"
+                  d="M 365 115 C 220 130, 500 190, 600 190"
+                  stroke="#3B82F6"
+                  strokeWidth="8"
+                  fill="none"
+                  strokeLinecap="round"
+                />
+                <path
+                  className="drop-shadow-[0px_4px_4px_rgba(0,0,0,0.4)]"
+                  d="M 590 215 C 600 160, 800 200, 860 240"
+                  stroke="#3B82F6"
+                  strokeWidth="8"
+                  fill="none"
+                  strokeLinecap="round"
+                />
+                <path
+                  className="drop-shadow-[0px_4px_4px_rgba(0,0,0,0.4)]"
+                  d="M 847 250 C 800 150, 845 350, 1500 275"
+                  stroke="#3B82F6"
+                  strokeWidth="8"
+                  fill="none"
+                  strokeLinecap="round"
+                />
               </svg>
               <div className="relative z-10 flex items-start justify-between gap-4 pb-8">
                 {/* Step 1 */}
                 <div className="desktop_process_steps">
                   <div className="desktop_process_icons">
-                    <svg className="desktop_process_svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20h3v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    <svg
+                      className="desktop_process_svg"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20h3v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                      />
                     </svg>
                   </div>
                   <div className="space-y-1 text-center">
@@ -1309,18 +1421,16 @@ export default function Home() {
           </h3>
           {/* Description */}
           <p className="text-center max-w-240 mx-auto">
-            Matekk Cybercore Academy delivers
-            end-to-end ICT and engineering solutions alongside comprehensive
-            training programs designed to meet industry demands and support
-            digital transformation.
+            Matekk Cybercore Academy delivers end-to-end ICT and engineering
+            solutions alongside comprehensive training programs designed to meet
+            industry demands and support digital transformation.
           </p>
         </div>
 
         {/* Gallery */}
         <div>
           {isMobile ? (
-            /* ── MOBILE ── */
-            /* ── MOBILE: single column ── */
+            /* ── MOBILE: single column, tap to reveal ── */
             <div className="flex flex-col gap-3">
               {galleryItems.map((item) => (
                 <div
@@ -1336,17 +1446,12 @@ export default function Home() {
                     className="w-full h-full object-cover"
                   />
 
-                  {/* Full blur overlay */}
                   <div
                     className={`flex flex-col justify-center items-center text-white p-6 absolute inset-0 rounded-2xl backdrop-blur-sm bg-black/1 transition-opacity duration-500 ${tappedCard === item.id ? "opacity-100" : "opacity-0"
                       }`}
                   >
-                    {/* Content */}
-                    {/* Title row */}
                     <div className="flex items-center justify-between gap-4 w-full">
-                      <h5 className="text-shadow-lg">
-                        {item.title}
-                      </h5>
+                      <h5 className="text-shadow-lg">{item.title}</h5>
                       <Link
                         to={item.link}
                         onClick={(e) => e.stopPropagation()}
@@ -1368,17 +1473,70 @@ export default function Home() {
                         </svg>
                       </Link>
                     </div>
-
-                    {/* Description below title */}
-                    <p className="text-shadow-lg">
-                      {item.desc}
-                    </p>
+                    <p className="text-shadow-lg">{item.desc}</p>
                   </div>
                 </div>
               ))}
             </div>
+          ) : isTouch ? (
+            /* ── TABLET: multi-column layout, tap to reveal ── */
+            <div className="flex flex-col gap-3">
+              {rows.map((row, rowIndex) => (
+                <div
+                  key={rowIndex}
+                  className="flex gap-3"
+                  style={{ height: "280px" }}
+                >
+                  {row.map((item) => (
+                    <div
+                      key={item.id}
+                      onClick={() =>
+                        setTappedCard(tappedCard === item.id ? null : item.id)
+                      }
+                      className="relative rounded-2xl overflow-hidden cursor-pointer flex-1"
+                    >
+                      <img
+                        src={item.src}
+                        alt={item.alt}
+                        className="w-full h-full object-cover"
+                      />
+
+                      <div
+                        className={`flex flex-row justify-center items-center absolute inset-x-0 bottom-0 p-5 text-white bg-black/1 backdrop-blur-[10px] transition-opacity duration-500 ${tappedCard === item.id ? "opacity-100" : "opacity-0"
+                          }`}
+                      >
+                        <div className="text-shadow-lg space-y-1 flex-1">
+                          <h5>{item.title}</h5>
+                          <p className="line-clamp-2">{item.desc}</p>
+                        </div>
+                        <Link
+                          to={item.link}
+                          onClick={(e) => e.stopPropagation()}
+                          className="shrink-0 flex items-center justify-center"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="w-10 h-10 text-white"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M7 17L17 7M17 7H7M17 7v10"
+                            />
+                          </svg>
+                        </Link>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
           ) : (
-            /* ── DESKTOP/TABLET ── */
+            /* ── DESKTOP: multi-column layout, hover to reveal ── */
             <div className="flex flex-col gap-3">
               {rows.map((row, rowIndex) => (
                 <div
@@ -1406,19 +1564,12 @@ export default function Home() {
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
 
-                      {/* Blur */}
                       <div className="flex flex-row justify-center items-center absolute inset-x-0 bottom-0 p-5 text-white bg-black/1 to-transparent backdrop-blur-[10px] opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-
                         <div className="text-shadow-lg space-y-1">
-                          {/* Text Content */}
-                          <h5>
-                            {item.title}
-                          </h5>
-                          <p className="line-clamp-2">
-                            {item.desc}
-                          </p>
+                          <h5>{item.title}</h5>
+                          <p className="line-clamp-2">{item.desc}</p>
                         </div>
-                        <div className="shrink-0 flex items-center justify-center">
+                        <Link to={item.link} className="shrink-0 flex items-center justify-center">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             className="w-10 h-10 text-white"
@@ -1433,7 +1584,7 @@ export default function Home() {
                               d="M7 17L17 7M17 7H7M17 7v10"
                             />
                           </svg>
-                        </div>
+                        </Link>
                       </div>
                     </div>
                   ))}
@@ -1448,7 +1599,10 @@ export default function Home() {
       <TestimonialsSection />
 
       {/* ==================== ABOUT THE COMPANY ====================*/}
-      <section id="about" className="scroll-mt-18 py-16 bg-[#EBF5FD] px-[2.063rem] sm:px-[2.063rem] md:px-16 xl:px-[7.438rem] space-y-6 ">
+      <section
+        id="about"
+        className="scroll-mt-18 py-16 bg-[#EBF5FD] px-[2.063rem] sm:px-[2.063rem] md:px-16 xl:px-[7.438rem] space-y-6 "
+      >
         {/* Title and Description */}
         <div className="flex flex-col justify-center items-center space-y-2">
           <h6 className="w-fit border border-gray-300 rounded-full px-3 py-1.5 text-sm text-black bg-white">
@@ -1461,30 +1615,30 @@ export default function Home() {
             </h3>
             {/* Description */}
             <p className="text-center max-w-240 mx-auto">
-              Matekk Cybercore Academy is a trusted
-              provider of ICT and engineering solutions and a premier ICT
-              training center, committed to empowering businesses and
-              individuals through innovation and education since 2013.
+              Matekk Cybercore Academy is a trusted provider of ICT and
+              engineering solutions and a premier ICT training center, committed
+              to empowering businesses and individuals through innovation and
+              education since 2013.
             </p>
           </div>
         </div>
 
         {/* 3-Column Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-stretch">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 items-stretch">
           {/* Left Column */}
           <div className="flex flex-col gap-4 md:h-full xl:h-full 2xl:h-full">
             {/* Text Card */}
             <div className="about_cards order-2 md:order-1 shrink-0">
               <p>
-                Founded in 2013, Matekk Cybercore Academy has grown into a reputable
-                firm delivering innovative ICT solutions and professional
-                training programs that enhance efficiency, connectivity, and
-                technological capability across industries.
+                Founded in 2013, Matekk Cybercore Academy has grown into a
+                reputable firm delivering innovative ICT solutions and
+                professional training programs that enhance efficiency,
+                connectivity, and technological capability across industries.
               </p>
             </div>
 
             {/* Person Image */}
-            <div className="rounded-2xl overflow-hidden shadow-sm order-1 md:order-2 md:flex-1 xl:flex-1 2xl:flex-1 min-h-0 2xl:max-h-96.75">
+            <div className="rounded-2xl overflow-hidden shadow-sm order-1 md:order-2 md:flex-1 xl:flex-1 2xl:flex-1 min-h-0 md:max-h-140 xl:max-h-96 2xl:max-h-96.75">
               <img
                 src={SirMark}
                 alt="Company Representative"
@@ -1494,7 +1648,7 @@ export default function Home() {
           </div>
 
           {/* Building Image */}
-          <div className="rounded-2xl overflow-hidden shadow-sm order-3 md:order-0 self-stretch min-h-0 2xl:max-h-145">
+          <div className="rounded-2xl overflow-hidden shadow-sm order-3 md:order-0 self-stretch min-h-0 xl:max-h-152 2xl:max-h-145">
             <img
               src={CompanyBuilding}
               alt="Matekk Academy Company Building"
@@ -1503,31 +1657,29 @@ export default function Home() {
           </div>
 
           {/* Right Column */}
-          <div className="flex flex-col gap-4 order-4 md:order-0">
+          <div className="flex flex-col md:flex-row xl:flex-col gap-4 order-4 md:order-0 md:col-span-2 xl:col-span-1">
             {/* Mission Card */}
-            <div className="about_cards space-y-2">
-              <h5>
-                Mission
-              </h5>
+            <div className="about_cards space-y-2 flex-1">
+              <h5>Mission</h5>
               <p>
                 To empower businesses through innovative ICT and engineering
                 solutions that enhance operational efficiency, drive
                 technological advancement, and support sustainable growth.
               </p>
               <p>
-                To deliver high-quality ICT education and training that
-                enables individuals and organizations to achieve their full
-                potential and stay competitive in the digital era.
+                To deliver high-quality ICT education and training that enables
+                individuals and organizations to achieve their full potential
+                and stay competitive in the digital era.
               </p>
             </div>
 
             {/* Vision Card */}
-            <div className="about_cards space-y-2">
+            <div className="about_cards space-y-2 flex-1">
               <h5>Vision</h5>
               <p>
                 To be a global leader in ICT and Engineering solutions,
-                recognized for excellence, innovation, and commitment to
-                client success.
+                recognized for excellence, innovation, and commitment to client
+                success.
               </p>
               <p>
                 To be a globally recognized leader in ICT training, known for
@@ -1544,7 +1696,7 @@ export default function Home() {
         {/* Title and Still Have Questions Container */}
         <div className="space-y-6 lg:space-y-36 justify-center items-start">
           {/* Title */}
-          <h3 >
+          <h3>
             Frequently <span className="text-[#1775EE]">Asked Questions</span>
           </h3>
 
@@ -1553,8 +1705,9 @@ export default function Home() {
             <div className="space-y-1">
               <h5>Still Have Questions?</h5>
               <p>
-                To be a global leader in ICT and Engineering solutions, recognized
-                for excellence, innovation, and commitment to client success.
+                To be a global leader in ICT and Engineering solutions,
+                recognized for excellence, innovation, and commitment to client
+                success.
               </p>
             </div>
             <Button
@@ -1593,13 +1746,14 @@ export default function Home() {
             {/* Heading */}
             <div className="space-y-1">
               <h3>
-                Get In Touch With Us <span className="text-[#1775EE]">Today</span>
+                Get In Touch With Us{" "}
+                <span className="text-[#1775EE]">Today</span>
               </h3>
               {/* Description */}
               <p>
-                Get in touch with Matekk Cybercore Academy
-                to inquire about our ICT solutions, training programs, or
-                request a consultation. Our team is ready to assist you.
+                Get in touch with Matekk Cybercore Academy to inquire about our
+                ICT solutions, training programs, or request a consultation. Our
+                team is ready to assist you.
               </p>
             </div>
           </div>
@@ -1609,15 +1763,17 @@ export default function Home() {
             {/* Address */}
             <div className="contact_infos">
               <div className="contact_infos_icons">
-                <Link to="https://maps.app.goo.gl/EvBzK1BBNEnBo6fh8" target="_blank" className="cursor-pointer">
+                <Link
+                  to="https://maps.app.goo.gl/EvBzK1BBNEnBo6fh8"
+                  target="_blank"
+                  className="cursor-pointer"
+                >
                   <img src={address} alt="Location Icon" className="w-6 h-6" />
                 </Link>
               </div>
               <div>
                 <h5>Address</h5>
-                <p>
-                  10B Kalantiao Marikina, Metro Manila
-                </p>
+                <p>10B Kalantiao Marikina, Metro Manila</p>
               </div>
             </div>
 
@@ -1653,9 +1809,7 @@ export default function Home() {
                 />
               </div>
               <div>
-                <h5>
-                  Availability
-                </h5>
+                <h5>Availability</h5>
                 <p>10:00 AM – 6:00 PM</p>
               </div>
             </div>

@@ -6,8 +6,8 @@ import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
 import CloudSecurity from "../../../assets/nsecloudsecurity.webp"; // Course badge image
-import ccnaHero from "../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
-import ccnaFooter from "../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
+import FortinetHero from "../../../assets/FortinetHeader.webp";
+import FortinetFooter from "../../../assets/FortinetFooter.webp";
 import MealIcon from "../../../assets/Meal.svg";
 import ReviewIcon from "../../../assets/Review.svg";
 import InstitutionalIcon from "../../../assets/InsitutionalAccount.svg";
@@ -22,142 +22,21 @@ import TrainingHeroBanner from "../../../components/section/TrainingHeroBanner";
 export default function NSE7CloudSecurity() {
   // ==================== COURSE MODULES ====================
   const modules = [
-    {
-      title: "1.0 Cloud Security — Enterprise Cloud Architecture",
-      items: [
-        {
-          subTitle: "1.1 Multi-Cloud Security Design",
-          items: [
-            "Multi-cloud reference architecture patterns",
-            "Cloud security architecture frameworks (CSA, NIST)",
-            "Security control mapping across AWS, Azure, and GCP",
-            "Data sovereignty and residency considerations",
-            "Enterprise cloud adoption framework and security maturity",
-          ],
-        },
-        {
-          subTitle: "1.2 Cloud Network Security Design",
-          items: [
-            "Hub-and-spoke vs. mesh cloud network topologies",
-            "East-west and north-south traffic inspection design",
-            "Cloud firewall insertion models",
-            "Centralized egress and ingress security architectures",
-            "Cloud security zones and segmentation strategy",
-          ],
-        },
-        {
-          subTitle: "1.3 Cloud Identity and Access Architecture",
-          items: [
-            "Cloud IAM design principles and least privilege",
-            "Federated identity across cloud providers",
-            "Privileged access management (PAM) in cloud",
-            "Service account and workload identity security",
-            "Just-in-time access provisioning strategies",
-          ],
-        },
-      ],
-    },
-    {
-      title: "2.0 Cloud Security — Advanced FortiGate Cloud Deployment",
-      items: [
-        {
-          subTitle: "2.1 High-Availability Cloud Architecture",
-          items: [
-            "Active-active FortiGate HA with GWLB on AWS",
-            "Zone-redundant FortiGate deployment on Azure",
-            "Multi-region failover architecture",
-            "Asymmetric routing resolution in HA cloud designs",
-            "Session synchronization across availability zones",
-          ],
-        },
-        {
-          subTitle: "2.2 FortiGate CNF at Scale",
-          items: [
-            "CNF multi-account and multi-VPC deployment",
-            "CNF policy inheritance and segmentation",
-            "CNF integration with AWS Network Firewall policy",
-            "Performance scaling with CNF auto-provisioning",
-            "CNF logging and FortiAnalyzer cloud integration",
-          ],
-        },
-        {
-          subTitle: "2.3 Cloud VPN and Interconnect at Scale",
-          items: [
-            "Redundant IPsec with BGP failover in cloud",
-            "AWS Direct Connect and Azure ExpressRoute security",
-            "Transit hub design with FortiGate and cloud routers",
-            "ADVPN integration with cloud SD-WAN",
-            "Encrypted interconnects between cloud regions",
-          ],
-        },
-      ],
-    },
-    {
-      title: "3.0 Cloud Security — Cloud-Native Security Integration",
-      items: [
-        {
-          subTitle: "3.1 Kubernetes and Service Mesh Security",
-          items: [
-            "Kubernetes network policy enforcement with FortiGate",
-            "Service mesh security with Istio and FortiGate",
-            "East-west traffic inspection in Kubernetes clusters",
-            "FortiGate Ingress Controller advanced configuration",
-            "Multi-cluster security policy consistency",
-          ],
-        },
-        {
-          subTitle: "3.2 Serverless and PaaS Security",
-          items: [
-            "Securing AWS Lambda, Azure Functions, and GCP Cloud Run",
-            "API gateway security and WAF integration",
-            "Event-driven security automation with serverless",
-            "PaaS service endpoint security controls",
-            "Data security for managed database services",
-          ],
-        },
-        {
-          subTitle: "3.3 Supply Chain and CI/CD Security",
-          items: [
-            "Software supply chain attack vectors",
-            "Container registry security and image signing",
-            "Pipeline integrity controls and SLSA framework",
-            "FortiDevSec advanced pipeline integration",
-            "Dependency vulnerability management at scale",
-          ],
-        },
-      ],
-    },
-    {
-      title: "4.0 Cloud Security — Cloud Incident Response",
-      items: [
-        {
-          subTitle: "4.1 Cloud Forensics",
-          items: [
-            "Cloud provider audit log forensics (CloudTrail, Activity Log)",
-            "VPC flow log analysis for incident investigation",
-            "Cloud storage forensics and evidence preservation",
-            "Volatile data collection from cloud instances",
-            "Cross-account forensic investigation procedures",
-          ],
-        },
-        {
-          subTitle: "4.2 Cloud Threat Detection and Response",
-          items: [
-            "Cloud-native threat detection: AWS GuardDuty, Azure Defender",
-            "Integrating cloud alerts into FortiSIEM and FortiSOAR",
-            "Automated cloud incident response with Lambda and Logic Apps",
-            "Cloud ransomware detection and containment",
-            "Insider threat detection in cloud environments",
-          ],
-        },
-      ],
-    },
+    { title: "Cloud Security Best Practices", items: [] },
+    { title: "Infrastructure as Code", items: [] },
+    { title: "Securing IaaS Solutions", items: [] },
+    { title: "Securing CaaS Solutions", items: [] },
+    { title: "Troubleshooting", items: [] },
+    { title: "FortiCNAPP Features", items: [] },
+    { title: "FortiCNAPP Risk Management and Threat Detection", items: [] },
+    { title: "MoFortiCNAPP Code Security and Vulnerability Managementnitoring", items: [] },
   ];
+
   return (
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}
       <TrainingHeroBanner
-        bgImage={ccnaHero}
+        bgImage={FortinetHero}
         category="FORTINET"
         title="NSE 7 Cloud Security"
         description="Learn to deploy and secure Fortinet solutions in public cloud environments. This course provides hands-on experience using automation tools, troubleshooting cloud connectivity, and managing risks with FortiCNAPP."
@@ -354,7 +233,7 @@ export default function NSE7CloudSecurity() {
 
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
-        bgImage={ccnaFooter} // CHANGE: Update background image for the footer banner
+        bgImage={FortinetFooter} // CHANGE: Update background image for the footer banner
         description="Advance your networking career and prepare for the Fortinet Enterprise exam."
       />
     </main>

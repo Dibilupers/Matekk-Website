@@ -3,8 +3,8 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 import ccnaBadge from "../../../assets/FortinetNSE2.png";
-import ccnaHero from "../../../assets/CCNAHeroImageAutomation.png";
-import ccnaFooter from "../../../assets/CCNAFooterImageAutomation.png";
+import FortinetHero from "../../../assets/FortinetHeader.webp";
+import FortinetFooter from "../../../assets/FortinetFooter.webp";
 import MealIcon from "../../../assets/Meal.svg";
 import ReviewIcon from "../../../assets/Review.svg";
 import InstitutionalIcon from "../../../assets/InsitutionalAccount.svg";
@@ -75,7 +75,7 @@ export default function NSE2() {
       {/* ==================== HERO BANNER ====================*/}
 
       <TrainingHeroBanner
-        bgImage={ccnaHero}
+        bgImage={FortinetHero}
         category="FORTINET"
         title="NSE 2"
         description="Deepen your understanding of cybersecurity by exploring 
@@ -285,7 +285,7 @@ export default function NSE2() {
 
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
-        bgImage={ccnaFooter} // CHANGE: Update background image for the footer banner
+        bgImage={FortinetFooter} // CHANGE: Update background image for the footer banner
         description="Advance your networking career and prepare for the CCNP Enterprise exam."
       />
     </main>

@@ -3,8 +3,8 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 import ccnaBadge from "../../../assets/FortinetNSE5SASE.png";
-import ccnaHero from "../../../assets/CCNAHeroImageAutomation.png";
-import ccnaFooter from "../../../assets/CCNAFooterImageAutomation.png";
+import FortinetHero from "../../../assets/FortinetHeader.webp";
+import FortinetFooter from "../../../assets/FortinetFooter.webp";
 import MealIcon from "../../../assets/Meal.svg";
 import ReviewIcon from "../../../assets/Review.svg";
 import InstitutionalIcon from "../../../assets/InsitutionalAccount.svg";
@@ -19,123 +19,18 @@ import TrainingHeroBanner from "../../../components/section/TrainingHeroBanner";
 export default function NSE5SASE() {
   // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
   const modules = [
-    {
-      title: "1.0 SASE — Secure Access Service Edge Fundamentals",
-      items: [
-        {
-          subTitle: "1.1 SASE Architecture",
-          items: [
-            "SASE definition and core principles",
-            "Convergence of networking and security",
-            "Single-vendor vs. multi-vendor SASE",
-            "Fortinet SASE architecture overview",
-            "SASE vs. traditional perimeter security",
-          ],
-        },
-        {
-          subTitle: "1.2 SASE Components",
-          items: [
-            "Secure Web Gateway (SWG)",
-            "Cloud Access Security Broker (CASB)",
-            "Zero Trust Network Access (ZTNA)",
-            "SD-WAN as the networking foundation",
-            "Firewall as a Service (FWaaS)",
-          ],
-        },
-      ],
-    },
-    {
-      title: "2.0 SASE — FortiSASE Configuration",
-      items: [
-        {
-          subTitle: "2.1 FortiSASE Deployment",
-          items: [
-            "FortiSASE portal and tenant management",
-            "FortiClient integration with FortiSASE",
-            "Agent-based and agentless deployment",
-            "Point of Presence (PoP) selection",
-            "Licensing and subscription management",
-          ],
-        },
-        {
-          subTitle: "2.2 Security Policies in FortiSASE",
-          items: [
-            "Web filtering in the SASE cloud",
-            "Application control and CASB policies",
-            "DLP policies for cloud traffic",
-            "DNS security in FortiSASE",
-            "SSL deep inspection in the cloud",
-          ],
-        },
-        {
-          subTitle: "2.3 User Identity and Access in SASE",
-          items: [
-            "Identity provider (IdP) integration",
-            "SAML-based SSO for SASE",
-            "User and device posture checks",
-            "Conditional access policies",
-            "Guest and contractor access management",
-          ],
-        },
-      ],
-    },
-    {
-      title: "3.0 SASE — Zero Trust Network Access (ZTNA)",
-      items: [
-        {
-          subTitle: "3.1 ZTNA Principles",
-          items: [
-            "Never trust, always verify concept",
-            "Micro-segmentation with ZTNA",
-            "Continuous trust evaluation",
-            "Identity-centric access control",
-            "ZTNA vs. traditional VPN",
-          ],
-        },
-        {
-          subTitle: "3.2 ZTNA Implementation",
-          items: [
-            "ZTNA access proxy configuration",
-            "Application tags and ZTNA rules",
-            "Device certificate enforcement",
-            "FortiClient as ZTNA agent",
-            "Inline ZTNA and implicit discovery",
-          ],
-        },
-      ],
-    },
-    {
-      title: "4.0 SASE — Monitoring and Troubleshooting",
-      items: [
-        {
-          subTitle: "4.1 SASE Visibility",
-          items: [
-            "FortiSASE dashboards and reporting",
-            "User traffic logs and session visibility",
-            "Shadow IT reports",
-            "Bandwidth and application usage analytics",
-            "Security incident reporting in SASE",
-          ],
-        },
-        {
-          subTitle: "4.2 Troubleshooting SASE Connectivity",
-          items: [
-            "FortiClient connection diagnostics",
-            "PoP connectivity issues",
-            "Policy misconfiguration troubleshooting",
-            "Split tunneling verification",
-            "Certificate and authentication errors",
-          ],
-        },
-      ],
-    },
+    { title: "Introduction to SASE and FortiSASE", items: [] },
+    { title: "Deployment Fundamentals", items: [] },
+    { title: "SIA and SSA", items: [] },
+    { title: "Basic Security and Endpoint Profiles", items: [] },
+    { title: "Monitoring and Reporting", items: [] },
   ];
 
   return (
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}
       <TrainingHeroBanner
-        bgImage={ccnaHero}
+        bgImage={FortinetHero}
         category="FORTINET"
         title="NSE 5 SASE"
         description="Learn to deploy and manage FortiSASE to secure internet access and protect SaaS applications for on-site and remote users. This course builds foundational knowledge of FortiSASE and how to enforce security policies.
@@ -340,7 +235,7 @@ export default function NSE5SASE() {
 
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
-        bgImage={ccnaFooter} // CHANGE: Update background image for the footer banner
+        bgImage={FortinetFooter} // CHANGE: Update background image for the footer banner
         description="Advance your networking career and prepare for the CCNP Enterprise exam."
       />
     </main>
