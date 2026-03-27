@@ -27,6 +27,7 @@ import ICCT from '../../assets/ICCT.jpg';
 import NAMRIA from '../../assets/NAMRIA.svg';
 import EASYTECH from '../../assets/EASYTECH.svg';
 import EZTECH from '../../assets/EZTECH.png';
+import SOLVEROUS from '../../assets/SolverousLogo.png';
 
 function Partners() {
     // OPTIMIZED: Wrap array in useMemo to prevent recreation on every render
@@ -55,6 +56,7 @@ function Partners() {
         { src: ASENWARE, alt: "ASENWARE Logo", size: "w-10 md:w-32" },
         { src: SCALEEXPERTS, alt: "SCALEEXPERTS Logo", size: "w-10 md:w-32" },
         { src: COMMSOURCE, alt: "COMMSOURCE Logo", size: "w-10 md:w-32" },
+        { src: SOLVEROUS, alt: "COMMSOURCE Logo", size: "w-10 md:w-20" },
         { src: STELLARSAT, alt: "STELLARSAT Logo", size: "w-10 md:w-32" },
         { src: EASYTECH, alt: "EASYTECH Logo", size: "w-10 md:w-26" },
         { src: EZTECH, alt: "EZTECH Logo", size: "w-10 md:w-26" },
