@@ -8,10 +8,10 @@ import gallery3 from "../assets/solutionsGallery3.webp";
 import gallery4 from "../assets/solutionsGallery4.webp";
 import gallery5 from "../assets/solutionsGallery5.webp";
 
-import MaamGrace from "../assets/person_holding_laptop.png";
-import ClydeNelsonRocillo from "../assets/Clyde_Nelson_Rocillo.jpg";
+import MaamGrace from "../assets/person_holding_laptop.webp";
+import ClydeNelsonRocillo from "../assets/Clyde_Nelson_Rocillo.webp";
 import SirMark from "../assets/Founder.webp";
-import ictImage from "../assets/ict.png";
+import ictImage from "../assets/ict.webp";
 import CompanyBuilding from "../assets/building.webp";
 import webImage from "../assets/web.png";
 import { useState, useEffect } from "react";
