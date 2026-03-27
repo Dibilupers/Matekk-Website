@@ -1,9 +1,9 @@
 import SolutionsTemplate from "../../../components/solution_template/solutions_template";
 import RelevantProjects from "../../../components/solution_template/releveantprojects";
-import dcHero from "../../../assets/CCNAHeroImageAutomation.png";
-import dcFooter from "../../../assets/CCNAFooterImageAutomation.png";
-import ictImage from "../../../assets/ict.png";
-import webImage from "../../../assets/web.png";
+import dcHero from "../../../assets/CCNAHeroImageAutomation.webp";
+import dcFooter from "../../../assets/CCNAFooterImageAutomation.webp";
+import ictImage from "../../../assets/ict.webp";
+import webImage from "../../../assets/web.webp";
 
 const CHALLENGES = [
   "Aging or inefficient data center infrastructure",

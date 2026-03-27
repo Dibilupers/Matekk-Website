@@ -13,7 +13,7 @@ import ClydeNelsonRocillo from "../assets/Clyde_Nelson_Rocillo.webp";
 import SirMark from "../assets/Founder.webp";
 import ictImage from "../assets/ict.webp";
 import CompanyBuilding from "../assets/building.webp";
-import webImage from "../assets/web.png";
+import webImage from "../assets/web.webp";
 import { useState, useEffect } from "react";
 import FAQ from "../components/FAQ/faq";
 import ContactForm from "../components/contact/Contact.jsx";
