@@ -91,14 +91,14 @@ export default function Home() {
     : isTablet
       ? "(39vw + 2.5rem)"
       : is2xl
-        ? "(24vw + 2.5rem)"
+        ? "(23vw + 3rem)"
         : "(27vw + 2.5rem)";
   const bottomStep = isMobile
-    ? "(77vw + 2.5rem)"
+    ? "(78.2vw + 2.5rem)"
     : isTablet
       ? "(39vw + 2.5rem)"
       : is2xl
-        ? "(24vw + 2.5rem)"
+        ? "(23vw + 3rem)"
         : "(25vw + 2.5rem)";
   const [hoveredRow, setHoveredRow] = useState(null);
   const [tappedCard, setTappedCard] = useState(null);
@@ -109,7 +109,6 @@ export default function Home() {
       alt: "Network and Security Infrastructure Projects",
       title: "Network and Security Infrastructure Projects",
       desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
-      link: "/solutions/network", // add link to every item
     },
     {
       id: 2,
@@ -379,7 +378,7 @@ export default function Home() {
                     End-to-End ICT & Engineering Solutions
                   </h5>
                   {/* Solutions Category Description */}
-                  <p className="">
+                  <p>
                     We provide ICT consultancy and engineering solutions focused
                     on planning, building, operating, optimizing, and testing
                     technology systems.
@@ -448,18 +447,21 @@ export default function Home() {
                       <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
                         <img
                           src={ictImage}
-                          alt="ICT Consultancy"
+                          alt="Data Center Facilities"
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
                       </div>
-                      <h5 className="">ICT Consultancy</h5>
-                      <p className="">
-                        Matekk provides ICT consultancy services using the Plan,
-                        Build, Operate, Optimize, and Test (PBOOT) approach to
-                        support the design, implementation, and improvement of
-                        ICT infrastructures.
+                      <h5>Data Center Facilities</h5>
+                      <p>
+                        MATEKK delivers end-to-end Data Center Facilities
+                        solutions that help organizations establish secure,
+                        efficient, and resilient infrastructure to support
+                        critical IT operations.
                       </p>
-                      <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
+                      <Link
+                        to="./solutions/ict/datacenter"
+                        className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white"
+                      >
                         See more
                       </Link>
                     </div>
@@ -485,7 +487,10 @@ export default function Home() {
                         organizational requirements, using modern technologies
                         to deliver reliable and functional digital systems.
                       </p>
-                      <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
+                      <Link
+                        to="./solutions/ict/webdev"
+                        className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white"
+                      >
                         See more
                       </Link>
                     </div>
@@ -499,19 +504,24 @@ export default function Home() {
                       <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
                         <img
                           src={webImage}
-                          alt="Network Infrastructure"
+                          alt="Cloud Computing Services"
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
                       </div>
                       <h5 className="font-inter font-bold text-xl">
-                        Network Infrastructure
+                        Cloud Computing Services
                       </h5>
                       <p className="font-poppins text-sm mb-[3vh]">
-                        We design and deploy robust network infrastructure
-                        solutions that ensure seamless connectivity, security,
-                        and scalability for businesses of all sizes.
+                        MATEKK enables organizations to leverage the power of
+                        cloud computing, providing scalable, flexible, and
+                        cost-effective solutions that enhance collaboration,
+                        streamline operations, and support digital
+                        transformation initiatives.
                       </p>
-                      <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
+                      <Link
+                        to="/solutions/ict/cloud"
+                        className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white"
+                      >
                         See more
                       </Link>
                     </div>
@@ -525,20 +535,23 @@ export default function Home() {
                       <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
                         <img
                           src={ictImage}
-                          alt="Training and Development"
+                          alt="Access Networks"
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
                       </div>
                       <h5 className="font-inter font-bold text-xl">
-                        Training & Development
+                        Access Networks
                       </h5>
                       <p className="font-poppins text-sm mb-[3vh]">
-                        Matekk offers comprehensive ICT training programs
-                        tailored to industry demands, equipping professionals
-                        with the skills needed to thrive in a rapidly evolving
-                        digital landscape.
+                        MATEKK delivers reliable and secure access network
+                        solutions that provide seamless connectivity between end
+                        users and core network infrastructure, ensuring
+                        efficient communication and optimal performance.
                       </p>
-                      <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
+                      <Link
+                        to="./solutions/ict/insi/accessnetworks"
+                        className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white"
+                      >
                         See more
                       </Link>
                     </div>
@@ -575,7 +588,7 @@ export default function Home() {
                   <h5 className="w-[50vw] md:w-60">
                     ICT Training & Skills Development
                   </h5>
-                  <p className="">
+                  <p>
                     We offers face-to-face and online training programs designed
                     to equip individuals and organizations with cutting-edge
                     technological knowledge and practical skills.
@@ -648,17 +661,22 @@ export default function Home() {
                       <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
                         <img
                           src={ictImage}
-                          alt="Training and Development"
+                          alt="CCNA"
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
                       </div>
-                      <h5 className="">Cybersecurity Training</h5>
-                      <p className="">
-                        Our cybersecurity training covers cybersecurity
-                        fundamentals, ethical hacking, vulnerability assessment
-                        and penetration testing (VAPT), and risk management.
+                      <h5>CCNA</h5>
+                      <p>
+                        Implementing and Administering Cisco Solutions (200-301
+                        CCNA) v1.1 is a 120-minute exam that tests a candidate's
+                        knowledge and skills related to network fundamentals,
+                        network access, IP connectivity, IP services, security
+                        fundamentals, and automation and programmability.
                       </p>
-                      <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
+                      <Link
+                        to="./training/cisco/ccna/ccna"
+                        className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white"
+                      >
                         See more
                       </Link>
                     </div>
@@ -673,17 +691,22 @@ export default function Home() {
                       <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
                         <img
                           src={webImage}
-                          alt="Network Infrastructure"
+                          alt="A+ (Core 1 & 2)"
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
                       </div>
-                      <h5 className="">Cloud Computing Training</h5>
-                      <p className="">
-                        We provide cloud computing training on platforms such as
-                        AWS, Microsoft Azure, and Google Cloud through
-                        face-to-face and online programs.
+                      <h5>A+ (Core 1 & 2)</h5>
+                      <p>
+                        CompTIA A+ is a widely recognized certification for
+                        beginners that will help you start your IT career.
+                        Employers from a variety of industries value A+ because
+                        it fosters fundamental skills in networking, hardware,
+                        software, problem-solving, and security.
                       </p>
-                      <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
+                      <Link
+                        to="./training/comptia/aplus"
+                        className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white"
+                      >
                         See more
                       </Link>
                     </div>
@@ -698,17 +721,22 @@ export default function Home() {
                       <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
                         <img
                           src={webImage}
-                          alt="Web and Software Development"
+                          alt="NSE 4 (All Tracks)"
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
                       </div>
-                      <h5 className="">Web and Software Development</h5>
-                      <p className="">
-                        We develop web and software solutions that support
-                        organizational requirements, using modern technologies
-                        to deliver reliable and functional digital systems.
+                      <h5>NSE 4 (All Tracks)</h5>
+                      <p>
+                        Learn to administer FortiGate devices using key features
+                        and security profiles. Through hands-on labs, you'll
+                        practice firewall policies, VPNs, user authentication,
+                        logging, and network protection, building a solid
+                        foundation for advanced FortiGate administration.
                       </p>
-                      <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
+                      <Link
+                        to="./training/fortinet/nse4"
+                        className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white"
+                      >
                         See more
                       </Link>
                     </div>
@@ -723,18 +751,21 @@ export default function Home() {
                       <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
                         <img
                           src={ictImage}
-                          alt="ICT Consultancy"
+                          alt="CDCP"
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
                       </div>
-                      <h5 className="">ICT Consultancy</h5>
-                      <p className="">
-                        Matekk provides ICT consultancy services using the Plan,
-                        Build, Operate, Optimize, and Test (PBOOT) approach to
-                        support the design, implementation, and improvement of
-                        ICT infrastructures.
+                      <h5>Certified Data Centre Professional</h5>
+                      <p>
+                        The CDCP® (Certified Data Centre Professional) course is
+                        an intensive 2-day program that provides participants
+                        with key knowledge of the critical components of data
+                        centre infrastructure.
                       </p>
-                      <Link className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white">
+                      <Link
+                        to="./training/datacenter/cdcp"
+                        className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white"
+                      >
                         See more
                       </Link>
                     </div>
@@ -1607,9 +1638,7 @@ export default function Home() {
           <div className="flex flex-col md:flex-row xl:flex-col gap-4 order-4 md:order-0 md:col-span-2 xl:col-span-1">
             {/* Mission Card */}
             <div className="about_cards space-y-2 flex-1">
-              <h5>
-                Mission
-              </h5>
+              <h5>Mission</h5>
               <p>
                 To empower businesses through innovative ICT and engineering
                 solutions that enhance operational efficiency, drive
