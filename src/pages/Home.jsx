@@ -108,7 +108,7 @@ export default function Home() {
   const topStep = isMobile
     ? "(78.2vw + 2.5rem)"
     : isTablet
-      ? "(39vw + 2.5rem)"
+      ? "(39vw + 2.8rem)"
       : isDesktop
         ? "(50vw + 2rem)"
         : is2xl
@@ -117,7 +117,7 @@ export default function Home() {
   const bottomStep = isMobile
     ? "(78.2vw + 2.5rem)"
     : isTablet
-      ? "(39vw + 2.5rem)"
+      ? "(39vw + 2.8rem)"
       : isDesktop
         ? "(50vw + 2rem)"
         : is2xl
@@ -461,7 +461,7 @@ export default function Home() {
               </div>
 
               {/* List of Solutions - In Slides */}
-              <div className="overflow-hidden w-[85vw] md:w-[45vw] lg:w-[60vw] xl:w-[53vw] 2xl:w-[52vw]">
+              <div className="overflow-hidden w-[85vw] md:w-[43.9vw] lg:w-[60vw] xl:w-[53vw] 2xl:w-[52vw]">
                 <div
                   className="flex gap-x-5 transition-transform duration-500 ease-in-out"
                   style={{
@@ -673,7 +673,7 @@ export default function Home() {
               </div>
 
               {/* List of Trainings - In Slides */}
-              <div className="overflow-hidden w-[85vw] md:w-[45vw] lg:w-[60vw] xl:w-[53vw] 2xl:w-[52vw] order-last md:order-first">
+              <div className="overflow-hidden w-[85vw] md:w-[43.9vw] lg:w-[60vw] xl:w-[53vw] 2xl:w-[52vw] order-last md:order-first">
                 <div
                   className="flex flex-row-reverse gap-x-5 transition-transform duration-500 ease-in-out"
                   style={{
