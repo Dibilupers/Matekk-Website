@@ -223,10 +223,10 @@ function NavBar() {
           </button>
 
           {openDropdown === "solutions" && (
-            <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 p-5 bg-white shadow-lg rounded-2xl border border-gray-100 overflow-hidden font-inter animate-in fade-in slide-in-from-top-2 duration-200">
+            <div className="absolute top-full -left-20 transform mt-2 py-5 px-2 bg-white shadow-lg rounded-2xl border border-gray-100 overflow-hidden font-inter animate-in fade-in slide-in-from-top-2 duration-200">
               <div className="flex space-x-[2.313rem]">
                 {/* Column 1 — categories */}
-                <div className="w-100 overflow-y-auto max-h-[70vh] animate-in fade-in slide-in-from-left-2 duration-200">
+                <div className="min-w-52 overflow-y-auto max-h-[70vh] animate-in fade-in slide-in-from-left-2 duration-200">
                   {dropdownMenus.solutions.map((category) => (
                     <button
                       key={category.name}
@@ -247,7 +247,7 @@ function NavBar() {
                       {category.name}
                       {category.subcourses?.length > 0 && (
                         <svg
-                          className={`w-4 h-4 ${t}`}
+                          className={`min-w-4 h-4 ${t}`}
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -266,7 +266,7 @@ function NavBar() {
 
                 {/* Column 2 — subcourses */}
                 {openSubcourse && (
-                  <div className="w-fit animate-in fade-in slide-in-from-left-2 duration-200">
+                  <div className="min-w-65 animate-in fade-in slide-in-from-left-2 duration-200">
                     {dropdownMenus.solutions
                       .find((cat) => cat.name === openSubcourse)
                       ?.subcourses?.map((item) => (
@@ -280,7 +280,7 @@ function NavBar() {
                                     : item.name,
                                 )
                               }
-                              className={`w-full text-left px-6 py-2 rounded-[0.35rem] flex items-center justify-between ${
+                              className={`w-full text-left px-6 py-2 rounded-[0.35rem] flex items-center justify-between cursor-pointer ${
                                 openThirdLevel === item.name
                                   ? "text-[#1775EE] font-bold"
                                   : "hover:text-[#1775EE] hover:font-bold"
@@ -288,7 +288,7 @@ function NavBar() {
                             >
                               {item.name}
                               <svg
-                                className="w-4 h-4"
+                                className="min-w-4 h-4"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -311,7 +311,7 @@ function NavBar() {
                 )}
                 {/* Column 3 - solutions */}
                 {openThirdLevel && (
-                  <div className="w-fit shrink-0 animate-in fade-in slide-in-from-left-2 duration-200">
+                  <div className="min-w-55 animate-in fade-in slide-in-from-left-2 duration-200">
                     {dropdownMenus.solutions
                       .find((cat) => cat.name === openSubcourse)
                       ?.subcourses?.find((item) => item.name === openThirdLevel)
@@ -320,7 +320,7 @@ function NavBar() {
                           key={sub.name}
                           to={sub.path}
                           onClick={resetMenu}
-                          className="block px-6 py-2 hover:text-[#1775EE] hover:font-bold"
+                          className="block px-4 py-2 hover:text-[#1775EE] hover:font-bold cursor-pointer"
                         >
                           {sub.name}
                         </Link>
