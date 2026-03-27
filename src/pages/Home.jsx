@@ -39,12 +39,17 @@ export default function Home() {
   const totalSlides = 3;
   const totalMobileSlides = 4;
   const totalTabletSlides = 4;
+  const totalDesktopSlides = 2;
+  const totalDesktopBottomSlides = 2;
   const totalMobileBottomSlides = 4;
   const [topSlide, setTopSlide] = useState(0);
   const [bottomSlide, setBottomSlide] = useState(0);
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
   const [isTablet, setIsTablet] = useState(
     () => window.innerWidth >= 768 && window.innerWidth < 1024,
+  );
+  const [isDesktop, setIsDesktop] = useState(
+    () => window.innerWidth >= 1024 && window.innerWidth < 1536,
   );
   const [is2xl, setIs2xl] = useState(() => window.innerWidth >= 1536);
   const location = useLocation();
@@ -63,6 +68,7 @@ export default function Home() {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
       setIsTablet(window.innerWidth >= 768 && window.innerWidth < 1024);
+      setIsDesktop(window.innerWidth >= 1024 && window.innerWidth < 1536);
       setIs2xl(window.innerWidth >= 1536);
     };
     window.addEventListener("resize", handleResize);
@@ -89,26 +95,34 @@ export default function Home() {
     ? totalMobileSlides
     : isTablet
       ? totalTabletSlides
-      : totalSlides;
+      : isDesktop
+        ? totalDesktopSlides
+        : totalSlides;
   const bottomMax = isMobile
     ? totalMobileBottomSlides
     : isTablet
       ? totalTabletSlides
-      : totalSlides;
+      : isDesktop
+        ? totalDesktopSlides
+        : totalSlides;
   const topStep = isMobile
     ? "(78.2vw + 2.5rem)"
     : isTablet
       ? "(39vw + 2.5rem)"
-      : is2xl
-        ? "(23vw + 3rem)"
-        : "(27vw + 2.5rem)";
+      : isDesktop
+        ? "(50vw + 2rem)"
+        : is2xl
+          ? "(23vw + 3rem)"
+          : "(27vw + 2.5rem)";
   const bottomStep = isMobile
     ? "(78.2vw + 2.5rem)"
     : isTablet
       ? "(39vw + 2.5rem)"
-      : is2xl
-        ? "(23vw + 3rem)"
-        : "(25vw + 2.5rem)";
+      : isDesktop
+        ? "(50vw + 2rem)"
+        : is2xl
+          ? "(23vw + 3rem)"
+          : "(25vw + 2.5rem)";
   const [hoveredRow, setHoveredRow] = useState(null);
   const [tappedCard, setTappedCard] = useState(null);
 
@@ -317,7 +331,10 @@ export default function Home() {
                   type="none"
                   buttonCustomStyle="bg-[#1775EE] text-white transition-all duration-300 shadow-lg hover:bg-[#0062E0] px-6 py-3 w-full"
                   btnFunc={() => {
-                    window.open("https://www.facebook.com/share/p/17QmhgY3as/", "_blank", "noopener,noreferrer");
+                    document.getElementById("feedbacks")?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
                   }}
                 />
               </div>
@@ -578,9 +595,8 @@ export default function Home() {
                 <button
                   key={i}
                   onClick={() => setTopSlide(i)}
-                  className={`h-2 rounded-full transition-all duration-300 ${
-                    topSlide === i ? "bg-[#1775EE] w-4" : "bg-[#C2DDFF] w-2"
-                  }`}
+                  className={`h-2 rounded-full transition-all duration-300 ${topSlide === i ? "bg-[#1775EE] w-4" : "bg-[#C2DDFF] w-2"
+                    }`}
                 />
               ))}
             </div>
@@ -792,9 +808,8 @@ export default function Home() {
                 <button
                   key={i}
                   onClick={() => setBottomSlide(i)}
-                  className={`h-2 rounded-full transition-all duration-300 ${
-                    bottomSlide === i ? "bg-[#1775EE] w-4" : "bg-[#C2DDFF] w-2"
-                  }`}
+                  className={`h-2 rounded-full transition-all duration-300 ${bottomSlide === i ? "bg-[#1775EE] w-4" : "bg-[#C2DDFF] w-2"
+                    }`}
                 />
               ))}
             </div>
@@ -1435,9 +1450,8 @@ export default function Home() {
                   />
 
                   <div
-                    className={`flex flex-col justify-center items-center text-white p-6 absolute inset-0 rounded-2xl backdrop-blur-sm bg-black/1 transition-opacity duration-500 ${
-                      tappedCard === item.id ? "opacity-100" : "opacity-0"
-                    }`}
+                    className={`flex flex-col justify-center items-center text-white p-6 absolute inset-0 rounded-2xl backdrop-blur-sm bg-black/1 transition-opacity duration-500 ${tappedCard === item.id ? "opacity-100" : "opacity-0"
+                      }`}
                   >
                     <div className="flex items-center justify-between gap-4 w-full">
                       <h5 className="text-shadow-lg">{item.title}</h5>
@@ -1491,9 +1505,8 @@ export default function Home() {
                       />
 
                       <div
-                        className={`flex flex-row justify-center items-center absolute inset-x-0 bottom-0 p-5 text-white bg-black/1 backdrop-blur-[10px] transition-opacity duration-500 ${
-                          tappedCard === item.id ? "opacity-100" : "opacity-0"
-                        }`}
+                        className={`flex flex-row justify-center items-center absolute inset-x-0 bottom-0 p-5 text-white bg-black/1 backdrop-blur-[10px] transition-opacity duration-500 ${tappedCard === item.id ? "opacity-100" : "opacity-0"
+                          }`}
                       >
                         <div className="text-shadow-lg space-y-1 flex-1">
                           <h5>{item.title}</h5>
