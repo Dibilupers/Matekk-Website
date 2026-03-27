@@ -11,9 +11,7 @@ import gallery5 from "../assets/solutionsGallery5.webp";
 import MaamGrace from "../assets/person_holding_laptop.webp";
 import ClydeNelsonRocillo from "../assets/Clyde_Nelson_Rocillo.webp";
 import SirMark from "../assets/Founder.webp";
-import ictImage from "../assets/ict.webp";
 import CompanyBuilding from "../assets/building.webp";
-import webImage from "../assets/web.webp";
 import { useState, useEffect } from "react";
 import FAQ from "../components/FAQ/faq";
 import ContactForm from "../components/contact/Contact.jsx";
@@ -25,6 +23,17 @@ import Button from "../../src/components/ui/button";
 import Handshake from "../../src/assets/handshake.png";
 import { useLocation } from "react-router-dom";
 import TestimonialsSection from "../components/section/TestimonialsSection.jsx";
+/* Services Section Images */
+/* Solutions */
+import DataCenterImage from "../assets/datacenterImage.webp";
+import WebDevImage from "../assets/webdevImage.webp";
+import CloudImage from "../assets/cloudImage.webp";
+import AcessNetworkImage from "../assets/accessnetworks.webp";
+/* Trainings */
+import CCNAImage from "../assets/CCNAFooterImageAutomation.webp";
+import ComptiaImage from "../assets/COMPTIAFooter.webp";
+import NSE4Image from "../assets/FortinetFooter.webp";
+import CDCPImage from "../assets/certified_data_centre_professional2.webp";
 
 export default function Home() {
   const totalSlides = 3;
@@ -102,13 +111,15 @@ export default function Home() {
         : "(25vw + 2.5rem)";
   const [hoveredRow, setHoveredRow] = useState(null);
   const [tappedCard, setTappedCard] = useState(null);
+
   const galleryItems = [
     {
       id: 1,
       src: gallery1,
-      alt: "Network and Security Infrastructure Projects",
-      title: "Network and Security Infrastructure Projects",
+      alt: "CCNA Certification",
+      title: "CCNA Certification",
       desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
+      link: "/training/cisco/ccna/ccna",
     },
     {
       id: 2,
@@ -116,6 +127,7 @@ export default function Home() {
       alt: "SLSU Delegates",
       title: "SLSU Delegates Welcome",
       desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
+      link: "/solutions/ict/datacenter",
     },
     {
       id: 3,
@@ -123,6 +135,7 @@ export default function Home() {
       alt: "Team Celebration",
       title: "Team Celebration",
       desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
+      link: "/solutions/pece/renewable",
     },
     {
       id: 4,
@@ -130,6 +143,7 @@ export default function Home() {
       alt: "Ideas Workshop",
       title: "Ideas Workshop",
       desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
+      link: "/solutions/ict/smart/home",
     },
     {
       id: 5,
@@ -137,6 +151,7 @@ export default function Home() {
       alt: "Conference Panel",
       title: "Conference Panel",
       desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
+      link: "/training/comptia/network",
     },
     // Just add more objects here if needed
   ];
@@ -446,7 +461,7 @@ export default function Home() {
                     <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
                       <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
                         <img
-                          src={ictImage}
+                          src={DataCenterImage}
                           alt="Data Center Facilities"
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
@@ -474,9 +489,9 @@ export default function Home() {
                     <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
                       <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
                         <img
-                          src={webImage}
+                          src={WebDevImage}
                           alt="Web and Software Development"
-                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          className="w-full h-full object-cover object-[center_30%] transition-transform duration-300 group-hover:scale-105"
                         />
                       </div>
                       <h5 className="font-inter font-bold text-xl">
@@ -503,7 +518,7 @@ export default function Home() {
                     <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
                       <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
                         <img
-                          src={webImage}
+                          src={CloudImage}
                           alt="Cloud Computing Services"
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
@@ -534,7 +549,7 @@ export default function Home() {
                     <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
                       <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
                         <img
-                          src={ictImage}
+                          src={AcessNetworkImage}
                           alt="Access Networks"
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
@@ -660,7 +675,7 @@ export default function Home() {
                     <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
                       <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
                         <img
-                          src={ictImage}
+                          src={CCNAImage}
                           alt="CCNA"
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
@@ -690,7 +705,7 @@ export default function Home() {
                     <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
                       <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
                         <img
-                          src={webImage}
+                          src={ComptiaImage}
                           alt="A+ (Core 1 & 2)"
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
@@ -720,7 +735,7 @@ export default function Home() {
                     <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
                       <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
                         <img
-                          src={webImage}
+                          src={NSE4Image}
                           alt="NSE 4 (All Tracks)"
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
@@ -750,7 +765,7 @@ export default function Home() {
                     <div className="relative flex flex-col gap-y-[1vh] p-6 transition-colors duration-300 group-hover:text-white h-full">
                       <div className="w-full h-36 mb-4 overflow-hidden rounded-lg">
                         <img
-                          src={ictImage}
+                          src={CDCPImage}
                           alt="CDCP"
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
@@ -1547,7 +1562,7 @@ export default function Home() {
                           <h5>{item.title}</h5>
                           <p className="line-clamp-2">{item.desc}</p>
                         </div>
-                        <div className="shrink-0 flex items-center justify-center">
+                        <Link to={item.link} className="shrink-0 flex items-center justify-center">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             className="w-10 h-10 text-white"
@@ -1562,7 +1577,7 @@ export default function Home() {
                               d="M7 17L17 7M17 7H7M17 7v10"
                             />
                           </svg>
-                        </div>
+                        </Link>
                       </div>
                     </div>
                   ))}
