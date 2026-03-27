@@ -1484,7 +1484,7 @@ export default function Home() {
             </div>
 
             {/* Person Image */}
-            <div className="rounded-2xl overflow-hidden shadow-sm order-1 md:order-2 md:flex-1 xl:flex-1 2xl:flex-1 min-h-0 xl:max-h-96 2xl:max-h-96.75">
+            <div className="rounded-2xl overflow-hidden shadow-sm order-1 md:order-2 md:flex-1 xl:flex-1 2xl:flex-1 min-h-0 md:max-h-140 xl:max-h-96 2xl:max-h-96.75">
               <img
                 src={SirMark}
                 alt="Company Representative"
@@ -1494,7 +1494,7 @@ export default function Home() {
           </div>
 
           {/* Building Image */}
-          <div className="rounded-2xl overflow-hidden shadow-sm order-3 md:order-0 self-stretch min-h-0 xl:max-h-152 2xl:max-h-145 ">
+          <div className="rounded-2xl overflow-hidden shadow-sm order-3 md:order-0 self-stretch min-h-0 xl:max-h-152 2xl:max-h-145">
             <img
               src={CompanyBuilding}
               alt="Matekk Academy Company Building"
@@ -1503,9 +1503,9 @@ export default function Home() {
           </div>
 
           {/* Right Column */}
-          <div className="flex flex-col md:flex-row xl:flex-col gap-4 order-4 md:order-0">
+          <div className="flex flex-col md:flex-row xl:flex-col gap-4 order-4 md:order-0 md:col-span-2 xl:col-span-1">
             {/* Mission Card */}
-            <div className="about_cards space-y-2">
+            <div className="about_cards space-y-2 flex-1">
               <h5>
                 Mission
               </h5>
@@ -1522,7 +1522,7 @@ export default function Home() {
             </div>
 
             {/* Vision Card */}
-            <div className="about_cards space-y-2">
+            <div className="about_cards space-y-2 flex-1">
               <h5>Vision</h5>
               <p>
                 To be a global leader in ICT and Engineering solutions,
