@@ -6,8 +6,8 @@ import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
 import cloudSecCerti from "../../../assets/nsecloudsecurity.webp"; // Course badge image
-import ccnaHero from "../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
-import ccnaFooter from "../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
+import FortinetHero from "../../../assets/FortinetHeader.webp";
+import FortinetFooter from "../../../assets/FortinetFooter.webp";
 import MealIcon from "../../../assets/Meal.svg";
 import ReviewIcon from "../../../assets/Review.svg";
 import InstitutionalIcon from "../../../assets/InsitutionalAccount.svg";
@@ -21,177 +21,26 @@ import TrainingHeroBanner from "../../../components/section/TrainingHeroBanner";
 export default function NSE6CloudSecurity() {
   // ==================== COURSE MODULES ====================
   const modules = [
-    {
-      title: "1.0 Cloud Security — FortiGate Cloud Deployment",
-      items: [
-        {
-          subTitle: "1.1 Advanced Cloud Deployment Models",
-          items: [
-            "FortiGate VM sizing and instance types per cloud provider",
-            "Single vs. dual-arm deployment architectures",
-            "Transit VPC and inspection VPC design patterns",
-            "Centralized vs. distributed security models",
-            "Brownfield vs. greenfield cloud deployments",
-          ],
-        },
-        {
-          subTitle: "1.2 AWS Advanced Integration",
-          items: [
-            "AWS Gateway Load Balancer (GWLB) with FortiGate",
-            "AWS Transit Gateway attachments and route tables",
-            "VPC endpoints and PrivateLink security",
-            "AWS SDN connector configuration",
-            "CloudWatch integration for FortiGate monitoring",
-          ],
-        },
-        {
-          subTitle: "1.3 Azure Advanced Integration",
-          items: [
-            "Azure Route Server integration",
-            "Azure Virtual WAN with FortiGate NVA",
-            "Azure SDN connector and dynamic objects",
-            "Azure Load Balancer health probes with FortiGate",
-            "Azure Autoscale with FortiGate",
-          ],
-        },
-        {
-          subTitle: "1.4 GCP Advanced Integration",
-          items: [
-            "GCP shared VPC and service project security",
-            "GCP SDN connector configuration",
-            "GCP load balancer integration with FortiGate",
-            "Cloud Armor and FortiGate complementary controls",
-            "GCP network tags and FortiGate dynamic policies",
-          ],
-        },
-      ],
-    },
-    {
-      title: "2.0 Cloud Security — FortiGate CNF",
-      items: [
-        {
-          subTitle: "2.1 Cloud-Native Firewall Overview",
-          items: [
-            "FortiGate CNF architecture and components",
-            "CNF vs. FortiGate VM comparison",
-            "Deployment scope: AWS and Azure CNF",
-            "CNF subscription and licensing model",
-            "Managed vs. customer-managed CNF",
-          ],
-        },
-        {
-          subTitle: "2.2 CNF Policy Management",
-          items: [
-            "Security policy sets in CNF",
-            "FortiManager integration for CNF policy push",
-            "CNF endpoint groups and dynamic objects",
-            "Intrusion prevention in CNF",
-            "Web filtering and application control in CNF",
-          ],
-        },
-      ],
-    },
-    {
-      title: "3.0 Cloud Security — FortiCWP and Cloud Posture",
-      items: [
-        {
-          subTitle: "3.1 Cloud Workload Protection",
-          items: [
-            "FortiCWP architecture and cloud API integration",
-            "Resource inventory and asset discovery",
-            "Misconfiguration detection and remediation",
-            "CIS benchmark compliance checks",
-            "Multi-cloud posture dashboard",
-          ],
-        },
-        {
-          subTitle: "3.2 Cloud Compliance and Governance",
-          items: [
-            "Compliance frameworks: CIS, PCI-DSS, HIPAA, GDPR",
-            "Custom compliance policy creation",
-            "Automated remediation workflows",
-            "Risk scoring and prioritization",
-            "Audit trail and evidence collection",
-          ],
-        },
-        {
-          subTitle: "3.3 Container and Serverless Security",
-          items: [
-            "Kubernetes cluster security assessment",
-            "EKS, AKS, and GKE security hardening",
-            "Serverless function security controls",
-            "Container image vulnerability scanning",
-            "Runtime anomaly detection for workloads",
-          ],
-        },
-      ],
-    },
-    {
-      title: "4.0 Cloud Security — Advanced Automation and DevSecOps",
-      items: [
-        {
-          subTitle: "4.1 Infrastructure as Code Security",
-          items: [
-            "Terraform modules for FortiGate cloud deployment",
-            "ARM and Bicep templates for Azure FortiGate",
-            "CloudFormation templates for AWS FortiGate",
-            "IaC security scanning and policy-as-code",
-            "GitOps workflows for network security",
-          ],
-        },
-        {
-          subTitle: "4.2 CI/CD Pipeline Integration",
-          items: [
-            "Security gates in Jenkins and GitHub Actions",
-            "FortiDevSec integration for pipeline scanning",
-            "SAST and DAST in DevSecOps pipelines",
-            "API security testing automation",
-            "Shift-left security principles",
-          ],
-        },
-        {
-          subTitle: "4.3 Cloud API and Automation",
-          items: [
-            "FortiGate REST API for cloud automation",
-            "Ansible playbooks for FortiGate configuration",
-            "Python SDK for Fortinet cloud management",
-            "Event-driven automation with cloud functions",
-            "FortiManager API for multi-cloud orchestration",
-          ],
-        },
-      ],
-    },
-    {
-      title: "5.0 Cloud Security — Advanced Troubleshooting",
-      items: [
-        {
-          subTitle: "5.1 Cloud Connectivity Troubleshooting",
-          items: [
-            "Asymmetric routing issues in cloud deployments",
-            "MTU and fragmentation in cloud VPNs",
-            "Cloud provider flow logs analysis",
-            "FortiGate packet capture in cloud environments",
-            "SDN connector authentication failures",
-          ],
-        },
-        {
-          subTitle: "5.2 Cloud Performance and Scaling",
-          items: [
-            "Throughput benchmarking for cloud FortiGate instances",
-            "Auto-scaling trigger configuration and tuning",
-            "SR-IOV and DPDK for high-performance cloud instances",
-            "Connection limits and session table management",
-            "Cloud instance type migration strategies",
-          ],
-        },
-      ],
-    },
+    { title: "Email Concepts", items: [] },
+    { title: "Basic Setup", items: [] },
+    { title: "Access Control and Policies", items: [] },
+    { title: "Authentication", items: [] },
+    { title: "Session Management", items: [] },
+    { title: "Antivirus and Antispam", items: [] },
+    { title: "Content Inspection", items: [] },
+    { title: "Securing Communications", items: [] },
+    { title: "High Availability", items: [] },
+    { title: "Server Mode", items: [] },
+    { title: "Transparent Mode", items: [] },
+    { title: "Maintenance", items: [] },
+    { title: "Troubleshooting", items: [] },
   ];
+
   return (
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}
       <TrainingHeroBanner
-        bgImage={ccnaHero}
+        bgImage={FortinetHero}
         category="FORTINET"
         title="NSE 6 Cloud Security"
         description="Learn to secure your network from email-based threats using FortiMail. This course provides hands-on experience in deployment, management, and advanced threat protection for critical business communications."
@@ -398,7 +247,7 @@ export default function NSE6CloudSecurity() {
 
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
-        bgImage={ccnaFooter} // CHANGE: Update background image for the footer banner
+        bgImage={FortinetFooter} // CHANGE: Update background image for the footer banner
         description="Advance your networking career and prepare for the Fortinet Enterprise exam."
       />
     </main>

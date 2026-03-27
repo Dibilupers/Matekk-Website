@@ -403,7 +403,7 @@ function ModalHeader({ title, subtitle }) {
 
 function InquiryBadge({ inquiryType }) {
   return (
-    <div className="mt-3 mb-5">
+    <div className="mt-2 mb-1">
       <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-[#1775EE] text-xs font-semibold">
         {inquiryType === "training" ? "📚 Training Inquiry" : "🖥️ ICT Solutions Inquiry"}
       </span>
@@ -498,7 +498,7 @@ function TrainingStep2({ trainingForm, errors, updateTraining, back, submit, sta
         subtitle="Fill out the form to secure your slot or learn more about the course."
       />
       <InquiryBadge inquiryType="training" />
-      <h5 className="font-bold text-gray-900 mb-2">Course Details</h5>
+      <h5 className="font-bold text-gray-900">Course Details</h5>
       <div className="flex flex-col gap-4">
         <SelectField label="Course to Take" id="course" options={COURSE_LABELS}
           value={trainingForm.course} onChange={updateTraining("course")} error={errors.course} />

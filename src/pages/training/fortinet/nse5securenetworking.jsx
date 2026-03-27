@@ -3,8 +3,8 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 import ccnaBadge from "../../../assets/FortinetNSE5SecureNetworking.png";
-import ccnaHero from "../../../assets/CCNAHeroImageAutomation.png";
-import ccnaFooter from "../../../assets/CCNAFooterImageAutomation.png";
+import FortinetHero from "../../../assets/FortinetHeader.webp";
+import FortinetFooter from "../../../assets/FortinetFooter.webp";
 import MealIcon from "../../../assets/Meal.svg";
 import ReviewIcon from "../../../assets/Review.svg";
 import InstitutionalIcon from "../../../assets/InsitutionalAccount.svg";
@@ -19,108 +19,24 @@ import TrainingHeroBanner from "../../../components/section/TrainingHeroBanner";
 export default function NSE5securenetworking() {
   // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
   const modules = [
-    {
-      title: "1.0 Secure Networking — SD-WAN",
-      items: [
-        {
-          subTitle: "1.1 SD-WAN Fundamentals",
-          items: [
-            "SD-WAN architecture and components",
-            "Underlay vs. overlay networking",
-            "WAN link types: MPLS, broadband, LTE, satellite",
-            "SD-WAN use cases and benefits",
-            "Fortinet SD-WAN solution overview",
-          ],
-        },
-        {
-          subTitle: "1.2 SD-WAN Configuration",
-          items: [
-            "SD-WAN interface members and zones",
-            "Performance SLA health checks",
-            "SD-WAN rules and traffic steering",
-            "Load balancing algorithms",
-            "Application-aware path selection",
-          ],
-        },
-        {
-          subTitle: "1.3 SD-WAN Advanced Features",
-          items: [
-            "Adaptive session routing",
-            "SD-WAN Orchestrator (FortiManager)",
-            "Dynamic BGP with SD-WAN",
-            "Quality of Service (QoS) and traffic shaping",
-            "SD-WAN reporting and SLA monitoring",
-          ],
-        },
-      ],
-    },
-    {
-      title: "2.0 Secure Networking — LAN Edge",
-      items: [
-        {
-          subTitle: "2.1 FortiSwitch",
-          items: [
-            "FortiSwitch managed vs. standalone mode",
-            "FortiLink protocol and topology",
-            "VLAN configuration and trunking",
-            "Spanning Tree Protocol (STP) on FortiSwitch",
-            "FortiSwitch security features: NAC, 802.1X",
-          ],
-        },
-        {
-          subTitle: "2.2 FortiAP and Wireless",
-          items: [
-            "FortiAP deployment modes: thin vs. local",
-            "Wireless profiles and SSIDs",
-            "Radio frequency management",
-            "Rogue AP detection",
-            "FortiAP captive portal and guest access",
-          ],
-        },
-        {
-          subTitle: "2.3 Network Access Control (NAC)",
-          items: [
-            "NAC concepts and policy enforcement",
-            "FortiNAC overview and deployment",
-            "Device profiling and classification",
-            "802.1X port-based authentication",
-            "Quarantine and remediation workflows",
-          ],
-        },
-      ],
-    },
-    {
-      title: "3.0 Secure Networking — OT and IoT Security",
-      items: [
-        {
-          subTitle: "3.1 OT Security Fundamentals",
-          items: [
-            "IT vs. OT network differences",
-            "Purdue model for industrial networks",
-            "SCADA and ICS security challenges",
-            "OT protocols: Modbus, DNP3, EtherNet/IP",
-            "Fortinet OT security solution overview",
-          ],
-        },
-        {
-          subTitle: "3.2 IoT Device Security",
-          items: [
-            "IoT device discovery and profiling",
-            "IoT segmentation strategies",
-            "Vulnerability management for IoT",
-            "FortiNAC IoT enforcement",
-            "IoT threat detection with FortiGate",
-          ],
-        },
-      ],
-    },
+    { title: "Introduction and Initial Configuration", items: [] },
+    { title: "Achieving Network Visibility", items: [] },
+    { title: "Identification and Classification of Rogues", items: [] },
+    { title: "Visibility, Troubleshooting, and Logging", items: [] },
+    { title: "Logical Networks and Fortinet Security Fabric Integration", items: [] },
+    { title: "State-Based Control", items: [] },
+    { title: "Security Policies", items: [] },
+    { title: "Guest and Contractor Management", items: [] },
+    { title: "Security Device Integration and Automated Response", items: [] },
+    { title: "Advanced Features", items: [] },
+    { title: "FortiNAC-F Manager Integrations", items: [] },
   ];
 
   return (
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}
       <TrainingHeroBanner
-        bgImage={ccnaHero}
+        bgImage={FortinetHero}
         category="FORTINET"
         title="NSE 5 Secure Networking"
         description="Learn to utilize FortiNAC-F to gain full network visibility, control, and automated security responses. This course provides hands-on experience and best practices for implementing network security and automation."
@@ -325,7 +241,7 @@ export default function NSE5securenetworking() {
 
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
-        bgImage={ccnaFooter} // CHANGE: Update background image for the footer banner
+        bgImage={FortinetFooter} // CHANGE: Update background image for the footer banner
         description="Advance your networking career and prepare for the CCNP Enterprise exam."
       />
     </main>

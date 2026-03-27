@@ -6,8 +6,8 @@ import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
 import SecureNetworking from "../../../assets/nsesecurenetworking.webp"; // Course badge image
-import ccnaHero from "../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
-import ccnaFooter from "../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
+import FortinetHero from "../../../assets/FortinetHeader.webp";
+import FortinetFooter from "../../../assets/FortinetFooter.webp";
 import MealIcon from "../../../assets/Meal.svg";
 import ReviewIcon from "../../../assets/Review.svg";
 import InstitutionalIcon from "../../../assets/InsitutionalAccount.svg";
@@ -21,132 +21,23 @@ import TrainingHeroBanner from "../../../components/section/TrainingHeroBanner";
 export default function NSE7SecureNetworking() {
   // ==================== COURSE MODULES ====================
   const modules = [
-    {
-      title: "1.0 Secure Networking — Enterprise SD-WAN Design",
-      items: [
-        {
-          subTitle: "1.1 Large-Scale SD-WAN Architecture",
-          items: [
-            "Regional hub design with dual-hub redundancy",
-            "ADVPN shortcut routing at enterprise scale",
-            "SD-WAN overlay design with IPsec and GRE",
-            "BGP route reflection in SD-WAN overlays",
-            "Multi-region SD-WAN with global hub interconnect",
-          ],
-        },
-        {
-          subTitle: "1.2 SD-WAN and Security Convergence",
-          items: [
-            "Integrated security inspection on SD-WAN edges",
-            "Secure SD-WAN branch without dedicated firewall",
-            "SD-WAN with SASE cloud security offload",
-            "Per-application security policy on SD-WAN paths",
-            "SD-WAN and ZTNA convergence for branch access",
-          ],
-        },
-        {
-          subTitle: "1.3 SD-WAN Operational Excellence",
-          items: [
-            "Zero-touch provisioning at scale with FortiManager",
-            "SD-WAN change management and rollback procedures",
-            "Performance baseline establishment and drift detection",
-            "SD-WAN KPI reporting for business stakeholders",
-            "Capacity planning for SD-WAN WAN links",
-          ],
-        },
-      ],
-    },
-    {
-      title: "2.0 Secure Networking — Enterprise LAN and Campus",
-      items: [
-        {
-          subTitle: "2.1 Campus Network Security Design",
-          items: [
-            "Secure campus architecture with FortiSwitch and FortiAP",
-            "Distributed vs. centralized wired/wireless design",
-            "Network segmentation for BYOD and IoT in campus",
-            "Macro-segmentation with VLANs and VRFs",
-            "Campus security policy framework",
-          ],
-        },
-        {
-          subTitle: "2.2 Enterprise Wireless Security",
-          items: [
-            "WPA3-Enterprise with 802.1X and EAP-TLS",
-            "Certificate-based wireless authentication at scale",
-            "Wireless intrusion prevention system (WIPS)",
-            "RF planning for dense enterprise deployments",
-            "Wireless guest network isolation and security",
-          ],
-        },
-        {
-          subTitle: "2.3 Enterprise NAC Design",
-          items: [
-            "FortiNAC enterprise deployment architecture",
-            "Scalable device profiling with machine learning",
-            "Dynamic VLAN assignment based on device posture",
-            "Integration with MDM and endpoint management",
-            "NAC policy for IoT and unmanaged devices at scale",
-          ],
-        },
-      ],
-    },
-    {
-      title: "3.0 Secure Networking — Advanced OT and Critical Infrastructure",
-      items: [
-        {
-          subTitle: "3.1 Critical Infrastructure Protection",
-          items: [
-            "NERC CIP compliance with Fortinet solutions",
-            "IEC 62443 security levels and zone design",
-            "IT/OT convergence security architecture",
-            "Critical infrastructure threat landscape",
-            "Resilience design for OT network outages",
-          ],
-        },
-        {
-          subTitle: "3.2 OT Threat Detection and Response",
-          items: [
-            "OT-specific threat actor TTPs and MITRE ATT&CK for ICS",
-            "Passive OT asset discovery and vulnerability assessment",
-            "OT anomaly detection with FortiSIEM",
-            "OT incident response playbooks in FortiSOAR",
-            "Coordinated IT/OT breach response procedures",
-          ],
-        },
-      ],
-    },
-    {
-      title: "4.0 Secure Networking — Network Automation at Scale",
-      items: [
-        {
-          subTitle: "4.1 Enterprise Network Automation Strategy",
-          items: [
-            "Network automation maturity model",
-            "Source of truth design: NetBox, CMDBs",
-            "Event-driven automation architecture",
-            "Automation testing and validation frameworks",
-            "Change control integration with automation pipelines",
-          ],
-        },
-        {
-          subTitle: "4.2 Advanced FortiManager Orchestration",
-          items: [
-            "FortiManager multi-ADOM enterprise design",
-            "Policy package inheritance and override strategy",
-            "FortiManager JSON/JSONRPC API at scale",
-            "Workflow automation with FortiManager scripts",
-            "FortiManager integration with ITSM platforms",
-          ],
-        },
-      ],
-    },
+    { title: "Introduction to Network Security Architecture", items: [] },
+    { title: "Central Management", items: [] },
+    { title: "VLANs and VDOMs", items: [] },
+    { title: "High Availability", items: [] },
+    { title: "Dynamic Routing Protocols", items: [] },
+    { title: "Dynamic Routing Protocols", items: [] },
+    { title: "IPsec", items: [] },
+    { title: "Auto-Discovery VPN", items: [] },
+    { title: "Security Fabric", items: [] },
+    { title: "Hardware Acceleration on FortiGate", items: [] },
   ];
+
   return (
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}
       <TrainingHeroBanner
-        bgImage={ccnaHero}
+        bgImage={FortinetHero}
         category="FORTINET"
         title="NSE 7 Secure Networking"
         description="Learn to implement and centrally manage enterprise security with multiple FortiGate devices. This course provides hands-on experience in network monitoring, high availability, routing, and service hardening."
@@ -348,7 +239,7 @@ export default function NSE7SecureNetworking() {
 
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
-        bgImage={ccnaFooter} // CHANGE: Update background image for the footer banner
+        bgImage={FortinetFooter} // CHANGE: Update background image for the footer banner
         description="Advance your networking career and prepare for the Fortinet Enterprise exam."
       />
     </main>

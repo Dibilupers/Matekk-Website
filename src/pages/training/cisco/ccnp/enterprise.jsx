@@ -7,9 +7,9 @@ import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
-import ccnaBadge from "../../../../assets/CCNPEnterprise.png"; // Course badge image
-import ccnaHero from "../../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
-import ccnaFooter from "../../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
+import ccnaBadge from "../../../../assets/CCNPEnterprise.webp"; // Course badge image
+import ccnaHero from "../../../../assets/CCNAHeroImageAutomation.webp"; // Hero banner background
+import ccnaFooter from "../../../../assets/CCNAFooterImageAutomation.webp"; // Footer banner background
 import MealIcon from "../../../../assets/Meal.svg";
 import ReviewIcon from "../../../../assets/Review.svg";
 import WorkstationIcon from "../../../../assets/Workstation.svg";
@@ -360,6 +360,7 @@ export default function CCNPEnterprise() {
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
         bgImage={ccnaFooter} // CHANGE: Update background image for the footer banner
+        bgPosition="90%"
         description="Advance your networking career and prepare for the CCNP Enterprise exam."
       />
     </main>

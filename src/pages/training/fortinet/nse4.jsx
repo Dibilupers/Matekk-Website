@@ -7,8 +7,8 @@ import badge1 from "../../../assets/FortinetNSE5SecureNetworking.png";
 import badge2 from "../../../assets/FortinetNSE5SASE.png";
 import badge3 from "../../../assets/FortinetNSE5ClousSecurity.png";
 import badge4 from "../../../assets/FortinetNSE5SecurityOperations.png";
-import ccnaHero from "../../../assets/CCNAHeroImageAutomation.png";
-import ccnaFooter from "../../../assets/CCNAFooterImageAutomation.png";
+import FortinetHero from "../../../assets/FortinetHeader.webp";
+import FortinetFooter from "../../../assets/FortinetFooter.webp";
 import MealIcon from "../../../assets/Meal.svg";
 import ReviewIcon from "../../../assets/Review.svg";
 import InstitutionalIcon from "../../../assets/InsitutionalAccount.svg";
@@ -55,392 +55,29 @@ export default function NSE5() {
   };
 
   const modules = [
-    // ─── TRACK 1: FORTIGATE SECURITY ───────────────────────────────────────────
-    {
-      title: "1.0 FortiGate Security — System and Network Settings",
-      items: [
-        {
-          subTitle: "1.1 Initial Configuration",
-          items: [
-            "Factory default settings",
-            "Connecting to the GUI and CLI",
-            "Firmware upgrades and downgrades",
-            "Backup and restore configuration",
-            "Administrative access profiles",
-          ],
-        },
-        {
-          subTitle: "1.2 Administrative Accounts",
-          items: [
-            "Local administrator accounts",
-            "RADIUS and LDAP admin authentication",
-            "Two-factor authentication for admins",
-            "Trusted hosts for admin access",
-            "Password policies",
-          ],
-        },
-        {
-          subTitle: "1.3 Network Interfaces",
-          items: [
-            "Physical interfaces",
-            "VLAN interfaces",
-            "Loopback interfaces",
-            "Aggregate and redundant interfaces",
-            "Software switch and hardware switch",
-          ],
-        },
-        {
-          subTitle: "1.4 Routing",
-          items: [
-            "Static routing",
-            "Policy-based routing",
-            "Route lookup behavior",
-            "Equal-cost multi-path (ECMP)",
-            "Reverse path forwarding (RPF)",
-          ],
-        },
-      ],
-    },
-    {
-      title: "2.0 FortiGate Security — Firewall Policies",
-      items: [
-        {
-          subTitle: "2.1 Firewall Policy Fundamentals",
-          items: [
-            "Policy table and order of evaluation",
-            "Implicit deny rule",
-            "Source and destination address objects",
-            "Service and schedule objects",
-            "Policy actions: Accept, Deny, IPsec",
-          ],
-        },
-        {
-          subTitle: "2.2 Network Address Translation (NAT)",
-          items: [
-            "Source NAT (SNAT) with IP pools",
-            "Destination NAT (DNAT) with virtual IPs (VIPs)",
-            "Central NAT table",
-            "Port address translation (PAT)",
-            "NAT46 and NAT64",
-          ],
-        },
-        {
-          subTitle: "2.3 Policy Objects",
-          items: [
-            "Address and address groups",
-            "Service definitions and groups",
-            "Schedules (one-time and recurring)",
-            "Internet service database (ISDB)",
-            "FQDN-based address objects",
-          ],
-        },
-      ],
-    },
-    {
-      title: "3.0 FortiGate Security — User Authentication",
-      items: [
-        {
-          subTitle: "3.1 Firewall Authentication",
-          items: [
-            "Active vs. passive authentication",
-            "Local user database",
-            "User groups and guest accounts",
-            "Captive portal",
-            "Disclaimer and welcome pages",
-          ],
-        },
-        {
-          subTitle: "3.2 Remote Authentication Servers",
-          items: [
-            "RADIUS server configuration",
-            "LDAP server configuration",
-            "TACACS+ integration",
-            "Single sign-on (SSO) concepts",
-            "FSSO (Fortinet Single Sign-On) agent and agentless modes",
-          ],
-        },
-        {
-          subTitle: "3.3 Certificate-Based Authentication",
-          items: [
-            "PKI certificates overview",
-            "Importing CA certificates",
-            "User certificate authentication",
-            "FortiGate as a CA",
-            "Certificate revocation (CRL and OCSP)",
-          ],
-        },
-      ],
-    },
-    {
-      title: "4.0 FortiGate Security — Content Inspection",
-      items: [
-        {
-          subTitle: "4.1 Inspection Modes",
-          items: [
-            "Flow-based inspection",
-            "Proxy-based inspection",
-            "Choosing the right inspection mode",
-            "SSL/TLS deep inspection",
-            "Certificate inspection",
-          ],
-        },
-        {
-          subTitle: "4.2 Security Profiles",
-          items: [
-            "Antivirus profiles",
-            "Web filter profiles",
-            "Application control profiles",
-            "Intrusion prevention system (IPS) profiles",
-            "DNS filter profiles",
-            "File filter profiles",
-          ],
-        },
-        {
-          subTitle: "4.3 Web Filtering",
-          items: [
-            "FortiGuard category-based filtering",
-            "URL and DNS filtering",
-            "Web content ratings",
-            "Safe search enforcement",
-            "YouTube education filter",
-          ],
-        },
-        {
-          subTitle: "4.4 Application Control",
-          items: [
-            "Application signatures and categories",
-            "Cloud access security (CASB)",
-            "Application overrides",
-            "Traffic shaping with application control",
-            "Unknown application handling",
-          ],
-        },
-        {
-          subTitle: "4.5 Antivirus",
-          items: [
-            "Virus scanning engines",
-            "File quarantine",
-            "Botnet detection",
-            "FortiSandbox integration",
-            "Outbreak prevention",
-          ],
-        },
-      ],
-    },
-    {
-      title: "5.0 FortiGate Security — SSL VPN",
-      items: [
-        {
-          subTitle: "5.1 SSL VPN Modes",
-          items: [
-            "Web mode (clientless)",
-            "Tunnel mode",
-            "Split tunneling",
-            "Full tunnel",
-            "Host check and endpoint compliance",
-          ],
-        },
-        {
-          subTitle: "5.2 SSL VPN Configuration",
-          items: [
-            "SSL VPN portals",
-            "SSL VPN realms",
-            "User and group-based access",
-            "SSL VPN firewall policies",
-            "FortiClient SSL VPN client",
-          ],
-        },
-      ],
-    },
-    {
-      title: "6.0 FortiGate Security — Diagnostics and Troubleshooting",
-      items: [
-        {
-          subTitle: "6.1 Logging",
-          items: [
-            "Log types: traffic, event, security",
-            "Local logging to disk and memory",
-            "Syslog server configuration",
-            "FortiAnalyzer logging",
-            "Log severity levels",
-          ],
-        },
-        {
-          subTitle: "6.2 Monitoring and Diagnostics",
-          items: [
-            "Dashboard widgets",
-            "Session table analysis",
-            "Packet capture (sniffer)",
-            "Flow debug (diagnose debug flow)",
-            "FortiView traffic analysis",
-          ],
-        },
-      ],
-    },
-
-    // ─── TRACK 2: FORTIGATE INFRASTRUCTURE ────────────────────────────────────
-    {
-      title: "7.0 FortiGate Infrastructure — Advanced Routing",
-      items: [
-        {
-          subTitle: "7.1 Dynamic Routing Protocols",
-          items: [
-            "OSPF fundamentals and areas",
-            "BGP overview and eBGP/iBGP",
-            "RIP version 2",
-            "Route redistribution",
-            "Routing tables and distance/metric",
-          ],
-        },
-        {
-          subTitle: "7.2 SD-WAN",
-          items: [
-            "SD-WAN members and zones",
-            "Performance SLAs and health checks",
-            "SD-WAN rules and strategies",
-            "Load balancing algorithms",
-            "Application-aware routing",
-          ],
-        },
-        {
-          subTitle: "7.3 Virtual Routing and Forwarding (VRF)",
-          items: [
-            "VRF concepts and use cases",
-            "VRF-lite configuration",
-            "Inter-VRF routing",
-            "VRF and VPN integration",
-            "Route leaking between VRFs",
-          ],
-        },
-      ],
-    },
-    {
-      title: "8.0 FortiGate Infrastructure — IPsec VPN",
-      items: [
-        {
-          subTitle: "8.1 IPsec Fundamentals",
-          items: [
-            "IKEv1 and IKEv2 phases",
-            "Authentication methods: PSK and certificates",
-            "Encryption and integrity algorithms",
-            "Diffie-Hellman groups",
-            "Perfect forward secrecy (PFS)",
-          ],
-        },
-        {
-          subTitle: "8.2 IPsec VPN Topologies",
-          items: [
-            "Site-to-site VPN",
-            "Hub-and-spoke VPN",
-            "Redundant VPN tunnels",
-            "Dial-up VPN (remote access)",
-            "GRE over IPsec",
-          ],
-        },
-        {
-          subTitle: "8.3 IPsec Troubleshooting",
-          items: [
-            "Phase 1 and Phase 2 negotiation errors",
-            "VPN monitor and status",
-            "IKE real-time debug output",
-            "Routing issues with VPN",
-            "MTU and fragmentation issues",
-          ],
-        },
-      ],
-    },
-    {
-      title: "9.0 FortiGate Infrastructure — High Availability (HA)",
-      items: [
-        {
-          subTitle: "9.1 HA Concepts",
-          items: [
-            "Active-Active vs. Active-Passive modes",
-            "FGCP (FortiGate Clustering Protocol)",
-            "Heartbeat interfaces",
-            "Session synchronization",
-            "Failover detection and recovery",
-          ],
-        },
-        {
-          subTitle: "9.2 HA Configuration and Management",
-          items: [
-            "HA cluster setup",
-            "Override and priority settings",
-            "Firmware upgrades in HA",
-            "Virtual MAC addresses",
-            "HA and management IP access",
-          ],
-        },
-      ],
-    },
-    {
-      title: "10.0 FortiGate Infrastructure — Security Fabric",
-      items: [
-        {
-          subTitle: "10.1 Security Fabric Overview",
-          items: [
-            "Fabric topology: root and downstream FortiGates",
-            "Fabric connectors",
-            "FortiTelemetry protocol",
-            "Fabric audit and recommendations",
-            "Automation stitches",
-          ],
-        },
-        {
-          subTitle: "10.2 Fabric Integration",
-          items: [
-            "FortiAnalyzer integration",
-            "FortiManager integration",
-            "FortiSandbox integration",
-            "Third-party fabric connectors",
-            "Fabric-wide policy synchronization",
-          ],
-        },
-        {
-          subTitle: "10.3 ZTNA (Zero Trust Network Access)",
-          items: [
-            "ZTNA concepts and principles",
-            "ZTNA vs. VPN",
-            "ZTNA access proxy configuration",
-            "Device posture checks",
-            "FortiClient ZTNA integration",
-          ],
-        },
-      ],
-    },
-    {
-      title: "11.0 FortiGate Infrastructure — Advanced Diagnostics",
-      items: [
-        {
-          subTitle: "11.1 Advanced Troubleshooting Tools",
-          items: [
-            "Debug flow (diagnose debug flow filter and trace)",
-            "Session list filtering and analysis",
-            "Hardware offload and NP/CP inspection bypass",
-            "CPU and memory diagnostics",
-            "Crash logs and conserve mode",
-          ],
-        },
-        {
-          subTitle: "11.2 Performance Tuning",
-          items: [
-            "NP6/NP7 hardware acceleration",
-            "CP9 content processor offloading",
-            "Traffic shaping and QoS",
-            "Interface queuing and priority",
-            "Conserve mode thresholds",
-          ],
-        },
-      ],
-    },
+    { title: "System and Network Settings", items: [] },
+    { title: "Logging and Monitoring", items: [] },
+    { title: "Firewall Policies and NAT", items: [] },
+    { title: "Routing", items: [] },
+    { title: "Firewall Authentication", items: [] },
+    { title: "Fortinet Single Sign-On (FSSO)", items: [] },
+    { title: "Certificate Operations", items: [] },
+    { title: "Antivirus", items: [] },
+    { title: "Web Filtering", items: [] },
+    { title: "Intrusion Prevention and Application Control", items: [] },
+    { title: "IPsec VPN", items: [] },
+    { title: "SD-WAN Configuration and Monitoring", items: [] },
+    { title: "High Availability", items: [] },
+    { title: "Diagnostics and Troubleshooting", items: [] },
+    { title: "FortiGate in the Cloud", items: [] },
+    { title: "FortiSASE", items: [] },
   ];
 
   return (
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}
       <TrainingHeroBanner
-        bgImage={ccnaHero}
+        bgImage={FortinetHero}
         category="FORTINET"
         title="NSE 4"
         description="Learn to administer FortiGate devices using key features and
@@ -637,7 +274,7 @@ export default function NSE5() {
 
       {/* ==================== FOOTER BANNER ==================== */}
       <TrainingTemplateFooter
-        bgImage={ccnaFooter}
+        bgImage={FortinetFooter}
         description="Advance your network security career and prepare for the Fortinet NSE 5 certification exam."
       />
     </main>

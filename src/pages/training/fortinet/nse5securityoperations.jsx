@@ -3,8 +3,8 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 import ccnaBadge from "../../../assets/FortinetNSE5SecurityOperations.png";
-import ccnaHero from "../../../assets/CCNAHeroImageAutomation.png";
-import ccnaFooter from "../../../assets/CCNAFooterImageAutomation.png";
+import FortinetHero from "../../../assets/FortinetHeader.webp";
+import FortinetFooter from "../../../assets/FortinetFooter.webp";
 import MealIcon from "../../../assets/Meal.svg";
 import ReviewIcon from "../../../assets/Review.svg";
 import InstitutionalIcon from "../../../assets/InsitutionalAccount.svg";
@@ -19,168 +19,19 @@ import TrainingHeroBanner from "../../../components/section/TrainingHeroBanner";
 export default function NSE5SecurityOperations() {
   // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
   const modules = [
-    {
-      title: "1.0 Security Operations — SOC Fundamentals",
-      items: [
-        {
-          subTitle: "1.1 SOC Roles and Responsibilities",
-          items: [
-            "Tier 1, 2, and 3 analyst functions",
-            "SOC models: in-house, MSSP, hybrid",
-            "Security Operations workflow",
-            "Escalation procedures and runbooks",
-            "Key SOC metrics: MTTD, MTTR",
-          ],
-        },
-        {
-          subTitle: "1.2 Threat Intelligence",
-          items: [
-            "Tactical, operational, and strategic threat intel",
-            "Indicators of Compromise (IoC)",
-            "Threat feeds and FortiGuard integration",
-            "MITRE ATT&CK framework",
-            "Threat hunting concepts",
-          ],
-        },
-      ],
-    },
-    {
-      title: "2.0 Security Operations — FortiAnalyzer",
-      items: [
-        {
-          subTitle: "2.1 FortiAnalyzer Deployment",
-          items: [
-            "FortiAnalyzer architecture and modes",
-            "Device registration and log ingestion",
-            "ADOM (Administrative Domain) configuration",
-            "Log storage and retention policies",
-            "FortiAnalyzer HA and collector mode",
-          ],
-        },
-        {
-          subTitle: "2.2 Log Analysis and Reporting",
-          items: [
-            "Log viewer and search filters",
-            "Event correlation and alert rules",
-            "FortiView dashboards in FortiAnalyzer",
-            "Custom reports and scheduled delivery",
-            "Compliance reporting (PCI-DSS, HIPAA, ISO 27001)",
-          ],
-        },
-        {
-          subTitle: "2.3 Incident Management in FortiAnalyzer",
-          items: [
-            "Incident creation and assignment",
-            "Playbooks and automated response",
-            "Event handlers and alert notifications",
-            "Case management workflow",
-            "Integration with FortiSOAR",
-          ],
-        },
-      ],
-    },
-    {
-      title: "3.0 Security Operations — FortiSIEM",
-      items: [
-        {
-          subTitle: "3.1 FortiSIEM Architecture",
-          items: [
-            "All-in-one vs. distributed deployment",
-            "Supervisor, Worker, and Collector roles",
-            "Event ingestion and normalization",
-            "Asset discovery and CMDB",
-            "FortiSIEM licensing and sizing",
-          ],
-        },
-        {
-          subTitle: "3.2 Rules and Correlation",
-          items: [
-            "Rule types: correlation, watch list, baseline",
-            "Writing and tuning correlation rules",
-            "Baseline anomaly detection",
-            "MITRE ATT&CK-mapped rules",
-            "False positive reduction strategies",
-          ],
-        },
-        {
-          subTitle: "3.3 FortiSIEM Response",
-          items: [
-            "Incident dashboard and triage",
-            "Remediation actions and scripts",
-            "Ticketing system integration (ServiceNow, Jira)",
-            "FortiSOAR integration",
-            "Reporting and compliance dashboards",
-          ],
-        },
-      ],
-    },
-    {
-      title: "4.0 Security Operations — FortiSOAR",
-      items: [
-        {
-          subTitle: "4.1 SOAR Concepts",
-          items: [
-            "Security Orchestration, Automation, and Response overview",
-            "Playbook-driven incident response",
-            "Alert ingestion and deduplication",
-            "Case management and collaboration",
-            "Benefits of SOAR over manual SOC workflows",
-          ],
-        },
-        {
-          subTitle: "4.2 FortiSOAR Playbooks",
-          items: [
-            "Playbook editor and logic blocks",
-            "Trigger types: manual, automated, scheduled",
-            "Connector integrations (FortiGate, FortiAnalyzer, VirusTotal)",
-            "Decision trees and conditional actions",
-            "Testing and debugging playbooks",
-          ],
-        },
-        {
-          subTitle: "4.3 FortiSOAR Administration",
-          items: [
-            "User roles and team management",
-            "Module editor and custom fields",
-            "Dashboard and widget configuration",
-            "API and webhook integrations",
-            "Audit logs and compliance tracking",
-          ],
-        },
-      ],
-    },
-    {
-      title: "5.0 Security Operations — Endpoint Detection and Response",
-      items: [
-        {
-          subTitle: "5.1 FortiEDR",
-          items: [
-            "EDR vs. traditional antivirus",
-            "FortiEDR agent deployment",
-            "Behavioral detection and threat blocking",
-            "Forensic data collection",
-            "FortiEDR console and playbooks",
-          ],
-        },
-        {
-          subTitle: "5.2 FortiClient EMS",
-          items: [
-            "EMS deployment and endpoint enrollment",
-            "Endpoint compliance profiles",
-            "Vulnerability scanning and patching",
-            "FortiClient telemetry to Security Fabric",
-            "Zero-trust tagging from EMS",
-          ],
-        },
-      ],
-    },
+    { title: "SOC Concepts and Security Fabric", items: [] },
+    { title: "Log Data Flow and Navigation", items: [] },
+    { title: "Events, Indicators, and Incidents", items: [] },
+    { title: "FortiAI, Threat Hunting, and Troubleshooting", items: [] },
+    { title: "Reports", items: [] },
+    { title: "Playbooks", items: [] },
   ];
 
   return (
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}
       <TrainingHeroBanner
-        bgImage={ccnaHero}
+        bgImage={FortinetHero}
         category="FORTINET"
         title="NSE 5 Security Operations"
         description="Learn practical SOC analyst skills using FortiAnalyzer for centralized logging, threat analysis, and automated responses. This course provides hands-on experience in managing security events, incident analysis, and generating reports."
@@ -382,7 +233,7 @@ export default function NSE5SecurityOperations() {
 
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
-        bgImage={ccnaFooter} // CHANGE: Update background image for the footer banner
+        bgImage={FortinetFooter} // CHANGE: Update background image for the footer banner
         description="Advance your networking career and prepare for the Fortinet Enterprise exam."
       />
     </main>
