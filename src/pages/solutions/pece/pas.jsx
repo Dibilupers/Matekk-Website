@@ -1,6 +1,6 @@
 import SolutionsTemplate from "../../../components/solution_template/solutions_template";
 import RelevantProjects from "../../../components/solution_template/releveantprojects";
-import PECEhero from "../../../assets/PECEHeroImage.webp";
+import PECEhero from "../../../assets/PECEHeroImage.jpg";
 import PECEfooter from "../../../assets/PECEFooterImage.webp";
 import ictImage from "../../../assets/ict.webp";
 import webImage from "../../../assets/web.webp";

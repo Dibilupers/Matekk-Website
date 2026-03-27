@@ -76,7 +76,7 @@ export default function SolutionsTemplate({
           style={{ backgroundImage: `url(${heroBgImage})` }}
         />
         {/* Blur overlay */}
-        <div className="absolute inset-0 backdrop-blur-sm bg-gray/20" />
+        <div className="absolute inset-0 backdrop-blur-xs bg-white/40" />
 
         {/* Content */}
         <div className="relative z-10 flex flex-col justify-center items-center text-center space-y-5">
@@ -86,7 +86,7 @@ export default function SolutionsTemplate({
             </h6>
             <div className="flex flex-col justify-center items-center text-center text-shadow-[0px_4px_8px_rgba(0,0,0,0.5)] space-y-1 text-white">
               <h1 className="max-w-5xl">{heroTitle}</h1>
-              <p className="max-w-3xl">{heroDescription}</p>
+              <p className="max-w-2xl">{heroDescription}</p>
             </div>
           </div>
 
@@ -184,10 +184,10 @@ export default function SolutionsTemplate({
         }}
       >
         <div
-          className="absolute inset-0"
+          className="absolute inset-0 backdrop-blur-xs"
           style={{
             background:
-              "linear-gradient(to right, #C2DDFF99, #FFFFFF00 67%, #C2DDFF99)",
+              "linear-gradient(to right, #C2DDFF99, #EDEDED10 67%, #C2DDFF99)",
           }}
         />
 

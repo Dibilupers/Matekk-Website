@@ -1,7 +1,7 @@
 import SolutionsTemplate from "../../../../components/solution_template/solutions_template";
 import RelevantProjects from "../../../../components/solution_template/releveantprojects";
 import ICTConsultancyHero from "../../../../assets/ICTConsultancyHero.jpg";
-import ICTConsultancyFooter from "../../../../assets/ICTConsultancyFooter.webp";
+import ICTConsultancyFooter from "../../../../assets/ICTConsultancyFooter.jpg";
 import ictImage from "../../../../assets/ict.webp";
 import webImage from "../../../../assets/web.webp";
 
