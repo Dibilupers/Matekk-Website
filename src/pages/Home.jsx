@@ -1484,7 +1484,7 @@ export default function Home() {
             </div>
 
             {/* Person Image */}
-            <div className="rounded-2xl overflow-hidden shadow-sm order-1 md:order-2 md:flex-1 xl:flex-1 2xl:flex-1 min-h-0 2xl:max-h-96.75">
+            <div className="rounded-2xl overflow-hidden shadow-sm order-1 md:order-2 md:flex-1 xl:flex-1 2xl:flex-1 min-h-0 xl:max-h-95 2xl:max-h-96.75">
               <img
                 src={SirMark}
                 alt="Company Representative"
