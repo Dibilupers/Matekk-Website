@@ -7,22 +7,14 @@ const ITEMS_PER_ROW = 3;
  * Drop this as a child of SolutionsTemplate on pages that need it.
  *
  * @param {object}   props
- * @param {Array}    props.projects      - Array of { id, src, alt, title, desc, link? }
+ * @param {Array}    props.projects     - Array of { id, src, alt, title, desc, link? }
  * @param {string}   [props.description] - Custom paragraph under the heading
  */
 export default function RelevantProjects({
   projects = [],
   description = "This section highlights selected projects demonstrating our experience in delivering similar ICT services, including the scope of work performed and the types of organizations served.",
 }) {
-  // ── Layout: controls single vs multi-column ──
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
-
-  // ── Interaction: touch devices (phones + tablets) need tap-to-reveal
-  //    since hover never fires on a touchscreen regardless of screen size ──
-  const [isTouch, setIsTouch] = useState(
-    () => window.matchMedia("(hover: none) and (pointer: coarse)").matches
-  );
-
   const [hoveredRow, setHoveredRow] = useState(null);
   const [tappedCard, setTappedCard] = useState(null);
 
@@ -30,13 +22,6 @@ export default function RelevantProjects({
     const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  useEffect(() => {
-    const touchQuery = window.matchMedia("(hover: none) and (pointer: coarse)");
-    const handleTouchChange = (e) => setIsTouch(e.matches);
-    touchQuery.addEventListener("change", handleTouchChange);
-    return () => touchQuery.removeEventListener("change", handleTouchChange);
   }, []);
 
   // Chunk flat array into rows of ITEMS_PER_ROW
@@ -55,51 +40,29 @@ export default function RelevantProjects({
     <section className="bg-[#EBF5FD] flex flex-col items-center py-10 md:py-15">
       <div className="mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] space-y-6">
         {/* ====== HEADING ====== */}
-        <div className="flex flex-col justify-center items-center space-y-1">
+        <div className="flex flex-row justify-center items-center space-y-1">
           <h3>
             Relevant Project{" "}
             <span className="text-[#1775EE]">Experience</span>
           </h3>
-          <p className="text-center max-w-3xl">{description}</p>
+          <p className="text-right max-w-3xl">{description}</p>
         </div>
 
         {/* ====== GALLERY ====== */}
         {isMobile ? (
-          /* ── MOBILE: single column, tap to reveal ── */
+          /* ── MOBILE: single column ── */
           <div className="flex flex-col gap-3">
             {projects.map((item) => (
-              <TapCard
+              <MobileCard
                 key={item.id}
                 item={item}
                 isTapped={tappedCard === item.id}
                 onTap={handleCardTap}
-                className="w-[90vw] h-[30vh] self-center"
               />
             ))}
           </div>
-        ) : isTouch ? (
-          /* ── TABLET: multi-column layout, tap to reveal ── */
-          <div className="flex flex-col gap-3">
-            {rows.map((row, rowIndex) => (
-              <div
-                key={rowIndex}
-                className="flex gap-3"
-                style={{ height: "280px" }}
-              >
-                {row.map((item) => (
-                  <TapCard
-                    key={item.id}
-                    item={item}
-                    isTapped={tappedCard === item.id}
-                    onTap={handleCardTap}
-                    className="flex-1 h-full"
-                  />
-                ))}
-              </div>
-            ))}
-          </div>
         ) : (
-          /* ── DESKTOP: multi-column layout, hover to reveal ── */
+          /* ── DESKTOP / TABLET: rows with expand-on-hover ── */
           <div className="flex flex-col gap-3">
             {rows.map((row, rowIndex) => (
               <DesktopRow
@@ -118,16 +81,12 @@ export default function RelevantProjects({
   );
 }
 
-// ==================== TAP CARD (mobile + tablet) ====================
-/**
- * Shared card for both mobile and tablet.
- * className prop controls sizing so the parent dictates dimensions.
- */
-function TapCard({ item, isTapped, onTap, className = "" }) {
+// ==================== MOBILE CARD ====================
+function MobileCard({ item, isTapped, onTap }) {
   return (
     <div
       onClick={() => onTap(item.id)}
-      className={`relative rounded-2xl overflow-hidden cursor-pointer ${className}`}
+      className="relative self-center rounded-2xl overflow-hidden w-[90vw] h-[30vh] cursor-pointer"
     >
       <img
         src={item.src}
@@ -144,11 +103,11 @@ function TapCard({ item, isTapped, onTap, className = "" }) {
 
       {/* Content */}
       <div
-        className={`absolute inset-0 px-6 py-4 flex flex-col justify-center gap-1 transition-opacity duration-500 ${
+        className={`absolute inset-0 px-8 py-4 flex flex-col justify-center transition-opacity duration-500 ${
           isTapped ? "opacity-100" : "opacity-0"
         }`}
       >
-        <h5 className="text-white">{item.title}</h5>
+        <h5 className="text-white flex-1">{item.title}</h5>
         <p className="text-white">{item.desc}</p>
       </div>
     </div>

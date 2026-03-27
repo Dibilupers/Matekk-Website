@@ -1,9 +1,6 @@
 import SolutionsTemplate from "../../../../components/solution_template/solutions_template";
-import RelevantProjects from "../../../../components/solution_template/releveantprojects";
 import ICTConsultancyHero from "../../../../assets/ICTConsultancyHero.jpg";
 import ICTConsultancyFooter from "../../../../assets/ICTConsultancyFooter.jpg";
-import ictImage from "../../../../assets/ict.webp";
-import webImage from "../../../../assets/web.webp";
 
 const CHALLENGES = [
   "Inefficient management of building systems and resources",
@@ -40,43 +37,6 @@ const DELIVERABLES = [
   },
 ];
 
-const RELEVANT_PROJECTS = [
-  {
-    id: 1,
-    src: ictImage,
-    alt: "Smart Building Infrastructure",
-    title: "Integrated Smart Building Systems",
-    desc: "Centralized automation and monitoring of building systems including lighting, HVAC, and security.",
-  },
-  {
-    id: 2,
-    src: webImage,
-    alt: "Energy Optimization",
-    title: "Energy Efficiency Implementation",
-    desc: "Deployment of intelligent energy management solutions to reduce operational costs.",
-  },
-  {
-    id: 3,
-    src: ictImage,
-    alt: "Security Systems",
-    title: "Advanced Security Integration",
-    desc: "Implementation of surveillance and access control systems for enhanced safety.",
-  },
-  {
-    id: 4,
-    src: webImage,
-    alt: "Automation Systems",
-    title: "Building Automation",
-    desc: "Automation of building operations for improved efficiency and occupant comfort.",
-  },
-  {
-    id: 5,
-    src: ictImage,
-    alt: "Monitoring Systems",
-    title: "Real-Time Monitoring",
-    desc: "Continuous monitoring and analytics for performance optimization.",
-  },
-];
 
 export default function SMARTBuilding() {
   return (
@@ -107,7 +67,6 @@ export default function SMARTBuilding() {
       footerHighlightText="Request a Consultation"
       footerDescription="Enhance your building operations with MATEKK Smart Building Solutions."
     >
-      <RelevantProjects projects={RELEVANT_PROJECTS} />
     </SolutionsTemplate>
   );
 }

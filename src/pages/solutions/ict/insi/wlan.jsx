@@ -1,9 +1,6 @@
 import SolutionsTemplate from "../../../../components/solution_template/solutions_template";
-import RelevantProjects from "../../../../components/solution_template/releveantprojects";
 import ICTConsultancyHero from "../../../../assets/ICTConsultancyHero.jpg";
 import ICTConsultancyFooter from "../../../../assets/ICTConsultancyFooter.jpg";
-import ictImage from "../../../../assets/ict.webp";
-import webImage from "../../../../assets/web.webp";
 
 const CHALLENGES = [
   "Weak or inconsistent wireless signal coverage",
@@ -40,44 +37,6 @@ const DELIVERABLES = [
   },
 ];
 
-const RELEVANT_PROJECTS = [
-  {
-    id: 1,
-    src: ictImage,
-    alt: "Network and Security Infrastructure Projects",
-    title:
-      "Design, Consultancy, Build, Test and Acceptance of ICT Infrastructure",
-    desc: "Centralized monitoring and control of interconnected substations via SCADA and ICT, and automating power distribution.",
-  },
-  {
-    id: 2,
-    src: webImage,
-    alt: "SLSU Delegates",
-    title: "SLSU Delegates Welcome",
-    desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
-  },
-  {
-    id: 3,
-    src: ictImage,
-    alt: "Team Celebration",
-    title: "Team Celebration",
-    desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
-  },
-  {
-    id: 4,
-    src: webImage,
-    alt: "Ideas Workshop",
-    title: "Ideas Workshop",
-    desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
-  },
-  {
-    id: 5,
-    src: ictImage,
-    alt: "Conference Panel",
-    title: "Conference Panel",
-    desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
-  },
-];
 
 export default function WLAN() {
   return (
@@ -104,7 +63,6 @@ export default function WLAN() {
       footerHighlightText="Request a Consultation"
       footerDescription="Secure your organization's network with MGKK Information Communication Technology Services."
     >
-      <RelevantProjects projects={RELEVANT_PROJECTS} />
     </SolutionsTemplate>
   );
 }

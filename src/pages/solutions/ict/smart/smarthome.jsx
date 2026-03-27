@@ -1,9 +1,7 @@
 import SolutionsTemplate from "../../../../components/solution_template/solutions_template";
-import RelevantProjects from "../../../../components/solution_template/releveantprojects";
 import ICTConsultancyHero from "../../../../assets/ICTConsultancyHero.jpg";
 import ICTConsultancyFooter from "../../../../assets/ICTConsultancyFooter.jpg";
-import ictImage from "../../../../assets/ict.webp";
-import webImage from "../../../../assets/web.webp";
+
 
 const CHALLENGES = [
   "Manual control of home systems and appliances",
@@ -104,7 +102,6 @@ export default function SMARTHome() {
       footerHighlightText="Request a Consultation"
       footerDescription="Secure your organization's network with MGKK Information Communication Technology Services."
     >
-      <RelevantProjects projects={RELEVANT_PROJECTS} />
     </SolutionsTemplate>
   );
 }

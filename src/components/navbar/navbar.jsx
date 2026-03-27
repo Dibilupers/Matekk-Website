@@ -52,12 +52,12 @@ function NavBar() {
             name: "ICT Network and Security Infrastructure",
             subcourses: [
               {
-                name: "IP Backbone and Distribution Networks",
-                path: "/solutions/ict/insi/ipbackbone",
+                name: "End-to-End Network Architecture",
+                path: "/solutions/ict/insi/e2e",
               },
               {
-                name: "Access Networks",
-                path: "/solutions/ict/insi/accessnetworks",
+                name: "Enterprise Security Architecture",
+                path: "/solutions/ict/insi/enterprise",
               },
               {
                 name: "WLAN and Wireless Backhaul Networks",
@@ -84,8 +84,8 @@ function NavBar() {
           {
             name: "Cybersecurity",
             subcourses: [
-              { name: "Red Team", path: "/solutions/ict/cybersec/redteam" },
-              { name: "Blue Team", path: "/solutions/ict/cybersec/blueteam" },
+              { name: "Red Team (VAPT)", path: "/solutions/ict/cybersec/redteam" },
+              { name: "Blue Team (SOC)", path: "/solutions/ict/cybersec/blueteam" },
             ],
           },
           {

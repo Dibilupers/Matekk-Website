@@ -92,8 +92,8 @@ import PMP from "../pages/training/projectmanagement/pmp";
 /* ICT Consultancy */
 import DataCenterFacilities from "../pages/solutions/ict/datacenter";
 /* INSI */
-import AccessNetworks from "../pages/solutions/ict/insi/accessnetworks";
-import IPBackbone from "../pages/solutions/ict/insi/ipbackbone";
+import EnterpriseSecurityArchitecture from "../pages/solutions/ict/insi/enterprise";
+import EndtoEnd from "../pages/solutions/ict/insi/e2e";
 import IPTelephony from "../pages/solutions/ict/insi/iptelephony";
 import OnPremise from "../pages/solutions/ict/insi/onpremise";
 import OpticalFiber from "../pages/solutions/ict/insi/opticalfiber";
@@ -329,8 +329,8 @@ export default function App() {
           element={<DataCenterFacilities />}
         />
         {/* ICT Network and Security Infrastructure */}
-        <Route path="/solutions/ict/insi/accessnetworks" element={<AccessNetworks />} />
-        <Route path="/solutions/ict/insi/ipbackbone" element={<IPBackbone />} />
+        <Route path="/solutions/ict/insi/enterprise" element={<EnterpriseSecurityArchitecture />} />
+        <Route path="/solutions/ict/insi/e2e" element={<EndtoEnd />} />
         <Route path="/solutions/ict/insi/iptelephony" element={<IPTelephony />} />
         <Route path="/solutions/ict/insi/onpremise" element={<OnPremise />} />
         <Route path="/solutions/ict/insi/opticalfiber" element={<OpticalFiber />} />

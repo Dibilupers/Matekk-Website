@@ -1,9 +1,7 @@
 import SolutionsTemplate from "../../../../components/solution_template/solutions_template";
-import RelevantProjects from "../../../../components/solution_template/releveantprojects";
 import ICTConsultancyHero from "../../../../assets/ICTConsultancyHero.jpg";
 import ICTConsultancyFooter from "../../../../assets/ICTConsultancyFooter.jpg";
-import ictImage from "../../../../assets/ict.webp";
-import webImage from "../../../../assets/web.webp";
+
 
 const CHALLENGES = [
   "Inefficient urban infrastructure and resource management",
@@ -40,43 +38,6 @@ const DELIVERABLES = [
   },
 ];
 
-const RELEVANT_PROJECTS = [
-  {
-    id: 1,
-    src: ictImage,
-    alt: "Smart City Infrastructure",
-    title: "Integrated Urban Systems",
-    desc: "Unified digital ecosystem connecting transportation, utilities, and communication systems.",
-  },
-  {
-    id: 2,
-    src: webImage,
-    alt: "Traffic Management",
-    title: "Smart Traffic Solutions",
-    desc: "Intelligent traffic monitoring and control to reduce congestion and improve mobility.",
-  },
-  {
-    id: 3,
-    src: ictImage,
-    alt: "Public Safety",
-    title: "Enhanced Public Safety",
-    desc: "Deployment of smart surveillance and emergency response systems.",
-  },
-  {
-    id: 4,
-    src: webImage,
-    alt: "Energy Systems",
-    title: "Sustainable Energy Management",
-    desc: "Smart grids and energy optimization for sustainable urban development.",
-  },
-  {
-    id: 5,
-    src: ictImage,
-    alt: "Data Platforms",
-    title: "Urban Data Intelligence",
-    desc: "Real-time data analytics platforms for smarter city planning and governance.",
-  },
-];
 
 export default function SMARTCity() {
   return (
@@ -107,7 +68,6 @@ export default function SMARTCity() {
       footerHighlightText="Request a Consultation"
       footerDescription="Transform urban environments with MATEKK Smart City Solutions."
     >
-      <RelevantProjects projects={RELEVANT_PROJECTS} />
     </SolutionsTemplate>
   );
 }
