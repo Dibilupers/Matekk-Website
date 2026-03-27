@@ -8,10 +8,10 @@ import gallery3 from "../assets/solutionsGallery3.webp";
 import gallery4 from "../assets/solutionsGallery4.webp";
 import gallery5 from "../assets/solutionsGallery5.webp";
 
-import MaamGrace from "../assets/person_holding_laptop.png";
-import ClydeNelsonRocillo from "../assets/Clyde_Nelson_Rocillo.jpg";
+import MaamGrace from "../assets/person_holding_laptop.webp";
+import ClydeNelsonRocillo from "../assets/Clyde_Nelson_Rocillo.webp";
 import SirMark from "../assets/Founder.webp";
-import ictImage from "../assets/ict.png";
+import ictImage from "../assets/ict.webp";
 import CompanyBuilding from "../assets/building.webp";
 import webImage from "../assets/web.png";
 import { useState, useEffect } from "react";
@@ -1470,7 +1470,7 @@ export default function Home() {
         </div>
 
         {/* 3-Column Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-stretch">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 items-stretch">
           {/* Left Column */}
           <div className="flex flex-col gap-4 md:h-full xl:h-full 2xl:h-full">
             {/* Text Card */}
@@ -1484,7 +1484,7 @@ export default function Home() {
             </div>
 
             {/* Person Image */}
-            <div className="rounded-2xl overflow-hidden shadow-sm order-1 md:order-2 md:flex-1 xl:flex-1 2xl:flex-1 min-h-0 xl:max-h-95 2xl:max-h-96.75">
+            <div className="rounded-2xl overflow-hidden shadow-sm order-1 md:order-2 md:flex-1 xl:flex-1 2xl:flex-1 min-h-0 xl:max-h-96 2xl:max-h-96.75">
               <img
                 src={SirMark}
                 alt="Company Representative"
@@ -1494,7 +1494,7 @@ export default function Home() {
           </div>
 
           {/* Building Image */}
-          <div className="rounded-2xl overflow-hidden shadow-sm order-3 md:order-0 self-stretch min-h-0 2xl:max-h-145">
+          <div className="rounded-2xl overflow-hidden shadow-sm order-3 md:order-0 self-stretch min-h-0 xl:max-h-152 2xl:max-h-145 ">
             <img
               src={CompanyBuilding}
               alt="Matekk Academy Company Building"
@@ -1503,7 +1503,7 @@ export default function Home() {
           </div>
 
           {/* Right Column */}
-          <div className="flex flex-col gap-4 order-4 md:order-0">
+          <div className="flex flex-col md:flex-row xl:flex-col gap-4 order-4 md:order-0">
             {/* Mission Card */}
             <div className="about_cards space-y-2">
               <h5>
