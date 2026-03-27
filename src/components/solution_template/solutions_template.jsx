@@ -76,7 +76,7 @@ export default function SolutionsTemplate({
           style={{ backgroundImage: `url(${heroBgImage})` }}
         />
         {/* Blur overlay */}
-        <div className="absolute inset-0 backdrop-blur-sm bg-white/20" />
+        <div className="absolute inset-0 backdrop-blur-sm bg-gray/20" />
 
         {/* Content */}
         <div className="relative z-10 flex flex-col justify-center items-center text-center space-y-5">

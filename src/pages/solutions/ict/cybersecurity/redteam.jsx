@@ -1,5 +1,5 @@
 import SolutionsTemplate from "../../../../components/solution_template/solutions_template";
-import ICTConsultancyHero from "../../../../assets/ICTConsultancyHero.webp";
+import ICTConsultancyHero from "../../../../assets/ICTConsultancyHero.jpg";
 import ICTConsultancyFooter from "../../../../assets/ICTConsultancyFooter.webp";
 
 const CHALLENGES = [
