@@ -3,8 +3,8 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 import ccnaBadge from "../../../assets/FortinetNSE5SecurityOperations.png";
-import ccnaHero from "../../../assets/CCNAHeroImageAutomation.png";
-import ccnaFooter from "../../../assets/CCNAFooterImageAutomation.png";
+import FortinetHero from "../../../assets/FortinetHeader.png";
+import FortinetFooter from "../../../assets/FortinetFooter.png";
 import MealIcon from "../../../assets/Meal.svg";
 import ReviewIcon from "../../../assets/Review.svg";
 import InstitutionalIcon from "../../../assets/InsitutionalAccount.svg";
@@ -18,112 +18,20 @@ import TrainingHeroBanner from "../../../components/section/TrainingHeroBanner";
 // ==================== COMPONENT NAME - CHANGE FOR EACH COURSE ====================
 export default function NSE5SecurityOperations() {
   // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
- const modules = [
-   {
-     title: "1.0 Networking Concepts",
-     items: [
-       {
-         subTitle: "1.1 OSI Model Layers",
-         items: [
-           "Physical",
-           "Data Link",
-           "Network",
-           "Transport",
-           "Session",
-           "Presentation",
-           "Application",
-         ],
-       },
-       {
-         subTitle: "1.2 Networking Appliances",
-         items: [
-           "Routers",
-           "Switches",
-           "Firewalls",
-           "IDS/IPS",
-           "Load Balancers",
-           "Proxies",
-           "NAS",
-           "SAN",
-           "Wireless Devices",
-         ],
-       },
-       {
-         subTitle: "1.3 Cloud Concepts",
-         items: [
-           "NFV",
-           "VPC",
-           "Network Security Groups",
-           "Cloud Gateways",
-           "Deployment Models: Public, Private, Hybrid",
-           "Service Models: SaaS, IaaS, PaaS",
-         ],
-       },
-       {
-         subTitle: "1.4 Ports and Protocols",
-         items: [
-           "FTP",
-           "SFTP",
-           "SSH",
-           "Telnet",
-           "SMTP",
-           "DNS",
-           "DHCP",
-           "HTTP",
-           "HTTPS",
-           "SNMP",
-           "LDAP",
-           "RDP",
-           "SIP",
-         ],
-       },
-       {
-         subTitle: "1.5 Traffic Types",
-         items: ["Unicast", "Multicast", "Anycast", "Broadcast"],
-       },
-       {
-         subTitle: "1.6 Transmission Media",
-         items: [
-           "Wireless: 802.11, Cellular, Satellite",
-           "Wired: Fiber, Coaxial, DAC",
-         ],
-       },
-       {
-         subTitle: "1.7 Transceivers and Connectors",
-         items: ["SC", "LC", "ST", "MPO", "RJ11", "RJ45", "F-type", "BNC"],
-       },
-       {
-         subTitle: "1.8 Network Topologies",
-         items: [
-           "Mesh",
-           "Hybrid",
-           "Star / Hub and Spoke",
-           "Spine and Leaf",
-           "Point-to-Point",
-           "Three-Tier",
-           "Collapsed Core",
-         ],
-       },
-       {
-         subTitle: "1.9 IPv4 Addressing",
-         items: [
-           "Public vs. Private",
-           "APIPA",
-           "RFC1918",
-           "Loopback",
-           "Subnetting: VLSM, CIDR",
-           "Address Classes: A, B, C, D, E",
-         ],
-       },
-     ],
-   },
- ];
+  const modules = [
+    { title: "SOC Concepts and Security Fabric", items: [] },
+    { title: "Log Data Flow and Navigation", items: [] },
+    { title: "Events, Indicators, and Incidents", items: [] },
+    { title: "FortiAI, Threat Hunting, and Troubleshooting", items: [] },
+    { title: "Reports", items: [] },
+    { title: "Playbooks", items: [] },
+  ];
 
   return (
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}
       <TrainingHeroBanner
-        bgImage={ccnaHero}
+        bgImage={FortinetHero}
         category="FORTINET"
         title="NSE 5 Security Operations"
         description="Learn practical SOC analyst skills using FortiAnalyzer for centralized logging, threat analysis, and automated responses. This course provides hands-on experience in managing security events, incident analysis, and generating reports."
@@ -142,13 +50,15 @@ export default function NSE5SecurityOperations() {
             {/* About Section - Description */}
             {/* CHANGE: Course description paragraphs */}
             <p>
-              In this course, you will gain practical skills to work as a SOC analyst using FortiAnalyzer 
-              for centralized logging and analytics. You will learn to manage and investigate events, automate 
-              threat responses with playbooks, and detect current and potential threats through incident analysis and outbreak reports.
+              In this course, you will gain practical skills to work as a SOC
+              analyst using FortiAnalyzer for centralized logging and analytics.
+              You will learn to manage and investigate events, automate threat
+              responses with playbooks, and detect current and potential threats
+              through incident analysis and outbreak reports.
             </p>
             <p>
-              The course also covers integrating FortiAI into your workflow and generating security 
-              reports to support effective SOC operations.
+              The course also covers integrating FortiAI into your workflow and
+              generating security reports to support effective SOC operations.
             </p>
           </section>
 
@@ -171,11 +81,15 @@ export default function NSE5SecurityOperations() {
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Explain FortiAnalyzer integration with the Security Fabric</p>
+                <p>
+                  Explain FortiAnalyzer integration with the Security Fabric
+                </p>
               </div>
               <p className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <span>Describe how logging functions within the Security Fabric</span>
+                <span>
+                  Describe how logging functions within the Security Fabric
+                </span>
               </p>
             </div>
           </section>
@@ -319,7 +233,7 @@ export default function NSE5SecurityOperations() {
 
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
-        bgImage={ccnaFooter} // CHANGE: Update background image for the footer banner
+        bgImage={FortinetFooter} // CHANGE: Update background image for the footer banner
         description="Advance your networking career and prepare for the Fortinet Enterprise exam."
       />
     </main>

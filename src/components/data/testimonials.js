@@ -142,7 +142,7 @@ export const testimonials = [
     name: "John Keanu Morales",
     course: "CCNA Passer - Sep. 2022",
     rating: 5,
-    feedback: "Just passed my CCNA! Highly recommend Converge Training not just lectures but they teach you how to study smart and identify your weak topics. Even after the bootcamp, Engr. Mark Melendres guides you until you pass and gives tips to get into the industry. Will definitely enroll again for future certifications!",
+    feedback: "Just passed my CCNA! Big thanks to Converge Training for teaching us how to study smart and focus on weak areas. Special shoutout to Engr. Mark Melendres for the guidance even after the bootcamp. Will enroll again for future certification!",
     image: JohnKeanuMorales,
     featured: false,
     link: "https://www.facebook.com/share/p/18USut4zYP/",

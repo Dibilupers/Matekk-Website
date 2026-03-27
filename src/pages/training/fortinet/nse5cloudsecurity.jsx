@@ -3,8 +3,8 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 import ccnaBadge from "../../../assets/FortinetNSE5ClousSecurity.png";
-import ccnaHero from "../../../assets/CCNAHeroImageAutomation.png";
-import ccnaFooter from "../../../assets/CCNAFooterImageAutomation.png";
+import FortinetHero from "../../../assets/FortinetHeader.png";
+import FortinetFooter from "../../../assets/FortinetFooter.png";
 import MealIcon from "../../../assets/Meal.svg";
 import ReviewIcon from "../../../assets/Review.svg";
 import InstitutionalIcon from "../../../assets/InsitutionalAccount.svg";
@@ -18,126 +18,23 @@ import TrainingHeroBanner from "../../../components/section/TrainingHeroBanner";
 // ==================== COMPONENT NAME - CHANGE FOR EACH COURSE ====================
 export default function NSE5CloudSecurity() {
   // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
- const modules = [
-  {
-    title: "1.0 Networking Concepts",
-    items: [
-      {
-        subTitle: "1.1 OSI Model Layers",
-        items: [
-          "Physical",
-          "Data Link",
-          "Network",
-          "Transport",
-          "Session",
-          "Presentation",
-          "Application",
-        ],
-      },
-      {
-        subTitle: "1.2 Networking Appliances",
-        items: [
-          "Routers",
-          "Switches",
-          "Firewalls",
-          "IDS/IPS",
-          "Load Balancers",
-          "Proxies",
-          "NAS",
-          "SAN",
-          "Wireless Devices",
-        ],
-      },
-      {
-        subTitle: "1.3 Cloud Concepts",
-        items: [
-          "NFV",
-          "VPC",
-          "Network Security Groups",
-          "Cloud Gateways",
-          "Deployment Models: Public, Private, Hybrid",
-          "Service Models: SaaS, IaaS, PaaS",
-        ],
-      },
-      {
-        subTitle: "1.4 Ports and Protocols",
-        items: [
-          "FTP",
-          "SFTP",
-          "SSH",
-          "Telnet",
-          "SMTP",
-          "DNS",
-          "DHCP",
-          "HTTP",
-          "HTTPS",
-          "SNMP",
-          "LDAP",
-          "RDP",
-          "SIP",
-        ],
-      },
-      {
-        subTitle: "1.5 Traffic Types",
-        items: [
-          "Unicast",
-          "Multicast",
-          "Anycast",
-          "Broadcast",
-        ],
-      },
-      {
-        subTitle: "1.6 Transmission Media",
-        items: [
-          "Wireless: 802.11, Cellular, Satellite",
-          "Wired: Fiber, Coaxial, DAC",
-        ],
-      },
-      {
-        subTitle: "1.7 Transceivers and Connectors",
-        items: [
-          "SC",
-          "LC",
-          "ST",
-          "MPO",
-          "RJ11",
-          "RJ45",
-          "F-type",
-          "BNC",
-        ],
-      },
-      {
-        subTitle: "1.8 Network Topologies",
-        items: [
-          "Mesh",
-          "Hybrid",
-          "Star / Hub and Spoke",
-          "Spine and Leaf",
-          "Point-to-Point",
-          "Three-Tier",
-          "Collapsed Core",
-        ],
-      },
-      {
-        subTitle: "1.9 IPv4 Addressing",
-        items: [
-          "Public vs. Private",
-          "APIPA",
-          "RFC1918",
-          "Loopback",
-          "Subnetting: VLSM, CIDR",
-          "Address Classes: A, B, C, D, E",
-        ],
-      },
-    ],
-  },
-];
+  const modules = [
+    { title: "Introduction", items: [] },
+    { title: "Basic Setup", items: [] },
+    { title: "Web Application Security", items: [] },
+    { title: "API Discovery and Protection", items: [] },
+    { title: "Bot Mitigation", items: [] },
+    { title: "Application Delivery", items: [] },
+    { title: "Additional Configuration", items: [] },
+    { title: "Compliance", items: [] },
+    { title: "Troubleshooting", items: [] },
+  ];
 
   return (
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}
       <TrainingHeroBanner
-        bgImage={ccnaHero}
+        bgImage={FortinetHero}
         category="FORTINET"
         title="NSE 5 Cloud Security"
         description="Learn to deploy, configure, and manage FortiWeb to protect web applications and cloud environments.
@@ -349,7 +246,7 @@ export default function NSE5CloudSecurity() {
 
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
-        bgImage={ccnaFooter} // CHANGE: Update background image for the footer banner
+        bgImage={FortinetFooter} // CHANGE: Update background image for the footer banner
         description="Advance your networking career and prepare for the CCNP Enterprise exam."
       />
     </main>

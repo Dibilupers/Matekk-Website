@@ -60,8 +60,8 @@ const INQUIRY_TYPE_OPTIONS = [
     ),
   },
   {
-    value: "services",
-    label: "ICT Services",
+    value: "solutions",
+    label: "ICT Solutions",
     description: "Inquire about network, security, or engineering solutions",
     icon: (
       <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -95,7 +95,7 @@ function useEnrollForm(onClose, initialStep = 0, initialInquiryType = null, pres
     message:   "",
   });
 
-  const [servicesForm, setServicesForm] = useState({
+  const [solutionsForm, setSolutionsForm] = useState({
     name:            "",
     email:           "",
     phone:           "",
@@ -114,8 +114,8 @@ function useEnrollForm(onClose, initialStep = 0, initialInquiryType = null, pres
 
   const updateTraining      = (field) => (e) =>
     setTrainingForm((prev) => ({ ...prev, [field]: e.target.value }));
-  const updateServicesEvent = (field) => (e) =>
-    setServicesForm((prev) => ({ ...prev, [field]: e.target.value }));
+  const updateSolutionsEvent = (field) => (e) =>
+    setSolutionsForm((prev) => ({ ...prev, [field]: e.target.value }));
 
   const selectInquiryType = (type) => { setInquiryType(type); setStep(1); };
 
@@ -138,22 +138,22 @@ function useEnrollForm(onClose, initialStep = 0, initialInquiryType = null, pres
     return Object.keys(e).length === 0;
   };
 
-  const validateServicesStep1 = () => {
+  const validateSolutionsStep1 = () => {
     const e = {};
-    if (!servicesForm.name.trim())  e.name  = "Name or company is required.";
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(servicesForm.email)) e.email = "Enter a valid email address.";
-    if (!servicesForm.phone.trim()) e.phone = "Phone number is required.";
+    if (!solutionsForm.name.trim())  e.name  = "Name or company is required.";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(solutionsForm.email)) e.email = "Enter a valid email address.";
+    if (!solutionsForm.phone.trim()) e.phone = "Phone number is required.";
     setErrors(e);
     return Object.keys(e).length === 0;
   };
 
-  const validateServicesStep2 = () => {
+  const validateSolutionsStep2 = () => {
     const e = {};
-    if (!servicesForm.serviceInterest) e.serviceInterest = "Please select a service.";
-    if (!servicesForm.projectScale)    e.projectScale    = "Please select a project scale.";
-    if (!servicesForm.timeline)        e.timeline        = "Please select a timeline.";
-    if (!servicesForm.budget)          e.budget          = "Please select a budget range.";
-    if (!servicesForm.projectDesc.trim()) e.projectDesc  = "Please describe your project.";
+    if (!solutionsForm.serviceInterest) e.serviceInterest = "Please select a service.";
+    if (!solutionsForm.projectScale)    e.projectScale    = "Please select a project scale.";
+    if (!solutionsForm.timeline)        e.timeline        = "Please select a timeline.";
+    if (!solutionsForm.budget)          e.budget          = "Please select a budget range.";
+    if (!solutionsForm.projectDesc.trim()) e.projectDesc  = "Please describe your project.";
     if (!captchaToken)                 e.captcha         = "Please complete the CAPTCHA verification.";
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -161,7 +161,7 @@ function useEnrollForm(onClose, initialStep = 0, initialInquiryType = null, pres
 
   const next = () => {
     if (inquiryType === "training" && validateTrainingStep1()) setStep(2);
-    if (inquiryType === "services" && validateServicesStep1()) setStep(2);
+    if (inquiryType === "solutions" && validateSolutionsStep1()) setStep(2);
   };
 
   const back = () => {
@@ -196,7 +196,7 @@ function useEnrollForm(onClose, initialStep = 0, initialInquiryType = null, pres
 
     const valid = inquiryType === "training"
       ? validateTrainingStep2()
-      : validateServicesStep2();
+      : validateSolutionsStep2();
     if (!valid) return;
 
     setStatus("loading");
@@ -215,17 +215,17 @@ function useEnrollForm(onClose, initialStep = 0, initialInquiryType = null, pres
        *     attendees    = <value>
        *     course       = <value>
        *     subject      = "New Training Inquiry"  ← used in <h1> subject tag
-       *     service_interest is NOT sent            ← hides Services block
+       *     service_interest is NOT sent            ← hides Solutions block
        *
-       *   Services:
-       *     inquiry_type     = "ICT Services Inquiry"
+       *   Solutions:
+       *     inquiry_type     = "ICT Solutions Inquiry"
        *     service_interest = <value>  ← triggers {{#service_interest}} block
        *     project_scale    = <value>
        *     timeline         = <value>
        *     budget           = <value>
        *     project_desc     = <value>
        *     tech_specs       = <value | "N/A">
-       *     subject          = "New ICT Services Inquiry"
+       *     subject          = "New ICT Solutions Inquiry"
        *     funding is NOT sent                     ← hides Training block
        *
        * ContactForm sends inquiry_type = "" (empty string → falsy),
@@ -253,24 +253,24 @@ function useEnrollForm(onClose, initialStep = 0, initialInquiryType = null, pres
           }
         : {
             // ── Shared fields ──
-            inquiry_type:        "ICT Services Inquiry",
-            name:                servicesForm.name,
-            email:               servicesForm.email,
-            phone:               servicesForm.phone,
-            subject:             "New ICT Services Inquiry",
-            message:             servicesForm.message || "No additional message.",
+            inquiry_type:        "ICT Solutions Inquiry",
+            name:                solutionsForm.name,
+            email:               solutionsForm.email,
+            phone:               solutionsForm.phone,
+            subject:             "New ICT Solutions Inquiry",
+            message:             solutionsForm.message || "No additional message.",
             // ── Badge keys (Gmail-safe — no {{^}} blocks needed) ──
-            badge_label:         "🖥️ ICT Services Inquiry",
+            badge_label:         "🖥️ ICT Solutions Inquiry",
             badge_color:         "#ff8c0022",
             badge_text_color:    "#ffaa44",
             badge_border_color:  "#ff8c0055",
-            // ── Services-specific (triggers {{#service_interest}} block) ──
-            service_interest:    servicesForm.serviceInterest,
-            project_scale:       servicesForm.projectScale,
-            timeline:            servicesForm.timeline,
-            budget:              servicesForm.budget,
-            project_desc:        servicesForm.projectDesc,
-            tech_specs:          servicesForm.techSpecs || "N/A",
+            // ── Solutions-specific (triggers {{#service_interest}} block) ──
+            service_interest:    solutionsForm.serviceInterest,
+            project_scale:       solutionsForm.projectScale,
+            timeline:            solutionsForm.timeline,
+            budget:              solutionsForm.budget,
+            project_desc:        solutionsForm.projectDesc,
+            tech_specs:          solutionsForm.techSpecs || "N/A",
           };
 
       await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, payload, EMAILJS_PUBLIC_KEY);
@@ -299,16 +299,16 @@ function useEnrollForm(onClose, initialStep = 0, initialInquiryType = null, pres
       funding: FUNDING_OPTIONS[0], attendees: "", name: "", email: "",
       phone: "", course: resolvedCourse, message: "",
     });
-    setServicesForm({
+    setSolutionsForm({
       name: "", email: "", phone: "", serviceInterest: "",
       projectScale: "", timeline: "", budget: "", projectDesc: "", techSpecs: "", message: "",
     });
   };
 
   return {
-    step, inquiryType, trainingForm, servicesForm, errors, status,
+    step, inquiryType, trainingForm, solutionsForm, errors, status,
     captchaToken, captchaRef, cooldownRef, honeypot, setHoneypot,
-    updateTraining, updateServicesEvent, selectInquiryType,
+    updateTraining, updateSolutionsEvent, selectInquiryType,
     next, back, backToSelection, submit, reset, onClose,
     onCaptchaVerify, onCaptchaExpire,
   };
@@ -403,9 +403,9 @@ function ModalHeader({ title, subtitle }) {
 
 function InquiryBadge({ inquiryType }) {
   return (
-    <div className="mt-3 mb-5">
+    <div className="mt-2 mb-1">
       <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-[#1775EE] text-xs font-semibold">
-        {inquiryType === "training" ? "📚 Training Inquiry" : "🖥️ ICT Services Inquiry"}
+        {inquiryType === "training" ? "📚 Training Inquiry" : "🖥️ ICT Solutions Inquiry"}
       </span>
     </div>
   );
@@ -498,7 +498,7 @@ function TrainingStep2({ trainingForm, errors, updateTraining, back, submit, sta
         subtitle="Fill out the form to secure your slot or learn more about the course."
       />
       <InquiryBadge inquiryType="training" />
-      <h5 className="font-bold text-gray-900 mb-2">Course Details</h5>
+      <h5 className="font-bold text-gray-900">Course Details</h5>
       <div className="flex flex-col gap-4">
         <SelectField label="Course to Take" id="course" options={COURSE_LABELS}
           value={trainingForm.course} onChange={updateTraining("course")} error={errors.course} />
@@ -520,15 +520,15 @@ function TrainingStep2({ trainingForm, errors, updateTraining, back, submit, sta
       </div>
       {status === "error" && <ErrorBanner />}
       <p className="mt-4 text-xs text-gray-400 leading-relaxed">
-        We'll email you a quotation within 1–2 business days. By submitting, you agree to be contacted about our services and schedules.
+        We'll email you a quotation within 1–2 business days. By submitting, you agree to be contacted about our solutions and schedules.
       </p>
       <StepNavButtons back={back} submit={submit} isLoading={isLoading} errors={errors} />
     </>
   );
 }
 
-// ─── Services Steps ────────────────────────────────────────────────────────
-function ServicesStep1({ servicesForm, errors, updateServicesEvent, next, backToSelection, honeypot, setHoneypot }) {
+// ─── Solutions Steps ────────────────────────────────────────────────────────
+function SolutionsStep1({ solutionsForm, errors, updateSolutionsEvent, next, backToSelection, honeypot, setHoneypot }) {
   return (
     <>
       <ModalHeader
@@ -537,15 +537,15 @@ function ServicesStep1({ servicesForm, errors, updateServicesEvent, next, backTo
       />
       <input type="text" value={honeypot} onChange={(e) => setHoneypot(e.target.value)}
         className="hidden" tabIndex="-1" autoComplete="off" aria-hidden="true" />
-      <InquiryBadge inquiryType="services" />
+      <InquiryBadge inquiryType="solutions" />
       <h5 className="font-bold text-gray-900 mb-4">Contact Info</h5>
       <div className="flex flex-col gap-4">
         <Input label="Name / Company" id="s-name" placeholder="Juan dela Cruz / ACME Corp"
-          value={servicesForm.name} onChange={updateServicesEvent("name")} error={errors.name} />
+          value={solutionsForm.name} onChange={updateSolutionsEvent("name")} error={errors.name} />
         <Input label="Email" id="s-email" type="email" placeholder="juan@company.com"
-          value={servicesForm.email} onChange={updateServicesEvent("email")} error={errors.email} />
+          value={solutionsForm.email} onChange={updateSolutionsEvent("email")} error={errors.email} />
         <Input label="Phone Number" id="s-phone" type="tel" placeholder="+63 912 345 6789"
-          value={servicesForm.phone} onChange={updateServicesEvent("phone")} error={errors.phone} />
+          value={solutionsForm.phone} onChange={updateSolutionsEvent("phone")} error={errors.phone} />
       </div>
       <div className="mt-6 flex justify-between items-center">
         <button onClick={backToSelection}
@@ -563,7 +563,7 @@ function ServicesStep1({ servicesForm, errors, updateServicesEvent, next, backTo
   );
 }
 
-function ServicesStep2({ servicesForm, errors, updateServicesEvent, back, submit, status, captchaRef, onCaptchaVerify, onCaptchaExpire }) {
+function SolutionsStep2({ solutionsForm, errors, updateSolutionsEvent, back, submit, status, captchaRef, onCaptchaVerify, onCaptchaExpire }) {
   const isLoading = status === "loading";
   return (
     <>
@@ -571,23 +571,23 @@ function ServicesStep2({ servicesForm, errors, updateServicesEvent, back, submit
         title={<>Service <span className="text-[#1775EE]">Details</span></>}
         subtitle="The more you share, the better we can tailor our proposal for you."
       />
-      <InquiryBadge inquiryType="services" />
+      <InquiryBadge inquiryType="solutions" />
       <div className="flex flex-col gap-4">
         <SelectField label="Service of Interest" id="serviceInterest"
-          options={SERVICE_INTEREST_OPTIONS} value={servicesForm.serviceInterest}
-          onChange={updateServicesEvent("serviceInterest")}
+          options={SERVICE_INTEREST_OPTIONS} value={solutionsForm.serviceInterest}
+          onChange={updateSolutionsEvent("serviceInterest")}
           error={errors.serviceInterest} placeholder="Select a service" />
         <SelectField label="Project Scale" id="projectScale"
-          options={PROJECT_SCALE_OPTIONS} value={servicesForm.projectScale}
-          onChange={updateServicesEvent("projectScale")}
+          options={PROJECT_SCALE_OPTIONS} value={solutionsForm.projectScale}
+          onChange={updateSolutionsEvent("projectScale")}
           error={errors.projectScale} placeholder="Select project scale" />
         <SelectField label="Project Timeline / Urgency" id="timeline"
-          options={TIMELINE_OPTIONS} value={servicesForm.timeline}
-          onChange={updateServicesEvent("timeline")}
+          options={TIMELINE_OPTIONS} value={solutionsForm.timeline}
+          onChange={updateSolutionsEvent("timeline")}
           error={errors.timeline} placeholder="Select a timeline" />
         <SelectField label="Estimated Budget Range" id="budget"
-          options={BUDGET_OPTIONS} value={servicesForm.budget}
-          onChange={updateServicesEvent("budget")}
+          options={BUDGET_OPTIONS} value={solutionsForm.budget}
+          onChange={updateSolutionsEvent("budget")}
           error={errors.budget} placeholder="Select a budget range" />
         <div className="flex flex-col gap-1">
           <label htmlFor="s-desc" className="text-sm font-medium text-gray-700">
@@ -595,7 +595,7 @@ function ServicesStep2({ servicesForm, errors, updateServicesEvent, back, submit
           </label>
           <textarea id="s-desc" rows={3}
             placeholder="What do you need done? What problem are you trying to solve?"
-            value={servicesForm.projectDesc} onChange={updateServicesEvent("projectDesc")}
+            value={solutionsForm.projectDesc} onChange={updateSolutionsEvent("projectDesc")}
             className={`w-full rounded-lg border px-3 py-2.5 text-sm outline-none resize-none
               transition hover:border-blue-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent
               ${errors.projectDesc ? "border-red-400 bg-red-50" : "border-gray-200"}`} />
@@ -607,7 +607,7 @@ function ServicesStep2({ servicesForm, errors, updateServicesEvent, back, submit
           </label>
           <textarea id="s-tech" rows={2}
             placeholder="Any specific systems, platforms, or tools involved?"
-            value={servicesForm.techSpecs} onChange={updateServicesEvent("techSpecs")}
+            value={solutionsForm.techSpecs} onChange={updateSolutionsEvent("techSpecs")}
             className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm outline-none
               resize-none transition hover:border-blue-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
         </div>
@@ -616,7 +616,7 @@ function ServicesStep2({ servicesForm, errors, updateServicesEvent, back, submit
             Additional Message <span className="text-gray-400 font-normal">(optional)</span>
           </label>
           <textarea id="s-message" rows={2} placeholder="Anything else you'd like us to know?"
-            value={servicesForm.message} onChange={updateServicesEvent("message")}
+            value={solutionsForm.message} onChange={updateSolutionsEvent("message")}
             className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm outline-none
               resize-none transition hover:border-blue-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
         </div>
@@ -628,7 +628,7 @@ function ServicesStep2({ servicesForm, errors, updateServicesEvent, back, submit
       </div>
       {status === "error" && <ErrorBanner />}
       <p className="mt-4 text-xs text-gray-400 leading-relaxed">
-        We'll get back to you within 1–2 business days. By submitting, you agree to be contacted about our services.
+        We'll get back to you within 1–2 business days. By submitting, you agree to be contacted about our solutions.
       </p>
       <StepNavButtons back={back} submit={submit} isLoading={isLoading} errors={errors} />
     </>
@@ -725,7 +725,7 @@ function ModalContent({ f, handleClose, initialInquiryType }) {
         ? <TrainingStep1 {...f} initialInquiryType={initialInquiryType} />
         : <TrainingStep2 {...f} />;
     }
-    return f.step === 1 ? <ServicesStep1 {...f} /> : <ServicesStep2 {...f} />;
+    return f.step === 1 ? <SolutionsStep1 {...f} /> : <SolutionsStep2 {...f} />;
   };
 
   return (
@@ -764,7 +764,7 @@ function ModalContent({ f, handleClose, initialInquiryType }) {
  * @param {boolean}                    isOpen
  * @param {() => void}                 onClose
  * @param {number}                     [initialStep=0]
- * @param {"training"|"services"|null} [initialInquiryType=null]
+ * @param {"training"|"solutions"|null} [initialInquiryType=null]
  * @param {string|null}                [preselectedCourse=null]
  */
 export default function InquireModal({
