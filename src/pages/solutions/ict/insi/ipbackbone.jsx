@@ -1,11 +1,9 @@
-import SolutionsTemplate from "../../../components/solution_template/solutions_template";
-import RelevantProjects from "../../../components/solution_template/releveantprojects";
-import dcHero from "../../../assets/CCNAHeroImageAutomation.png";
-import dcFooter from "../../../assets/CCNAFooterImageAutomation.png";
-import ictImage from "../../../assets/ict.png";
-import webImage from "../../../assets/web.png";
-
-// ==================== PAGE DATA ====================
+import SolutionsTemplate from "../../../../components/solution_template/solutions_template";
+import RelevantProjects from "../../../../components/solution_template/releveantprojects";
+import dcHero from "../../../../assets/CCNAHeroImageAutomation.png";
+import dcFooter from "../../../../assets/CCNAFooterImageAutomation.png";
+import ictImage from "../../../../assets/ict.png";
+import webImage from "../../../../assets/web.png";
 
 const CHALLENGES = [
   "Aging or inefficient data center infrastructure",
@@ -81,10 +79,8 @@ const DC_PROJECTS = [
   },
 ];
 
-// ==================== PAGE COMPONENT ====================
-
-export default function DataCenter() {
-  return (
+export default function IPBackbone(){
+return (
     <SolutionsTemplate
       // Hero
       heroBgImage={dcHero}

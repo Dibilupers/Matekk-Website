@@ -83,7 +83,7 @@ const DC_PROJECTS = [
 
 // ==================== PAGE COMPONENT ====================
 
-export default function DataCenter() {
+export default function IPCCTV() {
   return (
     <SolutionsTemplate
       // Hero

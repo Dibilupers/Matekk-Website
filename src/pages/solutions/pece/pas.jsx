@@ -83,12 +83,12 @@ const DC_PROJECTS = [
 
 // ==================== PAGE COMPONENT ====================
 
-export default function DataCenter() {
+export default function PAS() {
   return (
     <SolutionsTemplate
       // Hero
       heroBgImage={dcHero}
-      category="ICT Consultancy (PBOOT)"
+      category="PECE Consultancy (PBOOT)"
       heroTitle="Data Center Facilities"
       heroDescription="MATEKK delivers end-to-end Data Center Facilities solutions that help organizations establish secure, efficient, and resilient infrastructure to support critical IT operations."
       // Building section

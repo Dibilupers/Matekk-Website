@@ -5,8 +5,6 @@ import dcFooter from "../../../assets/CCNAFooterImageAutomation.png";
 import ictImage from "../../../assets/ict.png";
 import webImage from "../../../assets/web.png";
 
-// ==================== PAGE DATA ====================
-
 const CHALLENGES = [
   "Aging or inefficient data center infrastructure",
   "Limited redundancy and risk of downtime",
@@ -80,35 +78,32 @@ const DC_PROJECTS = [
     desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
   },
 ];
-
-// ==================== PAGE COMPONENT ====================
-
-export default function DataCenter() {
-  return (
-    <SolutionsTemplate
-      // Hero
-      heroBgImage={dcHero}
-      category="ICT Consultancy (PBOOT)"
-      heroTitle="Data Center Facilities"
-      heroDescription="MATEKK delivers end-to-end Data Center Facilities solutions that help organizations establish secure, efficient, and resilient infrastructure to support critical IT operations."
-      // Building section
-      buildingTitle="Building Scalable and Secure Network Infrastructure to"
-      buildingTitleHighlight="Support Business Continuity"
-      buildingDescription="Our Data Center Facilities service covers planning, design, implementation, and optimization of physical and virtual data center infrastructure. We help organizations ensure high availability, scalability, and operational efficiency for all mission-critical systems."
-      // Challenges section
-      challengesHighlight="Challenges Addressed"
-      challengesSuffix="by This Service"
-      challenges={CHALLENGES}
-      // Deliverables section
-      deliverablesHighlight="Deliverables"
-      deliverables={DELIVERABLES}
-      // Footer banner
-      footerBgImage={dcFooter}
-      footerTitle="Contact Us Today To"
-      footerHighlightText="Request a Consultation"
-      footerDescription="Secure your organization's network with MGKK Information Communication Technology Services."
-    >
-      <RelevantProjects projects={DC_PROJECTS} />
-    </SolutionsTemplate>
-  );
+export default function WebDev(){
+    return (
+        <SolutionsTemplate
+          // Hero
+          heroBgImage={dcHero}
+          category="ICT Consultancy (PBOOT)"
+          heroTitle="Data Center Facilities"
+          heroDescription="MATEKK delivers end-to-end Data Center Facilities solutions that help organizations establish secure, efficient, and resilient infrastructure to support critical IT operations."
+          // Building section
+          buildingTitle="Building Scalable and Secure Network Infrastructure to"
+          buildingTitleHighlight="Support Business Continuity"
+          buildingDescription="Our Data Center Facilities service covers planning, design, implementation, and optimization of physical and virtual data center infrastructure. We help organizations ensure high availability, scalability, and operational efficiency for all mission-critical systems."
+          // Challenges section
+          challengesHighlight="Challenges Addressed"
+          challengesSuffix="by This Service"
+          challenges={CHALLENGES}
+          // Deliverables section
+          deliverablesHighlight="Deliverables"
+          deliverables={DELIVERABLES}
+          // Footer banner
+          footerBgImage={dcFooter}
+          footerTitle="Contact Us Today To"
+          footerHighlightText="Request a Consultation"
+          footerDescription="Secure your organization's network with MGKK Information Communication Technology Services."
+        >
+          <RelevantProjects projects={DC_PROJECTS} />
+        </SolutionsTemplate>
+      );
 }

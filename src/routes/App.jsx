@@ -89,6 +89,35 @@ import ITIL5 from "../pages/training/itil5/itil5";
 import PMP from "../pages/training/projectmanagement/pmp";
 
 /* Solutions */
+/* ICT Consultancy */
+import DataCenterFacilities from "../pages/solutions/ict/datacenter";
+/* INSI */
+import AccessNetworks from "../pages/solutions/ict/insi/accessnetworks";
+import IPBackbone from "../pages/solutions/ict/insi/ipbackbone";
+import IPTelephony from "../pages/solutions/ict/insi/iptelephony";
+import OnPremise from "../pages/solutions/ict/insi/onpremise";
+import OpticalFiber from "../pages/solutions/ict/insi/opticalfiber";
+import StructuredCabling from "../pages/solutions/ict/insi/structuredcabling";
+import WLAN from "../pages/solutions/ict/insi/wlan";
+/* CyberSecurity Solutions Import */
+import RedTeamSolution from "../pages/solutions/ict/cybersecurity/redteam";
+import BlueTeamSolution from "../pages/solutions/ict/cybersecurity/blueteam";
+
+import WebDev from "../pages/solutions/ict/webdev";
+import CloudSolution from "../pages/solutions/ict/cloudsolution";
+/* SMART IOT */
+import SMARTHome from "../pages/solutions/ict/smart/building";
+import SMARTBuilding from "../pages/solutions/ict/smart/building";
+import SMARTCity from "../pages/solutions/ict/smart/city";
+/* PECE (PBOOT) */
+import DoorAccess from "../pages/solutions/pece/dooraccess";
+import FDAS from "../pages/solutions/pece/fdas";
+import IPCCTV from "../pages/solutions/pece/ipcctv";
+import PAS from "../pages/solutions/pece/pas";
+import Renewable from "../pages/solutions/pece/renewable";
+
+/* PECE (PBOOT) */
+
 
 
 if ("scrollRestoration" in history) {
@@ -294,8 +323,43 @@ export default function App() {
         <Route path="/training/projectmanagement/pmp" element={<PMP />} />
 
         {/* Solutions */}
-        {/* <Route path="/solutions/ict/network" element={<Network />} />
- */}
+        {/* ICT Consultancy */}
+        <Route
+          path="/solutions/ict/datacenter"
+          element={<DataCenterFacilities />}
+        />
+        {/* ICT Network and Security Infrastructure */}
+        <Route path="/solutions/ict/insi/accessnetworks" element={<AccessNetworks />} />
+        <Route path="/solutions/ict/insi/ipbackbone" element={<IPBackbone />} />
+        <Route path="/solutions/ict/insi/iptelephony" element={<IPTelephony />} />
+        <Route path="/solutions/ict/insi/onpremise" element={<OnPremise />} />
+        <Route path="/solutions/ict/insi/opticalfiber" element={<OpticalFiber />} />
+        <Route
+          path="/solutions/ict/insi/structuredcabling"
+          element={<StructuredCabling />}
+        />
+        <Route path="/solutions/ict/insi/wlan" element={<WLAN />} />
+        {/* CyberSecurity Solutions */}
+        <Route path="/solutions/ict/cybersec/redteam" element={<RedTeamSolution />} />
+        <Route
+          path="/solutions/ict/cybersec/blueteam"
+          element={<BlueTeamSolution />}
+        />
+
+        <Route path="/solutions/ict/webdev" element={<WebDev />} />
+        <Route path="/solutions/ict/cloud" element={<CloudSolution />} />
+        {/* SMART IOT */}
+        <Route path="/solutions/ict/smart/home" element={<SMARTHome />} />
+        <Route path="/solutions/ict/smart/building" element={<SMARTBuilding />} />
+        <Route path="/solutions/ict/smart/city" element={<SMARTCity />} />
+
+        {/* PECE (PBOOT) */}
+        <Route path="/solutions/pece/dooraccess" element={<DoorAccess />} />
+        <Route path="/solutions/pece/fdas" element={<FDAS />} />
+        <Route path="/solutions/pece/ipcctv" element={<IPCCTV />} />
+        <Route path="/solutions/pece/pas" element={<PAS />} />
+        <Route path="/solutions/pece/renewable" element={<Renewable />} />
+
         <Route path="*" element={<NotFound />} />
       </Routes>
 

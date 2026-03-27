@@ -41,6 +41,7 @@ function NavBar() {
     }
     return <img src={MainLogo} alt="MATEKK Logo" className="w-7 md:w-8" />;
   };
+
   const dropdownMenus = {
     solutions: [
       {
@@ -52,39 +53,39 @@ function NavBar() {
             subcourses: [
               {
                 name: "IP Backbone and Distribution Networks",
-                path: "/solutions/inci/ipbackbone",
+                path: "/solutions/ict/insi/ipbackbone",
               },
               {
                 name: "Access Networks",
-                path: "/solutions/inci/ipbackbone",
+                path: "/solutions/ict/insi/accessnetworks",
               },
               {
                 name: "WLAN and Wireless Backhaul Networks",
-                path: "/solutions/inci/ipbackbone",
+                path: "/solutions/ict/insi/wlan",
               },
               {
                 name: "Optical Fiber Networks (LAN and WAN)",
-                path: "/solutions/inci/ipbackbone",
+                path: "/solutions/ict/insi/opticalfiber",
               },
               {
                 name: "IP Telephony Networks",
-                path: "/solutions/inci/ipbackbone",
+                path: "/solutions/ict/insi/iptelephony",
               },
               {
                 name: "On-premise Servers",
-                path: "/solutions/inci/ipbackbone",
+                path: "/solutions/ict/insi/onpremise",
               },
               {
                 name: "Structured Cabling",
-                path: "/solutions/inci/ipbackbone",
+                path: "/solutions/ict/insi/structuredcabling",
               },
             ],
           },
           {
             name: "Cybersecurity",
             subcourses: [
-              { name: "Red Team", path: "/solutions/cybersec/redteam" },
-              { name: "Blue Team", path: "/solutions/cybersec/blueteam" },
+              { name: "Red Team", path: "/solutions/ict/cybersec/redteam" },
+              { name: "Blue Team", path: "/solutions/ict/cybersec/blueteam" },
             ],
           },
           {
@@ -95,12 +96,12 @@ function NavBar() {
           {
             name: "SMART Environment Automation (IoT)",
             subcourses: [
-              { name: "SMART Home", path: "/solutions/smartenviroment/home" },
+              { name: "SMART Home", path: "/solutions/ict/smart/home" },
               {
                 name: "SMART Building",
-                path: "/solutions/smartenviroment/building",
+                path: "/solutions/ict/smart/building",
               },
-              { name: "SMART City", path: "/solutions/smartenviroment/city" },
+              { name: "SMART City", path: "/solutions/ict/smart/city" },
             ],
           },
         ],
