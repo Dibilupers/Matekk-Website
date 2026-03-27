@@ -7,9 +7,9 @@ import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
-import ccnaBadge from "../../../../assets/CCNPDatacenter.png"; // Course badge image
-import ccnaHero from "../../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
-import ccnaFooter from "../../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
+import ccnaBadge from "../../../../assets/CCNPDatacenter.webp"; // Course badge image
+import ccnaHero from "../../../../assets/CCNAHeroImageAutomation.webp"; // Hero banner background
+import ccnaFooter from "../../../../assets/CCNAFooterImageAutomation.webp"; // Footer banner background
 import MealIcon from "../../../../assets/Meal.svg";
 import ReviewIcon from "../../../../assets/Review.svg";
 import WorkstationIcon from "../../../../assets/Workstation.svg";
