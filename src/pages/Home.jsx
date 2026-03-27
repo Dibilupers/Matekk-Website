@@ -317,10 +317,7 @@ export default function Home() {
                   type="none"
                   buttonCustomStyle="bg-[#1775EE] text-white transition-all duration-300 shadow-lg hover:bg-[#0062E0] px-6 py-3 w-full"
                   btnFunc={() => {
-                    document.getElementById("feedbacks")?.scrollIntoView({
-                      behavior: "smooth",
-                      block: "start",
-                    });
+                    window.open("https://www.facebook.com/share/p/17QmhgY3as/", "_blank", "noopener,noreferrer");
                   }}
                 />
               </div>
