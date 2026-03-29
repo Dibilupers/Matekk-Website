@@ -84,8 +84,14 @@ function NavBar() {
           {
             name: "Cybersecurity",
             subcourses: [
-              { name: "Red Team (VAPT)", path: "/solutions/ict/cybersec/redteam" },
-              { name: "Blue Team (SOC)", path: "/solutions/ict/cybersec/blueteam" },
+              {
+                name: "Red Team (VAPT)",
+                path: "/solutions/ict/cybersec/redteam",
+              },
+              {
+                name: "Blue Team (SOC)",
+                path: "/solutions/ict/cybersec/blueteam",
+              },
             ],
           },
           {
@@ -131,6 +137,7 @@ function NavBar() {
     const element = document.getElementById(sectionId);
     if (element) element.scrollIntoView({ behavior: "smooth", block: "start" });
     setIsOpen(false);
+    resetMenu();
   };
 
   useEffect(() => {
@@ -168,9 +175,16 @@ function NavBar() {
   };
 
   const handleHomeClick = () => {
+    // Always close everything FIRST
+    resetMenu();
+
     if (location.pathname === "/") {
-      scrollToSection("home");
+      // Already on homepage → scroll
+      setTimeout(() => {
+        scrollToSection("home");
+      }, 0);
     } else {
+      // Go to homepage and scroll after navigation
       navigate("/", { state: { scrollTo: "home" } });
     }
   };
@@ -240,7 +254,7 @@ function NavBar() {
                         setOpenSubcourse(
                           openSubcourse === category.name
                             ? null
-                            : category.name
+                            : category.name,
                         );
                         setOpenThirdLevel(null);
                       }}
@@ -633,10 +647,7 @@ function NavBar() {
 
             <nav className="flex-1 flex flex-col mt-[6vh] px-6 space-y-6 font-poppins font-bold">
               <button
-                onClick={() => {
-                  scrollToSection("home");
-                  setIsOpen(false);
-                }}
+                onClick={handleHomeClick}
                 className={`text-2xl font-semibold text-left text-black hover:text-[#1775EE] ${t}`}
               >
                 Home

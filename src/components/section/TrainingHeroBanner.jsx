@@ -27,7 +27,7 @@ export default function HeroBanner({ bgImage, category, title, description }) {
           {/* ====== Course Title and Description ======*/}
           <div className="space-y-1">
             {/* Course title */}
-            <h1 className="text-[#1775EE] max-w-40 md:max-w-md 2xl:max-w-xl">{title}</h1>
+            <h1 className="text-[#1775EE] max-w-90 md:max-w-md 2xl:max-w-xl">{title}</h1>
 
             {/* Course description */}
             <p className="max-w-65 sm:max-w-sm md:max-w-md lg:max-w-lg">{description}</p>
