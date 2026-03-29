@@ -72,12 +72,19 @@ export default function TestimonialsSection() {
   }, [totalSlides, hasUserInteracted]);
 
   return (
-    <section id="feedbacks" className="py-10 md:py-15 mx-[2.063rem] md:mx-16 xl:mx-[7.438rem] space-y-8 scroll-mt-18">
+    <section
+      id="feedbacks"
+      className="py-10 md:py-15 mx-[2.063rem] md:mx-16 xl:mx-[7.438rem] space-y-8 scroll-mt-18"
+    >
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div className="flex flex-col gap-2 max-w-2xl">
           <h3>
-            Hear From Our <span className="text-[#1775EE] block sm:inline"> Successful Learners</span>
+            Hear From Our{" "}
+            <span className="text-[#1775EE] block sm:inline">
+              {" "}
+              Successful Learners
+            </span>
           </h3>
           <p>
             Matekk Cybercore Academy has successfully delivered critical ICT
@@ -89,8 +96,13 @@ export default function TestimonialsSection() {
         <div className="shrink-0">
           <Button
             title="Contact Us"
-            type="primary"
+            type="none"
             buttonCustomStyle="bg-[#1775EE] text-white px-6 py-3 rounded-full hover:bg-blue-700 transition duration-300"
+            btnFunc={() => {
+              document
+                .getElementById("contact")
+                ?.scrollIntoView({ behavior: "smooth", block: "start" });
+            }}
           />
         </div>
       </div>

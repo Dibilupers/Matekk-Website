@@ -132,7 +132,7 @@ export default function Home() {
       src: gallery1,
       alt: "CCNA Certification",
       title: "CCNA Certification",
-      desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
+      desc: "A hands-on journey into networking fundamentals, where concepts finally click and real-world skills start to take shape.",
       link: "/training/cisco/ccna/ccna",
     },
     {
@@ -140,7 +140,7 @@ export default function Home() {
       src: gallery2,
       alt: "SLSU Delegates",
       title: "SLSU Delegates Welcome",
-      desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
+      desc: "Welcoming fresh perspectives and bright minds, this moment captures the energy of collaboration just getting started.",
       link: "/solutions/ict/datacenter",
     },
     {
@@ -148,7 +148,7 @@ export default function Home() {
       src: gallery3,
       alt: "Team Celebration",
       title: "Team Celebration",
-      desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
+      desc: "A well-earned pause to celebrate milestones, shared wins, and the teamwork that made it all possible.",
       link: "/solutions/pece/renewable",
     },
     {
@@ -156,7 +156,7 @@ export default function Home() {
       src: gallery4,
       alt: "Ideas Workshop",
       title: "Ideas Workshop",
-      desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
+      desc: "Where rough ideas turn into practical solutions through open discussion, creativity, and a bit of trial and error.",
       link: "/solutions/ict/smart/home",
     },
     {
@@ -164,10 +164,9 @@ export default function Home() {
       src: gallery5,
       alt: "Conference Panel",
       title: "Conference Panel",
-      desc: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
+      desc: "An exchange of insights and real-world experiences, offering different viewpoints on today’s evolving tech landscape.",
       link: "/training/comptia/network",
     },
-    // Just add more objects here if needed
   ];
 
   const ITEMS_PER_ROW = 3; // change to 2 or 4 if needed
@@ -331,7 +330,11 @@ export default function Home() {
                   type="none"
                   buttonCustomStyle="bg-[#1775EE] text-white transition-all duration-300 shadow-lg hover:bg-[#0062E0] px-6 py-3 w-full"
                   btnFunc={() => {
-                    window.open("https://www.facebook.com/share/p/17QmhgY3as/", "_blank", "noopener,noreferrer");
+                    window.open(
+                      "https://www.facebook.com/share/p/17QmhgY3as/",
+                      "_blank",
+                      "noopener,noreferrer",
+                    );
                   }}
                 />
               </div>
@@ -592,8 +595,9 @@ export default function Home() {
                 <button
                   key={i}
                   onClick={() => setTopSlide(i)}
-                  className={`h-2 rounded-full transition-all duration-300 ${topSlide === i ? "bg-[#1775EE] w-4" : "bg-[#C2DDFF] w-2"
-                    }`}
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    topSlide === i ? "bg-[#1775EE] w-4" : "bg-[#C2DDFF] w-2"
+                  }`}
                 />
               ))}
             </div>
@@ -805,8 +809,9 @@ export default function Home() {
                 <button
                   key={i}
                   onClick={() => setBottomSlide(i)}
-                  className={`h-2 rounded-full transition-all duration-300 ${bottomSlide === i ? "bg-[#1775EE] w-4" : "bg-[#C2DDFF] w-2"
-                    }`}
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    bottomSlide === i ? "bg-[#1775EE] w-4" : "bg-[#C2DDFF] w-2"
+                  }`}
                 />
               ))}
             </div>
@@ -1447,8 +1452,9 @@ export default function Home() {
                   />
 
                   <div
-                    className={`flex flex-col justify-center items-center text-white p-6 absolute inset-0 rounded-2xl backdrop-blur-sm bg-black/1 transition-opacity duration-500 ${tappedCard === item.id ? "opacity-100" : "opacity-0"
-                      }`}
+                    className={`flex flex-col justify-center items-center text-white p-6 absolute inset-0 rounded-2xl backdrop-blur-sm bg-black/1 transition-opacity duration-500 ${
+                      tappedCard === item.id ? "opacity-100" : "opacity-0"
+                    }`}
                   >
                     <div className="flex items-center justify-between gap-4 w-full">
                       <h5 className="text-shadow-lg">{item.title}</h5>
@@ -1502,8 +1508,9 @@ export default function Home() {
                       />
 
                       <div
-                        className={`flex flex-row justify-center items-center absolute inset-x-0 bottom-0 p-5 text-white bg-black/1 backdrop-blur-[10px] transition-opacity duration-500 ${tappedCard === item.id ? "opacity-100" : "opacity-0"
-                          }`}
+                        className={`flex flex-row justify-center items-center absolute inset-x-0 bottom-0 p-5 text-white bg-black/1 backdrop-blur-[10px] transition-opacity duration-500 ${
+                          tappedCard === item.id ? "opacity-100" : "opacity-0"
+                        }`}
                       >
                         <div className="text-shadow-lg space-y-1 flex-1">
                           <h5>{item.title}</h5>
@@ -1569,7 +1576,10 @@ export default function Home() {
                           <h5>{item.title}</h5>
                           <p className="line-clamp-2">{item.desc}</p>
                         </div>
-                        <Link to={item.link} className="shrink-0 flex items-center justify-center">
+                        <Link
+                          to={item.link}
+                          className="shrink-0 flex items-center justify-center"
+                        >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             className="w-10 h-10 text-white"
