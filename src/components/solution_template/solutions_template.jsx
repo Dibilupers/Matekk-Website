@@ -122,32 +122,30 @@ export default function SolutionsTemplate({
       </section>
 
       {/* ==================== CHALLENGES SECTION ==================== */}
-      <section className="bg-[#EBF5FD] py-10 md:py-15">
-        <div className="flex flex-col justify-center items-center mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] space-y-4">
-          <h3 className="text-center max-w-60 md:max-w-xl xl:max-w-2xl 2xl:max-w-3xl">
-            <span className="text-[#1775EE]">{challengesHighlight}</span>{" "}
-            {challengesSuffix}
-          </h3>
+      <section className="flex flex-col justify-center items-center space-y-4 bg-[#EBF5FD] py-10 md:py-15 px-[2.063rem] sm:px-[2.063rem] md:px-16 xl:px-[7.438rem]">
+        <h3 className="text-center max-w-60 sm:max-w-full">
+          <span className="text-[#1775EE]">{challengesHighlight}</span>{" "}
+          {challengesSuffix}
+        </h3>
 
-          <div className="flex flex-col justify-center items-center space-y-2 lg:space-y-4">
-            {/* Row 1 */}
-            {firstRow.length > 0 && (
-              <div className="flex flex-col lg:flex-row justify-center items-center space-x-0 lg:space-x-4 space-y-2 lg:space-y-0">
-                {firstRow.map((text) => (
-                  <ChallengeCard key={text} text={text} width="w-87" />
-                ))}
-              </div>
-            )}
+        <div className="flex flex-col justify-center items-center space-y-2 lg:space-y-4 w-full">
+          {/* Row 1 */}
+          {firstRow.length > 0 && (
+            <div className="flex flex-col lg:flex-row justify-center items-center space-x-0 lg:space-x-4 space-y-2 lg:space-y-0 max-w-90 md:max-w-100 lg:max-w-full">
+              {firstRow.map((text) => (
+                <ChallengeCard key={text} text={text} />
+              ))}
+            </div>
+          )}
 
-            {/* Row 2 */}
-            {secondRow.length > 0 && (
-              <div className="flex flex-col lg:flex-row justify-center items-center space-x-0 lg:space-x-4 space-y-2 lg:space-y-0">
-                {secondRow.map((text) => (
-                  <ChallengeCard key={text} text={text} width="w-87 lg:w-79" />
-                ))}
-              </div>
-            )}
-          </div>
+          {/* Row 2 */}
+          {secondRow.length > 0 && (
+            <div className="flex flex-col lg:flex-row justify-center items-center space-x-0 lg:space-x-4 space-y-2 lg:space-y-0 max-w-90 md:max-w-100 lg:max-w-full">
+              {secondRow.map((text) => (
+                <ChallengeCard key={text} text={text} />
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
