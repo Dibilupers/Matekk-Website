@@ -789,53 +789,126 @@ function NavBar() {
         )}
 
         {/* Solutions Mobile — Level 2 */}
-        {openDropdown === "solutions-mobile" && openSubcourse && (
-          <div className="fixed inset-0 bg-white z-50 flex flex-col">
-            <div className="flex items-center p-6 border-b border-gray-200">
-              <button
-                onClick={() => setOpenSubcourse(null)}
-                className="focus:outline-none mr-4"
-              >
-                <svg
-                  className={`w-6 h-6 text-[#1775EE] ${t}`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+        {openDropdown === "solutions-mobile" &&
+          openSubcourse &&
+          !openThirdLevel && (
+            <div className="fixed inset-0 bg-white z-50 flex flex-col">
+              <div className="flex items-center p-6 border-b border-gray-200">
+                <button
+                  onClick={() => setOpenSubcourse(null)}
+                  className="focus:outline-none mr-4"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 19l-7-7 7-7"
-                  />
-                </svg>
-              </button>
-              <h2 className="text-xl font-bold text-[#1775EE] font-poppins">
-                Solutions / {openSubcourse}
-              </h2>
-            </div>
-
-            <nav className="flex-1 px-6 py-8 space-y-4">
-              {dropdownMenus.solutions
-                .find((cat) => cat.name === openSubcourse)
-                ?.subcourses?.map((item) => (
-                  <Link
-                    key={item.name}
-                    to={item.path}
-                    onClick={() => {
-                      setIsOpen(false);
-                      setOpenDropdown(null);
-                      setOpenSubcourse(null);
-                    }}
-                    className={`block text-lg text-black font-poppins hover:text-[#1775EE] py-2 px-4 ${t}`}
+                  <svg
+                    className={`w-6 h-6 text-[#1775EE] ${t}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
                   >
-                    {item.name}
-                  </Link>
-                ))}
-            </nav>
-          </div>
-        )}
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 19l-7-7 7-7"
+                    />
+                  </svg>
+                </button>
+                <h2 className="text-xl font-bold text-[#1775EE] font-poppins">
+                  Solutions / {openSubcourse}
+                </h2>
+              </div>
 
+              <nav className="flex-1 px-6 py-8 space-y-4">
+                {dropdownMenus.solutions
+                  .find((cat) => cat.name === openSubcourse)
+                  ?.subcourses?.map((item) =>
+                    item.subcourses ? (
+                      <button
+                        key={item.name}
+                        onClick={() => setOpenThirdLevel(item.name)}
+                        className={`block w-full text-left text-lg text-black font-poppins hover:text-[#1775EE] py-2 flex items-center justify-between ${t}`}
+                      >
+                        {item.name}
+                        <svg
+                          className={`w-4 h-4 ${t}`}
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      </button>
+                    ) : (
+                      <Link
+                        key={item.name}
+                        to={item.path}
+                        onClick={resetMenu}
+                        className={`block text-lg text-black font-poppins hover:text-[#1775EE] py-2 px-4 ${t}`}
+                      >
+                        {item.name}
+                      </Link>
+                    ),
+                  )}
+              </nav>
+            </div>
+          )}
+
+        {/* Solutions Mobile — Level 3 */}
+        {openDropdown === "solutions-mobile" &&
+          openSubcourse &&
+          openThirdLevel && (
+            <div className="fixed inset-0 bg-white z-50 flex flex-col">
+              <div className="flex items-center p-6 border-b border-gray-200">
+                <button
+                  onClick={() => setOpenThirdLevel(null)}
+                  className="focus:outline-none mr-4"
+                >
+                  <svg
+                    className={`w-6 h-6 text-[#1775EE] ${t}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 19l-7-7 7-7"
+                    />
+                  </svg>
+                </button>
+                <h2 className="text-xl font-bold text-[#1775EE] font-poppins">
+                  Solutions / {openSubcourse} / {openThirdLevel}
+                </h2>
+              </div>
+
+              <nav className="flex-1 px-6 py-8 space-y-4">
+                {dropdownMenus.solutions
+                  .find((cat) => cat.name === openSubcourse)
+                  ?.subcourses?.find((sub) => sub.name === openThirdLevel)
+                  ?.subcourses?.map((item) => (
+                    <Link
+                      key={item.name}
+                      to={item.path}
+                      onClick={() => {
+                        setIsOpen(false);
+                        setOpenDropdown(null);
+                        setOpenSubcourse(null);
+                        setOpenThirdLevel(null);
+                      }}
+                      className={`block text-lg text-black font-poppins hover:text-[#1775EE] py-2 px-4 ${t}`}
+                    >
+                      {item.name}
+                    </Link>
+                  ))}
+              </nav>
+            </div>
+          )}
+          
         {/* Training Mobile — Level 1 */}
         {openDropdown === "training-mobile" && !openSubcourse && (
           <div className="fixed inset-0 bg-white z-50 flex flex-col">
