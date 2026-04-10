@@ -1805,7 +1805,7 @@ export default function Home() {
               </div>
               <div>
                 <h5>Email</h5>
-                <p>info@matekk.com</p>
+                <p>info@matekkcybercore.com</p>
               </div>
             </div>
 
