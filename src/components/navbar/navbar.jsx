@@ -27,7 +27,7 @@ function NavBar() {
   const getLogoElement = () => {
     if (location.pathname.startsWith("/training")) {
       return (
-        <img src={TrainingLogo} alt="Training Logo" className="w-11 md:w-12" />
+        <img src={TrainingLogo} alt="Training Logo" className="w-30" />
       );
     }
     if (location.pathname.startsWith("/solutions")) {
@@ -35,11 +35,11 @@ function NavBar() {
         <img
           src={SolutionsLogo}
           alt="Solutions Logo"
-          className="w-10 md:w-11"
+          className="w-30"
         />
       );
     }
-    return <img src={MainLogo} alt="MATEKK Logo" className="w-7 md:w-8" />;
+    return <img src={MainLogo} alt="MATEKK Logo" className="w-30" />;
   };
 
   const dropdownMenus = {

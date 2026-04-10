@@ -1783,7 +1783,7 @@ export default function Home() {
               </div>
               <div>
                 <h5>Address</h5>
-                <p>10B Kalantiao Marikina, Metro Manila</p>
+                <p>10B Kalantiao Street Brgy. Calumpang Marikina, Metro Manila</p>
               </div>
             </div>
 

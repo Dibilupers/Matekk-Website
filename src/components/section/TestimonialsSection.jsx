@@ -7,7 +7,7 @@ export default function TestimonialsSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [animating, setAnimating] = useState(false);
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
-  const [cardsPerSlide, setCardsPerSlide] = useState(3);
+  const [cardsPerSlide, setCardsPerSlide] = useState(4);
 
   // Dynamic cards per slide based on screen size — same as Partners logosPerPage
   useEffect(() => {
@@ -18,7 +18,7 @@ export default function TestimonialsSection() {
       } else if (width >= 768 && width < 1024) {
         setCardsPerSlide(2); // Tablet: 2 cards
       } else {
-        setCardsPerSlide(3); // Desktop: 3 cards
+        setCardsPerSlide(4); // Desktop: 4 cards
       }
     };
 
@@ -111,7 +111,7 @@ export default function TestimonialsSection() {
       <div
         onMouseDown={handleUserInteraction}
         onTouchStart={handleUserInteraction}
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5"
       >
         {visibleTestimonials.map((testimonial) => (
           <TestimonialCard

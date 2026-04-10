@@ -2,9 +2,9 @@ import React from "react";
 import { FaFacebook, FaLinkedin } from "react-icons/fa6";
 import { FaInstagram } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import MainLogo from "../../assets/main_logo_footer.webp";
-import TrainingLogo from "../../assets/training_logo_footer.png";
-import SolutionsLogo from "../../assets/services_logo_footer.png";
+import MainLogo from "../../assets/MATEKK_logo.webp";
+import TrainingLogo from "../../assets/MATEKK_training_logo.png";
+import SolutionsLogo from "../../assets/MATEKK_services_logo.png";
 
 export default function Footer() {
   const location = useLocation();
