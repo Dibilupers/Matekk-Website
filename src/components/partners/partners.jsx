@@ -27,6 +27,7 @@ import ICCT from '../../assets/ICCT.webp';
 import NAMRIA from '../../assets/NAMRIA.svg';
 import EZTECH from '../../assets/EZTECH.webp';
 import SOLVEROUS from '../../assets/SolverousLogo.webp';
+import URS from '../../assets/URS.webp';
 
 function Partners() {
     // OPTIMIZED: Wrap array in useMemo to prevent recreation on every render
@@ -45,6 +46,7 @@ function Partners() {
         { src: MARIKINA, alt: "MARIKINA Logo", size: "w-10 md:w-18" },
         { src: SLSU, alt: "SLSU Logo", size: "w-10 md:w-18" },
         { src: ICCT, alt: "ICCT Logo", size: "w-10 md:w-18" },
+        { src: URS, alt: "URS Logo", size: "w-8 md:w-14" },
         { src: MISAMIS, alt: "MISAMIS Logo", size: "w-10 md:w-18" },
         { src: MOREPOWER, alt: "MOREPOWER Logo", size: "w-10 md:w-32" },
         { src: MARSTECH, alt: "MARSTECH Logo", size: "w-10 md:w-32" },
