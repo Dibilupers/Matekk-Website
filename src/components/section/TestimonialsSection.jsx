@@ -2,23 +2,28 @@ import { useState, useCallback, useEffect } from "react";
 import TestimonialCard from "../cards/TestimonialCard";
 import { testimonials } from "../data/testimonials";
 import Button from "../ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function TestimonialsSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [animating, setAnimating] = useState(false);
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
-  const [cardsPerSlide, setCardsPerSlide] = useState(3);
+  const [cardsPerSlide, setCardsPerSlide] = useState(4);
+  const [isMobile, setIsMobile] = useState(false);
 
-  // Dynamic cards per slide based on screen size — same as Partners logosPerPage
+  // Dynamic cards per slide based on screen size
   useEffect(() => {
     const calculateCardsPerSlide = () => {
       const width = window.innerWidth;
       if (width < 768) {
         setCardsPerSlide(1); // Mobile: 1 card
+        setIsMobile(true);
       } else if (width >= 768 && width < 1024) {
         setCardsPerSlide(2); // Tablet: 2 cards
+        setIsMobile(false);
       } else {
-        setCardsPerSlide(3); // Desktop: 3 cards
+        setCardsPerSlide(4); // Desktop: 4 cards
+        setIsMobile(false);
       }
     };
 
@@ -27,7 +32,7 @@ export default function TestimonialsSection() {
     return () => window.removeEventListener("resize", calculateCardsPerSlide);
   }, []);
 
-  // Reset to slide 0 when cardsPerSlide changes to avoid out-of-range slide
+  // Reset to slide 0 when cardsPerSlide changes
   useEffect(() => {
     setCurrentSlide(0);
   }, [cardsPerSlide]);
@@ -55,7 +60,20 @@ export default function TestimonialsSection() {
     [animating, currentSlide],
   );
 
-  // Auto-scroll — same logic as Partners
+  // Next/Previous handlers
+  const handleNext = useCallback(() => {
+    handleUserInteraction();
+    const nextSlide = (currentSlide + 1) % totalSlides;
+    handleSlideChange(nextSlide);
+  }, [currentSlide, totalSlides, handleSlideChange, handleUserInteraction]);
+
+  const handlePrev = useCallback(() => {
+    handleUserInteraction();
+    const prevSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+    handleSlideChange(prevSlide);
+  }, [currentSlide, totalSlides, handleSlideChange, handleUserInteraction]);
+
+  // Auto-scroll
   useEffect(() => {
     if (hasUserInteracted) return;
 
@@ -111,7 +129,7 @@ export default function TestimonialsSection() {
       <div
         onMouseDown={handleUserInteraction}
         onTouchStart={handleUserInteraction}
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5"
       >
         {visibleTestimonials.map((testimonial) => (
           <TestimonialCard
@@ -122,8 +140,38 @@ export default function TestimonialsSection() {
         ))}
       </div>
 
-      {/* Dot Indicators */}
-      {totalSlides > 1 && (
+      {/* Navigation Buttons Below Card (Mobile Only) */}
+      {isMobile && totalSlides > 1 && (
+        <div className="flex justify-center items-center gap-4">
+          {/* Previous Button */}
+          <button
+            onClick={handlePrev}
+            disabled={animating}
+            className="bg-white rounded-full p-3 shadow-lg hover:bg-gray-100 transition disabled:opacity-50 disabled:cursor-not-allowed border border-gray-200"
+            aria-label="Previous testimonial"
+          >
+            <ChevronLeft className="w-6 h-6 text-[#1775EE]" />
+          </button>
+
+          {/* Page Counter */}
+          <span className="text-sm text-gray-600 font-medium min-w-[50px] text-center">
+            {currentSlide + 1} / {totalSlides}
+          </span>
+
+          {/* Next Button */}
+          <button
+            onClick={handleNext}
+            disabled={animating}
+            className="bg-white rounded-full p-3 shadow-lg hover:bg-gray-100 transition disabled:opacity-50 disabled:cursor-not-allowed border border-gray-200"
+            aria-label="Next testimonial"
+          >
+            <ChevronRight className="w-6 h-6 text-[#1775EE]" />
+          </button>
+        </div>
+      )}
+
+      {/* Dot Indicators - ALL SCREEN SIZES */}
+      {totalSlides > 1 && !isMobile && (
         <div className="flex justify-center gap-2">
           {Array(totalSlides)
             .fill(null)
