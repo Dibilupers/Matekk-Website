@@ -288,7 +288,7 @@ export default function NSE5SecurityOperations() {
                   className="w-4 h-4"
                 />
               </span>
-              <p>Institutional Accounts</p>
+              <p>Institutional Account</p>
             </div>
 
             <div className="inclusions">

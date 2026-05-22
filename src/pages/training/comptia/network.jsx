@@ -273,7 +273,7 @@ export default function NetworkPlus() {
                   className="w-4 h-4"
                 />
               </span>
-              <p className="text-sm">Institutional Accounts</p>
+              <p className="text-sm">Institutional Account</p>
             </div>
 
             <div className="inclusions">
