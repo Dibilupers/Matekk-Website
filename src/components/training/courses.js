@@ -23,8 +23,6 @@ export const TRAINING_COURSES = [
             subcourses: [
               { name: "CCNP Security", path: "/training/cisco/ccnp/ccnp-security/security" },
               { name: "300-710-SNCF-v1.1", path: "/training/cisco/ccnp/ccnp-security/sncf" },
-              { name: "300-715-SISE-v1.1", path: "/training/cisco/ccnp/ccnp-security/sise" },
-              { name: "300-730-SVPN-v1.1", path: "/training/cisco/ccnp/ccnp-security/svpn" },
               { name: "300-745-SDSI-v1.1", path: "/training/cisco/ccnp/ccnp-security/sdsi" },
             ],
           },

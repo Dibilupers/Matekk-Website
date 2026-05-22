@@ -15,8 +15,6 @@ import CCNPEnterprise from "../pages/training/cisco/ccnp/enterprise";
 import CCNPDatacenter from "../pages/training/cisco/ccnp/datacenter";
 import CCNPSecurity from "../pages/training/cisco/ccnp/ccnp-security/security";
 import SNCF from "../pages/training/cisco/ccnp/ccnp-security/300-710-SNCF-v1.1";
-import SISE from "../pages/training/cisco/ccnp/ccnp-security/300-715-SISE-v1.1";
-import SVPN from "../pages/training/cisco/ccnp/ccnp-security/300-730-SVPN-v1.1";
 import SDSI from "../pages/training/cisco/ccnp/ccnp-security/300-745-SDSI-v1.1";
 
 /* CompTIA */
@@ -158,14 +156,6 @@ export default function App() {
         <Route
           path="/training/cisco/ccnp/ccnp-security/sncf"
           element={<SNCF />}
-        />
-        <Route
-          path="/training/cisco/ccnp/ccnp-security/sise"
-          element={<SISE />}
-        />
-        <Route
-          path="/training/cisco/ccnp/ccnp-security/svpn"
-          element={<SVPN />}
         />
         <Route
           path="/training/cisco/ccnp/ccnp-security/sdsi"
