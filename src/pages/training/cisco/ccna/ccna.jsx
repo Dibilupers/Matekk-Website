@@ -417,7 +417,7 @@ export default function CCNA() {
             </div>
 
             {/* CHANGE: Download link text and URL */}
-            <a href="#" className="font-medium underline mt-2">
+            <a href="https://learningcontent.cisco.com/documents/marketing/exam-topics/200-301_CCNA_v2.0_Exam_Topics_PDF.pdf" target="_blank" className="font-medium underline mt-2">
               Download the CCNA Exam Topics Here
             </a>
           </div>

@@ -349,7 +349,7 @@ export default function CCNAAutomation() {
             </div>
 
             {/* CHANGE: Download link text and URL */}
-            <a href="#" className="text-sm font-medium underline mt-2">
+            <a href="https://learningcontent.cisco.com/documents/marketing/exam-topics/200-901-CCNAAUTO_v.1.1.pdf" target="_blank" className="text-sm font-medium underline mt-2">
               Download the CCNA Exam Topics Here
             </a>
           </div>
