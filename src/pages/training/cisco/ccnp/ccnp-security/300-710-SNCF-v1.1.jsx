@@ -1,7 +1,6 @@
 import Button from "../../../../../components/ui/button";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
-import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 import ccnaBadge from "../../../../../assets/CCNPSecurity.png";
@@ -17,12 +16,7 @@ import TrainingHeroBanner from "../../../../../components/section/TrainingHeroBa
 
 // ==================== COMPONENT NAME - CHANGE FOR EACH COURSE ====================
 export default function SNCF() {
-  const [openSection, setOpenSection] = useState(null);
-
-  const toggleSection = (index) => {
-    setOpenSection(openSection === index ? null : index);
-  };
-
+ 
   // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
   const modules = [
     {

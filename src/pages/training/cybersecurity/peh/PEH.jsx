@@ -114,7 +114,7 @@ export default function PEH() {
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}
       <TrainingHeroBanner
-        bgImage={CybersecurtyHero}
+        bgImage={CybersecurityHero}
         category="Practical Ethical Hacking"
         title="Practical Ethical Hacking (PEH)"
         description="A streamlined, targeted pathway designed for ITIL 4 certification

@@ -1,12 +1,8 @@
 // ==================== IMPORTS - UPDATE FOR EACH COURSE ====================
-// Change these imports based on the specific course
 import Button from "../../../../components/ui/button";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
-import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
-
-// COURSE-SPECIFIC ASSETS - Replace these for different courses
 import ccnaBadge from "../../../../assets/CCNPEnterprise.webp"; // Course badge image
 import ccnaHero from "../../../../assets/CCNAHeroImageAutomation.webp"; // Hero banner background
 import ccnaFooter from "../../../../assets/CCNAFooterImageAutomation.webp"; // Footer banner background
@@ -20,12 +16,6 @@ import TrainingHeroBanner from "../../../../components/section/TrainingHeroBanne
 
 // ==================== COMPONENT NAME - CHANGE FOR EACH COURSE ====================
 export default function CCNPEnterprise() {
-  const [openSection, setOpenSection] = useState(null);
-
-  const toggleSection = (index) => {
-    setOpenSection(openSection === index ? null : index);
-  };
-
   // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
   const modules = [
     {

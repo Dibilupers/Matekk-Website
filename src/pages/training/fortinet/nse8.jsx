@@ -87,15 +87,13 @@ export default function NSE8() {
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <p>
-                  Understand the level and scope of tasks in the NSE 8 practical
-                  exam
+                  Understand the level and scope of tasks in the NSE 8 practical exam
                 </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <p>
-                  Build skills to prepare for the NSE 8 practical exam with
-                  similar complexity
+                  Build skills to prepare for the NSE 8 practical exam with similar complexity
                 </p>
               </div>
             </div>
