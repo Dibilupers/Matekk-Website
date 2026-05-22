@@ -5,7 +5,7 @@ export default function TestimonialCard({ name, course, rating, feedback, image,
   const [hovered, setHovered] = useState(false);
   const isBlue = hovered;
 
-  const baseClass = "min-h-[280px] md:h-[320px] overflow-hidden rounded-2xl p-6 flex flex-col gap-4 shadow-sm transition-all duration-300 hover:scale-105 hover:shadow-xl";
+  const baseClass = "min-h-[280px] h-full overflow-hidden rounded-2xl p-6 flex flex-col gap-4 shadow-sm transition-all duration-300 hover:scale-105 hover:shadow-xl";
   const animClass = animating ? "opacity-0 translate-x-4" : "opacity-100 translate-x-0";
   const colorClass = isBlue ? "bg-[#1775EE] text-white" : "bg-[#EBF5FD] text-gray-800";
   const sharedClassName = baseClass + " " + animClass + " " + colorClass;

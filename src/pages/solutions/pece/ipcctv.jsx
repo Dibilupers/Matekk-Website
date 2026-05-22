@@ -1,0 +1,68 @@
+import SolutionsTemplate from "../../../components/solution_template/solutions_template";
+import PECEhero from "../../../assets/PECEHeroImage.jpg";
+import PECEfooter from "../../../assets/PECEFooterImage.webp";
+
+const CHALLENGES = [
+  "Limited visibility and monitoring of facilities",
+  "Security risks due to lack of surveillance systems",
+  "Poor image quality and unreliable recording systems",
+  "Difficulty managing and accessing surveillance footage",
+  "Inadequate coverage of critical areas",
+];
+
+const DELIVERABLES = [
+  {
+    title: "CCTV System Design and Planning",
+    desc: "Develop surveillance layouts for maximum coverage and efficiency.",
+  },
+  {
+    title: "IP and Analog Camera Installation",
+    desc: "Deploy high-quality cameras based on specific requirements.",
+  },
+  {
+    title: "Network Video Recorder (NVR) / Digital Video Recorder (DVR) Setup",
+    desc: "Configure reliable storage and playback systems.",
+  },
+  {
+    title: "Remote Monitoring and Access Setup",
+    desc: "Enable real-time viewing from anywhere.",
+  },
+  {
+    title: "System Integration and Optimization",
+    desc: "Ensure seamless operation with existing security systems.",
+  },
+  {
+    title: "Maintenance and Technical Support",
+    desc: "Provide ongoing service to ensure continuous system performance.",
+  },
+];
+
+
+export default function IPCCTV() {
+  return (
+    <SolutionsTemplate
+      // Hero
+      heroBgImage={PECEhero}
+      category="PECE Consultancy (PBOOT)"
+      heroTitle="IPCCTV and Analog CCTV"
+      heroDescription="MATEKK provides reliable surveillance solutions through IP and Analog CCTV systems, helping organizations enhance security, monitor operations, and protect assets with confidence."
+      // Building section
+      buildingTitle="Clear, Reliable, and Intelligent"
+      buildingTitleHighlight="Surveillance Solutions"
+      buildingDescription="Our CCTV services deliver end-to-end surveillance systems tailored to your environment. From high-definition IP cameras to cost-effective analog setups, MGKK ensures optimal coverage, real-time monitoring, and secure recording, giving you complete visibility and control over your premises."
+      // Challenges section
+      challengesHighlight="Challenges Addressed"
+      challengesSuffix="by This Service"
+      challenges={CHALLENGES}
+      // Deliverables section
+      deliverablesHighlight="Deliverables"
+      deliverables={DELIVERABLES}
+      // Footer banner
+      footerBgImage={PECEfooter}
+      footerTitle="Contact Us Today To"
+      footerHighlightText="Request a Consultation"
+      footerDescription="Secure your organization's network with MGKK Information Communication Technology Services."
+    >
+    </SolutionsTemplate>
+  );
+}

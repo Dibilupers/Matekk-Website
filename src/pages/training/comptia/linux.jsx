@@ -6,8 +6,8 @@ import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
 import linux from "../../../assets/linux+.webp"; // Course badge image
-import ccnaHero from "../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
-import ccnaFooter from "../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
+import comptiaHero from "../../../assets/COMPTIAherobg.webp"; // Hero banner background
+import comptiaFooter from "../../../assets/COMPTIAFooter.webp"; // Footer banner background
 import MealIcon from "../../../assets/Meal.svg";
 import ReviewIcon from "../../../assets/Review.svg";
 import InstitutionalIcon from "../../../assets/InsitutionalAccount.svg";
@@ -82,7 +82,7 @@ export default function Linux() {
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}
       <TrainingHeroBanner
-        bgImage={ccnaHero}
+        bgImage={comptiaHero}
         category="COMPTIA"
         title="Linux+"
         description="CompTIA Linux+ shows you how to manage, secure, and troubleshoot
@@ -167,7 +167,7 @@ export default function Linux() {
         </div>
 
         {/* ==================== RIGHT SIDEBAR: Contents/Information ==================== */}
-        <aside className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-1 gap-3 lg:w-72 xl:w-80 shrink-0">
+        <aside className="aside_contents">
           {/* ==================== CERT BADGE ====================*/}
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
             {/* Cert Badge - Change/Update Image */}
@@ -293,7 +293,8 @@ export default function Linux() {
 
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
-        bgImage={ccnaFooter} // CHANGE: Update background image for the footer banner
+        bgImage={comptiaFooter} // CHANGE: Update background image for the footer banner
+        bgPosition="90%"
         description="Advance your networking career and prepare for the COMPTIA Enterprise exam."
       />
     </main>

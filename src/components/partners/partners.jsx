@@ -2,41 +2,34 @@
 import { useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import DOH from '../../assets/DOH.svg';
 import DICT from '../../assets/DICT.svg';
-import PHIVOLCS from '../../assets/PHIVOLCS.png';
+import PHIVOLCS from '../../assets/PHIVOLCS.webp';
 import OCD from '../../assets/OCD.svg';
 import DND from '../../assets/DND.svg';
 import DOF from '../../assets/DOF.svg';
-import MOREPOWER from '../../assets/MOREPOWER.png';
-import MARSTECH from '../../assets/MARSTECH.png';
-import ATI from '../../assets/ATI.jpg';
+import MOREPOWER from '../../assets/MOREPOWER.webp';
+import MARSTECH from '../../assets/MARSTECH.webp';
+import ATI from '../../assets/ATI.webp';
 import EM from '../../assets/EM.avif';
-import MIZELA from '../../assets/MIZELA.png';
+import MIZELA from '../../assets/MIZELA.webp';
 import HIKVISION from '../../assets/HIKVISION.svg';
 import USTDI from '../../assets/USTDI.webp';
-import ASENWARE from '../../assets/ASENWARE.jpg';
-import SCALEEXPERTS from '../../assets/SCALEEXPERTS.png';
-import COMMSOURCE from '../../assets/COMMSOURCE.png';
-import IECEP from '../../assets/IECEP.png';
-import USTP from '../../assets/USTP.png';
-import CICC from '../../assets/CICC.jpg';
-import STELLARSAT from '../../assets/STELLARSAT.avif';
-import MISAMIS from '../../assets/MISAMIS.jpg';
-import MARIKINA from '../../assets/MARIKINA.jpg';
-import SLSU from '../../assets/SLSU.png';
-import ICCT from '../../assets/ICCT.jpg';
+import ASENWARE from '../../assets/ASENWARE.webp';
+import SCALEEXPERTS from '../../assets/SCALEEXPERTS.webp';
+import COMMSOURCE from '../../assets/COMMSOURCE.webp';
+import IECEP from '../../assets/IECEP.webp';
+import USTP from '../../assets/USTP.webp';
+import CICC from '../../assets/CICC.webp';
+import STELLARSAT from '../../assets/STELLARSAT.webp';
+import MISAMIS from '../../assets/MISAMIS.webp';
+import MARIKINA from '../../assets/MARIKINA.webp';
+import SLSU from '../../assets/SLSU.webp';
+import ICCT from '../../assets/ICCT.webp';
 import NAMRIA from '../../assets/NAMRIA.svg';
-import EASYTECH from '../../assets/EASYTECH.svg';
-import EZTECH from '../../assets/EZTECH.png';
-import Skeleton from 'react-loading-skeleton';
-import 'react-loading-skeleton/dist/skeleton.css';
+import EZTECH from '../../assets/EZTECH.webp';
+import SOLVEROUS from '../../assets/SolverousLogo.webp';
+import URS from '../../assets/URS.webp';
 
 function Partners() {
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        setTimeout(() => setLoading(false), 3000);
-    }, []);
-
     // OPTIMIZED: Wrap array in useMemo to prevent recreation on every render
     const partnerLogos = useMemo(() => [
         { src: DOH, alt: "DOH Logo", size: "w-10 md:w-16" },
@@ -45,26 +38,27 @@ function Partners() {
         { src: OCD, alt: "OCD Logo", size: "w-10 md:w-16" },
         { src: DND, alt: "DND Logo", size: "w-10 md:w-16" },
         { src: DOF, alt: "DOF Logo", size: "w-10 md:w-16" },
+        { src: IECEP, alt: "IECEP Logo", size: "w-10 md:w-18" },
+        { src: CICC, alt: "CICC Logo", size: "w-10 md:w-18" },
+        { src: NAMRIA, alt: "NAMRIA Logo", size: "w-10 md:w-18" },
+        { src: USTDI, alt: "USTDI Logo", size: "w-10 md:w-20" },
+        { src: USTP, alt: "USTP Logo", size: "w-10 md:w-16" },
+        { src: MARIKINA, alt: "MARIKINA Logo", size: "w-10 md:w-18" },
+        { src: SLSU, alt: "SLSU Logo", size: "w-10 md:w-18" },
+        { src: ICCT, alt: "ICCT Logo", size: "w-10 md:w-18" },
+        { src: URS, alt: "URS Logo", size: "w-8 md:w-14" },
+        { src: MISAMIS, alt: "MISAMIS Logo", size: "w-10 md:w-18" },
         { src: MOREPOWER, alt: "MOREPOWER Logo", size: "w-10 md:w-32" },
         { src: MARSTECH, alt: "MARSTECH Logo", size: "w-10 md:w-32" },
         { src: ATI, alt: "ATI Logo", size: "w-10 md:w-20" },
         { src: EM, alt: "E.M. CUERPO Logo", size: "w-10 md:w-32" },
         { src: MIZELA, alt: "MIZELA Logo", size: "w-10 md:w-16" },
         { src: HIKVISION, alt: "HIKVISION Logo", size: "w-10 md:w-32" },
-        { src: USTDI, alt: "USTDI Logo", size: "w-10 md:w-20" },
         { src: ASENWARE, alt: "ASENWARE Logo", size: "w-10 md:w-32" },
         { src: SCALEEXPERTS, alt: "SCALEEXPERTS Logo", size: "w-10 md:w-32" },
         { src: COMMSOURCE, alt: "COMMSOURCE Logo", size: "w-10 md:w-32" },
-        { src: IECEP, alt: "IECEP Logo", size: "w-10 md:w-18" },
-        { src: USTP, alt: "USTP Logo", size: "w-10 md:w-16" },
-        { src: CICC, alt: "CICC Logo", size: "w-10 md:w-18" },
+        { src: SOLVEROUS, alt: "COMMSOURCE Logo", size: "w-10 md:w-20" },
         { src: STELLARSAT, alt: "STELLARSAT Logo", size: "w-10 md:w-32" },
-        { src: MISAMIS, alt: "MISAMIS Logo", size: "w-10 md:w-18" },
-        { src: MARIKINA, alt: "MARIKINA Logo", size: "w-10 md:w-18" },
-        { src: SLSU, alt: "SLSU Logo", size: "w-10 md:w-18" },
-        { src: ICCT, alt: "ICCT Logo", size: "w-10 md:w-18" },
-        { src: NAMRIA, alt: "NAMRIA Logo", size: "w-10 md:w-18" },
-        { src: EASYTECH, alt: "EASYTECH Logo", size: "w-10 md:w-26" },
         { src: EZTECH, alt: "EZTECH Logo", size: "w-10 md:w-26" },
     ], []); // Empty dependency array means this only creates once
 
@@ -84,11 +78,11 @@ function Partners() {
     useEffect(() => {
         const calculateLogosPerPage = () => {
             const width = window.innerWidth;
-
+            
             // Mobile 
             if (width < 640) {
                 setLogosPerPage(12);
-            }
+            } 
             // Tablet
             else if (width >= 620 && width < 1024) {
                 setLogosPerPage(12);
@@ -104,7 +98,7 @@ function Partners() {
 
         // Recalculate on window resize
         window.addEventListener('resize', calculateLogosPerPage);
-
+        
         // Cleanup listener on unmount
         return () => window.removeEventListener('resize', calculateLogosPerPage);
     }, []);
@@ -167,10 +161,10 @@ function Partners() {
             setCurrentDot(prev => {
                 // Calculate next page (loop back to 0 after last page)
                 const nextPage = (prev + 1) % totalPages;
-
+                
                 // Scroll to next page
                 scrollToPage(nextPage);
-
+                
                 return nextPage;
             });
         }, 2000); // 2000ms = 2 seconds
@@ -181,90 +175,73 @@ function Partners() {
 
     return (
         <div className="space-y-8 justify-center items-center">
-            {loading ? (
-                <div className="grid grid-cols-3 grid-rows-4 sm:grid-cols-4 sm:grid-rows-3 lg:grid-cols-6 lg:grid-rows-3 gap-2 md:gap-4 m-0">
-                    {Array(logosPerPage).fill(null).map((_, i) => (
-                        <div key={i} style={{ lineHeight: 0 }}>
-                            <Skeleton
-                                height={96}
-                                width="10rem"
-                                borderRadius={12}
-                                style={{ transform: 'translateZ(0)' }}
-                            />
-                        </div>
-                    ))}
-                </div>
-            ) : (
-                <>
-                    {/* Main scrollable container */}
+            {/* Main scrollable container */}
+            <div
+                ref={scrollRef}
+                onScroll={handleScroll}
+                // ADDED: Pause auto-scroll when user manually scrolls or touches
+                onTouchStart={handleUserInteraction}
+                onMouseDown={handleUserInteraction}
+                className="overflow-x-hidden overflow-y-hidden scrollbar-hide snap-x snap-mandatory flex"
+                // ADDED: Hardware acceleration for smoother scrolling (tells browser to optimize)
+                style={{ willChange: 'scroll-position' }}
+            >
+                {/* Loop through each page and create a separate grid for each */}
+                {Array(totalPages).fill(null).map((_, pageIndex) => (
                     <div
-                        ref={scrollRef}
-                        onScroll={handleScroll}
-                        // ADDED: Pause auto-scroll when user manually scrolls or touches
-                        onTouchStart={handleUserInteraction}
-                        onMouseDown={handleUserInteraction}
-                        className="overflow-x-hidden overflow-y-hidden scrollbar-hide snap-x snap-mandatory flex"
-                        // ADDED: Hardware acceleration for smoother scrolling (tells browser to optimize)
-                        style={{ willChange: 'scroll-position' }}
+                        key={pageIndex}
+                        // ADDED: flex-shrink-0 prevents page compression during scroll
+                        className="min-w-full snap-start flex items-start justify-center shrink-0 p-2"
                     >
-                        {/* Loop through each page and create a separate grid for each */}
-                        {Array(totalPages).fill(null).map((_, pageIndex) => (
-                            <div
-                                key={pageIndex}
-                                // ADDED: flex-shrink-0 prevents page compression during scroll
-                                className="min-w-full snap-start flex items-start justify-center shrink-0 p-2"
-                            >
-                                <div className="grid grid-cols-3 grid-rows-4 sm:grid-cols-4 sm:grid-rows-3 lg:grid-cols-6 lg:grid-rows-3 gap-2 md:gap-4">
+                        <div className="grid grid-cols-3 grid-rows-4 sm:grid-cols-4 sm:grid-rows-3 lg:grid-cols-6 lg:grid-rows-3 gap-2 md:gap-4">
 
-                                    {/* Slice the logos array to get only the logos for this specific page */}
-                                    {partnerLogos
-                                        .slice(pageIndex * logosPerPage, (pageIndex + 1) * logosPerPage)
-                                        .map((logo, logoIndex) => (
-                                            <div
-                                                key={logoIndex}
-                                                className="partner_logos_format flex items-center justify-center hover:scale-110 transition duration-300 ease-in-out"
-                                                style={{ transform: 'translateZ(0)' }}
-                                            >
-                                                <img
-                                                    src={logo.src}
-                                                    alt={logo.alt}
-                                                    className={logo.size}  // Mobile: 40px, Desktop: 64px
-                                                    // ADDED: Prevents image dragging which can cause lag during scroll
-                                                    draggable="false"
-                                                />
-                                            </div>
-                                        ))
-                                    }
-                                </div>
-                            </div>
-                        ))}
+                            {/* Slice the logos array to get only the logos for this specific page */}
+                            {partnerLogos
+                                .slice(pageIndex * logosPerPage, (pageIndex + 1) * logosPerPage)
+                                .map((logo, logoIndex) => (
+                                    <div
+                                        key={logoIndex}
+                                        className="partner_logos_format flex items-center justify-center hover:scale-110 transition duration-300 ease-in-out"
+                                        style={{ transform: 'translateZ(0)' }}
+                                    >
+                                        <img
+                                            src={logo.src}
+                                            alt={logo.alt}
+                                            className={logo.size}  // Mobile: 40px, Desktop: 64px
+                                            // ADDED: Prevents image dragging which can cause lag during scroll
+                                            draggable="false"
+                                        />
+                                    </div>
+                                ))
+                            }
+                        </div>
                     </div>
+                ))}
+            </div>
 
-                    {/* Dot indicators at the bottom */}
-                    <div className="flex justify-center gap-2">
-                        {/* Create one dot button for each page */}
-                        {/* Note: Number of dots changes based on screen size since logosPerPage changes */}
-                        {Array(totalPages).fill(null).map((_, index) => (
-                            <button
-                                key={index}
-                                // UPDATED: Pause auto-scroll when clicking dots
-                                onClick={() => {
-                                    handleUserInteraction();
-                                    scrollToPage(index);
-                                }}
-                                className={`w-2 h-2 rounded-full transition-all ${currentDot === index
-                                    ? 'bg-blue-600 w-6'  // Active dot: blue and wider
-                                    : 'bg-gray-300 hover:bg-gray-400'  // Inactive dot: gray
-                                    }`}
-                                aria-label={`Go to page ${index + 1}`}
-                            >
-                            </button>
-                        ))}
-                    </div>
-                </>
-            )
-            }
-        </div >
+            {/* Dot indicators at the bottom */}
+            <div className="flex justify-center gap-2">
+                {/* Create one dot button for each page */}
+                {/* Note: Number of dots changes based on screen size since logosPerPage changes */}
+                {Array(totalPages).fill(null).map((_, index) => (
+                    <button
+                        key={index}
+                        // UPDATED: Pause auto-scroll when clicking dots
+                        onClick={() => {
+                            handleUserInteraction();
+                            scrollToPage(index);
+                        }}
+                        className={`w-2 h-2 rounded-full transition-all ${
+                            currentDot === index 
+                                ? 'bg-blue-600 w-6'  // Active dot: blue and wider
+                                : 'bg-gray-300 hover:bg-gray-400'  // Inactive dot: gray
+                        }`}
+                        aria-label={`Go to page ${index + 1}`}
+                    >
+                    </button>
+                ))}
+            </div>
+        </div>
     );
 }
 

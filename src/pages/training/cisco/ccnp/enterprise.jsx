@@ -7,9 +7,9 @@ import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
-import ccnaBadge from "../../../../assets/CCNPEnterprise.png"; // Course badge image
-import ccnaHero from "../../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
-import ccnaFooter from "../../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
+import ccnaBadge from "../../../../assets/CCNPEnterprise.webp"; // Course badge image
+import ccnaHero from "../../../../assets/CCNAHeroImageAutomation.webp"; // Hero banner background
+import ccnaFooter from "../../../../assets/CCNAFooterImageAutomation.webp"; // Footer banner background
 import MealIcon from "../../../../assets/Meal.svg";
 import ReviewIcon from "../../../../assets/Review.svg";
 import WorkstationIcon from "../../../../assets/Workstation.svg";
@@ -168,7 +168,7 @@ export default function CCNPEnterprise() {
       <TrainingHeroBanner
         bgImage={ccnaHero}
         category="CISCO"
-        title="CCNP ENTERPRISE"
+        title="CCNP Enterprise"
         description="Implementing Cisco Enterprise Network Core Technologies (350-401
               ENCOR) v1.1 is a 120-minute exam that assesses a candidate’s
               knowledge of enterprise network technologies, including dual-stack
@@ -244,7 +244,7 @@ export default function CCNPEnterprise() {
         </div>
 
         {/* ==================== RIGHT SIDEBAR: Contents/Information ==================== */}
-        <aside className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-1 gap-3 lg:w-72 xl:w-80 shrink-0">
+        <aside className="aside_contents">
           {/* ==================== CERT BADGE ====================*/}
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
             {/* Cert Badge - Change/Update Image */}
@@ -360,6 +360,7 @@ export default function CCNPEnterprise() {
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
         bgImage={ccnaFooter} // CHANGE: Update background image for the footer banner
+        bgPosition="90%"
         description="Advance your networking career and prepare for the CCNP Enterprise exam."
       />
     </main>

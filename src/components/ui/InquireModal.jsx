@@ -1,13 +1,15 @@
 import { useState, useRef, useCallback, useEffect } from "react";
+import { createPortal } from "react-dom";
 import emailjs from "@emailjs/browser";
 import ReCAPTCHA from "react-google-recaptcha";
+import { FLAT_COURSES } from "../training/courses";
 
 // ─── Config ────────────────────────────────────────────────────────────────
-const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+const EMAILJS_SERVICE_ID  = import.meta.env.VITE_EMAILJS_SERVICE_ID;
 const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
-const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
-const COOLDOWN_MS = 60000;
+const EMAILJS_PUBLIC_KEY  = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+const RECAPTCHA_SITE_KEY  = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
+const COOLDOWN_MS         = 60_000;
 
 // ─── Constants ─────────────────────────────────────────────────────────────
 const FUNDING_OPTIONS = [
@@ -16,51 +18,54 @@ const FUNDING_OPTIONS = [
   "Government / NGO",
 ];
 
-const COURSES = [
-  "React & Modern Frontend Development",
-  "Node.js & Backend Engineering",
-  "UI/UX Design Fundamentals",
-  "Data Analytics with Python",
-  "Cloud Infrastructure (AWS/GCP)",
-  "Cybersecurity Essentials",
+const COURSE_LABELS = FLAT_COURSES.map((c) => c.label);
+const DEFAULT_COURSE = COURSE_LABELS[0] ?? "";
+
+const SERVICE_INTEREST_OPTIONS = ["IT Consultancy", "Software Development", "Both"];
+
+const PROJECT_SCALE_OPTIONS = [
+  "Personal / Freelance",
+  "Small to Medium Business",
+  "Large Enterprise",
+  "Government / Corporate",
 ];
 
+const TIMELINE_OPTIONS = [
+  "ASAP (within 2 weeks)",
+  "Within 1 month",
+  "Within 3 months",
+  "Flexible",
+];
+
+const BUDGET_OPTIONS = [
+  "Below ₱100K",
+  "₱100K–₱500K",
+  "₱500K–₱1M",
+  "₱1M and above",
+  "To be discussed",
+];
+
+// ─── Inquiry Type Selector Options ────────────────────────────────────────
 const INQUIRY_TYPE_OPTIONS = [
   {
     value: "training",
     label: "Training",
     description: "Enroll in a course or certification program",
     icon: (
-      <svg
-        className="w-6 h-6"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
+      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
           d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
         />
       </svg>
     ),
   },
   {
-    value: "services",
-    label: "ICT Services",
+    value: "solutions",
+    label: "ICT Solutions",
     description: "Inquire about network, security, or engineering solutions",
     icon: (
-      <svg
-        className="w-6 h-6"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
+      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
           d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2v-4M9 21H5a2 2 0 01-2-2v-4m0 0h18"
         />
       </svg>
@@ -69,134 +74,210 @@ const INQUIRY_TYPE_OPTIONS = [
 ];
 
 // ─── Custom Hook ───────────────────────────────────────────────────────────
-function useEnrollForm(onClose) {
-  const [step, setStep] = useState(0);
-  const [inquiryType, setInquiryType] = useState(null);
-  const [status, setStatus] = useState("idle");
+function useEnrollForm(onClose, initialStep = 0, initialInquiryType = null, preselectedCourse = null) {
+  const resolvedCourse = preselectedCourse ?? DEFAULT_COURSE;
+
+  const [step, setStep]               = useState(initialStep);
+  const [inquiryType, setInquiryType] = useState(initialInquiryType);
+  const [status, setStatus]           = useState("idle");
   const [captchaToken, setCaptchaToken] = useState(null);
-  const [honeypot, setHoneypot] = useState("");
-  const captchaRef = useRef(null);
+  const [honeypot, setHoneypot]       = useState("");
+  const captchaRef  = useRef(null);
   const cooldownRef = useRef(null);
 
-  const [form, setForm] = useState({
-    funding: FUNDING_OPTIONS[0],
+  const [trainingForm, setTrainingForm] = useState({
+    funding:   FUNDING_OPTIONS[0],
     attendees: "",
-    name: "",
-    email: "",
-    phone: "",
-    course: "",
-    message: "",
+    name:      "",
+    email:     "",
+    phone:     "",
+    course:    resolvedCourse,
+    message:   "",
+  });
+
+  const [solutionsForm, setSolutionsForm] = useState({
+    name:            "",
+    email:           "",
+    phone:           "",
+    serviceInterest: "",
+    projectScale:    "",
+    timeline:        "",
+    budget:          "",
+    projectDesc:     "",
+    techSpecs:       "",
+    message:         "",
   });
 
   const [errors, setErrors] = useState({});
 
-  useEffect(() => {
-    return () => clearInterval(cooldownRef.current);
-  }, []);
+  useEffect(() => () => clearInterval(cooldownRef.current), []);
 
-  const update = (field) => (e) =>
-    setForm((prev) => ({ ...prev, [field]: e.target.value }));
+  const updateTraining      = (field) => (e) =>
+    setTrainingForm((prev) => ({ ...prev, [field]: e.target.value }));
+  const updateSolutionsEvent = (field) => (e) =>
+    setSolutionsForm((prev) => ({ ...prev, [field]: e.target.value }));
 
-  const selectInquiryType = (type) => {
-    setInquiryType(type);
-    setStep(1);
-  };
+  const selectInquiryType = (type) => { setInquiryType(type); setStep(1); };
 
-  const validateStep1 = () => {
+  const validateTrainingStep1 = () => {
     const e = {};
-    if (!form.attendees || isNaN(form.attendees) || Number(form.attendees) < 1)
+    if (!trainingForm.attendees || isNaN(trainingForm.attendees) || Number(trainingForm.attendees) < 1)
       e.attendees = "Enter a valid number of attendees.";
-    if (!form.name.trim()) e.name = "Name or company is required.";
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
-      e.email = "Enter a valid email address.";
-    if (!form.phone.trim()) e.phone = "Phone number is required.";
+    if (!trainingForm.name.trim())  e.name  = "Name or company is required.";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trainingForm.email)) e.email = "Enter a valid email address.";
+    if (!trainingForm.phone.trim()) e.phone = "Phone number is required.";
     setErrors(e);
     return Object.keys(e).length === 0;
   };
 
-  const validateStep2 = () => {
+  const validateTrainingStep2 = () => {
     const e = {};
-    if (inquiryType === "training" && !form.course)
-      e.course = "Please select a course.";
-    if (!captchaToken) e.captcha = "Please complete the CAPTCHA verification.";
+    if (!trainingForm.course)  e.course  = "Please select a course.";
+    if (!captchaToken)         e.captcha = "Please complete the CAPTCHA verification.";
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
+
+  const validateSolutionsStep1 = () => {
+    const e = {};
+    if (!solutionsForm.name.trim())  e.name  = "Name or company is required.";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(solutionsForm.email)) e.email = "Enter a valid email address.";
+    if (!solutionsForm.phone.trim()) e.phone = "Phone number is required.";
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
+
+  const validateSolutionsStep2 = () => {
+    const e = {};
+    if (!solutionsForm.serviceInterest) e.serviceInterest = "Please select a service.";
+    if (!solutionsForm.projectScale)    e.projectScale    = "Please select a project scale.";
+    if (!solutionsForm.timeline)        e.timeline        = "Please select a timeline.";
+    if (!solutionsForm.budget)          e.budget          = "Please select a budget range.";
+    if (!solutionsForm.projectDesc.trim()) e.projectDesc  = "Please describe your project.";
+    if (!captchaToken)                 e.captcha         = "Please complete the CAPTCHA verification.";
     setErrors(e);
     return Object.keys(e).length === 0;
   };
 
   const next = () => {
-    if (validateStep1()) setStep(2);
+    if (inquiryType === "training" && validateTrainingStep1()) setStep(2);
+    if (inquiryType === "solutions" && validateSolutionsStep1()) setStep(2);
   };
+
   const back = () => {
     setErrors({});
-    setStep(1);
+    step === 1 && initialInquiryType ? onClose() : setStep(1);
   };
-  const backToSelection = () => {
-    setErrors({});
-    setStep(0);
-    setInquiryType(null);
+
+  const backToSelection = () => { setErrors({}); setStep(0); setInquiryType(null); };
+
+  const checkRateLimit = () => {
+    const lastSent = localStorage.getItem("lastModalSubmit");
+    const now = Date.now();
+    if (lastSent && now - Number(lastSent) < COOLDOWN_MS) {
+      clearInterval(cooldownRef.current);
+      const sLeft = Math.ceil((COOLDOWN_MS - (now - Number(lastSent))) / 1000);
+      setErrors({ submit: `Please wait ${sLeft}s before sending again.` });
+      cooldownRef.current = setInterval(() => {
+        const s = Math.ceil(
+          (COOLDOWN_MS - (Date.now() - Number(localStorage.getItem("lastModalSubmit")))) / 1000,
+        );
+        if (s <= 0) { clearInterval(cooldownRef.current); setErrors((p) => ({ ...p, submit: "" })); }
+        else        { setErrors((p) => ({ ...p, submit: `Please wait ${s}s before sending again.` })); }
+      }, 1000);
+      return false;
+    }
+    return true;
   };
 
   const submit = async () => {
-    /* Honeypot check */
     if (honeypot) return;
+    if (!checkRateLimit()) return;
 
-    /* Rate limit check */
-    const lastSent = localStorage.getItem("lastModalSubmit");
-    const now = Date.now();
+    const valid = inquiryType === "training"
+      ? validateTrainingStep2()
+      : validateSolutionsStep2();
+    if (!valid) return;
 
-    if (lastSent && now - lastSent < COOLDOWN_MS) {
-      clearInterval(cooldownRef.current);
-
-      const secondsLeft = Math.ceil((COOLDOWN_MS - (now - lastSent)) / 1000);
-      setErrors({
-        submit: `Please wait ${secondsLeft}s before sending again.`,
-      });
-
-      cooldownRef.current = setInterval(() => {
-        const secondsLeft = Math.ceil(
-          (COOLDOWN_MS -
-            (Date.now() - localStorage.getItem("lastModalSubmit"))) /
-            1000,
-        );
-        if (secondsLeft <= 0) {
-          clearInterval(cooldownRef.current);
-          setErrors((prev) => ({ ...prev, submit: "" }));
-        } else {
-          setErrors((prev) => ({
-            ...prev,
-            submit: `Please wait ${secondsLeft}s before sending again.`,
-          }));
-        }
-      }, 1000);
-      return;
-    }
-
-    if (!validateStep2()) return;
     setStatus("loading");
-
     try {
-      localStorage.setItem("lastModalSubmit", now);
-      await emailjs.send(
-        EMAILJS_SERVICE_ID,
-        EMAILJS_TEMPLATE_ID,
-        {
-          inquiry_type: inquiryType,
-          funding: form.funding,
-          attendees: form.attendees,
-          name: form.name,
-          email: form.email,
-          phone: form.phone,
-          course: form.course || "N/A",
-          message: form.message || "No additional message.",
-          subject: `New ${inquiryType} Inquiry`,
-        },
-        EMAILJS_PUBLIC_KEY,
-      );
+      localStorage.setItem("lastModalSubmit", Date.now());
+
+      /*
+       * ── Payload Design ────────────────────────────────────────────────────
+       *
+       * Both payloads share the same template. The template detects which
+       * form type it is via the PRESENCE of certain keys:
+       *
+       *   Training:
+       *     inquiry_type = "Training Inquiry"
+       *     funding      = <value>  ← triggers {{#funding}} block in template
+       *     attendees    = <value>
+       *     course       = <value>
+       *     subject      = "New Training Inquiry"  ← used in <h1> subject tag
+       *     service_interest is NOT sent            ← hides Solutions block
+       *
+       *   Solutions:
+       *     inquiry_type     = "ICT Solutions Inquiry"
+       *     service_interest = <value>  ← triggers {{#service_interest}} block
+       *     project_scale    = <value>
+       *     timeline         = <value>
+       *     budget           = <value>
+       *     project_desc     = <value>
+       *     tech_specs       = <value | "N/A">
+       *     subject          = "New ICT Solutions Inquiry"
+       *     funding is NOT sent                     ← hides Training block
+       *
+       * ContactForm sends inquiry_type = "" (empty string → falsy),
+       * which triggers {{^inquiry_type}} "Contact Message" badge in template.
+       */
+
+      const payload = inquiryType === "training"
+        ? {
+            // ── Shared fields ──
+            inquiry_type:        "Training Inquiry",
+            name:                trainingForm.name,
+            email:               trainingForm.email,
+            phone:               trainingForm.phone,
+            subject:             "New Training Inquiry",
+            message:             trainingForm.message || "No additional message.",
+            // ── Badge keys (Gmail-safe — no {{^}} blocks needed) ──
+            badge_label:         "📚 Training Inquiry",
+            badge_color:         "#1fca6e22",
+            badge_text_color:    "#1fca6e",
+            badge_border_color:  "#1fca6e55",
+            // ── Training-specific (triggers {{#funding}} block) ──
+            funding:             trainingForm.funding,
+            attendees:           trainingForm.attendees,
+            course:              trainingForm.course || "N/A",
+          }
+        : {
+            // ── Shared fields ──
+            inquiry_type:        "ICT Solutions Inquiry",
+            name:                solutionsForm.name,
+            email:               solutionsForm.email,
+            phone:               solutionsForm.phone,
+            subject:             "New ICT Solutions Inquiry",
+            message:             solutionsForm.message || "No additional message.",
+            // ── Badge keys (Gmail-safe — no {{^}} blocks needed) ──
+            badge_label:         "🖥️ ICT Solutions Inquiry",
+            badge_color:         "#ff8c0022",
+            badge_text_color:    "#ffaa44",
+            badge_border_color:  "#ff8c0055",
+            // ── Solutions-specific (triggers {{#service_interest}} block) ──
+            service_interest:    solutionsForm.serviceInterest,
+            project_scale:       solutionsForm.projectScale,
+            timeline:            solutionsForm.timeline,
+            budget:              solutionsForm.budget,
+            project_desc:        solutionsForm.projectDesc,
+            tech_specs:          solutionsForm.techSpecs || "N/A",
+          };
+
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, payload, EMAILJS_PUBLIC_KEY);
       setStatus("success");
       captchaRef.current?.reset();
       setCaptchaToken(null);
-    } catch (err) {
-      console.error("EmailJS error:", err);
+    } catch {
       setStatus("error");
       captchaRef.current?.reset();
       setCaptchaToken(null);
@@ -208,44 +289,28 @@ function useEnrollForm(onClose) {
 
   const reset = () => {
     clearInterval(cooldownRef.current);
-    setStep(0);
-    setInquiryType(null);
+    setStep(initialStep);
+    setInquiryType(initialInquiryType);
     setStatus("idle");
     setCaptchaToken(null);
     setErrors({});
     setHoneypot("");
-    setForm({
-      funding: FUNDING_OPTIONS[0],
-      attendees: "",
-      name: "",
-      email: "",
-      phone: "",
-      course: "",
-      message: "",
+    setTrainingForm({
+      funding: FUNDING_OPTIONS[0], attendees: "", name: "", email: "",
+      phone: "", course: resolvedCourse, message: "",
+    });
+    setSolutionsForm({
+      name: "", email: "", phone: "", serviceInterest: "",
+      projectScale: "", timeline: "", budget: "", projectDesc: "", techSpecs: "", message: "",
     });
   };
 
   return {
-    step,
-    inquiryType,
-    form,
-    errors,
-    status,
-    captchaToken,
-    captchaRef,
-    cooldownRef,
-    honeypot,
-    setHoneypot,
-    update,
-    selectInquiryType,
-    next,
-    back,
-    backToSelection,
-    submit,
-    reset,
-    onClose,
-    onCaptchaVerify,
-    onCaptchaExpire,
+    step, inquiryType, trainingForm, solutionsForm, errors, status,
+    captchaToken, captchaRef, cooldownRef, honeypot, setHoneypot,
+    updateTraining, updateSolutionsEvent, selectInquiryType,
+    next, back, backToSelection, submit, reset, onClose,
+    onCaptchaVerify, onCaptchaExpire,
   };
 }
 
@@ -254,11 +319,9 @@ function FieldError({ msg }) {
   return msg ? (
     <p className="mt-1 text-xs text-red-500 flex items-center gap-1">
       <svg className="w-3 h-3 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-        <path
-          fillRule="evenodd"
+        <path fillRule="evenodd"
           d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-          clipRule="evenodd"
-        />
+          clipRule="evenodd" />
       </svg>
       {msg}
     </p>
@@ -268,9 +331,7 @@ function FieldError({ msg }) {
 function Input({ label, id, error, ...props }) {
   return (
     <div className="flex flex-col gap-1">
-      <label htmlFor={id} className="text-sm font-medium text-gray-700">
-        {label}
-      </label>
+      <label htmlFor={id} className="text-sm font-medium text-gray-700">{label}</label>
       <input
         id={id}
         className={`w-full rounded-lg border px-3 py-2.5 text-sm outline-none transition
@@ -283,25 +344,13 @@ function Input({ label, id, error, ...props }) {
   );
 }
 
-function SelectField({
-  label,
-  id,
-  options,
-  error,
-  value,
-  onChange,
-  placeholder,
-}) {
+function SelectField({ label, id, options, error, value, onChange, placeholder }) {
   return (
     <div className="flex flex-col gap-1">
-      <label htmlFor={id} className="text-sm font-medium text-gray-700">
-        {label}
-      </label>
+      <label htmlFor={id} className="text-sm font-medium text-gray-700">{label}</label>
       <div className="relative">
         <select
-          id={id}
-          value={value}
-          onChange={onChange}
+          id={id} value={value} onChange={onChange}
           className={`w-full appearance-none rounded-lg border px-3 py-2.5 text-sm outline-none
             transition focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-10
             ${error ? "border-red-400 bg-red-50" : "border-gray-200 bg-white hover:border-blue-300"}
@@ -309,24 +358,12 @@ function SelectField({
         >
           {placeholder && <option value="">{placeholder}</option>}
           {options.map((opt) => (
-            <option key={opt} value={opt}>
-              {opt}
-            </option>
+            <option key={opt} value={opt}>{opt}</option>
           ))}
         </select>
         <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
-          <svg
-            className="w-4 h-4 text-blue-500"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M19 9l-7 7-7-7"
-            />
+          <svg className="w-4 h-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>
         </div>
       </div>
@@ -343,15 +380,11 @@ function ProgressBar({ step }) {
         <span className="text-xs font-semibold tracking-widest text-blue-600 uppercase">
           Step {step} of 2
         </span>
-        <span className="text-xs text-gray-400">
-          {step === 1 ? "50%" : "100%"}
-        </span>
+        <span className="text-xs text-gray-400">{step === 1 ? "50%" : "100%"}</span>
       </div>
       <div className="h-1 w-full bg-gray-100 rounded-full overflow-hidden">
-        <div
-          className="h-full bg-blue-600 rounded-full transition-all duration-500 ease-out"
-          style={{ width: step === 1 ? "50%" : "100%" }}
-        />
+        <div className="h-full bg-blue-600 rounded-full transition-all duration-500 ease-out"
+          style={{ width: step === 1 ? "50%" : "100%" }} />
       </div>
     </div>
   );
@@ -368,32 +401,33 @@ function ModalHeader({ title, subtitle }) {
   );
 }
 
-// ─── Step Screens ──────────────────────────────────────────────────────────
+function InquiryBadge({ inquiryType }) {
+  return (
+    <div className="mt-2 mb-1">
+      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-[#1775EE] text-xs font-semibold">
+        {inquiryType === "training" ? "📚 Training Inquiry" : "🖥️ ICT Solutions Inquiry"}
+      </span>
+    </div>
+  );
+}
+
+// ─── Step 0 — Inquiry Type Selection ──────────────────────────────────────
 function Step0({ onSelect }) {
   return (
     <>
       <ModalHeader
-        title={
-          <>
-            What are you{" "}
-            <span className="text-[#1775EE]">inquiring about?</span>
-          </>
-        }
+        title={<>What are you <span className="text-[#1775EE]">inquiring about?</span></>}
         subtitle="Select the type of inquiry to get started."
       />
       <div className="flex flex-col gap-4 mt-6">
         {INQUIRY_TYPE_OPTIONS.map((opt) => (
-          <button
-            key={opt.value}
-            onClick={() => onSelect(opt.value)}
+          <button key={opt.value} onClick={() => onSelect(opt.value)}
             className="flex items-center gap-4 p-4 rounded-xl border-2 border-gray-100
               hover:border-blue-400 hover:bg-blue-50 active:scale-98 transition-all duration-200
               text-left group"
           >
-            <div
-              className="w-12 h-12 rounded-xl bg-blue-50 group-hover:bg-blue-100
-              flex items-center justify-center text-[#1775EE] shrink-0 transition-colors duration-200"
-            >
+            <div className="w-12 h-12 rounded-xl bg-blue-50 group-hover:bg-blue-100
+              flex items-center justify-center text-[#1775EE] shrink-0 transition-colors duration-200">
               {opt.icon}
             </div>
             <div>
@@ -402,18 +436,9 @@ function Step0({ onSelect }) {
               </p>
               <p className="text-sm text-gray-500 mt-0.5">{opt.description}</p>
             </div>
-            <svg
-              className="w-5 h-5 text-gray-300 group-hover:text-blue-400 ml-auto shrink-0 transition-colors"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5l7 7-7 7"
-              />
+            <svg className="w-5 h-5 text-gray-300 group-hover:text-blue-400 ml-auto shrink-0 transition-colors"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
           </button>
         ))}
@@ -422,110 +447,41 @@ function Step0({ onSelect }) {
   );
 }
 
-function Step1({
-  form,
-  errors,
-  update,
-  next,
-  backToSelection,
-  inquiryType,
-  honeypot,
-  setHoneypot,
-}) {
+// ─── Training Steps ────────────────────────────────────────────────────────
+function TrainingStep1({ trainingForm, errors, updateTraining, next, backToSelection, back, initialInquiryType, honeypot, setHoneypot }) {
+  const handleBack = initialInquiryType ? back : backToSelection;
   return (
     <>
       <ModalHeader
-        title={
-          <>
-            Begin Your <span className="text-[#1775EE]">Learning Journey</span>
-          </>
-        }
+        title={<>Begin Your <span className="text-[#1775EE]">Learning Journey</span></>}
         subtitle="Fill out the form to secure your slot or learn more about the course."
       />
-
-      {/* Honeypot — hidden from real users */}
-      <input
-        type="text"
-        value={honeypot}
-        onChange={(e) => setHoneypot(e.target.value)}
-        style={{ display: "none" }}
-        tabIndex="-1"
-        autoComplete="off"
-        aria-hidden="true"
-      />
-
-      <div className="mt-3 mb-5">
-        <span
-          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50
-          text-[#1775EE] text-xs font-semibold capitalize"
-        >
-          {inquiryType === "training" ? "📚" : "🖥️"}{" "}
-          {inquiryType === "training"
-            ? "Training Inquiry"
-            : "ICT Services Inquiry"}
-        </span>
-      </div>
-      <h5 className="font-bold text-gray-900 mb-4">
-        Individual / Company Info
-      </h5>
+      <input type="text" value={honeypot} onChange={(e) => setHoneypot(e.target.value)}
+        className="hidden" tabIndex="-1" autoComplete="off" aria-hidden="true" />
+      <InquiryBadge inquiryType="training" />
+      <h5 className="font-bold text-gray-900 mb-4">Individual / Company Info</h5>
       <div className="flex flex-col gap-4">
-        <SelectField
-          label="Choose Funding"
-          id="funding"
-          options={FUNDING_OPTIONS}
-          value={form.funding}
-          onChange={update("funding")}
-        />
-        <Input
-          label="Number of Attendees"
-          id="attendees"
-          type="number"
-          min="1"
-          placeholder="e.g. 3"
-          value={form.attendees}
-          onChange={update("attendees")}
-          error={errors.attendees}
-        />
-        <Input
-          label="Name / Company"
-          id="name"
-          placeholder="Juan dela Cruz"
-          value={form.name}
-          onChange={update("name")}
-          error={errors.name}
-        />
-        <Input
-          label="Email"
-          id="email"
-          type="email"
-          placeholder="juan@company.com"
-          value={form.email}
-          onChange={update("email")}
-          error={errors.email}
-        />
-        <Input
-          label="Phone Number"
-          id="phone"
-          type="tel"
-          placeholder="+63 912 345 6789"
-          value={form.phone}
-          onChange={update("phone")}
-          error={errors.phone}
-        />
+        <SelectField label="Choose Funding" id="funding" options={FUNDING_OPTIONS}
+          value={trainingForm.funding} onChange={updateTraining("funding")} />
+        <Input label="Number of Attendees" id="attendees" type="number" min="1"
+          placeholder="e.g. 3" value={trainingForm.attendees}
+          onChange={updateTraining("attendees")} error={errors.attendees} />
+        <Input label="Name / Company" id="name" placeholder="Juan dela Cruz"
+          value={trainingForm.name} onChange={updateTraining("name")} error={errors.name} />
+        <Input label="Email" id="email" type="email" placeholder="juan@company.com"
+          value={trainingForm.email} onChange={updateTraining("email")} error={errors.email} />
+        <Input label="Phone Number" id="phone" type="tel" placeholder="+63 912 345 6789"
+          value={trainingForm.phone} onChange={updateTraining("phone")} error={errors.phone} />
       </div>
       <div className="mt-6 flex justify-between items-center">
-        <button
-          onClick={backToSelection}
+        <button onClick={handleBack}
           className="px-5 py-2.5 rounded-lg border border-gray-200 text-sm font-semibold text-gray-600
-            hover:border-blue-400 hover:text-blue-600 active:scale-95 transition-all duration-150"
-        >
+            hover:border-blue-400 hover:text-blue-600 active:scale-95 transition-all duration-150">
           ← Back
         </button>
-        <button
-          onClick={next}
+        <button onClick={next}
           className="px-6 py-2.5 rounded-lg bg-[#1775EE] text-white text-sm font-semibold
-            hover:bg-blue-700 active:scale-95 transition-all duration-150 shadow-sm shadow-blue-200"
-        >
+            hover:bg-blue-700 active:scale-95 transition-all duration-150 shadow-sm shadow-blue-200">
           Next →
         </button>
       </div>
@@ -533,180 +489,199 @@ function Step1({
   );
 }
 
-function Step2({
-  form,
-  errors,
-  update,
-  back,
-  submit,
-  status,
-  captchaRef,
-  onCaptchaVerify,
-  onCaptchaExpire,
-  inquiryType,
-}) {
+function TrainingStep2({ trainingForm, errors, updateTraining, back, submit, status, captchaRef, onCaptchaVerify, onCaptchaExpire }) {
   const isLoading = status === "loading";
   return (
     <>
       <ModalHeader
-        title={
-          <>
-            Begin Your <span className="text-[#1775EE]">Learning Journey</span>
-          </>
-        }
+        title={<>Begin Your <span className="text-[#1775EE]">Learning Journey</span></>}
         subtitle="Fill out the form to secure your slot or learn more about the course."
       />
-      <div className="mt-3 mb-3">
-        <span
-          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50
-          text-[#1775EE] text-xs font-semibold capitalize"
-        >
-          {inquiryType === "training"
-            ? "📚 Training Inquiry"
-            : "🖥️ ICT Services Inquiry"}
-        </span>
-      </div>
-      <h5 className="font-bold text-gray-900 mb-2">
-        {inquiryType === "training" ? "Course Details" : "Service Details"}
-      </h5>
+      <InquiryBadge inquiryType="training" />
+      <h5 className="font-bold text-gray-900">Course Details</h5>
       <div className="flex flex-col gap-4">
-        {inquiryType === "training" && (
-          <SelectField
-            label="Course to Take"
-            id="course"
-            options={COURSES}
-            value={form.course}
-            onChange={update("course")}
-            error={errors.course}
-            placeholder="Select a course"
-          />
-        )}
+        <SelectField label="Course to Take" id="course" options={COURSE_LABELS}
+          value={trainingForm.course} onChange={updateTraining("course")} error={errors.course} />
         <div className="flex flex-col gap-1">
-          <label
-            htmlFor="message"
-            className="text-sm font-medium text-gray-700"
-          >
-            {inquiryType === "training" ? (
-              <>
-                {" "}
-                Message{" "}
-                <span className="text-gray-400 font-normal">(optional)</span>
-              </>
-            ) : (
-              "Describe your requirements"
-            )}
+          <label htmlFor="t-message" className="text-sm font-medium text-gray-700">
+            Message <span className="text-gray-400 font-normal">(optional)</span>
           </label>
-          <textarea
-            id="message"
-            rows={3}
-            placeholder={
-              inquiryType === "training"
-                ? "Any specific topics, questions, or scheduling preferences..."
-                : "Describe the ICT services you need (e.g. network setup, cybersecurity, data center)..."
-            }
-            value={form.message}
-            onChange={update("message")}
+          <textarea id="t-message" rows={3}
+            placeholder="Any specific topics, questions, or scheduling preferences..."
+            value={trainingForm.message} onChange={updateTraining("message")}
             className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm outline-none
-              resize-none transition hover:border-blue-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          />
+              resize-none transition hover:border-blue-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
         </div>
-
-        {/* reCAPTCHA */}
         <div className="flex flex-col gap-1">
-          <ReCAPTCHA
-            ref={captchaRef}
-            sitekey={RECAPTCHA_SITE_KEY}
-            onChange={onCaptchaVerify}
-            onExpired={onCaptchaExpire}
-          />
+          <ReCAPTCHA ref={captchaRef} sitekey={RECAPTCHA_SITE_KEY}
+            onChange={onCaptchaVerify} onExpired={onCaptchaExpire} />
           <FieldError msg={errors.captcha} />
         </div>
       </div>
+      {status === "error" && <ErrorBanner />}
+      <p className="mt-4 text-xs text-gray-400 leading-relaxed">
+        We'll email you a quotation within 1–2 business days. By submitting, you agree to be contacted about our solutions and schedules.
+      </p>
+      <StepNavButtons back={back} submit={submit} isLoading={isLoading} errors={errors} />
+    </>
+  );
+}
 
-      {/* Rate limit warning */}
+// ─── Solutions Steps ────────────────────────────────────────────────────────
+function SolutionsStep1({ solutionsForm, errors, updateSolutionsEvent, next, backToSelection, honeypot, setHoneypot }) {
+  return (
+    <>
+      <ModalHeader
+        title={<>Tell Us About Your <span className="text-[#1775EE]">Project</span></>}
+        subtitle="Help us understand what you need so we can prepare the best proposal."
+      />
+      <input type="text" value={honeypot} onChange={(e) => setHoneypot(e.target.value)}
+        className="hidden" tabIndex="-1" autoComplete="off" aria-hidden="true" />
+      <InquiryBadge inquiryType="solutions" />
+      <h5 className="font-bold text-gray-900 mb-4">Contact Info</h5>
+      <div className="flex flex-col gap-4">
+        <Input label="Name / Company" id="s-name" placeholder="Juan dela Cruz / ACME Corp"
+          value={solutionsForm.name} onChange={updateSolutionsEvent("name")} error={errors.name} />
+        <Input label="Email" id="s-email" type="email" placeholder="juan@company.com"
+          value={solutionsForm.email} onChange={updateSolutionsEvent("email")} error={errors.email} />
+        <Input label="Phone Number" id="s-phone" type="tel" placeholder="+63 912 345 6789"
+          value={solutionsForm.phone} onChange={updateSolutionsEvent("phone")} error={errors.phone} />
+      </div>
+      <div className="mt-6 flex justify-between items-center">
+        <button onClick={backToSelection}
+          className="px-5 py-2.5 rounded-lg border border-gray-200 text-sm font-semibold text-gray-600
+            hover:border-blue-400 hover:text-blue-600 active:scale-95 transition-all duration-150">
+          ← Back
+        </button>
+        <button onClick={next}
+          className="px-6 py-2.5 rounded-lg bg-[#1775EE] text-white text-sm font-semibold
+            hover:bg-blue-700 active:scale-95 transition-all duration-150 shadow-sm shadow-blue-200">
+          Next →
+        </button>
+      </div>
+    </>
+  );
+}
+
+function SolutionsStep2({ solutionsForm, errors, updateSolutionsEvent, back, submit, status, captchaRef, onCaptchaVerify, onCaptchaExpire }) {
+  const isLoading = status === "loading";
+  return (
+    <>
+      <ModalHeader
+        title={<>Service <span className="text-[#1775EE]">Details</span></>}
+        subtitle="The more you share, the better we can tailor our proposal for you."
+      />
+      <InquiryBadge inquiryType="solutions" />
+      <div className="flex flex-col gap-4">
+        <SelectField label="Service of Interest" id="serviceInterest"
+          options={SERVICE_INTEREST_OPTIONS} value={solutionsForm.serviceInterest}
+          onChange={updateSolutionsEvent("serviceInterest")}
+          error={errors.serviceInterest} placeholder="Select a service" />
+        <SelectField label="Project Scale" id="projectScale"
+          options={PROJECT_SCALE_OPTIONS} value={solutionsForm.projectScale}
+          onChange={updateSolutionsEvent("projectScale")}
+          error={errors.projectScale} placeholder="Select project scale" />
+        <SelectField label="Project Timeline / Urgency" id="timeline"
+          options={TIMELINE_OPTIONS} value={solutionsForm.timeline}
+          onChange={updateSolutionsEvent("timeline")}
+          error={errors.timeline} placeholder="Select a timeline" />
+        <SelectField label="Estimated Budget Range" id="budget"
+          options={BUDGET_OPTIONS} value={solutionsForm.budget}
+          onChange={updateSolutionsEvent("budget")}
+          error={errors.budget} placeholder="Select a budget range" />
+        <div className="flex flex-col gap-1">
+          <label htmlFor="s-desc" className="text-sm font-medium text-gray-700">
+            Brief Project Description <span className="text-red-400">*</span>
+          </label>
+          <textarea id="s-desc" rows={3}
+            placeholder="What do you need done? What problem are you trying to solve?"
+            value={solutionsForm.projectDesc} onChange={updateSolutionsEvent("projectDesc")}
+            className={`w-full rounded-lg border px-3 py-2.5 text-sm outline-none resize-none
+              transition hover:border-blue-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent
+              ${errors.projectDesc ? "border-red-400 bg-red-50" : "border-gray-200"}`} />
+          <FieldError msg={errors.projectDesc} />
+        </div>
+        <div className="flex flex-col gap-1">
+          <label htmlFor="s-tech" className="text-sm font-medium text-gray-700">
+            Technical Requirements <span className="text-gray-400 font-normal">(optional)</span>
+          </label>
+          <textarea id="s-tech" rows={2}
+            placeholder="Any specific systems, platforms, or tools involved?"
+            value={solutionsForm.techSpecs} onChange={updateSolutionsEvent("techSpecs")}
+            className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm outline-none
+              resize-none transition hover:border-blue-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+        </div>
+        <div className="flex flex-col gap-1">
+          <label htmlFor="s-message" className="text-sm font-medium text-gray-700">
+            Additional Message <span className="text-gray-400 font-normal">(optional)</span>
+          </label>
+          <textarea id="s-message" rows={2} placeholder="Anything else you'd like us to know?"
+            value={solutionsForm.message} onChange={updateSolutionsEvent("message")}
+            className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm outline-none
+              resize-none transition hover:border-blue-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+        </div>
+        <div className="flex flex-col gap-1">
+          <ReCAPTCHA ref={captchaRef} sitekey={RECAPTCHA_SITE_KEY}
+            onChange={onCaptchaVerify} onExpired={onCaptchaExpire} />
+          <FieldError msg={errors.captcha} />
+        </div>
+      </div>
+      {status === "error" && <ErrorBanner />}
+      <p className="mt-4 text-xs text-gray-400 leading-relaxed">
+        We'll get back to you within 1–2 business days. By submitting, you agree to be contacted about our solutions.
+      </p>
+      <StepNavButtons back={back} submit={submit} isLoading={isLoading} errors={errors} />
+    </>
+  );
+}
+
+// ─── Shared Sub-components ─────────────────────────────────────────────────
+function ErrorBanner() {
+  return (
+    <div className="mt-4 rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-600 flex items-center gap-2">
+      <svg className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+        <path fillRule="evenodd"
+          d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+          clipRule="evenodd" />
+      </svg>
+      Something went wrong. Please try again or contact us directly.
+    </div>
+  );
+}
+
+function StepNavButtons({ back, submit, isLoading, errors }) {
+  return (
+    <>
       {errors.submit && (
         <div className="mt-4 rounded-lg bg-yellow-50 border border-yellow-200 px-4 py-3 text-sm text-yellow-700 flex items-center gap-2">
-          <svg
-            className="w-4 h-4 shrink-0"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
-            <path
-              fillRule="evenodd"
+          <svg className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd"
               d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 102 0V6zm-1 8a1 1 0 100-2 1 1 0 000 2z"
-              clipRule="evenodd"
-            />
+              clipRule="evenodd" />
           </svg>
           {errors.submit}
         </div>
       )}
-
-      {/* Error banner */}
-      {status === "error" && (
-        <div className="mt-4 rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-600 flex items-center gap-2">
-          <svg
-            className="w-4 h-4 shrink-0"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
-            <path
-              fillRule="evenodd"
-              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-              clipRule="evenodd"
-            />
-          </svg>
-          Something went wrong. Please try again or contact us directly.
-        </div>
-      )}
-
-      <p className="mt-4 text-xs text-gray-400 leading-relaxed">
-        We'll email you a quotation within 1–2 business days. By submitting, you
-        agree to be contacted about our services and schedules.
-      </p>
-
       <div className="mt-5 flex justify-between items-center">
-        <button
-          onClick={back}
-          disabled={isLoading}
+        <button onClick={back} disabled={isLoading}
           className="px-5 py-2.5 rounded-lg border border-gray-200 text-sm font-semibold text-gray-600
             hover:border-blue-400 hover:text-blue-600 active:scale-95 transition-all duration-150
-            disabled:opacity-40 disabled:cursor-not-allowed"
-        >
+            disabled:opacity-40 disabled:cursor-not-allowed">
           ← Back
         </button>
-        <button
-          onClick={submit}
-          disabled={isLoading}
+        <button onClick={submit} disabled={isLoading}
           className="px-6 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-semibold
             hover:bg-blue-700 active:scale-95 transition-all duration-150 shadow-sm shadow-blue-200
-            disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2"
-        >
+            disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2">
           {isLoading ? (
             <>
-              <svg
-                className="w-4 h-4 animate-spin"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                />
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4z"
-                />
+              <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4z" />
               </svg>
               Sending...
             </>
-          ) : (
-            "Submit"
-          )}
+          ) : "Submit"}
         </button>
       </div>
     </>
@@ -717,38 +692,23 @@ function SuccessScreen({ onClose, reset }) {
   return (
     <div className="flex flex-col items-center justify-center py-8 text-center">
       <div className="w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center mb-4">
-        <svg
-          className="w-8 h-8 text-blue-600"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M5 13l4 4L19 7"
-          />
+        <svg className="w-8 h-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
         </svg>
       </div>
       <h2 className="text-xl font-bold text-gray-900 mb-2">Inquiry Sent!</h2>
       <p className="text-sm text-gray-500 max-w-xs leading-relaxed">
-        Thanks for reaching out. We'll send a quotation to your email within 1–2
-        business days.
+        Thanks for reaching out. We'll get back to you within 1–2 business days.
       </p>
       <div className="mt-6 flex gap-3">
-        <button
-          onClick={reset}
+        <button onClick={reset}
           className="px-5 py-2.5 rounded-lg border border-gray-200 text-sm font-semibold
-            text-gray-600 hover:border-blue-400 hover:text-blue-600 transition-all duration-150"
-        >
+            text-gray-600 hover:border-blue-400 hover:text-blue-600 transition-all duration-150">
           Submit Another
         </button>
-        <button
-          onClick={onClose}
+        <button onClick={onClose}
           className="px-6 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-semibold
-            hover:bg-blue-700 active:scale-95 transition-all duration-150"
-        >
+            hover:bg-blue-700 active:scale-95 transition-all duration-150">
           Done
         </button>
       </div>
@@ -756,78 +716,81 @@ function SuccessScreen({ onClose, reset }) {
   );
 }
 
-// ─── Main Export ───────────────────────────────────────────────────────────
-export default function EnrollModal({ isOpen, onClose }) {
-  const f = useEnrollForm(onClose);
-  const handleClose = () => {
-    f.reset();
-    onClose();
-  };
-
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
+// ─── Modal UI (rendered via Portal) ───────────────────────────────────────
+function ModalContent({ f, handleClose, initialInquiryType }) {
+  const renderStep = () => {
+    if (f.step === 0) return <Step0 onSelect={f.selectInquiryType} />;
+    if (f.inquiryType === "training") {
+      return f.step === 1
+        ? <TrainingStep1 {...f} initialInquiryType={initialInquiryType} />
+        : <TrainingStep2 {...f} />;
     }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [isOpen]);
-
-  if (!isOpen) return null;
+    return f.step === 1 ? <SolutionsStep1 {...f} /> : <SolutionsStep2 {...f} />;
+  };
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{
-        backgroundColor: "rgba(0,0,0,0.55)",
-        backdropFilter: "blur(2px)",
-      }}
-      onClick={(e) => {
-        if (e.target === e.currentTarget) handleClose();
-      }}
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+      style={{ backgroundColor: "rgba(0,0,0,0.55)", backdropFilter: "blur(2px)" }}
+      onClick={(e) => { if (e.target === e.currentTarget) handleClose(); }}
     >
       <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto">
         <div className="flex justify-end px-7 pt-5">
-          <button
-            onClick={handleClose}
+          <button onClick={handleClose}
             className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center
-              justify-center text-gray-500 hover:text-gray-700 transition-colors duration-150"
-          >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
+              justify-center text-gray-500 hover:text-gray-700 transition-colors duration-150">
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
-
         <div className="px-7 pb-7">
           {f.status === "success" ? (
             <SuccessScreen onClose={handleClose} reset={f.reset} />
           ) : (
             <>
               <ProgressBar step={f.step} />
-              {f.step === 0 ? (
-                <Step0 onSelect={f.selectInquiryType} />
-              ) : f.step === 1 ? (
-                <Step1 {...f} onClose={handleClose} />
-              ) : (
-                <Step2 {...f} onClose={handleClose} />
-              )}
+              {renderStep()}
             </>
           )}
         </div>
       </div>
     </div>
+  );
+}
+
+// ─── Main Export ───────────────────────────────────────────────────────────
+/**
+ * @param {boolean}                    isOpen
+ * @param {() => void}                 onClose
+ * @param {number}                     [initialStep=0]
+ * @param {"training"|"solutions"|null} [initialInquiryType=null]
+ * @param {string|null}                [preselectedCourse=null]
+ */
+export default function InquireModal({
+  isOpen,
+  onClose,
+  initialStep = 0,
+  initialInquiryType = null,
+  preselectedCourse = null,
+}) {
+  const f = useEnrollForm(onClose, initialStep, initialInquiryType, preselectedCourse);
+  const handleClose = () => { f.reset(); onClose(); };
+
+  useEffect(() => {
+    if (isOpen) f.reset();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
+
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [isOpen]);
+
+  if (!isOpen) return null;
+
+  return createPortal(
+    <ModalContent f={f} handleClose={handleClose} initialInquiryType={initialInquiryType} />,
+    document.body,
   );
 }

@@ -2,9 +2,14 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate, useLocation } from "react-router-dom";
 import InquireNowButton from "../ui/InquireNowButton";
-import MainLogo from "../../assets/MATEKK_logo.png";
+import MainLogo from "../../assets/MATEKK_logo.webp";
 import TrainingLogo from "../../assets/MATEKK_training_logo.png";
 import SolutionsLogo from "../../assets/MATEKK_services_logo.png";
+import {
+  TRAINING_COURSES,
+  FLAT_COURSES,
+  PATH_TO_COURSE,
+} from "../training/courses";
 
 function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,7 +27,7 @@ function NavBar() {
   const getLogoElement = () => {
     if (location.pathname.startsWith("/training")) {
       return (
-        <img src={TrainingLogo} alt="Training Logo" className="w-11 md:w-12" />
+        <img src={TrainingLogo} alt="Training Logo" className="w-30" />
       );
     }
     if (location.pathname.startsWith("/solutions")) {
@@ -30,12 +35,13 @@ function NavBar() {
         <img
           src={SolutionsLogo}
           alt="Solutions Logo"
-          className="w-10 md:w-11"
+          className="w-30"
         />
       );
     }
-    return <img src={MainLogo} alt="MATEKK Logo" className="w-7 md:w-8" />;
+    return <img src={MainLogo} alt="MATEKK Logo" className="w-30" />;
   };
+
   const dropdownMenus = {
     solutions: [
       {
@@ -44,9 +50,50 @@ function NavBar() {
           { name: "Data Center Facilities", path: "/solutions/ict/datacenter" },
           {
             name: "ICT Network and Security Infrastructure",
-            path: "/solutions/ict/network",
+            subcourses: [
+              {
+                name: "End-to-End Network Architecture",
+                path: "/solutions/ict/insi/e2e",
+              },
+              {
+                name: "Enterprise Security Architecture",
+                path: "/solutions/ict/insi/enterprise",
+              },
+              {
+                name: "WLAN and Wireless Backhaul Networks",
+                path: "/solutions/ict/insi/wlan",
+              },
+              {
+                name: "Optical Fiber Networks (LAN and WAN)",
+                path: "/solutions/ict/insi/opticalfiber",
+              },
+              {
+                name: "IP Telephony Networks",
+                path: "/solutions/ict/insi/iptelephony",
+              },
+              {
+                name: "On-premise Servers",
+                path: "/solutions/ict/insi/onpremise",
+              },
+              {
+                name: "Structured Cabling",
+                path: "/solutions/ict/insi/structuredcabling",
+              },
+            ],
           },
-          { name: "Cybersecurity", path: "/solutions/ict/cybersecurity" },
+          {
+            name: "Cybersecurity",
+            subcourses: [
+              {
+                name: "Red Team (VAPT)",
+                path: "/solutions/ict/cybersec/redteam",
+              },
+              {
+                name: "Blue Team (SOC)",
+                path: "/solutions/ict/cybersec/blueteam",
+              },
+            ],
+          },
           {
             name: "Web and Software Development",
             path: "/solutions/ict/webdev",
@@ -54,350 +101,43 @@ function NavBar() {
           { name: "Cloud Computing Services", path: "/solutions/ict/cloud" },
           {
             name: "SMART Environment Automation (IoT)",
-            path: "/solutions/ict/iot",
+            subcourses: [
+              { name: "SMART Home", path: "/solutions/ict/smart/home" },
+              {
+                name: "SMART Building",
+                path: "/solutions/ict/smart/building",
+              },
+              { name: "SMART City", path: "/solutions/ict/smart/city" },
+            ],
           },
         ],
       },
       {
-        name: "Auxiliary Systems and PECE Consultancy",
-        subcourses: [
-          { name: "Auxiliary Systems", path: "/solutions/auxiliary/systems" },
-          { name: "PECE Consultancy", path: "/solutions/auxiliary/pece" },
-        ],
-      },
-      {
-        name: "Cloud Computing",
+        name: "PECE Consultancy (PBOOT)",
         subcourses: [
           {
-            name: "Cloud Infrastructure",
-            path: "/solutions/cloud/infrastructure",
+            name: "Renewable Energy Solutions",
+            path: "/solutions/pece/renewable",
           },
-          { name: "Cloud Migration", path: "/solutions/cloud/migration" },
-        ],
-      },
-      {
-        name: "IT Management",
-        subcourses: [
-          { name: "IT Strategy", path: "/solutions/itmanagement/strategy" },
-          { name: "IT Operations", path: "/solutions/itmanagement/operations" },
-        ],
-      },
-      {
-        name: "Customized Training Solutions",
-        subcourses: [
-          { name: "Corporate Training", path: "/solutions/training/corporate" },
-          { name: "Custom Curriculum", path: "/solutions/training/curriculum" },
+          { name: "IPCCTV and Analog CCTV", path: "/solutions/pece/ipcctv" },
+          {
+            name: "Fire Detection and Alarm Systems (FDAS)",
+            path: "/solutions/pece/fdas",
+          },
+          { name: "Public Address Systems", path: "/solutions/pece/pas" },
+          { name: "Door Access", path: "/solutions/pece/dooraccess" },
         ],
       },
     ],
 
-    training: [
-      {
-        name: "Cisco",
-        subcourses: [
-          {
-            name: "CCNA",
-            subcourses: [
-              { name: "CCNA", path: "/training/cisco/ccna/ccna" },
-              {
-                name: "CCNA Automation",
-                path: "/training/cisco/ccna/automation",
-              },
-              {
-                name: "CCNA Cybersecurity",
-                path: "/training/cisco/ccna/cybersecurity",
-              },
-            ],
-          },
-          {
-            name: "CCNP",
-            subcourses: [
-              {
-                name: "CCNP Enterprise",
-                path: "/training/cisco/ccnp/enterprise",
-              },
-              {
-                name: "CCNP Security",
-                subcourses: [
-                  {
-                    name: "Security",
-                    path: "/training/cisco/ccnp/ccnp-security/security",
-                  },
-                  {
-                    name: "300-710-SNCF-v1.1",
-                    path: "/training/cisco/ccnp/ccnp-security/sncf",
-                  },
-                  {
-                    name: "300-715-SISE-v1.1",
-                    path: "/training/cisco/ccnp/ccnp-security/sise",
-                  },
-                  {
-                    name: "300-730-SVPN-v1.1",
-                    path: "/training/cisco/ccnp/ccnp-security/svpn",
-                  },
-                  {
-                    name: "300-745-SDSI-v1.1",
-                    path: "/training/cisco/ccnp/ccnp-security/sdsi",
-                  },
-                ],
-              },
-              {
-                name: "CCNP Data Center",
-                path: "/training/cisco/ccnp/datacenter",
-              },
-            ],
-          },
-        ],
-      },
-
-      {
-        name: "CompTIA",
-        subcourses: [
-          { name: "A+ (Core 1 & 2)", path: "/training/comptia/aplus" },
-          { name: "Network+", path: "/training/comptia/network" },
-          { name: "Security+", path: "/training/comptia/security+" },
-          { name: "CySA+", path: "/training/comptia/cysa" },
-          { name: "PenTest+", path: "/training/comptia/pentest" },
-          { name: "Linux+", path: "/training/comptia/linux" },
-        ],
-      },
-
-      {
-        name: "Fortinet",
-        subcourses: [
-          { name: "NSE 1", path: "/training/fortinet/nse1" },
-          { name: "NSE 2", path: "/training/fortinet/nse2" },
-          { name: "NSE 3", path: "/training/fortinet/nse3" },
-          { name: "NSE 4 (all tracks)", path: "/training/fortinet/nse4" },
-          {
-            name: "NSE 5 Secure Networking",
-            path: "/training/fortinet/nse5securenetworking",
-          },
-          { name: "NSE 5 SASE", path: "/training/fortinet/nse5sase" },
-          {
-            name: "NSE 5 Cloud Security",
-            path: "/training/fortinet/nse5cloudsecurity",
-          },
-          {
-            name: "NSE 5 Security Operations",
-            path: "/training/fortinet/nse5securityoperations",
-          },
-          {
-            name: "NSE 6 Secure Networking",
-            path: "/training/fortinet/nse6securenetworking",
-          },
-          { name: "NSE 6 SASE", path: "/training/fortinet/nse6sase" },
-          {
-            name: "NSE 6 Cloud Security",
-            path: "/training/fortinet/nse6cloudsecurity",
-          },
-          {
-            name: "NSE 6 Security Operations",
-            path: "/training/fortinet/nse6securityoperations",
-          },
-          {
-            name: "NSE 7 Secure Networking",
-            path: "/training/fortinet/nse7securenetworking",
-          },
-          { name: "NSE 7 SASE", path: "/training/fortinet/nse7sase" },
-          {
-            name: "NSE 7 Cloud Security",
-            path: "/training/fortinet/nse7cloudsecurity",
-          },
-          {
-            name: "NSE 7 Security Operations",
-            path: "/training/fortinet/nse7securityoperations",
-          },
-          {
-            name: "NSE 8",
-            path: "/training/fortinet/nse8",
-          },
-        ],
-      },
-
-      {
-        name: "Palo Alto",
-        subcourses: [
-          {
-            name: "Network Security",
-            subcourses: [
-              {
-                name: "Cybersecurity Apprentice",
-                path: "/training/paloalto/networksecurity/apprentice",
-              },
-              {
-                name: "Cybersecurity Practitioner",
-                path: "/training/paloalto/networksecurity/practitioner",
-              },
-              {
-                name: "Network Security Professional",
-                path: "/training/paloalto/networksecurity/professional",
-              },
-              {
-                name: "Network Security Analyst",
-                path: "/training/paloalto/networksecurity/analyst",
-              },
-              {
-                name: "Next-Generation Firewall Engineer",
-                path: "/training/paloalto/networksecurity/nextgenerationfirewallengineer",
-              },
-              {
-                name: "SD-WAN Engineer",
-                path: "/training/paloalto/networksecurity/sdwanengineer",
-              },
-              {
-                name: "Security Service Edge Engineer",
-                path: "/training/paloalto/networksecurity/securityserviceedgeengineer",
-              },
-              {
-                name: "Network Security Architect",
-                path: "/training/paloalto/networksecurity/architect",
-              },
-            ],
-          },
-          {
-            name: "Security Operations",
-            subcourses: [
-              {
-                name: "Security Operations Professional",
-                path: "/training/paloalto/securityoperations/professional",
-              },
-              {
-                name: "XSIAM Analyst",
-                path: "/training/paloalto/securityoperations/xsiamanalyst",
-              },
-              {
-                name: "XDR Analyst",
-                path: "/training/paloalto/securityoperations/xdranalyst",
-              },
-              {
-                name: "XSIAM Engineer",
-                path: "/training/paloalto/securityoperations/xsiamengineer",
-              },
-              {
-                name: "XDR Engineer",
-                path: "/training/paloalto/securityoperations/xdrengineer",
-              },
-              {
-                name: "XSOAR Engineer",
-                path: "/training/paloalto/securityoperations/xsoarengineer",
-              },
-            ],
-          },
-          {
-            name: "Cloud Security",
-            subcourses: [
-              {
-                name: "Cloud Security Professional",
-                path: "/training/paloalto/cloudsecurity/professional",
-              },
-            ],
-          },
-        ],
-      },
-      {
-        name: "Data Center",
-        subcourses: [
-          {
-            name: "Data Centre Foundation Certificate (DCFC)",
-            path: "/training/datacenter/dcfc",
-          },
-          {
-            name: "Certified Data Centre Professional (CDCP)",
-            path: "/training/datacenter/cdcp",
-          },
-          {
-            name: "Certified Data Centre Specialist (CDCS)",
-            path: "/training/datacenter/cdcs",
-          },
-        ],
-      },
-
-      {
-        name: "Cybersecurity",
-        subcourses: [
-          {
-            name: "Practical Ethical Hacking",
-            subcourses: [
-              {
-                name: "Cyber Defense & Threat Hunting",
-                path: "/training/cybersecurity/peh/cdth",
-              },
-              {
-                name: "Practical Ethical Hacking",
-                path: "/training/cybersecurity/peh/PEH",
-              },
-              {
-                name: "Vulnerability Assessment and Penetration Testing (VAPT)",
-                path: "/training/cybersecurity/peh/vapt",
-              },
-            ],
-          },
-          {
-            name: "Blue Team: Security Operations & Defensive Cybersecurity Program",
-            path: "/training/cybersecurity/blueteam",
-          },
-          {
-            name: "Red Team: CompTIA Security+ (SY0-701) Training",
-            path: "/training/cybersecurity/redteam",
-          },
-        ],
-      },
-
-      {
-        name: "Cloud Computing",
-        subcourses: [
-          {
-            name: "Microsoft",
-            subcourses: [
-              {
-                name: "Azure Fundamentals",
-                path: "/training/cloud/microsoft/azurefundamentals",
-              },
-            ],
-          },
-          {
-            name: "AWS",
-            subcourses: [
-              {
-                name: "Cloud Practitioner",
-                path: "/training/cloud/aws/practitioner",
-              },
-              {
-                name: "Technical Essentials",
-                path: "/training/cloud/aws/essentials",
-              },
-            ],
-          },
-        ],
-      },
-
-      {
-        name: "IT Management",
-        subcourses: [
-          {
-            name: "ITIL 5 Foundation",
-            path: "training/itil5/foundation",
-          },
-        ],
-      },
-
-      {
-        name: "Project Management",
-        subcourses: [
-          {
-            name: "Project Management Professional",
-            path: "/training/projectmanagement/pmp",
-          },
-        ],
-      },
-    ],
+    training: TRAINING_COURSES,
   };
 
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
     if (element) element.scrollIntoView({ behavior: "smooth", block: "start" });
     setIsOpen(false);
+    resetMenu();
   };
 
   useEffect(() => {
@@ -435,9 +175,16 @@ function NavBar() {
   };
 
   const handleHomeClick = () => {
+    // Always close everything FIRST
+    resetMenu();
+
     if (location.pathname === "/") {
-      scrollToSection("home");
+      // Already on homepage → scroll
+      setTimeout(() => {
+        scrollToSection("home");
+      }, 0);
     } else {
+      // Go to homepage and scroll after navigation
       navigate("/", { state: { scrollTo: "home" } });
     }
   };
@@ -491,10 +238,10 @@ function NavBar() {
           </button>
 
           {openDropdown === "solutions" && (
-            <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 p-5 bg-white shadow-lg rounded-2xl border border-gray-100 overflow-hidden font-inter animate-in fade-in slide-in-from-top-2 duration-200">
+            <div className="absolute top-full -left-20 transform mt-2 py-5 px-2 bg-white shadow-lg rounded-2xl border border-gray-100 overflow-hidden font-inter animate-in fade-in slide-in-from-top-2 duration-200">
               <div className="flex space-x-[2.313rem]">
                 {/* Column 1 — categories */}
-                <div className="w-100 overflow-y-auto max-h-[70vh] animate-in fade-in slide-in-from-left-2 duration-200">
+                <div className="min-w-52 overflow-y-auto max-h-[70vh] animate-in fade-in slide-in-from-left-2 duration-200">
                   {dropdownMenus.solutions.map((category) => (
                     <button
                       key={category.name}
@@ -503,18 +250,19 @@ function NavBar() {
                           ? "bg-[#1775EE] text-white font-bold"
                           : "hover:text-[#1775EE] hover:font-bold"
                       }`}
-                      onClick={() =>
+                      onClick={() => {
                         setOpenSubcourse(
                           openSubcourse === category.name
                             ? null
                             : category.name,
-                        )
-                      }
+                        );
+                        setOpenThirdLevel(null);
+                      }}
                     >
                       {category.name}
                       {category.subcourses?.length > 0 && (
                         <svg
-                          className={`w-4 h-4 ${t}`}
+                          className={`min-w-4 h-4 ${t}`}
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -533,17 +281,63 @@ function NavBar() {
 
                 {/* Column 2 — subcourses */}
                 {openSubcourse && (
-                  <div className="w-fit animate-in fade-in slide-in-from-left-2 duration-200">
+                  <div className="min-w-65 animate-in fade-in slide-in-from-left-2 duration-200">
                     {dropdownMenus.solutions
                       .find((cat) => cat.name === openSubcourse)
                       ?.subcourses?.map((item) => (
+                        <div key={item.name}>
+                          {item.subcourses ? (
+                            <button
+                              onClick={() =>
+                                setOpenThirdLevel(
+                                  openThirdLevel === item.name
+                                    ? null
+                                    : item.name,
+                                )
+                              }
+                              className={`w-full text-left px-6 py-2 rounded-[0.35rem] flex items-center justify-between cursor-pointer ${
+                                openThirdLevel === item.name
+                                  ? "text-[#1775EE] font-bold"
+                                  : "hover:text-[#1775EE] hover:font-bold"
+                              }`}
+                            >
+                              {item.name}
+                              <svg
+                                className="min-w-4 h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
+                            </button>
+                          ) : (
+                            <Link
+                              to={item.path}
+                              onClick={resetMenu}
+                              className="block px-6 py-2 hover:text-[#1775EE] hover:font-bold"
+                            >
+                              {item.name}
+                            </Link>
+                          )}
+                        </div>
+                      ))}
+                  </div>
+                )}
+                {/* Column 3 - solutions */}
+                {openThirdLevel && (
+                  <div className="min-w-55 animate-in fade-in slide-in-from-left-2 duration-200">
+                    {dropdownMenus.solutions
+                      .find((cat) => cat.name === openSubcourse)
+                      ?.subcourses?.find((item) => item.name === openThirdLevel)
+                      ?.subcourses?.map((sub) => (
                         <Link
-                          key={item.name}
-                          to={item.path}
+                          key={sub.name}
+                          to={sub.path}
                           onClick={resetMenu}
-                          className={`block w-full text-left px-6 py-2 rounded-[0.35rem] hover:text-[#1775EE] hover:font-bold ${t}`}
+                          className="block px-4 py-2 hover:text-[#1775EE] hover:font-bold cursor-pointer"
                         >
-                          {item.name}
+                          {sub.name}
                         </Link>
                       ))}
                   </div>
@@ -783,7 +577,13 @@ function NavBar() {
       </nav>
 
       {/* Inquire Now */}
-      <InquireNowButton buttonCustomStyle="hidden lg:block" />
+      <InquireNowButton
+        buttonCustomStyle="hidden lg:block w-full text-[1.25rem] text-center py-3 px-6 rounded-full
+          lg:flex lg:w-auto lg:text-base lg:py-2 lg:px-5.5 lg:rounded-3xl
+          text-blue-600 border border-blue-600 hover:bg-[#0062E0]
+          hover:border-[#0062E0] hover:text-white transition-all duration-300
+          cursor-pointer"
+      />
 
       {/* Mobile + Tablet Hamburger */}
       <div className="flex lg:hidden justify-center items-center">
@@ -847,10 +647,7 @@ function NavBar() {
 
             <nav className="flex-1 flex flex-col mt-[6vh] px-6 space-y-6 font-poppins font-bold">
               <button
-                onClick={() => {
-                  scrollToSection("home");
-                  setIsOpen(false);
-                }}
+                onClick={handleHomeClick}
                 className={`text-2xl font-semibold text-left text-black hover:text-[#1775EE] ${t}`}
               >
                 Home
@@ -926,7 +723,13 @@ function NavBar() {
             </nav>
 
             <div className="p-6">
-              <InquireNowButton />
+              <InquireNowButton
+                buttonCustomStyle={`block w-full text-[1.25rem] text-center py-3 px-6 rounded-full
+          lg:flex lg:w-auto lg:text-base lg:py-2 lg:px-5.5 lg:rounded-3xl
+          text-blue-600 border border-blue-600 hover:bg-[#0062E0]
+          hover:border-[#0062E0] hover:text-white transition-all duration-300
+          cursor-pointer`}
+              />
             </div>
           </div>
         )}
@@ -986,53 +789,126 @@ function NavBar() {
         )}
 
         {/* Solutions Mobile — Level 2 */}
-        {openDropdown === "solutions-mobile" && openSubcourse && (
-          <div className="fixed inset-0 bg-white z-50 flex flex-col">
-            <div className="flex items-center p-6 border-b border-gray-200">
-              <button
-                onClick={() => setOpenSubcourse(null)}
-                className="focus:outline-none mr-4"
-              >
-                <svg
-                  className={`w-6 h-6 text-[#1775EE] ${t}`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+        {openDropdown === "solutions-mobile" &&
+          openSubcourse &&
+          !openThirdLevel && (
+            <div className="fixed inset-0 bg-white z-50 flex flex-col">
+              <div className="flex items-center p-6 border-b border-gray-200">
+                <button
+                  onClick={() => setOpenSubcourse(null)}
+                  className="focus:outline-none mr-4"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 19l-7-7 7-7"
-                  />
-                </svg>
-              </button>
-              <h2 className="text-xl font-bold text-[#1775EE] font-poppins">
-                Solutions / {openSubcourse}
-              </h2>
-            </div>
-
-            <nav className="flex-1 px-6 py-8 space-y-4">
-              {dropdownMenus.solutions
-                .find((cat) => cat.name === openSubcourse)
-                ?.subcourses?.map((item) => (
-                  <Link
-                    key={item.name}
-                    to={item.path}
-                    onClick={() => {
-                      setIsOpen(false);
-                      setOpenDropdown(null);
-                      setOpenSubcourse(null);
-                    }}
-                    className={`block text-lg text-black font-poppins hover:text-[#1775EE] py-2 px-4 ${t}`}
+                  <svg
+                    className={`w-6 h-6 text-[#1775EE] ${t}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
                   >
-                    {item.name}
-                  </Link>
-                ))}
-            </nav>
-          </div>
-        )}
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 19l-7-7 7-7"
+                    />
+                  </svg>
+                </button>
+                <h2 className="text-xl font-bold text-[#1775EE] font-poppins">
+                  Solutions / {openSubcourse}
+                </h2>
+              </div>
 
+              <nav className="flex-1 px-6 py-8 space-y-4">
+                {dropdownMenus.solutions
+                  .find((cat) => cat.name === openSubcourse)
+                  ?.subcourses?.map((item) =>
+                    item.subcourses ? (
+                      <button
+                        key={item.name}
+                        onClick={() => setOpenThirdLevel(item.name)}
+                        className={`block w-full text-left text-lg text-black font-poppins hover:text-[#1775EE] py-2 flex items-center justify-between ${t}`}
+                      >
+                        {item.name}
+                        <svg
+                          className={`w-4 h-4 ${t}`}
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      </button>
+                    ) : (
+                      <Link
+                        key={item.name}
+                        to={item.path}
+                        onClick={resetMenu}
+                        className={`block text-lg text-black font-poppins hover:text-[#1775EE] py-2 px-4 ${t}`}
+                      >
+                        {item.name}
+                      </Link>
+                    ),
+                  )}
+              </nav>
+            </div>
+          )}
+
+        {/* Solutions Mobile — Level 3 */}
+        {openDropdown === "solutions-mobile" &&
+          openSubcourse &&
+          openThirdLevel && (
+            <div className="fixed inset-0 bg-white z-50 flex flex-col">
+              <div className="flex items-center p-6 border-b border-gray-200">
+                <button
+                  onClick={() => setOpenThirdLevel(null)}
+                  className="focus:outline-none mr-4"
+                >
+                  <svg
+                    className={`w-6 h-6 text-[#1775EE] ${t}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 19l-7-7 7-7"
+                    />
+                  </svg>
+                </button>
+                <h2 className="text-xl font-bold text-[#1775EE] font-poppins">
+                  Solutions / {openSubcourse} / {openThirdLevel}
+                </h2>
+              </div>
+
+              <nav className="flex-1 px-6 py-8 space-y-4">
+                {dropdownMenus.solutions
+                  .find((cat) => cat.name === openSubcourse)
+                  ?.subcourses?.find((sub) => sub.name === openThirdLevel)
+                  ?.subcourses?.map((item) => (
+                    <Link
+                      key={item.name}
+                      to={item.path}
+                      onClick={() => {
+                        setIsOpen(false);
+                        setOpenDropdown(null);
+                        setOpenSubcourse(null);
+                        setOpenThirdLevel(null);
+                      }}
+                      className={`block text-lg text-black font-poppins hover:text-[#1775EE] py-2 px-4 ${t}`}
+                    >
+                      {item.name}
+                    </Link>
+                  ))}
+              </nav>
+            </div>
+          )}
+          
         {/* Training Mobile — Level 1 */}
         {openDropdown === "training-mobile" && !openSubcourse && (
           <div className="fixed inset-0 bg-white z-50 flex flex-col">

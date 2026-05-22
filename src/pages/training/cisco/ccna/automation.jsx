@@ -6,8 +6,8 @@ import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
 import ccnaBadge from "../../../../assets/CCNAAutomation.webp"; // Course badge image
-import ccnaHero from "../../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
-import ccnaFooter from "../../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
+import ccnaHero from "../../../../assets/CCNAHeroImageAutomation.webp"; // Hero banner background
+import ccnaFooter from "../../../../assets/CCNAFooterImageAutomation.webp"; // Footer banner background
 import MealIcon from "../../../../assets/Meal.svg";
 import ReviewIcon from "../../../../assets/Review.svg";
 import InstitutionalIcon from "../../../../assets/InsitutionalAccount.svg";
@@ -157,7 +157,7 @@ export default function CCNAAutomation() {
       <TrainingHeroBanner
         bgImage={ccnaHero}
         category="CISCO"
-        title="CCNA AUTOMATION"
+        title="CCNA Automation"
         description="Automating Networks Using Cisco Platforms (200-901 CCNAAUTO) v1.1
               is a 120-minute exam that assesses a candidate’s knowledge of
               software development basics, APIs, application security, and
@@ -232,7 +232,7 @@ export default function CCNAAutomation() {
         </div>
 
         {/* ==================== RIGHT SIDEBAR: Contents/Information ==================== */}
-        <aside className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-1 gap-3 lg:w-72 xl:w-80 shrink-0">
+        <aside className="aside_contents">
           {/* ==================== CERT BADGE ====================*/}
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
             {/* Cert Badge - Change/Update Image */}
@@ -359,6 +359,7 @@ export default function CCNAAutomation() {
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
         bgImage={ccnaFooter} // CHANGE: Update background image for the footer banner
+        bgPosition="90%"
         description="Advance your networking career and prepare for the CCNA Enterprise exam."
       />
     </main>

@@ -5,8 +5,8 @@ import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
 import vapt from "../../../../assets/MATEKK_training_logo.png"; // Course badge image
-import ccnaHero from "../../../../assets/CCNAHeroImageAutomation.png"; // Hero banner background
-import ccnaFooter from "../../../../assets/CCNAFooterImageAutomation.png"; // Footer banner background
+import CybersecurityHero from "../../../../assets/CyberSecurityheader.webp"; // Hero banner background
+import CybersecurityFooter from "../../../../assets/CybersecurityFooter.webp"; // Footer banner background
 import MealIcon from "../../../../assets/Meal.svg";
 import ReviewIcon from "../../../../assets/Review.svg";
 import WorkstationIcon from "../../../../assets/Workstation.svg";
@@ -128,7 +128,7 @@ export default function VAPT() {
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}
       <TrainingHeroBanner
-        bgImage={ccnaHero}
+        bgImage={CybersecurityHero}
         category="Practical Ethical Hacking"
         title="Vulnerability Assessment & Penetration Testing (VAPT)"
         description="Participants will perform real penetration testing scenarios in controlled lab environments using 16 custom vulnerable VMs."
@@ -212,7 +212,7 @@ export default function VAPT() {
         </div>
 
         {/* ==================== RIGHT SIDEBAR: Contents/Information ==================== */}
-        <aside className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-1 gap-3 lg:w-72 xl:w-80 shrink-0">
+        <aside className="aside_contents">
           {/* ==================== CERT BADGE ====================*/}
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
             {/* Cert Badge - Change/Update Image */}
@@ -331,7 +331,7 @@ export default function VAPT() {
 
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
-        bgImage={ccnaFooter} // CHANGE: Update background image for the footer banner
+        bgImage={CybersecurityFooter} // CHANGE: Update background image for the footer banner
         description="Advance your networking career and prepare for the Practical Ethical Hacking Enterprise exam."
       />
     </main>

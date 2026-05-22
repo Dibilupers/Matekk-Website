@@ -7,29 +7,29 @@ export default function FAQ() {
 
   const faqs = [
     {
-      question: "What services does MGKK offer?",
+      question: "What services does Matekk offer?",
       answer:
-        "MGKK provides ICT consultancy and engineering solutions, including network and security infrastructure, data centers, cybersecurity, software and web development, cloud computing, SMART environment automation, and auxiliary systems.",
+        "Matekk provides ICT consultancy and engineering solutions, including network and security infrastructure, data centers, cybersecurity, software and web development, cloud computing, SMART environment automation, and auxiliary systems.",
     },
     {
-      question: "Does MGKK provide ICT training?",
+      question: "Does Matekk provide ICT training?",
       answer:
-        "Yes. MGKK Information Communication Technology Services is a premier ICT training center that offers a comprehensive range of training programs designed to equip individuals and organizations with the knowledge and skills required to thrive in today's digital world. Training is available both face to face and online.",
+        "Yes. Matekk Cybercore Academy is a premier ICT training center that offers a comprehensive range of training programs designed to equip individuals and organizations with the knowledge and skills required to thrive in today's digital world. Training is available both face to face and online.",
     },
     {
       question: "What training formats are available?",
       answer:
-        "MGKK offers flexible training formats to accommodate different learning needs, including face-to-face and online sessions. We also provide corporate training solutions such as customized training programs tailored to organizational needs, as well as short-term workshops and seminars on emerging technologies.",
+        "Matekk offers flexible training formats to accommodate different learning needs, including face-to-face and online sessions. We also provide corporate training solutions such as customized training programs tailored to organizational needs, as well as short-term workshops and seminars on emerging technologies.",
     },
     {
-      question: "Does MGKK offer cybersecurity services and training?",
+      question: "Does Matekk offer cybersecurity services and training?",
       answer:
-        "Yes. MGKK provides comprehensive cybersecurity services including Vulnerability Assessment and Penetration Testing (VAPT) as part of its ICT consultancy offerings. On the training side, we offer in-depth courses covering cybersecurity principles, ethical hacking, and risk management for both individuals and organizations.",
+        "Yes. Matekk provides comprehensive cybersecurity services including Vulnerability Assessment and Penetration Testing (VAPT) as part of its ICT consultancy offerings. On the training side, we offer in-depth courses covering cybersecurity principles, ethical hacking, and risk management for both individuals and organizations.",
     },
     {
       question: "What certifications are covered in the training programs?",
       answer:
-        "MGKK's training programs cover a wide range of globally recognized certifications, including Cisco (CCNA, CCNP), CompTIA, Palo Alto Networks, Juniper, Huawei, Fortinet, Microsoft Azure, AWS, and ITIL4. Programming, cloud computing, and SMART environment automation courses are also available.",
+        "Matekk's training programs cover a wide range of globally recognized certifications, including Cisco (CCNA, CCNP), CompTIA, Palo Alto Networks, Juniper, Huawei, Fortinet, Microsoft Azure, AWS, and ITIL4. Programming, cloud computing, and SMART environment automation courses are also available.",
     },
   ];
 

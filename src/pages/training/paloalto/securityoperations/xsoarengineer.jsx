@@ -3,8 +3,8 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 import ccnaBadge from "../../../../assets/PaloAltoXsoarEngineer.png";
-import ccnaHero from "../../../../assets/CCNAHeroImageAutomation.png";
-import ccnaFooter from "../../../../assets/CCNAFooterImageAutomation.png";
+import PaloAltoHero from "../../../../assets/PaloAltoHeader.webp";
+import PaloAltoFooter from "../../../../assets/PaloAltoFooter.webp";
 import MealIcon from "../../../../assets/Meal.svg";
 import ReviewIcon from "../../../../assets/Review.svg";
 import WorkstationIcon from "../../../../assets/Workstation.svg";
@@ -80,10 +80,10 @@ export default function XsoarEngineer() {
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}
       <TrainingHeroBanner
-        bgImage={ccnaHero}
+        bgImage={PaloAltoHero}
         category="Palo Alto"
         title="XSOAR Engineer"
-        description="The Palo Alto Networks Certified XSOAR Engineer exam validates the
+        d escription="The Palo Alto Networks Certified XSOAR Engineer exam validates the
               knowledge and skills required for skilled engineers to deploy,
               configure, manage, integrate, and troubleshoot Cortex XSOAR
               solutions in security operations environments."
@@ -157,7 +157,7 @@ export default function XsoarEngineer() {
         </div>
 
         {/* ==================== RIGHT SIDEBAR: Contents/Information ==================== */}
-        <aside className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-1 gap-3 lg:w-72 xl:w-80 shrink-0">
+        <aside className="aside_contents">
           {/* ==================== CERT BADGE ====================*/}
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
             {/* Cert Badge - Change/Update Image */}
@@ -272,7 +272,7 @@ export default function XsoarEngineer() {
 
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
-        bgImage={ccnaFooter} // CHANGE: Update background image for the footer banner
+        bgImage={PaloAltoFooter} // CHANGE: Update background image for the footer banner
         description="Advance your networking career and prepare for the Palo Alto Enterprise exam."
       />
     </main>

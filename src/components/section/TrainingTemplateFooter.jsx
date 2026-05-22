@@ -1,13 +1,13 @@
 import EnrollNowButton from "../ui/EnrollNowButton";
 
-export default function TrainingTemplateFooter({ bgImage, description }) {
+export default function TrainingTemplateFooter({ bgImage, description, bgPosition }) {
   return (
     <section
       className="relative p-8 lg:pr-12 rounded-2xl shadow-lg flex flex-col justify-center items-center gap-2.5 overflow-hidden min-h-75"
       style={{
         backgroundImage: `url(${bgImage})`,
         backgroundSize: "cover",
-        backgroundPosition: "center",
+        backgroundPosition: `center ${bgPosition}`,
       }}
     >
       <div
@@ -18,13 +18,11 @@ export default function TrainingTemplateFooter({ bgImage, description }) {
         }}
       />
 
-      <div className="relative z-10 flex flex-col items-center justify-center text-center space-y-5">
-        <div>
+      <div className="relative z-10 flex flex-col items-center justify-center text-center space-y-1">
           <h3 className="text-[#ffffff] text-shadow-[0px_4px_8px_rgba(0,0,0,0.5)]">Start Learning <span className="text-[#1775EE]">Today</span></h3>
-          <p className="text-white text-shadow-[0px_4px_8px_rgba(0,0,0,0.5)] max-w-80">
+          <p className="text-white text-shadow-[0px_4px_8px_rgba(0,0,0,0.5)] max-w-80 mb-4">
             {description}
           </p>
-        </div>
         <EnrollNowButton />
       </div>
     </section>

@@ -3,8 +3,8 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 import ccnaBadge from "../../../assets/FortinetNSE2.png";
-import ccnaHero from "../../../assets/CCNAHeroImageAutomation.png";
-import ccnaFooter from "../../../assets/CCNAFooterImageAutomation.png";
+import FortinetHero from "../../../assets/FortinetHeader.webp";
+import FortinetFooter from "../../../assets/FortinetFooter.webp";
 import MealIcon from "../../../assets/Meal.svg";
 import ReviewIcon from "../../../assets/Review.svg";
 import InstitutionalIcon from "../../../assets/InsitutionalAccount.svg";
@@ -75,7 +75,7 @@ export default function NSE2() {
       {/* ==================== HERO BANNER ====================*/}
 
       <TrainingHeroBanner
-        bgImage={ccnaHero}
+        bgImage={FortinetHero}
         category="FORTINET"
         title="NSE 2"
         description="Deepen your understanding of cybersecurity by exploring 
@@ -159,7 +159,7 @@ export default function NSE2() {
         </div>
 
         {/* ==================== RIGHT SIDEBAR: Contents/Information ==================== */}
-        <aside className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-1 gap-3 lg:w-72 xl:w-80 shrink-0">
+        <aside className="aside_contents">
           {/* ==================== CERT BADGE ====================*/}
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
             {/* Cert Badge - Change/Update Image */}
@@ -285,7 +285,7 @@ export default function NSE2() {
 
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
-        bgImage={ccnaFooter} // CHANGE: Update background image for the footer banner
+        bgImage={FortinetFooter} // CHANGE: Update background image for the footer banner
         description="Advance your networking career and prepare for the CCNP Enterprise exam."
       />
     </main>
