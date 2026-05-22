@@ -40,7 +40,6 @@ export default function Home() {
   const totalMobileSlides = 4;
   const totalTabletSlides = 4;
   const totalDesktopSlides = 2;
-  const totalDesktopBottomSlides = 2;
   const totalMobileBottomSlides = 4;
   const [topSlide, setTopSlide] = useState(0);
   const [bottomSlide, setBottomSlide] = useState(0);

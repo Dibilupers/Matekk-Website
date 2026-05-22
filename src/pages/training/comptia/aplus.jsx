@@ -83,7 +83,7 @@ export default function Aplus() {
         bgImage={comptiaHero}
         category="COMPTIA"
         title="A+ (Core 1 & Core 2)"
-        description="CompTIA A+ is a widely recognized certification for Beginners with 0 knowledge that
+        description="CompTIA A+ is a widely recognized certification for Zero Knowledge that
               will help you start your IT career. Employers from a variety of
               industries value A+ because it fosters fundamental skills in
               networking, hardware, software, problem-solving, and security."
@@ -206,7 +206,7 @@ export default function Aplus() {
             {/* Target Learners - Title */}
             <h5 className="text-[#1775EE] ">Target Learners</h5>
             {/* Target Learners - List */}
-            {["Beginners with 0 knowledge"].map((job) => (
+            {["Zero Knowledge"].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
                 <span>{job}</span>

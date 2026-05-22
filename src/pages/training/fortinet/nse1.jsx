@@ -76,7 +76,7 @@ export default function NSE1() {
         title="NSE 1"
         description="In this course, you will explore the cyberthreat landscape, including common network threats,
               the attackers behind them, and the basic cybersecurity principles that help keep you and your network secure.
-              This course serves as an introduction for Beginners with 0 knowledge in cybersecurity, aligned with Fortinet NSE 1 fundamentals.
+              This course serves as an introduction for Zero Knowledge in cybersecurity, aligned with Fortinet NSE 1 fundamentals.
             "
       />
 
@@ -189,7 +189,7 @@ export default function NSE1() {
             {/* Target Learners - Title */}
             <h5 className="text-[#1775EE] ">Target Learners</h5>
             {/* Target Learners - List */}
-            {["Beginners with 0 knowledge"].map((job) => (
+            {["Zero Knowledge"].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
                 <span >{job}</span>

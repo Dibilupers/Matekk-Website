@@ -165,7 +165,7 @@ export default function Footer() {
       <div className="space-y-3">
         <div className=" border-black border border-b-0.3 body_margin"></div>
         <div className=" body_margin flex flex-col md:flex-row justify-between space-y-4 md:space-y-0">
-          <p className="">© 2026 MATEKK. All rights reserved. </p>
+          <p>© 2026 MATEKK. All rights reserved.</p>
         </div>
       </div>
     </footer>
