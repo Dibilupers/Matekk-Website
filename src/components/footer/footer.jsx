@@ -64,18 +64,10 @@ export default function Footer() {
             <ul className="space-y-3">
               <li>
                 <Link
-                  to="/training/cisco/ccna/automation"
+                  to="/training/cisco/ccna/ccna"
                   className="hover:underline cursor-pointer"
                 >
-                  CCNA Automation
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/training/cisco/ccna/cybersecurity"
-                  className="hover:underline cursor-pointer"
-                >
-                  CCNA Cybersecurity
+                  CCNA
                 </Link>
               </li>
               <li>
@@ -83,15 +75,15 @@ export default function Footer() {
                   to="/training/cisco/ccnp/enterprise"
                   className="hover:underline cursor-pointer"
                 >
-                  CCNP Enterprise
+                  CCNP
                 </Link>
               </li>
               <li>
                 <Link
-                  to="/training/cisco/ccnp/ccnp-security/security"
+                  to="/training/comptia/aplus"
                   className="hover:underline cursor-pointer"
                 >
-                  CCNP Security
+                  CompTIA
                 </Link>
               </li>
             </ul>
