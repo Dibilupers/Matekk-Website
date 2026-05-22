@@ -233,7 +233,7 @@ export default function CDTH() {
             <h5 className="text-[#1775EE] ">Target Learners</h5>
             {/* Target Learners - List */}
             {[
-              "SOC Analyst Zero Knowledge (L1)",
+              "SOC Analyst Beginners (L1)",
               "System / Network Administrators",
               "Cybersecurity Enthusiasts",
             ].map((job) => (
