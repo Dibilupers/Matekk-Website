@@ -13,11 +13,14 @@ import MedalIcon from "../../../../assets/Medal.svg";
 import CourseModules from "../../../../components/training/courseModules";
 import TrainingTemplateFooter from "../../../../components/section/TrainingTemplateFooter";
 import TrainingHeroBanner from "../../../../components/section/TrainingHeroBanner";
+import { useState } from "react";
 
-// ==================== COMPONENT NAME - CHANGE FOR EACH COURSE ====================
+// ==================== COMPONENT NAME ====================
 export default function CCNPEnterprise() {
-  // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
-  const modules = [
+  const [activeTab, setActiveTab] = useState("ENCOR");
+
+  // ==================== ENCOR MODULES ====================
+  const encorModules = [
     {
       title: "1.0 Architecture",
       items: [
@@ -152,6 +155,328 @@ export default function CCNPEnterprise() {
     },
   ];
 
+  // ==================== ENARSI MODULES ====================
+  const enarsiModules = [
+    {
+      title: "1.0 Layer 3 Technologies (35%)",
+      items: [
+        {
+          subTitle: "1.1 Troubleshoot administrative distance",
+          items: [],
+        },
+        {
+          subTitle: "1.2 Troubleshoot route map for any routing protocol",
+          items: [],
+        },
+        {
+          subTitle: "1.3 Troubleshoot loop prevention mechanisms",
+          items: [
+            "1.3.a Route tagging and filtering",
+            "1.3.b Split horizon",
+            "1.3.c Route poisoning",
+          ],
+        },
+        {
+          subTitle: "1.4 Troubleshoot EIGRP",
+          items: [
+            "1.4.a Classic and named mode for IPv4 and IPv6",
+            "1.4.b Neighbor relationship and authentication",
+            "1.4.c Loop-free path selections (RD, FD, FC, successor, feasible successor, stuck in active)",
+            "1.4.d Stubs",
+            "1.4.e Load balancing (equal and unequal cost)",
+            "1.4.f Metrics",
+          ],
+        },
+        {
+          subTitle: "1.5 Troubleshoot OSPF",
+          items: [
+            "1.5.a IPv4 and IPv6",
+            "1.5.b Neighbor relationship and authentication",
+            "1.5.c Network types, area types, and router types",
+            "1.5.d Path preference",
+            "1.5.e Operations",
+            "1.5.f Optimization mechanisms such as summarization and route filtering",
+          ],
+        },
+        {
+          subTitle: "1.6 Troubleshoot BGP",
+          items: [
+            "1.6.a IPv4 and IPv6 address families",
+            "1.6.b iBGP and eBGP peer relationships",
+            "1.6.c Path selection algorithm",
+            "1.6.d Route reflector",
+            "1.6.e Policy control using route-maps and filtering",
+          ],
+        },
+        {
+          subTitle: "1.7 Describe IPv6 tunneling mechanisms",
+          items: ["1.7.a GRE", "1.7.b Dynamic 6to4 tunnels", "1.7.c ISATAP"],
+        },
+        {
+          subTitle: "1.8 Troubleshoot IPv4 and IPv6 multicast routing",
+          items: [
+            "1.8.a Reverse Path Forwarding (RPF)",
+            "1.8.b PIM",
+            "1.8.c IGMP v2 and v3",
+          ],
+        },
+      ],
+    },
+    {
+      title: "2.0 VPN Technologies (20%)",
+      items: [
+        "2.1 Describe MPLS operations (LSR, LDP, label switching, LSP)",
+        "2.2 Describe MPLS Layer 3 VPN",
+        {
+          subTitle: "2.3 Configure and verify DMVPN (single hub)",
+          items: [
+            "2.3.a GRE/mGRE",
+            "2.3.b NHRP",
+            "2.3.c IPsec",
+            "2.3.d Dynamic neighbor",
+            "2.3.e Spoke-to-spoke",
+          ],
+        },
+      ],
+    },
+    {
+      title: "3.0 Infrastructure Security (20%)",
+      items: [
+        {
+          subTitle: "3.1 Troubleshoot device security using IOS AAA",
+          items: ["3.1.a TACACS+", "3.1.b RADIUS", "3.1.c Local database"],
+        },
+        {
+          subTitle: "3.2 Troubleshoot router security features",
+          items: [
+            "3.2.a IPv4 access control lists (standard, extended, time-based)",
+            "3.2.b IPv6 traffic filter",
+            "3.2.c Unicast Reverse Path Forwarding (uRPF)",
+          ],
+        },
+        {
+          subTitle: "3.3 Troubleshoot control plane policing (CoPP)",
+          items: [],
+        },
+        {
+          subTitle: "3.4 Describe IPv6 first hop security features",
+          items: [
+            "3.4.a RA guard",
+            "3.4.b DHCP guard",
+            "3.4.c Binding table",
+            "3.4.d Dynamic ARP inspection (DAI)",
+            "3.4.e Source guard",
+            "3.4.f FIPV6",
+          ],
+        },
+      ],
+    },
+    {
+      title: "4.0 Infrastructure Services (25%)",
+      items: [
+        {
+          subTitle: "4.1 Troubleshoot device management",
+          items: [
+            "4.1.a Console and VTY",
+            "4.1.b Telnet and SSH",
+            "4.1.c SNMP v2c and v3",
+          ],
+        },
+        {
+          subTitle: "4.2 Troubleshoot DHCP",
+          items: [
+            "4.2.a Client/server mode for IPv4 and IPv6 (SLAAC/DHCPv6)",
+            "4.2.b DHCP options",
+            "4.2.c DHCP relay",
+            "4.2.d DHCP authentication",
+          ],
+        },
+        "4.3 Troubleshoot network performance issues using IP SLA with tracking",
+        "4.4 Troubleshoot NetFlow",
+        "4.5 Troubleshoot network problems using logging (local, syslog, conditional, timestamps)",
+        {
+          subTitle: "4.6 Configure and verify Embedded Event Manager (EEM)",
+          items: [],
+        },
+        {
+          subTitle: "4.7 Troubleshoot network connectivity issues using ICMP",
+          items: [
+            "4.7.a Extended ping",
+            "4.7.b Traceroute",
+            "4.7.c Debug",
+            "4.7.d Conditional debug",
+            "4.7.e Ping and traceroute with source option",
+          ],
+        },
+        {
+          subTitle: "4.8 Configure and verify Cisco DNA Center workflows",
+          items: [
+            "4.8.a Apply a network configuration",
+            "4.8.b Perform network monitoring",
+            "4.8.c Identify and troubleshoot client issues",
+          ],
+        },
+        "4.9 Configure and verify FHRP",
+        "4.10 Configure and verify RESTCONF and NETCONF",
+      ],
+    },
+  ];
+
+  // ==================== ENSDWI MODULES ====================
+  const ensdwiModules = [
+    {
+      title: "1.0 SD-WAN Architecture (20%)",
+      items: [
+        {
+          subTitle: "1.1 Describe the Cisco SD-WAN solution architecture",
+          items: [
+            "1.1.a Orchestration plane (vBond, NAT)",
+            "1.1.b Management plane (vManage)",
+            "1.1.c Control plane (vSmart, OMP)",
+            "1.1.d Data plane (WAN Edge)",
+          ],
+        },
+        "1.2 Describe WAN Edge router types and their deployment scenarios",
+        "1.3 Describe Cisco SD-WAN overlay network components and the roles they play",
+        "1.4 Describe the purpose and workings of the Overlay Management Protocol (OMP)",
+        "1.5 Describe SD-WAN connection types and transport options",
+      ],
+    },
+    {
+      title: "2.0 Controller Deployment (15%)",
+      items: [
+        {
+          subTitle: "2.1 Deploy and configure Cisco SD-WAN controllers",
+          items: ["2.1.a vManage", "2.1.b vSmart", "2.1.c vBond"],
+        },
+        "2.2 Configure and verify certificates and network-level authentication for controllers",
+        "2.3 Configure and verify controller high availability and redundancy",
+        "2.4 Configure and verify SD-WAN controller to WAN Edge connectivity",
+      ],
+    },
+    {
+      title: "3.0 Router Deployment (20%)",
+      items: [
+        {
+          subTitle: "3.1 Onboard WAN Edge routers",
+          items: [
+            "3.1.a Zero-Touch Provisioning (ZTP)",
+            "3.1.b Plug and Play (PnP)",
+            "3.1.c Manual onboarding",
+          ],
+        },
+        "3.2 Configure and verify WAN Edge device templates",
+        "3.3 Configure and verify routing protocols in the SD-WAN overlay",
+        "3.4 Configure and verify Direct Internet Access (DIA) breakout",
+        "3.5 Describe SD-WAN high availability and redundancy at the WAN Edge",
+      ],
+    },
+    {
+      title: "4.0 Policies (20%)",
+      items: [
+        {
+          subTitle: "4.1 Configure and verify centralized policies",
+          items: [
+            "4.1.a Control policies",
+            "4.1.b Data policies",
+            "4.1.c Application-aware routing policies",
+          ],
+        },
+        {
+          subTitle: "4.2 Configure and verify localized policies",
+          items: ["4.2.a Access lists", "4.2.b Route policies"],
+        },
+        "4.3 Configure and verify service chaining in SD-WAN",
+        "4.4 Describe the policy framework and the role of vSmart in policy distribution",
+      ],
+    },
+    {
+      title: "5.0 Security and Quality of Service (15%)",
+      items: [
+        {
+          subTitle: "5.1 Configure and verify SD-WAN security features",
+          items: [
+            "5.1.a Application-aware enterprise firewall",
+            "5.1.b Intrusion Prevention System (IPS)",
+            "5.1.c URL filtering",
+            "5.1.d Cisco Advanced Malware Protection (AMP)",
+            "5.1.e SSL/TLS proxy",
+            "5.1.f Cisco Umbrella Secure Internet Gateway (SIG)",
+          ],
+        },
+        "5.2 Configure and verify SD-WAN QoS mechanisms",
+        "5.3 Describe SD-WAN encryption and data plane security (IPsec, key exchange)",
+        "5.4 Configure and verify segmentation using VPNs in the SD-WAN fabric",
+      ],
+    },
+    {
+      title: "6.0 Management and Operations (10%)",
+      items: [
+        "6.1 Implement basic SD-WAN monitoring and troubleshooting using vManage",
+        "6.2 Configure and verify multicast over SD-WAN",
+        "6.3 Perform SD-WAN device software upgrades using vManage",
+        "6.4 Describe SD-WAN migration strategies from traditional WAN environments",
+        "6.5 Describe SD-WAN REST API capabilities and use cases",
+      ],
+    },
+  ];
+
+  const tabData = {
+    ENCOR: {
+      label: "CCNP Enterprise (ENCOR)",
+      examCode: "350-401",
+      duration: "120 minutes",
+      description:
+        "The Implementing Cisco Enterprise Network Core Technologies exam (350-401 ENCOR) v1.1 validates a candidate's understanding of core enterprise network technologies including dual-stack (IPv4 and IPv6) architecture, virtualization, infrastructure, network assurance, security, and automation. This is the required core exam for the CCNP Enterprise certification.",
+      about:
+        "This course prepares learners for the 350-401 ENCOR exam through instructor-led training with hands-on labs. It covers core enterprise networking topics including dual-stack architecture, virtualization, infrastructure, security, and automation. The program emphasizes practical configuration, troubleshooting, and real-world scenarios to build the skills and confidence needed for exam success.",
+      learn: [
+        "Network Access Concepts",
+        "Infrastructure Security Fundamentals",
+        "Automation and Programmability Basics",
+        "Advanced Routing Technologies",
+      ],
+      modules: encorModules,
+      downloadLabel: "Download the ENCOR Exam Topics Here",
+    },
+    ENARSI: {
+      label: "CCNP Enterprise (ENARSI)",
+      examCode: "300-410",
+      duration: "90 minutes",
+      description:
+        "The Implementing Cisco Enterprise Advanced Routing and Services exam (300-410 ENARSI) v1.2 validates a candidate's expertise in implementing and troubleshooting advanced routing technologies and services. This is a concentration exam for the CCNP Enterprise certification and also earns the Cisco Certified Specialist – Enterprise Advanced Infrastructure Implementation designation.",
+      about:
+        "This course equips learners with advanced routing and services skills needed to pass the 300-410 ENARSI exam. Topics include advanced Layer 3 routing protocols (EIGRP, OSPF, BGP), VPN technologies (MPLS, DMVPN), infrastructure security (AAA, ACLs, CoPP), and infrastructure services (DHCP, IP SLA, NetFlow). The course stresses hands-on troubleshooting in real-world enterprise environments.",
+      learn: [
+        "Advanced Routing Protocols (EIGRP, OSPF, BGP)",
+        "MPLS and VPN Technologies",
+        "Infrastructure Security and AAA",
+        "Infrastructure Services and Troubleshooting",
+      ],
+      modules: enarsiModules,
+      downloadLabel: "Download the ENARSI Exam Topics Here",
+    },
+    ENSDWI: {
+      label: "CCNP Enterprise (ENSDWI)",
+      examCode: "300-415",
+      duration: "90 minutes",
+      description:
+        "The Implementing Cisco Catalyst SD-WAN Solutions exam (300-415 ENSDWI) v1.2 validates a candidate's ability to design, deploy, configure, and manage Cisco SD-WAN solutions at enterprise scale. This is a concentration exam for the CCNP Enterprise certification and also earns the Cisco Certified Specialist – Enterprise SD-WAN Implementation designation.",
+      about:
+        "This course provides in-depth training on how to design, deploy, configure, and manage Cisco SD-WAN solutions in large-scale live networks, including migration from legacy WAN environments. Learners will master SD-WAN architecture, controller setup, WAN Edge router onboarding, advanced control and data policies, QoS, SD-WAN security, and day-to-day operational management through vManage.",
+      learn: [
+        "SD-WAN Architecture and Components",
+        "Controller and WAN Edge Deployment",
+        "SD-WAN Policy Configuration",
+        "SD-WAN Security and QoS",
+      ],
+      modules: ensdwiModules,
+      downloadLabel: "Download the ENSDWI Exam Topics Here",
+    },
+  };
+
+  const active = tabData[activeTab];
+
   return (
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}
@@ -159,97 +484,85 @@ export default function CCNPEnterprise() {
         bgImage={ccnaHero}
         category="CISCO"
         title="CCNP Enterprise"
-        description="Implementing Cisco Enterprise Network Core Technologies (350-401
-              ENCOR) v1.1 is a 120-minute exam that assesses a candidate’s
-              knowledge of enterprise network technologies, including dual-stack
-              (IPv4 and IPv6) architecture, virtualization, infrastructure,
-              security, and automation."
+        description="The CCNP Enterprise certification validates the skills required to plan, implement, verify, and troubleshoot enterprise networking solutions. It includes three tracks: ENCOR (core), ENARSI (advanced routing), and ENSDWI (SD-WAN). Choose a track below to explore its exam details and course content."
       />
 
-      {/* ==================== CONTENT SECTION - Training Informations/Content ==================== */}
+      {/* ==================== CONTENT SECTION ==================== */}
       <div className="flex flex-col lg:flex-row justify-start items-start lg:items-stretch gap-6 lg:gap-8">
-        {/* ==================== LEFT SIDE: Contents/Information ==================== */}
+        {/* ==================== LEFT SIDE ====================*/}
         <div className="flex flex-col gap-8">
-          {/* ==================== ABOUT SECTION ==================== */}
+          {/* ==================== COURSE TRACK TABS ==================== */}
+          <div className="flex flex-wrap gap-3">
+            {Object.entries(tabData).map(([key]) => (
+              <button
+                key={key}
+                onClick={() => setActiveTab(key)}
+                className={`px-5 py-2.5 rounded-full text-sm font-semibold border transition-all duration-200 ${
+                  activeTab === key
+                    ? "bg-[#1775EE] text-white border-[#1775EE]"
+                    : "bg-white text-[#1775EE] border-[#1775EE] hover:bg-[#EBF5FD]"
+                }`}
+              >
+                {key}
+              </button>
+            ))}
+          </div>
+
+          {/* ==================== ACTIVE TAB HEADER ==================== */}
+          <div className="flex flex-col gap-1">
+            <p className="text-xs font-semibold uppercase tracking-widest text-[#1775EE]">
+              {active.examCode}
+            </p>
+            <h2 className="text-2xl font-bold">{active.label}</h2>
+            <p className="text-gray-600 max-w-3xl">{active.description}</p>
+          </div>
+
+          {/* About Section */}
           <section className="flex flex-col gap-y-3">
-            {/* About Section - Title */}
             <h3>
               About This <span className="text-[#1775EE]">Course</span>
             </h3>
-            {/* About Section - Description */}
-            {/* CHANGE: Course description paragraphs */}
-            <p>
-              This course prepares learners for the Implementing Cisco
-              Enterprise Network Core Technologies (350-401 ENCOR) exam through
-              instructor-led training with hands-on labs and guided instruction.
-              It covers core enterprise networking topics, including dual-stack
-              architecture, virtualization, infrastructure, security, and
-              automation.
-            </p>
-            <p>
-              The program emphasizes practical configuration, troubleshooting,
-              and real-world scenarios to build the skills and confidence needed
-              for exam success.
-            </p>
+            <p>{active.about}</p>
           </section>
 
-          {/* ==================== WHAT YOU WILL LEARN ====================*/}
+          {/* What You Will Learn */}
           <section className="flex flex-col gap-y-5">
-            {/* What You Will Learn Section - Title */}
             <h3>
               What You Will <span className="text-[#1775EE]">Learn</span>
             </h3>
-
-            {/* What You Will Learn Section - List */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              <div className="flex items-center gap-2.5">
-                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Network Access Concepts</p>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Infrastructure Security Fundamentals</p>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Automation and Programmability Basics</p>
-              </div>
-              <p className="flex items-center gap-2.5">
-                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <span>Advanced Routing Technologies</span>
-              </p>
+              {active.learn.map((item) => (
+                <div key={item} className="flex items-center gap-2.5">
+                  <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
+                  <p>{item}</p>
+                </div>
+              ))}
             </div>
           </section>
 
-          {/* ==================== COURSE CONTENT ==================== */}
+          {/* Course Content */}
           <section className="flex flex-col gap-y-5">
-            {/* Course Content - Title */}
             <h3>
               Course <span className="text-[#1775EE]">Content</span>
             </h3>
-
-            {/* Course Content - List */}
-            <CourseModules modules={modules} />
+            <CourseModules modules={active.modules} />
           </section>
         </div>
 
-        {/* ==================== RIGHT SIDEBAR: Contents/Information ==================== */}
+        {/* ==================== RIGHT SIDEBAR ==================== */}
         <aside className="aside_contents">
-          {/* ==================== CERT BADGE ====================*/}
+          {/* Cert Badge */}
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
-            {/* Cert Badge - Change/Update Image */}
             <img
               src={ccnaBadge}
-              alt="CCNA Automation Certification Badge"
+              alt="CCNP Enterprise Certification Badge"
               className="w-55 h-55 lg:w-100 lg:h-100 object-contain"
             />
           </div>
 
-          {/* ==================== JOB OPPORTUNITIES ====================*/}
+          {/* Job Opportunities */}
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-2">
-            {/* Job Opportunities - Title */}
-            <h5 className="text-[#1775EE] ">Job Opportunities</h5>
-            {/* Job Opportunities - List */}
+            <h5 className="text-[#1775EE]">Job Opportunities</h5>
             {[
               "Network Engineer",
               "Network Administrator",
@@ -263,50 +576,48 @@ export default function CCNPEnterprise() {
             ))}
           </div>
 
-          {/* ==================== TARGET LEARNERS ====================*/}
+          {/* Target Learners */}
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-2">
-            {/* Target Learners - Title */}
-            <h5 className="text-[#1775EE] ">Target Learners</h5>
-            {/* Target Learners - List */}
-            {["Beginners", "Zero Knowledge"].map((job) => (
-              <p key={job} className="flex gap-2 justify-left items-center">
+            <h5 className="text-[#1775EE]">Target Learners</h5>
+            {["Beginners", "Zero Knowledge"].map((item) => (
+              <p key={item} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
-                <span>{job}</span>
+                <span>{item}</span>
               </p>
             ))}
           </div>
 
-          {/* ==================== SCHEDULE ====================*/}
+          {/* Schedule */}
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-2">
-            {/* Schedule - Title */}
-            <h5 className="text-[#1775EE] ">Schedule</h5>
-            {/* Schedule - List */}
+            <h5 className="text-[#1775EE]">Schedule</h5>
             <div className="flex flex-col gap-2 text-sm">
               <div className="flex justify-start gap-2">
-                <p className="">Modality:</p>
+                <p>Modality:</p>
                 <p>Face to Face/Online</p>
               </div>
               <div className="flex justify-start gap-2">
-                <p className="">Duration:</p>
+                <p>Duration:</p>
                 <p>6 Days</p>
               </div>
               <div className="flex justify-start gap-2">
-                <p className="">Days:</p>
-                <p>Monday-Sunday</p>
+                <p>Days:</p>
+                <p>Monday–Sunday</p>
               </div>
               <div className="flex justify-start gap-2">
-                <span className="">Time:</span>
+                <span>Time:</span>
                 <span>10:00 AM – 6:00 PM</span>
+              </div>
+              <div className="flex justify-start gap-2">
+                <span>Exam Duration:</span>
+                <span>{active.duration}</span>
               </div>
             </div>
           </div>
 
-          {/* ==================== INCLUSIONS ====================*/}
+          {/* Inclusions */}
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-2">
-            {/* Inlcusions - Title */}
-            <h5 className="text-[#1775EE] ">Inclusions</h5>
+            <h5 className="text-[#1775EE]">Inclusions</h5>
 
-            {/* Inclusions - List */}
             <div className="inclusions">
               <span className="inclusions_icons">
                 <img src={MealIcon} alt="Meal" className="w-4 h-4" />
@@ -339,19 +650,18 @@ export default function CCNPEnterprise() {
               <p>Certificate of Completion</p>
             </div>
 
-            {/* CHANGE: Download link text and URL */}
             <a href="#" className="text-sm font-medium underline mt-2">
-              Download the CCNP Exam Topics Here
+              {active.downloadLabel}
             </a>
           </div>
         </aside>
       </div>
 
-      {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
+      {/* ==================== CALL TO ACTION BANNER ==================== */}
       <TrainingTemplateFooter
-        bgImage={ccnaFooter} // CHANGE: Update background image for the footer banner
+        bgImage={ccnaFooter}
         bgPosition="90%"
-        description="Advance your networking career and prepare for the CCNP Enterprise exam."
+        description="Advance your networking career and prepare for the CCNP Enterprise certification."
       />
     </main>
   );

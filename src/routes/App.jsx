@@ -13,7 +13,7 @@ import CCNAAutomation from "../pages/training/cisco/ccna/automation";
 import CCNACybersecurity from "../pages/training/cisco/ccna/cybersecurity";
 import CCNPEnterprise from "../pages/training/cisco/ccnp/enterprise";
 import CCNPDatacenter from "../pages/training/cisco/ccnp/datacenter";
-import CCNPSecurity from "../pages/training/cisco/ccnp/ccnp-security/security";
+import CCNPSecurity from "../pages/training/cisco/ccnp/security";
 import SNCF from "../pages/training/cisco/ccnp/ccnp-security/300-710-SNCF-v1.1";
 import SDSI from "../pages/training/cisco/ccnp/ccnp-security/300-745-SDSI-v1.1";
 
@@ -150,7 +150,7 @@ export default function App() {
           element={<CCNPDatacenter />}
         />
         <Route
-          path="/training/cisco/ccnp/ccnp-security/security"
+          path="/training/cisco/ccnp/security"
           element={<CCNPSecurity />}
         />
         <Route
