@@ -233,7 +233,7 @@ export default function CDTH() {
             <h5 className="text-[#1775EE] ">Target Learners</h5>
             {/* Target Learners - List */}
             {[
-              "SOC Analyst beginners (L1)",
+              "SOC Analyst Beginners with 0 knowledge (L1)",
               "System / Network Administrators",
               "Cybersecurity Enthusiasts",
             ].map((job) => (
@@ -309,7 +309,7 @@ export default function CDTH() {
 
             {/* CHANGE: Download link text and URL */}
             <a href="#" className="text-sm font-medium underline mt-2">
-              Download the Practical Ethical Hacking Exam Basics here
+              Download the Practical Ethical Hacking Exam Topics Here
             </a>
           </div>
         </aside>

@@ -466,7 +466,7 @@ export default function PMP() {
             {/* Target Learners - Title */}
             <h5 className="text-[#1775EE] ">Target Learners</h5>
             {/* Target Learners - List */}
-            {["Beginners"].map((job) => (
+            {["Beginners with 0 knowledge"].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
                 <span>{job}</span>
@@ -539,7 +539,7 @@ export default function PMP() {
 
             {/* CHANGE: Download link text and URL */}
             <a href="#" className="text-sm font-medium underline mt-2">
-              Download the Project Management Exam Basics here
+              Download the Project Management Exam Topics Here
             </a>
           </div>
         </aside>

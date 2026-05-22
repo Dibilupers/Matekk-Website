@@ -311,7 +311,7 @@ export default function NSE5SecurityOperations() {
 
             {/* CHANGE: Download link text and URL */}
             <a href="#" className="text-sm font-medium underline mt-2">
-              Download the Fortinet Exam Basics here
+              Download the Fortinet Exam Topics Here
             </a>
           </div>
         </aside>

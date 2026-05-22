@@ -323,7 +323,7 @@ export default function VAPT() {
 
             {/* CHANGE: Download link text and URL */}
             <a href="#" className="text-sm font-medium underline mt-2">
-              Download the Practical Ethical Hacking Exam Basics here
+              Download the Practical Ethical Hacking Exam Topics Here
             </a>
           </div>
         </aside>

@@ -232,7 +232,7 @@ export default function PEH() {
             {[
               "Network and System Administrators",
               "Security Analysts",
-              "Ethical Hacking Beginners",
+              "Ethical Hacking Beginners with 0 knowledge",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
@@ -306,7 +306,7 @@ export default function PEH() {
 
             {/* CHANGE: Download link text and URL */}
             <a href="#" className="text-sm font-medium underline mt-2">
-              Download the Practical Ethical Hacking Exam Basics here
+              Download the Practical Ethical Hacking Exam Topics Here
             </a>
           </div>
         </aside>

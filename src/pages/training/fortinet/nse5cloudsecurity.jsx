@@ -341,7 +341,7 @@ export default function NSE5CloudSecurity() {
 
             {/* CHANGE: Download link text and URL */}
             <a href="#" className="text-sm font-medium underline mt-2">
-              Download the Palo Alto Exam Basics here
+              Download the Palo Alto Exam Topics Here
             </a>
           </div>
         </aside>

@@ -290,7 +290,7 @@ export default function CCNACybersecurity() {
 
             {/* CHANGE: Download link text and URL */}
             <a href="#" className="text-sm font-medium underline mt-2">
-              Download the CCNA Exam Basics here
+              Download the CCNA Exam Topics Here
             </a>
           </div>
         </aside>

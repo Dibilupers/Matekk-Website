@@ -142,7 +142,7 @@ const TrainingPage = ({
     },
   ],
   JobOpportunities = ["Lorem Ipsum Specialist", "Dolor Sit Administrator", "Lorem Ipsum Engineer"],
-  TargetLearners = ["Beginners", "Lorem Ipsum Learners"],
+  TargetLearners = ["Beginners with 0 knowledge", "Lorem Ipsum Learners"],
   Schedule = {
     duration: "Lorem / Ipsum / Dolor",
     days: "Monday to Friday",

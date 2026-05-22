@@ -83,7 +83,7 @@ export default function Aplus() {
         bgImage={ccnaHero}
         category="COMPTIA"
         title="A+ (Core 1 & Core 2)"
-        description="CompTIA A+ is a widely recognized certification for beginners that
+        description="CompTIA A+ is a widely recognized certification for Beginners with 0 knowledge that
               will help you start your IT career. Employers from a variety of
               industries value A+ because it fosters fundamental skills in
               networking, hardware, software, problem-solving, and security."
@@ -206,7 +206,7 @@ export default function Aplus() {
             {/* Target Learners - Title */}
             <h5 className="text-[#1775EE] ">Target Learners</h5>
             {/* Target Learners - List */}
-            {["Beginners"].map((job) => (
+            {["Beginners with 0 knowledge"].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
                 <span>{job}</span>
@@ -290,7 +290,7 @@ export default function Aplus() {
 
             {/* CHANGE: Download link text and URL */}
             <a href="#" className="text-sm font-medium underline mt-2">
-              Download the COMPTIA Exam Basics here
+              Download the COMPTIA Exam Topics Here
             </a>
           </div>
         </aside>

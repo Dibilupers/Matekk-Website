@@ -339,7 +339,7 @@ export default function NSE5() {
               <p>Certificate of Completion</p>
             </div>
             <a href="#" className="text-sm font-medium underline mt-2">
-              Download the Fortinet Exam Basics here
+              Download the Fortinet Exam Topics Here
             </a>
           </div>
         </aside>
