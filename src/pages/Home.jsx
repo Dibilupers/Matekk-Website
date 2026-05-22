@@ -833,7 +833,7 @@ export default function Home() {
             </h3>
             {/* Description */}
             <p>
-              Matekk Cybercore Academy is committed to delivering reliable ICT
+              Matekk Cybercore Technologies is committed to delivering reliable ICT
               solutions and high-quality training through experienced
               professionals, proven methodologies, and a strong focus on
               innovation, integrity, and excellence.
