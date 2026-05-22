@@ -650,8 +650,12 @@ export default function CCNPEnterprise() {
               <p>Certificate of Completion</p>
             </div>
 
-            <a href="#" className="text-sm font-medium underline mt-2">
-              {active.downloadLabel}
+            <a
+              href="https://learningcontent.cisco.com/documents/marketing/exam-topics/350-401-ENCORE-v1.2.pdf"
+              target="_blank"
+              className="font-medium underline mt-2"
+            >
+              Download the ENCOR Exam Topics Here
             </a>
           </div>
         </aside>

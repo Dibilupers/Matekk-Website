@@ -336,6 +336,7 @@ export default function CCNPSecurity() {
       ],
       modules: scorModules,
       downloadLabel: "Download the SCOR Exam Topics Here",
+      downloadUrl: "https://learningcontent.cisco.com/documents/marketing/exam-topics/350-701-SCOR-v2.0.pdf",
     },
     SDSI: {
       label: "300-745 SDSI v1.1",
@@ -359,6 +360,8 @@ export default function CCNPSecurity() {
       ],
       modules: sdsiModules,
       downloadLabel: "Download the SDSI Exam Topics Here",
+      downloadUrl: "https://learningcontent.cisco.com/documents/marketing/exam-topics/300-745-SDSI-v1.0-Public.pdf",
+
     },
     SNCF: {
       label: "300-710 SNCF v1.1",
@@ -382,6 +385,7 @@ export default function CCNPSecurity() {
       ],
       modules: sncfModules,
       downloadLabel: "Download the SNCF Exam Topics Here",
+      downloadUrl: "https://learningcontent.cisco.com/documents/marketing/exam-topics/300-710-SNCF-v1.2.pdf",
     },
   };
 
@@ -553,7 +557,11 @@ export default function CCNPSecurity() {
               <p>Certificate of Completion</p>
             </div>
 
-            <a href="#" className="text-sm font-medium underline mt-2">
+            <a   href={active.downloadUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm font-medium underline mt-2"
+            >
               {active.downloadLabel}
             </a>
           </div>

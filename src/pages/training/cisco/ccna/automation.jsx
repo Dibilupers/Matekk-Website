@@ -158,10 +158,9 @@ export default function CCNAAutomation() {
         bgImage={ccnaHero}
         category="CISCO"
         title="CCNA Automation"
-        description="Automating Networks Using Cisco Platforms (200-901 CCNAAUTO) v1.1
-              is a 120-minute exam that assesses a candidate’s knowledge of
-              software development basics, APIs, application security, and
-              network automation using Cisco platforms."
+        description="Automating Networks Using Cisco Platforms (200-901 CCNAAUTO) v1.1 is a 120-minute exam 
+        that assesses a candidate’s knowledge of software development and design, including understanding 
+        and using APIs, application deployment and security, and infrastructure and automation on Cisco platforms."
       />
       {/* ==================== CONTENT SECTION - Training Informations/Content ==================== */}
       <div className="flex flex-col lg:flex-row justify-start items-start lg:items-stretch gap-6 lg:gap-8">
@@ -176,18 +175,19 @@ export default function CCNAAutomation() {
             {/* About Section - Description */}
             {/* CHANGE: Course description paragraphs */}
             <p>
-              This course prepares learners for the updated CCNA 200-301
-              certification exam through instructor-led training that combines
-              guided discussions and interactive activities. It covers essential
-              topics such as network fundamentals, IP connectivity, security
-              principles, and basic automation, with hands-on labs and
-              real-world scenarios to build practical skills and exam
-              confidence.
+              This course prepares learners for the updated CCNAAUTO 200-901 v1.1 
+              certification exam through instructor-led training that combines 
+              guided discussions and interactive activities. It covers essential 
+              topics such as software development and design, APIs, application 
+              deployment and security, and infrastructure and network automation
+              on Cisco platforms, with hands-on labs and real-world scenarios to 
+              build practical skills and exam confidence.
             </p>
             <p>
-              The program also emphasizes troubleshooting techniques and best
-              practices to help participants apply their knowledge effectively
-              in real-world networking environments.
+              The program also emphasizes troubleshooting techniques, automation 
+              workflows, and best practices to help participants apply their 
+              knowledge effectively in real-world Cisco networking and automation 
+              environments.
             </p>
           </section>
 
@@ -350,7 +350,7 @@ export default function CCNAAutomation() {
 
             {/* CHANGE: Download link text and URL */}
             <a href="https://learningcontent.cisco.com/documents/marketing/exam-topics/200-901-CCNAAUTO_v.1.1.pdf" target="_blank" className="text-sm font-medium underline mt-2">
-              Download the CCNA Exam Topics Here
+              Download the CCNAAUTO Exam Topics Here
             </a>
           </div>
         </aside>

@@ -22,201 +22,119 @@ export default function CCNA() {
   // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
   const modules = [
     {
-      title: "1.0 Network Fundamentals",
+      title: "1.0 Network Infrastructure and Connectivity",
       items: [
+        "1.1 Diagnose interface and cable (copper and fiber) issues such as collisions, errors, mismatched duplex, speed, distance, interface, signal levels, pin out, and cable types",
+        "1.2 Describe the role and function of hypervisors, virtual machines, and containers",
+        "1.3 Troubleshoot IPv4 address configuration, assignment, and subnetting (public and private)",
+        "1.4 Troubleshoot IPv6 address configuration, assignment, and prefix sizing (unicast and modified EUI 64)",
         {
-          subTitle: "1.1 Explain the role and function of network components",
+          subTitle: "1.5 Describe wireless principles",
           items: [
-            "1.1.a Routers",
-            "1.1.b Layer 2 and Layer 3 switches",
-            "1.1.c Next-generation firewalls and IPS",
-            "1.1.d Access points",
-            "1.1.e Controllers (Cisco DNA Center and WLC)",
-            "1.1.f Endpoints",
-            "1.1.g Servers",
-            "1.1.h PoE",
+            "1.5.a Band and channel selection",
+            "1.5.b RF characteristics",
+            "1.5.c Security protocols",
+            "1.5.d Cause of interference",
           ],
         },
-        {
-          subTitle:
-            "1.2 Describe characteristics of network topology architectures",
-          items: [
-            "1.2.a Two-tier",
-            "1.2.b Three-tier",
-            "1.2.c Spine-leaf",
-            "1.2.d WAN",
-            "1.2.e Small office/home office (SOHO)",
-            "1.2.f On-premises and cloud",
-          ],
-        },
-        {
-          subTitle: "1.3 Compare physical interface and cabling types",
-          items: [
-            "1.3.a Single-mode fiber, multimode fiber, copper",
-            "1.3.b Connections (Ethernet shared media and point-to-point)",
-          ],
-        },
-        "1.4 Identify interface and cable issues (collisions, errors, mismatch duplex, and/or speed)",
-        "1.5 Compare TCP to UDP",
-        "1.6 Configure and verify IPv4 addressing and subnetting",
-        "1.7 Describe private IPv4 addressing",
-        "1.8 Configure and verify IPv6 addressing and prefix",
-        {
-          subTitle: "1.9 Describe IPv6 address types",
-          items: [
-            "1.9.a Unicast (global, unique local, and link local)",
-            "1.9.b Anycast",
-            "1.9.c Multicast",
-            "1.9.d Modified EUI 64",
-          ],
-        },
-        "1.10 Verify IP parameters for Client OS (Windows, Mac OS, Linux)",
-        {
-          subTitle: "1.11 Describe wireless principles",
-          items: [
-            "1.11.a Nonoverlapping Wi-Fi channels",
-            "1.11.b SSID",
-            "1.11.c RF",
-            "1.11.d Encryption",
-          ],
-        },
-        "1.12 Explain virtualization fundamentals (server virtualization, containers, and VRFs)",
-        {
-          subTitle: "1.13 Describe switching concepts",
-          items: [
-            "1.13.a MAC learning and aging",
-            "1.13.b Frame switching",
-            "1.13.c Frame flooding",
-            "1.13.d MAC address table",
-          ],
-        },
+        "1.6 Troubleshoot wired and wireless client connectivity (IP configuration, network reachability, and wireless security parameters on Windows, MacOS, and Linux)",
+        "1.7 Troubleshoot DHCPv4 client, server, and relay on IOS devices",
       ],
     },
     {
-      title: "2.0 Network Access",
+      title: "2.0 Switching and Network Access",
       items: [
         {
           subTitle:
-            "2.1 Configure and verify VLANs (normal range) spanning multiple switches",
+            "2.1 Configure network infrastructure connectivity (switch-to-switch and switch-to-router)",
           items: [
-            "2.1.a Access ports (data and voice)",
-            "2.1.b Default VLAN",
-            "2.1.c InterVLAN connectivity",
+            "2.1.a Layer 2/Layer 3 physical interfaces",
+            "2.1.b Layer 2 802.1Q trunk interfaces",
+            "2.1.c Layer 2/Layer 3 LACP port-channel/EtherChannel",
+            "2.1.d Switch virtual interface (SVI)",
           ],
         },
         {
-          subTitle: "2.2 Configure and verify interswitch connectivity",
-          items: ["2.2.a Trunk ports", "2.2.b 802.1Q", "2.2.c Native VLAN"],
+          subTitle:
+            "2.2 Configure Layer 2 switch port attributes for edge-host connectivity (VLAN, PoE, port channel, and LACP)",
+          items: [
+            "2.2.a Desktop, printer, and IOT appliances",
+            "2.2.b Wireless access points (standalone and controller based)",
+            "2.2.c Voice over IP phone",
+            "2.2.d Virtualized hosts",
+            "2.2.e Network appliances",
+          ],
         },
-        "2.3 Configure and verify Layer 2 discovery protocols (Cisco Discovery Protocol and LLDP)",
-        "2.4 Configure and verify (Layer 2/Layer 3) EtherChannel (LACP)",
+        "2.3 Validate the accuracy of network documentation using CDP and LLDP",
+        "2.4 Troubleshoot basic Layer 2/Layer 3 connectivity and device operations using show commands (including show logs), ping, extended ping, trace route, and packet capture output",
         {
           subTitle:
-            "2.5 Interpret basic operations of Rapid PVST+ Spanning Tree Protocol",
+            "2.5 Configure operations of the Rapid Per VLAN Spanning Tree Protocol (Rapid PVST+)",
           items: [
             "2.5.a Root port, root bridge (primary/secondary), and other port names",
-            "2.5.b Port states (forwarding/blocking)",
+            "2.5.b Port states and roles",
             "2.5.c PortFast",
-            "2.5.d Root guard, loop guard, BPDU filter, and BPDU guard",
+            "2.5.d Root guard, loop guard, and BPDU guard",
           ],
         },
-        "2.6 Describe Cisco Wireless Architectures and AP modes",
-        "2.7 Describe physical infrastructure connections of WLAN components (AP, WLC, access/trunk ports, and LAG)",
-        "2.8 Describe network device management access (Telnet, SSH, HTTP, HTTPS, console, TACACS+/RADIUS, and cloud managed)",
-        "2.9 Interpret the wireless LAN GUI configuration for client connectivity, such as WLAN creation, security settings, QoS profiles, and advanced settings",
       ],
     },
     {
-      title: "3.0 IP Connectivity",
+      title: "3.0 IP Routing",
       items: [
+        "3.1 Interpret a routing table to identify the next hop for a packet (routing protocol, prefix/mask, administrative distance, metric, and default route)",
         {
-          subTitle: "3.1 Interpret the components of routing table",
+          subTitle: "3.2 Troubleshoot IPv4 and IPv6 static routing",
           items: [
-            "3.1.a Routing protocol code",
-            "3.1.b Prefix",
-            "3.1.c Network mask",
-            "3.1.d Next hop",
-            "3.1.e Administrative distance",
-            "3.1.f Metric",
-            "3.1.g Gateway of last resort",
+            "3.2.a Default route",
+            "3.2.b Network route",
+            "3.2.c Host route",
+            "3.2.d Floating static",
           ],
         },
         {
           subTitle:
-            "3.2 Determine how a router makes a forwarding decision by default",
+            "3.3 Configure single area OSPFv2 for IPv4 and OSPFv3 for IPv6",
           items: [
-            "3.2.a Longest prefix match",
-            "3.2.b Administrative distance",
-            "3.2.c Routing protocol metric",
+            "3.3.a Neighbor adjacencies (excluding authentication)",
+            "3.3.b Point-to-point",
+            "3.3.c Broadcast (DR/BDR selection)",
+            "3.3.d Router ID",
           ],
         },
-        {
-          subTitle: "3.3 Configure and verify IPv4 and IPv6 static routing",
-          items: [
-            "3.3.a Default route",
-            "3.3.b Network route",
-            "3.3.c Host route",
-            "3.3.d Floating static",
-          ],
-        },
-        {
-          subTitle: "3.4 Configure and verify single area OSPFv2",
-          items: [
-            "3.4.a Neighbor adjacencies",
-            "3.4.b Point-to-point",
-            "3.4.c Broadcast (DR/BDR selection)",
-            "3.4.d Router ID",
-          ],
-        },
-        "3.5 Describe the purpose, functions, and concepts of first hop redundancy protocols",
+        "3.4 Interpret the operational status of First Hop Redundancy Protocols (HSRP and VRRP)",
       ],
     },
     {
-      title: "4.0 IP Services",
+      title: "4.0 Network Services and Security",
       items: [
-        "4.1 Configure and verify inside source NAT using static and pools",
-        "4.2 Configure and verify NTP operating in a client and server mode",
-        "4.3 Explain the role of DHCP and DNS within the network",
-        "4.4 Explain the function of SNMP in network operations",
-        "4.5 Describe the use of syslog features including facilities and levels",
-        "4.6 Configure and verify DHCP client and relay",
-        "4.7 Explain the forwarding per-hop behavior (PHB) for QoS, such as classification, marking, queuing, congestion, policing, and shaping",
-        "4.8 Configure network devices for remote access using SSH",
-        "4.9 Describe the capabilities and functions of TFTP/FTP in the network",
-      ],
-    },
-    {
-      title: "5.0 Security Fundamentals",
-      items: [
-        "5.1 Define key security concepts (threats, vulnerabilities, exploits, and mitigation techniques)",
-        "5.2 Describe security program elements (user awareness, training, and physical access control)",
-        "5.3 Configure and verify device access control using local passwords",
-        "5.4 Describe security password policies elements, such as management, complexity, and password alternatives (multifactor authentication, certificates, and biometrics)",
-        "5.5 Describe IPsec remote access and site-to-site VPNs",
-        "5.6 Configure and verify access control lists",
-        "5.7 Configure and verify Layer 2 security features (DHCP snooping, dynamic ARP inspection, and port security)",
-        "5.8 Compare authentication, authorization, and accounting concepts",
-        "5.9 Describe wireless security protocols (WPA, WPA2, and WPA3)",
-        "5.10 Configure and verify WLAN within the GUI using WPA2 PSK",
-      ],
-    },
-    {
-      title: "6.0 Automation and Programmability",
-      items: [
-        "6.1 Explain how automation impacts network management",
-        "6.2 Compare traditional networks with controller-based networking",
+        "4.1 Configure network devices with local usernames and as an AAA client (TACACS+ and RADIUS) for management",
+        "4.2 Manage device configuration and software files using secure file transfer operations with SFTP/SCP",
+        "4.3 Configure NAT/PAT on IOS XE routers",
+        "4.4 Diagnose issues with DNS records (A, AAAA, CNAME, MX, NS, and PTR) to support host, web application, and mail server access by name",
+        "4.5 Describe IPsec remote access and site-to-site VPNs (protocols and transport modes)",
+        "4.6 Configure IPv4 access control lists (standard, extended, numbered, and named ACLs)",
         {
-          subTitle:
-            "6.3 Describe controller-based, software defined architecture (overlay, underlay, and fabric)",
+          subTitle: "4.7 Configure Layer 2 security features",
           items: [
-            "6.3.a Separation of control plane and data plane",
-            "6.3.b Northbound and Southbound APIs",
+            "4.7.a DHCP snooping",
+            "4.7.b Dynamic ARP inspection",
+            "4.7.c Storm control",
+            "4.7.d RA guard",
+            "4.7.e Port security",
           ],
         },
-        "6.4 Explain AI (generative and predictive) and machine learning in network operations",
-        "6.5 Describe characteristics of REST-based APIs (authentication types, CRUD, HTTP verbs, and data encoding)",
-        "6.6 Recognize the capabilities of configuration management mechanisms, such as Ansible and Terraform",
-        "6.7 Recognize components of JSON-encoded data",
+      ],
+    },
+    {
+      title: "5.0 AI, and Network Operations and Management",
+      items: [
+        "5.1 Describe the role of agentic AI in network operations",
+        "5.2 Select a prompt to send to a generative AI system to support network operations considering prompt components such as data classification, output format, persona, and instructions",
+        "5.3 Describe network management approaches (device-based, cloud-based, controller-based, automation-based, and infrastructure as code)",
+        "5.4 Describe the function of SNMP in network operations",
+        "5.5 Use configuration management mechanisms such as Ansible to execute commands",
+        "5.6 Interpret syslog message content, severity levels, and facilities",
       ],
     },
   ];
@@ -228,9 +146,9 @@ export default function CCNA() {
         bgImage={ccnaHero}
         category="CISCO"
         title="CCNA"
-        description="Implementing and Administering Cisco Solutions (200-301 CCNA) v1.1 is a 120-minute exam 
-        that tests a candidate's knowledge and skills related to network fundamentals, network access, IP connectivity, IP services, 
-        security fundamentals, and automation and programmability."
+        description="Implementing and Administering Cisco Solutions (200-301 CCNA) v2.0 is a 120-minute exam that tests a 
+        candidate’s knowledge and skills related to IP routing, switching and network access, network services and security, 
+        network infrastructure and connectivity, AI, and network operations and management."
       />
 
       {/* ==================== CONTENT SECTION - Training Informations/Content ==================== */}
@@ -246,16 +164,16 @@ export default function CCNA() {
             {/* About Section - Description */}
             {/* CHANGE: Course description paragraphs */}
             <p>
-              This course is designed to help learners prepare for the updated
-              CCNA 201-301 v1.1 certification exam through instructor-led,
-              face-to-face training. The program includes guided instruction and
-              targeted learning activities that reinforce key networking
-              concepts tested in the exam.
+              This course is designed to help learners prepare for the updated CCNA 200-301 
+              v2.0 certification exam through instructor-led, face-to-face training. The program 
+              includes guided instruction and targeted learning activities that reinforce key networking, 
+              security, AI, and network operations concepts tested in the exam.
             </p>
             <p>
-              The training covers essential topics related to network access,
-              enterprise networking, security fundamentals, and basic automation
-              concepts, with a focus on practical hhvh and exam readiness.
+              The training covers essential topics related to IP routing, switching 
+              and network access, network services and security, network infrastructure 
+              and connectivity, AI, and network operations, with a focus on practical 
+              hands-on skills and exam readiness.
             </p>
           </section>
 
@@ -417,7 +335,11 @@ export default function CCNA() {
             </div>
 
             {/* CHANGE: Download link text and URL */}
-            <a href="https://learningcontent.cisco.com/documents/marketing/exam-topics/200-301_CCNA_v2.0_Exam_Topics_PDF.pdf" target="_blank" className="font-medium underline mt-2">
+            <a
+              href="https://learningcontent.cisco.com/documents/marketing/exam-topics/200-301_CCNA_v2.0_Exam_Topics_PDF.pdf"
+              target="_blank"
+              className="font-medium underline mt-2"
+            >
               Download the CCNA Exam Topics Here
             </a>
           </div>

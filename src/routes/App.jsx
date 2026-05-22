@@ -14,8 +14,6 @@ import CCNACybersecurity from "../pages/training/cisco/ccna/cybersecurity";
 import CCNPEnterprise from "../pages/training/cisco/ccnp/enterprise";
 import CCNPDatacenter from "../pages/training/cisco/ccnp/datacenter";
 import CCNPSecurity from "../pages/training/cisco/ccnp/security";
-import SNCF from "../pages/training/cisco/ccnp/ccnp-security/300-710-SNCF-v1.1";
-import SDSI from "../pages/training/cisco/ccnp/ccnp-security/300-745-SDSI-v1.1";
 
 /* CompTIA */
 import Aplus from "../pages/training/comptia/aplus";
@@ -152,14 +150,6 @@ export default function App() {
         <Route
           path="/training/cisco/ccnp/security"
           element={<CCNPSecurity />}
-        />
-        <Route
-          path="/training/cisco/ccnp/ccnp-security/sncf"
-          element={<SNCF />}
-        />
-        <Route
-          path="/training/cisco/ccnp/ccnp-security/sdsi"
-          element={<SDSI />}
         />
 
         {/* CompTIA */}
