@@ -440,8 +440,8 @@ export default function CCNACybersecurity() {
             <h5 className="text-[#1775EE] ">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
-              "Security Operations Center(SOC) Analyst",
-              "IT Security Operations Specialist",
+              "Network Engineer",
+              "Network Administrator",
               "IT Automation Specialist",
               "Network Security Engineer",
             ].map((job) => (

@@ -18,158 +18,144 @@ import TrainingHeroBanner from "../../../../components/section/TrainingHeroBanne
 export default function CCNPDatacenter() {
   // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
   const modules = [
-    {
-      title: "1.0 Network",
-      items: [
-        {
-          subTitle: "1.1 Apply routing protocols",
-          items: [
-            "1.1.a OSPFv2 and OSPFv3",
-            "1.1.b MP-BGP",
-            "1.1.c PIM",
-            "1.1.d FHRP",
-          ],
-        },
-        "1.2 Apply switching protocols such as RSTP+, LACP and vPC",
-        "1.3 Apply overlay protocols such as VXLAN EVPN",
-        {
-          subTitle: "1.4 Apply ACI concepts",
-          items: ["1.4.a Fabric setup", "1.4.b Access policies", "1.4.c VMM"],
-        },
-        "1.5 Analyze packet flow (unicast, multicast, and broadcast)",
-        "1.6 Describe Cloud service and deployment models (NIST 800-145)",
-        {
-          subTitle: "1.7 Describe software updates and their impacts",
-          items: [
-            "1.7.a Disruptive / nondisruptive",
-            "1.7.b EPLD",
-            "1.7.c Patches",
-          ],
-        },
-        "1.8 Implement network configuration management",
-        "1.9 Implement infrastructure monitoring using traditional and AI-powered tools such as NetFlow, SPAN, and Cisco Nexus Dashboard",
-        "1.10 Explain network assurance concepts such as streaming telemetry",
-        "1.11 Describe the capabilities and features of Nexus Dashboard",
-      ],
-    },
-    {
-      title: "2.0 Compute",
-      items: [
-        "2.1 Implement Cisco Unified Compute System Rack Servers",
-        {
-          subTitle: "2.2 Implement Cisco Unified Compute System Blade Chassis",
-          items: [
-            "2.2.a Initial setup",
-            "2.2.b Infrastructure management",
-            "2.2.c Network management (VLANs, pools and policies, templates, QoS)",
-            "2.2.d Storage management (SAN connectivity, Fibre Channel zoning, VSANs, WWN pools, SAN policies, templates)",
-            "2.2.e Server management (Server pools and boot policies)",
-          ],
-        },
-        "2.3 Explain UCS-X in Intersight Managed Mode",
-        "2.5 Implement compute configuration management (Backup and restore)",
-        "2.6 Implement infrastructure monitoring such as SPAN and Cisco Intersight",
-      ],
-    },
-    {
-      title: "3.0 Storage Network",
-      items: [
-        {
-          subTitle: "3.1 Implement Fibre Channel",
-          items: [
-            "3.1.a Switch fabric initialization",
-            "3.1.b Port channels",
-            "3.1.c FCID",
-            "3.1.d CFS",
-            "3.1.e Zoning",
-            "3.1.f FCNS",
-            "3.1.g Device alias",
-            "3.1.h NPV and NPIV",
-            "3.1.i VSAN",
-          ],
-        },
-        "3.2 Describe network storage systems and concepts such as NFS and iSCSI",
-        "3.3 Describe software updates and their impacts (Disruptive/nondisruptive and EPLD)",
-        "3.4 Implement infrastructure monitoring using traditional and AI-powered tools such as SPAN and Cisco Nexus Dashboard",
-      ],
-    },
-    {
-      title: "4.0 Automation and Artificial Intelligence",
-      items: [
-        {
-          subTitle: "4.1 Implement automation and scripting tools",
-          items: [
-            "4.1.a EEM",
-            "4.1.b Scheduler",
-            "4.1.c Bash Shell and Guest Shell for NX-OS",
-            "4.1.d REST API (NX-API, JSON and XML encodings)",
-            "4.1.e On-box Python",
-          ],
-        },
-        {
-          subTitle: "4.2 Evaluate automation and orchestration technologies",
-          items: [
-            "4.2.a Ansible",
-            "4.2.b Python",
-            "4.2.c POAP",
-            "4.2.d Cisco Nexus Dashboard Fabric Controller",
-            "4.2.e PowerShell",
-            "4.2.f Terraform CLI",
-            "4.2.g Intersight",
-          ],
-        },
-        "4.3 Describe high-performance network enabling technologies for AI in data center infrastructure",
-      ],
-    },
-    {
-      title: "5.0 Security",
-      items: [
-        {
-          subTitle: "5.1 Apply network security",
-          items: [
-            "5.1.a AAA and RBAC",
-            "5.1.b ACI contracts and microsegmentation",
-            "5.1.c First-hop security features",
-            "5.1.d Keychain authentication",
-            "5.1.e MACsec",
-          ],
-        },
-        "5.2 Apply compute security",
-        {
-          subTitle: "5.3 Apply storage security",
-          items: [
-            "5.3.a AAA and RBAC",
-            "5.3.b Port security",
-            "5.3.c Fabric binding",
-          ],
-        },
-      ],
-    },
-    {
-      title: "6.0 Secure Network Access, Visibility, and Enforcement",
-      items: [
-        "6.1 Describe identity management and secure network access concepts such as guest services, profiling, posture assessment and BYOD",
-        "6.2 Configure and verify network access control mechanisms such as 802.1X, MAB, WebAuth",
-        "6.3 Describe network access with CoA",
-        "6.4 Describe the benefits of device compliance and application control",
-        "6.5 Explain exfiltration techniques (DNS tunneling, HTTPS, email, FTP/SSH/SCP/SFTP, ICMP, Messenger, IRC, NTP)",
-        "6.6 Describe the benefits of network telemetry",
-        {
-          subTitle:
-            "6.7 Describe the components, capabilities, and benefits of these security products and solutions",
-          items: [
-            "6.7.a Cisco Secure Network Analytics",
-            "6.7.b Cisco Secure Cloud Analytics",
-            "6.7.c Cisco pxGrid",
-            "6.7.d Cisco Umbrella Investigate",
-            "6.7.e Cisco Cognitive Intelligence",
-            "6.7.f Cisco Encrypted Traffic Analytics",
-            "6.7.g Cisco Secure Client Network Visibility Module (NVM)",
-          ],
-        },
-      ],
-    },
-  ];
+  {
+    title: "1.0 Network",
+    items: [
+      {
+        subTitle: "1.1 Apply routing protocols",
+        items: [
+          "1.1.a OSPFv2 and OSPFv3",
+          "1.1.b MP-BGP",
+          "1.1.c PIM",
+          "1.1.d FHRP",
+        ],
+      },
+      "1.2 Apply switching protocols such as RSTP+, LACP and vPC",
+      "1.3 Apply overlay protocols such as VXLAN EVPN",
+      {
+        subTitle: "1.4 Apply ACI concepts",
+        items: [
+          "1.4.a Fabric setup",
+          "1.4.b Access policies",
+          "1.4.c VMM",
+        ],
+      },
+      "1.5 Analyze packet flow (unicast, multicast, and broadcast)",
+      "1.6 Describe Cloud service and deployment models (NIST 800-145)",
+      {
+        subTitle: "1.7 Describe software updates and their impacts",
+        items: [
+          "1.7.a Disruptive / nondisruptive",
+          "1.7.b EPLD",
+          "1.7.c Patches",
+        ],
+      },
+      "1.8 Implement network configuration management",
+      "1.9 Implement infrastructure monitoring using traditional and AI-powered tools such as NetFlow, SPAN, and Cisco Nexus Dashboard",
+      "1.10 Explain network assurance concepts such as streaming telemetry",
+      "1.11 Describe the capabilities and features of Nexus Dashboard",
+    ],
+  },
+  {
+    title: "2.0 Compute",
+    items: [
+      "2.1 Implement Cisco Unified Compute System Rack Servers",
+      {
+        subTitle: "2.2 Implement Cisco Unified Compute System Blade Chassis",
+        items: [
+          "2.2.a Initial setup",
+          "2.2.b Infrastructure management",
+          "2.2.c Network management (VLANs, pools and policies, templates, QoS)",
+          "2.2.d Storage management (SAN connectivity, Fibre Channel zoning, VSANs, WWN pools, SAN policies, templates)",
+          "2.2.e Server management (Server pools and boot policies)",
+        ],
+      },
+      "2.3 Explain UCS-X in Intersight Managed Mode",
+      "2.4 Describe firmware and software updates and their impacts on Blade and Rack servers",
+      "2.5 Implement compute configuration management (Backup and restore)",
+      "2.6 Implement infrastructure monitoring such as SPAN and Cisco Intersight",
+    ],
+  },
+  {
+    title: "3.0 Storage Network",
+    items: [
+      {
+        subTitle: "3.1 Implement Fibre Channel",
+        items: [
+          "3.1.a Switch fabric initialization",
+          "3.1.b Port channels",
+          "3.1.c FCID",
+          "3.1.d CFS",
+          "3.1.e Zoning",
+          "3.1.f FCNS",
+          "3.1.g Device alias",
+          "3.1.h NPV and NPIV",
+          "3.1.i VSAN",
+        ],
+      },
+      "3.2 Describe network storage systems and concepts such as NFS and iSCSI",
+      "3.3 Describe software updates and their impacts (Disruptive/nondisruptive and EPLD)",
+      "3.4 Implement infrastructure monitoring using traditional and AI-powered tools such as SPAN and Cisco Nexus Dashboard",
+    ],
+  },
+  {
+    title: "4.0 Automation and Artificial Intelligence",
+    items: [
+      {
+        subTitle: "4.1 Implement automation and scripting tools",
+        items: [
+          "4.1.a EEM",
+          "4.1.b Scheduler",
+          "4.1.c Bash Shell and Guest Shell for NX-OS",
+          "4.1.d REST API (NX-API, JSON and XML encodings)",
+          "4.1.e On-box Python",
+        ],
+      },
+      {
+        subTitle: "4.2 Evaluate automation and orchestration technologies",
+        items: [
+          "4.2.a Ansible",
+          "4.2.b Python",
+          "4.2.c POAP",
+          "4.2.d Cisco Nexus Dashboard",
+          "4.2.e PowerShell",
+          "4.2.f Terraform CLI",
+          "4.2.g Intersight",
+        ],
+      },
+      "4.3 Describe high-performance network enabling technologies for AI in data center infrastructure",
+    ],
+  },
+  {
+    title: "5.0 Security",
+    items: [
+      {
+        subTitle: "5.1 Apply network security",
+        items: [
+          "5.1.a AAA and RBAC",
+          "5.1.b ACI contracts and microsegmentation",
+          "5.1.c First-hop security features",
+          "5.1.d Keychain authentication",
+          "5.1.e MACsec",
+        ],
+      },
+      {
+        subTitle: "5.2 Apply compute security",
+        items: [
+          "5.2.a AAA and RBAC",
+        ],
+      },
+      {
+        subTitle: "5.3 Apply storage security",
+        items: [
+          "5.3.a AAA and RBAC",
+          "5.3.b Port security",
+          "5.3.c Fabric binding",
+        ],
+      },
+    ],
+  },
+];
 
   return (
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
@@ -178,11 +164,10 @@ export default function CCNPDatacenter() {
         bgImage={ccnaHero}
         category="CISCO"
         title="CCNP Data Center"
-        description="Implementing Cisco Data Center Core Technologies (350-601 DCCOR)
-              v1.2 is a 120-minute exam that assesses a candidate’s knowledge of
-              core data center technologies, including networking, compute,
-              storage networking, automation, and security within Cisco data
-              center environments."
+        description="Implementing Cisco Data Center Core Technologies (350-601 DCCOR) v1.2 
+        is a 120-minute exam that assesses a candidate’s knowledge of core data center 
+        technologies, including network, compute, storage networking, automation, and 
+        security within Cisco data center environments."
       />
 
       {/* ==================== CONTENT SECTION - Training Informations/Content ==================== */}
@@ -198,16 +183,16 @@ export default function CCNPDatacenter() {
             {/* About Section - Description */}
             {/* CHANGE: Course description paragraphs */}
             <p>
-              Implementing Cisco Data Center Core Technologies v1.2 (350-601
-              DCCOR) is a 120-minute exam for the CCNP and CCIE Data Center
-              certifications. It validates knowledge of core data center
-              technologies, including networking, compute, storage networking,
-              automation, and security. The corresponding course helps
-              candidates prepare for this exam.
+              Implementing Cisco Data Center Core Technologies v1.2 (350-601 DCCOR) 
+              is a 120-minute exam for the CCNP and CCIE Data Center certifications.
+              It validates knowledge of core data center technologies, including network, 
+              compute, storage networking, automation, and security. The corresponding 
+              course helps candidates prepare for this exam.
             </p>
             <p>
-              Exam topics are provided as general guidelines and may be updated
-              or adjusted without notice to reflect current objectives.
+              Exam topics are provided as general guidelines and may be updated or 
+              adjusted without notice to reflect current objectives and evolving 
+              data center technologies.
             </p>
           </section>
 
@@ -358,8 +343,12 @@ export default function CCNPDatacenter() {
             </div>
 
             {/* CHANGE: Download link text and URL */}
-            <a href="#" className="text-sm font-medium underline mt-2">
-              Download the CCNP Exam Topics Here
+            <a
+              href="https://learningcontent.cisco.com/documents/marketing/exam-topics/350-601-DCCOR-v1.2.pdf"
+              target="_blank"
+              className="font-medium underline mt-2"
+            >
+              Download the DCCOR Exam Topics Here
             </a>
           </div>
         </aside>

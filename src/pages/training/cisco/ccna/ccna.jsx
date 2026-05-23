@@ -235,7 +235,7 @@ export default function CCNA() {
             <h5 className="text-[#1775EE] ">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
-              "Network Support Technician",
+              "Network Engineer",
               "Network Administrator",
               "IT Support Specialist",
               "Junior Network Administrator",

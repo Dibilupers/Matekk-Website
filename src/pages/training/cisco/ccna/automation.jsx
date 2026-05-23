@@ -249,9 +249,9 @@ export default function CCNAAutomation() {
             <h5 className="text-[#1775EE] ">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
-              "Network Automation Technician",
-              "Junior DevNet Associate",
-              "IT Automation Specialist",
+              "Network Automation Engineer",
+              "Network DevOps Engineer",
+              "DevOps Support Enginee",
               "NOC Automation Analyst",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
