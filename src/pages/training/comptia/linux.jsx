@@ -295,7 +295,7 @@ export default function Linux() {
       <TrainingTemplateFooter
         bgImage={comptiaFooter} // CHANGE: Update background image for the footer banner
         bgPosition="90%"
-        description="Advance your networking career and prepare for the COMPTIA Enterprise exam."
+        description="Advance your networking career and prepare for the CompTIA Linux+ certification exam."
       />
     </main>
   );

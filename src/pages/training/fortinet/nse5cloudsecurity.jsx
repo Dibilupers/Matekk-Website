@@ -247,7 +247,7 @@ export default function NSE5CloudSecurity() {
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
         bgImage={FortinetFooter} // CHANGE: Update background image for the footer banner
-        description="Advance your networking career and prepare for the CCNP Enterprise exam."
+        description="Advance your networking career and prepare for the Fortinet NSE5 Secure Networking exam."
       />
     </main>
   );

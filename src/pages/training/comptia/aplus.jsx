@@ -299,7 +299,7 @@ export default function Aplus() {
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
         bgImage={comptiaFooter} // CHANGE: Update background image for the footer banner
-        description="Advance your networking career and prepare for the COMPTIA Enterprise exam."
+        description="Advance your networking career and prepare for the CompTIA A+ certification exam."
       />
     </main>
   );

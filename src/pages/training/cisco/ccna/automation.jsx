@@ -360,7 +360,7 @@ export default function CCNAAutomation() {
       <TrainingTemplateFooter
         bgImage={ccnaFooter} // CHANGE: Update background image for the footer banner
         bgPosition="90%"
-        description="Advance your networking career and prepare for the CCNA Enterprise exam."
+        description="Advance your networking career and prepare for the CCNAAUTO 200-901 v1.1 certification exam."
       />
     </main>
   );

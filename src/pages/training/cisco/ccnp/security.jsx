@@ -427,7 +427,7 @@ export default function CCNPSecurity() {
               {active.examCode}
             </p>
             <h2 className="text-2xl font-bold">{active.label}</h2>
-            <p className="text-gray-600 max-w-3xl">{active.description}</p>
+            <p className="text-black max-w-3xl">{active.description}</p>
           </div>
           {/* ==================== ABOUT SECTION ==================== */}
           <section className="flex flex-col gap-y-3">
