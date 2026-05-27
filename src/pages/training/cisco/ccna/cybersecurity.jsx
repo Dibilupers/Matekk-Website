@@ -440,10 +440,10 @@ export default function CCNACybersecurity() {
             <h5 className="text-[#1775EE] ">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
-              "Network Engineer",
-              "Network Administrator",
-              "IT Automation Specialist",
               "Network Security Engineer",
+              "IT Security Operations Specialist",
+              "Security Operations Center",
+              "Cybersecurity Engineer",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
@@ -458,8 +458,9 @@ export default function CCNACybersecurity() {
             <h5 className="text-[#1775EE] ">Target Learners</h5>
             {/* Target Learners - List */}
             {[
-              "New/Aspiring IT Professionals",
-              "Experienced IT Professionals",
+              "Entry-level IT Professionals",
+              "Career Shifters", 
+              "IT/CS/Engineering Graduates",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />

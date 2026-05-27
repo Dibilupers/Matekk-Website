@@ -266,7 +266,11 @@ export default function CCNAAutomation() {
             {/* Target Learners - Title */}
             <h5 className="text-[#1775EE] ">Target Learners</h5>
             {/* Target Learners - List */}
-            {["Beginners", "Zero Knowledge"].map((job) => (
+            {[
+              "Entry-level IT Professionals",
+              "Career Shifters",  
+              "IT/CS/Engineering Graduates",
+            ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
                 <span>{job}</span>

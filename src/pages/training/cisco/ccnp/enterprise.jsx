@@ -438,6 +438,7 @@ export default function CCNPEnterprise() {
       ],
       modules: encorModules,
       downloadLabel: "Download the ENCOR Exam Topics Here",
+      downloadUrl: "https://learningcontent.cisco.com/documents/marketing/exam-topics/350-401-ENCORE-v1.2.pdf",
     },
     ENARSI: {
       label: "CCNP Enterprise (ENARSI)",
@@ -455,6 +456,7 @@ export default function CCNPEnterprise() {
       ],
       modules: enarsiModules,
       downloadLabel: "Download the ENARSI Exam Topics Here",
+      downloadUrl: "https://learningcontent.cisco.com/documents/300-410-ENARSI-v1.1.7-2025.pdf",
     },
     ENSDWI: {
       label: "CCNP Enterprise (ENSDWI)",
@@ -472,6 +474,7 @@ export default function CCNPEnterprise() {
       ],
       modules: ensdwiModules,
       downloadLabel: "Download the ENSDWI Exam Topics Here",
+      downloadUrl: "https://learningcontent.cisco.com/documents/marketing/exam-topics/300-415-ENSDWI-v1.2-7-2025.pdf",
     },
   };
 
@@ -651,11 +654,12 @@ export default function CCNPEnterprise() {
             </div>
 
             <a
-              href="https://learningcontent.cisco.com/documents/marketing/exam-topics/350-401-ENCORE-v1.2.pdf"
+               href={active.downloadUrl}
               target="_blank"
+              rel="noopener noreferrer"
               className="font-medium underline mt-2"
             >
-              Download the ENCOR Exam Topics Here
+              {active.downloadLabel}
             </a>
           </div>
         </aside>
