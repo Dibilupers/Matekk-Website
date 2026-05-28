@@ -336,7 +336,8 @@ export default function CCNPSecurity() {
       ],
       modules: scorModules,
       downloadLabel: "Download the SCOR Exam Topics Here",
-      downloadUrl: "https://learningcontent.cisco.com/documents/marketing/exam-topics/350-701-SCOR-v2.0.pdf",
+      downloadUrl:
+        "https://learningcontent.cisco.com/documents/marketing/exam-topics/350-701-SCOR-v2.0.pdf",
     },
     SDSI: {
       label: "300-745 SDSI v1.1",
@@ -360,8 +361,8 @@ export default function CCNPSecurity() {
       ],
       modules: sdsiModules,
       downloadLabel: "Download the SDSI Exam Topics Here",
-      downloadUrl: "https://learningcontent.cisco.com/documents/marketing/exam-topics/300-745-SDSI-v1.0-Public.pdf",
-
+      downloadUrl:
+        "https://learningcontent.cisco.com/documents/marketing/exam-topics/300-745-SDSI-v1.0-Public.pdf",
     },
     SNCF: {
       label: "300-710 SNCF v1.1",
@@ -385,7 +386,8 @@ export default function CCNPSecurity() {
       ],
       modules: sncfModules,
       downloadLabel: "Download the SNCF Exam Topics Here",
-      downloadUrl: "https://learningcontent.cisco.com/documents/marketing/exam-topics/300-710-SNCF-v1.2.pdf",
+      downloadUrl:
+        "https://learningcontent.cisco.com/documents/marketing/exam-topics/300-710-SNCF-v1.2.pdf",
     },
   };
 
@@ -486,7 +488,12 @@ export default function CCNPSecurity() {
           {/* ==================== TARGET LEARNERS ==================== */}
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-2">
             <h5 className="text-[#1775EE]">Target Learners</h5>
-            {["Beginners", "Zero Knowledge"].map((item) => (
+            {[
+              "Experienced IT professionals",
+              "Mid-to-senior-level IT",
+              "Network Consultants",
+              "Network Engineers",
+            ].map((item) => (
               <p key={item} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
                 <span>{item}</span>
@@ -557,7 +564,8 @@ export default function CCNPSecurity() {
               <p>Certificate of Completion</p>
             </div>
 
-            <a   href={active.downloadUrl}
+            <a
+              href={active.downloadUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="text-sm font-medium underline mt-2"

@@ -567,10 +567,10 @@ export default function CCNPEnterprise() {
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-2">
             <h5 className="text-[#1775EE]">Job Opportunities</h5>
             {[
-              "Network Engineer",
-              "Network Administrator",
+              "Sr. Network Engineer",
+              "L2/L3 Engineer",
+              "SDWAN Engineer",
               "Network Architect",
-              "Network Security Engineer",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
@@ -582,7 +582,7 @@ export default function CCNPEnterprise() {
           {/* Target Learners */}
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-2">
             <h5 className="text-[#1775EE]">Target Learners</h5>
-            {["Beginners", "Zero Knowledge"].map((item) => (
+            {["Experienced IT professionals", "Mid-to-senior-level IT", "Network Consultants", "Network Engineers",].map((item) => (
               <p key={item} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
                 <span>{item}</span>

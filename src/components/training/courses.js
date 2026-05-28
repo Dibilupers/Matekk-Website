@@ -20,6 +20,7 @@ export const TRAINING_COURSES = [
           { name: "CCNP Enterprise", path: "/training/cisco/ccnp/enterprise" },
           { name: "CCNP Security", path: "/training/cisco/ccnp/security" },
           { name: "CCNP Data Center", path: "/training/cisco/ccnp/datacenter" },
+          { name: "CCNP Collaboration", path: "/training/cisco/ccnp/collaboration" },
         ],
       },
     ],

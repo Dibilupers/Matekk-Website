@@ -14,6 +14,7 @@ import CCNACybersecurity from "../pages/training/cisco/ccna/cybersecurity";
 import CCNPEnterprise from "../pages/training/cisco/ccnp/enterprise";
 import CCNPDatacenter from "../pages/training/cisco/ccnp/datacenter";
 import CCNPSecurity from "../pages/training/cisco/ccnp/security";
+import CCNPCollaboration from "../pages/training/cisco/ccnp/collaboration";
 
 /* CompTIA */
 import Aplus from "../pages/training/comptia/aplus";
@@ -150,6 +151,10 @@ export default function App() {
         <Route
           path="/training/cisco/ccnp/security"
           element={<CCNPSecurity />}
+        />
+        <Route
+          path="/training/cisco/ccnp/collaboration"
+          element={<CCNPCollaboration />}
         />
 
         {/* CompTIA */}
