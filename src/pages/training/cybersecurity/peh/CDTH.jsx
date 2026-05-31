@@ -136,7 +136,7 @@ export default function CDTH() {
       />
 
       {/* ==================== CONTENT SECTION - Training Informations/Content ==================== */}
-      <div className="flex flex-col lg:flex-row justify-start items-start lg:items-stretch gap-6 lg:gap-8">
+      <div className="flex flex-col lg:flex-row justify-start items-start lg:items-stretch gap-6 lg:gap-8" id="services">
         {/* ==================== LEFT SIDE: Contents/Information ==================== */}
         <div className="flex flex-col gap-8">
           {/* ==================== ABOUT SECTION ==================== */}

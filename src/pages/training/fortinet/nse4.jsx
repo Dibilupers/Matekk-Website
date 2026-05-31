@@ -89,7 +89,7 @@ export default function NSE5() {
       />
 
       {/* ==================== CONTENT SECTION ==================== */}
-      <div className="flex flex-col lg:flex-row justify-start items-start lg:items-stretch gap-6 lg:gap-8">
+      <div className="flex flex-col lg:flex-row justify-start items-start lg:items-stretch gap-6 lg:gap-8" id="services">
         {/* ==================== LEFT SIDE ==================== */}
         <div className="flex flex-col gap-8">
           <section className="flex flex-col gap-y-3">
