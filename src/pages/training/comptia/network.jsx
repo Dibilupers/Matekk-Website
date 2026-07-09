@@ -198,7 +198,7 @@ export default function NetworkPlus() {
               "Cybersecurity Specialist",
               "Cybersecurity Analyst",
               "Penetration Tester",
-              "IT Auditor",
+              "Cybersecurity Engineer",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
@@ -212,7 +212,7 @@ export default function NetworkPlus() {
             {/* Target Learners - Title */}
             <h5 className="text-[#1775EE] ">Target Learners</h5>
             {/* Target Learners - List */}
-            {["Beginners", "Zero Knowledge"].map((job) => (
+            {["CompTIA A+ certification", "About 9–12 months of practical experience in junior network administration or network support"].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
                 <span>{job}</span>

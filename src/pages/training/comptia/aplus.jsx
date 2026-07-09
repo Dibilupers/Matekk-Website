@@ -20,6 +20,15 @@ import TrainingHeroBanner from "../../../components/section/TrainingHeroBanner";
 export default function Aplus() {
   // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
   const modules = [
+        {
+      title: "Core 1: Mobile devices",
+      items: [
+        "Hardware setup: installing components like batteries, cameras, and Wi-Fi antennas.",
+        "Accessory options: configuring USB, Bluetooth, NFC, and docking stations.",
+        "Network setup: configuring Wi-Fi, Bluetooth, cellular data, and synchronization settings.",
+        "Troubleshooting: identifying and fixing hardware and connectivity issues.",
+      ],
+    },
     {
       title: "Core 1: Networking",
       items: [
@@ -49,6 +58,14 @@ export default function Aplus() {
       items: [
         "Diagnosing issues: identifying and fixing hardware, network, and connectivity problems.",
         "Troubleshooting tools: using multimeters, cable testers, and loopback plugs.",
+      ],
+    },
+    {
+      title: "Core 2: Operating systems",
+      items: [
+        "OS installation: working with Windows, macOS, Linux, and mobile operating systems.",
+        "Windows tools: managing systems with Task Manager, Command Prompt, and Disk Management.",
+        "File systems: handling file systems, updates, and OS upgrades.",
       ],
     },
     {
@@ -189,7 +206,7 @@ export default function Aplus() {
             <h5 className="text-[#1775EE] ">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
-              "IT Manager",
+              "Software Developer",
               "Network Administrator",
               "Cybersecurity Analyst",
               "Database Administrator",
@@ -206,7 +223,7 @@ export default function Aplus() {
             {/* Target Learners - Title */}
             <h5 className="text-[#1775EE] ">Target Learners</h5>
             {/* Target Learners - List */}
-            {["Beginners", "Zero Knowledge"].map((job) => (
+            {["At least one year of practical experience working in an IT support role"].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
                 <span>{job}</span>
