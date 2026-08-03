@@ -307,7 +307,7 @@ export default function Aplus() {
 
             {/* CHANGE: Download link text and URL */}
             <a href="https://www.comptia.org/en-us/certifications/a/core-1-and-2-v15/#overview" target="_blank" className="text-sm font-medium underline mt-2">
-              Download the COMPTIA Exam Topics Here
+              Access the Official CompTIA A+ Exam Topics
             </a>
           </div>
         </aside>
