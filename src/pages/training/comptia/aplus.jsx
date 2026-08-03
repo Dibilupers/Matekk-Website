@@ -23,72 +23,127 @@ export default function Aplus() {
         {
       title: "Core 1: Mobile devices",
       items: [
-        "Hardware setup: installing components like batteries, cameras, and Wi-Fi antennas.",
-        "Accessory options: configuring USB, Bluetooth, NFC, and docking stations.",
-        "Network setup: configuring Wi-Fi, Bluetooth, cellular data, and synchronization settings.",
-        "Troubleshooting: identifying and fixing hardware and connectivity issues.",
+        <>
+          <strong>Hardware setup:</strong> installing components like batteries, cameras, and Wi-Fi antennas.
+        </>,
+        <>
+          <strong>Hardware setup:</strong> installing components like batteries, cameras, and Wi-Fi antennas.
+        </>,
+        <>
+          <strong>Accessory options:</strong> configuring USB, Bluetooth, NFC, and docking stations.
+        </>,
+        <>
+          <strong>Network setup:</strong> configuring Wi-Fi, Bluetooth, cellular data, and synchronization settings.
+        </>,
+        <>
+          <strong>Troubleshooting:</strong> identifying and fixing hardware and connectivity issues.
+        </>,
       ],
     },
     {
       title: "Core 1: Networking",
       items: [
-        "Protocols and ports: learning about networking protocols, ports, and wireless technologies.",
-        "SOHO networks: setting up small office/home office networks, including IP addressing and VPNs.",
-        "Networking tools: troubleshooting with crimpers, cable testers, and Wi-Fi analyzers.",
+        <>
+          <strong>Protocols and ports:</strong> learning about networking protocols, ports, and wireless technologies.
+        </>,
+        <>
+          <strong>SOHO networks:</strong> setting up small office/home office networks, including IP addressing and VPNs.
+        </>,
+        <>
+          <strong>Networking tools:</strong> troubleshooting with crimpers, cable testers, and Wi-Fi analyzers.
+        </>,
       ],
     },
     {
       title: "Core 1: Hardware",
       items: [
-        "Component installation: setting up RAM, CPUs, and storage devices.",
-        "Cables and connectors: working with HDMI, Ethernet, and USB cables.",
-        "Peripheral devices: installing and maintaining printers, scanners, and other peripherals.",
-        "Motherboards and power: configuring motherboards, power supplies, and cooling solutions.",
+        <>
+          <strong>Component installation:</strong> setting up RAM, CPUs, and storage devices.
+        </>,
+        <>
+          <strong>Cables and connectors:</strong> working with HDMI, Ethernet, and USB cables.
+        </>,
+        <>
+          <strong>Peripheral devices:</strong> installing and maintaining printers, scanners, and other peripherals.
+        </>,
+        <>
+          <strong>Motherboards and power:</strong> configuring motherboards, power supplies, and cooling solutions.
+        </>,
       ],
     },
     {
       title: "Core 1: Virtualization and cloud computing",
       items: [
-        "Virtualization concepts: understanding virtual machines, hypervisors, and desktop virtualization.",
-        "Cloud models: learning about IaaS, SaaS, and PaaS.",
+        <>
+          <strong>Virtualization concepts:</strong> understanding virtual machines, hypervisors, and desktop virtualization.
+        </>,
+        <>
+          <strong>Cloud models:</strong> learning about IaaS, SaaS, and PaaS.
+        </>,
       ],
     },
     {
       title: "Core 1: Hardware and network troubleshooting",
       items: [
-        "Diagnosing issues: identifying and fixing hardware, network, and connectivity problems.",
-        "Troubleshooting tools: using multimeters, cable testers, and loopback plugs.",
+        <>
+          <strong>Diagnosing issues:</strong> identifying and fixing hardware, network, and connectivity problems.
+        </>,
+        <>
+          <strong>Troubleshooting tools:</strong> using multimeters, cable testers, and loopback plugs.
+        </>,
       ],
     },
     {
       title: "Core 2: Operating systems",
       items: [
-        "OS installation: working with Windows, macOS, Linux, and mobile operating systems.",
-        "Windows tools: managing systems with Task Manager, Command Prompt, and Disk Management.",
-        "File systems: handling file systems, updates, and OS upgrades.",
+        <>
+          <strong>OS installation:</strong> working with Windows, macOS, Linux, and mobile operating systems.
+        </>,
+        <>
+          <strong>Windows tools:</strong> managing systems with Task Manager, Command Prompt, and Disk Management.
+        </>,
+        <>
+          <strong>File systems:</strong> handling file systems, updates, and OS upgrades.
+        </>,
       ],
     },
     {
       title: "Core 2: Security",
       items: [
-        "Security measures: using encryption, access controls, and wireless security protocols.",
-        "Malware prevention: detecting, removing, and preventing malware threats.",
+        <>
+          <strong>Security measures:</strong> using encryption, access controls, and wireless security protocols.
+        </>,
+        <>
+          <strong>Malware prevention:</strong> detecting, removing, and preventing malware threats.
+        </>,
       ],
     },
     {
       title: "Core 2: Software troubleshooting",
       items: [
-        "OS issues: diagnosing and resolving problems with operating systems and applications.",
-        "Mobile troubleshooting: addressing connectivity, app, and performance issues.",
-        "Security concerns: fixing unauthorized access and malware issues.",
+        <>
+          <strong>OS issues:</strong> diagnosing and resolving problems with operating systems and applications.
+        </>,
+        <>
+          <strong>Mobile troubleshooting:</strong> addressing connectivity, app, and performance issues.
+        </>,
+        <>
+          <strong>Security concerns:</strong> fixing unauthorized access and malware issues.
+        </>,
       ],
     },
     {
       title: "Core 2: Operational procedures",
       items: [
-        "Documentation: using best practices for system changes and documentation.",
-        "Safety and communication: following safety protocols and communicating effectively.",
-        "Backup and recovery: setting up workstation backup and recovery processes.",
+        <>
+          <strong>Documentation:</strong> using best practices for system changes and documentation.
+        </>,
+        <>
+          <strong>Safety and communication:</strong> following safety protocols and communicating effectively.
+        </>,
+        <>
+          <strong>Backup and recovery:</strong> setting up workstation backup and recovery processes.
+        </>,
       ],
     },
   ];

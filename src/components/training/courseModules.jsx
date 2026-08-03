@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, isValidElement } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 export default function CourseModules({ modules }) {
@@ -32,7 +32,7 @@ export default function CourseModules({ modules }) {
             <ul className="flex flex-col gap-2 px-6 py-4 bg-[#EFF6FF]">
               {module.items.map((item, itemIndex) => (
                 <li key={itemIndex} className="text-sm text-gray-700">
-                  {typeof item === "string" ? item : (
+                  {typeof item === "string" || isValidElement(item) ? item : (
                     <div>
                       <p className="font-medium">{item.subTitle}</p>
                       <ul className="ml-4 mt-1 flex flex-col gap-1">
