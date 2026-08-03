@@ -25,55 +25,113 @@ export default function Linux() {
       title: "System Management",
       progress: 23,
       items: [
-        "Linux basics: Identify boot process steps, kernel, filesystems, and architectures.",
-        "Device management: Manage kernel modules, hardware components, and device utilities.",
-        "Storage management: Configure LVM, RAID, partitions, and mounted storage.",
-        "Network configuration: Set up hosts, DNS, interfaces, and network tools.",
-        "Shell operations: Use navigation, editing, redirection, and environment variables.",
-        "Backups and restores: Perform archiving, compression, and data recovery.",
-        "Virtualization: Deploy hypervisors, create VMs, and manage disk images.",
+        <>
+          <strong>Linux basics:</strong> Identify boot process steps, kernel, filesystems, and architectures.
+        </>,
+        <>
+          <strong>Device management:</strong> Manage kernel modules, hardware components, and device utilities.
+        </>,
+        <>
+          <strong>Storage management:</strong> Configure LVM, RAID, partitions, and mounted storage.
+        </>,
+        <>
+          <strong>Network configuration:</strong> Set up hosts, DNS, interfaces, and network tools.
+        </>,
+        <>
+          <strong>Shell operations:</strong> Use navigation, editing, redirection, and environment variables.
+        </>,
+        <>
+          <strong>Backups and restores:</strong> Perform archiving, compression, and data recovery.
+        </>,
+        <>
+          <strong>Virtualization:</strong> Deploy hypervisors, create VMs, and manage disk images.
+        </>,
       ],
     },
     {
       title: "Services and User Management",
       items: [
-        "Files & directories: Control permissions, create links, and manage special files.",
-        "Account management: Add, remove, and modify users and groups.",
-        "Process control: Monitor states, adjust priorities, and schedule jobs.",
-        "Software management: Install, update, or remove packages and repositories.",
-        "Systems management: Start, stop, and review services, logs, and timers.",
-        "Containers: Operate container runtimes, manage images, and create networks.",
+        <>
+          <strong>Files & directories:</strong> Control permissions, create links, and manage special files.
+        </>,
+        <>
+          <strong>Account management:</strong> Add, remove, and modify users and groups.
+        </>,
+        <>
+          <strong>Process control:</strong> Monitor states, adjust priorities, and schedule jobs.
+        </>,
+        <>
+          <strong>Software management:</strong> Install, update, or remove packages and repositories.
+        </>,
+        <>
+          <strong>Systems management:</strong> Start, stop, and review services, logs, and timers.
+        </>,
+        <>
+          <strong>Containers:</strong> Operate container runtimes, manage images, and create networks.
+        </>,
       ],
     },
     {
       title: "Security",
       items: [
-        "Auth & accounting: Configure PAM, LDAP, Kerberos, and enable auditing.",
-        "Firewalls: Set firewalls using iptables, nftables, UFW, and zone rules.",
-        "OS hardening: Apply permissions, configure sudo, and secure remote access.",
-        "Account security: Enforce password policies, restrict shells, and enable MFA.",
-        "Cryptography: Encrypt files, use hashing, and manage certificates.",
-        "Compliance: Verify integrity, run scans, and maintain standards.",
+        <>
+          <strong>Auth & accounting:</strong> Configure PAM, LDAP, Kerberos, and enable auditing.
+        </>,
+        <>
+          <strong>Firewalls:</strong> Set firewalls using iptables, nftables, UFW, and zone rules.
+        </>,
+        <>
+          <strong>OS hardening:</strong> Apply permissions, configure sudo, and secure remote access.
+        </>,
+        <>
+          <strong>Account security:</strong> Enforce password policies, restrict shells, and enable MFA.
+        </>,
+        <>
+          <strong>Cryptography:</strong> Encrypt files, use hashing, and manage certificates.
+        </>,
+        <>
+          <strong>Compliance:</strong> Verify integrity, run scans, and maintain standards.
+        </>,
       ],
     },
     {
       title: "Automation, Orchestration, and Scripting",
       items: [
-        "Automation: Automate tasks with Ansible, Puppet, and CI/CD tools.",
-        "Shell scripting: Write and troubleshoot variables, functions, and logic flows.",
-        "Python basics: Develop scripts using environments, packages, and data types.",
-        "Version control: Manage code with Git workflows and tagging.",
-        "AI best practices: Apply code generation and prompt engineering responsibly.",
+        <>
+          <strong>Automation:</strong> Automate tasks with Ansible, Puppet, and CI/CD tools.
+        </>,
+        <>
+          <strong>Shell scripting:</strong> Write and troubleshoot variables, functions, and logic flows.
+        </>,
+        <>
+          <strong>Python basics:</strong> Develop scripts using environments, packages, and data types.
+        </>,
+        <>
+          <strong>Version control:</strong> Manage code with Git workflows and tagging.
+        </>,
+        <>
+          <strong>AI best practices:</strong> Apply code generation and prompt engineering responsibly.
+        </>,
       ],
     },
     {
       title: "Troubleshooting",
       items: [
-        "System monitoring: Monitor health, logs, and event alerts.",
-        "Hardware/storage: Diagnose boot, mount, and repair issues.",
-        "Networking: Resolve firewall, routing, DNS, and connectivity problems.",
-        "Security: Fix SELinux, permission, and vulnerability issues.",
-        "Performance: Analyze CPU, memory, I/O, and optimize response times.",
+        <>
+          <strong>System monitoring:</strong> Monitor health, logs, and event alerts.
+        </>,
+        <>
+          <strong>Hardware/storage:</strong> Diagnose boot, mount, and repair issues.
+        </>,
+        <>
+          <strong>Networking:</strong> Resolve firewall, routing, DNS, and connectivity problems.
+        </>,
+        <>
+          <strong>Security:</strong> Fix SELinux, permission, and vulnerability issues.
+        </>,
+        <>
+          <strong>Performance:</strong> Analyze CPU, memory, I/O, and optimize response times.
+        </>,
       ],
     },
   ];
