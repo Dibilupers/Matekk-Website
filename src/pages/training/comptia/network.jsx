@@ -24,65 +24,143 @@ export default function NetworkPlus() {
     {
       title: "Networking concepts",
       items: [
-        "OSI model layers: physical, data link, network, transport, session, presentation, application.",
-        "Networking appliances: routers, switches, firewalls, IDS/IPS, load balancers, proxies, NAS, SAN, and wireless devices.",
-        "Cloud concepts: NFV, VPC, network security groups, cloud gateways, deployment models (public, private, hybrid), service models (SaaS, IaaS, PaaS).",
-        "Ports and protocols: FTP, SFTP, SSH, Telnet, SMTP, DNS, DHCP, HTTP, HTTPS, SNMP, LDAP, RDP, SIP.",
-        "Traffic types: unicast, multicast, anycast, broadcast.",
-        "Transmission media: wireless (802.11, cellular, satellite), wired (fiber, coaxial, DAC).",
-        "Transceivers and connectors: SC, LC, ST, MPO, RJ11, RJ45, F-type, BNC.",
-        "Network topologies: mesh, hybrid, star/hub-and-spoke, spine and leaf, point-to-point, three-tier, and collapsed core.",
-        "IPv4 addressing: public vs. private, APIPA, RFC1918, loopback, subnetting (VLSM, CIDR), and address classes (A, B, C, D, E).",
+         <>
+          <strong>OSI model layers:</strong> physical, data link, network, transport, session, presentation, application.
+        </>,
+        <>
+          <strong>Networking appliances:</strong> routers, switches, firewalls, IDS/IPS, load balancers, proxies, NAS, SAN, and wireless devices.
+        </>,
+        <>
+          <strong>Cloud concepts:</strong> NFV, VPC, network security groups, cloud gateways, deployment models (public, private, hybrid), service models (SaaS, IaaS, PaaS).
+        </>,
+        <>
+          <strong>Ports and protocols:</strong> FTP, SFTP, SSH, Telnet, SMTP, DNS, DHCP, HTTP, HTTPS, SNMP, LDAP, RDP, SIP.
+        </>,
+        <>
+          <strong>Traffic types:</strong> unicast, multicast, anycast, broadcast.
+        </>,
+        <>
+          <strong>Transmission media:</strong> wireless (802.11, cellular, satellite), wired (fiber, coaxial, DAC).
+        </>,
+        <>
+          <strong>Transceivers and connectors:</strong> SC, LC, ST, MPO, RJ11, RJ45, F-type, BNC.
+        </>,
+        <>
+          <strong>Network topologies:</strong> mesh, hybrid, star/hub-and-spoke, spine and leaf, point-to-point, three-tier, and collapsed core.
+        </>,
+        <>
+          <strong>IPv4 addressing:</strong> public vs. private, APIPA, RFC1918, loopback, subnetting (VLSM, CIDR), and address classes (A, B, C, D, E).
+        </>,
       ],
     },
     {
       title: "Network implementation",
       items: [
-        "OSI model layers: physical, data link, network, transport, session, presentation, application.",
-        "Networking appliances: routers, switches, firewalls, IDS/IPS, load balancers, proxies, NAS, SAN, and wireless devices.",
-        "Cloud concepts: NFV, VPC, network security groups, cloud gateways, deployment models (public, private, hybrid), service models (SaaS, IaaS, PaaS).",
-        "Ports and protocols: FTP, SFTP, SSH, Telnet, SMTP, DNS, DHCP, HTTP, HTTPS, SNMP, LDAP, RDP, SIP.",
-        "Traffic types: unicast, multicast, anycast, broadcast.",
-        "Transmission media: wireless (802.11, cellular, satellite), wired (fiber, coaxial, DAC).",
-        "Transceivers and connectors: SC, LC, ST, MPO, RJ11, RJ45, F-type, BNC.",
-        "Network topologies: mesh, hybrid, star/hub and spoke, spine and leaf, point-to-point, three-tier, and collapsed core.",
-        "IPv4 addressing: public vs. private, APIPA, RFC1918, loopback, subnetting (VLSM, CIDR), and address classes (A, B, C, D, E).",
+        <>
+          <strong>OSI model layers:</strong>  physical, data link, network, transport, session, presentation, application.
+        </>,
+        <>
+          <strong>Networking appliances:</strong> routers, switches, firewalls, IDS/IPS, load balancers, proxies, NAS, SAN, and wireless devices.
+        </>,
+        <>
+          <strong>Cloud concepts:</strong> NFV, VPC, network security groups, cloud gateways, deployment models (public, private, hybrid), service models (SaaS, IaaS, PaaS).
+        </>,
+        <>
+          <strong>Ports and protocols:</strong> FTP, SFTP, SSH, Telnet, SMTP, DNS, DHCP, HTTP, HTTPS, SNMP, LDAP, RDP, SIP.
+        </>,
+        <>
+          <strong>Traffic types:</strong> unicast, multicast, anycast, broadcast.
+        </>,
+        <>
+          <strong>Transmission media:</strong> wireless (802.11, cellular, satellite), wired (fiber, coaxial, DAC).
+        </>,
+        <>
+          <strong>Transceivers and connectors:</strong> SC, LC, ST, MPO, RJ11, RJ45, F-type, BNC.
+        </>,
+        <>
+          <strong>Network topologies:</strong> mesh, hybrid, star/hub-and-spoke, spine and leaf, point-to-point, three-tier, and collapsed core.
+        </>,
+        <>
+          <strong>IPv4 addressing:</strong> public vs. private, APIPA, RFC1918, loopback, subnetting (VLSM, CIDR), and address classes (A, B, C, D, E).
+        </>,
       ],
     },
     {
       title: "Network operations",
       items: [
-        "Documentation: physical vs. logical diagrams, rack diagrams, cable maps, network diagrams, asset inventory, IPAM, SLA, and wireless surveys.",
-        "Life-cycle management: EOL, EOS, software management, and decommissioning.",
-        "Change management: structured process for changes.",
-        "Configuration management: production, backup, baseline configurations.",
-        "Network monitoring: SNMP, flow data, packet capture, baseline metrics, log aggregation, API integration, and port mirroring.",
-        "Disaster recovery: RPO, RTO, MTTR, MTBF, cold/warm/hot sites, active-active/passive, and testing.",
-        "Network services: NTP, DHCP, DNS, NTP, PTP, and NFS.",
-        "Access and management: VPN, SSL, GUI, API, and console.",
+        <>
+          <strong>Documentation:</strong>  physical vs. logical diagrams, rack diagrams, cable maps, network diagrams, asset inventory, IPAM, SLA, and wireless surveys.
+        </>,
+        <>
+          <strong>Life-cycle management:</strong> EOL, EOS, software management, and decommissioning.
+        </>,
+        <>
+          <strong>Change management:</strong> structured process for changes.
+        </>,
+        <>
+          <strong>Configuration management:</strong> production, backup, baseline configurations.
+        </>,
+        <>
+          <strong>Network monitoring:</strong> SNMP, flow data, packet capture, baseline metrics, log aggregation, API integration, and port mirroring.
+        </>,
+        <>
+          <strong>Disaster recovery:</strong> RPO, RTO, MTTR, MTBF, cold/warm/hot sites, active-active/passive, and testing.
+        </>,
+        <>
+          <strong>Network services:</strong> NTP, DHCP, DNS, NTP, PTP, and NFS.
+        </>,
+        <>
+          <strong>Access and management:</strong> VPN, SSL, GUI, API, and console.
+        </>,
       ],
     },
     {
       title: "Network security",
       items: [
-        "Logical security: encryption (data in transit/rest), PKI, IAM, MFA, SSO, RADIUS, LDAP, SAML, TACACS+, time-based authentication, authorization, least privilege, role-based access control, and geofencing.",
-        "Physical security: cameras and locks.",
-        "Deception technologies: honeypot and honeywet.",
-        "Security terminology: risk, vulnerability, exploit, threat, and CIA triad.",
-        "Audit and compliance: data locality, PCI-DSS, and GDPR.",
-        "Network segmentation: IoT, IIoT, SCADA, ICS, OT, guest, and BYOD.",
-        "Types of attacks: DoS/DDoS, VLAN hopping, MAC flooding, ARP poisoning/spoofing, DNS poisoning/spoofing, rogue devices/services, evil twin, on-path attack, and social engineering (phishing, dumpster diving, shoulder surfing, tailgating).",
-        "Security features and defense: device hardening, NAC, key management, ACL, URL/content filtering, trusted vs. untrusted zones, and screened subnet.",
+        <>
+          <strong>Logical security:</strong> encryption (data in transit/rest), PKI, IAM, MFA, SSO, RADIUS, LDAP, SAML, TACACS+, time-based authentication, authorization, least privilege, role-based access control, and geofencing.
+        </>,
+        <>
+          <strong>Physical security:</strong> cameras and locks.
+        </>,
+        <>
+          <strong>Deception technologies:</strong> honeypot and honeywet.
+        </>,
+        <>
+          <strong>Security terminology:</strong> risk, vulnerability, exploit, threat, and CIA triad.
+        </>,
+        <>
+          <strong>Audit and compliance:</strong> data locality, PCI-DSS, and GDPR.
+        </>,
+        <>
+          <strong>Network segmentation:</strong> IoT, IIoT, SCADA, ICS, OT, guest, and BYOD.
+        </>,
+        <>
+          <strong>Types of attacks:</strong> DoS/DDoS, VLAN hopping, MAC flooding, ARP poisoning/spoofing, DNS poisoning/spoofing, rogue devices/services, evil twin, on-path attack, and social engineering (phishing, dumpster diving, shoulder surfing, tailgating).
+        </>,
+        <>
+          <strong>Security features and defense:</strong> device hardening, NAC, key management, ACL, URL/content filtering, trusted vs. untrusted zones, and screened subnet.
+        </>,
       ],
     },
     {
       title: "Network troubleshooting",
       items: [
-        "Troubleshooting methodology: identifying the problem, establishing a theory, testing, planning, and implementing a solution, verifying functionality, and documenting findings.",
-        "Cabling and physical issues: cable issues (incorrect type, signal degradation, improper termination, TX/RX transposed), interface issues (increasing counters, port status), and hardware issues (PoE, transceiver mismatch, signal strength).",
-        "Network services: switching issues (STP, VLAN assignment, ACLs), routing issues (routing table and default routes), address pool exhaustion, and incorrect gateway/IP/subnet mask.",
-        "Performance issues: network latency, packet loss, and wireless interference.",
-        "Tools and protocols: protocol analyzers, command line tools, cable testers, and Wi-Fi analyzers.",
+        <>
+          <strong>Troubleshooting methodology:</strong> identifying the problem, establishing a theory, testing, planning, and implementing a solution, verifying functionality, and documenting findings.
+        </>,
+        <>
+          <strong>Cabling and physical issues:</strong> cable issues (incorrect type, signal degradation, improper termination, TX/RX transposed), interface issues (increasing counters, port status), and hardware issues (PoE, transceiver mismatch, signal strength).
+        </>,
+        <>
+          <strong>Network services:</strong> switching issues (STP, VLAN assignment, ACLs), routing issues (routing table and default routes), address pool exhaustion, and incorrect gateway/IP/subnet mask.
+        </>,
+        <>
+          <strong>Performance issues:</strong> network latency, packet loss, and wireless interference.
+        </>,
+        <>
+          <strong>Tools and protocols:</strong> protocol analyzers, command line tools, cable testers, and Wi-Fi analyzers.
+        </>,
       ],
     },
   ];
