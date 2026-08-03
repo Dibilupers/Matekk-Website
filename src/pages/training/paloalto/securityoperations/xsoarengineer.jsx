@@ -263,8 +263,12 @@ export default function XsoarEngineer() {
             </div>
 
             {/* CHANGE: Download link text and URL */}
-            <a href="#" className="text-sm font-medium underline mt-2">
-              Download the Palo Alto Exam Topics Here
+            <a
+              href="https://www.paloaltonetworks.com/content/dam/pan/en_US/assets/pdf/datasheets/education/xsoar-engineer-datasheet.pdf"
+              target="_blank"
+              className="font-medium underline mt-2"
+            >
+              Download the Palo Alto Networks XSOAR Engineer Here
             </a>
           </div>
         </aside>
