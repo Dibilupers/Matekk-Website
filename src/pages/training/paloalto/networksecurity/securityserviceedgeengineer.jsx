@@ -367,9 +367,12 @@ export default function SecurityServiceEdgeEngineer() {
               <p >Certificate of Completion</p>
             </div>
 
-            {/* CHANGE: Download link text and URL */}
-            <a href="#" className="text-sm font-medium underline mt-2">
-              Download the Palo Alto Exam Topics Here
+            <a
+              href="https://www.paloaltonetworks.com/content/dam/pan/en_US/assets/pdf/datasheets/education/sse-engineer-datasheet.pdf"
+              target="_blank"
+              className="font-medium underline mt-2"
+            >
+              Download the Palo Alto Networks Security Service Edge Engineer Here
             </a>
           </div>
         </aside>
