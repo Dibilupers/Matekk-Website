@@ -374,7 +374,7 @@ export default function NetworkPlus() {
 
             {/* CHANGE: Download link text and URL */}
             <a href="https://www.comptia.org/en-us/certifications/network/" target="_blank" className="text-sm font-medium underline mt-2">
-              Access the Official CompTIA Network+ Exam Topics
+              See the Official CompTIA Network+ Exam Objectives
             </a>
           </div>
         </aside>
