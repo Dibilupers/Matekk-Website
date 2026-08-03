@@ -345,7 +345,7 @@ export default function SecurityPlus() {
 
             {/* CHANGE: Download link text and URL */}
             <a href="https://www.comptia.org/en-us/certifications/security/" target="_blank" className="text-sm font-medium underline mt-2">
-              Access the Official CompTIA Security+ Exam Topics
+              See the Official CompTIA Security+ Exam Objectives
             </a>
           </div>
         </aside>
