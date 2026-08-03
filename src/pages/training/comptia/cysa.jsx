@@ -297,7 +297,7 @@ export default function CySA() {
 
             {/* CHANGE: Download link text and URL */}
             <a href="https://www.comptia.org/en-us/certifications/cybersecurity-analyst/v3/" target="_blank" className="text-sm font-medium underline mt-2">
-              Access the Official CompTIA CySA+ Exam Topics
+              See the Official CompTIA CySA+ Exam Objectives
             </a>
           </div>
         </aside>
