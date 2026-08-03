@@ -317,8 +317,12 @@ export default function XsiamAnalyst() {
             </div>
 
             {/* CHANGE: Download link text and URL */}
-            <a href="#" className="text-sm font-medium underline mt-2">
-              Download the Palo Alto Exam Topics Here
+            <a
+              href="https://www.paloaltonetworks.com/content/dam/pan/en_US/assets/pdf/datasheets/education/XSIAMAnalyst-datasheet.pdf"
+              target="_blank"
+              className="font-medium underline mt-2"
+            >
+              Download the Palo Alto Networks XSIAM Analyst Here
             </a>
           </div>
         </aside>
