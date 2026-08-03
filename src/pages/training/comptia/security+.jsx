@@ -24,54 +24,110 @@ export default function SecurityPlus() {
     {
       title: "General security concepts",
       items: [
-        "Security controls: comparing technical, preventive, managerial, deterrent, operational, detective, physical, corrective, compensating, and directive controls.",
-        "Fundamental concepts: summarizing confidentiality, integrity, and availability (CIA), non-repudiation, authentication, authorization, and accounting (AAA), zero trust, and deceptive/disruption technology.",
-        "Change management: explaining business processes, technical implications of change, documentation, and version control.",
-        "Cryptographic solutions: using public-key infrastructure (PKI), encryption, obfuscation, hashing, digital signatures, and blockchain.",
+        <>
+          <strong>Security controls:</strong> comparing technical, preventive, managerial, deterrent, operational, detective, physical, corrective, compensating, and directive controls.
+        </>,
+        <>
+          <strong>Fundamental concepts:</strong> summarizing confidentiality, integrity, and availability (CIA), non-repudiation, authentication, authorization, and accounting (AAA), zero trust, and deceptive/disruption technology.
+        </>,
+        <>
+          <strong>Change management:</strong> explaining business processes, technical implications of change, documentation, and version control.
+        </>,
+        <>
+          <strong>Cryptographic solutions:</strong> using public-key infrastructure (PKI), encryption, obfuscation, hashing, digital signatures, and blockchain.
+        </>
       ],
     },
     {
       title: "Threats, vulnerabilities, and mitigations",
       items: [
-        "Threat actors and motivations: comparing nation-states, unskilled attackers, hacktivists, insider threats, organized crime, and shadow IT; understanding their attributes, resources, espionage, and financial motivations.",
-        "Threat vectors and attack surfaces: explaining message-based, voice call, removable media, supply chain, network, wireless, cloud, and operational technology vectors.",
-        "Vulnerabilities: applying application, operating system, web, hardware, virtualization, operating system (OS), firmware, client-based, agentless, unsupported systems, and third-party vulnerabilities.",
-        "Malicious activity: analyzing malware attacks, password attacks, application attacks, advanced attacks, network attacks, and cryptographic attacks.",
-        "Mitigation techniques: using segmentation, access control, configuration enforcement, hardening, isolation, and patching.",
+        <>
+          <strong>Threat actors and motivations:</strong> comparing nation-states, unskilled attackers, hacktivists, insider threats, organized crime, and shadow IT; understanding their attributes, resources, espionage, and financial motivations.
+        </>,
+        <>
+          <strong>Threat vectors and attack surfaces:</strong> explaining message-based, voice call, removable media, supply chain, network, wireless, cloud, and operational technology vectors.
+        </>,
+        <>
+          <strong>Vulnerabilities:</strong> applying application, operating system, web, hardware, virtualization, operating system (OS), firmware, client-based, agentless, unsupported systems, and third-party vulnerabilities.
+        </>,
+        <>
+          <strong>Malicious activity:</strong> analyzing malware attacks, password attacks, application attacks, advanced attacks, network attacks, and cryptographic attacks.
+        </>,
+        <>
+          <strong>Mitigation techniques:</strong> using segmentation, access control, configuration enforcement, hardening, isolation, and patching.
+        </>,
       ],
     },
     {
       title: "Security architecture",
       items: [
-        "Architecture models: comparing on-premises, cloud, virtualization, Internet of Things (IoT), industrial control systems (ICS), and microservices architecture.",
-        "Enterprise infrastructure: applying security principles to infrastructure considerations, secure selection, and network appliances.",
-        "Data protection: explaining data types, data classifications, general considerations, and data sovereignty.",
-        "Resilience and recovery: explaining high availability, site considerations, testing, power resilience, capacity, backups, and continuity of operations.",
+        <>
+          <strong>Architecture models:</strong> comparing on-premises, cloud, virtualization, Internet of Things (IoT), industrial control systems (ICS), and microservices architecture.
+        </>,
+        <>
+          <strong>Enterprise infrastructure:</strong> applying security principles to infrastructure considerations, secure selection, and network appliances.
+        </>,
+        <>
+          <strong>Data protection:</strong> explaining data types, data classifications, general considerations, and data sovereignty.
+        </>,
+        <>
+          <strong>Resilience and recovery:</strong> explaining high availability, site considerations, testing, power resilience, capacity, backups, and continuity of operations.
+        </>,
       ],
     },
     {
       title: "Security operations",
       items: [
-        "Computing resources: applying secure baselines, mobile solutions, hardening, software security, application security, monitoring, and log monitoring.",
-        "Identity and access management: analyzing identity, authentication, authorization, and provisioning of hardware, software, and data assets.",
-        "Vulnerability management: identifying, analyzing, remediating, validating, and reporting vulnerabilities.",
-        "Alerting and monitoring: explaining monitoring tools and computing resource activities.",
-        "Enterprise security: involving firewalls, IDS/IPS, web filters, DNS (data loss prevention), DLP, (prevent content analysis), and SOAR (extended detection and response).",
-        "Identity and access management: implementing provisioning, PAM (single sign-on), MFA (multifactor authentication), and password vaults.",
-        "Automation and orchestration: explaining automation use cases, scripting benefits, and orchestration.",
-        "Incident response: explaining processes, training, testing, IOC, and threat hunting; root cause analysis, digital forensics.",
-        "Data sources: explaining log data and other sources to support investigations.",
+        <>
+          <strong>Computing resources:</strong> applying secure baselines, mobile solutions, hardening, software security, application security, monitoring, and log monitoring.
+        </>,
+        <>
+          <strong>Identity and access management:</strong> analyzing identity, authentication, authorization, and provisioning of hardware, software, and data assets.
+        </>,
+        <>
+          <strong>Vulnerability management:</strong> identifying, analyzing, remediating, validating, and reporting vulnerabilities.
+        </>,
+        <>
+          <strong>Alerting and monitoring:</strong> explaining monitoring tools and computing resource activities.
+        </>,
+        <>
+          <strong>Enterprise security:</strong> involving firewalls, IDS/IPS, web filters, DNS (data loss prevention), DLP, (prevent content analysis), and SOAR (extended detection and response).
+        </>,
+        <>
+          <strong>Identity and access management:</strong> implementing provisioning, PAM (single sign-on), MFA (multifactor authentication), and password vaults.
+        </>,
+        <>
+          <strong>Automation and orchestration:</strong> explaining automation use cases, scripting benefits, and orchestration.
+        </>,
+        <>
+          <strong>Incident response:</strong> explaining processes, training, testing, IOC, and threat hunting; root cause analysis, digital forensics.
+        </>,
+        <>
+          <strong>Data sources:</strong> explaining log data and other sources to support investigations.
+        </>,
       ],
     },
     {
       title: "Security program management and oversight",
       items: [
-        "Security governance: summarizing guidelines, policies, standards, procedures, external considerations, monitoring, and revisions; explaining incident response.",
-        "Risk management: explaining risk identification, assessment types, risk analysis, risk register, risk tolerance strategies, reporting, and business impact analysis (BIA).",
-        "Third-party risk: managing vendor assessment, selection, agreements, monitoring, questionnaires, and rules of engagement.",
-        "Security compliance: summarizing compliance reporting, consequences of non-compliance, monitoring, and privacy.",
-        "Security awareness: explaining infiltration, internal/external audits, and penetration testing.",
-        "Security discoveries: implementing phishing training, anomalous behavior recognition, user guidance, reporting, and monitoring.",
+        <>
+          <strong>Security governance:</strong> summarizing guidelines, policies, standards, procedures, external considerations, monitoring, and revisions; explaining incident response.
+        </>,
+        <>
+          <strong>Risk management:</strong> explaining risk identification, assessment types, risk analysis, risk register, risk tolerance strategies, reporting, and business impact analysis (BIA).
+        </>,
+        <>
+          <strong>Third-party risk:</strong> managing vendor assessment, selection, agreements, monitoring, questionnaires, and rules of engagement.
+        </>,
+        <>
+          <strong>Security compliance:</strong> summarizing compliance reporting, consequences of non-compliance, monitoring, and privacy.
+        </>,
+        <>
+          <strong>Security awareness:</strong> explaining infiltration, internal/external audits, and penetration testing.
+        </>,
+        <>
+          <strong>Security discoveries:</strong> implementing phishing training, anomalous behavior recognition, user guidance, reporting, and monitoring.
+        </>,
       ],
     },
   ];
