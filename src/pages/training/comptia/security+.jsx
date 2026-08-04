@@ -244,10 +244,10 @@ export default function SecurityPlus() {
             <h5 className="text-[#1775EE] ">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
-              "Data Analyst",
-              "IT Manager",
-              "E-Commerce Analyst",
-              "IT Project Manager",
+              "Cybersecurity Engineer",
+              "Cybersecurity Specialist",
+              "Cybersecurity Tester",
+              "Cybersecurity Manager",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />

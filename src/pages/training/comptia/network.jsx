@@ -273,10 +273,9 @@ export default function NetworkPlus() {
             <h5 className="text-[#1775EE] ">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
-              "Cybersecurity Specialist",
-              "Cybersecurity Analyst",
-              "Penetration Tester",
-              "Cybersecurity Engineer",
+              "Linux Administrator",
+              "Network Engineer",
+              "IoT Engineer"
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
