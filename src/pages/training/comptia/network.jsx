@@ -156,7 +156,7 @@ export default function NetworkPlus() {
           <strong>Network services:</strong> switching issues (STP, VLAN assignment, ACLs), routing issues (routing table and default routes), address pool exhaustion, and incorrect gateway/IP/subnet mask.
         </>,
         <>
-          <strong>Performance issues:</strong> network latency, packet loss, and wireless interference.
+          <strong>Performance issues:</strong> congestion, latency, packet loss, and wireless interference.
         </>,
         <>
           <strong>Tools and protocols:</strong> protocol analyzers, command line tools, cable testers, and Wi-Fi analyzers.
