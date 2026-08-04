@@ -21,7 +21,7 @@ export default function Aplus() {
   // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
   const modules = [
         {
-      title: "Core 1: Mobile devices",
+      title: "Core 1: Mobile devices (13%)",
       items: [
         <>
           <strong>Hardware setup:</strong> installing components like batteries, cameras, and Wi-Fi antennas.
@@ -41,7 +41,7 @@ export default function Aplus() {
       ],
     },
     {
-      title: "Core 1: Networking",
+      title: "Core 1: Networking (23%)",
       items: [
         <>
           <strong>Protocols and ports:</strong> learning about networking protocols, ports, and wireless technologies.
@@ -55,7 +55,7 @@ export default function Aplus() {
       ],
     },
     {
-      title: "Core 1: Hardware",
+      title: "Core 1: Hardware (25%)",
       items: [
         <>
           <strong>Component installation:</strong> setting up RAM, CPUs, and storage devices.
@@ -72,7 +72,7 @@ export default function Aplus() {
       ],
     },
     {
-      title: "Core 1: Virtualization and cloud computing",
+      title: "Core 1: Virtualization and cloud computing (11%)",
       items: [
         <>
           <strong>Virtualization concepts:</strong> understanding virtual machines, hypervisors, and desktop virtualization.
@@ -83,7 +83,7 @@ export default function Aplus() {
       ],
     },
     {
-      title: "Core 1: Hardware and network troubleshooting",
+      title: "Core 1: Hardware and network troubleshooting (28%)",
       items: [
         <>
           <strong>Diagnosing issues:</strong> identifying and fixing hardware, network, and connectivity problems.
@@ -94,7 +94,7 @@ export default function Aplus() {
       ],
     },
     {
-      title: "Core 2: Operating systems",
+      title: "Core 2: Operating systems (28%)",
       items: [
         <>
           <strong>OS installation:</strong> working with Windows, macOS, Linux, and mobile operating systems.
@@ -108,7 +108,7 @@ export default function Aplus() {
       ],
     },
     {
-      title: "Core 2: Security",
+      title: "Core 2: Security (28%)",
       items: [
         <>
           <strong>Security measures:</strong> using encryption, access controls, and wireless security protocols.
@@ -119,7 +119,7 @@ export default function Aplus() {
       ],
     },
     {
-      title: "Core 2: Software troubleshooting",
+      title: "Core 2: Software troubleshooting (23%)",
       items: [
         <>
           <strong>OS issues:</strong> diagnosing and resolving problems with operating systems and applications.
@@ -133,7 +133,7 @@ export default function Aplus() {
       ],
     },
     {
-      title: "Core 2: Operational procedures",
+      title: "Core 2: Operational procedures (21%)",
       items: [
         <>
           <strong>Documentation:</strong> using best practices for system changes and documentation.
@@ -296,7 +296,7 @@ export default function Aplus() {
               </div>
               <div className="flex justify-start gap-2">
                 <p className="">Duration:</p>
-                <p>7 Days</p>
+                <p>5 Days</p>
               </div>
               <div className="flex justify-start gap-2">
                 <p className="">Days:</p>

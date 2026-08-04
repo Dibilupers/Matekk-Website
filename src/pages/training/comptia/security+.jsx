@@ -22,7 +22,7 @@ export default function SecurityPlus() {
   // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
   const modules = [
     {
-      title: "General security concepts",
+      title: "General security concepts (12%)",
       items: [
         <>
           <strong>Security controls:</strong> comparing technical, preventive, managerial, deterrent, operational, detective, physical, corrective, compensating, and directive controls.
@@ -39,7 +39,7 @@ export default function SecurityPlus() {
       ],
     },
     {
-      title: "Threats, vulnerabilities, and mitigations",
+      title: "Threats, vulnerabilities, and mitigations (22%)",
       items: [
         <>
           <strong>Threat actors and motivations:</strong> comparing nation-states, unskilled attackers, hacktivists, insider threats, organized crime, and shadow IT; understanding their attributes, resources, espionage, and financial motivations.
@@ -59,7 +59,7 @@ export default function SecurityPlus() {
       ],
     },
     {
-      title: "Security architecture",
+      title: "Security architecture (18%)",
       items: [
         <>
           <strong>Architecture models:</strong> comparing on-premises, cloud, virtualization, Internet of Things (IoT), industrial control systems (ICS), and microservices architecture.
@@ -76,7 +76,7 @@ export default function SecurityPlus() {
       ],
     },
     {
-      title: "Security operations",
+      title: "Security operations (28%)",
       items: [
         <>
           <strong>Computing resources:</strong> applying secure baselines, mobile solutions, hardening, software security, application security, monitoring, and log monitoring.
@@ -108,7 +108,7 @@ export default function SecurityPlus() {
       ],
     },
     {
-      title: "Security program management and oversight",
+      title: "Security program management and oversight (20%)",
       items: [
         <>
           <strong>Security governance:</strong> summarizing guidelines, policies, standards, procedures, external considerations, monitoring, and revisions; explaining incident response.
@@ -281,7 +281,7 @@ export default function SecurityPlus() {
               </div>
               <div className="flex justify-start gap-2">
                 <p>Duration:</p>
-                <p>7 Days</p>
+                <p>5 Days</p>
               </div>
               <div className="flex justify-start gap-2">
                 <p>Days:</p>

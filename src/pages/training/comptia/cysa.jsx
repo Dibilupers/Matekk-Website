@@ -22,7 +22,7 @@ export default function CySA() {
   // ==================== COURSE MODULES ====================
   const modules = [
     {
-      title: "Security operations",
+      title: "Security operations (33%)",
       items: [
         <>
           <strong>System and network architecture:</strong> explaining log ingestion, operating system (OS) concepts, infrastructure, network architecture, identity and access management (IAM), encryption, and sensitive data protection.
@@ -42,7 +42,7 @@ export default function CySA() {
       ],
     },
     {
-      title: "Vulnerability management",
+      title: "Vulnerability management (30%)",
       items: [
         <>
           <strong>Vulnerability scanning:</strong> implementing asset discovery, internal vs. external scanning, agent vs. agentless, credentialed vs. non-credentialed, passive vs. active, static vs. dynamic, and critical infrastructure scanning.
@@ -62,7 +62,7 @@ export default function CySA() {
       ],
     },
     {
-      title: "Incident response management",
+      title: "Incident response management (20%)",
       items: [
         <>
           <strong>Attack methodology frameworks:</strong> explaining cyber kill chains, diamond model of intrusion analysis, MITRE ATT&CK, Open Source Security Testing Methodology Manual (OSSTMM), and OWASP testing guide.
@@ -76,7 +76,7 @@ export default function CySA() {
       ],
     },
     {
-      title: "Reporting and communication",
+      title: "Reporting and communication (17%)",
       items: [
         <>
           <strong>Vulnerability management reporting:</strong> explaining compliance reports, action plans, inhibitors to remediation, metrics, key performance indicators (KPIs), and stakeholder communication.
@@ -233,7 +233,7 @@ export default function CySA() {
               </div>
               <div className="flex justify-start gap-2">
                 <p className="">Duration:</p>
-                <p>7 Days</p>
+                <p>5 Days</p>
               </div>
               <div className="flex justify-start gap-2">
                 <p className="">Days:</p>

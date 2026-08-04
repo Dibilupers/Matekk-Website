@@ -22,7 +22,7 @@ export default function NetworkPlus() {
   // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
   const modules = [
     {
-      title: "Networking concepts",
+      title: "Networking concepts (23%)",
       items: [
          <>
           <strong>OSI model layers:</strong> physical, data link, network, transport, session, presentation, application.
@@ -54,7 +54,7 @@ export default function NetworkPlus() {
       ],
     },
     {
-      title: "Network implementation",
+      title: "Network implementation (20%)",
       items: [
         <>
           <strong>OSI model layers:</strong>  physical, data link, network, transport, session, presentation, application.
@@ -86,7 +86,7 @@ export default function NetworkPlus() {
       ],
     },
     {
-      title: "Network operations",
+      title: "Network operations (19%)",
       items: [
         <>
           <strong>Documentation:</strong>  physical vs. logical diagrams, rack diagrams, cable maps, network diagrams, asset inventory, IPAM, SLA, and wireless surveys.
@@ -115,7 +115,7 @@ export default function NetworkPlus() {
       ],
     },
     {
-      title: "Network security",
+      title: "Network security (14%)",
       items: [
         <>
           <strong>Logical security:</strong> encryption (data in transit/rest), PKI, IAM, MFA, SSO, RADIUS, LDAP, SAML, TACACS+, time-based authentication, authorization, least privilege, role-based access control, and geofencing.
@@ -144,7 +144,7 @@ export default function NetworkPlus() {
       ],
     },
     {
-      title: "Network troubleshooting",
+      title: "Network troubleshooting (24%)",
       items: [
         <>
           <strong>Troubleshooting methodology:</strong> identifying the problem, establishing a theory, testing, planning, and implementing a solution, verifying functionality, and documenting findings.
@@ -309,7 +309,7 @@ export default function NetworkPlus() {
               </div>
               <div className="flex justify-start gap-2">
                 <p>Duration:</p>
-                <p>7 Days</p>
+                <p>5 Days</p>
               </div>
               <div className="flex justify-start gap-2">
                 <p>Days:</p>

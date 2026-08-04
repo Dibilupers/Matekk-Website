@@ -22,7 +22,7 @@ export default function Linux() {
   // ==================== COURSE MODULES ====================
   const modules = [
     {
-      title: "System Management",
+      title: "System Management (23%)",
       progress: 23,
       items: [
         <>
@@ -49,7 +49,7 @@ export default function Linux() {
       ],
     },
     {
-      title: "Services and User Management",
+      title: "Services and User Management (20%)",
       items: [
         <>
           <strong>Files & directories:</strong> Control permissions, create links, and manage special files.
@@ -72,7 +72,7 @@ export default function Linux() {
       ],
     },
     {
-      title: "Security",
+      title: "Security (18%)",
       items: [
         <>
           <strong>Auth & accounting:</strong> Configure PAM, LDAP, Kerberos, and enable auditing.
@@ -95,7 +95,7 @@ export default function Linux() {
       ],
     },
     {
-      title: "Automation, Orchestration, and Scripting",
+      title: "Automation, Orchestration, and Scripting (17%)",
       items: [
         <>
           <strong>Automation:</strong> Automate tasks with Ansible, Puppet, and CI/CD tools.
@@ -115,7 +115,7 @@ export default function Linux() {
       ],
     },
     {
-      title: "Troubleshooting",
+      title: "Troubleshooting (22%)",
       items: [
         <>
           <strong>System monitoring:</strong> Monitor health, logs, and event alerts.
@@ -277,7 +277,7 @@ export default function Linux() {
               </div>
               <div className="flex justify-start gap-2">
                 <p >Duration:</p>
-                <p>7 Days</p>
+                <p>5 Days</p>
               </div>
               <div className="flex justify-start gap-2">
                 <p >Days:</p>
