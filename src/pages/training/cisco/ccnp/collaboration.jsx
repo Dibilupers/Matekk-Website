@@ -195,112 +195,289 @@ export default function CCNPCollaboration() {
     },
   ];
 
-  const CLICAModules = [
+  const CLACCModules = [
     {
-      title: "1.0 Single Sign-On (SSO) for Collaboration Applications",
+      title: "1.0 Signaling and Media Protocols",
       items: [
         {
           subTitle:
-            "1.1 Describe these types of SSO as they relate to Collaboration",
+            "1.1 Troubleshoot advanced elements of a SIP conversation",
           items: [
-            "1.1.a Integrated Windows AD",
-            "1.1.b Kerberos",
-            "1.1.c Two-factor authentication (2FA)",
-            "1.1.d Third-party IdP",
+            "1.1.a Ring back",
+            "1.1.b PRACK",
+            "1.1.c UPDATE",
           ],
         },
-        "1.2 Describe the SAML SSO login process flow in the context of Cisco Collaboration solutions",
+        "1.2 Describe media optimization features and NAT traversal protocols such as STUN, TURN, and ICE",
         {
-          subTitle: "1.3 Describe these components of SAML 2.0 and later",
+          subTitle: "1.3 Troubleshoot mid-call signaling",
           items: [
-            "1.3.a Assertion",
-            "1.3.b Protocol",
-            "1.3.c Binding",
-            "1.3.d Profiles",
+            "1.3.a Hold/resume with new media",
+            "1.3.b Call transfer (blind, consult, refer or reinvite)",
+            "1.3.c Conferencing and barge",
+            "1.3.d Session timers, retries, and refresh",
           ],
         },
-        "1.4 Describe SAML SSO configuration",
-        "1.5 Describe OAuth 2.0",
       ],
     },
     {
-      title: "2.0 Cisco Unified IM and Presence and Cloud Messaging",
+      title: "2.0 Session Border Controller and Voice Gateway Technologies",
       items: [
+        "2.1 Configure Cisco UCME and SIP SRST",
         {
-          subTitle: "2.1 Configure Cisco Unified IM and Presence on-premises",
+          subTitle:
+            "2.2 Troubleshoot Cisco Unified Border Element dial plan elements using VoIP Trace and debugs",
           items: [
-            "2.1.a High availability",
-            "2.1.b Calendar integration",
-            "2.1.c Apple Push Notification Service",
-            "2.1.d Persistent chat",
-            "2.1.e Federation configuration (XMPP and SIP)",
-            "2.1.f Centralized Cisco Unified IM and Presence",
-            "2.1.g Hybrid Message Service",
+            "2.2.a DTMF interoperability",
+            "2.2.b Codec preference list",
+            "2.2.c SIP and SDP header manipulation with SIP profiles",
+            "2.2.d Signaling and media bindings",
+            "2.2.e TLS profiles and SRTP",
           ],
         },
         {
           subTitle:
-            "2.2 Troubleshoot Cisco Unified IM and Presence on-premises",
+            "2.3 Troubleshoot Cisco Unified Border Element advanced dial peer features",
           items: [
-            "2.2.a XMPP",
-            "2.2.b High availability",
-            "2.2.c Calendar integration",
-            "2.2.d Apple Push Notification Service",
-            "2.2.e Persistent chat",
-            "2.2.f Federation configuration (XMPP and SIP)",
-            "2.2.g Message Archiver Service",
-            "2.2.h Third-party compliance server integration",
+            "2.3.a URI matching",
+            "2.3.b Dial peer groups",
+            "2.3.c E.164 pattern map",
+            "2.3.d Voice VRF and multi VRF",
+            "2.3.e Hunt stop",
+          ],
+        },
+        {
+          subTitle:
+            "2.4 Configure advanced SIP interoperability with Cisco Unified Border Element",
+          items: [
+            "2.4.a Video interworking",
+            "2.4.b Media flow through flow around",
+            "2.4.c LTI transcoders",
+            "2.4.d Filtering or blocking mid-call signaling",
+            "2.4.e EO/DO interoperability",
+            "2.4.f Secure SIP trunk interoperability",
           ],
         },
       ],
     },
     {
-      title: "3.0 Cisco Unity Connection",
+      title: "3.0 Advance Call Control",
       items: [
         {
-          subTitle: "3.1 Configure these in Cisco Unity Connection",
+          subTitle: "3.1 Configure advanced SIP interoperability with Cisco UCM",
           items: [
-            "3.1.a Call handlers",
-            "3.1.b Voicemail transfers and greetings",
-            "3.1.c Routing rules",
-            "3.1.d Distribution lists",
-            "3.1.e LDAP integration",
+            "3.1.a EO/DO interoperability",
+            "3.1.b SIP normalization and transparency",
+            "3.1.c SIP profiles",
+            "3.1.d SIP trunk security profile",
           ],
         },
         {
-          subTitle: "3.2 Troubleshoot these in Cisco Unity Connection",
+          subTitle: "3.2 Describe call recording options",
           items: [
-            "3.2.a Call handlers",
-            "3.2.b Voicemail transfers and greetings",
-            "3.2.c Auto Attendant",
-            "3.2.d Routing rules",
-            "3.2.e MWI",
+            "3.2.a Network-based gateway recording (XMF)",
+            "3.2.b SIPREC",
+            "3.2.c Built in bridge",
           ],
         },
-        "3.3 Implement toll fraud prevention",
-        "3.4 Troubleshoot Cisco Unity Connection integration options with Cisco UCM",
-        "3.5 Describe digital networking in multicluster deployments in Cisco Unity Connection",
+        {
+          subTitle: "3.3 Troubleshoot globalized call routing elements in Cisco UCM",
+          items: [
+            "3.3.a Route patterns (traditional and +E.164), route groups, route lists",
+            "3.3.b Translation patterns, transformations, and transformation patterns",
+            "3.3.c Local route group",
+            "3.3.d Time-of-day routing",
+            "3.3.e Partitions and Calling Search Space (CSS)",
+            "3.3.f Forced authorization code (FAC)",
+            "3.3.g Urgent priority",
+          ],
+        },
       ],
     },
     {
-      title: "4.0 Application Clients",
+      title: "4.0 Supplemental Features and Security",
       items: [
-        "4.1 Configure DNS for service discovery",
-        "4.2 Troubleshoot service discovery",
-        "4.3 Troubleshoot Cisco Jabber and Webex App phone control",
-        "4.4 Troubleshoot Cisco Jabber and Webex App voicemail integration",
-        "4.5 Troubleshoot certificate validation",
-        "4.6 Describe the Cisco Unified Attendant Console Advanced integration",
         {
-          subTitle: "4.7 Troubleshoot Webex App functions",
+          subTitle: "4.1 Describe certificate management in Cisco UCM",
           items: [
-            "4.7.a Login process",
-            "4.7.b Call signaling",
-            "4.7.c Voice/video quality",
-            "4.7.d Voicemail",
-            "4.7.e Proximity",
+            "4.1.a Trust store usage",
+            "4.1.b Secure phone registration",
+            "4.1.c Phone security profile",
           ],
         },
+        {
+          subTitle: "4.2 Configure supplementary functions",
+          items: [
+            "4.2.a Call park",
+            "4.2.b Call pick-up",
+            "4.2.c Hunt groups",
+            "4.2.d Call queuing with announcements",
+            "4.2.e MoH",
+            "4.2.f Barge",
+            "4.2.g BLF",
+          ],
+        },
+        {
+          subTitle: "4.3 Troubleshoot Cisco UCM Mobility",
+          items: [
+            "4.3.a Unified Mobility (excluding dual-mode phones)",
+            "4.3.b Extension Mobility",
+            "4.3.c Extend & Connect",
+          ],
+        },
+        "4.4 Configure ILS, URI synchronization, and GDPR",
+      ],
+    },
+    {
+      title: "5.0 Remote Connectivity and Business to Business Solutions",
+      items: [
+        "5.0 Remote Connectivity and Business to Business Solutions",
+        "5.1 Configure a Mobile and Remote Access (MRA) solution",
+        "5.2 Troubleshoot a Mobile and Remote Access (MRA) solution",
+        "5.3 Describe Expressway media traversal",
+        "5.4 Describe protocol interworking on the Expressway (IPv4 and IPv6)",
+        {
+          subTitle: "5.5 Configure encrypted calling in Expressway",
+          items: [
+            "5.5.a TLS",
+            "5.5.b MTLS",
+            "5.5.c Zone media encryption modes",
+            "5.5.d Certificate management (including ACME protocol)",
+          ],
+        },
+        {
+          subTitle: "5.6 Configure security for Cisco Expressway",
+          items: [
+            "5.6.a Toll fraud prevention using local call policy rules",
+            "5.6.b Automated intrusion detection",
+            "5.6.c Zone media encryption modes",
+            "5.6.d Firewall rules",
+          ],
+        },
+        {
+          subTitle: "5.7 Troubleshoot a Business to Business (B2B) collaboration solution",
+          items: [
+            "5.7.a DNS records",
+            "5.7.b Certificates",
+            "5.7.c Traversal zones",
+            "5.7.d Neighbor zones",
+            "5.7.e DNS zones",
+            "5.7.f Transforms",
+            "5.7.g Search rules",
+            "5.7.h SIP trunk integration with Cisco UCM"
+          ],
+        },
+      ],
+    },
+  ];
+
+  const CLHCTModules = [
+    {
+      title: "1.0 Suite and Devices Configuration",
+      items: [
+        "1.1 Configure SSO",
+        "1.2 Configure directory synchronization",
+        "1.3 Configure hybrid calendar service using cloud mail services",
+        {
+          subTitle:
+            "1.4 Configure local gateways",
+          items: [
+            "1.4.a Certificate-based",
+            "1.4.b Registration-based",
+          ],
+        },
+        "1.5 Configure site survivability",
+        "1.6 Configure Control Hub calling features such as hot desking or auto attendant",
+      ],
+    },
+    {
+      title: "2.0 Cloud Management",
+      items: [
+        {
+          subTitle:
+            "2.1 Troubleshoot cloud user management",
+          items: [
+            "2.1.a Control Hub directory connector",
+            "2.1.b SCIM",
+            "2.1.c RBAC",
+          ],
+        },
+        "2.2 Diagnose network issues such as bandwidth and QoS when using Webex Suite and collaboration endpoints",
+      ],
+    },
+    {
+      title: "3.0 Suite and Devices Management",
+      items: [
+        "3.1 Troubleshoot Webex Calling",
+        {
+          subTitle: "3.2 Troubleshoot call routing in Webex Calling",
+          items: [
+            "3.2.a Operating modes",
+            "3.2.b Locations",
+            "3.2.c Numbers",
+            "3.2.d Translation patterns",
+            "3.2.e Trunks and route groups",
+            "3.2.f Dial plans",
+            "3.2.g Call permissions"
+          ],
+        },
+        "3.3 Troubleshoot cloud meetings",
+        "3.4 Troubleshoot cloud messages",
+        "3.5 Troubleshoot endpoint registration to the cloud"
+      ],
+    },
+    {
+      title: "4.0 Suite and Device administration",
+      items: [
+        {
+          subTitle: "4.1 Describe the administration functions in Webex",
+          items: [
+            "4.1.a User management, such as adding users, removing users, and modifying users",
+            "4.1.b Organization management, such as setting up a domain, settings, security, and integrations",
+            "4.1.c Site management, such as adding multiple sites, enabling features, common site settings",
+          ],
+        },
+        "4.2 Describe AI features in cloud collaboration solutions",
+        "4.3 Describe the Control Hub migration tool options from on-premises to cloud",
+      ],
+    },
+    {
+      title: "5.0 Hybrid and Migration to the Cloud",
+      items: [
+        {
+          subTitle: "5.1 Configure hybrid and migration from on-premises to cloud",
+          items: [
+            "5.1.a Cloud Connected UC",
+            "5.1.b Control Hub",
+          ],
+        },
+        "5.2 Configure advance dial plans",
+      ],
+    },
+    {
+      title: "6.0 Security",
+      items: [
+        "6.1 Implement security such as administration, endpoints, meetings, and compliance for Webex",
+        {
+          subTitle: "6.2 Describe the Webex cloud security realm architecture",
+          items: [
+            "6.2.a Identity service",
+            "6.2.b Key management service",
+            "6.2.c Indexing service",
+            "6.2.d Compliance service",
+            "6.2.e Content server",
+          ],
+        },
+        "6.3 Configure hybrid data security deployment models",
+      ],
+    },
+    {
+      title: "7.0 APIs and Programmability",
+      items: [
+        "6.1 Implement security such as administration, endpoints, meetings, and compliance for Webex",
+        "7.1 Describe App Hub, Developer Portal, and Room OS Portal",
+        "7.2 Describe macros on devices",
+        "7.3 Construct Webex Messaging, Meeting, Calling, People, and Events APIs",
       ],
     },
   ];
@@ -325,24 +502,46 @@ export default function CCNPCollaboration() {
       downloadUrl:
         "https://learningcontent.cisco.com/documents/marketing/exam-topics/350-801-CLCOR-v2.0-new.pdf",
     },
-    CLICA: {
-      label: "CLICA (300-810)",
-      examCode: "300-810",
+    CLACC: {
+      label: "CLACC (300-815)",
+      examCode: "300-815",
       duration: "90 minutes",
       description:
-        "Implementing Cisco Collaboration Applications v1.2 (300-810 CLICA) is a 90-minute exam associated with the CCNP Collaboration Certification. It assesses a candidate's knowledge of collaboration applications, including single sign-on, Cisco Unified IM and Presence, Cisco Unity Connection, Cisco Unity Express, and application clients. The corresponding course is designed to help candidates prepare for this exam. Topics are general guidelines and may be updated at any time without notice.",
+        "The Implementing Cisco Advanced Call Control On-Premises (300-815 CLACC) v2.0 is a 90-minute examination designed to assess proficiency in advanced call control and mobility services. Candidates who successfully pass the exam receive the Cisco Certified Specialist – Collaboration Call Control On-Premises certification. It also meets the concentration exam requirement for the CCNP Collaboration certification.",
       about:
-        "This course is focused on providing learners with the skills needed to configure and troubleshoot Cisco collaboration applications in enterprise environments. Training covers SSO frameworks, instant messaging and presence services, voicemail systems, and application clients. Learners gain practical experience with Cisco Unified IM and Presence, Unity Connection, and the Webex App across on-premises and hybrid deployments.",
+        "Get ready for the Implementing Cisco Advanced Call Control On-Premises (300-815 CLACC) v2.0 exam by reviewing the official exam topics. This resource provides an overview of the key areas you need to study for the Cisco Certified Network Professional (CCNP) Collaboration concentration exam, making it a useful guide to support your exam preparation.",
       learn: [
-        "Single Sign-On (SSO) and Identity Federation for Collaboration",
-        "Cisco Unified IM, Presence, and Cloud Messaging",
-        "Cisco Unity Connection Configuration and Troubleshooting",
-        "Application Clients and Service Discovery",
+        "Signaling and media protocols",
+        "CME/SRST gateway technologies",
+        "Cisco Unified Board Element",
+        "Call control and dial planning",
+        "Cisco UCM Call Control",
+        "Mobility",
       ],
-      modules: CLICAModules,
-      downloadLabel: "Download the CLICA Exam Topics Here",
+      modules: CLACCModules,
+      downloadLabel: "Download the CLACC Exam Topics Here",
       downloadUrl:
-        "https://learningcontent.cisco.com/documents/marketing/exam-topics/300-810-CLICA-v1.2.pdf",
+        "http://learningcontent.cisco.com/documents/marketing/exam-topics/300-815-CLACC-v2.0-new.pdf",
+    },
+    CLHCT: {
+      label: "CLHCT (300-820)",
+      examCode: "300-815",
+      duration: "90 minutes",
+      description:
+        "The Implementing Cisco Collaboration Hybrid and Cloud Technologies (300-820 CLHCT) v2.0 is a 90-minute exam designed to assess your knowledge and proficiency in collaboration cloud technologies. Successfully passing the exam earns you the Cisco Certified Specialist – Collaboration Hybrid and Cloud certification and fulfills the concentration exam requirement for the CCNP Collaboration certification.",
+      about:
+        "Prepare for the Implementing Cisco Collaboration Hybrid and Cloud Technologies (300-820 CLHCT) v2.0 exam by reviewing the official exam topics. This resource highlights the key areas you should understand to successfully complete the Cisco Certified Network Professional (CCNP) Collaboration concentration exam, making it a valuable reference for your overall exam preparation.",
+      learn: [
+        "Suite and device configuration",
+        "Cloud management",
+        "Suite and devices management and administration",
+        "Security",
+        "APIs and programmabilityl",
+      ],
+      modules: CLHCTModules,
+      downloadLabel: "Download the CLHCT Exam Topics Here",
+      downloadUrl:
+        "https://learningcontent.cisco.com/documents/marketing/exam-topics/300-820-CLHCT-v2.0.pdf",
     },
   };
 

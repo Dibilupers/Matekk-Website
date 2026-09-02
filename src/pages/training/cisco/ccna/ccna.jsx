@@ -256,6 +256,7 @@ export default function CCNA() {
               "Entry-level IT Professionals",
               "Career Shifters", 
               "Recent IT/CS/Engineering Graduates",
+              "On-going Students",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />

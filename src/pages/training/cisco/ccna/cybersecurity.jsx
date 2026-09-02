@@ -359,7 +359,10 @@ export default function CCNACybersecurity() {
       />
 
       {/* ==================== CONTENT SECTION - Training Informations/Content ==================== */}
-      <div className="flex flex-col lg:flex-row justify-start items-start lg:items-stretch gap-6 lg:gap-8" id="services">
+      <div
+        className="flex flex-col lg:flex-row justify-start items-start lg:items-stretch gap-6 lg:gap-8"
+        id="services"
+      >
         {/* ==================== LEFT SIDE: Contents/Information ==================== */}
         <div className="flex flex-col gap-8">
           {/* ==================== ABOUT SECTION ==================== */}
@@ -459,8 +462,9 @@ export default function CCNACybersecurity() {
             {/* Target Learners - List */}
             {[
               "Entry-level IT Professionals",
-              "Career Shifters", 
+              "Career Shifters",
               "Recent IT/CS/Engineering Graduates",
+              "On-going Students",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
