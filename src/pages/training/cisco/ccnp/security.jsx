@@ -306,7 +306,7 @@ export default function CCNPSecurity() {
         "https://learningcontent.cisco.com/documents/marketing/exam-topics/300-745-SDSI-v1.0-Public.pdf",
     },
     SNCF: {
-      label: "300-710 SNCF v1.1",
+      label: "300-710 SNCF v1.2",
       examCode: "300-710",
       duration: "90 minutes",
       description:
