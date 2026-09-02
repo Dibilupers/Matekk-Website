@@ -25,25 +25,12 @@ import PenTest from "../pages/training/comptia/pentest";
 import Linux from "../pages/training/comptia/linux";
 
 /* Fortinet */
-import NSE1 from "../pages/training/fortinet/nse1";
-import NSE2 from "../pages/training/fortinet/nse2";
-import NSE3 from "../pages/training/fortinet/nse3";
-import NSE4 from "../pages/training/fortinet/nse4";
-import NSE5securenetworking from "../pages/training/fortinet/nse5securenetworking";
-import NSE5CloudSecurity from "../pages/training/fortinet/nse5cloudsecurity";
-import NSE5SASE from "../pages/training/fortinet/nse5sase";
-import NSE5SecurityOperations from "../pages/training/fortinet/nse5securityoperations";
-import NSE6SecureNetworking from "../pages/training/fortinet/nse6securenetworking";
-import NSE6SASE from "../pages/training/fortinet/nse6sase";
-import NSE6CloudSecurity from "../pages/training/fortinet/nse6cloudsecurity";
-import NSE6SecurityOperations from "../pages/training/fortinet/nse6securityoperations";
-import NSE7SecureNetworking from "../pages/training/fortinet/nse7securenetworking";
-import NSE7SASE from "../pages/training/fortinet/nse7sase";
-import NSE7CloudSecurity from "../pages/training/fortinet/nse7cloudsecurity";
-import NSE7SecurityOperations from "../pages/training/fortinet/nse7securityoperations";
-import NSE8 from "../pages/training/fortinet/nse8";
-import NSEMSSPSecurity from "../pages/training/fortinet/nsemsspsecurity";
-import NSEOTSecurity from "../pages/training/fortinet/nseotsecurity";
+import FortiOS from "../pages/training/fortinet/fortios";
+import SecureNetworking from "../pages/training/fortinet/secure-networking";
+import SASE from "../pages/training/fortinet/sase";
+import CloudSecurity from "../pages/training/fortinet/cloud-security";
+import SecurityOperations from "../pages/training/fortinet/security-operations";
+import CybersecurityExpert from "../pages/training/fortinet/cybersecurity-expert";
 
 /* CDCP */
 import DCFC from "../pages/training/datacenter/dcfc";
@@ -168,57 +155,23 @@ export default function App() {
         <Route path="/training/comptia/linux" element={<Linux />} />
 
         {/* Fortinet */}
-        <Route path="/training/fortinet/nse1" element={<NSE1 />} />
-        <Route path="/training/fortinet/nse2" element={<NSE2 />} />
-        <Route path="/training/fortinet/nse3" element={<NSE3 />} />
-        <Route path="/training/fortinet/nse4" element={<NSE4 />} />
+        <Route path="/training/fortinet/fortios" element={<FortiOS />} />
         <Route
-          path="/training/fortinet/nse5securenetworking"
-          element={<NSE5securenetworking />}
+          path="/training/fortinet/secure-networking"
+          element={<SecureNetworking />}
+        />
+        <Route path="/training/fortinet/sase" element={<SASE />} />
+        <Route
+          path="/training/fortinet/cloud-security"
+          element={<CloudSecurity />}
         />
         <Route
-          path="/training/fortinet/nse5cloudsecurity"
-          element={<NSE5CloudSecurity />}
-        />
-        <Route path="/training/fortinet/nse5sase" element={<NSE5SASE />} />
-        <Route
-          path="/training/fortinet/nse5securityoperations"
-          element={<NSE5SecurityOperations />}
+          path="/training/fortinet/security-operations"
+          element={<SecurityOperations />}
         />
         <Route
-          path="/training/fortinet/nse6securenetworking"
-          element={<NSE6SecureNetworking />}
-        />
-        <Route path="/training/fortinet/nse6sase" element={<NSE6SASE />} />
-        <Route
-          path="/training/fortinet/nse6cloudsecurity"
-          element={<NSE6CloudSecurity />}
-        />
-        <Route
-          path="/training/fortinet/nse6securityoperations"
-          element={<NSE6SecurityOperations />}
-        />
-        <Route
-          path="/training/fortinet/nse7securenetworking"
-          element={<NSE7SecureNetworking />}
-        />
-        <Route path="/training/fortinet/nse7sase" element={<NSE7SASE />} />
-        <Route
-          path="/training/fortinet/nse7cloudsecurity"
-          element={<NSE7CloudSecurity />}
-        />
-        <Route
-          path="/training/fortinet/nse7securityoperations"
-          element={<NSE7SecurityOperations />}
-        />
-        <Route path="/training/fortinet/nse8" element={<NSE8 />} />
-        <Route
-          path="/training/fortinet/nsemsspsecurity"
-          element={<NSEMSSPSecurity />}
-        />
-        <Route
-          path="/training/fortinet/nseotsecurity"
-          element={<NSEOTSecurity />}
+          path="/training/fortinet/cybersecurity-expert"
+          element={<CybersecurityExpert />}
         />
 
         {/* CDCP */}

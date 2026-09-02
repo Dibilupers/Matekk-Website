@@ -5,7 +5,7 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
-import cloudSecCerti from "../../../assets/nse-6-cloud-security.svg"; // Course badge image
+import nse8Badge from "../../../assets/nse-8-cybersecurity-expert.png"; // Course badge image
 import FortinetHero from "../../../assets/FortinetHeader.webp";
 import FortinetFooter from "../../../assets/FortinetFooter.webp";
 import MealIcon from "../../../assets/Meal.svg";
@@ -18,32 +18,25 @@ import TrainingTemplateFooter from "../../../components/section/TrainingTemplate
 import TrainingHeroBanner from "../../../components/section/TrainingHeroBanner";
 
 // ==================== COMPONENT NAME ====================
-export default function NSE6CloudSecurity() {
+export default function CybersecurityExpert() {
   // ==================== COURSE MODULES ====================
   const modules = [
-    { title: "Email Concepts", items: [] },
-    { title: "Basic Setup", items: [] },
-    { title: "Access Control and Policies", items: [] },
+    { title: "Networking", items: [] },
+    { title: "Operations", items: [] },
+    { title: "VPN", items: [] },
+    { title: "Policies", items: [] },
     { title: "Authentication", items: [] },
-    { title: "Session Management", items: [] },
-    { title: "Antivirus and Antispam", items: [] },
-    { title: "Content Inspection", items: [] },
-    { title: "Securing Communications", items: [] },
-    { title: "High Availability", items: [] },
-    { title: "Server Mode", items: [] },
-    { title: "Transparent Mode", items: [] },
-    { title: "Maintenance", items: [] },
-    { title: "Troubleshooting", items: [] },
+    { title: "Management", items: [] },
+    { title: "Advanced Technologies", items: [] },
   ];
-
   return (
     <main className="flex flex-col h-full mx-[2.063rem] md:mx-16 lg:mx-16 xl:mx-[7.438rem] scroll-mt-18 space-y-10">
       {/* ==================== HERO BANNER ====================*/}
       <TrainingHeroBanner
         bgImage={FortinetHero}
         category="FORTINET"
-        title="NSE 6 Cloud Security"
-        description="Learn to secure your network from email-based threats using FortiMail. This course provides hands-on experience in deployment, management, and advanced threat protection for critical business communications."
+        title="Cybersecurity Expert"
+        description="Participate in a two-day hands-on lab where you will configure a variety of Fortinet products to meet specific objectives. Learn from an FCX Cybersecurity certified instructor while practicing real-world scenarios across multiple Fortinet solutions."
       />
 
       {/* ==================== CONTENT SECTION - Training Informations/Content ==================== */}
@@ -57,17 +50,14 @@ export default function NSE6CloudSecurity() {
               About This <span className="text-[#1775EE]">Course</span>
             </h3>
             {/* About Section - Description */}
-            {/* CHANGE: Course description paragraphs */}
             <p>
-              In this course, you will explore common email security challenges
-              and gain practical skills in deploying, managing, and
-              troubleshooting FortiMail to protect your network from email-borne
-              threats.
+              In this immersive lab, you will work with FortiGate, FortiManager,
+              FortiAnalyzer, FortiWeb, FortiMail, FortiADC, FortiAuthenticator,
+              and FortiSandbox to complete a series of configuration tasks.
             </p>
             <p>
-              You will also learn the role of FortiMail as a specialized
-              security device and how its features deliver high-performance,
-              in-depth protection for business-critical communications.
+              An FCX Cybersecurity certified instructor will guide you, answer
+              questions, and provide support as you complete each objective.
             </p>
           </section>
 
@@ -83,26 +73,26 @@ export default function NSE6CloudSecurity() {
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <p>
-                  Integrate FortiMail with FortiSandbox for advanced threat
-                  protection (ATP)
+                  Gain hands-on experience configuring multiple Fortinet
+                  products
                 </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <p>
-                  Prevent accidental or intentional data leaks of confidential
-                  or regulated information
+                  Learn to navigate complex network topologies and scenarios
                 </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Archive email to meet compliance requirements</p>
+                <p>
+                  Understand the level and scope of tasks in the NSE 8 practical exam
+                </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <p>
-                  Deploy high availability (HA) and redundant infrastructure to
-                  ensure maximum uptime of critical email systems
+                  Build skills to prepare for the NSE 8 practical exam with similar complexity
                 </p>
               </div>
             </div>
@@ -126,8 +116,8 @@ export default function NSE6CloudSecurity() {
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
             {/* Cert Badge - Change/Update Image */}
             <img
-              src={cloudSecCerti}
-              alt="NSE Cloud Security Certification Badge"
+              src={nse8Badge}
+              alt="Fortinet NSE 8 Cybersecurity Expert Certification Badge"
               className="w-50 h-50 object-contain"
             />
           </div>
@@ -138,10 +128,10 @@ export default function NSE6CloudSecurity() {
             <h5 className="text-[#1775EE] ">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
-              "Junior Network Administrator",
-              "Entry-Level Security Analyst",
-              "IT Security Associate",
-              "Cybersecurity Intern",
+              "Network Security Architect",
+              "Principal Security Engineer",
+              "Cybersecurity Consultant",
+              "Security Operations Director",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
@@ -155,7 +145,7 @@ export default function NSE6CloudSecurity() {
             {/* Target Learners - Title */}
             <h5 className="text-[#1775EE] ">Target Learners</h5>
             {/* Target Learners - List */}
-            {["Advanced"].map((job) => (
+            {["Expert"].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
                 <span>{job}</span>
@@ -166,7 +156,12 @@ export default function NSE6CloudSecurity() {
           {/* ==================== PREREQUISITES ====================*/}
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-2">
             <h5 className="text-[#1775EE] ">Prerequisites</h5>
-            {["Active NSE 4 certification"].map((item) => (
+            {[
+              "Active NSE 4 certification",
+              "Active NSE 5 or NSE 6 certification",
+              "Active NSE 7 certification (same track as the NSE 5 or NSE 6)",
+              "Pass the NSE 8 Core exam",
+            ].map((item) => (
               <p key={item} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
                 <span>{item}</span>
@@ -250,12 +245,12 @@ export default function NSE6CloudSecurity() {
 
             {/* CHANGE: Download link text and URL */}
             <a
-              href="https://training.fortinet.com/local/staticpage/view.php?page=nse_6_cloud_security"
+              href="https://training.fortinet.com/local/staticpage/view.php?page=nse_8"
               target="_blank"
               rel="noopener noreferrer"
               className="text-sm font-medium underline mt-2"
             >
-              See the Official Fortinet NSE 6 Cloud Security Exam Details
+              See the Official Fortinet NSE 8 Exam Details
             </a>
           </div>
         </aside>
@@ -264,7 +259,7 @@ export default function NSE6CloudSecurity() {
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
         bgImage={FortinetFooter} // CHANGE: Update background image for the footer banner
-        description="Advance your networking career and prepare for the Fortinet NSE 6 Cloud Security exam."
+        description="Advance your networking career and pursue the Fortinet Cybersecurity Expert (NSE 8) certification."
       />
     </main>
   );

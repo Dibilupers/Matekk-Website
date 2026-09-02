@@ -753,7 +753,7 @@ export default function Home() {
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
                       </div>
-                      <h5>NSE 4 (All Tracks)</h5>
+                      <h5>FortiOS (NSE 1-4)</h5>
                       <p>
                         Learn to administer FortiGate devices using key features
                         and security profiles. Through hands-on labs, you'll
@@ -762,7 +762,7 @@ export default function Home() {
                         foundation for advanced FortiGate administration.
                       </p>
                       <Link
-                        to="./training/fortinet/nse4"
+                        to="./training/fortinet/fortios"
                         className="font-inter text-sm underline underline-offset-4 text-[#1775EE] transition-colors duration-300 group-hover:text-white"
                       >
                         See more
