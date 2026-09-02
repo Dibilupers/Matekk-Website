@@ -258,7 +258,7 @@ export default function NetworkPlus() {
             <h5 className="text-[#1775EE] ">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
-              "Linux Administrator",
+              "NOC Engineer",
               "Network Engineer",
               "IoT Engineer"
             ].map((job) => (
@@ -274,7 +274,7 @@ export default function NetworkPlus() {
             {/* Target Learners - Title */}
             <h5 className="text-[#1775EE] ">Target Learners</h5>
             {/* Target Learners - List */}
-            {["CompTIA A+ certification", "About 9–12 months of practical experience in junior network administration or network support"].map((job) => (
+            {["Career Shifters","Ongoing Students","CompTIA A+ certification", "About 9–12 months of practical experience in junior network administration or network support"].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
                 <span>{job}</span>
