@@ -82,7 +82,7 @@ export default function SecurityPlus() {
           <strong>Computing resources:</strong> applying secure baselines, mobile solutions, hardening, software security, application security, monitoring, and log monitoring.
         </>,
         <>
-          <strong>Identity and access management:</strong> analyzing identity, authentication, authorization, and provisioning of hardware, software, and data assets.
+          <strong>Asset management:</strong>explaining acquisition, disposal, assignment, and monitoring/tracking of hardware, software, and data assets.
         </>,
         <>
           <strong>Vulnerability management:</strong> identifying, analyzing, remediating, validating, and reporting vulnerabilities.
@@ -123,10 +123,10 @@ export default function SecurityPlus() {
           <strong>Security compliance:</strong> summarizing compliance reporting, consequences of non-compliance, monitoring, and privacy.
         </>,
         <>
-          <strong>Security awareness:</strong> explaining infiltration, internal/external audits, and penetration testing.
+          <strong>Audits and assessments:</strong> explaining attestation, internal/external audits, and penetration testing.
         </>,
         <>
-          <strong>Security discoveries:</strong> implementing phishing training, anomalous behavior recognition, user guidance, reporting, and monitoring.
+          <strong>Security awareness:</strong>  implementing phishing training, anomalous behavior recognition, user guidance, reporting, and monitoring.
         </>,
       ],
     },
