@@ -5,7 +5,7 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
-import cloudSecCerti from "../../../assets/nse-6-cloud-security.svg"; // Course badge image
+import otBadge from "../../../assets/nse-ot-security-architect.svg"; // Course badge image
 import FortinetHero from "../../../assets/FortinetHeader.webp";
 import FortinetFooter from "../../../assets/FortinetFooter.webp";
 import MealIcon from "../../../assets/Meal.svg";
@@ -18,22 +18,16 @@ import TrainingTemplateFooter from "../../../components/section/TrainingTemplate
 import TrainingHeroBanner from "../../../components/section/TrainingHeroBanner";
 
 // ==================== COMPONENT NAME ====================
-export default function NSE6CloudSecurity() {
+export default function NSEOTSecurity() {
   // ==================== COURSE MODULES ====================
   const modules = [
-    { title: "Email Concepts", items: [] },
-    { title: "Basic Setup", items: [] },
-    { title: "Access Control and Policies", items: [] },
-    { title: "Authentication", items: [] },
-    { title: "Session Management", items: [] },
-    { title: "Antivirus and Antispam", items: [] },
-    { title: "Content Inspection", items: [] },
-    { title: "Securing Communications", items: [] },
-    { title: "High Availability", items: [] },
-    { title: "Server Mode", items: [] },
-    { title: "Transparent Mode", items: [] },
-    { title: "Maintenance", items: [] },
-    { title: "Troubleshooting", items: [] },
+    { title: "Introduction to OT Infrastructures", items: [] },
+    { title: "Securing OT with the Purdue Model", items: [] },
+    { title: "Asset Identification with FortiGate and FortiNAC", items: [] },
+    { title: "Segmentation and Microsegmentation", items: [] },
+    { title: "Protection and Access Control", items: [] },
+    { title: "Logging and Monitoring with FortiAnalyzer and FortiSIEM", items: [] },
+    { title: "Risk Assessment", items: [] },
   ];
 
   return (
@@ -42,8 +36,8 @@ export default function NSE6CloudSecurity() {
       <TrainingHeroBanner
         bgImage={FortinetHero}
         category="FORTINET"
-        title="NSE 6 Cloud Security"
-        description="Learn to secure your network from email-based threats using FortiMail. This course provides hands-on experience in deployment, management, and advanced threat protection for critical business communications."
+        title="NSE Certified – OT Security"
+        description="Learn to protect operational technology (OT) infrastructures using Fortinet solutions. This industry certification course provides hands-on experience designing, deploying, and managing FortiGate, FortiNAC, FortiAnalyzer, and FortiSIEM to secure industrial and critical infrastructure environments."
       />
 
       {/* ==================== CONTENT SECTION - Training Informations/Content ==================== */}
@@ -57,17 +51,18 @@ export default function NSE6CloudSecurity() {
               About This <span className="text-[#1775EE]">Course</span>
             </h3>
             {/* About Section - Description */}
-            {/* CHANGE: Course description paragraphs */}
             <p>
-              In this course, you will explore common email security challenges
-              and gain practical skills in deploying, managing, and
-              troubleshooting FortiMail to protect your network from email-borne
-              threats.
+              In this course, you will gain practical skills to secure
+              operational technology (OT) environments using Fortinet
+              solutions. You will learn to design, deploy, administer, and
+              monitor FortiGate, FortiNAC, FortiAnalyzer, and FortiSIEM to
+              protect industrial control systems and critical infrastructure.
             </p>
             <p>
-              You will also learn the role of FortiMail as a specialized
-              security device and how its features deliver high-performance,
-              in-depth protection for business-critical communications.
+              As an industry certification built on the NSE track, OT Security
+              validates the ability to plan and operate a comprehensive OT
+              security strategy across converged IT/OT environments using
+              Fortinet products.
             </p>
           </section>
 
@@ -82,27 +77,21 @@ export default function NSE6CloudSecurity() {
             <div className="grid grid-cols-1 gap-4">
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>
-                  Integrate FortiMail with FortiSandbox for advanced threat
-                  protection (ATP)
-                </p>
+                <p>Explain the fundamentals of OT infrastructures</p>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
+                <p>Secure an OT environment following the Purdue model</p>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
+                <p>Use FortiGate and FortiNAC to identify and manage devices</p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <p>
-                  Prevent accidental or intentional data leaks of confidential
-                  or regulated information
-                </p>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Archive email to meet compliance requirements</p>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>
-                  Deploy high availability (HA) and redundant infrastructure to
-                  ensure maximum uptime of critical email systems
+                  Implement segmentation and microsegmentation within an OT
+                  network
                 </p>
               </div>
             </div>
@@ -126,8 +115,8 @@ export default function NSE6CloudSecurity() {
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
             {/* Cert Badge - Change/Update Image */}
             <img
-              src={cloudSecCerti}
-              alt="NSE Cloud Security Certification Badge"
+              src={otBadge}
+              alt="NSE Certified OT Security Badge"
               className="w-50 h-50 object-contain"
             />
           </div>
@@ -138,10 +127,10 @@ export default function NSE6CloudSecurity() {
             <h5 className="text-[#1775EE] ">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
-              "Junior Network Administrator",
-              "Entry-Level Security Analyst",
-              "IT Security Associate",
-              "Cybersecurity Intern",
+              "OT Security Engineer",
+              "Industrial Control Systems (ICS) Security Specialist",
+              "Critical Infrastructure Security Analyst",
+              "OT/IT Convergence Consultant",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
@@ -166,7 +155,12 @@ export default function NSE6CloudSecurity() {
           {/* ==================== PREREQUISITES ====================*/}
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-2">
             <h5 className="text-[#1775EE] ">Prerequisites</h5>
-            {["Active NSE 4 certification"].map((item) => (
+            {[
+              "Active NSE 4 certification",
+              "Active NSE 5 or NSE 6 certification",
+              "Active NSE 7 certification (same track as the NSE 5 or NSE 6)",
+              "Pass the OT Security proctored exam",
+            ].map((item) => (
               <p key={item} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
                 <span>{item}</span>
@@ -250,12 +244,12 @@ export default function NSE6CloudSecurity() {
 
             {/* CHANGE: Download link text and URL */}
             <a
-              href="https://training.fortinet.com/local/staticpage/view.php?page=nse_6_cloud_security"
+              href="https://training.fortinet.com/local/staticpage/view.php?page=nse_ot_security"
               target="_blank"
               rel="noopener noreferrer"
               className="text-sm font-medium underline mt-2"
             >
-              See the Official Fortinet NSE 6 Cloud Security Exam Details
+              See the Official Fortinet OT Security Exam Details
             </a>
           </div>
         </aside>
@@ -264,7 +258,7 @@ export default function NSE6CloudSecurity() {
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
         bgImage={FortinetFooter} // CHANGE: Update background image for the footer banner
-        description="Advance your networking career and prepare for the Fortinet NSE 6 Cloud Security exam."
+        description="Advance your career and prepare for the Fortinet OT Security industry certification exam."
       />
     </main>
   );

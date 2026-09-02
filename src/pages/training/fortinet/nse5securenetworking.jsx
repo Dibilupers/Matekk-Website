@@ -2,7 +2,7 @@ import Button from "../../../components/ui/button";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
-import ccnaBadge from "../../../assets/FortinetNSE5SecureNetworking.png";
+import ccnaBadge from "../../../assets/nse-5-secure-networking.svg";
 import FortinetHero from "../../../assets/FortinetHeader.webp";
 import FortinetFooter from "../../../assets/FortinetFooter.webp";
 import MealIcon from "../../../assets/Meal.svg";
@@ -19,17 +19,15 @@ import TrainingHeroBanner from "../../../components/section/TrainingHeroBanner";
 export default function NSE5securenetworking() {
   // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
   const modules = [
-    { title: "Introduction and Initial Configuration", items: [] },
-    { title: "Achieving Network Visibility", items: [] },
-    { title: "Identification and Classification of Rogues", items: [] },
-    { title: "Visibility, Troubleshooting, and Logging", items: [] },
-    { title: "Logical Networks and Fortinet Security Fabric Integration", items: [] },
-    { title: "State-Based Control", items: [] },
-    { title: "Security Policies", items: [] },
-    { title: "Guest and Contractor Management", items: [] },
-    { title: "Security Device Integration and Automated Response", items: [] },
-    { title: "Advanced Features", items: [] },
-    { title: "FortiNAC-F Manager Integrations", items: [] },
+    { title: "FortiSwitch Fundamentals and Initial Setup", items: [] },
+    { title: "Switch Management and Port Configuration", items: [] },
+    { title: "VLANs and Layer 2 Security", items: [] },
+    { title: "FortiLink Integration with FortiGate", items: [] },
+    { title: "Wireless Network Fundamentals", items: [] },
+    { title: "Secure Wireless Deployment and Access Point Management", items: [] },
+    { title: "Wireless Security Policies and Guest Access", items: [] },
+    { title: "Fortinet Security Fabric Integration", items: [] },
+    { title: "Monitoring, Logging, and Troubleshooting", items: [] },
   ];
 
   return (
@@ -39,7 +37,7 @@ export default function NSE5securenetworking() {
         bgImage={FortinetHero}
         category="FORTINET"
         title="NSE 5 Secure Networking"
-        description="Learn to utilize FortiNAC-F to gain full network visibility, control, and automated security responses. This course provides hands-on experience and best practices for implementing network security and automation."
+        description="Learn to deploy and manage secure switching and wireless access with FortiSwitch and Fortinet's secure wireless solutions. This course provides hands-on experience configuring, securing, and monitoring the wired and wireless edge of the network."
       />
 
       {/* ==================== CONTENT SECTION - Training Informations/Content ==================== */}
@@ -55,16 +53,17 @@ export default function NSE5securenetworking() {
             {/* About Section - Description */}
             {/* CHANGE: Course description paragraphs */}
             <p>
-              In this course, you will gain practical skills to harness the
-              capabilities of FortiNAC-F, following best practices to achieve
-              network visibility, access control, and automated security
-              responses. You will learn how to monitor devices, enforce
-              policies, and strengthen overall network security.
+              In this course, you will gain practical skills in deploying and
+              managing secure switching and wireless networking with
+              FortiSwitch and Fortinet's secure wireless access points. You
+              will learn how to configure ports, VLANs, and access policies,
+              and how to extend the Fortinet Security Fabric to the wired and
+              wireless edge.
             </p>
             <p>
               Aligned with Fortinet training, these fundamentals provide a
-              strong foundation for implementing effective network monitoring
-              and security automation.
+              strong foundation for building visible, controlled, and secure
+              access layers across the network.
             </p>
           </section>
 
@@ -79,24 +78,24 @@ export default function NSE5securenetworking() {
             <div className="grid flex-col lg:flex-col-2 gap-4">
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Set up a FortiNAC-F system to achieve network visibility</p>
+                <p>Configure and manage FortiSwitch devices from FortiGate</p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <p>
-                  Use control features for network access and automated policy
-                  enforcement
+                  Deploy secure wireless access points and enforce wireless
+                  security policies
                 </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Integrate FortiNAC-F with the Fortinet Security Fabric</p>
+                <p>Segment traffic with VLANs and Layer 2 controls</p>
               </div>
               <p className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <span>
-                  Combine visibility and control with security device
-                  integrations to automate threat responses
+                  Extend the Fortinet Security Fabric to switching and
+                  wireless infrastructure
                 </span>
               </p>
             </div>
@@ -153,6 +152,17 @@ export default function NSE5securenetworking() {
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
                 <span>{job}</span>
+              </p>
+            ))}
+          </div>
+
+          {/* ==================== PREREQUISITES ====================*/}
+          <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-2">
+            <h5 className="text-[#1775EE] ">Prerequisites</h5>
+            {["Active NSE 4 certification"].map((item) => (
+              <p key={item} className="flex gap-2 justify-left items-center">
+                <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
+                <span>{item}</span>
               </p>
             ))}
           </div>
@@ -232,8 +242,13 @@ export default function NSE5securenetworking() {
             </div>
 
             {/* CHANGE: Download link text and URL */}
-            <a href="#" className="text-sm font-medium underline mt-2">
-              Download the Palo Alto Exam Topics Here
+            <a
+              href="https://training.fortinet.com/local/staticpage/view.php?page=nse_5_secure_networking"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm font-medium underline mt-2"
+            >
+              See the Official Fortinet NSE 5 Secure Networking Exam Details
             </a>
           </div>
         </aside>

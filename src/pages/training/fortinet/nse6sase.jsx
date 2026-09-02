@@ -5,7 +5,7 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
-import sase from "../../../assets/nseSASE.webp"; // Course badge image
+import sase from "../../../assets/nse-6-sase.svg"; // Course badge image
 import FortinetHero from "../../../assets/FortinetHeader.webp";
 import FortinetFooter from "../../../assets/FortinetFooter.webp";
 import MealIcon from "../../../assets/Meal.svg";
@@ -149,10 +149,21 @@ export default function NSE6SASE() {
             {/* Target Learners - Title */}
             <h5 className="text-[#1775EE] ">Target Learners</h5>
             {/* Target Learners - List */}
-            {["Beginners", "Zero Knowledge"].map((job) => (
+            {["Advanced"].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
                 <span>{job}</span>
+              </p>
+            ))}
+          </div>
+
+          {/* ==================== PREREQUISITES ====================*/}
+          <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-2">
+            <h5 className="text-[#1775EE] ">Prerequisites</h5>
+            {["Active NSE 4 certification"].map((item) => (
+              <p key={item} className="flex gap-2 justify-left items-center">
+                <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
+                <span>{item}</span>
               </p>
             ))}
           </div>
@@ -232,8 +243,13 @@ export default function NSE6SASE() {
             </div>
 
             {/* CHANGE: Download link text and URL */}
-            <a href="#" className="text-sm font-medium underline mt-2">
-              Download the Fortinet Exam Topics Here
+            <a
+              href="https://training.fortinet.com/local/staticpage/view.php?page=nse_6_sase"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm font-medium underline mt-2"
+            >
+              See the Official Fortinet NSE 6 SASE Exam Details
             </a>
           </div>
         </aside>
@@ -242,7 +258,7 @@ export default function NSE6SASE() {
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
         bgImage={FortinetFooter} // CHANGE: Update background image for the footer banner
-        description="Advance your networking career and prepare for the Fortinet Enterprise exam."
+        description="Advance your networking career and prepare for the Fortinet NSE 6 SASE exam."
       />
     </main>
   );

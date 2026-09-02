@@ -2,7 +2,7 @@ import Button from "../../../components/ui/button";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
-import ccnaBadge from "../../../assets/FortinetNSE1.png";
+import ccnaBadge from "../../../assets/nse-1-cybersecurity.svg";
 import FortinetHero from "../../../assets/FortinetHeader.webp";
 import FortinetFooter from "../../../assets/FortinetFooter.webp";
 import MealIcon from "../../../assets/Meal.svg";
@@ -272,8 +272,13 @@ export default function NSE1() {
             </div>
 
             {/* CHANGE: Download link text and URL */}
-            <a href="#" className="text-sm font-medium underline mt-2">
-              Download the Fortinet Exam Topics Here
+            <a
+              href="https://training.fortinet.com/local/staticpage/view.php?page=nse_1"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm font-medium underline mt-2"
+            >
+              See the Official Fortinet NSE 1 Exam Details
             </a>
           </div>
         </aside>

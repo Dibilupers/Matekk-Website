@@ -42,6 +42,8 @@ import NSE7SASE from "../pages/training/fortinet/nse7sase";
 import NSE7CloudSecurity from "../pages/training/fortinet/nse7cloudsecurity";
 import NSE7SecurityOperations from "../pages/training/fortinet/nse7securityoperations";
 import NSE8 from "../pages/training/fortinet/nse8";
+import NSEMSSPSecurity from "../pages/training/fortinet/nsemsspsecurity";
+import NSEOTSecurity from "../pages/training/fortinet/nseotsecurity";
 
 /* CDCP */
 import DCFC from "../pages/training/datacenter/dcfc";
@@ -210,6 +212,14 @@ export default function App() {
           element={<NSE7SecurityOperations />}
         />
         <Route path="/training/fortinet/nse8" element={<NSE8 />} />
+        <Route
+          path="/training/fortinet/nsemsspsecurity"
+          element={<NSEMSSPSecurity />}
+        />
+        <Route
+          path="/training/fortinet/nseotsecurity"
+          element={<NSEOTSecurity />}
+        />
 
         {/* CDCP */}
         <Route path="/training/datacenter/dcfc" element={<DCFC />} />

@@ -1,12 +1,8 @@
-import { useState, useEffect } from "react";
 import Button from "../../../components/ui/button";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
-import badge1 from "../../../assets/FortinetNSE5SecureNetworking.png";
-import badge2 from "../../../assets/FortinetNSE5SASE.png";
-import badge3 from "../../../assets/FortinetNSE5ClousSecurity.png";
-import badge4 from "../../../assets/FortinetNSE5SecurityOperations.png";
+import nse4Badge from "../../../assets/nse-4-fortios.svg";
 import FortinetHero from "../../../assets/FortinetHeader.webp";
 import FortinetFooter from "../../../assets/FortinetFooter.webp";
 import MealIcon from "../../../assets/Meal.svg";
@@ -18,42 +14,7 @@ import CourseModules from "../../../components/training/courseModules";
 import TrainingTemplateFooter from "../../../components/section/TrainingTemplateFooter";
 import TrainingHeroBanner from "../../../components/section/TrainingHeroBanner";
 
-export default function NSE5() {
-  const [selectedBadge, setSelectedBadge] = useState(0);
-  const [animating, setAnimating] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
-
-  const badges = [
-    { src: badge1, alt: "Fortinet NSE 5 Secure Networking Badge" },
-    { src: badge2, alt: "Fortinet NSE 5 SASE Badge" },
-    { src: badge3, alt: "Fortinet NSE 5 Cloud Security Badge" },
-    { src: badge4, alt: "Fortinet NSE 5 Security Operations Badge" },
-  ];
-
-  // Auto-cycle every 2.5 seconds unless paused
-  useEffect(() => {
-    if (isPaused) return;
-    const interval = setInterval(() => {
-      handleBadgeChange((prev) => (prev + 1) % badges.length);
-    }, 3500);
-    return () => clearInterval(interval);
-  }, [isPaused, badges.length]);
-
-  const handleBadgeChange = (indexOrUpdater) => {
-    setAnimating(true);
-    setTimeout(() => {
-      setSelectedBadge(indexOrUpdater);
-      setAnimating(false);
-    }, 300);
-  };
-
-  const handleDotClick = (i) => {
-    setIsPaused(true); // pause auto-cycle on manual click
-    handleBadgeChange(i);
-    // Resume auto-cycle after 5 seconds of inactivity
-    setTimeout(() => setIsPaused(false), 5000);
-  };
-
+export default function NSE4() {
   const modules = [
     { title: "System and Network Settings", items: [] },
     { title: "Logging and Monitoring", items: [] },
@@ -145,33 +106,13 @@ export default function NSE5() {
 
         {/* ==================== RIGHT SIDEBAR ==================== */}
         <aside className="aside_contents">
-          {/* ==================== CERT BADGE WITH SELECTOR ==================== */}
-          <div
-            className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col items-center justify-center h-64 gap-4"
-            onMouseEnter={() => setIsPaused(true)}
-            onMouseLeave={() => setIsPaused(false)}
-          >
+          {/* ==================== CERT BADGE ==================== */}
+          <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
             <img
-              src={badges[selectedBadge].src}
-              alt={badges[selectedBadge].alt}
-              className={`w-40 h-40 sm:w-45 sm:h-45 lg:w-50 lg:h-50 object-contain transition-all duration-300 ${
-                animating ? "opacity-0 scale-90" : "opacity-100 scale-100"
-              }`}
+              src={nse4Badge}
+              alt="Fortinet NSE 4 FortiOS Certification Badge"
+              className="w-50 h-50 object-contain"
             />
-            {/* DOT INDICATORS */}
-            <div className="flex justify-center gap-x-2">
-              {badges.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => handleDotClick(i)}
-                  className={`h-2 rounded-full transition-all duration-300 ${
-                    selectedBadge === i
-                      ? "bg-[#1775EE] w-4"
-                      : "bg-[#C2DDFF] w-2"
-                  }`}
-                />
-              ))}
-            </div>
           </div>
 
           {/* ==================== JOB OPPORTUNITIES ==================== */}
@@ -265,8 +206,13 @@ export default function NSE5() {
               </span>
               <p>Certificate of Completion</p>
             </div>
-            <a href="#" className="text-sm font-medium underline mt-2">
-              Download the Fortinet Exam Topics Here
+            <a
+              href="https://training.fortinet.com/local/staticpage/view.php?page=nse_4"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm font-medium underline mt-2"
+            >
+              See the Official Fortinet NSE 4 Exam Details
             </a>
           </div>
         </aside>

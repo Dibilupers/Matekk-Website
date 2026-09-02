@@ -58,6 +58,8 @@ export const TRAINING_COURSES = [
       { name: "NSE 7 Cloud Security", path: "/training/fortinet/nse7cloudsecurity" },
       { name: "NSE 7 Security Operations", path: "/training/fortinet/nse7securityoperations" },
       { name: "NSE 8", path: "/training/fortinet/nse8" },
+      { name: "NSE Certified – MSSP Security", path: "/training/fortinet/nsemsspsecurity" },
+      { name: "NSE Certified – OT Security", path: "/training/fortinet/nseotsecurity" },
     ],
   },
 

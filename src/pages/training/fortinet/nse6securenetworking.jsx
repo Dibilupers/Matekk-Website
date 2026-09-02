@@ -5,7 +5,7 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
-import SecureNetworking from "../../../assets/nsesecurenetworking.webp"; // Course badge image
+import SecureNetworking from "../../../assets/nse-6-secure-networking.svg"; // Course badge image
 import FortinetHero from "../../../assets/FortinetHeader.webp";
 import FortinetFooter from "../../../assets/FortinetFooter.webp";
 import MealIcon from "../../../assets/Meal.svg";
@@ -22,13 +22,14 @@ import TrainingHeroBanner from "../../../components/section/TrainingHeroBanner";
 export default function NSE6SecureNetworking() {
   // ==================== COURSE MODULES ====================
   const modules = [
-    { title: "Introduction", items: [] },
-    { title: "Asset Management", items: [] },
-    { title: "Access Control", items: [] },
-    { title: "Segmentation", items: [] },
-    { title: "Protection", items: [] },
-    { title: "Logging and Monitoring", items: [] },
-    { title: "Risk Assessment", items: [] },
+    { title: "Centralized Management with FortiManager", items: [] },
+    { title: "Device Provisioning and Policy Packages", items: [] },
+    { title: "Centralized Logging and Analytics with FortiAnalyzer", items: [] },
+    { title: "Reporting and Event Handling", items: [] },
+    { title: "Network Access Control with FortiNAC", items: [] },
+    { title: "Device Profiling and Automated Response", items: [] },
+    { title: "Secure Voice Communications with FortiVoice", items: [] },
+    { title: "Fortinet Security Fabric Integration", items: [] },
   ];
 
   return (
@@ -38,7 +39,7 @@ export default function NSE6SecureNetworking() {
         bgImage={FortinetHero}
         category="FORTINET"
         title="NSE 6 Secure Networking"
-        description="Learn to protect operational technology (OT) infrastructures using Fortinet solutions. This course provides hands-on experience in designing, deploying, and managing FortiGate, FortiNAC, FortiAnalyzer, and FortiSIEM devices for OT security."
+        description="Learn to centrally manage and monitor a Fortinet deployment using FortiManager, FortiAnalyzer, and FortiNAC. This course provides hands-on experience in policy administration, log analysis, and network access control across a growing infrastructure."
       />
 
       {/* ==================== CONTENT SECTION - Training Informations/Content ==================== */}
@@ -54,16 +55,16 @@ export default function NSE6SecureNetworking() {
             {/* About Section - Description */}
             {/* CHANGE: Course description paragraphs */}
             <p>
-              In this course, you will gain practical skills to secure
-              operational technology (OT) environments using Fortinet solutions.
-              You will learn to design, deploy, administer, and monitor
-              FortiGate, FortiNAC, FortiAnalyzer, and FortiSIEM devices to
-              protect OT infrastructures.
+              In this course, you will gain practical skills in administering
+              FortiManager for centralized policy and device management, and
+              FortiAnalyzer for consolidated logging, analytics, and
+              reporting across a Fortinet deployment.
             </p>
             <p>
-              These skills provide a strong foundation for designing,
-              implementing, and operating a comprehensive OT security solution
-              using Fortinet products.
+              You will also learn to use FortiNAC to gain visibility into
+              connected devices and enforce automated network access
+              controls, building a strong foundation for managing a
+              distributed, secure networking infrastructure.
             </p>
           </section>
 
@@ -78,21 +79,21 @@ export default function NSE6SecureNetworking() {
             <div className="grid grid-cols-1 gap-4">
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Explain the fundamentals of OT infrastructures</p>
+                <p>Provision and manage FortiGate devices from FortiManager</p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Secure an OT environment following the Purdue model</p>
+                <p>Build and deploy policy packages across multiple devices</p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Use FortiGate and FortiNAC to identify and manage devices</p>
+                <p>Consolidate logs and generate reports with FortiAnalyzer</p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <p>
-                  Implement segmentation and microsegmentation within an OT
-                  network
+                  Use FortiNAC to profile devices and automate network access
+                  control
                 </p>
               </div>
             </div>
@@ -145,10 +146,21 @@ export default function NSE6SecureNetworking() {
             {/* Target Learners - Title */}
             <h5 className="text-[#1775EE] ">Target Learners</h5>
             {/* Target Learners - List */}
-            {["Beginners", "Zero Knowledge"].map((job) => (
+            {["Advanced"].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
                 <span>{job}</span>
+              </p>
+            ))}
+          </div>
+
+          {/* ==================== PREREQUISITES ====================*/}
+          <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-2">
+            <h5 className="text-[#1775EE] ">Prerequisites</h5>
+            {["Active NSE 4 certification"].map((item) => (
+              <p key={item} className="flex gap-2 justify-left items-center">
+                <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
+                <span>{item}</span>
               </p>
             ))}
           </div>
@@ -228,8 +240,13 @@ export default function NSE6SecureNetworking() {
             </div>
 
             {/* CHANGE: Download link text and URL */}
-            <a href="#" className="text-sm font-medium underline mt-2">
-              Download the Fortinet Exam Topics Here
+            <a
+              href="https://training.fortinet.com/local/staticpage/view.php?page=nse_6_secure_networking"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm font-medium underline mt-2"
+            >
+              See the Official Fortinet NSE 6 Secure Networking Exam Details
             </a>
           </div>
         </aside>
@@ -238,7 +255,7 @@ export default function NSE6SecureNetworking() {
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
         bgImage={FortinetFooter} // CHANGE: Update background image for the footer banner
-        description="Advance your networking career and prepare for the Fortinet Enterprise exam."
+        description="Advance your networking career and prepare for the Fortinet NSE 6 Secure Networking exam."
       />
     </main>
   );

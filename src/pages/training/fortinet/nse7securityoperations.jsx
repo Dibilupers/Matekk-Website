@@ -5,7 +5,7 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
-import SecurityOperations from "../../../assets/nsesecurityoperations.webp"; // Course badge image
+import SecurityOperations from "../../../assets/nse-7-security-operations.svg"; // Course badge image
 import FortinetHero from "../../../assets/FortinetHeader.webp";
 import FortinetFooter from "../../../assets/FortinetFooter.webp";
 import MealIcon from "../../../assets/Meal.svg";
@@ -144,10 +144,24 @@ export default function NSE7SecurityOperations() {
             {/* Target Learners - Title */}
             <h5 className="text-[#1775EE] ">Target Learners</h5>
             {/* Target Learners - List */}
-            {["Beginners", "Zero Knowledge"].map((job) => (
+            {["Advanced"].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
                 <span>{job}</span>
+              </p>
+            ))}
+          </div>
+
+          {/* ==================== PREREQUISITES ====================*/}
+          <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-2">
+            <h5 className="text-[#1775EE] ">Prerequisites</h5>
+            {[
+              "Active NSE 4 certification",
+              "Active NSE 5 or NSE 6 certification (Security Operations track)",
+            ].map((item) => (
+              <p key={item} className="flex gap-2 justify-left items-center">
+                <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
+                <span>{item}</span>
               </p>
             ))}
           </div>
@@ -227,8 +241,13 @@ export default function NSE7SecurityOperations() {
             </div>
 
             {/* CHANGE: Download link text and URL */}
-            <a href="#" className="text-sm font-medium underline mt-2">
-              Download the Fortinet Exam Topics Here
+            <a
+              href="https://training.fortinet.com/local/staticpage/view.php?page=nse_7_security_operations"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm font-medium underline mt-2"
+            >
+              See the Official Fortinet NSE 7 Security Operations Exam Details
             </a>
           </div>
         </aside>
@@ -237,7 +256,7 @@ export default function NSE7SecurityOperations() {
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
         bgImage={FortinetFooter} // CHANGE: Update background image for the footer banner
-        description="Advance your networking career and prepare for the Fortinet Enterprise exam."
+        description="Advance your networking career and prepare for the Fortinet NSE 7 Security Operations exam."
       />
     </main>
   );

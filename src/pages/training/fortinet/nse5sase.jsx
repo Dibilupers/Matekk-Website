@@ -2,7 +2,7 @@ import Button from "../../../components/ui/button";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
-import ccnaBadge from "../../../assets/FortinetNSE5SASE.png";
+import ccnaBadge from "../../../assets/nse-5-sase.svg";
 import FortinetHero from "../../../assets/FortinetHeader.webp";
 import FortinetFooter from "../../../assets/FortinetFooter.webp";
 import MealIcon from "../../../assets/Meal.svg";
@@ -73,24 +73,22 @@ export default function NSE5SASE() {
             <div className="grid flex-col lg:flex-col-2 gap-4">
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Set up a FortiNAC-F system to achieve network visibility</p>
+                <p>Explain core SASE and SD-WAN concepts and architecture</p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <p>
-                  Use control features for network access and automated policy
-                  enforcement
+                  Perform initial deployment and configuration of FortiSASE
                 </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Integrate FortiNAC-F with the Fortinet Security Fabric</p>
+                <p>Apply endpoint profiles and secure internet access policies</p>
               </div>
               <p className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <span>
-                  Combine visibility and control with security device
-                  integrations to automate threat responses
+                  Monitor and report on user activity and security events
                 </span>
               </p>
             </div>
@@ -147,6 +145,17 @@ export default function NSE5SASE() {
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
                 <span>{job}</span>
+              </p>
+            ))}
+          </div>
+
+          {/* ==================== PREREQUISITES ====================*/}
+          <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-2">
+            <h5 className="text-[#1775EE] ">Prerequisites</h5>
+            {["Active NSE 4 certification"].map((item) => (
+              <p key={item} className="flex gap-2 justify-left items-center">
+                <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
+                <span>{item}</span>
               </p>
             ))}
           </div>
@@ -226,8 +235,13 @@ export default function NSE5SASE() {
             </div>
 
             {/* CHANGE: Download link text and URL */}
-            <a href="#" className="text-sm font-medium underline mt-2">
-              Download the Palo Alto Exam Topics Here
+            <a
+              href="https://training.fortinet.com/local/staticpage/view.php?page=nse_5_sase"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm font-medium underline mt-2"
+            >
+              See the Official Fortinet NSE 5 SASE Exam Details
             </a>
           </div>
         </aside>

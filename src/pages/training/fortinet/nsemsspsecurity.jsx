@@ -5,7 +5,7 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
-import cloudSecCerti from "../../../assets/nse-6-cloud-security.svg"; // Course badge image
+import msspBadge from "../../../assets/nse-mssp-security-architect.svg"; // Course badge image
 import FortinetHero from "../../../assets/FortinetHeader.webp";
 import FortinetFooter from "../../../assets/FortinetFooter.webp";
 import MealIcon from "../../../assets/Meal.svg";
@@ -18,22 +18,15 @@ import TrainingTemplateFooter from "../../../components/section/TrainingTemplate
 import TrainingHeroBanner from "../../../components/section/TrainingHeroBanner";
 
 // ==================== COMPONENT NAME ====================
-export default function NSE6CloudSecurity() {
+export default function NSEMSSPSecurity() {
   // ==================== COURSE MODULES ====================
   const modules = [
-    { title: "Email Concepts", items: [] },
-    { title: "Basic Setup", items: [] },
-    { title: "Access Control and Policies", items: [] },
-    { title: "Authentication", items: [] },
-    { title: "Session Management", items: [] },
-    { title: "Antivirus and Antispam", items: [] },
-    { title: "Content Inspection", items: [] },
-    { title: "Securing Communications", items: [] },
-    { title: "High Availability", items: [] },
-    { title: "Server Mode", items: [] },
-    { title: "Transparent Mode", items: [] },
-    { title: "Maintenance", items: [] },
-    { title: "Troubleshooting", items: [] },
+    { title: "MSSP Service Delivery Concepts", items: [] },
+    { title: "Multi-Tenant Architecture and Onboarding", items: [] },
+    { title: "Centralized Management Across Customer Environments", items: [] },
+    { title: "Monitoring and Analytics for Managed Clients", items: [] },
+    { title: "Incident Handling and Escalation Workflows", items: [] },
+    { title: "Reporting and Service-Level Compliance", items: [] },
   ];
 
   return (
@@ -42,8 +35,8 @@ export default function NSE6CloudSecurity() {
       <TrainingHeroBanner
         bgImage={FortinetHero}
         category="FORTINET"
-        title="NSE 6 Cloud Security"
-        description="Learn to secure your network from email-based threats using FortiMail. This course provides hands-on experience in deployment, management, and advanced threat protection for critical business communications."
+        title="NSE Certified – MSSP Security"
+        description="Learn to design, deliver, and manage Fortinet security services across multiple customer environments as a managed security service provider (MSSP). This industry certification course builds skills in multi-tenant management, monitoring, and incident response at scale."
       />
 
       {/* ==================== CONTENT SECTION - Training Informations/Content ==================== */}
@@ -57,17 +50,18 @@ export default function NSE6CloudSecurity() {
               About This <span className="text-[#1775EE]">Course</span>
             </h3>
             {/* About Section - Description */}
-            {/* CHANGE: Course description paragraphs */}
             <p>
-              In this course, you will explore common email security challenges
-              and gain practical skills in deploying, managing, and
-              troubleshooting FortiMail to protect your network from email-borne
-              threats.
+              In this course, you will gain practical skills to operate as a
+              managed security service provider (MSSP) using Fortinet
+              solutions. You will learn to onboard multiple customer
+              environments, apply centralized management and monitoring, and
+              deliver consistent security outcomes at scale.
             </p>
             <p>
-              You will also learn the role of FortiMail as a specialized
-              security device and how its features deliver high-performance,
-              in-depth protection for business-critical communications.
+              As an industry certification built on the NSE track, MSSP
+              Security validates the ability to run day-to-day security
+              operations for multiple clients while meeting service-level and
+              reporting requirements.
             </p>
           </section>
 
@@ -82,27 +76,24 @@ export default function NSE6CloudSecurity() {
             <div className="grid grid-cols-1 gap-4">
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
+                <p>Explain core MSSP service delivery models and responsibilities</p>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
+                <p>Onboard and isolate multiple customer environments securely</p>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <p>
-                  Integrate FortiMail with FortiSandbox for advanced threat
-                  protection (ATP)
+                  Apply centralized monitoring and analytics across managed
+                  clients
                 </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <p>
-                  Prevent accidental or intentional data leaks of confidential
-                  or regulated information
-                </p>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Archive email to meet compliance requirements</p>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>
-                  Deploy high availability (HA) and redundant infrastructure to
-                  ensure maximum uptime of critical email systems
+                  Handle incidents and produce compliance reporting for
+                  service-level agreements
                 </p>
               </div>
             </div>
@@ -126,8 +117,8 @@ export default function NSE6CloudSecurity() {
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
             {/* Cert Badge - Change/Update Image */}
             <img
-              src={cloudSecCerti}
-              alt="NSE Cloud Security Certification Badge"
+              src={msspBadge}
+              alt="NSE Certified MSSP Security Badge"
               className="w-50 h-50 object-contain"
             />
           </div>
@@ -138,10 +129,10 @@ export default function NSE6CloudSecurity() {
             <h5 className="text-[#1775EE] ">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
-              "Junior Network Administrator",
-              "Entry-Level Security Analyst",
-              "IT Security Associate",
-              "Cybersecurity Intern",
+              "MSSP Security Engineer",
+              "Managed SOC Analyst",
+              "Client Security Operations Manager",
+              "Security Service Delivery Consultant",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
@@ -166,7 +157,12 @@ export default function NSE6CloudSecurity() {
           {/* ==================== PREREQUISITES ====================*/}
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-2">
             <h5 className="text-[#1775EE] ">Prerequisites</h5>
-            {["Active NSE 4 certification"].map((item) => (
+            {[
+              "Active NSE 4 certification",
+              "Active NSE 5 or NSE 6 certification",
+              "Active NSE 7 certification (same track as the NSE 5 or NSE 6)",
+              "Pass the MSSP Security proctored exam",
+            ].map((item) => (
               <p key={item} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
                 <span>{item}</span>
@@ -250,12 +246,12 @@ export default function NSE6CloudSecurity() {
 
             {/* CHANGE: Download link text and URL */}
             <a
-              href="https://training.fortinet.com/local/staticpage/view.php?page=nse_6_cloud_security"
+              href="https://training.fortinet.com/local/staticpage/view.php?page=nse_mssp_security"
               target="_blank"
               rel="noopener noreferrer"
               className="text-sm font-medium underline mt-2"
             >
-              See the Official Fortinet NSE 6 Cloud Security Exam Details
+              See the Official Fortinet MSSP Security Exam Details
             </a>
           </div>
         </aside>
@@ -264,7 +260,7 @@ export default function NSE6CloudSecurity() {
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
         bgImage={FortinetFooter} // CHANGE: Update background image for the footer banner
-        description="Advance your networking career and prepare for the Fortinet NSE 6 Cloud Security exam."
+        description="Advance your career and prepare for the Fortinet MSSP Security industry certification exam."
       />
     </main>
   );
