@@ -22,126 +22,78 @@ export default function CCNPSecurity() {
     {
       title: "1.0 Security Concepts",
       items: [
-        {
-          subTitle:
-            "1.1 Explain common threats against on-premises, hybrid, and cloud environments",
-          items: [
-            "1.1.a On-premises: viruses, trojans, DoS/DDoS attacks, phishing, rootkits, man-in-the-middle attacks, SQL injection, cross-site scripting, malware",
-            "1.1.b Cloud: data breaches, insecure APIs, DoS/DDoS, compromised credentials",
-          ],
-        },
-        "1.2 Compare common security vulnerabilities such as software bugs, weak and/or hardcoded passwords, OWASP top ten, missing encryption ciphers, buffer overflow, path traversal, cross-site scripting/forgery",
-        "1.3 Describe functions of the cryptography components such as hashing, encryption, PKI, SSL, IPsec, NAT-T IPv4 for IPsec, preshared key, and certificate-based authorization",
-        "1.4 Compare site-to-site and remote access VPN deployment types and components such as virtual tunnel interfaces, standards-based IPsec, DMVPN, FlexVPN, and Cisco Secure Client including high availability considerations",
-        "1.5 Describe security intelligence authoring, sharing, and consumption",
-        "1.6 Describe the controls used to protect against phishing and social engineering attacks",
-        "1.7 Explain North Bound and South Bound APIs in the SDN architecture",
-        "1.8 Explain Cisco DNA Center APIs for network provisioning, optimization, monitoring, and troubleshooting",
-        "1.9 Interpret basic Python scripts used to call Cisco Security appliances APIs",
+        "1.1 Explain attack threats against on-premises, hybrid, and cloud environments such as viruses, trojans, DoS/DDoS, phishing, rootkits, man-in-the middle, malware, data breaches, insecure APIs, compromised credentials, PQC, and AI",
+        "1.2 Describe security vulnerabilities and exploits such as software bugs, weak and/or hardcoded passwords, OWASP top ten, missing encryption ciphers, buffer overflow, path traversal, cross-site scripting/forgery, SQL injection, and identification and prioritization using CVEs and CVSS scores",
+        "1.3 Describe vulnerabilities in AI/LLM models such as prompt injection, system prompt leakage, vector and embedding weaknesses, and supply chain",
+        "1.4 Describe the controls used to protect against phishing and social engineering attacks",
+        "1.5 Describe cryptography security components such as hashing, encryption, PKI, SSL, TLS, QUIC, MASQUE, IPsec, NAT-T IPv4 for IPsec, preshared key, certificate-based authorization, and post-quantum cryptography",
+        "1.6 Describe site-to-site and remote access VPN deployment types such as virtual tunnel interfaces, standards-based IPsec, SSL VPN, DMVPN, FlexVPN, and GETVPN",
+        "1.7 Describe security intelligence authoring, sharing, and consumption",
+        "1.8 Describe zero trust architecture",
+        "1.9 Describe defense in depth strategy such as Secure Architecture for Everyone (SAFE)",
+        "1.10 Interpret scripts used to call security appliances APIs in a language such as Python",
       ],
     },
     {
       title: "2.0 Network Security",
       items: [
-        "2.1 Compare network security solutions that provide intrusion prevention and firewall capabilities",
-        "2.2 Describe deployment models of network security solutions and architectures that provide intrusion prevention and firewall capabilities",
-        "2.3 Describe the components, capabilities, and benefits of NetFlow and Flexible NetFlow records",
-        {
-          subTitle:
-            "2.4 Configure and verify network infrastructure security methods",
-          items: [
-            "2.4.a Layer 2 methods (network segmentation using VLANs; Layer 2 and port security; DHCP snooping; Dynamic ARP inspection; storm control; PVLANs to segregate network traffic; and defenses against MAC, ARP, VLAN hopping, STP, and DHCP rogue attacks)",
-            "2.4.b Device hardening of network infrastructure security devices (control plane, data plane, and management plane)",
-          ],
-        },
-        "2.5 Implement segmentation, access control policies, AVC, URL filtering, malware protection, and intrusion policies",
-        "2.6 Implement management options for network security solutions (single vs. multidevice manager, in-band vs. out-of-band, cloud vs. on-premises)",
-        "2.7 Configure AAA for device and network access such as TACACS+ and RADIUS",
-        "2.8 Configure secure network management of perimeter security and infrastructure devices such as SNMPv3, NetConf, RestConf, APIs, secure syslog, and NTP with authentication",
-        {
-          subTitle:
-            "2.9 Configure and verify site-to-site and remote access VPN",
-          items: [
-            "2.9.a Site-to-site VPN using Cisco routers and IOS",
-            "2.9.b Remote access VPN using Cisco AnyConnect Secure Mobility client",
-            "2.9.c Debug commands to view IPsec tunnel establishment and troubleshooting",
-          ],
-        },
+        "2.1 Describe network security solutions and deployment models that provide intrusion prevention and firewall capabilities",
+        "2.2 Describe security monitoring and telemetry technologies",
+        "2.3 Configure network infrastructure security methods (network segmentation using VLANs or SGTs; Layer 2 and port security; DHCP snooping; Dynamic ARP inspection; storm control; and defenses against MAC, ARP, VLAN hopping, STP, and DHCP rogue attacks)",
+        "2.4 Select management options for network security solutions (single vs. multidevice manager, in-band vs. out-of-band, on-premises vs. cloud with Cisco Security Cloud Control)",
+        "2.5 Describe CIS benchmarks for hardening devices such as Cisco Secure Firewall (FTD) and Cisco IOS XE",
+        "2.6 Troubleshoot AAA for device and network access such as TACACS+ and RADIUS",
+        "2.7 Configure secure network management of perimeter security and infrastructure devices such as SNMPv3, NetConf, RestConf, APIs, secure syslog, and NTP with authentication",
+        "2.8 Implement access control policies, AVC, URL filtering, malware protection, and intrusion prevention using Cisco Secure Firewall (FTD)",
+        "2.9 Configure site-to-site and remote access VPN using Cisco Secure Firewall (FTD) and Cisco Secure Client",
+        "2.10 Troubleshoot VPN tunnel establishment on Cisco Secure Firewall (FTD)",
       ],
     },
     {
-      title: "3.0 Securing the Cloud",
+      title: "3.0 Cloud Security",
       items: [
-        {
-          subTitle: "3.1 Identify security solutions for cloud environments",
-          items: [
-            "3.1.a Public, private, hybrid, and community clouds",
-            "3.1.b Cloud service models: SaaS, PaaS, IaaS (NIST 800-145)",
-          ],
-        },
-        {
-          subTitle:
-            "3.2 Compare security responsibility for the different cloud service models",
-          items: [
-            "3.2.a Patch management in the cloud",
-            "3.2.b Security assessment in the cloud",
-          ],
-        },
-        "3.3 Describe the concept of DevSecOps (CI/CD pipeline, container orchestration, and secure software development)",
-        "3.4 Implement application and data security in cloud environments",
-        "3.5 Identify security capabilities, deployment models, and policy management to secure the cloud",
-        "3.6 Configure cloud logging and monitoring methodologies",
-        "3.7 Describe application and workload security concepts",
+        "3.1 Describe security responsibility within common Cloud Shared Responsibility Models",
+        "3.2 Select security capabilities, deployment models, cloud security frameworks, and policy management to secure the cloud",
+        "3.3 Select security solutions for cloud environments (public; private; hybrid; community cloud; NIST 800-145 SaaS, PaaS, and IaaS; and Cloud Access Security Broker)",
+        "3.4 Describe network, application, and data security in cloud environments with solutions such as Cisco Multicloud Defense and Cisco Secure Workload",
+        "3.5 Configure Splunk to ingest cloud logging and monitoring data from other security solutions",
+        "3.6 Describe application and workload security concepts including eBPF",
+        "3.7 Describe DevSecOps (Infrastructure as Code security, CI/CD pipeline, container orchestration, and secure software development)",
       ],
     },
     {
-      title: "4.0 Content Security",
+      title: "4.0 Secure Service Edge",
       items: [
-        "4.1 Implement traffic redirection and capture methods for web proxy",
-        "4.2 Describe web proxy identity and authentication including transparent user identification",
-        "4.3 Compare the components, capabilities, and benefits of on-premises, hybrid, and cloud-based email and web solutions (Cisco Secure Email Gateway, Cisco Secure Email Cloud Gateway, and Cisco Secure Web Appliance)",
-        "4.4 Configure and verify web and email security deployment methods to protect on-premises, hybrid, and remote users",
-        "4.5 Configure and verify email security features such as SPAM filtering, antimalware filtering, DLP, blocklisting, and email encryption",
-        "4.6 Configure and verify Cisco Umbrella Secure Internet Gateway and web security features such as blocklisting, URL filtering, malware scanning, URL categorization, web application filtering, and TLS decryption",
-        "4.7 Describe the components, capabilities, and benefits of Cisco Umbrella",
-        "4.8 Configure and verify web security controls on Cisco Umbrella (identities, URL content settings, destination lists, and reporting)",
+        "4.1 Describe Security Service Edge (SSE) and Secure Access Service Edge (SASE)",
+        "4.2 Configure Cisco Secure Access Secure Internet Access",
+        "4.3 Configure Cisco Secure Access Secure Private Access",
+        "4.4 Configure data loss prevention and AI guardrails for secure internet access",
+        "4.5 Interpret Cisco Secure Access Investigate scores and indicators",
       ],
     },
     {
       title: "5.0 Endpoint Protection and Detection",
       items: [
-        "5.1 Compare Endpoint Protection Platforms (EPP) and Endpoint Detection & Response (EDR) solutions",
-        "5.2 Configure endpoint antimalware protection using Cisco Secure Endpoint",
-        "5.3 Configure and verify outbreak control and quarantines to limit infection",
-        "5.4 Describe justifications for endpoint-based security",
-        "5.5 Describe the value of endpoint device management and asset inventory systems such as MDM",
-        "5.6 Describe the uses and importance of a multifactor authentication (MFA) strategy",
-        "5.7 Describe endpoint posture assessment solutions to ensure endpoint security",
-        "5.8 Explain the importance of an endpoint patching strategy",
+        "5.1 Describe Endpoint Protection Platforms (EPP) and Endpoint Detection and Response (EDR) solutions",
+        "5.2 Describe endpoint device management and asset inventory systems such as MDM",
+        "5.3 Describe endpoint posture assessment solutions to ensure endpoint security",
+        "5.4 Describe endpoint protection and detection security with solutions such as Cisco Secure Client and Cisco Secure Malware Analytics",
+        "5.5 Configure endpoint antimalware protection using Cisco Secure Endpoint",
+        "5.6 Interpret Cisco Secure Endpoint malware detection events",
+        "5.7 Configure email security features with Cisco Security Email Threat Defense",
       ],
     },
     {
-      title: "6.0 Secure Network Access, Visibility, and Enforcement",
+      title: "6.0 Network Access, Visibility, and Enforcement",
       items: [
-        "6.1 Describe identity management and secure network access concepts such as guest services, profiling, posture assessment and BYOD",
-        "6.2 Configure and verify network access control mechanisms such as 802.1X, MAB, WebAuth",
-        "6.3 Describe network access with CoA",
-        "6.4 Describe the benefits of device compliance and application control",
-        "6.5 Explain exfiltration techniques (DNS tunneling, HTTPS, email, FTP/SSH/SCP/SFTP, ICMP, Messenger, IRC, NTP)",
-        "6.6 Describe the benefits of network telemetry",
-        {
-          subTitle:
-            "6.7 Describe the components, capabilities, and benefits of these security products and solutions",
-          items: [
-            "6.7.a Cisco Secure Network Analytics",
-            "6.7.b Cisco Secure Cloud Analytics",
-            "6.7.c Cisco pxGrid",
-            "6.7.d Cisco Umbrella Investigate",
-            "6.7.e Cisco Cognitive Intelligence",
-            "6.7.f Cisco Encrypted Traffic Analytics",
-            "6.7.g Cisco Secure Client Network Visibility Module (NVM)",
-          ],
-        },
+        "6.1 Describe identity management and secure network access concepts such as guest services, profiling, posture assessment, and BYOD",
+        "6.2 Describe device compliance and application control",
+        "6.3 Configure network access control mechanisms such as 802.1X and MAB with Cisco Identity Services Engine",
+        "6.4 Configure network access with CoA",
+        "6.5 Explain exfiltration techniques such as DNS tunneling, HTTPS, email, FTP/SSH/SCP/SFTP, ICMP, Messenger, IRC, NTP, and cloud storage",
+        "6.6 Describe network visibility and enforcement using telemetry and native AI/ML capabilities with XDR and SIEM/SOAR platforms such as Splunk and Cisco XDR",
+        "6.7 Describe Cisco Duo in a zero-trust security architecture (Trust Monitor, MFA, Device Trust, health checks, Adaptive Access policies, SSO, and CII)",
+        "6.8 Describe managing, orchestrating, and automating security information and events with Splunk",
       ],
     },
   ];
@@ -319,7 +271,7 @@ export default function CCNPSecurity() {
       examCode: "350-701",
       duration: "120 minutes",
       description:
-        "Implementing and Operating Cisco Security Solutions (350-701 SCOR) v1.1 is a 120-minute exam that assesses a candidate's knowledge of network security, secure access, threat defense, VPNs, firewall technologies, and automation using Cisco platforms. This is the required core exam for both the CCNP Security and CCIE Security certifications.",
+        "The Implementing and Operating Cisco Security Core Technologies (350-701 SCOR) v2.0 is a 120-minute exam that assesses a candidate's knowledge of implementing and operating core security technologies. Passing this exam earns the Cisco Certified Specialist - Security Core certification and satisfies the core exam requirement for both the CCNP Security and CCIE Security certifications.",
       about:
         "This course prepares learners for the Implementing and Operating Cisco Security Solutions (350-701 SCOR) exam through instructor-led training with hands-on labs and guided instruction. It covers core security topics, including network security, secure access, threat defense, VPNs, firewall technologies, and automation. The program emphasizes practical configuration, monitoring, and troubleshooting using real-world scenarios to develop the skills and confidence needed for success in both CCNP Security and CCIE Security paths.",
       learn: [
@@ -346,7 +298,7 @@ export default function CCNPSecurity() {
       description:
         "Designing Cisco Security Infrastructure (300-745 SDSI) v1.0 is a 90-minute CCNP Security concentration exam assessing knowledge of security architecture, including infrastructure, applications, risk, events, automation, and DevSecOps.",
       about:
-        "This course prepares learners for the Designing Cisco Security Infrastructure (300-745 SDSI) exam through instructor-led training with hands-on labs and guided instruction. It covers key topics in security architecture, including secure infrastructure, applications, risk management, automation, and DevSecOps. The program emphasizes practical exercises and real-world scenarios to build the skills and confidence needed for success in the CCNP Security certification.",
+        "This course prepares learners for the Implementing and Operating Cisco Security Core Technologies (350-701 SCOR) v2.0 exam through instructor-led training with hands-on labs and guided instruction. It covers key topics in core security technologies, including network security, secure access, threat defense, VPNs, firewall technologies, and security automation. The program emphasizes practical exercises and real-world scenarios to build the skills and confidence needed for success in the Cisco Certified Network Professional (CCNP) Security and Cisco Certified Internetwork Expert (CCIE) Security certification core exam.",
       learn: [
         "SD-WAN Security Architecture",
         "Policy Enforcement and Encryption",

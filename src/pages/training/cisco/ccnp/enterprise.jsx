@@ -445,7 +445,7 @@ export default function CCNPEnterprise() {
       examCode: "300-410",
       duration: "90 minutes",
       description:
-        "The Implementing Cisco Enterprise Advanced Routing and Services exam (300-410 ENARSI) v1.2 validates a candidate's expertise in implementing and troubleshooting advanced routing technologies and services. This is a concentration exam for the CCNP Enterprise certification and also earns the Cisco Certified Specialist – Enterprise Advanced Infrastructure Implementation designation.",
+        "The Implementing Cisco Enterprise Advanced Routing and Services exam (300-410 ENARSI) v1.1 validates a candidate's expertise in implementing and troubleshooting advanced routing technologies and services. This is a concentration exam for the CCNP Enterprise certification and also earns the Cisco Certified Specialist – Enterprise Advanced Infrastructure Implementation designation.",
       about:
         "This course equips learners with advanced routing and services skills needed to pass the 300-410 ENARSI exam. Topics include advanced Layer 3 routing protocols (EIGRP, OSPF, BGP), VPN technologies (MPLS, DMVPN), infrastructure security (AAA, ACLs, CoPP), and infrastructure services (DHCP, IP SLA, NetFlow). The course stresses hands-on troubleshooting in real-world enterprise environments.",
       learn: [
