@@ -22,67 +22,67 @@ export default function CySA() {
   // ==================== COURSE MODULES ====================
   const modules = [
     {
-      title: "Security operations (33%)",
+      title: "Security operations (34%)",
       items: [
         <>
-          <strong>System and network architecture:</strong> explaining log ingestion, operating system (OS) concepts, infrastructure, network architecture, identity and access management (IAM), encryption, and sensitive data protection.
+          <strong>Explain system and network architecture concepts in security operations:</strong> security architecture components, identity concepts, and logging practices that support secure environments.
         </>,
         <>
-          <strong>Malicious activity indicators:</strong> analyzing network anomalies like bandwidth spikes and rogue devices, host issues like unauthorized software and data exfiltration, application irregularities like unexpected communication and service interruptions, and threats like social engineering attacks.
+          <strong>Analyze indicators of potential malicious activity:</strong> suspicious activity across networks, endpoints, cloud, and identity systems.
         </>,
         <>
-          <strong>Tools and techniques:</strong> detecting malicious activity using tools like Wireshark, security information and event management (SIEM), and VirusTotal, along with techniques like pattern recognition and email analysis, supported by scripting languages like Python and PowerShell.
+          <strong>Use tools to determine malicious activity:</strong> SIEM, EDR, packet analysis tools, and threat intelligence platforms.
         </>,
         <>
-          <strong>Threat intelligence and hunting:</strong> comparing threat actors, tactics, techniques, and procedures (TTP); confidence levels; collection methods; intelligence sharing; and hunting techniques.
+          <strong>Explain threat intelligence and threat-hunting concepts:</strong> frameworks, data sources, and methods used to identify and investigate threats.
         </>,
         <>
-          <strong>Process improvement:</strong> standardizing processes, streamlining operations, integrating tools, and using a single pane of glass.
+          <strong>Describe efficiency and process improvement in security operations:</strong> automation, workflows, and processes used to improve operational efficiency.
+        </>,
+        <>
+          <strong>Summarize concepts related to the use of AI in security operations:</strong> use cases, risks, and governance considerations.
         </>,
       ],
     },
     {
-      title: "Vulnerability management (30%)",
+      title: "Vulnerability management (26%)",
       items: [
         <>
-          <strong>Vulnerability scanning:</strong> implementing asset discovery, internal vs. external scanning, agent vs. agentless, credentialed vs. non-credentialed, passive vs. active, static vs. dynamic, and critical infrastructure scanning.
+          <strong>Implement the appropriate vulnerability scanning method:</strong> tools and techniques used to identify vulnerabilities across systems, networks, and applications.
         </>,
         <>
-          <strong>Assessment tool output:</strong> analyzing network scanning, web application scanners, vulnerability scanners, debuggers, multiprocess tools, and cloud infrastructure assessments.
+          <strong>Analyze output from vulnerability assessment tools:</strong> vulnerabilities, findings, and security gaps identified through scan results.
         </>,
         <>
-          <strong>Vulnerability prioritization:</strong> interpreting common vulnerability scoring system (CVSS), validating findings, assessing exploitability, and considering asset value and zero-day vulnerabilities.
+          <strong>Prioritize and mitigate vulnerabilities:</strong> risk-based approaches using scoring systems, threat intelligence, and business context.
         </>,
         <>
-          <strong>Mitigation controls:</strong> recommending controls for cross-site scripting (XSS), overflow vulnerabilities, and data poisoning.
-        </>,
-        <>
-          <strong>Vulnerability response:</strong> explaining compensating controls, patching, configuration management, maintenance windows, exceptions, governance, service-level objectives (SLOs), secure software development life cycle (SDLC), and threat modeling.
+          <strong>Explain concepts related to control types, risks, and vulnerability management:</strong> controls, policies, and compliance practices used to manage risk.
         </>,
       ],
     },
     {
-      title: "Incident response management (20%)",
+      title: "Incident Response and Management (24%)",
       items: [
         <>
-          <strong>Attack methodology frameworks:</strong> explaining cyber kill chains, diamond model of intrusion analysis, MITRE ATT&CK, Open Source Security Testing Methodology Manual (OSSTMM), and OWASP testing guide.
+          <strong>Summarize concepts related to attack methodology frameworks:</strong> models such as MITRE ATT&CK and the Cyber Kill Chain.
         </>,
         <>
-          <strong>Incident response activities:</strong> performing detection, analysis, containment, eradication, and recovery.
+          <strong>Outline the incident response process:</strong> phases including preparation, detection, analysis, containment, eradication, and recovery.
         </>,
         <>
-          <strong>Incident management life cycle:</strong> explaining incident response plans, tools, playbooks, tabletop exercises, training, business continuity (BC), disaster recovery (DR), forensic system analysis, and root cause analysis.
+          <strong>Implement incident response techniques:</strong> triage, evidence handling, escalation, remediation, and root cause identification.
         </>,
       ],
     },
     {
-      title: "Reporting and communication (17%)",
+      title: "Reporting and Communication (16%)",
       items: [
         <>
-          <strong>Vulnerability management reporting:</strong> explaining compliance reports, action plans, inhibitors to remediation, metrics, key performance indicators (KPIs), and stakeholder communication.
+          <strong>Explain vulnerability management reporting and communication:</strong> reports, dashboards, and communication activities used to present findings and support escalation during security events.
         </>,
         <>
-          <strong>Incident response reporting:</strong> explaining incident declaration, escalation, reporting, communication, root cause analysis, lessons learned, and metrics and KPIs.
+          <strong>Describe security operations, incident response reporting, and communication:</strong> incident documentation, post-incident reviews, and metrics such as detection time, response time, and remediation effectiveness.
         </>,
       ],
     },
@@ -94,7 +94,7 @@ export default function CySA() {
       <TrainingHeroBanner
         bgImage={comptiaHero}
         category="COMPTIA"
-        title="CySA+"
+        title="CySA+ V4"
         description="CompTIA CySA+ shows you how to detect, analyze, and respond to
               threats in real time. From vulnerability management to incident
               response, it equips you with the skills SOCs rely on to turn
@@ -114,12 +114,12 @@ export default function CySA() {
             {/* About Section - Description */}
             {/* CHANGE: Course description paragraphs */}
             <p>
-              CompTIA Cybersecurity Analyst (CySA+) is a leading certification
-              for professionals responsible for identifying, preventing, and
-              responding to security incidents through continuous monitoring. It
-              validates expertise in incident response and vulnerability
-              management while emphasizing the communication skills required for
-              effective analysis and regulatory compliance.
+              CompTIA Cybersecurity Analyst (CySA+) is a cybersecurity
+              certification that validates your ability to detect, analyze,
+              and respond to threats in security operations and vulnerability
+              management roles. It focuses on incident detection, response,
+              and continuous monitoring in modern environments, while managing
+              vulnerabilities and effectively communicating critical risks.
             </p>
           </section>
 
