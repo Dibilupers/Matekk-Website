@@ -28,7 +28,7 @@ import NAMRIA from '../../assets/NAMRIA.svg';
 import EZTECH from '../../assets/EZTECH.webp';
 import SOLVEROUS from '../../assets/SolverousLogo.webp';
 import URS from '../../assets/URS.webp';
-import TRENCHNET from '../../assets/Trenchnet.jpg';
+import TRENCHNET from '../../assets/Trenchnet.png';
 import PPA from '../../assets/PhilippinePortsAuthority.webp';
 
 function Partners() {
