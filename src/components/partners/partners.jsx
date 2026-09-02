@@ -28,6 +28,8 @@ import NAMRIA from '../../assets/NAMRIA.svg';
 import EZTECH from '../../assets/EZTECH.webp';
 import SOLVEROUS from '../../assets/SolverousLogo.webp';
 import URS from '../../assets/URS.webp';
+import TRENCHNET from '../../assets/Trenchnet.jpg';
+import PPA from '../../assets/PhilippinePortsAuthority.webp';
 
 function Partners() {
     // OPTIMIZED: Wrap array in useMemo to prevent recreation on every render
@@ -40,6 +42,7 @@ function Partners() {
         { src: DOF, alt: "DOF Logo", size: "w-10 md:w-16" },
         { src: IECEP, alt: "IECEP Logo", size: "w-10 md:w-18" },
         { src: CICC, alt: "CICC Logo", size: "w-10 md:w-18" },
+        { src: PPA, alt: "PPA Logo", size: "w-10 md:w-24" },
         { src: NAMRIA, alt: "NAMRIA Logo", size: "w-10 md:w-18" },
         { src: USTDI, alt: "USTDI Logo", size: "w-10 md:w-20" },
         { src: USTP, alt: "USTP Logo", size: "w-10 md:w-16" },
@@ -60,6 +63,7 @@ function Partners() {
         { src: SOLVEROUS, alt: "COMMSOURCE Logo", size: "w-10 md:w-20" },
         { src: STELLARSAT, alt: "STELLARSAT Logo", size: "w-10 md:w-32" },
         { src: EZTECH, alt: "EZTECH Logo", size: "w-10 md:w-26" },
+        { src: TRENCHNET, alt: "TRENCHNET Logo", size: "w-10 md:w-20" },
     ], []); // Empty dependency array means this only creates once
 
     // Reference to the scrollable container so we can control scrolling programmatically
