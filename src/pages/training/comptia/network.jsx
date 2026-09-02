@@ -57,31 +57,16 @@ export default function NetworkPlus() {
       title: "Network implementation (20%)",
       items: [
         <>
-          <strong>OSI model layers:</strong>  physical, data link, network, transport, session, presentation, application.
+          <strong>Routing technologies:</strong> static and dynamic routing (BGP, EIGRP, OSPF), route selection, NAT, PAT, FHRP, VIP, and subinterfaces.
         </>,
         <>
-          <strong>Networking appliances:</strong> routers, switches, firewalls, IDS/IPS, load balancers, proxies, NAS, SAN, and wireless devices.
+          <strong>Switching technologies:</strong> VLANs, interface configuration, spanning tree, MTU, and jumbo frames.
         </>,
         <>
-          <strong>Cloud concepts:</strong> NFV, VPC, network security groups, cloud gateways, deployment models (public, private, hybrid), service models (SaaS, IaaS, PaaS).
+          <strong>Wireless devices:</strong> channels, frequency options, SSID, network types, encryption, guest networks, authentication, antennas, and access points.
         </>,
         <>
-          <strong>Ports and protocols:</strong> FTP, SFTP, SSH, Telnet, SMTP, DNS, DHCP, HTTP, HTTPS, SNMP, LDAP, RDP, SIP.
-        </>,
-        <>
-          <strong>Traffic types:</strong> unicast, multicast, anycast, broadcast.
-        </>,
-        <>
-          <strong>Transmission media:</strong> wireless (802.11, cellular, satellite), wired (fiber, coaxial, DAC).
-        </>,
-        <>
-          <strong>Transceivers and connectors:</strong> SC, LC, ST, MPO, RJ11, RJ45, F-type, BNC.
-        </>,
-        <>
-          <strong>Network topologies:</strong> mesh, hybrid, star/hub-and-spoke, spine and leaf, point-to-point, three-tier, and collapsed core.
-        </>,
-        <>
-          <strong>IPv4 addressing:</strong> public vs. private, APIPA, RFC1918, loopback, subnetting (VLSM, CIDR), and address classes (A, B, C, D, E).
+          <strong>Physical installations:</strong> installation implications, power considerations, and environmental factors.
         </>,
       ],
     },
