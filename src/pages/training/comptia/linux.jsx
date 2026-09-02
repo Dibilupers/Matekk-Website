@@ -242,8 +242,8 @@ export default function Linux() {
             <h5 className="text-[#1775EE] ">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
-              "Network Engineer",
-              "IoT Engineer",
+              "System Engineer",
+              "System Administrator",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
@@ -257,7 +257,7 @@ export default function Linux() {
             {/* Target Learners - Title */}
             <h5 className="text-[#1775EE] ">Target Learners</h5>
             {/* Target Learners - List */}
-            {["About 12 months of hands-on experience working with Linux servers", "CompTIA A+, Network+, or Server+ certification"].map((job) => (
+            {["Career Shifter", "Tech Support", "Help Desk Technician", "Computer Repair Technician", "CompTIA A+, Network+, or Server+ certification", "About 12 months of hands-on experience working with Linux servers"].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
                 <span >{job}</span>

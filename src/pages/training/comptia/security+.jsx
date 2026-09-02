@@ -82,7 +82,7 @@ export default function SecurityPlus() {
           <strong>Computing resources:</strong> applying secure baselines, mobile solutions, hardening, software security, application security, monitoring, and log monitoring.
         </>,
         <>
-          <strong>Identity and access management:</strong> analyzing identity, authentication, authorization, and provisioning of hardware, software, and data assets.
+          <strong>Asset management:</strong>explaining acquisition, disposal, assignment, and monitoring/tracking of hardware, software, and data assets.
         </>,
         <>
           <strong>Vulnerability management:</strong> identifying, analyzing, remediating, validating, and reporting vulnerabilities.
@@ -123,10 +123,10 @@ export default function SecurityPlus() {
           <strong>Security compliance:</strong> summarizing compliance reporting, consequences of non-compliance, monitoring, and privacy.
         </>,
         <>
-          <strong>Security awareness:</strong> explaining infiltration, internal/external audits, and penetration testing.
+          <strong>Audits and assessments:</strong> explaining attestation, internal/external audits, and penetration testing.
         </>,
         <>
-          <strong>Security discoveries:</strong> implementing phishing training, anomalous behavior recognition, user guidance, reporting, and monitoring.
+          <strong>Security awareness:</strong>  implementing phishing training, anomalous behavior recognition, user guidance, reporting, and monitoring.
         </>,
       ],
     },
@@ -261,7 +261,7 @@ export default function SecurityPlus() {
             {/* Target Learners - Title */}
             <h5 className="text-[#1775EE] ">Target Learners</h5>
             {/* Target Learners - List */}
-            {[" CompTIA Network+ certification", "About 2 years of hands-on experience in security or systems administration"].map((job) => (
+            {["Career Shifter", "Help Desk Technician", "Network Administrator", "System Administrator", "Network Engineer", "System Engineer", "CompTIA Network+ certification", "About 2 years of hands-on experience in security or systems administration"].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
                 <span>{job}</span>

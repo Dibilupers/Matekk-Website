@@ -57,31 +57,16 @@ export default function NetworkPlus() {
       title: "Network implementation (20%)",
       items: [
         <>
-          <strong>OSI model layers:</strong>  physical, data link, network, transport, session, presentation, application.
+          <strong>Routing technologies:</strong> static and dynamic routing (BGP, EIGRP, OSPF), route selection, NAT, PAT, FHRP, VIP, and subinterfaces.
         </>,
         <>
-          <strong>Networking appliances:</strong> routers, switches, firewalls, IDS/IPS, load balancers, proxies, NAS, SAN, and wireless devices.
+          <strong>Switching technologies:</strong> VLANs, interface configuration, spanning tree, MTU, and jumbo frames.
         </>,
         <>
-          <strong>Cloud concepts:</strong> NFV, VPC, network security groups, cloud gateways, deployment models (public, private, hybrid), service models (SaaS, IaaS, PaaS).
+          <strong>Wireless devices:</strong> channels, frequency options, SSID, network types, encryption, guest networks, authentication, antennas, and access points.
         </>,
         <>
-          <strong>Ports and protocols:</strong> FTP, SFTP, SSH, Telnet, SMTP, DNS, DHCP, HTTP, HTTPS, SNMP, LDAP, RDP, SIP.
-        </>,
-        <>
-          <strong>Traffic types:</strong> unicast, multicast, anycast, broadcast.
-        </>,
-        <>
-          <strong>Transmission media:</strong> wireless (802.11, cellular, satellite), wired (fiber, coaxial, DAC).
-        </>,
-        <>
-          <strong>Transceivers and connectors:</strong> SC, LC, ST, MPO, RJ11, RJ45, F-type, BNC.
-        </>,
-        <>
-          <strong>Network topologies:</strong> mesh, hybrid, star/hub-and-spoke, spine and leaf, point-to-point, three-tier, and collapsed core.
-        </>,
-        <>
-          <strong>IPv4 addressing:</strong> public vs. private, APIPA, RFC1918, loopback, subnetting (VLSM, CIDR), and address classes (A, B, C, D, E).
+          <strong>Physical installations:</strong> installation implications, power considerations, and environmental factors.
         </>,
       ],
     },
@@ -273,7 +258,7 @@ export default function NetworkPlus() {
             <h5 className="text-[#1775EE] ">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
-              "Linux Administrator",
+              "NOC Engineer",
               "Network Engineer",
               "IoT Engineer"
             ].map((job) => (
@@ -289,7 +274,7 @@ export default function NetworkPlus() {
             {/* Target Learners - Title */}
             <h5 className="text-[#1775EE] ">Target Learners</h5>
             {/* Target Learners - List */}
-            {["CompTIA A+ certification", "About 9–12 months of practical experience in junior network administration or network support"].map((job) => (
+            {["Career Shifters","Ongoing Students","CompTIA A+ certification", "About 9–12 months of practical experience in junior network administration or network support"].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
                 <span>{job}</span>
