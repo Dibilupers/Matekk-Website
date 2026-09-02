@@ -185,19 +185,7 @@ export default function CCNPSecurity() {
       title: "2.0 Configuration",
       items: [
         "2.1 Configure system settings in Secure Firewall Management Center",
-        {
-          subTitle:
-            "2.2 Configure policies in Secure Firewall Management Center",
-          items: [
-            "2.2.a Access control",
-            "2.2.b Intrusion",
-            "2.2.c Malware & File",
-            "2.2.d DNS",
-            "2.2.e Identity",
-            "2.2.f Decryption",
-            "2.2.g Prefilter",
-          ],
-        },
+        "2.2 Configure security policies such as access control, DNS, identity, and network analysis policy in Secure Firewall Management Center",
         {
           subTitle:
             "2.3 Configure these features using Secure Firewall Management Center",
@@ -205,7 +193,7 @@ export default function CCNPSecurity() {
             "2.3.a Network discovery",
             "2.3.b Application detectors",
             "2.3.c Correlation",
-            "2.3.d Encrypted visibility engine",
+            "2.3.d Encrypted Visibility Engine",
           ],
         },
         {
@@ -217,16 +205,12 @@ export default function CCNPSecurity() {
           subTitle:
             "2.5 Configure devices using Secure Firewall Management Center",
           items: [
-            "2.5.a Device management",
-            "2.5.b NAT",
-            "2.5.c VPN",
-            "2.5.d QoS",
-            "2.5.e Platform settings",
-            "2.5.f Certificates",
-            "2.5.g Routing",
+            "2.5.a Device management such as certificates, platform setting, and health policy",
+            "2.5.b Network settings such as NAT, QoS, and routing",
+            "2.5.c Secure access such as zero trust network access, and VPN",
           ],
         },
-        "2.6 Describe the use of Snort within Secure Firewall Threat Defense",
+        "2.6 Describe Snort within Secure Firewall Threat Defense",
       ],
     },
     {
@@ -235,17 +219,21 @@ export default function CCNPSecurity() {
         "3.1 Troubleshoot with Secure Firewall Management Center GUI and device CLI",
         "3.2 Configure dashboards and reporting in Secure Firewall Management Center",
         {
-          subTitle: "3.3 Troubleshoot using:",
-          items: ["3.3.a Packet capture procedures", "3.3.b Packet Tracer"],
-        },
-        "3.4 Analyze risk and standard reports",
-        {
-          subTitle: "3.5 Describe management options",
+          subTitle: "3.3 Troubleshoot Firewall Threat Defense using tools:",
           items: [
-            "3.5.a Cisco Defense Orchestrator",
-            "3.5.b Cloud-delivered Firewall Management Center",
-            "3.5.c Secure Firewall Device Manager",
-            "3.5.d Secure Firewall Management Center",
+            "3.3.a Packet capture procedures",
+            "3.3.b Packet Tracer",
+            "3.3.c Firewall engine debug",
+            "3.3.d System Support Trace",
+          ],
+        },
+        "3.4 Analyze risk and standard reports such as events (connection, discovery, intrusion, malware, and unified) and network map",
+        {
+          subTitle: "3.5 Describe device management tools",
+          items: [
+            "3.5.a Cisco Security Cloud Control Firewall Management (formerly Cloud-delivered Firewall Management Center)",
+            "3.5.b Secure Firewall Device Manager",
+            "3.5.c Secure Firewall Management Center",
           ],
         },
       ],
@@ -253,13 +241,14 @@ export default function CCNPSecurity() {
     {
       title: "4.0 Integration",
       items: [
-        "4.1 Configure Cisco Secure Firewall Malware Defense (formerly AMP for Networks) in Secure Firewall Management Center",
-        "4.2 Configure Cisco Secure Endpoint (formerly AMP for Endpoints) integration with Secure Firewall Management Center",
+        "4.1 Configure Cisco Secure Firewall Malware Defense in Secure Firewall Management Center",
+        "4.2 Configure Cisco Secure Endpoint integration with Secure Firewall Management Center",
         "4.3 Implement Threat Intelligence Director for third-party security intelligence feeds",
-        "4.4 Describe using Cisco SecureX for security investigations",
+        "4.4 Describe using Cisco XDR for security investigations",
         "4.5 Describe Secure Firewall Management Center integration using pxGrid",
         "4.6 Describe Rapid Threat Containment (RTC) functionality within Secure Firewall Management Center",
         "4.7 Describe Cisco Security Analytics and Logging",
+        "4.8 Describe Splunk integration and AI-driven threat intelligence",
       ],
     },
   ];
@@ -321,9 +310,9 @@ export default function CCNPSecurity() {
       examCode: "300-710",
       duration: "90 minutes",
       description:
-        "Securing Networks with Cisco Firewalls (300-710 SNCF) v1.1 is a 90-minute CCNP Security concentration exam that tests skills in configuring, deploying, managing, and troubleshooting Cisco Secure Firewall and Firewall Management Center.",
+        "The Securing Networks with Cisco Firewalls (300-710 SNCF) v1.2 is a 90-minute exam that assesses a candidate's knowledge of Cisco Secure Firewall and Cisco Secure Firewall Management Center. The exam covers skills in configuring, deploying, managing, and troubleshooting Cisco Secure Firewall technologies. Passing this exam earns the Cisco Certified Specialist - Network Security Firewalls certification and satisfies the concentration exam requirement for the CCNP Security certification.",
       about:
-        "This course prepares learners for the Securing Networks with Cisco Firewalls (300-710 SNCF) exam through instructor-led training with hands-on labs and guided instruction. It covers core topics related to Cisco Secure Firewall and Cisco Secure Firewall Management Center, including policy configuration, deployment, integration, management, and troubleshooting. The program emphasizes practical configuration, monitoring, and troubleshooting using real-world scenarios to build the skills and confidence needed for success in the CCNP Security certification path.",
+        "This course prepares learners for the Securing Networks with Cisco Firewalls (300-710 SNCF) v1.2 exam through instructor-led training with hands-on labs and guided instruction. It covers key topics related to Cisco Secure Firewall and Cisco Secure Firewall Management Center, including policy configuration, deployment, integration, management, monitoring, and troubleshooting. The program emphasizes practical configuration and real-world scenarios to build the skills and confidence needed for success in the Cisco Certified Network Professional (CCNP) Security certification concentration exam.",
       learn: [
         "Firewall Deployment Concepts",
         "Firewall Management and Monitoring",
