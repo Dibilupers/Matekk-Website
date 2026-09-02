@@ -525,7 +525,7 @@ export default function CCNPCollaboration() {
     },
     CLHCT: {
       label: "CLHCT (300-820)",
-      examCode: "300-815",
+      examCode: "300-820",
       duration: "90 minutes",
       description:
         "The Implementing Cisco Collaboration Hybrid and Cloud Technologies (300-820 CLHCT) v2.0 is a 90-minute exam designed to assess your knowledge and proficiency in collaboration cloud technologies. Successfully passing the exam earns you the Cisco Certified Specialist – Collaboration Hybrid and Cloud certification and fulfills the concentration exam requirement for the CCNP Collaboration certification.",
