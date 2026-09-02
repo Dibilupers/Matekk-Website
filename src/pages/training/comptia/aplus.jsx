@@ -27,9 +27,6 @@ export default function Aplus() {
           <strong>Hardware setup:</strong> installing components like batteries, cameras, and Wi-Fi antennas.
         </>,
         <>
-          <strong>Hardware setup:</strong> installing components like batteries, cameras, and Wi-Fi antennas.
-        </>,
-        <>
           <strong>Accessory options:</strong> configuring USB, Bluetooth, NFC, and docking stations.
         </>,
         <>
@@ -276,7 +273,7 @@ export default function Aplus() {
             {/* Target Learners - Title */}
             <h5 className="text-[#1775EE] ">Target Learners</h5>
             {/* Target Learners - List */}
-            {["At least one year of practical experience working in an IT support role"].map((job) => (
+            {["At least one year of practical experience working in an IT support role", "Ongoing Students", "Fresh Graduates"].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
                 <span>{job}</span>
