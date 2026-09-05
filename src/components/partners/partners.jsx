@@ -30,6 +30,7 @@ import SOLVEROUS from '../../assets/SolverousLogo.webp';
 import URS from '../../assets/URS.webp';
 import TRENCHNET from '../../assets/Trenchnet.png';
 import PPA from '../../assets/PhilippinePortsAuthority.webp';
+import NEOTECH from '../../assets/NeoTech.png';
 
 function Partners() {
     // OPTIMIZED: Wrap array in useMemo to prevent recreation on every render
@@ -51,19 +52,20 @@ function Partners() {
         { src: ICCT, alt: "ICCT Logo", size: "w-10 md:w-18" },
         { src: URS, alt: "URS Logo", size: "w-8 md:w-14" },
         { src: MISAMIS, alt: "MISAMIS Logo", size: "w-10 md:w-18" },
-        { src: MOREPOWER, alt: "MOREPOWER Logo", size: "w-10 md:w-32" },
-        { src: MARSTECH, alt: "MARSTECH Logo", size: "w-10 md:w-32" },
+        { src: MOREPOWER, alt: "MOREPOWER Logo", size: "w-14 md:w-32" },
+        { src: MARSTECH, alt: "MARSTECH Logo", size: "w-14 md:w-32" },
         { src: ATI, alt: "ATI Logo", size: "w-10 md:w-20" },
-        { src: EM, alt: "E.M. CUERPO Logo", size: "w-10 md:w-32" },
+        { src: EM, alt: "E.M. CUERPO Logo", size: "w-14 md:w-32" },
         { src: MIZELA, alt: "MIZELA Logo", size: "w-10 md:w-16" },
-        { src: HIKVISION, alt: "HIKVISION Logo", size: "w-10 md:w-32" },
-        { src: ASENWARE, alt: "ASENWARE Logo", size: "w-10 md:w-32" },
-        { src: SCALEEXPERTS, alt: "SCALEEXPERTS Logo", size: "w-10 md:w-32" },
-        { src: COMMSOURCE, alt: "COMMSOURCE Logo", size: "w-10 md:w-32" },
+        { src: HIKVISION, alt: "HIKVISION Logo", size: "w-14 md:w-32" },
+        { src: ASENWARE, alt: "ASENWARE Logo", size: "w-14 md:w-32" },
+        { src: SCALEEXPERTS, alt: "SCALEEXPERTS Logo", size: "w-14 md:w-32" },
+        { src: COMMSOURCE, alt: "COMMSOURCE Logo", size: "w-14 md:w-32" },
         { src: SOLVEROUS, alt: "COMMSOURCE Logo", size: "w-10 md:w-20" },
-        { src: STELLARSAT, alt: "STELLARSAT Logo", size: "w-10 md:w-32" },
+        { src: STELLARSAT, alt: "STELLARSAT Logo", size: "w-14 md:w-32" },
         { src: EZTECH, alt: "EZTECH Logo", size: "w-10 md:w-26" },
         { src: TRENCHNET, alt: "TRENCHNET Logo", size: "w-10 md:w-20" },
+        { src: NEOTECH, alt: "TRENCHNET Logo", size: "w-14 md:w-26" },
     ], []); // Empty dependency array means this only creates once
 
     // Reference to the scrollable container so we can control scrolling programmatically

@@ -289,7 +289,7 @@ const modules = [
             </div>
 
             {/* CHANGE: Download link text and URL */}
-            <a href="#" className="font-medium underline mt-2">
+            <a href="https://skillbuilder.aws/learn/KRREM87781/aws-technical-essentials/W5T3UTW15Z" target="_blank" className="font-medium underline mt-2">
               Download the Cloud Computing Exam Topics Here
             </a>
           </div>
