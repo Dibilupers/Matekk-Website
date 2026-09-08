@@ -57,7 +57,6 @@ import CloudSecurityProfessional from "../pages/training/paloalto/cloudsecurity/
 /* Practical Ethical Hacking */
 import CDTH from "../pages/training/cybersecurity/peh/CDTH";
 import PEH from "../pages/training/cybersecurity/peh/PEH";
-import VAPT from "../pages/training/cybersecurity/peh/VAPT";
 
 /* Cloud */
 import AzureFundamentals from "../pages/training/cloud/microsoft/azurefundamentals";
@@ -240,7 +239,6 @@ export default function App() {
         {/* Practical Ethical Hacking */}
         <Route path="/training/cybersecurity/peh/cdth" element={<CDTH />} />
         <Route path="/training/cybersecurity/peh/PEH" element={<PEH />} />
-        <Route path="/training/cybersecurity/peh/VAPT" element={<VAPT />} />
 
         {/* Cloud */}
         <Route
