@@ -369,7 +369,7 @@ export default function CDCS() {
             </div>
 
             {/* CHANGE: Download link text and URL */}
-            <a href="#" className="font-medium underline mt-2">
+            <a href="https://www.epi-ap.com/uploads/file/training/CDCS_english.pdf" target="_blank" className="text-sm font-medium underline mt-2">
               Download the CDCS Exam Topics Here
             </a>
           </div>
