@@ -54,10 +54,6 @@ import XDREngineer from "../pages/training/paloalto/securityoperations/xdrengine
 import XsoarEngineer from "../pages/training/paloalto/securityoperations/xsoarengineer";
 import CloudSecurityProfessional from "../pages/training/paloalto/cloudsecurity/professional";
 
-/* Cybersecurity */
-import BlueTeam from "../pages/training/cybersecurity/blueteam";
-import RedTeam from "../pages/training/cybersecurity/redteam";
-
 /* Practical Ethical Hacking */
 import CDTH from "../pages/training/cybersecurity/peh/CDTH";
 import PEH from "../pages/training/cybersecurity/peh/PEH";
@@ -245,10 +241,6 @@ export default function App() {
         <Route path="/training/cybersecurity/peh/cdth" element={<CDTH />} />
         <Route path="/training/cybersecurity/peh/PEH" element={<PEH />} />
         <Route path="/training/cybersecurity/peh/VAPT" element={<VAPT />} />
-
-        {/* Cybersecurity */}
-        <Route path="/training/cybersecurity/blueteam" element={<BlueTeam />} />
-        <Route path="/training/cybersecurity/redteam" element={<RedTeam />} />
 
         {/* Cloud */}
         <Route

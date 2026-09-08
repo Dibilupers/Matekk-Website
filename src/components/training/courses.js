@@ -98,16 +98,9 @@ export const TRAINING_COURSES = [
   {
     name: "Cybersecurity",
     subcourses: [
-      {
-        name: "Practical Ethical Hacking",
-        subcourses: [
-          { name: "Cyber Defense & Threat Hunting", path: "/training/cybersecurity/peh/cdth" },
-          { name: "Practical Ethical Hacking", path: "/training/cybersecurity/peh/PEH" },
-          { name: "Vulnerability Assessment and Penetration Testing (VAPT)", path: "/training/cybersecurity/peh/vapt" },
-        ],
-      },
-      { name: "Blue Team: Security Operations & Defensive Cybersecurity Program", path: "/training/cybersecurity/blueteam" },
-      { name: "Red Team: CompTIA Security+ (SY0-701) Training", path: "/training/cybersecurity/redteam" },
+      { name: "Cyber Defense & Threat Hunting", path: "/training/cybersecurity/peh/cdth" },
+      { name: "Practical Ethical Hacking", path: "/training/cybersecurity/peh/PEH" },
+      { name: "Vulnerability Assessment and Penetration Testing (VAPT)", path: "/training/cybersecurity/peh/vapt" },
     ],
   },
 
