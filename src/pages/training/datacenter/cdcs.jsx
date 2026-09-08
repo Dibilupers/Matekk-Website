@@ -305,6 +305,21 @@ export default function CDCS() {
             ))}
           </div>
 
+          {/* ==================== PREREQUISITES ====================*/}
+          <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-2">
+            {/* Prerequisites - Title */}
+            <h5 className="text-[#1775EE] ">Prerequisites</h5>
+            {/* Prerequisites - List */}
+            {[
+              "Participants must hold a valid CDCP certificate when taking the CDCS exam.",
+            ].map((item) => (
+              <p key={item} className="flex gap-2 justify-left items-center">
+                <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
+                <span>{item}</span>
+              </p>
+            ))}
+          </div>
+
           {/* ==================== SCHEDULE ====================*/}
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-2">
             {/* Schedule - Title */}
