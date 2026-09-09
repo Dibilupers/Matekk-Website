@@ -18,121 +18,179 @@ export default function NetworkSecurityProfessional() {
   // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
   const modules = [
     {
-      title: "1.0 Cybersecurity",
+      title: "1.0 Network Security Fundamentals",
       items: [
-        "1.1 Identify and describe vulnerabilities and exploits",
+        "1.1 Explain Application Layer inspection for Strata and SASE products",
+        "1.2 Explain the functionality of slow path and fast path for packet inspection",
         {
           subTitle:
-            "1.2 Identify and describe the stages of the cyber attack lifecycle",
+            "1.3 Explain the use of decryption on Strata and SASE products",
           items: [
-            "1.2.1 Reconnaissance",
-            "1.2.2 Weaponization and Delivery",
-            "1.2.3 Exploitation",
-            "1.2.4 Installation",
-            "1.2.5 Command-and-Control (C2)",
-            "1.2.6 Actions on the Objective",
+            "1.3.1 SSL Forward Proxy",
+            "1.3.2 SSL Inbound Inspection",
+            "1.3.3 SSH Proxy",
+            "1.3.4 no decrypt",
           ],
         },
-        "1.3 Identify and describe common attack types (e.g., malware, insider threat, C2, social engineering, AI-powered)",
         {
-          subTitle: "1.4 Identify and describe common threat detection systems",
+          subTitle: "1.4 Explain the application of network hardening methods for enhanced security on Strata and SASE products",
           items: [
-            "1.4.1 Intrusion Detection System (IDS)",
-            "1.4.2 Host-Based Intrusion Detection System (HIDS)",
-            "1.4.3 Network-Based Intrusion Detection System (NIDS)",
+            "1.4.1 Content-ID",
+            "1.4.2 Zero Trust",
+            "1.4.3 User-ID",
+            "1.4.4 Device-ID",
+            "1.4.5 Zones",
           ],
         },
-        "1.5 Identify and describe threat prevention systems and practices (e.g., end user awareness, security updates, antivirus, intrusion prevention systems, firewalls)",
-        "1.6 Explain the purpose of a DMZ",
-        "1.7 Explain the purpose of Zero Trust",
       ],
     },
     {
-      title: "2.0 Network Fundamentals",
+      title: "2.0 NGFW and SASE Solution Functionality",
       items: [
         {
-          subTitle: "2.1 Identify and describe types of area networks",
-          items: ["2.1.1 WAN", "2.1.2 LAN", "2.1.3 SD-WAN"],
-        },
-        "2.2 Explain external (north-south) and internal (east-west) traffic flow patterns for environments",
-        "2.3 Explain the function of a default gateway",
-        "2.4 Explain the function of NAT, DNS, and DHCP",
-        "2.5 Explain routed protocols and routing protocols",
-        "2.6 Explain the TCP/IP model and the OSI model",
-        "2.7 Identify and describe devices that operate in Layer 1 through Layer 4 of the OSI model",
-      ],
-    },
-    {
-      title: "3.0 Network Security",
-      items: [
-        "3.1 Identify and describe network segmentation methods (e.g., IP subnetting, VLAN)",
-        "3.2 Explain the function of stateful firewalls and next-generation firewalls (NGFWs)",
-        "3.3 Explain the function of URL filtering",
-        "3.4 Explain the function of a VPN",
-        "3.5 Explain the function of a proxy",
-        {
-          subTitle: "3.6 Identify and describe tunneling protocols",
-          items: ["3.6.1 SSH", "3.6.2 TLS", "3.6.3 IKE"],
-        },
-        "3.7 Explain the function of data loss prevention (DLP)",
-        "3.8 Explain the function of enterprise browsers",
-      ],
-    },
-    {
-      title: "4.0 Endpoint Security",
-      items: [
-        "4.1 Identify and describe internet of things (IoT) devices and endpoints",
-        "4.2 Explain the objectives of endpoint security and network security",
-        {
-          subTitle: "4.3 Identify and describe endpoint security components",
+          subTitle: "2.1 Explain the function of Cloud NGFWs, PA-Series, CN-Series, and VM-Series firewalls",
           items: [
-            "4.3.1 Security updates",
-            "4.3.2 Antivirus",
-            "4.3.3 Host-based firewalls",
+            "2.1.1 perimeter and core security", 
+            "2.1.2 zone security and segmentation", 
+            "2.1.3 high availability [HA]",
+            "2.1.4 security and NAT policy implementation", 
+            "2.1.5 monitoring and logging",
           ],
         },
-        "4.4 Differentiate between single-factor authentication and multi-factor authentication",
-        "4.5 Describe identity and access management (IAM)",
+        {
+          subTitle: "2.2 Explain the function of Prisma SD-WAN",
+          items: [
+            "2.2.1 WAN optimization", 
+            "2.2.2 path and NAT policies", 
+            "2.2.3 Zone-based firewalls",
+            "2.2.4 monitoring and logging", 
+          ],
+        },
+        {
+          subTitle: "2.3 Explain the function of Prisma Access",
+          items: [
+            "2.3.1 remote user configuration", 
+            "2.3.2 remote network configuration", 
+            "2.3.3 public and private application access",
+            "2.3.4 security and NAT policy implementation", 
+            "2.3.5 monitoring and logging"
+          ],
+        },
+        "2.4 Explain the functionality of Panorama and Strata Cloud Manager (SCM) for managing Strata and SASE solutions",
       ],
     },
     {
-      title: "5.0 Cloud Security",
+      title: "3.0 Platform Solutions, Services, and Tools",
       items: [
-        "5.1 Identify and describe the four cloud-computing deployment models",
         {
-          subTitle: "5.2 Identify and describe common cloud service models",
+          subTitle: "3.1 Explain the security efficacy of Palo Alto Networks NGFW and Prisma SASE products",
           items: [
-            "5.2.1 Software as a service (SaaS)",
-            "5.2.2 Platform as a service (PaaS)",
-            "5.2.3 Infrastructure as a service (IaaS)",
-            "5.2.4 Network as a service (NaaS)",
+            "3.1.1 security and NAT policy", 
+            "3.1.2 User-ID", 
+            "3.1.3 App-ID",
+            "3.1.4 decryption",
+            "3.1.5 monitoring and logging",],
+        },
+        {
+          subTitle: "3.2 Explain the functionality of Cloud-Delivered Security Services (CDSS) components",
+          items: [
+            "3.2.1 Internet of things (IoT) security", 
+            "3.2.2 Enterprise Data Loss Prevention (DLP)", 
+            "3.2.3 SaaS Security",
+            "3.2.4 PAN-OS SD-WAN",
+            "3.2.5 Premium GlobalProtect",
+            "3.2.6 Advanced WildFire, Advanced Threat Prevention, Advanced URL Filtering, and Advanced DNS",],
+        },
+        {
+          subTitle: "3.3 Explain the alignment of AIOps to Palo Alto Networks best practices",
+          items: [
+            "3.3.1 dashboards", 
+            "3.3.2 Best Practice Assessment [BPA]", 
+            "3.3.3 administration",
+            ],
+        },
+        "3.4 Explain how Next-Generation Trust Security (NGTS) supports identity governance, trust relationships, and adaptive security decisions across the enterprise platform",
+        {
+          subTitle: "3.5 Identify and describe quantum security risks",
+          items: [
+            "3.5.1 harvest now", 
+            "3.5.2 decrypt later attacks", 
+            ],
+        },
+        {
+          subTitle: "3.6 Identify Palo Alto Networks platform capabilities to address quantum security risks",
+          items: [
+            "3.6.1 post-quantum readiness", 
+            "3.6.2 hybrid cryptography", 
+            ],
+        },
+        {
+          subTitle: "3.7 Identify and describe AI-related security risks and mitigation techniques",
+          items: [
+            "3.7.1 AI use",
+            "3.7.2 sensitive data exposure",
+            "3.7.3 AI application access",
+            "3.7.4 AI-enabled threats",
+            "3.7.5 Palo Alto Networks platform capabilities",
           ],
         },
-        "5.3 Explain the cloud shared responsibility model",
-        "5.4 Explain cloud security and cloud-native security",
-        "5.5 Define common cloud terms (e.g., hosted, virtualization, virtual machine, container, microservice, API)",
-        "5.6 Explain the cloud native security platform (CNSP)",
-        "5.7 Explain the function of continuous integration and continuous delivery / deployment (CI/CD)",
       ],
     },
     {
-      title: "6.0 Security Operations",
+      title: "4.0 ENGFW and SASE Solution Maintenance and Configuration",
       items: [
         {
-          subTitle: "6.1 Explain security operations functions",
+          subTitle: "4.1 Explain the configuration and maintenance of Palo Alto Networks hardware firewalls, VM-Series firewalls, CN-Series firewalls, and Cloud NGFWs",
           items: [
-            "6.1.1 Identify / detect",
-            "6.1.2 Investigate",
-            "6.1.3 Mitigate",
-            "6.1.4 Improve",
+            "4.1.1 Security policies",
+            "4.1.2 profiles",
+            "4.1.3 updates",
+            "4.1.4 upgrades",
+          ],
+        }, 
+        {
+          subTitle: "4.2 Explain the configuration and maintenance of Prisma Access",
+          items: [
+            "4.2.1 Security policies",
+            "4.2.2 profiles",
+            "4.2.3 updates",
+            "4.2.4 upgrades",
+            "4.2.5 monitoring and logging",
+          ],
+        },      
+      ],
+    },
+    {
+      title: "5.0 Infrastructure Management and CDSS",
+      items: [
+        "5.1 Explain the function of Security policies, profiles, and updates in the configuration and maintenance of CDSS",
+        "5.2 Explain the function of Security policies, Device-IDs, and monitoring and logging in the configuration and maintenance of IoT security",
+        "5.3 Explain the function of data encryption, access control, and monitoring and logging in the configuration and maintenance of Enterprise DLP and Enterprise SaaS Security",
+        "5.4 Explain the function of supported products, new device addition, reporting, and configuration management in SCM and Panorama in network security environments",
+      ],
+    },
+    {
+      title: "6.0 Connectivity and Security",
+      items: [
+        {
+          subTitle: "6.1 Explain the configuration and maintenance of network security for on-premises, cloud, and hybrid networks",
+          items: [
+            "6.1.1 network segmentation",
+            "6.1.2 policies",
+            "6.1.3 monitoring and logging",
+            "6.1.4 certificates",
           ],
         },
-        "6.2 Identify methods to optimize security operations center (SOC) performance (e.g., automation and AI, collaboration and information sharing, regular security policy updates, security framework alignment)",
-        "6.3 Define common security operations terms (e.g., event, alert, SOC, DevSecOps, incident response plan, disaster recovery plan)",
-        "6.4 Explain the concepts of false positive alerts and false negative alerts",
-        "6.5 Explain the function of syslog",
-        "6.6 Explain security orchestration, automation, and response (SOAR) and security information and event management (SIEM)",
-        "6.7 Explain AI as it relates to alert analysis",
+        {
+          subTitle: "6.2 Identify and describe the components used to maintain connectivity and security of remote users",
+          items: [
+            "6.2.1 remote access solutions",
+            "6.2.2 network segmentation",
+            "6.2.3 Security policy tuning",
+            "6.2.4 monitoring and logging",
+            "6.2.5 certificates",
+          ],
+        },
       ],
     },
   ];
