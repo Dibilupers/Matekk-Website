@@ -91,8 +91,6 @@ export default function PaloaltoApprentice() {
             "4.3.3 Host-based firewalls",
           ],
         },
-        "4.4 Differentiate between single-factor authentication and multi-factor authentication",
-        "4.5 Describe identity and access management (IAM)",
       ],
     },
     {
@@ -132,6 +130,44 @@ export default function PaloaltoApprentice() {
         "6.5 Explain the function of syslog",
         "6.6 Explain security orchestration, automation, and response (SOAR) and security information and event management (SIEM)",
         "6.7 Explain AI as it relates to alert analysis",
+      ],
+    },
+    {
+      title: "7.0 Identity Security",
+      items: [
+        {
+          subTitle: "7.1 Identify and describe identity and access management (IAM) components",
+          items: [
+            "7.1.1 Identity lifecycle management",
+            "7.1.2 Single-factor and multifactor authentication",
+            "7.1.3 Single sign-on (SSO) and federation",
+            "7.1.4 Directory services",
+            "7.1.5 Role-Based Access Control (RBAC)",
+          ],
+        },
+        {
+          subTitle: "7.2 Identify and describe privileged access management (PAM) components",
+          items: [
+            "7.2.1 Credential vaulting and rotation",
+            "7.2.2 Session monitoring, isolation, and recording",
+            "7.2.3 Least privilege",
+            "7.2.4 Just-in-time (JIT) access",
+          ],
+        },
+        {
+          subTitle: "7.3 Identify and describe public key infrastructure (PKI) components",
+          items: [
+            "7.3.1 Certificate authorities (CAs) and trust chains",
+            "7.3.2 Public / private key pairs in encryption and digital signatures",
+          ],
+        },
+        {
+          subTitle: "7.4 Identify and describe the components of secrets management",
+          items: [
+            "7.4.1 Application secrets (e.g., API keys, SSH keys, passwords, tokens)",
+            "7.4.2 CI/CD pipelines",
+          ],
+        },
       ],
     },
   ];
