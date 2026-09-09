@@ -18,9 +18,9 @@ export default function SDWanEngineer() {
   // ==================== COURSE MODULES - UPDATE CONTENT FOR EACH COURSE ====================
   const modules = [
     {
-      title: "1.0 PAN-OS Networking Configuration",
+      title: "1.0 Planning and Design",
       items: [
-        "1.1 Planning and Design",
+        "1.1 Identify and describe device selection criteria",
         "1.2 Demonstrate understanding of the bandwidth plan",
         "1.3 Identify and describe device licensing options and tiers",
         "1.4 Explain the assessment of existing network architecture",
