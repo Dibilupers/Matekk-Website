@@ -98,8 +98,8 @@ export const TRAINING_COURSES = [
   {
     name: "Cybersecurity",
     subcourses: [
-      { name: "Cyber Defense & Threat Hunting", path: "/training/cybersecurity/peh/cdth" },
-      { name: "Practical Ethical Hacking", path: "/training/cybersecurity/peh/PEH" },
+      { name: "Cyber Defense & Threat Hunting (SOC)", path: "/training/cybersecurity/cdth" },
+      { name: "Practical Ethical Hacking (VAPT)", path: "/training/cybersecurity/peh" },
     ],
   },
 

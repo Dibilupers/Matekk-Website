@@ -4,125 +4,124 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
-import cdth from "../../../../assets/cdth.png"; // Course badge image
-import CybersecurityHero from "../../../../assets/CyberSecurityheader.webp"; // Hero banner background
-import CybersecurityFooter from "../../../../assets/CybersecurityFooter.webp"; // Footer banner background
-import MealIcon from "../../../../assets/Meal.svg";
-import ReviewIcon from "../../../../assets/Review.svg";
-import WorkstationIcon from "../../../../assets/Workstation.svg";
-import MedalIcon from "../../../../assets/Medal.svg";
-import CourseModules from "../../../../components/training/courseModules";
-import TrainingTemplateFooter from "../../../../components/section/TrainingTemplateFooter";
-import TrainingHeroBanner from "../../../../components/section/TrainingHeroBanner";
+import vapt from "../../../assets/MATEKK_training_logo.png"; // Course badge image
+import CybersecurityHero from "../../../assets/CyberSecurityheader.webp"; // Hero banner background
+import CybersecurityFooter from "../../../assets/CybersecurityFooter.webp"; // Footer banner background
+import MealIcon from "../../../assets/Meal.svg";
+import ReviewIcon from "../../../assets/Review.svg";
+import WorkstationIcon from "../../../assets/Workstation.svg";
+import MedalIcon from "../../../assets/Medal.svg";
+import CourseModules from "../../../components/training/courseModules";
+import TrainingTemplateFooter from "../../../components/section/TrainingTemplateFooter";
+import TrainingHeroBanner from "../../../components/section/TrainingHeroBanner";
 
 // ==================== COMPONENT NAME ====================
-export default function CDTH() {
+export default function VAPT() {
   // ==================== COURSE MODULES ====================
   const modules = [
     {
-      title: "SOC Foundations & Log Investigation",
-      items: [
-        "Introduction to Security Operations Center",
-        "SOC Analyst Roles (L1, L2, L3)",
-        "Types of security logs",
-        "Linux authentication logs",
-        "Identifying suspicious activities in logs",
-        {
-          subTitle: "Hands-on Labs",
-          items: [
-            "Investigating login attempts",
-            "Detecting failed SSH authentication",
-            "Log analysis using Linux tools",
-            "Basic threat investigation",
-          ],
-        },
-      ],
-    },
-    {
-      title: "SIEM Deployment & Security Monitoring",
-      items: [
-        "Introduction to SIEM technology",
-        "Installing and configuring Wazuh SIEM",
-        "• Connecting endpoints (agents)",
-        "• Monitoring security events in real time",
-        {
-          subTitle: "Hands-on Labs",
-          items: [
-            "Deploy Wazuh server",
-            "Connect Ubuntu endpoint as agent",
-            "Generate security events",
-            "Monitor alerts in SIEM dashboard",
-          ],
-        },
-      ],
-    },
-    {
       title:
-        "Network Monitoring & Threat Detection",
+        "Information Security Fundamentals & Operating System Command Line",
       items: [
-        "Network traffic analysis fundamentals",
-        "Detecting suspicious network activity",
-        "Identifying reconnaissance and scanning attacks",
+        "Information Security Domains, CIA Triad, Threats, Risks & Vulnerabilities",
+        "Penetration Testing Methodology & 5 Phases",
+        "Linux Command Line Fundamentals (shortcuts, autocompletion, file structures, history)",
+        "Windows Command Line Fundamentals (netstat, whoami, net users, systeminfo)",
+        "VMware Lab Setup (Adding VMnet2, subnet configuration 192.168.2.0/24, NIC adapters)",
         {
           subTitle: "Hands-on Labs",
           items: [
-            "Wireshark traffic capture",
-            "Detecting HTTP traffic and suspicious activity",
-            "Simulating network scanning attacks",
-            "Analyzing network indicators of compromise",
+            "Setting up Kali Linux penetration testing environment",
+            "Linux & Windows command-line mastery",
+            "Network discovery and basic enumeration",
           ],
         },
       ],
     },
     {
-      title: "Attack Simulation & Detection",
+      title: "Penetration Testing Process & Initial Foothold",
       items: [
-        "Understanding attacker techniques",
-        "Using MITRE ATT&CK to map attacks",
-        "Detecting malicious behavior in SIEM",
+        "Ethical Hacking & Types of Penetration Tests",
+        "Generating payloads with msfvenom (Meterpreter & Windows Shell)",
+        "File transfer techniques (SMB, SimpleHTTPServer, certutil)",
+        "Exploit Development Lab: SLMail 5.5 Buffer Overflow",
+        "Google Dorks for exploit research",
         {
           subTitle: "Hands-on Labs",
           items: [
-            "Kali Linux attack simulation",
-            "Port scanning detection",
-            "Brute-force attack detection",
-            "File integrity monitoring alerts",
+            "Building and deploying reverse shells",
+            "Metasploit Multi/Handler listener",
+            "Initial system compromise techniques",
           ],
         },
       ],
     },
     {
-      title: "Threat Hunting & Incident Response",
+      title: "Establishing Foothold & Privilege Escalation Techniques",
       items: [
-        "Introduction to Threat Hunting",
-        "Indicators of Compromise (IOC)",
-        "Incident investigation workflow",
-        "SOC reporting and documentation",
+        "Windows Privilege Escalation (Kernel, Misconfigurations, Relay Attacks)",
+        "Privilege Escalation using Startup Applications (weak folder permissions)",
+        "Hot Potato Attack (NBNS spoofing + NTLM relay)",
+        "Kernel Exploitation with Sherlock.ps1 & MS15-051",
         {
           subTitle: "Hands-on Labs",
           items: [
-            "Investigate simulated attack incidents",
-            "Correlate logs and alerts",
-            "Build incident reports",
-            "Present investigation findings",
+            "Privilege escalation exercises on Windows 7 targets",
+            "Meterpreter file upload & Netcat shells",
+            "Post-exploitation system control",
           ],
         },
       ],
     },
     {
-      title: "Final Outcome",
+      title: "Fundamentals in Web & Web Application Technologies",
       items: [
+        "Web Application Security Fundamentals & OWASP Top 10",
+        "Manual SQL Injection techniques (Union-based)",
+        "Database enumeration and dumping",
         {
-          subTitle: "After completing the program, students will be able to:",
+          subTitle: "Hands-on Labs",
           items: [
-            "Monitor security events using SIEM",
-            "Detect real cyber attacks",
-            "Investigate security alerts",
-            "Understand attacker techniques",
-            "Perform basic threat hunting",
+            "DVWA Low Security SQL Injection (single quote test, column counting, database(), tables, users, passwords)",
+            "Hash cracking (hashes.com)",
+            "Web vulnerability exploitation",
           ],
         },
-      "These are the core skills required for SOC Analyst roles.", ],
+      ],
+    },
+    {
+      title: "Exploit Development Basics, PowerShell Fundamentals & Capstone",
+      items: [
+        "Assembly x86 Fundamentals",
+        "Buffer Overflow process & Python exploit creation",
+        "PowerShell for Post-Exploitation",
+        "Living off the Land techniques",
+        "Penetration Test Reporting and Best Practices",
+        {
+          subTitle: "Hands-on Labs",
+          items: [
+            "Full SLMail 5.5 exploit development walkthrough",
+            "Advanced post-exploitation",
+            "Professional report writing",
+          ],
+        },
+      ],
+    },
+    {
+      title: "Final Project",
+      items: [
+        {
+          subTitle:
+            "Students will conduct a complete penetration test simulation on the Hack The Kingdom CTF environment, including:",
+          items: [
+            "Reconnaissance",
+            "Exploitation",
+            "Privilege escalation",
+            "Report generation",
+          ],
+        },
+        "Participants will present their findings similar to a real penetration testing engagement.",
+      ],
     },
   ];
   return (
@@ -131,12 +130,16 @@ export default function CDTH() {
       <TrainingHeroBanner
         bgImage={CybersecurityHero}
         category="Cybersecurity"
-        title="Cyber Defense & Threat Hunting (CDTH)"
-        description="Learn to detect, investigate, and respond to real cyber attacks using industry SOC tools."
+        title="The Practical Ethical Hacking: Vulnerability Assessment &
+              Penetration Testing (VAPT)"
+        description="Participants will perform real penetration testing scenarios in controlled lab environments using 16 custom vulnerable VMs."
       />
 
       {/* ==================== CONTENT SECTION - Training Informations/Content ==================== */}
-      <div className="flex flex-col lg:flex-row justify-start items-start lg:items-stretch gap-6 lg:gap-8" id="services">
+      <div
+        className="flex flex-col lg:flex-row justify-start items-start lg:items-stretch gap-6 lg:gap-8"
+        id="services"
+      >
         {/* ==================== LEFT SIDE: Contents/Information ==================== */}
         <div className="flex flex-col gap-8">
           {/* ==================== ABOUT SECTION ==================== */}
@@ -148,10 +151,21 @@ export default function CDTH() {
             {/* About Section - Description */}
             {/* CHANGE: Course description paragraphs */}
             <p>
-              The Cyber Defense & Threat Hunting (CDTH) Bootcamp is designed to
-              prepare aspiring cybersecurity professionals for Security
-              Operations Center (SOC) roles such as SOC Analyst, Threat Hunter,
-              and Incident Responder.
+              The Practical Ethical Hacking: Vulnerability Assessment &
+              Penetration Testing (PEH-VAPT) course is designed to enable those
+              who aspire to enter the Information Security field in
+              understanding the core concepts of network hacking in order to
+              safeguard a network infrastructure. This course provides all the
+              fundamental skills needed to carry out a thorough and professional
+              penetration test against an enterprise network.
+            </p>
+            <p>
+              This is a purely practical training course where students spend
+              more time doing well-prepared hands-on hacking exercises in
+              conjunction with theoretical discussion. The training covers the
+              full penetration testing lifecycle including Reconnaissance,
+              Vulnerability Assessment, Exploitation, Privilege Escalation,
+              Post-Exploitation, and Reporting.
             </p>
           </section>
 
@@ -166,21 +180,25 @@ export default function CDTH() {
             <div className="grid grid-cols-1 gap-4">
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Understand how a Security Operations Center (SOC) works</p>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
                 <p>
-                  Use the MITRE ATT&CK framework to understand attacker behavior
+                  Understand the penetration testing methodology and the 5
+                  phases
                 </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Perform basic threat hunting</p>
+                <p>Perform network reconnaissance, scanning, and enumeration</p>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
-                <p>Investigate security logs and alerts using SIEM</p>
+                <p>Identify system and web application vulnerabilities</p>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <FaCircleCheck className="text-[#1775EE] shrink-0 w-6 h-6" />
+                <p>
+                  Exploit vulnerable services using real tools and custom
+                  payloads
+                </p>
               </div>
             </div>
           </section>
@@ -203,8 +221,8 @@ export default function CDTH() {
           <div className="p-6 rounded-2xl bg-[#EBF5FD] flex items-center justify-center h-64">
             {/* Cert Badge - Change/Update Image */}
             <img
-              src={cdth}
-              alt="Cyber Defense & Threat Hunting (CDTH) Bootcamp Certification Badge"
+              src={vapt}
+              alt=" Vulnerability Assessment & Penetration Testing (VAPT) Bootcamp Certification Badge"
               className="w-45 h-45 lg:w-50 lg:h-50 object-contain"
             />
           </div>
@@ -215,10 +233,10 @@ export default function CDTH() {
             <h5 className="text-[#1775EE] ">Job Opportunities</h5>
             {/* Job Opportunities - List */}
             {[
-              "SOC Analyst (L1)",
-              "Security Monitoring Analyst",
-              "Threat Detection Analyst",
-              "Incident Response Assistant",
+              "Penetration Tester",
+              "Ethical Hacker",
+              "Vulnerability Assessment Analyst",
+              "Red Team Operator",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
@@ -233,9 +251,9 @@ export default function CDTH() {
             <h5 className="text-[#1775EE] ">Target Learners</h5>
             {/* Target Learners - List */}
             {[
-              "SOC Analyst Beginners (L1)",
-              "System / Network Administrators",
-              "Cybersecurity Enthusiasts",
+              "IT Students Pursuing Cybersecurity Careers",
+              "Network and System Administrators",
+              "Security Analysts",
             ].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
@@ -308,7 +326,13 @@ export default function CDTH() {
             </div>
 
             {/* CHANGE: Download link text and URL */}
-            <a href="#" className="text-sm font-medium underline mt-2">
+            <a
+              href="/downloads/EHVAPT_Course_Outline.pdf"
+              download
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm font-medium underline mt-2"
+            >
               Download the Practical Ethical Hacking Exam Topics Here
             </a>
           </div>
@@ -318,7 +342,7 @@ export default function CDTH() {
       {/* ==================== CALL TO ACTION BANNER - UPDATE IMAGE ====================*/}
       <TrainingTemplateFooter
         bgImage={CybersecurityFooter} // CHANGE: Update background image for the footer banner
-        description="Advance your networking career and prepare for the Practical Ethical Hacking Enterprise exam."
+        description="Advance your career and build real-world skills with the Practical Ethical Hacking (VAPT) Bootcamp."
       />
     </main>
   );

@@ -54,9 +54,9 @@ import XDREngineer from "../pages/training/paloalto/securityoperations/xdrengine
 import XsoarEngineer from "../pages/training/paloalto/securityoperations/xsoarengineer";
 import CloudSecurityProfessional from "../pages/training/paloalto/cloudsecurity/professional";
 
-/* Practical Ethical Hacking */
-import CDTH from "../pages/training/cybersecurity/peh/CDTH";
-import PEH from "../pages/training/cybersecurity/peh/PEH";
+/* Cybersecurity */
+import CDTH from "../pages/training/cybersecurity/CDTH";
+import VAPT from "../pages/training/cybersecurity/PEH";
 
 /* Cloud */
 import AzureFundamentals from "../pages/training/cloud/microsoft/azurefundamentals";
@@ -236,9 +236,9 @@ export default function App() {
           element={<CloudSecurityProfessional />}
         />
 
-        {/* Practical Ethical Hacking */}
-        <Route path="/training/cybersecurity/peh/cdth" element={<CDTH />} />
-        <Route path="/training/cybersecurity/peh/PEH" element={<PEH />} />
+        {/* Cybersecurity */}
+        <Route path="/training/cybersecurity/cdth" element={<CDTH />} />
+        <Route path="/training/cybersecurity/peh" element={<VAPT />} />
 
         {/* Cloud */}
         <Route
