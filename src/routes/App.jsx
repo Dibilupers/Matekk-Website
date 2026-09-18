@@ -5,6 +5,7 @@ import ScrollToTop from "../components/scroll/ScrollToTop";
 
 /* Pages */
 import Home from "../pages/Home";
+import Login from "../pages/Login";
 import NotFound from "../pages/NotFound";
 
 /* Cisco */
@@ -100,7 +101,6 @@ import Renewable from "../pages/solutions/pece/renewable";
 /* PECE (PBOOT) */
 
 
-
 if ("scrollRestoration" in history) {
   history.scrollRestoration = "manual";
 }
@@ -113,6 +113,7 @@ export default function App() {
 
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
 
         {/* Cisco */}
         <Route path="/training/cisco/ccna/ccna" element={<CCNA />} />
