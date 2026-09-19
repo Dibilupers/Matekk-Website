@@ -1,6 +1,7 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, BookOpen } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import { TRAINING_COURSES } from "../components/training/courses";
 import CCNALogo from "../assets/CCNA.png";
 import CCNPSecurityLogo from "../assets/CCNPSecurity.png";
@@ -54,7 +55,11 @@ function getCategoryCourses(category) {
 }
 
 export default function Blank() {
+	const navigate = useNavigate();
+	const { profile: sessionProfile, isAuthenticated } = useAuth();
 	const [activeCategory, setActiveCategory] = useState("All Programs");
+	const [profile, setProfile] = useState(null);
+	const [profileError, setProfileError] = useState("");
 	const categories = ["All Programs", ...TRAINING_COURSES.map((category) => category.name)];
 	const visibleCourses = useMemo(() => {
 		if (activeCategory === "All Programs") return featuredCourses;
@@ -68,13 +73,55 @@ export default function Blank() {
 		}));
 	}, [activeCategory]);
 
+	useEffect(() => {
+		if (isAuthenticated) setProfile(sessionProfile);
+	}, [isAuthenticated, sessionProfile]);
+
+	useEffect(() => {
+		const accessToken = localStorage.getItem("accessToken");
+		if (!accessToken) {
+			navigate("/login", { replace: true });
+			return;
+		}
+
+		async function loadProfile() {
+			try {
+				const response = await fetch("http://localhost:3000/auth/profile", {
+					headers: { Authorization: `Bearer ${accessToken}` },
+				});
+
+				if (!response.ok) {
+					localStorage.removeItem("accessToken");
+					navigate("/login", { replace: true });
+					return;
+				}
+
+				setProfile(await response.json());
+			} catch {
+				setProfileError("We could not load your profile. Please try again.");
+			}
+		}
+
+		loadProfile();
+	}, [navigate]);
+
+	if (!profile && !profileError) {
+		return <main className="flex min-h-[calc(100vh-5rem)] items-center justify-center bg-[#f8fafc] text-slate-600">Loading your profile...</main>;
+	}
+
+	if (profileError) {
+		return <main className="flex min-h-[calc(100vh-5rem)] items-center justify-center bg-[#f8fafc] text-slate-600">{profileError}</main>;
+	}
+
 	return (
 		<main className="min-h-[calc(100vh-5rem)] bg-[#f8fafc] px-5 py-10 sm:px-8 lg:px-16">
 			<div className="mx-auto max-w-7xl">
 				<div className="mb-10 max-w-2xl">
+					<div>
 					<p className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-[#087ff5]">MATEKK Training Academy</p>
-					<h1 className="text-3xl font-bold text-slate-950 sm:text-4xl">Choose your next certification</h1>
+					<h1 className="text-3xl font-bold text-slate-950 sm:text-4xl">Welcome, {profile.username}</h1>
 					<p className="mt-3 text-slate-600">Explore practical ICT training programs designed to help you grow with confidence.</p>
+					</div>
 				</div>
 
 				<div className="grid gap-10 lg:grid-cols-[14rem_1fr] lg:gap-14">

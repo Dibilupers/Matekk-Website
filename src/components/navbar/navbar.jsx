@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 import InquireNowButton from "../ui/InquireNowButton";
 import MainLogo from "../../assets/MATEKK_logo.webp";
 import TrainingLogo from "../../assets/MATEKK_training_logo.png";
@@ -20,8 +21,50 @@ function NavBar() {
   const [openSubSubSubcourse, setOpenSubSubSubcourse] = useState(null);
   const [openThirdLevel, setOpenThirdLevel] = useState(null);
   const [openFourthLevel, setOpenFourthLevel] = useState(null);
+  const { logout } = useAuth();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) {
+      return;
+    }
+
+    let isMounted = true;
+
+    async function checkSession() {
+      try {
+        const response = await fetch("http://localhost:3000/auth/profile", {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+
+        if (isMounted && !response.ok) {
+          localStorage.removeItem("accessToken");
+        }
+        if (isMounted) {
+          setIsAuthenticated(response.ok);
+        }
+      } catch {
+        if (isMounted) {
+          setIsAuthenticated(false);
+        }
+      }
+    }
+
+    checkSession();
+    return () => {
+      isMounted = false;
+    };
+  }, [location.pathname]);
+
+  function handleLogout() {
+    logout();
+    setIsAuthenticated(false);
+    setIsOpen(false);
+    navigate("/login");
+  }
 
   /* If the user is on specific page then logo changes */
   const getLogoElement = () => {
@@ -585,12 +628,13 @@ function NavBar() {
           hover:border-[#0062E0] hover:text-white transition-all duration-300
           cursor-pointer"
         />
-        <Link
-          to="/login"
+        <button
+          type="button"
+          onClick={isAuthenticated ? handleLogout : () => navigate("/login")}
           className="block rounded-full bg-[#1775EE] px-5.5 py-2 text-center text-white transition-all duration-300 hover:bg-[#0062E0]"
         >
-          Login
-        </Link>
+          {isAuthenticated ? "Logout" : "Login"}
+        </button>
       </div>
 
       {/* Mobile + Tablet Hamburger */}
@@ -738,13 +782,16 @@ function NavBar() {
           hover:border-[#0062E0] hover:text-white transition-all duration-300
           cursor-pointer`}
               />
-              <Link
-                to="/login"
-                onClick={() => setIsOpen(false)}
+              <button
+                type="button"
+                onClick={isAuthenticated ? handleLogout : () => {
+                  setIsOpen(false);
+                  navigate("/login");
+                }}
                 className="block w-full rounded-full bg-[#1775EE] px-6 py-3 text-center text-[1.25rem] text-white transition-all duration-300 hover:bg-[#0062E0]"
               >
-                Login
-              </Link>
+                {isAuthenticated ? "Logout" : "Login"}
+              </button>
             </div>
           </div>
         )}

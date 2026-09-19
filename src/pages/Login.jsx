@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowRight, Eye, EyeOff, Facebook, Instagram, Phone, Send } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import MainLogo from "../assets/MATEKK_logo.webp";
 import CrestLogo from "../assets/MATEKK_tab_logo.webp";
 import TikTokLogo from "../assets/tiktok.png";
@@ -32,11 +34,43 @@ const trainingLogos = [
 ];
 
 export default function Login() {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [pass, setPass] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [msg, setMsg] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { login } = useAuth();
+  const [isCheckingSession, setIsCheckingSession] = useState(true);
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) {
+      setIsCheckingSession(false);
+      return;
+    }
+
+    async function checkSession() {
+      try {
+        const response = await fetch("http://localhost:3000/auth/profile", {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+
+        if (response.ok) {
+          navigate("/pages/blank", { replace: true });
+          return;
+        }
+
+        localStorage.removeItem("accessToken");
+      } catch {
+        setMsg("Unable to verify your existing session.");
+      } finally {
+        setIsCheckingSession(false);
+      }
+    }
+
+    checkSession();
+  }, [navigate]);
 
   async function submit(e) {
     e.preventDefault();
@@ -49,11 +83,7 @@ export default function Login() {
     setMsg("");
 
     try {
-      const response = await fetch("http://localhost:3000/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: username, password: pass }),
-      });
+      const response = await login(username, pass);
 
       if (!response.ok) {
         setMsg(response.status === 401 ? "Invalid username or password." : "Unable to log in.");
@@ -66,6 +96,10 @@ export default function Login() {
     } finally {
       setIsSubmitting(false);
     }
+  }
+
+  if (isCheckingSession) {
+    return <main className="flex min-h-[calc(100vh-5rem)] items-center justify-center bg-[#f8fafc] text-slate-600">Checking your session...</main>;
   }
 
   return (
@@ -183,4 +217,3 @@ export default function Login() {
     </main>
   );
 }
-
