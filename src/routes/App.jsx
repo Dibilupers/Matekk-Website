@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import NavBar from "../components/navbar/navbar";
 import Footer from "../components/footer/footer";
 import ScrollToTop from "../components/scroll/ScrollToTop";
@@ -7,6 +7,7 @@ import ScrollToTop from "../components/scroll/ScrollToTop";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
 import NotFound from "../pages/NotFound";
+import UsersDashboard from "../admin";
 
 /* Cisco */
 import CCNA from "../pages/training/cisco/ccna/ccna";
@@ -106,14 +107,19 @@ if ("scrollRestoration" in history) {
 }
 
 export default function App() {
+  const { pathname } = useLocation();
+  const isAdminRoute = pathname === "/admin" || pathname === "/users";
+
   return (
     <>
-      <NavBar />
+      {!isAdminRoute && <NavBar />}
       <ScrollToTop />
 
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/admin" element={<UsersDashboard />} />
+        <Route path="/users" element={<UsersDashboard />} />
 
         {/* Cisco */}
         <Route path="/training/cisco/ccna/ccna" element={<CCNA />} />
@@ -302,7 +308,7 @@ export default function App() {
         <Route path="*" element={<NotFound />} />
       </Routes>
 
-      <Footer />
+      {!isAdminRoute && <Footer />}
     </>
   );
 }
