@@ -3,7 +3,6 @@ import { ArrowRight, Eye, EyeOff, Facebook, Instagram, Phone, Send } from "lucid
 import MainLogo from "../assets/MATEKK_logo.webp";
 import CrestLogo from "../assets/MATEKK_tab_logo.webp";
 import TikTokLogo from "../assets/tiktok.png";
-import AtiLogo from "../assets/ATI.webp";
 import AwsLogo from "../assets/awspractitioner.webp";
 import AzureLogo from "../assets/azure.svg";
 import CcnaLogo from "../assets/CCNA.png";
@@ -15,9 +14,10 @@ import ItilLogo from "../assets/itil5.webp";
 import LinuxLogo from "../assets/linux+.webp";
 import CiscoLogo from "../assets/cisco.png";
 import PythonLogo from "../assets/python.png";
+import PaloAltoLogo from "../assets/paloalto.png";
 
 const trainingLogos = [
-  { src: AtiLogo, alt: "ATI certification" },
+  { src: PaloAltoLogo, alt: "Palo Alto certification" },
   { src: AwsLogo, alt: "AWS Cloud Practitioner" },
   { src: AzureLogo, alt: "Microsoft Azure" },
   { src: CcnpLogo, alt: "Cisco CCNP" },
