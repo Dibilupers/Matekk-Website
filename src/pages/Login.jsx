@@ -1,12 +1,40 @@
 import { useState } from "react";
-import { ArrowRight, Facebook, Instagram, Phone, Send } from "lucide-react";
+import { ArrowRight, Eye, EyeOff, Facebook, Instagram, Phone, Send } from "lucide-react";
 import MainLogo from "../assets/MATEKK_logo.webp";
 import CrestLogo from "../assets/MATEKK_tab_logo.webp";
 import TikTokLogo from "../assets/tiktok.png";
+import AtiLogo from "../assets/ATI.webp";
+import AwsLogo from "../assets/awspractitioner.webp";
+import AzureLogo from "../assets/azure.svg";
+import CcnaLogo from "../assets/CCNA.png";
+import CcnpLogo from "../assets/CCNPEnterprise.webp";
+import CompTiaLogo from "../assets/security+.webp";
+import FortinetLogo from "../assets/fortinet.png";
+import Azure from "../assets/azure.jpg";
+import ItilLogo from "../assets/itil5.webp";
+import LinuxLogo from "../assets/linux+.webp";
+import CiscoLogo from "../assets/cisco.png";
+import PythonLogo from "../assets/python.png";
+
+const trainingLogos = [
+  { src: AtiLogo, alt: "ATI certification" },
+  { src: AwsLogo, alt: "AWS Cloud Practitioner" },
+  { src: AzureLogo, alt: "Microsoft Azure" },
+  { src: CcnpLogo, alt: "Cisco CCNP" },
+  { src: ItilLogo, alt: "ITIL certification" },
+  { src: PythonLogo, alt: "Python programming" },
+  { src: CcnaLogo, alt: "Cisco CCNA" },
+  { src: FortinetLogo, alt: "Fortinet certification" },
+  { src: CompTiaLogo, alt: "CompTIA Security Plus" },
+  { src: LinuxLogo, alt: "Linux Plus" },
+  { src: CiscoLogo, alt: "Cisco certification" },
+  { src: Azure, alt: "Microsoft Azure fundamentals" },
+];
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [pass, setPass] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [msg, setMsg] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -32,8 +60,7 @@ export default function Login() {
         return;
       }
 
-      const user = await response.json();
-      setMsg(`Welcome, ${user.username}.`);
+      window.location.replace("/pages/blank");
     } catch {
       setMsg("Unable to connect to the login server.");
     } finally {
@@ -56,12 +83,12 @@ export default function Login() {
           </div>
 
           <label className="block space-y-1 text-sm font-medium text-slate-800">
-            <span>Email Address</span>
+            <span>Username</span>
             <input
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="name@example.com"
+              placeholder="username"
               autoComplete="username"
               className="w-full rounded-lg border border-slate-500 px-4 py-2.5 outline-none transition focus:border-[#1775EE] focus:ring-2 focus:ring-blue-100"
             />
@@ -69,14 +96,24 @@ export default function Login() {
 
           <label className="block space-y-1 text-sm font-medium text-slate-800">
             <span>Password</span>
-            <input
-              type="password"
-              value={pass}
-              onChange={(e) => setPass(e.target.value)}
-              placeholder="••••••••••••"
-              autoComplete="current-password"
-              className="w-full rounded-lg border border-slate-500 px-4 py-2.5 outline-none transition focus:border-[#1775EE] focus:ring-2 focus:ring-blue-100"
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                value={pass}
+                onChange={(e) => setPass(e.target.value)}
+                placeholder="••••••••••••"
+                autoComplete="current-password"
+                className="w-full rounded-lg border border-slate-500 px-4 py-2.5 pr-11 outline-none transition focus:border-[#1775EE] focus:ring-2 focus:ring-blue-100"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((visible) => !visible)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                className="absolute inset-y-0 right-0 flex items-center px-3 text-slate-500 transition-colors hover:text-[#087ff5]"
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
           </label>
 
           <div className="text-right text-sm text-slate-700">Forgot Password</div>
@@ -99,28 +136,46 @@ export default function Login() {
         </form>
 
         <section className="space-y-7 text-center lg:text-left">
-          <div className="flex justify-center">
-            <div className="flex h-56 w-56 items-center justify-center rounded-full bg-white/80 shadow-[0_12px_25px_rgba(15,23,42,0.12)]">
+          <div className="relative mx-auto flex min-h-[27rem] w-full max-w-[32rem] items-center justify-center">
+            <div className="pointer-events-none absolute left-1/2 top-1/2 hidden aspect-square w-[26rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/20 lg:block" aria-hidden="true">
+              {trainingLogos.map((logo, index) => (
+                <div
+                  key={logo.alt}
+                  style={{ "--angle": `${index * 30}deg` }}
+                  className="pointer-events-auto absolute left-1/2 top-1/2 -ml-[2rem] -mt-[2rem] flex h-[4rem] w-[4rem] items-center justify-center rounded-full border border-slate-100 bg-white p-2 shadow-[0_8px_14px_rgba(15,23,42,0.18)] transition duration-300 [transform:rotate(var(--angle))_translateY(-10.75rem)] hover:scale-110"
+                >
+                  <img src={logo.src} alt="" className="h-full w-full object-contain [transform:rotate(calc(var(--angle)*-1))]" />
+                </div>
+              ))}
+            </div>
+            <div className="relative z-10 flex h-56 w-56 items-center justify-center rounded-full bg-white/90 shadow-[0_12px_25px_rgba(15,23,42,0.12)]">
               <img src={CrestLogo} alt="Matekk crest" className="h-44 w-44 object-contain" />
             </div>
+          </div>
+          <div className="grid grid-cols-4 gap-3 lg:hidden" aria-label="Training certifications">
+            {trainingLogos.map((logo) => (
+              <div key={logo.alt} className="flex h-16 items-center justify-center rounded-full bg-white p-2 shadow-sm">
+                <img src={logo.src} alt={logo.alt} className="h-full w-full object-contain" />
+              </div>
+            ))}
           </div>
           <div className="max-w-xl space-y-2">
             <h2 className="text-2xl font-bold text-slate-900 sm:text-3xl">Grow with <span className="text-[#1775EE]">Matekk</span></h2>
             <p className="text-base leading-relaxed text-slate-800">MATEKK Cybercore Technologies delivers industry-driven ICT, engineering solutions, and professional training designed to empower businesses and individuals.</p>
           </div>
           <div className="grid max-w-xl grid-cols-1 gap-3 sm:grid-cols-2">
-            <a href="https://www.facebook.com/matekkcybercore/" className="flex items-center gap-3 rounded-lg bg-white/85 p-3 shadow-sm transition hover:shadow-md">
-              <Facebook className="text-[#1877F2]" size={22} /><span className="text-sm font-semibold text-slate-700">Matekk Cybercore Academy</span>
+            <a href="https://www.facebook.com/matekkcybercore/" className="group flex items-center gap-3 rounded-lg bg-white/85 p-3 shadow-sm transition hover:shadow-md">
+              <Facebook className="text-[#1877F2]" size={22} /><span className="text-sm font-semibold text-slate-700 transition-colors group-hover:text-[#087ff5]">Matekk Cybercore Academy</span>
             </a>
-            <a href="tel:09771968226" className="flex items-center gap-3 rounded-lg bg-white/85 p-3 shadow-sm transition hover:shadow-md">
-              <Phone className="text-green-600" size={22} /><span className="text-sm font-semibold text-slate-700">09771968226</span>
+            <a href="tel:09771968226" className="group flex items-center gap-3 rounded-lg bg-white/85 p-3 shadow-sm transition hover:shadow-md">
+              <Phone className="text-green-600" size={22} /><span className="text-sm font-semibold text-slate-700 transition-colors group-hover:text-[#087ff5]">09771968226</span>
             </a>
-            <a href="https://www.instagram.com/matekkcybercore/" className="flex items-center gap-3 rounded-lg bg-white/85 p-3 shadow-sm transition hover:shadow-md">
-              <Instagram className="text-pink-500" size={22} /><span className="text-sm font-semibold text-slate-700">@matekkcybercore</span>
+            <a href="https://www.instagram.com/matekkcybercore/" className="group flex items-center gap-3 rounded-lg bg-white/85 p-3 shadow-sm transition hover:shadow-md">
+              <Instagram className="text-pink-500" size={22} /><span className="text-sm font-semibold text-slate-700 transition-colors group-hover:text-[#087ff5]">@matekkcybercore</span>
             </a>
-            <a href="https://www.tiktok.com/@training.matekkcybercore" className="flex items-center gap-1 rounded-lg bg-white/85 p-3 shadow-sm transition hover:shadow-md">
+            <a href="https://www.tiktok.com/@training.matekkcybercore" className="group flex items-center gap-1 rounded-lg bg-white/85 p-3 shadow-sm transition hover:shadow-md">
               <img src={TikTokLogo} alt="TikTok" className="h-5 w-5" />
-              <span className="text-sm font-semibold text-slate-700">@training.matekk</span>
+              <span className="text-sm font-semibold text-slate-700 transition-colors group-hover:text-[#087ff5]">@training.matekk</span>
             </a>
           </div>
         </section>

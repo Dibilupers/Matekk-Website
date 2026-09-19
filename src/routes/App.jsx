@@ -100,6 +100,7 @@ import Renewable from "../pages/solutions/pece/renewable";
 
 /* PECE (PBOOT) */
 
+import Blank from "../pages/Blank";
 
 if ("scrollRestoration" in history) {
   history.scrollRestoration = "manual";
@@ -298,10 +299,12 @@ export default function App() {
         <Route path="/solutions/pece/ipcctv" element={<IPCCTV />} />
         <Route path="/solutions/pece/pas" element={<PAS />} />
         <Route path="/solutions/pece/renewable" element={<Renewable />} />
+        <Route path="/pages/blank" element={<Blank />} />
 
         <Route path="*" element={<NotFound />} />
       </Routes>
 
+      
       <Footer />
     </>
   );
