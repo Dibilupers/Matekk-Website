@@ -5,11 +5,11 @@ import ReCAPTCHA from "react-google-recaptcha";
 import { FLAT_COURSES } from "../training/courses";
 
 // ─── Config ────────────────────────────────────────────────────────────────
-const EMAILJS_SERVICE_ID  = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
 const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-const EMAILJS_PUBLIC_KEY  = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
-const RECAPTCHA_SITE_KEY  = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
-const COOLDOWN_MS         = 60_000;
+const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
+const COOLDOWN_MS = 60_000;
 
 // ─── Constants ─────────────────────────────────────────────────────────────
 const FUNDING_OPTIONS = [
@@ -77,42 +77,42 @@ const INQUIRY_TYPE_OPTIONS = [
 function useEnrollForm(onClose, initialStep = 0, initialInquiryType = null, preselectedCourse = null) {
   const resolvedCourse = preselectedCourse ?? DEFAULT_COURSE;
 
-  const [step, setStep]               = useState(initialStep);
+  const [step, setStep] = useState(initialStep);
   const [inquiryType, setInquiryType] = useState(initialInquiryType);
-  const [status, setStatus]           = useState("idle");
+  const [status, setStatus] = useState("idle");
   const [captchaToken, setCaptchaToken] = useState(null);
-  const [honeypot, setHoneypot]       = useState("");
-  const captchaRef  = useRef(null);
+  const [honeypot, setHoneypot] = useState("");
+  const captchaRef = useRef(null);
   const cooldownRef = useRef(null);
 
   const [trainingForm, setTrainingForm] = useState({
-    funding:   FUNDING_OPTIONS[0],
+    funding: FUNDING_OPTIONS[0],
     attendees: "",
-    name:      "",
-    email:     "",
-    phone:     "",
-    course:    resolvedCourse,
-    message:   "",
+    name: "",
+    email: "",
+    phone: "",
+    course: resolvedCourse,
+    message: "",
   });
 
   const [solutionsForm, setSolutionsForm] = useState({
-    name:            "",
-    email:           "",
-    phone:           "",
+    name: "",
+    email: "",
+    phone: "",
     serviceInterest: "",
-    projectScale:    "",
-    timeline:        "",
-    budget:          "",
-    projectDesc:     "",
-    techSpecs:       "",
-    message:         "",
+    projectScale: "",
+    timeline: "",
+    budget: "",
+    projectDesc: "",
+    techSpecs: "",
+    message: "",
   });
 
   const [errors, setErrors] = useState({});
 
   useEffect(() => () => clearInterval(cooldownRef.current), []);
 
-  const updateTraining      = (field) => (e) =>
+  const updateTraining = (field) => (e) =>
     setTrainingForm((prev) => ({ ...prev, [field]: e.target.value }));
   const updateSolutionsEvent = (field) => (e) =>
     setSolutionsForm((prev) => ({ ...prev, [field]: e.target.value }));
@@ -123,7 +123,7 @@ function useEnrollForm(onClose, initialStep = 0, initialInquiryType = null, pres
     const e = {};
     if (!trainingForm.attendees || isNaN(trainingForm.attendees) || Number(trainingForm.attendees) < 1)
       e.attendees = "Enter a valid number of attendees.";
-    if (!trainingForm.name.trim())  e.name  = "Name or company is required.";
+    if (!trainingForm.name.trim()) e.name = "Name or company is required.";
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trainingForm.email)) e.email = "Enter a valid email address.";
     if (!trainingForm.phone.trim()) e.phone = "Phone number is required.";
     setErrors(e);
@@ -132,15 +132,16 @@ function useEnrollForm(onClose, initialStep = 0, initialInquiryType = null, pres
 
   const validateTrainingStep2 = () => {
     const e = {};
-    if (!trainingForm.course)  e.course  = "Please select a course.";
-    if (!captchaToken)         e.captcha = "Please complete the CAPTCHA verification.";
+    if (!trainingForm.course) e.course = "Please select a course.";
+    if (!RECAPTCHA_SITE_KEY) e.captcha = "CAPTCHA is not configured. Please contact us directly.";
+    else if (!captchaToken) e.captcha = "Please complete the CAPTCHA verification.";
     setErrors(e);
     return Object.keys(e).length === 0;
   };
 
   const validateSolutionsStep1 = () => {
     const e = {};
-    if (!solutionsForm.name.trim())  e.name  = "Name or company is required.";
+    if (!solutionsForm.name.trim()) e.name = "Name or company is required.";
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(solutionsForm.email)) e.email = "Enter a valid email address.";
     if (!solutionsForm.phone.trim()) e.phone = "Phone number is required.";
     setErrors(e);
@@ -150,11 +151,12 @@ function useEnrollForm(onClose, initialStep = 0, initialInquiryType = null, pres
   const validateSolutionsStep2 = () => {
     const e = {};
     if (!solutionsForm.serviceInterest) e.serviceInterest = "Please select a service.";
-    if (!solutionsForm.projectScale)    e.projectScale    = "Please select a project scale.";
-    if (!solutionsForm.timeline)        e.timeline        = "Please select a timeline.";
-    if (!solutionsForm.budget)          e.budget          = "Please select a budget range.";
-    if (!solutionsForm.projectDesc.trim()) e.projectDesc  = "Please describe your project.";
-    if (!captchaToken)                 e.captcha         = "Please complete the CAPTCHA verification.";
+    if (!solutionsForm.projectScale) e.projectScale = "Please select a project scale.";
+    if (!solutionsForm.timeline) e.timeline = "Please select a timeline.";
+    if (!solutionsForm.budget) e.budget = "Please select a budget range.";
+    if (!solutionsForm.projectDesc.trim()) e.projectDesc = "Please describe your project.";
+    if (!RECAPTCHA_SITE_KEY) e.captcha = "CAPTCHA is not configured. Please contact us directly.";
+    else if (!captchaToken) e.captcha = "Please complete the CAPTCHA verification.";
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -183,7 +185,7 @@ function useEnrollForm(onClose, initialStep = 0, initialInquiryType = null, pres
           (COOLDOWN_MS - (Date.now() - Number(localStorage.getItem("lastModalSubmit")))) / 1000,
         );
         if (s <= 0) { clearInterval(cooldownRef.current); setErrors((p) => ({ ...p, submit: "" })); }
-        else        { setErrors((p) => ({ ...p, submit: `Please wait ${s}s before sending again.` })); }
+        else { setErrors((p) => ({ ...p, submit: `Please wait ${s}s before sending again.` })); }
       }, 1000);
       return false;
     }
@@ -234,44 +236,44 @@ function useEnrollForm(onClose, initialStep = 0, initialInquiryType = null, pres
 
       const payload = inquiryType === "training"
         ? {
-            // ── Shared fields ──
-            inquiry_type:        "Training Inquiry",
-            name:                trainingForm.name,
-            email:               trainingForm.email,
-            phone:               trainingForm.phone,
-            subject:             "New Training Inquiry",
-            message:             trainingForm.message || "No additional message.",
-            // ── Badge keys (Gmail-safe — no {{^}} blocks needed) ──
-            badge_label:         "📚 Training Inquiry",
-            badge_color:         "#1fca6e22",
-            badge_text_color:    "#1fca6e",
-            badge_border_color:  "#1fca6e55",
-            // ── Training-specific (triggers {{#funding}} block) ──
-            funding:             trainingForm.funding,
-            attendees:           trainingForm.attendees,
-            course:              trainingForm.course || "N/A",
-          }
+          // ── Shared fields ──
+          inquiry_type: "Training Inquiry",
+          name: trainingForm.name,
+          email: trainingForm.email,
+          phone: trainingForm.phone,
+          subject: "New Training Inquiry",
+          message: trainingForm.message || "No additional message.",
+          // ── Badge keys (Gmail-safe — no {{^}} blocks needed) ──
+          badge_label: "📚 Training Inquiry",
+          badge_color: "#1fca6e22",
+          badge_text_color: "#1fca6e",
+          badge_border_color: "#1fca6e55",
+          // ── Training-specific (triggers {{#funding}} block) ──
+          funding: trainingForm.funding,
+          attendees: trainingForm.attendees,
+          course: trainingForm.course || "N/A",
+        }
         : {
-            // ── Shared fields ──
-            inquiry_type:        "ICT Solutions Inquiry",
-            name:                solutionsForm.name,
-            email:               solutionsForm.email,
-            phone:               solutionsForm.phone,
-            subject:             "New ICT Solutions Inquiry",
-            message:             solutionsForm.message || "No additional message.",
-            // ── Badge keys (Gmail-safe — no {{^}} blocks needed) ──
-            badge_label:         "🖥️ ICT Solutions Inquiry",
-            badge_color:         "#ff8c0022",
-            badge_text_color:    "#ffaa44",
-            badge_border_color:  "#ff8c0055",
-            // ── Solutions-specific (triggers {{#service_interest}} block) ──
-            service_interest:    solutionsForm.serviceInterest,
-            project_scale:       solutionsForm.projectScale,
-            timeline:            solutionsForm.timeline,
-            budget:              solutionsForm.budget,
-            project_desc:        solutionsForm.projectDesc,
-            tech_specs:          solutionsForm.techSpecs || "N/A",
-          };
+          // ── Shared fields ──
+          inquiry_type: "ICT Solutions Inquiry",
+          name: solutionsForm.name,
+          email: solutionsForm.email,
+          phone: solutionsForm.phone,
+          subject: "New ICT Solutions Inquiry",
+          message: solutionsForm.message || "No additional message.",
+          // ── Badge keys (Gmail-safe — no {{^}} blocks needed) ──
+          badge_label: "🖥️ ICT Solutions Inquiry",
+          badge_color: "#ff8c0022",
+          badge_text_color: "#ffaa44",
+          badge_border_color: "#ff8c0055",
+          // ── Solutions-specific (triggers {{#service_interest}} block) ──
+          service_interest: solutionsForm.serviceInterest,
+          project_scale: solutionsForm.projectScale,
+          timeline: solutionsForm.timeline,
+          budget: solutionsForm.budget,
+          project_desc: solutionsForm.projectDesc,
+          tech_specs: solutionsForm.techSpecs || "N/A",
+        };
 
       await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, payload, EMAILJS_PUBLIC_KEY);
       setStatus("success");
@@ -372,6 +374,22 @@ function SelectField({ label, id, options, error, value, onChange, placeholder }
   );
 }
 
+function CaptchaField({ captchaRef, onCaptchaVerify, onCaptchaExpire, error }) {
+  return (
+    <div className="flex flex-col gap-1">
+      {RECAPTCHA_SITE_KEY ? (
+        <ReCAPTCHA ref={captchaRef} sitekey={RECAPTCHA_SITE_KEY}
+          onChange={onCaptchaVerify} onExpired={onCaptchaExpire} />
+      ) : (
+        <p className="text-sm text-gray-500">
+          CAPTCHA is temporarily unavailable. Please contact us directly.
+        </p>
+      )}
+      <FieldError msg={error} />
+    </div>
+  );
+}
+
 function ProgressBar({ step }) {
   if (step === 0) return null;
   return (
@@ -421,7 +439,7 @@ function Step0({ onSelect }) {
       />
       <div className="flex flex-col gap-4 mt-6">
         {INQUIRY_TYPE_OPTIONS.map((opt) => (
-          <button key={opt.value} onClick={() => onSelect(opt.value)}
+          <button type="button" key={opt.value} onClick={() => onSelect(opt.value)}
             className="flex items-center gap-4 p-4 rounded-xl border-2 border-gray-100
               hover:border-blue-400 hover:bg-blue-50 active:scale-98 transition-all duration-200
               text-left group"
@@ -474,12 +492,12 @@ function TrainingStep1({ trainingForm, errors, updateTraining, next, backToSelec
           value={trainingForm.phone} onChange={updateTraining("phone")} error={errors.phone} />
       </div>
       <div className="mt-6 flex justify-between items-center">
-        <button onClick={handleBack}
+        <button type="button" onClick={handleBack}
           className="px-5 py-2.5 rounded-lg border border-gray-200 text-sm font-semibold text-gray-600
             hover:border-blue-400 hover:text-blue-600 active:scale-95 transition-all duration-150">
           ← Back
         </button>
-        <button onClick={next}
+        <button type="button" onClick={next}
           className="px-6 py-2.5 rounded-lg bg-[#1775EE] text-white text-sm font-semibold
             hover:bg-blue-700 active:scale-95 transition-all duration-150 shadow-sm shadow-blue-200">
           Next →
@@ -512,11 +530,8 @@ function TrainingStep2({ trainingForm, errors, updateTraining, back, submit, sta
             className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm outline-none
               resize-none transition hover:border-blue-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
         </div>
-        <div className="flex flex-col gap-1">
-          <ReCAPTCHA ref={captchaRef} sitekey={RECAPTCHA_SITE_KEY}
-            onChange={onCaptchaVerify} onExpired={onCaptchaExpire} />
-          <FieldError msg={errors.captcha} />
-        </div>
+        <CaptchaField captchaRef={captchaRef} onCaptchaVerify={onCaptchaVerify}
+          onCaptchaExpire={onCaptchaExpire} error={errors.captcha} />
       </div>
       {status === "error" && <ErrorBanner />}
       <p className="mt-4 text-xs text-gray-400 leading-relaxed">
@@ -548,12 +563,12 @@ function SolutionsStep1({ solutionsForm, errors, updateSolutionsEvent, next, bac
           value={solutionsForm.phone} onChange={updateSolutionsEvent("phone")} error={errors.phone} />
       </div>
       <div className="mt-6 flex justify-between items-center">
-        <button onClick={backToSelection}
+        <button type="button" onClick={backToSelection}
           className="px-5 py-2.5 rounded-lg border border-gray-200 text-sm font-semibold text-gray-600
             hover:border-blue-400 hover:text-blue-600 active:scale-95 transition-all duration-150">
           ← Back
         </button>
-        <button onClick={next}
+        <button type="button" onClick={next}
           className="px-6 py-2.5 rounded-lg bg-[#1775EE] text-white text-sm font-semibold
             hover:bg-blue-700 active:scale-95 transition-all duration-150 shadow-sm shadow-blue-200">
           Next →
@@ -620,11 +635,8 @@ function SolutionsStep2({ solutionsForm, errors, updateSolutionsEvent, back, sub
             className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm outline-none
               resize-none transition hover:border-blue-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
         </div>
-        <div className="flex flex-col gap-1">
-          <ReCAPTCHA ref={captchaRef} sitekey={RECAPTCHA_SITE_KEY}
-            onChange={onCaptchaVerify} onExpired={onCaptchaExpire} />
-          <FieldError msg={errors.captcha} />
-        </div>
+        <CaptchaField captchaRef={captchaRef} onCaptchaVerify={onCaptchaVerify}
+          onCaptchaExpire={onCaptchaExpire} error={errors.captcha} />
       </div>
       {status === "error" && <ErrorBanner />}
       <p className="mt-4 text-xs text-gray-400 leading-relaxed">
@@ -663,13 +675,13 @@ function StepNavButtons({ back, submit, isLoading, errors }) {
         </div>
       )}
       <div className="mt-5 flex justify-between items-center">
-        <button onClick={back} disabled={isLoading}
+        <button type="button" onClick={back} disabled={isLoading}
           className="px-5 py-2.5 rounded-lg border border-gray-200 text-sm font-semibold text-gray-600
             hover:border-blue-400 hover:text-blue-600 active:scale-95 transition-all duration-150
             disabled:opacity-40 disabled:cursor-not-allowed">
           ← Back
         </button>
-        <button onClick={submit} disabled={isLoading}
+        <button type="button" onClick={submit} disabled={isLoading}
           className="px-6 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-semibold
             hover:bg-blue-700 active:scale-95 transition-all duration-150 shadow-sm shadow-blue-200
             disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2">
@@ -701,12 +713,12 @@ function SuccessScreen({ onClose, reset }) {
         Thanks for reaching out. We'll get back to you within 1–2 business days.
       </p>
       <div className="mt-6 flex gap-3">
-        <button onClick={reset}
+        <button type="button" onClick={reset}
           className="px-5 py-2.5 rounded-lg border border-gray-200 text-sm font-semibold
             text-gray-600 hover:border-blue-400 hover:text-blue-600 transition-all duration-150">
           Submit Another
         </button>
-        <button onClick={onClose}
+        <button type="button" onClick={onClose}
           className="px-6 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-semibold
             hover:bg-blue-700 active:scale-95 transition-all duration-150">
           Done
@@ -736,7 +748,7 @@ function ModalContent({ f, handleClose, initialInquiryType }) {
     >
       <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto">
         <div className="flex justify-end px-7 pt-5">
-          <button onClick={handleClose}
+          <button type="button" onClick={handleClose}
             className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center
               justify-center text-gray-500 hover:text-gray-700 transition-colors duration-150">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

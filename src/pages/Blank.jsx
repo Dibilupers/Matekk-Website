@@ -4,7 +4,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { TRAINING_COURSES } from "../components/training/courses";
 import CCNALogo from "../assets/CCNA.png";
-import CCNPSecurityLogo from "../assets/CCNPSecurity.png";
 import APlusLogo from "../assets/aplus.webp";
 import NetworkPlusLogo from "../assets/network+.webp";
 import FortinetLogo from "../assets/FortinetHeader.webp";
@@ -28,21 +27,6 @@ const categoryLogos = {
 	"Project Management": ProjectManagementLogo,
 };
 
-const featuredCourses = [
-	{ category: "Cisco", name: "CCNA", path: "/training/cisco/ccna/ccna", image: CCNALogo, description: "Build practical networking skills in routing, switching, automation, and troubleshooting." },
-	{ category: "Cisco", name: "CCNP Security", path: "/training/cisco/ccnp/security", image: CCNPSecurityLogo, description: "Design and secure enterprise networks with advanced Cisco security technologies." },
-	{ category: "CompTIA", name: "A+ (Core 1 & 2)", path: "/training/comptia/aplus", image: APlusLogo, description: "Develop the essential hardware, software, and support skills for IT operations." },
-	{ category: "CompTIA", name: "Network+", path: "/training/comptia/network", image: NetworkPlusLogo, description: "Learn vendor-neutral networking concepts, infrastructure, and troubleshooting." },
-	{ category: "Fortinet", name: "Secure Networking", path: "/training/fortinet/secure-networking", image: FortinetLogo, description: "Strengthen network defense with Fortinet security and secure networking practice." },
-	{ category: "Palo Alto", name: "Network Security Professional", path: "/training/paloalto/networksecurity/professional", image: PaloAltoLogo, description: "Build modern security operations skills with Palo Alto Networks technology." },
-	{ category: "Data Center", name: "Certified Data Centre Professional", path: "/training/datacenter/cdcp", image: DataCenterLogo, description: "Learn the standards and best practices behind reliable data center facilities." },
-	{ category: "Cybersecurity", name: "Practical Ethical Hacking", path: "/training/cybersecurity/peh", image: CybersecurityLogo, description: "Practice ethical hacking methods, vulnerability discovery, and security testing." },
-	{ category: "Cloud Computing", name: "Azure Fundamentals", path: "/training/cloud/microsoft/azurefundamentals", image: AzureLogo, description: "Get started with cloud concepts, Azure services, and cloud security basics." },
-	{ category: "Cloud Computing", name: "AWS Cloud Practitioner", path: "/training/cloud/aws/practitioner", image: AwsLogo, description: "Understand AWS cloud services, architecture, pricing, and core concepts." },
-	{ category: "IT Management", name: "ITIL 5 Foundation", path: "/training/itil5/foundation", image: ItilLogo, description: "Learn modern service management principles for dependable IT delivery." },
-	{ category: "Project Management", name: "Project Management Professional", path: "/training/projectmanagement/pmp", image: ProjectManagementLogo, description: "Build the planning, delivery, and leadership skills for successful projects." },
-];
-
 function getCategoryCourses(category) {
 	const selectedCategory = TRAINING_COURSES.find((item) => item.name === category);
 	if (!selectedCategory) return [];
@@ -54,28 +38,43 @@ function getCategoryCourses(category) {
 	return flatten(selectedCategory.subcourses || []);
 }
 
+function getCoursesForEnrollment(enrollment) {
+	if (!enrollment) return [];
+
+	const enrollments = (Array.isArray(enrollment) ? enrollment : [enrollment])
+		.flatMap((item) => String(item).split(","))
+		.map((item) => item.trim().toLowerCase())
+		.filter(Boolean);
+
+	return TRAINING_COURSES.flatMap((category) => {
+		const categoryMatches = enrollments.includes(category.name.toLowerCase());
+		return getCategoryCourses(category.name)
+			.filter((course) => categoryMatches || enrollments.includes(course.name.toLowerCase()))
+			.map((course) => ({
+				...course,
+				category: category.name,
+				image: categoryLogos[category.name],
+				description: `Explore the ${course.name} program and develop industry-ready skills with MATEKK Cybercore Technologies.`,
+			}));
+	});
+}
+
 export default function Blank() {
 	const navigate = useNavigate();
-	const { profile: sessionProfile, isAuthenticated } = useAuth();
+	const { profile: sessionProfile } = useAuth();
 	const [activeCategory, setActiveCategory] = useState("All Programs");
-	const [profile, setProfile] = useState(null);
+	const [loadedProfile, setLoadedProfile] = useState(null);
 	const [profileError, setProfileError] = useState("");
-	const categories = ["All Programs", ...TRAINING_COURSES.map((category) => category.name)];
+	const profile = sessionProfile ?? loadedProfile;
+	const enrolledCourses = useMemo(
+		() => getCoursesForEnrollment([profile?.module_enrolled, profile?.course_enrolled]),
+		[profile?.module_enrolled, profile?.course_enrolled],
+	);
+	const categories = ["All Programs", ...new Set(enrolledCourses.map((course) => course.category))];
 	const visibleCourses = useMemo(() => {
-		if (activeCategory === "All Programs") return featuredCourses;
-
-		const categoryCourses = getCategoryCourses(activeCategory);
-		return categoryCourses.map((course) => ({
-			...course,
-			category: activeCategory,
-			image: categoryLogos[activeCategory],
-			description: `Explore the ${course.name} program and develop industry-ready skills with MATEKK Cybercore Technologies.`,
-		}));
-	}, [activeCategory]);
-
-	useEffect(() => {
-		if (isAuthenticated) setProfile(sessionProfile);
-	}, [isAuthenticated, sessionProfile]);
+		if (activeCategory === "All Programs") return enrolledCourses;
+		return enrolledCourses.filter((course) => course.category === activeCategory);
+	}, [activeCategory, enrolledCourses]);
 
 	useEffect(() => {
 		const accessToken = localStorage.getItem("accessToken");
@@ -96,7 +95,7 @@ export default function Blank() {
 					return;
 				}
 
-				setProfile(await response.json());
+				setLoadedProfile(await response.json());
 			} catch {
 				setProfileError("We could not load your profile. Please try again.");
 			}
@@ -104,6 +103,8 @@ export default function Blank() {
 
 		loadProfile();
 	}, [navigate]);
+
+
 
 	if (!profile && !profileError) {
 		return <main className="flex min-h-[calc(100vh-5rem)] items-center justify-center bg-[#f8fafc] text-slate-600">Loading your profile...</main>;
@@ -118,9 +119,9 @@ export default function Blank() {
 			<div className="mx-auto max-w-7xl">
 				<div className="mb-10 max-w-2xl">
 					<div>
-					<p className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-[#087ff5]">MATEKK Training Academy</p>
-					<h1 className="text-3xl font-bold text-slate-950 sm:text-4xl">Welcome, {profile.username}</h1>
-					<p className="mt-3 text-slate-600">Explore practical ICT training programs designed to help you grow with confidence.</p>
+						<p className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-[#087ff5]">MATEKK Training Academy</p>
+						<h1 className="text-3xl font-bold text-slate-950 sm:text-4xl">Welcome, {profile.username}</h1>
+						<p className="mt-3 text-slate-600">Explore practical ICT training programs designed to help you grow with confidence.</p>
 					</div>
 				</div>
 

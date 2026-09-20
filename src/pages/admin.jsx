@@ -1,8 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { ArrowDown, ArrowUp, Download, Pencil, Plus, Search, Trash2, UserMinus, X } from "lucide-react";
-import CrestLogo from "./assets/MATEKK_tab_logo.webp";
+import CrestLogo from "../assets/MATEKK_tab_logo.webp";
 
 const API_URL = "http://localhost:3000/users";
+
+function BrandMark() {
+	return (
+		<img src={CrestLogo} alt="Matekk crest" className="h-20 w-20 object-contain" />
+	);
+}
 
 function mapApiUser(user) {
 	return {
@@ -40,12 +46,6 @@ export default function UsersDashboard() {
 	const userCount = userRows.length;
 	const activeUserCount = userRows.filter((user) => user.status === "Active").length;
 	const suspendedUserCount = userRows.filter((user) => user.status === "Suspended").length;
-
-	function BrandMark() {
-		return (
-			<img src={CrestLogo} alt="Matekk crest" className="h-20 w-20 object-contain" />
-		);
-	}
 
 	const filteredUsers = useMemo(() => {
 		const query = search.trim().toLowerCase();
@@ -139,13 +139,13 @@ export default function UsersDashboard() {
 					<div className="mb-4 grid gap-3 md:grid-cols-[minmax(240px,1.45fr)_0.9fr_0.9fr_1fr_auto] md:gap-3">
 						<div className="relative">
 							<Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#888888]" />
-						<input
-							type="search"
-							value={search}
-							onChange={(event) => setSearch(event.target.value)}
-							placeholder="Search email or name"
-							className="h-11 w-full rounded-lg border border-[#dddddd] pl-11 pr-4 text-sm outline-none placeholder:text-[#777777] focus:border-[#1775ee] focus:ring-2 focus:ring-[#1775ee]/20"
-						/>
+							<input
+								type="search"
+								value={search}
+								onChange={(event) => setSearch(event.target.value)}
+								placeholder="Search email or name"
+								className="h-11 w-full rounded-lg border border-[#dddddd] pl-11 pr-4 text-sm outline-none placeholder:text-[#777777] focus:border-[#1775ee] focus:ring-2 focus:ring-[#1775ee]/20"
+							/>
 						</div>
 						<select value={status} onChange={(event) => setStatus(event.target.value)} className="h-11 rounded-lg border border-[#dddddd] px-4 text-sm outline-none focus:border-[#1775ee]">
 							<option>All statuses</option>
@@ -195,7 +195,7 @@ export default function UsersDashboard() {
 										<td><input type="checkbox" checked={selectedUsers.includes(user.name)} onChange={() => toggleUser(user.name)} aria-label={`Select ${user.name}`} /></td>
 										<td className="py-2">
 											<div className="flex items-center gap-3"><span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#d9eaff] text-xs font-bold text-[#1e5ba6]">{initials(user.name)}</span><span><span className="block font-semibold text-[#202020]">{user.name}</span>
-											<div className="text-[10px] font-normal text-[#8a8a8a]">{user.email}</div>
+												<div className="text-[10px] font-normal text-[#8a8a8a]">{user.email}</div>
 											</span></div>
 										</td>
 										<td><span className={`rounded-full px-2 py-1 ${user.status === "Active" ? "bg-[#ccefcf] text-[#23752a]" : user.status === "Suspended" ? "bg-[#ffd8d8] text-[#a52b2b]" : "text-[#555555]"}`}>{user.status}</span></td>

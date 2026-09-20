@@ -6,6 +6,7 @@ export type User = {
     password: string;
     role: string;
     module_enrolled?: string;
+    course_enrolled?: string;
 };
 
 @Injectable()
@@ -16,7 +17,8 @@ export class UsersService {
             username: 'test',
             password: 'testpass',
             role: 'student',
-            module_enrolled: 'CCNA',
+            module_enrolled: 'CCNA, CCNP Security, Network+',
+            course_enrolled: 'Cisco',
         },
         {
             userId: 2,
