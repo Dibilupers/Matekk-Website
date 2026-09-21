@@ -1,10 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { ArrowDown, ArrowUp, Download, Pencil, Plus, Search, Trash2, UserMinus, X } from "lucide-react";
 import CrestLogo from "../assets/MATEKK_tab_logo.webp";
-
-import { API_URL as BACKEND_URL } from "../config/api";
-
-const API_URL = `${BACKEND_URL}/users`;
+import API_URL from "../config/api";
 
 function BrandMark() {
 	return (
@@ -34,7 +31,7 @@ export default function UsersDashboard() {
 	const [sortConfig, setSortConfig] = useState({ key: "name", direction: "asc" });
 
 	useEffect(() => {
-		fetch(API_URL)
+		fetch(`${API_URL}/users`)
 			.then((response) => {
 				if (!response.ok) {
 					throw new Error("Failed to fetch users");

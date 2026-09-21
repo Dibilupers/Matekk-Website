@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ArrowRight, Eye, EyeOff, Facebook, Instagram, Phone, Send } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { API_URL } from "../config/api";
+import API_URL from "../config/api";
 import MainLogo from "../assets/MATEKK_logo.webp";
 import CrestLogo from "../assets/MATEKK_tab_logo.webp";
 import TikTokLogo from "../assets/tiktok.png";

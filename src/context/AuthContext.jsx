@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { API_URL } from "../config/api";
+import API_URL from "../config/api";
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
