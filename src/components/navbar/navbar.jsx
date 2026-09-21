@@ -621,6 +621,15 @@ function NavBar() {
 
       {/* Header actions */}
       <div className="hidden lg:flex items-center justify-end gap-3">
+        {isAuthenticated && (
+          <button
+            type="button"
+            onClick={() => navigate("/pages/blank")}
+            className="block rounded-full border border-[#1775EE] px-5.5 py-2 text-center text-[#1775EE] transition-all duration-300 hover:bg-[#1775EE] hover:text-white"
+          >
+            Courses
+          </button>
+        )}
         <InquireNowButton
           buttonCustomStyle="block w-full text-[1.25rem] text-center py-3 px-6 rounded-full
           lg:flex lg:w-auto lg:text-base lg:py-2 lg:px-5.5 lg:rounded-3xl
@@ -744,6 +753,19 @@ function NavBar() {
                   />
                 </svg>
               </button>
+
+              {isAuthenticated && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsOpen(false);
+                    navigate("/pages/blank");
+                  }}
+                  className={`text-2xl font-semibold text-left text-black hover:text-[#1775EE] ${t}`}
+                >
+                  Courses
+                </button>
+              )}
 
               <button
                 onClick={() => {

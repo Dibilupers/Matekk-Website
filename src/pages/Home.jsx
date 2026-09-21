@@ -52,8 +52,16 @@ export default function Home() {
   );
   const [is2xl, setIs2xl] = useState(() => window.innerWidth >= 1536);
   const location = useLocation();
+  const [submissionMessage, setSubmissionMessage] = useState("");
   /* Scroll function for when user comes form another page scrolls to home */
   useEffect(() => {
+    if (location.state?.submissionMessage) {
+      setSubmissionMessage(location.state.submissionMessage);
+      window.history.replaceState({}, document.title);
+      const timer = window.setTimeout(() => setSubmissionMessage(""), 3_000);
+      return () => window.clearTimeout(timer);
+    }
+
     if (location.state?.scrollTo) {
       const element = document.getElementById(location.state.scrollTo);
       if (element) {
@@ -180,6 +188,14 @@ export default function Home() {
 
   return (
     <main>
+      {submissionMessage && (
+        <div
+          role="status"
+          className="fixed left-1/2 top-24 z-[60] -translate-x-1/2 rounded-lg bg-green-600 px-5 py-3 text-sm font-semibold text-white shadow-lg"
+        >
+          {submissionMessage}
+        </div>
+      )}
       {/* ==================== HERO BANNER ====================*/}
       <section
         id="home"

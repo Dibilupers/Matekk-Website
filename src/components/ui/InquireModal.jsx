@@ -3,12 +3,15 @@ import { createPortal } from "react-dom";
 import emailjs from "@emailjs/browser";
 import ReCAPTCHA from "react-google-recaptcha";
 import { FLAT_COURSES } from "../training/courses";
+import { useNavigate } from "react-router-dom";
 
 // ─── Config ────────────────────────────────────────────────────────────────
 const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
 const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
 const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
-const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
+const RECAPTCHA_TEST_SITE_KEY = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI";
+const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY
+  || (import.meta.env.DEV ? RECAPTCHA_TEST_SITE_KEY : "");
 const COOLDOWN_MS = 60_000;
 
 // ─── Constants ─────────────────────────────────────────────────────────────
@@ -81,6 +84,7 @@ function useEnrollForm(onClose, initialStep = 0, initialInquiryType = null, pres
   const [inquiryType, setInquiryType] = useState(initialInquiryType);
   const [status, setStatus] = useState("idle");
   const [captchaToken, setCaptchaToken] = useState(null);
+  const [captchaError, setCaptchaError] = useState("");
   const [honeypot, setHoneypot] = useState("");
   const captchaRef = useRef(null);
   const cooldownRef = useRef(null);
@@ -286,8 +290,18 @@ function useEnrollForm(onClose, initialStep = 0, initialInquiryType = null, pres
     }
   };
 
-  const onCaptchaVerify = useCallback((token) => setCaptchaToken(token), []);
-  const onCaptchaExpire = useCallback(() => setCaptchaToken(null), []);
+  const onCaptchaVerify = useCallback((token) => {
+    setCaptchaToken(token);
+    setCaptchaError("");
+  }, []);
+  const onCaptchaExpire = useCallback(() => {
+    setCaptchaToken(null);
+    setCaptchaError("CAPTCHA expired. Please verify again.");
+  }, []);
+  const onCaptchaError = useCallback(() => {
+    setCaptchaToken(null);
+    setCaptchaError("CAPTCHA could not load. Check your connection and try again.");
+  }, []);
 
   const reset = () => {
     clearInterval(cooldownRef.current);
@@ -295,6 +309,7 @@ function useEnrollForm(onClose, initialStep = 0, initialInquiryType = null, pres
     setInquiryType(initialInquiryType);
     setStatus("idle");
     setCaptchaToken(null);
+    setCaptchaError("");
     setErrors({});
     setHoneypot("");
     setTrainingForm({
@@ -312,7 +327,7 @@ function useEnrollForm(onClose, initialStep = 0, initialInquiryType = null, pres
     captchaToken, captchaRef, cooldownRef, honeypot, setHoneypot,
     updateTraining, updateSolutionsEvent, selectInquiryType,
     next, back, backToSelection, submit, reset, onClose,
-    onCaptchaVerify, onCaptchaExpire,
+    onCaptchaVerify, onCaptchaExpire, onCaptchaError, captchaError,
   };
 }
 
@@ -374,18 +389,18 @@ function SelectField({ label, id, options, error, value, onChange, placeholder }
   );
 }
 
-function CaptchaField({ captchaRef, onCaptchaVerify, onCaptchaExpire, error }) {
+function CaptchaField({ captchaRef, onCaptchaVerify, onCaptchaExpire, onCaptchaError, error, captchaError }) {
   return (
     <div className="flex flex-col gap-1">
       {RECAPTCHA_SITE_KEY ? (
         <ReCAPTCHA ref={captchaRef} sitekey={RECAPTCHA_SITE_KEY}
-          onChange={onCaptchaVerify} onExpired={onCaptchaExpire} />
+          onChange={onCaptchaVerify} onExpired={onCaptchaExpire} onErrored={onCaptchaError} />
       ) : (
         <p className="text-sm text-gray-500">
           CAPTCHA is temporarily unavailable. Please contact us directly.
         </p>
       )}
-      <FieldError msg={error} />
+      <FieldError msg={error || captchaError} />
     </div>
   );
 }
@@ -507,7 +522,7 @@ function TrainingStep1({ trainingForm, errors, updateTraining, next, backToSelec
   );
 }
 
-function TrainingStep2({ trainingForm, errors, updateTraining, back, submit, status, captchaRef, onCaptchaVerify, onCaptchaExpire }) {
+function TrainingStep2({ trainingForm, errors, updateTraining, back, submit, status, captchaRef, onCaptchaVerify, onCaptchaExpire, onCaptchaError, captchaError }) {
   const isLoading = status === "loading";
   return (
     <>
@@ -531,7 +546,8 @@ function TrainingStep2({ trainingForm, errors, updateTraining, back, submit, sta
               resize-none transition hover:border-blue-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
         </div>
         <CaptchaField captchaRef={captchaRef} onCaptchaVerify={onCaptchaVerify}
-          onCaptchaExpire={onCaptchaExpire} error={errors.captcha} />
+          onCaptchaExpire={onCaptchaExpire} onCaptchaError={onCaptchaError}
+          captchaError={captchaError} error={errors.captcha} />
       </div>
       {status === "error" && <ErrorBanner />}
       <p className="mt-4 text-xs text-gray-400 leading-relaxed">
@@ -578,7 +594,7 @@ function SolutionsStep1({ solutionsForm, errors, updateSolutionsEvent, next, bac
   );
 }
 
-function SolutionsStep2({ solutionsForm, errors, updateSolutionsEvent, back, submit, status, captchaRef, onCaptchaVerify, onCaptchaExpire }) {
+function SolutionsStep2({ solutionsForm, errors, updateSolutionsEvent, back, submit, status, captchaRef, onCaptchaVerify, onCaptchaExpire, onCaptchaError, captchaError }) {
   const isLoading = status === "loading";
   return (
     <>
@@ -636,7 +652,8 @@ function SolutionsStep2({ solutionsForm, errors, updateSolutionsEvent, back, sub
               resize-none transition hover:border-blue-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
         </div>
         <CaptchaField captchaRef={captchaRef} onCaptchaVerify={onCaptchaVerify}
-          onCaptchaExpire={onCaptchaExpire} error={errors.captcha} />
+          onCaptchaExpire={onCaptchaExpire} onCaptchaError={onCaptchaError}
+          captchaError={captchaError} error={errors.captcha} />
       </div>
       {status === "error" && <ErrorBanner />}
       <p className="mt-4 text-xs text-gray-400 leading-relaxed">
@@ -787,6 +804,7 @@ export default function InquireModal({
   preselectedCourse = null,
 }) {
   const f = useEnrollForm(onClose, initialStep, initialInquiryType, preselectedCourse);
+  const navigate = useNavigate();
   const handleClose = () => { f.reset(); onClose(); };
 
   useEffect(() => {
@@ -798,6 +816,15 @@ export default function InquireModal({
     document.body.style.overflow = isOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [isOpen]);
+
+  useEffect(() => {
+    if (f.status !== "success") return;
+
+    handleClose();
+    navigate("/", {
+      state: { submissionMessage: "Message sent successfully!" },
+    });
+  }, [f.status, navigate]);
 
   if (!isOpen) return null;
 

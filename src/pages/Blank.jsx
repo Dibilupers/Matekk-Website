@@ -115,7 +115,7 @@ export default function Blank() {
 	}
 
 	return (
-		<main className="min-h-[calc(100vh-5rem)] bg-[#f8fafc] px-5 py-10 sm:px-8 lg:px-16">
+		<main className="h-[calc(100vh-5rem)] overflow-y-auto bg-[#f8fafc] px-5 py-10 sm:px-8 lg:px-16">
 			<div className="mx-auto max-w-7xl">
 				<div className="mb-10 max-w-2xl">
 					<div>

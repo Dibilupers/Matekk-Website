@@ -33,6 +33,13 @@ export class UsersService {
             password: 'renebaterbonia',
             role: 'admin',
         },
+        {
+            userId: 4,
+            username: 'junard',
+            password: 'bacarroo',
+            role: 'student',
+            course_enrolled: ['Cisco', 'Microsoft', 'CompTIA', 'Fortinet'],
+        }
     ];
 
     async findAll(): Promise<Omit<User, 'password'>[]> {
