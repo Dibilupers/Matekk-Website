@@ -25,7 +25,7 @@ export class UsersService {
             username: 'brian',
             password: 'sabrido',
             role: 'student',
-            course_enrolled: ['Cisco', 'Microsoft', 'CompTIA', 'Fortinet'],
+            course_enrolled: ['Cisco', 'Palo Alto', 'CompTIA', 'Fortinet'],
         },
         {
             userId: 3,
@@ -38,7 +38,7 @@ export class UsersService {
             username: 'junard',
             password: 'bacarroo',
             role: 'student',
-            course_enrolled: ['Cisco', 'Microsoft', 'CompTIA', 'Fortinet'],
+            course_enrolled: ['Cisco', 'Palo Alto', 'CompTIA', 'Fortinet'],
         }
     ];
 

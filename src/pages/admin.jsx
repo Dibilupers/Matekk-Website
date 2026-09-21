@@ -2,7 +2,9 @@ import { useEffect, useMemo, useState } from "react";
 import { ArrowDown, ArrowUp, Download, Pencil, Plus, Search, Trash2, UserMinus, X } from "lucide-react";
 import CrestLogo from "../assets/MATEKK_tab_logo.webp";
 
-const API_URL = "http://localhost:3000/users";
+import { API_URL as BACKEND_URL } from "../config/api";
+
+const API_URL = `${BACKEND_URL}/users`;
 
 function BrandMark() {
 	return (

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, BookOpen } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { API_URL } from "../config/api";
 import { TRAINING_COURSES } from "../components/training/courses";
 import CCNALogo from "../assets/CCNA.png";
 import APlusLogo from "../assets/aplus.webp";
@@ -85,7 +86,7 @@ export default function Blank() {
 		/* Fetch the user's profile from the server using the access token. If the token is invalid or expired, redirect to login. */
 		async function loadProfile() {
 			try {
-				const response = await fetch("http://localhost:3000/auth/profile", {
+				const response = await fetch(`${API_URL}/auth/profile`, {
 					headers: { Authorization: `Bearer ${accessToken}` },
 				});
 
