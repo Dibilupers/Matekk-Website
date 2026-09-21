@@ -41,7 +41,7 @@ export default function UsersDashboard() {
 			.then((data) => setUserRows(data.map(mapApiUser)))
 			.catch((error) => console.error(error));
 	}, []);
-
+/* User Statistics */
 	const userCount = userRows.length;
 	const activeUserCount = userRows.filter((user) => user.status === "Active").length;
 	const suspendedUserCount = userRows.filter((user) => user.status === "Suspended").length;
