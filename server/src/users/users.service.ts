@@ -25,7 +25,7 @@ export class UsersService {
             username: 'brian',
             password: 'sabrido',
             role: 'student',
-            course_enrolled: ['Cisco', 'Microsoft', 'CompTIA', 'Fortinet'],
+            course_enrolled: ['Cisco', 'Palo Alto', 'CompTIA', 'Fortinet', 'Project Management', 'Data Center', 'Cloud Computing', 'Cybersecurity'],
         },
         {
             userId: 3,
@@ -37,15 +37,15 @@ export class UsersService {
             userId: 4,
             username: 'Kulatoy',
             password: 'Parale',
-            role: 'admin',
-            course_enrolled: ['Cisco', 'Microsoft', 'CompTIA', 'Fortinet'],
+            role: 'student',
+            course_enrolled: ['Cisco', 'Palo Alto', 'CompTIA', 'Fortinet'],
         },
         {
             userId: 5,
             username: 'junard',
             password: 'bacarroo',
             role: 'student',
-            course_enrolled: ['Cisco', 'Microsoft', 'CompTIA', 'Fortinet'],
+            course_enrolled: ['Cisco', 'Palo Alto', 'CompTIA', 'Fortinet', 'Data Center', 'Cloud Computing', 'Cybersecurity'],
         },
     ];
 
