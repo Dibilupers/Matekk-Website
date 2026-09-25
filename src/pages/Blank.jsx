@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, BookOpen } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import API_URL from "../config/api";
 import { TRAINING_COURSES } from "../components/training/courses";
 import CCNALogo from "../assets/CCNA.png";
 import APlusLogo from "../assets/aplus.webp";
@@ -85,7 +86,7 @@ export default function Blank() {
 		/* Fetch the user's profile from the server using the access token. If the token is invalid or expired, redirect to login. */
 		async function loadProfile() {
 			try {
-				const response = await fetch("http://localhost:3000/auth/profile", {
+				const response = await fetch(`${API_URL}/auth/profile`, {
 					headers: { Authorization: `Bearer ${accessToken}` },
 				});
 
@@ -157,7 +158,7 @@ export default function Blank() {
 										<p className="mb-2 text-xs font-bold uppercase tracking-[0.14em] text-[#087ff5]">{course.category}</p>
 										<h3 className="text-xl font-bold text-slate-950">{course.name}</h3>
 										<p className="mt-3 flex-1 text-sm leading-6 text-slate-600">{course.description}</p>
-										<Link to={course.path} className="mt-5 flex items-center justify-center gap-2 rounded-lg bg-[#087ff5] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#0062e0]">
+										<Link to={course.name === "CCNA" ? "/modules/programs/ccna" : course.path} className="mt-5 flex items-center justify-center gap-2 rounded-lg bg-[#087ff5] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#0062e0]">
 											View Program <ArrowRight size={16} />
 										</Link>
 									</div>

@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Navigate, Routes, Route } from "react-router-dom";
 import NavBar from "../components/navbar/navbar";
 import Footer from "../components/footer/footer";
 import ScrollToTop from "../components/scroll/ScrollToTop";
@@ -102,6 +102,8 @@ import Renewable from "../pages/solutions/pece/renewable";
 
 import Blank from "../pages/Blank";
 import AdminPage from "../pages/admin";
+import CCNADashboard from "../pages/modules/programs/ccna";
+import { useAuth } from "../context/AuthContext";
 
 if ("scrollRestoration" in history) {
   history.scrollRestoration = "manual";
@@ -301,6 +303,14 @@ export default function App() {
         <Route path="/solutions/pece/pas" element={<PAS />} />
         <Route path="/solutions/pece/renewable" element={<Renewable />} />
         <Route path="/pages/blank" element={<Blank />} />
+        <Route
+          path="/modules/programs/ccna"
+          element={
+            <ProtectedRoute>
+              <CCNADashboard />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/admin" element={<AdminPage />} />
 
         <Route path="*" element={<NotFound />} />
@@ -310,4 +320,18 @@ export default function App() {
       <Footer />
     </>
   );
+}
+
+function ProtectedRoute({ children }) {
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-white text-sm text-slate-500">
+        Checking your session...
+      </main>
+    );
+  }
+
+  return isAuthenticated ? children : <Navigate to="/login" replace />;
 }

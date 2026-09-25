@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { ArrowRight, Eye, EyeOff, Facebook, Instagram, Phone, Send } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import API_URL from "../config/api";
 import MainLogo from "../assets/MATEKK_logo.webp";
 import CrestLogo from "../assets/MATEKK_tab_logo.webp";
 import TikTokLogo from "../assets/tiktok.png";
@@ -52,7 +53,7 @@ export default function Login() {
 
     async function checkSession() {
       try {
-        const response = await fetch("http://localhost:3000/auth/profile", {
+        const response = await fetch(`${API_URL}/auth/profile`, {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
 
