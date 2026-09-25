@@ -103,6 +103,8 @@ import Renewable from "../pages/solutions/pece/renewable";
 import Blank from "../pages/Blank";
 import AdminPage from "../pages/admin";
 import CCNADashboard from "../pages/modules/programs/ccna";
+import CCNAKnowledgeHub from "../pages/modules/programs/ccnaKnowledgeHub";
+import CCNAKnowledgeArticle from "../pages/modules/programs/ccnaKnowledgeArticle";
 import { useAuth } from "../context/AuthContext";
 
 if ("scrollRestoration" in history) {
@@ -308,6 +310,22 @@ export default function App() {
           element={
             <ProtectedRoute>
               <CCNADashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/ccna/knowledge-hub"
+          element={
+            <ProtectedRoute>
+              <CCNAKnowledgeHub />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/ccna/knowledge-hub/:articleSlug"
+          element={
+            <ProtectedRoute>
+              <CCNAKnowledgeArticle />
             </ProtectedRoute>
           }
         />

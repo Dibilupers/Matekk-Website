@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import {
 	ArrowRight,
 	Check,
@@ -133,7 +134,7 @@ export default function CCNA() {
 						</p>
 						<div className="mt-8 flex flex-wrap gap-3">
 							<button className="flex h-[58px] items-center gap-2 rounded-full bg-[#2f58e8] px-7 text-base font-bold text-white shadow-[0_10px_20px_rgba(47,88,232,0.16)]">Continue Lesson <ArrowRight size={18} /></button>
-							<button className="h-[58px] rounded-full border border-[#2f58e8] px-7 text-base font-bold text-[#2f58e8]">View All Modules</button>
+							<Link to="/modules/programs/ccna/knowledge-hub" className="flex h-[58px] items-center rounded-full border border-[#2f58e8] px-7 text-base font-bold text-[#2f58e8]">View All Modules</Link>
 						</div>
 						<div className="mt-11 flex flex-wrap gap-5 divide-x divide-[#dce5f2]">
 							<Stat value="2/5" label="Modules complete" />

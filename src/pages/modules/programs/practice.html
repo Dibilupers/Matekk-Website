@@ -1,0 +1,22 @@
+function Card ({title, price}) {
+  return (
+    <div className="card">
+      <h2>{title}</h2>
+      <p>Price: ${price}</p>
+    </div>
+  );
+}
+
+<Card title="Pandesal" price={29.99} /> 
+
+
+function App() {
+  return (
+    <div>
+      <h1>Welcome to the Bakery</h1>
+      <Card title="Pandesal" price={29.99} />
+      <Card title="Ensaymada" price={49.99} />
+      <Card title="Monay" price={19.99} />
+    </div>
+  );
+}
