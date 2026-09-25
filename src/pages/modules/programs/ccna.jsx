@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../../context/AuthContext";
 import {
 	ArrowRight,
 	Check,
@@ -50,6 +51,8 @@ function Stat({ value, label }) {
 }
 
 function NetworkIllustration() {
+	const { profile } = useAuth();
+
 	return (
 		<div className="relative mx-auto h-[320px] w-full max-w-[440px] sm:h-[380px] sm:max-w-[470px]">
 			<div className="absolute left-1/2 top-1/2 h-[270px] w-[270px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#e8efff] sm:h-[356px] sm:w-[356px]" />
@@ -71,7 +74,7 @@ function NetworkIllustration() {
 			<div className="absolute right-[-4px] top-[44%] z-30 flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#2f58e8] shadow-[0_8px_20px_rgba(15,35,75,0.1)]"><Pencil size={18} /></div>
 			<div className="absolute right-[2%] top-[70%] z-30 flex h-12 w-12 items-center justify-center rounded-full bg-[#2f58e8] text-white shadow-lg"><MessageSquare size={19} /></div>
 			<div className="absolute bottom-0 right-0 z-30 w-[238px] rounded-2xl border border-[#e4eaf5] bg-white p-4 shadow-[0_14px_28px_rgba(15,35,75,0.1)] sm:right-[-2%] sm:w-[275px]">
-				<strong className="text-sm text-[#2853df]">Emman R.</strong>
+				<strong className="text-sm text-[#2853df]">{profile?.username}</strong>
 				<p className="mt-0.5 text-sm leading-snug text-[#64708a]">just passed the CCNA<br />mock exam!</p>
 				<button className="mt-3 flex h-11 w-full items-center justify-center rounded-full bg-[#2f58e8] text-sm font-bold text-white">View result</button>
 			</div>
