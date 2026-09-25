@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { ArrowDown, ArrowUp, Download, Pencil, Plus, Search, Trash2, UserMinus, X } from "lucide-react";
+import { ArrowDown, ArrowUp, Download, Inbox, Pencil, Plus, Search, Trash2, UserMinus, Users, X } from "lucide-react";
 import CrestLogo from "../assets/MATEKK_tab_logo.webp";
 import API_URL from "../config/api";
 
@@ -29,6 +29,7 @@ export default function UsersDashboard() {
 	const [userRows, setUserRows] = useState([]);
 	const [selectedUsers, setSelectedUsers] = useState([]);
 	const [sortConfig, setSortConfig] = useState({ key: "name", direction: "asc" });
+	const [activeSection, setActiveSection] = useState("users");
 
 	useEffect(() => {
 		fetch(`${API_URL}/users`)
@@ -121,21 +122,44 @@ export default function UsersDashboard() {
 						<BrandMark />
 					</div>
 					<div className="min-w-0 flex-1">
-						<h4 className="text-base font-bold leading-tight tracking-wide sm:text-lg">Users</h4>
-						<p className="text-[10px] leading-4 sm:text-xs">Manage who has access to your workspace.</p>
+						<h4 className="text-base font-bold leading-tight tracking-wide sm:text-lg">{activeSection === "users" ? "Users" : "Inquiries"}</h4>
+						<p className="text-[10px] leading-4 sm:text-xs">{activeSection === "users" ? "Manage who has access to your workspace." : "Review messages and requests submitted through the website."}</p>
 						<div className="mt-3 grid max-w-[560px] grid-cols-3 gap-4 text-[10px] sm:text-[11px]">
-							<span><strong className="block text-xl sm:text-2xl">{userCount}</strong>Total users</span>
-							<span><strong className="block text-xl sm:text-2xl">{activeUserCount}</strong>Active</span>
-							<span><strong className="block text-xl sm:text-2xl">{suspendedUserCount}</strong>Suspended</span>
+							{activeSection === "users" ? (
+								<>
+									<span><strong className="block text-xl sm:text-2xl">{userCount}</strong>Total users</span>
+									<span><strong className="block text-xl sm:text-2xl">{activeUserCount}</strong>Active</span>
+									<span><strong className="block text-xl sm:text-2xl">{suspendedUserCount}</strong>Suspended</span>
+								</>
+							) : (
+								<>
+									<span><strong className="block text-xl sm:text-2xl">0</strong>Total inquiries</span>
+									<span><strong className="block text-xl sm:text-2xl">0</strong>Unread</span>
+									<span><strong className="block text-xl sm:text-2xl">0</strong>Resolved</span>
+								</>
+							)}
 						</div>
 					</div>
-					<button type="button" className="absolute right-5 top-1/2 flex -translate-y-1/2 items-center gap-2 rounded-lg bg-white px-4 py-3 text-sm font-semibold text-[#145bb7] shadow-sm transition hover:bg-blue-50 sm:right-8">
-						<Plus size={17} /> Add user
-					</button>
+					{activeSection === "users" && (
+						<button type="button" className="absolute right-5 top-1/2 flex -translate-y-1/2 items-center gap-2 rounded-lg bg-white px-4 py-3 text-sm font-semibold text-[#145bb7] shadow-sm transition hover:bg-blue-50 sm:right-8">
+							<Plus size={17} /> Add user
+						</button>
+					)}
 				</header>
 
 				<div className="p-4 sm:p-8 lg:p-12">
-					<div className="mb-4 grid gap-3 md:grid-cols-[minmax(240px,1.45fr)_0.9fr_0.9fr_1fr_auto] md:gap-3">
+					<nav aria-label="Admin sections" className="mb-6 flex flex-wrap gap-2 border-b border-[#dddddd] pb-4">
+						<button type="button" onClick={() => setActiveSection("users")} className={`flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition ${activeSection === "users" ? "bg-[#1775ee] text-white" : "text-[#666666] hover:bg-[#eef5ff] hover:text-[#145bb7]"}`}>
+							<Users size={17} /> Users
+						</button>
+						<button type="button" onClick={() => setActiveSection("inquiries")} className={`flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition ${activeSection === "inquiries" ? "bg-[#1775ee] text-white" : "text-[#666666] hover:bg-[#eef5ff] hover:text-[#145bb7]"}`}>
+							<Inbox size={17} /> Inquiries
+						</button>
+					</nav>
+
+					{activeSection === "users" ? (
+						<>
+						<div className="mb-4 grid gap-3 md:grid-cols-[minmax(240px,1.45fr)_0.9fr_0.9fr_1fr_auto] md:gap-3">
 						<div className="relative">
 							<Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#888888]" />
 							<input
@@ -145,7 +169,7 @@ export default function UsersDashboard() {
 								placeholder="Search email or name"
 								className="h-11 w-full rounded-lg border border-[#dddddd] pl-11 pr-4 text-sm outline-none placeholder:text-[#777777] focus:border-[#1775ee] focus:ring-2 focus:ring-[#1775ee]/20"
 							/>
-						</div>
+							</div>
 						<select value={status} onChange={(event) => setStatus(event.target.value)} className="h-11 rounded-lg border border-[#dddddd] px-4 text-sm outline-none focus:border-[#1775ee]">
 							<option>All statuses</option>
 							<option>Active</option>
@@ -210,7 +234,21 @@ export default function UsersDashboard() {
 							</tbody>
 						</table>
 					</div>
-					<div className="flex items-center justify-between border-t border-[#dddddd] px-1 pt-4 text-xs text-[#777777]"><span>Showing {filteredUsers.length} of {userRows.length} users</span><span>Page 1 of 1</span></div>
+						<div className="flex items-center justify-between border-t border-[#dddddd] px-1 pt-4 text-xs text-[#777777]"><span>Showing {filteredUsers.length} of {userRows.length} users</span><span>Page 1 of 1</span></div>
+						</>
+					) : (
+						<section className="rounded-xl border border-dashed border-[#bfcde0] bg-[#f8fbff] px-6 py-16 text-center">
+							<Inbox size={42} className="mx-auto mb-4 text-[#1775ee]" />
+							<h2 className="text-lg font-semibold text-[#202020]">Inquiries</h2>
+							<p className="mx-auto mt-2 max-w-md text-sm text-[#777777]">All website inquiries will appear here once the inquiry service is connected.</p>
+							<div className="mx-auto mt-6 max-w-2xl overflow-x-auto rounded-lg border border-[#dddddd] bg-white text-left">
+								<table className="w-full min-w-[620px] text-xs">
+									<thead><tr className="border-b border-[#dddddd] text-[#555555]"><th className="px-4 py-3 font-semibold">Sender</th><th className="px-4 py-3 font-semibold">Subject</th><th className="px-4 py-3 font-semibold">Type</th><th className="px-4 py-3 font-semibold">Status</th><th className="px-4 py-3 font-semibold">Received</th></tr></thead>
+									<tbody><tr><td colSpan="5" className="px-4 py-10 text-center text-[#888888]">No inquiries yet</td></tr></tbody>
+								</table>
+							</div>
+						</section>
+					)}
 				</div>
 			</section>
 		</main>

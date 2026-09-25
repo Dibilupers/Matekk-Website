@@ -122,7 +122,7 @@ export default function Blank() {
 	return (
 		<main className="h-[calc(100vh-5rem)] w-full max-w-full overflow-x-hidden overflow-y-auto bg-[#f8fafc] px-5 py-10 sm:px-8 lg:px-16">
 			<div className="mx-auto w-full min-w-0 max-w-7xl">
-				<div className="mb-10 max-w-2xl">
+				<div className="fade-in-up mb-10 max-w-2xl">
 					<div>
 						<p className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-[#087ff5]">MATEKK Training Academy</p>
 						<h1 className="text-3xl font-bold text-slate-950 sm:text-4xl">Welcome, {profile.username}</h1>
@@ -131,7 +131,7 @@ export default function Blank() {
 				</div>
 
 				<div className="grid gap-10 lg:grid-cols-[14rem_1fr] lg:gap-14">
-					<aside className="lg:sticky lg:top-24 lg:self-start">
+					<aside className="fade-in-up lg:sticky lg:top-24 lg:self-start" style={{ "--fade-delay": 100 }}>
 						<h2 className="mb-5 text-2xl font-bold text-slate-950">Category</h2>
 						<nav
 							className="flex max-h-56 w-full flex-col gap-0 overflow-y-auto overscroll-contain rounded-lg border border-slate-200 bg-slate-50 px-3 pb-1 touch-pan-y lg:max-h-none lg:overflow-visible lg:rounded-none lg:border-0 lg:bg-transparent lg:px-0 lg:pb-0 lg:block lg:space-y-1"
@@ -156,8 +156,8 @@ export default function Blank() {
 							<span className="text-sm font-semibold text-slate-400">{activeCategory}</span>
 						</div>
 						<div className="grid min-w-0 gap-7 sm:grid-cols-2">
-							{visibleCourses.map((course) => (
-								<article key={course.path} className="group flex min-w-0 min-h-[25rem] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl">
+							{visibleCourses.map((course, index) => (
+								<article key={course.path} className="fade-in-up-stagger group flex min-w-0 min-h-[25rem] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl" style={{ "--fade-delay": 150 + index * 75 }}>
 									<div className="flex h-44 items-center justify-center bg-slate-50 p-7">
 										<img src={course.image} alt={`${course.name} certification`} className="h-full max-w-[13rem] object-contain transition duration-300 group-hover:scale-105" />
 									</div>
