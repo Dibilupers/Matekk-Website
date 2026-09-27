@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import { ArrowDown, ArrowUp, Download, Inbox, Pencil, Plus, Search, Trash2, UserMinus, Users, X } from "lucide-react";
+import { Fragment, useEffect, useMemo, useState } from "react";
+import { ArrowDown, ArrowUp, ChevronDown, Download, Inbox, Pencil, Plus, Search, Trash2, UserMinus, Users, X } from "lucide-react";
 import CrestLogo from "../assets/MATEKK_tab_logo.webp";
 import API_URL from "../config/api";
 
@@ -27,6 +27,12 @@ export default function UsersDashboard() {
 	const [status, setStatus] = useState("All statuses");
 	const [subject, setSubject] = useState("All subjects");
 	const [userRows, setUserRows] = useState([]);
+	const [inquiries, setInquiries] = useState([]);
+	const [inquiriesLoading, setInquiriesLoading] = useState(true);
+	const [inquiriesError, setInquiriesError] = useState("");
+	const [inquirySearch, setInquirySearch] = useState("");
+	const [inquiryStatus, setInquiryStatus] = useState("All statuses");
+	const [expandedInquiryId, setExpandedInquiryId] = useState(null);
 	const [selectedUsers, setSelectedUsers] = useState([]);
 	const [sortConfig, setSortConfig] = useState({ key: "name", direction: "asc" });
 	const [activeSection, setActiveSection] = useState("users");
@@ -42,10 +48,67 @@ export default function UsersDashboard() {
 			.then((data) => setUserRows(data.map(mapApiUser)))
 			.catch((error) => console.error(error));
 	}, []);
-/* User Statistics */
+
+	useEffect(() => {
+		const controller = new AbortController();
+
+		fetch(`${API_URL}/inquires`, { signal: controller.signal })
+			.then((response) => {
+				if (!response.ok) {
+					throw new Error("Failed to load inquiries.");
+				}
+				return response.json();
+			})
+			.then((data) => {
+				if (!Array.isArray(data)) {
+					throw new Error("The inquiry response was not a list.");
+				}
+				setInquiries(data);
+				setInquiriesError("");
+			})
+			.catch((error) => {
+				if (error.name !== "AbortError") {
+					setInquiriesError(error.message || "Unable to load inquiries.");
+				}
+			})
+			.finally(() => {
+				if (!controller.signal.aborted) setInquiriesLoading(false);
+			});
+
+		return () => controller.abort();
+	}, []);
+
+	/* User Statistics */
 	const userCount = userRows.length;
 	const activeUserCount = userRows.filter((user) => user.status === "Active").length;
 	const suspendedUserCount = userRows.filter((user) => user.status === "Suspended").length;
+	const openInquiryCount = inquiries.filter((inquiry) => inquiry.status).length;
+	const resolvedInquiryCount = inquiries.length - openInquiryCount;
+	const filteredInquiries = useMemo(() => {
+		const query = inquirySearch.trim().toLowerCase();
+
+		return inquiries
+			.filter((inquiry) => {
+				const searchableText = [
+					inquiry.name,
+					inquiry.email,
+					inquiry.phone,
+					inquiry.subject,
+					inquiry.inquiry_type,
+					inquiry.message,
+					inquiry.course,
+					inquiry.service_interest,
+					inquiry.project_desc,
+				].filter(Boolean).join(" ").toLowerCase();
+				const matchesSearch = !query || searchableText.includes(query);
+				const matchesStatus = inquiryStatus === "All statuses"
+					|| (inquiryStatus === "Open" && inquiry.status)
+					|| (inquiryStatus === "Resolved" && !inquiry.status);
+
+				return matchesSearch && matchesStatus;
+			})
+			.sort((firstInquiry, secondInquiry) => new Date(secondInquiry.createdAt) - new Date(firstInquiry.createdAt));
+	}, [inquiries, inquirySearch, inquiryStatus]);
 
 	const filteredUsers = useMemo(() => {
 		const query = search.trim().toLowerCase();
@@ -133,9 +196,9 @@ export default function UsersDashboard() {
 								</>
 							) : (
 								<>
-									<span><strong className="block text-xl sm:text-2xl">0</strong>Total inquiries</span>
-									<span><strong className="block text-xl sm:text-2xl">0</strong>Unread</span>
-									<span><strong className="block text-xl sm:text-2xl">0</strong>Resolved</span>
+									<span><strong className="block text-xl sm:text-2xl">{inquiries.length}</strong>Total inquiries</span>
+									<span><strong className="block text-xl sm:text-2xl">{openInquiryCount}</strong>Open</span>
+									<span><strong className="block text-xl sm:text-2xl">{resolvedInquiryCount}</strong>Resolved</span>
 								</>
 							)}
 						</div>
@@ -159,94 +222,174 @@ export default function UsersDashboard() {
 
 					{activeSection === "users" ? (
 						<>
-						<div className="mb-4 grid gap-3 md:grid-cols-[minmax(240px,1.45fr)_0.9fr_0.9fr_1fr_auto] md:gap-3">
-						<div className="relative">
-							<Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#888888]" />
-							<input
-								type="search"
-								value={search}
-								onChange={(event) => setSearch(event.target.value)}
-								placeholder="Search email or name"
-								className="h-11 w-full rounded-lg border border-[#dddddd] pl-11 pr-4 text-sm outline-none placeholder:text-[#777777] focus:border-[#1775ee] focus:ring-2 focus:ring-[#1775ee]/20"
-							/>
+							<div className="mb-4 grid gap-3 md:grid-cols-[minmax(240px,1.45fr)_0.9fr_0.9fr_1fr_auto] md:gap-3">
+								<div className="relative">
+									<Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#888888]" />
+									<input
+										type="search"
+										value={search}
+										onChange={(event) => setSearch(event.target.value)}
+										placeholder="Search email or name"
+										className="h-11 w-full rounded-lg border border-[#dddddd] pl-11 pr-4 text-sm outline-none placeholder:text-[#777777] focus:border-[#1775ee] focus:ring-2 focus:ring-[#1775ee]/20"
+									/>
+								</div>
+								<select value={status} onChange={(event) => setStatus(event.target.value)} className="h-11 rounded-lg border border-[#dddddd] px-4 text-sm outline-none focus:border-[#1775ee]">
+									<option>All statuses</option>
+									<option>Active</option>
+									<option>Inactive</option>
+									<option>Suspended</option>
+								</select>
+								<select value={role} onChange={(event) => setRole(event.target.value)} className="h-11 rounded-lg border border-[#dddddd] px-4 text-sm outline-none focus:border-[#1775ee]">
+									<option>All roles</option>
+									<option>Member</option>
+									<option>Admin</option>
+								</select>
+								<select value={subject} onChange={(event) => setSubject(event.target.value)} className="h-11 rounded-lg border border-[#dddddd] px-4 text-sm outline-none focus:border-[#1775ee]">
+									<option>All subjects</option>
+									<option>ECE Review</option>
+									<option>Networking</option>
+									<option>Cybersecurity</option>
+								</select>
+								<button type="button" onClick={exportUsers} title="Export users" aria-label="Export users" className="flex h-11 items-center justify-center rounded-lg border border-[#dddddd] px-4 text-[#555555] transition hover:border-[#1775ee] hover:text-[#1775ee]"><Download size={18} /></button>
 							</div>
-						<select value={status} onChange={(event) => setStatus(event.target.value)} className="h-11 rounded-lg border border-[#dddddd] px-4 text-sm outline-none focus:border-[#1775ee]">
-							<option>All statuses</option>
-							<option>Active</option>
-							<option>Inactive</option>
-							<option>Suspended</option>
-						</select>
-						<select value={role} onChange={(event) => setRole(event.target.value)} className="h-11 rounded-lg border border-[#dddddd] px-4 text-sm outline-none focus:border-[#1775ee]">
-							<option>All roles</option>
-							<option>Member</option>
-							<option>Admin</option>
-						</select>
-						<select value={subject} onChange={(event) => setSubject(event.target.value)} className="h-11 rounded-lg border border-[#dddddd] px-4 text-sm outline-none focus:border-[#1775ee]">
-							<option>All subjects</option>
-							<option>ECE Review</option>
-							<option>Networking</option>
-							<option>Cybersecurity</option>
-						</select>
-						<button type="button" onClick={exportUsers} title="Export users" aria-label="Export users" className="flex h-11 items-center justify-center rounded-lg border border-[#dddddd] px-4 text-[#555555] transition hover:border-[#1775ee] hover:text-[#1775ee]"><Download size={18} /></button>
-					</div>
 
-					{selectedCount > 0 && (
-						<div className="mb-4 flex flex-wrap items-center gap-3 rounded-lg bg-[#eef5ff] px-4 py-3 text-sm text-[#145bb7]">
-							<strong>{selectedCount} selected</strong>
-							<button type="button" onClick={() => suspendUsers(selectedUsers)} className="flex items-center gap-1 rounded-md border border-[#b8d5ff] bg-white px-3 py-1.5 font-semibold hover:bg-blue-50"><UserMinus size={15} /> Suspend</button>
-							<button type="button" onClick={() => removeUsers(selectedUsers)} className="flex items-center gap-1 rounded-md border border-red-200 bg-white px-3 py-1.5 font-semibold text-red-600 hover:bg-red-50"><Trash2 size={15} /> Delete</button>
-							<button type="button" onClick={() => setSelectedUsers([])} title="Clear selection" aria-label="Clear selection" className="ml-auto p-1 hover:text-[#0d4084]"><X size={18} /></button>
-						</div>
-					)}
+							{selectedCount > 0 && (
+								<div className="mb-4 flex flex-wrap items-center gap-3 rounded-lg bg-[#eef5ff] px-4 py-3 text-sm text-[#145bb7]">
+									<strong>{selectedCount} selected</strong>
+									<button type="button" onClick={() => suspendUsers(selectedUsers)} className="flex items-center gap-1 rounded-md border border-[#b8d5ff] bg-white px-3 py-1.5 font-semibold hover:bg-blue-50"><UserMinus size={15} /> Suspend</button>
+									<button type="button" onClick={() => removeUsers(selectedUsers)} className="flex items-center gap-1 rounded-md border border-red-200 bg-white px-3 py-1.5 font-semibold text-red-600 hover:bg-red-50"><Trash2 size={15} /> Delete</button>
+									<button type="button" onClick={() => setSelectedUsers([])} title="Clear selection" aria-label="Clear selection" className="ml-auto p-1 hover:text-[#0d4084]"><X size={18} /></button>
+								</div>
+							)}
 
-					<div className="overflow-x-auto border border-[#dddddd] px-3 sm:px-4">
-						<table className="w-full min-w-[760px] border-collapse text-left text-xs">
-							<thead>
-								<tr className="h-10 border-b border-[#cccccc]">
-									<th className="w-8"><input type="checkbox" checked={allVisibleSelected} onChange={toggleAll} aria-label="Select all users" /></th>
-									<th><button type="button" onClick={() => sortBy("name")} className="flex items-center gap-1 font-semibold">Name {sortConfig.key === "name" && (sortConfig.direction === "asc" ? <ArrowUp size={14} /> : <ArrowDown size={14} />)}</button></th>
-									<th>Status</th>
-									<th>Role</th>
-									<th>Enrolled subject</th>
-									<th><button type="button" onClick={() => sortBy("lastActive")} className="flex items-center gap-1 font-semibold">Last active {sortConfig.key === "lastActive" && (sortConfig.direction === "asc" ? <ArrowUp size={14} /> : <ArrowDown size={14} />)}</button></th>
-									<th className="w-20">Actions</th>
-								</tr>
-							</thead>
-							<tbody>
-								{filteredUsers.map((user) => (
-									<tr key={user.name} className="border-b border-[#cccccc] last:border-b-0">
-										<td><input type="checkbox" checked={selectedUsers.includes(user.name)} onChange={() => toggleUser(user.name)} aria-label={`Select ${user.name}`} /></td>
-										<td className="py-2">
-											<div className="flex items-center gap-3"><span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#d9eaff] text-xs font-bold text-[#1e5ba6]">{initials(user.name)}</span><span><span className="block font-semibold text-[#202020]">{user.name}</span>
-												<div className="text-[10px] font-normal text-[#8a8a8a]">{user.email}</div>
-											</span></div>
-										</td>
-										<td><span className={`rounded-full px-2 py-1 ${user.status === "Active" ? "bg-[#ccefcf] text-[#23752a]" : user.status === "Suspended" ? "bg-[#ffd8d8] text-[#a52b2b]" : "text-[#555555]"}`}>{user.status}</span></td>
-										<td><span className={`rounded-full px-2 py-1 ${user.role === "Admin" ? "bg-[#e3dcff] text-[#5941b2]" : "text-[#555555]"}`}>{user.role}</span></td>
-										<td>{user.enrolledSubject}</td>
-										<td>{user.lastActive}</td>
-										<td><div className="flex items-center gap-3 text-[#777777]"><button type="button" title={`Edit ${user.name}`} aria-label={`Edit ${user.name}`} className="hover:text-[#1775ee]"><Pencil size={16} /></button><button type="button" onClick={() => removeUsers([user.name])} title={`Delete ${user.name}`} aria-label={`Delete ${user.name}`} className="hover:text-red-600"><Trash2 size={16} /></button></div></td>
-									</tr>
-								))}
-								{filteredUsers.length === 0 && (
-									<tr><td colSpan="7" className="h-16 text-center font-normal">No users found</td></tr>
-								)}
-							</tbody>
-						</table>
-					</div>
-						<div className="flex items-center justify-between border-t border-[#dddddd] px-1 pt-4 text-xs text-[#777777]"><span>Showing {filteredUsers.length} of {userRows.length} users</span><span>Page 1 of 1</span></div>
-						</>
-					) : (
-						<section className="rounded-xl border border-dashed border-[#bfcde0] bg-[#f8fbff] px-6 py-16 text-center">
-							<Inbox size={42} className="mx-auto mb-4 text-[#1775ee]" />
-							<h2 className="text-lg font-semibold text-[#202020]">Inquiries</h2>
-							<p className="mx-auto mt-2 max-w-md text-sm text-[#777777]">All website inquiries will appear here once the inquiry service is connected.</p>
-							<div className="mx-auto mt-6 max-w-2xl overflow-x-auto rounded-lg border border-[#dddddd] bg-white text-left">
-								<table className="w-full min-w-[620px] text-xs">
-									<thead><tr className="border-b border-[#dddddd] text-[#555555]"><th className="px-4 py-3 font-semibold">Sender</th><th className="px-4 py-3 font-semibold">Subject</th><th className="px-4 py-3 font-semibold">Type</th><th className="px-4 py-3 font-semibold">Status</th><th className="px-4 py-3 font-semibold">Received</th></tr></thead>
-									<tbody><tr><td colSpan="5" className="px-4 py-10 text-center text-[#888888]">No inquiries yet</td></tr></tbody>
+							<div className="overflow-x-auto border border-[#dddddd] px-3 sm:px-4">
+								<table className="w-full min-w-[760px] border-collapse text-left text-xs">
+									<thead>
+										<tr className="h-10 border-b border-[#cccccc]">
+											<th className="w-8"><input type="checkbox" checked={allVisibleSelected} onChange={toggleAll} aria-label="Select all users" /></th>
+											<th><button type="button" onClick={() => sortBy("name")} className="flex items-center gap-1 font-semibold">Name {sortConfig.key === "name" && (sortConfig.direction === "asc" ? <ArrowUp size={14} /> : <ArrowDown size={14} />)}</button></th>
+											<th>Status</th>
+											<th>Role</th>
+											<th>Enrolled subject</th>
+											<th><button type="button" onClick={() => sortBy("lastActive")} className="flex items-center gap-1 font-semibold">Last active {sortConfig.key === "lastActive" && (sortConfig.direction === "asc" ? <ArrowUp size={14} /> : <ArrowDown size={14} />)}</button></th>
+											<th className="w-20">Actions</th>
+										</tr>
+									</thead>
+									<tbody>
+										{filteredUsers.map((user) => (
+											<tr key={user.name} className="border-b border-[#cccccc] last:border-b-0">
+												<td><input type="checkbox" checked={selectedUsers.includes(user.name)} onChange={() => toggleUser(user.name)} aria-label={`Select ${user.name}`} /></td>
+												<td className="py-2">
+													<div className="flex items-center gap-3"><span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#d9eaff] text-xs font-bold text-[#1e5ba6]">{initials(user.name)}</span><span><span className="block font-semibold text-[#202020]">{user.name}</span>
+														<div className="text-[10px] font-normal text-[#8a8a8a]">{user.email}</div>
+													</span></div>
+												</td>
+												<td><span className={`rounded-full px-2 py-1 ${user.status === "Active" ? "bg-[#ccefcf] text-[#23752a]" : user.status === "Suspended" ? "bg-[#ffd8d8] text-[#a52b2b]" : "text-[#555555]"}`}>{user.status}</span></td>
+												<td><span className={`rounded-full px-2 py-1 ${user.role === "Admin" ? "bg-[#e3dcff] text-[#5941b2]" : "text-[#555555]"}`}>{user.role}</span></td>
+												<td>{user.enrolledSubject}</td>
+												<td>{user.lastActive}</td>
+												<td><div className="flex items-center gap-3 text-[#777777]"><button type="button" title={`Edit ${user.name}`} aria-label={`Edit ${user.name}`} className="hover:text-[#1775ee]"><Pencil size={16} /></button><button type="button" onClick={() => removeUsers([user.name])} title={`Delete ${user.name}`} aria-label={`Delete ${user.name}`} className="hover:text-red-600"><Trash2 size={16} /></button></div></td>
+											</tr>
+										))}
+										{filteredUsers.length === 0 && (
+											<tr><td colSpan="7" className="h-16 text-center font-normal">No users found</td></tr>
+										)}
+									</tbody>
 								</table>
 							</div>
+							<div className="flex items-center justify-between border-t border-[#dddddd] px-1 pt-4 text-xs text-[#777777]"><span>Showing {filteredUsers.length} of {userRows.length} users</span><span>Page 1 of 1</span></div>
+						</>
+					) : (
+						<section aria-label="Website inquiries">
+							<div className="mb-4 grid gap-3 sm:grid-cols-[minmax(240px,1fr)_200px]">
+								<div className="relative">
+									<Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#888888]" />
+									<input
+										type="search"
+										value={inquirySearch}
+										onChange={(event) => setInquirySearch(event.target.value)}
+										placeholder="Search inquiries"
+										aria-label="Search inquiries"
+										className="h-11 w-full rounded-lg border border-[#dddddd] pl-11 pr-4 text-sm outline-none placeholder:text-[#777777] focus:border-[#1775ee] focus:ring-2 focus:ring-[#1775ee]/20"
+									/>
+								</div>
+								<select value={inquiryStatus} onChange={(event) => setInquiryStatus(event.target.value)} className="h-11 rounded-lg border border-[#dddddd] px-4 text-sm outline-none focus:border-[#1775ee]" aria-label="Filter by inquiry status">
+									<option>All statuses</option>
+									<option>Open</option>
+									<option>Resolved</option>
+								</select>
+							</div>
+
+							{inquiriesError ? (
+								<p role="alert" className="border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{inquiriesError}</p>
+							) : (
+								<div className="overflow-x-auto border border-[#dddddd]">
+									<table className="w-full min-w-[760px] border-collapse text-left text-xs">
+										<thead>
+											<tr className="h-10 border-b border-[#cccccc] text-[#555555]">
+												<th className="px-3 font-semibold sm:px-4">Sender</th>
+												<th className="px-3 font-semibold sm:px-4">Subject</th>
+												<th className="px-3 font-semibold sm:px-4">Type</th>
+												<th className="px-3 font-semibold sm:px-4">Status</th>
+												<th className="px-3 font-semibold sm:px-4">Received</th>
+												<th className="w-12 px-3 sm:px-4"><span className="sr-only">Details</span></th>
+											</tr>
+										</thead>
+										<tbody>
+											{inquiriesLoading ? (
+												<tr><td colSpan="6" className="h-16 text-center">Loading inquiries...</td></tr>
+											) : filteredInquiries.length === 0 ? (
+												<tr><td colSpan="6" className="h-16 text-center">{inquiries.length === 0 ? "No inquiries found" : "No inquiries match your filters"}</td></tr>
+											) : filteredInquiries.map((inquiry) => {
+												const isExpanded = expandedInquiryId === inquiry.id;
+												const receivedAt = new Date(inquiry.createdAt);
+												const receivedLabel = Number.isNaN(receivedAt.getTime()) ? "—" : receivedAt.toLocaleString();
+												const detailFields = [
+													["Funding", inquiry.funding],
+													["Attendees", inquiry.attendees],
+													["Course", inquiry.course],
+													["Service interest", inquiry.service_interest],
+													["Project scale", inquiry.project_scale],
+													["Timeline", inquiry.timeline],
+													["Budget", inquiry.budget],
+													["Project description", inquiry.project_desc],
+													["Technical specifications", inquiry.tech_specs],
+												].filter(([, value]) => value);
+
+												return (
+													<Fragment key={inquiry.id}>
+														<tr className="border-b border-[#cccccc] last:border-b-0">
+															<td className="px-3 py-3 sm:px-4">
+																<span className="block font-semibold text-[#202020]">{inquiry.name}</span>
+																<a href={`mailto:${inquiry.email}`} className="text-[10px] text-[#666666] hover:text-[#145bb7]">{inquiry.email}</a>
+															</td>
+															<td className="px-3 py-3 sm:px-4">{inquiry.subject}</td>
+															<td className="px-3 py-3 sm:px-4">{inquiry.inquiry_type}</td>
+															<td className="px-3 py-3 sm:px-4"><span className={`rounded-full px-2 py-1 ${inquiry.status ? "bg-[#fff0cf] text-[#8b5b00]" : "bg-[#ccefcf] text-[#23752a]"}`}>{inquiry.status ? "Open" : "Resolved"}</span></td>
+															<td className="whitespace-nowrap px-3 py-3 sm:px-4">{receivedLabel}</td>
+															<td className="px-3 py-3 sm:px-4">
+																<button type="button" onClick={() => setExpandedInquiryId(isExpanded ? null : inquiry.id)} aria-expanded={isExpanded} aria-label={`${isExpanded ? "Hide" : "Show"} details for ${inquiry.name}`} className="rounded p-1 text-[#666666] hover:bg-[#eef5ff] hover:text-[#145bb7]"><ChevronDown size={17} className={isExpanded ? "rotate-180" : ""} /></button>
+															</td>
+														</tr>
+														{isExpanded && (
+															<tr className="border-b border-[#cccccc] bg-[#f8fbff]">
+																<td colSpan="6" className="px-4 py-4 sm:px-6">
+																	<div className="grid gap-4 sm:grid-cols-2">
+																		<div><h3 className="mb-1 font-semibold text-[#202020]">Message</h3><p className="whitespace-pre-wrap text-sm text-[#555555]">{inquiry.message || "No message provided."}</p></div>
+																		<div className="space-y-1 text-sm text-[#555555]"><h3 className="mb-1 font-semibold text-[#202020]">Contact</h3><p>Phone: {inquiry.phone || "—"}</p><p>Email: {inquiry.email || "—"}</p></div>
+																	</div>
+																	{detailFields.length > 0 && <dl className="mt-4 grid gap-x-6 gap-y-3 border-t border-[#dddddd] pt-4 sm:grid-cols-2 lg:grid-cols-3">{detailFields.map(([label, value]) => <div key={label}><dt className="font-semibold text-[#202020]">{label}</dt><dd className="mt-0.5 whitespace-pre-wrap text-[#555555]">{value}</dd></div>)}</dl>}
+																</td>
+															</tr>
+														)}
+													</Fragment>
+												);
+											})}
+										</tbody>
+									</table>
+								</div>
+							)}
+							<div className="border-t border-[#dddddd] px-1 pt-4 text-xs text-[#777777]">Showing {filteredInquiries.length} of {inquiries.length} inquiries</div>
 						</section>
 					)}
 				</div>

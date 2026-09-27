@@ -1,14 +1,11 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { createPortal } from "react-dom";
-import emailjs from "@emailjs/browser";
 import ReCAPTCHA from "react-google-recaptcha";
 import { FLAT_COURSES } from "../training/courses";
 import { useNavigate } from "react-router-dom";
+import API_URL from "../../config/api";
 
 // ─── Config ────────────────────────────────────────────────────────────────
-const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 const RECAPTCHA_TEST_SITE_KEY = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI";
 const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY
   || (import.meta.env.DEV ? RECAPTCHA_TEST_SITE_KEY : "");
@@ -209,68 +206,25 @@ function useEnrollForm(onClose, initialStep = 0, initialInquiryType = null, pres
     try {
       localStorage.setItem("lastModalSubmit", Date.now());
 
-      /*
-       * ── Payload Design ────────────────────────────────────────────────────
-       *
-       * Both payloads share the same template. The template detects which
-       * form type it is via the PRESENCE of certain keys:
-       *
-       *   Training:
-       *     inquiry_type = "Training Inquiry"
-       *     funding      = <value>  ← triggers {{#funding}} block in template
-       *     attendees    = <value>
-       *     course       = <value>
-       *     subject      = "New Training Inquiry"  ← used in <h1> subject tag
-       *     service_interest is NOT sent            ← hides Solutions block
-       *
-       *   Solutions:
-       *     inquiry_type     = "ICT Solutions Inquiry"
-       *     service_interest = <value>  ← triggers {{#service_interest}} block
-       *     project_scale    = <value>
-       *     timeline         = <value>
-       *     budget           = <value>
-       *     project_desc     = <value>
-       *     tech_specs       = <value | "N/A">
-       *     subject          = "New ICT Solutions Inquiry"
-       *     funding is NOT sent                     ← hides Training block
-       *
-       * ContactForm sends inquiry_type = "" (empty string → falsy),
-       * which triggers {{^inquiry_type}} "Contact Message" badge in template.
-       */
-
       const payload = inquiryType === "training"
         ? {
-          // ── Shared fields ──
           inquiry_type: "Training Inquiry",
           name: trainingForm.name,
           email: trainingForm.email,
           phone: trainingForm.phone,
           subject: "New Training Inquiry",
           message: trainingForm.message || "No additional message.",
-          // ── Badge keys (Gmail-safe — no {{^}} blocks needed) ──
-          badge_label: "📚 Training Inquiry",
-          badge_color: "#1fca6e22",
-          badge_text_color: "#1fca6e",
-          badge_border_color: "#1fca6e55",
-          // ── Training-specific (triggers {{#funding}} block) ──
           funding: trainingForm.funding,
           attendees: trainingForm.attendees,
           course: trainingForm.course || "N/A",
         }
         : {
-          // ── Shared fields ──
           inquiry_type: "ICT Solutions Inquiry",
           name: solutionsForm.name,
           email: solutionsForm.email,
           phone: solutionsForm.phone,
           subject: "New ICT Solutions Inquiry",
           message: solutionsForm.message || "No additional message.",
-          // ── Badge keys (Gmail-safe — no {{^}} blocks needed) ──
-          badge_label: "🖥️ ICT Solutions Inquiry",
-          badge_color: "#ff8c0022",
-          badge_text_color: "#ffaa44",
-          badge_border_color: "#ff8c0055",
-          // ── Solutions-specific (triggers {{#service_interest}} block) ──
           service_interest: solutionsForm.serviceInterest,
           project_scale: solutionsForm.projectScale,
           timeline: solutionsForm.timeline,
@@ -279,7 +233,13 @@ function useEnrollForm(onClose, initialStep = 0, initialInquiryType = null, pres
           tech_specs: solutionsForm.techSpecs || "N/A",
         };
 
-      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, payload, EMAILJS_PUBLIC_KEY);
+      const response = await fetch(`${API_URL}/inquires`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!response.ok) throw new Error("Inquiry submission failed.");
+
       setStatus("success");
       captchaRef.current?.reset();
       setCaptchaToken(null);
