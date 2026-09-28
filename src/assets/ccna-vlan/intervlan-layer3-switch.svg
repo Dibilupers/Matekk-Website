@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 420" role="img" aria-labelledby="title description">
+  <title id="title">Inter-VLAN routing with switch virtual interfaces</title>
+  <desc id="description">A multilayer switch routes between VLAN 10 and VLAN 20 using SVI gateway interfaces. Hosts connect on access ports.</desc>
+  <rect width="960" height="420" rx="24" fill="#f7f9fe"/>
+  <text x="480" y="48" text-anchor="middle" font-family="Arial, sans-serif" font-size="25" font-weight="700" fill="#122447">Inter-VLAN routing on a multilayer switch</text>
+  <rect x="355" y="112" width="250" height="184" rx="20" fill="#13294b"/>
+  <text x="480" y="151" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#fff">LAYER 3 SWITCH</text>
+  <rect x="387" y="173" width="186" height="42" rx="9" fill="#e9f1ff"/>
+  <text x="480" y="200" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" font-weight="700" fill="#2458b8">SVI VLAN 10 · .10.1</text>
+  <rect x="387" y="230" width="186" height="42" rx="9" fill="#fff0e4"/>
+  <text x="480" y="257" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" font-weight="700" fill="#a34c16">SVI VLAN 20 · .20.1</text>
+  <rect x="66" y="148" width="214" height="112" rx="16" fill="#eef4ff" stroke="#8fb5f4" stroke-width="2"/>
+  <text x="173" y="190" text-anchor="middle" font-family="Arial, sans-serif" font-size="19" font-weight="700" fill="#2458b8">SALES HOSTS</text>
+  <text x="173" y="222" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#526584">VLAN 10 · gateway .10.1</text>
+  <rect x="680" y="148" width="214" height="112" rx="16" fill="#fff3e9" stroke="#f0b17f" stroke-width="2"/>
+  <text x="787" y="190" text-anchor="middle" font-family="Arial, sans-serif" font-size="19" font-weight="700" fill="#a34c16">TECH HOSTS</text>
+  <text x="787" y="222" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#765b4c">VLAN 20 · gateway .20.1</text>
+  <path d="M280 204h75" stroke="#2c66cf" stroke-width="5"/>
+  <path d="m341 194 14 10-14 10" fill="none" stroke="#2c66cf" stroke-width="5"/>
+  <path d="M605 204h75" stroke="#bd6730" stroke-width="5"/>
+  <path d="m666 194 14 10-14 10" fill="none" stroke="#bd6730" stroke-width="5"/>
+  <text x="480" y="345" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#526584">Enable Layer 3 routing; the switch routes locally between its VLAN interfaces.</text>
+  <text x="480" y="375" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#71819b">No router-on-a-stick trunk is needed for these directly connected VLANs.</text>
+</svg>

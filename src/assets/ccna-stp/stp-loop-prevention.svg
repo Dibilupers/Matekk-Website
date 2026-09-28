@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 420" role="img" aria-labelledby="title description">
+  <title id="title">Spanning Tree loop prevention</title>
+  <desc id="description">Two switches have two redundant physical links. STP blocks one port so only one active Layer 2 path remains, while the blocked link is available as a backup.</desc>
+  <rect width="960" height="420" rx="24" fill="#f7f9fe"/>
+  <text x="480" y="48" text-anchor="middle" font-family="Arial, sans-serif" font-size="25" font-weight="700" fill="#122447">Redundancy without a Layer 2 loop</text>
+  <rect x="88" y="138" width="250" height="138" rx="20" fill="#13294b"/>
+  <text x="213" y="193" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#fff">SWITCH A</text>
+  <text x="213" y="229" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#ccdcf7">BPDU sender</text>
+  <rect x="622" y="138" width="250" height="138" rx="20" fill="#13294b"/>
+  <text x="747" y="193" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#fff">SWITCH B</text>
+  <text x="747" y="229" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#ccdcf7">BPDU sender</text>
+  <path d="M338 172H622" stroke="#2c66cf" stroke-width="8"/>
+  <circle cx="480" cy="172" r="14" fill="#fff" stroke="#2c66cf" stroke-width="5"/>
+  <text x="480" y="139" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#2458b8">Forwarding path</text>
+  <path d="M338 244H622" stroke="#c85454" stroke-width="7" stroke-dasharray="13 11"/>
+  <circle cx="480" cy="244" r="18" fill="#fff" stroke="#c85454" stroke-width="4"/>
+  <path d="m472 236 16 16m0-16-16 16" stroke="#c85454" stroke-width="4"/>
+  <text x="480" y="300" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#ad3c3c">STP blocks this port from forwarding user data</text>
+  <rect x="205" y="336" width="550" height="48" rx="14" fill="#eaf2ff"/>
+  <text x="480" y="366" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#35547f">If the active path fails, STP can recalculate and use a backup path.</text>
+</svg>

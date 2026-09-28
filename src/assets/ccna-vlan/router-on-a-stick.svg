@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 460" role="img" aria-labelledby="title description">
+  <title id="title">Router-on-a-stick topology</title>
+  <desc id="description">A router with two VLAN subinterfaces connects to a switch using one 802.1Q trunk. The switch connects Sales and Technical hosts on separate access VLANs.</desc>
+  <rect width="960" height="460" rx="24" fill="#f7f9fe"/>
+  <text x="480" y="48" text-anchor="middle" font-family="Arial, sans-serif" font-size="25" font-weight="700" fill="#122447">Router-on-a-stick</text>
+  <rect x="58" y="112" width="270" height="250" rx="20" fill="#fff" stroke="#d8e2f1" stroke-width="2"/>
+  <text x="193" y="145" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#17356d">ROUTER</text>
+  <rect x="91" y="168" width="204" height="65" rx="12" fill="#eef4ff" stroke="#8fb5f4" stroke-width="2"/>
+  <text x="193" y="194" text-anchor="middle" font-family="Arial, sans-serif" font-size="17" font-weight="700" fill="#2458b8">G0/0.10</text>
+  <text x="193" y="217" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#526584">192.168.10.1 · VLAN 10</text>
+  <rect x="91" y="250" width="204" height="65" rx="12" fill="#fff3e9" stroke="#f0b17f" stroke-width="2"/>
+  <text x="193" y="276" text-anchor="middle" font-family="Arial, sans-serif" font-size="17" font-weight="700" fill="#a34c16">G0/0.20</text>
+  <text x="193" y="299" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#765b4c">192.168.20.1 · VLAN 20</text>
+  <rect x="420" y="161" width="190" height="135" rx="18" fill="#13294b"/>
+  <text x="515" y="212" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" font-weight="700" fill="#fff">SWITCH</text>
+  <text x="515" y="245" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#ccdcf7">Access ports + trunk</text>
+  <path d="M328 234h92" stroke="#2c66cf" stroke-width="5"/>
+  <path d="m406 224 14 10-14 10" fill="none" stroke="#2c66cf" stroke-width="5"/>
+  <text x="374" y="211" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#2458b8">802.1Q trunk</text>
+  <text x="374" y="263" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#526584">VLANs 10, 20</text>
+  <rect x="713" y="107" width="195" height="92" rx="15" fill="#eef4ff" stroke="#8fb5f4" stroke-width="2"/>
+  <text x="810" y="141" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#2458b8">SALES HOSTS</text>
+  <text x="810" y="169" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#526584">Access VLAN 10</text>
+  <rect x="713" y="259" width="195" height="92" rx="15" fill="#fff3e9" stroke="#f0b17f" stroke-width="2"/>
+  <text x="810" y="293" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#a34c16">TECH HOSTS</text>
+  <text x="810" y="321" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#765b4c">Access VLAN 20</text>
+  <path d="M610 208 713 153" stroke="#2c66cf" stroke-width="4"/>
+  <path d="M610 252 713 305" stroke="#bd6730" stroke-width="4"/>
+  <text x="480" y="402" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#526584">The router routes between subinterfaces; one physical link carries both VLANs.</text>
+</svg>

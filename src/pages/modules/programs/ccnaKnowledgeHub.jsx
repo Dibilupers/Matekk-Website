@@ -2,36 +2,38 @@ import { useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Clock, Search } from "lucide-react";
 import { Link } from "react-router-dom";
 
+const RECENT_TUTORIAL_KEY = "matekk-ccna-recent-tutorial";
+
 const curriculum = [
 	{
 		number: "1.0",
 		title: "Network Fundamentals",
-		description: "Learn network models, devices, addressing, and essential services.",
+		description: "Learn foundational networking, addressing, device setup, and architecture.",
 		tutorials: [
 			{ number: "1.1", title: "OSI Model Tutorial", duration: "6 min", summary: "Understand seven layers and how network communication flows." },
-			{ number: "1.2", title: "Network Topologies and WAN Tutorial", duration: "8 min", summary: "Compare common network designs and wide area connections." },
-			{ number: "1.3", title: "Network Devices, Interfaces, and Cabling", duration: "7 min", summary: "Identify key switches, routers, interfaces, and network media." },
-			{ number: "1.4", title: "TCP and UDP Tutorial", duration: "6 min", summary: "Compare reliable TCP with connectionless UDP transport services." },
-			{ number: "1.5", title: "IPv4 Addressing and Subnetting Made Easy", duration: "10 min", summary: "Calculate subnets, host ranges, and IPv4 network boundaries." },
-			{ number: "1.6", title: "IPv6 Addressing Tutorial", duration: "8 min", summary: "Plan IPv6 addresses, prefixes, and basic network communication." },
-			{ number: "Extra", title: "Cisco Command Line Interface CLI", duration: "7 min", summary: "Practice essential Cisco commands for configuring network devices." },
-			{ number: "Extra", title: "Cisco Router Boot Sequence Tutorial", duration: "6 min", summary: "Follow router startup stages and configuration loading behavior." },
-			{ number: "Extra", title: "Spine-Leaf Architecture Tutorial", duration: "8 min", summary: "Explore scalable data center fabric and leaf-spine design." },
-			{ number: "Extra", title: "Wireless and Hypervisor Fundamentals", duration: "8 min", summary: "Review wireless fundamentals, virtualization, and hypervisor types overview." },
+			{ number: "1.2", title: "TCP and UDP Tutorial", duration: "6 min", summary: "Compare reliable TCP with connectionless UDP transport services." },
+			{ number: "1.3", title: "WAN Tutorial", duration: "8 min", summary: "Explore wide area networks and common WAN technologies." },
+			{ number: "1.4", title: "Cisco Command Line Interface CLI", duration: "7 min", summary: "Practice essential Cisco commands for configuring network devices." },
+			{ number: "1.5", title: "Cisco Router Boot Sequence Tutorial", duration: "6 min", summary: "Follow router startup stages and configuration loading behavior." },
+			{ number: "1.6", title: "Spine-Leaf Architecture Tutorial", duration: "8 min", summary: "Explore scalable data center fabric and leaf-spine design." },
+			{ number: "1.7", title: "Subnetting Tutorial - Subnetting Made Easy", duration: "10 min", summary: "Calculate subnet ranges, host addresses, and network boundaries." },
+			{ number: "1.8", title: "Wireless Tutorial", duration: "8 min", summary: "Learn wireless network basics, standards, and connection concepts." },
+			{ number: "1.9", title: "IPv6 Tutorial", duration: "8 min", summary: "Plan IPv6 addresses, prefixes, and basic network communication." },
+			{ number: "1.10", title: "Hypervisor type 1 and 2 Tutorial (on digitaltut.com)", duration: "8 min", summary: "Compare Type 1 and Type 2 hypervisor virtualization." },
 		],
 	},
 	{
 		number: "2.0",
 		title: "Network Access",
-		description: "Configure VLANs, trunks, EtherChannel, spanning tree, and wireless.",
+		description: "Learn VLANs, inter-VLAN routing, spanning tree, VTP, and EtherChannel.",
 		tutorials: [
-			{ number: "2.1", title: "Virtual Local Area Networks (VLANs)", duration: "8 min", summary: "Segment broadcast domains and organize devices using VLANs." },
-			{ number: "2.2", title: "Inter-Switch Connectivity and 802.1Q Trunking", duration: "9 min", summary: "Carry multiple VLANs between switches using 802.1Q trunks." },
-			{ number: "2.3", title: "CDP and LLDP Discovery Protocols", duration: "6 min", summary: "Discover neighboring Cisco and standards-based network devices automatically." },
-			{ number: "2.4", title: "EtherChannel and LACP Tutorial", duration: "8 min", summary: "Bundle switch links into resilient, higher-bandwidth connection groups." },
-			{ number: "2.5", title: "Spanning Tree Protocol (STP) Tutorial", duration: "9 min", summary: "Prevent switching loops by understanding spanning tree operation." },
-			{ number: "2.6", title: "Rapid PVST+ and Root Port Election", duration: "8 min", summary: "Understand rapid spanning tree root port selection process." },
-			{ number: "2.7", title: "Wireless LAN Architecture and Access Points", duration: "10 min", summary: "Understand wireless LAN components, access points, and architecture." },
+			{ number: "2.1", title: "Virtual Local Area Network VLAN Tutorial", duration: "8 min", summary: "Segment broadcast domains and organize devices using VLANs." },
+			{ number: "2.2", title: "InterVLAN Routing Tutorial", duration: "10 min", summary: "Route traffic between VLANs using routers or multilayer switches." },
+			{ number: "2.3", title: "Spanning Tree Protocol STP Tutorial", duration: "9 min", summary: "Prevent Layer 2 loops by understanding spanning tree operation." },
+			{ number: "2.4", title: "STP Root Port Election Tutorial", duration: "8 min", summary: "Learn how spanning tree selects the best root path." },
+			{ number: "2.5", title: "Rapid Spanning Tree Protocol RSTP Tutorial", duration: "9 min", summary: "Learn faster convergence using Rapid Spanning Tree Protocol." },
+			{ number: "2.6", title: "VLAN Trunking Protocol VTP Tutorial", duration: "8 min", summary: "Understand how VTP distributes VLAN information across switches." },
+			{ number: "2.7", title: "EtherChannel Tutorial", duration: "8 min", summary: "Bundle switch links into resilient, higher-bandwidth connection groups." },
 		],
 	},
 ];
@@ -40,10 +42,24 @@ function slugify(value) {
 	return value.toLowerCase().replaceAll(" ", "-");
 }
 
-function TutorialCard({ number, title, duration, summary, isScrollable }) {
+function getTutorialBySlug(slug) {
+	for (const section of curriculum) {
+		const tutorial = section.tutorials.find((item) => slugify(item.title) === slug);
+		if (tutorial) return { ...tutorial, sectionNumber: section.number, sectionTitle: section.title };
+	}
+	return null;
+}
+
+function getRecentTutorial() {
+	const recentSlug = window.localStorage.getItem(RECENT_TUTORIAL_KEY);
+	return recentSlug ? getTutorialBySlug(recentSlug) : null;
+}
+
+function TutorialCard({ number, title, duration, summary, isScrollable, sectionNumber, sectionTitle, onOpen }) {
 	return (
 		<Link
 			to={`/modules/programs/ccna/knowledge-hub/${slugify(title)}`}
+			onClick={() => onOpen({ number, title, duration, summary, sectionNumber, sectionTitle })}
 			className={`group flex min-h-[190px] flex-col justify-between rounded-xl border border-[#d7d7d7] bg-white p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:border-[#2474df] hover:shadow-[0_10px_24px_rgba(31,91,180,0.12)] ${
 				isScrollable ? "w-[min(82vw,300px)] shrink-0 snap-start sm:w-[290px]" : "w-full"
 			}`}
@@ -65,7 +81,7 @@ function TutorialCard({ number, title, duration, summary, isScrollable }) {
 	);
 }
 
-function CurriculumSection({ section, searchQuery }) {
+function CurriculumSection({ section, searchQuery, onOpen }) {
 	const trackRef = useRef(null);
 	const isScrollable = section.tutorials.length > 6;
 	const visibleTutorials = section.tutorials.filter((tutorial) =>
@@ -131,7 +147,14 @@ function CurriculumSection({ section, searchQuery }) {
 					: {})}
 			>
 				{visibleTutorials.map((tutorial) => (
-					<TutorialCard key={tutorial.title} {...tutorial} isScrollable={isScrollable} />
+					<TutorialCard
+						key={tutorial.title}
+						{...tutorial}
+						sectionNumber={section.number}
+						sectionTitle={section.title}
+						isScrollable={isScrollable}
+						onOpen={onOpen}
+					/>
 				))}
 			</div>
 		</section>
@@ -140,6 +163,20 @@ function CurriculumSection({ section, searchQuery }) {
 
 export default function CCNAKnowledgeHub() {
 	const [searchQuery, setSearchQuery] = useState("");
+	const [recentTutorial, setRecentTutorial] = useState(getRecentTutorial);
+	const featuredTutorial = recentTutorial || {
+		number: "Extra",
+		title: "Spine-Leaf Architecture Tutorial",
+		duration: "8 min",
+		summary: "Explore scalable data center fabric and leaf-spine design.",
+		sectionNumber: "1.0",
+		sectionTitle: "Network Fundamentals",
+	};
+
+	function handleTutorialOpen(tutorial) {
+		window.localStorage.setItem(RECENT_TUTORIAL_KEY, slugify(tutorial.title));
+		setRecentTutorial(tutorial);
+	}
 
 	return (
 		<main className="min-h-screen bg-white text-[#111a2d]">
@@ -171,30 +208,43 @@ export default function CCNAKnowledgeHub() {
 				</Link>
 
 				<Link
-					to="/modules/programs/ccna/knowledge-hub/spine-leaf-architecture-tutorial"
+					to={`/modules/programs/ccna/knowledge-hub/${slugify(featuredTutorial.title)}`}
 					className="group mt-5 grid overflow-hidden rounded-2xl border border-[#dbe5f5] bg-[#f5f8ff] transition hover:border-[#9cb8ed] hover:shadow-[0_12px_28px_rgba(31,91,180,0.12)] sm:grid-cols-[0.8fr_1.2fr]"
 				>
 					<div className="flex min-h-40 items-center justify-center bg-[#e7efff] p-6 sm:min-h-48">
-						<div className="grid grid-cols-3 items-center gap-4 text-center text-xs font-semibold text-[#2853df]">
-							<span className="rounded-lg bg-white px-3 py-2 shadow-sm">Leaf</span>
-							<span className="rounded-lg bg-[#2853df] px-3 py-2 text-white shadow-sm">Spine</span>
-							<span className="rounded-lg bg-white px-3 py-2 shadow-sm">Leaf</span>
+						<div className="flex flex-col items-center text-center">
+							<span className="text-xs font-bold uppercase tracking-[0.18em] text-[#5273bd]">CCNA module</span>
+							<span className="mt-2 text-5xl font-bold tracking-tight text-[#2853df]">{featuredTutorial.number}</span>
+							<span className="mt-4 flex items-center gap-3" aria-hidden="true">
+								<span className="h-3 w-3 rounded-full bg-white ring-2 ring-[#7da0e8]" />
+								<span className="h-1 w-12 rounded bg-[#7da0e8]" />
+								<span className="h-4 w-4 rounded-full bg-[#2853df] ring-4 ring-[#cbdafa]" />
+								<span className="h-1 w-12 rounded bg-[#7da0e8]" />
+								<span className="h-3 w-3 rounded-full bg-white ring-2 ring-[#7da0e8]" />
+							</span>
 						</div>
 					</div>
 					<div className="flex flex-col justify-center p-6 sm:p-8">
-						<span className="text-sm font-semibold text-[#2853df]">Featured tutorial · 1.0 Network Fundamentals</span>
+						<span className="text-sm font-semibold text-[#2853df]">
+							{recentTutorial ? "Recently opened" : "Featured tutorial"} · {featuredTutorial.sectionNumber} {featuredTutorial.sectionTitle}
+						</span>
 						<strong className="mt-2 text-xl leading-tight text-[#111a2d] transition group-hover:text-[#176fe0] sm:text-2xl">
-							Spine-Leaf Architecture Tutorial
+							{featuredTutorial.title}
 						</strong>
 						<span className="mt-3 flex items-center gap-1.5 text-sm text-[#71819b]">
-							<Clock size={15} /> 8 min read
+							<Clock size={15} /> {featuredTutorial.duration} read
 							<ArrowRight size={16} className="ml-auto transition group-hover:translate-x-1" />
 						</span>
 					</div>
 				</Link>
 
 				{curriculum.map((section) => (
-					<CurriculumSection key={section.number} section={section} searchQuery={searchQuery} />
+					<CurriculumSection
+						key={section.number}
+						section={section}
+						searchQuery={searchQuery}
+						onOpen={handleTutorialOpen}
+					/>
 				))}
 				{curriculum.every((section) =>
 					section.tutorials.every((tutorial) =>

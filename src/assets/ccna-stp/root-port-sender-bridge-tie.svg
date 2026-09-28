@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 410" role="img" aria-labelledby="title description">
+  <title id="title">Root-port tie resolved by sender Bridge ID</title>
+  <desc id="description">SW1 is root. SW2 and SW3 advertise equal root path cost 8 to SW4. With equal priorities, SW2's lower MAC address gives it the lower Bridge ID, so SW4 selects the port toward SW2.</desc>
+  <rect width="960" height="410" rx="24" fill="#f7f9fe"/>
+  <text x="480" y="44" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#122447">Example 2 · tie-break with sender Bridge ID</text>
+  <path d="M210 135 438 260" stroke="#2c66cf" stroke-width="6"/>
+  <path d="M210 135 690 135" stroke="#2c66cf" stroke-width="6"/>
+  <path d="M438 260H690" stroke="#2c66cf" stroke-width="7"/>
+  <path d="M438 260 810 135" stroke="#2c66cf" stroke-width="7"/>
+  <rect x="95" y="90" width="230" height="90" rx="16" fill="#13294b"/>
+  <text x="210" y="127" text-anchor="middle" font-family="Arial, sans-serif" font-size="19" font-weight="700" fill="#fff">SW1 · ROOT</text>
+  <text x="210" y="153" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#ccdcf7">Priority 32768</text>
+  <rect x="323" y="215" width="230" height="90" rx="16" fill="#eaf2ff" stroke="#2c66cf" stroke-width="3"/>
+  <text x="438" y="250" text-anchor="middle" font-family="Arial, sans-serif" font-size="19" font-weight="700" fill="#2458b8">SW2 · Sender</text>
+  <text x="438" y="278" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#35547f">Bridge ID MAC suffix 02</text>
+  <rect x="575" y="90" width="230" height="90" rx="16" fill="#fff" stroke="#8fb5f4" stroke-width="3"/>
+  <text x="690" y="125" text-anchor="middle" font-family="Arial, sans-serif" font-size="19" font-weight="700" fill="#17356d">SW3 · Sender</text>
+  <text x="690" y="153" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#526584">Bridge ID MAC suffix 03</text>
+  <rect x="695" y="215" width="230" height="90" rx="16" fill="#fff" stroke="#8fb5f4" stroke-width="3"/>
+  <text x="810" y="250" text-anchor="middle" font-family="Arial, sans-serif" font-size="19" font-weight="700" fill="#17356d">SW4</text>
+  <text x="810" y="278" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#526584">Both candidate costs = 8</text>
+  <rect x="513" y="318" width="343" height="44" rx="12" fill="#eaf2ff"/>
+  <text x="684" y="346" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" font-weight="700" fill="#2458b8">SW2 wins: equal priority, lower MAC / Bridge ID</text>
+</svg>

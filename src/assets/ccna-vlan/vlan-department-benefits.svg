@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 300" fill="none">
+  <rect width="760" height="300" rx="24" fill="#F4F7FD"/>
+  <text x="36" y="40" fill="#172642" font-family="Arial,sans-serif" font-size="18" font-weight="700">LOGICAL GROUPS CAN SPAN FLOORS</text>
+  <rect x="38" y="69" width="285" height="85" rx="16" fill="#FFFFFF" stroke="#CBD7E9" stroke-width="2"/>
+  <rect x="38" y="168" width="285" height="85" rx="16" fill="#FFFFFF" stroke="#CBD7E9" stroke-width="2"/>
+  <text x="58" y="96" fill="#526584" font-family="Arial,sans-serif" font-size="13" font-weight="700">3RD FLOOR</text>
+  <text x="58" y="195" fill="#526584" font-family="Arial,sans-serif" font-size="13" font-weight="700">1ST FLOOR</text>
+  <g fill="#EAF0FA" stroke="#7890B4" stroke-width="2">
+    <rect x="69" y="108" width="62" height="29" rx="6"/><rect x="193" y="108" width="62" height="29" rx="6"/>
+    <rect x="69" y="207" width="62" height="29" rx="6"/><rect x="193" y="207" width="62" height="29" rx="6"/>
+  </g>
+  <text x="100" y="127" text-anchor="middle" fill="#315EEA" font-family="Arial,sans-serif" font-size="10" font-weight="700">SWITCH A</text>
+  <text x="224" y="127" text-anchor="middle" fill="#315EEA" font-family="Arial,sans-serif" font-size="10" font-weight="700">SWITCH B</text>
+  <text x="100" y="226" text-anchor="middle" fill="#315EEA" font-family="Arial,sans-serif" font-size="10" font-weight="700">SWITCH C</text>
+  <text x="224" y="226" text-anchor="middle" fill="#315EEA" font-family="Arial,sans-serif" font-size="10" font-weight="700">SWITCH D</text>
+  <path d="M132 123h59M132 222h59M100 137v70M224 137v70" stroke="#AAB9D0" stroke-width="2" stroke-dasharray="5 5"/>
+  <path d="M324 112h60M324 211h60" stroke="#315EEA" stroke-width="2.5" stroke-dasharray="6 5"/>
+  <path d="m378 105 9 7-9 7M378 204l9 7-9 7" stroke="#315EEA" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="404" y="76" width="314" height="54" rx="14" fill="#EDE9FE" stroke="#C4B5FD"/>
+  <rect x="404" y="143" width="314" height="54" rx="14" fill="#FFF1E7" stroke="#FDBA74"/>
+  <rect x="404" y="210" width="314" height="54" rx="14" fill="#ECF8E9" stroke="#A3D18B"/>
+  <circle cx="433" cy="103" r="11" fill="#7C3AED"/><circle cx="433" cy="170" r="11" fill="#EA7B25"/><circle cx="433" cy="237" r="11" fill="#4B9B54"/>
+  <text x="456" y="99" fill="#5422A7" font-family="Arial,sans-serif" font-size="14" font-weight="700">VLAN 10 · SALES</text><text x="456" y="117" fill="#6D5A8D" font-family="Arial,sans-serif" font-size="11">192.168.10.0/24</text>
+  <text x="456" y="166" fill="#A34F12" font-family="Arial,sans-serif" font-size="14" font-weight="700">VLAN 20 · TECH</text><text x="456" y="184" fill="#8A6C58" font-family="Arial,sans-serif" font-size="11">192.168.20.0/24</text>
+  <text x="456" y="233" fill="#35713B" font-family="Arial,sans-serif" font-size="14" font-weight="700">VLAN 30 · LEADERS</text><text x="456" y="251" fill="#668168" font-family="Arial,sans-serif" font-size="11">192.168.30.0/24</text>
+</svg>

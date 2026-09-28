@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 390" role="img" aria-labelledby="title description">
+  <title id="title">Root-port tie resolved by sender Port ID</title>
+  <desc id="description">SW5 receives equal-cost BPDUs from two links connected to SW4. With identical sender Bridge IDs, SW4's lower sender Port ID Fa0/1 wins over Fa0/2.</desc>
+  <rect width="960" height="390" rx="24" fill="#f7f9fe"/>
+  <text x="480" y="45" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#122447">Example 3 · tie-break with sender Port ID</text>
+  <rect x="150" y="132" width="260" height="120" rx="18" fill="#13294b"/>
+  <text x="280" y="179" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" font-weight="700" fill="#fff">SW4 · SAME SENDER</text>
+  <text x="280" y="214" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#ccdcf7">Same Bridge ID on both BPDUs</text>
+  <rect x="645" y="132" width="210" height="120" rx="18" fill="#fff" stroke="#8fb5f4" stroke-width="3"/>
+  <text x="750" y="179" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" font-weight="700" fill="#17356d">SW5</text>
+  <text x="750" y="214" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#526584">Both path costs equal</text>
+  <path d="M410 164C500 164 550 164 645 164" stroke="#2c66cf" stroke-width="7"/>
+  <path d="M410 220C500 220 550 220 645 220" stroke="#8b9ab2" stroke-width="5" stroke-dasharray="10 8"/>
+  <rect x="449" y="130" width="135" height="31" rx="9" fill="#eaf2ff"/>
+  <text x="516" y="151" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#2458b8">Sender Fa0/1</text>
+  <rect x="449" y="225" width="135" height="31" rx="9" fill="#f0f2f7"/>
+  <text x="516" y="246" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#526584">Sender Fa0/2</text>
+  <rect x="265" y="300" width="430" height="48" rx="13" fill="#eaf2ff"/>
+  <text x="480" y="331" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#2458b8">Lower sender Port ID wins: Fa0/1 (priority, then port number)</text>
+</svg>
