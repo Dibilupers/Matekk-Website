@@ -9,15 +9,14 @@ const curriculum = [
 		description: "Learn network models, devices, addressing, and essential services.",
 		tutorials: [
 			{ number: "1.1", title: "OSI Model Tutorial", duration: "6 min", summary: "Understand seven layers and how network communication flows." },
-			{ number: "1.2", title: "Network Topologies and WAN Tutorial", duration: "8 min", summary: "Compare common network designs and wide area connections." },
-			{ number: "1.3", title: "Network Devices, Interfaces, and Cabling", duration: "7 min", summary: "Identify key switches, routers, interfaces, and network media." },
-			{ number: "1.4", title: "TCP and UDP Tutorial", duration: "6 min", summary: "Compare reliable TCP with connectionless UDP transport services." },
-			{ number: "1.5", title: "IPv4 Addressing and Subnetting Made Easy", duration: "10 min", summary: "Calculate subnets, host ranges, and IPv4 network boundaries." },
-			{ number: "1.6", title: "IPv6 Addressing Tutorial", duration: "8 min", summary: "Plan IPv6 addresses, prefixes, and basic network communication." },
-			{ number: "Extra", title: "Cisco Command Line Interface CLI", duration: "7 min", summary: "Practice essential Cisco commands for configuring network devices." },
-			{ number: "Extra", title: "Cisco Router Boot Sequence Tutorial", duration: "6 min", summary: "Follow router startup stages and configuration loading behavior." },
-			{ number: "Extra", title: "Spine-Leaf Architecture Tutorial", duration: "8 min", summary: "Explore scalable data center fabric and leaf-spine design." },
-			{ number: "Extra", title: "Wireless and Hypervisor Fundamentals", duration: "8 min", summary: "Review wireless fundamentals, virtualization, and hypervisor types overview." },
+			{ number: "1.2", title: "TCP and UDP Tutorial", duration: "18 min", summary: "Compare TCP and UDP, and learn TCP features, handshakes, and connection teardown." },
+			{ number: "1.3", title: "WAN Tutorial", duration: "12 min", summary: "Learn WAN services, provider links, WAN devices, PPP, HDLC, and packet switching." },
+			{ number: "1.4", title: "Cisco Command Line Interface CLI", duration: "8 min", summary: "Understand Cisco IOS command modes, prompts, and how to move safely between them." },
+			{ number: "1.5", title: "Cisco Router Boot Sequence Tutorial", duration: "8 min", summary: "Follow router startup, memory roles, IOS selection, and configuration loading." },
+			{ number: "1.6", title: "Subnetting Tutorial - Subnetting Made Easy", duration: "12 min", summary: "Read prefixes, calculate subnet boundaries, and understand network and host bits." },
+			{ number: "1.7", title: "Wireless Tutorial", duration: "18 min", summary: "Learn WLAN operation, Wi-Fi architecture, radio basics, security, and interference." },
+			{ number: "1.8", title: "IPv6 Tutorial", duration: "14 min", summary: "Read IPv6 addresses, abbreviate them, and understand address types, prefixes, and scopes." },
+			{ number: "1.9", title: "Hypervisor type 1 and 2 Tutorial (on digitaltut.com)", duration: "10 min", summary: "Compare hypervisor architectures, virtual machines, virtual switches, and paravirtualization." },
 		],
 	},
 	{
@@ -168,29 +167,6 @@ export default function CCNAKnowledgeHub() {
 					className="mb-2 inline-flex items-center gap-1 text-sm font-semibold text-[#176fe0] hover:underline"
 				>
 					<ArrowLeft size={16} /> Back to dashboard
-				</Link>
-
-				<Link
-					to="/modules/programs/ccna/knowledge-hub/spine-leaf-architecture-tutorial"
-					className="group mt-5 grid overflow-hidden rounded-2xl border border-[#dbe5f5] bg-[#f5f8ff] transition hover:border-[#9cb8ed] hover:shadow-[0_12px_28px_rgba(31,91,180,0.12)] sm:grid-cols-[0.8fr_1.2fr]"
-				>
-					<div className="flex min-h-40 items-center justify-center bg-[#e7efff] p-6 sm:min-h-48">
-						<div className="grid grid-cols-3 items-center gap-4 text-center text-xs font-semibold text-[#2853df]">
-							<span className="rounded-lg bg-white px-3 py-2 shadow-sm">Leaf</span>
-							<span className="rounded-lg bg-[#2853df] px-3 py-2 text-white shadow-sm">Spine</span>
-							<span className="rounded-lg bg-white px-3 py-2 shadow-sm">Leaf</span>
-						</div>
-					</div>
-					<div className="flex flex-col justify-center p-6 sm:p-8">
-						<span className="text-sm font-semibold text-[#2853df]">Featured tutorial · 1.0 Network Fundamentals</span>
-						<strong className="mt-2 text-xl leading-tight text-[#111a2d] transition group-hover:text-[#176fe0] sm:text-2xl">
-							Spine-Leaf Architecture Tutorial
-						</strong>
-						<span className="mt-3 flex items-center gap-1.5 text-sm text-[#71819b]">
-							<Clock size={15} /> 8 min read
-							<ArrowRight size={16} className="ml-auto transition group-hover:translate-x-1" />
-						</span>
-					</div>
 				</Link>
 
 				{curriculum.map((section) => (
