@@ -34,3 +34,14 @@ model Inquires {
   status Boolean @default(true)
   createdAt DateTime @default(now())
 }
+
+model Users{
+  id Int @id @default(autoincrement())
+  username String
+  password String
+  email String
+  role String
+
+  active_status Boolean @default(false)
+  createdAt DateTime @default(now())
+}
