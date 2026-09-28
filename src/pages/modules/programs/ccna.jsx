@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import {
 	ArrowRight,
@@ -120,6 +120,7 @@ function ModuleCard({ module, index, openSection, onToggle }) {
 
 export default function CCNA() {
 	const [openSection, setOpenSection] = useState(1);
+	const navigate = useNavigate();
 
 	return (
 		<main className="min-h-screen bg-white text-[#071126]">
@@ -136,8 +137,8 @@ export default function CCNA() {
 							Cutting-edge ICT training built on real network topologies — from switching fundamentals to security hardening, taught by working engineers.
 						</p>
 						<div className="mt-8 flex flex-wrap gap-3">
-							<button className="flex h-[58px] items-center gap-2 rounded-full bg-[#2f58e8] px-7 text-base font-bold text-white shadow-[0_10px_20px_rgba(47,88,232,0.16)]">Continue Lesson <ArrowRight size={18} /></button>
-							<Link to="/modules/programs/ccna/knowledge-hub" className="flex h-[58px] items-center rounded-full border border-[#2f58e8] px-7 text-base font-bold text-[#2f58e8]">View All Modules</Link>
+							<button onClick={() => navigate("/modules/programs/ccna/lesson")} className="flex h-[58px] items-center gap-2 rounded-full bg-[#2f58e8] px-7 text-base font-bold text-white shadow-[0_10px_20px_rgba(47,88,232,0.16)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-[#2448c8] hover:shadow-[0_14px_26px_rgba(47,88,232,0.24)] active:translate-y-0">Continue Lesson <ArrowRight size={18} /></button>
+							<Link to="/modules/programs/ccna/knowledge-hub" className="flex h-[58px] items-center rounded-full border border-[#2f58e8] px-7 text-base font-bold text-[#2f58e8] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-[#f5f8ff] hover:shadow-[0_10px_20px_rgba(47,88,232,0.12)] active:translate-y-0">View All Modules</Link>
 						</div>
 						<div className="mt-11 flex flex-wrap gap-5 divide-x divide-[#dce5f2]">
 							<Stat value="2/5" label="Modules complete" />

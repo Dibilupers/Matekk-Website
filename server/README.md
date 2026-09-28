@@ -33,6 +33,9 @@ $ npm install
 
 ## Compile and run the project
 
+Prisma Client is generated automatically before building or starting the server.
+Make sure `DATABASE_URL` is set in `server/.env`.
+
 ```bash
 # development
 $ npm run start

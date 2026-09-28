@@ -1,4 +1,6 @@
-import { Navigate, Routes, Route } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Navigate, Routes, Route, useLocation } from "react-router-dom";
+import { X } from "lucide-react";
 import NavBar from "../components/navbar/navbar";
 import Footer from "../components/footer/footer";
 import ScrollToTop from "../components/scroll/ScrollToTop";
@@ -105,16 +107,22 @@ import AdminPage from "../pages/admin";
 import CCNADashboard from "../pages/modules/programs/ccna";
 import CCNAKnowledgeHub from "../pages/modules/programs/ccnaKnowledgeHub";
 import CCNAKnowledgeArticle from "../pages/modules/programs/ccnaKnowledgeArticle";
+import CCNALesson from "../pages/modules/programs/ccnaLesson";
 import { useAuth } from "../context/AuthContext";
+import { readCcnaExamSession, saveCcnaExamSession } from "../utils/ccnaExamSession";
 
 if ("scrollRestoration" in history) {
   history.scrollRestoration = "manual";
 }
 
 export default function App() {
+  const location = useLocation();
+  const isCCNALesson = location.pathname === "/modules/programs/ccna/lesson";
+
   return (
     <>
-      <NavBar />
+      <CCNAExamTimeNotification />
+      {!isCCNALesson && <NavBar />}
       <ScrollToTop />
 
       <Routes>
@@ -314,6 +322,14 @@ export default function App() {
           }
         />
         <Route
+          path="/modules/programs/ccna/lesson"
+          element={
+            <ProtectedRoute>
+              <CCNALesson />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/modules/programs/ccna/knowledge-hub"
           element={
             <ProtectedRoute>
@@ -335,8 +351,69 @@ export default function App() {
       </Routes>
 
 
-      <Footer />
+      {!isCCNALesson && <Footer />}
     </>
+  );
+}
+
+function CCNAExamTimeNotification() {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    function checkExamDeadline() {
+      const session = readCcnaExamSession();
+      if (!session || session.status === "completed") {
+        setIsVisible(false);
+        return;
+      }
+
+      if (session.deadline <= Date.now() && session.status !== "expired") {
+        session.status = "expired";
+        session.toastDismissed = false;
+        saveCcnaExamSession(session);
+      }
+
+      setIsVisible(session.status === "expired" && !session.toastDismissed);
+    }
+
+    checkExamDeadline();
+    const timer = window.setInterval(checkExamDeadline, 1000);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  function dismissNotification() {
+    const session = readCcnaExamSession();
+    if (session?.status === "expired") {
+      saveCcnaExamSession({ ...session, toastDismissed: true });
+    }
+    setIsVisible(false);
+  }
+
+  if (!isVisible) return null;
+
+  return (
+    <div
+      role="status"
+      className="fixed right-4 top-4 z-[100] flex w-[min(24rem,calc(100vw-2rem))] items-start gap-3 rounded-xl border border-[#f2c6c3] bg-white p-4 text-[#263654] shadow-[0_12px_35px_rgba(15,35,75,0.18)]"
+    >
+      <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#fff0ef] text-sm font-bold text-[#b42318]">
+        !
+      </span>
+      <div className="min-w-0 flex-1">
+        <p className="text-sm font-bold">Exam time is up</p>
+        <p className="mt-1 text-sm leading-5 text-[#64718a]">
+          Your time limit has ended. Your answers have been submitted.
+        </p>
+      </div>
+      <button
+        type="button"
+        onClick={dismissNotification}
+        aria-label="Dismiss time limit notification"
+        className="rounded-md p-1 text-[#71809a] transition hover:bg-[#f1f5fc] hover:text-[#263654]"
+      >
+        <X size={17} />
+      </button>
+    </div>
   );
 }
 
