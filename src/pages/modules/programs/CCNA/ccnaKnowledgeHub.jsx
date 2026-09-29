@@ -53,7 +53,7 @@ const curriculum = [
 		title: "IP Services",
 		description: "Review the services that support addressing, time, monitoring, logging, QoS, and remote access.",
 		tutorials: [
-			{ number: "4.1", title: "Network Address Translation NAT Tutorial", duration: "9 min", summary: "Translate private and public IP addresses as traffic crosses network boundaries." },
+			{ number: "4.1", title: "Network Address Translation NAT Tutorial", duration: "14 min", summary: "Learn static NAT, dynamic address pools, PAT overload, address roles, and translation behavior." },
 			{ number: "4.2", title: "Network Time Protocol NTP Tutorial", duration: "7 min", summary: "Synchronize network device clocks for consistent logs and operations." },
 			{ number: "4.3", title: "DHCP Tutorial", duration: "9 min", summary: "Learn how DHCP assigns IP addresses and other network settings to clients." },
 			{ number: "4.4", title: "Simple Network Management Protocol SNMP Tutorial", duration: "8 min", summary: "Understand how SNMP monitors and manages network devices." },

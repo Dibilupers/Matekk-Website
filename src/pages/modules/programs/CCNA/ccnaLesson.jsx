@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft, Moon, Sun } from "lucide-react";
-import TrainingLogo from "../../../assets/MATEKK_training_logo.png";
+import TrainingLogo from "../../../../assets/MATEKK_training_logo.png";
 import {
 	readCcnaExamSession,
 	saveCcnaExamSession,
-} from "../../../utils/ccnaExamSession";
+} from "../../../../utils/ccnaExamSession";
 
 const questions = [
 	{

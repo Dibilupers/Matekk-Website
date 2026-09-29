@@ -104,10 +104,10 @@ import Renewable from "../pages/solutions/pece/renewable";
 
 import Blank from "../pages/Blank";
 import AdminPage from "../pages/admin";
-import CCNADashboard from "../pages/modules/programs/ccna";
-import CCNAKnowledgeHub from "../pages/modules/programs/ccnaKnowledgeHub";
-import CCNAKnowledgeArticle from "../pages/modules/programs/ccnaKnowledgeArticle";
-import CCNALesson from "../pages/modules/programs/ccnaLesson";
+import CCNADashboard from "../pages/modules/programs/CCNA/ccna";
+import CCNAKnowledgeHub from "../pages/modules/programs/CCNA/ccnaKnowledgeHub";
+import CCNAKnowledgeArticle from "../pages/modules/programs/CCNA/ccnaKnowledgeArticle";
+import CCNALesson from "../pages/modules/programs/CCNA/ccnaLesson";
 import { useAuth } from "../context/AuthContext";
 import { readCcnaExamSession, saveCcnaExamSession } from "../utils/ccnaExamSession";
 
