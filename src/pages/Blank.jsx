@@ -142,7 +142,7 @@ export default function Blank() {
 									key={category}
 									type="button"
 									onClick={() => selectCategory(category)}
-									className={`min-h-12 w-full shrink-0 whitespace-nowrap border-b px-3 py-2 text-left text-sm font-semibold transition-colors last:border-b-0 lg:block lg:w-full ${activeCategory === category ? "border-[#087ff5] bg-blue-50 text-[#087ff5]" : "border-slate-200 text-slate-700 hover:border-[#087ff5] hover:bg-[#087ff5] hover:text-white"}`}
+									className={`min-h-12 w-full shrink-0 whitespace-nowrap rounded-md border-b px-3 py-2 text-left text-sm font-semibold transition-all duration-200 ease-out last:border-b-0 hover:scale-[1.02] hover:shadow-sm lg:block lg:w-full ${activeCategory === category ? "border-[#087ff5] bg-blue-50 text-[#087ff5]" : "border-slate-200 text-slate-700 hover:border-[#087ff5] hover:bg-[#087ff5] hover:text-white"}`}
 								>
 									{category}
 								</button>

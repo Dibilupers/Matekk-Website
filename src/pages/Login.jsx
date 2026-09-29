@@ -104,7 +104,7 @@ export default function Login() {
   }
 
   return (
-    <main className="relative isolate min-h-[calc(100vh-5rem)] overflow-hidden bg-[#f8fafc] px-5 py-10 sm:px-10 lg:px-16">
+    <main className="fade-in-up relative isolate min-h-[calc(100vh-5rem)] overflow-hidden bg-[#f8fafc] px-5 py-10 sm:px-10 lg:px-16">
       <div className="pointer-events-none absolute inset-0 -z-10 opacity-70 [background-image:linear-gradient(35deg,transparent_0_35%,rgba(226,232,240,0.45)_35.2%_48%,transparent_48.2%),linear-gradient(145deg,transparent_0_46%,rgba(226,232,240,0.35)_46.2%_58%,transparent_58.2%),linear-gradient(75deg,transparent_0_62%,rgba(241,245,249,0.95)_62.2%_78%,transparent_78.2%)]" />
 
       <div className="mx-auto grid w-full max-w-6xl items-center gap-12 lg:grid-cols-[minmax(320px,390px)_1fr] lg:gap-20">
