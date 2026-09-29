@@ -108,8 +108,11 @@ import CCNADashboard from "../pages/modules/programs/CCNA/ccna";
 import CCNAKnowledgeHub from "../pages/modules/programs/CCNA/ccnaKnowledgeHub";
 import CCNAKnowledgeArticle from "../pages/modules/programs/CCNA/ccnaKnowledgeArticle";
 import CCNALesson from "../pages/modules/programs/CCNA/ccnaLesson";
+import CCNAModuleQuiz from "../pages/modules/programs/CCNA/ccnaModuleQuiz";
 import { useAuth } from "../context/AuthContext";
 import { readCcnaExamSession, saveCcnaExamSession } from "../utils/ccnaExamSession";
+import { readCcnaModuleQuizProgress, saveCcnaModuleQuizProgress } from "../utils/ccnaModuleQuizProgress";
+import { CCNA_MODULE_QUIZZES } from "../pages/modules/programs/CCNA/ccnaModuleQuizData";
 
 if ("scrollRestoration" in history) {
   history.scrollRestoration = "manual";
@@ -117,7 +120,8 @@ if ("scrollRestoration" in history) {
 
 export default function App() {
   const location = useLocation();
-  const isCCNALesson = location.pathname === "/modules/programs/ccna/lesson";
+  const isCCNALesson = location.pathname === "/modules/programs/ccna/lesson"
+    || location.pathname.startsWith("/modules/programs/ccna/quiz/");
   const isAdminPage = location.pathname === "/admin";
 
   return (
@@ -331,6 +335,14 @@ export default function App() {
           }
         />
         <Route
+          path="/modules/programs/ccna/quiz/:moduleNumber"
+          element={
+            <ProtectedRoute>
+              <CCNAModuleQuiz />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/modules/programs/ccna/knowledge-hub"
           element={
             <ProtectedRoute>
@@ -358,39 +370,96 @@ export default function App() {
 }
 
 function CCNAExamTimeNotification() {
-  const [isVisible, setIsVisible] = useState(false);
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     function checkExamDeadline() {
       const session = readCcnaExamSession();
-      if (!session || session.status === "completed") {
-        setIsVisible(false);
-        return;
-      }
-
-      if (session.deadline <= Date.now() && session.status !== "expired") {
+      if (session && session.status !== "completed" && session.deadline <= Date.now() && session.status !== "expired") {
         session.status = "expired";
         session.toastDismissed = false;
         saveCcnaExamSession(session);
       }
 
-      setIsVisible(session.status === "expired" && !session.toastDismissed);
+      let moduleProgress = readCcnaModuleQuizProgress();
+      const expiredModule = Object.entries(moduleProgress.modules).find(
+        ([, attempt]) =>
+          attempt?.status === "in-progress" &&
+          Number.isFinite(attempt.deadline) &&
+          attempt.deadline <= Date.now(),
+      );
+
+      if (expiredModule) {
+        const [moduleNumber, attempt] = expiredModule;
+        const moduleQuiz = CCNA_MODULE_QUIZZES.find((quiz) => quiz.number === moduleNumber);
+        if (moduleQuiz) {
+          const score = moduleQuiz.questions.reduce(
+            (total, question, index) => total + (attempt.answers?.[index] === question.answer ? 1 : 0),
+            0,
+          );
+          moduleProgress = {
+            ...moduleProgress,
+            activeModule: moduleProgress.activeModule === moduleNumber ? null : moduleProgress.activeModule,
+            modules: {
+              ...moduleProgress.modules,
+              [moduleNumber]: {
+                ...attempt,
+                status: "expired",
+                score,
+                bestScore: Math.max(attempt.bestScore ?? 0, score),
+              },
+            },
+          };
+          saveCcnaModuleQuizProgress(moduleProgress);
+        }
+      }
+
+      const expiredModuleAttempt = Object.entries(moduleProgress.modules)
+        .filter(([, attempt]) => attempt?.status === "expired" && !attempt.toastDismissed)
+        .sort(([, first], [, second]) => (second.deadline ?? 0) - (first.deadline ?? 0))[0];
+
+      if (expiredModuleAttempt) {
+        const nextNotification = { type: "module", moduleNumber: expiredModuleAttempt[0] };
+        setNotification((current) =>
+          current?.type === nextNotification.type && current.moduleNumber === nextNotification.moduleNumber
+            ? current
+            : nextNotification,
+        );
+      } else if (session?.status === "expired" && !session.toastDismissed) {
+        setNotification((current) => current?.type === "lesson" ? current : { type: "lesson" });
+      } else {
+        setNotification((current) => current ? null : current);
+      }
     }
 
     checkExamDeadline();
-    const timer = window.setInterval(checkExamDeadline, 1000);
+    const timer = window.setInterval(checkExamDeadline, 500);
     return () => window.clearInterval(timer);
   }, []);
 
   function dismissNotification() {
-    const session = readCcnaExamSession();
-    if (session?.status === "expired") {
-      saveCcnaExamSession({ ...session, toastDismissed: true });
+    if (notification?.type === "module") {
+      const progress = readCcnaModuleQuizProgress();
+      const attempt = progress.modules[notification.moduleNumber];
+      if (attempt?.status === "expired") {
+        saveCcnaModuleQuizProgress({
+          ...progress,
+          modules: {
+            ...progress.modules,
+            [notification.moduleNumber]: { ...attempt, toastDismissed: true },
+          },
+        });
+      }
+    } else {
+      const session = readCcnaExamSession();
+      if (session?.status === "expired") {
+        saveCcnaExamSession({ ...session, toastDismissed: true });
+      }
     }
-    setIsVisible(false);
+    setNotification(null);
   }
 
-  if (!isVisible) return null;
+  if (!notification) return null;
 
   return (
     <div
@@ -401,9 +470,13 @@ function CCNAExamTimeNotification() {
         !
       </span>
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-bold">Exam time is up</p>
+        <p className="text-sm font-bold">
+          {notification.type === "module" ? `Module ${notification.moduleNumber} quiz time is up` : "Exam time is up"}
+        </p>
         <p className="mt-1 text-sm leading-5 text-[#64718a]">
-          Your time limit has ended. Your answers have been submitted.
+          {notification.type === "module"
+            ? "Your quiz has ended and your score has been saved."
+            : "Your time limit has ended. Your answers have been submitted."}
         </p>
       </div>
       <button
