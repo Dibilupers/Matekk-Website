@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 430" role="img" aria-labelledby="title description">
+  <title id="title">VTP domain modes and VLAN advertisement flow</title>
+  <desc id="description">A server switch and client switches share VLAN database advertisements within one VTP domain over trunks. A transparent switch retains its own local database and relays received advertisements.</desc>
+  <rect width="960" height="430" rx="24" fill="#f7f9fe"/>
+  <text x="480" y="45" text-anchor="middle" font-family="Arial, sans-serif" font-size="25" font-weight="700" fill="#122447">VTP shares VLAN database information over trunks</text>
+  <rect x="52" y="83" width="856" height="300" rx="20" fill="#fff" stroke="#d8e2f1" stroke-width="2"/>
+  <rect x="75" y="101" width="642" height="250" rx="18" fill="#eff5ff" stroke="#8fb5f4" stroke-width="2"/>
+  <text x="396" y="132" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#2458b8">VTP DOMAIN · CAMPUS</text>
+  <rect x="99" y="177" width="180" height="105" rx="16" fill="#13294b"/>
+  <text x="189" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#fff">SERVER</text>
+  <text x="189" y="249" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#ccdcf7">Creates / changes VLANs</text>
+  <rect x="365" y="177" width="180" height="105" rx="16" fill="#fff" stroke="#8fb5f4" stroke-width="3"/>
+  <text x="455" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#17356d">CLIENT</text>
+  <text x="455" y="249" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#526584">Learns VLAN database</text>
+  <rect x="75" y="302" width="642" height="41" rx="12" fill="#e4edff"/>
+  <text x="396" y="329" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#35547f">Trunk links carry VTP advertisements and VLAN traffic</text>
+  <path d="M279 229H365" stroke="#2c66cf" stroke-width="6"/>
+  <path d="m351 219 14 10-14 10" fill="none" stroke="#2c66cf" stroke-width="4"/>
+  <text x="322" y="209" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="#2458b8">VTP updates</text>
+  <rect x="744" y="171" width="140" height="117" rx="16" fill="#fff8eb" stroke="#e7bd69" stroke-width="2"/>
+  <text x="814" y="211" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#91610d">TRANSPARENT</text>
+  <text x="814" y="239" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#765b4c">Local VLAN database</text>
+  <text x="814" y="261" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#765b4c">relays received VTP</text>
+  <path d="M717 229h27" stroke="#cf9a2b" stroke-width="5" stroke-dasharray="6 5"/>
+  <text x="480" y="408" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#526584">Transparent mode does not synchronize its local database with the domain.</text>
+</svg>

@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 470" role="img" aria-labelledby="title description">
+  <title id="title">Root-port election by lowest path cost</title>
+  <desc id="description">SW1 is root. SW2 has a direct one gigabit path with cost 4 and an alternate path through SW4 and SW3 with cost 27. SW4 reaches SW1 through SW3 at cost 8 rather than SW2 at cost 23.</desc>
+  <rect width="960" height="470" rx="24" fill="#f7f9fe"/>
+  <text x="480" y="45" text-anchor="middle" font-family="Arial, sans-serif" font-size="25" font-weight="700" fill="#122447">Example 1 · lowest accumulated path cost wins</text>
+  <path d="M205 135H438" stroke="#2c66cf" stroke-width="7"/>
+  <path d="M205 157 415 300" stroke="#8294b2" stroke-width="5" stroke-dasharray="10 8"/>
+  <path d="M438 300H685" stroke="#8294b2" stroke-width="5" stroke-dasharray="10 8"/>
+  <path d="M685 278 205 157" stroke="#8294b2" stroke-width="5" stroke-dasharray="10 8"/>
+  <path d="M205 135 685 278" stroke="#2c66cf" stroke-width="6"/>
+  <path d="M205 135 438 300" stroke="#2c66cf" stroke-width="6"/>
+  <rect x="90" y="90" width="230" height="94" rx="16" fill="#13294b"/>
+  <text x="205" y="130" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#fff">SW1 · ROOT</text>
+  <text x="205" y="157" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#ccdcf7">Root path cost 0</text>
+  <rect x="405" y="90" width="230" height="94" rx="16" fill="#fff" stroke="#8fb5f4" stroke-width="3"/>
+  <text x="520" y="130" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#17356d">SW2</text>
+  <text x="520" y="157" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#526584">Direct path cost 4</text>
+  <rect x="323" y="270" width="230" height="94" rx="16" fill="#fff" stroke="#8fb5f4" stroke-width="3"/>
+  <text x="438" y="310" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#17356d">SW3</text>
+  <text x="438" y="337" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#526584">to SW1 · 1 Gb/s · cost 4</text>
+  <rect x="570" y="270" width="230" height="94" rx="16" fill="#fff" stroke="#8fb5f4" stroke-width="3"/>
+  <text x="685" y="310" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#17356d">SW4</text>
+  <text x="685" y="337" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#526584">to SW3 · 1 Gb/s · cost 4</text>
+  <rect x="340" y="198" width="118" height="31" rx="9" fill="#eaf2ff"/>
+  <text x="399" y="219" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="#2458b8">1 Gb/s · 4</text>
+  <rect x="243" y="216" width="124" height="31" rx="9" fill="#f0f2f7"/>
+  <text x="305" y="237" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="#526584">1 Gb/s · 4</text>
+  <rect x="566" y="216" width="126" height="31" rx="9" fill="#fff3e9"/>
+  <text x="629" y="237" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="#a34c16">100 Mb/s · 19</text>
+  <rect x="735" y="165" width="126" height="31" rx="9" fill="#eaf2ff"/>
+  <text x="798" y="186" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="#2458b8">1 Gb/s · 4</text>
+  <rect x="300" y="399" width="360" height="42" rx="12" fill="#eaf2ff"/>
+  <text x="480" y="426" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" font-weight="700" fill="#2458b8">SW2 chooses direct SW1 path: 4 &lt; 27</text>
+</svg>

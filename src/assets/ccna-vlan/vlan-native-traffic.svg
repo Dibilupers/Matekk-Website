@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 300" fill="none">
+  <rect width="760" height="300" rx="24" fill="#F4F7FD"/>
+  <text x="36" y="42" fill="#172642" font-family="Arial,sans-serif" font-size="18" font-weight="700">NATIVE VLAN TRAFFIC ON AN 802.1Q TRUNK</text>
+  <rect x="66" y="105" width="100" height="68" rx="14" fill="#315EEA"/>
+  <path d="M84 128h64m-64 12h64m-52-22v33m20-33v33m20-33v33" stroke="#FFFFFF" stroke-width="2.5"/>
+  <rect x="594" y="105" width="100" height="68" rx="14" fill="#315EEA"/>
+  <path d="M612 128h64m-64 12h64m-52-22v33m20-33v33m20-33v33" stroke="#FFFFFF" stroke-width="2.5"/>
+  <text x="116" y="195" text-anchor="middle" fill="#526584" font-family="Arial,sans-serif" font-size="11" font-weight="700">SWITCH A</text>
+  <text x="644" y="195" text-anchor="middle" fill="#526584" font-family="Arial,sans-serif" font-size="11" font-weight="700">SWITCH B</text>
+  <path d="M168 138h424" stroke="#8295B5" stroke-width="8" stroke-linecap="round"/>
+  <path d="m578 127 16 11-16 11" stroke="#8295B5" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="380" y="103" text-anchor="middle" fill="#526584" font-family="Arial,sans-serif" font-size="12" font-weight="700">802.1Q TRUNK</text>
+  <rect x="212" y="119" width="125" height="38" rx="8" fill="#FFFFFF" stroke="#CBD7E9" stroke-width="2"/>
+  <text x="274" y="143" text-anchor="middle" fill="#526584" font-family="Arial,sans-serif" font-size="12" font-weight="700">UNTAGGED FRAME</text>
+  <rect x="355" y="119" width="125" height="38" rx="8" fill="#DDF5E7" stroke="#A8D9B9" stroke-width="2"/>
+  <text x="417" y="143" text-anchor="middle" fill="#237344" font-family="Arial,sans-serif" font-size="12" font-weight="700">NATIVE VLAN</text>
+  <path d="M274 166v24h143v-24" stroke="#38A169" stroke-width="2.5" stroke-dasharray="5 5"/>
+  <rect x="191" y="216" width="378" height="44" rx="12" fill="#FFFFFF" stroke="#D7E0EF" stroke-width="2"/>
+  <text x="380" y="234" text-anchor="middle" fill="#526584" font-family="Arial,sans-serif" font-size="12" font-weight="700">Other VLANs remain identified by 802.1Q tags</text>
+  <text x="380" y="251" text-anchor="middle" fill="#71819B" font-family="Arial,sans-serif" font-size="11">Configure matching native VLANs at both ends.</text>
+</svg>

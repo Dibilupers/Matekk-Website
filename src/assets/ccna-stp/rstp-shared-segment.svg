@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 410" role="img" aria-labelledby="title description">
+  <title id="title">RSTP backup port on a shared segment</title>
+  <desc id="description">SW2 connects two interfaces to the same shared LAN through a hub. Fa0/2 is the designated port and Fa0/3 is a backup port in discarding state. A host also connects to the hub.</desc>
+  <rect width="960" height="410" rx="24" fill="#f7f9fe"/>
+  <text x="480" y="45" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#122447">RSTP backup role · shared hub segment</text>
+  <rect x="92" y="129" width="255" height="142" rx="20" fill="#13294b"/>
+  <text x="219" y="178" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" font-weight="700" fill="#fff">SW2</text>
+  <text x="219" y="210" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#ccdcf7">Two ports to one segment</text>
+  <rect x="444" y="144" width="170" height="112" rx="18" fill="#fff" stroke="#8fb5f4" stroke-width="3"/>
+  <text x="529" y="191" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#17356d">HUB</text>
+  <text x="529" y="220" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#526584">Shared LAN segment</text>
+  <rect x="716" y="158" width="170" height="84" rx="16" fill="#eef4ff" stroke="#8fb5f4" stroke-width="2"/>
+  <text x="801" y="193" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#2458b8">HOST</text>
+  <text x="801" y="220" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#526584">Same segment</text>
+  <path d="M347 171 444 171" stroke="#2c66cf" stroke-width="7"/>
+  <path d="M347 231 444 231" stroke="#c85454" stroke-width="6" stroke-dasharray="10 8"/>
+  <path d="M614 200H716" stroke="#8294b2" stroke-width="5"/>
+  <rect x="346" y="107" width="105" height="31" rx="9" fill="#eaf2ff"/>
+  <text x="398" y="128" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="#2458b8">Fa0/2 · designated</text>
+  <rect x="342" y="270" width="108" height="31" rx="9" fill="#fff0f0"/>
+  <text x="396" y="291" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="#ad3c3c">Fa0/3 · backup</text>
+  <text x="480" y="342" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#526584">Both switch ports reach the same shared collision domain, so one is backup.</text>
+  <text x="480" y="370" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#71819b">The backup port stays discarding unless the designated path becomes unavailable.</text>
+</svg>

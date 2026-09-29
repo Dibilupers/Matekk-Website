@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 430" role="img" aria-labelledby="title description">
+  <title id="title">RSTP port roles on three switches</title>
+  <desc id="description">SW1 is the root bridge. SW2 and SW3 use their ports to SW1 as root ports. On their direct link, SW2 is designated and SW3 is alternate.</desc>
+  <rect width="960" height="430" rx="24" fill="#f7f9fe"/>
+  <text x="480" y="45" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#122447">RSTP roles · three-switch example</text>
+  <path d="M478 168 266 293" stroke="#2c66cf" stroke-width="8"/>
+  <path d="M482 168 694 293" stroke="#2c66cf" stroke-width="8"/>
+  <path d="M380 326H580" stroke="#2c66cf" stroke-width="8"/>
+  <rect x="365" y="83" width="230" height="95" rx="18" fill="#13294b"/>
+  <text x="480" y="122" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#fff">SW1 · ROOT</text>
+  <text x="480" y="150" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#ccdcf7">Ports are designated</text>
+  <rect x="145" y="276" width="230" height="95" rx="18" fill="#fff" stroke="#8fb5f4" stroke-width="3"/>
+  <text x="260" y="315" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#17356d">SW2</text>
+  <text x="260" y="343" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#526584">Root port toward SW1</text>
+  <rect x="585" y="276" width="230" height="95" rx="18" fill="#fff" stroke="#8fb5f4" stroke-width="3"/>
+  <text x="700" y="315" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#17356d">SW3</text>
+  <text x="700" y="343" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#526584">Root port toward SW1</text>
+  <rect x="270" y="200" width="130" height="32" rx="9" fill="#eaf2ff"/>
+  <text x="335" y="222" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#2458b8">Root port</text>
+  <rect x="560" y="200" width="130" height="32" rx="9" fill="#eaf2ff"/>
+  <text x="625" y="222" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#2458b8">Root port</text>
+  <rect x="369" y="306" width="130" height="32" rx="9" fill="#eaf2ff"/>
+  <text x="434" y="328" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#2458b8">Designated</text>
+  <rect x="461" y="347" width="130" height="32" rx="9" fill="#fff0f0"/>
+  <text x="526" y="369" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#ad3c3c">Alternate · discarding</text>
+  <text x="480" y="410" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#526584">When path information ties, the lower Bridge ID can win designated-port selection.</text>
+</svg>

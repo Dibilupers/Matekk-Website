@@ -29,9 +29,10 @@ export class UsersService {
         },
         {
             userId: 3,
-            username: 'rene',
-            password: 'renebaterbonia',
-            role: 'admin',
+            username: 'Emman',
+            password: 'emmanpogi',
+            role: 'student',
+            course_enrolled: ['Cisco', 'Palo Alto', 'CompTIA', 'Fortinet', 'Data Center', 'Cloud Computing', 'Cybersecurity'],
         },
         {
             userId: 4,
