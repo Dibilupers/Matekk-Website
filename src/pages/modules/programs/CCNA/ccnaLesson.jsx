@@ -113,7 +113,7 @@ function LessonHeader({ timeLeftSeconds, isDark, onThemeToggle, theme }) {
 			<div className="flex items-center gap-2">
 				<Link
 					to="/modules/programs/ccna"
-					className={`inline-flex items-center gap-2 rounded-full border px-3 py-2 text-sm font-semibold transition hover:-translate-y-0.5 hover:border-[#315eea] hover:text-[#315eea] ${
+					className={`inline-flex items-center gap-2 rounded-full border px-3 py-2 text-sm font-semibold transition hover:-translate-y-0.5 hover:border-[#005b6b] hover:text-[#005b6b] ${
 						isDark
 							? "border-[#303a60] text-[#d7def2]"
 							: "border-[#d4dced] text-[#42516b]"
@@ -124,7 +124,7 @@ function LessonHeader({ timeLeftSeconds, isDark, onThemeToggle, theme }) {
 				</Link>
 				<div
 					aria-label={`Time left ${formatTime(timeLeftSeconds)}`}
-					className={`rounded-full border px-4 py-2 text-sm font-semibold tabular-nums transition-colors hover:border-[#315eea] hover:bg-[#315eea] hover:text-white ${theme.timer}`}
+					className={`rounded-full border px-4 py-2 text-sm font-semibold tabular-nums transition-colors hover:border-[#005b6b] hover:bg-[#005b6b] hover:text-white ${theme.timer}`}
 				>
 					{formatTime(timeLeftSeconds)}
 				</div>
@@ -172,11 +172,11 @@ export default function CCNALesson() {
 				heading: "text-[#f4f6ff]",
 				muted: "text-[#9ba8c8]",
 				timer: "border-[#273153] bg-[#151c36] text-[#e2e7f5]",
-				option: "border-[#293455] bg-transparent text-[#e0e5f3] hover:border-[#43547f] hover:bg-[#1b2342]",
-				neutralBadge: "bg-[#1d2749] text-[#4772ff]",
+				option: "border-[#293455] bg-transparent text-[#e0e5f3] hover:border-[#397c86] hover:bg-[#172d36]",
+				neutralBadge: "bg-[#173941] text-[#7dc6ce]",
 				navUnanswered: "border-[#293455] bg-transparent text-[#9ba8c8]",
 				ringOffset: "ring-offset-[#161d38]",
-				completionBadge: "bg-[#1b2850] text-[#4772ff]",
+				completionBadge: "bg-[#173941] text-[#7dc6ce]",
 				completionMuted: "text-[#93a1c7]",
 				completionText: "text-[#a6b1ce]",
 				completionOutline: "border-[#303a60] text-[#d7def2] hover:bg-[#171e39]",
@@ -187,11 +187,11 @@ export default function CCNALesson() {
 				heading: "text-[#17233d]",
 				muted: "text-[#70809a]",
 				timer: "border-[#dfe6f1] bg-white text-[#34435e]",
-				option: "border-[#d9e1ef] bg-white text-[#263654] hover:border-[#9aafe6] hover:bg-[#f5f8ff]",
-				neutralBadge: "bg-[#edf2ff] text-[#315eea]",
+				option: "border-[#d9e1ef] bg-white text-[#263654] hover:border-[#8bb8bf] hover:bg-[#f0f7f7]",
+				neutralBadge: "bg-[#e8f3f4] text-[#005b6b]",
 				navUnanswered: "border-[#d9e1ef] bg-white text-[#71809a]",
 				ringOffset: "ring-offset-white",
-				completionBadge: "bg-[#e8efff] text-[#315eea]",
+				completionBadge: "bg-[#e8f3f4] text-[#005b6b]",
 				completionMuted: "text-[#70809a]",
 				completionText: "text-[#596983]",
 				completionOutline: "border-[#cfd8e8] text-[#42516b] hover:bg-[#edf2fa]",
@@ -393,7 +393,7 @@ export default function CCNALesson() {
 								setToastDismissed(false);
 								setIsComplete(false);
 							}}
-							className="rounded-full bg-[#2f58e8] px-6 py-3 font-semibold text-white transition hover:bg-[#4168f2]"
+							className="rounded-full bg-[#005b6b] px-6 py-3 font-semibold text-white transition hover:bg-[#004653]"
 						>
 							Try again
 						</button>
@@ -429,7 +429,7 @@ export default function CCNALesson() {
 					className={`mb-6 h-2 overflow-hidden rounded-full ${isDark ? "bg-[#222b4b]" : "bg-[#dfe6f1]"}`}
 				>
 					<div
-						className="h-full rounded-full bg-[#315eea] transition-[width] duration-300"
+						className="h-full rounded-full bg-[#005b6b] transition-[width] duration-300"
 						style={{ width: `${(answeredCount / quizQuestions.length) * 100}%` }}
 					/>
 				</div>
@@ -447,8 +447,8 @@ export default function CCNALesson() {
 								let optionStyle = theme.option;
 								if (isSelected) {
 									optionStyle = isDark
-										? "border-[#4772ff] bg-[#1d2749] text-[#e0e5f3]"
-										: "border-[#315eea] bg-[#edf2ff] text-[#263654]";
+										? "border-[#55b3bf] bg-[#173941] text-[#e0e5f3]"
+										: "border-[#005b6b] bg-[#e8f3f4] text-[#263654]";
 								}
 
 								return (
@@ -461,7 +461,7 @@ export default function CCNALesson() {
 										className={`flex min-h-[60px] w-full items-center gap-3 rounded-2xl border px-4 py-3 text-left transition disabled:cursor-default ${optionStyle}`}
 									>
 										<span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
-											isSelected ? "bg-[#315eea] text-white" : theme.neutralBadge
+											isSelected ? "bg-[#005b6b] text-white" : theme.neutralBadge
 										}`}>
 											{String.fromCharCode(65 + optionIndex)}
 										</span>
@@ -482,7 +482,7 @@ export default function CCNALesson() {
 									}
 								}}
 								disabled={!isAnswered || Boolean(lockedQuestions[currentIndex])}
-								className="rounded-full bg-[#2f58e8] px-6 py-3 font-semibold text-white transition hover:bg-[#4168f2] disabled:cursor-not-allowed disabled:opacity-40"
+								className="rounded-full bg-[#005b6b] px-6 py-3 font-semibold text-white transition hover:bg-[#004653] disabled:cursor-not-allowed disabled:opacity-40"
 							>
 								{currentIndex === quizQuestions.length - 1 ? "Finish quiz" : "Next question"}
 							</button>
@@ -500,8 +500,8 @@ export default function CCNALesson() {
 									(index === currentIndex + 1 && isAnswered && !lockedQuestions[currentIndex]);
 								const stateStyle = hasAnswer
 									? isDark
-										? "border-[#315eea] bg-[#1d2749] text-[#b8c8ff]"
-										: "border-[#315eea] bg-[#edf2ff] text-[#315eea]"
+										? "border-[#55b3bf] bg-[#173941] text-[#7dc6ce]"
+										: "border-[#005b6b] bg-[#e8f3f4] text-[#005b6b]"
 									: theme.navUnanswered;
 
 								return (
@@ -512,8 +512,8 @@ export default function CCNALesson() {
 										disabled={!canNavigate}
 										aria-label={`Question ${index + 1}${hasAnswer ? ", answered" : ", unanswered"}`}
 										aria-current={isActive ? "step" : undefined}
-										className={`h-10 w-full rounded-xl border text-sm font-semibold transition hover:border-[#315eea] hover:bg-[#315eea] hover:text-white disabled:cursor-not-allowed disabled:hover:border-inherit disabled:hover:bg-inherit disabled:hover:text-inherit ${stateStyle} ${
-											isActive ? `ring-2 ring-[#315eea] ring-offset-2 ${theme.ringOffset}` : ""
+										className={`h-10 w-full rounded-xl border text-sm font-semibold transition hover:border-[#005b6b] hover:bg-[#005b6b] hover:text-white disabled:cursor-not-allowed disabled:hover:border-inherit disabled:hover:bg-inherit disabled:hover:text-inherit ${stateStyle} ${
+											isActive ? `ring-2 ring-[#005b6b] ring-offset-2 ${theme.ringOffset}` : ""
 										}`}
 									>
 										{index + 1}
@@ -555,7 +555,7 @@ export default function CCNALesson() {
 							<button
 								type="button"
 								onClick={confirmExit}
-								className="rounded-full bg-[#2f58e8] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#2448c8]"
+								className="rounded-full bg-[#005b6b] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#004653]"
 							>
 								Exit exam
 							</button>

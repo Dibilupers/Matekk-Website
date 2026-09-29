@@ -23,8 +23,8 @@ const ccnaModuleOneSlugs = new Set([
 
 const sections = [
 	{
-		title: "Fundamentals",
-		count: 10,
+		number: "1.0",
+		title: "Network Fundamentals",
 		items: [
 			"OSI Model Tutorial",
 			"TCP and UDP Tutorial",
@@ -39,23 +39,8 @@ const sections = [
 		],
 	},
 	{
-		title: "Switching & Routing",
-		count: 7,
-		items: ["Spine-Leaf Architecture", "Inter-Switch Connectivity and 802.1Q Trunking", "EtherChannel Tutorial", "VLAN Trunking Protocol VTP", "STP Root Port Election", "Cisco Router Boot Sequence Tutorial", "Routing Protocols Explained"],
-	},
-	{
-		title: "Network Services",
-		count: 6,
-		items: ["DHCP Snooping", "Dynamic ARP Inspection", "DNS Fundamentals", "Network Address Translation NAT Tutorial", "Network Time Protocol NTP Tutorial", "SNMP Explained"],
-	},
-	{
-		title: "Security Fundamentals",
-		count: 6,
-		items: ["Access Control Lists", "Port Security Tutorial", "AAA Authentication", "IPsec and VPNs", "Secure Management", "Threat Modeling Basics"],
-	},
-	{
+		number: "2.0",
 		title: "Network Access",
-		count: 7,
 		items: [
 			"Virtual Local Area Network VLAN Tutorial",
 			"InterVLAN Routing Tutorial",
@@ -67,9 +52,53 @@ const sections = [
 		],
 	},
 	{
+		number: "3.0",
 		title: "IP Connectivity",
-		count: 5,
-		items: ["How a Router Makes a Forwarding Decision", "OSPF Tutorial", "EIGRP Tutorial", "Hot Standby Router Protocol HSRP Tutorial", "Gateway Load Balancing Protocol GLBP Tutorial"],
+		items: [
+			"How a Router Makes a Forwarding Decision",
+			"OSPF Tutorial",
+			"EIGRP Tutorial",
+			"Hot Standby Router Protocol HSRP Tutorial",
+			"Gateway Load Balancing Protocol GLBP Tutorial",
+		],
+	},
+	{
+		number: "4.0",
+		title: "IP Services",
+		items: [
+			"Network Address Translation NAT Tutorial",
+			"Network Time Protocol NTP Tutorial",
+			"DHCP Tutorial",
+			"Simple Network Management Protocol SNMP Tutorial",
+			"Syslog Tutorial",
+			"Forwarding per-hop behavior PHB for QoS Tutorial",
+			"Configure SSH for Remote Access on Cisco Router",
+		],
+	},
+	{
+		number: "5.0",
+		title: "Security Fundamentals",
+		items: [
+			"Key Security Concepts Tutorial",
+			"Access List Tutorial",
+			"Layer 2 Threats and Security Features",
+			"AAA TACACS+ and RADIUS Tutorial",
+			"Port-Security Tutorial",
+			"DHCP Snooping Tutorial",
+		],
+	},
+	{
+		number: "6.0",
+		title: "Automation and Programmability",
+		items: [
+			"What is SDN?",
+			"Puppet Tutorial",
+			"Chef Tutorial",
+			"Ansible Tutorial",
+			"JSON Tutorial",
+			"Generative AI vs Predictive AI Tutorial",
+			"REST API Tutorial",
+		],
 	},
 ];
 
@@ -154,6 +183,105 @@ const articles = {
 		body: "Learn inside and outside address terminology, static NAT, dynamic NAT, Port Address Translation (PAT), translation tables, pool behavior, and practical configuration concepts.",
 		tags: ["CCNA 4.1", "NAT", "PAT", "IP Services"],
 		contentType: "nat",
+	},
+	"dhcp-tutorial": {
+		title: "DHCP Tutorial",
+		meta: "12 min read · CCNA 4.3 · IP Services",
+		section: "IP Services",
+		intro: "Dynamic Host Configuration Protocol (DHCP) automatically leases IPv4 configuration to clients, including an address, subnet mask, default gateway, and DNS servers. It lets a device join a new network without manually knowing that network's addressing plan.",
+		body: "Follow the DORA exchange, understand leases and address-conflict handling, configure a Cisco IOS router as a DHCP server, and use a relay agent when clients and the server are on different subnets.",
+		tags: ["CCNA 4.3", "DHCP", "DORA", "IP Services"],
+		contentType: "dhcp",
+	},
+	"simple-network-management-protocol-snmp-tutorial": {
+		title: "Simple Network Management Protocol (SNMP) Tutorial",
+		meta: "12 min read · CCNA 4.4 · IP Services",
+		section: "IP Services",
+		intro: "Simple Network Management Protocol (SNMP) lets a network management system monitor and manage routers, switches, servers, and other devices through structured management information. Managers poll agents for data, while agents can send notifications when significant events occur.",
+		body: "Understand the manager, agent, and MIB; compare SNMPv1, SNMPv2c, and SNMPv3; follow GET, SET, TRAP, INFORM, and GETBULK messages; and configure SNMP monitoring on Cisco IOS.",
+		tags: ["CCNA 4.4", "SNMP", "Network Monitoring", "IP Services"],
+		contentType: "snmp",
+	},
+	"syslog-tutorial": {
+		title: "Syslog Tutorial",
+		meta: "10 min read · CCNA 4.5 · IP Services",
+		section: "IP Services",
+		intro: "Syslog collects device-generated event messages so administrators can monitor network health, investigate failures, and correlate activity across routers, switches, servers, and a central log server.",
+		body: "Read the fields in a syslog message, distinguish facility from severity, understand all eight severity levels and their thresholds, compare local and remote logging destinations, and configure Cisco IOS logging.",
+		tags: ["CCNA 4.5", "Syslog", "Logging", "IP Services"],
+		contentType: "syslog",
+	},
+	"forwarding-per-hop-behavior-phb-for-qos-tutorial": {
+		title: "Forwarding per-hop behavior (PHB) for QoS Tutorial",
+		meta: "12 min read · CCNA 4.6 · IP Services",
+		section: "IP Services",
+		intro: "Quality of Service (QoS) manages how network devices handle traffic when resources such as bandwidth and queue space are limited. Per-hop behaviors (PHBs) define forwarding treatment at each device, while classification and packet markings help devices apply consistent policies along a path.",
+		body: "Learn DSCP codepoints, classification and marking, queuing and congestion management, and how policing differs from shaping, with Cisco IOS policy examples.",
+		tags: ["CCNA 4.6", "QoS", "PHB", "DSCP"],
+		contentType: "qos",
+	},
+	"configure-ssh-for-remote-access-on-cisco-router": {
+		title: "Configure SSH for Remote Access on Cisco Router",
+		meta: "12 min read · CCNA 4.7 · IP Services",
+		section: "IP Services",
+		intro: "Secure Shell (SSH) provides authenticated, encrypted remote command-line access to Cisco routers. Unlike Telnet, which sends session data including credentials in clear text, SSH protects the management session in transit.",
+		body: "Configure a hostname and domain name, generate an RSA key pair, create a local user, restrict VTY lines to SSH, and verify connections from another Cisco device or a computer running PuTTY or an SSH client.",
+		tags: ["CCNA 4.7", "SSH", "Cisco IOS", "Secure Management"],
+		contentType: "ssh",
+	},
+	"key-security-concepts-tutorial": {
+		title: "Key Security Concepts Tutorial",
+		meta: "10 min read · CCNA 5.1 · Security Fundamentals",
+		section: "Security Fundamentals",
+		intro: "Cybersecurity starts with recognizing weaknesses, understanding how they could be exploited, identifying the threats that may use them, and selecting safeguards that reduce risk while allowing systems and people to do their work.",
+		body: "Use the house-security analogy to understand vulnerabilities, exploits, threats, and mitigation techniques, then apply the concepts to a practical network-security example.",
+		tags: ["CCNA 5.1", "Security Fundamentals", "Vulnerability", "Threat Mitigation"],
+		contentType: "security-concepts",
+	},
+	"access-list-tutorial": {
+		title: "Access List Tutorial",
+		meta: "14 min read · CCNA 5.2 · Security Fundamentals",
+		section: "Security Fundamentals",
+		intro: "Access control lists (ACLs) filter traffic at router interfaces by checking packet fields against ordered permit and deny entries. A packet must match an explicit permit statement to pass; unmatched traffic is denied by the implicit deny at the end.",
+		body: "Learn standard, extended, and named IPv4 ACLs; apply them in the correct direction; calculate wildcard masks; choose placement; and manage ACL entries on Cisco IOS.",
+		tags: ["CCNA 5.2", "ACL", "Wildcard Mask", "Cisco IOS"],
+		contentType: "acl",
+	},
+	"layer-2-threats-and-security-features": {
+		title: "Layer 2 Threats and Security Features",
+		meta: "14 min read · CCNA 5.3 · Security Fundamentals",
+		section: "Security Fundamentals",
+		intro: "Layer 2 attacks can exploit trust in local switching, address learning, and network configuration protocols. DHCP spoofing, VLAN hopping, ARP spoofing, and MAC flooding can expose traffic or redirect users unless switch access and trunk behavior are secured.",
+		body: "Learn how DHCP snooping, secure trunk configuration, VLAN ACLs, Dynamic ARP Inspection, port security, and 802.1X help mitigate common Layer 2 threats.",
+		tags: ["CCNA 5.3", "Layer 2 Security", "DHCP Snooping", "DAI"],
+		contentType: "layer2-security",
+	},
+	"aaa-tacacs+-and-radius-tutorial": {
+		title: "AAA TACACS+ and RADIUS Tutorial",
+		meta: "16 min read · CCNA 5.4 · Security Fundamentals",
+		section: "Security Fundamentals",
+		intro: "Authentication, Authorization, and Accounting (AAA) centralizes how users prove their identity, what they are allowed to do, and which actions are recorded. Network devices can use a local database or communicate with remote RADIUS or TACACS+ servers.",
+		body: "Learn the three AAA functions, compare RADIUS and TACACS+, configure Cisco IOS method lists and fallback behavior, apply authentication to console and VTY lines, and reason through common AAA login scenarios.",
+		tags: ["CCNA 5.4", "AAA", "TACACS+", "RADIUS"],
+		contentType: "aaa",
+	},
+	"port-security-tutorial": {
+		title: "Port-Security Tutorial",
+		meta: "14 min read · CCNA 5.5 · Security Fundamentals",
+		section: "Security Fundamentals",
+		intro: "Cisco switch port security limits which source MAC addresses may send traffic through an access port. By allowing specific addresses or limiting how many addresses a port can learn, administrators can reduce unauthorized device connections and certain MAC-flooding risks.",
+		body: "Configure static or sticky secure MAC addresses, set a maximum and violation mode, verify port-security status, interpret secure-shutdown output, and recover an err-disabled interface.",
+		tags: ["CCNA 5.5", "Port Security", "MAC Address", "Cisco Switching"],
+		contentType: "port-security",
+	},
+	"dhcp-snooping-tutorial": {
+		title: "DHCP Snooping Tutorial",
+		meta: "12 min read · CCNA 5.6 · Security Fundamentals",
+		section: "Security Fundamentals",
+		intro: "DHCP snooping is a Layer 2 switch security feature that identifies trusted and untrusted interfaces for DHCP traffic. It helps prevent rogue DHCP servers on user-facing ports from sending unauthorized offers and acknowledgements to clients.",
+		body: "Learn the DHCP snooping trust model, enable snooping globally and for selected VLANs, trust only the authorized server or relay path, verify DHCP bindings and counters, and troubleshoot common client and server-path issues.",
+		tags: ["CCNA 5.6", "DHCP Snooping", "Layer 2 Security", "Cisco Switching"],
+		contentType: "dhcp-snooping",
 	},
 	"gateway-load-balancing-protocol-glbp-tutorial": {
 		title: "Gateway Load Balancing Protocol GLBP Tutorial",
@@ -348,56 +476,84 @@ function titleFromSlug(slug) {
 }
 
 function TutorialSidebar({ activeSlug }) {
-	const [openSections, setOpenSections] = useState(() => new Set());
+	const [openSections, setOpenSections] = useState(() => {
+		const activeSection = sections.find((section) =>
+			section.items.some((item) => slugify(item) === activeSlug),
+		);
+		return new Set(activeSection ? [activeSection.number] : []);
+	});
+	const [searchQuery, setSearchQuery] = useState("");
 
-	function toggleSection(title) {
+	function toggleSection(sectionNumber) {
 		setOpenSections((currentSections) => {
 			const nextSections = new Set(currentSections);
-			if (nextSections.has(title)) {
-				nextSections.delete(title);
+			if (nextSections.has(sectionNumber)) {
+				nextSections.delete(sectionNumber);
 			} else {
-				nextSections.add(title);
+				nextSections.add(sectionNumber);
 			}
 			return nextSections;
 		});
 	}
 
+	const normalizedQuery = searchQuery.trim().toLowerCase();
+	const visibleSections = sections
+		.map((section) => {
+			const sectionMatches = `${section.number} ${section.title}`.toLowerCase().includes(normalizedQuery);
+			const items = sectionMatches || !normalizedQuery
+				? section.items
+				: section.items.filter((item) => item.toLowerCase().includes(normalizedQuery));
+			return { ...section, visibleItems: items };
+		})
+		.filter((section) => section.visibleItems.length > 0);
+
 	return (
-		<aside className="lg:sticky lg:top-24 lg:ml-auto lg:w-full lg:max-w-[300px] lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto lg:overscroll-contain lg:self-start">
+		<aside className="border-l border-[#e1e8f3] pl-6 lg:sticky lg:top-24 lg:ml-auto lg:w-full lg:max-w-[300px] lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto lg:overscroll-contain lg:self-start">
 			<label className="relative block w-full">
-				<Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#71819b]" />
-				<input type="search" placeholder="Filter tutorials..." className="h-11 w-full rounded-xl border border-[#dbe5f5] bg-[#f4f7fd] pl-10 pr-3 text-sm text-[#172642] outline-none focus:border-[#2f68d9]" />
+				<Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#005b6b]" />
+				<input
+					type="search"
+					value={searchQuery}
+					onChange={(event) => setSearchQuery(event.target.value)}
+					placeholder="Filter tutorials..."
+					aria-label="Filter tutorials by title or module"
+					className="h-[54px] w-full rounded-2xl border border-[#dbe5f5] bg-[#f4f7fd] pl-12 pr-4 text-base text-[#172642] outline-none transition focus:border-[#005b6b] focus:ring-2 focus:ring-[#005b6b]/15"
+				/>
 			</label>
-			<div className="mt-7 space-y-8">
-				{sections.map((section) => (
-					<div key={section.title}>
+			<div className="mt-6 space-y-2">
+				{visibleSections.map((section) => (
+					<div key={section.number}>
 						<button
 							type="button"
-							onClick={() => toggleSection(section.title)}
-							aria-expanded={openSections.has(section.title)}
-							className="group flex w-full items-center justify-between border-b border-[#dbe5f5] px-1 pb-4 text-left"
+							onClick={() => toggleSection(section.number)}
+							aria-expanded={openSections.has(section.number) || Boolean(normalizedQuery)}
+							aria-controls={`tutorials-${section.number.replace(".", "-")}`}
+							className="group flex min-h-[72px] w-full items-center justify-between gap-3 border-b border-[#dbe5f5] px-1 py-4 text-left"
 						>
-							<strong className="inline-block origin-left text-base text-[#111a2d] transition duration-200 group-hover:scale-[1.03] group-hover:text-[#204ed0]">{section.title}</strong>
-							<span className="flex items-center gap-3 text-sm text-[#71819b]">
-								<span>{section.count}</span>
+							<strong className="text-lg leading-tight text-[#111a2d] transition-colors group-hover:text-[#005b6b]">{section.number} {section.title}</strong>
+							<span className="flex shrink-0 items-center gap-3 text-base text-[#71819b]">
+								<span className="group-hover:text-[#005b6b]">{section.items.length}</span>
 								<ChevronDown
-									size={16}
-									className={`text-[#2f58e8] transition-transform duration-200 group-hover:scale-110 group-hover:text-[#204ed0] ${openSections.has(section.title) ? "" : "-rotate-90"}`}
+									size={18}
+									className={`text-[#005b6b] transition-transform duration-200 group-hover:text-[#004653] ${openSections.has(section.number) || normalizedQuery ? "" : "-rotate-90"}`}
 								/>
 							</span>
 						</button>
-						{openSections.has(section.title) && (
-							<div className="space-y-1 pt-2">
-								{section.items.map((item) => {
+						{(openSections.has(section.number) || normalizedQuery) && (
+							<div id={`tutorials-${section.number.replace(".", "-")}`} className="space-y-1 py-2 pl-2">
+								{section.visibleItems.map((item) => {
 									const slug = slugify(item);
 									return (
-										<Link key={item} to={`/modules/programs/ccna/knowledge-hub/${slug}`} className={`block rounded-lg px-2 py-2 text-base leading-snug transition ${activeSlug === slug ? "bg-[#eff4ff] font-semibold text-[#204ed0]" : "text-[#526584] hover:bg-[#f5f8ff] hover:text-[#204ed0]"}`}>{item}</Link>
+										<Link key={item} to={`/modules/programs/ccna/knowledge-hub/${slug}`} className={`block rounded-lg px-3 py-2 text-sm leading-snug transition ${activeSlug === slug ? "bg-[#e8f3f4] font-semibold text-[#005b6b]" : "text-[#526584] hover:bg-[#f0f7f7] hover:text-[#005b6b]"}`}>{item}</Link>
 									);
 								})}
 							</div>
 						)}
 					</div>
 				))}
+				{normalizedQuery && visibleSections.length === 0 && (
+					<p className="px-1 py-4 text-sm text-[#71819b]">No tutorials match “{searchQuery.trim()}”.</p>
+				)}
 			</div>
 		</aside>
 	);
@@ -406,8 +562,16 @@ function TutorialSidebar({ activeSlug }) {
 export default function CCNAKnowledgeArticle() {
 	const { articleSlug = "spine-leaf-architecture-tutorial" } = useParams();
 	const vlanArticleSlug = "virtual-local-area-network-vlan-tutorial";
-	const canonicalArticleSlug = articleSlug === "virtual-local-area-networks-(vlans)" ? vlanArticleSlug : articleSlug;
-	const article = articles[articleSlug] || (articleSlug === vlanArticleSlug ? articles["virtual-local-area-networks-(vlans)"] : undefined) || {
+	const aaaArticleSlug = "aaa-tacacs+-and-radius-tutorial";
+	const canonicalArticleSlug = articleSlug === "virtual-local-area-networks-(vlans)"
+		? vlanArticleSlug
+		: articleSlug === "aaa-tacacs-and-radius-tutorial"
+			? aaaArticleSlug
+			: articleSlug;
+	const article = articles[articleSlug]
+		|| (articleSlug === vlanArticleSlug ? articles["virtual-local-area-networks-(vlans)"] : undefined)
+		|| (articleSlug === "aaa-tacacs-and-radius-tutorial" ? articles[aaaArticleSlug] : undefined)
+		|| {
 		title: titleFromSlug(articleSlug),
 		meta: "6 min read · Updated Sep 2026 · CCNA Knowledge",
 		section: "Fundamentals",
@@ -420,15 +584,15 @@ export default function CCNAKnowledgeArticle() {
 		<main className="min-h-screen bg-white text-[#526584]">
 			<div className="mx-auto max-w-[1600px] px-5 pb-8 pt-10 sm:px-10 sm:pt-12 lg:px-10">
 				<nav className="mb-6 flex flex-wrap items-center gap-2 text-sm sm:text-base" aria-label="Breadcrumb">
-					<Link to="/modules/programs/ccna/knowledge-hub" className="font-semibold text-[#2259dc] hover:underline">Training</Link>
+					<Link to="/modules/programs/ccna/knowledge-hub" className="font-semibold text-[#005b6b] hover:underline">Training</Link>
 					<span>/</span>
-					<Link to="/modules/programs/ccna/knowledge-hub" className="font-semibold text-[#2259dc] hover:underline">CCNA Knowledge</Link>
+					<Link to="/modules/programs/ccna/knowledge-hub" className="font-semibold text-[#005b6b] hover:underline">CCNA Knowledge</Link>
 					<span>/</span>
 					<span className="truncate text-[#8492a9]">{article.title}</span>
 				</nav>
 				<div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-6">
 					<article className="rounded-[24px] border border-[#dbe5f5] px-6 py-9 sm:px-10 sm:py-11">
-						<div className="inline-flex items-center gap-2 rounded-full bg-[#f1f6ff] px-4 py-2 text-sm font-semibold text-[#2354d4]"><Folder size={15} /> CCNA Knowledge</div>
+						<div className="inline-flex items-center gap-2 rounded-full bg-[#e8f3f4] px-4 py-2 text-sm font-semibold text-[#005b6b]"><Folder size={15} /> CCNA Knowledge</div>
 						<h1 className="mt-6 text-3xl font-bold leading-tight tracking-tight text-[#071126] sm:text-5xl">{article.title}</h1>
 						<p className="mt-4 flex items-center gap-2 text-base text-[#7b8ca7]"><Clock size={17} /> {article.meta}</p>
 						{ccnaModuleOneSlugs.has(articleSlug) ? (
@@ -446,7 +610,7 @@ export default function CCNAKnowledgeArticle() {
 						) : (
 							<CcnaKnowledgeModuleFour article={article} />
 						)}
-						<div className="mt-7 flex flex-wrap gap-3">{article.tags.map((tag) => <span key={tag} className="rounded-full border border-[#dbe5f5] bg-[#f8faff] px-4 py-2 text-sm text-[#3d5c88]">{tag}</span>)}</div>
+						<div className="mt-7 flex flex-wrap gap-3">{article.tags.map((tag) => <span key={tag} className="rounded-full border border-[#d6e5e7] bg-[#f5f9f9] px-4 py-2 text-sm text-[#3d5c88]">{tag}</span>)}</div>
 					</article>
 					<TutorialSidebar activeSlug={canonicalArticleSlug} />
 				</div>
