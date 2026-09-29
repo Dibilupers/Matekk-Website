@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useBlocker } from "react-router-dom";
 import { ArrowLeft, Moon, Sun } from "lucide-react";
 import TrainingLogo from "../../../../assets/MATEKK_training_logo.png";
 import {
@@ -135,12 +135,6 @@ function LessonHeader({ timeLeftSeconds, isDark, onThemeToggle, theme }) {
 }
 
 export default function CCNALesson() {
-	const navigate = useNavigate();
-	const location = useLocation();
-	const pendingExitRef = useRef(null);
-	const skipDuplicatePopRef = useRef(false);
-	const allowUnloadRef = useRef(false);
-	const [pendingExit, setPendingExit] = useState(null);
 	const [initialSession] = useState(() => {
 		const savedSession = readCcnaExamSession();
 		return savedSession ?? {
@@ -164,6 +158,13 @@ export default function CCNALesson() {
 	const [isComplete, setIsComplete] = useState(initialSession.status === "completed");
 	const [toastDismissed, setToastDismissed] = useState(initialSession.toastDismissed ?? false);
 	const [isDark, setIsDark] = useState(false);
+	const blocker = useBlocker(({ currentLocation, nextLocation }) =>
+		!isComplete &&
+		timeLeftSeconds > 0 &&
+		(currentLocation.pathname !== nextLocation.pathname ||
+			currentLocation.search !== nextLocation.search ||
+			currentLocation.hash !== nextLocation.hash),
+	);
 
 	const theme = isDark
 		? {
@@ -258,101 +259,6 @@ export default function CCNALesson() {
 			}));
 		}
 		setCurrentIndex(index);
-	}
-
-	useEffect(() => {
-		if (showResults) return undefined;
-
-		const currentPath = `${location.pathname}${location.search}${location.hash}`;
-		const guardHistoryState = {
-			...(window.history.state ?? {}),
-			ccnaExamGuard: true,
-		};
-		window.history.pushState(guardHistoryState, "", currentPath);
-
-		function requestExit(target) {
-			if (pendingExitRef.current) return;
-			pendingExitRef.current = target;
-			setPendingExit(target);
-		}
-
-		function handleDocumentClick(event) {
-			if (
-				event.defaultPrevented ||
-				event.button !== 0 ||
-				event.metaKey ||
-				event.ctrlKey ||
-				event.shiftKey ||
-				event.altKey ||
-				!(event.target instanceof Element)
-			) {
-				return;
-			}
-
-			const anchor = event.target.closest("a[href]");
-			if (!anchor || anchor.target === "_blank" || anchor.hasAttribute("download")) return;
-
-			const target = new URL(anchor.href, window.location.href);
-			if (target.href === window.location.href) return;
-
-			event.preventDefault();
-			requestExit(target.href);
-		}
-
-		function handlePopState(event) {
-			event.stopImmediatePropagation();
-			const target = `${window.location.pathname}${window.location.search}${window.location.hash}`;
-			if (skipDuplicatePopRef.current) {
-				skipDuplicatePopRef.current = false;
-			} else if (target === currentPath) {
-				skipDuplicatePopRef.current = true;
-				window.history.back();
-				return;
-			}
-			window.history.pushState(
-				guardHistoryState,
-				"",
-				currentPath,
-			);
-			if (target !== currentPath) {
-				requestExit(new URL(target, window.location.origin).href);
-			}
-		}
-
-		function handleBeforeUnload(event) {
-			if (allowUnloadRef.current) return;
-			event.preventDefault();
-			event.returnValue = "";
-		}
-
-		document.addEventListener("click", handleDocumentClick, true);
-		window.addEventListener("popstate", handlePopState, true);
-		window.addEventListener("beforeunload", handleBeforeUnload);
-
-		return () => {
-			document.removeEventListener("click", handleDocumentClick, true);
-			window.removeEventListener("popstate", handlePopState, true);
-			window.removeEventListener("beforeunload", handleBeforeUnload);
-		};
-	}, [location.hash, location.pathname, location.search, showResults]);
-
-	function confirmExit() {
-		if (!pendingExit) return;
-		pendingExitRef.current = null;
-		setPendingExit(null);
-
-		const target = new URL(pendingExit, window.location.href);
-		if (target.origin === window.location.origin) {
-			navigate(`${target.pathname}${target.search}${target.hash}`);
-			return;
-		}
-		allowUnloadRef.current = true;
-		window.location.assign(target.href);
-	}
-
-	function cancelExit() {
-		pendingExitRef.current = null;
-		setPendingExit(null);
 	}
 
 	if (showResults) {
@@ -527,7 +433,7 @@ export default function CCNALesson() {
 					</aside>
 				</div>
 			</div>
-			{pendingExit && (
+			{blocker.state === "blocked" && (
 				<div className="fixed inset-0 z-[110] flex items-center justify-center bg-[#071126]/55 px-4 py-6 backdrop-blur-[2px]">
 					<section
 						role="alertdialog"
@@ -545,7 +451,7 @@ export default function CCNALesson() {
 						<div className="mt-6 flex justify-end gap-3">
 							<button
 								type="button"
-								onClick={cancelExit}
+								onClick={() => blocker.reset()}
 								className={`rounded-full border px-5 py-2.5 text-sm font-semibold transition ${
 									isDark ? "border-[#303a60] text-[#d7def2] hover:bg-[#1b2342]" : "border-[#cfd8e8] text-[#42516b] hover:bg-[#edf2fa]"
 								}`}
@@ -554,7 +460,7 @@ export default function CCNALesson() {
 							</button>
 							<button
 								type="button"
-								onClick={confirmExit}
+								onClick={() => blocker.proceed()}
 								className="rounded-full bg-[#005b6b] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#004653]"
 							>
 								Exit exam
