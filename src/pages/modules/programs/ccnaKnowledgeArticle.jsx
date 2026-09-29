@@ -3195,39 +3195,54 @@ function HypervisorLesson() {
 }
 
 function TutorialSidebar({ activeSlug }) {
+	const [openSections, setOpenSections] = useState(() => new Set(sections.map((section) => section.title)));
+
+	function toggleSection(title) {
+		setOpenSections((currentSections) => {
+			const nextSections = new Set(currentSections);
+			if (nextSections.has(title)) {
+				nextSections.delete(title);
+			} else {
+				nextSections.add(title);
+			}
+			return nextSections;
+		});
+	}
+
 	return (
-		<aside className="lg:sticky lg:top-6 lg:h-[calc(100vh-3rem)] lg:overflow-y-auto lg:overscroll-contain lg:self-start lg:pr-2">
-			<label className="relative block">
-				<Search size={17} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#71819b]" />
-				<input type="search" placeholder="Filter tutorials..." className="h-12 w-full rounded-2xl border border-[#dbe5f5] bg-[#f4f7fd] pl-11 pr-4 text-base text-[#172642] outline-none focus:border-[#2f68d9]" />
+		<aside className="lg:sticky lg:top-24 lg:ml-auto lg:w-full lg:max-w-[300px] lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto lg:overscroll-contain lg:self-start">
+			<label className="relative block w-full">
+				<Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#71819b]" />
+				<input type="search" placeholder="Filter tutorials..." className="h-11 w-full rounded-xl border border-[#dbe5f5] bg-[#f4f7fd] pl-10 pr-3 text-sm text-[#172642] outline-none focus:border-[#2f68d9]" />
 			</label>
 			<div className="mt-7 space-y-8">
 				{sections.map((section) => (
 					<div key={section.title}>
-						<div className="flex items-center justify-between border-b border-[#dbe5f5] px-1 pb-4">
-							<strong className="text-base text-[#111a2d]">{section.title}</strong>
-							<span className="flex items-center gap-3 text-sm text-[#71819b]"><span>{section.count}</span><ChevronDown size={16} className="text-[#2f58e8]" /></span>
-						</div>
-						<div
-							className={`space-y-1 pt-2 ${
-								section.title === "Fundamentals"
-									? "max-h-[480px] overflow-y-auto overscroll-y-contain pr-2 [scrollbar-color:#b9c9e8_transparent] [scrollbar-width:thin]"
-									: ""
-							}`}
-							{...(section.title === "Fundamentals"
-								? {
-										tabIndex: 0,
-										"aria-label": "Fundamentals tutorials; scroll vertically to see all topics",
-									}
-								: {})}
+						<button
+							type="button"
+							onClick={() => toggleSection(section.title)}
+							aria-expanded={openSections.has(section.title)}
+							className="group flex w-full items-center justify-between border-b border-[#dbe5f5] px-1 pb-4 text-left"
 						>
-							{section.items.map((item) => {
-								const slug = slugify(item);
-								return (
-									<Link key={item} to={`/modules/programs/ccna/knowledge-hub/${slug}`} className={`block rounded-lg px-2 py-2 text-base leading-snug transition ${activeSlug === slug ? "bg-[#eff4ff] font-semibold text-[#204ed0]" : "text-[#526584] hover:bg-[#f5f8ff] hover:text-[#204ed0]"}`}>{item}</Link>
-								);
-							})}
-						</div>
+							<strong className="inline-block origin-left text-base text-[#111a2d] transition duration-200 group-hover:scale-[1.03] group-hover:text-[#204ed0]">{section.title}</strong>
+							<span className="flex items-center gap-3 text-sm text-[#71819b]">
+								<span>{section.count}</span>
+								<ChevronDown
+									size={16}
+									className={`text-[#2f58e8] transition-transform duration-200 group-hover:scale-110 group-hover:text-[#204ed0] ${openSections.has(section.title) ? "" : "-rotate-90"}`}
+								/>
+							</span>
+						</button>
+						{openSections.has(section.title) && (
+							<div className="space-y-1 pt-2">
+								{section.items.map((item) => {
+									const slug = slugify(item);
+									return (
+										<Link key={item} to={`/modules/programs/ccna/knowledge-hub/${slug}`} className={`block rounded-lg px-2 py-2 text-base leading-snug transition ${activeSlug === slug ? "bg-[#eff4ff] font-semibold text-[#204ed0]" : "text-[#526584] hover:bg-[#f5f8ff] hover:text-[#204ed0]"}`}>{item}</Link>
+									);
+								})}
+							</div>
+						)}
 					</div>
 				))}
 			</div>
@@ -3250,7 +3265,7 @@ export default function CCNAKnowledgeArticle() {
 
 	return (
 		<main className="min-h-screen bg-white text-[#526584]">
-			<div className="mx-auto max-w-[1440px] px-5 pb-8 pt-10 sm:px-10 sm:pt-12 lg:px-14">
+			<div className="mx-auto max-w-[1600px] px-5 pb-8 pt-10 sm:px-10 sm:pt-12 lg:px-10">
 				<nav className="mb-6 flex flex-wrap items-center gap-2 text-sm sm:text-base" aria-label="Breadcrumb">
 					<Link to="/modules/programs/ccna/knowledge-hub" className="font-semibold text-[#2259dc] hover:underline">Training</Link>
 					<span>/</span>
@@ -3258,7 +3273,7 @@ export default function CCNAKnowledgeArticle() {
 					<span>/</span>
 					<span className="truncate text-[#8492a9]">{article.title}</span>
 				</nav>
-				<div className="grid gap-9 lg:grid-cols-[minmax(0,1fr)_375px] lg:gap-10">
+				<div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-6">
 					<article className="rounded-[24px] border border-[#dbe5f5] px-6 py-9 sm:px-10 sm:py-11">
 						<div className="inline-flex items-center gap-2 rounded-full bg-[#f1f6ff] px-4 py-2 text-sm font-semibold text-[#2354d4]"><Folder size={15} /> CCNA Knowledge</div>
 						<h1 className="mt-6 text-3xl font-bold leading-tight tracking-tight text-[#071126] sm:text-5xl">{article.title}</h1>
