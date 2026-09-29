@@ -1,19 +1,12 @@
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowDown, ArrowUp, ChevronDown, Download, Inbox, Pencil, Plus, Search, Trash2, UserMinus, Users, X } from "lucide-react";
-import CrestLogo from "../assets/MATEKK_tab_logo.webp";
+import { ArrowDown, ArrowUp, ChevronDown, Download, Inbox, Pencil, Search, Trash2, UserMinus, Users, X } from "lucide-react";
 import API_URL from "../config/api";
-
-function BrandMark() {
-	return (
-		<img src={CrestLogo} alt="Matekk crest" className="h-20 w-20 object-contain" />
-	);
-}
 
 function mapApiUser(user) {
 	return {
 		id: user.userId,
 		name: user.username,
-		email: `${user.username}@example.com`,
+		email: user.email,
 		status: "Active",
 		role: `${user.role}`,
 		enrolledSubject: `${user.module_enrolled || "—"}`,
@@ -106,7 +99,6 @@ export default function UsersDashboard() {
 	/* User Statistics */
 	const userCount = userRows.length;
 	const activeUserCount = userRows.filter((user) => user.status === "Active").length;
-	const suspendedUserCount = userRows.filter((user) => user.status === "Suspended").length;
 	const openInquiryCount = inquiries.filter((inquiry) => inquiry.status).length;
 	const resolvedInquiryCount = inquiries.length - openInquiryCount;
 	const filteredInquiries = useMemo(() => {
@@ -208,9 +200,9 @@ export default function UsersDashboard() {
 	};
 
 	return (
-		<main className="min-h-screen w-full overflow-x-hidden bg-[#e9e9e9] p-3 font-poppins text-[#666666] sm:p-6 lg:p-0">
+		<main className="min-h-screen w-full overflow-x-hidden bg-white font-poppins text-[#0f172a]">
 			{inquiryNotification && (
-				<div role="status" aria-live="polite" className="fixed bottom-5 right-5 z-50 flex max-w-sm items-start gap-4 rounded-lg bg-[#145bb7] px-5 py-4 text-sm text-white shadow-xl">
+				<div role="status" aria-live="polite" className="fixed bottom-5 right-5 z-50 flex max-w-sm items-start gap-4 rounded-xl bg-[#145bb7] px-5 py-4 text-sm text-white shadow-xl">
 					<div className="flex-1">
 						<p className="font-semibold">New inquiry</p>
 						<p className="mt-1">{inquiryNotification}</p>
@@ -219,133 +211,118 @@ export default function UsersDashboard() {
 					<button type="button" onClick={() => setInquiryNotification("")} aria-label="Dismiss inquiry notification" className="rounded p-1 hover:bg-white/10"><X size={16} /></button>
 				</div>
 			)}
-			<section className="mx-auto min-h-screen w-full max-w-none overflow-hidden border border-[#8e8e8e] bg-white shadow-sm lg:border-0">
-				<header className="relative flex min-h-[92px] items-center gap-4 bg-[#1775ee] px-5 py-4 text-white sm:gap-6 sm:px-8 lg:min-h-[168px] lg:px-12">
-					<div className="-ml-8 flex h-[108px] w-[108px] shrink-0 items-center justify-center rounded-full bg-white sm:-ml-14 sm:h-[124px] sm:w-[124px]">
-						<BrandMark />
+			<header className="bg-[#1775ee] px-5 py-6 text-white sm:px-8 sm:py-7">
+				<div className="mx-auto max-w-[950px]">
+					<h1 className="text-2xl font-bold leading-tight tracking-wide sm:text-[32px]">{activeSection === "users" ? "Users" : "Inquiries"}</h1>
+					<p className="mt-1 text-sm sm:text-lg">{activeSection === "users" ? "Manage who has access to your workspace." : "Review messages and requests submitted through the website."}</p>
+					<div className="mt-6 grid grid-cols-3 gap-3 text-center sm:mt-7 sm:gap-6">
+						{activeSection === "users" ? (
+							<>
+								<div><span className="block text-xs sm:text-base">Total Users</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-[40px]">{userCount}</strong></div>
+								<div><span className="block text-xs sm:text-base">Active</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-[40px]">{activeUserCount}</strong></div>
+								<div><span className="block text-xs sm:text-base">Inquiries</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-[40px]">{openInquiryCount}</strong></div>
+							</>
+						) : (
+							<>
+								<div><span className="block text-xs sm:text-base">Total Inquiries</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-[40px]">{inquiries.length}</strong></div>
+								<div><span className="block text-xs sm:text-base">Open</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-[40px]">{openInquiryCount}</strong></div>
+								<div><span className="block text-xs sm:text-base">Resolved</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-[40px]">{resolvedInquiryCount}</strong></div>
+							</>
+						)}
 					</div>
-					<div className="min-w-0 flex-1">
-						<h4 className="text-base font-bold leading-tight tracking-wide sm:text-lg">{activeSection === "users" ? "Users" : "Inquiries"}</h4>
-						<p className="text-[10px] leading-4 sm:text-xs">{activeSection === "users" ? "Manage who has access to your workspace." : "Review messages and requests submitted through the website."}</p>
-						<div className="mt-3 grid max-w-[560px] grid-cols-3 gap-4 text-[10px] sm:text-[11px]">
-							{activeSection === "users" ? (
-								<>
-									<span><strong className="block text-xl sm:text-2xl">{userCount}</strong>Total users</span>
-									<span><strong className="block text-xl sm:text-2xl">{activeUserCount}</strong>Active</span>
-									<span><strong className="block text-xl sm:text-2xl">{suspendedUserCount}</strong>Suspended</span>
-								</>
-							) : (
-								<>
-									<span><strong className="block text-xl sm:text-2xl">{inquiries.length}</strong>Total inquiries</span>
-									<span><strong className="block text-xl sm:text-2xl">{openInquiryCount}</strong>Open</span>
-									<span><strong className="block text-xl sm:text-2xl">{resolvedInquiryCount}</strong>Resolved</span>
-								</>
-							)}
-						</div>
-					</div>
-					{activeSection === "users" && (
-						<button type="button" className="absolute right-5 top-1/2 flex -translate-y-1/2 items-center gap-2 rounded-lg bg-white px-4 py-3 text-sm font-semibold text-[#145bb7] shadow-sm transition hover:bg-blue-50 sm:right-8">
-							<Plus size={17} /> Add user
-						</button>
-					)}
-				</header>
+				</div>
+			</header>
 
-				<div className="p-4 sm:p-8 lg:p-12">
-					<nav aria-label="Admin sections" className="mb-6 flex flex-wrap gap-2 border-b border-[#dddddd] pb-4">
-						<button type="button" onClick={() => setActiveSection("users")} className={`flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition ${activeSection === "users" ? "bg-[#1775ee] text-white" : "text-[#666666] hover:bg-[#eef5ff] hover:text-[#145bb7]"}`}>
+			<section className="mx-auto max-w-[1180px] px-4 sm:px-8">
+				<div className="py-5 sm:py-7">
+					<nav aria-label="Admin sections" className="mb-5 flex flex-wrap gap-2 border-b border-[#e3e9f4] pb-4">
+						<button type="button" onClick={() => setActiveSection("users")} className={`flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition ${activeSection === "users" ? "bg-[#2b5cf0] text-white shadow-lg shadow-[#2b5cf0]/20" : "text-[#667085] hover:bg-[#edf3ff] hover:text-[#2b5cf0]"}`}>
 							<Users size={17} /> Users
 						</button>
-						<button type="button" onClick={showInquiries} className={`flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition ${activeSection === "inquiries" ? "bg-[#1775ee] text-white" : "text-[#666666] hover:bg-[#eef5ff] hover:text-[#145bb7]"}`}>
+						<button type="button" onClick={showInquiries} className={`flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition ${activeSection === "inquiries" ? "bg-[#2b5cf0] text-white shadow-lg shadow-[#2b5cf0]/20" : "text-[#667085] hover:bg-[#edf3ff] hover:text-[#2b5cf0]"}`}>
 							<Inbox size={17} /> Inquiries
-							{newInquiryCount > 0 && (
-								<span
-									className="flex h-5 min-w-5 items-center justify-center rounded-full bg-red-600 px-1.5 text-[10px] font-bold leading-4 text-white"
-									aria-label={`${newInquiryCount} new inquiries`}
-								>
-									{newInquiryCount}
-								</span>
-							)}
+							{newInquiryCount > 0 && <span className={`rounded-full px-2 py-0.5 text-[11px] font-bold ${activeSection === "inquiries" ? "bg-white text-[#2b5cf0]" : "bg-[#e5484d] text-white"}`} aria-label={`${newInquiryCount} new inquiries`}>{newInquiryCount}</span>}
 						</button>
 					</nav>
 
 					{activeSection === "users" ? (
 						<>
-							<div className="mb-4 grid gap-3 md:grid-cols-[minmax(240px,1.45fr)_0.9fr_0.9fr_1fr_auto] md:gap-3">
+							<div className="mb-4 flex flex-wrap gap-3">
 								<div className="relative">
-									<Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#888888]" />
+									<Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#667085]" />
 									<input
 										type="search"
 										value={search}
 										onChange={(event) => setSearch(event.target.value)}
 										placeholder="Search email or name"
-										className="h-11 w-full rounded-lg border border-[#dddddd] pl-11 pr-4 text-sm outline-none placeholder:text-[#777777] focus:border-[#1775ee] focus:ring-2 focus:ring-[#1775ee]/20"
+										className="h-11 w-full min-w-[240px] rounded-[14px] border border-[#e3e9f4] bg-white pl-11 pr-4 text-sm outline-none placeholder:text-[#667085] focus:border-[#2b5cf0] focus:ring-2 focus:ring-[#2b5cf0]/15 sm:flex-1"
 									/>
 								</div>
-								<select value={status} onChange={(event) => setStatus(event.target.value)} className="h-11 rounded-lg border border-[#dddddd] px-4 text-sm outline-none focus:border-[#1775ee]">
+								<select value={status} onChange={(event) => setStatus(event.target.value)} className="h-11 min-w-[150px] rounded-[14px] border border-[#e3e9f4] bg-white px-4 text-sm text-[#667085] outline-none focus:border-[#2b5cf0]">
 									<option>All statuses</option>
 									<option>Active</option>
 									<option>Inactive</option>
 									<option>Suspended</option>
 								</select>
-								<select value={role} onChange={(event) => setRole(event.target.value)} className="h-11 rounded-lg border border-[#dddddd] px-4 text-sm outline-none focus:border-[#1775ee]">
+								<select value={role} onChange={(event) => setRole(event.target.value)} className="h-11 min-w-[140px] rounded-[14px] border border-[#e3e9f4] bg-white px-4 text-sm text-[#667085] outline-none focus:border-[#2b5cf0]">
 									<option>All roles</option>
 									<option>Member</option>
 									<option>Admin</option>
 								</select>
-								<select value={subject} onChange={(event) => setSubject(event.target.value)} className="h-11 rounded-lg border border-[#dddddd] px-4 text-sm outline-none focus:border-[#1775ee]">
+								<select value={subject} onChange={(event) => setSubject(event.target.value)} className="h-11 min-w-[150px] rounded-[14px] border border-[#e3e9f4] bg-white px-4 text-sm text-[#667085] outline-none focus:border-[#2b5cf0]">
 									<option>All subjects</option>
 									<option>ECE Review</option>
 									<option>Networking</option>
 									<option>Cybersecurity</option>
 								</select>
-								<button type="button" onClick={exportUsers} title="Export users" aria-label="Export users" className="flex h-11 items-center justify-center rounded-lg border border-[#dddddd] px-4 text-[#555555] transition hover:border-[#1775ee] hover:text-[#1775ee]"><Download size={18} /></button>
+								<button type="button" onClick={exportUsers} title="Export users" aria-label="Export users" className="flex h-11 items-center justify-center gap-2 rounded-full border-[1.5px] border-[#2b5cf0] px-5 text-sm font-semibold text-[#2b5cf0] transition hover:bg-[#edf3ff]"><Download size={17} /><span>Export CSV</span></button>
 							</div>
 
 							{selectedCount > 0 && (
-								<div className="mb-4 flex flex-wrap items-center gap-3 rounded-lg bg-[#eef5ff] px-4 py-3 text-sm text-[#145bb7]">
+								<div className="mb-4 flex flex-wrap items-center gap-4 rounded-[14px] border border-[#cddcff] bg-[#edf3ff] px-4 py-3 text-sm text-[#334155]">
 									<strong>{selectedCount} selected</strong>
-									<button type="button" onClick={() => suspendUsers(selectedUsers)} className="flex items-center gap-1 rounded-md border border-[#b8d5ff] bg-white px-3 py-1.5 font-semibold hover:bg-blue-50"><UserMinus size={15} /> Suspend</button>
-									<button type="button" onClick={() => removeUsers(selectedUsers)} className="flex items-center gap-1 rounded-md border border-red-200 bg-white px-3 py-1.5 font-semibold text-red-600 hover:bg-red-50"><Trash2 size={15} /> Delete</button>
-									<button type="button" onClick={() => setSelectedUsers([])} title="Clear selection" aria-label="Clear selection" className="ml-auto p-1 hover:text-[#0d4084]"><X size={18} /></button>
+									<button type="button" onClick={() => suspendUsers(selectedUsers)} className="flex items-center gap-1 font-semibold text-[#2b5cf0] hover:underline"><UserMinus size={15} /> Suspend</button>
+									<button type="button" onClick={() => removeUsers(selectedUsers)} className="flex items-center gap-1 font-semibold text-[#e5484d] hover:underline"><Trash2 size={15} /> Delete</button>
+									<button type="button" onClick={() => setSelectedUsers([])} title="Clear selection" aria-label="Clear selection" className="ml-auto rounded-md p-1 text-[#667085] hover:bg-white"><X size={18} /></button>
 								</div>
 							)}
 
-							<div className="overflow-x-auto border border-[#dddddd] px-3 sm:px-4">
-								<table className="w-full min-w-[760px] border-collapse text-left text-xs">
+							<div className="overflow-x-auto rounded-[18px] border border-[#e3e9f4]">
+								<table className="w-full min-w-[760px] border-collapse text-left text-sm">
 									<thead>
-										<tr className="h-10 border-b border-[#cccccc]">
-											<th className="w-8"><input type="checkbox" checked={allVisibleSelected} onChange={toggleAll} aria-label="Select all users" /></th>
-											<th><button type="button" onClick={() => sortBy("name")} className="flex items-center gap-1 font-semibold">Name {sortConfig.key === "name" && (sortConfig.direction === "asc" ? <ArrowUp size={14} /> : <ArrowDown size={14} />)}</button></th>
-											<th>Status</th>
-											<th>Role</th>
-											<th>Enrolled subject</th>
-											<th><button type="button" onClick={() => sortBy("lastActive")} className="flex items-center gap-1 font-semibold">Last active {sortConfig.key === "lastActive" && (sortConfig.direction === "asc" ? <ArrowUp size={14} /> : <ArrowDown size={14} />)}</button></th>
-											<th className="w-20">Actions</th>
+										<tr className="h-12 border-b border-[#e3e9f4] bg-[#f8faff] text-xs text-[#667085]">
+											<th className="w-12 px-3 sm:px-4"><input type="checkbox" checked={allVisibleSelected} onChange={toggleAll} aria-label="Select all users" className="h-4 w-4 rounded border-[#b5c1d6] accent-[#2b5cf0]" /></th>
+											<th className="px-3 py-3 sm:px-4"><button type="button" onClick={() => sortBy("name")} className="flex items-center gap-1 font-semibold">Name {sortConfig.key === "name" && (sortConfig.direction === "asc" ? <ArrowUp size={14} /> : <ArrowDown size={14} />)}</button></th>
+											<th className="px-3 py-3 font-semibold sm:px-4">Status</th>
+											<th className="px-3 py-3 font-semibold sm:px-4">Role</th>
+											<th className="px-3 py-3 font-semibold sm:px-4">Enrolled subject</th>
+											<th className="px-3 py-3 sm:px-4"><button type="button" onClick={() => sortBy("lastActive")} className="flex items-center gap-1 font-semibold">Last active {sortConfig.key === "lastActive" && (sortConfig.direction === "asc" ? <ArrowUp size={14} /> : <ArrowDown size={14} />)}</button></th>
+											<th className="w-20 px-3 py-3 font-semibold sm:px-4">Actions</th>
 										</tr>
 									</thead>
 									<tbody>
 										{filteredUsers.map((user) => (
-											<tr key={user.name} className="border-b border-[#cccccc] last:border-b-0">
-												<td><input type="checkbox" checked={selectedUsers.includes(user.name)} onChange={() => toggleUser(user.name)} aria-label={`Select ${user.name}`} /></td>
-												<td className="py-2">
-													<div className="flex items-center gap-3"><span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#d9eaff] text-xs font-bold text-[#1e5ba6]">{initials(user.name)}</span><span><span className="block font-semibold text-[#202020]">{user.name}</span>
-														<div className="text-[10px] font-normal text-[#8a8a8a]">{user.email}</div>
+											<tr key={user.name} className="border-b border-[#eef2f9] transition-colors last:border-b-0 hover:bg-[#fbfcff]">
+												<td className="px-3 py-3 sm:px-4"><input type="checkbox" checked={selectedUsers.includes(user.name)} onChange={() => toggleUser(user.name)} aria-label={`Select ${user.name}`} className="h-4 w-4 rounded border-[#b5c1d6] accent-[#2b5cf0]" /></td>
+												<td className="px-3 py-3 sm:px-4">
+													<div className="flex items-center gap-3"><span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#2b5cf0] text-xs font-semibold text-white">{initials(user.name)}</span><span><span className="block font-semibold leading-tight text-[#0f172a]">{user.name}</span>
+														<div className="mt-0.5 text-xs font-normal text-[#667085]">{user.email}</div>
 													</span></div>
 												</td>
-												<td><span className={`rounded-full px-2 py-1 ${user.status === "Active" ? "bg-[#ccefcf] text-[#23752a]" : user.status === "Suspended" ? "bg-[#ffd8d8] text-[#a52b2b]" : "text-[#555555]"}`}>{user.status}</span></td>
-												<td><span className={`rounded-full px-2 py-1 ${user.role === "Admin" ? "bg-[#e3dcff] text-[#5941b2]" : "text-[#555555]"}`}>{user.role}</span></td>
-												<td>{user.enrolledSubject}</td>
-												<td>{user.lastActive}</td>
-												<td><div className="flex items-center gap-3 text-[#777777]"><button type="button" title={`Edit ${user.name}`} aria-label={`Edit ${user.name}`} className="hover:text-[#1775ee]"><Pencil size={16} /></button><button type="button" onClick={() => removeUsers([user.name])} title={`Delete ${user.name}`} aria-label={`Delete ${user.name}`} className="hover:text-red-600"><Trash2 size={16} /></button></div></td>
+												<td className="px-3 py-3 sm:px-4"><span className={`before:mr-2 before:inline-block before:h-2 before:w-2 before:rounded-full ${user.status === "Active" ? "text-[#0f172a] before:bg-[#12a150]" : user.status === "Suspended" ? "text-[#0f172a] before:bg-[#e5484d]" : "text-[#667085] before:bg-[#94a3b8]"}`}>{user.status}</span></td>
+												<td className="px-3 py-3 sm:px-4"><span className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${user.role === "Admin" ? "bg-[#fff0e0] text-[#b4520a]" : "bg-[#e8efff] text-[#2b5cf0]"}`}>{user.role}</span></td>
+												<td className="px-3 py-3 text-[#334155] sm:px-4">{user.enrolledSubject}</td>
+												<td className="whitespace-nowrap px-3 py-3 text-[#667085] sm:px-4">{user.lastActive}</td>
+												<td className="px-3 py-3 sm:px-4"><div className="flex items-center gap-3 text-[#667085]"><button type="button" title={`Edit ${user.name}`} aria-label={`Edit ${user.name}`} className="transition hover:text-[#2b5cf0]"><Pencil size={16} /></button><button type="button" onClick={() => removeUsers([user.name])} title={`Delete ${user.name}`} aria-label={`Delete ${user.name}`} className="transition hover:text-[#e5484d]"><Trash2 size={16} /></button></div></td>
 											</tr>
 										))}
 										{filteredUsers.length === 0 && (
-											<tr><td colSpan="7" className="h-16 text-center font-normal">No users found</td></tr>
+											<tr><td colSpan="7" className="h-20 text-center text-sm text-[#667085]">No users found</td></tr>
 										)}
 									</tbody>
 								</table>
 							</div>
-							<div className="flex items-center justify-between border-t border-[#dddddd] px-1 pt-4 text-xs text-[#777777]"><span>Showing {filteredUsers.length} of {userRows.length} users</span><span>Page 1 of 1</span></div>
+							<div className="flex items-center justify-between border-t border-[#e3e9f4] px-1 pt-4 text-xs text-[#667085]"><span>Showing {filteredUsers.length} of {userRows.length} users</span><span>Page 1 of 1</span></div>
 						</>
 					) : (
 						<section aria-label="Website inquiries">

@@ -157,15 +157,15 @@ export default function Blank() {
 						</div>
 						<div className="grid min-w-0 gap-7 sm:grid-cols-2">
 							{visibleCourses.map((course, index) => (
-								<article key={course.path} className={`fade-in-up-stagger group flex min-w-0 min-h-[25rem] flex-col overflow-hidden rounded-2xl border bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl ${course.path.startsWith("/training/cisco/ccna/") ? "border-slate-200 hover:border-[#8bb8bf]" : "border-slate-200"}`} style={{ "--fade-delay": 150 + index * 75 }}>
+								<article key={course.path} className="fade-in-up-stagger group flex min-w-0 min-h-[25rem] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:border-[#1775EE] hover:shadow-xl" style={{ "--fade-delay": 150 + index * 75 }}>
 									<div className="flex h-44 items-center justify-center bg-slate-50 p-7">
 										<img src={course.image} alt={`${course.name} certification`} className="h-full max-w-[13rem] object-contain transition duration-300 group-hover:scale-105" />
 									</div>
 									<div className="flex flex-1 flex-col p-5">
-										<p className={`mb-2 text-xs font-bold uppercase tracking-[0.14em] ${course.path.startsWith("/training/cisco/ccna/") ? "text-[#005b6b]" : "text-[#087ff5]"}`}>{course.category}</p>
+										<p className="mb-2 text-xs font-bold uppercase tracking-[0.14em] text-[#1775EE]">{course.category}</p>
 										<h3 className="break-words text-xl font-bold text-slate-950">{course.name}</h3>
 										<p className="mt-3 flex-1 text-sm leading-6 text-slate-600">{course.description}</p>
-										<Link to={course.name === "CCNA" ? "/modules/programs/ccna" : course.path} className={`mt-5 flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold text-white transition ${course.path.startsWith("/training/cisco/ccna/") ? "bg-[#005b6b] hover:bg-[#004653]" : "bg-[#087ff5] hover:bg-[#0062e0]"}`}>
+										<Link to={course.name === "CCNA" ? "/modules/programs/ccna" : course.path} className="mt-5 flex items-center justify-center gap-2 rounded-lg bg-[#1775EE] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#1262c9]">
 											View Program <ArrowRight size={16} />
 										</Link>
 									</div>
