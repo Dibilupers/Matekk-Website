@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowDown, ArrowUp, ChevronDown, Download, Inbox, Pencil, Plus, Search, Trash2, UserMinus, Users, X } from "lucide-react";
 import CrestLogo from "../assets/MATEKK_tab_logo.webp";
 import API_URL from "../config/api";
@@ -30,12 +30,15 @@ export default function UsersDashboard() {
 	const [inquiries, setInquiries] = useState([]);
 	const [inquiriesLoading, setInquiriesLoading] = useState(true);
 	const [inquiriesError, setInquiriesError] = useState("");
+	const [newInquiryCount, setNewInquiryCount] = useState(0);
+	const [inquiryNotification, setInquiryNotification] = useState("");
 	const [inquirySearch, setInquirySearch] = useState("");
 	const [inquiryStatus, setInquiryStatus] = useState("All statuses");
 	const [expandedInquiryId, setExpandedInquiryId] = useState(null);
 	const [selectedUsers, setSelectedUsers] = useState([]);
 	const [sortConfig, setSortConfig] = useState({ key: "name", direction: "asc" });
 	const [activeSection, setActiveSection] = useState("users");
+	const knownInquiryIds = useRef(new Set());
 
 	useEffect(() => {
 		fetch(`${API_URL}/users`)
@@ -51,31 +54,53 @@ export default function UsersDashboard() {
 
 	useEffect(() => {
 		const controller = new AbortController();
+		let timeoutId;
+		let hasLoadedInquiries = false;
 
-		fetch(`${API_URL}/inquires`, { signal: controller.signal })
-			.then((response) => {
+		const loadInquiries = async () => {
+			try {
+				const response = await fetch(`${API_URL}/inquires`, { signal: controller.signal });
 				if (!response.ok) {
 					throw new Error("Failed to load inquiries.");
 				}
-				return response.json();
-			})
-			.then((data) => {
+				const data = await response.json();
 				if (!Array.isArray(data)) {
 					throw new Error("The inquiry response was not a list.");
 				}
+
+				if (hasLoadedInquiries) {
+					const newInquiries = data.filter((inquiry) => !knownInquiryIds.current.has(inquiry.id));
+					if (newInquiries.length > 0) {
+						setNewInquiryCount((count) => count + newInquiries.length);
+						setInquiryNotification(
+							newInquiries.length === 1
+								? `${newInquiries[0].name} sent a new inquiry.`
+								: `${newInquiries.length} new inquiries received.`,
+						);
+					}
+				}
+				data.forEach((inquiry) => knownInquiryIds.current.add(inquiry.id));
+				hasLoadedInquiries = true;
 				setInquiries(data);
 				setInquiriesError("");
-			})
-			.catch((error) => {
+			} catch (error) {
 				if (error.name !== "AbortError") {
 					setInquiriesError(error.message || "Unable to load inquiries.");
 				}
-			})
-			.finally(() => {
-				if (!controller.signal.aborted) setInquiriesLoading(false);
-			});
+			} finally {
+				if (!controller.signal.aborted) {
+					setInquiriesLoading(false);
+					timeoutId = window.setTimeout(loadInquiries, 15_000);
+				}
+			}
+		};
 
-		return () => controller.abort();
+		loadInquiries();
+
+		return () => {
+			controller.abort();
+			window.clearTimeout(timeoutId);
+		};
 	}, []);
 
 	/* User Statistics */
@@ -176,9 +201,24 @@ export default function UsersDashboard() {
 	const allVisibleSelected = filteredUsers.length > 0 && filteredUsers.every((user) => selectedUsers.includes(user.name));
 	const initials = (name) => name.split(" ").map((part) => part[0]).slice(0, 2).join("");
 	const selectedCount = selectedUsers.length;
+	const showInquiries = () => {
+		setActiveSection("inquiries");
+		setNewInquiryCount(0);
+		setInquiryNotification("");
+	};
 
 	return (
 		<main className="min-h-screen w-full overflow-x-hidden bg-[#e9e9e9] p-3 font-poppins text-[#666666] sm:p-6 lg:p-0">
+			{inquiryNotification && (
+				<div role="status" aria-live="polite" className="fixed bottom-5 right-5 z-50 flex max-w-sm items-start gap-4 rounded-lg bg-[#145bb7] px-5 py-4 text-sm text-white shadow-xl">
+					<div className="flex-1">
+						<p className="font-semibold">New inquiry</p>
+						<p className="mt-1">{inquiryNotification}</p>
+						<button type="button" onClick={showInquiries} className="mt-3 font-semibold underline underline-offset-2 hover:text-blue-100">View inquiries</button>
+					</div>
+					<button type="button" onClick={() => setInquiryNotification("")} aria-label="Dismiss inquiry notification" className="rounded p-1 hover:bg-white/10"><X size={16} /></button>
+				</div>
+			)}
 			<section className="mx-auto min-h-screen w-full max-w-none overflow-hidden border border-[#8e8e8e] bg-white shadow-sm lg:border-0">
 				<header className="relative flex min-h-[92px] items-center gap-4 bg-[#1775ee] px-5 py-4 text-white sm:gap-6 sm:px-8 lg:min-h-[168px] lg:px-12">
 					<div className="-ml-8 flex h-[108px] w-[108px] shrink-0 items-center justify-center rounded-full bg-white sm:-ml-14 sm:h-[124px] sm:w-[124px]">
@@ -215,8 +255,16 @@ export default function UsersDashboard() {
 						<button type="button" onClick={() => setActiveSection("users")} className={`flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition ${activeSection === "users" ? "bg-[#1775ee] text-white" : "text-[#666666] hover:bg-[#eef5ff] hover:text-[#145bb7]"}`}>
 							<Users size={17} /> Users
 						</button>
-						<button type="button" onClick={() => setActiveSection("inquiries")} className={`flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition ${activeSection === "inquiries" ? "bg-[#1775ee] text-white" : "text-[#666666] hover:bg-[#eef5ff] hover:text-[#145bb7]"}`}>
+						<button type="button" onClick={showInquiries} className={`flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition ${activeSection === "inquiries" ? "bg-[#1775ee] text-white" : "text-[#666666] hover:bg-[#eef5ff] hover:text-[#145bb7]"}`}>
 							<Inbox size={17} /> Inquiries
+							{newInquiryCount > 0 && (
+								<span
+									className="flex h-5 min-w-5 items-center justify-center rounded-full bg-red-600 px-1.5 text-[10px] font-bold leading-4 text-white"
+									aria-label={`${newInquiryCount} new inquiries`}
+								>
+									{newInquiryCount}
+								</span>
+							)}
 						</button>
 					</nav>
 

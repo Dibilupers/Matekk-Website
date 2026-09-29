@@ -21,6 +21,13 @@ const FUNDING_OPTIONS = [
 const COURSE_LABELS = FLAT_COURSES.map((c) => c.label);
 const DEFAULT_COURSE = COURSE_LABELS[0] ?? "";
 
+const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+const isValidMobileNumber = (value) => {
+  const trimmedValue = value.trim();
+  const digits = trimmedValue.replace(/\D/g, "");
+  return /^\+?[0-9\s()-]+$/.test(trimmedValue) && digits.length >= 7 && digits.length <= 15;
+};
+
 const SERVICE_INTEREST_OPTIONS = ["IT Consultancy", "Software Development", "Both"];
 
 const PROJECT_SCALE_OPTIONS = [
@@ -125,8 +132,9 @@ function useEnrollForm(onClose, initialStep = 0, initialInquiryType = null, pres
     if (!trainingForm.attendees || isNaN(trainingForm.attendees) || Number(trainingForm.attendees) < 1)
       e.attendees = "Enter a valid number of attendees.";
     if (!trainingForm.name.trim()) e.name = "Name or company is required.";
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trainingForm.email)) e.email = "Enter a valid email address.";
-    if (!trainingForm.phone.trim()) e.phone = "Phone number is required.";
+    if (!isValidEmail(trainingForm.email)) e.email = "Enter a valid email address.";
+    if (!trainingForm.phone.trim()) e.phone = "Mobile number is required.";
+    else if (!isValidMobileNumber(trainingForm.phone)) e.phone = "Enter a valid mobile number.";
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -143,8 +151,9 @@ function useEnrollForm(onClose, initialStep = 0, initialInquiryType = null, pres
   const validateSolutionsStep1 = () => {
     const e = {};
     if (!solutionsForm.name.trim()) e.name = "Name or company is required.";
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(solutionsForm.email)) e.email = "Enter a valid email address.";
-    if (!solutionsForm.phone.trim()) e.phone = "Phone number is required.";
+    if (!isValidEmail(solutionsForm.email)) e.email = "Enter a valid email address.";
+    if (!solutionsForm.phone.trim()) e.phone = "Mobile number is required.";
+    else if (!isValidMobileNumber(solutionsForm.phone)) e.phone = "Enter a valid mobile number.";
     setErrors(e);
     return Object.keys(e).length === 0;
   };
