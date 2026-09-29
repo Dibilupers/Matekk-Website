@@ -5,8 +5,7 @@ import { AppService } from './app.service.js';
 import { AuthModule } from './auth/auth.module.js';
 import { UsersModule } from './users/users.module.js';
 import { InquiresModule } from './inquires/inquires.module.js';
-import { InquiresService } from './inquires/inquires.service.js';
-import { PrismaModule } from '../prisma/prisma.module.js';
+import { PrismaModule } from './prisma/prisma.module.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -25,6 +24,6 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     PrismaModule,
   ],
   controllers: [AppController],
-  providers: [AppService, InquiresService],
+  providers: [AppService],
 })
 export class AppModule { }
