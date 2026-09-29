@@ -118,6 +118,7 @@ if ("scrollRestoration" in history) {
 export default function App() {
   const location = useLocation();
   const isCCNALesson = location.pathname === "/modules/programs/ccna/lesson";
+  const isAdminPage = location.pathname === "/admin";
 
   return (
     <>
@@ -351,7 +352,7 @@ export default function App() {
       </Routes>
 
 
-      {!isCCNALesson && <Footer />}
+      {!isCCNALesson && !isAdminPage && <Footer />}
     </>
   );
 }
