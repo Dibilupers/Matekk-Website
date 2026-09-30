@@ -7,6 +7,7 @@
   "license": "UNLICENSED",
   "type": "module",
   "scripts": {
+    "dev": "npm run start:dev",
     "prisma:generate": "prisma generate",
     "prebuild": "npm run prisma:generate",
     "build": "nest build",

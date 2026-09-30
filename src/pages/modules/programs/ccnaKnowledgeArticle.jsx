@@ -1,5 +1,11 @@
 import { ChevronDown, ChevronLeft, ChevronRight, Clock, Folder, Search } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
+import OsiVsTcpIpImage from "../../../assets/tcp-udp/osi-vs-tcpip.png";
+import TcpThreeWayHandshakeImage from "../../../assets/tcp-udp/tcp-three-way-handshake.png";
+import TcpHandshakeExampleImage from "../../../assets/tcp-udp/tcp-handshake-example.png";
+import TcpConnectionTerminationImage from "../../../assets/tcp-udp/tcp-connection-termination.png";
+import TcpPortMultiplexingImage from "../../../assets/tcp-udp/tcp-port-multiplexing.png";
+import TcpSourceDestinationPortsImage from "../../../assets/tcp-udp/tcp-source-destination-ports.png";
 import VlanWithoutSegmentationImage from "../../../assets/ccna-vlan/vlan-without-segmentation.svg";
 import VlanDepartmentBenefitsImage from "../../../assets/ccna-vlan/vlan-department-benefits.svg";
 import VlanTrunkIdImage from "../../../assets/ccna-vlan/vlan-trunk-id.svg";
@@ -932,7 +938,7 @@ function TcpUdpPageOne() {
 					“always faster”: performance depends on the network and the needs of the application.
 				</p>
 				<TransportDiagramImage
-					src="/images/tcp-udp/osi-vs-tcpip.png"
+					src={OsiVsTcpIpImage}
 					alt="Diagram comparing the seven-layer OSI model with the four-layer TCP/IP model and showing TCP and UDP at the Transport layer."
 					caption="The TCP/IP model groups OSI responsibilities into four broader layers."
 				/>
@@ -978,7 +984,7 @@ function TcpUdpPageOne() {
 					one sequence number, which is why the acknowledgement is the starting sequence plus one.
 				</p>
 				<TransportDiagramImage
-					src="/images/tcp-udp/tcp-three-way-handshake.png"
+					src={TcpThreeWayHandshakeImage}
 					alt="TCP three-way handshake between Host A and Host B: SYN, SYN-ACK, and ACK, establishing a connection."
 					caption="TCP establishes a connection with SYN, SYN-ACK, and ACK."
 				/>
@@ -988,7 +994,7 @@ function TcpUdpPageOne() {
 					hosts and are not necessarily small or predictable values.
 				</p>
 				<TransportDiagramImage
-					src="/images/tcp-udp/tcp-handshake-example.png"
+					src={TcpHandshakeExampleImage}
 					alt="TCP handshake example: Host A sends SYN sequence 100, Host B replies with sequence 300 and acknowledgement 101, then Host A acknowledges 301."
 					caption="Example initial sequence numbers show how each acknowledgement confirms the next expected sequence."
 				/>
@@ -1003,7 +1009,7 @@ function TcpUdpPageOne() {
 					flags in some situations, so not every capture has exactly four separate packets.
 				</p>
 				<TransportDiagramImage
-					src="/images/tcp-udp/tcp-connection-termination.png"
+					src={TcpConnectionTerminationImage}
 					alt="TCP connection termination between Host A and Host B using FIN, ACK, FIN, and ACK."
 					caption="A common graceful TCP close uses FIN, ACK, FIN, and ACK."
 				/>
@@ -1738,12 +1744,12 @@ function TcpUdpPageTwo() {
 					service port such as 443 for HTTPS or 25 for SMTP.
 				</p>
 				<TransportDiagramImage
-					src="/images/tcp-udp/tcp-port-multiplexing.png"
+					src={TcpPortMultiplexingImage}
 					alt="A laptop uses separate TCP source ports for web browsing, email, and FTP connections to their respective servers."
 					caption="Distinct source and destination ports keep simultaneous application connections separate."
 				/>
 				<TransportDiagramImage
-					src="/images/tcp-udp/tcp-source-destination-ports.png"
+					src={TcpSourceDestinationPortsImage}
 					alt="TCP request and response between a laptop and web server, using source port 50000 and destination port 80, then reversing the ports in the response."
 					caption="The response uses the original destination port as its source and the client's source port as its destination."
 				/>
