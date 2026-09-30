@@ -1,12 +1,14 @@
 import { ChevronDown, Clock, Folder, Search } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CcnaKnowledgeModuleOne from "./ccnaKnowledgeModule1";
 import CcnaKnowledgeModuleTwo from "./ccnaKnowledgeModule2";
 import CcnaKnowledgeModuleThree from "./ccnaKnowledgeModule3";
 import CcnaKnowledgeModuleFour from "./ccnaKnowledgeModule4";
 import CcnaKnowledgeModuleFive from "./ccnaKnowledgeModule5";
 import CcnaKnowledgeModuleSix from "./ccnaKnowledgeModule6";
+import { markCcnaTutorialOpened } from "../../../../utils/ccnaTutorialProgress";
+import { useAuth } from "../../../../context/AuthContext";
 
 const ccnaModuleOneSlugs = new Set([
 	"spine-leaf-architecture-tutorial",
@@ -560,7 +562,10 @@ function TutorialSidebar({ activeSlug }) {
 }
 
 export default function CCNAKnowledgeArticle() {
+	const { profile } = useAuth();
 	const { articleSlug = "spine-leaf-architecture-tutorial" } = useParams();
+	const userId = profile?.userId;
+	const lessonEndRef = useRef(null);
 	const vlanArticleSlug = "virtual-local-area-network-vlan-tutorial";
 	const aaaArticleSlug = "aaa-tacacs+-and-radius-tutorial";
 	const canonicalArticleSlug = articleSlug === "virtual-local-area-networks-(vlans)"
@@ -568,6 +573,25 @@ export default function CCNAKnowledgeArticle() {
 		: articleSlug === "aaa-tacacs-and-radius-tutorial"
 			? aaaArticleSlug
 			: articleSlug;
+	useEffect(() => {
+		if (!userId) return undefined;
+
+		let previousScrollY = window.scrollY;
+		const markLessonCompleteAtEnd = () => {
+			const currentScrollY = window.scrollY;
+			if (currentScrollY > previousScrollY) {
+				const lessonEnd = lessonEndRef.current?.getBoundingClientRect();
+				if (lessonEnd && lessonEnd.top <= window.innerHeight) {
+					markCcnaTutorialOpened(userId, canonicalArticleSlug);
+					window.removeEventListener("scroll", markLessonCompleteAtEnd);
+				}
+			}
+			previousScrollY = currentScrollY;
+		};
+
+		window.addEventListener("scroll", markLessonCompleteAtEnd, { passive: true });
+		return () => window.removeEventListener("scroll", markLessonCompleteAtEnd);
+	}, [canonicalArticleSlug, userId]);
 	const article = articles[articleSlug]
 		|| (articleSlug === vlanArticleSlug ? articles["virtual-local-area-networks-(vlans)"] : undefined)
 		|| (articleSlug === "aaa-tacacs-and-radius-tutorial" ? articles[aaaArticleSlug] : undefined)
@@ -610,6 +634,7 @@ export default function CCNAKnowledgeArticle() {
 						) : (
 							<CcnaKnowledgeModuleFour article={article} />
 						)}
+						<div ref={lessonEndRef} aria-hidden="true" className="h-px" />
 						<div className="mt-7 flex flex-wrap gap-3">{article.tags.map((tag) => <span key={tag} className="rounded-full border border-[#d6e5e7] bg-[#f5f9f9] px-4 py-2 text-sm text-[#3d5c88]">{tag}</span>)}</div>
 					</article>
 					<TutorialSidebar activeSlug={canonicalArticleSlug} />

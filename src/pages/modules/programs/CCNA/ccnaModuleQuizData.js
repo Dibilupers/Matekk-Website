@@ -1,4 +1,6 @@
-export const CCNA_MODULE_QUIZZES = [
+import { CCNA_MODULE_QUIZ_EXTRA_QUESTIONS } from "./ccnaModuleQuizExtraData.js";
+
+const baseModuleQuizzes = [
 	{
 		number: "1.0",
 		title: "Network Fundamentals",
@@ -68,6 +70,12 @@ export const CCNA_MODULE_QUIZZES = [
 				options: ["Every user-facing access port", "Only the authorized server or relay-facing path", "All ports in the default VLAN", "Only ports with port security disabled"],
 				answer: 1,
 				explanation: "Trust only the interface through which authorized DHCP server replies enter; keep client-facing ports untrusted.",
+			},
+			{
+				prompt: "Which VTP mode can create and advertise VLAN changes while keeping a local VLAN database?",
+				options: ["Client", "Server", "Transparent", "Access"],
+				answer: 1,
+				explanation: "A VTP server can create, modify, and advertise VLAN information for its VTP domain.",
 			},
 		],
 	},
@@ -172,6 +180,12 @@ export const CCNA_MODULE_QUIZZES = [
 				explanation: "SSH encrypts credentials and session traffic; Telnet sends them in clear text.",
 			},
 			{
+				prompt: "What is a security benefit of multi-factor authentication?",
+				options: ["It requires evidence from more than one authentication factor", "It removes the need to identify users", "It encrypts all network traffic automatically", "It replaces authorization and accounting"],
+				answer: 0,
+				explanation: "Multi-factor authentication combines different factor types, making a stolen password alone less likely to grant access.",
+			},
+			{
 				prompt: "What does Dynamic ARP Inspection use to validate ARP messages in a common deployment?",
 				options: ["DHCP snooping bindings", "NTP associations", "OSPF neighbors", "DNS cache entries"],
 				answer: 0,
@@ -216,3 +230,11 @@ export const CCNA_MODULE_QUIZZES = [
 		],
 	},
 ];
+
+export const CCNA_MODULE_QUIZZES = baseModuleQuizzes.map((quiz) => ({
+	...quiz,
+	questions: [
+		...quiz.questions,
+		...(CCNA_MODULE_QUIZ_EXTRA_QUESTIONS[quiz.number] ?? []),
+	],
+}));

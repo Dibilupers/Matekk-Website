@@ -16,6 +16,14 @@ import AwsLogo from "../assets/awspractitioner.webp";
 import ItilLogo from "../assets/itil5.webp";
 import ProjectManagementLogo from "../assets/project_management_professional.webp";
 
+const PROGRAM_INTROS = [
+	"Explore practical ICT training programs designed to help you grow with confidence.",
+	"Build in-demand technology skills with training programs designed for your next step.",
+	"Discover hands-on ICT courses and grow your confidence for the future of technology.",
+	"Find the right training program to strengthen your skills and move your career forward.",
+	"Explore technology courses that turn your curiosity into practical, career-ready skills.",
+];
+
 const categoryLogos = {
 	Cisco: CCNALogo,
 	CompTIA: APlusLogo,
@@ -67,6 +75,10 @@ export default function Blank() {
 	const [loadedProfile, setLoadedProfile] = useState(null);
 	const [profileError, setProfileError] = useState("");
 	const profile = sessionProfile ?? loadedProfile;
+	const hasProfile = profile !== null;
+	const [introText] = useState(() => PROGRAM_INTROS[Math.floor(Math.random() * PROGRAM_INTROS.length)]);
+	const [typedUsername, setTypedUsername] = useState("");
+	const [typedIntro, setTypedIntro] = useState("");
 	const enrolledCourses = useMemo(
 		() => getCoursesForEnrollment([profile?.module_enrolled, profile?.course_enrolled]),
 		[profile?.module_enrolled, profile?.course_enrolled],
@@ -80,6 +92,73 @@ export default function Blank() {
 	const selectCategory = (category) => {
 		setActiveCategory(category);
 	};
+
+	useEffect(() => {
+		if (!profile?.username) return undefined;
+
+		const welcomeText = String(profile.username);
+		let timeoutId;
+		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+			timeoutId = window.setTimeout(() => setTypedUsername(welcomeText), 0);
+			return () => window.clearTimeout(timeoutId);
+		}
+
+		let usernameIndex = 0;
+
+		function startTyping() {
+			setTypedUsername("");
+			timeoutId = window.setTimeout(typeUsername, 65);
+		}
+
+		function typeUsername() {
+			usernameIndex += 1;
+			setTypedUsername(welcomeText.slice(0, usernameIndex));
+			if (usernameIndex < welcomeText.length) {
+				timeoutId = window.setTimeout(typeUsername, 65);
+			}
+		}
+
+		timeoutId = window.setTimeout(startTyping, 120);
+		return () => window.clearTimeout(timeoutId);
+	}, [profile?.username]);
+
+	useEffect(() => {
+		if (!hasProfile) return undefined;
+
+		let timeoutId;
+		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+			timeoutId = window.setTimeout(() => setTypedIntro(introText), 0);
+			return () => window.clearTimeout(timeoutId);
+		}
+
+		let introIndex = PROGRAM_INTROS.indexOf(introText);
+		let characterIndex = 0;
+
+		function typeIntro() {
+			const description = PROGRAM_INTROS[introIndex];
+			characterIndex += 1;
+			setTypedIntro(description.slice(0, characterIndex));
+			if (characterIndex < description.length) {
+				timeoutId = window.setTimeout(typeIntro, 18);
+			} else {
+				timeoutId = window.setTimeout(eraseIntro, 10000);
+			}
+		}
+
+		function eraseIntro() {
+			characterIndex -= 1;
+			setTypedIntro(PROGRAM_INTROS[introIndex].slice(0, characterIndex));
+			if (characterIndex > 0) {
+				timeoutId = window.setTimeout(eraseIntro, 8);
+			} else {
+				introIndex = (introIndex + 1) % PROGRAM_INTROS.length;
+				timeoutId = window.setTimeout(typeIntro, 120);
+			}
+		}
+
+		timeoutId = window.setTimeout(typeIntro, 150);
+		return () => window.clearTimeout(timeoutId);
+	}, [introText, hasProfile]);
 
 	useEffect(() => {
 		const accessToken = localStorage.getItem("accessToken");
@@ -125,8 +204,12 @@ export default function Blank() {
 				<div className="fade-in-up mb-10 max-w-2xl">
 					<div>
 						<p className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-[#087ff5]">MATEKK Training Academy</p>
-						<h1 className="text-3xl font-bold text-slate-950 sm:text-4xl">Welcome, {profile.username}</h1>
-						<p className="mt-3 text-slate-600">Explore practical ICT training programs designed to help you grow with confidence.</p>
+						<h1 className="text-3xl font-bold text-slate-950 sm:text-4xl">
+							Welcome, <span className={typedUsername.length < String(profile.username).length ? "typewriter-caret" : ""}>{typedUsername}</span>
+						</h1>
+						<p className="mt-3 text-slate-600">
+							<span className="typewriter-caret">{typedIntro}</span>
+						</p>
 					</div>
 				</div>
 
