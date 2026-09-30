@@ -1,7 +1,7 @@
 import CcnaLessonImage from "./ccnaLessonImage";
-import puppetWorkflow from "../puppet-1-how-puppet-works.png";
-import puppetComponents from "../puppet-2-master-and-client-components.png";
-import puppetRemember from "../puppet-4-remember.png";
+import puppetWorkflow from "../../../../assets/puppet-1-how-puppet-works.png";
+import puppetComponents from "../../../../assets/puppet-2-master-and-client-components.png";
+import puppetRemember from "../../../../assets/puppet-4-remember.png";
 
 const imageBase = "https://www.9tut.com/images/ccna_self_study/Ansible_Puppet_Chef";
 

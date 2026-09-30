@@ -1,8 +1,8 @@
 import CcnaLessonImage from "./ccnaLessonImage";
-import distributedVsCentralized from "../sdn-1-distributed-vs-centralized.png";
-import northboundSouthbound from "../sdn-2-northbound-southbound-interfaces.png";
-import apiTypes from "../sdn-3-apis.png";
-import sdnBenefits from "../sdn-4-benefits.png";
+import distributedVsCentralized from "../../../../assets/sdn-1-distributed-vs-centralized.png";
+import northboundSouthbound from "../../../../assets/sdn-2-northbound-southbound-interfaces.png";
+import apiTypes from "../../../../assets/sdn-3-apis.png";
+import sdnBenefits from "../../../../assets/sdn-4-benefits.png";
 
 const imageBase = "https://www.9tut.com/images";
 
