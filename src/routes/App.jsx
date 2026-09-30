@@ -371,6 +371,8 @@ export default function App() {
 
 function CCNAExamTimeNotification() {
   const [notification, setNotification] = useState(null);
+  const { profile } = useAuth();
+  const userId = profile?.userId;
 
   useEffect(() => {
     function checkExamDeadline() {
@@ -381,7 +383,9 @@ function CCNAExamTimeNotification() {
         saveCcnaExamSession(session);
       }
 
-      let moduleProgress = readCcnaModuleQuizProgress();
+      let moduleProgress = userId
+        ? readCcnaModuleQuizProgress(userId)
+        : { activeModule: null, modules: {} };
       const expiredModule = Object.entries(moduleProgress.modules).find(
         ([, attempt]) =>
           attempt?.status === "in-progress" &&
@@ -410,7 +414,7 @@ function CCNAExamTimeNotification() {
               },
             },
           };
-          saveCcnaModuleQuizProgress(moduleProgress);
+          saveCcnaModuleQuizProgress(userId, moduleProgress);
         }
       }
 
@@ -419,9 +423,11 @@ function CCNAExamTimeNotification() {
         .sort(([, first], [, second]) => (second.deadline ?? 0) - (first.deadline ?? 0))[0];
 
       if (expiredModuleAttempt) {
-        const nextNotification = { type: "module", moduleNumber: expiredModuleAttempt[0] };
+        const nextNotification = { type: "module", moduleNumber: expiredModuleAttempt[0], userId };
         setNotification((current) =>
-          current?.type === nextNotification.type && current.moduleNumber === nextNotification.moduleNumber
+          current?.type === nextNotification.type &&
+          current.moduleNumber === nextNotification.moduleNumber &&
+          current.userId === nextNotification.userId
             ? current
             : nextNotification,
         );
@@ -435,14 +441,15 @@ function CCNAExamTimeNotification() {
     checkExamDeadline();
     const timer = window.setInterval(checkExamDeadline, 500);
     return () => window.clearInterval(timer);
-  }, []);
+  }, [userId]);
 
   function dismissNotification() {
     if (notification?.type === "module") {
-      const progress = readCcnaModuleQuizProgress();
+      if (!userId || notification.userId !== userId) return;
+      const progress = readCcnaModuleQuizProgress(userId);
       const attempt = progress.modules[notification.moduleNumber];
       if (attempt?.status === "expired") {
-        saveCcnaModuleQuizProgress({
+        saveCcnaModuleQuizProgress(userId, {
           ...progress,
           modules: {
             ...progress.modules,
@@ -459,7 +466,7 @@ function CCNAExamTimeNotification() {
     setNotification(null);
   }
 
-  if (!notification) return null;
+  if (!notification || (notification.type === "module" && notification.userId !== userId)) return null;
 
   return (
     <div
