@@ -1,5 +1,40 @@
 import { useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Clock, Search } from "lucide-react";
+import {
+	ArrowLeft,
+	ArrowLeftRight,
+	ArrowRight,
+	Activity,
+	Cable,
+	ChevronLeft,
+	ChevronRight,
+	Clock,
+	GitFork,
+	Grid2X2,
+	Gauge,
+	Hash,
+	KeyRound,
+	Layers,
+	ListChecks,
+	LockKeyhole,
+	Eye,
+	Fingerprint,
+	ShieldAlert,
+	Workflow,
+	ChefHat,
+	Braces,
+	Sparkles,
+	Webhook,
+	Monitor,
+	Network,
+	Power,
+	RefreshCw,
+	Router,
+	Search,
+	Share2,
+	ScrollText,
+	Terminal,
+	Wifi,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import { CCNA_CURRICULUM as curriculum, slugifyCcnaTutorial as slugify } from "./ccnaCurriculum.js";
 
@@ -30,7 +65,75 @@ function getRecentTutorial() {
 	return recentSlug ? getTutorialBySlug(recentSlug) : null;
 }
 
+const networkFundamentalsLogos = {
+	"OSI Model Tutorial": { Icon: Layers, style: "bg-[#116d57] text-[#e0f5ee]" },
+	"TCP and UDP Tutorial": { Icon: ArrowLeftRight, style: "bg-[#5146b5] text-[#efedff]" },
+	"WAN Tutorial": { Icon: Router, style: "bg-[#116d57] text-[#e0f5ee]" },
+	"Cisco Command Line Interface CLI": { Icon: Terminal, style: "bg-[#5146b5] text-[#efedff]" },
+	"Cisco Router Boot Sequence Tutorial": { Icon: Power, style: "bg-[#116d57] text-[#e0f5ee]" },
+	"Spine-Leaf Architecture Tutorial": { Icon: Network, style: "bg-[#5146b5] text-[#efedff]" },
+	"Subnetting Tutorial - Subnetting Made Easy": { Icon: Grid2X2, style: "bg-[#116d57] text-[#e0f5ee]" },
+	"Wireless Tutorial": { Icon: Wifi, style: "bg-[#5146b5] text-[#efedff]" },
+	"IPv6 Tutorial": { Icon: Hash, style: "bg-[#116d57] text-[#e0f5ee]" },
+	"Hypervisor type 1 and 2 Tutorial (on digitaltut.com)": { Icon: Monitor, style: "bg-[#5146b5] text-[#efedff]" },
+};
+
+const networkAccessLogos = {
+	"Virtual Local Area Network VLAN Tutorial": { Icon: Grid2X2, style: "bg-[#116d57] text-[#e0f5ee]" },
+	"InterVLAN Routing Tutorial": { Icon: Router, style: "bg-[#116d57] text-[#e0f5ee]" },
+	"Spanning Tree Protocol STP Tutorial": { Icon: GitFork, style: "bg-[#5146b5] text-[#efedff]" },
+	"STP Root Port Election Tutorial": { Icon: Network, style: "bg-[#5146b5] text-[#efedff]" },
+	"Rapid Spanning Tree Protocol RSTP Tutorial": { Icon: RefreshCw, style: "bg-[#116d57] text-[#e0f5ee]" },
+	"VLAN Trunking Protocol VTP Tutorial": { Icon: Share2, style: "bg-[#5146b5] text-[#efedff]" },
+	"EtherChannel Tutorial": { Icon: Cable, style: "bg-[#116d57] text-[#e0f5ee]" },
+};
+
+const ipConnectivityLogos = {
+	"How a Router Makes a Forwarding Decision": { Icon: Router, style: "bg-[#116d57] text-[#e0f5ee]" },
+	"OSPF Tutorial": { Icon: Network, style: "bg-[#5146b5] text-[#efedff]" },
+	"EIGRP Tutorial": { Icon: GitFork, style: "bg-[#5146b5] text-[#efedff]" },
+	"Hot Standby Router Protocol HSRP Tutorial": { Icon: RefreshCw, style: "bg-[#116d57] text-[#e0f5ee]" },
+	"Gateway Load Balancing Protocol GLBP Tutorial": { Icon: Share2, style: "bg-[#5146b5] text-[#efedff]" },
+};
+
+const ipServicesLogos = {
+	"Network Address Translation NAT Tutorial": { Icon: ArrowLeftRight, style: "bg-[#116d57] text-[#e0f5ee]" },
+	"Network Time Protocol NTP Tutorial": { Icon: Clock, style: "bg-[#5146b5] text-[#efedff]" },
+	"DHCP Tutorial": { Icon: Router, style: "bg-[#116d57] text-[#e0f5ee]" },
+	"Simple Network Management Protocol SNMP Tutorial": { Icon: Activity, style: "bg-[#5146b5] text-[#efedff]" },
+	"Syslog Tutorial": { Icon: ScrollText, style: "bg-[#116d57] text-[#e0f5ee]" },
+	"Forwarding per-hop behavior PHB for QoS Tutorial": { Icon: Gauge, style: "bg-[#5146b5] text-[#efedff]" },
+	"Configure SSH for Remote Access on Cisco Router": { Icon: LockKeyhole, style: "bg-[#116d57] text-[#e0f5ee]" },
+};
+
+const securityFundamentalsLogos = {
+	"Key Security Concepts Tutorial": { Icon: KeyRound, style: "bg-[#5146b5] text-[#efedff]" },
+	"Access List Tutorial": { Icon: ListChecks, style: "bg-[#116d57] text-[#e0f5ee]" },
+	"Layer 2 Threats and Security Features": { Icon: ShieldAlert, style: "bg-[#5146b5] text-[#efedff]" },
+	"AAA TACACS+ and RADIUS Tutorial": { Icon: Fingerprint, style: "bg-[#116d57] text-[#e0f5ee]" },
+	"Port-Security Tutorial": { Icon: LockKeyhole, style: "bg-[#5146b5] text-[#efedff]" },
+	"DHCP Snooping Tutorial": { Icon: Eye, style: "bg-[#116d57] text-[#e0f5ee]" },
+};
+
+const automationLogos = {
+	"What is SDN?": { Icon: Network, style: "bg-[#116d57] text-[#e0f5ee]" },
+	"Puppet Tutorial": { Icon: Workflow, style: "bg-[#5146b5] text-[#efedff]" },
+	"Chef Tutorial": { Icon: ChefHat, style: "bg-[#116d57] text-[#e0f5ee]" },
+	"Ansible Tutorial": { Icon: Terminal, style: "bg-[#5146b5] text-[#efedff]" },
+	"JSON Tutorial": { Icon: Braces, style: "bg-[#116d57] text-[#e0f5ee]" },
+	"Generative AI vs Predictive AI Tutorial": { Icon: Sparkles, style: "bg-[#5146b5] text-[#efedff]" },
+	"REST API Tutorial": { Icon: Webhook, style: "bg-[#116d57] text-[#e0f5ee]" },
+};
+
 function TutorialCard({ number, title, duration, summary, isScrollable, sectionNumber, sectionTitle, onOpen }) {
+	const logo = networkFundamentalsLogos[title]
+		?? networkAccessLogos[title]
+		?? ipConnectivityLogos[title]
+		?? ipServicesLogos[title]
+		?? securityFundamentalsLogos[title]
+		?? automationLogos[title];
+	const Logo = logo?.Icon;
+
 	return (
 		<Link
 			to={`/modules/programs/ccna/knowledge-hub/${slugify(title)}`}
@@ -42,9 +145,16 @@ function TutorialCard({ number, title, duration, summary, isScrollable, sectionN
 			}`}
 		>
 			<div className="transition-transform duration-200 group-hover:scale-[1.02]">
-				<span className="inline-flex rounded-full bg-[#e8f3f4] px-3 py-1 text-xs font-bold text-[#005b6b]">
-					{number}
-				</span>
+				<div className="flex items-start justify-between gap-3">
+					<span className="inline-flex rounded-full bg-[#e8f3f4] px-3 py-1 text-xs font-bold text-[#005b6b]">
+						{number}
+					</span>
+					{Logo && (
+						<span aria-hidden="true" className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${logo.style}`}>
+							<Logo size={25} strokeWidth={2} />
+						</span>
+					)}
+				</div>
 				<strong className="mt-3 block text-base leading-snug text-[#111a2d] underline decoration-transparent transition group-hover:text-[#005b6b] group-hover:decoration-current sm:text-lg">
 					{title}
 				</strong>

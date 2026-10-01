@@ -24,3 +24,4 @@ dist-ssr
 *.sln
 *.sw?
 src/config/api.js
+src/pages/modules/programs/Postman (x64).exe

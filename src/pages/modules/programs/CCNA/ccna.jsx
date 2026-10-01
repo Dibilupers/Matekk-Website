@@ -23,19 +23,18 @@ import {
 	readCcnaModuleQuizProgress,
 } from "../../../../utils/ccnaModuleQuizProgress";
 import { CCNA_MODULE_QUIZZES } from "./ccnaModuleQuizData";
-import { CCNA_CURRICULUM, slugifyCcnaTutorial } from "./ccnaCurriculum.js";
+import { CCNA_CURRICULUM } from "./ccnaCurriculum.js";
 import { readCcnaTutorialProgress } from "../../../../utils/ccnaTutorialProgress";
 
 const modules = CCNA_CURRICULUM.map((section) => ({
 	...section,
 	lessons: `${section.tutorials.length} lessons`,
 }));
+
 const HERO_INTROS = [
-	"Cutting-edge ICT training built on real network topologies — from switching fundamentals to security hardening, taught by working engineers.",
-	"Build practical networking skills through focused lessons, hands-on concepts, and CCNA module quizzes.",
-	"Explore routing, switching, security, and automation with lessons designed to grow your networking confidence.",
-	"Strengthen your CCNA foundation one module at a time with practical tutorials and focused quizzes.",
-	"Learn the networking concepts behind real-world topologies, from VLANs and routing to security and automation.",
+	"Practical ICT training built on real network topologies, from switching fundamentals to security hardening.",
+	"Build networking skills through focused lessons, practical concepts, and CCNA module quizzes.",
+	"Explore routing, switching, security, and automation with lessons designed to grow your confidence.",
 ];
 
 function Stat({ value, label }) {
@@ -57,14 +56,17 @@ function NetworkIllustration({ quizAverage }) {
 
 	return (
 		<div className="relative mx-auto h-[320px] w-full max-w-[440px] sm:h-[380px] sm:max-w-[470px]">
-			<div aria-hidden="true" className="absolute left-1/2 top-1/2 h-[270px] w-[270px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#e4f0f1] sm:h-[356px] sm:w-[356px]" />
-			<img
-				src={CcnaLogo}
-				alt=""
-				aria-hidden="true"
-				className="absolute left-1/2 top-1/2 z-10 h-[210px] w-[210px] -translate-x-1/2 -translate-y-1/2 object-contain sm:h-[270px] sm:w-[270px]"
-			/>
-			<div className="absolute left-0 top-[31%] z-30 flex h-[94px] w-[128px] flex-col justify-center rounded-xl border border-[#e4eaf5] bg-white px-4 shadow-[0_14px_28px_rgba(15,35,75,0.1)] transition-transform duration-200 ease-out hover:scale-105 motion-reduce:transition-none motion-reduce:hover:scale-100 sm:left-[-4px]">
+			<div className="absolute left-1/2 top-1/2 h-[270px] w-[270px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#e4f0f1] sm:h-[356px] sm:w-[356px]" />
+			<div className="absolute left-1/2 top-1/2 z-10 h-[220px] w-[220px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#005b6b] shadow-[0_18px_45px_rgba(0,91,107,0.2)] sm:h-[262px] sm:w-[262px]" />
+			<div className="absolute left-1/2 top-[30%] z-20 h-14 w-14 -translate-x-1/2 rounded-full bg-[#ffd8b0] sm:h-16 sm:w-16" />
+			<div className="absolute left-1/2 top-[51%] z-20 flex h-16 w-24 -translate-x-1/2 items-end justify-center border-b-[14px] border-[#edf2ff] sm:h-20 sm:w-28">
+				<div className="mb-2 h-11 w-16 rounded-md border-[6px] border-[#101b33] bg-[#167789] shadow-[0_0_0_3px_#f1f7f7] sm:h-12 sm:w-20">
+					<div className="ml-2 mt-2 h-2 w-2 rounded-full bg-[#62e5a5]" />
+					<div className="ml-6 -mt-2 h-1 w-7 bg-white/80" />
+					<div className="ml-6 mt-1 h-1 w-5 bg-white/60" />
+				</div>
+			</div>
+			<div className="absolute left-0 top-[31%] z-30 flex h-[94px] w-[128px] flex-col justify-center rounded-xl border border-[#e4eaf5] bg-white px-4 shadow-[0_14px_28px_rgba(15,35,75,0.1)] sm:left-[-4px]">
 				<strong className="text-xl leading-none text-[#005b6b]">{quizAverage}%</strong>
 				<span className="mt-2 text-sm leading-none text-[#15203a]">Quiz score</span>
 				<span
@@ -89,7 +91,6 @@ function NetworkIllustration({ quizAverage }) {
 }
 
 function getQuizActionLabel(progress) {
-	if (!isCurrentCcnaModuleQuizAttempt(progress)) return "Start Quiz";
 	if (progress?.status === "in-progress") return "Continue Quiz";
 	if (progress?.status === "completed" || progress?.status === "expired") return "Retake Quiz";
 	return "Start Quiz";
@@ -117,10 +118,9 @@ function QuizTimeRemaining({ deadline }) {
 		<span
 			role="timer"
 			aria-label={`${minutes} minutes and ${seconds} seconds remaining`}
-			className={`inline-flex min-w-[88px] justify-center whitespace-nowrap rounded-full px-3 py-1 text-xs font-bold tabular-nums ${
-				secondsRemaining <= 60
-					? "bg-[#fff0ed] text-[#b42318]"
-					: "bg-[#e8f3f4] text-[#005b6b]"
+			className={`inline-flex min-w-[88px] justify-center whitespace-nowrap rounded-full px-3 py-1 text-xs font-bold tabular-nums ${secondsRemaining <= 60
+				? "bg-[#fff0ed] text-[#b42318]"
+				: "bg-[#e8f3f4] text-[#005b6b]"
 			}`}
 		>
 			{minutes}:{seconds} left
@@ -206,54 +206,29 @@ function ModuleCard({ module, index, openSection, onToggle, quizProgress, tutori
 			</button>
 			{isOpen && (
 				<div className="space-y-4 border-t border-[#e2ecec] px-6 pb-6 pt-5 sm:pl-[91px]">
-					<div className="space-y-4">
-						{module.tutorials.map((tutorial) => {
-							const isComplete = tutorialProgress.has(tutorial.number);
-							return (
-								<Link
-									key={tutorial.number}
-									to={`/modules/programs/ccna/knowledge-hub/${slugifyCcnaTutorial(tutorial.title)}`}
-									className="group flex items-center gap-3 text-[15px] text-[#66738d] hover:text-[#005b6b]"
-								>
-									<span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-colors ${isComplete ? "border-[#005b6b] bg-[#005b6b] text-white" : "border-[#dce5f2] bg-white text-transparent group-hover:border-[#8bb8bf]"}`}>
-										<Check size={13} strokeWidth={3} />
-									</span>
-									<span className="min-w-0 flex-1 transition-colors group-hover:text-[#005b6b]">
-										<span className="mr-2 text-xs font-semibold text-[#8a96aa]">{tutorial.number}</span>
-										{tutorial.title}
-									</span>
-								</Link>
-							);
-						})}
-					</div>
+					{module.tutorials.map((tutorial) => (
+						<div key={tutorial.number} className="flex items-center gap-3 text-[15px] text-[#66738d]">
+							<span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border ${tutorialProgress.has(tutorial.number) ? "border-[#005b6b] bg-[#005b6b] text-white" : "border-[#dce5f2] text-transparent"}`}>
+								<Check size={13} strokeWidth={3} />
+							</span>
+							<span>{tutorial.number} {tutorial.title}</span>
+						</div>
+					))}
 					<div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#e2ecec] pt-4">
 						<span className="text-sm text-[#71819b]">
-							<span className="block">{completedLessons} of {module.tutorials.length} lessons read</span>
 							{currentQuizProgress?.status === "completed" || currentQuizProgress?.status === "expired"
-								? `${currentQuizProgress.status === "expired" ? "Time expired · " : ""}Last score: ${currentQuizProgress.score}/${moduleQuiz?.questions.length ?? 25}`
+								? `${currentQuizProgress.status === "expired" ? "Time expired · " : ""}Last score: ${currentQuizProgress.score}/${moduleQuiz?.questions.length ?? 0}`
 								: currentQuizProgress?.status === "in-progress"
 									? "Quiz in progress"
-									: "25-question quiz · 30-minute limit"}
+									: `${moduleQuiz?.questions.length ?? 0}-question module quiz`}
 						</span>
-						<span className="relative inline-flex shrink-0">
-							<button
-								type="button"
-								onClick={() => onStartQuiz(module.number)}
-								className="rounded-full bg-[#005b6b] px-5 py-2.5 text-sm font-semibold text-white transition-all duration-200 ease-out hover:scale-105 hover:bg-[#004653] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100"
-							>
-								{getQuizActionLabel(currentQuizProgress)}
-							</button>
-							{currentQuizProgress?.status === "expired" && (
-								<span
-									role="img"
-									title="Quiz time expired"
-									aria-label="Quiz time expired"
-									className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-[#dc2626] text-white shadow-sm"
-								>
-									<CircleAlert size={15} strokeWidth={2.5} />
-								</span>
-							)}
-						</span>
+						<button
+							type="button"
+							onClick={() => onStartQuiz(module.number)}
+							className="rounded-full bg-[#005b6b] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#004653]"
+						>
+							{getQuizActionLabel(currentQuizProgress)}
+						</button>
 					</div>
 				</div>
 			)}
@@ -267,41 +242,23 @@ export default function CCNA() {
 	const [typedIntro, setTypedIntro] = useState("");
 	const [openSection, setOpenSection] = useState(null);
 	const [isQuizPickerOpen, setIsQuizPickerOpen] = useState(false);
-	const [quizProgressState] = useState(() => ({
-		userId,
-		progress: userId ? readCcnaModuleQuizProgress(userId) : { activeModule: null, modules: {} },
-	}));
-	const quizProgress = quizProgressState.userId === userId
-		? quizProgressState.progress
-		: userId ? readCcnaModuleQuizProgress(userId) : { activeModule: null, modules: {} };
+	const [quizProgress] = useState(readCcnaModuleQuizProgress);
 	const tutorialProgress = userId ? readCcnaTutorialProgress(userId) : new Set();
 	const navigate = useNavigate();
 	const { quizAverage, attemptedModules, quizCoverage } = getQuizMetrics(quizProgress);
-	const completedModules = modules.filter(
-		(module) => module.tutorials.length > 0 &&
-			module.tutorials.every((tutorial) => tutorialProgress.has(tutorial.number)),
-	).length;
-	const remainingModules = modules.length - completedModules;
 	const activeModule = quizProgress.activeModule
-		&& isCurrentCcnaModuleQuizAttempt(quizProgress.modules[quizProgress.activeModule])
 		&& quizProgress.modules[quizProgress.activeModule]?.status === "in-progress"
 		? quizProgress.activeModule
-		: modules.find((module) => {
-			const attempt = quizProgress.modules[module.number];
-			return !isCurrentCcnaModuleQuizAttempt(attempt) || !["completed", "expired"].includes(attempt.status);
-		})?.number ?? "1.0";
-	const activeQuizProgress = isCurrentCcnaModuleQuizAttempt(quizProgress.modules[activeModule])
-		? quizProgress.modules[activeModule]
-		: null;
+		: modules.find((module) => !["completed", "expired"].includes(quizProgress.modules[module.number]?.status))?.number ?? "1.0";
+	const activeQuizProgress = quizProgress.modules[activeModule];
 	const heroQuizLabel = getQuizActionLabel(activeQuizProgress);
+	const completedModules = modules.filter((module) =>
+		module.tutorials.length > 0 && module.tutorials.every((tutorial) => tutorialProgress.has(tutorial.number)),
+	).length;
+	const remainingModules = modules.length - completedModules;
 
 	useEffect(() => {
 		let timeoutId;
-		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-			timeoutId = window.setTimeout(() => setTypedIntro(HERO_INTROS[0]), 0);
-			return () => window.clearTimeout(timeoutId);
-		}
-
 		let introIndex = 0;
 		let characterIndex = 0;
 
@@ -327,7 +284,11 @@ export default function CCNA() {
 			}
 		}
 
-		timeoutId = window.setTimeout(typeDescription, 150);
+		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+			timeoutId = window.setTimeout(() => setTypedIntro(HERO_INTROS[0]), 0);
+		} else {
+			timeoutId = window.setTimeout(typeDescription, 150);
+		}
 		return () => window.clearTimeout(timeoutId);
 	}, []);
 
@@ -348,7 +309,7 @@ export default function CCNA() {
 
 	function openModuleQuiz(moduleNumber) {
 		if (!userId) return;
-		beginCcnaModuleQuiz(userId, moduleNumber);
+		beginCcnaModuleQuiz(moduleNumber);
 		navigate(`/modules/programs/ccna/quiz/${moduleNumber}`);
 	}
 
@@ -358,7 +319,7 @@ export default function CCNA() {
 				<div className="grid items-center gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-4">
 					<div>
 						<div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#c9dfe2] bg-[#f0f7f7] px-4 py-2 text-sm font-semibold text-[#005b6b]">
-							<span className="h-2 w-2 rounded-full bg-[#005b6b]" /> Module 2 of 6 · Network Access
+							<span className="h-2 w-2 rounded-full bg-[#005b6b]" /> Module {activeModule} · {modules.find((module) => module.number === activeModule)?.title}
 						</div>
 						<h1 className="max-w-[700px] text-[2.65rem] font-bold leading-[1.08] tracking-[-1.5px] sm:text-6xl lg:text-[3.25rem] xl:text-[3.7rem]">
 							Continue your path to <span className="text-[#005b6b]">CCNA<br className="hidden sm:block" /> Certification.</span>
@@ -373,7 +334,7 @@ export default function CCNA() {
 						<div className="mt-11 flex flex-wrap gap-5 divide-x divide-[#dce5f2]">
 							<Stat value={`${attemptedModules}/6`} label="Quizzes attempted" />
 							<div className="pl-5 sm:pl-7"><Stat value={`${quizAverage}%`} label="Quiz average" /></div>
-							<div className="pl-5 sm:pl-7"><Stat value={remainingModules} label="Modules left" /></div>
+							<div className="pl-5 sm:pl-7"><Stat value={remainingModules} label="Modules remaining" /></div>
 						</div>
 					</div>
 					<NetworkIllustration quizAverage={quizAverage} />
@@ -392,7 +353,7 @@ export default function CCNA() {
 							<span className="text-sm text-[#7c89a1]">{attemptedModules} of 6 quizzes attempted</span>
 						</div>
 						<div className="space-y-3">
-							{modules.map((module, index) => <ModuleCard key={module.number} module={module} index={index} openSection={openSection} onToggle={toggleModule} quizProgress={quizProgress} tutorialProgress={tutorialProgress} onStartQuiz={openModuleQuiz} />)}
+							{modules.map((module, index) => <ModuleCard key={module.title} module={module} index={index} openSection={openSection} onToggle={toggleModule} quizProgress={quizProgress} tutorialProgress={tutorialProgress} onStartQuiz={openModuleQuiz} />)}
 						</div>
 					</div>
 
@@ -414,41 +375,18 @@ export default function CCNA() {
 						<div className="rounded-[18px] border border-[#d6e5e7] bg-white p-6">
 							<h2 className="mb-5 text-xl font-bold">Practice quizzes</h2>
 							{modules.map((module) => {
-								const savedModuleProgress = quizProgress.modules[module.number];
-								const moduleProgress = isCurrentCcnaModuleQuizAttempt(savedModuleProgress) ? savedModuleProgress : null;
-								const moduleQuestionCount = CCNA_MODULE_QUIZZES.find((quiz) => quiz.number === module.number)?.questions.length ?? 25;
+								const moduleProgress = quizProgress.modules[module.number];
 								return (
-									<div key={module.number} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border-b border-[#e2ecec] py-3 text-sm last:border-0">
+									<div key={module.number} className="flex items-center justify-between gap-3 border-b border-[#e2ecec] py-3 text-sm last:border-0">
 										<div className="min-w-0">
 											<span className="block truncate font-medium">{module.number} {module.title}</span>
-											<strong className={`mt-0.5 block ${moduleProgress?.status === "completed" || moduleProgress?.status === "expired" ? "text-[#005b6b]" : "text-[#8b96a9]"}`}>
-												{moduleProgress?.status === "completed" || moduleProgress?.status === "expired"
-													? `${moduleProgress.score}/${moduleQuestionCount}`
-													: getQuizActionLabel(moduleProgress)}
+											<strong className={moduleProgress?.status === "completed" || moduleProgress?.status === "expired" ? "text-[#005b6b]" : "text-[#8b96a9]"}>
+												{moduleProgress?.status === "completed" || moduleProgress?.status === "expired" ? `${moduleProgress.score}/5` : getQuizActionLabel(moduleProgress)}
 											</strong>
 										</div>
-										<div className="flex min-h-[58px] min-w-[88px] flex-col items-end justify-between">
-											<div className="flex h-6 items-center justify-end">
-												{moduleProgress?.status === "in-progress" && Number.isFinite(moduleProgress.deadline) && (
-													<QuizTimeRemaining deadline={moduleProgress.deadline} />
-												)}
-											</div>
-											<span className="relative inline-flex shrink-0">
-												<button type="button" onClick={() => openModuleQuiz(module.number)} className="rounded-full border border-[#c9dfe2] px-3 py-1.5 text-xs font-semibold text-[#005b6b] transition-all duration-200 ease-out hover:scale-105 hover:bg-[#e8f3f4] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100">
-													{getQuizActionLabel(moduleProgress)}
-												</button>
-												{moduleProgress?.status === "expired" && (
-													<span
-														role="img"
-														title="Quiz time expired"
-														aria-label="Quiz time expired"
-														className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-[#dc2626] text-white shadow-sm"
-													>
-														<CircleAlert size={15} strokeWidth={2.5} />
-													</span>
-												)}
-											</span>
-										</div>
+										<button type="button" onClick={() => openModuleQuiz(module.number)} className="shrink-0 rounded-full border border-[#c9dfe2] px-3 py-1.5 text-xs font-semibold text-[#005b6b] transition hover:bg-[#e8f3f4]">
+											{getQuizActionLabel(moduleProgress)}
+										</button>
 									</div>
 								);
 							})}
