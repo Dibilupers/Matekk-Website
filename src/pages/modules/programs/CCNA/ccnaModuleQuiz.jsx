@@ -268,8 +268,8 @@ export default function CCNAModuleQuiz() {
 												disabled={Boolean(attempt.lockedQuestions?.[attempt.currentIndex])}
 												aria-pressed={isSelected}
 												className={`flex min-h-[60px] w-full items-center gap-3 rounded-2xl border px-4 py-3 text-left transition disabled:cursor-default ${isSelected
-														? "border-[#005b6b] bg-[#e8f3f4] text-[#263654]"
-														: "border-[#d9e1ef] bg-white text-[#263654] hover:border-[#8bb8bf] hover:bg-[#f0f7f7]"
+													? "border-[#005b6b] bg-[#e8f3f4] text-[#263654]"
+													: "border-[#d9e1ef] bg-white text-[#263654] hover:border-[#8bb8bf] hover:bg-[#f0f7f7]"
 													}`}
 											>
 												<span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold ${isSelected ? "bg-[#005b6b] text-white" : "bg-[#e8f3f4] text-[#005b6b]"}`}>
@@ -310,8 +310,8 @@ export default function CCNAModuleQuiz() {
 												aria-label={`Question ${index + 1}${hasAnswer ? ", answered" : ", unanswered"}`}
 												aria-current={isActive ? "step" : undefined}
 												className={`h-10 w-full rounded-xl border text-sm font-semibold transition disabled:cursor-not-allowed ${hasAnswer
-														? "border-[#005b6b] bg-[#e8f3f4] text-[#005b6b]"
-														: "border-[#d9e1ef] bg-white text-[#71809a]"
+													? "border-[#005b6b] bg-[#e8f3f4] text-[#005b6b]"
+													: "border-[#d9e1ef] bg-white text-[#71809a]"
 													} ${isActive ? "ring-2 ring-[#005b6b] ring-offset-2" : ""} hover:border-[#005b6b] hover:bg-[#005b6b] hover:text-white disabled:hover:border-inherit disabled:hover:bg-inherit disabled:hover:text-inherit`}
 											>
 												{index + 1}

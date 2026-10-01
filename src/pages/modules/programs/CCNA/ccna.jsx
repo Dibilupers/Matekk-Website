@@ -121,7 +121,7 @@ function QuizTimeRemaining({ deadline }) {
 			className={`inline-flex min-w-[88px] justify-center whitespace-nowrap rounded-full px-3 py-1 text-xs font-bold tabular-nums ${secondsRemaining <= 60
 				? "bg-[#fff0ed] text-[#b42318]"
 				: "bg-[#e8f3f4] text-[#005b6b]"
-			}`}
+				}`}
 		>
 			{minutes}:{seconds} left
 		</span>
