@@ -1,6 +1,6 @@
 import SolutionsTemplate from "../../../../components/solution_template/solutions_template";
-import ICTConsultancyHero from "../../../../assets/ICTConsultancyHero.jpg";
-import ICTConsultancyFooter from "../../../../assets/ICTConsultancyFooter.jpg";
+import ICTConsultancyHero from "../../../../assets/solutions/blueteam-hero.webp";
+import ICTConsultancyFooter from "../../../../assets/solutions/blueteam-footer.webp";
 
 const CHALLENGES = [
   "Limited real-time visibility into security threats and incidents",
@@ -43,7 +43,7 @@ export default function BlueTeamSolution() {
       // Hero
       heroBgImage={ICTConsultancyHero}
       category="ICT Consultancy (PBOOT)"
-      heroTitle="Blue Team"
+      heroTitle="Blue Team (SOC)"
       heroDescription="MATEKK delivers dedicated Blue Team services focused on defending, monitoring, and continuously improving your organization's security posture against evolving cyber threats."
       // Building section
       buildingTitle="Defensive, Continuous, and Intelligence-Driven"
