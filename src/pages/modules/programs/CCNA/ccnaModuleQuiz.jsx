@@ -139,6 +139,10 @@ export default function CCNAModuleQuiz() {
 	const animatedPercentage = moduleQuiz
 		? Math.round((animatedScore / moduleQuiz.questions.length) * 100)
 		: 0;
+	const progressHue = animatedPercentage <= 50
+		? animatedPercentage * 1.2
+		: 60 + (animatedPercentage - 50) * 1.2;
+	const progressColor = `hsl(${progressHue} 75% 42%)`;
 	const quizPassed = scorePercentage >= QUIZ_PASS_PERCENTAGE;
 	const elapsedSeconds = attempt.elapsedSeconds ?? Math.min(
 		CCNA_MODULE_QUIZ_DURATION_SECONDS,
@@ -455,7 +459,7 @@ export default function CCNAModuleQuiz() {
 										disabled={!answeredCurrentQuestion}
 										className="rounded-full bg-[#005b6b] px-6 py-3 font-semibold text-white transition hover:bg-[#004653] disabled:cursor-not-allowed disabled:opacity-40"
 									>
-										{attempt.currentIndex === moduleQuiz.questions.length - 1 ? "Finish Quiz" : "Next Question"}
+										{attempt.currentIndex === moduleQuiz.questions.length - 1 ? "Submit" : "Next Question"}
 									</button>
 								</div>
 							</section>
@@ -556,7 +560,7 @@ export default function CCNAModuleQuiz() {
 											cy="50"
 											r="46"
 											fill="none"
-											stroke="#005b6b"
+											stroke={progressColor}
 											strokeWidth="4.5"
 											strokeDasharray={`${2 * Math.PI * 46}`}
 											strokeDashoffset={`${2 * Math.PI * 46 * (1 - animatedPercentage / 100)}`}
@@ -564,7 +568,7 @@ export default function CCNAModuleQuiz() {
 									</svg>
 									<div className="absolute inset-[28px] rounded-full border-[12px] border-white" />
 									<div className="relative z-10 text-center">
-										<strong className="block text-5xl font-extrabold tracking-tight tabular-nums text-[#005b6b]">{animatedPercentage}%</strong>
+										<strong className="block text-5xl font-extrabold tracking-tight tabular-nums" style={{ color: progressColor }}>{animatedPercentage}%</strong>
 										<span className="mt-1 block text-sm font-semibold text-[#64748b]">correct answers</span>
 									</div>
 									<div className="absolute -left-9 top-[30%] rounded-xl border border-[#e2ecec] bg-white px-4 py-3 shadow-lg transition-transform duration-200 ease-out hover:scale-105 motion-reduce:transition-none motion-reduce:hover:scale-100">
