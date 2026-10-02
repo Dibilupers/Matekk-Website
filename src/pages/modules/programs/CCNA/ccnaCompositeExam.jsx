@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useBlocker } from "react-router-dom";
 import { ArrowLeft, ArrowRight, ArrowUp, Clock3, RotateCcw, X } from "lucide-react";
+import { useAuth } from "../../../../context/AuthContext";
 import TrainingLogo from "../../../../assets/MATEKK_training_logo.png";
 import { CCNA_MODULE_QUIZZES } from "./ccnaModuleQuizData";
+import { getCcnaShortExamSessionKey } from "../../../../utils/ccnaShortExamSession";
 
 const SHORT_EXAM_QUESTION_COUNT = 50;
 const SHORT_EXAM_DURATION_SECONDS = 45 * 60;
 const EXAM_PASS_PERCENTAGE = 80;
-const SHORT_EXAM_SESSION_KEY = "matekk-ccna-short-exam-session";
 
 function shuffle(items) {
 	const shuffled = [...items];
@@ -37,8 +38,8 @@ function createShortExamQuestions() {
 	}));
 }
 
-function restoreShortExamSession() {
-	const savedSession = window.sessionStorage.getItem(SHORT_EXAM_SESSION_KEY);
+function restoreShortExamSession(sessionStorageKey) {
+	const savedSession = window.sessionStorage.getItem(sessionStorageKey);
 	if (!savedSession) {
 		return {
 			questions: createShortExamQuestions(),
@@ -82,7 +83,7 @@ function restoreShortExamSession() {
 		throw new TypeError("Saved CCNA short exam session has an invalid structure.");
 	} catch (error) {
 		console.error("Unable to restore the saved CCNA short exam session.", error);
-		window.sessionStorage.removeItem(SHORT_EXAM_SESSION_KEY);
+		window.sessionStorage.removeItem(sessionStorageKey);
 		return {
 			questions: createShortExamQuestions(),
 			answers: {},
@@ -101,7 +102,9 @@ function formatTime(totalSeconds) {
 }
 
 export default function CCNACompositeExam() {
-	const [initialSession] = useState(restoreShortExamSession);
+	const { profile } = useAuth();
+	const sessionStorageKey = getCcnaShortExamSessionKey(profile?.userId);
+	const [initialSession] = useState(() => restoreShortExamSession(sessionStorageKey));
 	const [questions, setQuestions] = useState(initialSession.questions);
 	const [answers, setAnswers] = useState(initialSession.answers);
 	const [lockedQuestions, setLockedQuestions] = useState(initialSession.lockedQuestions);
@@ -153,7 +156,7 @@ export default function CCNACompositeExam() {
 		);
 
 	useEffect(() => {
-		window.sessionStorage.setItem(SHORT_EXAM_SESSION_KEY, JSON.stringify({
+		window.sessionStorage.setItem(sessionStorageKey, JSON.stringify({
 			questions,
 			answers,
 			lockedQuestions,
@@ -161,7 +164,7 @@ export default function CCNACompositeExam() {
 			deadline,
 			isSubmitted,
 		}));
-	}, [answers, currentIndex, deadline, isSubmitted, lockedQuestions, questions]);
+	}, [answers, currentIndex, deadline, isSubmitted, lockedQuestions, questions, sessionStorageKey]);
 
 	useEffect(() => {
 		if (isSubmitted) return undefined;

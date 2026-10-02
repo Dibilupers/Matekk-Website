@@ -26,6 +26,7 @@ import {
 import { CCNA_MODULE_QUIZZES } from "./ccnaModuleQuizData";
 import { CCNA_CURRICULUM, slugifyCcnaTutorial } from "./ccnaCurriculum.js";
 import { readCcnaTutorialProgress } from "../../../../utils/ccnaTutorialProgress";
+import { getCcnaShortExamSessionKey } from "../../../../utils/ccnaShortExamSession";
 
 const modules = CCNA_CURRICULUM.map((section) => ({
 	...section,
@@ -36,10 +37,11 @@ const EXAM_FORMATS = [
 	{ name: "Medium Exam", questions: 100, duration: "1 hour & 30 mins", description: "A balanced, longer practice session." },
 	{ name: "Long Exam", questions: 150, duration: "2 hours", description: "A full-length practice session." },
 ];
-const SHORT_EXAM_SESSION_KEY = "matekk-ccna-short-exam-session";
-
-function readShortExamProgress() {
-	const savedSession = window.sessionStorage.getItem(SHORT_EXAM_SESSION_KEY);
+function readShortExamProgress(userId) {
+	if (userId === null || userId === undefined || String(userId).trim() === "") {
+		return { status: "not-started", deadline: null, answeredCount: 0, score: 0 };
+	}
+	const savedSession = window.sessionStorage.getItem(getCcnaShortExamSessionKey(userId));
 	if (!savedSession) return { status: "not-started", deadline: null, answeredCount: 0, score: 0 };
 
 	try {
@@ -321,7 +323,13 @@ export default function CCNA() {
 	const [isQuizPickerOpen, setIsQuizPickerOpen] = useState(false);
 	const [isExamPickerOpen, setIsExamPickerOpen] = useState(false);
 	const [selectedExamFormat, setSelectedExamFormat] = useState(null);
-	const [shortExamProgress, setShortExamProgress] = useState(readShortExamProgress);
+	const [shortExamProgressState, setShortExamProgressState] = useState(() => ({
+		userId,
+		progress: readShortExamProgress(userId),
+	}));
+	const shortExamProgress = shortExamProgressState.userId === userId
+		? shortExamProgressState.progress
+		: readShortExamProgress(userId);
 	const [examClockNow, setExamClockNow] = useState(Date.now);
 	const [progressSlide, setProgressSlide] = useState(0);
 	const [quizProgressState] = useState(() => ({
@@ -360,10 +368,10 @@ export default function CCNA() {
 		if (!shortExamProgress.deadline) return undefined;
 		const intervalId = window.setInterval(() => {
 			setExamClockNow(Date.now());
-			setShortExamProgress(readShortExamProgress());
+			setShortExamProgressState({ userId, progress: readShortExamProgress(userId) });
 		}, 1000);
 		return () => window.clearInterval(intervalId);
-	}, [shortExamProgress.deadline]);
+	}, [shortExamProgress.deadline, userId]);
 
 	useEffect(() => {
 		let timeoutId;
