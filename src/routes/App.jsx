@@ -107,10 +107,9 @@ import AdminPage from "../pages/admin";
 import CCNADashboard from "../pages/modules/programs/CCNA/ccna";
 import CCNAKnowledgeHub from "../pages/modules/programs/CCNA/ccnaKnowledgeHub";
 import CCNAKnowledgeArticle from "../pages/modules/programs/CCNA/ccnaKnowledgeArticle";
-import CCNALesson from "../pages/modules/programs/CCNA/ccnaLesson";
+import CCNACompositeExam from "../pages/modules/programs/CCNA/ccnaCompositeExam";
 import CCNAModuleQuiz from "../pages/modules/programs/CCNA/ccnaModuleQuiz";
 import { useAuth } from "../context/AuthContext";
-import { readCcnaExamSession, saveCcnaExamSession } from "../utils/ccnaExamSession";
 import { readCcnaModuleQuizProgress, saveCcnaModuleQuizProgress } from "../utils/ccnaModuleQuizProgress";
 import { CCNA_MODULE_QUIZZES } from "../pages/modules/programs/CCNA/ccnaModuleQuizData";
 
@@ -120,14 +119,14 @@ if ("scrollRestoration" in history) {
 
 export default function App() {
   const location = useLocation();
-  const isCCNALesson = location.pathname === "/modules/programs/ccna/lesson"
-    || location.pathname.startsWith("/modules/programs/ccna/quiz/");
+  const isCCNAQuiz = location.pathname.startsWith("/modules/programs/ccna/quiz/")
+    || location.pathname.startsWith("/modules/programs/ccna/exam/");
   const isAdminPage = location.pathname === "/admin";
 
   return (
     <>
       <CCNAExamTimeNotification />
-      {!isCCNALesson && <NavBar />}
+      {!isCCNAQuiz && <NavBar />}
       <ScrollToTop />
 
       <Routes>
@@ -327,18 +326,18 @@ export default function App() {
           }
         />
         <Route
-          path="/modules/programs/ccna/lesson"
-          element={
-            <ProtectedRoute>
-              <CCNALesson />
-            </ProtectedRoute>
-          }
-        />
-        <Route
           path="/modules/programs/ccna/quiz/:moduleNumber"
           element={
             <ProtectedRoute>
               <CCNAModuleQuiz />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/ccna/exam/short"
+          element={
+            <ProtectedRoute>
+              <CCNACompositeExam />
             </ProtectedRoute>
           }
         />
@@ -364,7 +363,7 @@ export default function App() {
       </Routes>
 
 
-      {!isCCNALesson && !isAdminPage && <Footer />}
+      {!isCCNAQuiz && !isAdminPage && <Footer />}
     </>
   );
 }
@@ -376,13 +375,6 @@ function CCNAExamTimeNotification() {
 
   useEffect(() => {
     function checkExamDeadline() {
-      const session = readCcnaExamSession();
-      if (session && session.status !== "completed" && session.deadline <= Date.now() && session.status !== "expired") {
-        session.status = "expired";
-        session.toastDismissed = false;
-        saveCcnaExamSession(session);
-      }
-
       let moduleProgress = userId
         ? readCcnaModuleQuizProgress(userId)
         : { activeModule: null, modules: {} };
@@ -431,8 +423,6 @@ function CCNAExamTimeNotification() {
             ? current
             : nextNotification,
         );
-      } else if (session?.status === "expired" && !session.toastDismissed) {
-        setNotification((current) => current?.type === "lesson" ? current : { type: "lesson" });
       } else {
         setNotification((current) => current ? null : current);
       }
@@ -457,11 +447,6 @@ function CCNAExamTimeNotification() {
           },
         });
       }
-    } else {
-      const session = readCcnaExamSession();
-      if (session?.status === "expired") {
-        saveCcnaExamSession({ ...session, toastDismissed: true });
-      }
     }
     setNotification(null);
   }
@@ -478,12 +463,10 @@ function CCNAExamTimeNotification() {
       </span>
       <div className="min-w-0 flex-1">
         <p className="text-sm font-bold">
-          {notification.type === "module" ? `Module ${notification.moduleNumber} quiz time is up` : "Exam time is up"}
+          {`Module ${notification.moduleNumber} quiz time is up`}
         </p>
         <p className="mt-1 text-sm leading-5 text-[#64718a]">
-          {notification.type === "module"
-            ? "Your quiz has ended and your score has been saved."
-            : "Your time limit has ended. Your answers have been submitted."}
+          Your quiz has ended and your score has been saved.
         </p>
       </div>
       <button
