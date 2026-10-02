@@ -109,9 +109,14 @@ import CCNAKnowledgeHub from "../pages/modules/programs/CCNA/ccnaKnowledgeHub";
 import CCNAKnowledgeArticle from "../pages/modules/programs/CCNA/ccnaKnowledgeArticle";
 import CCNALesson from "../pages/modules/programs/CCNA/ccnaLesson";
 import CCNAModuleQuiz from "../pages/modules/programs/CCNA/ccnaModuleQuiz";
+import CCNAGradebook from "../pages/modules/programs/CCNA/ccnaGradebook";
 import { useAuth } from "../context/AuthContext";
 import { readCcnaExamSession, saveCcnaExamSession } from "../utils/ccnaExamSession";
-import { readCcnaModuleQuizProgress, saveCcnaModuleQuizProgress } from "../utils/ccnaModuleQuizProgress";
+import {
+  readCcnaModuleQuizProgress,
+  recordCcnaModuleQuizAttempt,
+  saveCcnaModuleQuizProgress,
+} from "../utils/ccnaModuleQuizProgress";
 import { CCNA_MODULE_QUIZZES } from "../pages/modules/programs/CCNA/ccnaModuleQuizData";
 
 if ("scrollRestoration" in history) {
@@ -343,6 +348,14 @@ export default function App() {
           }
         />
         <Route
+          path="/modules/programs/ccna/results"
+          element={
+            <ProtectedRoute>
+              <CCNAGradebook />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/modules/programs/ccna/knowledge-hub"
           element={
             <ProtectedRoute>
@@ -376,11 +389,11 @@ function CCNAExamTimeNotification() {
 
   useEffect(() => {
     function checkExamDeadline() {
-      const session = readCcnaExamSession();
+      const session = readCcnaExamSession(userId);
       if (session && session.status !== "completed" && session.deadline <= Date.now() && session.status !== "expired") {
         session.status = "expired";
         session.toastDismissed = false;
-        saveCcnaExamSession(session);
+        saveCcnaExamSession(userId, session);
       }
 
       let moduleProgress = userId
@@ -406,12 +419,14 @@ function CCNAExamTimeNotification() {
             activeModule: moduleProgress.activeModule === moduleNumber ? null : moduleProgress.activeModule,
             modules: {
               ...moduleProgress.modules,
-              [moduleNumber]: {
+              [moduleNumber]: recordCcnaModuleQuizAttempt({
                 ...attempt,
                 status: "expired",
                 score,
+                maxScore: moduleQuiz.questions.length,
+                submittedAt: attempt.submittedAt ?? Date.now(),
                 bestScore: Math.max(attempt.bestScore ?? 0, score),
-              },
+              }, moduleQuiz.questions.length),
             },
           };
           saveCcnaModuleQuizProgress(userId, moduleProgress);
@@ -458,9 +473,9 @@ function CCNAExamTimeNotification() {
         });
       }
     } else {
-      const session = readCcnaExamSession();
+      const session = readCcnaExamSession(userId);
       if (session?.status === "expired") {
-        saveCcnaExamSession({ ...session, toastDismissed: true });
+        saveCcnaExamSession(userId, { ...session, toastDismissed: true });
       }
     }
     setNotification(null);

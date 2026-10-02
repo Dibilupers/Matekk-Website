@@ -1,7 +1,16 @@
 export const CCNA_EXAM_SESSION_KEY = "matekk-ccna-exam-session";
 
-export function readCcnaExamSession() {
-	const savedSession = window.sessionStorage.getItem(CCNA_EXAM_SESSION_KEY);
+function getCcnaExamSessionKey(userId) {
+	if ((typeof userId !== "string" && typeof userId !== "number") || String(userId).trim() === "") {
+		return null;
+	}
+	return `${CCNA_EXAM_SESSION_KEY}:${encodeURIComponent(String(userId))}`;
+}
+
+export function readCcnaExamSession(userId) {
+	const key = getCcnaExamSessionKey(userId);
+	if (!key) return null;
+	const savedSession = window.sessionStorage.getItem(key);
 	if (!savedSession) return null;
 
 	try {
@@ -23,10 +32,12 @@ export function readCcnaExamSession() {
 		console.error("Unable to restore the saved CCNA exam session.", error);
 	}
 
-	window.sessionStorage.removeItem(CCNA_EXAM_SESSION_KEY);
+	window.sessionStorage.removeItem(key);
 	return null;
 }
 
-export function saveCcnaExamSession(session) {
-	window.sessionStorage.setItem(CCNA_EXAM_SESSION_KEY, JSON.stringify(session));
+export function saveCcnaExamSession(userId, session) {
+	const key = getCcnaExamSessionKey(userId);
+	if (!key) return;
+	window.sessionStorage.setItem(key, JSON.stringify(session));
 }
