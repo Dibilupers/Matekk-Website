@@ -1,4 +1,6 @@
-export const CCNA_MODULE_QUIZZES = [
+import { CCNA_MODULE_QUIZ_EXTRA_QUESTIONS } from "./ccnaModuleQuizExtraData.js";
+
+const baseModuleQuizzes = [
 	{
 		number: "1.0",
 		title: "Network Fundamentals",
@@ -216,3 +218,11 @@ export const CCNA_MODULE_QUIZZES = [
 		],
 	},
 ];
+
+export const CCNA_MODULE_QUIZZES = baseModuleQuizzes.map((quiz) => ({
+	...quiz,
+	questions: [
+		...quiz.questions,
+		...(CCNA_MODULE_QUIZ_EXTRA_QUESTIONS[quiz.number] ?? []),
+	],
+}));

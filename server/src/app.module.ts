@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module.js';
 import { UsersModule } from './users/users.module.js';
 import { InquiresModule } from './inquires/inquires.module.js';
 import { PrismaModule } from './prisma/prisma.module.js';
+import { QuestionsModule } from './questions/questions/questions.module.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -21,6 +22,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     AuthModule,
     UsersModule,
     InquiresModule,
+    QuestionsModule,
     PrismaModule,
   ],
   controllers: [AppController],
