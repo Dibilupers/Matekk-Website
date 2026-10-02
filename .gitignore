@@ -24,7 +24,9 @@ dist-ssr
 *.sln
 *.sw?
 
-.CLAUDE.md
-
 # Claude guide (local only)
 CLAUDE.md
+.CLAUDE.md
+
+src/config/api.js
+src/pages/modules/programs/Postman (x64).exe

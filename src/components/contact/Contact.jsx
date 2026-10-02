@@ -6,7 +6,9 @@ import ReCAPTCHA from "react-google-recaptcha";
 const EMAILJS_SERVICE_ID  = import.meta.env.VITE_EMAILJS_SERVICE_ID;
 const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
 const EMAILJS_PUBLIC_KEY  = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
-const RECAPTCHA_SITE_KEY  = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
+const RECAPTCHA_TEST_SITE_KEY = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI";
+const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY
+  || (import.meta.env.DEV ? RECAPTCHA_TEST_SITE_KEY : "");
 const COOLDOWN_MS         = 60_000;
 
 // ── Validators ─────────────────────────────────────────────────────────────
@@ -41,6 +43,10 @@ export default function ContactForm() {
       f.subject.value.trim() &&
       f.message.value.trim();
     setShowCaptcha(!!allFilled);
+    if (!allFilled) {
+      setRecaptchaToken(null);
+      recaptchaRef.current?.reset();
+    }
   };
 
   const startCooldownTimer = (lastSent) => {
@@ -76,6 +82,10 @@ export default function ContactForm() {
     }
 
     // ── reCAPTCHA ─────────────────────────────────────────────────────────
+    if (!RECAPTCHA_SITE_KEY) {
+      setStatus("CAPTCHA is not configured. Please contact us directly.");
+      return;
+    }
     if (!recaptchaToken) {
       setStatus("Please complete the CAPTCHA.");
       return;
@@ -231,12 +241,19 @@ export default function ContactForm() {
 
       {/* reCAPTCHA — only visible when all fields are filled */}
       {showCaptcha && (
-        <ReCAPTCHA
-          ref={recaptchaRef}
-          sitekey={RECAPTCHA_SITE_KEY}
-          onChange={setRecaptchaToken}
-          className="self-center"
-        />
+        RECAPTCHA_SITE_KEY ? (
+          <ReCAPTCHA
+            ref={recaptchaRef}
+            sitekey={RECAPTCHA_SITE_KEY}
+            onChange={setRecaptchaToken}
+            onExpired={() => setRecaptchaToken(null)}
+            className="self-center"
+          />
+        ) : (
+          <p className="self-center text-sm text-red-500">
+            CAPTCHA is not configured. Please contact us directly.
+          </p>
+        )
       )}
 
       {/* Status message */}

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 260" fill="none">
+  <rect width="760" height="260" rx="24" fill="#F4F7FD"/>
+  <text x="36" y="42" fill="#172642" font-family="Arial,sans-serif" font-size="18" font-weight="700">A TRUNK CARRIES VLAN IDENTIFICATION</text>
+  <rect x="72" y="102" width="108" height="76" rx="15" fill="#315EEA"/>
+  <path d="M91 125h70M91 137h70M101 115v40M123 115v40M145 115v40" stroke="#FFFFFF" stroke-width="3" opacity=".9"/>
+  <text x="126" y="198" text-anchor="middle" fill="#526584" font-family="Arial,sans-serif" font-size="12" font-weight="700">SWITCH A</text>
+  <rect x="580" y="102" width="108" height="76" rx="15" fill="#315EEA"/>
+  <path d="M599 125h70M599 137h70M609 115v40M631 115v40M653 115v40" stroke="#FFFFFF" stroke-width="3" opacity=".9"/>
+  <text x="634" y="198" text-anchor="middle" fill="#526584" font-family="Arial,sans-serif" font-size="12" font-weight="700">SWITCH B</text>
+  <path d="M181 140h398" stroke="#8295B5" stroke-width="8" stroke-linecap="round"/>
+  <path d="m565 130 15 10-15 10" stroke="#8295B5" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="380" y="105" text-anchor="middle" fill="#526584" font-family="Arial,sans-serif" font-size="13" font-weight="700">802.1Q TRUNK</text>
+  <rect x="270" y="122" width="220" height="38" rx="8" fill="#FFFFFF" stroke="#CBD7E9" stroke-width="2"/>
+  <path d="M270 130a8 8 0 0 1 8-8h91v38h-91a8 8 0 0 1-8-8v-22z" fill="#DDF5E7"/>
+  <path d="M369 122h113a8 8 0 0 1 8 8v22a8 8 0 0 1-8 8H369v-38z" fill="#E7EEFF"/>
+  <text x="319" y="146" text-anchor="middle" fill="#237344" font-family="Arial,sans-serif" font-size="12" font-weight="700">VLAN ID: 10</text>
+  <text x="428" y="146" text-anchor="middle" fill="#315EEA" font-family="Arial,sans-serif" font-size="12" font-weight="700">ETHERNET FRAME</text>
+  <text x="380" y="218" text-anchor="middle" fill="#71819B" font-family="Arial,sans-serif" font-size="13">The receiving switch uses the VLAN ID to forward the frame correctly.</text>
+</svg>

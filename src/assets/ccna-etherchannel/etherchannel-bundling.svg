@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 560" role="img" aria-labelledby="title description">
+  <title id="title">EtherChannel turns parallel physical links into one logical connection</title>
+  <desc id="description">Three illustrated switch chassis compare one 100 megabit physical link, separate links where STP blocks the redundant path, and two 100 megabit member links bundled into one Port-Channel with 200 megabit aggregate capacity.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
+      <path d="M0 0 8 3 0 6Z" fill="#285fc4"/>
+    </marker>
+    <g id="switch">
+      <rect x="0" y="0" width="150" height="104" rx="12" fill="#152b4c"/>
+      <rect x="9" y="10" width="132" height="15" rx="4" fill="#263e63"/>
+      <circle cx="19" cy="17.5" r="3" fill="#5be0a0"/>
+      <circle cx="31" cy="17.5" r="3" fill="#71a7ff"/>
+      <text x="80" y="22" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="700" fill="#eaf2ff">ETHERNET SWITCH</text>
+      <rect x="12" y="38" width="126" height="51" rx="7" fill="#0c1b32" stroke="#3c587e"/>
+      <g fill="#9ab3d9">
+        <rect x="20" y="48" width="15" height="11" rx="2"/><rect x="40" y="48" width="15" height="11" rx="2"/>
+        <rect x="60" y="48" width="15" height="11" rx="2"/><rect x="80" y="48" width="15" height="11" rx="2"/>
+        <rect x="100" y="48" width="15" height="11" rx="2"/><rect x="120" y="48" width="10" height="11" rx="2"/>
+        <rect x="20" y="68" width="15" height="11" rx="2"/><rect x="40" y="68" width="15" height="11" rx="2"/>
+        <rect x="60" y="68" width="15" height="11" rx="2"/><rect x="80" y="68" width="15" height="11" rx="2"/>
+        <rect x="100" y="68" width="15" height="11" rx="2"/><rect x="120" y="68" width="10" height="11" rx="2"/>
+      </g>
+      <text x="27" y="101" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#b9cce8">Gi0/1</text>
+      <text x="47" y="101" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#b9cce8">Gi0/2</text>
+    </g>
+  </defs>
+  <rect width="1100" height="560" rx="26" fill="#f6f8fd"/>
+  <text x="550" y="43" text-anchor="middle" font-family="Arial, sans-serif" font-size="27" font-weight="700" fill="#13294b">EtherChannel · from physical member links to one logical link</text>
+  <rect x="24" y="75" width="335" height="452" rx="20" fill="#fff" stroke="#d8e2f1" stroke-width="2"/>
+  <rect x="383" y="75" width="335" height="452" rx="20" fill="#fff" stroke="#d8e2f1" stroke-width="2"/>
+  <rect x="742" y="75" width="335" height="452" rx="20" fill="#fff" stroke="#78a4eb" stroke-width="3"/>
+  <text x="191" y="113" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#17356d">1 · ONE PHYSICAL LINK</text>
+  <text x="550" y="113" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#17356d">2 · SEPARATE REDUNDANT LINKS</text>
+  <text x="909" y="113" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#2458b8">3 · ETHERCHANNEL BUNDLE</text>
+  <g transform="translate(110 145)"><use href="#switch"/></g>
+  <g transform="translate(110 320)"><use href="#switch"/></g>
+  <path d="M140 249V320" stroke="#285fc4" stroke-width="8"/>
+  <text x="183" y="276" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="#285fc4">100 Mb/s</text>
+  <text x="191" y="455" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#526584">One link: 100 Mb/s line rate</text>
+  <g transform="translate(475 145)"><use href="#switch"/></g>
+  <g transform="translate(475 320)"><use href="#switch"/></g>
+  <path d="M505 249V320" stroke="#285fc4" stroke-width="8"/>
+  <path d="M535 249V320" stroke="#cb4f55" stroke-width="7" stroke-dasharray="8 7"/>
+  <circle cx="535" cy="284" r="15" fill="#fff" stroke="#cb4f55" stroke-width="3"/>
+  <path d="m529 278 12 12m0-12-12 12" stroke="#cb4f55" stroke-width="3"/>
+  <text x="555" y="269" font-family="Arial, sans-serif" font-size="12" font-weight="700" fill="#285fc4">100 Mb/s active</text>
+  <text x="555" y="297" font-family="Arial, sans-serif" font-size="12" font-weight="700" fill="#ad3c3c">STP blocks redundant link</text>
+  <text x="550" y="455" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#526584">Independent paths may be blocked by STP</text>
+  <g transform="translate(840 145)"><use href="#switch"/></g>
+  <g transform="translate(840 320)"><use href="#switch"/></g>
+  <path d="M870 249V320" stroke="#285fc4" stroke-width="8"/>
+  <path d="M900 249V320" stroke="#36a77a" stroke-width="8"/>
+  <rect x="820" y="267" width="178" height="37" rx="10" fill="#e9f5ff" stroke="#8fb5f4"/>
+  <text x="909" y="291" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#2458b8">Port-Channel 1</text>
+  <text x="909" y="455" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#35547f">2 × 100 Mb/s · 200 Mb/s aggregate</text>
+  <rect x="126" y="477" width="848" height="34" rx="11" fill="#eaf2ff"/>
+  <text x="550" y="500" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#35547f">STP sees the bundled Port-Channel as one logical link; physical member links remain separately cabled.</text>
+</svg>

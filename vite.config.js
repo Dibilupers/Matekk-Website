@@ -75,6 +75,13 @@ export default defineConfig({
     open: true,
     cors: true,
     strictPort: false,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+    },
     hmr: {
       overlay: true,
     },

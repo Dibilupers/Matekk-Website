@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 460" role="img" aria-labelledby="title description">
+  <title id="title">Spanning Tree port-role example</title>
+  <desc id="description">Switch A is the root bridge. Switch B uses its direct link to A as the root port. The link from B to C forwards as designated on the segment, while C blocks its redundant link to A.</desc>
+  <rect width="960" height="460" rx="24" fill="#f7f9fe"/>
+  <text x="480" y="46" text-anchor="middle" font-family="Arial, sans-serif" font-size="25" font-weight="700" fill="#122447">Example STP roles on a redundant triangle</text>
+  <path d="M245 155 590 155" stroke="#2c66cf" stroke-width="8"/>
+  <path d="M245 172 472 327" stroke="#2c66cf" stroke-width="8"/>
+  <path d="M590 172 488 327" stroke="#2c66cf" stroke-width="7"/>
+  <path d="M506 300 519 281" stroke="#c85454" stroke-width="7" stroke-dasharray="7 6"/>
+  <circle cx="506" cy="300" r="14" fill="#fff" stroke="#c85454" stroke-width="3"/>
+  <path d="m500 294 12 12m0-12-12 12" stroke="#c85454" stroke-width="3"/>
+  <rect x="105" y="100" width="220" height="112" rx="18" fill="#13294b"/>
+  <text x="215" y="145" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#fff">SWITCH A</text>
+  <text x="215" y="178" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#b8d2ff">ROOT BRIDGE</text>
+  <rect x="510" y="100" width="220" height="112" rx="18" fill="#fff" stroke="#8fb5f4" stroke-width="3"/>
+  <text x="620" y="145" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#17356d">SWITCH B</text>
+  <text x="620" y="178" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#526584">NON-ROOT BRIDGE</text>
+  <rect x="365" y="296" width="220" height="112" rx="18" fill="#fff" stroke="#8fb5f4" stroke-width="3"/>
+  <text x="475" y="341" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#17356d">SWITCH C</text>
+  <text x="475" y="374" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#526584">NON-ROOT BRIDGE</text>
+  <rect x="328" y="107" width="120" height="31" rx="9" fill="#eaf2ff"/>
+  <text x="388" y="128" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="#2458b8">Designated</text>
+  <rect x="237" y="208" width="120" height="31" rx="9" fill="#eaf2ff"/>
+  <text x="297" y="229" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="#2458b8">Designated</text>
+  <rect x="510" y="164" width="100" height="31" rx="9" fill="#eaf2ff"/>
+  <text x="560" y="185" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="#2458b8">Root port</text>
+  <rect x="388" y="266" width="100" height="31" rx="9" fill="#eaf2ff"/>
+  <text x="438" y="287" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="#2458b8">Root port</text>
+  <rect x="604" y="290" width="132" height="31" rx="9" fill="#fff0f0"/>
+  <text x="670" y="311" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="#ad3c3c">Non-designated</text>
+  <rect x="521" y="224" width="114" height="31" rx="9" fill="#eaf2ff"/>
+  <text x="578" y="245" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="#2458b8">Designated</text>
+</svg>

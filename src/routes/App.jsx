@@ -1,10 +1,13 @@
-import { Routes, Route } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Navigate, Routes, Route, useLocation } from "react-router-dom";
+import { X } from "lucide-react";
 import NavBar from "../components/navbar/navbar";
 import Footer from "../components/footer/footer";
 import ScrollToTop from "../components/scroll/ScrollToTop";
 
 /* Pages */
 import Home from "../pages/Home";
+import Login from "../pages/Login";
 import NotFound from "../pages/NotFound";
 
 /* Cisco */
@@ -99,20 +102,37 @@ import Renewable from "../pages/solutions/pece/renewable";
 
 /* PECE (PBOOT) */
 
-
+import Blank from "../pages/Blank";
+import AdminPage from "../pages/admin";
+import CCNADashboard from "../pages/modules/programs/CCNA/ccna";
+import CCNAKnowledgeHub from "../pages/modules/programs/CCNA/ccnaKnowledgeHub";
+import CCNAKnowledgeArticle from "../pages/modules/programs/CCNA/ccnaKnowledgeArticle";
+import CCNALesson from "../pages/modules/programs/CCNA/ccnaLesson";
+import CCNAModuleQuiz from "../pages/modules/programs/CCNA/ccnaModuleQuiz";
+import { useAuth } from "../context/AuthContext";
+import { readCcnaExamSession, saveCcnaExamSession } from "../utils/ccnaExamSession";
+import { readCcnaModuleQuizProgress, saveCcnaModuleQuizProgress } from "../utils/ccnaModuleQuizProgress";
+import { CCNA_MODULE_QUIZZES } from "../pages/modules/programs/CCNA/ccnaModuleQuizData";
 
 if ("scrollRestoration" in history) {
   history.scrollRestoration = "manual";
 }
 
 export default function App() {
+  const location = useLocation();
+  const isCCNALesson = location.pathname === "/modules/programs/ccna/lesson"
+    || location.pathname.startsWith("/modules/programs/ccna/quiz/");
+  const isAdminPage = location.pathname === "/admin";
+
   return (
     <>
-      <NavBar />
+      <CCNAExamTimeNotification />
+      {!isCCNALesson && <NavBar />}
       <ScrollToTop />
 
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
 
         {/* Cisco */}
         <Route path="/training/cisco/ccna/ccna" element={<CCNA />} />
@@ -297,11 +317,190 @@ export default function App() {
         <Route path="/solutions/pece/ipcctv" element={<IPCCTV />} />
         <Route path="/solutions/pece/pas" element={<PAS />} />
         <Route path="/solutions/pece/renewable" element={<Renewable />} />
+        <Route path="/pages/blank" element={<Blank />} />
+        <Route
+          path="/modules/programs/ccna"
+          element={
+            <ProtectedRoute>
+              <CCNADashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/ccna/lesson"
+          element={
+            <ProtectedRoute>
+              <CCNALesson />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/ccna/quiz/:moduleNumber"
+          element={
+            <ProtectedRoute>
+              <CCNAModuleQuiz />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/ccna/knowledge-hub"
+          element={
+            <ProtectedRoute>
+              <CCNAKnowledgeHub />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/ccna/knowledge-hub/:articleSlug"
+          element={
+            <ProtectedRoute>
+              <CCNAKnowledgeArticle />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/admin" element={<AdminPage />} />
 
         <Route path="*" element={<NotFound />} />
       </Routes>
 
-      <Footer />
+
+      {!isCCNALesson && !isAdminPage && <Footer />}
     </>
   );
+}
+
+function CCNAExamTimeNotification() {
+  const [notification, setNotification] = useState(null);
+
+  useEffect(() => {
+    function checkExamDeadline() {
+      const session = readCcnaExamSession();
+      if (session && session.status !== "completed" && session.deadline <= Date.now() && session.status !== "expired") {
+        session.status = "expired";
+        session.toastDismissed = false;
+        saveCcnaExamSession(session);
+      }
+
+      let moduleProgress = readCcnaModuleQuizProgress();
+      const expiredModule = Object.entries(moduleProgress.modules).find(
+        ([, attempt]) =>
+          attempt?.status === "in-progress" &&
+          Number.isFinite(attempt.deadline) &&
+          attempt.deadline <= Date.now(),
+      );
+
+      if (expiredModule) {
+        const [moduleNumber, attempt] = expiredModule;
+        const moduleQuiz = CCNA_MODULE_QUIZZES.find((quiz) => quiz.number === moduleNumber);
+        if (moduleQuiz) {
+          const score = moduleQuiz.questions.reduce(
+            (total, question, index) => total + (attempt.answers?.[index] === question.answer ? 1 : 0),
+            0,
+          );
+          moduleProgress = {
+            ...moduleProgress,
+            activeModule: moduleProgress.activeModule === moduleNumber ? null : moduleProgress.activeModule,
+            modules: {
+              ...moduleProgress.modules,
+              [moduleNumber]: {
+                ...attempt,
+                status: "expired",
+                score,
+                bestScore: Math.max(attempt.bestScore ?? 0, score),
+              },
+            },
+          };
+          saveCcnaModuleQuizProgress(moduleProgress);
+        }
+      }
+
+      const expiredModuleAttempt = Object.entries(moduleProgress.modules)
+        .filter(([, attempt]) => attempt?.status === "expired" && !attempt.toastDismissed)
+        .sort(([, first], [, second]) => (second.deadline ?? 0) - (first.deadline ?? 0))[0];
+
+      if (expiredModuleAttempt) {
+        const nextNotification = { type: "module", moduleNumber: expiredModuleAttempt[0] };
+        setNotification((current) =>
+          current?.type === nextNotification.type && current.moduleNumber === nextNotification.moduleNumber
+            ? current
+            : nextNotification,
+        );
+      } else if (session?.status === "expired" && !session.toastDismissed) {
+        setNotification((current) => current?.type === "lesson" ? current : { type: "lesson" });
+      } else {
+        setNotification((current) => current ? null : current);
+      }
+    }
+
+    checkExamDeadline();
+    const timer = window.setInterval(checkExamDeadline, 500);
+    return () => window.clearInterval(timer);
+  }, [userId]);
+
+  function dismissNotification() {
+    if (notification?.type === "module") {
+      const progress = readCcnaModuleQuizProgress();
+      const attempt = progress.modules[notification.moduleNumber];
+      if (attempt?.status === "expired") {
+        saveCcnaModuleQuizProgress({
+          ...progress,
+          modules: {
+            ...progress.modules,
+            [notification.moduleNumber]: { ...attempt, toastDismissed: true },
+          },
+        });
+      }
+    } else {
+      const session = readCcnaExamSession();
+      if (session?.status === "expired") {
+        saveCcnaExamSession({ ...session, toastDismissed: true });
+      }
+    }
+    setNotification(null);
+  }
+
+  if (!notification) return null;
+
+  return (
+    <div
+      role="status"
+      className="fixed right-4 top-4 z-[100] flex w-[min(24rem,calc(100vw-2rem))] items-start gap-3 rounded-xl border border-[#f2c6c3] bg-white p-4 text-[#263654] shadow-[0_12px_35px_rgba(15,35,75,0.18)]"
+    >
+      <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#fff0ef] text-sm font-bold text-[#b42318]">
+        !
+      </span>
+      <div className="min-w-0 flex-1">
+        <p className="text-sm font-bold">
+          {notification.type === "module" ? `Module ${notification.moduleNumber} quiz time is up` : "Exam time is up"}
+        </p>
+        <p className="mt-1 text-sm leading-5 text-[#64718a]">
+          {notification.type === "module"
+            ? "Your quiz has ended and your score has been saved."
+            : "Your time limit has ended. Your answers have been submitted."}
+        </p>
+      </div>
+      <button
+        type="button"
+        onClick={dismissNotification}
+        aria-label="Dismiss time limit notification"
+        className="rounded-md p-1 text-[#71809a] transition hover:bg-[#f1f5fc] hover:text-[#263654]"
+      >
+        <X size={17} />
+      </button>
+    </div>
+  );
+}
+
+function ProtectedRoute({ children }) {
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-white text-sm text-slate-500">
+        Checking your session...
+      </main>
+    );
+  }
+
+  return isAuthenticated ? children : <Navigate to="/login" replace />;
 }
