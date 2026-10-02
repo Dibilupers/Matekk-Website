@@ -71,6 +71,12 @@ const baseModuleQuizzes = [
 				answer: 1,
 				explanation: "Trust only the interface through which authorized DHCP server replies enter; keep client-facing ports untrusted.",
 			},
+			{
+				prompt: "Which VTP mode can create and advertise VLAN changes while keeping a local VLAN database?",
+				options: ["Client", "Server", "Transparent", "Access"],
+				answer: 1,
+				explanation: "A VTP server can create, modify, and advertise VLAN information for its VTP domain.",
+			},
 		],
 	},
 	{
@@ -172,6 +178,12 @@ const baseModuleQuizzes = [
 				options: ["SSH encrypts the management session", "SSH requires no authentication", "Telnet supports stronger encryption", "SSH works only on console lines"],
 				answer: 0,
 				explanation: "SSH encrypts credentials and session traffic; Telnet sends them in clear text.",
+			},
+			{
+				prompt: "What is a security benefit of multi-factor authentication?",
+				options: ["It requires evidence from more than one authentication factor", "It removes the need to identify users", "It encrypts all network traffic automatically", "It replaces authorization and accounting"],
+				answer: 0,
+				explanation: "Multi-factor authentication combines different factor types, making a stolen password alone less likely to grant access.",
 			},
 			{
 				prompt: "What does Dynamic ARP Inspection use to validate ARP messages in a common deployment?",

@@ -3,7 +3,7 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 import ccnaBadge from "../../../../assets/PaloAltoXsiamAnalyst.png";
-import PaloAltoHero from "../../../../assets/PaloAltoHeader.webp";
+import PaloAltoHero from "../../../../assets/training/paloalto/xsiamanalyst-hero.webp";
 import PaloAltoFooter from "../../../../assets/PaloAltoFooter.webp";
 import MealIcon from "../../../../assets/Meal.svg";
 import ReviewIcon from "../../../../assets/Review.svg";
@@ -136,7 +136,7 @@ export default function XsiamAnalyst() {
       <TrainingHeroBanner
         bgImage={PaloAltoHero}
         category="Palo Alto"
-        title="SXSIAM Analyst"
+        title="XSIAM Analyst"
         description="The Palo Alto Networks Certified Cortex XSIAM Security Operations 
               Professional exam is designed to validate the knowledge and skills 
               required to use the Palo Alto Networks Cortex XSIAM platform for automation,

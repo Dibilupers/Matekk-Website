@@ -1,16 +1,42 @@
-import { useState, isValidElement } from "react";
+import { useState, useRef, isValidElement } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
+
+// Matches the duration-500 collapse/expand transition below (plus a small buffer)
+const ANIMATION_MS = 550;
 
 export default function CourseModules({ modules }) {
   const [openSection, setOpenSection] = useState(null);
-  const toggleSection = (index) =>
+  const headerRefs = useRef([]);
+  const pinFrame = useRef(null);
+
+  // Keep the clicked header fixed on screen while a module above it collapses,
+  // so the page doesn't appear to jump down.
+  const pinHeader = (index) => {
+    const header = headerRefs.current[index];
+    if (!header) return;
+    cancelAnimationFrame(pinFrame.current);
+    const startTop = header.getBoundingClientRect().top;
+    let start = null;
+    const step = (now) => {
+      start ??= now;
+      const drift = header.getBoundingClientRect().top - startTop;
+      if (Math.abs(drift) > 0.5) window.scrollBy(0, drift);
+      if (now - start < ANIMATION_MS) pinFrame.current = requestAnimationFrame(step);
+    };
+    pinFrame.current = requestAnimationFrame(step);
+  };
+
+  const toggleSection = (index) => {
+    pinHeader(index);
     setOpenSection(openSection === index ? null : index);
+  };
 
   return (
     <div className="flex flex-col gap-3">
       {modules.map((module, index) => (
         <div key={index} className="rounded-xl overflow-hidden border border-gray-200">
           <div
+            ref={(el) => (headerRefs.current[index] = el)}
             onClick={() => toggleSection(index)}
             className={`w-full px-6 py-4 flex items-center justify-between transition-all duration-300 cursor-pointer ${
               openSection === index

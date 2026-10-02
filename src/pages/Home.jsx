@@ -20,7 +20,7 @@ import phone from "../assets/phone.svg";
 import email from "../assets/email.svg";
 import availability from "../assets/availability.svg";
 import Button from "../../src/components/ui/button";
-import Handshake from "../../src/assets/handshake.png";
+import Handshake from "../../src/assets/handshake_melendres.webp";
 import { useLocation } from "react-router-dom";
 import TestimonialsSection from "../components/section/TestimonialsSection.jsx";
 /* Services Section Images */
@@ -859,7 +859,7 @@ export default function Home() {
             <div className="absolute -top-4 -right-4 sm:-top-6 sm:-right-6 w-32 h-32 sm:w-40 sm:h-40 lg:w-50 lg:h-50 border-t-4 border-r-4 sm:border-t-6 sm:border-r-6 border-blue-500 rounded-tr-3xl z-0"></div>
             <img
               src={Handshake}
-              alt="Professional handshake - Matekk Cybercore Academy team"
+              alt="Engr. Melendres shaking hands with a client - Matekk Cybercore Academy"
               className="z-10 w-[75vw] md:w-[50vw] lg:w-full h-auto rounded-2xl sm:rounded-3xl object-cover aspect-4/5"
             />
             <div className="absolute -bottom-4 -left-4 sm:-bottom-6 sm:-left-6 w-32 h-32 sm:w-40 sm:h-40 lg:w-50 lg:h-50 border-b-4 border-l-4 sm:border-b-6 sm:border-l-6 border-blue-500 rounded-bl-3xl z-0"></div>

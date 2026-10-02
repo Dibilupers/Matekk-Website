@@ -208,7 +208,7 @@ function NavBar() {
                 path: "/solutions/ict/insi/iptelephony",
               },
               {
-                name: "On-premise Servers",
+                name: "On-Premise Servers",
                 path: "/solutions/ict/insi/onpremise",
               },
               {
@@ -261,7 +261,7 @@ function NavBar() {
             path: "/solutions/pece/fdas",
           },
           { name: "Public Address Systems", path: "/solutions/pece/pas" },
-          { name: "Door Access", path: "/solutions/pece/dooraccess" },
+          { name: "Door Access Control Systems", path: "/solutions/pece/dooraccess" },
         ],
       },
     ],

@@ -1,6 +1,6 @@
 import SolutionsTemplate from "../../../components/solution_template/solutions_template";
-import PECEhero from "../../../assets/PECEHeroImage.jpg";
-import PECEfooter from "../../../assets/PECEFooterImage.webp";
+import PECEhero from "../../../assets/solutions/fdas-hero.webp";
+import PECEfooter from "../../../assets/solutions/fdas-footer.webp";
 
 
 const CHALLENGES = [

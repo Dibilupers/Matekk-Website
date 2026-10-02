@@ -1,11 +1,16 @@
 import { useEffect, useState } from "react";
 import { Link, useBlocker } from "react-router-dom";
+import { useAuth } from "../../../../context/AuthContext";
 import { ArrowLeft, Moon, Sun } from "lucide-react";
 import TrainingLogo from "../../../../assets/MATEKK_training_logo.png";
 import {
 	readCcnaExamSession,
 	saveCcnaExamSession,
 } from "../../../../utils/ccnaExamSession";
+import {
+	createCcnaMockExamAttemptId,
+	saveCcnaMockExamResult,
+} from "../../../../utils/ccnaGradebook";
 
 const questions = [
 	{
@@ -135,9 +140,18 @@ function LessonHeader({ timeLeftSeconds, isDark, onThemeToggle, theme }) {
 }
 
 export default function CCNALesson() {
+	const { profile } = useAuth();
+	const userId = profile?.userId;
 	const [initialSession] = useState(() => {
-		const savedSession = readCcnaExamSession();
-		return savedSession ?? {
+		const savedSession = readCcnaExamSession(userId);
+		if (savedSession) {
+			return {
+				...savedSession,
+				attemptId: savedSession.attemptId ?? createCcnaMockExamAttemptId(),
+			};
+		}
+		return {
+			attemptId: createCcnaMockExamAttemptId(),
 			quizQuestions: shuffleQuestionOptions(questions),
 			answers: {},
 			lockedQuestions: {},
@@ -147,6 +161,9 @@ export default function CCNALesson() {
 			toastDismissed: false,
 		};
 	});
+	const [attemptId, setAttemptId] = useState(initialSession.attemptId);
+	const [submittedAt, setSubmittedAt] = useState(initialSession.submittedAt ?? null);
+	const [fallbackSubmittedAt] = useState(() => initialSession.submittedAt ?? Date.now());
 	const [currentIndex, setCurrentIndex] = useState(initialSession.currentIndex);
 	const [answers, setAnswers] = useState(initialSession.answers);
 	const [lockedQuestions, setLockedQuestions] = useState(initialSession.lockedQuestions ?? {});
@@ -158,6 +175,10 @@ export default function CCNALesson() {
 	const [isComplete, setIsComplete] = useState(initialSession.status === "completed");
 	const [toastDismissed, setToastDismissed] = useState(initialSession.toastDismissed ?? false);
 	const [isDark, setIsDark] = useState(false);
+	const score = quizQuestions.reduce(
+		(total, item, index) => total + (answers[index] === item.answer ? 1 : 0),
+		0,
+	);
 	const blocker = useBlocker(({ currentLocation, nextLocation }) =>
 		!isComplete &&
 		timeLeftSeconds > 0 &&
@@ -204,6 +225,7 @@ export default function CCNALesson() {
 		const timer = window.setTimeout(() => {
 			const secondsRemaining = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
 			setTimeLeftSeconds(secondsRemaining);
+			if (secondsRemaining === 0) setSubmittedAt((current) => current ?? Date.now());
 		}, 1000);
 
 		return () => window.clearTimeout(timer);
@@ -215,7 +237,9 @@ export default function CCNALesson() {
 			: timeLeftSeconds === 0
 				? "expired"
 				: "active";
-		saveCcnaExamSession({
+		const resultSubmittedAt = status === "active" ? null : submittedAt ?? fallbackSubmittedAt;
+		saveCcnaExamSession(userId, {
+			attemptId,
 			quizQuestions,
 			answers,
 			lockedQuestions,
@@ -223,18 +247,24 @@ export default function CCNALesson() {
 			deadline,
 			status,
 			toastDismissed,
+			...(resultSubmittedAt ? { submittedAt: resultSubmittedAt } : {}),
 		});
-	}, [answers, currentIndex, deadline, isComplete, lockedQuestions, quizQuestions, timeLeftSeconds, toastDismissed]);
+		if (status !== "active" && userId) {
+			saveCcnaMockExamResult(userId, {
+				id: attemptId,
+				title: "Mock exam",
+				score,
+				maxScore: quizQuestions.length,
+				submittedAt: resultSubmittedAt,
+			});
+		}
+	}, [answers, attemptId, currentIndex, deadline, fallbackSubmittedAt, isComplete, lockedQuestions, profile, quizQuestions, score, submittedAt, timeLeftSeconds, toastDismissed, userId]);
 
 	const question = quizQuestions[currentIndex];
 	const selectedAnswer = answers[currentIndex];
 	const isAnswered = selectedAnswer !== undefined;
 	const showResults = isComplete || timeLeftSeconds === 0;
 	const answeredCount = Object.keys(answers).length;
-	const score = quizQuestions.reduce(
-		(total, item, index) => total + (answers[index] === item.answer ? 1 : 0),
-		0,
-	);
 
 	function chooseAnswer(optionIndex) {
 		if (lockedQuestions[currentIndex]) return;
@@ -292,6 +322,8 @@ export default function CCNALesson() {
 								setAnswers({});
 								setLockedQuestions({});
 								setQuizQuestions(shuffleQuestionOptions(questions));
+								setAttemptId(createCcnaMockExamAttemptId());
+								setSubmittedAt(null);
 								setCurrentIndex(0);
 								const nextDeadline = Date.now() + QUIZ_TIME_LIMIT_SECONDS * 1000;
 								setDeadline(nextDeadline);
@@ -382,6 +414,7 @@ export default function CCNALesson() {
 								type="button"
 								onClick={() => {
 									if (currentIndex === quizQuestions.length - 1) {
+											setSubmittedAt(Date.now());
 										setIsComplete(true);
 									} else {
 										goToQuestion(currentIndex + 1);
