@@ -8,6 +8,7 @@ import {
 	beginCcnaModuleQuiz,
 	CCNA_MODULE_QUIZ_DURATION_SECONDS,
 	isCurrentCcnaModuleQuizAttempt,
+	recordCcnaModuleQuizAttempt,
 	readCcnaModuleQuizProgress,
 	saveCcnaModuleQuizProgress,
 } from "../../../../utils/ccnaModuleQuizProgress";
@@ -287,13 +288,15 @@ export default function CCNAModuleQuiz() {
 				(total, question, index) => total + (attemptAnswers?.[index] === question.answer ? 1 : 0),
 				0,
 			);
-			const expiredAttempt = {
+			const expiredAttempt = recordCcnaModuleQuizAttempt({
 				...attempt,
 				status: "expired",
 				score: finalScore,
+				maxScore: moduleQuiz.questions.length,
 				elapsedSeconds: CCNA_MODULE_QUIZ_DURATION_SECONDS,
+				submittedAt: Date.now(),
 				bestScore: Math.max(bestScore ?? 0, finalScore),
-			};
+			}, moduleQuiz.questions.length);
 			saveAttemptProgress(userId, moduleQuiz.number, expiredAttempt, "expired");
 			setAttemptState({ userId, moduleNumber: moduleQuiz.number, attempt: expiredAttempt });
 		}
@@ -350,18 +353,20 @@ export default function CCNAModuleQuiz() {
 			(total, question, index) => total + (answers[index] === question.answer ? 1 : 0),
 			0,
 		);
-		updateAttempt({
+		updateAttempt(recordCcnaModuleQuizAttempt({
 			...attempt,
 			answers,
 			lockedQuestions: { ...attempt.lockedQuestions, [attempt.currentIndex]: true },
 			status: "completed",
 			score: finalScore,
+			maxScore: moduleQuiz.questions.length,
+			submittedAt: Date.now(),
 			elapsedSeconds: Math.min(
 				CCNA_MODULE_QUIZ_DURATION_SECONDS,
 				Math.max(0, CCNA_MODULE_QUIZ_DURATION_SECONDS - secondsLeft),
 			),
 			bestScore: Math.max(attempt.bestScore ?? 0, finalScore),
-		}, "completed");
+		}, moduleQuiz.questions.length), "completed");
 	}
 
 	const answeredCurrentQuestion = selectedAnswer !== undefined;

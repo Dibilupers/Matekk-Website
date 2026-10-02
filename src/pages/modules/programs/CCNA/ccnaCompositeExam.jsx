@@ -3,6 +3,8 @@ import { Link, useBlocker } from "react-router-dom";
 import { ArrowLeft, ArrowRight, ArrowUp, Clock3, RotateCcw, X } from "lucide-react";
 import TrainingLogo from "../../../../assets/MATEKK_training_logo.png";
 import { CCNA_MODULE_QUIZZES } from "./ccnaModuleQuizData";
+import { useAuth } from "../../../../context/AuthContext";
+import { createCcnaMockExamAttemptId, saveCcnaMockExamResult } from "../../../../utils/ccnaGradebook";
 
 const SHORT_EXAM_QUESTION_COUNT = 50;
 const SHORT_EXAM_DURATION_SECONDS = 45 * 60;
@@ -37,18 +39,22 @@ function createShortExamQuestions() {
 	}));
 }
 
+function createShortExamSession() {
+	return {
+		attemptId: createCcnaMockExamAttemptId(),
+		questions: createShortExamQuestions(),
+		answers: {},
+		lockedQuestions: {},
+		currentIndex: 0,
+		deadline: Date.now() + SHORT_EXAM_DURATION_SECONDS * 1000,
+		isSubmitted: false,
+		submittedAt: null,
+	};
+}
+
 function restoreShortExamSession() {
 	const savedSession = window.sessionStorage.getItem(SHORT_EXAM_SESSION_KEY);
-	if (!savedSession) {
-		return {
-			questions: createShortExamQuestions(),
-			answers: {},
-			lockedQuestions: {},
-			currentIndex: 0,
-			deadline: Date.now() + SHORT_EXAM_DURATION_SECONDS * 1000,
-			isSubmitted: false,
-		};
-	}
+	if (!savedSession) return createShortExamSession();
 
 	try {
 		const session = JSON.parse(savedSession);
@@ -73,9 +79,14 @@ function restoreShortExamSession() {
 			typeof session.isSubmitted === "boolean";
 
 		if (isValid) {
+			const isSubmitted = session.isSubmitted || session.deadline <= Date.now();
 			return {
 				...session,
-				isSubmitted: session.isSubmitted || session.deadline <= Date.now(),
+				attemptId: typeof session.attemptId === "string" ? session.attemptId : createCcnaMockExamAttemptId(),
+				isSubmitted,
+				submittedAt: Number.isFinite(session.submittedAt)
+					? session.submittedAt
+					: isSubmitted ? Math.min(Date.now(), session.deadline) : null,
 			};
 		}
 
@@ -83,14 +94,7 @@ function restoreShortExamSession() {
 	} catch (error) {
 		console.error("Unable to restore the saved CCNA short exam session.", error);
 		window.sessionStorage.removeItem(SHORT_EXAM_SESSION_KEY);
-		return {
-			questions: createShortExamQuestions(),
-			answers: {},
-			lockedQuestions: {},
-			currentIndex: 0,
-			deadline: Date.now() + SHORT_EXAM_DURATION_SECONDS * 1000,
-			isSubmitted: false,
-		};
+		return createShortExamSession();
 	}
 }
 
@@ -102,6 +106,10 @@ function formatTime(totalSeconds) {
 
 export default function CCNACompositeExam() {
 	const [initialSession] = useState(restoreShortExamSession);
+	const { profile } = useAuth();
+	const userId = profile?.userId;
+	const [attemptId, setAttemptId] = useState(initialSession.attemptId);
+	const [submittedAt, setSubmittedAt] = useState(initialSession.submittedAt);
 	const [questions, setQuestions] = useState(initialSession.questions);
 	const [answers, setAnswers] = useState(initialSession.answers);
 	const [lockedQuestions, setLockedQuestions] = useState(initialSession.lockedQuestions);
@@ -154,14 +162,33 @@ export default function CCNACompositeExam() {
 
 	useEffect(() => {
 		window.sessionStorage.setItem(SHORT_EXAM_SESSION_KEY, JSON.stringify({
+			attemptId,
 			questions,
 			answers,
 			lockedQuestions,
 			currentIndex,
 			deadline,
 			isSubmitted,
+			submittedAt,
 		}));
-	}, [answers, currentIndex, deadline, isSubmitted, lockedQuestions, questions]);
+	}, [answers, attemptId, currentIndex, deadline, isSubmitted, lockedQuestions, questions, submittedAt]);
+
+	// Record the finished exam in the student's gradebook (CCNA results page).
+	useEffect(() => {
+		if (!isSubmitted || !userId || !Number.isFinite(submittedAt)) return;
+		saveCcnaMockExamResult(userId, {
+			id: attemptId,
+			title: "Short exam",
+			score,
+			maxScore: questions.length,
+			submittedAt,
+		});
+	}, [attemptId, isSubmitted, questions.length, score, submittedAt, userId]);
+
+	function submitExam(finishedAt = Date.now()) {
+		setSubmittedAt(finishedAt);
+		setIsSubmitted(true);
+	}
 
 	useEffect(() => {
 		if (isSubmitted) return undefined;
@@ -169,7 +196,7 @@ export default function CCNACompositeExam() {
 		function updateTimer() {
 			const remaining = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
 			setSecondsRemaining(remaining);
-			if (remaining === 0) setIsSubmitted(true);
+			if (remaining === 0) submitExam(deadline);
 		}
 
 		updateTimer();
@@ -251,6 +278,8 @@ export default function CCNACompositeExam() {
 	}, [isAnswerReviewVisible, isSubmitted]);
 
 	function restartExam() {
+		setAttemptId(createCcnaMockExamAttemptId());
+		setSubmittedAt(null);
 		setQuestions(createShortExamQuestions());
 		setAnswers({});
 		setLockedQuestions({});
@@ -360,7 +389,7 @@ export default function CCNACompositeExam() {
 								<div className="mt-6 flex justify-end">
 									<button
 										type="button"
-										onClick={() => currentIndex === questions.length - 1 ? setIsSubmitted(true) : goToQuestion(currentIndex + 1)}
+										onClick={() => currentIndex === questions.length - 1 ? submitExam() : goToQuestion(currentIndex + 1)}
 										disabled={answers[currentIndex] === undefined}
 										className="rounded-full bg-[#005b6b] px-6 py-3 font-semibold text-white transition hover:bg-[#004653] disabled:cursor-not-allowed disabled:opacity-40"
 									>
