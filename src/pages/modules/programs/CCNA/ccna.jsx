@@ -11,6 +11,7 @@ import {
 	ChevronLeft,
 	ChevronRight,
 	CircleAlert,
+	ClipboardList,
 	Clock3,
 	MessageSquare,
 	Pencil,
@@ -26,7 +27,7 @@ import {
 import { CCNA_MODULE_QUIZZES } from "./ccnaModuleQuizData";
 import { CCNA_CURRICULUM, slugifyCcnaTutorial } from "./ccnaCurriculum.js";
 import { readCcnaTutorialProgress } from "../../../../utils/ccnaTutorialProgress";
-import { getCcnaShortExamSessionKey } from "../../../../utils/ccnaShortExamSession";
+import { readCcnaShortExamProgress } from "../../../../utils/ccnaShortExamSession";
 
 const modules = CCNA_CURRICULUM.map((section) => ({
 	...section,
@@ -37,42 +38,6 @@ const EXAM_FORMATS = [
 	{ name: "Medium Exam", questions: 100, duration: "1 hour & 30 mins", description: "A balanced, longer practice session." },
 	{ name: "Long Exam", questions: 150, duration: "2 hours", description: "A full-length practice session." },
 ];
-function readShortExamProgress(userId) {
-	if (userId === null || userId === undefined || String(userId).trim() === "") {
-		return { status: "not-started", deadline: null, answeredCount: 0, score: 0 };
-	}
-	const savedSession = window.sessionStorage.getItem(getCcnaShortExamSessionKey(userId));
-	if (!savedSession) return { status: "not-started", deadline: null, answeredCount: 0, score: 0 };
-
-	try {
-		const session = JSON.parse(savedSession);
-		if (
-			!session ||
-			!Array.isArray(session.questions) ||
-			!session.answers ||
-			typeof session.answers !== "object" ||
-			!Number.isFinite(session.deadline) ||
-			typeof session.isSubmitted !== "boolean"
-		) {
-			throw new TypeError("Saved CCNA short exam progress has an invalid structure.");
-		}
-		const score = session.questions.reduce(
-			(total, question, index) => total + Number(session.answers[index] === question.answer),
-			0,
-		);
-		const isExpired = !session.isSubmitted && session.deadline <= Date.now();
-		return {
-			status: session.isSubmitted ? "completed" : isExpired ? "expired" : "in-progress",
-			deadline: session.isSubmitted || isExpired ? null : session.deadline,
-			answeredCount: Object.keys(session.answers).length,
-			score,
-		};
-	} catch (error) {
-		console.error("Unable to restore the saved CCNA short exam status.", error);
-		return { status: "not-started", deadline: null, answeredCount: 0, score: 0 };
-	}
-}
-
 function formatExamTime(totalSeconds) {
 	const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, "0");
 	const seconds = (totalSeconds % 60).toString().padStart(2, "0");
@@ -100,9 +65,16 @@ function Stat({ value, label }) {
 	);
 }
 
-function NetworkIllustration({ quizAverage }) {
+function NetworkIllustration({ quizAverage, shortExamProgress }) {
 	const { profile } = useAuth();
 	const starsFill = `${Math.max(0, Math.min(100, quizAverage))}%`;
+	const hasShortExamResult = shortExamProgress.status === "completed" || shortExamProgress.status === "expired";
+	const passedShortExam = shortExamProgress.score / 50 >= 0.8;
+	const examActionLabel = hasShortExamResult
+		? "View result"
+		: shortExamProgress.status === "in-progress"
+			? "Continue exam"
+			: "Start short exam";
 
 	return (
 		<div className="relative mx-auto h-[320px] w-full max-w-[440px] sm:h-[380px] sm:max-w-[470px]">
@@ -125,13 +97,37 @@ function NetworkIllustration({ quizAverage }) {
 					<span aria-hidden="true" className="ccna-stars-fill" style={{ width: starsFill }}>★★★★★</span>
 				</span>
 			</div>
-			<div className="absolute right-0 top-[10%] z-30 flex h-12 w-12 items-center justify-center rounded-full bg-[#005b6b] text-white shadow-lg transition-transform duration-200 ease-out hover:scale-110 motion-reduce:transition-none motion-reduce:hover:scale-100"><Settings size={21} /></div>
-			<div className="absolute right-[-4px] top-[44%] z-30 flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#005b6b] shadow-[0_8px_20px_rgba(15,35,75,0.1)] transition-transform duration-200 ease-out hover:scale-110 motion-reduce:transition-none motion-reduce:hover:scale-100"><Pencil size={18} /></div>
+			<Link
+				to="/modules/programs/ccna/results"
+				aria-label="Open CCNA gradebook"
+				title="Gradebook"
+				className="absolute right-[12%] top-[2%] z-30 flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#005b6b] shadow-[0_8px_20px_rgba(15,35,75,0.1)] transition-all duration-200 ease-out hover:-translate-y-1 hover:scale-110 hover:shadow-lg active:translate-y-0 motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:hover:scale-100"
+			>
+				<ClipboardList size={21} />
+			</Link>
+			<div className="absolute right-0 top-[17%] z-30 flex h-12 w-12 items-center justify-center rounded-full bg-[#005b6b] text-white shadow-lg transition-transform duration-200 ease-out hover:scale-110 motion-reduce:transition-none motion-reduce:hover:scale-100"><Settings size={21} /></div>
+			<div className="absolute right-[-4px] top-[32%] z-30 flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#005b6b] shadow-[0_8px_20px_rgba(15,35,75,0.1)] transition-transform duration-200 ease-out hover:scale-110 motion-reduce:transition-none motion-reduce:hover:scale-100"><Pencil size={18} /></div>
 			<div className="absolute right-[2%] top-[70%] z-30 flex h-12 w-12 items-center justify-center rounded-full bg-[#005b6b] text-white shadow-lg transition-transform duration-200 ease-out hover:scale-110 motion-reduce:transition-none motion-reduce:hover:scale-100"><MessageSquare size={19} /></div>
 			<div className="absolute bottom-0 right-0 z-30 w-[238px] rounded-2xl border border-[#e4eaf5] bg-white p-4 shadow-[0_14px_28px_rgba(15,35,75,0.1)] transition-transform duration-200 ease-out hover:scale-[1.03] motion-reduce:transition-none motion-reduce:hover:scale-100 sm:right-[-2%] sm:w-[275px]">
 				<strong className="text-sm text-[#005b6b]">{profile?.username}</strong>
-				<p className="mt-0.5 text-sm leading-snug text-[#64708a]">just passed the CCNA<br />mock exam!</p>
-				<Link to="/modules/programs/ccna/results" className="mt-3 flex h-11 w-full items-center justify-center rounded-full bg-[#005b6b] text-sm font-bold text-white transition-all duration-200 ease-out hover:scale-105 hover:bg-[#004653] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100">View result</Link>
+				<p className="mt-0.5 text-sm leading-snug text-[#64708a]">
+					{hasShortExamResult
+						? passedShortExam
+							? "You just passed the short exam!"
+							: "You didn't pass the short exam!"
+						: shortExamProgress.status === "in-progress"
+							? "You're taking the short exam!"
+							: "Take the short exam to see your result."}
+					{hasShortExamResult && (
+						<span className="mt-1 block">
+							{passedShortExam ? "Good job! :)" : "Better luck next time! :("}
+						</span>
+					)}
+					{hasShortExamResult && (
+						<span className="mt-1 block">Score: {shortExamProgress.score}/50</span>
+					)}
+				</p>
+				<Link to="/modules/programs/ccna/exam/short" className="mt-3 flex h-11 w-full items-center justify-center rounded-full bg-[#005b6b] text-sm font-bold text-white transition-all duration-200 ease-out hover:scale-105 hover:bg-[#004653] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100">{examActionLabel}</Link>
 			</div>
 		</div>
 	);
@@ -325,11 +321,11 @@ export default function CCNA() {
 	const [selectedExamFormat, setSelectedExamFormat] = useState(null);
 	const [shortExamProgressState, setShortExamProgressState] = useState(() => ({
 		userId,
-		progress: readShortExamProgress(userId),
+		progress: readCcnaShortExamProgress(userId),
 	}));
 	const shortExamProgress = shortExamProgressState.userId === userId
 		? shortExamProgressState.progress
-		: readShortExamProgress(userId);
+		: readCcnaShortExamProgress(userId);
 	const [examClockNow, setExamClockNow] = useState(Date.now);
 	const [progressSlide, setProgressSlide] = useState(0);
 	const [quizProgressState] = useState(() => ({
@@ -355,6 +351,11 @@ export default function CCNA() {
 			const attempt = quizProgress.modules[module.number];
 			return !isCurrentCcnaModuleQuizAttempt(attempt) || !["completed", "expired"].includes(attempt.status);
 		})?.number ?? "1.0";
+	const activeModuleDetails = modules.find((module) => module.number === activeModule);
+	const allModulesCompleted = modules.every((module) => {
+		const attempt = quizProgress.modules[module.number];
+		return isCurrentCcnaModuleQuizAttempt(attempt) && ["completed", "expired"].includes(attempt.status);
+	});
 	const activeQuizProgress = isCurrentCcnaModuleQuizAttempt(quizProgress.modules[activeModule])
 		? quizProgress.modules[activeModule]
 		: null;
@@ -368,7 +369,7 @@ export default function CCNA() {
 		if (!shortExamProgress.deadline) return undefined;
 		const intervalId = window.setInterval(() => {
 			setExamClockNow(Date.now());
-			setShortExamProgressState({ userId, progress: readShortExamProgress(userId) });
+			setShortExamProgressState({ userId, progress: readCcnaShortExamProgress(userId) });
 		}, 1000);
 		return () => window.clearInterval(intervalId);
 	}, [shortExamProgress.deadline, userId]);
@@ -439,7 +440,10 @@ export default function CCNA() {
 				<div className="grid items-center gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-4">
 					<div>
 						<div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#c9dfe2] bg-[#f0f7f7] px-4 py-2 text-sm font-semibold text-[#005b6b]">
-							<span className="h-2 w-2 rounded-full bg-[#005b6b]" /> Module 2 of 6 · Network Access
+							<span className="h-2 w-2 rounded-full bg-[#005b6b]" />
+							{allModulesCompleted
+								? "All 6 modules completed"
+								: `Module ${activeModuleDetails?.number.replace(".0", "") ?? "1"} of ${modules.length} · ${activeModuleDetails?.title ?? "Network Fundamentals"}`}
 						</div>
 						<h1 className="max-w-[700px] text-[2.65rem] font-bold leading-[1.08] tracking-[-1.5px] sm:text-6xl lg:text-[3.25rem] xl:text-[3.7rem]">
 							Continue your path to <span className="text-[#005b6b]">CCNA<br className="hidden sm:block" /> Certification.</span>
@@ -467,7 +471,7 @@ export default function CCNA() {
 							<div className="pl-5 sm:pl-7"><Stat value={remainingModules} label="Modules left" /></div>
 						</div>
 					</div>
-					<NetworkIllustration quizAverage={quizAverage} />
+					<NetworkIllustration quizAverage={quizAverage} shortExamProgress={shortExamProgress} />
 				</div>
 			</section>
 
@@ -623,6 +627,23 @@ export default function CCNA() {
 														<span className="mt-0.5 block text-xs text-[#7c89a1]">{format.questions} questions</span>
 														<strong className={`mt-1 block text-sm ${isShortExam && shortExamProgress.status !== "not-started" ? "text-[#005b6b]" : "text-[#8b96a9]"}`}>
 															{statusText}
+															{isShortExam && shortExamProgress.status === "expired" && (
+																<span className="group/exam-expired relative ml-1.5 inline-flex align-middle">
+																	<button
+																		type="button"
+																		aria-label="Exam time expired"
+																		className="flex h-5 w-5 items-center justify-center rounded-full bg-[#dc2626] text-white shadow-sm"
+																	>
+																		<CircleAlert size={15} strokeWidth={2.5} />
+																	</button>
+																	<span
+																		role="tooltip"
+																		className="pointer-events-none absolute bottom-full left-0 z-20 mb-1 w-max max-w-[240px] rounded-md bg-[#071126] px-2.5 py-1.5 text-xs font-medium text-white opacity-0 shadow-lg transition-opacity group-hover/exam-expired:opacity-100 group-focus-within/exam-expired:opacity-100"
+																	>
+																		Time is up — retake the exam to try again.
+																	</span>
+																</span>
+															)}
 														</strong>
 													</div>
 													<div className="flex min-h-[58px] min-w-[112px] flex-col items-end justify-between">
@@ -652,7 +673,7 @@ export default function CCNA() {
 														) : null}
 													</div>
 												</div>
-												{!(isShortExam && hasActiveShortExam) && (
+												{isShortExam && shortExamProgress.status !== "not-started" && !hasActiveShortExam && (
 													<div
 														role="progressbar"
 														aria-label={`${format.name} completion`}
@@ -794,9 +815,24 @@ export default function CCNA() {
 										type="button"
 										aria-pressed={isSelected}
 										onClick={() => setSelectedExamFormat(format.name)}
-										className={`rounded-2xl border p-5 text-left transition-colors ${isSelected ? "border-[#005b6b] bg-[#eaf3f4] text-[#005b6b]" : "border-[#d6e5e7] text-[#263654] hover:border-[#a9cdd2]"}`}
+										className={`rounded-2xl border p-5 text-left transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(0,91,107,0.14)] active:translate-y-0 motion-reduce:transition-none motion-reduce:hover:translate-y-0 ${isSelected ? "border-[#005b6b] bg-[#eaf3f4] text-[#005b6b]" : "border-[#d6e5e7] text-[#263654] hover:border-[#a9cdd2]"}`}
 									>
-										<span className="block text-lg font-bold">{format.name}</span>
+										<span className="flex items-center justify-between gap-2">
+											<span className="text-lg font-bold">{format.name}</span>
+											{format.name === "Short Exam" && hasActiveShortExam && (
+												<span
+													role="timer"
+													aria-label={`${formatExamTime(shortExamSecondsRemaining)} remaining`}
+													className={`shrink-0 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-bold tabular-nums ${
+														shortExamSecondsRemaining <= 60
+															? "bg-[#fff0ed] text-[#b42318]"
+															: "bg-[#e8f3f4] text-[#005b6b]"
+													}`}
+												>
+													{formatExamTime(shortExamSecondsRemaining)} left
+												</span>
+											)}
+										</span>
 										<span className="mt-3 block text-3xl font-extrabold">{format.questions}</span>
 										<span className="block text-sm font-medium text-[#71819b]">questions</span>
 										<span className="mt-4 flex items-center gap-1.5 text-sm font-semibold"><Clock3 size={15} /> {format.duration}</span>

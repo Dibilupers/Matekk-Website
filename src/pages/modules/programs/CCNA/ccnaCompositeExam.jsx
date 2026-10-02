@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useBlocker } from "react-router-dom";
-import { ArrowLeft, ArrowRight, ArrowUp, Clock3, RotateCcw, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUp, Clock3, Moon, RotateCcw, Sun, X } from "lucide-react";
 import { useAuth } from "../../../../context/AuthContext";
 import TrainingLogo from "../../../../assets/MATEKK_training_logo.png";
 import { CCNA_MODULE_QUIZZES } from "./ccnaModuleQuizData";
@@ -113,6 +113,7 @@ export default function CCNACompositeExam() {
 	const [secondsRemaining, setSecondsRemaining] = useState(() =>
 		Math.max(0, Math.ceil((initialSession.deadline - Date.now()) / 1000)),
 	);
+	const [isDark, setIsDark] = useState(false);
 	const [isSubmitted, setIsSubmitted] = useState(initialSession.isSubmitted);
 	const [examAttempt, setExamAttempt] = useState(0);
 	const [answerFilter, setAnswerFilter] = useState("all");
@@ -298,11 +299,11 @@ export default function CCNACompositeExam() {
 	if (!question) return null;
 
 	return (
-		<main className="ccna-page-enter min-h-screen bg-[#f5f9f9] px-4 py-6 text-[#17233d] sm:px-8 sm:py-8">
+		<main data-theme={isDark ? "dark" : "light"} className="ccna-page-enter min-h-screen bg-[#f5f9f9] px-4 py-6 text-[#17233d] sm:px-8 sm:py-8">
 			<div className="mx-auto max-w-[1125px]">
 				<header className="mb-7 flex flex-wrap items-center justify-between gap-4 border-b border-[#d6e5e7] pb-5">
 					<div className="flex min-w-0 items-center gap-4">
-						<Link to="/modules/programs/ccna" aria-label="Back to CCNA course" className="shrink-0 rounded-lg bg-white px-3 py-2 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 motion-reduce:transition-none">
+						<Link to="/modules/programs/ccna" aria-label="Back to CCNA course" className="ccna-training-logo shrink-0 rounded-lg bg-white px-3 py-2 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 motion-reduce:transition-none">
 							<img src={TrainingLogo} alt="MATEKK Cybercore Academy" className="h-auto w-32 sm:w-36" />
 						</Link>
 						<div className="hidden min-w-0 border-l border-[#cbd5e1] pl-4 sm:block">
@@ -311,12 +312,22 @@ export default function CCNACompositeExam() {
 						</div>
 					</div>
 					<div className="flex items-center gap-2">
+						<button
+							type="button"
+							onClick={() => setIsDark((current) => !current)}
+							aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
+							aria-pressed={isDark}
+							className="ccna-dark-hover inline-flex items-center gap-2 rounded-full border border-[#c9dfe2] bg-white px-4 py-2 text-sm font-semibold text-[#005b6b] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md hover:bg-[#e8f3f4] active:translate-y-0 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+						>
+							{isDark ? <Sun size={16} /> : <Moon size={16} />}
+							{isDark ? "Light mode" : "Dark mode"}
+						</button>
 						{!isSubmitted && (
 							<div role="timer" aria-label={`${formatTime(secondsRemaining)} remaining`} className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold tabular-nums ${secondsRemaining <= 300 ? "border-[#f0c6a8] bg-[#fff5ee] text-[#a44b13]" : "border-[#c9dfe2] bg-white text-[#005b6b]"}`}>
 								<Clock3 size={16} /> {formatTime(secondsRemaining)}
 							</div>
 						)}
-						<Link to="/modules/programs/ccna" className="inline-flex items-center gap-2 rounded-full border border-[#c9dfe2] px-4 py-2 text-sm font-semibold text-[#005b6b] transition-all duration-200 ease-out hover:scale-105 hover:bg-[#e8f3f4] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100">
+						<Link to="/modules/programs/ccna" className="ccna-dark-hover inline-flex items-center gap-2 rounded-full border border-[#c9dfe2] px-4 py-2 text-sm font-semibold text-[#005b6b] transition-all duration-200 ease-out hover:scale-105 hover:bg-[#e8f3f4] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100">
 							<X size={16} /> <span>Exit exam</span>
 						</Link>
 					</div>
@@ -330,7 +341,7 @@ export default function CCNACompositeExam() {
 								<p className="mt-1 text-sm text-[#70809a]">{answeredCount} of {questions.length} questions answered</p>
 							</div>
 							<div role="progressbar" aria-label="Exam progress" aria-valuemin={0} aria-valuemax={questions.length} aria-valuenow={answeredCount} className="h-2 w-full max-w-xs overflow-hidden rounded-full bg-[#dfe9eb]">
-								<div className="h-full rounded-full bg-[#005b6b] transition-[width]" style={{ width: `${(answeredCount / questions.length) * 100}%` }} />
+								<div className="ccna-progress-fill h-full rounded-full bg-[#005b6b] transition-[width]" style={{ width: `${(answeredCount / questions.length) * 100}%` }} />
 							</div>
 						</div>
 
@@ -350,7 +361,7 @@ export default function CCNACompositeExam() {
 												onClick={() => setAnswers((previous) => ({ ...previous, [currentIndex]: optionIndex }))}
 												disabled={Boolean(lockedQuestions[currentIndex])}
 												aria-pressed={isSelected}
-												className={`flex min-h-[60px] w-full items-center gap-3 rounded-2xl border px-4 py-3 text-left transition disabled:cursor-default ${isSelected ? "border-[#005b6b] bg-[#e8f3f4] text-[#263654]" : "border-[#d9e1ef] bg-white text-[#263654] hover:border-[#8bb8bf] hover:bg-[#f0f7f7]"}`}
+												className={`ccna-answer-choice ccna-dark-hover flex min-h-[60px] w-full items-center gap-3 rounded-2xl border px-4 py-3 text-left transition disabled:cursor-default ${isSelected ? "border-[#005b6b] bg-[#e8f3f4] text-[#263654]" : "border-[#d9e1ef] bg-white text-[#263654] hover:border-[#8bb8bf] hover:bg-[#f0f7f7]"}`}
 											>
 												<span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold ${isSelected ? "bg-[#005b6b] text-white" : "bg-[#e8f3f4] text-[#005b6b]"}`}>
 													{String.fromCharCode(65 + optionIndex)}
@@ -382,7 +393,7 @@ export default function CCNACompositeExam() {
 											index === currentIndex ||
 											(index === currentIndex + 1 && answers[currentIndex] !== undefined && !lockedQuestions[currentIndex]);
 										return (
-											<button key={`${item.moduleNumber}-${index}`} type="button" onClick={() => goToQuestion(index)} disabled={!canNavigate} aria-label={`Question ${index + 1}${isAnswered ? ", answered" : ", unanswered"}`} aria-current={isCurrent ? "step" : undefined} className={`h-10 rounded-xl border text-sm font-semibold transition disabled:cursor-not-allowed ${isAnswered ? "border-[#005b6b] bg-[#e8f3f4] text-[#005b6b]" : "border-[#d9e1ef] bg-white text-[#71809a]"} ${isCurrent ? "ring-2 ring-[#005b6b] ring-offset-2" : ""} hover:border-[#005b6b] hover:bg-[#005b6b] hover:text-white disabled:hover:border-inherit disabled:hover:bg-inherit disabled:hover:text-inherit`}>
+											<button key={`${item.moduleNumber}-${index}`} type="button" onClick={() => goToQuestion(index)} disabled={!canNavigate} aria-label={`Question ${index + 1}${isAnswered ? ", answered" : ", unanswered"}`} aria-current={isCurrent ? "step" : undefined} className={`ccna-dark-hover h-10 rounded-xl border text-sm font-semibold transition disabled:cursor-not-allowed ${isAnswered ? "border-[#005b6b] bg-[#e8f3f4] text-[#005b6b]" : "border-[#d9e1ef] bg-white text-[#71809a]"} ${isCurrent ? "ring-2 ring-[#005b6b] ring-offset-2" : ""} hover:border-[#005b6b] hover:bg-[#005b6b] hover:text-white disabled:hover:border-inherit disabled:hover:bg-inherit disabled:hover:text-inherit`}>
 												{index + 1}
 											</button>
 										);
@@ -565,7 +576,7 @@ export default function CCNACompositeExam() {
 				)}
 			</div>
 			{blocker.state === "blocked" && (
-				<div className="fixed inset-0 z-[120] flex items-center justify-center bg-[#071126]/55 px-4 py-6 backdrop-blur-[2px]">
+				<div data-theme={isDark ? "dark" : "light"} className="fixed inset-0 z-[120] flex items-center justify-center bg-[#071126]/55 px-4 py-6 backdrop-blur-[2px]">
 					<section
 						role="alertdialog"
 						aria-modal="true"
@@ -579,7 +590,7 @@ export default function CCNACompositeExam() {
 							Your answers and time remaining will be saved. The timer will keep running while you are away.
 						</p>
 						<div className="mt-6 flex justify-end gap-3">
-							<button type="button" onClick={() => blocker.reset()} className="rounded-full border border-[#c9dfe2] px-5 py-2.5 text-sm font-semibold text-[#42516b] transition hover:bg-[#f5f9f9]">
+							<button type="button" onClick={() => blocker.reset()} className="ccna-modal-stay rounded-full border border-[#c9dfe2] px-5 py-2.5 text-sm font-semibold text-[#42516b] transition hover:bg-[#f5f9f9]">
 								Stay in exam
 							</button>
 							<button type="button" onClick={() => blocker.proceed()} className="rounded-full bg-[#005b6b] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#004653]">
