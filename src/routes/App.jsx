@@ -371,6 +371,8 @@ export default function App() {
 
 function CCNAExamTimeNotification() {
   const [notification, setNotification] = useState(null);
+  const { profile } = useAuth();
+  const userId = profile?.userId;
 
   useEffect(() => {
     function checkExamDeadline() {

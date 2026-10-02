@@ -1,6 +1,6 @@
 import SolutionsTemplate from "../../../../components/solution_template/solutions_template";
-import ICTConsultancyHero from "../../../../assets/ICTConsultancyHero.jpg";
-import ICTConsultancyFooter from "../../../../assets/ICTConsultancyFooter.jpg";
+import ICTConsultancyHero from "../../../../assets/solutions/redteam-hero.webp";
+import ICTConsultancyFooter from "../../../../assets/solutions/redteam-footer.webp";
 
 const CHALLENGES = [
   "Unknown or untested security gaps across systems and processes",
@@ -43,7 +43,7 @@ export default function RedTeamSolution() {
       // Hero
       heroBgImage={ICTConsultancyHero}
       category="ICT Consultancy (PBOOT)"
-      heroTitle="Red Team"
+      heroTitle="Red Team (VAPT)"
       heroDescription="MATEKK delivers advanced Red Team operations that simulate real-world cyberattacks to test your organization's defenses, uncover hidden vulnerabilities, and strengthen overall security resilience."
       // Building section
       buildingTitle="Realistic, Offensive, and Intelligence-Led"

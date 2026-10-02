@@ -1,6 +1,6 @@
 import SolutionsTemplate from "../../../../components/solution_template/solutions_template";
-import ICTConsultancyHero from "../../../../assets/ICTConsultancyHero.jpg";
-import ICTConsultancyFooter from "../../../../assets/ICTConsultancyFooter.jpg";
+import ICTConsultancyHero from "../../../../assets/solutions/iptelephony-hero.webp";
+import ICTConsultancyFooter from "../../../../assets/solutions/iptelephony-footer.webp";
 
 const CHALLENGES = [
   "High costs of traditional telephony systems",

@@ -1,6 +1,6 @@
 import SolutionsTemplate from "../../../../components/solution_template/solutions_template";
-import ICTConsultancyHero from "../../../../assets/ICTConsultancyHero.jpg";
-import ICTConsultancyFooter from "../../../../assets/ICTConsultancyFooter.jpg";
+import ICTConsultancyHero from "../../../../assets/solutions/smartbuilding-hero.webp";
+import ICTConsultancyFooter from "../../../../assets/solutions/smartbuilding-footer.webp";
 
 const CHALLENGES = [
   "Inefficient management of building systems and resources",
