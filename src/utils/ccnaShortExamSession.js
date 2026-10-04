@@ -1,3 +1,4 @@
+import { isAnswerCorrect, isQuestionAnswered } from "./ccnaExamGrading";
 
 const CCNA_SHORT_EXAM_SESSION_KEY = "matekk-ccna-short-exam-session";
 
@@ -34,14 +35,14 @@ export function readCcnaExamProgress(baseKey, userId) {
 			throw new TypeError("Saved CCNA exam progress has an invalid structure.");
 		}
 		const score = session.questions.reduce(
-			(total, question, index) => total + Number(session.answers[index] === question.answer),
+			(total, question, index) => total + Number(isAnswerCorrect(question, session.answers[index])),
 			0,
 		);
 		const isExpired = !session.isSubmitted && session.deadline <= Date.now();
 		return {
 			status: session.isSubmitted ? "completed" : isExpired ? "expired" : "in-progress",
 			deadline: session.isSubmitted || isExpired ? null : session.deadline,
-			answeredCount: Object.keys(session.answers).length,
+			answeredCount: session.questions.filter((question, index) => isQuestionAnswered(question, session.answers[index])).length,
 			score,
 			maxScore: session.questions.length,
 		};

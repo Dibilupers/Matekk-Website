@@ -1,6 +1,8 @@
 // Questions for the CCNA Medium Exam.
-// Each question: { prompt, exhibit?, options, answer (index of the correct option), explanation }.
+// Question formats are described in src/utils/ccnaExamGrading.js (pick one, choose two, matching).
 // `exhibit` is optional device output shown in a code box above the choices.
+
+import { CCNA_COMPOSITE_SET_QUESTIONS, CCNA_COMPOSITE_SET2_QUESTIONS } from "./ccnaCompositeSetQuestions";
 
 export const CCNA_MEDIUM_EXAM_QUESTIONS = [
 	{
@@ -45,4 +47,7 @@ GigabitEthernet0/0 is up, line protocol is up
 		explanation:
 			"The router side shows Full Duplex, yet the counters show collisions along with CRC and frame errors. Collisions should never happen on a full-duplex link, so the ISP side has most likely negotiated half duplex. This duplex mismatch corrupts and discards frames, which causes the unstable connection. The other choices do not fit: there are 0 overruns and 0 no-buffer drops (no full buffer), 0 runts (no undersized frames), and the ARP timeout has nothing to do with dropping broadcasts.",
 	},
+	// 85 questions from the CCNA composite question set
+	...CCNA_COMPOSITE_SET_QUESTIONS,
+	...CCNA_COMPOSITE_SET2_QUESTIONS,
 ];

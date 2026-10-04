@@ -12,6 +12,7 @@ import NotFound from "../pages/NotFound";
 
 /* Cisco */
 import CCNA from "../pages/training/cisco/ccna/ccna";
+import CCNAPracticeLab from "../pages/training/cisco/ccna/practiceLab";
 import CCNAAutomation from "../pages/training/cisco/ccna/automation";
 import CCNACybersecurity from "../pages/training/cisco/ccna/cybersecurity";
 import CCNPEnterprise from "../pages/training/cisco/ccnp/enterprise";
@@ -142,6 +143,7 @@ export default function App() {
 
         {/* Cisco */}
         <Route path="/training/cisco/ccna/ccna" element={<CCNA />} />
+        <Route path="/training/cisco/ccna/practice-lab" element={<CCNAPracticeLab />} />
         <Route
           path="/training/cisco/ccna/automation"
           element={<CCNAAutomation />}
@@ -329,6 +331,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <CCNADashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/ccna/practice-lab"
+          element={
+            <ProtectedRoute>
+              <CCNAPracticeLab fromDashboard />
             </ProtectedRoute>
           }
         />

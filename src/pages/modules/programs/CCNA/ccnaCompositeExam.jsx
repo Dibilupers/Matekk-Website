@@ -6,6 +6,8 @@ import TrainingLogo from "../../../../assets/MATEKK_training_logo.png";
 import { CCNA_EXAMS } from "./ccnaExamFormats";
 import { createCcnaMockExamAttemptId, saveCcnaMockExamResult } from "../../../../utils/ccnaGradebook";
 import { getCcnaExamSessionKey } from "../../../../utils/ccnaShortExamSession";
+import { isAnswerCorrect, isQuestionAnswered, isValidQuestion } from "../../../../utils/ccnaExamGrading";
+import { QuestionInput, QuestionReview } from "./ccnaExamQuestionViews";
 
 const EXAM_PASS_PERCENTAGE = 80;
 
@@ -32,12 +34,7 @@ function restoreExamSession(exam, sessionStorageKey) {
 			session &&
 			Array.isArray(session.questions) &&
 			session.questions.length === exam.questionCount &&
-			session.questions.every((question) =>
-				Array.isArray(question.options) &&
-				Number.isInteger(question.answer) &&
-				question.answer >= 0 &&
-				question.answer < question.options.length
-			) &&
+			session.questions.every(isValidQuestion) &&
 			session.answers &&
 			typeof session.answers === "object" &&
 			session.lockedQuestions &&
@@ -112,11 +109,12 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 			currentLocation.hash !== nextLocation.hash),
 	);
 	const question = questions[currentIndex];
-	const answeredCount = Object.keys(answers).length;
+	const answeredCount = questions.filter((item, index) => isQuestionAnswered(item, answers[index])).length;
 	const score = questions.reduce(
-		(total, item, index) => total + Number(answers[index] === item.answer),
+		(total, item, index) => total + Number(isAnswerCorrect(item, answers[index])),
 		0,
 	);
+	const isCurrentAnswered = question ? isQuestionAnswered(question, answers[currentIndex]) : false;
 	const animatedScore = animatedResult.attempt === examAttempt ? animatedResult.score : 0;
 	const animatedElapsedSeconds = animatedResult.attempt === examAttempt ? animatedResult.elapsedSeconds : 0;
 	const animatedPercentage = Math.round((animatedScore / questions.length) * 100);
@@ -131,7 +129,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 			...item,
 			index,
 			selectedAnswer: answers[index],
-			isCorrect: answers[index] === item.answer,
+			isCorrect: isAnswerCorrect(item, answers[index]),
 		}))
 		.filter((item) =>
 			answerFilter === "all" ||
@@ -289,7 +287,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 			index < currentIndex ||
 			index > currentIndex + 1 ||
 			(index > currentIndex && (
-				answers[currentIndex] === undefined ||
+				!isCurrentAnswered ||
 				lockedQuestions[currentIndex]
 			))
 		) return;
@@ -358,31 +356,18 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 								{question.exhibit && (
 									<pre aria-label="Exhibit" className="mb-6 max-h-96 overflow-auto rounded-xl bg-[#0f1b2d] p-4 text-xs leading-5 text-[#e2e8f0] sm:text-[13px]"><code>{question.exhibit}</code></pre>
 								)}
-								<div className="space-y-2.5">
-									{question.options.map((option, optionIndex) => {
-										const isSelected = answers[currentIndex] === optionIndex;
-										return (
-											<button
-												key={option}
-												type="button"
-												onClick={() => setAnswers((previous) => ({ ...previous, [currentIndex]: optionIndex }))}
-												disabled={Boolean(lockedQuestions[currentIndex])}
-												aria-pressed={isSelected}
-												className={`ccna-answer-choice ccna-dark-hover flex min-h-[60px] w-full items-center gap-3 rounded-2xl border px-4 py-3 text-left transition disabled:cursor-default ${isSelected ? "border-[#005b6b] bg-[#e8f3f4] text-[#263654]" : "border-[#d9e1ef] bg-white text-[#263654] hover:border-[#8bb8bf] hover:bg-[#f0f7f7]"}`}
-											>
-												<span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold ${isSelected ? "bg-[#005b6b] text-white" : "bg-[#e8f3f4] text-[#005b6b]"}`}>
-													{String.fromCharCode(65 + optionIndex)}
-												</span>
-												<span className="text-[15px] sm:text-base">{option}</span>
-											</button>
-										);
-									})}
-								</div>
+								<QuestionInput
+									key={currentIndex}
+									question={question}
+									value={answers[currentIndex]}
+									disabled={Boolean(lockedQuestions[currentIndex])}
+									onChange={(value) => setAnswers((previous) => ({ ...previous, [currentIndex]: value }))}
+								/>
 								<div className="mt-6 flex justify-end">
 									<button
 										type="button"
 										onClick={() => currentIndex === questions.length - 1 ? submitExam() : goToQuestion(currentIndex + 1)}
-										disabled={answers[currentIndex] === undefined}
+										disabled={!isCurrentAnswered}
 										className="rounded-full bg-[#005b6b] px-6 py-3 font-semibold text-white transition hover:bg-[#004653] disabled:cursor-not-allowed disabled:opacity-40"
 									>
 										{currentIndex === questions.length - 1 ? "Submit" : "Next Question"}
@@ -394,11 +379,11 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 								<h2 className="mb-4 text-base font-bold">Questions</h2>
 								<div className="grid grid-cols-5 gap-2">
 									{questions.map((item, index) => {
-										const isAnswered = answers[index] !== undefined;
+										const isAnswered = isQuestionAnswered(item, answers[index]);
 										const isCurrent = currentIndex === index;
 										const canNavigate =
 											index === currentIndex ||
-											(index === currentIndex + 1 && answers[currentIndex] !== undefined && !lockedQuestions[currentIndex]);
+											(index === currentIndex + 1 && isCurrentAnswered && !lockedQuestions[currentIndex]);
 										return (
 											<button key={`${item.moduleNumber ?? "q"}-${index}`} type="button" onClick={() => goToQuestion(index)} disabled={!canNavigate} aria-label={`Question ${index + 1}${isAnswered ? ", answered" : ", unanswered"}`} aria-current={isCurrent ? "step" : undefined} className={`ccna-dark-hover h-10 rounded-xl border text-sm font-semibold transition disabled:cursor-not-allowed ${isAnswered ? "border-[#005b6b] bg-[#e8f3f4] text-[#005b6b]" : "border-[#d9e1ef] bg-white text-[#71809a]"} ${isCurrent ? "ring-2 ring-[#005b6b] ring-offset-2" : ""} hover:border-[#005b6b] hover:bg-[#005b6b] hover:text-white disabled:hover:border-inherit disabled:hover:bg-inherit disabled:hover:text-inherit`}>
 												{index + 1}
@@ -427,7 +412,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 									)}
 								</h1>
 								<p className="mt-4 max-w-xl leading-7 text-[#64748b]">
-									You got {score} of {questions.length} questions correct across CCNA modules 1.0–6.0.
+									You got {score} of {questions.length} questions correct{examKey === "short" ? " across CCNA modules 1.0–6.0" : ""}.
 									{examPassed
 										? " You passed this exam."
 										: ` Review your answers below and aim for ${EXAM_PASS_PERCENTAGE}% to pass.`}
@@ -533,32 +518,8 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 												{item.exhibit && (
 													<pre aria-label="Exhibit" className="mt-4 max-h-80 overflow-auto rounded-xl bg-[#0f1b2d] p-4 text-xs leading-5 text-[#e2e8f0]"><code>{item.exhibit}</code></pre>
 												)}
-												<div className="mt-5 space-y-2.5">
-													{item.options.map((option, optionIndex) => {
-														const isCorrectAnswer = optionIndex === item.answer;
-														const isSelectedAnswer = optionIndex === item.selectedAnswer;
-														const optionStyle = isCorrectAnswer
-															? "border-[#54a879] bg-[#eff9f2] text-[#236a43]"
-															: isSelectedAnswer
-																? "border-[#e77945] bg-[#fff5ef] text-[#a44b13]"
-																: "border-[#e1e8ef] bg-white text-[#42516b]";
-														return (
-															<div key={option} className={`flex min-h-[54px] items-center gap-3 rounded-xl border px-4 py-3 ${optionStyle}`}>
-																<span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
-																	isCorrectAnswer ? "bg-[#2d8a56] text-white" : isSelectedAnswer ? "bg-[#c7541a] text-white" : "bg-[#edf3fb] text-[#4764a8]"
-																}`}>
-																	{String.fromCharCode(65 + optionIndex)}
-																</span>
-																<span className="flex-1 text-sm font-medium sm:text-base">{option}</span>
-																{isSelectedAnswer && !isCorrectAnswer && (
-																	<span className="text-xs font-bold text-[#a44b13]">Your answer</span>
-																)}
-																{isCorrectAnswer && (
-																	<span className="text-xs font-bold text-[#287849]">Correct answer</span>
-																)}
-															</div>
-														);
-													})}
+												<div className="mt-5">
+													<QuestionReview question={item} value={item.selectedAnswer} />
 												</div>
 												<p className="mt-4 rounded-xl bg-[#f5f9f9] px-4 py-3 text-sm leading-6 text-[#596983]">
 													<span className="font-bold text-[#005b6b]">Explanation: </span>{item.explanation}
