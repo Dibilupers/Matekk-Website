@@ -105,6 +105,8 @@ import Renewable from "../pages/solutions/pece/renewable";
 import Blank from "../pages/Blank";
 import AdminPage from "../pages/admin";
 import CCNADashboard from "../pages/modules/programs/CCNA/ccna";
+import CCNAAutomationDashboard from "../pages/modules/programs/CCNAAutomation/ccnaAutomationDashboard";
+import CCNACybersecurityDashboard from "../pages/modules/programs/CCNACybersecurity/ccnaCybersecurityDashboard";
 import CCNAKnowledgeHub from "../pages/modules/programs/CCNA/ccnaKnowledgeHub";
 import CCNAKnowledgeArticle from "../pages/modules/programs/CCNA/ccnaKnowledgeArticle";
 import CCNACompositeExam from "../pages/modules/programs/CCNA/ccnaCompositeExam";
@@ -327,6 +329,22 @@ export default function App() {
           element={
             <ProtectedRoute>
               <CCNADashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/ccna-automation"
+          element={
+            <ProtectedRoute>
+              <CCNAAutomationDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/ccna-cybersecurity"
+          element={
+            <ProtectedRoute>
+              <CCNACybersecurityDashboard />
             </ProtectedRoute>
           }
         />

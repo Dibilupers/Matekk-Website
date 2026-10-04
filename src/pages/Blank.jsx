@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { ArrowRight, BookOpen } from "lucide-react";
+import { ArrowRight, BookOpen, LayoutGrid, List, Search, X } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import API_URL from "../config/api";
@@ -15,6 +15,46 @@ import AzureLogo from "../assets/azure_fundamentals.webp";
 import AwsLogo from "../assets/awspractitioner.webp";
 import ItilLogo from "../assets/itil5.webp";
 import ProjectManagementLogo from "../assets/project_management_professional.webp";
+import CCNAAutomationLogo from "../assets/CCNAAutomation.webp";
+import CCNACybersecurityLogo from "../assets/CCNAcybersecurity.webp";
+import CCNPDatacenterLogo from "../assets/CCNPDatacenter.webp";
+import CCNPEnterpriseLogo from "../assets/CCNPEnterprise.webp";
+import CCNPSecurityLogo from "../assets/CCNPSecurity.png";
+import CiscoLogo from "../assets/cisco.png";
+import SecurityPlusLogo from "../assets/security+.webp";
+import CySAPlusLogo from "../assets/cysa.webp";
+import PenTestPlusLogo from "../assets/pentest.webp";
+import LinuxPlusLogo from "../assets/linux+.webp";
+import FortiOSLogo from "../assets/nse-4-fortios.svg";
+import FortinetSecureNetworkingLogo from "../assets/nse-5-secure-networking.svg";
+import FortinetSaseLogo from "../assets/nse-5-sase.svg";
+import FortinetCloudSecurityLogo from "../assets/nse-5-cloud-security.svg";
+import FortinetSecurityOperationsLogo from "../assets/nse-5-security-operations.svg";
+import FortinetCybersecurityExpertLogo from "../assets/nse-8-cybersecurity-expert.png";
+import PaloAltoApprenticeLogo from "../assets/PaloAltoCyberSecurityApprentice.png";
+import PaloAltoPractitionerLogo from "../assets/PaloAltoCyberSecurityPractitioner.png";
+import PaloAltoProfessionalLogo from "../assets/PaloAltoProfessional.png";
+import PaloAltoAnalystLogo from "../assets/PaloAltoNetworkSecurityAnalyst.png";
+import PaloAltoFirewallEngineerLogo from "../assets/PaloAltoNextGenFirewallEngineer.png";
+import PaloAltoSdwanEngineerLogo from "../assets/PaloAltoSDWanEngineer.png";
+import PaloAltoSseEngineerLogo from "../assets/PaloAltoSecurityServiceEdgeEngineer.png";
+import PaloAltoArchitectLogo from "../assets/PaloAltoNetworkSecurityArchitect.png";
+import PaloAltoSecOpsLogo from "../assets/PaloAltoSecurityOperationProfessional.png";
+import PaloAltoXsiamAnalystLogo from "../assets/PaloAltoXsiamAnalyst.png";
+import PaloAltoXdrAnalystLogo from "../assets/PaloAltoXDRAnalyst.png";
+import PaloAltoXsiamEngineerLogo from "../assets/PaloAltoXsiamEngineer.png";
+import PaloAltoXdrEngineerLogo from "../assets/PaloAltoXDREngineer.png";
+import PaloAltoXsoarEngineerLogo from "../assets/PaloAltoXsoarEngineer.png";
+import PaloAltoCloudSecurityLogo from "../assets/PaloAltoCloudSecurityProfessional.png";
+import DcfcLogo from "../assets/dcfc.webp";
+import CdcpLogo from "../assets/cdcp.webp";
+import CdcsLogo from "../assets/cdcs.webp";
+import CdthLogo from "../assets/cdth.png";
+import MatekkTrainingLogo from "../assets/MATEKK_training_logo.png";
+import AzureFundamentalsLogo from "../assets/azure.svg";
+import AwsEssentialsLogo from "../assets/awsessentials.png";
+import Itil5FoundationLogo from "../assets/itil5.webp";
+import PmpLogo from "../assets/pmp.webp";
 
 const PROGRAM_INTROS = [
 	"Explore practical ICT training programs designed to help you grow with confidence.",
@@ -34,6 +74,53 @@ const categoryLogos = {
 	"Cloud Computing": AzureLogo,
 	"IT Management": ItilLogo,
 	"Project Management": ProjectManagementLogo,
+};
+
+const programLogos = {
+	"/training/cisco/ccna/ccna": CCNALogo,
+	"/training/cisco/ccna/automation": CCNAAutomationLogo,
+	"/training/cisco/ccna/cybersecurity": CCNACybersecurityLogo,
+	"/training/cisco/ccnp/enterprise": CCNPEnterpriseLogo,
+	"/training/cisco/ccnp/security": CCNPSecurityLogo,
+	"/training/cisco/ccnp/datacenter": CCNPDatacenterLogo,
+	"/training/cisco/ccnp/collaboration": CiscoLogo,
+	"/training/comptia/aplus": APlusLogo,
+	"/training/comptia/network": NetworkPlusLogo,
+	"/training/comptia/security+": SecurityPlusLogo,
+	"/training/comptia/cysa": CySAPlusLogo,
+	"/training/comptia/pentest": PenTestPlusLogo,
+	"/training/comptia/linux": LinuxPlusLogo,
+	"/training/fortinet/fortios": FortiOSLogo,
+	"/training/fortinet/secure-networking": FortinetSecureNetworkingLogo,
+	"/training/fortinet/sase": FortinetSaseLogo,
+	"/training/fortinet/cloud-security": FortinetCloudSecurityLogo,
+	"/training/fortinet/security-operations": FortinetSecurityOperationsLogo,
+	"/training/fortinet/cybersecurity-expert": FortinetCybersecurityExpertLogo,
+	"/training/paloalto/networksecurity/apprentice": PaloAltoApprenticeLogo,
+	"/training/paloalto/networksecurity/practitioner": PaloAltoPractitionerLogo,
+	"/training/paloalto/networksecurity/professional": PaloAltoProfessionalLogo,
+	"/training/paloalto/networksecurity/analyst": PaloAltoAnalystLogo,
+	"/training/paloalto/networksecurity/nextgenerationfirewallengineer": PaloAltoFirewallEngineerLogo,
+	"/training/paloalto/networksecurity/sdwanengineer": PaloAltoSdwanEngineerLogo,
+	"/training/paloalto/networksecurity/securityserviceedgeengineer": PaloAltoSseEngineerLogo,
+	"/training/paloalto/networksecurity/architect": PaloAltoArchitectLogo,
+	"/training/paloalto/securityoperations/professional": PaloAltoSecOpsLogo,
+	"/training/paloalto/securityoperations/xsiamanalyst": PaloAltoXsiamAnalystLogo,
+	"/training/paloalto/securityoperations/xdranalyst": PaloAltoXdrAnalystLogo,
+	"/training/paloalto/securityoperations/xsiamengineer": PaloAltoXsiamEngineerLogo,
+	"/training/paloalto/securityoperations/xdrengineer": PaloAltoXdrEngineerLogo,
+	"/training/paloalto/securityoperations/xsoarengineer": PaloAltoXsoarEngineerLogo,
+	"/training/paloalto/cloudsecurity/professional": PaloAltoCloudSecurityLogo,
+	"/training/datacenter/dcfc": DcfcLogo,
+	"/training/datacenter/cdcp": CdcpLogo,
+	"/training/datacenter/cdcs": CdcsLogo,
+	"/training/cybersecurity/cdth": CdthLogo,
+	"/training/cybersecurity/peh": MatekkTrainingLogo,
+	"/training/cloud/microsoft/azurefundamentals": AzureFundamentalsLogo,
+	"/training/cloud/aws/practitioner": AwsLogo,
+	"/training/cloud/aws/essentials": AwsEssentialsLogo,
+	"/training/itil5/foundation": Itil5FoundationLogo,
+	"/training/projectmanagement/pmp": PmpLogo,
 };
 
 function getCategoryCourses(category) {
@@ -62,16 +149,26 @@ function getCoursesForEnrollment(enrollment) {
 			.map((course) => ({
 				...course,
 				category: category.name,
-				image: categoryLogos[category.name],
+				image: programLogos[course.path] ?? categoryLogos[category.name],
 				description: `Explore the ${course.name} program and develop industry-ready skills with MATEKK Cybercore Technologies.`,
 			}));
 	});
 }
+
+function getProgramPath(course) {
+	if (course.name === "CCNA") return "/modules/programs/ccna";
+	if (course.name === "CCNA Automation") return "/modules/programs/ccna-automation";
+	if (course.name === "CCNA Cybersecurity") return "/modules/programs/ccna-cybersecurity";
+	return course.path;
+}
+
 /* Reads User's Profile to display enrolled courses */
 export default function Blank() {
 	const navigate = useNavigate();
 	const { profile: sessionProfile } = useAuth();
 	const [activeCategory, setActiveCategory] = useState("All Programs");
+	const [programLayout, setProgramLayout] = useState("grid");
+	const [programSearch, setProgramSearch] = useState("");
 	const [loadedProfile, setLoadedProfile] = useState(null);
 	const [profileError, setProfileError] = useState("");
 	const profile = sessionProfile ?? loadedProfile;
@@ -85,9 +182,15 @@ export default function Blank() {
 	);
 	const categories = ["All Programs", ...new Set(enrolledCourses.map((course) => course.category))];
 	const visibleCourses = useMemo(() => {
-		if (activeCategory === "All Programs") return enrolledCourses;
-		return enrolledCourses.filter((course) => course.category === activeCategory);
-	}, [activeCategory, enrolledCourses]);
+		const normalizedSearch = programSearch.trim().toLowerCase();
+		return enrolledCourses.filter((course) => {
+			const matchesCategory = activeCategory === "All Programs" || course.category === activeCategory;
+			const matchesSearch = !normalizedSearch || `${course.name} ${course.category} ${course.description}`
+				.toLowerCase()
+				.includes(normalizedSearch);
+			return matchesCategory && matchesSearch;
+		});
+	}, [activeCategory, enrolledCourses, programSearch]);
 
 	const selectCategory = (category) => {
 		setActiveCategory(category);
@@ -234,27 +337,77 @@ export default function Blank() {
 					</aside>
 
 					<section className="min-w-0" aria-live="polite">
-						<div className="mb-5 flex items-center justify-between gap-4">
+						<div className="mb-5 flex flex-wrap items-center justify-between gap-4">
 							<p className="flex items-center gap-2 text-sm font-medium text-slate-500"><BookOpen size={17} /> {visibleCourses.length} programs</p>
-							<span className="text-sm font-semibold text-slate-400">{activeCategory}</span>
+							<div className="flex items-center gap-4">
+								<span className="text-sm font-semibold text-slate-400">{activeCategory}</span>
+								<label className="relative block">
+									<Search size={17} aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+									<input
+										type="search"
+										value={programSearch}
+										onChange={(event) => setProgramSearch(event.target.value)}
+										placeholder="Search programs"
+										aria-label="Search programs"
+										className="h-10 w-44 rounded-md border border-slate-200 bg-white py-2 pl-9 pr-8 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-[#1775EE] focus:ring-2 focus:ring-[#1775EE]/20 sm:w-52"
+									/>
+									{programSearch && (
+										<button
+											type="button"
+											onClick={() => setProgramSearch("")}
+											aria-label="Clear program search"
+											className="absolute right-2 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+										>
+											<X size={15} />
+										</button>
+									)}
+								</label>
+								<div role="group" aria-label="Program layout" className="flex items-center gap-2">
+									<button
+										type="button"
+										onClick={() => setProgramLayout("grid")}
+										aria-label="Grid view"
+										aria-pressed={programLayout === "grid"}
+										className={`flex h-10 w-10 items-center justify-center rounded-md border transition-colors ${programLayout === "grid" ? "border-[#1775EE] bg-[#1775EE] text-white" : "border-slate-200 bg-white text-slate-500 hover:border-[#1775EE] hover:text-[#1775EE]"}`}
+									>
+										<LayoutGrid size={19} />
+									</button>
+									<button
+										type="button"
+										onClick={() => setProgramLayout("list")}
+										aria-label="List view"
+										aria-pressed={programLayout === "list"}
+										className={`flex h-10 w-10 items-center justify-center rounded-md border transition-colors ${programLayout === "list" ? "border-[#1775EE] bg-[#1775EE] text-white" : "border-slate-200 bg-white text-slate-500 hover:border-[#1775EE] hover:text-[#1775EE]"}`}
+									>
+										<List size={20} />
+									</button>
+								</div>
+							</div>
 						</div>
-						<div className="grid min-w-0 gap-7 sm:grid-cols-2">
+						<div className={programLayout === "grid" ? "grid min-w-0 gap-7 sm:grid-cols-2" : "flex min-w-0 flex-col gap-4"}>
 							{visibleCourses.map((course, index) => (
-								<article key={course.path} className="fade-in-up-stagger group flex min-w-0 min-h-[25rem] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:border-[#1775EE] hover:shadow-xl" style={{ "--fade-delay": 150 + index * 75 }}>
-									<div className="flex h-44 items-center justify-center bg-slate-50 p-7">
-										<img src={course.image} alt={`${course.name} certification`} className="h-full max-w-[13rem] object-contain transition duration-300 group-hover:scale-105" />
+								<article key={course.path} className={`fade-in-up-stagger group flex min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:border-[#1775EE] hover:shadow-xl ${programLayout === "grid" ? "min-h-[25rem] flex-col hover:-translate-y-1" : "flex-col sm:flex-row"}`} style={{ "--fade-delay": 150 + index * 75 }}>
+									<div className={`flex shrink-0 items-center justify-center bg-slate-50 p-7 ${programLayout === "grid" ? "h-44" : "h-36 sm:h-auto sm:w-52"}`}>
+										<img src={course.image} alt={`${course.name} certification`} className={`object-contain transition duration-300 group-hover:scale-105 ${programLayout === "grid" ? "h-full max-w-[13rem]" : "h-full max-h-28 max-w-[10rem]"}`} />
 									</div>
-									<div className="flex flex-1 flex-col p-5">
+									<div className={`flex min-w-0 flex-1 flex-col p-5 ${programLayout === "list" ? "sm:flex-row sm:items-center sm:gap-6" : ""}`}>
+										<div className="min-w-0 flex-1">
 										<p className="mb-2 text-xs font-bold uppercase tracking-[0.14em] text-[#1775EE]">{course.category}</p>
 										<h3 className="break-words text-xl font-bold text-slate-950">{course.name}</h3>
-										<p className="mt-3 flex-1 text-sm leading-6 text-slate-600">{course.description}</p>
-										<Link to={course.name === "CCNA" ? "/modules/programs/ccna" : course.path} className="mt-5 flex items-center justify-center gap-2 rounded-lg bg-[#1775EE] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#1262c9]">
+										<p className="mt-3 text-sm leading-6 text-slate-600">{course.description}</p>
+										</div>
+										<Link to={getProgramPath(course)} className={`mt-5 flex items-center justify-center gap-2 rounded-lg bg-[#1775EE] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#1262c9] ${programLayout === "list" ? "sm:mt-0 sm:w-48 sm:shrink-0" : ""}`}>
 											View Program <ArrowRight size={16} />
 										</Link>
 									</div>
 								</article>
 							))}
 						</div>
+						{visibleCourses.length === 0 && (
+							<p className="rounded-xl border border-dashed border-slate-300 bg-white px-5 py-10 text-center text-sm text-slate-500">
+								No programs match “{programSearch}”.
+							</p>
+						)}
 					</section>
 				</div>
 			</div>
