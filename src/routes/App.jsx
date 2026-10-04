@@ -342,7 +342,15 @@ export default function App() {
           path="/modules/programs/ccna/exam/short"
           element={
             <ProtectedRoute>
-              <CCNACompositeExam />
+              <CCNACompositeExam key="short" examKey="short" />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/ccna/exam/medium"
+          element={
+            <ProtectedRoute>
+              <CCNACompositeExam key="medium" examKey="medium" />
             </ProtectedRoute>
           }
         />

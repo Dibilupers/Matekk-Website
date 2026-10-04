@@ -2,66 +2,35 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useBlocker } from "react-router-dom";
 import { ArrowLeft, ArrowRight, ArrowUp, Clock3, RotateCcw, X } from "lucide-react";
 import TrainingLogo from "../../../../assets/MATEKK_training_logo.png";
-import { CCNA_MODULE_QUIZZES } from "./ccnaModuleQuizData";
+import { CCNA_EXAMS } from "./ccnaExamFormats";
 import { useAuth } from "../../../../context/AuthContext";
 import { createCcnaMockExamAttemptId, saveCcnaMockExamResult } from "../../../../utils/ccnaGradebook";
 
-const SHORT_EXAM_QUESTION_COUNT = 50;
-const SHORT_EXAM_DURATION_SECONDS = 45 * 60;
 const EXAM_PASS_PERCENTAGE = 80;
-const SHORT_EXAM_SESSION_KEY = "matekk-ccna-short-exam-session";
 
-function shuffle(items) {
-	const shuffled = [...items];
-	for (let index = shuffled.length - 1; index > 0; index -= 1) {
-		const randomIndex = Math.floor(Math.random() * (index + 1));
-		[shuffled[index], shuffled[randomIndex]] = [shuffled[randomIndex], shuffled[index]];
-	}
-	return shuffled;
-}
-
-function createShortExamQuestions() {
-	const moduleQuizzes = CCNA_MODULE_QUIZZES.filter((quiz) => /^[1-6]\.0$/.test(quiz.number));
-	if (moduleQuizzes.length !== 6 || moduleQuizzes.some((quiz) => quiz.questions.length < 8)) {
-		throw new Error("The short CCNA exam requires at least 8 questions from each module, 1.0 through 6.0.");
-	}
-
-	const modulesWithExtraQuestion = new Set(shuffle(moduleQuizzes.map((quiz) => quiz.number)).slice(0, 2));
-	return shuffle(moduleQuizzes.flatMap((quiz) => {
-		const questionCount = 8 + Number(modulesWithExtraQuestion.has(quiz.number));
-		return shuffle(quiz.questions)
-			.slice(0, questionCount)
-			.map((question) => ({
-				...question,
-				moduleNumber: quiz.number,
-				moduleTitle: quiz.title,
-			}));
-	}));
-}
-
-function createShortExamSession() {
+function createExamSession(exam) {
 	return {
 		attemptId: createCcnaMockExamAttemptId(),
-		questions: createShortExamQuestions(),
+		questions: exam.createQuestions(),
 		answers: {},
 		lockedQuestions: {},
 		currentIndex: 0,
-		deadline: Date.now() + SHORT_EXAM_DURATION_SECONDS * 1000,
+		deadline: Date.now() + exam.durationSeconds * 1000,
 		isSubmitted: false,
 		submittedAt: null,
 	};
 }
 
-function restoreShortExamSession() {
-	const savedSession = window.sessionStorage.getItem(SHORT_EXAM_SESSION_KEY);
-	if (!savedSession) return createShortExamSession();
+function restoreExamSession(exam) {
+	const savedSession = window.sessionStorage.getItem(exam.sessionKey);
+	if (!savedSession) return createExamSession(exam);
 
 	try {
 		const session = JSON.parse(savedSession);
 		const isValid =
 			session &&
 			Array.isArray(session.questions) &&
-			session.questions.length === SHORT_EXAM_QUESTION_COUNT &&
+			session.questions.length === exam.questionCount &&
 			session.questions.every((question) =>
 				Array.isArray(question.options) &&
 				Number.isInteger(question.answer) &&
@@ -74,7 +43,7 @@ function restoreShortExamSession() {
 			typeof session.lockedQuestions === "object" &&
 			Number.isInteger(session.currentIndex) &&
 			session.currentIndex >= 0 &&
-			session.currentIndex < SHORT_EXAM_QUESTION_COUNT &&
+			session.currentIndex < exam.questionCount &&
 			Number.isFinite(session.deadline) &&
 			typeof session.isSubmitted === "boolean";
 
@@ -90,12 +59,17 @@ function restoreShortExamSession() {
 			};
 		}
 
-		throw new TypeError("Saved CCNA short exam session has an invalid structure.");
+		throw new TypeError(`Saved CCNA ${exam.name} session has an invalid structure.`);
 	} catch (error) {
-		console.error("Unable to restore the saved CCNA short exam session.", error);
-		window.sessionStorage.removeItem(SHORT_EXAM_SESSION_KEY);
-		return createShortExamSession();
+		console.error(`Unable to restore the saved CCNA ${exam.name} session.`, error);
+		window.sessionStorage.removeItem(exam.sessionKey);
+		return createExamSession(exam);
 	}
+}
+
+function questionLabel(item, index, total) {
+	const module = item.moduleNumber ? ` · Module ${item.moduleNumber}: ${item.moduleTitle}` : "";
+	return `Question ${index + 1} of ${total}${module}`;
 }
 
 function formatTime(totalSeconds) {
@@ -104,8 +78,9 @@ function formatTime(totalSeconds) {
 	return `${minutes}:${seconds}`;
 }
 
-export default function CCNACompositeExam() {
-	const [initialSession] = useState(restoreShortExamSession);
+export default function CCNACompositeExam({ examKey = "short" }) {
+	const exam = CCNA_EXAMS[examKey];
+	const [initialSession] = useState(() => restoreExamSession(exam));
 	const { profile } = useAuth();
 	const userId = profile?.userId;
 	const [attemptId, setAttemptId] = useState(initialSession.attemptId);
@@ -161,7 +136,7 @@ export default function CCNACompositeExam() {
 		);
 
 	useEffect(() => {
-		window.sessionStorage.setItem(SHORT_EXAM_SESSION_KEY, JSON.stringify({
+		window.sessionStorage.setItem(exam.sessionKey, JSON.stringify({
 			attemptId,
 			questions,
 			answers,
@@ -171,19 +146,19 @@ export default function CCNACompositeExam() {
 			isSubmitted,
 			submittedAt,
 		}));
-	}, [answers, attemptId, currentIndex, deadline, isSubmitted, lockedQuestions, questions, submittedAt]);
+	}, [answers, attemptId, currentIndex, deadline, exam.sessionKey, isSubmitted, lockedQuestions, questions, submittedAt]);
 
 	// Record the finished exam in the student's gradebook (CCNA results page).
 	useEffect(() => {
 		if (!isSubmitted || !userId || !Number.isFinite(submittedAt)) return;
 		saveCcnaMockExamResult(userId, {
 			id: attemptId,
-			title: "Short exam",
+			title: exam.name,
 			score,
 			maxScore: questions.length,
 			submittedAt,
 		});
-	}, [attemptId, isSubmitted, questions.length, score, submittedAt, userId]);
+	}, [attemptId, exam.name, isSubmitted, questions.length, score, submittedAt, userId]);
 
 	function submitExam(finishedAt = Date.now()) {
 		setSubmittedAt(finishedAt);
@@ -211,7 +186,7 @@ export default function CCNACompositeExam() {
 		const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 		let animationFrame;
 		let startTime;
-		const finalElapsedSeconds = SHORT_EXAM_DURATION_SECONDS - secondsRemaining;
+		const finalElapsedSeconds = exam.durationSeconds - secondsRemaining;
 
 		function animateScore(timestamp) {
 			if (reducedMotion) {
@@ -231,7 +206,7 @@ export default function CCNACompositeExam() {
 
 		animationFrame = window.requestAnimationFrame(animateScore);
 		return () => window.cancelAnimationFrame(animationFrame);
-	}, [examAttempt, isSubmitted, score, secondsRemaining]);
+	}, [exam.durationSeconds, examAttempt, isSubmitted, score, secondsRemaining]);
 
 	useEffect(() => {
 		if (!isSubmitted || !isAnswerReviewVisible) return undefined;
@@ -280,12 +255,12 @@ export default function CCNACompositeExam() {
 	function restartExam() {
 		setAttemptId(createCcnaMockExamAttemptId());
 		setSubmittedAt(null);
-		setQuestions(createShortExamQuestions());
+		setQuestions(exam.createQuestions());
 		setAnswers({});
 		setLockedQuestions({});
 		setCurrentIndex(0);
-		setDeadline(Date.now() + SHORT_EXAM_DURATION_SECONDS * 1000);
-		setSecondsRemaining(SHORT_EXAM_DURATION_SECONDS);
+		setDeadline(Date.now() + exam.durationSeconds * 1000);
+		setSecondsRemaining(exam.durationSeconds);
 		setIsSubmitted(false);
 		setExamAttempt((attempt) => attempt + 1);
 		setAnswerFilter("all");
@@ -333,7 +308,7 @@ export default function CCNACompositeExam() {
 						</Link>
 						<div className="hidden min-w-0 border-l border-[#cbd5e1] pl-4 sm:block">
 							<p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#70809a]">CCNA composite exam</p>
-							<p className="mt-1 truncate text-sm font-bold text-[#17233d]">Short Exam · Modules 1.0–6.0</p>
+							<p className="mt-1 truncate text-sm font-bold text-[#17233d]">{exam.name} · {exam.subtitle}</p>
 						</div>
 					</div>
 					<div className="flex items-center gap-2">
@@ -352,7 +327,7 @@ export default function CCNACompositeExam() {
 					<>
 						<div className="mb-6 flex flex-wrap items-center justify-between gap-3">
 							<div>
-								<p className="text-sm font-bold uppercase tracking-[0.12em] text-[#005b6b]">Short Exam</p>
+								<p className="text-sm font-bold uppercase tracking-[0.12em] text-[#005b6b]">{exam.name}</p>
 								<p className="mt-1 text-sm text-[#70809a]">{answeredCount} of {questions.length} questions answered</p>
 							</div>
 							<div role="progressbar" aria-label="Exam progress" aria-valuemin={0} aria-valuemax={questions.length} aria-valuenow={answeredCount} className="h-2 w-full max-w-xs overflow-hidden rounded-full bg-[#dfe9eb]">
@@ -363,9 +338,12 @@ export default function CCNACompositeExam() {
 						<div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_300px]">
 							<section className="rounded-[20px] border border-[#d6e5e7] bg-white p-5 shadow-sm sm:p-7">
 								<p className="mb-2 text-sm text-[#70809a]">
-									Question {currentIndex + 1} of {questions.length} · Module {question.moduleNumber}: {question.moduleTitle}
+									{questionLabel(question, currentIndex, questions.length)}
 								</p>
 								<h1 className="mb-6 text-[1.45rem] font-bold leading-snug tracking-tight sm:text-[1.7rem]">{question.prompt}</h1>
+								{question.exhibit && (
+									<pre aria-label="Exhibit" className="mb-6 max-h-96 overflow-auto rounded-xl bg-[#0f1b2d] p-4 text-xs leading-5 text-[#e2e8f0] sm:text-[13px]"><code>{question.exhibit}</code></pre>
+								)}
 								<div className="space-y-2.5">
 									{question.options.map((option, optionIndex) => {
 										const isSelected = answers[currentIndex] === optionIndex;
@@ -408,7 +386,7 @@ export default function CCNACompositeExam() {
 											index === currentIndex ||
 											(index === currentIndex + 1 && answers[currentIndex] !== undefined && !lockedQuestions[currentIndex]);
 										return (
-											<button key={`${item.moduleNumber}-${index}`} type="button" onClick={() => goToQuestion(index)} disabled={!canNavigate} aria-label={`Question ${index + 1}${isAnswered ? ", answered" : ", unanswered"}`} aria-current={isCurrent ? "step" : undefined} className={`h-10 rounded-xl border text-sm font-semibold transition disabled:cursor-not-allowed ${isAnswered ? "border-[#005b6b] bg-[#e8f3f4] text-[#005b6b]" : "border-[#d9e1ef] bg-white text-[#71809a]"} ${isCurrent ? "ring-2 ring-[#005b6b] ring-offset-2" : ""} hover:border-[#005b6b] hover:bg-[#005b6b] hover:text-white disabled:hover:border-inherit disabled:hover:bg-inherit disabled:hover:text-inherit`}>
+											<button key={`${item.moduleNumber ?? "q"}-${index}`} type="button" onClick={() => goToQuestion(index)} disabled={!canNavigate} aria-label={`Question ${index + 1}${isAnswered ? ", answered" : ", unanswered"}`} aria-current={isCurrent ? "step" : undefined} className={`h-10 rounded-xl border text-sm font-semibold transition disabled:cursor-not-allowed ${isAnswered ? "border-[#005b6b] bg-[#e8f3f4] text-[#005b6b]" : "border-[#d9e1ef] bg-white text-[#71809a]"} ${isCurrent ? "ring-2 ring-[#005b6b] ring-offset-2" : ""} hover:border-[#005b6b] hover:bg-[#005b6b] hover:text-white disabled:hover:border-inherit disabled:hover:bg-inherit disabled:hover:text-inherit`}>
 												{index + 1}
 											</button>
 										);
@@ -425,7 +403,7 @@ export default function CCNACompositeExam() {
 							<div>
 								<p className="inline-flex items-center gap-2 rounded-full bg-[#e8f3f4] px-3 py-1.5 text-xs font-bold tracking-wide text-[#005b6b]">
 									<span className="h-2 w-2 rounded-full bg-[#005b6b]" />
-									Short Exam · CCNA
+									{exam.name} · CCNA
 								</p>
 								<h1 className="mt-5 max-w-xl text-4xl font-extrabold leading-tight tracking-tight text-[#17233d] sm:text-5xl">
 									{examPassed ? (
@@ -526,10 +504,10 @@ export default function CCNACompositeExam() {
 									</div>
 									<div className="mt-8 space-y-5">
 										{reviewQuestions.map((item) => (
-											<article key={`${item.moduleNumber}-${item.index}`} className="rounded-[20px] border border-[#dce9ea] bg-white p-5 shadow-sm sm:p-7">
+											<article key={`${item.moduleNumber ?? "q"}-${item.index}`} className="rounded-[20px] border border-[#dce9ea] bg-white p-5 shadow-sm sm:p-7">
 												<div className="flex flex-wrap items-center gap-2">
 													<span className="text-sm font-semibold text-[#64748b]">
-														Question {item.index + 1} of {questions.length} · Module {item.moduleNumber}: {item.moduleTitle}
+														{questionLabel(item, item.index, questions.length)}
 													</span>
 													<span className={`rounded-full px-3 py-1 text-xs font-bold ${
 														item.isCorrect ? "bg-[#e8f3f4] text-[#005b6b]" : "bg-[#fff0e8] text-[#b4532a]"
@@ -538,6 +516,9 @@ export default function CCNACompositeExam() {
 													</span>
 												</div>
 												<h3 className="mt-4 text-lg font-bold leading-snug text-[#17233d] sm:text-xl">{item.prompt}</h3>
+												{item.exhibit && (
+													<pre aria-label="Exhibit" className="mt-4 max-h-80 overflow-auto rounded-xl bg-[#0f1b2d] p-4 text-xs leading-5 text-[#e2e8f0]"><code>{item.exhibit}</code></pre>
+												)}
 												<div className="mt-5 space-y-2.5">
 													{item.options.map((option, optionIndex) => {
 														const isCorrectAnswer = optionIndex === item.answer;

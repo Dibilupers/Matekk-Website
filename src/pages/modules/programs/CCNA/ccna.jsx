@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../../context/AuthContext";
+import { CCNA_EXAMS } from "./ccnaExamFormats";
 import CcnaLogo from "../../../../assets/CCNA.png";
 import {
 	ArrowRight,
@@ -33,13 +34,11 @@ const modules = CCNA_CURRICULUM.map((section) => ({
 }));
 const EXAM_FORMATS = [
 	{ name: "Short Exam", questions: 50, duration: "45 mins", description: "A quick practice session." },
-	{ name: "Medium Exam", questions: 100, duration: "1 hour & 30 mins", description: "A balanced, longer practice session." },
+	{ name: "Medium Exam", questions: CCNA_EXAMS.medium.questionCount, duration: "1 hour & 30 mins", description: "A balanced, longer practice session." },
 	{ name: "Long Exam", questions: 150, duration: "2 hours", description: "A full-length practice session." },
 ];
-const SHORT_EXAM_SESSION_KEY = "matekk-ccna-short-exam-session";
-
-function readShortExamProgress() {
-	const savedSession = window.sessionStorage.getItem(SHORT_EXAM_SESSION_KEY);
+function readExamProgress(sessionKey) {
+	const savedSession = window.sessionStorage.getItem(sessionKey);
 	if (!savedSession) return { status: "not-started", deadline: null, answeredCount: 0, score: 0 };
 
 	try {
@@ -66,7 +65,7 @@ function readShortExamProgress() {
 			score,
 		};
 	} catch (error) {
-		console.error("Unable to restore the saved CCNA short exam status.", error);
+		console.error("Unable to restore the saved CCNA exam status.", error);
 		return { status: "not-started", deadline: null, answeredCount: 0, score: 0 };
 	}
 }
@@ -321,7 +320,8 @@ export default function CCNA() {
 	const [isQuizPickerOpen, setIsQuizPickerOpen] = useState(false);
 	const [isExamPickerOpen, setIsExamPickerOpen] = useState(false);
 	const [selectedExamFormat, setSelectedExamFormat] = useState(null);
-	const [shortExamProgress, setShortExamProgress] = useState(readShortExamProgress);
+	const [shortExamProgress, setShortExamProgress] = useState(() => readExamProgress(CCNA_EXAMS.short.sessionKey));
+	const [mediumExamProgress, setMediumExamProgress] = useState(() => readExamProgress(CCNA_EXAMS.medium.sessionKey));
 	const [examClockNow, setExamClockNow] = useState(Date.now);
 	const [progressSlide, setProgressSlide] = useState(0);
 	const [quizProgressState] = useState(() => ({
@@ -355,15 +355,37 @@ export default function CCNA() {
 		? Math.max(0, Math.ceil((shortExamProgress.deadline - examClockNow) / 1000))
 		: 0;
 	const hasActiveShortExam = shortExamSecondsRemaining > 0;
+	const mediumExamSecondsRemaining = mediumExamProgress.deadline
+		? Math.max(0, Math.ceil((mediumExamProgress.deadline - examClockNow) / 1000))
+		: 0;
+	const mediumQuestionCount = CCNA_EXAMS.medium.questionCount;
+	// Live status for each exam that can be taken, keyed by its name in EXAM_FORMATS
+	const examRuns = {
+		"Short Exam": {
+			progress: shortExamProgress,
+			secondsRemaining: shortExamSecondsRemaining,
+			isActive: hasActiveShortExam,
+			path: CCNA_EXAMS.short.path,
+			summary: "50 questions · 45 minutes · Modules 1.0–6.0",
+		},
+		"Medium Exam": {
+			progress: mediumExamProgress,
+			secondsRemaining: mediumExamSecondsRemaining,
+			isActive: mediumExamSecondsRemaining > 0,
+			path: CCNA_EXAMS.medium.path,
+			summary: `${mediumQuestionCount} question${mediumQuestionCount === 1 ? "" : "s"} · 1 hour 30 minutes · CCNA practice questions`,
+		},
+	};
 
 	useEffect(() => {
-		if (!shortExamProgress.deadline) return undefined;
+		if (!shortExamProgress.deadline && !mediumExamProgress.deadline) return undefined;
 		const intervalId = window.setInterval(() => {
 			setExamClockNow(Date.now());
-			setShortExamProgress(readShortExamProgress());
+			setShortExamProgress(readExamProgress(CCNA_EXAMS.short.sessionKey));
+			setMediumExamProgress(readExamProgress(CCNA_EXAMS.medium.sessionKey));
 		}, 1000);
 		return () => window.clearInterval(intervalId);
-	}, [shortExamProgress.deadline]);
+	}, [shortExamProgress.deadline, mediumExamProgress.deadline]);
 
 	useEffect(() => {
 		let timeoutId;
@@ -627,20 +649,19 @@ export default function CCNA() {
 								<>
 									<h2 className="mb-5 text-xl font-bold">Exam progress</h2>
 									{EXAM_FORMATS.map((format) => {
-										const isShortExam = format.name === "Short Exam";
-										const answeredCount = isShortExam ? shortExamProgress.answeredCount : 0;
-										const progressPercentage = isShortExam && shortExamProgress.status === "completed"
+										const run = examRuns[format.name];
+										const examProgress = run?.progress;
+										const answeredCount = examProgress?.answeredCount ?? 0;
+										const progressPercentage = examProgress?.status === "completed"
 											? 100
 											: Math.round((answeredCount / format.questions) * 100);
-										const statusText = !isShortExam
-											? "Not started"
-											: shortExamProgress.status === "completed"
-												? `Completed · Score ${shortExamProgress.score}/${format.questions}`
-												: shortExamProgress.status === "expired"
-													? `Time expired · Score ${shortExamProgress.score}/${format.questions}`
-													: shortExamProgress.status === "in-progress"
-														? `${answeredCount}/${format.questions} answered`
-														: "Not started";
+										const statusText = examProgress?.status === "completed"
+											? `Completed · Score ${examProgress.score}/${format.questions}`
+											: examProgress?.status === "expired"
+												? `Time expired · Score ${examProgress.score}/${format.questions}`
+												: examProgress?.status === "in-progress"
+													? `${answeredCount}/${format.questions} answered`
+													: "Not started";
 
 										return (
 											<div key={format.name} className="border-b border-[#e2ecec] py-3 last:border-0">
@@ -648,30 +669,30 @@ export default function CCNA() {
 													<div className="min-w-0">
 														<span className="block truncate text-sm font-medium">{format.name}</span>
 														<span className="mt-0.5 block text-xs text-[#7c89a1]">{format.questions} questions</span>
-														<strong className={`mt-1 block text-sm ${isShortExam && shortExamProgress.status !== "not-started" ? "text-[#005b6b]" : "text-[#8b96a9]"}`}>
+														<strong className={`mt-1 block text-sm ${examProgress && examProgress.status !== "not-started" ? "text-[#005b6b]" : "text-[#8b96a9]"}`}>
 															{statusText}
 														</strong>
 													</div>
 													<div className="flex min-h-[58px] min-w-[112px] flex-col items-end justify-between">
 														<div className="flex h-6 items-center justify-end">
-															{isShortExam && hasActiveShortExam && (
+															{run?.isActive && (
 																	<span
 																		role="timer"
-																		aria-label={`${formatExamTime(shortExamSecondsRemaining)} remaining`}
+																		aria-label={`${formatExamTime(run.secondsRemaining)} remaining`}
 																		className={`inline-flex min-w-[88px] justify-center whitespace-nowrap rounded-full px-3 py-1 text-xs font-bold tabular-nums ${
-																			shortExamSecondsRemaining <= 60
+																			run.secondsRemaining <= 60
 																				? "bg-[#fff0ed] text-[#b42318]"
 																				: "bg-[#e8f3f4] text-[#005b6b]"
 																		}`}
 																	>
-																		{formatExamTime(shortExamSecondsRemaining)} left
+																		{formatExamTime(run.secondsRemaining)} left
 																	</span>
 																)}
 															</div>
-														{isShortExam && hasActiveShortExam ? (
+														{run?.isActive ? (
 															<button
 																type="button"
-																onClick={() => navigate("/modules/programs/ccna/exam/short")}
+																onClick={() => navigate(run.path)}
 																className="rounded-full border border-[#c9dfe2] px-3 py-1.5 text-xs font-semibold text-[#005b6b] transition-all duration-200 ease-out hover:scale-105 hover:bg-[#e8f3f4] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100"
 															>
 																Continue Exam
@@ -679,7 +700,7 @@ export default function CCNA() {
 														) : null}
 													</div>
 												</div>
-												{!(isShortExam && hasActiveShortExam) && (
+												{!run?.isActive && (
 													<div
 														role="progressbar"
 														aria-label={`${format.name} completion`}
@@ -810,7 +831,7 @@ export default function CCNA() {
 							</button>
 						</header>
 						<p className="mt-3 text-sm leading-6 text-[#71819b]">
-							The Short Exam is ready with 50 random questions from CCNA modules 1.0–6.0. Medium and Long Exam are coming soon.
+							The Short Exam has 50 random questions from CCNA modules 1.0–6.0, and the Medium Exam has CCNA practice questions. The Long Exam is coming soon.
 						</p>
 						<div className="mt-6 grid gap-3 md:grid-cols-3">
 							{EXAM_FORMATS.map((format) => {
@@ -821,9 +842,9 @@ export default function CCNA() {
 											? "border-[#005b6b] bg-[#eaf3f4] text-[#005b6b]"
 											: "border-[#d6e5e7] text-[#263654]"
 									}`}>
-										{format.name === "Short Exam" && hasActiveShortExam && (
-											<span role="timer" aria-label={`${formatExamTime(shortExamSecondsRemaining)} remaining`} className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full border border-[#c9dfe2] bg-white px-2.5 py-1 text-xs font-bold tabular-nums text-[#005b6b]">
-												<Clock3 size={13} /> {formatExamTime(shortExamSecondsRemaining)}
+										{examRuns[format.name]?.isActive && (
+											<span role="timer" aria-label={`${formatExamTime(examRuns[format.name].secondsRemaining)} remaining`} className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full border border-[#c9dfe2] bg-white px-2.5 py-1 text-xs font-bold tabular-nums text-[#005b6b]">
+												<Clock3 size={13} /> {formatExamTime(examRuns[format.name].secondsRemaining)}
 											</span>
 										)}
 										<button
@@ -832,7 +853,7 @@ export default function CCNA() {
 											onClick={() => setSelectedExamFormat(format.name)}
 											className="w-full text-left"
 										>
-											<span className={`block text-lg font-bold ${format.name === "Short Exam" && hasActiveShortExam ? "pr-20" : ""}`}>{format.name}</span>
+											<span className={`block text-lg font-bold ${examRuns[format.name]?.isActive ? "pr-20" : ""}`}>{format.name}</span>
 											<span className="mt-3 block text-3xl font-extrabold tracking-tight">{format.questions}</span>
 											<span className="block text-sm font-medium text-[#71819b]">questions</span>
 											<span className="mt-4 flex items-center gap-1.5 text-sm font-semibold">
@@ -848,13 +869,13 @@ export default function CCNA() {
 							Each short exam is randomly selected across all six modules, with at least 8 questions from every module.
 						</p>
 						{selectedExamFormat && (
-							selectedExamFormat === "Short Exam" ? (
+							examRuns[selectedExamFormat] ? (
 								<div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-xl bg-[#f5f9f9] p-4">
 									<div>
-										<p className="text-sm text-[#526584]">50 questions · 45 minutes · Modules 1.0–6.0</p>
-										{hasActiveShortExam && (
+										<p className="text-sm text-[#526584]">{examRuns[selectedExamFormat].summary}</p>
+										{examRuns[selectedExamFormat].isActive && (
 											<p role="timer" className="mt-1 text-sm font-bold tabular-nums text-[#005b6b]">
-												Time remaining: {formatExamTime(shortExamSecondsRemaining)}
+												Time remaining: {formatExamTime(examRuns[selectedExamFormat].secondsRemaining)}
 											</p>
 										)}
 									</div>
@@ -862,11 +883,11 @@ export default function CCNA() {
 										type="button"
 										onClick={() => {
 											setIsExamPickerOpen(false);
-											navigate("/modules/programs/ccna/exam/short");
+											navigate(examRuns[selectedExamFormat].path);
 										}}
 										className="rounded-full bg-[#005b6b] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#004653]"
 									>
-										{hasActiveShortExam ? "Continue Exam" : "Start Short Exam"}
+										{examRuns[selectedExamFormat].isActive ? "Continue Exam" : `Start ${selectedExamFormat}`}
 									</button>
 								</div>
 							) : (
