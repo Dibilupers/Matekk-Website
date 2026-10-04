@@ -353,6 +353,9 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 									{questionLabel(question, currentIndex, questions.length)}
 								</p>
 								<h1 className="mb-6 text-[1.45rem] font-bold leading-snug tracking-tight sm:text-[1.7rem]">{question.prompt}</h1>
+								{question.exhibitImage && (
+									<img src={question.exhibitImage} alt="Exhibit" className="mb-6 w-auto max-w-full max-h-[32rem] rounded-xl border border-[#d6e5e7] bg-white" />
+								)}
 								{question.exhibit && (
 									<pre aria-label="Exhibit" className="mb-6 max-h-96 overflow-auto rounded-xl bg-[#0f1b2d] p-4 text-xs leading-5 text-[#e2e8f0] sm:text-[13px]"><code>{question.exhibit}</code></pre>
 								)}
@@ -515,6 +518,9 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 													</span>
 												</div>
 												<h3 className="mt-4 text-lg font-bold leading-snug text-[#17233d] sm:text-xl">{item.prompt}</h3>
+												{item.exhibitImage && (
+													<img src={item.exhibitImage} alt="Exhibit" loading="lazy" className="mt-4 w-auto max-w-full max-h-[26rem] rounded-xl border border-[#d6e5e7] bg-white" />
+												)}
 												{item.exhibit && (
 													<pre aria-label="Exhibit" className="mt-4 max-h-80 overflow-auto rounded-xl bg-[#0f1b2d] p-4 text-xs leading-5 text-[#e2e8f0]"><code>{item.exhibit}</code></pre>
 												)}

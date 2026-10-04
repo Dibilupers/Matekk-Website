@@ -1,10 +1,29 @@
 // CCNA composite question set (85 questions) used in the Medium Exam.
-// Exhibits that were pictures in the source are written out as text.
+// Exhibits are shown as a picture (pic) where we have one, otherwise written out as text.
 // Answer keys were worked out from the question content (not supplied in the source).
 
-const one = (prompt, options, answer, explanation, exhibit) => ({ prompt, exhibit, options, answer, explanation });
-const two = (prompt, options, answer, explanation, exhibit) => ({ type: "multi", prompt, exhibit, options, answer, explanation });
-const match = (prompt, items, choices, answer, explanation, exhibit) => ({ type: "match", prompt, exhibit, items, choices, answer, explanation });
+import ipv6BlockImg from "../../../../assets/ccna-exam/ipv6-block-r1-r2.webp";
+import salesVlan10Img from "../../../../assets/ccna-exam/sales-vlan10-mac-table.webp";
+import etherchannelImg from "../../../../assets/ccna-exam/etherchannel-group1.webp";
+import r4SupernetImg from "../../../../assets/ccna-exam/r4-supernet.webp";
+import lobbyPortSecurityImg from "../../../../assets/ccna-exam/lobby-port-security.webp";
+import routersAbcOspfImg from "../../../../assets/ccna-exam/routers-abc-ospf-dr.webp";
+import router1HostAImg from "../../../../assets/ccna-exam/router1-host-a.webp";
+import wlcMyWlanImg from "../../../../assets/ccna-exam/wlc-my-wlan-layer2.webp";
+import wlcPskImg from "../../../../assets/ccna-exam/wlc-psk-layer2.webp";
+import ospfPriorityImg from "../../../../assets/ccna-exam/ospf-r1-r2-r3-priority.webp";
+import ospfDrotherImg from "../../../../assets/ccna-exam/ospf-drother-r1.webp";
+import wlcAdvancedImg from "../../../../assets/ccna-exam/wlc-advanced-tab.webp";
+import oldNewSwitchImg from "../../../../assets/ccna-exam/oldswitch-newswitch-trunk.webp";
+import routersAbcFloatingImg from "../../../../assets/ccna-exam/routers-abc-floating-route.webp";
+import subinterfaceImg from "../../../../assets/ccna-exam/subinterface-r1-sw1-sw2.webp";
+
+// pic(image, text?) = picture exhibit, optionally with device output shown below it
+const pic = (image, text) => ({ image, text });
+const ex = (exhibit) => (exhibit && typeof exhibit === "object" ? { exhibitImage: exhibit.image, exhibit: exhibit.text } : { exhibit });
+const one = (prompt, options, answer, explanation, exhibit) => ({ prompt, ...ex(exhibit), options, answer, explanation });
+const two = (prompt, options, answer, explanation, exhibit) => ({ type: "multi", prompt, ...ex(exhibit), options, answer, explanation });
+const match = (prompt, items, choices, answer, explanation, exhibit) => ({ type: "match", prompt, ...ex(exhibit), items, choices, answer, explanation });
 
 const AAA = ["Accounting", "Authentication", "Authorization"];
 
@@ -31,12 +50,7 @@ export const CCNA_COMPOSITE_SET_QUESTIONS = [
 		"ipv6 address 2001:0B8:FFFF:FCF3::1/64",
 		"ipv6 address autoconfig 2001:DB8:FFFF:FCF2::/64",
 	], 0, "EUI-64 builds the interface ID automatically from the MAC address within the assigned 2001:db8:ffff:fcf3::/64 block. Option C has a typo in the prefix (0B8) and D uses the wrong block.",
-	`Topology:
-  IPv6 BLOCK  2001:0db8:ffff:fcf3:0000:0000:0000:0000/64
-
-  [R1] Gig0/1 ---------- Gig0/1 [R2]
-   | Gig0/0                    | Gig0/0
-  [Switch] -- 3 PCs           [Switch] -- 3 PCs`),
+	pic(ipv6BlockImg)),
 
 	one("The entire contents of the MAC address table are shown. Sales-4 sends a data frame to Sales-1. What does the switch do as it receives the frame from Sales-4?", [
 		"Map the Layer 2 MAC address to the Layer 3 IP address and forward the frame",
@@ -44,17 +58,7 @@ export const CCNA_COMPOSITE_SET_QUESTIONS = [
 		"Perform a lookup in the MAC address table and discard the frame due to a missing entry",
 		"Flood the frame out of all ports except on the port where Sales-1 is connected",
 	], 1, "Sales-4's MAC is not in the table, so the switch learns it (source MAC + port Gi1/0/4). Sales-1's MAC is already known on Gi1/0/1, so the frame is forwarded only there.",
-	`Topology (all in VLAN 10):
-  Sales-1 -- Gi1/0/1 [Sales-SW] Gi1/0/4 -- Sales-4
-  Sales-2 -- Gi1/0/2 [Sales-SW] Gi1/0/3 -- Sales-3
-
-Sales-SW#show mac-address-table
-          Mac Address Table
--------------------------------------------
-VLAN  MAC Address      Type      Ports
-10    000c.8590.bb7d   DYNAMIC   Gi1/0/1
-10    3910.3456.9d3d   DYNAMIC   Gi1/0/2
-10    00d0.d323.d343   DYNAMIC   Gi1/0/3`),
+	pic(salesVlan10Img)),
 
 	one("A network engineer started to configure two directly-connected routers as shown. Which command sequence must the engineer configure on R2 so that the two routers become OSPF neighbors?", [
 		"interface GigabitEthernet0/1\n ip ospf 1 area 1",
@@ -99,10 +103,7 @@ interface GigabitEthernet0/1
 		"interface port-channel 1\n channel-group 1 mode passive",
 		"interface port-channel 1\n channel-group 1 mode auto",
 	], 2, "LACP passive mode responds to LACP packets but never starts negotiation. Desirable and auto are PAgP modes; on uses no protocol.",
-	`Topology:
-  [Switch A] Ge0/0/0 to Ge0/0/15  ==== Group 1 ====  Ge0/0/0 to Ge0/0/15 [Switch B]
-       |                                                      |
-     hosts                                                  hosts`),
+	pic(etherchannelImg)),
 
 	one("What is the purpose of the show ip ospf interface command?", [
 		"displaying OSPF neighbor information on a per-interface-type basis",
@@ -117,8 +118,7 @@ interface GigabitEthernet0/1
 		"Subnet: 10.7.54.0\nSubnet mask: 255.255.254.0\nBroadcast address: 10.7.54.255\nUsable IP address range: 10.7.54.1 – 10.7.55.254",
 		"Subnet: 10.7.54.0\nSubnet mask: 255.255.254.0\nBroadcast address: 10.7.55.255\nUsable IP address range: 10.7.54.1 – 10.7.55.254",
 	], 3, "380 hosts need 9 host bits (510 usable), so /23 = 255.255.254.0. 10.7.54.0/23 runs to 10.7.55.255 (broadcast).",
-	`Topology:
-  [R4] 10.7.54.0/x ---- [Switch] ---- PC`),
+	pic(r4SupernetImg)),
 
 	one("What is a function of an endpoint on a network?", [
 		"provides wireless services to users in a building",
@@ -240,10 +240,7 @@ Atlanta(config)#end`),
 		"interface gi1/0/15\n switchport port-security\n switchport port-security mac-address 0000.abcd.0004 vlan 100",
 		"interface gi1/0/15\n switchport port-security mac-address 0000.abcd.0004 vlan 100",
 	], 1, "Port security must be enabled ('switchport port-security') and 'maximum 2' limits the port to two MAC addresses.",
-	`Topology:
-  [SW1] Gi0/0/1 ==== 802.1q trunk (VLANs 1, 100, 101, 102, 103) ==== Gi0/0/1 [SW2]
-    | Gi1/0/15  (Lobby Conference Room access port)
-   PC1 — VLAN 100, MAC 0000.abcd.0004`),
+	pic(lobbyPortSecurityImg)),
 
 	one("What is the function of a hub-and-spoke WAN topology?", [
 		"supports application optimization", "allows access restrictions to be implemented between subscriber sites",
@@ -256,10 +253,7 @@ Atlanta(config)#end`),
 		"Configure router B and router C as OSPF neighbors of router A.",
 		"Configure router A with a fixed OSPF router ID.",
 	], 1, "The router with the highest OSPF interface priority becomes the DR.",
-	`Topology (OSPF area 0):
-  Router A Gi0/0/0 (.1) --- 192.168.2.0/24 --- (.2) Gi0/0/0 Router B
-  Router A Gi0/0/1 (.1) --- 192.168.1.0/24 --- (.2) Gi0/0/0 Router C
-  Router B Gi0/0/1 (.2) --- 192.168.3.0/24 --- (.1) Gi0/0/1 Router C`),
+	pic(routersAbcOspfImg)),
 
 	one("How many objects are present in the given JSON-encoded data?", ["nine", "one", "four", "seven"], 0,
 		"Count every { } pair: the outer object, aaaUser, its attributes, the children list item, aaaUserRole, its attributes, the nested list item, the nested aaaUserRole and its attributes = 9.",
@@ -321,12 +315,7 @@ L    10.10.10.1/32 is directly connected, Serial 0/0`),
 
 	one("Which prefix does Router 1 use for traffic to Host A?", ["10.10.13.144/28", "10.10.10.0/28", "10.10.13.0/25", "10.10.13.208/29"], 3,
 		"Host A is 10.10.13.214, which falls in 10.10.13.208/29 (10.10.13.208 to 10.10.13.215), the longest matching prefix.",
-	`Topology:
-  Internet (.2) --- 10.10.11.0/30 --- (.1) Router1
-  MPLS     (.2) --- 10.10.12.0/30 --- (.1) Router1
-  Router1 (.2) --- 10.10.10.0/28 --- (.1) Switch1 --- Host A 10.10.13.214
-
-Router1#show ip route
+	pic(router1HostAImg, `Router1#show ip route
 Gateway of last resort is 10.10.11.2 to network 0.0.0.0
 B    209.165.200.224 [20/0] via 10.10.12.2, 03:03:03
 B    209.165.201.0 [20/0] via 10.10.12.2, 03:03:03
@@ -340,7 +329,7 @@ O    10.10.13.128/28 [110/2] via 10.10.10.1, 00:00:03, GigabitEthernet0/0
 O    10.10.13.144/28 [110/2] via 10.10.10.1, 00:00:03, GigabitEthernet0/0
 O    10.10.13.160/29 [110/2] via 10.10.10.1, 00:00:03, GigabitEthernet0/0
 O    10.10.13.208/29 [110/2] via 10.10.10.1, 00:00:03, GigabitEthernet0/0
-S*   0.0.0.0/0 [1/0] via 10.10.11.2`),
+S*   0.0.0.0/0 [1/0] via 10.10.11.2`)),
 
 	one("Which command creates a static NAT binding for a PC address of 10.1.1.1 to the public routable address 209.165.200.225 assigned to the PC?", [
 		"R1(config)#ip nat outside source static 10.1.1.1 209.165.200.225",
@@ -524,18 +513,7 @@ interface fastethernet0/1
 	one("A network engineer is configuring a wireless LAN with Web Passthrough Layer 3 Web Policy. Which action must the engineer take to complete the configuration?", [
 		"Set the Layer 2 Security to None.", "Enable the WPA Policy.", "Enable TKIP and CCMP256 WPA2 Encryption.", "Set the Layer 2 Security to 802.1X.",
 	], 0, "Web Passthrough is a Layer 3 web policy for open guest access, so Layer 2 Security must be set to None.",
-	`WLC GUI — WLANs > Edit 'my_WLAN' > Security > Layer 2
-  Layer 2 Security ........ WPA+WPA2
-  MAC Filtering ........... (unchecked)
-  Fast Transition ......... Adaptive, Over the DS: checked
-  PMF ..................... Disabled
-  WPA+WPA2 Parameters
-    WPA Policy ............ (unchecked)
-    WPA2 Policy ........... checked
-    WPA2 Encryption ....... AES checked; TKIP, CCMP256, GCMP128, GCMP256 unchecked
-  Authentication Key Management
-    802.1X ................ Enable (checked)
-    CCKM .................. Enable (unchecked)`),
+	pic(wlcMyWlanImg)),
 
 	two("Which two HTTP methods are suitable for actions performed by REST-based APIs? (Choose two)", ["GET", "REMOVE", "REDIRECT", "POST", "POP"], [0, 3],
 		"REST APIs use HTTP methods such as GET, POST, PUT, PATCH, and DELETE. REMOVE, REDIRECT, and POP are not HTTP methods."),
@@ -563,18 +541,7 @@ interface fastethernet0/1
 		"Select Authentication server under the AAA servers tab.", "Set Authentication under the Layer 3 tab.",
 		"Enable WPA2 Policy under the Layer 2 tab.", "Enable AutoConfig iPSK under the Layer 2 tab.", "Configure Enterprise Security type under the Layer 2 tab.",
 	], [0, 3], "Identity PSK lets devices without 802.1X get per-device keys from the RADIUS server: enable AutoConfig iPSK and select the RADIUS authentication server under AAA Servers.",
-	`WLC GUI — WLAN > Security > Layer 2
-  Layer 2 Security ........ WPA+WPA2
-  Security Type ........... Personal
-  MAC Filtering ........... (unchecked)
-  AutoConfig iPSK ......... Enable (unchecked)
-  WPA+WPA2 Parameters
-    WPA Policy ............ (unchecked)
-    WPA2 Policy ........... (unchecked)
-    OSEN Encryption ....... CCMP128(AES) (greyed), TKIP (unchecked)
-  Authentication Key Management
-    PSK Format ............ ASCII  ********
-  WPA GTK-randomize State . Disable`),
+	pic(wlcPskImg)),
 
 	one("Which security method is used to prevent man-in-the-middle attack?", ["anti-replay", "authorization", "accounting", "authentication"], 3,
 		"Mutual authentication of both endpoints prevents an attacker from impersonating either side in a man-in-the-middle attack."),
@@ -585,10 +552,7 @@ interface fastethernet0/1
 		"R3(config)#interface Gig0/1\nR3(config-if)#ip ospf priority 100",
 		"R3(config)#interface Gig0/0\nR3(config-if)#ip ospf priority 100",
 	], 2, "R3 connects to 10.0.4.0/24 on Gig0/1. A priority of 100 (higher than R2's 99) makes R3 the DR.",
-	`Topology (shared segment 10.0.4.0/24):
-  R1  Gi0/1 .1  ──┐                      R1 Gi0/0 → 10.0.1.0/24
-  R2  Gi0/1 .2  ──┼── 10.0.4.0/24        R2 Gi0/0 → 10.0.2.0/24
-  R3  Gi0/1 .3  ──┘                      R3 Gi0/0 → 10.0.3.0/24`),
+	pic(ospfPriorityImg)),
 
 	one("A packet is being sent across router R1 to host 172.16.3.14. To which destination does the router send the packet?", [
 		"207.165.200.254 via Serial0/0/0", "207.165.200.246 via Serial0/1/0", "207.165.200.254 via Serial0/0/1", "207.165.200.250 via Serial0/0/0",
@@ -648,28 +612,14 @@ R 10.18.75.113/27 [120/14] via G0/23`),
 		"R1(config)#interface FastEthernet0/0\nR1(config-if)#ip ospf priority 200\nR1#clear ip ospf process",
 		"R2(config)#interface FastEthernet0/2\nR2(config-if)#ip ospf priority 1\nR2#clear ip ospf process",
 	], 2, "All routers have the default priority 1. Raising R1's priority to 200 and resetting OSPF makes R1 win the DR election.",
-	`Topology (OSPF Area 0, segment 10.0.0.0/24 via switch SW):
-  R1 F0/0 (10.10.10.1) -- Fa0/0 [SW] Fa0/2 -- F0/2 R2 (10.10.10.2)
-                                [SW] Fa0/1 -- F0/1 R3 (10.10.10.3)
-
-R1#show ip ospf neighbor
-Neighbor ID     Pri  State     Dead Time  Address        Interface
-192.168.100.2   1    FULL/BDR  00:00:35   192.168.100.2  FastEthernet0/0
-192.168.100.3   1    FULL/DR   00:00:34   192.168.100.3  FastEthernet0/0`),
+	pic(ospfDrotherImg)),
 
 	two("A network engineer configures the CCNA WLAN so that clients must reauthenticate hourly and to limit the number of simultaneous connections to the WLAN to 10. Which two actions complete this configuration? (Choose two)", [
 		"Enable the Client Exclusion option and set the value to 3600.", "Enable the Wi-Fi Direct Clients Policy option.",
 		"Set the Maximum Allowed Clients value to 10.", "Enable the Enable Session Timeout option and set the value to 3600.",
 		"Set the Maximum Allowed Clients Per AP Radio value to 10.",
 	], [2, 3], "Session Timeout of 3600 seconds forces hourly reauthentication, and Maximum Allowed Clients limits connections to the whole WLAN.",
-	`WLC GUI — WLAN > Advanced
-  Allow AAA Override ................ Enabled (unchecked)
-  Enable Session Timeout ............ (unchecked)  Session Timeout (secs): [blank]
-  Client Exclusion .................. Enabled (unchecked)  Timeout Value (secs): [blank]
-  Maximum Allowed Clients ........... 0
-  Wi-Fi Direct Clients Policy ....... Disabled
-  Maximum Allowed Clients Per AP Radio  200
-  Client user idle timeout .......... (unchecked)`),
+	pic(wlcAdvancedImg)),
 
 	one("Which goal is achieved by the implementation of private IPv4 addressing on a network?", [
 		"provides an added level of protection against Internet exposure", "allows communication across the Internet to other private networks",
@@ -697,20 +647,7 @@ Neighbor ID     Pri  State     Dead Time  Address        Interface
 		"switchport nonnegotiate\nno switchport trunk allowed vlan 5,10\nswitchport trunk allowed vlan 5,10,15,20",
 		"no switchport trunk encapsulation isl\nswitchport trunk encapsulation dot1q\nswitchport trunk allowed vlan add 20",
 	], 3, "Switch from ISL to IEEE 802.1Q (dot1q) and use 'allowed vlan add 20' to keep VLANs 5 and 10 while adding VLAN 20.",
-	`Topology:
-  VLAN 5, 10, 20 PCs -- [OldSwitch] f0/1 ---- f0/1 [NewSwitch] -- VLAN 5, 10 PCs
-
-OldSwitch(config)#interface fastEthernet0/1
-OldSwitch(config-if)#switchport mode trunk
-OldSwitch(config-if)#switchport trunk allowed vlan 5,10
-OldSwitch(config-if)#switchport trunk native vlan 15
-**output suppressed**
-
-NewSwitch(config)#interface fastEthernet0/1
-NewSwitch(config-if)#switchport mode trunk
-NewSwitch(config-if)#switchport trunk encapsulation isl
-NewSwitch(config-if)#switchport trunk allowed vlan 5,10
-NewSwitch(config-if)#switchport trunk native vlan 15`),
+	pic(oldNewSwitchImg)),
 
 	one("What is the effect when loopback interfaces and the configured router ID are absent during the OSPF Process configuration?", [
 		"The lowest IP address is incremented by 1 and selected as the router ID.", "No router ID is set, and the OSPF protocol does not run.",
@@ -730,12 +667,7 @@ export const CCNA_COMPOSITE_SET2_QUESTIONS = [
 		"ip route 0.0.0.0 0.0.0.0 192.168.2.1 10", "ip route 0.0.0.0 0.0.0.0 192.168.1.2",
 		"ip default-gateway 192.168.2.1", "ip route 0.0.0.0 0.0.0.0 192.168.1.2 10",
 	], 3, "The primary default route goes to Router B (192.168.2.2). The backup must point to the other neighbor, Router C (192.168.1.2), with a higher administrative distance (10) so it is only used if the primary fails.",
-	`Topology:
-  Router A Gi0/0/0 (.1) --- 192.168.2.0/24 --- (.2) Gi0/0/0 Router B
-  Router A Gi0/0/1 (.1) --- 192.168.1.0/24 --- (.2) Gi0/0/0 Router C
-  Router B Gi0/0/1 (.2) --- 192.168.3.0/24 --- (.1) Gi0/0/1 Router C
-
-RouterA(config)#ip route 0.0.0.0 0.0.0.0 192.168.2.2`),
+	pic(routersAbcFloatingImg)),
 
 	one("The administrator must configure a floating static default route that points to 2001:db8:1234:2::1 and replaces the current default route only if it fails. Which command must the engineer configure on the CPE?", [
 		"ipv6 route ::/0 2001:db8:1234:2::1 1", "ipv6 route ::/128 2001:db8:1234:2::1 3",
@@ -794,10 +726,7 @@ L   FF00::/8 [0/0]
 		"R1(config)#interface ethernet0/0.20\nR1(config)#ip address 10.20.20.1 255.255.255.0",
 		"R1(config)#interface ethernet0/0\nR1(config)#ip address 10.20.20.1 255.255.255.0",
 	], 1, "Router-on-a-stick needs a subinterface (e0/0.20) tagged with \"encapsulation dot1q 20\" before the IP address is assigned.",
-	`Topology:
-  [R1] E0/0 ---- E0/0 [SW1] E0/1 ---- E0/1 [SW2]
-
-R1
+	pic(subinterfaceImg, `R1
 interface Ethernet0/0
  no ip address
 
@@ -818,7 +747,7 @@ interface Ethernet0/1
 !
 interface Ethernet0/2
  switchport access vlan 20
- switchport mode access`),
+ switchport mode access`)),
 
 	one("Which command entered on a switch configured with Rapid-PVST+ listens and learns for a specific time period?", [
 		"switch(config)#spanning-tree vlan 1 priority 4096", "switch(config)#spanning-tree vlan 1 hello-time 10",
