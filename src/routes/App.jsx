@@ -12,6 +12,7 @@ import NotFound from "../pages/NotFound";
 
 /* Cisco */
 import CCNA from "../pages/training/cisco/ccna/ccna";
+import CCNAPracticeLab from "../pages/training/cisco/ccna/practiceLab";
 import CCNAAutomation from "../pages/training/cisco/ccna/automation";
 import CCNACybersecurity from "../pages/training/cisco/ccna/cybersecurity";
 import CCNPEnterprise from "../pages/training/cisco/ccnp/enterprise";
@@ -105,6 +106,8 @@ import Renewable from "../pages/solutions/pece/renewable";
 import Blank from "../pages/Blank";
 import AdminPage from "../pages/admin";
 import CCNADashboard from "../pages/modules/programs/CCNA/ccna";
+import CCNAAutomationDashboard from "../pages/modules/programs/CCNAAutomation/ccnaAutomationDashboard";
+import CCNACybersecurityDashboard from "../pages/modules/programs/CCNACybersecurity/ccnaCybersecurityDashboard";
 import CCNAKnowledgeHub from "../pages/modules/programs/CCNA/ccnaKnowledgeHub";
 import CCNAKnowledgeArticle from "../pages/modules/programs/CCNA/ccnaKnowledgeArticle";
 import CCNACompositeExam from "../pages/modules/programs/CCNA/ccnaCompositeExam";
@@ -140,6 +143,7 @@ export default function App() {
 
         {/* Cisco */}
         <Route path="/training/cisco/ccna/ccna" element={<CCNA />} />
+        <Route path="/training/cisco/ccna/practice-lab" element={<CCNAPracticeLab />} />
         <Route
           path="/training/cisco/ccna/automation"
           element={<CCNAAutomation />}
@@ -331,6 +335,30 @@ export default function App() {
           }
         />
         <Route
+          path="/modules/programs/ccna/practice-lab"
+          element={
+            <ProtectedRoute>
+              <CCNAPracticeLab fromDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/ccna-automation"
+          element={
+            <ProtectedRoute>
+              <CCNAAutomationDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/ccna-cybersecurity"
+          element={
+            <ProtectedRoute>
+              <CCNACybersecurityDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/modules/programs/ccna/quiz/:moduleNumber"
           element={
             <ProtectedRoute>
@@ -339,18 +367,26 @@ export default function App() {
           }
         />
         <Route
-          path="/modules/programs/ccna/results"
+          path="/modules/programs/ccna/exam/short"
           element={
             <ProtectedRoute>
-              <CCNAGradebook />
+              <CCNACompositeExam key="short" examKey="short" />
             </ProtectedRoute>
           }
         />
         <Route
-          path="/modules/programs/ccna/exam/short"
+          path="/modules/programs/ccna/exam/medium"
           element={
             <ProtectedRoute>
-              <CCNACompositeExam />
+              <CCNACompositeExam key="medium" examKey="medium" />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/ccna/results"
+          element={
+            <ProtectedRoute>
+              <CCNAGradebook />
             </ProtectedRoute>
           }
         />

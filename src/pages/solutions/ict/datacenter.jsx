@@ -1,6 +1,6 @@
 import SolutionsTemplate from "../../../components/solution_template/solutions_template";
-import DataCenterHero from "../../../assets/certified_data_centre_professional.webp";
-import DataCenterFooter from "../../../assets/certified_data_centre_professional2.webp";
+import DataCenterHero from "../../../assets/solutions/datacenter-hero.webp";
+import DataCenterFooter from "../../../assets/solutions/datacenter-footer.webp";
 
 
 // ==================== PAGE DATA ====================

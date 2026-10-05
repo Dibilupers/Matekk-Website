@@ -1,5 +1,6 @@
 // ==================== IMPORTS - UPDATE FOR EACH COURSE ====================
 // Change these imports based on the specific course
+import { Link } from "react-router-dom";
 import Button from "../../../../components/ui/button";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
@@ -214,6 +215,33 @@ export default function CCNA() {
 
             {/* Course Content - List */}
             <CourseModules modules={modules} />
+          </section>
+
+          {/* ==================== PRACTICE LAB ==================== */}
+          <section className="flex flex-col gap-y-4 p-6 rounded-2xl bg-[#EBF5FD]">
+            <h3>
+              Practice <span className="text-[#1775EE]">Online</span>
+            </h3>
+            <p>
+              Try a free hands-on lab in your browser: configure a Cisco router step by step
+              using real IOS commands, or download Cisco Packet Tracer for full network simulations.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                to="/training/cisco/ccna/practice-lab"
+                className="w-fit rounded-full bg-[#1775EE] text-white px-5 py-3 md:py-2 hover:bg-[#0062E0] transition shadow-lg"
+              >
+                Try the Practice Lab
+              </Link>
+              <a
+                href="https://www.netacad.com/resources/lab-downloads"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-fit rounded-full border border-[#1775EE] text-[#1775EE] px-5 py-3 md:py-2 hover:bg-[#1775EE] hover:text-white transition"
+              >
+                Download Packet Tracer
+              </a>
+            </div>
           </section>
         </div>
 

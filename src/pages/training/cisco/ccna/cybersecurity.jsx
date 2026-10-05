@@ -352,7 +352,7 @@ export default function CCNACybersecurity() {
       <TrainingHeroBanner
         bgImage={ccnaHero}
         category="CISCO"
-        title="CCNA CYBERSECURITY"
+        title="CCNA Cybersecurity"
         description="Start building a career in cybersecurity operations. Develop the
               skills needed to protect systems, networks, and data from cyber
               threats."

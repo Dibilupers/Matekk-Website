@@ -48,8 +48,8 @@ export default function SMARTBuilding() {
       heroDescription="MATEKK delivers advanced smart building solutions that integrate automation, connectivity, and intelligent control systems to enhance efficiency, security, and sustainability across modern facilities."
       
       // Building section
-      buildingTitle="Intelligent, Automated, and Energy-Efficient Building"
-      buildingTitleHighlight="Solutions"
+      buildingTitle="Intelligent, Automated, and Energy-Efficient"
+      buildingTitleHighlight="Building Solutions"
       buildingDescription="Our smart building services unify building systems such as lighting, HVAC, security, and energy management into a centralized, intelligent platform. MGKK enables real-time monitoring, automation, and data-driven control to improve operational efficiency, occupant comfort, and overall building performance."
       
       // Challenges section
@@ -65,7 +65,7 @@ export default function SMARTBuilding() {
       footerBgImage={ICTConsultancyFooter}
       footerTitle="Contact Us Today To"
       footerHighlightText="Request a Consultation"
-      footerDescription="Enhance your building operations with MATEKK Smart Building Solutions."
+      footerDescription="Secure your organization's network with MGKK Information Communication Technology Services."
     >
     </SolutionsTemplate>
   );
