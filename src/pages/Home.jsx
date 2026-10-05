@@ -407,9 +407,26 @@ export default function Home() {
                   type="none"
                   buttonCustomStyle="text-blue-600 border border-blue-600 hover:bg-[#0062E0] hover:border-[#0062E0] hover:text-white  transition-all duration-300"
                   btnFunc={() => {
-                    document.getElementById("training-programs")?.scrollIntoView({
+                    const trainingSection = document.getElementById("training-programs");
+                    if (!trainingSection) return;
+
+                    const currentTop = trainingSection.getBoundingClientRect().top;
+                    const scrollMargin = Number.parseFloat(
+                      window.getComputedStyle(trainingSection).scrollMarginTop,
+                    );
+                    const nextSection = trainingSection.closest("section")?.nextElementSibling;
+                    const nextSectionTop = nextSection?.getBoundingClientRect().top;
+                    const sectionGap = nextSectionTop === undefined
+                      ? Number.POSITIVE_INFINITY
+                      : nextSectionTop - currentTop;
+                    const targetTop = Math.max(
+                      scrollMargin,
+                      window.innerHeight + 24 - sectionGap,
+                    );
+
+                    window.scrollTo({
+                      top: Math.max(0, window.scrollY + currentTop - targetTop),
                       behavior: "smooth",
-                      block: "start",
                     });
                   }}
                 />
@@ -643,7 +660,7 @@ export default function Home() {
           </div>
 
           {/* ====== TRAINING - ICT Training & Skills Development ======*/}
-          <div id="training-programs" className="scroll-mt-24">
+          <div id="training-programs" className="scroll-mt-40">
             <div className="flex flex-col md:flex-row justify-center items-center gap-10">
               {/* Controls — on mobile: top + right-aligned | on desktop: right column */}
               {/* Training title */}
