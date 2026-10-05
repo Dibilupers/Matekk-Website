@@ -8,6 +8,7 @@ import {
 	BookOpen,
 	Check,
 	ChevronDown,
+	ChevronLeft,
 	ChevronRight,
 	CircleAlert,
 	Clock3,
@@ -37,8 +38,15 @@ const EXAM_FORMATS = [
 ];
 const SHORT_EXAM_SESSION_KEY = "matekk-ccna-short-exam-session";
 
-function readShortExamProgress() {
-	const savedSession = window.sessionStorage.getItem(SHORT_EXAM_SESSION_KEY);
+function getShortExamSessionKey(userId) {
+	if ((typeof userId !== "string" && typeof userId !== "number") || String(userId).trim() === "") return null;
+	return `${SHORT_EXAM_SESSION_KEY}:${encodeURIComponent(String(userId))}`;
+}
+
+function readShortExamProgress(userId) {
+	const sessionKey = getShortExamSessionKey(userId);
+	if (!sessionKey) return { status: "not-started", deadline: null, answeredCount: 0, score: 0 };
+	const savedSession = window.sessionStorage.getItem(sessionKey);
 	if (!savedSession) return { status: "not-started", deadline: null, answeredCount: 0, score: 0 };
 
 	try {
@@ -315,7 +323,7 @@ export default function CCNA() {
 	const [isQuizPickerOpen, setIsQuizPickerOpen] = useState(false);
 	const [isExamPickerOpen, setIsExamPickerOpen] = useState(false);
 	const [selectedExamFormat, setSelectedExamFormat] = useState(null);
-	const [shortExamProgress, setShortExamProgress] = useState(readShortExamProgress);
+	const [shortExamProgress, setShortExamProgress] = useState(() => readShortExamProgress(userId));
 	const [examClockNow, setExamClockNow] = useState(Date.now);
 	const [progressSlide, setProgressSlide] = useState(0);
 	const [quizProgressState] = useState(() => ({
@@ -404,10 +412,10 @@ export default function CCNA() {
 		if (!shortExamProgress.deadline) return undefined;
 		const intervalId = window.setInterval(() => {
 			setExamClockNow(Date.now());
-			setShortExamProgress(readShortExamProgress());
+			setShortExamProgress(readShortExamProgress(userId));
 		}, 1000);
 		return () => window.clearInterval(intervalId);
-	}, [shortExamProgress.deadline]);
+	}, [shortExamProgress.deadline, userId]);
 
 	function toggleModule(index) {
 		setOpenSection((currentSection) => currentSection === index ? null : index);

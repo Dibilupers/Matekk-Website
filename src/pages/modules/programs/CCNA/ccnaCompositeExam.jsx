@@ -1,13 +1,25 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useBlocker } from "react-router-dom";
 import { ArrowLeft, ArrowRight, ArrowUp, Clock3, RotateCcw, X } from "lucide-react";
+import { useAuth } from "../../../../context/AuthContext";
 import TrainingLogo from "../../../../assets/MATEKK_training_logo.png";
+import {
+	createCcnaMockExamAttemptId,
+	saveCcnaMockExamResult,
+} from "../../../../utils/ccnaGradebook";
 import { CCNA_MODULE_QUIZZES } from "./ccnaModuleQuizData";
 
 const SHORT_EXAM_QUESTION_COUNT = 50;
 const SHORT_EXAM_DURATION_SECONDS = 45 * 60;
 const EXAM_PASS_PERCENTAGE = 80;
 const SHORT_EXAM_SESSION_KEY = "matekk-ccna-short-exam-session";
+
+function getShortExamSessionKey(userId) {
+	if ((typeof userId !== "string" && typeof userId !== "number") || String(userId).trim() === "") {
+		return null;
+	}
+	return `${SHORT_EXAM_SESSION_KEY}:${encodeURIComponent(String(userId))}`;
+}
 
 function shuffle(items) {
 	const shuffled = [...items];
@@ -37,17 +49,22 @@ function createShortExamQuestions() {
 	}));
 }
 
-function restoreShortExamSession() {
-	const savedSession = window.sessionStorage.getItem(SHORT_EXAM_SESSION_KEY);
+function restoreShortExamSession(userId) {
+	const sessionKey = getShortExamSessionKey(userId);
+	const createSession = () => ({
+		attemptId: createCcnaMockExamAttemptId(),
+		submittedAt: null,
+		questions: createShortExamQuestions(),
+		answers: {},
+		lockedQuestions: {},
+		currentIndex: 0,
+		deadline: Date.now() + SHORT_EXAM_DURATION_SECONDS * 1000,
+		isSubmitted: false,
+	});
+	if (!sessionKey) return createSession();
+	const savedSession = window.sessionStorage.getItem(sessionKey);
 	if (!savedSession) {
-		return {
-			questions: createShortExamQuestions(),
-			answers: {},
-			lockedQuestions: {},
-			currentIndex: 0,
-			deadline: Date.now() + SHORT_EXAM_DURATION_SECONDS * 1000,
-			isSubmitted: false,
-		};
+		return createSession();
 	}
 
 	try {
@@ -73,24 +90,22 @@ function restoreShortExamSession() {
 			typeof session.isSubmitted === "boolean";
 
 		if (isValid) {
+			const isSubmitted = session.isSubmitted || session.deadline <= Date.now();
 			return {
 				...session,
-				isSubmitted: session.isSubmitted || session.deadline <= Date.now(),
+				attemptId: typeof session.attemptId === "string" ? session.attemptId : createCcnaMockExamAttemptId(),
+				submittedAt: Number.isFinite(session.submittedAt)
+					? session.submittedAt
+					: isSubmitted ? Date.now() : null,
+				isSubmitted,
 			};
 		}
 
 		throw new TypeError("Saved CCNA short exam session has an invalid structure.");
 	} catch (error) {
 		console.error("Unable to restore the saved CCNA short exam session.", error);
-		window.sessionStorage.removeItem(SHORT_EXAM_SESSION_KEY);
-		return {
-			questions: createShortExamQuestions(),
-			answers: {},
-			lockedQuestions: {},
-			currentIndex: 0,
-			deadline: Date.now() + SHORT_EXAM_DURATION_SECONDS * 1000,
-			isSubmitted: false,
-		};
+		window.sessionStorage.removeItem(sessionKey);
+		return createSession();
 	}
 }
 
@@ -101,12 +116,16 @@ function formatTime(totalSeconds) {
 }
 
 export default function CCNACompositeExam() {
-	const [initialSession] = useState(restoreShortExamSession);
+	const { profile } = useAuth();
+	const userId = profile?.userId;
+	const [initialSession] = useState(() => restoreShortExamSession(userId));
 	const [questions, setQuestions] = useState(initialSession.questions);
 	const [answers, setAnswers] = useState(initialSession.answers);
 	const [lockedQuestions, setLockedQuestions] = useState(initialSession.lockedQuestions);
 	const [currentIndex, setCurrentIndex] = useState(initialSession.currentIndex);
 	const [deadline, setDeadline] = useState(initialSession.deadline);
+	const [attemptId, setAttemptId] = useState(initialSession.attemptId);
+	const [submittedAt, setSubmittedAt] = useState(initialSession.submittedAt);
 	const [secondsRemaining, setSecondsRemaining] = useState(() =>
 		Math.max(0, Math.ceil((initialSession.deadline - Date.now()) / 1000)),
 	);
@@ -151,9 +170,18 @@ export default function CCNACompositeExam() {
 			(answerFilter === "correct" && item.isCorrect) ||
 			(answerFilter === "incorrect" && !item.isCorrect),
 		);
+	const sessionKey = getShortExamSessionKey(userId);
+
+	function submitExam() {
+		setSubmittedAt((previousSubmittedAt) => previousSubmittedAt ?? Date.now());
+		setIsSubmitted(true);
+	}
 
 	useEffect(() => {
-		window.sessionStorage.setItem(SHORT_EXAM_SESSION_KEY, JSON.stringify({
+		if (!sessionKey) return;
+		window.sessionStorage.setItem(sessionKey, JSON.stringify({
+			attemptId,
+			submittedAt,
 			questions,
 			answers,
 			lockedQuestions,
@@ -161,7 +189,18 @@ export default function CCNACompositeExam() {
 			deadline,
 			isSubmitted,
 		}));
-	}, [answers, currentIndex, deadline, isSubmitted, lockedQuestions, questions]);
+	}, [answers, attemptId, currentIndex, deadline, isSubmitted, lockedQuestions, questions, sessionKey, submittedAt]);
+
+	useEffect(() => {
+		if (!isSubmitted || !userId || !Number.isFinite(submittedAt)) return;
+		saveCcnaMockExamResult(userId, {
+			id: attemptId,
+			title: "Short Exam",
+			score,
+			maxScore: questions.length,
+			submittedAt,
+		});
+	}, [attemptId, isSubmitted, questions.length, score, submittedAt, userId]);
 
 	useEffect(() => {
 		if (isSubmitted) return undefined;
@@ -169,7 +208,7 @@ export default function CCNACompositeExam() {
 		function updateTimer() {
 			const remaining = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
 			setSecondsRemaining(remaining);
-			if (remaining === 0) setIsSubmitted(true);
+			if (remaining === 0) submitExam();
 		}
 
 		updateTimer();
@@ -256,6 +295,8 @@ export default function CCNACompositeExam() {
 		setLockedQuestions({});
 		setCurrentIndex(0);
 		setDeadline(Date.now() + SHORT_EXAM_DURATION_SECONDS * 1000);
+		setAttemptId(createCcnaMockExamAttemptId());
+		setSubmittedAt(null);
 		setSecondsRemaining(SHORT_EXAM_DURATION_SECONDS);
 		setIsSubmitted(false);
 		setExamAttempt((attempt) => attempt + 1);
@@ -360,7 +401,7 @@ export default function CCNACompositeExam() {
 								<div className="mt-6 flex justify-end">
 									<button
 										type="button"
-										onClick={() => currentIndex === questions.length - 1 ? setIsSubmitted(true) : goToQuestion(currentIndex + 1)}
+										onClick={() => currentIndex === questions.length - 1 ? submitExam() : goToQuestion(currentIndex + 1)}
 										disabled={answers[currentIndex] === undefined}
 										className="rounded-full bg-[#005b6b] px-6 py-3 font-semibold text-white transition hover:bg-[#004653] disabled:cursor-not-allowed disabled:opacity-40"
 									>

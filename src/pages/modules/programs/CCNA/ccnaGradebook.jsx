@@ -120,7 +120,9 @@ function getMockExamRows(results) {
 		.sort((first, second) => first.submittedAt - second.submittedAt)
 		.map((result, index) => ({
 			id: result.id,
-			name: index === 0 ? "Mock exam" : `Mock exam ${index}`,
+			name: result.title === "Short Exam"
+				? index === 0 ? "Short Exam" : `Short Exam ${index}`
+				: index === 0 ? "Mock exam" : `Mock exam ${index}`,
 			status: "graded",
 			submittedAt: result.submittedAt,
 			attempts: 1,
