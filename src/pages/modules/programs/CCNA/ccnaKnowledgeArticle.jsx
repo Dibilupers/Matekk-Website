@@ -576,16 +576,21 @@ export default function CCNAKnowledgeArticle() {
 	useEffect(() => {
 		if (!userId) return undefined;
 
-		const lessonEnd = lessonEndRef.current;
-		if (!lessonEnd) return undefined;
+		let previousScrollY = window.scrollY;
+		const markLessonCompleteAtEnd = () => {
+			const currentScrollY = window.scrollY;
+			if (currentScrollY > previousScrollY) {
+				const lessonEnd = lessonEndRef.current?.getBoundingClientRect();
+				if (lessonEnd && lessonEnd.top <= window.innerHeight) {
+					markCcnaTutorialOpened(userId, canonicalArticleSlug);
+					window.removeEventListener("scroll", markLessonCompleteAtEnd);
+				}
+			}
+			previousScrollY = currentScrollY;
+		};
 
-		const observer = new IntersectionObserver(([entry]) => {
-			if (!entry.isIntersecting) return;
-			markCcnaTutorialOpened(userId, canonicalArticleSlug);
-			observer.disconnect();
-		});
-		observer.observe(lessonEnd);
-		return () => observer.disconnect();
+		window.addEventListener("scroll", markLessonCompleteAtEnd, { passive: true });
+		return () => window.removeEventListener("scroll", markLessonCompleteAtEnd);
 	}, [canonicalArticleSlug, userId]);
 	const article = articles[articleSlug]
 		|| (articleSlug === vlanArticleSlug ? articles["virtual-local-area-networks-(vlans)"] : undefined)

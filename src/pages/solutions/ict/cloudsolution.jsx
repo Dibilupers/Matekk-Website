@@ -1,6 +1,6 @@
 import SolutionsTemplate from "../../../components/solution_template/solutions_template";
-import ICTConsultancyHero from "../../../assets/solutions/cloud-hero.webp";
-import ICTConsultancyFooter from "../../../assets/solutions/cloud-footer.webp";
+import ICTConsultancyHero from "../../../assets/ICTConsultancyHero.jpg";
+import ICTConsultancyFooter from "../../../assets/ICTConsultancyFooter.jpg";
 
 
 const CHALLENGES = [

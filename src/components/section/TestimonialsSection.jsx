@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import TestimonialCard from "../cards/TestimonialCard";
 import { testimonials } from "../data/testimonials";
+import Button from "../ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function TestimonialsSection() {
@@ -109,6 +110,18 @@ export default function TestimonialsSection() {
             private organizations, maintaining a strong focus on quality,
             reliability, and customer satisfaction.
           </p>
+        </div>
+        <div className="shrink-0">
+          <Button
+            title="Contact Us"
+            type="none"
+            buttonCustomStyle="bg-[#1775EE] text-white px-6 py-3 rounded-full hover:bg-blue-700 transition duration-300"
+            btnFunc={() => {
+              document
+                .getElementById("contact")
+                ?.scrollIntoView({ behavior: "smooth", block: "start" });
+            }}
+          />
         </div>
       </div>
 

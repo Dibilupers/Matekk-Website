@@ -1,6 +1,6 @@
 import SolutionsTemplate from "../../../components/solution_template/solutions_template";
-import ICTConsultancyHero from "../../../assets/solutions/webdev-hero.webp";
-import ICTConsultancyFooter from "../../../assets/solutions/webdev-footer.webp";
+import ICTConsultancyHero from "../../../assets/ICTConsultancyHero.jpg";
+import ICTConsultancyFooter from "../../../assets/ICTConsultancyFooter.jpg";
 
 const CHALLENGES = [
   "Outdated or inefficient software systems slowing operations",

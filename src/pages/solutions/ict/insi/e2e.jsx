@@ -1,6 +1,6 @@
 import SolutionsTemplate from "../../../../components/solution_template/solutions_template";
-import ICTConsultancyHero from "../../../../assets/solutions/e2e-hero.webp";
-import ICTConsultancyFooter from "../../../../assets/solutions/e2e-footer.webp";
+import ICTConsultancyHero from "../../../../assets/ICTConsultancyHero.jpg";
+import ICTConsultancyFooter from "../../../../assets/ICTConsultancyFooter.jpg";
 
 const CHALLENGES = [
   "Inconsistent or unstable network connectivity",

@@ -1,6 +1,6 @@
 import SolutionsTemplate from "../../../components/solution_template/solutions_template";
-import PECEhero from "../../../assets/solutions/ipcctv-hero.webp";
-import PECEfooter from "../../../assets/solutions/ipcctv-footer.webp";
+import PECEhero from "../../../assets/PECEHeroImage.jpg";
+import PECEfooter from "../../../assets/PECEFooterImage.webp";
 
 const CHALLENGES = [
   "Limited visibility and monitoring of facilities",

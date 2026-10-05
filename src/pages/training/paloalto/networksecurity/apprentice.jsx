@@ -3,7 +3,7 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 import ccnaBadge from "../../../../assets/PaloAltoCyberSecurityApprentice.png";
-import PaloAltoHero from "../../../../assets/training/paloalto/apprentice-hero.webp";
+import PaloAltoHero from "../../../../assets/PaloAltoHeader.webp";
 import PaloAltoFooter from "../../../../assets/PaloAltoFooter.webp";
 import MealIcon from "../../../../assets/Meal.svg";
 import ReviewIcon from "../../../../assets/Review.svg";

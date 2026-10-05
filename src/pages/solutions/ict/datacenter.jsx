@@ -1,6 +1,6 @@
 import SolutionsTemplate from "../../../components/solution_template/solutions_template";
-import DataCenterHero from "../../../assets/solutions/datacenter-hero.webp";
-import DataCenterFooter from "../../../assets/solutions/datacenter-footer.webp";
+import ICTConsultancyHero from "../../../assets/ICTConsultancyHero.jpg";
+import ICTConsultancyFooter from "../../../assets/ICTConsultancyFooter.jpg";
 
 
 // ==================== PAGE DATA ====================
@@ -46,7 +46,7 @@ export default function DataCenter() {
   return (
     <SolutionsTemplate
       // Hero
-      heroBgImage={DataCenterHero}
+      heroBgImage={ICTConsultancyHero}
       category="ICT Consultancy (PBOOT)"
       heroTitle="Data Center Facilities"
       heroDescription="MATEKK delivers end-to-end Data Center Facilities solutions that help organizations establish secure, efficient, and resilient infrastructure to support critical IT operations."
@@ -62,7 +62,7 @@ export default function DataCenter() {
       deliverablesHighlight="Deliverables"
       deliverables={DELIVERABLES}
       // Footer banner
-      footerBgImage={DataCenterFooter}
+      footerBgImage={ICTConsultancyFooter}
       footerTitle="Contact Us Today To"
       footerHighlightText="Request a Consultation"
       footerDescription="Secure your organization's network with MGKK Information Communication Technology Services."

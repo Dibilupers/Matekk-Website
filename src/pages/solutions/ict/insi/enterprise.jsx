@@ -1,6 +1,8 @@
 import SolutionsTemplate from "../../../../components/solution_template/solutions_template";
-import ICTConsultancyHero from "../../../../assets/solutions/enterprise-hero.webp";
-import ICTConsultancyFooter from "../../../../assets/solutions/enterprise-footer.webp";
+import ICTConsultancyHero from "../../../../assets/ICTConsultancyHero.jpg";
+import ICTConsultancyFooter from "../../../../assets/ICTConsultancyFooter.jpg";
+import ictImage from "../../../../assets/ict.webp";
+import webImage from "../../../../assets/web.webp";
 
 const CHALLENGES = [
   "Fragmented and inconsistent security controls across systems",

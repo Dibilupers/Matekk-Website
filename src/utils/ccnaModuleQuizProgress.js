@@ -2,52 +2,8 @@ const CCNA_MODULE_QUIZ_PROGRESS_KEY = "matekk-ccna-module-quiz-progress";
 export const CCNA_MODULE_QUIZ_VERSION = 2;
 export const CCNA_MODULE_QUIZ_DURATION_SECONDS = 30 * 60;
 
-function getModuleQuizProgressKey(userId) {
-	if ((typeof userId !== "string" && typeof userId !== "number") || String(userId).trim() === "") {
-		throw new TypeError("A signed-in user ID is required to access CCNA module quiz progress.");
-	}
-	return `${CCNA_MODULE_QUIZ_PROGRESS_KEY}:${encodeURIComponent(String(userId))}`;
-}
-
 export function isCurrentCcnaModuleQuizAttempt(attempt) {
-	return attempt?.quizVersion === CCNA_MODULE_QUIZ_VERSION;
-}
-
-export function getCcnaModuleQuizAttemptHistory(attempt, maxScore) {
-	const history = Array.isArray(attempt?.attemptHistory) ? attempt.attemptHistory : [];
-	if (!attempt || !["completed", "expired"].includes(attempt.status)) return history;
-
-	const attemptNumber = Number.isInteger(attempt.attempts) && attempt.attempts > 0 ? attempt.attempts : 1;
-	if (history.some((result) => result.attemptNumber === attemptNumber)) return history;
-	return [
-		...history,
-		{
-			attemptNumber,
-			status: attempt.status,
-			score: Number.isFinite(attempt.score) ? attempt.score : 0,
-			maxScore: Number.isFinite(attempt.maxScore) ? attempt.maxScore : maxScore,
-			submittedAt: Number.isFinite(attempt.submittedAt) ? attempt.submittedAt : null,
-		},
-	];
-}
-
-export function recordCcnaModuleQuizAttempt(attempt, maxScore) {
-	const attemptNumber = Number.isInteger(attempt.attempts) && attempt.attempts > 0 ? attempt.attempts : 1;
-	const result = {
-		attemptNumber,
-		status: attempt.status,
-		score: Number.isFinite(attempt.score) ? attempt.score : 0,
-		maxScore: Number.isFinite(maxScore) ? maxScore : attempt.maxScore ?? null,
-		submittedAt: Number.isFinite(attempt.submittedAt) ? attempt.submittedAt : null,
-	};
-	const history = getCcnaModuleQuizAttemptHistory(attempt, result.maxScore)
-		.filter((previousResult) => previousResult.attemptNumber !== attemptNumber);
-
-	return {
-		...attempt,
-		maxScore: result.maxScore,
-		attemptHistory: [...history, result],
-	};
+	return Boolean(attempt) && (attempt.quizVersion === undefined || attempt.quizVersion === CCNA_MODULE_QUIZ_VERSION);
 }
 
 function createEmptyProgress() {
@@ -57,8 +13,8 @@ function createEmptyProgress() {
 	};
 }
 
-export function readCcnaModuleQuizProgress(userId) {
-	const savedProgress = window.localStorage.getItem(getModuleQuizProgressKey(userId));
+export function readCcnaModuleQuizProgress() {
+	const savedProgress = window.localStorage.getItem(CCNA_MODULE_QUIZ_PROGRESS_KEY);
 	if (!savedProgress) return createEmptyProgress();
 
 	try {
@@ -76,16 +32,16 @@ export function readCcnaModuleQuizProgress(userId) {
 	}
 }
 
-export function saveCcnaModuleQuizProgress(userId, progress) {
-	window.localStorage.setItem(getModuleQuizProgressKey(userId), JSON.stringify(progress));
+export function saveCcnaModuleQuizProgress(progress) {
+	window.localStorage.setItem(CCNA_MODULE_QUIZ_PROGRESS_KEY, JSON.stringify(progress));
 }
 
-export function beginCcnaModuleQuiz(userId, moduleNumber) {
-	const progress = readCcnaModuleQuizProgress(userId);
+export function beginCcnaModuleQuiz(moduleNumber) {
+	const progress = readCcnaModuleQuizProgress();
 	const previousAttempt = progress.modules[moduleNumber];
 	if (isCurrentCcnaModuleQuizAttempt(previousAttempt) && previousAttempt.status === "in-progress") {
 		const resumedProgress = { ...progress, activeModule: moduleNumber };
-		saveCcnaModuleQuizProgress(userId, resumedProgress);
+		saveCcnaModuleQuizProgress(resumedProgress);
 		return previousAttempt;
 	}
 
@@ -99,11 +55,8 @@ export function beginCcnaModuleQuiz(userId, moduleNumber) {
 		quizVersion: CCNA_MODULE_QUIZ_VERSION,
 		attempts: (previousAttempt?.attempts ?? 0) + 1,
 		bestScore: isCurrentCcnaModuleQuizAttempt(previousAttempt) ? previousAttempt.bestScore ?? null : null,
-		attemptHistory: isCurrentCcnaModuleQuizAttempt(previousAttempt)
-			? getCcnaModuleQuizAttemptHistory(previousAttempt, previousAttempt.maxScore)
-			: [],
 	};
-	saveCcnaModuleQuizProgress(userId, {
+	saveCcnaModuleQuizProgress({
 		...progress,
 		activeModule: moduleNumber,
 		modules: {

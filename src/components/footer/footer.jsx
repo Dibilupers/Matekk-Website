@@ -102,7 +102,7 @@ export default function Footer() {
               </li>
               <li>
                 <button
-                  onClick={() => scrollToSection("training-programs")}
+                  onClick={() => scrollToSection("training")}
                   className="hover:underline cursor-pointer"
                 >
                   Training
@@ -148,15 +148,15 @@ export default function Footer() {
               >
                 <FaInstagram className="text-[#1775EE] group-hover:text-white transition-colors duration-300 w-10 h-10" />
               </a>
-              {/* LINKEDIN — no page address yet, so clicking does nothing.
-                  When the LinkedIn URL is known, change this back to an <a href="..." target="_blank"> link. */}
-              <button
-                type="button"
-                aria-label="LinkedIn"
-                className="p-2 rounded-md border border-[#1775EE] flex items-center justify-center hover:bg-[#1775EE] transition-colors duration-300 group w-10 h-10 cursor-pointer"
+              {/* LINKEDIN */}
+              <a
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 rounded-md border border-[#1775EE] flex items-center justify-center hover:bg-[#1775EE] transition-colors duration-300 group w-10 h-10"
               >
                 <FaLinkedin className="text-[#1775EE] group-hover:text-white transition-colors duration-300 w-10 h-10" />
-              </button>
+              </a>
             </div>
           </div>  
         </div>

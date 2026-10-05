@@ -1,6 +1,6 @@
 import SolutionsTemplate from "../../../../components/solution_template/solutions_template";
-import ICTConsultancyHero from "../../../../assets/solutions/wlan-hero.webp";
-import ICTConsultancyFooter from "../../../../assets/solutions/wlan-footer.webp";
+import ICTConsultancyHero from "../../../../assets/ICTConsultancyHero.jpg";
+import ICTConsultancyFooter from "../../../../assets/ICTConsultancyFooter.jpg";
 
 const CHALLENGES = [
   "Weak or inconsistent wireless signal coverage",

@@ -1,6 +1,6 @@
 import SolutionsTemplate from "../../../components/solution_template/solutions_template";
-import PECEhero from "../../../assets/solutions/dooraccess-hero.webp";
-import PECEfooter from "../../../assets/solutions/dooraccess-footer.webp";
+import PECEhero from "../../../assets/PECEHeroImage.jpg";
+import PECEfooter from "../../../assets/PECEFooterImage.webp";
 
 const CHALLENGES = [
   "Unauthorized access to restricted areas",

@@ -1,6 +1,6 @@
 import SolutionsTemplate from "../../../components/solution_template/solutions_template";
-import PECEhero from "../../../assets/solutions/pas-hero.webp";
-import PECEfooter from "../../../assets/solutions/pas-footer.webp";
+import PECEhero from "../../../assets/PECEHeroImage.jpg";
+import PECEfooter from "../../../assets/PECEFooterImage.webp";
 
 
 const CHALLENGES = [

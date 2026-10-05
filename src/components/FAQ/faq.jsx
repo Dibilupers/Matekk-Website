@@ -41,10 +41,7 @@ export default function FAQ() {
         return (
           <div
             key={index}
-            // Mouse users: hovering anywhere on a question opens it, leaving closes it (tap/click still toggles)
-            onPointerEnter={(e) => { if (e.pointerType === "mouse") setOpenIndex(index); }}
-            onPointerLeave={(e) => { if (e.pointerType === "mouse") setOpenIndex((current) => (current === index ? null : current)); }}
-            className={`h-fit rounded-2xl w-full transition-all duration-300 origin-left hover:scale-[1.03]
+            className={`h-fit rounded-2xl w-full transition-all duration-300
               ${isOpen ? "bg-linear-to-b from-[#5192E6] to-[#1775EE] p-6 md:p-8 space-y-2" : "bg-transparent p-0"}
             `}
           >
@@ -59,9 +56,7 @@ export default function FAQ() {
               </h5>
 
               {/* QUESTION CARD - DROP DOWN BUTTON */}
-              <button
-                onClick={() => setOpenIndex(isOpen ? null : index)}
-              >
+              <button onClick={() => setOpenIndex(isOpen ? null : index)}>
                 <div
                   className={`w-10 h-10 rounded-full flex items-center justify-center cursor-pointer
   ${isOpen ? "bg-[#EBF5FD]" : "bg-[#1775EE]"}

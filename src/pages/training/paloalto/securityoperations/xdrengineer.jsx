@@ -3,7 +3,7 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 import ccnaBadge from "../../../../assets/PaloAltoXDREngineer.png";
-import PaloAltoHero from "../../../../assets/training/paloalto/xdrengineer-hero.webp";
+import PaloAltoHero from "../../../../assets/PaloAltoHeader.webp";
 import PaloAltoFooter from "../../../../assets/PaloAltoFooter.webp";
 import MealIcon from "../../../../assets/Meal.svg";
 import ReviewIcon from "../../../../assets/Review.svg";
@@ -195,7 +195,7 @@ export default function XDREngineer() {
             {/* Target Learners - Title */}
             <h5 className="text-[#1775EE] ">Target Learners</h5>
             {/* Target Learners - List */}
-            {["Security Operations & SOC Engineers", "XDR & Detection Engineers", "Security Architects"].map((job) => (
+            {["Beginners", "Zero Knowledge"].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
                 <span>{job}</span>
