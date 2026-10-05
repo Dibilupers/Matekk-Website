@@ -29,14 +29,15 @@ model Inquires {
 }
 
 model Users {
-  id            Int      @id @default(autoincrement())
-  username      String
-  password      String
-  email         String
-  role          String   @default("Student ")
-  programs_enrolled String?
-  active_status Boolean  @default(false)
-  createdAt     DateTime @default(now())
+  id                Int          @id @default(autoincrement())
+  username          String
+  password          String
+  email             String
+  role              String       @default("Student ")
+  active_status     Boolean      @default(false)
+  createdAt         DateTime     @default(now())
+  programs_enrolled String
+  enrollments       Enrollment[]
 }
 
 model Questions {
@@ -51,18 +52,17 @@ model Questions {
 }
 
 model Program {
-  id           Int @id @default(autoincrement())
-  name         String
-  enrollmens   Enrollment[]
+  id          Int          @id @default(autoincrement())
+  name        String
+  enrollments Enrollment[]
 }
 
 model Enrollment {
   userId     Int
   programId  Int
   enrolledAt DateTime @default(now())
-
-  user    Users   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  program Program @relation(fields: [programId], references: [id], onDelete: Cascade)
+  program    Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
+  user       Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([userId, programId])
 }

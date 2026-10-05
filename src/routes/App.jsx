@@ -435,7 +435,7 @@ function CCNAExamTimeNotification() {
     checkExamDeadline();
     const timer = window.setInterval(checkExamDeadline, 500);
     return () => window.clearInterval(timer);
-  }, [userId]);
+  }, []);
 
   function dismissNotification() {
     if (notification?.type === "module") {
