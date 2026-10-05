@@ -18,7 +18,7 @@ export class UsersService {
             password: 'testpass',
             role: 'student',
             module_enrolled: 'CCNA, CCNP Security, Network+',
-            course_enrolled: ['Cisco'],
+            course_enrolled: ['Cisco', 'CompTIA', 'Fortinet', 'Palo Alto', 'Data Center', 'Cybersecurity', 'Cloyd Computing', 'IT Management', 'Project Management'],
         },
         {
             userId: 2,

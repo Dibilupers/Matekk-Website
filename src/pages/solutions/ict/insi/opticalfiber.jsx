@@ -1,6 +1,6 @@
 import SolutionsTemplate from "../../../../components/solution_template/solutions_template";
-import ICTConsultancyHero from "../../../../assets/ICTConsultancyHero.jpg";
-import ICTConsultancyFooter from "../../../../assets/ICTConsultancyFooter.jpg";
+import ICTConsultancyHero from "../../../../assets/solutions/opticalfiber-hero.webp";
+import ICTConsultancyFooter from "../../../../assets/solutions/opticalfiber-footer.webp";
 
 const CHALLENGES = [
   "Slow or inconsistent connectivity across multiple locations",
