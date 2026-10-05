@@ -9,7 +9,6 @@ import {
 	Check,
 	ChevronDown,
 	ChevronLeft,
-	ChevronLeft,
 	ChevronRight,
 	CircleAlert,
 	ClipboardList,
