@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { Link, useBlocker } from "react-router-dom";
+import { Link, useBlocker, useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight, ArrowUp, Clock3, Moon, RotateCcw, Sun, X } from "lucide-react";
 import { useAuth } from "../../../../context/AuthContext";
 import TrainingLogo from "../../../../assets/MATEKK_training_logo.png";
@@ -79,11 +79,17 @@ function formatTime(totalSeconds) {
 
 export default function CCNACompositeExam({ examKey = "short" }) {
 	const exam = CCNA_EXAMS[examKey];
+	const location = useLocation();
+	const navigate = useNavigate();
+	const shouldShowExamResult = location.state?.showExamResult === true;
+	const shouldStartNewAttempt = location.state?.retakeExam === true;
 	const { profile } = useAuth();
 	const userId = profile?.userId;
 	// Each student's exam progress is saved separately (per signed-in user)
 	const sessionStorageKey = getCcnaExamSessionKey(exam.sessionKey, userId);
-	const [initialSession] = useState(() => restoreExamSession(exam, sessionStorageKey));
+	const [initialSession] = useState(() =>
+		shouldStartNewAttempt ? createExamSession(exam) : restoreExamSession(exam, sessionStorageKey),
+	);
 	const [attemptId, setAttemptId] = useState(initialSession.attemptId);
 	const [submittedAt, setSubmittedAt] = useState(initialSession.submittedAt);
 	const [questions, setQuestions] = useState(initialSession.questions);
@@ -96,6 +102,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 	);
 	const [isDark, setIsDark] = useState(false);
 	const [isSubmitted, setIsSubmitted] = useState(initialSession.isSubmitted);
+	const [isRetakeConfirmationOpen, setIsRetakeConfirmationOpen] = useState(false);
 	const [examAttempt, setExamAttempt] = useState(0);
 	const [answerFilter, setAnswerFilter] = useState("all");
 	const [isAnswerReviewVisible, setIsAnswerReviewVisible] = useState(false);
@@ -137,6 +144,11 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 			(answerFilter === "correct" && item.isCorrect) ||
 			(answerFilter === "incorrect" && !item.isCorrect),
 		);
+
+	useEffect(() => {
+		if (!shouldStartNewAttempt) return;
+		navigate(location.pathname, { replace: true, state: null });
+	}, [location.pathname, navigate, shouldStartNewAttempt]);
 
 	useEffect(() => {
 		window.sessionStorage.setItem(sessionStorageKey, JSON.stringify({
@@ -254,6 +266,14 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 		window.addEventListener("scroll", revealOnScrollDown, { passive: true });
 		return () => window.removeEventListener("scroll", revealOnScrollDown);
 	}, [isAnswerReviewVisible, isSubmitted]);
+
+	useEffect(() => {
+		if (!isSubmitted || !shouldShowExamResult) return undefined;
+		const animationFrame = window.requestAnimationFrame(() => {
+			resultsTopRef.current?.scrollIntoView({ behavior: "instant", block: "start" });
+		});
+		return () => window.cancelAnimationFrame(animationFrame);
+	}, [isSubmitted, shouldShowExamResult]);
 
 	function restartExam() {
 		setAttemptId(createCcnaMockExamAttemptId());
@@ -422,7 +442,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 										: ` Review your answers below and aim for ${EXAM_PASS_PERCENTAGE}% to pass.`}
 								</p>
 								<div className="mt-7 flex flex-wrap gap-3">
-									<button type="button" onClick={restartExam} className="inline-flex items-center gap-2 rounded-full bg-[#005b6b] px-6 py-3 font-semibold text-white transition-all duration-200 ease-out hover:scale-105 hover:bg-[#004653] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100">
+									<button type="button" onClick={() => setIsRetakeConfirmationOpen(true)} className="inline-flex items-center gap-2 rounded-full bg-[#005b6b] px-6 py-3 font-semibold text-white transition-all duration-200 ease-out hover:scale-105 hover:bg-[#004653] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100">
 										<RotateCcw size={16} /> Retake Exam
 									</button>
 									<button type="button" onClick={reviewAnswers} className="inline-flex items-center gap-2 rounded-full border border-[#9fc8ce] px-6 py-3 font-semibold text-[#005b6b] transition-all duration-200 ease-out hover:scale-105 hover:bg-[#e8f3f4] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100">
@@ -553,6 +573,45 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 					</>
 				)}
 			</div>
+			{isRetakeConfirmationOpen && createPortal(
+				<div data-theme={isDark ? "dark" : "light"} className="fixed inset-0 z-[120] grid place-items-center bg-[#071126]/60 p-4 backdrop-blur-sm">
+					<section
+						role="alertdialog"
+						aria-modal="true"
+						aria-labelledby="ccna-exam-retake-title"
+						aria-describedby="ccna-exam-retake-description"
+						className="w-full max-w-md rounded-2xl border border-[#d6e5e7] bg-white p-5 text-[#17233d] shadow-2xl sm:p-8"
+					>
+						<p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#005b6b]">New exam attempt</p>
+						<h2 id="ccna-exam-retake-title" className="mt-2 text-xl font-bold sm:text-2xl">
+							Are you sure you want to retake the {exam.name.toLowerCase()}?
+						</h2>
+						<p id="ccna-exam-retake-description" className="mt-3 text-sm leading-6 text-[#64748b]">
+							A new attempt will start with a fresh set of randomly selected questions. Your previous result will remain saved.
+						</p>
+						<div className="mt-6 flex flex-wrap justify-end gap-3">
+							<button
+								type="button"
+								onClick={() => setIsRetakeConfirmationOpen(false)}
+								className="rounded-full border border-[#c9dfe2] px-5 py-2.5 text-sm font-semibold text-[#42516b] transition hover:bg-[#f5f9f9]"
+							>
+								Cancel
+							</button>
+							<button
+								type="button"
+								onClick={() => {
+									setIsRetakeConfirmationOpen(false);
+									restartExam();
+								}}
+								className="rounded-full bg-[#005b6b] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#004653]"
+							>
+								Yes, retake exam
+							</button>
+						</div>
+					</section>
+				</div>,
+				document.body,
+			)}
 			{blocker.state === "blocked" && createPortal(
 				<div data-theme={isDark ? "dark" : "light"} className="fixed inset-0 z-[120] grid place-items-center overflow-y-auto bg-[#071126]/55 p-4 backdrop-blur-[2px] sm:p-6">
 					<section

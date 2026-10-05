@@ -101,7 +101,7 @@ function NetworkIllustration({ quizAverage, examCards }) {
 		: examCard.status === "in-progress"
 			? "Continue exam"
 			: `Start ${examCard.name.toLowerCase()}`;
-	const examActionPath = hasExamResult ? "/modules/programs/ccna/results" : examCard.path;
+	const examActionPath = examCard.path;
 
 	function showNextExamCard() {
 		setExamCardIndex((index) => (index + 1) % examCards.length);
@@ -169,7 +169,13 @@ function NetworkIllustration({ quizAverage, examCards }) {
 						<span className="mt-1 block text-xs text-[#7c89a1]">Click to see the next exam update</span>
 					</p>
 				</button>
-				<Link to={examActionPath} className="mt-3 flex h-11 w-full items-center justify-center rounded-full bg-[#005b6b] text-sm font-bold text-white transition-all duration-200 ease-out hover:scale-105 hover:bg-[#004653] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100">{examActionLabel}</Link>
+				<Link
+					to={examActionPath}
+					state={hasExamResult ? { showExamResult: true } : undefined}
+					className="mt-3 flex h-11 w-full items-center justify-center rounded-full bg-[#005b6b] text-sm font-bold text-white transition-all duration-200 ease-out hover:scale-105 hover:bg-[#004653] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100"
+				>
+					{examActionLabel}
+				</Link>
 			</div>
 		</div>
 	);
@@ -361,6 +367,8 @@ export default function CCNA() {
 	const [isQuizPickerOpen, setIsQuizPickerOpen] = useState(false);
 	const [isExamPickerOpen, setIsExamPickerOpen] = useState(false);
 	const [selectedExamFormat, setSelectedExamFormat] = useState(null);
+	const [retakeQuizModule, setRetakeQuizModule] = useState(null);
+	const [retakeExamFormat, setRetakeExamFormat] = useState(null);
 	const [shortExamProgressState, setShortExamProgressState] = useState(() => ({
 		userId,
 		progress: readCcnaShortExamProgress(userId),
@@ -399,6 +407,21 @@ export default function CCNA() {
 	const quizProgress = quizProgressState.userId === userId
 		? quizProgressState.progress
 		: userId ? readCcnaModuleQuizProgress(userId) : { activeModule: null, modules: {} };
+	const quizResultRows = modules.flatMap((module) => {
+		const attempt = quizProgress.modules[module.number];
+		if (!isCurrentCcnaModuleQuizAttempt(attempt) || !["completed", "expired"].includes(attempt.status)) {
+			return [];
+		}
+		const quiz = CCNA_MODULE_QUIZZES.find((item) => item.number === module.number);
+		if (!quiz) return [];
+		return [{
+			module,
+			score: attempt.score,
+			maxScore: Number.isFinite(attempt.maxScore) && attempt.maxScore > 0
+				? attempt.maxScore
+				: quiz.questions.length,
+		}];
+	});
 	const tutorialProgress = userId ? readCcnaTutorialProgress(userId) : new Set();
 	const navigate = useNavigate();
 	const { quizAverage, attemptedModules, quizCoverage } = getQuizMetrics(quizProgress);
@@ -440,13 +463,15 @@ export default function CCNA() {
 	const examRuns = {
 		"Short Exam": {
 			progress: shortExamProgress,
+			result: examCards.find((card) => card.name === "Short Exam"),
 			secondsRemaining: shortExamSecondsRemaining,
 			isActive: hasActiveShortExam,
 			path: CCNA_EXAMS.short.path,
-			summary: `50 questions · 45 minutes · ${hasActiveShortExam ? `${formatExamTime(shortExamSecondsRemaining)} remaining` : "Modules 1.0–6.0"}`,
+			summary: `50 questions · 45 minutes · ${hasActiveShortExam ? `${formatExamTime(shortExamSecondsRemaining)} remaining` : "CCNA practice questions"}`,
 		},
 		"Medium Exam": {
 			progress: mediumExamProgress,
+			result: examCards.find((card) => card.name === "Medium Exam"),
 			secondsRemaining: mediumExamSecondsRemaining,
 			isActive: mediumExamSecondsRemaining > 0,
 			path: CCNA_EXAMS.medium.path,
@@ -454,6 +479,7 @@ export default function CCNA() {
 		},
 		"Long Exam": {
 			progress: longExamProgress,
+			result: examCards.find((card) => card.name === "Long Exam"),
 			secondsRemaining: longExamSecondsRemaining,
 			isActive: longExamSecondsRemaining > 0,
 			path: CCNA_EXAMS.long.path,
@@ -509,10 +535,12 @@ export default function CCNA() {
 	}, []);
 
 	useEffect(() => {
-		if (!isQuizPickerOpen && !isExamPickerOpen) return undefined;
+		if (!isQuizPickerOpen && !isExamPickerOpen && !retakeQuizModule && !retakeExamFormat) return undefined;
 
 		function closeOnEscape(event) {
 			if (event.key === "Escape") {
+				setRetakeQuizModule(null);
+				setRetakeExamFormat(null);
 				setIsQuizPickerOpen(false);
 				setIsExamPickerOpen(false);
 			}
@@ -520,7 +548,7 @@ export default function CCNA() {
 
 		window.addEventListener("keydown", closeOnEscape);
 		return () => window.removeEventListener("keydown", closeOnEscape);
-	}, [isExamPickerOpen, isQuizPickerOpen]);
+	}, [isExamPickerOpen, isQuizPickerOpen, retakeExamFormat, retakeQuizModule]);
 
 	function toggleModule(index) {
 		setOpenSection((currentSection) => currentSection === index ? null : index);
@@ -789,6 +817,54 @@ export default function CCNA() {
 								</>
 							)}
 						</div>
+						<div className="rounded-[18px] border border-[#d6e5e7] bg-white p-6">
+							<div className="mb-4 flex items-center justify-between gap-3">
+								<div>
+									<h2 className="text-xl font-bold">Quiz Results</h2>
+									<p className="mt-1 text-sm text-[#7c89a1]">Your latest completed module quiz attempts.</p>
+								</div>
+								<ClipboardList size={20} className="shrink-0 text-[#005b6b]" aria-hidden="true" />
+							</div>
+							{quizResultRows.length ? (
+								<div>
+									{quizResultRows.map(({ module, score, maxScore }) => (
+										<div key={module.number} className="border-b border-[#e2ecec] py-3 last:border-0">
+											<div className="flex items-start justify-between gap-3">
+												<div className="min-w-0">
+													<span className="block truncate text-sm font-semibold">{module.number} {module.title}</span>
+													<strong className="mt-1 block text-sm text-[#005b6b]">
+														{score}/{maxScore} · {Math.round((score / maxScore) * 100)}%
+													</strong>
+												</div>
+												<span className="shrink-0 rounded-full bg-[#e8f3f4] px-2.5 py-1 text-xs font-semibold text-[#005b6b]">
+													{quizProgress.modules[module.number].status === "expired" ? "Time expired" : "Completed"}
+												</span>
+											</div>
+											<div className="mt-3 flex flex-wrap justify-end gap-2">
+												<button
+													type="button"
+													onClick={() => navigate(`/modules/programs/ccna/quiz/${module.number}`)}
+													className="rounded-full border border-[#c9dfe2] px-3 py-1.5 text-xs font-semibold text-[#005b6b] transition hover:bg-[#e8f3f4]"
+												>
+													View Result
+												</button>
+												<button
+													type="button"
+													onClick={() => setRetakeQuizModule(module.number)}
+													className="rounded-full bg-[#005b6b] px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-[#004653]"
+												>
+													Retake Quiz
+												</button>
+											</div>
+										</div>
+									))}
+								</div>
+							) : (
+								<p className="rounded-xl bg-[#f5f9f9] px-4 py-3 text-sm text-[#7c89a1]">
+									Completed quiz results will appear here.
+								</p>
+							)}
+						</div>
 					</aside>
 				</div>
 			</section>
@@ -828,6 +904,7 @@ export default function CCNA() {
 								const completedLessons = module.tutorials.filter((tutorial) => tutorialProgress.has(tutorial.number)).length;
 								const questionCount = quiz?.questions.length ?? 25;
 								const actionLabel = userId ? getQuizActionLabel(moduleProgress) : "Sign in required";
+								const hasQuizResult = ["completed", "expired"].includes(moduleProgress?.status);
 
 								return (
 									<article key={module.number} className="relative rounded-2xl border border-[#d6e5e7] bg-white p-4 pt-14 transition-colors hover:border-[#a9cdd2] sm:p-5 sm:pt-14">
@@ -854,21 +931,92 @@ export default function CCNA() {
 															: "Not started"}
 												</p>
 											</div>
-											<button
-												type="button"
-												disabled={!userId}
-												onClick={() => {
-													setIsQuizPickerOpen(false);
-													openModuleQuiz(module.number);
-												}}
-												className="shrink-0 rounded-full bg-[#005b6b] px-5 py-2.5 text-sm font-semibold text-white transition-all duration-200 ease-out hover:scale-105 hover:bg-[#004653] active:scale-100 disabled:cursor-not-allowed disabled:opacity-50 motion-reduce:transition-none motion-reduce:hover:scale-100"
-											>
-												{actionLabel}
-											</button>
+											{hasQuizResult ? (
+												<div className="flex shrink-0 flex-wrap gap-2 sm:justify-end">
+													<button
+														type="button"
+														disabled={!userId}
+														onClick={() => {
+															setIsQuizPickerOpen(false);
+															navigate(`/modules/programs/ccna/quiz/${module.number}`);
+														}}
+														className="rounded-full border border-[#9fc8ce] px-4 py-2.5 text-sm font-semibold text-[#005b6b] transition hover:bg-[#e8f3f4] disabled:cursor-not-allowed disabled:opacity-50"
+													>
+														View Result
+													</button>
+													<button
+														type="button"
+														disabled={!userId}
+														onClick={() => setRetakeQuizModule(module.number)}
+														className="rounded-full bg-[#005b6b] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#004653] disabled:cursor-not-allowed disabled:opacity-50"
+													>
+														Retake Quiz
+													</button>
+												</div>
+											) : (
+												<button
+													type="button"
+													disabled={!userId}
+													onClick={() => {
+														setIsQuizPickerOpen(false);
+														openModuleQuiz(module.number);
+													}}
+													className="shrink-0 rounded-full bg-[#005b6b] px-5 py-2.5 text-sm font-semibold text-white transition-all duration-200 ease-out hover:scale-105 hover:bg-[#004653] active:scale-100 disabled:cursor-not-allowed disabled:opacity-50 motion-reduce:transition-none motion-reduce:hover:scale-100"
+												>
+													{actionLabel}
+												</button>
+											)}
 										</div>
 									</article>
 								);
 							})}
+						</div>
+					</section>
+				</div>,
+				document.body,
+			)}
+			{retakeQuizModule && createPortal(
+				<div
+					className="fixed inset-0 z-[110] grid place-items-center bg-[#071126]/60 p-4 backdrop-blur-sm"
+					onMouseDown={(event) => {
+						if (event.target === event.currentTarget) setRetakeQuizModule(null);
+					}}
+				>
+					<section
+						role="alertdialog"
+						aria-modal="true"
+						aria-labelledby="ccna-quiz-retake-title"
+						aria-describedby="ccna-quiz-retake-description"
+						className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl sm:p-8"
+					>
+						<p className="text-sm font-semibold text-[#005b6b]">CCNA module quiz</p>
+						<h2 id="ccna-quiz-retake-title" className="mt-2 text-xl font-bold text-[#071126] sm:text-2xl">
+							Are you sure you want to retake this quiz?
+						</h2>
+						<p id="ccna-quiz-retake-description" className="mt-3 text-sm leading-6 text-[#71819b]">
+							Your previous result will stay saved, and a new {CCNA_MODULE_QUIZZES.find((quiz) => quiz.number === retakeQuizModule)?.questions.length ?? 25}-question attempt will begin.
+						</p>
+						<div className="mt-6 flex flex-wrap justify-end gap-3">
+							<button
+								type="button"
+								onClick={() => setRetakeQuizModule(null)}
+								className="rounded-full border border-[#c9dfe2] px-5 py-3 text-sm font-semibold text-[#526584] transition hover:bg-[#f5f9f9]"
+							>
+								Cancel
+							</button>
+							<button
+								type="button"
+								disabled={!userId}
+								onClick={() => {
+									const moduleNumber = retakeQuizModule;
+									setRetakeQuizModule(null);
+									setIsQuizPickerOpen(false);
+									openModuleQuiz(moduleNumber);
+								}}
+								className="rounded-full bg-[#005b6b] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#004653] disabled:cursor-not-allowed disabled:opacity-50"
+							>
+								Yes, retake quiz
+							</button>
 						</div>
 					</section>
 				</div>,
@@ -940,13 +1088,18 @@ export default function CCNA() {
 							})}
 						</div>
 						{selectedExamFormat && (
-							<div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-xl bg-[#f5f9f9] p-4">
-								<p className="text-sm text-[#526584]">
-										{examRuns[selectedExamFormat]
-											? examRuns[selectedExamFormat].summary
-											: `${selectedExamFormat} selected.`}
-								</p>
-								{examRuns[selectedExamFormat] && (
+							<div className="mt-5 grid grid-cols-1 gap-3 rounded-xl bg-[#f5f9f9] p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
+								<div className="min-w-0 sm:pr-3">
+									<p className="text-sm text-[#526584]">{examRuns[selectedExamFormat]?.summary ?? `${selectedExamFormat} selected.`}</p>
+									{examRuns[selectedExamFormat]?.result?.hasResult && (
+										<p className="mt-1 text-sm font-semibold text-[#005b6b]">
+											Last result: {examRuns[selectedExamFormat].result.score}/{examRuns[selectedExamFormat].result.maxScore}
+											{" · "}
+											{Math.round((examRuns[selectedExamFormat].result.score / examRuns[selectedExamFormat].result.maxScore) * 100)}%
+										</p>
+									)}
+								</div>
+								{examRuns[selectedExamFormat]?.isActive ? (
 									<button
 										type="button"
 										disabled={!userId}
@@ -954,13 +1107,89 @@ export default function CCNA() {
 											setIsExamPickerOpen(false);
 											navigate(examRuns[selectedExamFormat].path);
 										}}
-										className="rounded-full bg-[#005b6b] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#004653] disabled:cursor-not-allowed disabled:opacity-50"
+										className="shrink-0 rounded-full bg-[#005b6b] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#004653] disabled:cursor-not-allowed disabled:opacity-50"
+									>
+										Continue Exam
+									</button>
+								) : examRuns[selectedExamFormat]?.result?.hasResult ? (
+									<div className="flex flex-wrap gap-2 sm:justify-self-end">
+										<button
+											type="button"
+											disabled={!userId}
+											onClick={() => {
+												setIsExamPickerOpen(false);
+												navigate(examRuns[selectedExamFormat].path, { state: { showExamResult: true } });
+											}}
+											className="rounded-full border border-[#9fc8ce] px-4 py-3 text-sm font-bold text-[#005b6b] transition hover:bg-[#e8f3f4] disabled:cursor-not-allowed disabled:opacity-50"
+										>
+											Review Result
+										</button>
+										<button
+											type="button"
+											disabled={!userId}
+											onClick={() => setRetakeExamFormat(selectedExamFormat)}
+											className="rounded-full bg-[#005b6b] px-4 py-3 text-sm font-bold text-white transition hover:bg-[#004653] disabled:cursor-not-allowed disabled:opacity-50"
+										>
+											Retake Exam
+										</button>
+									</div>
+								) : examRuns[selectedExamFormat] && (
+									<button
+										type="button"
+										disabled={!userId}
+										onClick={() => {
+											setIsExamPickerOpen(false);
+											navigate(examRuns[selectedExamFormat].path);
+										}}
+										className="justify-self-start rounded-full bg-[#005b6b] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#004653] disabled:cursor-not-allowed disabled:opacity-50 sm:justify-self-end"
 									>
 										{examRuns[selectedExamFormat].isActive ? "Continue Exam" : `Start ${selectedExamFormat}`}
 									</button>
 								)}
 							</div>
 						)}
+					</section>
+				</div>,
+				document.body,
+			)}
+			{retakeExamFormat && createPortal(
+				<div className="fixed inset-0 z-[110] grid place-items-center bg-[#071126]/60 p-4 backdrop-blur-sm">
+					<section
+						role="alertdialog"
+						aria-modal="true"
+						aria-labelledby="ccna-retake-confirm-title"
+						aria-describedby="ccna-retake-confirm-description"
+						className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl sm:p-8"
+					>
+						<p className="text-sm font-semibold text-[#005b6b]">CCNA practice</p>
+						<h2 id="ccna-retake-confirm-title" className="mt-2 text-xl font-bold text-[#071126] sm:text-2xl">
+							Are you sure you want to retake the {retakeExamFormat.toLowerCase()}?
+						</h2>
+						<p id="ccna-retake-confirm-description" className="mt-3 text-sm leading-6 text-[#71819b]">
+							A new attempt will start with a fresh set of randomly selected questions. Your previous result will remain saved.
+						</p>
+						<div className="mt-6 flex flex-wrap justify-end gap-3">
+							<button
+								type="button"
+								onClick={() => setRetakeExamFormat(null)}
+								className="rounded-full border border-[#c9dfe2] px-5 py-3 text-sm font-semibold text-[#526584] transition hover:bg-[#f5f9f9]"
+							>
+								Cancel
+							</button>
+							<button
+								type="button"
+								disabled={!userId}
+								onClick={() => {
+									const examRun = examRuns[retakeExamFormat];
+									setRetakeExamFormat(null);
+									setIsExamPickerOpen(false);
+									navigate(examRun.path, { state: { retakeExam: true } });
+								}}
+								className="rounded-full bg-[#005b6b] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#004653] disabled:cursor-not-allowed disabled:opacity-50"
+							>
+								Yes, retake exam
+							</button>
+						</div>
 					</section>
 				</div>,
 				document.body,
