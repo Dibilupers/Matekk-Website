@@ -7,6 +7,7 @@ import { UsersModule } from './users/users.module.js';
 import { InquiresModule } from './inquires/inquires.module.js';
 import { QuestionsModule } from './questions/questions.module.js';
 import { PrismaModule } from './prisma/prisma.module.js';
+import { QuestionsModule } from './questions/questions/questions.module.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 

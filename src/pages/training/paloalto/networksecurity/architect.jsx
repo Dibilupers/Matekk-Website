@@ -3,7 +3,7 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 import ccnaBadge from "../../../../assets/PaloAltoNetworkSecurityArchitect.png";
-import PaloAltoHero from "../../../../assets/PaloAltoHeader.webp";
+import PaloAltoHero from "../../../../assets/training/paloalto/architect-hero.webp";
 import PaloAltoFooter from "../../../../assets/PaloAltoFooter.webp";
 import MealIcon from "../../../../assets/Meal.svg";
 import ReviewIcon from "../../../../assets/Review.svg";
@@ -334,7 +334,7 @@ export default function NetworkSecurityArchitect() {
             {/* Target Learners - Title */}
             <h5 className="text-[#1775EE] ">Target Learners</h5>
             {/* Target Learners - List */}
-            {["Beginners", "Zero Knowledge"].map((job) => (
+            {["Network Security Architects", "Cloud, Data & Cybersecurity Architects", "Enterprise & Solutions Architects", "Senior Systems Engineers (Network Security)"].map((job) => (
               <p key={job} className="flex gap-2 justify-left items-center">
                 <IoIosCheckmarkCircleOutline className="text-[#1775EE] shrink-0 w-6 h-6 mt-0.5" />
                 <span>{job}</span>

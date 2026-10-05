@@ -1,6 +1,6 @@
 import SolutionsTemplate from "../../../../components/solution_template/solutions_template";
-import ICTConsultancyHero from "../../../../assets/ICTConsultancyHero.jpg";
-import ICTConsultancyFooter from "../../../../assets/ICTConsultancyFooter.jpg";
+import ICTConsultancyHero from "../../../../assets/solutions/smartcity-hero.webp";
+import ICTConsultancyFooter from "../../../../assets/solutions/smartcity-footer.webp";
 
 
 const CHALLENGES = [
@@ -49,8 +49,8 @@ export default function SMARTCity() {
       heroDescription="MATEKK delivers innovative smart city solutions that leverage advanced technologies, IoT, and data-driven systems to improve urban living, enhance public services, and promote sustainable development."
       
       // Building section
-      buildingTitle="Connected, Intelligent, and Sustainable Urban"
-      buildingTitleHighlight="Solutions"
+      buildingTitle="Connected, Intelligent, and Sustainable"
+      buildingTitleHighlight="Urban Solutions"
       buildingDescription="Our smart city services integrate multiple systems such as transportation, public safety, energy, and communication into a unified digital ecosystem. MGKK enables real-time data monitoring, automation, and intelligent decision-making to help cities become more efficient, livable, and future-ready."
       
       // Challenges section
@@ -66,7 +66,7 @@ export default function SMARTCity() {
       footerBgImage={ICTConsultancyFooter}
       footerTitle="Contact Us Today To"
       footerHighlightText="Request a Consultation"
-      footerDescription="Transform urban environments with MATEKK Smart City Solutions."
+      footerDescription="Secure your organization's network with MGKK Information Communication Technology Services."
     >
     </SolutionsTemplate>
   );

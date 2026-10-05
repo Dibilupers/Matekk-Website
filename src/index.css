@@ -106,6 +106,172 @@ h6 {
   animation: ccna-page-enter 550ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
+.ccna-notification-boink {
+  animation: ccna-notification-boink 420ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+[data-theme="dark"].ccna-page-enter {
+  background-color: #0b1024 !important;
+  color: #e0e5f3;
+}
+
+.ccna-gradebook-banner {
+  position: relative;
+  isolation: isolate;
+}
+
+.ccna-gradebook-banner::before {
+  position: absolute;
+  z-index: -1;
+  inset-block: 0;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  background-color: #087a91;
+  content: "";
+}
+
+.ccna-gradebook-summary {
+  position: relative;
+  isolation: isolate;
+}
+
+.ccna-gradebook-summary::before {
+  position: absolute;
+  z-index: -1;
+  inset-block: 0;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  background-color: #ffffff;
+  box-shadow: 0 1px 2px rgb(15 23 42 / 10%);
+  content: "";
+}
+
+[data-theme="dark"] .bg-white {
+  background-color: #161d38 !important;
+}
+
+[data-theme="dark"] .ccna-training-logo {
+  background-color: #bfe9ec !important;
+  box-shadow: 0 4px 16px rgb(32 197 214 / 18%);
+}
+
+[data-theme="dark"] [class~="bg-[#f5f9f9]"],
+[data-theme="dark"] [class~="bg-[#f0f7f7]"],
+[data-theme="dark"] [class~="bg-[#f2f8f8]"] {
+  background-color: #10172f !important;
+}
+
+[data-theme="dark"] [class~="bg-[#e8f3f4]"],
+[data-theme="dark"] [class~="bg-[#eaf3f4]"],
+[data-theme="dark"] [class~="bg-[#eef7f8]"],
+[data-theme="dark"] [class~="bg-[#dceff1]"],
+[data-theme="dark"] [class~="bg-[#edf3fb]"] {
+  background-color: #1b2947 !important;
+}
+
+[data-theme="dark"] [class~="bg-[#dfe9eb]"] {
+  background-color: #303a60 !important;
+}
+
+[data-theme="dark"] [class~="bg-[#fff5ee]"],
+[data-theme="dark"] [class~="bg-[#fff0e8]"],
+[data-theme="dark"] [class~="bg-[#fff5ef]"] {
+  background-color: #42291f !important;
+}
+
+[data-theme="dark"] [class~="bg-[#eff9f2]"] {
+  background-color: #173a2b !important;
+}
+
+[data-theme="dark"] [class~="text-[#17233d]"],
+[data-theme="dark"] [class~="text-[#111a2d]"],
+[data-theme="dark"] [class~="text-[#263654]"],
+[data-theme="dark"] [class~="text-[#42516b]"] {
+  color: #e0e5f3 !important;
+}
+
+[data-theme="dark"] [class~="text-[#005b6b]"] {
+  color: #7dc6ce !important;
+}
+
+[data-theme="dark"] [class~="text-[#64748b]"],
+[data-theme="dark"] [class~="text-[#70809a]"],
+[data-theme="dark"] [class~="text-[#71809a]"],
+[data-theme="dark"] [class~="text-[#71819b]"],
+[data-theme="dark"] [class~="text-[#66738d]"],
+[data-theme="dark"] [class~="text-[#596983]"] {
+  color: #a6b1ce !important;
+}
+
+[data-theme="dark"] [class~="text-[#a44b13]"],
+[data-theme="dark"] [class~="text-[#b4532a]"] {
+  color: #ffc28e !important;
+}
+
+[data-theme="dark"] [class~="text-[#236a43]"],
+[data-theme="dark"] [class~="text-[#287849]"] {
+  color: #a4d6b6 !important;
+}
+
+[data-theme="dark"] [class~="border-[#d6e5e7]"],
+[data-theme="dark"] [class~="border-[#d9e1ef]"],
+[data-theme="dark"] [class~="border-[#dce5f2]"],
+[data-theme="dark"] [class~="border-[#dfe9eb]"],
+[data-theme="dark"] [class~="border-[#dce9ea]"],
+[data-theme="dark"] [class~="border-[#e1e8ef]"],
+[data-theme="dark"] [class~="border-[#e2ecec]"],
+[data-theme="dark"] [class~="border-[#cbd5e1]"],
+[data-theme="dark"] [class~="border-[#c9dfe2]"],
+[data-theme="dark"] [class~="border-[#e4eaf5]"] {
+  border-color: #303a60 !important;
+}
+
+[data-theme="dark"] [class~="divide-[#dce5f2]"] {
+  --tw-divide-opacity: 1;
+  border-color: #303a60 !important;
+}
+
+[data-theme="dark"] .ccna-dark-hover:not(:disabled):hover {
+  background-color: #005b6b !important;
+  border-color: #005b6b !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .ccna-modal-stay:hover {
+  background-color: #005b6b !important;
+  border-color: #005b6b !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .ccna-answer-choice[aria-pressed="true"] {
+  background-color: #005b6b !important;
+  border-color: #005b6b !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .ccna-answer-choice[aria-pressed="true"] > span:first-child {
+  background-color: #003f4a !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .ccna-answer-choice[aria-pressed="false"]:not(:disabled):hover {
+  background-color: #1b2947 !important;
+  border-color: #005b6b !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .ccna-answer-choice[aria-pressed="false"]:not(:disabled):hover > span:first-child {
+  background-color: #005b6b !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .ccna-progress-fill {
+  background-color: #20c5d6 !important;
+  box-shadow: 0 0 10px rgb(32 197 214 / 55%);
+}
+
 .ccna-stars-enter {
   position: relative;
   animation: ccna-stars-enter 650ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
@@ -143,6 +309,24 @@ h6 {
   }
 }
 
+@keyframes ccna-notification-boink {
+  0% {
+    transform: scale(1);
+  }
+
+  38% {
+    transform: translateY(-0.55rem) scale(1.06);
+  }
+
+  70% {
+    transform: translateY(0.12rem) scale(0.98);
+  }
+
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+
 @keyframes ccna-stars-enter {
   from {
     opacity: 0;
@@ -169,6 +353,7 @@ h6 {
 
 @media (prefers-reduced-motion: reduce) {
   .ccna-page-enter,
+  .ccna-notification-boink,
   .ccna-stars-enter,
   .ccna-stars-fill {
     animation: none;
@@ -204,3 +389,55 @@ h6 {
 .aside_contents {
   @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-1 gap-3 lg:w-72 xl:w-80 shrink-0 self-start;
 }
+/* ===== CCNA Practice Lab — CCNA dashboard theme (only when opened from the CCNA dashboard) ===== */
+.ccna-lab-theme { color: #071126; }
+.ccna-lab-theme .text-\[\#1775EE\] { color: #005b6b; }
+.ccna-lab-theme .bg-\[\#1775EE\] { background-color: #005b6b; box-shadow: 0 10px 20px rgba(0, 91, 107, 0.16); }
+.ccna-lab-theme .border-\[\#1775EE\] { border-color: #005b6b; }
+.ccna-lab-theme .hover\:bg-\[\#0062E0\]:hover,
+.ccna-lab-theme .hover\:bg-\[\#1775EE\]:hover { background-color: #004653; color: #fff; }
+.ccna-lab-theme .bg-blue-50 { background-color: #f0f7f7; border: 1px solid #c9dfe2; }
+.ccna-lab-theme [stroke="#1775EE"] { stroke: #005b6b; }
+.ccna-lab-theme [fill="#1775EE"] { fill: #005b6b; }
+.ccna-lab-theme text[fill="#1775EE"] { fill: #005b6b; }
+
+/* cards: dashboard style + lift on hover */
+.ccna-lab-theme .bg-\[\#EBF5FD\] {
+  background-color: #ffffff;
+  border: 1px solid #d6e5e7;
+  border-radius: 18px;
+  box-shadow: 0 8px 20px rgba(15, 35, 75, 0.06);
+  transition: transform 200ms ease-out, box-shadow 200ms ease-out;
+}
+.ccna-lab-theme .bg-\[\#EBF5FD\]:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 28px rgba(15, 35, 75, 0.1);
+}
+.ccna-lab-theme .bg-\[\#EBF5FD\] .bg-white { background-color: #e8f3f4; }
+
+/* buttons: same lift/press feel as the dashboard */
+.ccna-lab-theme a.rounded-full,
+.ccna-lab-theme button.rounded-full {
+  font-weight: 700;
+  transition: transform 200ms ease-out, background-color 200ms ease-out, box-shadow 200ms ease-out, color 200ms ease-out;
+}
+.ccna-lab-theme a.rounded-full:hover,
+.ccna-lab-theme button.rounded-full:hover { transform: translateY(-2px); }
+.ccna-lab-theme a.rounded-full:active,
+.ccna-lab-theme button.rounded-full:active { transform: translateY(0); }
+
+/* console + progress */
+.ccna-lab-theme .font-mono.shadow-lg { box-shadow: 0 14px 28px rgba(0, 91, 107, 0.18); border: 1px solid #0d3f49; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ccna-lab-theme .bg-\[\#EBF5FD\],
+  .ccna-lab-theme a.rounded-full,
+  .ccna-lab-theme button.rounded-full { transition: none; transform: none !important; }
+}
+
+/* sections fade up one after another, like the dashboard */
+.ccna-lab-theme > * { animation: fade-in-up 500ms ease-out both; }
+.ccna-lab-theme > *:nth-child(2) { animation-delay: 90ms; }
+.ccna-lab-theme > *:nth-child(3) { animation-delay: 180ms; }
+.ccna-lab-theme > *:nth-child(4) { animation-delay: 270ms; }
+@media (prefers-reduced-motion: reduce) { .ccna-lab-theme > * { animation: none; } }

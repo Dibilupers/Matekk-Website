@@ -12,6 +12,7 @@ import NotFound from "../pages/NotFound";
 
 /* Cisco */
 import CCNA from "../pages/training/cisco/ccna/ccna";
+import CCNAPracticeLab from "../pages/training/cisco/ccna/practiceLab";
 import CCNAAutomation from "../pages/training/cisco/ccna/automation";
 import CCNACybersecurity from "../pages/training/cisco/ccna/cybersecurity";
 import CCNPEnterprise from "../pages/training/cisco/ccnp/enterprise";
@@ -105,13 +106,19 @@ import Renewable from "../pages/solutions/pece/renewable";
 import Blank from "../pages/Blank";
 import AdminPage from "../pages/admin";
 import CCNADashboard from "../pages/modules/programs/CCNA/ccna";
+import CCNAAutomationDashboard from "../pages/modules/programs/CCNAAutomation/ccnaAutomationDashboard";
+import CCNACybersecurityDashboard from "../pages/modules/programs/CCNACybersecurity/ccnaCybersecurityDashboard";
 import CCNAKnowledgeHub from "../pages/modules/programs/CCNA/ccnaKnowledgeHub";
 import CCNAKnowledgeArticle from "../pages/modules/programs/CCNA/ccnaKnowledgeArticle";
-import CCNALesson from "../pages/modules/programs/CCNA/ccnaLesson";
+import CCNACompositeExam from "../pages/modules/programs/CCNA/ccnaCompositeExam";
 import CCNAModuleQuiz from "../pages/modules/programs/CCNA/ccnaModuleQuiz";
+import CCNAGradebook from "../pages/modules/programs/CCNA/ccnaGradebook";
 import { useAuth } from "../context/AuthContext";
-import { readCcnaExamSession, saveCcnaExamSession } from "../utils/ccnaExamSession";
-import { readCcnaModuleQuizProgress, saveCcnaModuleQuizProgress } from "../utils/ccnaModuleQuizProgress";
+import {
+  readCcnaModuleQuizProgress,
+  recordCcnaModuleQuizAttempt,
+  saveCcnaModuleQuizProgress,
+} from "../utils/ccnaModuleQuizProgress";
 import { CCNA_MODULE_QUIZZES } from "../pages/modules/programs/CCNA/ccnaModuleQuizData";
 
 if ("scrollRestoration" in history) {
@@ -120,14 +127,14 @@ if ("scrollRestoration" in history) {
 
 export default function App() {
   const location = useLocation();
-  const isCCNALesson = location.pathname === "/modules/programs/ccna/lesson"
-    || location.pathname.startsWith("/modules/programs/ccna/quiz/");
+  const isCCNAQuiz = location.pathname.startsWith("/modules/programs/ccna/quiz/")
+    || location.pathname.startsWith("/modules/programs/ccna/exam/");
   const isAdminPage = location.pathname === "/admin";
 
   return (
     <>
       <CCNAExamTimeNotification />
-      {!isCCNALesson && <NavBar />}
+      {!isCCNAQuiz && <NavBar />}
       <ScrollToTop />
 
       <Routes>
@@ -136,6 +143,7 @@ export default function App() {
 
         {/* Cisco */}
         <Route path="/training/cisco/ccna/ccna" element={<CCNA />} />
+        <Route path="/training/cisco/ccna/practice-lab" element={<CCNAPracticeLab />} />
         <Route
           path="/training/cisco/ccna/automation"
           element={<CCNAAutomation />}
@@ -327,10 +335,26 @@ export default function App() {
           }
         />
         <Route
-          path="/modules/programs/ccna/lesson"
+          path="/modules/programs/ccna/practice-lab"
           element={
             <ProtectedRoute>
-              <CCNALesson />
+              <CCNAPracticeLab fromDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/ccna-automation"
+          element={
+            <ProtectedRoute>
+              <CCNAAutomationDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/ccna-cybersecurity"
+          element={
+            <ProtectedRoute>
+              <CCNACybersecurityDashboard />
             </ProtectedRoute>
           }
         />
@@ -339,6 +363,38 @@ export default function App() {
           element={
             <ProtectedRoute>
               <CCNAModuleQuiz />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/ccna/exam/short"
+          element={
+            <ProtectedRoute>
+              <CCNACompositeExam key="short" examKey="short" />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/ccna/exam/medium"
+          element={
+            <ProtectedRoute>
+              <CCNACompositeExam key="medium" examKey="medium" />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/ccna/exam/long"
+          element={
+            <ProtectedRoute>
+              <CCNACompositeExam key="long" examKey="long" />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/ccna/results"
+          element={
+            <ProtectedRoute>
+              <CCNAGradebook />
             </ProtectedRoute>
           }
         />
@@ -364,24 +420,21 @@ export default function App() {
       </Routes>
 
 
-      {!isCCNALesson && !isAdminPage && <Footer />}
+      {!isCCNAQuiz && !isAdminPage && <Footer />}
     </>
   );
 }
 
 function CCNAExamTimeNotification() {
   const [notification, setNotification] = useState(null);
+  const { profile } = useAuth();
+  const userId = profile?.userId;
 
   useEffect(() => {
     function checkExamDeadline() {
-      const session = readCcnaExamSession();
-      if (session && session.status !== "completed" && session.deadline <= Date.now() && session.status !== "expired") {
-        session.status = "expired";
-        session.toastDismissed = false;
-        saveCcnaExamSession(session);
-      }
-
-      let moduleProgress = readCcnaModuleQuizProgress();
+      let moduleProgress = userId
+        ? readCcnaModuleQuizProgress(userId)
+        : { activeModule: null, modules: {} };
       const expiredModule = Object.entries(moduleProgress.modules).find(
         ([, attempt]) =>
           attempt?.status === "in-progress" &&
@@ -402,15 +455,17 @@ function CCNAExamTimeNotification() {
             activeModule: moduleProgress.activeModule === moduleNumber ? null : moduleProgress.activeModule,
             modules: {
               ...moduleProgress.modules,
-              [moduleNumber]: {
+              [moduleNumber]: recordCcnaModuleQuizAttempt({
                 ...attempt,
                 status: "expired",
                 score,
+                maxScore: moduleQuiz.questions.length,
+                submittedAt: attempt.submittedAt ?? Date.now(),
                 bestScore: Math.max(attempt.bestScore ?? 0, score),
-              },
+              }, moduleQuiz.questions.length),
             },
           };
-          saveCcnaModuleQuizProgress(moduleProgress);
+          saveCcnaModuleQuizProgress(userId, moduleProgress);
         }
       }
 
@@ -419,14 +474,14 @@ function CCNAExamTimeNotification() {
         .sort(([, first], [, second]) => (second.deadline ?? 0) - (first.deadline ?? 0))[0];
 
       if (expiredModuleAttempt) {
-        const nextNotification = { type: "module", moduleNumber: expiredModuleAttempt[0] };
+        const nextNotification = { type: "module", moduleNumber: expiredModuleAttempt[0], userId };
         setNotification((current) =>
-          current?.type === nextNotification.type && current.moduleNumber === nextNotification.moduleNumber
+          current?.type === nextNotification.type &&
+          current.moduleNumber === nextNotification.moduleNumber &&
+          current.userId === nextNotification.userId
             ? current
             : nextNotification,
         );
-      } else if (session?.status === "expired" && !session.toastDismissed) {
-        setNotification((current) => current?.type === "lesson" ? current : { type: "lesson" });
       } else {
         setNotification((current) => current ? null : current);
       }
@@ -439,10 +494,11 @@ function CCNAExamTimeNotification() {
 
   function dismissNotification() {
     if (notification?.type === "module") {
-      const progress = readCcnaModuleQuizProgress();
+      if (!userId || notification.userId !== userId) return;
+      const progress = readCcnaModuleQuizProgress(userId);
       const attempt = progress.modules[notification.moduleNumber];
       if (attempt?.status === "expired") {
-        saveCcnaModuleQuizProgress({
+        saveCcnaModuleQuizProgress(userId, {
           ...progress,
           modules: {
             ...progress.modules,
@@ -450,16 +506,11 @@ function CCNAExamTimeNotification() {
           },
         });
       }
-    } else {
-      const session = readCcnaExamSession();
-      if (session?.status === "expired") {
-        saveCcnaExamSession({ ...session, toastDismissed: true });
-      }
     }
     setNotification(null);
   }
 
-  if (!notification) return null;
+  if (!notification || (notification.type === "module" && notification.userId !== userId)) return null;
 
   return (
     <div
@@ -471,12 +522,10 @@ function CCNAExamTimeNotification() {
       </span>
       <div className="min-w-0 flex-1">
         <p className="text-sm font-bold">
-          {notification.type === "module" ? `Module ${notification.moduleNumber} quiz time is up` : "Exam time is up"}
+          {`Module ${notification.moduleNumber} quiz time is up`}
         </p>
         <p className="mt-1 text-sm leading-5 text-[#64718a]">
-          {notification.type === "module"
-            ? "Your quiz has ended and your score has been saved."
-            : "Your time limit has ended. Your answers have been submitted."}
+          Your quiz has ended and your score has been saved.
         </p>
       </div>
       <button
