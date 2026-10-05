@@ -34,7 +34,9 @@ export default function UsersDashboard() {
 	const knownInquiryIds = useRef(new Set());
 
 	useEffect(() => {
-		fetch(`${API_URL}/users`)
+		fetch(`${API_URL}/users`, {
+			headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+		})
 			.then((response) => {
 				if (!response.ok) {
 					throw new Error("Failed to fetch users");
@@ -52,7 +54,10 @@ export default function UsersDashboard() {
 
 		const loadInquiries = async () => {
 			try {
-				const response = await fetch(`${API_URL}/inquires`, { signal: controller.signal });
+				const response = await fetch(`${API_URL}/inquires`, {
+					headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+					signal: controller.signal,
+				});
 				if (!response.ok) {
 					throw new Error("Failed to load inquiries.");
 				}
