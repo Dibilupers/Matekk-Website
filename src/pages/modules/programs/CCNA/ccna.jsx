@@ -334,6 +334,13 @@ export default function CCNA() {
 	const mediumExamProgress = mediumExamProgressState.userId === userId
 		? mediumExamProgressState.progress
 		: readCcnaExamProgress(CCNA_EXAMS.medium.sessionKey, userId);
+	const [longExamProgressState, setLongExamProgressState] = useState(() => ({
+		userId,
+		progress: readCcnaExamProgress(CCNA_EXAMS.long.sessionKey, userId),
+	}));
+	const longExamProgress = longExamProgressState.userId === userId
+		? longExamProgressState.progress
+		: readCcnaExamProgress(CCNA_EXAMS.long.sessionKey, userId);
 	const [examClockNow, setExamClockNow] = useState(Date.now);
 	const [progressSlide, setProgressSlide] = useState(0);
 	const [quizProgressState] = useState(() => ({
@@ -375,7 +382,11 @@ export default function CCNA() {
 	const mediumExamSecondsRemaining = mediumExamProgress.deadline
 		? Math.max(0, Math.ceil((mediumExamProgress.deadline - examClockNow) / 1000))
 		: 0;
+	const longExamSecondsRemaining = longExamProgress.deadline
+		? Math.max(0, Math.ceil((longExamProgress.deadline - examClockNow) / 1000))
+		: 0;
 	const mediumQuestionCount = CCNA_EXAMS.medium.questionCount;
+	const longQuestionCount = CCNA_EXAMS.long.questionCount;
 	// Live status for each exam that can be taken, keyed by its name in EXAM_FORMATS
 	const examRuns = {
 		"Short Exam": {
@@ -392,17 +403,25 @@ export default function CCNA() {
 			path: CCNA_EXAMS.medium.path,
 			summary: `${mediumQuestionCount} question${mediumQuestionCount === 1 ? "" : "s"} · 1 hour 30 minutes · ${mediumExamSecondsRemaining > 0 ? `${formatExamTime(mediumExamSecondsRemaining)} remaining` : "CCNA practice questions"}`,
 		},
+		"Long Exam": {
+			progress: longExamProgress,
+			secondsRemaining: longExamSecondsRemaining,
+			isActive: longExamSecondsRemaining > 0,
+			path: CCNA_EXAMS.long.path,
+			summary: `${longQuestionCount} questions · 2 hours · ${longExamSecondsRemaining > 0 ? `${formatExamTime(longExamSecondsRemaining)} remaining` : "Full question bank"}`,
+		},
 	};
 
 	useEffect(() => {
-		if (!shortExamProgress.deadline && !mediumExamProgress.deadline) return undefined;
+		if (!shortExamProgress.deadline && !mediumExamProgress.deadline && !longExamProgress.deadline) return undefined;
 		const intervalId = window.setInterval(() => {
 			setExamClockNow(Date.now());
 			setShortExamProgressState({ userId, progress: readCcnaShortExamProgress(userId) });
 			setMediumExamProgressState({ userId, progress: readCcnaExamProgress(CCNA_EXAMS.medium.sessionKey, userId) });
+			setLongExamProgressState({ userId, progress: readCcnaExamProgress(CCNA_EXAMS.long.sessionKey, userId) });
 		}, 1000);
 		return () => window.clearInterval(intervalId);
-	}, [shortExamProgress.deadline, mediumExamProgress.deadline, userId]);
+	}, [shortExamProgress.deadline, mediumExamProgress.deadline, longExamProgress.deadline, userId]);
 
 	useEffect(() => {
 		let timeoutId;
@@ -834,7 +853,7 @@ export default function CCNA() {
 							</button>
 						</header>
 						<p className="mt-3 text-sm leading-6 text-[#71819b]">
-							The Short Exam has 50 random questions from CCNA modules 1.0–6.0, and the Medium Exam has CCNA practice questions. The Long Exam is coming soon.
+							The Short Exam pulls 50 random questions from modules 1.0–6.0, the Medium Exam uses a random CCNA question bank set, and the Long Exam pulls 150 random questions from the full CCNA question bank.
 						</p>
 						<div className="mt-6 grid gap-3 md:grid-cols-3">
 							{EXAM_FORMATS.map((format) => {
@@ -874,9 +893,9 @@ export default function CCNA() {
 						{selectedExamFormat && (
 							<div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-xl bg-[#f5f9f9] p-4">
 								<p className="text-sm text-[#526584]">
-									{examRuns[selectedExamFormat]
-										? examRuns[selectedExamFormat].summary
-										: `${selectedExamFormat} selected. This exam format is coming soon.`}
+										{examRuns[selectedExamFormat]
+											? examRuns[selectedExamFormat].summary
+											: `${selectedExamFormat} selected.`}
 								</p>
 								{examRuns[selectedExamFormat] && (
 									<button
