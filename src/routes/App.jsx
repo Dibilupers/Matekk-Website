@@ -383,6 +383,14 @@ export default function App() {
           }
         />
         <Route
+          path="/modules/programs/ccna/exam/long"
+          element={
+            <ProtectedRoute>
+              <CCNACompositeExam key="long" examKey="long" />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/modules/programs/ccna/results"
           element={
             <ProtectedRoute>
