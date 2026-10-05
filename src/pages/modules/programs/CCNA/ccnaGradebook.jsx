@@ -7,8 +7,10 @@ import {
 	isCurrentCcnaModuleQuizAttempt,
 	readCcnaModuleQuizProgress,
 } from "../../../../utils/ccnaModuleQuizProgress";
-import { readCcnaShortExamProgress } from "../../../../utils/ccnaShortExamSession";
+import { readCcnaExamProgress, readCcnaShortExamProgress } from "../../../../utils/ccnaShortExamSession";
+import { readCcnaMockExamResults } from "../../../../utils/ccnaGradebook";
 import { CCNA_MODULE_QUIZZES } from "./ccnaModuleQuizData";
+import { CCNA_EXAMS } from "./ccnaExamFormats";
 
 const EMPTY_PROGRESS = { activeModule: null, modules: {} };
 
@@ -157,42 +159,49 @@ function getModuleRows(progress) {
 	});
 }
 
-function getExamRows(shortExamProgress) {
-	const shortExamCompleted = ["completed", "expired"].includes(shortExamProgress.status);
-	const shortExamGrade = shortExamCompleted && shortExamProgress.maxScore > 0
-		? Math.round((shortExamProgress.score / shortExamProgress.maxScore) * 100)
-		: null;
-	return [
-		{
-			id: "short-exam",
-			name: "Short Exam",
-			status: shortExamProgress.status === "in-progress" ? "in-progress" : shortExamCompleted ? "graded" : "upcoming",
-			statusLabel: shortExamProgress.status === "expired" ? "Time expired" : null,
-			submittedAt: null,
-			attempts: shortExamCompleted || shortExamProgress.status === "in-progress" ? 1 : 0,
-			points: shortExamCompleted
-				? { score: shortExamProgress.score, maxScore: shortExamProgress.maxScore }
-				: null,
-			grade: shortExamGrade,
-			bestPoints: shortExamCompleted
-				? { score: shortExamProgress.score, maxScore: shortExamProgress.maxScore }
-				: null,
-			bestGrade: shortExamGrade,
-			order: 0,
-		},
-		...["Medium Exam", "Long Exam"].map((name, index) => ({
-			id: name.toLowerCase().replaceAll(" ", "-"),
-			name,
-			status: "upcoming",
-			submittedAt: null,
-			attempts: 0,
-			points: null,
-			grade: null,
-			bestPoints: null,
-			bestGrade: null,
-			order: index + 1,
-		})),
-	];
+function getExamRows(examProgressByKey, examResults) {
+	return Object.values(CCNA_EXAMS).map((exam, index) => {
+		const progress = examProgressByKey[exam.name];
+		const results = examResults
+			.filter((result) => result.title === exam.name)
+			.sort((first, second) => first.submittedAt - second.submittedAt);
+		const latestResult = results.at(-1);
+		const bestResult = results.reduce(
+			(best, result) => !best || result.score / result.maxScore > best.score / best.maxScore ? result : best,
+			null,
+		);
+		const hasLegacyShortResult = exam.name === "Short Exam" &&
+			!latestResult &&
+			["completed", "expired"].includes(progress.status) &&
+			progress.maxScore > 0;
+		const points = latestResult
+			? { score: latestResult.score, maxScore: latestResult.maxScore }
+			: hasLegacyShortResult
+				? { score: progress.score, maxScore: progress.maxScore }
+				: null;
+		const grade = points ? Math.round((points.score / points.maxScore) * 100) : null;
+		const bestPoints = bestResult
+			? { score: bestResult.score, maxScore: bestResult.maxScore }
+			: points;
+		const bestGrade = bestPoints ? Math.round((bestPoints.score / bestPoints.maxScore) * 100) : null;
+		const isInProgress = progress.status === "in-progress";
+		const isExpired = progress.status === "expired" && !latestResult;
+
+		return {
+			id: exam.name.toLowerCase().replaceAll(" ", "-"),
+			name: exam.name,
+			status: isInProgress ? "in-progress" : points ? "graded" : "upcoming",
+			statusLabel: isExpired ? "Time expired" : null,
+			submittedAt: latestResult?.submittedAt ?? null,
+			deadline: isInProgress ? progress.deadline : null,
+			attempts: Math.max(results.length, hasLegacyShortResult ? 1 : 0) + Number(isInProgress),
+			points,
+			grade,
+			bestPoints,
+			bestGrade,
+			order: index,
+		};
+	});
 }
 
 function formatDate(timestamp) {
@@ -292,8 +301,15 @@ export default function CCNAGradebook() {
 	const [typedWelcome, setTypedWelcome] = useState(() => prefersReducedMotion ? welcomeText : "");
 	const progress = userId ? readCcnaModuleQuizProgress(userId) : EMPTY_PROGRESS;
 	const shortExamProgress = readCcnaShortExamProgress(userId);
+	const examProgressByKey = Object.fromEntries(Object.values(CCNA_EXAMS).map((exam) => [
+		exam.name,
+		exam.name === "Short Exam"
+			? shortExamProgress
+			: readCcnaExamProgress(exam.sessionKey, userId),
+	]));
+	const examResults = readCcnaMockExamResults(userId);
 	const moduleRows = getModuleRows(progress);
-	const examRows = getExamRows(shortExamProgress);
+	const examRows = getExamRows(examProgressByKey, examResults);
 	const allRows = [...moduleRows, ...examRows];
 	const [filter, setFilter] = useState("all");
 	const [sort, setSort] = useState("default");
@@ -301,23 +317,28 @@ export default function CCNAGradebook() {
 		moduleRows.some((row) => row.id.startsWith(`${quiz.number}-attempt-`) && row.status === "graded"),
 	).length;
 	const completedExamCount = examRows.filter((row) => row.status === "graded").length;
-	const gradedRows = allRows.filter((row) => row.status === "graded");
-	const classGrade = gradedRows.length
-		? Math.round(gradedRows.reduce((total, row) => total + row.grade, 0) / gradedRows.length)
-		: null;
-	const bestAssessment = gradedRows.reduce(
+	const latestModuleRows = CCNA_MODULE_QUIZZES.flatMap((quiz) => {
+		const attempts = moduleRows
+			.filter((row) => row.id.startsWith(`${quiz.number}-attempt-`) && row.status === "graded")
+			.sort((first, second) => first.attempts - second.attempts);
+		return attempts.length ? [attempts.at(-1)] : [];
+	});
+	const gradedExamRows = examRows.filter((row) => row.points);
+	const gradedRows = [...latestModuleRows, ...gradedExamRows];
+	const bestAssessment = allRows.filter((row) => row.status === "graded").reduce(
 		(best, row) => !best || row.bestGrade > best.bestGrade ? row : best,
 		null,
 	);
 	const nextAssessment = allRows.find((row) => row.status !== "graded");
-	const totalPoints = gradedRows.reduce((total, row) => total + row.grade, 0);
-	const totalPossiblePoints = gradedRows.length * 100;
-	const moduleAverage = moduleRows.filter((row) => row.status === "graded");
-	const modulePoints = moduleAverage.reduce((total, row) => total + row.grade, 0);
-	const modulePossiblePoints = moduleAverage.length * 100;
-	const gradedExamRows = examRows.filter((row) => row.status === "graded");
-	const examPoints = gradedExamRows.reduce((total, row) => total + row.grade, 0);
-	const examPossiblePoints = gradedExamRows.length * 100;
+	const totalPoints = gradedRows.reduce((total, row) => total + row.points.score, 0);
+	const totalPossiblePoints = gradedRows.reduce((total, row) => total + row.points.maxScore, 0);
+	const classGrade = totalPossiblePoints
+		? Math.round((totalPoints / totalPossiblePoints) * 100)
+		: null;
+	const modulePoints = latestModuleRows.reduce((total, row) => total + row.points.score, 0);
+	const modulePossiblePoints = latestModuleRows.reduce((total, row) => total + row.points.maxScore, 0);
+	const examPoints = gradedExamRows.reduce((total, row) => total + row.points.score, 0);
+	const examPossiblePoints = gradedExamRows.reduce((total, row) => total + row.points.maxScore, 0);
 
 	useEffect(() => {
 		if (prefersReducedMotion) return undefined;

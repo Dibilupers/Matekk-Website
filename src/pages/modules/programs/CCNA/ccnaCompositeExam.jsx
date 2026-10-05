@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Link, useBlocker } from "react-router-dom";
 import { ArrowLeft, ArrowRight, ArrowUp, Clock3, Moon, RotateCcw, Sun, X } from "lucide-react";
 import { useAuth } from "../../../../context/AuthContext";
@@ -552,30 +553,31 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 					</>
 				)}
 			</div>
-			{blocker.state === "blocked" && (
-				<div data-theme={isDark ? "dark" : "light"} className="fixed inset-0 z-[120] flex items-center justify-center bg-[#071126]/55 px-4 py-6 backdrop-blur-[2px]">
+			{blocker.state === "blocked" && createPortal(
+				<div data-theme={isDark ? "dark" : "light"} className="fixed inset-0 z-[120] grid place-items-center overflow-y-auto bg-[#071126]/55 p-4 backdrop-blur-[2px] sm:p-6">
 					<section
 						role="alertdialog"
 						aria-modal="true"
 						aria-labelledby="ccna-short-exam-exit-title"
 						aria-describedby="ccna-short-exam-exit-description"
-						className="w-full max-w-md rounded-2xl border border-[#d6e5e7] bg-white p-6 text-[#17233d] shadow-2xl sm:p-8"
+						className="w-full max-w-md rounded-2xl border border-[#d6e5e7] bg-white p-5 text-[#17233d] shadow-2xl sm:p-8"
 					>
 						<p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#005b6b]">Exam in progress</p>
-						<h2 id="ccna-short-exam-exit-title" className="mt-2 text-2xl font-bold">Are you sure you want to exit the exam?</h2>
-						<p id="ccna-short-exam-exit-description" className="mt-3 leading-6 text-[#64748b]">
+						<h2 id="ccna-short-exam-exit-title" className="mt-2 text-xl font-bold sm:text-2xl">Are you sure you want to exit the exam?</h2>
+						<p id="ccna-short-exam-exit-description" className="mt-3 text-sm leading-6 text-[#64748b] sm:text-base">
 							Your answers and time remaining will be saved. The timer will keep running while you are away.
 						</p>
-						<div className="mt-6 flex justify-end gap-3">
-							<button type="button" onClick={() => blocker.reset()} className="ccna-modal-stay rounded-full border border-[#c9dfe2] px-5 py-2.5 text-sm font-semibold text-[#42516b] transition hover:bg-[#f5f9f9]">
+						<div className="mt-6 flex flex-wrap justify-end gap-3">
+							<button type="button" onClick={() => blocker.reset()} className="ccna-modal-stay rounded-full border border-[#c9dfe2] px-4 py-2.5 text-sm font-semibold text-[#42516b] transition hover:bg-[#f5f9f9] sm:px-5">
 								Stay in exam
 							</button>
-							<button type="button" onClick={() => blocker.proceed()} className="rounded-full bg-[#005b6b] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#004653]">
+							<button type="button" onClick={() => blocker.proceed()} className="rounded-full bg-[#005b6b] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#004653] sm:px-5">
 								Exit exam
 							</button>
 						</div>
 					</section>
-				</div>
+				</div>,
+				document.body,
 			)}
 		</main>
 	);

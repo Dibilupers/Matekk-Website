@@ -28,6 +28,7 @@ import { CCNA_MODULE_QUIZZES } from "./ccnaModuleQuizData";
 import { CCNA_CURRICULUM, slugifyCcnaTutorial } from "./ccnaCurriculum.js";
 import { readCcnaTutorialProgress } from "../../../../utils/ccnaTutorialProgress";
 import { readCcnaExamProgress, readCcnaShortExamProgress } from "../../../../utils/ccnaShortExamSession";
+import { readCcnaMockExamResults } from "../../../../utils/ccnaGradebook";
 import { CCNA_EXAMS } from "./ccnaExamFormats";
 
 const modules = CCNA_CURRICULUM.map((section) => ({
@@ -35,9 +36,9 @@ const modules = CCNA_CURRICULUM.map((section) => ({
 	lessons: `${section.tutorials.length} lessons`,
 }));
 const EXAM_FORMATS = [
-	{ name: "Short Exam", questions: 50, duration: "45 mins", description: "A quick practice session." },
+	{ name: "Short Exam", questions: CCNA_EXAMS.short.questionCount, duration: "45 mins", description: "A quick practice session." },
 	{ name: "Medium Exam", questions: CCNA_EXAMS.medium.questionCount, duration: "1 hour & 30 mins", description: "A balanced, longer practice session." },
-	{ name: "Long Exam", questions: 150, duration: "2 hours", description: "A full-length practice session." },
+	{ name: "Long Exam", questions: CCNA_EXAMS.long.questionCount, duration: "2 hours", description: "A full-length practice session." },
 ];
 function formatExamTime(totalSeconds) {
 	const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, "0");
@@ -66,16 +67,45 @@ function Stat({ value, label }) {
 	);
 }
 
-function NetworkIllustration({ quizAverage, shortExamProgress }) {
+function getDashboardExamCards(examResults, examProgress) {
+	const exams = [
+		{ exam: CCNA_EXAMS.short, progress: examProgress.short },
+		{ exam: CCNA_EXAMS.medium, progress: examProgress.medium },
+		{ exam: CCNA_EXAMS.long, progress: examProgress.long },
+	];
+	return exams.map(({ exam, progress }) => {
+		const latestResult = examResults
+			.filter((result) => result.title === exam.name)
+			.sort((first, second) => second.submittedAt - first.submittedAt)[0];
+		if (latestResult) {
+			return { ...exam, ...latestResult, status: "completed", hasResult: true };
+		}
+		const hasLegacyResult = ["completed", "expired"].includes(progress.status) && progress.maxScore > 0;
+		return {
+			...exam,
+			...progress,
+			hasResult: hasLegacyResult,
+		};
+	});
+}
+
+function NetworkIllustration({ quizAverage, examCards }) {
 	const { profile } = useAuth();
+	const [examCardIndex, setExamCardIndex] = useState(0);
+	const examCard = examCards[examCardIndex];
 	const starsFill = `${Math.max(0, Math.min(100, quizAverage))}%`;
-	const hasShortExamResult = shortExamProgress.status === "completed" || shortExamProgress.status === "expired";
-	const passedShortExam = shortExamProgress.score / 50 >= 0.8;
-	const examActionLabel = hasShortExamResult
+	const hasExamResult = examCard.hasResult;
+	const passedExam = hasExamResult && examCard.score / examCard.maxScore >= 0.8;
+	const examActionLabel = hasExamResult
 		? "View result"
-		: shortExamProgress.status === "in-progress"
+		: examCard.status === "in-progress"
 			? "Continue exam"
-			: "Start short exam";
+			: `Start ${examCard.name.toLowerCase()}`;
+	const examActionPath = hasExamResult ? "/modules/programs/ccna/results" : examCard.path;
+
+	function showNextExamCard() {
+		setExamCardIndex((index) => (index + 1) % examCards.length);
+	}
 
 	return (
 		<div className="relative mx-auto h-[320px] w-full max-w-[440px] sm:h-[380px] sm:max-w-[470px]">
@@ -109,26 +139,37 @@ function NetworkIllustration({ quizAverage, shortExamProgress }) {
 			<div className="absolute right-0 top-[17%] z-30 flex h-12 w-12 items-center justify-center rounded-full bg-[#005b6b] text-white shadow-lg transition-transform duration-200 ease-out hover:scale-110 motion-reduce:transition-none motion-reduce:hover:scale-100"><Settings size={21} /></div>
 			<div className="absolute right-[-4px] top-[32%] z-30 flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#005b6b] shadow-[0_8px_20px_rgba(15,35,75,0.1)] transition-transform duration-200 ease-out hover:scale-110 motion-reduce:transition-none motion-reduce:hover:scale-100"><Pencil size={18} /></div>
 			<div className="absolute right-[2%] top-[70%] z-30 flex h-12 w-12 items-center justify-center rounded-full bg-[#005b6b] text-white shadow-lg transition-transform duration-200 ease-out hover:scale-110 motion-reduce:transition-none motion-reduce:hover:scale-100"><MessageSquare size={19} /></div>
-			<div className="absolute bottom-0 right-0 z-30 w-[238px] rounded-2xl border border-[#e4eaf5] bg-white p-4 shadow-[0_14px_28px_rgba(15,35,75,0.1)] transition-transform duration-200 ease-out hover:scale-[1.03] motion-reduce:transition-none motion-reduce:hover:scale-100 sm:right-[-2%] sm:w-[275px]">
-				<strong className="text-sm text-[#005b6b]">{profile?.username}</strong>
-				<p className="mt-0.5 text-sm leading-snug text-[#64708a]">
-					{hasShortExamResult
-						? passedShortExam
-							? "You just passed the short exam!"
-							: "You didn't pass the short exam!"
-						: shortExamProgress.status === "in-progress"
-							? "You're taking the short exam!"
-							: "Take the short exam to see your result."}
-					{hasShortExamResult && (
-						<span className="mt-1 block">
-							{passedShortExam ? "Good job! :)" : "Better luck next time! :("}
-						</span>
-					)}
-					{hasShortExamResult && (
-						<span className="mt-1 block">Score: {shortExamProgress.score}/50</span>
-					)}
-				</p>
-				<Link to="/modules/programs/ccna/exam/short" className="mt-3 flex h-11 w-full items-center justify-center rounded-full bg-[#005b6b] text-sm font-bold text-white transition-all duration-200 ease-out hover:scale-105 hover:bg-[#004653] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100">{examActionLabel}</Link>
+			<div key={examCardIndex} className="ccna-notification-boink absolute bottom-0 right-0 z-30 w-[238px] rounded-2xl border border-[#e4eaf5] bg-white p-4 shadow-[0_14px_28px_rgba(15,35,75,0.1)] transition-transform duration-200 ease-out hover:scale-[1.03] motion-reduce:transition-none motion-reduce:hover:scale-100 sm:right-[-2%] sm:w-[275px]">
+				<button
+					type="button"
+					onClick={showNextExamCard}
+					aria-label={`Show next exam notification. Showing ${examCard.name}, ${examCardIndex + 1} of ${examCards.length}.`}
+					className="block w-full rounded-lg text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#005b6b]"
+				>
+					<div className="flex items-center justify-between gap-2">
+						<strong className="text-sm text-[#005b6b]">{profile?.username}</strong>
+						<span className="text-xs font-semibold text-[#7c89a1]">{examCardIndex + 1}/{examCards.length}</span>
+					</div>
+					<p className="mt-0.5 text-sm leading-snug text-[#64708a]">
+						{hasExamResult
+							? passedExam
+								? `You just passed the ${examCard.name.toLowerCase()}!`
+								: `You didn't pass the ${examCard.name.toLowerCase()}!`
+							: examCard.status === "in-progress"
+								? `You're taking the ${examCard.name.toLowerCase()}!`
+								: `Take the ${examCard.name.toLowerCase()} to see your result.`}
+						{hasExamResult && (
+							<span className="mt-1 block">
+								{passedExam ? "Good job! :)" : "Better luck next time! :("}
+							</span>
+						)}
+						{hasExamResult && (
+							<span className="mt-1 block">Score: {examCard.score}/{examCard.maxScore}</span>
+						)}
+						<span className="mt-1 block text-xs text-[#7c89a1]">Click to see the next exam update</span>
+					</p>
+				</button>
+				<Link to={examActionPath} className="mt-3 flex h-11 w-full items-center justify-center rounded-full bg-[#005b6b] text-sm font-bold text-white transition-all duration-200 ease-out hover:scale-105 hover:bg-[#004653] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100">{examActionLabel}</Link>
 			</div>
 		</div>
 	);
@@ -341,6 +382,14 @@ export default function CCNA() {
 	const longExamProgress = longExamProgressState.userId === userId
 		? longExamProgressState.progress
 		: readCcnaExamProgress(CCNA_EXAMS.long.sessionKey, userId);
+	const examCards = getDashboardExamCards(
+		userId ? readCcnaMockExamResults(userId) : [],
+		{
+			short: shortExamProgress,
+			medium: mediumExamProgress,
+			long: longExamProgress,
+		},
+	);
 	const [examClockNow, setExamClockNow] = useState(Date.now);
 	const [progressSlide, setProgressSlide] = useState(0);
 	const [quizProgressState] = useState(() => ({
@@ -408,7 +457,7 @@ export default function CCNA() {
 			secondsRemaining: longExamSecondsRemaining,
 			isActive: longExamSecondsRemaining > 0,
 			path: CCNA_EXAMS.long.path,
-			summary: `${longQuestionCount} questions · 2 hours · ${longExamSecondsRemaining > 0 ? `${formatExamTime(longExamSecondsRemaining)} remaining` : "Full question bank"}`,
+			summary: `${longQuestionCount} questions · 2 hours · ${longExamSecondsRemaining > 0 ? `${formatExamTime(longExamSecondsRemaining)} remaining` : "CCNA practice questions"}`,
 		},
 	};
 
@@ -521,7 +570,7 @@ export default function CCNA() {
 							<div className="pl-5 sm:pl-7"><Stat value={remainingModules} label="Modules left" /></div>
 						</div>
 					</div>
-					<NetworkIllustration quizAverage={quizAverage} shortExamProgress={shortExamProgress} />
+					<NetworkIllustration quizAverage={quizAverage} examCards={examCards} />
 				</div>
 			</section>
 
@@ -853,7 +902,7 @@ export default function CCNA() {
 							</button>
 						</header>
 						<p className="mt-3 text-sm leading-6 text-[#71819b]">
-							The Short Exam pulls 50 random questions from modules 1.0–6.0, the Medium Exam uses a random CCNA question bank set, and the Long Exam pulls 150 random questions from the full CCNA question bank.
+							All exam formats randomly select questions from the CCNA Question Bank. Choose the number of questions and time limit that suit your practice session.
 						</p>
 						<div className="mt-6 grid gap-3 md:grid-cols-3">
 							{EXAM_FORMATS.map((format) => {
