@@ -1,6 +1,7 @@
 ﻿import { CCNA_MODULE_QUIZZES } from "./ccnaModuleQuizData";
 import { CCNA_MEDIUM_EXAM_QUESTIONS } from "./ccnaMediumExamData";
 import { CCNA_COMPOSITE_SET_QUESTIONS, CCNA_COMPOSITE_SET2_QUESTIONS } from "./ccnaCompositeSetQuestions";
+import { CCNA_LEGACY_QUESTIONS } from "./ccnaLegacyQuestions";
 
 export function shuffle(items) {
   const shuffled = [...items];
@@ -37,6 +38,12 @@ export const CCNA_QUESTION_BANK = [
     source: "medium-exam",
     moduleNumber: null,
     moduleTitle: "Medium Exam",
+  })),
+  ...CCNA_LEGACY_QUESTIONS.map((question) => ({
+    ...question,
+    source: "legacy-pdf",
+    moduleNumber: null,
+    moduleTitle: "Legacy PDF",
   })),
 ];
 
