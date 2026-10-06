@@ -1,4 +1,4 @@
-import chefLessonUrl from "../chef-tutorial-lesson.html?url";
+import chefLessonUrl from "../../chef-tutorial-lesson.html?url";
 
 function resizeLessonFrame(event) {
 	const frame = event.currentTarget;

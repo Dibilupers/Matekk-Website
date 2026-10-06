@@ -2,12 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, useBlocker, useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight, ArrowUp, Clock3, Moon, RotateCcw, Sun, X } from "lucide-react";
-import { useAuth } from "../../../../context/AuthContext";
-import TrainingLogo from "../../../../assets/MATEKK_training_logo.png";
+import { useAuth } from "../../../../../context/AuthContext";
+import TrainingLogo from "../../../../../assets/MATEKK_training_logo.png";
 import { CCNA_EXAMS } from "./ccnaExamFormats";
-import { createCcnaMockExamAttemptId, saveCcnaMockExamResult } from "../../../../utils/ccnaGradebook";
-import { getCcnaExamSessionKey } from "../../../../utils/ccnaShortExamSession";
-import { isAnswerCorrect, isQuestionAnswered, isValidQuestion } from "../../../../utils/ccnaExamGrading";
+import { createCcnaMockExamAttemptId, saveCcnaMockExamResult } from "../../../../../utils/ccnaGradebook";
+import { getCcnaExamSessionKey } from "../../../../../utils/ccnaShortExamSession";
+import { isAnswerCorrect, isQuestionAnswered, isValidQuestion } from "../../../../../utils/ccnaExamGrading";
 import { QuestionInput, QuestionReview } from "./ccnaExamQuestionViews";
 
 const EXAM_PASS_PERCENTAGE = 80;
@@ -82,6 +82,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 	const location = useLocation();
 	const navigate = useNavigate();
 	const shouldShowExamResult = location.state?.showExamResult === true;
+	const linkedExamResult = location.state?.examResult;
 	const shouldStartNewAttempt = location.state?.retakeExam === true;
 	const { profile } = useAuth();
 	const userId = profile?.userId;
@@ -90,6 +91,13 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 	const [initialSession] = useState(() =>
 		shouldStartNewAttempt ? createExamSession(exam) : restoreExamSession(exam, sessionStorageKey),
 	);
+	const hasLinkedExamResult = shouldShowExamResult &&
+		Number.isFinite(linkedExamResult?.score) &&
+		Number.isFinite(linkedExamResult?.maxScore) &&
+		linkedExamResult.maxScore > 0;
+	const isViewingSavedResult = hasLinkedExamResult &&
+		(!initialSession.isSubmitted ||
+			(typeof linkedExamResult.id === "string" && initialSession.attemptId !== linkedExamResult.id));
 	const [attemptId, setAttemptId] = useState(initialSession.attemptId);
 	const [submittedAt, setSubmittedAt] = useState(initialSession.submittedAt);
 	const [questions, setQuestions] = useState(initialSession.questions);
@@ -102,6 +110,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 	);
 	const [isDark, setIsDark] = useState(false);
 	const [isSubmitted, setIsSubmitted] = useState(initialSession.isSubmitted);
+	const isResultView = isSubmitted || isViewingSavedResult;
 	const [isRetakeConfirmationOpen, setIsRetakeConfirmationOpen] = useState(false);
 	const [examAttempt, setExamAttempt] = useState(0);
 	const [answerFilter, setAnswerFilter] = useState("all");
@@ -125,12 +134,16 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 	const isCurrentAnswered = question ? isQuestionAnswered(question, answers[currentIndex]) : false;
 	const animatedScore = animatedResult.attempt === examAttempt ? animatedResult.score : 0;
 	const animatedElapsedSeconds = animatedResult.attempt === examAttempt ? animatedResult.elapsedSeconds : 0;
-	const animatedPercentage = Math.round((animatedScore / questions.length) * 100);
-	const progressHue = animatedPercentage <= 50
-		? animatedPercentage * 1.2
-		: 60 + (animatedPercentage - 50) * 1.2;
+	const resultScore = isViewingSavedResult ? linkedExamResult.score : score;
+	const resultMaxScore = isViewingSavedResult ? linkedExamResult.maxScore : questions.length;
+	const resultPercentage = Math.round((resultScore / resultMaxScore) * 100);
+	const displayedScore = isViewingSavedResult ? resultScore : animatedScore;
+	const displayedPercentage = isViewingSavedResult ? resultPercentage : Math.round((animatedScore / questions.length) * 100);
+	const progressHue = displayedPercentage <= 50
+		? displayedPercentage * 1.2
+		: 60 + (displayedPercentage - 50) * 1.2;
 	const progressColor = `hsl(${progressHue} 75% 42%)`;
-	const examPassed = Math.round((score / questions.length) * 100) >= EXAM_PASS_PERCENTAGE;
+	const examPassed = (isViewingSavedResult ? resultPercentage : Math.round((score / questions.length) * 100)) >= EXAM_PASS_PERCENTAGE;
 	const showBackToTop = backToTopVisibility.attempt === examAttempt && backToTopVisibility.visible;
 	const reviewQuestions = questions
 		.map((item, index) => ({
@@ -151,6 +164,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 	}, [location.pathname, navigate, shouldStartNewAttempt]);
 
 	useEffect(() => {
+		if (isViewingSavedResult) return;
 		window.sessionStorage.setItem(sessionStorageKey, JSON.stringify({
 			attemptId,
 			questions,
@@ -161,11 +175,11 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 			isSubmitted,
 			submittedAt,
 		}));
-	}, [answers, attemptId, currentIndex, deadline, isSubmitted, lockedQuestions, questions, sessionStorageKey, submittedAt]);
+	}, [answers, attemptId, currentIndex, deadline, isSubmitted, isViewingSavedResult, lockedQuestions, questions, sessionStorageKey, submittedAt]);
 
 	// Record the finished exam in the student's gradebook (CCNA results page).
 	useEffect(() => {
-		if (!isSubmitted || !userId || !Number.isFinite(submittedAt)) return;
+		if (!isSubmitted || isViewingSavedResult || !userId || !Number.isFinite(submittedAt)) return;
 		saveCcnaMockExamResult(userId, {
 			id: attemptId,
 			title: exam.name,
@@ -173,7 +187,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 			maxScore: questions.length,
 			submittedAt,
 		});
-	}, [attemptId, exam.name, isSubmitted, questions.length, score, submittedAt, userId]);
+	}, [attemptId, exam.name, isSubmitted, isViewingSavedResult, questions.length, score, submittedAt, userId]);
 
 	function submitExam(finishedAt = Date.now()) {
 		setSubmittedAt(finishedAt);
@@ -181,7 +195,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 	}
 
 	useEffect(() => {
-		if (isSubmitted) return undefined;
+		if (isSubmitted || isViewingSavedResult) return undefined;
 
 		function updateTimer() {
 			const remaining = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
@@ -192,7 +206,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 		updateTimer();
 		const timer = window.setInterval(updateTimer, 1000);
 		return () => window.clearInterval(timer);
-	}, [deadline, isSubmitted]);
+	}, [deadline, isSubmitted, isViewingSavedResult]);
 
 	useEffect(() => {
 		if (!isSubmitted) return undefined;
@@ -268,12 +282,12 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 	}, [isAnswerReviewVisible, isSubmitted]);
 
 	useEffect(() => {
-		if (!isSubmitted || !shouldShowExamResult) return undefined;
+		if (!isResultView || !shouldShowExamResult) return undefined;
 		const animationFrame = window.requestAnimationFrame(() => {
 			resultsTopRef.current?.scrollIntoView({ behavior: "instant", block: "start" });
 		});
 		return () => window.cancelAnimationFrame(animationFrame);
-	}, [isSubmitted, shouldShowExamResult]);
+	}, [isResultView, shouldShowExamResult]);
 
 	function restartExam() {
 		setAttemptId(createCcnaMockExamAttemptId());
@@ -356,7 +370,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 					</div>
 				</header>
 
-				{!isSubmitted ? (
+				{!isResultView ? (
 					<>
 						<div className="mb-6 flex flex-wrap items-center justify-between gap-3">
 							<div>
@@ -436,30 +450,34 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 									)}
 								</h1>
 								<p className="mt-4 max-w-xl leading-7 text-[#64748b]">
-									You got {score} of {questions.length} questions correct{examKey === "short" ? " across CCNA modules 1.0–6.0" : ""}.
+									You got {resultScore} of {resultMaxScore} questions correct{examKey === "short" ? " across CCNA modules 1.0–6.0" : ""}.
 									{examPassed
 										? " You passed this exam."
-										: ` Review your answers below and aim for ${EXAM_PASS_PERCENTAGE}% to pass.`}
+										: isViewingSavedResult
+											? ` The passing score is ${EXAM_PASS_PERCENTAGE}%.`
+											: ` Review your answers below and aim for ${EXAM_PASS_PERCENTAGE}% to pass.`}
 								</p>
 								<div className="mt-7 flex flex-wrap gap-3">
 									<button type="button" onClick={() => setIsRetakeConfirmationOpen(true)} className="inline-flex items-center gap-2 rounded-full bg-[#005b6b] px-6 py-3 font-semibold text-white transition-all duration-200 ease-out hover:scale-105 hover:bg-[#004653] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100">
 										<RotateCcw size={16} /> Retake Exam
 									</button>
-									<button type="button" onClick={reviewAnswers} className="inline-flex items-center gap-2 rounded-full border border-[#9fc8ce] px-6 py-3 font-semibold text-[#005b6b] transition-all duration-200 ease-out hover:scale-105 hover:bg-[#e8f3f4] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100">
-										Review Answers <ArrowLeft className="rotate-[-90deg]" size={16} />
-									</button>
+									{!isViewingSavedResult && (
+										<button type="button" onClick={reviewAnswers} className="inline-flex items-center gap-2 rounded-full border border-[#9fc8ce] px-6 py-3 font-semibold text-[#005b6b] transition-all duration-200 ease-out hover:scale-105 hover:bg-[#e8f3f4] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100">
+											Review Answers <ArrowLeft className="rotate-[-90deg]" size={16} />
+										</button>
+									)}
 								</div>
 								<div className="mt-9 grid max-w-lg grid-cols-3 divide-x divide-[#dce5f2]">
 									<div className="pr-4">
-										<strong className="block text-3xl font-extrabold tabular-nums text-[#17233d]">{Math.round(animatedScore)}</strong>
-										<span className="text-xs leading-4 text-[#71819b]">Your score<br />out of {questions.length}</span>
+										<strong className="block text-3xl font-extrabold tabular-nums text-[#17233d]">{Math.round(displayedScore)}</strong>
+										<span className="text-xs leading-4 text-[#71819b]">Your score<br />out of {resultMaxScore}</span>
 									</div>
 									<div className="px-4">
-										<strong className="block text-3xl font-extrabold text-[#17233d]">{questions.length}</strong>
+										<strong className="block text-3xl font-extrabold text-[#17233d]">{resultMaxScore}</strong>
 										<span className="text-xs leading-4 text-[#71819b]">Total<br />questions</span>
 									</div>
 									<div className="pl-4">
-										<strong className="block text-3xl font-extrabold tabular-nums text-[#17233d]">{formatTime(Math.round(animatedElapsedSeconds))}</strong>
+										<strong className="block text-3xl font-extrabold tabular-nums text-[#17233d]">{isViewingSavedResult ? "--:--" : formatTime(Math.round(animatedElapsedSeconds))}</strong>
 										<span className="text-xs leading-4 text-[#71819b]">Time<br />elapsed</span>
 									</div>
 								</div>
@@ -468,7 +486,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 							<div className="flex justify-center py-3">
 								<div
 									role="img"
-									aria-label={`${animatedPercentage}% correct answers; ${EXAM_PASS_PERCENTAGE}% required to pass`}
+									aria-label={`${displayedPercentage}% correct answers; ${EXAM_PASS_PERCENTAGE}% required to pass`}
 									className="relative flex h-64 w-64 items-center justify-center rounded-full bg-[#dceff1] sm:h-72 sm:w-72"
 								>
 									<div className="absolute inset-[13px] rounded-full bg-[#eef7f8]" />
@@ -482,12 +500,12 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 											stroke={progressColor}
 											strokeWidth="4.5"
 											strokeDasharray={`${2 * Math.PI * 46}`}
-											strokeDashoffset={`${2 * Math.PI * 46 * (1 - animatedPercentage / 100)}`}
+											strokeDashoffset={`${2 * Math.PI * 46 * (1 - displayedPercentage / 100)}`}
 										/>
 									</svg>
 									<div className="absolute inset-[28px] rounded-full border-[12px] border-white" />
 									<div className="relative z-10 text-center">
-										<strong className="block text-5xl font-extrabold tracking-tight tabular-nums" style={{ color: progressColor }}>{animatedPercentage}%</strong>
+										<strong className="block text-5xl font-extrabold tracking-tight tabular-nums" style={{ color: progressColor }}>{displayedPercentage}%</strong>
 										<span className="mt-1 block text-sm font-semibold text-[#64748b]">correct answers</span>
 									</div>
 									<div className="absolute -left-9 top-[30%] rounded-xl border border-[#e2ecec] bg-white px-4 py-3 shadow-lg transition-transform duration-200 ease-out hover:scale-105 motion-reduce:transition-none motion-reduce:hover:scale-100">
@@ -498,7 +516,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 							</div>
 						</section>
 
-						{isAnswerReviewVisible && (
+						{isAnswerReviewVisible && !isViewingSavedResult && (
 							<section ref={answerReviewRef} className="fade-in-up-stagger mt-8 scroll-mt-6 rounded-[24px] bg-[#eaf3f4] px-4 py-10 sm:px-8 sm:py-12" style={{ "--fade-delay": 120 }}>
 								<div className="mx-auto max-w-4xl">
 									<h2 className="text-center text-3xl font-extrabold tracking-tight text-[#17233d] sm:text-4xl">

@@ -1,8 +1,8 @@
 import CcnaLessonImage from "./ccnaLessonImage";
-import agentlessImage from "../../../../assets/ansible-1-agentless-by-design.png";
-import createsImage from "../../../../assets/ansible-2-what-ansible-creates.png";
-import commandsImage from "../../../../assets/ansible-3-example-show-commands.png";
-import rememberImage from "../../../../assets/ansible-4-remember.png";
+import agentlessImage from "../../../../../assets/ansible-1-agentless-by-design.png";
+import createsImage from "../../../../../assets/ansible-2-what-ansible-creates.png";
+import commandsImage from "../../../../../assets/ansible-3-example-show-commands.png";
+import rememberImage from "../../../../../assets/ansible-4-remember.png";
 
 export default function CcnaAnsibleTutorial() {
 	return (

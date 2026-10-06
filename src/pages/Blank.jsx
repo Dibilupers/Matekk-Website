@@ -123,6 +123,53 @@ const programLogos = {
 	"/training/projectmanagement/pmp": PmpLogo,
 };
 
+const PROGRAM_DESCRIPTIONS = {
+	"CCNA": "Build networking foundations in IP connectivity, network access, services, security, and automation.",
+	"CCNA Automation": "Learn to automate Cisco networks with Python, APIs, programmable infrastructure, and modern development practices.",
+	"CCNA Cybersecurity": "Develop skills in security monitoring, host and network analysis, threat detection, and incident response.",
+	"CCNP Enterprise": "Advance your enterprise networking skills across routing, infrastructure, and network assurance.",
+	"CCNP Security": "Build advanced skills for securing enterprise networks, managing access, and protecting infrastructure.",
+	"CCNP Data Center": "Learn to design, operate, and troubleshoot data center networks and compute infrastructure.",
+	"CCNP Collaboration": "Develop expertise in collaboration technologies, voice, video, and Cisco collaboration infrastructure.",
+	"A+ (Core 1 & 2)": "Prepare for IT support work through hardware, operating systems, troubleshooting, and security fundamentals.",
+	"Network+": "Strengthen your skills in network technologies, operations, security, and troubleshooting.",
+	"Security+": "Learn the core security concepts used to protect systems, networks, and organizational data.",
+	"CySA+": "Practice security monitoring, threat analysis, vulnerability management, and incident response.",
+	"PenTest+": "Learn penetration testing methods, from planning and assessment to exploitation and reporting.",
+	"Linux+": "Build practical Linux administration skills in system management, security, and troubleshooting.",
+	"FortiOS": "Learn to configure and manage FortiGate security features with FortiOS.",
+	"Secure Networking": "Build secure networking skills with Fortinet switching, wireless, and network security solutions.",
+	"SASE": "Explore secure access service edge concepts, cloud-delivered security, and zero-trust connectivity.",
+	"Cloud Security": "Learn to secure cloud environments, applications, and workloads with Fortinet solutions.",
+	"Security Operations": "Develop security operations skills in monitoring, analysis, and response using Fortinet tools.",
+	"Cybersecurity Expert": "Practice advanced cybersecurity engineering through hands-on Fortinet solution labs.",
+	"Cybersecurity Apprentice": "Start learning cybersecurity fundamentals, common threats, and practical protection methods.",
+	"Cybersecurity Practitioner": "Build practical cybersecurity skills for identifying threats and applying security controls.",
+	"Network Security Professional": "Learn professional network security concepts for protecting enterprise infrastructure.",
+	"Network Security Analyst": "Practice analyzing network activity, investigating alerts, and identifying security threats.",
+	"Next-Generation Firewall Engineer": "Learn to deploy, configure, and troubleshoot next-generation firewall solutions.",
+	"SD-WAN Engineer": "Build skills in secure SD-WAN design, deployment, and operations.",
+	"Security Service Edge Engineer": "Learn to implement cloud-delivered security and secure service edge connectivity.",
+	"Network Security Architect": "Develop architecture skills for designing resilient enterprise network security.",
+	"Security Operations Professional": "Strengthen security operations through detection, investigation, and incident handling.",
+	"XSIAM Analyst": "Learn to investigate security incidents and analyze threats with Cortex XSIAM.",
+	"XDR Analyst": "Practice investigating alerts and correlating endpoint, network, and cloud security data with XDR.",
+	"XSIAM Engineer": "Build engineering skills for deploying and managing Cortex XSIAM security operations.",
+	"XDR Engineer": "Learn to configure and operate extended detection and response integrations and workflows.",
+	"XSOAR Engineer": "Develop skills in security orchestration, automated playbooks, and incident response workflows.",
+	"Cloud Security Professional": "Learn to protect cloud workloads, applications, and data with Palo Alto Networks security tools.",
+	"Data Centre Foundation Certificate (DCFC)": "Explore data centre fundamentals, facilities, infrastructure, and operational practices.",
+	"Certified Data Centre Professional (CDCP)": "Build the knowledge to operate and maintain reliable data centre facilities.",
+	"Certified Data Centre Specialist (CDCS)": "Advance your expertise in data centre design, infrastructure, and operational resilience.",
+	"Cyber Defense & Threat Hunting (SOC)": "Practice SOC workflows for detecting, investigating, and responding to cyber threats.",
+	"Practical Ethical Hacking (VAPT)": "Learn hands-on ethical hacking techniques for assessing vulnerabilities and testing defenses.",
+	"Azure Fundamentals": "Understand cloud concepts, Azure services, security, and core cloud management.",
+	"Cloud Practitioner": "Learn AWS cloud fundamentals, core services, security, and cloud value propositions.",
+	"Technical Essentials": "Get hands-on with core AWS services and the technical building blocks of cloud solutions.",
+	"ITIL 5 Foundation": "Learn IT service management concepts, practices, and value-focused service delivery.",
+	"Project Management Professional": "Build project leadership skills across planning, delivery, risk, and stakeholder management.",
+};
+
 function getCategoryCourses(category) {
 	const selectedCategory = TRAINING_COURSES.find((item) => item.name === category);
 	if (!selectedCategory) return [];
@@ -150,7 +197,8 @@ function getCoursesForEnrollment(enrollment) {
 				...course,
 				category: category.name,
 				image: programLogos[course.path] ?? categoryLogos[category.name],
-				description: `Explore the ${course.name} program and develop industry-ready skills with MATEKK Cybercore Technologies.`,
+				description: PROGRAM_DESCRIPTIONS[course.name]
+					?? `Study ${course.name} through focused lessons, practical activities, and certification preparation.`,
 			}));
 	});
 }

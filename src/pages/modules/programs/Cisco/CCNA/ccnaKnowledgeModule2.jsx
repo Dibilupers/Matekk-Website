@@ -1,25 +1,25 @@
 import { Link } from "react-router-dom";
 import { TutorialDiagramFrame } from "./ccnaTutorialDiagramFrame";
-import VlanWithoutSegmentationImage from "../../../../assets/ccna-vlan/vlan-without-segmentation.svg";
-import VlanDepartmentBenefitsImage from "../../../../assets/ccna-vlan/vlan-department-benefits.svg";
-import VlanTrunkIdImage from "../../../../assets/ccna-vlan/vlan-trunk-id.svg";
-import VlanFrameTaggingImage from "../../../../assets/ccna-vlan/vlan-frame-tagging.svg";
-import VlanTrunkToRouterImage from "../../../../assets/ccna-vlan/vlan-trunk-to-router.svg";
-import VlanNativeTrafficImage from "../../../../assets/ccna-vlan/vlan-native-traffic.svg";
-import InterVlanSeparationImage from "../../../../assets/ccna-vlan/intervlan-separation.svg";
-import RouterOnAStickImage from "../../../../assets/ccna-vlan/router-on-a-stick.svg";
-import InterVlanLayer3SwitchImage from "../../../../assets/ccna-vlan/intervlan-layer3-switch.svg";
-import StpLoopPreventionImage from "../../../../assets/ccna-stp/stp-loop-prevention.svg";
-import StpRolesImage from "../../../../assets/ccna-stp/stp-port-roles.svg";
-import StpRootCostExampleImage from "../../../../assets/ccna-stp/root-port-cost-example.svg";
-import StpSenderBridgeTieImage from "../../../../assets/ccna-stp/root-port-sender-bridge-tie.svg";
-import StpSenderPortTieImage from "../../../../assets/ccna-stp/root-port-sender-port-tie.svg";
-import RstpPortRolesImage from "../../../../assets/ccna-stp/rstp-port-roles.svg";
-import RstpSharedSegmentImage from "../../../../assets/ccna-stp/rstp-shared-segment.svg";
-import VtpDomainModesImage from "../../../../assets/ccna-vtp/vtp-domain-modes.svg";
-import VtpPruningImage from "../../../../assets/ccna-vtp/vtp-pruning.svg";
-import EtherChannelBundlingImage from "../../../../assets/ccna-etherchannel/etherchannel-bundling.svg";
-import EtherChannelLoadBalanceImage from "../../../../assets/ccna-etherchannel/etherchannel-load-balance.svg";
+import VlanWithoutSegmentationImage from "../../../../../assets/ccna-vlan/vlan-without-segmentation.svg";
+import VlanDepartmentBenefitsImage from "../../../../../assets/ccna-vlan/vlan-department-benefits.svg";
+import VlanTrunkIdImage from "../../../../../assets/ccna-vlan/vlan-trunk-id.svg";
+import VlanFrameTaggingImage from "../../../../../assets/ccna-vlan/vlan-frame-tagging.svg";
+import VlanTrunkToRouterImage from "../../../../../assets/ccna-vlan/vlan-trunk-to-router.svg";
+import VlanNativeTrafficImage from "../../../../../assets/ccna-vlan/vlan-native-traffic.svg";
+import InterVlanSeparationImage from "../../../../../assets/ccna-vlan/intervlan-separation.svg";
+import RouterOnAStickImage from "../../../../../assets/ccna-vlan/router-on-a-stick.svg";
+import InterVlanLayer3SwitchImage from "../../../../../assets/ccna-vlan/intervlan-layer3-switch.svg";
+import StpLoopPreventionImage from "../../../../../assets/ccna-stp/stp-loop-prevention.svg";
+import StpRolesImage from "../../../../../assets/ccna-stp/stp-port-roles.svg";
+import StpRootCostExampleImage from "../../../../../assets/ccna-stp/root-port-cost-example.svg";
+import StpSenderBridgeTieImage from "../../../../../assets/ccna-stp/root-port-sender-bridge-tie.svg";
+import StpSenderPortTieImage from "../../../../../assets/ccna-stp/root-port-sender-port-tie.svg";
+import RstpPortRolesImage from "../../../../../assets/ccna-stp/rstp-port-roles.svg";
+import RstpSharedSegmentImage from "../../../../../assets/ccna-stp/rstp-shared-segment.svg";
+import VtpDomainModesImage from "../../../../../assets/ccna-vtp/vtp-domain-modes.svg";
+import VtpPruningImage from "../../../../../assets/ccna-vtp/vtp-pruning.svg";
+import EtherChannelBundlingImage from "../../../../../assets/ccna-etherchannel/etherchannel-bundling.svg";
+import EtherChannelLoadBalanceImage from "../../../../../assets/ccna-etherchannel/etherchannel-load-balance.svg";
 
 function VlanDiagram({ image, title, description }) {
 	return (

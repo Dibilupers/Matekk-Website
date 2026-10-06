@@ -2,21 +2,21 @@
 // Exhibits are shown as a picture (pic) where we have one, otherwise written out as text.
 // Answer keys were worked out from the question content (not supplied in the source).
 
-import ipv6BlockImg from "../../../../assets/ccna-exam/ipv6-block-r1-r2.webp";
-import salesVlan10Img from "../../../../assets/ccna-exam/sales-vlan10-mac-table.webp";
-import etherchannelImg from "../../../../assets/ccna-exam/etherchannel-group1.webp";
-import r4SupernetImg from "../../../../assets/ccna-exam/r4-supernet.webp";
-import lobbyPortSecurityImg from "../../../../assets/ccna-exam/lobby-port-security.webp";
-import routersAbcOspfImg from "../../../../assets/ccna-exam/routers-abc-ospf-dr.webp";
-import router1HostAImg from "../../../../assets/ccna-exam/router1-host-a.webp";
-import wlcMyWlanImg from "../../../../assets/ccna-exam/wlc-my-wlan-layer2.webp";
-import wlcPskImg from "../../../../assets/ccna-exam/wlc-psk-layer2.webp";
-import ospfPriorityImg from "../../../../assets/ccna-exam/ospf-r1-r2-r3-priority.webp";
-import ospfDrotherImg from "../../../../assets/ccna-exam/ospf-drother-r1.webp";
-import wlcAdvancedImg from "../../../../assets/ccna-exam/wlc-advanced-tab.webp";
-import oldNewSwitchImg from "../../../../assets/ccna-exam/oldswitch-newswitch-trunk.webp";
-import routersAbcFloatingImg from "../../../../assets/ccna-exam/routers-abc-floating-route.webp";
-import subinterfaceImg from "../../../../assets/ccna-exam/subinterface-r1-sw1-sw2.webp";
+import ipv6BlockImg from "../../../../../assets/ccna-exam/ipv6-block-r1-r2.webp";
+import salesVlan10Img from "../../../../../assets/ccna-exam/sales-vlan10-mac-table.webp";
+import etherchannelImg from "../../../../../assets/ccna-exam/etherchannel-group1.webp";
+import r4SupernetImg from "../../../../../assets/ccna-exam/r4-supernet.webp";
+import lobbyPortSecurityImg from "../../../../../assets/ccna-exam/lobby-port-security.webp";
+import routersAbcOspfImg from "../../../../../assets/ccna-exam/routers-abc-ospf-dr.webp";
+import router1HostAImg from "../../../../../assets/ccna-exam/router1-host-a.webp";
+import wlcMyWlanImg from "../../../../../assets/ccna-exam/wlc-my-wlan-layer2.webp";
+import wlcPskImg from "../../../../../assets/ccna-exam/wlc-psk-layer2.webp";
+import ospfPriorityImg from "../../../../../assets/ccna-exam/ospf-r1-r2-r3-priority.webp";
+import ospfDrotherImg from "../../../../../assets/ccna-exam/ospf-drother-r1.webp";
+import wlcAdvancedImg from "../../../../../assets/ccna-exam/wlc-advanced-tab.webp";
+import oldNewSwitchImg from "../../../../../assets/ccna-exam/oldswitch-newswitch-trunk.webp";
+import routersAbcFloatingImg from "../../../../../assets/ccna-exam/routers-abc-floating-route.webp";
+import subinterfaceImg from "../../../../../assets/ccna-exam/subinterface-r1-sw1-sw2.webp";
 
 // pic(image, text?) = picture exhibit, optionally with device output shown below it
 const pic = (image, text) => ({ image, text });

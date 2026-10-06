@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, ChevronDown, ChevronUp } from "lucide-react";
-import { useAuth } from "../../../../context/AuthContext";
+import { useAuth } from "../../../../../context/AuthContext";
 import {
 	getCcnaModuleQuizAttemptHistory,
 	isCurrentCcnaModuleQuizAttempt,
 	readCcnaModuleQuizProgress,
-} from "../../../../utils/ccnaModuleQuizProgress";
-import { readCcnaExamProgress, readCcnaShortExamProgress } from "../../../../utils/ccnaShortExamSession";
-import { readCcnaMockExamResults } from "../../../../utils/ccnaGradebook";
+} from "../../../../../utils/ccnaModuleQuizProgress";
+import { readCcnaExamProgress, readCcnaShortExamProgress } from "../../../../../utils/ccnaShortExamSession";
+import { readCcnaMockExamResults } from "../../../../../utils/ccnaGradebook";
 import { CCNA_MODULE_QUIZZES } from "./ccnaModuleQuizData";
 import { CCNA_EXAMS } from "./ccnaExamFormats";
 
