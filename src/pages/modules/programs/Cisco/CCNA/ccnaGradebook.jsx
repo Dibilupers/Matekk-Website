@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, ChevronDown, ChevronUp } from "lucide-react";
-import { useAuth } from "../../../../context/AuthContext";
+import { useAuth } from "../../../../../context/AuthContext";
 import {
 	getCcnaModuleQuizAttemptHistory,
 	isCurrentCcnaModuleQuizAttempt,
 	readCcnaModuleQuizProgress,
-} from "../../../../utils/ccnaModuleQuizProgress";
-import { readCcnaMockExamResults } from "../../../../utils/ccnaGradebook";
+} from "../../../../../utils/ccnaModuleQuizProgress";
+import { readCcnaExamProgress, readCcnaShortExamProgress } from "../../../../../utils/ccnaShortExamSession";
+import { readCcnaMockExamResults } from "../../../../../utils/ccnaGradebook";
 import { CCNA_MODULE_QUIZZES } from "./ccnaModuleQuizData";
+import { CCNA_EXAMS } from "./ccnaExamFormats";
 
 const EMPTY_PROGRESS = { activeModule: null, modules: {} };
 
@@ -103,33 +105,49 @@ function getModuleRows(progress) {
 	});
 }
 
-function getMockExamRows(results) {
-	if (results.length === 0) {
-		return [{
-			id: "mock-exam",
-			name: "Mock exam",
-			status: "upcoming",
-			submittedAt: null,
-			attempts: 0,
-			points: null,
-			order: 0,
-		}];
-	}
+function getExamRows(examProgressByKey, examResults) {
+	return Object.values(CCNA_EXAMS).map((exam, index) => {
+		const progress = examProgressByKey[exam.name];
+		const results = examResults
+			.filter((result) => result.title === exam.name)
+			.sort((first, second) => first.submittedAt - second.submittedAt);
+		const latestResult = results.at(-1);
+		const bestResult = results.reduce(
+			(best, result) => !best || result.score / result.maxScore > best.score / best.maxScore ? result : best,
+			null,
+		);
+		const hasLegacyShortResult = exam.name === "Short Exam" &&
+			!latestResult &&
+			["completed", "expired"].includes(progress.status) &&
+			progress.maxScore > 0;
+		const points = latestResult
+			? { score: latestResult.score, maxScore: latestResult.maxScore }
+			: hasLegacyShortResult
+				? { score: progress.score, maxScore: progress.maxScore }
+				: null;
+		const grade = points ? Math.round((points.score / points.maxScore) * 100) : null;
+		const bestPoints = bestResult
+			? { score: bestResult.score, maxScore: bestResult.maxScore }
+			: points;
+		const bestGrade = bestPoints ? Math.round((bestPoints.score / bestPoints.maxScore) * 100) : null;
+		const isInProgress = progress.status === "in-progress";
+		const isExpired = progress.status === "expired" && !latestResult;
 
-	return [...results]
-		.sort((first, second) => first.submittedAt - second.submittedAt)
-		.map((result, index) => ({
-			id: result.id,
-			name: result.title === "Short Exam"
-				? index === 0 ? "Short Exam" : `Short Exam ${index}`
-				: index === 0 ? "Mock exam" : `Mock exam ${index}`,
-			status: "graded",
-			submittedAt: result.submittedAt,
-			attempts: 1,
-			points: { score: Math.round((result.score / result.maxScore) * 100), maxScore: 100 },
-			bestPoints: { score: Math.round((result.score / result.maxScore) * 100), maxScore: 100 },
+		return {
+			id: exam.name.toLowerCase().replaceAll(" ", "-"),
+			name: exam.name,
+			status: isInProgress ? "in-progress" : points ? "graded" : "upcoming",
+			statusLabel: isExpired ? "Time expired" : null,
+			submittedAt: latestResult?.submittedAt ?? null,
+			deadline: isInProgress ? progress.deadline : null,
+			attempts: Math.max(results.length, hasLegacyShortResult ? 1 : 0) + Number(isInProgress),
+			points,
+			grade,
+			bestPoints,
+			bestGrade,
 			order: index,
-		}));
+		};
+	});
 }
 
 function formatDate(timestamp) {
@@ -225,29 +243,45 @@ export default function CCNAGradebook() {
 	const [prefersReducedMotion] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
 	const [typedWelcome, setTypedWelcome] = useState(() => prefersReducedMotion ? welcomeText : "");
 	const progress = userId ? readCcnaModuleQuizProgress(userId) : EMPTY_PROGRESS;
-	const mockResults = userId ? readCcnaMockExamResults(userId) : [];
+	const shortExamProgress = readCcnaShortExamProgress(userId);
+	const examProgressByKey = Object.fromEntries(Object.values(CCNA_EXAMS).map((exam) => [
+		exam.name,
+		exam.name === "Short Exam"
+			? shortExamProgress
+			: readCcnaExamProgress(exam.sessionKey, userId),
+	]));
+	const examResults = readCcnaMockExamResults(userId);
 	const moduleRows = getModuleRows(progress);
-	const mockExamRows = getMockExamRows(mockResults);
-	const allRows = [...moduleRows, ...mockExamRows];
+	const examRows = getExamRows(examProgressByKey, examResults);
+	const allRows = [...moduleRows, ...examRows];
 	const [filter, setFilter] = useState("all");
 	const [sort, setSort] = useState("default");
-	const gradedRows = allRows.filter((row) => row.status === "graded");
-	const classGrade = gradedRows.length
-		? Math.round(gradedRows.reduce((total, row) => total + row.points.score, 0) / gradedRows.length)
-		: null;
-	const bestAssessment = gradedRows.reduce(
-		(best, row) => !best || row.bestPoints.score > best.bestPoints.score ? row : best,
+	const completedQuizCount = CCNA_MODULE_QUIZZES.filter((quiz) =>
+		moduleRows.some((row) => row.id.startsWith(`${quiz.number}-attempt-`) && row.status === "graded"),
+	).length;
+	const completedExamCount = examRows.filter((row) => row.status === "graded").length;
+	const latestModuleRows = CCNA_MODULE_QUIZZES.flatMap((quiz) => {
+		const attempts = moduleRows
+			.filter((row) => row.id.startsWith(`${quiz.number}-attempt-`) && row.status === "graded")
+			.sort((first, second) => first.attempts - second.attempts);
+		return attempts.length ? [attempts.at(-1)] : [];
+	});
+	const gradedExamRows = examRows.filter((row) => row.points);
+	const gradedRows = [...latestModuleRows, ...gradedExamRows];
+	const bestAssessment = allRows.filter((row) => row.status === "graded").reduce(
+		(best, row) => !best || row.bestGrade > best.bestGrade ? row : best,
 		null,
 	);
 	const nextAssessment = allRows.find((row) => row.status !== "graded");
 	const totalPoints = gradedRows.reduce((total, row) => total + row.points.score, 0);
-	const totalPossiblePoints = gradedRows.length * 100;
-	const moduleAverage = moduleRows.filter((row) => row.status === "graded");
-	const modulePoints = moduleAverage.reduce((total, row) => total + row.points.score, 0);
-	const modulePossiblePoints = moduleAverage.length * 100;
-	const gradedMockRows = mockExamRows.filter((row) => row.status === "graded");
-	const mockPoints = gradedMockRows.reduce((total, row) => total + row.points.score, 0);
-	const mockPossiblePoints = gradedMockRows.length * 100;
+	const totalPossiblePoints = gradedRows.reduce((total, row) => total + row.points.maxScore, 0);
+	const classGrade = totalPossiblePoints
+		? Math.round((totalPoints / totalPossiblePoints) * 100)
+		: null;
+	const modulePoints = latestModuleRows.reduce((total, row) => total + row.points.score, 0);
+	const modulePossiblePoints = latestModuleRows.reduce((total, row) => total + row.points.maxScore, 0);
+	const examPoints = gradedExamRows.reduce((total, row) => total + row.points.score, 0);
+	const examPossiblePoints = gradedExamRows.reduce((total, row) => total + row.points.maxScore, 0);
 
 	useEffect(() => {
 		if (prefersReducedMotion) return undefined;

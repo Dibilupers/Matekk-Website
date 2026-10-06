@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { TutorialDiagramFrame } from "./ccnaTutorialDiagramFrame";
-import OsiVsTcpIpImage from "../../../../assets/tcp-udp/osi-vs-tcpip.png";
-import TcpThreeWayHandshakeImage from "../../../../assets/tcp-udp/tcp-three-way-handshake.png";
-import TcpHandshakeExampleImage from "../../../../assets/tcp-udp/tcp-handshake-example.png";
-import TcpConnectionTerminationImage from "../../../../assets/tcp-udp/tcp-connection-termination.png";
-import TcpPortMultiplexingImage from "../../../../assets/tcp-udp/tcp-port-multiplexing.png";
-import TcpSourceDestinationPortsImage from "../../../../assets/tcp-udp/tcp-source-destination-ports.png";
+import OsiVsTcpIpImage from "../../../../../assets/tcp-udp/osi-vs-tcpip.png";
+import TcpThreeWayHandshakeImage from "../../../../../assets/tcp-udp/tcp-three-way-handshake.png";
+import TcpHandshakeExampleImage from "../../../../../assets/tcp-udp/tcp-handshake-example.png";
+import TcpConnectionTerminationImage from "../../../../../assets/tcp-udp/tcp-connection-termination.png";
+import TcpPortMultiplexingImage from "../../../../../assets/tcp-udp/tcp-port-multiplexing.png";
+import TcpSourceDestinationPortsImage from "../../../../../assets/tcp-udp/tcp-source-destination-ports.png";
 
 function DiagramPlaceholder() {
 	return (

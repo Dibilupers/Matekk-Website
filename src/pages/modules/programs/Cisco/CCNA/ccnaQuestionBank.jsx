@@ -1,6 +1,7 @@
 ﻿import { CCNA_MODULE_QUIZZES } from "./ccnaModuleQuizData";
 import { CCNA_MEDIUM_EXAM_QUESTIONS } from "./ccnaMediumExamData";
 import { CCNA_COMPOSITE_SET_QUESTIONS, CCNA_COMPOSITE_SET2_QUESTIONS } from "./ccnaCompositeSetQuestions";
+import { CCNA_LEGACY_200_301_QUESTIONS } from "./ccnaLegacyQuestionBank";
 
 export function shuffle(items) {
   const shuffled = [...items];
@@ -38,7 +39,16 @@ export const CCNA_QUESTION_BANK = [
     moduleNumber: null,
     moduleTitle: "Medium Exam",
   })),
+  // Kept tagged so older CCNA 200-301 questions remain identifiable in the shared bank.
+  ...CCNA_LEGACY_200_301_QUESTIONS.map((question) => ({
+    ...question,
+    source: "legacy-ccna-200-301",
+    moduleNumber: null,
+    moduleTitle: "Legacy CCNA 200-301",
+  })),
 ];
+
+const SHORT_EXAM_SOURCES = new Set(["legacy-ccna-200-301"]);
 
 export function pickRandomQuestions(sourceQuestions, count) {
   const selected = [];
@@ -58,7 +68,8 @@ export function pickRandomQuestions(sourceQuestions, count) {
 export function createShortExamQuestions() {
   const moduleQuestions = CCNA_QUESTION_BANK.filter((question) => {
     const moduleNumber = question.moduleNumber;
-    return typeof moduleNumber === "string" && /^([1-6])\.0$/.test(moduleNumber);
+    return (typeof moduleNumber === "string" && /^([1-6])\.0$/.test(moduleNumber)) ||
+      SHORT_EXAM_SOURCES.has(question.source);
   });
 
   return pickRandomQuestions(moduleQuestions, 50);

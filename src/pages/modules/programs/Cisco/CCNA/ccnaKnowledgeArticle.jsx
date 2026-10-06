@@ -7,8 +7,8 @@ import CcnaKnowledgeModuleThree from "./ccnaKnowledgeModule3";
 import CcnaKnowledgeModuleFour from "./ccnaKnowledgeModule4";
 import CcnaKnowledgeModuleFive from "./ccnaKnowledgeModule5";
 import CcnaKnowledgeModuleSix from "./ccnaKnowledgeModule6";
-import { markCcnaTutorialOpened } from "../../../../utils/ccnaTutorialProgress";
-import { useAuth } from "../../../../context/AuthContext";
+import { markCcnaTutorialOpened } from "../../../../../utils/ccnaTutorialProgress";
+import { useAuth } from "../../../../../context/AuthContext";
 
 const ccnaModuleOneSlugs = new Set([
 	"spine-leaf-architecture-tutorial",
@@ -489,11 +489,8 @@ function TutorialSidebar({ activeSlug }) {
 	function toggleSection(sectionNumber) {
 		setOpenSections((currentSections) => {
 			const nextSections = new Set(currentSections);
-			if (nextSections.has(sectionNumber)) {
-				nextSections.delete(sectionNumber);
-			} else {
-				nextSections.add(sectionNumber);
-			}
+			if (nextSections.has(sectionNumber)) nextSections.delete(sectionNumber);
+			else nextSections.add(sectionNumber);
 			return nextSections;
 		});
 	}
@@ -523,36 +520,42 @@ function TutorialSidebar({ activeSlug }) {
 				/>
 			</label>
 			<div className="mt-6 space-y-2">
-				{visibleSections.map((section) => (
-					<div key={section.number}>
-						<button
-							type="button"
-							onClick={() => toggleSection(section.number)}
-							aria-expanded={openSections.has(section.number) || Boolean(normalizedQuery)}
-							aria-controls={`tutorials-${section.number.replace(".", "-")}`}
-							className="group flex min-h-[72px] w-full items-center justify-between gap-3 border-b border-[#dbe5f5] px-1 py-4 text-left"
-						>
-							<strong className="text-lg leading-tight text-[#111a2d] transition-colors group-hover:text-[#005b6b]">{section.number} {section.title}</strong>
-							<span className="flex shrink-0 items-center gap-3 text-base text-[#71819b]">
-								<span className="group-hover:text-[#005b6b]">{section.items.length}</span>
-								<ChevronDown
-									size={18}
-									className={`text-[#005b6b] transition-transform duration-200 group-hover:text-[#004653] ${openSections.has(section.number) || normalizedQuery ? "" : "-rotate-90"}`}
-								/>
-							</span>
-						</button>
-						{(openSections.has(section.number) || normalizedQuery) && (
-							<div id={`tutorials-${section.number.replace(".", "-")}`} className="space-y-1 py-2 pl-2">
-								{section.visibleItems.map((item) => {
-									const slug = slugify(item);
-									return (
-										<Link key={item} to={`/modules/programs/ccna/knowledge-hub/${slug}`} className={`block rounded-lg px-3 py-2 text-sm leading-snug transition ${activeSlug === slug ? "bg-[#e8f3f4] font-semibold text-[#005b6b]" : "text-[#526584] hover:bg-[#f0f7f7] hover:text-[#005b6b]"}`}>{item}</Link>
-									);
-								})}
-							</div>
-						)}
-					</div>
-				))}
+				{visibleSections.map((section) => {
+					const isOpen = openSections.has(section.number) || Boolean(normalizedQuery);
+					return (
+						<div key={section.number}>
+							<button
+								type="button"
+								onClick={() => toggleSection(section.number)}
+								aria-expanded={isOpen}
+								aria-controls={`tutorials-${section.number.replace(".", "-")}`}
+								className="group flex min-h-[72px] w-full items-center justify-between gap-3 border-b border-[#dbe5f5] px-1 py-4 text-left"
+							>
+								<strong className="text-lg leading-tight text-[#111a2d] transition-colors group-hover:text-[#005b6b]">{section.number} {section.title}</strong>
+								<span className="flex shrink-0 items-center gap-3 text-base text-[#71819b]">
+									<span className="group-hover:text-[#005b6b]">{section.items.length}</span>
+									<ChevronDown size={18} className={`text-[#005b6b] transition-transform duration-200 group-hover:text-[#004653] ${isOpen ? "" : "-rotate-90"}`} />
+								</span>
+							</button>
+							{isOpen && (
+								<div id={`tutorials-${section.number.replace(".", "-")}`} className="space-y-1 py-2 pl-2">
+									{section.visibleItems.map((item) => {
+										const slug = slugify(item);
+										return (
+											<Link
+												key={item}
+												to={`/modules/programs/ccna/knowledge-hub/${slug}`}
+												className={`block rounded-lg px-3 py-2 text-sm leading-snug transition ${activeSlug === slug ? "bg-[#e8f3f4] font-semibold text-[#005b6b]" : "text-[#526584] hover:bg-[#f0f7f7] hover:text-[#005b6b]"}`}
+											>
+												{item}
+											</Link>
+										);
+									})}
+								</div>
+							)}
+						</div>
+					);
+				})}
 				{normalizedQuery && visibleSections.length === 0 && (
 					<p className="px-1 py-4 text-sm text-[#71819b]">No tutorials match “{searchQuery.trim()}”.</p>
 				)}
@@ -603,9 +606,9 @@ export default function CCNAKnowledgeArticle() {
 		<main className="min-h-screen bg-white text-[#526584]">
 			<div className="mx-auto max-w-[1600px] px-5 pb-8 pt-10 sm:px-10 sm:pt-12 lg:px-10">
 				<nav className="mb-6 flex flex-wrap items-center gap-2 text-sm sm:text-base" aria-label="Breadcrumb">
-					<Link to="/modules/programs/ccna/knowledge-hub" className="font-semibold text-[#005b6b] hover:underline">Training</Link>
+					<Link to="/modules/programs/ccna" className="font-semibold text-[#005b6b] hover:underline">CCNA</Link>
 					<span>/</span>
-					<Link to="/modules/programs/ccna/knowledge-hub" className="font-semibold text-[#005b6b] hover:underline">CCNA Knowledge</Link>
+					<Link to="/modules/programs/ccna/knowledge-hub" className="font-semibold text-[#005b6b] hover:underline">Knowledge Hub</Link>
 					<span>/</span>
 					<span className="truncate text-[#8492a9]">{article.title}</span>
 				</nav>

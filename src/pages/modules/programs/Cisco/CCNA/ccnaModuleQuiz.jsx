@@ -1,9 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, ArrowUp, Check, Moon, RotateCcw, Sun, X } from "lucide-react";
-import { Link, useBlocker, useParams } from "react-router-dom";
-import { useAuth } from "../../../../context/AuthContext";
-import TrainingLogo from "../../../../assets/MATEKK_training_logo.png";
+import { Link, useBlocker, useLocation, useParams } from "react-router-dom";
+import { useAuth } from "../../../../../context/AuthContext";
+import TrainingLogo from "../../../../../assets/MATEKK_training_logo.png";
 import { CCNA_MODULE_QUIZZES } from "./ccnaModuleQuizData";
+import {
+	CCNA_AUTOMATION_MODULE_QUIZZES,
+	CCNA_CYBERSECURITY_MODULE_QUIZZES,
+} from "../../programModuleQuizData";
 import {
 	beginCcnaModuleQuiz,
 	CCNA_MODULE_QUIZ_DURATION_SECONDS,
@@ -11,9 +15,60 @@ import {
 	recordCcnaModuleQuizAttempt,
 	readCcnaModuleQuizProgress,
 	saveCcnaModuleQuizProgress,
-} from "../../../../utils/ccnaModuleQuizProgress";
+} from "../../../../../utils/ccnaModuleQuizProgress";
+import {
+	beginProgramModuleQuiz,
+	isCurrentProgramModuleQuizAttempt,
+	readProgramModuleQuizProgress,
+	recordProgramModuleQuizAttempt,
+	saveProgramModuleQuizProgress,
+} from "../../../../../utils/programModuleQuizProgress";
 
-function getModuleProgress(userId, moduleNumber) {
+const PROGRAM_QUIZ_CONFIG = {
+	"ccna-automation": {
+		title: "CCNA Automation",
+		basePath: "/modules/programs/ccna-automation",
+		durationSeconds: 20 * 60,
+		quizzes: CCNA_AUTOMATION_MODULE_QUIZZES,
+	},
+	"ccna-cybersecurity": {
+		title: "CCNA Cybersecurity",
+		basePath: "/modules/programs/ccna-cybersecurity",
+		durationSeconds: 20 * 60,
+		quizzes: CCNA_CYBERSECURITY_MODULE_QUIZZES,
+	},
+};
+
+function isCurrentQuizAttempt(attempt, programKey) {
+	return programKey
+		? isCurrentProgramModuleQuizAttempt(attempt)
+		: isCurrentCcnaModuleQuizAttempt(attempt);
+}
+
+function readQuizProgress(userId, programKey) {
+	return programKey
+		? readProgramModuleQuizProgress(programKey, userId)
+		: readCcnaModuleQuizProgress(userId);
+}
+
+function saveQuizProgress(userId, programKey, progress) {
+	if (programKey) saveProgramModuleQuizProgress(programKey, userId, progress);
+	else saveCcnaModuleQuizProgress(userId, progress);
+}
+
+function startQuizAttempt(userId, moduleNumber, programKey, durationSeconds) {
+	return programKey
+		? beginProgramModuleQuiz(programKey, userId, moduleNumber, durationSeconds)
+		: beginCcnaModuleQuiz(userId, moduleNumber);
+}
+
+function recordQuizAttempt(attempt, maxScore, programKey) {
+	return programKey
+		? recordProgramModuleQuizAttempt(attempt, maxScore)
+		: recordCcnaModuleQuizAttempt(attempt, maxScore);
+}
+
+function getModuleProgress(userId, moduleNumber, programKey, durationSeconds) {
 	if (!userId) {
 		return {
 			status: "not-started",
@@ -24,9 +79,9 @@ function getModuleProgress(userId, moduleNumber) {
 			bestScore: null,
 		};
 	}
-	const progress = readCcnaModuleQuizProgress(userId);
+	const progress = readQuizProgress(userId, programKey);
 	const savedAttempt = progress.modules[moduleNumber];
-	if (savedAttempt && !isCurrentCcnaModuleQuizAttempt(savedAttempt)) {
+	if (savedAttempt && !isCurrentQuizAttempt(savedAttempt, programKey)) {
 		return {
 			status: "not-started",
 			currentIndex: 0,
@@ -39,10 +94,10 @@ function getModuleProgress(userId, moduleNumber) {
 	if (savedAttempt?.status === "in-progress" && !Number.isFinite(savedAttempt.deadline)) {
 		const migratedAttempt = {
 			...savedAttempt,
-			deadline: Date.now() + CCNA_MODULE_QUIZ_DURATION_SECONDS * 1000,
+			deadline: Date.now() + durationSeconds * 1000,
 			lockedQuestions: savedAttempt.lockedQuestions ?? {},
 		};
-		saveCcnaModuleQuizProgress(userId, {
+		saveQuizProgress(userId, programKey, {
 			...progress,
 			modules: { ...progress.modules, [moduleNumber]: migratedAttempt },
 		});
@@ -58,9 +113,9 @@ function getModuleProgress(userId, moduleNumber) {
 	};
 }
 
-function saveAttemptProgress(userId, moduleNumber, nextAttempt, status) {
-	const progress = readCcnaModuleQuizProgress(userId);
-	saveCcnaModuleQuizProgress(userId, {
+function saveAttemptProgress(userId, moduleNumber, nextAttempt, status, programKey) {
+	const progress = readQuizProgress(userId, programKey);
+	saveQuizProgress(userId, programKey, {
 		...progress,
 		activeModule: status === "in-progress" ? moduleNumber : null,
 		modules: {
@@ -82,7 +137,13 @@ export default function CCNAModuleQuiz() {
 	const { profile } = useAuth();
 	const userId = profile?.userId;
 	const { moduleNumber } = useParams();
-	const moduleQuiz = CCNA_MODULE_QUIZZES.find((quiz) => quiz.number === moduleNumber);
+	const location = useLocation();
+	const programKey = Object.keys(PROGRAM_QUIZ_CONFIG).find((key) => location.pathname.startsWith(`/modules/programs/${key}/quiz/`));
+	const programConfig = programKey ? PROGRAM_QUIZ_CONFIG[programKey] : null;
+	const courseTitle = programConfig?.title ?? "CCNA";
+	const coursePath = programConfig?.basePath ?? "/modules/programs/ccna";
+	const quizDurationSeconds = programConfig?.durationSeconds ?? CCNA_MODULE_QUIZ_DURATION_SECONDS;
+	const moduleQuiz = (programConfig?.quizzes ?? CCNA_MODULE_QUIZZES).find((quiz) => quiz.number === moduleNumber);
 	const [attemptState, setAttemptState] = useState({ userId: null, moduleNumber: null, attempt: null });
 	const [selectionState, setSelectionState] = useState({ userId: null, moduleNumber: null, answer: undefined });
 	const [isDark, setIsDark] = useState(false);
@@ -95,8 +156,8 @@ export default function CCNAModuleQuiz() {
 	const attempt = useMemo(
 		() => attemptState.userId === userId && attemptState.moduleNumber === moduleNumber && attemptState.attempt
 			? attemptState.attempt
-			: getModuleProgress(userId, moduleNumber),
-		[attemptState, moduleNumber, userId],
+			: getModuleProgress(userId, moduleNumber, programKey, quizDurationSeconds),
+		[attemptState, moduleNumber, programKey, quizDurationSeconds, userId],
 	);
 	const [clockState, setClockState] = useState(() => ({
 		userId,
@@ -127,7 +188,7 @@ export default function CCNAModuleQuiz() {
 	const bestScore = attempt.bestScore;
 	const secondsLeft = clockState.userId === userId && clockState.moduleNumber === moduleNumber && clockState.secondsLeft !== null
 		? clockState.secondsLeft
-		: CCNA_MODULE_QUIZ_DURATION_SECONDS;
+		: quizDurationSeconds;
 	const scorePercentage = moduleQuiz
 		? Math.round((score / moduleQuiz.questions.length) * 100)
 		: 0;
@@ -146,8 +207,8 @@ export default function CCNAModuleQuiz() {
 	const progressColor = `hsl(${progressHue} 75% 42%)`;
 	const quizPassed = scorePercentage >= QUIZ_PASS_PERCENTAGE;
 	const elapsedSeconds = attempt.elapsedSeconds ?? Math.min(
-		CCNA_MODULE_QUIZ_DURATION_SECONDS,
-		Math.max(0, CCNA_MODULE_QUIZ_DURATION_SECONDS - secondsLeft),
+		quizDurationSeconds,
+		Math.max(0, quizDurationSeconds - secondsLeft),
 	);
 	const reviewQuestions = moduleQuiz?.questions
 		.map((question, index) => ({
@@ -244,19 +305,19 @@ export default function CCNAModuleQuiz() {
 
 	function updateAttempt(nextAttempt, status = "in-progress") {
 		if (!userId || !moduleQuiz) return;
-		saveAttemptProgress(userId, moduleQuiz.number, nextAttempt, status);
+		saveAttemptProgress(userId, moduleQuiz.number, nextAttempt, status, programKey);
 		setAttemptState({ userId, moduleNumber: moduleQuiz.number, attempt: nextAttempt });
 	}
 
 	function startQuiz() {
 		if (!userId || !moduleQuiz) return;
-		const newAttempt = beginCcnaModuleQuiz(userId, moduleQuiz.number);
+		const newAttempt = startQuizAttempt(userId, moduleQuiz.number, programKey, quizDurationSeconds);
 		setAnswerFilter("all");
 		setSelectionState({ userId, moduleNumber: moduleQuiz.number, answer: undefined });
 		setClockState({
 			userId,
 			moduleNumber: moduleQuiz.number,
-			secondsLeft: CCNA_MODULE_QUIZ_DURATION_SECONDS,
+			secondsLeft: quizDurationSeconds,
 		});
 		updateAttempt(newAttempt);
 	}
@@ -289,31 +350,31 @@ export default function CCNAModuleQuiz() {
 				(total, question, index) => total + (attemptAnswers?.[index] === question.answer ? 1 : 0),
 				0,
 			);
-			const expiredAttempt = recordCcnaModuleQuizAttempt({
+			const expiredAttempt = recordQuizAttempt({
 				...attempt,
 				status: "expired",
 				score: finalScore,
 				maxScore: moduleQuiz.questions.length,
-				elapsedSeconds: CCNA_MODULE_QUIZ_DURATION_SECONDS,
+				elapsedSeconds: quizDurationSeconds,
 				submittedAt: Date.now(),
 				bestScore: Math.max(bestScore ?? 0, finalScore),
-			}, moduleQuiz.questions.length);
-			saveAttemptProgress(userId, moduleQuiz.number, expiredAttempt, "expired");
+			}, moduleQuiz.questions.length, programKey);
+			saveAttemptProgress(userId, moduleQuiz.number, expiredAttempt, "expired", programKey);
 			setAttemptState({ userId, moduleNumber: moduleQuiz.number, attempt: expiredAttempt });
 		}
 		updateClock();
 
 		return () => window.clearTimeout(timer);
-	}, [attempt, attemptAnswers, attemptDeadline, bestScore, hasStarted, moduleQuiz, userId]);
+	}, [attempt, attemptAnswers, attemptDeadline, bestScore, hasStarted, moduleQuiz, programKey, quizDurationSeconds, userId]);
 
 	if (!moduleQuiz) {
 		return (
 			<main className="ccna-page-enter min-h-screen bg-[#f5f9f9] px-5 py-12 text-[#111a2d]">
 				<div className="mx-auto max-w-2xl rounded-2xl border border-[#d6e5e7] bg-white p-8 text-center">
 					<h1 className="text-2xl font-bold">Quiz not found</h1>
-					<p className="mt-3 text-[#64748b]">Choose a CCNA module to open its quiz.</p>
-					<Link to="/modules/programs/ccna" className="mt-6 inline-flex rounded-full bg-[#005b6b] px-5 py-3 font-semibold text-white hover:bg-[#004653]">
-						Back to CCNA
+					<p className="mt-3 text-[#64748b]">Choose a {courseTitle} module to open its quiz.</p>
+					<Link to={coursePath} className="mt-6 inline-flex rounded-full bg-[#005b6b] px-5 py-3 font-semibold text-white hover:bg-[#004653]">
+						Back to {courseTitle}
 					</Link>
 				</div>
 			</main>
@@ -354,7 +415,7 @@ export default function CCNAModuleQuiz() {
 			(total, question, index) => total + (answers[index] === question.answer ? 1 : 0),
 			0,
 		);
-		updateAttempt(recordCcnaModuleQuizAttempt({
+		updateAttempt(recordQuizAttempt({
 			...attempt,
 			answers,
 			lockedQuestions: { ...attempt.lockedQuestions, [attempt.currentIndex]: true },
@@ -363,11 +424,11 @@ export default function CCNAModuleQuiz() {
 			maxScore: moduleQuiz.questions.length,
 			submittedAt: Date.now(),
 			elapsedSeconds: Math.min(
-				CCNA_MODULE_QUIZ_DURATION_SECONDS,
-				Math.max(0, CCNA_MODULE_QUIZ_DURATION_SECONDS - secondsLeft),
+				quizDurationSeconds,
+				Math.max(0, quizDurationSeconds - secondsLeft),
 			),
 			bestScore: Math.max(attempt.bestScore ?? 0, finalScore),
-		}, moduleQuiz.questions.length), "completed");
+		}, moduleQuiz.questions.length, programKey), "completed");
 	}
 
 	const answeredCurrentQuestion = selectedAnswer !== undefined;
@@ -377,11 +438,11 @@ export default function CCNAModuleQuiz() {
 			<div className="mx-auto max-w-[1125px]">
 				<header className="mb-7 flex flex-wrap items-center justify-between gap-4 border-b border-[#d6e5e7] pb-5">
 					<div className="flex min-w-0 items-center gap-4">
-						<Link to="/modules/programs/ccna" aria-label="Back to CCNA course" className="ccna-training-logo shrink-0 rounded-lg bg-white px-3 py-2 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+						<Link to={coursePath} aria-label={`Back to ${courseTitle} course`} className="ccna-training-logo shrink-0 rounded-lg bg-white px-3 py-2 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
 							<img src={TrainingLogo} alt="MATEKK Cybercore Academy" className="h-auto w-32 sm:w-36" />
 						</Link>
 						<div className="hidden min-w-0 border-l border-[#cbd5e1] pl-4 sm:block">
-							<p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#70809a]">CCNA module quiz</p>
+							<p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#70809a]">{courseTitle} module quiz</p>
 							<p className="mt-1 truncate text-sm font-bold text-[#17233d]">Module {moduleQuiz.number}: {moduleQuiz.title}</p>
 						</div>
 					</div>
@@ -401,7 +462,7 @@ export default function CCNAModuleQuiz() {
 								{formatTime(secondsLeft)}
 							</div>
 						)}
-						<Link to="/modules/programs/ccna" className="ccna-dark-hover inline-flex items-center gap-2 rounded-full border border-[#c9dfe2] px-4 py-2 text-sm font-semibold text-[#005b6b] transition-all duration-200 ease-out hover:scale-105 hover:bg-[#e8f3f4] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100">
+						<Link to={coursePath} className="ccna-dark-hover inline-flex items-center gap-2 rounded-full border border-[#c9dfe2] px-4 py-2 text-sm font-semibold text-[#005b6b] transition-all duration-200 ease-out hover:scale-105 hover:bg-[#e8f3f4] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100">
 							<ArrowLeft size={16} />
 							<span>Back to course</span>
 						</Link>
@@ -412,7 +473,7 @@ export default function CCNAModuleQuiz() {
 					<section className="rounded-[20px] border border-[#d6e5e7] bg-white p-6 shadow-sm sm:p-8">
 						<p className="text-sm font-bold uppercase tracking-[0.15em] text-[#005b6b]">Module {moduleQuiz.number}</p>
 						<h1 className="mt-2 text-3xl font-bold tracking-tight text-[#17233d] sm:text-4xl">{moduleQuiz.title}</h1>
-						<p className="mt-4 text-[#64748b]">This quiz contains {moduleQuiz.questions.length} questions and has a 30-minute time limit. Choose an answer for each question, then continue through the quiz to see your score and answer explanations.</p>
+						<p className="mt-4 text-[#64748b]">This quiz contains {moduleQuiz.questions.length} questions and has a {quizDurationSeconds / 60}-minute time limit. Choose an answer for each question, then continue through the quiz to see your score and answer explanations.</p>
 						<button type="button" onClick={startQuiz} className="mt-6 rounded-full bg-[#005b6b] px-6 py-3 font-semibold text-white transition hover:bg-[#004653]">
 							Start Quiz
 						</button>
@@ -516,7 +577,7 @@ export default function CCNAModuleQuiz() {
 							<div>
 								<p className="inline-flex items-center gap-2 rounded-full bg-[#e8f3f4] px-3 py-1.5 text-xs font-bold tracking-wide text-[#005b6b]">
 									<span className="h-2 w-2 rounded-full bg-[#005b6b]" />
-									Module {moduleQuiz.number} Quiz · CCNA
+									Module {moduleQuiz.number} Quiz · {courseTitle}
 								</p>
 								<h1 className="mt-5 max-w-xl text-4xl font-extrabold leading-tight tracking-tight text-[#17233d] sm:text-5xl">
 									{quizPassed ? (

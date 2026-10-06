@@ -1,5 +1,8 @@
-import { useState } from "react";
-import { ArrowRight, BookOpen, Check, ChevronDown, ChevronRight, Clock3, LockKeyhole } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ArrowRight, BookOpen, Check, ChevronDown, ChevronRight, ClipboardList, Clock3, LockKeyhole } from "lucide-react";
+import { Link } from "react-router-dom";
+
+const NO_HERO_INTROS = [];
 
 function ComingSoonCard({ title, description, icon }) {
 	return (
@@ -64,25 +67,93 @@ function ModuleOutlineCard({ module, index }) {
 	);
 }
 
-export default function CCNAProgramDashboard({ programName, badge, description, quote, focusAreas, modules = [] }) {
+export default function CCNAProgramDashboard({
+	programName,
+	badge,
+	description,
+	quote,
+	focusAreas,
+	modules = [],
+	activeModule,
+	modulesLeft = modules.length,
+	renderModules,
+	heroActions,
+	topStats,
+	practiceQuizzes,
+	modulesSummary,
+	quizScore = 0,
+	gradebookPath,
+	heroIntros = NO_HERO_INTROS,
+	overviewDescription,
+}) {
+	const [typedIntro, setTypedIntro] = useState("");
+
+	useEffect(() => {
+		if (heroIntros.length === 0) {
+			setTypedIntro("");
+			return undefined;
+		}
+
+		let timeoutId;
+		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+			timeoutId = window.setTimeout(() => setTypedIntro(heroIntros[0]), 0);
+			return () => window.clearTimeout(timeoutId);
+		}
+
+		let introIndex = 0;
+		let characterIndex = 0;
+
+		function typeDescription() {
+			const description = heroIntros[introIndex];
+			characterIndex += 1;
+			setTypedIntro(description.slice(0, characterIndex));
+			if (characterIndex < description.length) {
+				timeoutId = window.setTimeout(typeDescription, 18);
+			} else {
+				timeoutId = window.setTimeout(eraseDescription, 10000);
+			}
+		}
+
+		function eraseDescription() {
+			characterIndex -= 1;
+			setTypedIntro(heroIntros[introIndex].slice(0, characterIndex));
+			if (characterIndex > 0) {
+				timeoutId = window.setTimeout(eraseDescription, 8);
+			} else {
+				introIndex = (introIndex + 1) % heroIntros.length;
+				timeoutId = window.setTimeout(typeDescription, 120);
+			}
+		}
+
+		timeoutId = window.setTimeout(typeDescription, 150);
+		return () => window.clearTimeout(timeoutId);
+	}, [heroIntros]);
+
 	return (
 		<main className="ccna-page-enter min-h-screen bg-white text-[#071126]">
 			<section className="mx-auto max-w-[1440px] px-6 pb-16 pt-14 sm:px-10 lg:px-14 lg:pb-20 lg:pt-16">
 				<div className="grid items-center gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-4">
 					<div>
 						<div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#c9dfe2] bg-[#f0f7f7] px-4 py-2 text-sm font-semibold text-[#005b6b]">
-							<span className="h-2 w-2 rounded-full bg-[#005b6b]" /> {programName} · Learning path
+							<span className="h-2 w-2 rounded-full bg-[#005b6b]" />
+							{activeModule
+								? `Module ${activeModule.number.replace(".0", "")} of ${modules.length} · ${activeModule.title}`
+								: `${programName} · Learning path`}
 						</div>
 						<h1 className="max-w-[700px] text-[2.65rem] font-bold leading-[1.08] tracking-[-1.5px] sm:text-6xl lg:text-[3.25rem] xl:text-[3.7rem]">
-							Build your path to <span className="text-[#005b6b]">{programName}<br className="hidden sm:block" /> Certification.</span>
+							Continue your path to <span className="text-[#005b6b]">{programName}<br className="hidden sm:block" /> Certification.</span>
 						</h1>
-						<p className="mt-6 min-h-[5.4rem] max-w-[555px] text-base leading-[1.8] text-[#66738d] sm:text-lg">{quote}</p>
-						<div className="mt-8 flex flex-wrap gap-3">
-							<a href="#program-content" className="flex h-[58px] items-center gap-2 rounded-full bg-[#005b6b] px-7 text-base font-bold text-white shadow-[0_10px_20px_rgba(0,91,107,0.16)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-[#004653] hover:shadow-[0_14px_26px_rgba(0,91,107,0.24)]">
-								Explore learning path <ArrowRight size={18} />
-							</a>
-						</div>
+						<p className="typewriter-caret mt-6 min-h-[5.4rem] max-w-[555px] text-base leading-[1.8] text-[#66738d] sm:text-lg">{heroIntros.length > 0 ? typedIntro : quote}</p>
+						{heroActions ?? (
+							<div className="mt-8 flex flex-wrap gap-3">
+								<a href="#program-content" className="flex h-[58px] items-center gap-2 rounded-full bg-[#005b6b] px-7 text-base font-bold text-white shadow-[0_10px_20px_rgba(0,91,107,0.16)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-[#004653] hover:shadow-[0_14px_26px_rgba(0,91,107,0.24)]">
+									Explore learning path <ArrowRight size={18} />
+								</a>
+							</div>
+						)}
 						<div className="mt-11 flex flex-wrap gap-5 divide-x divide-[#dce5f2]">
+							{topStats ?? (
+								<>
 							<div className="flex items-center gap-3">
 								<strong className="text-[1.65rem] leading-none tracking-tight text-[#071126] sm:text-[2rem]">{modules.length}</strong>
 								<span className="max-w-20 text-xs leading-tight text-[#6f7d99] sm:text-sm">Course modules</span>
@@ -95,20 +166,49 @@ export default function CCNAProgramDashboard({ programName, badge, description, 
 								<strong className="text-[1.65rem] leading-none tracking-tight text-[#071126] sm:text-[2rem]">0</strong>
 								<span className="max-w-20 text-xs leading-tight text-[#6f7d99] sm:text-sm">Exams available</span>
 							</div>
+								</>
+							)}
 						</div>
 					</div>
 
 					<div className="relative mx-auto flex h-[320px] w-full max-w-[440px] items-center justify-center sm:h-[380px] sm:max-w-[470px]">
 						<div aria-hidden="true" className="absolute h-[270px] w-[270px] rounded-full bg-[#e4f0f1] sm:h-[356px] sm:w-[356px]" />
 						<img src={badge} alt={`${programName} certification badge`} className="relative z-10 h-[210px] w-[210px] object-contain sm:h-[270px] sm:w-[270px]" />
-						<div className="absolute left-0 top-[25%] z-20 max-w-[155px] rounded-xl border border-[#e4eaf5] bg-white px-4 py-3 shadow-[0_14px_28px_rgba(15,35,75,0.1)] sm:left-[-4px]">
-							<strong className="text-sm text-[#005b6b]">Learning path</strong>
-							<span className="mt-1 block text-xs leading-5 text-[#64708a]">Your course content will appear here.</span>
-						</div>
-						<div className="absolute bottom-[16%] right-0 z-20 max-w-[185px] rounded-xl border border-[#e4eaf5] bg-white px-4 py-3 shadow-[0_14px_28px_rgba(15,35,75,0.1)] sm:right-[-2%]">
-							<strong className="text-sm text-[#005b6b]">{programName}</strong>
-							<span className="mt-1 block text-xs leading-5 text-[#64708a]">Course materials are being prepared.</span>
-						</div>
+						{gradebookPath ? (
+							<>
+								<div className="absolute left-0 top-[31%] z-20 flex h-[94px] w-[128px] flex-col justify-center rounded-xl border border-[#e4eaf5] bg-white px-4 shadow-[0_14px_28px_rgba(15,35,75,0.1)] transition-transform duration-200 ease-out hover:scale-105 sm:left-[-4px]">
+									<strong className="text-xl leading-none text-[#005b6b]">{quizScore}%</strong>
+									<span className="mt-2 text-sm leading-none text-[#15203a]">Quiz score</span>
+									<span
+										role="img"
+										aria-label={`${quizScore}% quiz score, ${Math.round((quizScore / 100) * 5 * 10) / 10} out of 5 stars`}
+										className="relative mt-2 inline-block text-sm leading-none tracking-[2px]"
+									>
+										<span aria-hidden="true" className="text-[#d7dee9]">★★★★★</span>
+										<span aria-hidden="true" className="absolute inset-y-0 left-0 overflow-hidden whitespace-nowrap text-[#f59e0b]" style={{ width: `${Math.max(0, Math.min(100, quizScore))}%` }}>★★★★★</span>
+									</span>
+								</div>
+								<Link
+									to={gradebookPath}
+									aria-label={`Open ${programName} gradebook`}
+									title="Gradebook"
+									className="absolute right-[12%] top-[2%] z-30 flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#005b6b] shadow-[0_8px_20px_rgba(15,35,75,0.1)] transition-all duration-200 ease-out hover:-translate-y-1 hover:scale-110 hover:shadow-lg active:translate-y-0"
+								>
+									<ClipboardList size={21} />
+								</Link>
+							</>
+						) : (
+							<>
+								<div className="absolute left-0 top-[25%] z-20 max-w-[155px] rounded-xl border border-[#e4eaf5] bg-white px-4 py-3 shadow-[0_14px_28px_rgba(15,35,75,0.1)] sm:left-[-4px]">
+									<strong className="text-sm text-[#005b6b]">Learning path</strong>
+									<span className="mt-1 block text-xs leading-5 text-[#64708a]">Your course content will appear here.</span>
+								</div>
+								<div className="absolute bottom-[16%] right-0 z-20 max-w-[185px] rounded-xl border border-[#e4eaf5] bg-white px-4 py-3 shadow-[0_14px_28px_rgba(15,35,75,0.1)] sm:right-[-2%]">
+									<strong className="text-sm text-[#005b6b]">{programName}</strong>
+									<span className="mt-1 block text-xs leading-5 text-[#64708a]">Course materials are being prepared.</span>
+								</div>
+							</>
+						)}
 					</div>
 				</div>
 			</section>
@@ -122,9 +222,9 @@ export default function CCNAProgramDashboard({ programName, badge, description, 
 					<div>
 						<div className="mb-6 flex flex-wrap items-center justify-between gap-2">
 							<h2 className="text-xl font-bold sm:text-[21px]">Course modules</h2>
-							<span className="text-sm text-[#7c89a1]">{modules.length} modules · curriculum outline</span>
+							<span className="text-sm text-[#7c89a1]">{modulesSummary ?? `${modules.length} modules · curriculum outline`}</span>
 						</div>
-						{modules.length > 0 ? (
+						{typeof renderModules === "function" ? renderModules() : modules.length > 0 ? (
 							<div className="space-y-3">
 								{modules.map((module, index) => (
 									<ModuleOutlineCard key={module.title} module={module} index={index} />
@@ -140,26 +240,38 @@ export default function CCNAProgramDashboard({ programName, badge, description, 
 					</div>
 
 					<aside className="space-y-5">
-						<div className="rounded-[18px] border border-[#d6e5e7] bg-white p-6">
+						{!practiceQuizzes && <div className="rounded-[18px] border border-[#d6e5e7] bg-white p-6">
 							<div className="flex items-center gap-4">
 								<div className="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-full border-[6px] border-[#e4eaf4]">
 									<span className="text-xs font-bold text-[#005b6b]">0%</span>
 								</div>
 								<div>
 									<strong className="text-lg">Learning progress</strong>
-									<p className="mt-1 text-sm text-[#7c89a1]">{modules.length > 0 ? `${modules.length} course modules available` : "No modules available yet"}</p>
+									<p className="mt-1 text-sm text-[#7c89a1]">{modules.length > 0 ? `${modules.length - modulesLeft} modules opened · ${modulesLeft} left` : "No modules available yet"}</p>
 								</div>
 							</div>
-						</div>
-						<ComingSoonCard title="Practice quizzes" description="Interactive quizzes are not available yet for this learning path." icon={<Check size={21} />} />
-						<ComingSoonCard title="Exams" description="Timed exams are not available yet for this learning path." icon={<Clock3 size={21} />} />
+						</div>}
+						{practiceQuizzes ?? <ComingSoonCard title="Practice quizzes" description="Interactive quizzes are not available yet for this learning path." icon={<Check size={21} />} />}
+						{!practiceQuizzes && <ComingSoonCard title="Exams" description="Timed exams are not available yet for this learning path." icon={<Clock3 size={21} />} />}
 						<div className="rounded-[18px] border border-[#d6e5e7] bg-white p-6">
-							<h2 className="text-lg font-bold">Program overview</h2>
-							<p className="mt-2 text-sm leading-6 text-[#71819b]">{description}</p>
-							<div className="mt-4 flex items-start gap-2 text-sm leading-6 text-[#526584]">
-								<BookOpen size={16} className="mt-1 shrink-0 text-[#087a91]" />
-								{focusAreas}
+							<div className="mb-4 flex items-center justify-between gap-3">
+								<div>
+									<h2 className="text-xl font-bold">Program Overview</h2>
+									<p className="mt-1 text-sm leading-6 text-[#7c89a1]">{overviewDescription ?? focusAreas}</p>
+								</div>
+								<BookOpen size={20} className="shrink-0 text-[#005b6b]" aria-hidden="true" />
 							</div>
+							<h3 className="mb-3 text-xs font-bold uppercase tracking-wide text-[#7c89a1]">Course roadmap</h3>
+							<ol className="space-y-2.5">
+								{modules.map((module, index) => (
+									<li key={module.number ?? module.title} className="flex items-center gap-3 text-sm font-medium text-[#334454]">
+										<span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#e8f3f4] text-xs font-bold text-[#005b6b]">
+											{index + 1}
+										</span>
+										<span className="min-w-0">{module.title}</span>
+									</li>
+								))}
+							</ol>
 						</div>
 					</aside>
 				</div>
