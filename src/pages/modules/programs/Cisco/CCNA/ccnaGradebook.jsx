@@ -183,45 +183,45 @@ function AssessmentTable({ title, rows, filter, sort }) {
 
 	return (
 		<section className="overflow-hidden border border-[#dce4e8] bg-white">
-			<header className="flex min-h-12 items-center justify-between gap-4 bg-[#f2f5f6] px-4 py-2.5">
-				<h2 id={`${sectionId}-title`} className="text-sm font-bold text-[#152536]">{title}</h2>
+			<header className="flex min-h-14 items-center justify-between gap-4 bg-[#f2f5f6] px-5 py-3">
+				<h2 id={`${sectionId}-title`} className="text-base font-bold text-[#152536]">{title}</h2>
 				<button
 					type="button"
 					onClick={() => setIsOpen((open) => !open)}
 					aria-expanded={isOpen}
 					aria-controls={sectionId}
 					aria-label={`${isOpen ? "Collapse" : "Expand"} ${title}`}
-					className="flex h-8 w-8 items-center justify-center rounded-md bg-[#087a91] text-white transition hover:bg-[#06677a]"
+					className="flex h-9 w-9 items-center justify-center rounded-md bg-[#087a91] text-white transition hover:bg-[#06677a]"
 				>
-					<Chevron size={17} />
+					<Chevron size={19} />
 				</button>
 			</header>
 			{isOpen && (
 				<div id={sectionId} className="overflow-x-auto">
-					<table className="w-full min-w-[560px] border-collapse text-left text-sm">
-						<thead className="border-y border-[#e6ebee] text-xs text-[#687887]">
+					<table className="w-full min-w-[620px] border-collapse text-left text-base">
+						<thead className="border-y border-[#e6ebee] text-sm text-[#687887]">
 							<tr>
-								<th scope="col" className="px-4 py-2.5 font-medium">Name</th>
-								<th scope="col" className="px-4 py-2.5 font-medium">Submission date</th>
-								<th scope="col" className="px-4 py-2.5 text-center font-medium">Attempts</th>
-								<th scope="col" className="px-4 py-2.5 text-right font-medium">Points</th>
+								<th scope="col" className="px-5 py-3 font-medium">Name</th>
+								<th scope="col" className="px-5 py-3 font-medium">Submission date</th>
+								<th scope="col" className="px-5 py-3 text-center font-medium">Attempts</th>
+								<th scope="col" className="px-5 py-3 text-right font-medium">Score</th>
 							</tr>
 						</thead>
 						<tbody>
 							{visibleRows.map((row) => (
 								<tr key={row.id} className="border-b border-[#e9edef] last:border-0">
-									<th scope="row" className="px-4 py-3 font-semibold text-[#172536]">
+									<th scope="row" className="px-5 py-4 font-semibold text-[#172536]">
 										<span>{row.name}</span>
-										{row.statusLabel && <span className="ml-2 text-xs font-medium text-[#a44b13]">{row.statusLabel}</span>}
+										{row.statusLabel && <span className="ml-2 text-sm font-medium text-[#a44b13]">{row.statusLabel}</span>}
 									</th>
-									<td className="whitespace-nowrap px-4 py-3 text-[#445363]">{formatDate(row.submittedAt)}</td>
-									<td className="px-4 py-3 text-center text-[#445363]">{row.attempts || "--"}</td>
-									<td className="px-4 py-3 text-right">
+									<td className="whitespace-nowrap px-5 py-4 text-[#445363]">{formatDate(row.submittedAt)}</td>
+									<td className="px-5 py-4 text-center text-[#445363]">{row.attempts || "--"}</td>
+									<td className="px-5 py-4 text-right">
 										{row.points ? (
-											<span className={`inline-flex min-w-[58px] justify-center rounded-full px-2.5 py-1 text-xs font-bold tabular-nums ${getGradeTone(row.points.score).badge}`}>
+											<span className={`inline-flex min-w-[68px] justify-center rounded-full px-3 py-1.5 text-sm font-bold tabular-nums ${getGradeTone(Math.round((row.points.score / row.points.maxScore) * 100)).badge}`}>
 												{row.points.score}/{row.points.maxScore}
 											</span>
-										) : <span className="text-[#8895a0]">--/100</span>}
+										) : <span className="text-[#8895a0]">--</span>}
 									</td>
 								</tr>
 							))}
@@ -256,10 +256,6 @@ export default function CCNAGradebook() {
 	const allRows = [...moduleRows, ...examRows];
 	const [filter, setFilter] = useState("all");
 	const [sort, setSort] = useState("default");
-	const completedQuizCount = CCNA_MODULE_QUIZZES.filter((quiz) =>
-		moduleRows.some((row) => row.id.startsWith(`${quiz.number}-attempt-`) && row.status === "graded"),
-	).length;
-	const completedExamCount = examRows.filter((row) => row.status === "graded").length;
 	const latestModuleRows = CCNA_MODULE_QUIZZES.flatMap((quiz) => {
 		const attempts = moduleRows
 			.filter((row) => row.id.startsWith(`${quiz.number}-attempt-`) && row.status === "graded")
@@ -267,19 +263,17 @@ export default function CCNAGradebook() {
 		return attempts.length ? [attempts.at(-1)] : [];
 	});
 	const gradedExamRows = examRows.filter((row) => row.points);
-	const gradedRows = [...latestModuleRows, ...gradedExamRows];
 	const bestAssessment = allRows.filter((row) => row.status === "graded").reduce(
 		(best, row) => !best || row.bestGrade > best.bestGrade ? row : best,
 		null,
 	);
 	const nextAssessment = allRows.find((row) => row.status !== "graded");
-	const totalPoints = gradedRows.reduce((total, row) => total + row.points.score, 0);
-	const totalPossiblePoints = gradedRows.reduce((total, row) => total + row.points.maxScore, 0);
-	const classGrade = totalPossiblePoints
-		? Math.round((totalPoints / totalPossiblePoints) * 100)
+	const quizPoints = latestModuleRows.reduce((total, row) => total + row.points.score, 0);
+	const quizPossiblePoints = latestModuleRows.reduce((total, row) => total + row.points.maxScore, 0);
+	const classGrade = quizPossiblePoints
+		? Math.round((quizPoints / quizPossiblePoints) * 100)
 		: null;
-	const modulePoints = latestModuleRows.reduce((total, row) => total + row.points.score, 0);
-	const modulePossiblePoints = latestModuleRows.reduce((total, row) => total + row.points.maxScore, 0);
+	const gradedQuizAttempts = moduleRows.filter((row) => row.status === "graded");
 	const examPoints = gradedExamRows.reduce((total, row) => total + row.points.score, 0);
 	const examPossiblePoints = gradedExamRows.reduce((total, row) => total + row.points.maxScore, 0);
 
@@ -303,36 +297,43 @@ export default function CCNAGradebook() {
 
 	return (
 		<main className="ccna-page-enter min-h-screen bg-[#f5f7f8] pb-12 text-[#152536]">
-			<div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
-				<header className="overflow-hidden bg-white shadow-sm">
-					<div className="bg-[#087a91] px-6 py-5 text-white sm:px-10">
-						<Link to="/modules/programs/ccna" className="mb-4 inline-flex items-center gap-2 text-sm font-semibold text-white/85 transition hover:text-white">
-							<ArrowLeft size={16} /> Back to course
-						</Link>
-						<h1 aria-label={welcomeText} className="typewriter-caret text-2xl font-bold sm:text-3xl">{typedWelcome}</h1>
-						<p className="mt-1 text-sm text-white/85">Your grades and progress</p>
+			<div className="mx-auto max-w-[1680px] px-4 py-6 sm:px-8 lg:px-10 2xl:px-12">
+				<header className="relative">
+					<div className="relative left-1/2 w-screen -translate-x-1/2 bg-[#087a91] px-4 py-6 text-white sm:px-8 sm:py-7 lg:px-10 2xl:px-12">
+						<div className="mx-auto max-w-[1680px] px-2 sm:px-0">
+							<Link to="/modules/programs/ccna" className="inline-flex items-center gap-2 text-base font-semibold text-white/85 transition hover:text-white">
+								<ArrowLeft size={18} /> Back to course
+							</Link>
+							<div className="pt-3">
+								<h1 aria-label={welcomeText} className="typewriter-caret text-3xl font-bold sm:text-4xl">{typedWelcome}</h1>
+								<p className="mt-1 text-base text-white/85">Your grades and progress on CCNA</p>
+							</div>
+						</div>
 					</div>
-					<div className="grid grid-cols-2 gap-3 p-4 sm:grid-cols-4 sm:p-6">
-						<SummaryStat label="Class grade" value={classGrade === null ? "--" : `${classGrade}%`} detail={totalPossiblePoints ? `${totalPoints}/${totalPossiblePoints} points` : "No graded assessments"} progress={classGrade} />
-						<SummaryStat label="Completed" value={`${gradedRows.length} of ${allRows.length}`} detail="assessments graded" />
-						<SummaryStat label="Best score" value={bestAssessment ? `${bestAssessment.bestPoints.score}/100` : "--"} detail={bestAssessment?.name ?? "No results yet"} gradeScore={bestAssessment?.bestPoints.score} />
-						<SummaryStat label="Up next" value={nextAssessment?.name ?? "All complete"} detail={nextAssessment?.status === "in-progress" ? "In progress" : nextAssessment ? "Not submitted" : "Assessment list complete"} />
+					<div className="relative left-1/2 w-screen -translate-x-1/2 bg-white shadow-sm">
+						<div className="mx-auto grid max-w-[1680px] grid-cols-2 gap-4 px-4 py-5 sm:grid-cols-3 sm:gap-5 sm:px-8 sm:py-8 lg:px-10 xl:grid-cols-5 2xl:px-12">
+							<SummaryStat label="Class grade" value={classGrade === null ? "--" : `${classGrade}%`} detail={quizPossiblePoints ? `${quizPoints}/${quizPossiblePoints} points` : "No graded quizzes"} progress={classGrade ?? undefined} />
+							<SummaryStat label="Quizzes completed" value={`${latestModuleRows.length} of ${CCNA_MODULE_QUIZZES.length}`} detail="module quizzes completed" />
+							<SummaryStat label="Quiz attempts" value={gradedQuizAttempts.length} detail="graded attempts saved" />
+							<SummaryStat label="Best score" value={bestAssessment ? `${bestAssessment.bestPoints.score}/${bestAssessment.bestPoints.maxScore}` : "--"} detail={bestAssessment?.name ?? "No results yet"} gradeScore={bestAssessment?.bestGrade} />
+							<SummaryStat label="Up next" value={nextAssessment?.name ?? "All complete"} detail={nextAssessment?.status === "in-progress" ? "In progress" : nextAssessment ? "Not submitted" : "Assessment list complete"} compactValue />
+						</div>
 					</div>
 				</header>
 
-				<div className="mt-6 flex flex-wrap items-center justify-end gap-x-5 gap-y-3 text-sm">
+				<div className="mt-6 flex flex-wrap items-center justify-end gap-x-5 gap-y-3 text-base">
 					<label className="flex items-center gap-2 font-semibold text-[#334454]">
 						Show
-						<select value={filter} onChange={(event) => setFilter(event.target.value)} className="h-9 min-w-28 rounded-md border border-[#bcc8ce] bg-white px-3 font-normal text-[#233442] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#087a91]">
+						<select value={filter} onChange={(event) => setFilter(event.target.value)} className="h-10 min-w-32 rounded-md border border-[#bcc8ce] bg-white px-3 font-normal text-[#233442] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#087a91]">
 							<option value="all">All</option>
-							<option value="graded">Graded</option>
+							<option value="graded">Completed</option>
 							<option value="in-progress">In progress</option>
-							<option value="upcoming">Upcoming</option>
+							<option value="upcoming">Not started</option>
 						</select>
 					</label>
 					<label className="flex items-center gap-2 font-semibold text-[#334454]">
 						Sort
-						<select value={sort} onChange={(event) => setSort(event.target.value)} className="h-9 min-w-36 rounded-md border border-[#bcc8ce] bg-white px-3 font-normal text-[#233442] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#087a91]">
+						<select value={sort} onChange={(event) => setSort(event.target.value)} className="h-10 min-w-40 rounded-md border border-[#bcc8ce] bg-white px-3 font-normal text-[#233442] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#087a91]">
 							<option value="default">Default</option>
 							<option value="recent">Newest first</option>
 							<option value="oldest">Oldest first</option>
@@ -343,22 +344,22 @@ export default function CCNAGradebook() {
 				</div>
 
 				<div className="mt-4 space-y-2">
-					<div className="flex items-center justify-between bg-[#edf1f3] px-4 py-3 text-sm font-bold">
+					<div className="flex items-center justify-between bg-[#edf1f3] px-5 py-4 text-base font-bold">
 						<span>Class Grades</span>
 						<span className={getGradeTone(classGrade).text}>{classGrade === null ? "--" : `${classGrade}%`}</span>
 					</div>
 					<AssessmentTable title="Module Quizzes" rows={moduleRows} filter={filter} sort={sort} />
-					<div className="flex items-center justify-between border border-[#dce4e8] bg-[#f2f5f6] px-4 py-3 text-xs text-[#4c5b67]">
+					<div className="flex items-center justify-between border border-[#dce4e8] bg-[#f2f5f6] px-5 py-4 text-sm text-[#4c5b67]">
 						<strong className="font-medium">Module quizzes average</strong>
-						<span className={getGradeTone(modulePossiblePoints ? Math.round(modulePoints / modulePossiblePoints * 100) : null).text}>{modulePossiblePoints ? `${modulePoints}/${modulePossiblePoints} (${Math.round(modulePoints / modulePossiblePoints * 100)}%)` : "--"}</span>
+						<span className={getGradeTone(classGrade).text}>{quizPossiblePoints ? `${quizPoints}/${quizPossiblePoints} (${classGrade}%)` : "--"}</span>
 					</div>
 				</div>
 
 				<div className="mt-8 space-y-2">
-					<AssessmentTable title="Mock Exams" rows={mockExamRows} filter={filter} sort={sort} />
-					<div className="flex items-center justify-between border border-[#dce4e8] bg-[#f2f5f6] px-4 py-3 text-xs text-[#4c5b67]">
-						<strong className="font-medium">Mock exam average</strong>
-						<span className={getGradeTone(mockPossiblePoints ? Math.round(mockPoints / mockPossiblePoints * 100) : null).text}>{mockPossiblePoints ? `${mockPoints}/${mockPossiblePoints} (${Math.round(mockPoints / mockPossiblePoints * 100)}%)` : "--"}</span>
+					<AssessmentTable title="Exams" rows={examRows} filter={filter} sort={sort} />
+					<div className="flex items-center justify-between border border-[#dce4e8] bg-[#f2f5f6] px-5 py-4 text-sm text-[#4c5b67]">
+						<strong className="font-medium">Exam average</strong>
+						<span className={getGradeTone(examPossiblePoints ? Math.round(examPoints / examPossiblePoints * 100) : null).text}>{examPossiblePoints ? `${examPoints}/${examPossiblePoints} (${Math.round(examPoints / examPossiblePoints * 100)}%)` : "--"}</span>
 					</div>
 				</div>
 			</div>
@@ -366,21 +367,21 @@ export default function CCNAGradebook() {
 	);
 }
 
-function SummaryStat({ label, value, detail, progress, gradeScore }) {
+function SummaryStat({ label, value, detail, progress, gradeScore, compactValue = false }) {
 	const hasGrade = progress !== undefined || gradeScore !== undefined;
 	const gradeTone = getGradeTone(gradeScore ?? progress);
 	const progressValue = progress ?? 0;
 
 	return (
-		<div className="min-w-0 rounded-md border border-[#e0e6e9] bg-[#fafbfb] px-3 py-3">
-			<p className="text-xs text-[#687887]">{label}</p>
-			<strong className={`mt-1 block truncate text-xl font-bold leading-tight ${hasGrade ? gradeTone.text : "text-[#152536]"}`}>{value}</strong>
+		<div className="min-h-[132px] min-w-0 rounded-md border border-[#e0e6e9] bg-[#fafbfb] px-5 py-5">
+			<p className="text-sm text-[#687887]">{label}</p>
+			<strong className={`mt-1 block font-bold leading-tight ${compactValue ? "break-words text-lg" : "truncate text-2xl"} ${hasGrade ? gradeTone.text : "text-[#152536]"}`}>{value}</strong>
 			{progress !== undefined && (
 				<div role="progressbar" aria-label="Class grade" aria-valuemin={0} aria-valuemax={100} aria-valuenow={progressValue} className="mt-2 h-1.5 overflow-hidden rounded-full bg-[#e0e6e9]">
 					<div className={`h-full transition-[width] duration-700 motion-reduce:transition-none ${gradeTone.fill}`} style={{ width: `${progressValue}%` }} />
 				</div>
 			)}
-			<p className="mt-1 truncate text-xs text-[#6c7a86]">{detail}</p>
+			<p className="mt-1 truncate text-sm text-[#6c7a86]">{detail}</p>
 		</div>
 	);
 }

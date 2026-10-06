@@ -11,6 +11,7 @@ import {
 	ChevronLeft,
 	ChevronRight,
 	CircleAlert,
+	ClipboardList,
 	Clock3,
 	MessageSquare,
 	Pencil,
@@ -176,8 +177,16 @@ function NetworkIllustration({ quizAverage, examCards }) {
 					<span aria-hidden="true" className="ccna-stars-fill" style={{ width: starsFill }}>★★★★★</span>
 				</span>
 			</div>
-			<div className="absolute right-0 top-[10%] z-30 flex h-12 w-12 items-center justify-center rounded-full bg-[#005b6b] text-white shadow-lg transition-transform duration-200 ease-out hover:scale-110 motion-reduce:transition-none motion-reduce:hover:scale-100"><Settings size={21} /></div>
-			<div className="absolute right-[-4px] top-[44%] z-30 flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#005b6b] shadow-[0_8px_20px_rgba(15,35,75,0.1)] transition-transform duration-200 ease-out hover:scale-110 motion-reduce:transition-none motion-reduce:hover:scale-100"><Pencil size={18} /></div>
+			<Link
+				to="/modules/programs/ccna/results"
+				aria-label="Open CCNA gradebook"
+				title="Gradebook"
+				className="absolute right-[12%] top-[2%] z-30 flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#005b6b] shadow-[0_8px_20px_rgba(15,35,75,0.1)] transition-all duration-200 ease-out hover:-translate-y-1 hover:scale-110 hover:shadow-lg active:translate-y-0 motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:hover:scale-100"
+			>
+				<ClipboardList size={21} />
+			</Link>
+			<div className="absolute right-0 top-[17%] z-30 flex h-12 w-12 items-center justify-center rounded-full bg-[#005b6b] text-white shadow-lg transition-transform duration-200 ease-out hover:scale-110 motion-reduce:transition-none motion-reduce:hover:scale-100"><Settings size={21} /></div>
+			<div className="absolute right-[-4px] top-[32%] z-30 flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#005b6b] shadow-[0_8px_20px_rgba(15,35,75,0.1)] transition-transform duration-200 ease-out hover:scale-110 motion-reduce:transition-none motion-reduce:hover:scale-100"><Pencil size={18} /></div>
 			<div className="absolute right-[2%] top-[70%] z-30 flex h-12 w-12 items-center justify-center rounded-full bg-[#005b6b] text-white shadow-lg transition-transform duration-200 ease-out hover:scale-110 motion-reduce:transition-none motion-reduce:hover:scale-100"><MessageSquare size={19} /></div>
 			<div key={examCardIndex} className="ccna-notification-boink absolute bottom-0 right-0 z-30 w-[238px] rounded-2xl border border-[#e4eaf5] bg-white p-4 shadow-[0_14px_28px_rgba(15,35,75,0.1)] transition-transform duration-200 ease-out hover:scale-[1.03] motion-reduce:transition-none motion-reduce:hover:scale-100 sm:right-[-2%] sm:w-[275px]">
 				<button
@@ -257,11 +266,10 @@ function QuizTimeRemaining({ deadline }) {
 		<span
 			role="timer"
 			aria-label={`${minutes} minutes and ${seconds} seconds remaining`}
-			className={`inline-flex min-w-[88px] justify-center whitespace-nowrap rounded-full px-3 py-1 text-xs font-bold tabular-nums ${
-				secondsRemaining <= 60
+			className={`inline-flex min-w-[88px] justify-center whitespace-nowrap rounded-full px-3 py-1 text-xs font-bold tabular-nums ${secondsRemaining <= 60
 					? "bg-[#fff0ed] text-[#b42318]"
 					: "bg-[#e8f3f4] text-[#005b6b]"
-			}`}
+				}`}
 		>
 			{minutes}:{seconds} left
 		</span>
@@ -409,8 +417,8 @@ function ModuleCard({ module, index, openSection, onToggle, quizProgress, tutori
 									</span>
 								)}
 							</span>
-					</span>
-						</div>
+						</span>
+					</div>
 				</div>
 			)}
 		</div>
@@ -827,11 +835,10 @@ export default function CCNA() {
 																<span
 																	role="timer"
 																	aria-label={`${formatExamTime(run.secondsRemaining)} remaining`}
-																	className={`inline-flex min-w-[88px] justify-center whitespace-nowrap rounded-full px-3 py-1 text-xs font-bold tabular-nums ${
-																		run.secondsRemaining <= 60
+																	className={`inline-flex min-w-[88px] justify-center whitespace-nowrap rounded-full px-3 py-1 text-xs font-bold tabular-nums ${run.secondsRemaining <= 60
 																			? "bg-[#fff0ed] text-[#b42318]"
 																			: "bg-[#e8f3f4] text-[#005b6b]"
-																	}`}
+																		}`}
 																>
 																	{formatExamTime(run.secondsRemaining)} left
 																</span>
