@@ -7,6 +7,25 @@ export function AuthProvider({ children }) {
   const [profile, setProfile] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  async function refreshProfile() {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      setProfile(null);
+      return null;
+    }
+
+    const response = await fetch(`${API_URL}/auth/profile`, {
+      headers: { Authorization: "Bearer " + token },
+    });
+    if (!response.ok) {
+      throw new Error("Unable to refresh account approval status.");
+    }
+
+    const nextProfile = await response.json();
+    setProfile(nextProfile);
+    return nextProfile;
+  }
+
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
     if (!token) {
@@ -39,19 +58,25 @@ export function AuthProvider({ children }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
     });
-    if (!response.ok) return response;
+    if (!response.ok) return { response, profile: null };
 
     const { access_token: token } = await response.json();
     localStorage.setItem("accessToken", token);
-    const profileResponse = await fetch(`${API_URL}/auth/profile`, {
-      headers: { Authorization: "Bearer " + token },
-    });
-    if (!profileResponse.ok) {
+    let signedInProfile;
+    try {
+      const profileResponse = await fetch(`${API_URL}/auth/profile`, {
+        headers: { Authorization: "Bearer " + token },
+      });
+      if (!profileResponse.ok) {
+        throw new Error("Unable to load the signed-in user.");
+      }
+      signedInProfile = await profileResponse.json();
+    } catch (error) {
       localStorage.removeItem("accessToken");
-      throw new Error("Unable to load the signed-in user.");
+      throw error;
     }
-    setProfile(await profileResponse.json());
-    return response;
+    setProfile(signedInProfile);
+    return { response, profile: signedInProfile };
   }
 
   function logout() {
@@ -60,7 +85,7 @@ export function AuthProvider({ children }) {
   }
 
   const value = useMemo(
-    () => ({ profile, isAuthenticated: Boolean(profile), isLoading, login, logout }),
+    () => ({ profile, isAuthenticated: Boolean(profile), isLoading, login, logout, refreshProfile }),
     [isLoading, profile],
   );
 

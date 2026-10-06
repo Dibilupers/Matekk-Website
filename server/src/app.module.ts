@@ -7,23 +7,31 @@ import { UsersModule } from './users/users.module.js';
 import { InquiresModule } from './inquires/inquires.module.js';
 import { QuestionsModule } from './questions/questions.module.js';
 import { PrismaModule } from './prisma/prisma.module.js';
-import { QuestionsModule } from './questions/questions/questions.module.js';
+import { EnrollmentsModule } from './enrollments/enrollments.module.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
+const observeAppKey = process.env.OBSERVE_APP_KEY?.trim();
+const observeAppSecret = process.env.OBSERVE_APP_SECRET?.trim();
+if (Boolean(observeAppKey) !== Boolean(observeAppSecret)) {
+  throw new Error('Both OBSERVE_APP_KEY and OBSERVE_APP_SECRET must be configured to enable telemetry.');
+}
+const observeOptions = observeAppKey && observeAppSecret
+  ? {
+      appKey: observeAppKey,
+      appSecret: observeAppSecret,
+      serviceId: process.env.OBSERVE_SERVICE_ID?.trim() || 'server',
+    }
+  : null;
+export const isObserveEnabled = observeOptions !== null;
 
 @Module({
   imports: [
-    // Distributed tracing, auto-correlated logs, request/job metrics, error
-    // telemetry, alarms, and more — out of the box. Sign up at https://observe.nestjs.com
-    ObserveModule.forRoot({
-      appKey: 'YOUR_APP_KEY',
-      appSecret: 'YOUR_APP_SECRET',
-      serviceId: 'server',
-    }),
+    ...(observeOptions ? [ObserveModule.forRoot(observeOptions)] : []),
     AuthModule,
     UsersModule,
     InquiresModule,
     QuestionsModule,
+    EnrollmentsModule,
     PrismaModule,
   ],
   controllers: [AppController],

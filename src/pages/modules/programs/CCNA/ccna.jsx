@@ -11,7 +11,6 @@ import {
 	ChevronLeft,
 	ChevronRight,
 	CircleAlert,
-	ClipboardList,
 	Clock3,
 	MessageSquare,
 	Pencil,
@@ -27,8 +26,6 @@ import {
 import { CCNA_MODULE_QUIZZES } from "./ccnaModuleQuizData";
 import { CCNA_CURRICULUM, slugifyCcnaTutorial } from "./ccnaCurriculum.js";
 import { readCcnaTutorialProgress } from "../../../../utils/ccnaTutorialProgress";
-import { readCcnaExamProgress, readCcnaShortExamProgress } from "../../../../utils/ccnaShortExamSession";
-import { CCNA_EXAMS } from "./ccnaExamFormats";
 
 const modules = CCNA_CURRICULUM.map((section) => ({
 	...section,
@@ -36,7 +33,7 @@ const modules = CCNA_CURRICULUM.map((section) => ({
 }));
 const EXAM_FORMATS = [
 	{ name: "Short Exam", questions: 50, duration: "45 mins", description: "A quick practice session." },
-	{ name: "Medium Exam", questions: CCNA_EXAMS.medium.questionCount, duration: "1 hour & 30 mins", description: "A balanced, longer practice session." },
+	{ name: "Medium Exam", questions: 100, duration: "1 hour & 30 mins", description: "A balanced, longer practice session." },
 	{ name: "Long Exam", questions: 150, duration: "2 hours", description: "A full-length practice session." },
 ];
 const SHORT_EXAM_SESSION_KEY = "matekk-ccna-short-exam-session";
@@ -108,16 +105,9 @@ function Stat({ value, label }) {
 	);
 }
 
-function NetworkIllustration({ quizAverage, shortExamProgress }) {
+function NetworkIllustration({ quizAverage }) {
 	const { profile } = useAuth();
 	const starsFill = `${Math.max(0, Math.min(100, quizAverage))}%`;
-	const hasShortExamResult = shortExamProgress.status === "completed" || shortExamProgress.status === "expired";
-	const passedShortExam = shortExamProgress.score / 50 >= 0.8;
-	const examActionLabel = hasShortExamResult
-		? "View result"
-		: shortExamProgress.status === "in-progress"
-			? "Continue exam"
-			: "Start short exam";
 
 	return (
 		<div className="relative mx-auto h-[320px] w-full max-w-[440px] sm:h-[380px] sm:max-w-[470px]">
@@ -140,37 +130,13 @@ function NetworkIllustration({ quizAverage, shortExamProgress }) {
 					<span aria-hidden="true" className="ccna-stars-fill" style={{ width: starsFill }}>★★★★★</span>
 				</span>
 			</div>
-			<Link
-				to="/modules/programs/ccna/results"
-				aria-label="Open CCNA gradebook"
-				title="Gradebook"
-				className="absolute right-[12%] top-[2%] z-30 flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#005b6b] shadow-[0_8px_20px_rgba(15,35,75,0.1)] transition-all duration-200 ease-out hover:-translate-y-1 hover:scale-110 hover:shadow-lg active:translate-y-0 motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:hover:scale-100"
-			>
-				<ClipboardList size={21} />
-			</Link>
-			<div className="absolute right-0 top-[17%] z-30 flex h-12 w-12 items-center justify-center rounded-full bg-[#005b6b] text-white shadow-lg transition-transform duration-200 ease-out hover:scale-110 motion-reduce:transition-none motion-reduce:hover:scale-100"><Settings size={21} /></div>
-			<div className="absolute right-[-4px] top-[32%] z-30 flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#005b6b] shadow-[0_8px_20px_rgba(15,35,75,0.1)] transition-transform duration-200 ease-out hover:scale-110 motion-reduce:transition-none motion-reduce:hover:scale-100"><Pencil size={18} /></div>
+			<div className="absolute right-0 top-[10%] z-30 flex h-12 w-12 items-center justify-center rounded-full bg-[#005b6b] text-white shadow-lg transition-transform duration-200 ease-out hover:scale-110 motion-reduce:transition-none motion-reduce:hover:scale-100"><Settings size={21} /></div>
+			<div className="absolute right-[-4px] top-[44%] z-30 flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#005b6b] shadow-[0_8px_20px_rgba(15,35,75,0.1)] transition-transform duration-200 ease-out hover:scale-110 motion-reduce:transition-none motion-reduce:hover:scale-100"><Pencil size={18} /></div>
 			<div className="absolute right-[2%] top-[70%] z-30 flex h-12 w-12 items-center justify-center rounded-full bg-[#005b6b] text-white shadow-lg transition-transform duration-200 ease-out hover:scale-110 motion-reduce:transition-none motion-reduce:hover:scale-100"><MessageSquare size={19} /></div>
 			<div className="absolute bottom-0 right-0 z-30 w-[238px] rounded-2xl border border-[#e4eaf5] bg-white p-4 shadow-[0_14px_28px_rgba(15,35,75,0.1)] transition-transform duration-200 ease-out hover:scale-[1.03] motion-reduce:transition-none motion-reduce:hover:scale-100 sm:right-[-2%] sm:w-[275px]">
 				<strong className="text-sm text-[#005b6b]">{profile?.username}</strong>
-				<p className="mt-0.5 text-sm leading-snug text-[#64708a]">
-					{hasShortExamResult
-						? passedShortExam
-							? "You just passed the short exam!"
-							: "You didn't pass the short exam!"
-						: shortExamProgress.status === "in-progress"
-							? "You're taking the short exam!"
-							: "Take the short exam to see your result."}
-					{hasShortExamResult && (
-						<span className="mt-1 block">
-							{passedShortExam ? "Good job! :)" : "Better luck next time! :("}
-						</span>
-					)}
-					{hasShortExamResult && (
-						<span className="mt-1 block">Score: {shortExamProgress.score}/50</span>
-					)}
-				</p>
-				<Link to="/modules/programs/ccna/exam/short" className="mt-3 flex h-11 w-full items-center justify-center rounded-full bg-[#005b6b] text-sm font-bold text-white transition-all duration-200 ease-out hover:scale-105 hover:bg-[#004653] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100">{examActionLabel}</Link>
+				<p className="mt-0.5 text-sm leading-snug text-[#64708a]">just passed the CCNA<br />mock exam!</p>
+				<Link to="/modules/programs/ccna/results" className="mt-3 flex h-11 w-full items-center justify-center rounded-full bg-[#005b6b] text-sm font-bold text-white transition-all duration-200 ease-out hover:scale-105 hover:bg-[#004653] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100">View result</Link>
 			</div>
 		</div>
 	);
@@ -323,18 +289,14 @@ function ModuleCard({ module, index, openSection, onToggle, quizProgress, tutori
 									? "Quiz in progress"
 									: "25-question quiz · 30-minute limit"}
 						</span>
-						<span className="inline-flex shrink-0 flex-col items-end gap-1">
-							{currentQuizProgress?.status === "completed" && (
-								<span className="text-xs font-semibold text-[#287849]">Completed</span>
-							)}
-							<span className="relative inline-flex">
-								<button
-									type="button"
-									onClick={() => onStartQuiz(module.number)}
-									className="rounded-full bg-[#005b6b] px-5 py-2.5 text-sm font-semibold text-white transition-all duration-200 ease-out hover:scale-105 hover:bg-[#004653] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100"
-								>
-									{getQuizActionLabel(currentQuizProgress)}
-								</button>
+						<span className="relative inline-flex shrink-0">
+							<button
+								type="button"
+								onClick={() => onStartQuiz(module.number)}
+								className="rounded-full bg-[#005b6b] px-5 py-2.5 text-sm font-semibold text-white transition-all duration-200 ease-out hover:scale-105 hover:bg-[#004653] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100"
+							>
+								{getQuizActionLabel(currentQuizProgress)}
+							</button>
 							{currentQuizProgress?.status === "expired" && (
 								<span
 									role="img"
@@ -345,7 +307,6 @@ function ModuleCard({ module, index, openSection, onToggle, quizProgress, tutori
 									<CircleAlert size={15} strokeWidth={2.5} />
 								</span>
 							)}
-							</span>
 						</span>
 					</div>
 				</div>
@@ -362,27 +323,7 @@ export default function CCNA() {
 	const [isQuizPickerOpen, setIsQuizPickerOpen] = useState(false);
 	const [isExamPickerOpen, setIsExamPickerOpen] = useState(false);
 	const [selectedExamFormat, setSelectedExamFormat] = useState(null);
-	const [shortExamProgressState, setShortExamProgressState] = useState(() => ({
-		userId,
-		progress: readCcnaShortExamProgress(userId),
-	}));
-	const shortExamProgress = shortExamProgressState.userId === userId
-		? shortExamProgressState.progress
-		: readCcnaShortExamProgress(userId);
-	const [mediumExamProgressState, setMediumExamProgressState] = useState(() => ({
-		userId,
-		progress: readCcnaExamProgress(CCNA_EXAMS.medium.sessionKey, userId),
-	}));
-	const mediumExamProgress = mediumExamProgressState.userId === userId
-		? mediumExamProgressState.progress
-		: readCcnaExamProgress(CCNA_EXAMS.medium.sessionKey, userId);
-	const [longExamProgressState, setLongExamProgressState] = useState(() => ({
-		userId,
-		progress: readCcnaExamProgress(CCNA_EXAMS.long.sessionKey, userId),
-	}));
-	const longExamProgress = longExamProgressState.userId === userId
-		? longExamProgressState.progress
-		: readCcnaExamProgress(CCNA_EXAMS.long.sessionKey, userId);
+	const [shortExamProgress, setShortExamProgress] = useState(() => readShortExamProgress(userId));
 	const [examClockNow, setExamClockNow] = useState(Date.now);
 	const [progressSlide, setProgressSlide] = useState(0);
 	const [quizProgressState] = useState(() => ({
@@ -408,11 +349,6 @@ export default function CCNA() {
 			const attempt = quizProgress.modules[module.number];
 			return !isCurrentCcnaModuleQuizAttempt(attempt) || !["completed", "expired"].includes(attempt.status);
 		})?.number ?? "1.0";
-	const activeModuleDetails = modules.find((module) => module.number === activeModule);
-	const allModulesCompleted = modules.every((module) => {
-		const attempt = quizProgress.modules[module.number];
-		return isCurrentCcnaModuleQuizAttempt(attempt) && ["completed", "expired"].includes(attempt.status);
-	});
 	const activeQuizProgress = isCurrentCcnaModuleQuizAttempt(quizProgress.modules[activeModule])
 		? quizProgress.modules[activeModule]
 		: null;
@@ -421,49 +357,6 @@ export default function CCNA() {
 		? Math.max(0, Math.ceil((shortExamProgress.deadline - examClockNow) / 1000))
 		: 0;
 	const hasActiveShortExam = shortExamSecondsRemaining > 0;
-	const mediumExamSecondsRemaining = mediumExamProgress.deadline
-		? Math.max(0, Math.ceil((mediumExamProgress.deadline - examClockNow) / 1000))
-		: 0;
-	const longExamSecondsRemaining = longExamProgress.deadline
-		? Math.max(0, Math.ceil((longExamProgress.deadline - examClockNow) / 1000))
-		: 0;
-	const mediumQuestionCount = CCNA_EXAMS.medium.questionCount;
-	const longQuestionCount = CCNA_EXAMS.long.questionCount;
-	// Live status for each exam that can be taken, keyed by its name in EXAM_FORMATS
-	const examRuns = {
-		"Short Exam": {
-			progress: shortExamProgress,
-			secondsRemaining: shortExamSecondsRemaining,
-			isActive: hasActiveShortExam,
-			path: CCNA_EXAMS.short.path,
-			summary: `50 questions · 45 minutes · ${hasActiveShortExam ? `${formatExamTime(shortExamSecondsRemaining)} remaining` : "Modules 1.0–6.0"}`,
-		},
-		"Medium Exam": {
-			progress: mediumExamProgress,
-			secondsRemaining: mediumExamSecondsRemaining,
-			isActive: mediumExamSecondsRemaining > 0,
-			path: CCNA_EXAMS.medium.path,
-			summary: `${mediumQuestionCount} question${mediumQuestionCount === 1 ? "" : "s"} · 1 hour 30 minutes · ${mediumExamSecondsRemaining > 0 ? `${formatExamTime(mediumExamSecondsRemaining)} remaining` : "CCNA practice questions"}`,
-		},
-		"Long Exam": {
-			progress: longExamProgress,
-			secondsRemaining: longExamSecondsRemaining,
-			isActive: longExamSecondsRemaining > 0,
-			path: CCNA_EXAMS.long.path,
-			summary: `${longQuestionCount} questions · 2 hours · ${longExamSecondsRemaining > 0 ? `${formatExamTime(longExamSecondsRemaining)} remaining` : "Full question bank"}`,
-		},
-	};
-
-	useEffect(() => {
-		if (!shortExamProgress.deadline && !mediumExamProgress.deadline && !longExamProgress.deadline) return undefined;
-		const intervalId = window.setInterval(() => {
-			setExamClockNow(Date.now());
-			setShortExamProgressState({ userId, progress: readCcnaShortExamProgress(userId) });
-			setMediumExamProgressState({ userId, progress: readCcnaExamProgress(CCNA_EXAMS.medium.sessionKey, userId) });
-			setLongExamProgressState({ userId, progress: readCcnaExamProgress(CCNA_EXAMS.long.sessionKey, userId) });
-		}, 1000);
-		return () => window.clearInterval(intervalId);
-	}, [shortExamProgress.deadline, mediumExamProgress.deadline, longExamProgress.deadline, userId]);
 
 	useEffect(() => {
 		let timeoutId;
@@ -540,10 +433,7 @@ export default function CCNA() {
 				<div className="grid items-center gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-4">
 					<div>
 						<div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#c9dfe2] bg-[#f0f7f7] px-4 py-2 text-sm font-semibold text-[#005b6b]">
-							<span className="h-2 w-2 rounded-full bg-[#005b6b]" />
-							{allModulesCompleted
-								? "All 6 modules completed"
-								: `Module ${activeModuleDetails?.number.replace(".0", "") ?? "1"} of ${modules.length} · ${activeModuleDetails?.title ?? "Network Fundamentals"}`}
+							<span className="h-2 w-2 rounded-full bg-[#005b6b]" /> Module 2 of 6 · Network Access
 						</div>
 						<h1 className="max-w-[700px] text-[2.65rem] font-bold leading-[1.08] tracking-[-1.5px] sm:text-6xl lg:text-[3.25rem] xl:text-[3.7rem]">
 							Continue your path to <span className="text-[#005b6b]">CCNA<br className="hidden sm:block" /> Certification.</span>
@@ -564,7 +454,6 @@ export default function CCNA() {
 							</button>
 							<button onClick={() => setIsQuizPickerOpen(true)} className="flex h-[58px] items-center gap-2 rounded-full bg-[#005b6b] px-7 text-base font-bold text-white shadow-[0_10px_20px_rgba(0,91,107,0.16)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-[#004653] hover:shadow-[0_14px_26px_rgba(0,91,107,0.24)] active:translate-y-0">{heroQuizLabel} <ArrowRight size={18} /></button>
 							<Link to="/modules/programs/ccna/knowledge-hub" className="flex h-[58px] items-center rounded-full border border-[#005b6b] px-7 text-base font-bold text-[#005b6b] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-[#f0f7f7] hover:shadow-[0_10px_20px_rgba(0,91,107,0.12)] active:translate-y-0">View All Modules</Link>
-							<Link to="/modules/programs/ccna/practice-lab" className="flex h-[58px] items-center gap-2 rounded-full border border-[#005b6b] px-7 text-base font-bold text-[#005b6b] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-[#f0f7f7] hover:shadow-[0_10px_20px_rgba(0,91,107,0.12)] active:translate-y-0">Practice Lab <ArrowRight size={18} /></Link>
 						</div>
 						<div className="mt-11 flex flex-wrap gap-5 divide-x divide-[#dce5f2]">
 							<Stat value={`${attemptedModules}/6`} label="Quizzes attempted" />
@@ -572,7 +461,7 @@ export default function CCNA() {
 							<div className="pl-5 sm:pl-7"><Stat value={remainingModules} label="Modules left" /></div>
 						</div>
 					</div>
-					<NetworkIllustration quizAverage={quizAverage} shortExamProgress={shortExamProgress} />
+					<NetworkIllustration quizAverage={quizAverage} />
 				</div>
 			</section>
 
@@ -646,150 +535,46 @@ export default function CCNA() {
 							</div>
 						</div>
 						<div className="rounded-[18px] border border-[#d6e5e7] bg-white p-6">
-							{progressSlide === 0 ? (
-								<>
-									<h2 className="mb-5 text-xl font-bold">Practice quizzes</h2>
-									{modules.map((module) => {
-										const savedModuleProgress = quizProgress.modules[module.number];
-										const moduleProgress = isCurrentCcnaModuleQuizAttempt(savedModuleProgress) ? savedModuleProgress : null;
-										const moduleQuestionCount = CCNA_MODULE_QUIZZES.find((quiz) => quiz.number === module.number)?.questions.length ?? 25;
-										const answeredQuestionCount = Object.keys(moduleProgress?.answers ?? {}).length;
-										return (
-											<div key={module.number} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border-b border-[#e2ecec] py-3 text-sm last:border-0">
-												<div className="min-w-0">
-													<span className="block truncate font-medium">{module.number} {module.title}</span>
-													<strong className={`mt-0.5 block ${moduleProgress?.status === "completed" || moduleProgress?.status === "expired" || moduleProgress?.status === "in-progress" ? "text-[#005b6b]" : "text-[#8b96a9]"}`}>
-														{moduleProgress?.status === "completed" || moduleProgress?.status === "expired"
-															? `${moduleProgress.score}/${moduleQuestionCount}`
-															: moduleProgress?.status === "in-progress"
-																? `${answeredQuestionCount}/${moduleQuestionCount} answered`
-																: getQuizActionLabel(moduleProgress)}
-													</strong>
-												</div>
-												<div className="flex min-h-[58px] min-w-[88px] flex-col items-end justify-between">
-													<div className="flex h-6 items-center justify-end">
-														{moduleProgress?.status === "completed" ? (
-															<span className="text-xs font-semibold text-[#287849]">Completed</span>
-														) : moduleProgress?.status === "in-progress" && Number.isFinite(moduleProgress.deadline) ? (
-															<QuizTimeRemaining deadline={moduleProgress.deadline} />
-														) : null}
-													</div>
-													<span className="relative inline-flex shrink-0">
-														<button type="button" onClick={() => openModuleQuiz(module.number)} className="rounded-full border border-[#c9dfe2] px-3 py-1.5 text-xs font-semibold text-[#005b6b] transition-all duration-200 ease-out hover:scale-105 hover:bg-[#e8f3f4] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100">
-															{getQuizActionLabel(moduleProgress)}
-														</button>
-														{moduleProgress?.status === "expired" && (
-															<span className="group/quiz-expired absolute -right-1.5 -top-1.5">
-																<span
-																	role="img"
-																	aria-label="Quiz time expired"
-																	className="flex h-5 w-5 items-center justify-center rounded-full bg-[#dc2626] text-white shadow-sm"
-																>
-																	<CircleAlert size={15} strokeWidth={2.5} />
-																</span>
-																<span
-																	role="tooltip"
-																	className="pointer-events-none absolute right-full top-1/2 z-20 mr-2 w-max -translate-y-1/2 rounded-md bg-[#071126] px-2.5 py-1.5 text-xs font-medium text-white opacity-0 shadow-lg transition-opacity group-hover/quiz-expired:opacity-100 group-focus-within/quiz-expired:opacity-100"
-																>
-																	Time is up — retake the quiz to try again.
-																</span>
-															</span>
-														)}
-													</span>
-												</div>
-											</div>
-										);
-									})}
-								</>
-							) : (
-								<>
-									<h2 className="mb-5 text-xl font-bold">Exam progress</h2>
-									{EXAM_FORMATS.map((format) => {
-										const run = examRuns[format.name];
-										const examProgress = run?.progress;
-										const answeredCount = examProgress?.answeredCount ?? 0;
-										const progressPercentage = examProgress?.status === "completed"
-											? 100
-											: Math.round((answeredCount / format.questions) * 100);
-										const statusText = examProgress?.status === "completed"
-											? `Completed · Score ${examProgress.score}/${format.questions}`
-											: examProgress?.status === "expired"
-												? `Time expired · Score ${examProgress.score}/${format.questions}`
-												: examProgress?.status === "in-progress"
-													? `${answeredCount}/${format.questions} answered`
-													: "Not started";
-
-										return (
-											<div key={format.name} className="border-b border-[#e2ecec] py-3 last:border-0">
-												<div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
-													<div className="min-w-0">
-														<span className="block truncate text-sm font-medium">{format.name}</span>
-														<span className="mt-0.5 block text-xs text-[#7c89a1]">{format.questions} questions</span>
-														<strong className={`mt-1 block text-sm ${examProgress && examProgress.status !== "not-started" ? "text-[#005b6b]" : "text-[#8b96a9]"}`}>
-															{statusText}
-															{examProgress?.status === "expired" && (
-																<span className="group/exam-expired relative ml-1.5 inline-flex align-middle">
-																	<button
-																		type="button"
-																		aria-label="Exam time expired"
-																		className="flex h-5 w-5 items-center justify-center rounded-full bg-[#dc2626] text-white shadow-sm"
-																	>
-																		<CircleAlert size={15} strokeWidth={2.5} />
-																	</button>
-																	<span
-																		role="tooltip"
-																		className="pointer-events-none absolute bottom-full left-0 z-20 mb-1 w-max max-w-[240px] rounded-md bg-[#071126] px-2.5 py-1.5 text-xs font-medium text-white opacity-0 shadow-lg transition-opacity group-hover/exam-expired:opacity-100 group-focus-within/exam-expired:opacity-100"
-																	>
-																		Time is up — retake the exam to try again.
-																	</span>
-																</span>
-															)}
-														</strong>
-													</div>
-													<div className="flex min-h-[58px] min-w-[112px] flex-col items-end justify-between">
-														<div className="flex h-6 items-center justify-end">
-															{run?.isActive && (
-																<span
-																	role="timer"
-																	aria-label={`${formatExamTime(run.secondsRemaining)} remaining`}
-																	className={`inline-flex min-w-[88px] justify-center whitespace-nowrap rounded-full px-3 py-1 text-xs font-bold tabular-nums ${
-																		run.secondsRemaining <= 60
-																			? "bg-[#fff0ed] text-[#b42318]"
-																			: "bg-[#e8f3f4] text-[#005b6b]"
-																	}`}
-																>
-																	{formatExamTime(run.secondsRemaining)} left
-																</span>
-															)}
-														</div>
-														{run?.isActive ? (
-															<button
-																type="button"
-																onClick={() => navigate(run.path)}
-																className="rounded-full border border-[#c9dfe2] px-3 py-1.5 text-xs font-semibold text-[#005b6b] transition-all duration-200 ease-out hover:scale-105 hover:bg-[#e8f3f4] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100"
-															>
-																Continue Exam
-															</button>
-														) : null}
-													</div>
-												</div>
-												{examProgress && examProgress.status !== "not-started" && !run.isActive && (
-													<div
-														role="progressbar"
-														aria-label={`${format.name} completion`}
-														aria-valuemin={0}
-														aria-valuemax={100}
-														aria-valuenow={progressPercentage}
-														className="mt-2 h-1.5 overflow-hidden rounded-full bg-[#e4eaf4]"
-													>
-														<div className="h-full rounded-full bg-[#005b6b] transition-[width]" style={{ width: `${progressPercentage}%` }} />
-													</div>
+							<h2 className="mb-5 text-xl font-bold">Practice quizzes</h2>
+							{modules.map((module) => {
+								const savedModuleProgress = quizProgress.modules[module.number];
+								const moduleProgress = isCurrentCcnaModuleQuizAttempt(savedModuleProgress) ? savedModuleProgress : null;
+								const moduleQuestionCount = CCNA_MODULE_QUIZZES.find((quiz) => quiz.number === module.number)?.questions.length ?? 25;
+								return (
+									<div key={module.number} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border-b border-[#e2ecec] py-3 text-sm last:border-0">
+										<div className="min-w-0">
+											<span className="block truncate font-medium">{module.number} {module.title}</span>
+											<strong className={`mt-0.5 block ${moduleProgress?.status === "completed" || moduleProgress?.status === "expired" ? "text-[#005b6b]" : "text-[#8b96a9]"}`}>
+												{moduleProgress?.status === "completed" || moduleProgress?.status === "expired"
+													? `${moduleProgress.score}/${moduleQuestionCount}`
+													: getQuizActionLabel(moduleProgress)}
+											</strong>
+										</div>
+										<div className="flex min-h-[58px] min-w-[88px] flex-col items-end justify-between">
+											<div className="flex h-6 items-center justify-end">
+												{moduleProgress?.status === "in-progress" && Number.isFinite(moduleProgress.deadline) && (
+													<QuizTimeRemaining deadline={moduleProgress.deadline} />
 												)}
 											</div>
-										);
-									})}
-								</>
-							)}
+											<span className="relative inline-flex shrink-0">
+												<button type="button" onClick={() => openModuleQuiz(module.number)} className="rounded-full border border-[#c9dfe2] px-3 py-1.5 text-xs font-semibold text-[#005b6b] transition-all duration-200 ease-out hover:scale-105 hover:bg-[#e8f3f4] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100">
+													{getQuizActionLabel(moduleProgress)}
+												</button>
+												{moduleProgress?.status === "expired" && (
+													<span
+														role="img"
+														title="Quiz time expired"
+														aria-label="Quiz time expired"
+														className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-[#dc2626] text-white shadow-sm"
+													>
+														<CircleAlert size={15} strokeWidth={2.5} />
+													</span>
+												)}
+											</span>
+										</div>
+									</div>
+								);
+							})}
 						</div>
 					</aside>
 				</div>
@@ -904,7 +689,7 @@ export default function CCNA() {
 							</button>
 						</header>
 						<p className="mt-3 text-sm leading-6 text-[#71819b]">
-							The Short Exam pulls 50 random questions from modules 1.0–6.0, the Medium Exam uses a random CCNA question bank set, and the Long Exam pulls 150 random questions from the full CCNA question bank.
+							The Short Exam is ready with 50 random questions from CCNA modules 1.0–6.0. Medium and Long Exam are coming soon.
 						</p>
 						<div className="mt-6 grid gap-3 md:grid-cols-3">
 							{EXAM_FORMATS.map((format) => {
@@ -915,24 +700,9 @@ export default function CCNA() {
 										type="button"
 										aria-pressed={isSelected}
 										onClick={() => setSelectedExamFormat(format.name)}
-										className={`rounded-2xl border p-5 text-left transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(0,91,107,0.14)] active:translate-y-0 motion-reduce:transition-none motion-reduce:hover:translate-y-0 ${isSelected ? "border-[#005b6b] bg-[#eaf3f4] text-[#005b6b]" : "border-[#d6e5e7] text-[#263654] hover:border-[#a9cdd2]"}`}
+										className={`rounded-2xl border p-5 text-left transition-colors ${isSelected ? "border-[#005b6b] bg-[#eaf3f4] text-[#005b6b]" : "border-[#d6e5e7] text-[#263654] hover:border-[#a9cdd2]"}`}
 									>
-										<span className="flex items-center justify-between gap-2">
-											<span className="text-lg font-bold">{format.name}</span>
-											{examRuns[format.name]?.isActive && (
-												<span
-													role="timer"
-													aria-label={`${formatExamTime(examRuns[format.name].secondsRemaining)} remaining`}
-													className={`shrink-0 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-bold tabular-nums ${
-														examRuns[format.name].secondsRemaining <= 60
-															? "bg-[#fff0ed] text-[#b42318]"
-															: "bg-[#e8f3f4] text-[#005b6b]"
-													}`}
-												>
-													{formatExamTime(examRuns[format.name].secondsRemaining)} left
-												</span>
-											)}
-										</span>
+										<span className="block text-lg font-bold">{format.name}</span>
 										<span className="mt-3 block text-3xl font-extrabold">{format.questions}</span>
 										<span className="block text-sm font-medium text-[#71819b]">questions</span>
 										<span className="mt-4 flex items-center gap-1.5 text-sm font-semibold"><Clock3 size={15} /> {format.duration}</span>
@@ -944,21 +714,21 @@ export default function CCNA() {
 						{selectedExamFormat && (
 							<div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-xl bg-[#f5f9f9] p-4">
 								<p className="text-sm text-[#526584]">
-										{examRuns[selectedExamFormat]
-											? examRuns[selectedExamFormat].summary
-											: `${selectedExamFormat} selected.`}
+									{selectedExamFormat === "Short Exam"
+										? `50 questions · 45 minutes · ${hasActiveShortExam ? `${formatExamTime(shortExamSecondsRemaining)} remaining` : "Modules 1.0–6.0"}`
+										: `${selectedExamFormat} selected. This exam format is coming soon.`}
 								</p>
-								{examRuns[selectedExamFormat] && (
+								{selectedExamFormat === "Short Exam" && (
 									<button
 										type="button"
 										disabled={!userId}
 										onClick={() => {
 											setIsExamPickerOpen(false);
-											navigate(examRuns[selectedExamFormat].path);
+											navigate("/modules/programs/ccna/exam/short");
 										}}
 										className="rounded-full bg-[#005b6b] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#004653] disabled:cursor-not-allowed disabled:opacity-50"
 									>
-										{examRuns[selectedExamFormat].isActive ? "Continue Exam" : `Start ${selectedExamFormat}`}
+										{hasActiveShortExam ? "Continue Exam" : "Start Short Exam"}
 									</button>
 								)}
 							</div>

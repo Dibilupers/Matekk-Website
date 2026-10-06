@@ -1,6 +1,7 @@
-import { Body, Controller, Post, HttpCode, HttpStatus, Request, UseGuards, Get } from '@nestjs/common';
+import { Body, Controller, Post, Get, UseGuards, Param, ParseIntPipe, Patch } from '@nestjs/common';
 import { CreateInquirtDto } from './dto/create-inquirt.dto.js';
 import { InquiresService } from './inquires.service.js';
+import { AdminGuard } from '../auth/guards/admin.guard.js';
 
 @Controller('inquires')
 export class InquiresController {
@@ -12,7 +13,14 @@ export class InquiresController {
     }
 
     @Get()
+    @UseGuards(AdminGuard)
     findAll() {
         return this.InquiresService.findAll();
+    }
+
+    @Patch(':id/accept')
+    @UseGuards(AdminGuard)
+    accept(@Param('id', ParseIntPipe) inquiryId: number) {
+        return this.InquiresService.accept(inquiryId);
     }
 }

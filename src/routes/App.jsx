@@ -8,6 +8,7 @@ import ScrollToTop from "../components/scroll/ScrollToTop";
 /* Pages */
 import Home from "../pages/Home";
 import Login from "../pages/Login";
+import AccountPending from "../pages/AccountPending";
 import NotFound from "../pages/NotFound";
 
 /* Cisco */
@@ -130,16 +131,25 @@ export default function App() {
   const isCCNAQuiz = location.pathname.startsWith("/modules/programs/ccna/quiz/")
     || location.pathname.startsWith("/modules/programs/ccna/exam/");
   const isAdminPage = location.pathname === "/admin";
+  const isAccountPendingPage = location.pathname === "/account-pending";
 
   return (
     <>
       <CCNAExamTimeNotification />
-      {!isCCNAQuiz && <NavBar />}
+      {!isCCNAQuiz && !isAccountPendingPage && <NavBar />}
       <ScrollToTop />
 
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        <Route
+          path="/account-pending"
+          element={(
+            <AccountStatusRoute>
+              <AccountPending />
+            </AccountStatusRoute>
+          )}
+        />
 
         {/* Cisco */}
         <Route path="/training/cisco/ccna/ccna" element={<CCNA />} />
@@ -325,7 +335,14 @@ export default function App() {
         <Route path="/solutions/pece/ipcctv" element={<IPCCTV />} />
         <Route path="/solutions/pece/pas" element={<PAS />} />
         <Route path="/solutions/pece/renewable" element={<Renewable />} />
-        <Route path="/pages/blank" element={<Blank />} />
+        <Route
+          path="/pages/blank"
+          element={
+            <ProtectedRoute>
+              <Blank />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/modules/programs/ccna"
           element={
@@ -414,13 +431,20 @@ export default function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/admin" element={<AdminPage />} />
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <AdminPage />
+            </AdminRoute>
+          }
+        />
 
         <Route path="*" element={<NotFound />} />
       </Routes>
 
 
-      {!isCCNAQuiz && !isAdminPage && <Footer />}
+      {!isCCNAQuiz && !isAdminPage && !isAccountPendingPage && <Footer />}
     </>
   );
 }
@@ -540,8 +564,8 @@ function CCNAExamTimeNotification() {
   );
 }
 
-function ProtectedRoute({ children }) {
-  const { isAuthenticated, isLoading } = useAuth();
+function AccountStatusRoute({ children }) {
+  const { profile, isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {
     return (
@@ -551,5 +575,43 @@ function ProtectedRoute({ children }) {
     );
   }
 
-  return isAuthenticated ? children : <Navigate to="/login" replace />;
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  return profile.active_status === false
+    ? children
+    : <Navigate to="/pages/blank" replace />;
+}
+
+function ProtectedRoute({ children }) {
+  const { profile, isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-white text-sm text-slate-500">
+        Checking your session...
+      </main>
+    );
+  }
+
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  return profile.active_status === false
+    ? <Navigate to="/account-pending" replace />
+    : children;
+}
+
+function AdminRoute({ children }) {
+  const { profile, isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-white text-sm text-slate-500">
+        Checking your session...
+      </main>
+    );
+  }
+
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  if (profile.active_status === false) return <Navigate to="/account-pending" replace />;
+  return profile.role?.trim().toLowerCase() === "admin"
+    ? children
+    : <Navigate to="/pages/blank" replace />;
 }

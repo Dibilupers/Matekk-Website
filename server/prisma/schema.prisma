@@ -29,14 +29,16 @@ model Inquires {
 }
 
 model Users {
-  id            Int      @id @default(autoincrement())
-  username      String
-  password      String
-  email         String
-  role          String   @default("Student ")
-  programs_enrolled String?
-  active_status Boolean  @default(false)
-  createdAt     DateTime @default(now())
+  id                Int          @id @default(autoincrement())
+  username          String
+  password          String
+  email             String?
+  role              String       @default("Student ")
+  active_status     Boolean      @default(false)
+  createdAt         DateTime     @default(now())
+  programs_enrolled String
+  pending_status    String       @default("Pending")
+  enrollments       Enrollment[]
 }
 
 model Questions {
@@ -51,18 +53,31 @@ model Questions {
 }
 
 model Program {
-  id           Int @id @default(autoincrement())
-  name         String
-  enrollmens   Enrollment[]
+  id         Int          @id @default(autoincrement())
+  name       String
+  enrollmens Enrollment[]
 }
 
 model Enrollment {
   userId     Int
   programId  Int
   enrolledAt DateTime @default(now())
-
-  user    Users   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  program Program @relation(fields: [programId], references: [id], onDelete: Cascade)
+  program    Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
+  user       Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([userId, programId])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model QuestionsRls {
+  id             Int     @id @default(autoincrement())
+  module         String?
+  topic          String?
+  difficulty     String?
+  question_text  String?
+  choices        String?
+  correct_answer String?
+  explanation    String?
+
+  @@map("questions")
 }

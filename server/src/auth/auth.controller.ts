@@ -2,12 +2,14 @@
 import { Body, Controller, Post, HttpCode, HttpStatus, Request, UseGuards, Get } from '@nestjs/common';
 import { AuthService } from './auth.service.js';
 import { AuthGuard } from './auth.guard.js';
+import { Public } from './decorators/public.decorator.js';
 import type { Request as ExpressRequest } from 'express';
 
 @Controller('auth')
 export class AuthController {
     constructor(private readonly authService: AuthService) { }
 
+    @Public()
     @HttpCode(HttpStatus.OK)
     @Post('login')
     signIn(@Body() signInDto: Record<string, any>) {
