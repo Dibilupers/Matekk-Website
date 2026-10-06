@@ -8,6 +8,7 @@ import { InquiresModule } from './inquires/inquires.module.js';
 import { QuestionsModule } from './questions/questions.module.js';
 import { PrismaModule } from './prisma/prisma.module.js';
 import { EnrollmentsModule } from './enrollments/enrollments.module.js';
+import { GradebookModule } from './gradebook/gradebook.module.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 const observeAppKey = process.env.OBSERVE_APP_KEY?.trim();
@@ -32,6 +33,7 @@ export const isObserveEnabled = observeOptions !== null;
     InquiresModule,
     QuestionsModule,
     EnrollmentsModule,
+    GradebookModule,
     PrismaModule,
   ],
   controllers: [AppController],

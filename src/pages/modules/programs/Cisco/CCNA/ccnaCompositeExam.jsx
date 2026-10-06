@@ -1,16 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { Link, useBlocker, useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight, ArrowUp, Clock3, Moon, RotateCcw, Sun, X } from "lucide-react";
+import { Link, useBlocker, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../../../context/AuthContext";
 import TrainingLogo from "../../../../../assets/MATEKK_training_logo.png";
 import { CCNA_EXAMS } from "./ccnaExamFormats";
+import { CCNA_MODULE_QUIZZES } from "./ccnaModuleQuizData";
 import { createCcnaMockExamAttemptId, saveCcnaMockExamResult } from "../../../../../utils/ccnaGradebook";
 import { getCcnaExamSessionKey } from "../../../../../utils/ccnaShortExamSession";
-import { isAnswerCorrect, isQuestionAnswered, isValidQuestion } from "../../../../../utils/ccnaExamGrading";
-import { QuestionInput, QuestionReview } from "./ccnaExamQuestionViews";
 
 const EXAM_PASS_PERCENTAGE = 80;
+const SHORT_EXAM_DURATION_SECONDS = CCNA_EXAMS.short.durationSeconds;
+const SHORT_EXAM_QUESTION_COUNT = CCNA_EXAMS.short.questionCount;
 const SHORT_EXAM_SESSION_KEY = "matekk-ccna-short-exam-session";
 
 function getShortExamSessionKey(userId) {
@@ -48,64 +49,58 @@ function createShortExamQuestions() {
 	}));
 }
 
-function restoreShortExamSession(userId) {
-	const sessionKey = getShortExamSessionKey(userId);
-	const createSession = () => ({
+function createExamSession(exam) {
+	const questions = typeof exam.createQuestions === "function" ? exam.createQuestions() : createShortExamQuestions();
+	return {
 		attemptId: createCcnaMockExamAttemptId(),
 		submittedAt: null,
-		questions: createShortExamQuestions(),
+		questions,
 		answers: {},
 		lockedQuestions: {},
 		currentIndex: 0,
-		deadline: Date.now() + SHORT_EXAM_DURATION_SECONDS * 1000,
+		deadline: Date.now() + exam.durationSeconds * 1000,
 		isSubmitted: false,
-	});
-	if (!sessionKey) return createSession();
-	const savedSession = window.sessionStorage.getItem(sessionKey);
-	if (!savedSession) {
-		return createSession();
-	}
+	};
+}
+
+function restoreExamSession(exam, sessionStorageKey) {
+	const createSession = () => createExamSession(exam);
+	if (!sessionStorageKey || typeof window === "undefined") return createSession();
+	const savedSession = window.sessionStorage.getItem(sessionStorageKey);
+	if (!savedSession) return createSession();
 
 	try {
 		const session = JSON.parse(savedSession);
-		const isValid =
-			session &&
+		const isValid = session &&
 			Array.isArray(session.questions) &&
-			session.questions.length === SHORT_EXAM_QUESTION_COUNT &&
-			session.questions.every((question) =>
-				Array.isArray(question.options) &&
-				Number.isInteger(question.answer) &&
-				question.answer >= 0 &&
-				question.answer < question.options.length
-			) &&
+			session.questions.length === exam.questionCount &&
 			session.answers &&
 			typeof session.answers === "object" &&
 			session.lockedQuestions &&
 			typeof session.lockedQuestions === "object" &&
 			Number.isInteger(session.currentIndex) &&
 			session.currentIndex >= 0 &&
-			session.currentIndex < SHORT_EXAM_QUESTION_COUNT &&
+			session.currentIndex < session.questions.length &&
 			Number.isFinite(session.deadline) &&
 			typeof session.isSubmitted === "boolean";
 
-		if (isValid) {
-			const isSubmitted = session.isSubmitted || session.deadline <= Date.now();
-			return {
-				...session,
-				attemptId: typeof session.attemptId === "string" ? session.attemptId : createCcnaMockExamAttemptId(),
-				submittedAt: Number.isFinite(session.submittedAt)
-					? session.submittedAt
-					: isSubmitted ? Date.now() : null,
-				isSubmitted,
-			};
-		}
-
-		throw new TypeError("Saved CCNA short exam session has an invalid structure.");
+		if (!isValid) throw new TypeError("Saved CCNA exam session has an invalid structure.");
+		const isSubmitted = session.isSubmitted || session.deadline <= Date.now();
+		return {
+			...session,
+			attemptId: typeof session.attemptId === "string" ? session.attemptId : createCcnaMockExamAttemptId(),
+			submittedAt: Number.isFinite(session.submittedAt) ? session.submittedAt : isSubmitted ? Date.now() : null,
+			isSubmitted,
+		};
 	} catch (error) {
-		console.error("Unable to restore the saved CCNA short exam session.", error);
-		window.sessionStorage.removeItem(sessionKey);
+		console.error("Unable to restore the saved CCNA exam session.", error);
+		window.sessionStorage.removeItem(sessionStorageKey);
 		return createSession();
 	}
+}
+
+function restoreShortExamSession(userId) {
+	return restoreExamSession(CCNA_EXAMS.short, getShortExamSessionKey(userId));
 }
 
 function formatTime(totalSeconds) {
@@ -124,7 +119,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 	const { profile } = useAuth();
 	const userId = profile?.userId;
 	// Each student's exam progress is saved separately (per signed-in user)
-	const sessionStorageKey = getCcnaExamSessionKey(exam.sessionKey, userId);
+	const sessionStorageKey = userId ? getCcnaExamSessionKey(exam.sessionKey, userId) : null;
 	const [initialSession] = useState(() =>
 		shouldStartNewAttempt ? createExamSession(exam) : restoreExamSession(exam, sessionStorageKey),
 	);
@@ -142,8 +137,6 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 	const [lockedQuestions, setLockedQuestions] = useState(initialSession.lockedQuestions);
 	const [currentIndex, setCurrentIndex] = useState(initialSession.currentIndex);
 	const [deadline, setDeadline] = useState(initialSession.deadline);
-	const [attemptId, setAttemptId] = useState(initialSession.attemptId);
-	const [submittedAt, setSubmittedAt] = useState(initialSession.submittedAt);
 	const [secondsRemaining, setSecondsRemaining] = useState(() =>
 		Math.max(0, Math.ceil((initialSession.deadline - Date.now()) / 1000)),
 	);
@@ -194,12 +187,12 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 			(answerFilter === "correct" && item.isCorrect) ||
 			(answerFilter === "incorrect" && !item.isCorrect),
 		);
-	const sessionKey = getShortExamSessionKey(userId);
+	const [isDark, setIsDark] = useState(false);
 
-	function submitExam() {
-		setSubmittedAt((previousSubmittedAt) => previousSubmittedAt ?? Date.now());
+	const submitExam = (finishedAt = Date.now()) => {
+		setSubmittedAt((previousSubmittedAt) => previousSubmittedAt ?? finishedAt);
 		setIsSubmitted(true);
-	}
+	};
 
 	useEffect(() => {
 		if (!shouldStartNewAttempt) return;
@@ -230,11 +223,6 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 			submittedAt,
 		});
 	}, [attemptId, exam.name, isSubmitted, isViewingSavedResult, questions.length, score, submittedAt, userId]);
-
-	function submitExam(finishedAt = Date.now()) {
-		setSubmittedAt(finishedAt);
-		setIsSubmitted(true);
-	}
 
 	useEffect(() => {
 		if (isSubmitted || isViewingSavedResult) return undefined;
@@ -391,6 +379,14 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 						</div>
 					</div>
 					<div className="flex items-center gap-2">
+						<button
+							type="button"
+							onClick={() => setIsDark((value) => !value)}
+							aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
+							className="inline-flex items-center gap-2 rounded-full border border-[#c9dfe2] bg-white p-2.5 text-[#005b6b] transition hover:bg-[#e8f3f4]"
+						>
+							{isDark ? <Sun size={16} /> : <Moon size={16} />}
+						</button>
 						{!isSubmitted && (
 							<div role="timer" aria-label={`${formatTime(secondsRemaining)} remaining`} className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold tabular-nums ${secondsRemaining <= 300 ? "border-[#f0c6a8] bg-[#fff5ee] text-[#a44b13]" : "border-[#c9dfe2] bg-white text-[#005b6b]"}`}>
 								<Clock3 size={16} /> {formatTime(secondsRemaining)}
@@ -572,11 +568,10 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 												type="button"
 												onClick={() => setAnswerFilter(filter.value)}
 												aria-pressed={answerFilter === filter.value}
-												className={`rounded-full border px-5 py-2 text-sm font-semibold transition ${
-													answerFilter === filter.value
+												className={`rounded-full border px-5 py-2 text-sm font-semibold transition ${answerFilter === filter.value
 														? "border-[#005b6b] bg-[#005b6b] text-white"
 														: "border-[#9fc8ce] bg-white text-[#005b6b] hover:bg-[#f2f8f8]"
-												}`}
+													}`}
 											>
 												{filter.label}
 											</button>
@@ -589,9 +584,8 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 													<span className="text-sm font-semibold text-[#64748b]">
 														Question {item.index + 1} of {questions.length} · Module {item.moduleNumber}: {item.moduleTitle}
 													</span>
-													<span className={`rounded-full px-3 py-1 text-xs font-bold ${
-														item.isCorrect ? "bg-[#e8f3f4] text-[#005b6b]" : "bg-[#fff0e8] text-[#b4532a]"
-													}`}>
+													<span className={`rounded-full px-3 py-1 text-xs font-bold ${item.isCorrect ? "bg-[#e8f3f4] text-[#005b6b]" : "bg-[#fff0e8] text-[#b4532a]"
+														}`}>
 														{item.isCorrect ? "Correct" : "Incorrect"}
 													</span>
 												</div>
@@ -607,9 +601,8 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 																: "border-[#e1e8ef] bg-white text-[#42516b]";
 														return (
 															<div key={option} className={`flex min-h-[54px] items-center gap-3 rounded-xl border px-4 py-3 ${optionStyle}`}>
-																<span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
-																	isCorrectAnswer ? "bg-[#2d8a56] text-white" : isSelectedAnswer ? "bg-[#c7541a] text-white" : "bg-[#edf3fb] text-[#4764a8]"
-																}`}>
+																<span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold ${isCorrectAnswer ? "bg-[#2d8a56] text-white" : isSelectedAnswer ? "bg-[#c7541a] text-white" : "bg-[#edf3fb] text-[#4764a8]"
+																	}`}>
 																	{String.fromCharCode(65 + optionIndex)}
 																</span>
 																<span className="flex-1 text-sm font-medium sm:text-base">{option}</span>

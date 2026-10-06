@@ -2,6 +2,7 @@ import { Body, Controller, Post, Get, UseGuards, Param, ParseIntPipe, Patch } fr
 import { CreateInquirtDto } from './dto/create-inquirt.dto.js';
 import { InquiresService } from './inquires.service.js';
 import { AdminGuard } from '../auth/guards/admin.guard.js';
+import { Public } from '../auth/decorators/public.decorator.js';
 
 @Controller('inquires')
 export class InquiresController {

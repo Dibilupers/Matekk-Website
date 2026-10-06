@@ -6,9 +6,9 @@ import {
 import { PrismaService } from '../prisma/prisma.service.js';
 
 const DEFAULT_PROGRAMS = [
-  { name: 'CCNA', moduleCount: 9 },
-  { name: 'Network+', moduleCount: 7 },
-  { name: 'Security+', moduleCount: 8 },
+  { name: 'CCNA' },
+  { name: 'Network+' },
+  { name: 'Security+' },
 ] as const;
 
 interface CreateEnrollmentData {
@@ -34,14 +34,20 @@ export class EnrollmentsService {
     const programs = await this.prisma.program.findMany();
 
     for (const defaultProgram of DEFAULT_PROGRAMS) {
-      if (!programs.some((program) => program.name === defaultProgram.name)) {
+      if (!programs.some((program) => program.name === defaultProgram.name && program.parentId === null)) {
         programs.push(await this.prisma.program.create({ data: { name: defaultProgram.name } }));
       }
     }
 
-    return programs.map((program) => ({
+    const rootPrograms = await this.prisma.program.findMany({
+      where: { parentId: null },
+      include: { modules: { orderBy: { name: 'asc' } } },
+      orderBy: { name: 'asc' },
+    });
+
+    return rootPrograms.map((program) => ({
       ...program,
-      moduleCount: DEFAULT_PROGRAMS.find((item) => item.name === program.name)?.moduleCount ?? 0,
+      moduleCount: program.modules.length,
     }));
   }
 
@@ -49,7 +55,7 @@ export class EnrollmentsService {
     return this.prisma.enrollment.findMany({
       include: {
         user: { select: { id: true, username: true, email: true } },
-        program: true,
+        program: { include: { parent: { select: { id: true, name: true } } } },
       },
       orderBy: { enrolledAt: 'desc' },
     });
@@ -79,6 +85,33 @@ export class EnrollmentsService {
       throw new NotFoundException('One or more selected programs were not found.');
     }
 
+    const selectedIds = new Set(programIds);
+    const selectedRootIds = programs
+      .filter((program) => program.parentId === null)
+      .map((program) => program.id);
+    const selectedModuleParentIds = programs
+      .map((program) => program.parentId)
+      .filter((parentId): parentId is number => parentId !== null);
+    if (selectedModuleParentIds.some((parentId) => selectedIds.has(parentId))) {
+      throw new BadRequestException('Enroll a student in either a whole program or its modules, not both.');
+    }
+
+    const overlappingEnrollments = await this.prisma.enrollment.findMany({
+      where: {
+        userId: data.userId,
+        OR: [
+          { programId: { in: selectedModuleParentIds } },
+          ...(selectedRootIds.length
+            ? [{ program: { parentId: { in: selectedRootIds } } }]
+            : []),
+        ],
+      },
+      select: { programId: true },
+    });
+    if (overlappingEnrollments.length > 0) {
+      throw new BadRequestException('The student is already enrolled in the whole program or one of its modules.');
+    }
+
     await this.prisma.$transaction(
       programIds.map((programId) =>
         this.prisma.enrollment.upsert({
@@ -93,7 +126,7 @@ export class EnrollmentsService {
       where: { userId: data.userId, programId: { in: programIds } },
       include: {
         user: { select: { id: true, username: true, email: true } },
-        program: true,
+        program: { include: { parent: { select: { id: true, name: true } } } },
       },
       orderBy: { enrolledAt: 'desc' },
     });

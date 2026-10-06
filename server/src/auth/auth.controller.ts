@@ -3,7 +3,6 @@ import { AuthService } from './auth.service.js';
 import { AuthGuard } from './auth.guard.js';
 import { Public } from './decorators/public.decorator.js';
 import type { Request as ExpressRequest } from 'express';
-import { Public } from './decorators/public.decorator.js';
 
 @Controller('auth')
 export class AuthController {

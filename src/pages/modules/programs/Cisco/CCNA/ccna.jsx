@@ -398,18 +398,19 @@ function ModuleCard({ module, index, openSection, onToggle, quizProgress, tutori
 								>
 									{getQuizActionLabel(currentQuizProgress)}
 								</button>
-							{currentQuizProgress?.status === "expired" && (
-								<span
-									role="img"
-									title="Quiz time expired"
-									aria-label="Quiz time expired"
-									className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-[#dc2626] text-white shadow-sm"
-								>
-									<CircleAlert size={15} strokeWidth={2.5} />
-								</span>
-							)}
-						</span>
-					</div>
+								{currentQuizProgress?.status === "expired" && (
+									<span
+										role="img"
+										title="Quiz time expired"
+										aria-label="Quiz time expired"
+										className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-[#dc2626] text-white shadow-sm"
+									>
+										<CircleAlert size={15} strokeWidth={2.5} />
+									</span>
+								)}
+							</span>
+					</span>
+						</div>
 				</div>
 			)}
 		</div>

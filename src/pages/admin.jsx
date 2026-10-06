@@ -4,12 +4,13 @@ import API_URL from "../config/api";
 import { useAuth } from "../context/AuthContext";
 
 function mapApiUser(user) {
+	const normalizedRole = typeof user.role === "string" ? user.role.trim() : "";
 	return {
 		id: user.userId,
 		name: user.username,
 		email: user.email,
 		status: user.pending_status ?? (user.active_status ? "Active" : "Pending"),
-		role: `${user.role}`,
+		role: normalizedRole ? `${normalizedRole[0].toUpperCase()}${normalizedRole.slice(1).toLowerCase()}` : "Unknown",
 		enrolledSubject: `${user.module_enrolled || "—"}`,
 		lastActive: "Recently",
 	};
@@ -33,7 +34,8 @@ async function fetchAdminJson(url, options = {}) {
 	const data = await response.json().catch(() => null);
 
 	if (!response.ok) {
-		throw new Error(data?.message || "The request could not be completed.");
+		const message = Array.isArray(data?.message) ? data.message.join(", ") : data?.message;
+		throw new Error(message || `The request could not be completed (HTTP ${response.status}).`);
 	}
 
 	return data;
@@ -48,6 +50,9 @@ export default function UsersDashboard() {
 	const [status, setStatus] = useState("All statuses");
 	const [subject, setSubject] = useState("All subjects");
 	const [userRows, setUserRows] = useState([]);
+	const [usersLoading, setUsersLoading] = useState(true);
+	const [usersError, setUsersError] = useState("");
+	const [usersRequestAttempt, setUsersRequestAttempt] = useState(0);
 	const [inquiries, setInquiries] = useState([]);
 	const [inquiriesLoading, setInquiriesLoading] = useState(true);
 	const [inquiriesError, setInquiriesError] = useState("");
@@ -78,18 +83,38 @@ export default function UsersDashboard() {
 	const knownInquiryIds = useRef(new Set());
 
 	useEffect(() => {
+		let isMounted = true;
+		setUsersLoading(true);
+		setUsersError("");
 		fetch(`${API_URL}/users`, {
 			headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
 		})
-			.then((response) => {
+			.then(async (response) => {
 				if (!response.ok) {
-					throw new Error("Failed to fetch users");
+					const errorData = await response.json().catch(() => null);
+					const message = Array.isArray(errorData?.message)
+						? errorData.message.join(", ")
+						: errorData?.message;
+					throw new Error(message || `Failed to fetch users (HTTP ${response.status}).`);
 				}
 				return response.json();
 			})
-			.then((data) => setUserRows(data.map(mapApiUser)))
-			.catch((error) => console.error(error));
-	}, []);
+			.then((data) => {
+				if (!Array.isArray(data)) {
+					throw new Error("The users response was not a list.");
+				}
+				if (isMounted) setUserRows(data.map(mapApiUser));
+			})
+			.catch((error) => {
+				if (isMounted) setUsersError(error.message || "Unable to load users.");
+			})
+			.finally(() => {
+				if (isMounted) setUsersLoading(false);
+			});
+		return () => {
+			isMounted = false;
+		};
+	}, [usersRequestAttempt]);
 
 	useEffect(() => {
 		const controller = new AbortController();
@@ -486,7 +511,7 @@ export default function UsersDashboard() {
 								</select>}
 								<select value={role} onChange={(event) => setRole(event.target.value)} className="h-11 min-w-[140px] rounded-[14px] border border-[#e3e9f4] bg-white px-4 text-sm text-[#667085] outline-none focus:border-[#2b5cf0]">
 									<option>All roles</option>
-									<option>Member</option>
+									<option>Student</option>
 									<option>Admin</option>
 								</select>
 								<select value={subject} onChange={(event) => setSubject(event.target.value)} className="h-11 min-w-[150px] rounded-[14px] border border-[#e3e9f4] bg-white px-4 text-sm text-[#667085] outline-none focus:border-[#2b5cf0]">
@@ -507,6 +532,14 @@ export default function UsersDashboard() {
 								</div>
 							)}
 
+							{usersError && (
+								<div role="alert" className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+									<span>{usersError}</span>
+									<button type="button" onClick={() => setUsersRequestAttempt((attempt) => attempt + 1)} className="font-semibold underline">
+										Retry
+									</button>
+								</div>
+							)}
 							{approvalError && <p role="alert" className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{approvalError}</p>}
 							<div id="users-list-panel" role="tabpanel" aria-labelledby={userListTab === "pending" ? "pending-users-tab" : "all-users-tab"} className="overflow-x-auto rounded-[18px] border border-[#e3e9f4]">
 								<table className="w-full min-w-[760px] border-collapse text-left text-sm">
@@ -522,6 +555,8 @@ export default function UsersDashboard() {
 										</tr>
 									</thead>
 									<tbody>
+										{usersLoading && <tr><td colSpan="7" className="h-20 text-center text-sm text-[#667085]">Loading users...</td></tr>}
+										{!usersLoading && !usersError && userRows.length === 0 && <tr><td colSpan="7" className="h-20 text-center text-sm text-[#667085]">No users found.</td></tr>}
 										{filteredUsers.map((user) => (
 											<tr key={user.name} className="border-b border-[#eef2f9] transition-colors last:border-b-0 hover:bg-[#fbfcff]">
 												<td className="px-3 py-3 sm:px-4"><input type="checkbox" checked={selectedUsers.includes(user.name)} onChange={() => toggleUser(user.name)} aria-label={`Select ${user.name}`} className="h-4 w-4 rounded border-[#b5c1d6] accent-[#2b5cf0]" /></td>
@@ -539,8 +574,8 @@ export default function UsersDashboard() {
 													<button type="button" title={`Edit ${user.name}`} aria-label={`Edit ${user.name}`} className="transition hover:text-[#2b5cf0]"><Pencil size={16} /></button><button type="button" onClick={() => removeUsers([user.name])} title={`Delete ${user.name}`} aria-label={`Delete ${user.name}`} className="transition hover:text-[#e5484d]"><Trash2 size={16} /></button></div></td>
 											</tr>
 										))}
-										{filteredUsers.length === 0 && (
-											<tr><td colSpan="7" className="h-20 text-center text-sm text-[#667085]">{userListTab === "pending" ? "No users are waiting for approval." : "No users found"}</td></tr>
+										{!usersLoading && !usersError && userRows.length > 0 && filteredUsers.length === 0 && (
+											<tr><td colSpan="7" className="h-20 text-center text-sm text-[#667085]">{userListTab === "pending" ? "No users are waiting for approval." : "No users match these filters."}</td></tr>
 										)}
 									</tbody>
 								</table>
@@ -585,13 +620,21 @@ export default function UsersDashboard() {
 												<legend className="text-xs font-semibold text-[#344054]">Programs (programId)</legend>
 												<div className="mt-2 space-y-2">
 													{programs.map((program) => (
-														<label key={program.id} className="flex cursor-pointer items-center gap-3 rounded-lg border border-[#e3e9f4] px-3 py-2.5 text-sm hover:bg-[#f8faff]">
-															<input type="checkbox" checked={selectedProgramIds.includes(program.id)} onChange={() => toggleProgram(program.id)} className="h-4 w-4 accent-[#2b5cf0]" />
-															<span className="flex-1">{program.name}</span><span className="text-xs text-[#667085]">{program.moduleCount} modules</span>
-														</label>
+														<div key={program.id} className="space-y-1">
+															<label className="flex cursor-pointer items-center gap-3 rounded-lg border border-[#e3e9f4] px-3 py-2.5 text-sm hover:bg-[#f8faff]">
+																<input type="checkbox" checked={selectedProgramIds.includes(program.id)} onChange={() => toggleProgram(program.id)} className="h-4 w-4 accent-[#2b5cf0]" />
+																<span className="flex-1">{program.name} — Entire program</span>
+															</label>
+															{program.modules?.map((module) => (
+																<label key={module.id} className="ml-6 flex cursor-pointer items-center gap-3 rounded-lg border border-[#e3e9f4] px-3 py-2.5 text-sm hover:bg-[#f8faff]">
+																	<input type="checkbox" checked={selectedProgramIds.includes(module.id)} onChange={() => toggleProgram(module.id)} className="h-4 w-4 accent-[#2b5cf0]" />
+																	<span className="flex-1">{program.name} — {module.name}</span>
+																</label>
+															))}
+														</div>
 													))}
 												</div>
-												<p className="mt-2 text-xs text-[#667085]">Select one or more programs.</p>
+												<p className="mt-2 text-xs text-[#667085]">Choose a whole program or one or more of its modules.</p>
 											</fieldset>
 
 											<label htmlFor="enrolled-at" className="mt-5 block text-xs font-semibold text-[#344054]">Enrolled at (enrolledAt)</label>
@@ -613,7 +656,7 @@ export default function UsersDashboard() {
 																const enrollmentDate = new Date(enrollment.enrolledAt);
 																return <tr key={`${enrollment.userId}-${enrollment.programId}`} className="border-b border-[#eef2f9] last:border-0">
 																	<td className="px-2 py-3"><span className="block font-medium text-[#14213d]">{enrollment.user.username}</span><span className="text-[10px] text-[#667085]">usr_{enrollment.userId}</span></td>
-																	<td className="px-2 py-3"><span className="rounded-full bg-[#edf3ff] px-2 py-1 font-semibold text-[#2b5cf0]">{enrollment.program.name}</span></td>
+																	<td className="px-2 py-3"><span className="rounded-full bg-[#edf3ff] px-2 py-1 font-semibold text-[#2b5cf0]">{enrollment.program.parent ? `${enrollment.program.parent.name} — ${enrollment.program.name}` : `${enrollment.program.name} — Entire program`}</span></td>
 																	<td className="whitespace-nowrap px-2 py-3 text-[#344054]">{Number.isNaN(enrollmentDate.getTime()) ? "—" : enrollmentDate.toLocaleString()}</td>
 																	<td className="px-2 py-3"><button type="button" onClick={() => removeEnrollment(enrollment.userId, enrollment.programId)} className="font-medium text-[#d92d20] hover:underline">Remove</button></td>
 																</tr>;

@@ -29,7 +29,7 @@ describe('UsersService', () => {
     expect(service).toBeDefined();
   });
 
-  it('returns the persisted pending status in the admin user list', async () => {
+  it('returns an approval status derived from the active flag', async () => {
     findMany.mockResolvedValue([
       {
         id: 42,
@@ -37,7 +37,6 @@ describe('UsersService', () => {
         email: 'waiting@example.com',
         role: 'Student',
         active_status: false,
-        pending_status: 'Pending',
         programs_enrolled: null,
       },
     ]);
@@ -60,7 +59,6 @@ describe('UsersService', () => {
         email: true,
         role: true,
         active_status: true,
-        pending_status: true,
         programs_enrolled: true,
       },
     });
@@ -90,7 +88,7 @@ describe('UsersService', () => {
     });
     expect(updateMany).toHaveBeenCalledWith({
       where: { id: 42 },
-      data: { active_status: true, pending_status: 'Active' },
+      data: { active_status: true },
     });
   });
 

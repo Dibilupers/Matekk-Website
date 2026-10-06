@@ -39,6 +39,20 @@ model Users {
   programs_enrolled String
   pending_status    String       @default("Pending")
   enrollments       Enrollment[]
+  gradebooks        UserGradebook[]
+}
+
+model UserGradebook {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  programKey String
+  data       Json     @db.JsonB
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  user       Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, programKey])
+  @@index([programKey])
 }
 
 model Questions {
@@ -53,9 +67,14 @@ model Questions {
 }
 
 model Program {
-  id         Int          @id @default(autoincrement())
-  name       String
-  enrollmens Enrollment[]
+  id          Int          @id @default(autoincrement())
+  name        String
+  parentId    Int?
+  parent      Program?     @relation("ProgramModules", fields: [parentId], references: [id], onDelete: Cascade)
+  modules     Program[]    @relation("ProgramModules")
+  enrollmens  Enrollment[]
+
+  @@index([parentId])
 }
 
 model Enrollment {

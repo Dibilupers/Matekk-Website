@@ -25,7 +25,6 @@ export class UsersService {
                 email: true,
                 role: true,
                 active_status: true,
-                pending_status: true,
                 programs_enrolled: true,
             },
         });
@@ -36,7 +35,7 @@ export class UsersService {
             email: user.email ?? undefined,
             role: user.role,
             active_status: user.active_status,
-            pending_status: user.pending_status,
+            pending_status: user.active_status ? 'Active' : 'Pending',
             module_enrolled: user.programs_enrolled ?? undefined,
         }));
     }
@@ -45,7 +44,7 @@ export class UsersService {
         // The profile endpoint reads this persisted flag to release the user from the pending screen.
         const result = await this.prisma.users.updateMany({
             where: { id: userId },
-            data: { active_status: true, pending_status: 'Active' },
+            data: { active_status: true },
         });
         if (result.count === 0) {
             throw new NotFoundException('User not found.');
@@ -69,7 +68,7 @@ export class UsersService {
             password: databaseUser.password,
             role: databaseUser.role,
             active_status: databaseUser.active_status,
-            pending_status: databaseUser.pending_status,
+            pending_status: databaseUser.active_status ? 'Active' : 'Pending',
             email: databaseUser.email ?? undefined,
             module_enrolled: databaseUser.programs_enrolled ?? undefined,
         };
