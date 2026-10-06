@@ -43,6 +43,13 @@ export default function Login() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { login } = useAuth();
   const [isCheckingSession, setIsCheckingSession] = useState(true);
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [registerUsername, setRegisterUsername] = useState("");
+  const [registerEmail, setRegisterEmail] = useState("");
+  const [registerPassword, setRegisterPassword] = useState("");
+  const [programId, setProgramId] = useState("");
+  const [programs, setPrograms] = useState([]);
+  const [isLoadingPrograms, setIsLoadingPrograms] = useState(false);
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
@@ -74,6 +81,36 @@ export default function Login() {
     checkSession();
   }, [navigate]);
 
+  useEffect(() => {
+    if (!isRegistering) return undefined;
+
+    const controller = new AbortController();
+    setIsLoadingPrograms(true);
+    fetch(`${API_URL}/auth/programs`, { signal: controller.signal })
+      .then(async (response) => {
+        if (!response.ok) throw new Error("Unable to load the available programs.");
+        const availablePrograms = await response.json();
+        if (!Array.isArray(availablePrograms)) throw new TypeError("The programs response is invalid.");
+        setPrograms(availablePrograms);
+        setProgramId((currentProgramId) =>
+          availablePrograms.some((program) => String(program.id) === currentProgramId)
+            ? currentProgramId
+            : String(availablePrograms[0]?.id ?? ""),
+        );
+      })
+      .catch((error) => {
+        if (error.name !== "AbortError") {
+          console.error("Unable to load registration programs.", error);
+          setMsg("Unable to load programs for registration. Please try again.");
+        }
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setIsLoadingPrograms(false);
+      });
+
+    return () => controller.abort();
+  }, [isRegistering]);
+
   async function submit(e) {
     e.preventDefault();
     if (!username || !pass) {
@@ -100,6 +137,48 @@ export default function Login() {
     }
   }
 
+  async function submitRegistration(e) {
+    e.preventDefault();
+    setMsg("");
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch(`${API_URL}/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: registerUsername,
+          email: registerEmail,
+          password: registerPassword,
+          programId: Number(programId),
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json().catch(() => null);
+        const message = Array.isArray(error?.message) ? error.message.join(" ") : error?.message;
+        setMsg(message || "Unable to create your account.");
+        return;
+      }
+
+      const { response: loginResponse } = await login(registerUsername, registerPassword);
+      if (!loginResponse.ok) {
+        setMsg("Your account was created. Please sign in to continue to the approval page.");
+        setIsRegistering(false);
+        setUsername(registerUsername);
+        setPass("");
+        return;
+      }
+
+      navigate("/account-pending", { replace: true });
+    } catch (error) {
+      console.error("Unable to complete account registration.", error);
+      setMsg("Unable to connect to the registration server.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
   if (isCheckingSession) {
     return <main className="flex min-h-[calc(100vh-5rem)] items-center justify-center bg-[#f8fafc] text-slate-600">Checking your session...</main>;
   }
@@ -109,23 +188,45 @@ export default function Login() {
       <div className="pointer-events-none absolute inset-0 -z-10 opacity-70 [background-image:linear-gradient(35deg,transparent_0_35%,rgba(226,232,240,0.45)_35.2%_48%,transparent_48.2%),linear-gradient(145deg,transparent_0_46%,rgba(226,232,240,0.35)_46.2%_58%,transparent_58.2%),linear-gradient(75deg,transparent_0_62%,rgba(241,245,249,0.95)_62.2%_78%,transparent_78.2%)]" />
 
       <div className="mx-auto grid w-full max-w-6xl items-center gap-12 lg:grid-cols-[minmax(320px,390px)_1fr] lg:gap-20">
-        <form onSubmit={submit} className="w-full space-y-5 rounded-2xl border border-slate-300 bg-white px-8 py-9 shadow-[0_14px_35px_rgba(15,23,42,0.1)] sm:px-11">
+        <form onSubmit={isRegistering ? submitRegistration : submit} className="w-full space-y-5 rounded-2xl border border-slate-300 bg-white px-8 py-9 shadow-[0_14px_35px_rgba(15,23,42,0.1)] sm:px-11">
           <div className="flex justify-center">
             <img src={MainLogo} alt="Matekk Cybercore Technologies" className="h-auto w-56" />
           </div>
           <div className="space-y-1 text-center">
-            <h4 className="text-3xl uppercase tracking-tight">Welcome <span className="text-[#1775EE]">back</span></h4>
-            <p className="text-sm text-slate-400">Sign in to keep growing your skills</p>
+            <h4 className="text-3xl uppercase tracking-tight">
+              {isRegistering ? <>Create your <span className="text-[#1775EE]">account</span></> : <>Welcome <span className="text-[#1775EE]">back</span></>}
+            </h4>
+            <p className="text-sm text-slate-400">
+              {isRegistering ? "Register for a program and wait for admin approval." : "Sign in to keep growing your skills"}
+            </p>
           </div>
+
+          {isRegistering && (
+            <label className="block space-y-1 text-sm font-medium text-slate-800">
+              <span>Email</span>
+              <input
+                type="email"
+                value={registerEmail}
+                onChange={(e) => setRegisterEmail(e.target.value)}
+                placeholder="you@example.com"
+                autoComplete="email"
+                required
+                className="w-full rounded-lg border border-slate-500 px-4 py-2.5 outline-none transition focus:border-[#1775EE] focus:ring-2 focus:ring-blue-100"
+              />
+            </label>
+          )}
 
           <label className="block space-y-1 text-sm font-medium text-slate-800">
             <span>Username</span>
             <input
               type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={isRegistering ? registerUsername : username}
+              onChange={(e) => isRegistering ? setRegisterUsername(e.target.value) : setUsername(e.target.value)}
               placeholder="username"
               autoComplete="username"
+              minLength={isRegistering ? 3 : undefined}
+              maxLength={isRegistering ? 30 : undefined}
+              required
               className="w-full rounded-lg border border-slate-500 px-4 py-2.5 outline-none transition focus:border-[#1775EE] focus:ring-2 focus:ring-blue-100"
             />
           </label>
@@ -135,10 +236,13 @@ export default function Login() {
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
-                value={pass}
-                onChange={(e) => setPass(e.target.value)}
+                value={isRegistering ? registerPassword : pass}
+                onChange={(e) => isRegistering ? setRegisterPassword(e.target.value) : setPass(e.target.value)}
                 placeholder="••••••••••••"
-                autoComplete="current-password"
+                autoComplete={isRegistering ? "new-password" : "current-password"}
+                minLength={isRegistering ? 10 : undefined}
+                maxLength={isRegistering ? 128 : undefined}
+                required
                 className="w-full rounded-lg border border-slate-500 px-4 py-2.5 pr-11 outline-none transition focus:border-[#1775EE] focus:ring-2 focus:ring-blue-100"
               />
               <button
@@ -152,21 +256,45 @@ export default function Login() {
             </div>
           </label>
 
-          <div className="text-right text-sm text-slate-700">Forgot Password</div>
+          {isRegistering ? (
+            <label className="block space-y-1 text-sm font-medium text-slate-800">
+              <span>Program</span>
+              <select
+                value={programId}
+                onChange={(e) => setProgramId(e.target.value)}
+                disabled={isLoadingPrograms || programs.length === 0}
+                required
+                className="w-full rounded-lg border border-slate-500 bg-white px-4 py-2.5 outline-none transition focus:border-[#1775EE] focus:ring-2 focus:ring-blue-100 disabled:bg-slate-100"
+              >
+                {programs.length === 0 && <option value="">{isLoadingPrograms ? "Loading programs..." : "No programs available"}</option>}
+                {programs.map((program) => <option key={program.id} value={program.id}>{program.name}</option>)}
+              </select>
+            </label>
+          ) : (
+            <div className="text-right text-sm text-slate-700">Forgot Password</div>
+          )}
+
           <button
             type="submit"
-            disabled={isSubmitting}
+            disabled={isSubmitting || (isRegistering && (isLoadingPrograms || programs.length === 0))}
             className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#087ff5] px-6 py-3 font-semibold text-white shadow-[0_5px_12px_rgba(8,127,245,0.3)] transition hover:bg-[#0062E0] disabled:cursor-wait disabled:opacity-70"
           >
-            {isSubmitting ? "Signing in..." : "Sign In"}
+            {isSubmitting ? (isRegistering ? "Creating account..." : "Signing in...") : isRegistering ? "Create Account" : "Sign In"}
             {!isSubmitting && <ArrowRight size={17} />}
           </button>
 
           {msg && <p role="status" className="text-center text-sm text-slate-600">{msg}</p>}
           <div className="space-y-3 pt-1 text-center">
             <p className="text-xs text-slate-400">New to Matekk?</p>
-            <button type="button" className="w-full rounded-lg border border-slate-500 px-4 py-2.5 text-sm text-slate-500 transition hover:border-[#1775EE] hover:text-[#1775EE]">
-              Create New Account
+            <button
+              type="button"
+              onClick={() => {
+                setMsg("");
+                setIsRegistering((registering) => !registering);
+              }}
+              className="w-full rounded-lg border border-slate-500 px-4 py-2.5 text-sm text-slate-500 transition hover:border-[#1775EE] hover:text-[#1775EE]"
+            >
+              {isRegistering ? "Back to Sign In" : "Create New Account"}
             </button>
           </div>
         </form>

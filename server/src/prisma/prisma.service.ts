@@ -1,11 +1,7 @@
 import 'dotenv/config';
-import { createRequire } from 'node:module';
 import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { PrismaPg } from '@prisma/adapter-pg';
-
-const require = createRequire(import.meta.url);
-const { PrismaClient } =
-  require('../generated/prisma/client.js') as typeof import('../generated/prisma/client.js');
+import { PrismaClient } from '../generated/prisma/client.js';
 
 @Injectable()
 export class PrismaService

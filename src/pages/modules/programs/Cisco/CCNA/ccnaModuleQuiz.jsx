@@ -23,6 +23,7 @@ import {
 	recordProgramModuleQuizAttempt,
 	saveProgramModuleQuizProgress,
 } from "../../../../../utils/programModuleQuizProgress";
+import { saveGradebookAssessment } from "../../../../../utils/gradebookApi";
 
 const PROGRAM_QUIZ_CONFIG = {
 	"ccna-automation": {
@@ -151,6 +152,7 @@ export default function CCNAModuleQuiz() {
 	const [isAnswerReviewVisible, setIsAnswerReviewVisible] = useState(false);
 	const [animatedResult, setAnimatedResult] = useState({ key: null, score: 0, elapsedSeconds: 0 });
 	const [backToTopVisibility, setBackToTopVisibility] = useState({ key: null, visible: false });
+	const [gradebookSaveError, setGradebookSaveError] = useState(null);
 	const answerReviewRef = useRef(null);
 	const resultsTopRef = useRef(null);
 	const attempt = useMemo(
@@ -253,6 +255,40 @@ export default function CCNAModuleQuiz() {
 		animationFrame = window.requestAnimationFrame(animateScore);
 		return () => window.cancelAnimationFrame(animationFrame);
 	}, [animationKey, elapsedSeconds, isCompleted, moduleQuiz, score]);
+
+	useEffect(() => {
+		if (
+			!userId ||
+			!isCompleted ||
+			!moduleQuiz ||
+			!Number.isFinite(attempt.submittedAt)
+		) return undefined;
+
+		let isActive = true;
+		const gradebookProgramKey = programKey ?? "ccna";
+		saveGradebookAssessment(gradebookProgramKey, {
+			id: `quiz:${moduleQuiz.number}:${attempt.attempts ?? 1}`,
+			type: "quiz",
+			programKey: gradebookProgramKey,
+			moduleNumber: moduleQuiz.number,
+			title: `${moduleQuiz.number} ${moduleQuiz.title}`,
+			courseTitle,
+			status: attempt.status,
+			attemptNumber: attempt.attempts ?? 1,
+			score: attempt.score,
+			maxScore: moduleQuiz.questions.length,
+			submittedAt: attempt.submittedAt,
+		}).catch((error) => {
+			console.error("Unable to save the quiz result to the gradebook.", error);
+			if (isActive) {
+				setGradebookSaveError("Your quiz result could not be saved to the backend gradebook.");
+			}
+		});
+
+		return () => {
+			isActive = false;
+		};
+	}, [attempt.attempts, attempt.score, attempt.status, attempt.submittedAt, courseTitle, isCompleted, moduleQuiz, programKey, userId]);
 
 	useEffect(() => {
 		if (!isCompleted || !isAnswerReviewVisible) return undefined;
@@ -436,6 +472,11 @@ export default function CCNAModuleQuiz() {
 	return (
 		<main data-theme={isDark ? "dark" : "light"} className="ccna-page-enter min-h-screen bg-[#f5f9f9] px-4 py-6 text-[#17233d] sm:px-8 sm:py-8">
 			<div className="mx-auto max-w-[1125px]">
+				{gradebookSaveError && isCompleted && (
+					<p role="alert" className="mb-4 rounded-xl border border-[#f2c6c3] bg-white px-4 py-3 text-sm font-medium text-[#b42318]">
+						{gradebookSaveError} Reload this page to retry.
+					</p>
+				)}
 				<header className="mb-7 flex flex-wrap items-center justify-between gap-4 border-b border-[#d6e5e7] pb-5">
 					<div className="flex min-w-0 items-center gap-4">
 						<Link to={coursePath} aria-label={`Back to ${courseTitle} course`} className="ccna-training-logo shrink-0 rounded-lg bg-white px-3 py-2 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">

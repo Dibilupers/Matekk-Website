@@ -9,6 +9,7 @@ import { createCcnaMockExamAttemptId, saveCcnaMockExamResult } from "../../../..
 import { getCcnaExamSessionKey } from "../../../../../utils/ccnaShortExamSession";
 import { isAnswerCorrect, isQuestionAnswered, isValidQuestion } from "../../../../../utils/ccnaExamGrading";
 import { QuestionInput, QuestionReview } from "./ccnaExamQuestionViews";
+import { saveGradebookAssessment } from "../../../../../utils/gradebookApi";
 
 const EXAM_PASS_PERCENTAGE = 80;
 function createExamSession(exam) {
@@ -158,6 +159,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 			(answerFilter === "incorrect" && !item.isCorrect),
 		);
 	const [isDark, setIsDark] = useState(false);
+	const [gradebookSaveError, setGradebookSaveError] = useState(null);
 
 	useEffect(() => {
 		if (!shouldStartNewAttempt) return;
@@ -187,6 +189,30 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 			maxScore: questions.length,
 			submittedAt,
 		});
+	}, [attemptId, exam.name, isSubmitted, isViewingSavedResult, questions.length, score, submittedAt, userId]);
+
+	useEffect(() => {
+		if (!isSubmitted || isViewingSavedResult || !userId || !Number.isFinite(submittedAt)) return undefined;
+
+		let isActive = true;
+		saveGradebookAssessment("ccna", {
+			id: attemptId,
+			type: "exam",
+			programKey: "ccna",
+			title: exam.name,
+			score,
+			maxScore: questions.length,
+			submittedAt,
+		}).catch((error) => {
+			console.error("Unable to save the exam result to the gradebook.", error);
+			if (isActive) {
+				setGradebookSaveError("Your exam result could not be saved to the backend gradebook.");
+			}
+		});
+
+		return () => {
+			isActive = false;
+		};
 	}, [attemptId, exam.name, isSubmitted, isViewingSavedResult, questions.length, score, submittedAt, userId]);
 
 	function submitExam(finishedAt = Date.now()) {
@@ -339,6 +365,11 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 	return (
 		<main data-theme={isDark ? "dark" : "light"} className="ccna-page-enter min-h-screen bg-[#f5f9f9] px-4 py-6 text-[#17233d] sm:px-8 sm:py-8">
 			<div className="mx-auto max-w-[1125px]">
+				{gradebookSaveError && isResultView && (
+					<p role="alert" className="mb-4 rounded-xl border border-[#f2c6c3] bg-white px-4 py-3 text-sm font-medium text-[#b42318]">
+						{gradebookSaveError} Reload this page to retry.
+					</p>
+				)}
 				<header className="mb-7 flex flex-wrap items-center justify-between gap-4 border-b border-[#d6e5e7] pb-5">
 					<div className="flex min-w-0 items-center gap-4">
 						<Link to="/modules/programs/ccna" aria-label="Back to CCNA course" className="shrink-0 rounded-lg bg-white px-3 py-2 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 motion-reduce:transition-none">

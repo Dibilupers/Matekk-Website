@@ -38,6 +38,10 @@ export class GradebookService {
       throw new BadRequestException('Gradebook data must contain valid JSON values.');
     }
 
+    if (isJsonObject(jsonData.assessments)) {
+      return this.mergeAssessments(userId, programKey, jsonData);
+    }
+
     return this.prisma.userGradebook.upsert({
       where: {
         userId_programKey: {
@@ -55,6 +59,36 @@ export class GradebookService {
         data: true,
         updatedAt: true,
       },
+    });
+  }
+
+  private async mergeAssessments(
+    userId: number,
+    programKey: string,
+    data: Prisma.InputJsonObject,
+  ) {
+    const existing = await this.prisma.userGradebook.findUnique({
+      where: { userId_programKey: { userId, programKey } },
+      select: { data: true },
+    });
+    const existingData = isJsonObject(existing?.data) ? existing.data : {};
+    const existingAssessments = isJsonObject(existingData.assessments)
+      ? existingData.assessments
+      : {};
+    const jsonData: Prisma.InputJsonObject = {
+      ...existingData,
+      ...data,
+      assessments: {
+        ...existingAssessments,
+        ...(data.assessments as Prisma.InputJsonObject),
+      },
+    };
+
+    return this.prisma.userGradebook.upsert({
+      where: { userId_programKey: { userId, programKey } },
+      create: { userId, programKey, data: jsonData },
+      update: { data: jsonData },
+      select: { data: true, updatedAt: true },
     });
   }
 }

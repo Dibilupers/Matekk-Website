@@ -1,0 +1,66 @@
+import API_URL from "../config/api";
+
+function getAccessToken() {
+	const token = window.localStorage.getItem("accessToken");
+	if (!token) throw new Error("Sign in to save or view gradebook results.");
+	return token;
+}
+
+async function readResponse(response) {
+	if (!response.ok) {
+		throw new Error(`Gradebook request failed (${response.status}).`);
+	}
+	const body = await response.text();
+	if (!body.trim()) return null;
+	try {
+		return JSON.parse(body);
+	} catch {
+		throw new TypeError("The gradebook API returned an invalid JSON response.");
+	}
+}
+
+export async function readGradebookAssessments(programKey) {
+	const response = await fetch(`${API_URL}/gradebook/${encodeURIComponent(programKey)}`, {
+		headers: { Authorization: `Bearer ${getAccessToken()}` },
+	});
+	const gradebook = await readResponse(response);
+	const assessments = gradebook?.data?.assessments;
+	if (assessments === undefined || assessments === null) return [];
+	if (typeof assessments !== "object" || Array.isArray(assessments)) {
+		throw new TypeError("The saved gradebook assessments have an invalid format.");
+	}
+	return Object.values(assessments).filter((assessment) =>
+		typeof assessment?.id === "string" &&
+		Number.isFinite(assessment.score) &&
+		Number.isFinite(assessment.maxScore) &&
+		assessment.maxScore > 0 &&
+		Number.isFinite(assessment.submittedAt),
+	);
+}
+
+export async function saveGradebookAssessments(programKey, assessments) {
+	if (!Array.isArray(assessments) || assessments.some((assessment) =>
+		typeof assessment?.id !== "string" ||
+		!Number.isFinite(assessment.score) ||
+		!Number.isFinite(assessment.maxScore) ||
+		assessment.maxScore <= 0 ||
+		!Number.isFinite(assessment.submittedAt),
+	)) {
+		throw new TypeError("Gradebook assessments must include an ID, valid score, maximum score, and submission time.");
+	}
+	if (assessments.length === 0) return;
+	const assessmentMap = Object.fromEntries(assessments.map((assessment) => [assessment.id, assessment]));
+	const response = await fetch(`${API_URL}/gradebook/${encodeURIComponent(programKey)}`, {
+		method: "PUT",
+		headers: {
+			Authorization: `Bearer ${getAccessToken()}`,
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({ data: { assessments: assessmentMap } }),
+	});
+	await readResponse(response);
+}
+
+export async function saveGradebookAssessment(programKey, assessment) {
+	return saveGradebookAssessments(programKey, [assessment]);
+}

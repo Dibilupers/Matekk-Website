@@ -7,6 +7,7 @@ import {
 	isCurrentProgramModuleQuizAttempt,
 	readProgramModuleQuizProgress,
 } from "../../../utils/programModuleQuizProgress";
+import { readGradebookAssessments } from "../../../utils/gradebookApi";
 
 function getGradeTone(score) {
 	if (!Number.isFinite(score)) {
@@ -17,10 +18,30 @@ function getGradeTone(score) {
 	return { text: "text-[#b42318]", fill: "bg-[#d04438]", badge: "bg-[#fff0ed] text-[#b42318]" };
 }
 
-function getModuleRows(modules, progress) {
+function getModuleRows(modules, progress, storedAssessments) {
 	return modules.flatMap((module, index) => {
 		const attempt = progress.modules[module.number];
-		if (!isCurrentProgramModuleQuizAttempt(attempt)) {
+		const isCurrentAttempt = isCurrentProgramModuleQuizAttempt(attempt);
+		const localHistory = isCurrentAttempt
+			? getCcnaModuleQuizAttemptHistory(attempt, 20)
+				.filter((result) => Number.isInteger(result.attemptNumber) && Number.isFinite(result.score))
+			: [];
+		const storedHistory = storedAssessments
+			.filter((result) => result.type === "quiz" && result.moduleNumber === module.number)
+			.map((result) => ({
+				attemptNumber: result.attemptNumber,
+				status: result.status,
+				score: result.score,
+				maxScore: result.maxScore,
+				submittedAt: result.submittedAt,
+			}))
+			.filter((result) => Number.isInteger(result.attemptNumber));
+		const historyByAttempt = new Map(localHistory.map((result) => [result.attemptNumber, result]));
+		for (const result of storedHistory) historyByAttempt.set(result.attemptNumber, result);
+		const history = [...historyByAttempt.values()]
+			.sort((first, second) => first.attemptNumber - second.attemptNumber);
+
+		if (!isCurrentAttempt && history.length === 0) {
 			return [{
 				id: `${module.number}-upcoming`,
 				name: `${module.number} ${module.title}`,
@@ -36,9 +57,6 @@ function getModuleRows(modules, progress) {
 			}];
 		}
 
-		const history = getCcnaModuleQuizAttemptHistory(attempt, 20)
-			.filter((result) => Number.isInteger(result.attemptNumber) && Number.isFinite(result.score))
-			.sort((first, second) => first.attemptNumber - second.attemptNumber);
 		const bestResult = history.reduce((best, result) => {
 			const maxScore = Number.isFinite(result.maxScore) && result.maxScore > 0 ? result.maxScore : 20;
 			const bestMaxScore = Number.isFinite(best?.maxScore) && best.maxScore > 0 ? best.maxScore : 20;
@@ -65,7 +83,7 @@ function getModuleRows(modules, progress) {
 			};
 		});
 
-		if (attempt.status === "in-progress") {
+		if (isCurrentAttempt && attempt.status === "in-progress") {
 			rows.push({
 				id: `${module.number}-in-progress`,
 				name: `${module.number} ${module.title}`,
@@ -190,8 +208,31 @@ export default function ProgramModuleGradebook({ programKey, programName, module
 	const [typedWelcome, setTypedWelcome] = useState(() => prefersReducedMotion ? welcomeText : "");
 	const [filter, setFilter] = useState("all");
 	const [sort, setSort] = useState("default");
+	const [backendGradebook, setBackendGradebook] = useState({ userId: null, assessments: [], error: null });
+	useEffect(() => {
+		if (!userId) return undefined;
+		let isActive = true;
+		readGradebookAssessments(programKey)
+			.then((assessments) => {
+				if (isActive) setBackendGradebook({ userId, assessments, error: null });
+			})
+			.catch((error) => {
+				console.error(`Unable to load the backend ${programKey} gradebook.`, error);
+				if (isActive) {
+					setBackendGradebook({
+						userId,
+						assessments: [],
+						error: "Backend gradebook results could not be loaded. Showing locally saved results.",
+					});
+				}
+			});
+		return () => {
+			isActive = false;
+		};
+	}, [programKey, userId]);
 	const progress = userId ? readProgramModuleQuizProgress(programKey, userId) : { activeModule: null, modules: {} };
-	const moduleRows = getModuleRows(modules, progress);
+	const storedAssessments = backendGradebook.userId === userId ? backendGradebook.assessments : [];
+	const moduleRows = getModuleRows(modules, progress, storedAssessments);
 	const completedRows = moduleRows.filter((row) => row.status === "graded");
 	const latestRows = modules.flatMap((module) => {
 		const attempts = completedRows.filter((row) => row.name.startsWith(`${module.number} `)).sort((first, second) => first.attempts - second.attempts);
@@ -219,6 +260,11 @@ export default function ProgramModuleGradebook({ programKey, programName, module
 	return (
 		<main className="ccna-page-enter min-h-screen bg-[#f5f7f8] pb-12 text-[#152536]">
 			<div className="mx-auto max-w-[1680px] px-4 py-6 sm:px-8 lg:px-10 2xl:px-12">
+				{backendGradebook.error && backendGradebook.userId === userId && (
+					<p role="alert" className="mb-4 rounded-md border border-[#f2c6c3] bg-white px-4 py-3 text-sm font-medium text-[#b42318]">
+						{backendGradebook.error}
+					</p>
+				)}
 				<header className="ccna-gradebook-summary">
 					<div className="ccna-gradebook-banner relative px-6 py-6 text-white sm:px-10 sm:py-7">
 						<Link to={dashboardPath} className="absolute left-6 top-5 inline-flex items-center gap-2 text-base font-semibold text-white/85 transition hover:text-white sm:left-10 sm:top-6">

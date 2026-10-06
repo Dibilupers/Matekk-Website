@@ -9,6 +9,7 @@ import {
 } from "../../../../../utils/ccnaModuleQuizProgress";
 import { readCcnaExamProgress, readCcnaShortExamProgress } from "../../../../../utils/ccnaShortExamSession";
 import { readCcnaMockExamResults } from "../../../../../utils/ccnaGradebook";
+import { readGradebookAssessments } from "../../../../../utils/gradebookApi";
 import { CCNA_MODULE_QUIZZES } from "./ccnaModuleQuizData";
 import { CCNA_EXAMS } from "./ccnaExamFormats";
 
@@ -43,18 +44,45 @@ function getGradeTone(score) {
 	};
 }
 
-function getModuleRows(progress) {
+function getModuleRows(progress, storedAssessments) {
 	return CCNA_MODULE_QUIZZES.flatMap((quiz, index) => {
 		const attempt = progress.modules[quiz.number];
 		const isCurrentAttempt = isCurrentCcnaModuleQuizAttempt(attempt);
-		const history = isCurrentAttempt
+		const localHistory = isCurrentAttempt
 			? getCcnaModuleQuizAttemptHistory(attempt, quiz.questions.length)
 				.filter((result) => Number.isInteger(result.attemptNumber) && Number.isFinite(result.score))
-				.sort((first, second) => first.attemptNumber - second.attemptNumber)
 			: [];
-		const bestScore = isCurrentAttempt && Number.isFinite(attempt.bestScore)
-			? attempt.bestScore
-			: Math.max(0, ...history.map((result) => result.score));
+		const storedHistory = storedAssessments
+			.filter((result) => result.type === "quiz" && result.moduleNumber === quiz.number)
+			.map((result) => ({
+				attemptNumber: result.attemptNumber,
+				status: result.status,
+				score: result.score,
+				maxScore: result.maxScore,
+				submittedAt: result.submittedAt,
+			}))
+			.filter((result) => Number.isInteger(result.attemptNumber));
+		const historyByAttempt = new Map(localHistory.map((result) => [result.attemptNumber, result]));
+		for (const result of storedHistory) historyByAttempt.set(result.attemptNumber, result);
+		const history = [...historyByAttempt.values()]
+			.sort((first, second) => first.attemptNumber - second.attemptNumber);
+		if (!isCurrentAttempt && history.length === 0) {
+			return [{
+				id: `${quiz.number}-upcoming`,
+				name: `${quiz.number} ${quiz.title}`,
+				status: "upcoming",
+				statusLabel: "Not started",
+				submittedAt: null,
+				attempts: 0,
+				points: null,
+				bestPoints: null,
+				order: index * 100,
+			}];
+		}
+		const bestScore = Math.max(
+			isCurrentAttempt && Number.isFinite(attempt.bestScore) ? attempt.bestScore : 0,
+			...history.map((result) => result.score),
+		);
 		const bestPoints = history.length
 			? { score: Math.round((bestScore / quiz.questions.length) * 100), maxScore: 100 }
 			: null;
@@ -105,11 +133,18 @@ function getModuleRows(progress) {
 	});
 }
 
-function getExamRows(examProgressByKey, examResults) {
+function getExamRows(examProgressByKey, examResults, storedAssessments) {
 	return Object.values(CCNA_EXAMS).map((exam, index) => {
 		const progress = examProgressByKey[exam.name];
-		const results = examResults
-			.filter((result) => result.title === exam.name)
+		const resultById = new Map(
+			examResults.filter((result) => result.title === exam.name).map((result) => [result.id, result]),
+		);
+		for (const result of storedAssessments) {
+			if (result.type === "exam" && result.title === exam.name) {
+				resultById.set(result.id, result);
+			}
+		}
+		const results = [...resultById.values()]
 			.sort((first, second) => first.submittedAt - second.submittedAt);
 		const latestResult = results.at(-1);
 		const bestResult = results.reduce(
@@ -242,6 +277,28 @@ export default function CCNAGradebook() {
 	const welcomeText = `Welcome, ${profile?.username ?? "Student"}!`;
 	const [prefersReducedMotion] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
 	const [typedWelcome, setTypedWelcome] = useState(() => prefersReducedMotion ? welcomeText : "");
+	const [backendGradebook, setBackendGradebook] = useState({ userId: null, assessments: [], error: null });
+	useEffect(() => {
+		if (!userId) return undefined;
+		let isActive = true;
+		readGradebookAssessments("ccna")
+			.then((assessments) => {
+				if (isActive) setBackendGradebook({ userId, assessments, error: null });
+			})
+			.catch((error) => {
+				console.error("Unable to load the backend CCNA gradebook.", error);
+				if (isActive) {
+					setBackendGradebook({
+						userId,
+						assessments: [],
+						error: "Backend gradebook results could not be loaded. Showing locally saved results.",
+					});
+				}
+			});
+		return () => {
+			isActive = false;
+		};
+	}, [userId]);
 	const progress = userId ? readCcnaModuleQuizProgress(userId) : EMPTY_PROGRESS;
 	const shortExamProgress = readCcnaShortExamProgress(userId);
 	const examProgressByKey = Object.fromEntries(Object.values(CCNA_EXAMS).map((exam) => [
@@ -251,8 +308,9 @@ export default function CCNAGradebook() {
 			: readCcnaExamProgress(exam.sessionKey, userId),
 	]));
 	const examResults = readCcnaMockExamResults(userId);
-	const moduleRows = getModuleRows(progress);
-	const examRows = getExamRows(examProgressByKey, examResults);
+	const storedAssessments = backendGradebook.userId === userId ? backendGradebook.assessments : [];
+	const moduleRows = getModuleRows(progress, storedAssessments);
+	const examRows = getExamRows(examProgressByKey, examResults, storedAssessments);
 	const allRows = [...moduleRows, ...examRows];
 	const [filter, setFilter] = useState("all");
 	const [sort, setSort] = useState("default");
@@ -298,6 +356,11 @@ export default function CCNAGradebook() {
 	return (
 		<main className="ccna-page-enter min-h-screen bg-[#f5f7f8] pb-12 text-[#152536]">
 			<div className="mx-auto max-w-[1680px] px-4 py-6 sm:px-8 lg:px-10 2xl:px-12">
+				{backendGradebook.error && backendGradebook.userId === userId && (
+					<p role="alert" className="mb-4 rounded-md border border-[#f2c6c3] bg-white px-4 py-3 text-sm font-medium text-[#b42318]">
+						{backendGradebook.error}
+					</p>
+				)}
 				<header className="relative">
 					<div className="relative left-1/2 w-screen -translate-x-1/2 bg-[#087a91] px-4 py-6 text-white sm:px-8 sm:py-7 lg:px-10 2xl:px-12">
 						<div className="mx-auto max-w-[1680px] px-2 sm:px-0">
