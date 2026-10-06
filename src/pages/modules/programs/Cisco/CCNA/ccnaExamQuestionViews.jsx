@@ -1,4 +1,4 @@
-import { questionType, requiredSelections } from "../../../../utils/ccnaExamGrading";
+import { questionType, requiredSelections } from "../../../../../utils/ccnaExamGrading";
 
 const letter = (i) => String.fromCharCode(65 + i);
 

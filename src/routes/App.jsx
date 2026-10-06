@@ -8,6 +8,7 @@ import ScrollToTop from "../components/scroll/ScrollToTop";
 /* Pages */
 import Home from "../pages/Home";
 import Login from "../pages/Login";
+import AccountPending from "../pages/AccountPending";
 import NotFound from "../pages/NotFound";
 
 /* Cisco */
@@ -105,21 +106,29 @@ import Renewable from "../pages/solutions/pece/renewable";
 
 import Blank from "../pages/Blank";
 import AdminPage from "../pages/admin";
-import CCNADashboard from "../pages/modules/programs/CCNA/ccna";
-import CCNAAutomationDashboard from "../pages/modules/programs/CCNAAutomation/ccnaAutomationDashboard";
-import CCNACybersecurityDashboard from "../pages/modules/programs/CCNACybersecurity/ccnaCybersecurityDashboard";
-import CCNAKnowledgeHub from "../pages/modules/programs/CCNA/ccnaKnowledgeHub";
-import CCNAKnowledgeArticle from "../pages/modules/programs/CCNA/ccnaKnowledgeArticle";
-import CCNACompositeExam from "../pages/modules/programs/CCNA/ccnaCompositeExam";
-import CCNAModuleQuiz from "../pages/modules/programs/CCNA/ccnaModuleQuiz";
-import CCNAGradebook from "../pages/modules/programs/CCNA/ccnaGradebook";
+import CCNADashboard from "../pages/modules/programs/Cisco/CCNA/ccna";
+import CCNAAutomationDashboard from "../pages/modules/programs/Cisco/CCNAAutomation/ccnaAutomationDashboard";
+import CCNAAutomationKnowledgeHub from "../pages/modules/programs/Cisco/CCNAAutomation/ccnaAutomationKnowledgeHub";
+import CCNAAutomationKnowledgeArticle from "../pages/modules/programs/Cisco/CCNAAutomation/ccnaAutomationKnowledgeArticle";
+import CCNACybersecurityDashboard from "../pages/modules/programs/Cisco/CCNACybersecurity/ccnaCybersecurityDashboard";
+import CCNACybersecurityKnowledgeHub from "../pages/modules/programs/Cisco/CCNACybersecurity/ccnaCybersecurityKnowledgeHub";
+import CCNACybersecurityKnowledgeArticle from "../pages/modules/programs/Cisco/CCNACybersecurity/ccnaCybersecurityKnowledgeArticle";
+import ProgramModuleGradebook from "../pages/modules/programs/ProgramModuleGradebook";
+import { CCNA_AUTOMATION_CURRICULUM } from "../pages/modules/programs/Cisco/CCNAAutomation/ccnaAutomationCurriculum";
+import { CCNA_CYBERSECURITY_CURRICULUM } from "../pages/modules/programs/Cisco/CCNACybersecurity/ccnaCybersecurityCurriculum";
+import CCNAKnowledgeHub from "../pages/modules/programs/Cisco/CCNA/ccnaKnowledgeHub";
+import CCNAKnowledgeArticle from "../pages/modules/programs/Cisco/CCNA/ccnaKnowledgeArticle";
+import CCNACompositeExam from "../pages/modules/programs/Cisco/CCNA/ccnaCompositeExam";
+import CCNAModuleQuiz from "../pages/modules/programs/Cisco/CCNA/ccnaModuleQuiz";
+import CCNAGradebook from "../pages/modules/programs/Cisco/CCNA/ccnaGradebook";
+import AplusDashboard from "../pages/modules/programs/CompTIA/A+ (Core 1 & 2)/aplusDashboard";
 import { useAuth } from "../context/AuthContext";
 import {
   readCcnaModuleQuizProgress,
   recordCcnaModuleQuizAttempt,
   saveCcnaModuleQuizProgress,
 } from "../utils/ccnaModuleQuizProgress";
-import { CCNA_MODULE_QUIZZES } from "../pages/modules/programs/CCNA/ccnaModuleQuizData";
+import { CCNA_MODULE_QUIZZES } from "../pages/modules/programs/Cisco/CCNA/ccnaModuleQuizData";
 
 if ("scrollRestoration" in history) {
   history.scrollRestoration = "manual";
@@ -128,18 +137,29 @@ if ("scrollRestoration" in history) {
 export default function App() {
   const location = useLocation();
   const isCCNAQuiz = location.pathname.startsWith("/modules/programs/ccna/quiz/")
-    || location.pathname.startsWith("/modules/programs/ccna/exam/");
+    || location.pathname.startsWith("/modules/programs/ccna/exam/")
+    || location.pathname.startsWith("/modules/programs/ccna-automation/quiz/")
+    || location.pathname.startsWith("/modules/programs/ccna-cybersecurity/quiz/");
   const isAdminPage = location.pathname === "/admin";
+  const isAccountPendingPage = location.pathname === "/account-pending";
 
   return (
     <>
       <CCNAExamTimeNotification />
-      {!isCCNAQuiz && <NavBar />}
+      {!isCCNAQuiz && !isAccountPendingPage && <NavBar />}
       <ScrollToTop />
 
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        <Route
+          path="/account-pending"
+          element={(
+            <AccountStatusRoute>
+              <AccountPending />
+            </AccountStatusRoute>
+          )}
+        />
 
         {/* Cisco */}
         <Route path="/training/cisco/ccna/ccna" element={<CCNA />} />
@@ -325,12 +345,27 @@ export default function App() {
         <Route path="/solutions/pece/ipcctv" element={<IPCCTV />} />
         <Route path="/solutions/pece/pas" element={<PAS />} />
         <Route path="/solutions/pece/renewable" element={<Renewable />} />
-        <Route path="/pages/blank" element={<Blank />} />
+        <Route
+          path="/pages/blank"
+          element={
+            <ProtectedRoute>
+              <Blank />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/modules/programs/ccna"
           element={
             <ProtectedRoute>
               <CCNADashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/comptia-aplus"
+          element={
+            <ProtectedRoute>
+              <AplusDashboard />
             </ProtectedRoute>
           }
         />
@@ -351,6 +386,35 @@ export default function App() {
           }
         />
         <Route
+          path="/modules/programs/ccna-automation/knowledge-hub"
+          element={
+            <ProtectedRoute>
+              <CCNAAutomationKnowledgeHub />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/ccna-automation/knowledge-hub/:articleSlug"
+          element={
+            <ProtectedRoute>
+              <CCNAAutomationKnowledgeArticle />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/ccna-automation/gradebook"
+          element={
+            <ProtectedRoute>
+              <ProgramModuleGradebook
+                programKey="ccna-automation"
+                programName="CCNA Automation"
+                modules={CCNA_AUTOMATION_CURRICULUM}
+                dashboardPath="/modules/programs/ccna-automation"
+              />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/modules/programs/ccna-cybersecurity"
           element={
             <ProtectedRoute>
@@ -359,7 +423,52 @@ export default function App() {
           }
         />
         <Route
+          path="/modules/programs/ccna-cybersecurity/knowledge-hub"
+          element={
+            <ProtectedRoute>
+              <CCNACybersecurityKnowledgeHub />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/ccna-cybersecurity/knowledge-hub/:articleSlug"
+          element={
+            <ProtectedRoute>
+              <CCNACybersecurityKnowledgeArticle />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/ccna-cybersecurity/gradebook"
+          element={
+            <ProtectedRoute>
+              <ProgramModuleGradebook
+                programKey="ccna-cybersecurity"
+                programName="CCNA Cybersecurity"
+                modules={CCNA_CYBERSECURITY_CURRICULUM}
+                dashboardPath="/modules/programs/ccna-cybersecurity"
+              />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/modules/programs/ccna/quiz/:moduleNumber"
+          element={
+            <ProtectedRoute>
+              <CCNAModuleQuiz />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/ccna-automation/quiz/:moduleNumber"
+          element={
+            <ProtectedRoute>
+              <CCNAModuleQuiz />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/ccna-cybersecurity/quiz/:moduleNumber"
           element={
             <ProtectedRoute>
               <CCNAModuleQuiz />
@@ -417,9 +526,9 @@ export default function App() {
         <Route
           path="/admin"
           element={
-            <ProtectedRoute>
+            <AdminRoute>
               <AdminPage />
-            </ProtectedRoute>
+            </AdminRoute>
           }
         />
 
@@ -427,7 +536,7 @@ export default function App() {
       </Routes>
 
 
-      {!isCCNAQuiz && !isAdminPage && <Footer />}
+      {!isCCNAQuiz && !isAdminPage && !isAccountPendingPage && <Footer />}
     </>
   );
 }
@@ -484,8 +593,8 @@ function CCNAExamTimeNotification() {
         const nextNotification = { type: "module", moduleNumber: expiredModuleAttempt[0], userId };
         setNotification((current) =>
           current?.type === nextNotification.type &&
-          current.moduleNumber === nextNotification.moduleNumber &&
-          current.userId === nextNotification.userId
+            current.moduleNumber === nextNotification.moduleNumber &&
+            current.userId === nextNotification.userId
             ? current
             : nextNotification,
         );
@@ -547,8 +656,8 @@ function CCNAExamTimeNotification() {
   );
 }
 
-function ProtectedRoute({ children }) {
-  const { isAuthenticated, isLoading } = useAuth();
+function AccountStatusRoute({ children }) {
+  const { profile, isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {
     return (
@@ -558,5 +667,43 @@ function ProtectedRoute({ children }) {
     );
   }
 
-  return isAuthenticated ? children : <Navigate to="/login" replace />;
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  return profile.active_status === false
+    ? children
+    : <Navigate to="/pages/blank" replace />;
+}
+
+function ProtectedRoute({ children }) {
+  const { profile, isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-white text-sm text-slate-500">
+        Checking your session...
+      </main>
+    );
+  }
+
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  return profile.active_status === false
+    ? <Navigate to="/account-pending" replace />
+    : children;
+}
+
+function AdminRoute({ children }) {
+  const { profile, isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-white text-sm text-slate-500">
+        Checking your session...
+      </main>
+    );
+  }
+
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  if (profile.active_status === false) return <Navigate to="/account-pending" replace />;
+  return profile.role?.trim().toLowerCase() === "admin"
+    ? children
+    : <Navigate to="/pages/blank" replace />;
 }

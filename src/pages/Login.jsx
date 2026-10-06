@@ -58,7 +58,8 @@ export default function Login() {
         });
 
         if (response.ok) {
-          navigate("/pages/blank", { replace: true });
+          const profile = await response.json();
+          navigate(profile.active_status === false ? "/account-pending" : "/pages/blank", { replace: true });
           return;
         }
 
@@ -84,14 +85,14 @@ export default function Login() {
     setMsg("");
 
     try {
-      const response = await login(username, pass);
+      const { response, profile } = await login(username, pass);
 
       if (!response.ok) {
         setMsg(response.status === 401 ? "Invalid username or password." : "Unable to log in.");
         return;
       }
 
-      window.location.replace("/pages/blank");
+      navigate(profile.active_status === false ? "/account-pending" : "/pages/blank", { replace: true });
     } catch {
       setMsg("Unable to connect to the login server.");
     } finally {

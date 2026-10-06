@@ -8,7 +8,7 @@ export class QuestionsService {
     constructor(private prisma: PrismaService) { }
 
     create(data: CreateQuestionDto) {
-        return this.prisma.questions.create({
+        return this.prisma.questionsRls.create({
             data: {
                 module: data.module,
                 topic: data.topic,
@@ -22,7 +22,7 @@ export class QuestionsService {
     }
 
     findAll() {
-        return this.prisma.questions.findMany();
+        return this.prisma.questionsRls.findMany();
     }
 
 }

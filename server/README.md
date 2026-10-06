@@ -35,6 +35,9 @@ $ npm install
 
 Prisma Client is generated automatically before building or starting the server.
 Make sure `DATABASE_URL` is set in `server/.env`.
+Observe telemetry is optional. To enable it, set both `OBSERVE_APP_KEY` and
+`OBSERVE_APP_SECRET`; otherwise telemetry is disabled. `OBSERVE_SERVICE_ID`
+defaults to `server`.
 
 ```bash
 # development
