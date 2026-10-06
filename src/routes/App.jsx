@@ -120,6 +120,7 @@ import CCNAKnowledgeArticle from "../pages/modules/programs/Cisco/CCNA/ccnaKnowl
 import CCNACompositeExam from "../pages/modules/programs/Cisco/CCNA/ccnaCompositeExam";
 import CCNAModuleQuiz from "../pages/modules/programs/Cisco/CCNA/ccnaModuleQuiz";
 import CCNAGradebook from "../pages/modules/programs/Cisco/CCNA/ccnaGradebook";
+import AplusDashboard from "../pages/modules/programs/CompTIA/A+ (Core 1 & 2)/aplusDashboard";
 import { useAuth } from "../context/AuthContext";
 import {
   readCcnaModuleQuizProgress,
@@ -340,6 +341,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <CCNADashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/comptia-aplus"
+          element={
+            <ProtectedRoute>
+              <AplusDashboard />
             </ProtectedRoute>
           }
         />

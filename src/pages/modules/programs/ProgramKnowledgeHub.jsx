@@ -93,7 +93,7 @@ function getLessonIcon(title) {
 	return { Icon: BookOpen, style: "bg-[#116d57] text-[#e0f5ee]" };
 }
 
-function LessonCard({ lesson, module, basePath, programName, onOpen, isScrollable }) {
+function LessonCard({ lesson, basePath, onOpen, isScrollable }) {
 	const { Icon, style } = getLessonIcon(lesson.title);
 	return (
 		<Link
@@ -111,14 +111,13 @@ function LessonCard({ lesson, module, basePath, programName, onOpen, isScrollabl
 			</div>
 			<span className="mt-5 flex items-center gap-1.5 text-sm text-[#71819b] transition-transform duration-200 group-hover:scale-[1.02]">
 				<Clock size={15} /> {lesson.duration} read
-				<span className="ml-auto text-xs">{programName} · {module.number}</span>
 				<ArrowRight size={15} className="transition group-hover:translate-x-1 group-hover:text-[#005b6b]" />
 			</span>
 		</Link>
 	);
 }
 
-function CurriculumSection({ module, visibleLessons, basePath, programName, onOpen }) {
+function CurriculumSection({ module, visibleLessons, basePath, onOpen }) {
 	const trackRef = useRef(null);
 	const isScrollable = visibleLessons.length > 3;
 	if (!visibleLessons.length) return null;
@@ -158,7 +157,7 @@ function CurriculumSection({ module, visibleLessons, basePath, programName, onOp
 				{...(isScrollable ? { tabIndex: 0, "aria-label": `${module.title} subjects; swipe or scroll horizontally` } : {})}
 			>
 				{visibleLessons.map((lesson) => (
-					<LessonCard key={lesson.slug} lesson={lesson} module={module} basePath={basePath} programName={programName} onOpen={onOpen} isScrollable={isScrollable} />
+					<LessonCard key={lesson.slug} lesson={lesson} basePath={basePath} onOpen={onOpen} isScrollable={isScrollable} />
 				))}
 			</div>
 		</section>
@@ -255,7 +254,7 @@ export default function ProgramKnowledgeHub({
 
 						<div className="mt-7 space-y-8">
 							{visibleModules.map((module) => (
-								<CurriculumSection key={module.number} module={module} visibleLessons={module.visibleLessons} basePath={basePath} programName={programName} onOpen={handleOpen} />
+								<CurriculumSection key={module.number} module={module} visibleLessons={module.visibleLessons} basePath={basePath} onOpen={handleOpen} />
 							))}
 							{visibleModules.length === 0 && (
 								<p className="rounded-xl border border-dashed border-[#cfd9e8] p-6 text-center text-sm text-[#71819b]">No subjects match “{query}”.</p>

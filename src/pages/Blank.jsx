@@ -205,6 +205,7 @@ function getCoursesForEnrollment(enrollment) {
 
 function getProgramPath(course) {
 	if (course.name === "CCNA") return "/modules/programs/ccna";
+	if (course.name === "A+ (Core 1 & 2)") return "/modules/programs/comptia-aplus";
 	if (course.name === "CCNA Automation") return "/modules/programs/ccna-automation";
 	if (course.name === "CCNA Cybersecurity") return "/modules/programs/ccna-cybersecurity";
 	return course.path;
