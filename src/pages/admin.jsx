@@ -245,7 +245,7 @@ export default function UsersDashboard() {
 		const query = enrollmentSearch.trim().toLowerCase();
 		return enrollments.filter((enrollment) =>
 			!query
-			|| `${enrollment.user.username} ${enrollment.user.email || ""} ${enrollment.program.name}`
+			|| `${enrollment.user.username} ${enrollment.user.email || ""} ${enrollment.program.name} ${enrollment.program.training?.name || enrollment.program.parent?.training?.name || ""}`
 				.toLowerCase()
 				.includes(query),
 		);
@@ -619,17 +619,22 @@ export default function UsersDashboard() {
 											<fieldset className="mt-5">
 												<legend className="text-xs font-semibold text-[#344054]">Programs (programId)</legend>
 												<div className="mt-2 space-y-2">
-													{programs.map((program) => (
-														<div key={program.id} className="space-y-1">
-															<label className="flex cursor-pointer items-center gap-3 rounded-lg border border-[#e3e9f4] px-3 py-2.5 text-sm hover:bg-[#f8faff]">
-																<input type="checkbox" checked={selectedProgramIds.includes(program.id)} onChange={() => toggleProgram(program.id)} className="h-4 w-4 accent-[#2b5cf0]" />
-																<span className="flex-1">{program.name} — Entire program</span>
-															</label>
-															{program.modules?.map((module) => (
-																<label key={module.id} className="ml-6 flex cursor-pointer items-center gap-3 rounded-lg border border-[#e3e9f4] px-3 py-2.5 text-sm hover:bg-[#f8faff]">
-																	<input type="checkbox" checked={selectedProgramIds.includes(module.id)} onChange={() => toggleProgram(module.id)} className="h-4 w-4 accent-[#2b5cf0]" />
-																	<span className="flex-1">{program.name} — {module.name}</span>
-																</label>
+													{Array.from(new Set(programs.map((program) => program.training?.name || "Other"))).map((trainingName) => (
+														<div key={trainingName} className="space-y-1">
+															<p className="pt-2 text-xs font-bold uppercase tracking-wide text-[#667085]">{trainingName} training</p>
+															{programs.filter((program) => (program.training?.name || "Other") === trainingName).map((program) => (
+																<div key={program.id} className="space-y-1">
+																	<label className="flex cursor-pointer items-center gap-3 rounded-lg border border-[#e3e9f4] px-3 py-2.5 text-sm hover:bg-[#f8faff]">
+																		<input type="checkbox" checked={selectedProgramIds.includes(program.id)} onChange={() => toggleProgram(program.id)} className="h-4 w-4 accent-[#2b5cf0]" />
+																		<span className="flex-1">{program.name} — Entire program</span>
+																	</label>
+																	{program.modules?.map((module) => (
+																		<label key={module.id} className="ml-6 flex cursor-pointer items-center gap-3 rounded-lg border border-[#e3e9f4] px-3 py-2.5 text-sm hover:bg-[#f8faff]">
+																			<input type="checkbox" checked={selectedProgramIds.includes(module.id)} onChange={() => toggleProgram(module.id)} className="h-4 w-4 accent-[#2b5cf0]" />
+																			<span className="flex-1">{program.name} — {module.name}</span>
+																		</label>
+																	))}
+																</div>
 															))}
 														</div>
 													))}
@@ -656,7 +661,7 @@ export default function UsersDashboard() {
 																const enrollmentDate = new Date(enrollment.enrolledAt);
 																return <tr key={`${enrollment.userId}-${enrollment.programId}`} className="border-b border-[#eef2f9] last:border-0">
 																	<td className="px-2 py-3"><span className="block font-medium text-[#14213d]">{enrollment.user.username}</span><span className="text-[10px] text-[#667085]">usr_{enrollment.userId}</span></td>
-																	<td className="px-2 py-3"><span className="rounded-full bg-[#edf3ff] px-2 py-1 font-semibold text-[#2b5cf0]">{enrollment.program.parent ? `${enrollment.program.parent.name} — ${enrollment.program.name}` : `${enrollment.program.name} — Entire program`}</span></td>
+																	<td className="px-2 py-3"><span className="rounded-full bg-[#edf3ff] px-2 py-1 font-semibold text-[#2b5cf0]">{enrollment.program.parent ? `${enrollment.program.parent.training?.name || enrollment.program.training?.name || "Other"} — ${enrollment.program.parent.name} — ${enrollment.program.name}` : `${enrollment.program.training?.name || "Other"} — ${enrollment.program.name} — Entire program`}</span></td>
 																	<td className="whitespace-nowrap px-2 py-3 text-[#344054]">{Number.isNaN(enrollmentDate.getTime()) ? "—" : enrollmentDate.toLocaleString()}</td>
 																	<td className="px-2 py-3"><button type="button" onClick={() => removeEnrollment(enrollment.userId, enrollment.programId)} className="font-medium text-[#d92d20] hover:underline">Remove</button></td>
 																</tr>;

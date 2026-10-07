@@ -386,6 +386,129 @@ h6 {
   }
 }
 
+.login-orbit-ring {
+  isolation: isolate;
+  animation: login-orbit-spin 48s linear infinite;
+}
+
+.login-orbit-ring::before,
+.login-orbit-ripple {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 50%;
+  content: "";
+  pointer-events: none;
+}
+
+.login-orbit-ring::before {
+  inset: 1.25rem;
+  border: 1.5px dashed #b9ccf0;
+  transition: opacity 1s;
+}
+
+.login-orbit-ripple {
+  width: 14rem;
+  height: 14rem;
+  margin: -7rem;
+  border: 3px solid #1677ff;
+  opacity: 0;
+}
+
+.login-orbit-ring.login-orbit-sinking::before {
+  opacity: 0;
+}
+
+.login-orbit-ripple-active {
+  animation: login-orbit-ripple 1.2s ease-out 2.5s forwards;
+}
+
+.login-orbit-badge > div {
+  animation: login-orbit-spin 48s linear infinite reverse;
+}
+
+.login-orbit-badge-sinking {
+  animation: login-orbit-sink 1.3s ease-in forwards;
+}
+
+.login-orbit-core {
+  animation: login-orbit-glow 4s ease-in-out infinite;
+}
+
+.login-orbit-core-absorbing {
+  animation: login-orbit-absorb 2.8s ease-in forwards;
+}
+
+@keyframes login-orbit-spin {
+  to {
+    rotate: 360deg;
+  }
+}
+
+@keyframes login-orbit-sink {
+  to {
+    transform: rotate(var(--angle)) translateY(0) rotate(calc(-1 * var(--angle))) scale(0.15);
+    opacity: 0;
+  }
+}
+
+@keyframes login-orbit-absorb {
+  0% {
+    transform: scale(1);
+  }
+
+  85% {
+    box-shadow: 0 0 0 24px rgb(22 119 255 / 12%), 0 0 80px rgb(22 119 255 / 50%);
+    transform: scale(1.18);
+  }
+
+  100% {
+    box-shadow: 0 0 0 16px rgb(22 119 255 / 10%), 0 0 60px rgb(22 119 255 / 40%);
+    transform: scale(1.08);
+  }
+}
+
+@keyframes login-orbit-ripple {
+  from {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(2.8);
+  }
+}
+
+@keyframes login-orbit-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 14px rgb(22 119 255 / 7%), 0 0 40px rgb(22 119 255 / 12%);
+  }
+
+  50% {
+    box-shadow: 0 0 0 26px rgb(22 119 255 / 4%), 0 0 70px rgb(22 119 255 / 25%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .login-orbit-ring,
+  .login-orbit-badge > div,
+  .login-orbit-core {
+    animation: none;
+  }
+
+  .login-orbit-ring::before {
+    transition: none;
+  }
+
+  .login-orbit-ripple-active,
+  .login-orbit-badge-sinking,
+  .login-orbit-core-absorbing {
+    animation: none;
+  }
+}
+
 .aside_contents {
   @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-1 gap-3 lg:w-72 xl:w-80 shrink-0 self-start;
 }

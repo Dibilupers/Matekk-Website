@@ -1,0 +1,6 @@
+-- AlterTable
+ALTER TABLE "Users" ADD COLUMN     "birth_date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ADD COLUMN     "city_province" TEXT NOT NULL DEFAULT '',
+ADD COLUMN     "first_name" TEXT NOT NULL DEFAULT '',
+ADD COLUMN     "gender" TEXT,
+ADD COLUMN     "last_name" TEXT NOT NULL DEFAULT '';

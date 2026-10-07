@@ -1,4 +1,4 @@
-import { IsEmail, IsInt, IsString, Length, MaxLength, MinLength } from 'class-validator';
+import { IsDateString, IsEmail, IsInt, IsOptional, IsString, Length, MaxLength, MinLength } from 'class-validator';
 
 export class RegisterDto {
     @IsString() @Length(3, 30)
@@ -12,4 +12,19 @@ export class RegisterDto {
 
     @IsInt()
     programId: number;
+
+    @IsString() @Length(1, 80)
+    firstName: string;
+
+    @IsString() @Length(1, 80)
+    lastName: string;
+
+    @IsOptional() @IsDateString()
+    birthdate?: string;
+
+    @IsOptional() @IsString() @MaxLength(40)
+    gender?: string;
+
+    @IsOptional() @IsString() @MaxLength(120)
+    city?: string;
 }
