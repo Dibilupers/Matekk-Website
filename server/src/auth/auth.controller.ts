@@ -1,4 +1,4 @@
-import { Body, Controller, Post, HttpCode, HttpStatus, Request, Get } from '@nestjs/common';
+import { Body, Controller, Post, HttpCode, HttpStatus, Request, Get, ValidationPipe, UsePipes } from '@nestjs/common';
 import { AuthService } from './auth.service.js';
 import { Public } from './decorators/public.decorator.js';
 import type { Request as ExpressRequest } from 'express';
@@ -15,6 +15,7 @@ export class AuthController {
     }
 
     @Public()
+    @UsePipes(new ValidationPipe({ whitelist: true, transform: true, forbidNonWhitelisted: true }))
     @Post('register')
     register(@Body() registerDto: RegisterDto) {
         return this.authService.register(registerDto);

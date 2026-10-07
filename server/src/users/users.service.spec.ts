@@ -1,23 +1,32 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { UsersService } from './users.service.js';
+import { EmailService } from '../email/email.service.js';
 
 describe('UsersService', () => {
   let service: UsersService;
   const updateMany = vi.fn();
   const findMany = vi.fn();
   const findFirst = vi.fn();
+  const findUnique = vi.fn();
+  const sendUserStatusEmail = vi.fn();
 
   beforeEach(async () => {
     updateMany.mockReset();
     findMany.mockReset();
     findFirst.mockReset();
+    findUnique.mockReset();
+    sendUserStatusEmail.mockReset();
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UsersService,
         {
           provide: PrismaService,
-          useValue: { users: { updateMany, findMany, findFirst } },
+          useValue: { users: { updateMany, findMany, findFirst, findUnique } },
+        },
+        {
+          provide: EmailService,
+          useValue: { sendUserStatusEmail },
         },
       ],
     }).compile();
@@ -38,6 +47,7 @@ describe('UsersService', () => {
         role: 'Student',
         active_status: false,
         programs_enrolled: null,
+        enrollments: [],
       },
     ]);
 
@@ -60,8 +70,78 @@ describe('UsersService', () => {
         role: true,
         active_status: true,
         programs_enrolled: true,
+        enrollments: {
+          select: {
+            program: {
+              select: {
+                name: true,
+                parentId: true,
+                modules: { select: { name: true } },
+              },
+            },
+          },
+        },
       },
     });
+  });
+
+  it('returns enrolled program names from enrollment relations', async () => {
+    findMany.mockResolvedValue([
+      {
+        id: 43,
+        username: 'enrolled-user',
+        email: 'enrolled@example.com',
+        role: 'Student',
+        active_status: false,
+        programs_enrolled: '',
+        enrollments: [
+          {
+            program: {
+              name: 'CCNA',
+              parentId: null,
+              modules: [{ name: 'CCNA Cybersecurity' }, { name: 'CCNA Automation' }],
+            },
+          },
+          {
+            program: {
+              name: 'CCNA',
+              parentId: null,
+              modules: [{ name: 'CCNA Cybersecurity' }, { name: 'CCNA Automation' }],
+            },
+          },
+          { program: { name: 'Security+', parentId: 1, modules: [] } },
+        ],
+      },
+    ]);
+
+    await expect(service.findAll()).resolves.toEqual([
+      {
+        userId: 43,
+        username: 'enrolled-user',
+        email: 'enrolled@example.com',
+        role: 'Student',
+        active_status: false,
+        pending_status: 'Pending',
+        module_enrolled: 'CCNA, CCNA Cybersecurity, CCNA Automation, Security+',
+      },
+    ]);
+  });
+
+  it('uses the legacy enrolled-program field when no enrollment relation exists', async () => {
+    findMany.mockResolvedValue([
+      {
+        id: 44,
+        username: 'legacy-user',
+        email: 'legacy@example.com',
+        role: 'Student',
+        active_status: false,
+        programs_enrolled: 'CCNA',
+        enrollments: [],
+      },
+    ]);
+
+    const result = await service.findAll();
+    expect(result[0].module_enrolled).toBe('CCNA');
   });
 
   it('returns an empty list when the database has no users', async () => {
@@ -76,25 +156,135 @@ describe('UsersService', () => {
     await expect(service.findOne('test')).resolves.toBeUndefined();
     expect(findFirst).toHaveBeenCalledWith({
       where: { username: { equals: 'test', mode: 'insensitive' } },
+      select: {
+        id: true,
+        username: true,
+        password: true,
+        role: true,
+        active_status: true,
+        email: true,
+        programs_enrolled: true,
+        enrollments: {
+          select: {
+            program: {
+              select: {
+                name: true,
+                parentId: true,
+                modules: { select: { name: true } },
+              },
+            },
+          },
+        },
+      },
     });
   });
 
+  it('returns program enrollments from the profile used by the course page', async () => {
+    findFirst.mockResolvedValue({
+      id: 45,
+      username: 'ccna-student',
+      password: 'hashed',
+      role: 'Student',
+      active_status: true,
+      email: 'ccna@example.com',
+      programs_enrolled: '',
+      enrollments: [{
+        program: {
+          name: 'CCNA',
+          parentId: null,
+          modules: [{ name: 'CCNA Cybersecurity' }, { name: 'CCNA Automation' }],
+        },
+      }],
+    });
+
+    await expect(service.findOne('ccna-student')).resolves.toEqual({
+      userId: 45,
+      username: 'ccna-student',
+      password: 'hashed',
+      role: 'Student',
+      active_status: true,
+      pending_status: 'Active',
+      email: 'ccna@example.com',
+      module_enrolled: 'CCNA, CCNA Cybersecurity, CCNA Automation',
+    });
+  });
+
+  it('returns only the selected module when enrollment is not for the whole program', async () => {
+    findFirst.mockResolvedValue({
+      id: 46,
+      username: 'module-student',
+      password: 'hashed',
+      role: 'Student',
+      active_status: true,
+      email: 'module@example.com',
+      programs_enrolled: '',
+      enrollments: [{
+        program: {
+          name: 'CCNA Automation',
+          parentId: 4,
+          modules: [],
+        },
+      }],
+    });
+
+    const result = await service.findOne('module-student');
+    expect(result?.module_enrolled).toBe('CCNA Automation');
+  });
+
   it('approves an existing user', async () => {
+    findUnique.mockResolvedValue({
+      active_status: false,
+      email: 'waiting@example.com',
+      first_name: 'Waiting',
+      last_name: 'User',
+      username: 'waiting-user',
+    });
     updateMany.mockResolvedValue({ count: 1 });
 
     await expect(service.approve(42)).resolves.toEqual({
       userId: 42,
       active_status: true,
     });
-    expect(updateMany).toHaveBeenCalledWith({
+    expect(findUnique).toHaveBeenCalledWith({
       where: { id: 42 },
+      select: {
+        active_status: true,
+        email: true,
+        first_name: true,
+        last_name: true,
+        username: true,
+      },
+    });
+    expect(updateMany).toHaveBeenCalledWith({
+      where: { id: 42, active_status: false },
       data: { active_status: true },
     });
+    expect(sendUserStatusEmail).toHaveBeenCalledWith(
+      { name: 'Waiting User', email: 'waiting@example.com' },
+      'accepted',
+    );
   });
 
   it('reports when the user does not exist', async () => {
-    updateMany.mockResolvedValue({ count: 0 });
+    findUnique.mockResolvedValue(null);
 
     await expect(service.approve(404)).rejects.toThrow('User not found.');
+    expect(sendUserStatusEmail).not.toHaveBeenCalled();
+  });
+
+  it('does not resend an approval email when the user is already active', async () => {
+    findUnique.mockResolvedValue({
+      active_status: true,
+      email: 'active@example.com',
+      first_name: 'Active',
+      last_name: 'User',
+      username: 'active-user',
+    });
+
+    await expect(service.approve(42)).resolves.toEqual({
+      userId: 42,
+      active_status: true,
+    });
+    expect(sendUserStatusEmail).not.toHaveBeenCalled();
   });
 });
