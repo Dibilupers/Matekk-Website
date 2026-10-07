@@ -174,17 +174,17 @@ export default function CCNAAutomationDashboard() {
 			heroActions={<ProgramQuizControls programKey={PROGRAM_KEY} basePath={PROGRAM_PATH} modules={CCNA_AUTOMATION_CURRICULUM} learningProgress={progress} />}
 			topStats={(
 				<>
-					<div className="flex items-center gap-3">
-						<strong className="text-[1.65rem] leading-none tracking-tight text-[#071126] sm:text-[2rem]">{attemptedQuizzes}/{CCNA_AUTOMATION_CURRICULUM.length}</strong>
-						<span className="max-w-20 text-xs leading-tight text-[#6f7d99] sm:text-sm">Quizzes attempted</span>
+					<div className="flex min-w-0 flex-col items-start gap-1 sm:flex-row sm:items-center sm:gap-3">
+						<strong className="text-xl leading-none tracking-tight text-[#071126] sm:text-[2rem]">{attemptedQuizzes}/{CCNA_AUTOMATION_CURRICULUM.length}</strong>
+						<span className="text-[11px] leading-tight text-[#6f7d99] sm:max-w-20 sm:text-sm">Quizzes attempted</span>
 					</div>
-					<div className="flex items-center gap-3 pl-5 sm:pl-7">
-						<strong className="text-[1.65rem] leading-none tracking-tight text-[#071126] sm:text-[2rem]">{quizScore}%</strong>
-						<span className="max-w-20 text-xs leading-tight text-[#6f7d99] sm:text-sm">Quiz average</span>
+					<div className="flex min-w-0 flex-col items-start gap-1 sm:flex-row sm:items-center sm:gap-3 sm:pl-7">
+						<strong className="text-xl leading-none tracking-tight text-[#071126] sm:text-[2rem]">{quizScore}%</strong>
+						<span className="text-[11px] leading-tight text-[#6f7d99] sm:max-w-20 sm:text-sm">Quiz average</span>
 					</div>
-					<div className="flex items-center gap-3 pl-5 sm:pl-7">
-						<strong className="text-[1.65rem] leading-none tracking-tight text-[#071126] sm:text-[2rem]">{modulesLeft}</strong>
-						<span className="max-w-20 text-xs leading-tight text-[#6f7d99] sm:text-sm">Modules left</span>
+					<div className="flex min-w-0 flex-col items-start gap-1 sm:flex-row sm:items-center sm:gap-3 sm:pl-7">
+						<strong className="text-xl leading-none tracking-tight text-[#071126] sm:text-[2rem]">{modulesLeft}</strong>
+						<span className="text-[11px] leading-tight text-[#6f7d99] sm:max-w-20 sm:text-sm">Modules left</span>
 					</div>
 				</>
 			)}
@@ -211,6 +211,7 @@ export default function CCNAAutomationDashboard() {
 				/>
 			)}
 			description="Automate network operations and build practical skills for programmable, API-driven infrastructure."
+			descriptionAccent="API-driven infrastructure."
 			overviewDescription="A guided path from network fundamentals to programmable, automated infrastructure."
 			focusAreas="Explore network automation, APIs, Python, and programmable Cisco platforms as course content becomes available."
 		/>

@@ -79,13 +79,21 @@ function getModuleRows(progress, storedAssessments) {
 				order: index * 100,
 			}];
 		}
-		const bestScore = Math.max(
-			isCurrentAttempt && Number.isFinite(attempt.bestScore) ? attempt.bestScore : 0,
-			...history.map((result) => result.score),
+		const bestCandidates = history.map((result) => ({
+			score: result.score,
+			maxScore: Number.isFinite(result.maxScore) && result.maxScore > 0
+				? result.maxScore
+				: quiz.questions.length,
+		}));
+		if (isCurrentAttempt && Number.isFinite(attempt.bestScore)) {
+			bestCandidates.push({ score: attempt.bestScore, maxScore: quiz.questions.length });
+		}
+		const bestPoints = bestCandidates.reduce(
+			(best, candidate) => !best || candidate.score / candidate.maxScore > best.score / best.maxScore
+				? candidate
+				: best,
+			null,
 		);
-		const bestPoints = history.length
-			? { score: Math.round((bestScore / quiz.questions.length) * 100), maxScore: 100 }
-			: null;
 		const historyRows = history.map((result) => {
 			const resultMaxScore = Number.isFinite(result.maxScore) && result.maxScore > 0
 				? result.maxScore
@@ -97,7 +105,7 @@ function getModuleRows(progress, storedAssessments) {
 				statusLabel: result.status === "expired" ? "Time expired" : null,
 				submittedAt: result.submittedAt,
 				attempts: result.attemptNumber,
-				points: { score: Math.round((result.score / resultMaxScore) * 100), maxScore: 100 },
+				points: { score: result.score, maxScore: resultMaxScore },
 				bestPoints,
 				order: index * 100 + result.attemptNumber,
 			};
@@ -200,7 +208,9 @@ function sortRows(rows, sort) {
 			const difference = (first.submittedAt ?? 0) - (second.submittedAt ?? 0);
 			if (difference !== 0) return sort === "recent" ? -difference : difference;
 		} else if (sort === "highest" || sort === "lowest") {
-			const difference = (first.points?.score ?? -1) - (second.points?.score ?? -1);
+			const firstGrade = first.points ? first.points.score / first.points.maxScore : -1;
+			const secondGrade = second.points ? second.points.score / second.points.maxScore : -1;
+			const difference = firstGrade - secondGrade;
 			if (difference !== 0) return sort === "highest" ? -difference : difference;
 		}
 		return first.order - second.order;
@@ -321,6 +331,7 @@ export default function CCNAGradebook() {
 		return attempts.length ? [attempts.at(-1)] : [];
 	});
 	const gradedExamRows = examRows.filter((row) => row.points);
+	const completedExamCount = gradedExamRows.length;
 	const bestAssessment = allRows.filter((row) => row.status === "graded").reduce(
 		(best, row) => !best || row.bestGrade > best.bestGrade ? row : best,
 		null,
@@ -328,12 +339,13 @@ export default function CCNAGradebook() {
 	const nextAssessment = allRows.find((row) => row.status !== "graded");
 	const quizPoints = latestModuleRows.reduce((total, row) => total + row.points.score, 0);
 	const quizPossiblePoints = latestModuleRows.reduce((total, row) => total + row.points.maxScore, 0);
-	const classGrade = quizPossiblePoints
-		? Math.round((quizPoints / quizPossiblePoints) * 100)
-		: null;
-	const gradedQuizAttempts = moduleRows.filter((row) => row.status === "graded");
 	const examPoints = gradedExamRows.reduce((total, row) => total + row.points.score, 0);
 	const examPossiblePoints = gradedExamRows.reduce((total, row) => total + row.points.maxScore, 0);
+	const overallPoints = quizPoints + examPoints;
+	const overallPossiblePoints = quizPossiblePoints + examPossiblePoints;
+	const classGrade = overallPossiblePoints
+		? Math.round((overallPoints / overallPossiblePoints) * 100)
+		: null;
 
 	useEffect(() => {
 		if (prefersReducedMotion) return undefined;
@@ -375,9 +387,9 @@ export default function CCNAGradebook() {
 					</div>
 					<div className="relative left-1/2 w-screen -translate-x-1/2 bg-white shadow-sm">
 						<div className="mx-auto grid max-w-[1680px] grid-cols-2 gap-4 px-4 py-5 sm:grid-cols-3 sm:gap-5 sm:px-8 sm:py-8 lg:px-10 xl:grid-cols-5 2xl:px-12">
-							<SummaryStat label="Class grade" value={classGrade === null ? "--" : `${classGrade}%`} detail={quizPossiblePoints ? `${quizPoints}/${quizPossiblePoints} points` : "No graded quizzes"} progress={classGrade ?? undefined} />
+							<SummaryStat label="Class grade" value={classGrade === null ? "--" : `${classGrade}%`} detail={overallPossiblePoints ? `${overallPoints}/${overallPossiblePoints} points` : "No graded assessments"} progress={classGrade ?? undefined} />
 							<SummaryStat label="Quizzes completed" value={`${latestModuleRows.length} of ${CCNA_MODULE_QUIZZES.length}`} detail="module quizzes completed" />
-							<SummaryStat label="Quiz attempts" value={gradedQuizAttempts.length} detail="graded attempts saved" />
+							<SummaryStat label="Exams completed" value={`${completedExamCount} of ${Object.keys(CCNA_EXAMS).length}`} detail="exams completed" />
 							<SummaryStat label="Best score" value={bestAssessment ? `${bestAssessment.bestPoints.score}/${bestAssessment.bestPoints.maxScore}` : "--"} detail={bestAssessment?.name ?? "No results yet"} gradeScore={bestAssessment?.bestGrade} />
 							<SummaryStat label="Up next" value={nextAssessment?.name ?? "All complete"} detail={nextAssessment?.status === "in-progress" ? "In progress" : nextAssessment ? "Not submitted" : "Assessment list complete"} compactValue />
 						</div>
@@ -414,7 +426,7 @@ export default function CCNAGradebook() {
 					<AssessmentTable title="Module Quizzes" rows={moduleRows} filter={filter} sort={sort} />
 					<div className="flex items-center justify-between border border-[#dce4e8] bg-[#f2f5f6] px-5 py-4 text-sm text-[#4c5b67]">
 						<strong className="font-medium">Module quizzes average</strong>
-						<span className={getGradeTone(classGrade).text}>{quizPossiblePoints ? `${quizPoints}/${quizPossiblePoints} (${classGrade}%)` : "--"}</span>
+						<span className={getGradeTone(quizPossiblePoints ? Math.round(quizPoints / quizPossiblePoints * 100) : null).text}>{quizPossiblePoints ? `${quizPoints}/${quizPossiblePoints}` : "--"}</span>
 					</div>
 				</div>
 
@@ -422,7 +434,7 @@ export default function CCNAGradebook() {
 					<AssessmentTable title="Exams" rows={examRows} filter={filter} sort={sort} />
 					<div className="flex items-center justify-between border border-[#dce4e8] bg-[#f2f5f6] px-5 py-4 text-sm text-[#4c5b67]">
 						<strong className="font-medium">Exam average</strong>
-						<span className={getGradeTone(examPossiblePoints ? Math.round(examPoints / examPossiblePoints * 100) : null).text}>{examPossiblePoints ? `${examPoints}/${examPossiblePoints} (${Math.round(examPoints / examPossiblePoints * 100)}%)` : "--"}</span>
+						<span className={getGradeTone(examPossiblePoints ? Math.round(examPoints / examPossiblePoints * 100) : null).text}>{examPossiblePoints ? `${examPoints}/${examPossiblePoints}` : "--"}</span>
 					</div>
 				</div>
 			</div>

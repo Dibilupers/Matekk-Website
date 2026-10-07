@@ -605,18 +605,18 @@ export default function CCNAKnowledgeArticle() {
 	return (
 		<main className="min-h-screen bg-white text-[#526584]">
 			<div className="mx-auto max-w-[1600px] px-5 pb-8 pt-10 sm:px-10 sm:pt-12 lg:px-10">
-				<nav className="mb-6 flex flex-wrap items-center gap-2 text-sm sm:text-base" aria-label="Breadcrumb">
+				<nav className="mb-6 flex min-w-0 flex-wrap items-center gap-2 text-sm sm:text-base" aria-label="Breadcrumb">
 					<Link to="/modules/programs/ccna" className="font-semibold text-[#005b6b] hover:underline">CCNA</Link>
 					<span>/</span>
 					<Link to="/modules/programs/ccna/knowledge-hub" className="font-semibold text-[#005b6b] hover:underline">Knowledge Hub</Link>
 					<span>/</span>
-					<span className="truncate text-[#8492a9]">{article.title}</span>
+					<span className="min-w-0 truncate text-[#8492a9]">{article.title}</span>
 				</nav>
-				<div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-6">
-					<article className="rounded-[24px] border border-[#dbe5f5] px-6 py-9 sm:px-10 sm:py-11">
+				<div className="grid min-w-0 grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-6">
+					<article className="min-w-0 rounded-[24px] border border-[#dbe5f5] px-6 py-9 sm:px-10 sm:py-11">
 						<div className="inline-flex items-center gap-2 rounded-full bg-[#e8f3f4] px-4 py-2 text-sm font-semibold text-[#005b6b]"><Folder size={15} /> CCNA Knowledge</div>
 						<h1 className="mt-6 text-3xl font-bold leading-tight tracking-tight text-[#071126] sm:text-5xl">{article.title}</h1>
-						<p className="mt-4 flex items-center gap-2 text-base text-[#7b8ca7]"><Clock size={17} /> {article.meta}</p>
+						<p className="mt-4 flex min-w-0 items-center gap-2 text-base text-[#7b8ca7]"><Clock size={17} /> {article.meta}</p>
 						{ccnaModuleOneSlugs.has(articleSlug) ? (
 							<CcnaKnowledgeModuleOne article={article} articleSlug={articleSlug} />
 						) : ["vlan", "intervlan", "stp", "stp-root-port", "rstp", "vtp", "etherchannel"].includes(article.contentType) ? (

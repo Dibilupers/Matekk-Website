@@ -1,4 +1,5 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import {
 	ArrowLeft,
 	ArrowLeftRight,
@@ -27,6 +28,7 @@ import {
 	Monitor,
 	Network,
 	Power,
+	X,
 	RefreshCw,
 	Router,
 	Search,
@@ -250,7 +252,14 @@ function CurriculumSection({ section, searchQuery, onOpen }) {
 
 export default function CCNAKnowledgeHub() {
 	const [searchQuery, setSearchQuery] = useState("");
+	const [activeSectionNumber, setActiveSectionNumber] = useState(curriculum[0]?.number ?? "");
+	const [showFloatingSearch, setShowFloatingSearch] = useState(false);
+	const [showFloatingBack, setShowFloatingBack] = useState(false);
+	const [isFloatingSearchOpen, setIsFloatingSearchOpen] = useState(false);
 	const [recentTutorial, setRecentTutorial] = useState(getRecentTutorial);
+	const searchFieldRef = useRef(null);
+	const floatingSearchInputRef = useRef(null);
+	const dashboardLinkRef = useRef(null);
 	const featuredTutorial = recentTutorial || {
 		number: "Extra",
 		title: "Spine-Leaf Architecture Tutorial",
@@ -265,6 +274,73 @@ export default function CCNAKnowledgeHub() {
 		setRecentTutorial(tutorial);
 	}
 
+	useEffect(() => {
+		let frameId = 0;
+		function updateActiveSection() {
+			cancelAnimationFrame(frameId);
+			frameId = requestAnimationFrame(() => {
+				const marker = window.innerHeight * 0.35;
+				const sectionAtMarker = curriculum.find((section) => {
+					const element = document.getElementById(getSectionId(section.number));
+					if (!element) return false;
+					const bounds = element.getBoundingClientRect();
+					return bounds.top <= marker && bounds.bottom > marker;
+				});
+				if (sectionAtMarker) {
+					setActiveSectionNumber(sectionAtMarker.number);
+					return;
+				}
+				const nextSection = curriculum.find((section) => {
+					const element = document.getElementById(getSectionId(section.number));
+					return element && element.getBoundingClientRect().top > marker;
+				});
+				if (nextSection) setActiveSectionNumber(nextSection.number);
+			});
+		}
+
+		updateActiveSection();
+		window.addEventListener("scroll", updateActiveSection, { passive: true });
+		window.addEventListener("resize", updateActiveSection);
+		return () => {
+			cancelAnimationFrame(frameId);
+			window.removeEventListener("scroll", updateActiveSection);
+			window.removeEventListener("resize", updateActiveSection);
+		};
+	}, []);
+
+	useEffect(() => {
+		const searchField = searchFieldRef.current;
+		if (!searchField) return undefined;
+
+		const observer = new IntersectionObserver(([entry]) => {
+			setShowFloatingSearch(!entry.isIntersecting && entry.boundingClientRect.top < 0);
+		}, { threshold: 0.05 });
+		observer.observe(searchField);
+		return () => observer.disconnect();
+	}, []);
+
+	useEffect(() => {
+		const dashboardLink = dashboardLinkRef.current;
+		if (!dashboardLink) return undefined;
+
+		const observer = new IntersectionObserver(([entry]) => {
+			setShowFloatingBack(!entry.isIntersecting && entry.boundingClientRect.top < 0);
+		}, { threshold: 0.05 });
+		observer.observe(dashboardLink);
+		return () => observer.disconnect();
+	}, []);
+
+	useEffect(() => {
+		if (!isFloatingSearchOpen) return undefined;
+
+		floatingSearchInputRef.current?.focus();
+		function closeOnEscape(event) {
+			if (event.key === "Escape") setIsFloatingSearchOpen(false);
+		}
+		window.addEventListener("keydown", closeOnEscape);
+		return () => window.removeEventListener("keydown", closeOnEscape);
+	}, [isFloatingSearchOpen]);
+
 	return (
 		<main className="ccna-page-enter min-h-screen bg-white text-[#111a2d]">
 			<header className="border-y border-[#dddddd] bg-[#fafafa] px-5 py-10 text-center sm:py-14">
@@ -274,7 +350,7 @@ export default function CCNAKnowledgeHub() {
 				<p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-[#555555] sm:text-base">
 					Learn practical networking concepts, troubleshooting techniques, and architecture patterns to build stronger CCNA foundations.
 				</p>
-				<label className="relative mx-auto mt-6 block max-w-[360px]">
+				<label ref={searchFieldRef} className="relative mx-auto mt-6 block max-w-[360px]">
 					<Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#777777]" />
 					<input
 						type="search"
@@ -288,6 +364,7 @@ export default function CCNAKnowledgeHub() {
 
 			<div className="mx-auto max-w-[1440px] px-5 py-8 sm:px-10 sm:py-10 lg:px-6 xl:px-8">
 				<Link
+					ref={dashboardLinkRef}
 					to="/modules/programs/ccna"
 					className="mb-2 inline-flex items-center gap-1 text-sm font-semibold text-[#005b6b] hover:underline"
 				>
@@ -295,7 +372,7 @@ export default function CCNAKnowledgeHub() {
 				</Link>
 
 				<div className="mt-5 grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_180px]">
-					<aside className="rounded-2xl border border-[#d6e5e7] bg-[#f5f9f9] p-4 lg:sticky lg:top-24 lg:col-start-2 lg:row-span-2">
+					<aside className="hidden rounded-2xl border border-[#d6e5e7] bg-[#f5f9f9] p-4 lg:sticky lg:top-24 lg:col-start-2 lg:row-span-2 lg:block">
 						<h2 className="mb-3 text-sm font-bold uppercase tracking-[0.1em] text-[#526584]">Jump to module</h2>
 						<nav aria-label="CCNA module navigation" className="grid grid-cols-3 gap-2 sm:grid-cols-6 lg:grid-cols-1">
 							{curriculum.map((section) => {
@@ -330,6 +407,95 @@ export default function CCNAKnowledgeHub() {
 							})}
 						</nav>
 					</aside>
+					{createPortal(
+						<nav
+							aria-label="CCNA module shortcuts"
+							className="fixed right-0 top-1/2 z-[100] flex -translate-y-1/2 flex-col gap-1 rounded-l-2xl border border-r-0 border-[#c9dfe2] bg-white/95 p-1.5 shadow-[0_8px_24px_rgba(7,17,38,0.16)] backdrop-blur-sm lg:hidden"
+						>
+							{curriculum.map((section) => {
+								const isVisible = sectionMatchesSearch(section, searchQuery);
+								const isActive = section.number === activeSectionNumber;
+								return (
+									<a
+										key={section.number}
+										href={`#${getSectionId(section.number)}`}
+										aria-label={`Go to module ${section.number} ${section.title}`}
+										aria-current={isActive ? "location" : undefined}
+										aria-disabled={!isVisible}
+										onClick={(event) => {
+											if (!isVisible) {
+												event.preventDefault();
+												return;
+											}
+											event.preventDefault();
+											setActiveSectionNumber(section.number);
+											document.getElementById(getSectionId(section.number))?.scrollIntoView({
+												behavior: "smooth",
+												block: "start",
+											});
+										}}
+										className={`flex h-10 w-11 items-center justify-center rounded-xl border text-xs font-bold transition ${
+											!isVisible
+												? "cursor-not-allowed border-[#e8edf5] bg-[#f3f5f9] text-[#a3adbd]"
+												: isActive
+													? "border-[#005b6b] bg-[#005b6b] text-white shadow-sm"
+													: "border-[#c9dfe2] bg-[#f5f9f9] text-[#005b6b] active:bg-[#e8f3f4]"
+										}`}
+									>
+										{section.number}
+									</a>
+								);
+							})}
+						</nav>,
+						document.body,
+					)}
+					{showFloatingSearch && createPortal(
+						<div className="fixed bottom-5 left-4 z-[100] flex items-center gap-2">
+							<button
+								type="button"
+								onClick={() => setIsFloatingSearchOpen((open) => !open)}
+								aria-label={isFloatingSearchOpen ? "Close search" : "Open search"}
+								aria-expanded={isFloatingSearchOpen}
+								title="Search tutorials"
+								className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[#9fc8ce] bg-[#005b6b] text-white shadow-[0_8px_24px_rgba(7,17,38,0.2)] transition hover:bg-[#004653] active:scale-95"
+							>
+								<Search size={20} />
+							</button>
+							{isFloatingSearchOpen && (
+								<div className="flex w-[min(17rem,calc(100vw-6rem))] items-center gap-2 rounded-full border border-[#c9dfe2] bg-white p-1.5 pl-4 shadow-[0_8px_24px_rgba(7,17,38,0.2)]">
+									<input
+										ref={floatingSearchInputRef}
+										type="search"
+										value={searchQuery}
+										onChange={(event) => setSearchQuery(event.target.value)}
+										placeholder="Search tutorials"
+										aria-label="Search CCNA tutorials"
+										className="min-w-0 flex-1 bg-transparent text-sm text-[#172642] outline-none placeholder:text-[#8492a9]"
+									/>
+									<button
+										type="button"
+										onClick={() => setIsFloatingSearchOpen(false)}
+										aria-label="Close search"
+										className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[#71819b] transition hover:bg-[#f0f7f7] hover:text-[#005b6b]"
+									>
+										<X size={17} />
+									</button>
+								</div>
+							)}
+						</div>,
+						document.body,
+					)}
+					{showFloatingBack && createPortal(
+						<Link
+							to="/modules/programs/ccna"
+							aria-label="Back to dashboard"
+							title="Back to dashboard"
+							className="fixed left-4 top-24 z-[100] flex h-12 w-12 items-center justify-center rounded-full border border-[#9fc8ce] bg-white text-[#005b6b] shadow-[0_8px_24px_rgba(7,17,38,0.2)] transition hover:bg-[#e8f3f4] active:scale-95"
+						>
+							<ArrowLeft size={21} />
+						</Link>,
+						document.body,
+					)}
 
 					<div className="min-w-0 lg:col-start-1 lg:row-start-1">
 						<Link

@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
 	ArrowLeft,
 	ArrowLeftRight,
@@ -23,7 +23,9 @@ import {
 	Sparkles,
 	Terminal,
 	Webhook,
+	X,
 } from "lucide-react";
+import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 
@@ -175,6 +177,13 @@ export default function ProgramKnowledgeHub({
 	const { profile } = useAuth();
 	const userId = profile?.userId;
 	const [searchQuery, setSearchQuery] = useState("");
+	const [activeModuleNumber, setActiveModuleNumber] = useState(curriculum[0]?.number ?? "");
+	const [showFloatingSearch, setShowFloatingSearch] = useState(false);
+	const [showFloatingBack, setShowFloatingBack] = useState(false);
+	const [isFloatingSearchOpen, setIsFloatingSearchOpen] = useState(false);
+	const searchFieldRef = useRef(null);
+	const floatingSearchInputRef = useRef(null);
+	const dashboardLinkRef = useRef(null);
 	const progress = userId
 		? readProgress(userId)
 		: { openedModules: [], completedLessons: [], recentLesson: null };
@@ -196,6 +205,73 @@ export default function ProgramKnowledgeHub({
 		if (userId) markLessonOpened(userId, slug);
 	}
 
+	useEffect(() => {
+		let frameId = 0;
+		function updateActiveModule() {
+			cancelAnimationFrame(frameId);
+			frameId = requestAnimationFrame(() => {
+				const marker = window.innerHeight * 0.35;
+				const moduleAtMarker = curriculum.find((module) => {
+					const element = document.getElementById(sectionId(module.number));
+					if (!element) return false;
+					const bounds = element.getBoundingClientRect();
+					return bounds.top <= marker && bounds.bottom > marker;
+				});
+				if (moduleAtMarker) {
+					setActiveModuleNumber(moduleAtMarker.number);
+					return;
+				}
+				const nextModule = curriculum.find((module) => {
+					const element = document.getElementById(sectionId(module.number));
+					return element && element.getBoundingClientRect().top > marker;
+				});
+				if (nextModule) setActiveModuleNumber(nextModule.number);
+			});
+		}
+
+		updateActiveModule();
+		window.addEventListener("scroll", updateActiveModule, { passive: true });
+		window.addEventListener("resize", updateActiveModule);
+		return () => {
+			cancelAnimationFrame(frameId);
+			window.removeEventListener("scroll", updateActiveModule);
+			window.removeEventListener("resize", updateActiveModule);
+		};
+	}, [curriculum]);
+
+	useEffect(() => {
+		const searchField = searchFieldRef.current;
+		if (!searchField) return undefined;
+
+		const observer = new IntersectionObserver(([entry]) => {
+			setShowFloatingSearch(!entry.isIntersecting && entry.boundingClientRect.top < 0);
+		}, { threshold: 0.05 });
+		observer.observe(searchField);
+		return () => observer.disconnect();
+	}, []);
+
+	useEffect(() => {
+		const dashboardLink = dashboardLinkRef.current;
+		if (!dashboardLink) return undefined;
+
+		const observer = new IntersectionObserver(([entry]) => {
+			setShowFloatingBack(!entry.isIntersecting && entry.boundingClientRect.top < 0);
+		}, { threshold: 0.05 });
+		observer.observe(dashboardLink);
+		return () => observer.disconnect();
+	}, []);
+
+	useEffect(() => {
+		if (!isFloatingSearchOpen) return undefined;
+
+		floatingSearchInputRef.current?.focus();
+		function closeOnEscape(event) {
+			if (event.key === "Escape") setIsFloatingSearchOpen(false);
+		}
+		window.addEventListener("keydown", closeOnEscape);
+		return () => window.removeEventListener("keydown", closeOnEscape);
+	}, [isFloatingSearchOpen]);
+
 	return (
 		<main className="ccna-page-enter min-h-screen bg-white text-[#111a2d]">
 			<header className="border-y border-[#dddddd] bg-[#fafafa] px-5 py-10 text-center sm:py-14">
@@ -203,19 +279,19 @@ export default function ProgramKnowledgeHub({
 					Explore the <span className="text-[#005b6b]">{programName}</span> Knowledge Hub.
 				</h1>
 				<p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-[#555555] sm:text-base">{description}</p>
-				<label className="relative mx-auto mt-6 block max-w-[360px]">
+				<label ref={searchFieldRef} className="relative mx-auto mt-6 block max-w-[360px]">
 					<Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#777777]" />
 					<input type="search" value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} placeholder={`Search ${programName} subjects`} aria-label={`Search ${programName} lessons`} className="h-10 w-full rounded-full border border-[#cfcfcf] bg-white pl-10 pr-4 text-center text-sm outline-none focus:border-[#005b6b] focus:ring-2 focus:ring-[#005b6b]/15" />
 				</label>
 			</header>
 
-			<div className="mx-auto max-w-[1440px] px-5 py-8 sm:px-10 sm:py-10 lg:px-6 xl:px-8">
-				<Link to={basePath} className="mb-2 inline-flex items-center gap-1 text-sm font-semibold text-[#005b6b] hover:underline">
+			<div className="mx-auto min-w-0 max-w-[1440px] px-5 py-8 sm:px-10 sm:py-10 lg:px-6 xl:px-8">
+				<Link ref={dashboardLinkRef} to={basePath} className="mb-2 inline-flex items-center gap-1 text-sm font-semibold text-[#005b6b] hover:underline">
 					<ArrowLeft size={16} /> Back to dashboard
 				</Link>
 
-				<div className="mt-5 grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_180px]">
-					<aside className="rounded-2xl border border-[#d6e5e7] bg-[#f5f9f9] p-4 lg:sticky lg:top-24 lg:col-start-2 lg:row-span-2">
+				<div className="mt-5 grid min-w-0 grid-cols-1 items-start gap-5 lg:grid-cols-[minmax(0,1fr)_180px]">
+					<aside className="hidden rounded-2xl border border-[#d6e5e7] bg-[#f5f9f9] p-4 lg:sticky lg:top-24 lg:col-start-2 lg:row-span-2 lg:block">
 						<h2 className="mb-3 text-sm font-bold uppercase tracking-[0.1em] text-[#526584]">Jump to module</h2>
 						<nav aria-label={`${programName} module navigation`} className="grid grid-cols-3 gap-2 sm:grid-cols-6 lg:grid-cols-1">
 							{curriculum.map((module) => {
@@ -233,6 +309,95 @@ export default function ProgramKnowledgeHub({
 							})}
 						</nav>
 					</aside>
+					{createPortal(
+						<nav
+							aria-label={`${programName} module shortcuts`}
+							className="fixed right-0 top-1/2 z-[100] flex -translate-y-1/2 flex-col gap-1 rounded-l-2xl border border-r-0 border-[#c9dfe2] bg-white/95 p-1.5 shadow-[0_8px_24px_rgba(7,17,38,0.16)] backdrop-blur-sm lg:hidden"
+						>
+							{curriculum.map((module) => {
+								const isVisible = visibleModules.some((item) => item.number === module.number);
+								const isActive = module.number === activeModuleNumber;
+								return (
+									<a
+										key={module.number}
+										href={`#${sectionId(module.number)}`}
+										aria-label={`Go to module ${module.number} ${module.title}`}
+										aria-current={isActive ? "location" : undefined}
+										aria-disabled={!isVisible}
+										onClick={(event) => {
+											if (!isVisible) {
+												event.preventDefault();
+												return;
+											}
+											event.preventDefault();
+											setActiveModuleNumber(module.number);
+											document.getElementById(sectionId(module.number))?.scrollIntoView({
+												behavior: "smooth",
+												block: "start",
+											});
+										}}
+										className={`flex h-10 w-11 items-center justify-center rounded-xl border text-xs font-bold transition ${
+											!isVisible
+												? "cursor-not-allowed border-[#e8edf5] bg-[#f3f5f9] text-[#a3adbd]"
+												: isActive
+													? "border-[#005b6b] bg-[#005b6b] text-white shadow-sm"
+													: "border-[#c9dfe2] bg-[#f5f9f9] text-[#005b6b] active:bg-[#e8f3f4]"
+										}`}
+									>
+										{module.number}
+									</a>
+								);
+							})}
+						</nav>,
+						document.body,
+					)}
+					{showFloatingSearch && createPortal(
+						<div className="fixed bottom-5 left-4 z-[100] flex items-center gap-2">
+							<button
+								type="button"
+								onClick={() => setIsFloatingSearchOpen((open) => !open)}
+								aria-label={isFloatingSearchOpen ? "Close search" : "Open search"}
+								aria-expanded={isFloatingSearchOpen}
+								title="Search lessons"
+								className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[#9fc8ce] bg-[#005b6b] text-white shadow-[0_8px_24px_rgba(7,17,38,0.2)] transition hover:bg-[#004653] active:scale-95"
+							>
+								<Search size={20} />
+							</button>
+							{isFloatingSearchOpen && (
+								<div className="flex w-[min(17rem,calc(100vw-6rem))] items-center gap-2 rounded-full border border-[#c9dfe2] bg-white p-1.5 pl-4 shadow-[0_8px_24px_rgba(7,17,38,0.2)]">
+									<input
+										ref={floatingSearchInputRef}
+										type="search"
+										value={searchQuery}
+										onChange={(event) => setSearchQuery(event.target.value)}
+										placeholder="Search lessons"
+										aria-label={`Search ${programName} lessons`}
+										className="min-w-0 flex-1 bg-transparent text-sm text-[#172642] outline-none placeholder:text-[#8492a9]"
+									/>
+									<button
+										type="button"
+										onClick={() => setIsFloatingSearchOpen(false)}
+										aria-label="Close search"
+										className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[#71819b] transition hover:bg-[#f0f7f7] hover:text-[#005b6b]"
+									>
+										<X size={17} />
+									</button>
+								</div>
+							)}
+						</div>,
+						document.body,
+					)}
+					{showFloatingBack && createPortal(
+						<Link
+							to={basePath}
+							aria-label="Back to dashboard"
+							title="Back to dashboard"
+							className="fixed left-4 top-24 z-[100] flex h-12 w-12 items-center justify-center rounded-full border border-[#9fc8ce] bg-white text-[#005b6b] shadow-[0_8px_24px_rgba(7,17,38,0.2)] transition hover:bg-[#e8f3f4] active:scale-95"
+						>
+							<ArrowLeft size={21} />
+						</Link>,
+						document.body,
+					)}
 
 					<div className="min-w-0 lg:col-start-1 lg:row-start-1">
 						{recentLesson && (

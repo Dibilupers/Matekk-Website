@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { ArrowRight, BookOpen, Check, ChevronDown, ChevronRight, ClipboardList, Clock3, LockKeyhole } from "lucide-react";
+import { createPortal } from "react-dom";
+import { ArrowLeft, ArrowRight, BookOpen, Check, ChevronDown, ChevronRight, ClipboardList, Clock3, LockKeyhole } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const NO_HERO_INTROS = [];
@@ -71,6 +72,7 @@ export default function CCNAProgramDashboard({
 	programName,
 	badge,
 	description,
+	descriptionAccent,
 	quote,
 	focusAreas,
 	modules = [],
@@ -87,6 +89,15 @@ export default function CCNAProgramDashboard({
 	overviewDescription,
 }) {
 	const [typedIntro, setTypedIntro] = useState("");
+	const [hasScrolled, setHasScrolled] = useState(false);
+	const hasDescriptionAccent = typeof descriptionAccent === "string" && description.endsWith(descriptionAccent);
+
+	useEffect(() => {
+		const updateBackButtonVisibility = () => setHasScrolled(window.scrollY > 120);
+		updateBackButtonVisibility();
+		window.addEventListener("scroll", updateBackButtonVisibility, { passive: true });
+		return () => window.removeEventListener("scroll", updateBackButtonVisibility);
+	}, []);
 
 	useEffect(() => {
 		if (heroIntros.length === 0) {
@@ -130,17 +141,37 @@ export default function CCNAProgramDashboard({
 	}, [heroIntros]);
 
 	return (
-		<main className="ccna-page-enter min-h-screen bg-white text-[#071126]">
-			<section className="mx-auto max-w-[1440px] px-6 pb-16 pt-14 sm:px-10 lg:px-14 lg:pb-20 lg:pt-16">
-				<div className="grid items-center gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-4">
-					<div>
+		<main className="ccna-page-enter relative min-h-screen bg-white text-[#071126]">
+			{hasScrolled
+				? createPortal(
+					<Link
+						to="/pages/blank"
+						aria-label="Back"
+						className="fixed left-6 top-24 z-[60] text-[#005b6b] transition hover:text-[#004653] active:scale-95 lg:hidden"
+					>
+						<ArrowLeft size={28} strokeWidth={2.5} />
+					</Link>,
+					document.body,
+				)
+				: (
+					<Link
+						to="/pages/blank"
+						aria-label="Back"
+						className="absolute left-6 top-2 z-40 text-[#005b6b] transition hover:text-[#004653] active:scale-95 lg:hidden"
+					>
+						<ArrowLeft size={28} strokeWidth={2.5} />
+					</Link>
+				)}
+			<section className="mx-auto min-w-0 max-w-[1440px] px-6 pb-16 pt-14 sm:px-10 lg:px-14 lg:pb-20 lg:pt-16">
+				<div className="grid min-w-0 items-center gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-4">
+					<div className="min-w-0">
 						<div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#c9dfe2] bg-[#f0f7f7] px-4 py-2 text-sm font-semibold text-[#005b6b]">
 							<span className="h-2 w-2 rounded-full bg-[#005b6b]" />
 							{activeModule
 								? `Module ${activeModule.number.replace(".0", "")} of ${modules.length} · ${activeModule.title}`
 								: `${programName} · Learning path`}
 						</div>
-						<h1 className="max-w-[700px] text-[2.65rem] font-bold leading-[1.08] tracking-[-1.5px] sm:text-6xl lg:text-[3.25rem] xl:text-[3.7rem]">
+						<h1 className="max-w-[700px] text-[2rem] font-bold leading-[1.12] tracking-[-1px] sm:text-6xl sm:leading-[1.08] sm:tracking-[-1.5px] lg:text-[3.25rem] xl:text-[3.7rem]">
 							Continue your path to <span className="text-[#005b6b]">{programName}<br className="hidden sm:block" /> Certification.</span>
 						</h1>
 						<p className="typewriter-caret mt-6 min-h-[5.4rem] max-w-[555px] text-base leading-[1.8] text-[#66738d] sm:text-lg">{heroIntros.length > 0 ? typedIntro : quote}</p>
@@ -151,21 +182,21 @@ export default function CCNAProgramDashboard({
 								</a>
 							</div>
 						)}
-						<div className="mt-11 flex flex-wrap gap-5 divide-x divide-[#dce5f2]">
+						<div className="mt-8 grid grid-cols-3 gap-2 sm:mt-11 sm:flex sm:flex-wrap sm:gap-5 sm:divide-x sm:divide-[#dce5f2]">
 							{topStats ?? (
 								<>
-							<div className="flex items-center gap-3">
-								<strong className="text-[1.65rem] leading-none tracking-tight text-[#071126] sm:text-[2rem]">{modules.length}</strong>
-								<span className="max-w-20 text-xs leading-tight text-[#6f7d99] sm:text-sm">Course modules</span>
-							</div>
-							<div className="flex items-center gap-3 pl-5 sm:pl-7">
-								<strong className="text-[1.65rem] leading-none tracking-tight text-[#071126] sm:text-[2rem]">0</strong>
-								<span className="max-w-20 text-xs leading-tight text-[#6f7d99] sm:text-sm">Quizzes available</span>
-							</div>
-							<div className="flex items-center gap-3 pl-5 sm:pl-7">
-								<strong className="text-[1.65rem] leading-none tracking-tight text-[#071126] sm:text-[2rem]">0</strong>
-								<span className="max-w-20 text-xs leading-tight text-[#6f7d99] sm:text-sm">Exams available</span>
-							</div>
+									<div className="flex min-w-0 flex-col items-start gap-1 sm:flex-row sm:items-center sm:gap-3">
+										<strong className="text-xl leading-none tracking-tight text-[#071126] sm:text-[2rem]">{modules.length}</strong>
+										<span className="text-[11px] leading-tight text-[#6f7d99] sm:max-w-20 sm:text-sm">Course modules</span>
+									</div>
+									<div className="flex min-w-0 flex-col items-start gap-1 sm:flex-row sm:items-center sm:gap-3 sm:pl-7">
+										<strong className="text-xl leading-none tracking-tight text-[#071126] sm:text-[2rem]">0</strong>
+										<span className="text-[11px] leading-tight text-[#6f7d99] sm:max-w-20 sm:text-sm">Quizzes available</span>
+									</div>
+									<div className="flex min-w-0 flex-col items-start gap-1 sm:flex-row sm:items-center sm:gap-3 sm:pl-7">
+										<strong className="text-xl leading-none tracking-tight text-[#071126] sm:text-[2rem]">0</strong>
+										<span className="text-[11px] leading-tight text-[#6f7d99] sm:max-w-20 sm:text-sm">Exams available</span>
+									</div>
 								</>
 							)}
 						</div>
@@ -214,12 +245,19 @@ export default function CCNAProgramDashboard({
 			</section>
 
 			<div className="bg-[#eaf3f4] py-12 text-center sm:py-14">
-				<p className="mx-auto max-w-4xl px-6 text-2xl font-bold tracking-tight text-[#071126] sm:text-[28px]">{description}</p>
+				<p className="mx-auto max-w-4xl px-6 text-2xl font-bold tracking-tight text-[#071126] sm:text-[28px]">
+					{hasDescriptionAccent ? (
+						<>
+							{description.slice(0, -descriptionAccent.length)}
+							<span className="text-[#005b6b]">{descriptionAccent}</span>
+						</>
+					) : description}
+				</p>
 			</div>
 
-			<section id="program-content" className="scroll-mt-8 bg-[#f5f9f9]">
-				<div className="mx-auto grid max-w-[1440px] gap-8 px-6 py-12 sm:px-10 lg:grid-cols-[minmax(0,1fr)_353px] lg:px-14 lg:py-14">
-					<div>
+			<section id="program-content" className="scroll-mt-8 min-w-0 bg-[#f5f9f9]">
+				<div className="mx-auto grid min-w-0 max-w-[1440px] gap-8 px-6 py-12 sm:px-10 lg:grid-cols-[minmax(0,1fr)_353px] lg:px-14 lg:py-14">
+					<div className="min-w-0">
 						<div className="mb-6 flex flex-wrap items-center justify-between gap-2">
 							<h2 className="text-xl font-bold sm:text-[21px]">Course modules</h2>
 							<span className="text-sm text-[#7c89a1]">{modulesSummary ?? `${modules.length} modules · curriculum outline`}</span>
@@ -239,7 +277,7 @@ export default function CCNAProgramDashboard({
 						)}
 					</div>
 
-					<aside className="space-y-5">
+					<aside className="min-w-0 space-y-5">
 						{!practiceQuizzes && <div className="rounded-[18px] border border-[#d6e5e7] bg-white p-6">
 							<div className="flex items-center gap-4">
 								<div className="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-full border-[6px] border-[#e4eaf4]">

@@ -9,6 +9,8 @@ import {
 } from "../../../utils/programModuleQuizProgress";
 import { readGradebookAssessments } from "../../../utils/gradebookApi";
 
+const PROGRAM_EXAM_COUNT = 3;
+
 function getGradeTone(score) {
 	if (!Number.isFinite(score)) {
 		return { text: "text-[#52616e]", fill: "bg-[#9aa7b1]", badge: "bg-[#edf1f3] text-[#52616e]" };
@@ -232,6 +234,12 @@ export default function ProgramModuleGradebook({ programKey, programName, module
 	}, [programKey, userId]);
 	const progress = userId ? readProgramModuleQuizProgress(programKey, userId) : { activeModule: null, modules: {} };
 	const storedAssessments = backendGradebook.userId === userId ? backendGradebook.assessments : [];
+	const completedExamCount = Math.min(
+		new Set(storedAssessments
+			.filter((assessment) => assessment.type === "exam" && typeof assessment.title === "string")
+			.map((assessment) => assessment.title)).size,
+		PROGRAM_EXAM_COUNT,
+	);
 	const moduleRows = getModuleRows(modules, progress, storedAssessments);
 	const completedRows = moduleRows.filter((row) => row.status === "graded");
 	const latestRows = modules.flatMap((module) => {
@@ -278,7 +286,7 @@ export default function ProgramModuleGradebook({ programKey, programName, module
 					<div className="grid grid-cols-2 gap-4 p-5 sm:grid-cols-3 sm:gap-5 sm:p-8 xl:grid-cols-5">
 						<SummaryStat label="Class grade" value={classGrade === null ? "--" : `${classGrade}%`} detail={totalPossiblePoints ? `${totalPoints}/${totalPossiblePoints} points` : "No graded assessments"} progress={classGrade ?? undefined} />
 						<SummaryStat label="Quizzes completed" value={`${latestRows.length} of ${modules.length}`} detail="module quizzes completed" />
-						<SummaryStat label="Quiz attempts" value={completedRows.length} detail="graded attempts saved" />
+						<SummaryStat label="Exams completed" value={`${completedExamCount} of ${PROGRAM_EXAM_COUNT}`} detail="exams completed" />
 						<SummaryStat label="Best score" value={bestAssessment ? `${bestAssessment.bestPoints.score}/${bestAssessment.bestPoints.maxScore}` : "--"} detail={bestAssessment?.name ?? "No results yet"} gradeScore={bestAssessment?.bestGrade} />
 						<SummaryStat label="Up next" value={nextAssessment?.name ?? "All complete"} detail={nextAssessment?.status === "in-progress" ? "In progress" : nextAssessment ? "Not submitted" : "Quiz list complete"} compactValue />
 					</div>
