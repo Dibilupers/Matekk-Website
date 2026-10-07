@@ -366,7 +366,7 @@ export default function Blank() {
 				</div>
 
 				<div className="grid gap-10 lg:grid-cols-[14rem_1fr] lg:gap-14">
-					<aside className="fade-in-up lg:sticky lg:top-24 lg:self-start" style={{ "--fade-delay": 100 }}>
+					<aside className="fade-in-up hidden lg:sticky lg:top-24 lg:block lg:self-start" style={{ "--fade-delay": 100 }}>
 						<h2 className="mb-5 text-2xl font-bold text-slate-950">Category</h2>
 						<nav
 							className="flex max-h-56 w-full flex-col gap-0 overflow-y-auto overscroll-contain rounded-lg border border-slate-200 bg-slate-50 px-3 pb-1 touch-pan-y lg:max-h-none lg:overflow-visible lg:rounded-none lg:border-0 lg:bg-transparent lg:px-0 lg:pb-0 lg:block lg:space-y-1"
@@ -386,11 +386,42 @@ export default function Blank() {
 					</aside>
 
 					<section className="min-w-0" aria-live="polite">
-						<div className="mb-5 flex flex-wrap items-center justify-between gap-4">
-							<p className="flex items-center gap-2 text-sm font-medium text-slate-500"><BookOpen size={17} /> {visibleCourses.length} programs</p>
-							<div className="flex items-center gap-4">
-								<span className="text-sm font-semibold text-slate-400">{activeCategory}</span>
-								<label className="relative block">
+						<div className="mb-5 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 sm:flex sm:flex-wrap sm:justify-between sm:gap-4">
+							<label className="col-span-2 block sm:hidden">
+								<span className="sr-only">Filter by category</span>
+								<select
+									value={activeCategory}
+									onChange={(event) => selectCategory(event.target.value)}
+									aria-label="Filter programs by category"
+									className="h-11 w-full rounded-md border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-700 outline-none transition focus:border-[#1775EE] focus:ring-2 focus:ring-[#1775EE]/20"
+								>
+									{categories.map((category) => <option key={category} value={category}>{category}</option>)}
+								</select>
+							</label>
+							<p className="flex min-w-0 items-center gap-2 text-sm font-medium text-slate-500"><BookOpen size={17} className="shrink-0" /> {visibleCourses.length} programs</p>
+							<div role="group" aria-label="Program layout" className="col-start-2 row-start-2 flex items-center justify-end gap-2 sm:order-3 sm:ml-auto">
+								<button
+									type="button"
+									onClick={() => setProgramLayout("grid")}
+									aria-label="Grid view"
+									aria-pressed={programLayout === "grid"}
+									className={`flex h-10 w-10 items-center justify-center rounded-md border transition-colors ${programLayout === "grid" ? "border-[#1775EE] bg-[#1775EE] text-white" : "border-slate-200 bg-white text-slate-500 hover:border-[#1775EE] hover:text-[#1775EE]"}`}
+								>
+									<LayoutGrid size={19} />
+								</button>
+								<button
+									type="button"
+									onClick={() => setProgramLayout("list")}
+									aria-label="List view"
+									aria-pressed={programLayout === "list"}
+									className={`flex h-10 w-10 items-center justify-center rounded-md border transition-colors ${programLayout === "list" ? "border-[#1775EE] bg-[#1775EE] text-white" : "border-slate-200 bg-white text-slate-500 hover:border-[#1775EE] hover:text-[#1775EE]"}`}
+								>
+									<List size={20} />
+								</button>
+							</div>
+							<div className="col-span-2 row-start-3 flex min-w-0 items-center gap-3 sm:order-2 sm:ml-auto sm:w-auto">
+								<span className="hidden text-sm font-semibold text-slate-400 sm:block">{activeCategory}</span>
+								<label className="relative block min-w-0 flex-1 sm:w-52 sm:flex-none">
 									<Search size={17} aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
 									<input
 										type="search"
@@ -398,7 +429,7 @@ export default function Blank() {
 										onChange={(event) => setProgramSearch(event.target.value)}
 										placeholder="Search programs"
 										aria-label="Search programs"
-										className="h-10 w-44 rounded-md border border-slate-200 bg-white py-2 pl-9 pr-8 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-[#1775EE] focus:ring-2 focus:ring-[#1775EE]/20 sm:w-52"
+										className="h-11 w-full rounded-md border border-slate-200 bg-white py-2 pl-9 pr-8 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-[#1775EE] focus:ring-2 focus:ring-[#1775EE]/20 sm:h-10"
 									/>
 									{programSearch && (
 										<button
@@ -411,35 +442,15 @@ export default function Blank() {
 										</button>
 									)}
 								</label>
-								<div role="group" aria-label="Program layout" className="flex items-center gap-2">
-									<button
-										type="button"
-										onClick={() => setProgramLayout("grid")}
-										aria-label="Grid view"
-										aria-pressed={programLayout === "grid"}
-										className={`flex h-10 w-10 items-center justify-center rounded-md border transition-colors ${programLayout === "grid" ? "border-[#1775EE] bg-[#1775EE] text-white" : "border-slate-200 bg-white text-slate-500 hover:border-[#1775EE] hover:text-[#1775EE]"}`}
-									>
-										<LayoutGrid size={19} />
-									</button>
-									<button
-										type="button"
-										onClick={() => setProgramLayout("list")}
-										aria-label="List view"
-										aria-pressed={programLayout === "list"}
-										className={`flex h-10 w-10 items-center justify-center rounded-md border transition-colors ${programLayout === "list" ? "border-[#1775EE] bg-[#1775EE] text-white" : "border-slate-200 bg-white text-slate-500 hover:border-[#1775EE] hover:text-[#1775EE]"}`}
-									>
-										<List size={20} />
-									</button>
-								</div>
 							</div>
 						</div>
 						<div className={programLayout === "grid" ? "grid min-w-0 gap-7 sm:grid-cols-2" : "flex min-w-0 flex-col gap-4"}>
 							{visibleCourses.map((course, index) => (
-								<article key={course.path} className={`fade-in-up-stagger group flex min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:border-[#1775EE] hover:shadow-xl ${programLayout === "grid" ? "min-h-[25rem] flex-col hover:-translate-y-1" : "flex-col sm:flex-row"}`} style={{ "--fade-delay": 150 + index * 75 }}>
-									<div className={`flex shrink-0 items-center justify-center bg-slate-50 p-7 ${programLayout === "grid" ? "h-44" : "h-36 sm:h-auto sm:w-52"}`}>
-										<img src={course.image} alt={`${course.name} certification`} className={`object-contain transition duration-300 group-hover:scale-105 ${programLayout === "grid" ? "h-full max-w-[13rem]" : "h-full max-h-28 max-w-[10rem]"}`} />
+								<article key={course.path} className={`fade-in-up-stagger group flex min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:border-[#1775EE] hover:shadow-xl ${programLayout === "grid" ? "min-h-[25rem] flex-col hover:-translate-y-1" : "flex-row"}`} style={{ "--fade-delay": 150 + index * 75 }}>
+									<div className={`flex shrink-0 items-center justify-center overflow-hidden bg-slate-50 ${programLayout === "grid" ? "h-44 p-7" : "w-24 p-3 sm:h-auto sm:w-52 sm:p-7"}`}>
+										<img src={course.image} alt={`${course.name} certification`} className={`object-contain transition duration-300 group-hover:scale-105 ${programLayout === "grid" ? "h-full max-w-[13rem]" : "h-16 w-16 sm:h-28 sm:w-40"}`} />
 									</div>
-									<div className={`flex min-w-0 flex-1 flex-col p-5 ${programLayout === "list" ? "sm:flex-row sm:items-center sm:gap-6" : ""}`}>
+									<div className={`flex min-w-0 flex-1 flex-col ${programLayout === "list" ? "p-3 sm:flex-row sm:items-center sm:gap-6 sm:p-5" : "p-5"}`}>
 										<div className="min-w-0 flex-1">
 										<p className="mb-2 text-xs font-bold uppercase tracking-[0.14em] text-[#1775EE]">{course.category}</p>
 										<h3 className="break-words text-xl font-bold text-slate-950">{course.name}</h3>

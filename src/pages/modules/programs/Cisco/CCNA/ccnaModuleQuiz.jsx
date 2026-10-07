@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { ArrowLeft, ArrowUp, Check, Moon, RotateCcw, Sun, X } from "lucide-react";
 import { Link, useBlocker, useLocation, useParams } from "react-router-dom";
 import { useAuth } from "../../../../../context/AuthContext";
@@ -471,13 +472,13 @@ export default function CCNAModuleQuiz() {
 
 	return (
 		<main data-theme={isDark ? "dark" : "light"} className="ccna-page-enter min-h-screen bg-[#f5f9f9] px-4 py-6 text-[#17233d] sm:px-8 sm:py-8">
-			<div className="mx-auto max-w-[1125px]">
+			<div className="mx-auto min-w-0 max-w-[1125px]">
 				{gradebookSaveError && isCompleted && (
 					<p role="alert" className="mb-4 rounded-xl border border-[#f2c6c3] bg-white px-4 py-3 text-sm font-medium text-[#b42318]">
 						{gradebookSaveError} Reload this page to retry.
 					</p>
 				)}
-				<header className="mb-7 flex flex-wrap items-center justify-between gap-4 border-b border-[#d6e5e7] pb-5">
+				<header className="mb-7 flex flex-col gap-4 border-b border-[#d6e5e7] pb-5 sm:flex-row sm:items-center sm:justify-between">
 					<div className="flex min-w-0 items-center gap-4">
 						<Link to={coursePath} aria-label={`Back to ${courseTitle} course`} className="ccna-training-logo shrink-0 rounded-lg bg-white px-3 py-2 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
 							<img src={TrainingLogo} alt="MATEKK Cybercore Academy" className="h-auto w-32 sm:w-36" />
@@ -487,23 +488,23 @@ export default function CCNAModuleQuiz() {
 							<p className="mt-1 truncate text-sm font-bold text-[#17233d]">Module {moduleQuiz.number}: {moduleQuiz.title}</p>
 						</div>
 					</div>
-					<div className="flex items-center gap-2">
+					<div className="flex w-full items-center justify-between gap-2 sm:w-auto sm:justify-end">
 						<button
 							type="button"
 							onClick={() => setIsDark((current) => !current)}
 							aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
 							aria-pressed={isDark}
-							className="ccna-dark-hover inline-flex items-center gap-2 rounded-full border border-[#c9dfe2] bg-white px-4 py-2 text-sm font-semibold text-[#005b6b] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md hover:bg-[#e8f3f4] active:translate-y-0 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+							className="ccna-dark-hover inline-flex shrink-0 items-center gap-2 rounded-full border border-[#c9dfe2] bg-white px-3 py-2 text-xs font-semibold text-[#005b6b] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md hover:bg-[#e8f3f4] active:translate-y-0 motion-reduce:transition-none motion-reduce:hover:translate-y-0 sm:px-4 sm:text-sm"
 						>
 							{isDark ? <Sun size={16} /> : <Moon size={16} />}
-							{isDark ? "Light mode" : "Dark mode"}
+							<span className="hidden sm:inline">{isDark ? "Light mode" : "Dark mode"}</span>
 						</button>
 						{hasStarted && (
-							<div aria-label={`Time left ${formatTime(secondsLeft)}`} className={`rounded-full border px-4 py-2 text-sm font-semibold tabular-nums ${secondsLeft <= 10 ? "border-[#edbd9b] bg-[#fff5ee] text-[#a44b13]" : "border-[#c9dfe2] bg-white text-[#005b6b]"}`}>
+							<div aria-label={`Time left ${formatTime(secondsLeft)}`} className={`shrink-0 rounded-full border px-3 py-2 text-xs font-semibold tabular-nums sm:px-4 sm:text-sm ${secondsLeft <= 10 ? "border-[#edbd9b] bg-[#fff5ee] text-[#a44b13]" : "border-[#c9dfe2] bg-white text-[#005b6b]"}`}>
 								{formatTime(secondsLeft)}
 							</div>
 						)}
-						<Link to={coursePath} className="ccna-dark-hover inline-flex items-center gap-2 rounded-full border border-[#c9dfe2] px-4 py-2 text-sm font-semibold text-[#005b6b] transition-all duration-200 ease-out hover:scale-105 hover:bg-[#e8f3f4] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100">
+						<Link to={coursePath} className="ccna-dark-hover inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-[#c9dfe2] px-3 py-2 text-xs font-semibold text-[#005b6b] transition-all duration-200 ease-out hover:scale-105 hover:bg-[#e8f3f4] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100 sm:gap-2 sm:px-4 sm:text-sm">
 							<ArrowLeft size={16} />
 							<span>Back to course</span>
 						</Link>
@@ -511,11 +512,11 @@ export default function CCNAModuleQuiz() {
 				</header>
 
 				{!hasStarted && !isCompleted && (
-					<section className="rounded-[20px] border border-[#d6e5e7] bg-white p-6 shadow-sm sm:p-8">
+					<section className="min-w-0 rounded-[20px] border border-[#d6e5e7] bg-white p-4 shadow-sm sm:p-8">
 						<p className="text-sm font-bold uppercase tracking-[0.15em] text-[#005b6b]">Module {moduleQuiz.number}</p>
-						<h1 className="mt-2 text-3xl font-bold tracking-tight text-[#17233d] sm:text-4xl">{moduleQuiz.title}</h1>
-						<p className="mt-4 text-[#64748b]">This quiz contains {moduleQuiz.questions.length} questions and has a {quizDurationSeconds / 60}-minute time limit. Choose an answer for each question, then continue through the quiz to see your score and answer explanations.</p>
-						<button type="button" onClick={startQuiz} className="mt-6 rounded-full bg-[#005b6b] px-6 py-3 font-semibold text-white transition hover:bg-[#004653]">
+						<h1 className="mt-2 text-2xl font-bold tracking-tight text-[#17233d] sm:text-4xl">{moduleQuiz.title}</h1>
+						<p className="mt-4 text-sm leading-6 text-[#64748b] sm:text-base">This quiz contains {moduleQuiz.questions.length} questions and has a {quizDurationSeconds / 60}-minute time limit. Choose an answer for each question, then continue through the quiz to see your score and answer explanations.</p>
+						<button type="button" onClick={startQuiz} className="mt-6 w-full rounded-full bg-[#005b6b] px-6 py-3 font-semibold text-white transition hover:bg-[#004653] sm:w-auto">
 							Start Quiz
 						</button>
 					</section>
@@ -536,9 +537,9 @@ export default function CCNAModuleQuiz() {
 						</div>
 
 						<div className="grid items-stretch gap-5 lg:grid-cols-[minmax(0,1fr)_280px]">
-							<section className="rounded-[20px] border border-[#d6e5e7] bg-white p-5 shadow-sm sm:p-7">
+							<section className="rounded-[20px] border border-[#d6e5e7] bg-white p-4 shadow-sm sm:p-7">
 								<p className="mb-2 text-sm text-[#70809a]">Question {attempt.currentIndex + 1} of {moduleQuiz.questions.length} · {moduleQuiz.title}</p>
-								<h1 className="mb-6 text-[1.45rem] font-bold leading-snug tracking-tight text-[#17233d] sm:text-[1.7rem]">
+								<h1 className="mb-4 text-lg font-bold leading-snug tracking-tight text-[#17233d] sm:mb-6 sm:text-[1.7rem]">
 									{currentQuestion.prompt}
 								</h1>
 								<div className="space-y-2.5">
@@ -551,7 +552,7 @@ export default function CCNAModuleQuiz() {
 												onClick={() => chooseAnswer(optionIndex)}
 												disabled={Boolean(attempt.lockedQuestions?.[attempt.currentIndex])}
 												aria-pressed={isSelected}
-												className={`ccna-answer-choice ccna-dark-hover flex min-h-[60px] w-full items-center gap-3 rounded-2xl border px-4 py-3 text-left transition disabled:cursor-default ${
+												className={`ccna-answer-choice ccna-dark-hover flex min-h-[52px] w-full items-center gap-2.5 rounded-2xl border px-3 py-2.5 text-left transition disabled:cursor-default sm:min-h-[60px] sm:gap-3 sm:px-4 sm:py-3 ${
 													isSelected
 														? "border-[#005b6b] bg-[#e8f3f4] text-[#263654]"
 														: "border-[#d9e1ef] bg-white text-[#263654] hover:border-[#8bb8bf] hover:bg-[#f0f7f7]"
@@ -560,7 +561,7 @@ export default function CCNAModuleQuiz() {
 												<span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold ${isSelected ? "bg-[#005b6b] text-white" : "bg-[#e8f3f4] text-[#005b6b]"}`}>
 													{String.fromCharCode(65 + optionIndex)}
 												</span>
-												<span className="text-[15px] sm:text-base">{option}</span>
+												<span className="text-sm sm:text-base">{option}</span>
 											</button>
 										);
 									})}
@@ -788,45 +789,46 @@ export default function CCNAModuleQuiz() {
 					</>
 				)}
 			</div>
-			{blocker.state === "blocked" && (
+			{blocker.state === "blocked" && createPortal(
 				<div
 					data-theme={isDark ? "dark" : "light"}
-					className="fixed inset-0 z-[120] flex items-center justify-center bg-[#071126]/55 px-4 py-6 backdrop-blur-[2px]"
+					className="fixed inset-0 z-[120] flex items-center justify-center overflow-y-auto bg-[#071126]/55 px-3 py-3 backdrop-blur-[2px] sm:px-4 sm:py-6"
 				>
 					<section
 						role="alertdialog"
 						aria-modal="true"
 						aria-labelledby="ccna-module-exit-title"
 						aria-describedby="ccna-module-exit-description"
-						className="w-full max-w-md rounded-2xl border border-[#d6e5e7] bg-white p-6 text-[#17233d] shadow-2xl sm:p-8"
+						className="my-auto max-h-[calc(100dvh-1.5rem)] w-full max-w-md overflow-y-auto rounded-2xl border border-[#d6e5e7] bg-white p-4 text-[#17233d] shadow-2xl sm:max-h-[calc(100dvh-3rem)] sm:p-8"
 					>
 						<div className="flex items-start justify-between gap-4">
 							<div>
 								<p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#005b6b]">Quiz in progress</p>
-								<h2 id="ccna-module-exit-title" className="mt-2 text-2xl font-bold">Are you sure you want to exit?</h2>
+								<h2 id="ccna-module-exit-title" className="mt-2 text-xl font-bold sm:text-2xl">Are you sure you want to exit?</h2>
 							</div>
 						</div>
-						<p id="ccna-module-exit-description" className="mt-3 leading-6 text-[#64748b]">
+						<p id="ccna-module-exit-description" className="mt-3 text-sm leading-6 text-[#64748b] sm:text-base">
 							Your answers and remaining time will be saved, but the timer will keep running while you are away.
 						</p>
-						<div className="mt-6 flex justify-end gap-3">
+						<div className="mt-5 flex flex-wrap justify-end gap-2 sm:mt-6 sm:gap-3">
 							<button
 								type="button"
 								onClick={() => blocker.reset()}
-								className="ccna-modal-stay rounded-full border border-[#c9dfe2] px-5 py-2.5 text-sm font-semibold text-[#42516b] transition hover:bg-[#f5f9f9]"
+								className="ccna-modal-stay rounded-full border border-[#c9dfe2] px-4 py-2.5 text-sm font-semibold text-[#42516b] transition hover:bg-[#f5f9f9] sm:px-5"
 							>
 								Stay in quiz
 							</button>
 							<button
 								type="button"
 								onClick={() => blocker.proceed()}
-								className="rounded-full bg-[#005b6b] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#004653]"
+								className="rounded-full bg-[#005b6b] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#004653] sm:px-5"
 							>
 								Exit quiz
 							</button>
 						</div>
 					</section>
-				</div>
+				</div>,
+				document.body,
 			)}
 		</main>
 	);

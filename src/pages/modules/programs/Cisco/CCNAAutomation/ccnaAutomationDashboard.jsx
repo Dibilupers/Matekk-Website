@@ -211,6 +211,7 @@ export default function CCNAAutomationDashboard() {
 				/>
 			)}
 			description="Automate network operations and build practical skills for programmable, API-driven infrastructure."
+			descriptionAccent="API-driven infrastructure."
 			overviewDescription="A guided path from network fundamentals to programmable, automated infrastructure."
 			focusAreas="Explore network automation, APIs, Python, and programmable Cisco platforms as course content becomes available."
 		/>

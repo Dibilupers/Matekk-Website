@@ -83,7 +83,11 @@ export function saveCcnaModuleQuizProgress(userId, progress) {
 export function beginCcnaModuleQuiz(userId, moduleNumber) {
 	const progress = readCcnaModuleQuizProgress(userId);
 	const previousAttempt = progress.modules[moduleNumber];
-	if (isCurrentCcnaModuleQuizAttempt(previousAttempt) && previousAttempt.status === "in-progress") {
+	if (
+		isCurrentCcnaModuleQuizAttempt(previousAttempt) &&
+		previousAttempt.status === "in-progress" &&
+		(!Number.isFinite(previousAttempt.deadline) || previousAttempt.deadline > Date.now())
+	) {
 		const resumedProgress = { ...progress, activeModule: moduleNumber };
 		saveCcnaModuleQuizProgress(userId, resumedProgress);
 		return previousAttempt;
@@ -112,4 +116,40 @@ export function beginCcnaModuleQuiz(userId, moduleNumber) {
 		},
 	});
 	return attempt;
+}
+
+export function expireCcnaModuleQuizAttempt(userId, moduleNumber, questions) {
+	const progress = readCcnaModuleQuizProgress(userId);
+	const attempt = progress.modules[moduleNumber];
+	if (
+		!isCurrentCcnaModuleQuizAttempt(attempt) ||
+		attempt.status !== "in-progress" ||
+		!Number.isFinite(attempt.deadline) ||
+		attempt.deadline > Date.now()
+	) {
+		return false;
+	}
+	if (!Array.isArray(questions) || questions.length === 0) {
+		throw new TypeError("Quiz questions are required to record an expired CCNA quiz attempt.");
+	}
+
+	const score = questions.reduce(
+		(total, question, index) => total + Number(attempt.answers?.[index] === question.answer),
+		0,
+	);
+	const expiredAttempt = recordCcnaModuleQuizAttempt({
+		...attempt,
+		status: "expired",
+		score,
+		maxScore: questions.length,
+		submittedAt: Date.now(),
+		bestScore: Math.max(attempt.bestScore ?? 0, score),
+	}, questions.length);
+
+	saveCcnaModuleQuizProgress(userId, {
+		...progress,
+		activeModule: progress.activeModule === moduleNumber ? null : progress.activeModule,
+		modules: { ...progress.modules, [moduleNumber]: expiredAttempt },
+	});
+	return true;
 }

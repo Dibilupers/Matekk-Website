@@ -46,10 +46,10 @@ export default function ProgramQuizControls({ programKey, basePath, modules, lea
 			</div>
 
 			{isQuizPickerOpen && (
-				createPortal(<div className="fixed inset-0 z-[110] flex items-center justify-center overflow-hidden bg-[#071126]/55 p-3 backdrop-blur-sm sm:p-5" onMouseDown={(event) => {
+				createPortal(				<div className="fixed inset-0 z-[110] flex items-center justify-center overflow-x-hidden overflow-y-auto bg-[#071126]/55 p-2 backdrop-blur-sm sm:p-5" onMouseDown={(event) => {
 					if (event.target === event.currentTarget) setIsQuizPickerOpen(false);
 				}}>
-					<section role="dialog" aria-modal="true" aria-labelledby={`${programKey}-quiz-picker-title`} className="ccna-page-enter my-auto flex max-h-[calc(100dvh-2rem)] w-full max-w-3xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl">
+					<section role="dialog" aria-modal="true" aria-labelledby={`${programKey}-quiz-picker-title`} className="ccna-page-enter my-auto flex max-h-[calc(100dvh-1rem)] w-[calc(100vw-1rem)] max-w-3xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl sm:max-h-[calc(100dvh-2rem)] sm:w-full">
 						<div className="flex shrink-0 items-start justify-between gap-4 border-b border-[#e2ecec] px-5 py-4 sm:px-8 sm:py-5">
 							<div className="min-w-0">
 								<p className="text-sm font-semibold text-[#005b6b]">{programKey === "ccna-automation" ? "CCNA Automation" : "CCNA Cybersecurity"} practice</p>

@@ -71,6 +71,7 @@ export default function CCNAProgramDashboard({
 	programName,
 	badge,
 	description,
+	descriptionAccent,
 	quote,
 	focusAreas,
 	modules = [],
@@ -87,6 +88,7 @@ export default function CCNAProgramDashboard({
 	overviewDescription,
 }) {
 	const [typedIntro, setTypedIntro] = useState("");
+	const hasDescriptionAccent = typeof descriptionAccent === "string" && description.endsWith(descriptionAccent);
 
 	useEffect(() => {
 		if (heroIntros.length === 0) {
@@ -214,7 +216,14 @@ export default function CCNAProgramDashboard({
 			</section>
 
 			<div className="bg-[#eaf3f4] py-12 text-center sm:py-14">
-				<p className="mx-auto max-w-4xl px-6 text-2xl font-bold tracking-tight text-[#071126] sm:text-[28px]">{description}</p>
+				<p className="mx-auto max-w-4xl px-6 text-2xl font-bold tracking-tight text-[#071126] sm:text-[28px]">
+					{hasDescriptionAccent ? (
+						<>
+							{description.slice(0, -descriptionAccent.length)}
+							<span className="text-[#005b6b]">{descriptionAccent}</span>
+						</>
+					) : description}
+				</p>
 			</div>
 
 			<section id="program-content" className="scroll-mt-8 bg-[#f5f9f9]">

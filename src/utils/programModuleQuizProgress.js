@@ -49,7 +49,11 @@ export function saveProgramModuleQuizProgress(programKey, userId, progress) {
 export function beginProgramModuleQuiz(programKey, userId, moduleNumber, durationSeconds) {
 	const progress = readProgramModuleQuizProgress(programKey, userId);
 	const previousAttempt = progress.modules[moduleNumber];
-	if (isCurrentProgramModuleQuizAttempt(previousAttempt) && previousAttempt.status === "in-progress") {
+	if (
+		isCurrentProgramModuleQuizAttempt(previousAttempt) &&
+		previousAttempt.status === "in-progress" &&
+		(!Number.isFinite(previousAttempt.deadline) || previousAttempt.deadline > Date.now())
+	) {
 		saveProgramModuleQuizProgress(programKey, userId, { ...progress, activeModule: moduleNumber });
 		return previousAttempt;
 	}
@@ -74,6 +78,42 @@ export function beginProgramModuleQuiz(programKey, userId, moduleNumber, duratio
 		modules: { ...progress.modules, [moduleNumber]: attempt },
 	});
 	return attempt;
+}
+
+export function expireProgramModuleQuizAttempt(programKey, userId, moduleNumber, questions) {
+	const progress = readProgramModuleQuizProgress(programKey, userId);
+	const attempt = progress.modules[moduleNumber];
+	if (
+		!isCurrentProgramModuleQuizAttempt(attempt) ||
+		attempt.status !== "in-progress" ||
+		!Number.isFinite(attempt.deadline) ||
+		attempt.deadline > Date.now()
+	) {
+		return false;
+	}
+	if (!Array.isArray(questions) || questions.length === 0) {
+		throw new TypeError("Quiz questions are required to record an expired program quiz attempt.");
+	}
+
+	const score = questions.reduce(
+		(total, question, index) => total + (attempt.answers?.[index] === question.answer ? 1 : 0),
+		0,
+	);
+	const expiredAttempt = recordProgramModuleQuizAttempt({
+		...attempt,
+		status: "expired",
+		score,
+		maxScore: questions.length,
+		submittedAt: Date.now(),
+		bestScore: Math.max(attempt.bestScore ?? 0, score),
+	}, questions.length);
+
+	saveProgramModuleQuizProgress(programKey, userId, {
+		...progress,
+		activeModule: progress.activeModule === moduleNumber ? null : progress.activeModule,
+		modules: { ...progress.modules, [moduleNumber]: expiredAttempt },
+	});
+	return true;
 }
 
 export function recordProgramModuleQuizAttempt(attempt, maxScore) {

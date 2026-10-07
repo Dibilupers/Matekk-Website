@@ -4,11 +4,24 @@ import { ChevronLeft, ChevronRight, CircleAlert } from "lucide-react";
 import { useAuth } from "../../../context/AuthContext";
 import {
 	beginProgramModuleQuiz,
+	expireProgramModuleQuizAttempt,
 	isCurrentProgramModuleQuizAttempt,
 	readProgramModuleQuizProgress,
 } from "../../../utils/programModuleQuizProgress";
+import {
+	CCNA_AUTOMATION_MODULE_QUIZZES,
+	CCNA_CYBERSECURITY_MODULE_QUIZZES,
+} from "./programModuleQuizData";
 
 export const PROGRAM_MODULE_QUIZ_DURATION_SECONDS = 20 * 60;
+const PROGRAM_QUIZZES = {
+	"ccna-automation": CCNA_AUTOMATION_MODULE_QUIZZES,
+	"ccna-cybersecurity": CCNA_CYBERSECURITY_MODULE_QUIZZES,
+};
+
+function getProgramQuizQuestions(programKey, moduleNumber) {
+	return PROGRAM_QUIZZES[programKey]?.find((quiz) => quiz.number === moduleNumber)?.questions;
+}
 
 function QuizCoverageCard({ attemptedCount, totalModules, coverage }) {
 	const [slide, setSlide] = useState(0);
@@ -63,20 +76,33 @@ function QuizCoverageCard({ attemptedCount, totalModules, coverage }) {
 	);
 }
 
-function QuizTimeRemaining({ deadline }) {
+function QuizTimeRemaining({ deadline, onExpire }) {
 	const [secondsRemaining, setSecondsRemaining] = useState(() =>
 		Math.max(0, Math.ceil((deadline - Date.now()) / 1000)),
 	);
 
 	useEffect(() => {
+		let hasExpired = false;
+		function updateRemaining() {
+			const remaining = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
+			setSecondsRemaining(remaining);
+			if (remaining === 0 && !hasExpired) {
+				hasExpired = true;
+				onExpire();
+			}
+		}
+		updateRemaining();
 		const intervalId = window.setInterval(() => {
-			setSecondsRemaining(Math.max(0, Math.ceil((deadline - Date.now()) / 1000)));
+			updateRemaining();
 		}, 1000);
 		return () => window.clearInterval(intervalId);
-	}, [deadline]);
+	}, [deadline, onExpire]);
 
 	const minutes = Math.floor(secondsRemaining / 60).toString().padStart(2, "0");
 	const seconds = (secondsRemaining % 60).toString().padStart(2, "0");
+	if (secondsRemaining === 0) {
+		return <span role="status" className="whitespace-nowrap rounded-full bg-[#fff0ed] px-3 py-1 text-[11px] font-bold text-[#b42318]">Time expired</span>;
+	}
 	return <span role="timer" className="whitespace-nowrap text-[11px] font-bold tabular-nums text-[#005b6b]">{minutes}:{seconds} left</span>;
 }
 
@@ -89,14 +115,46 @@ export function ProgramModuleQuizAction({ programKey, basePath, module, compact 
 	const navigate = useNavigate();
 	const userId = profile?.userId;
 	const [isConfirmingRetake, setIsConfirmingRetake] = useState(false);
+	const [clockNow, setClockNow] = useState(Date.now);
+	const [, setProgressRevision] = useState(0);
 	const progress = userId ? readProgramModuleQuizProgress(programKey, userId) : { modules: {} };
 	const attempt = progress.modules[module.number];
 	const currentAttempt = isCurrentProgramModuleQuizAttempt(attempt) ? attempt : null;
-	const label = currentAttempt?.status === "in-progress"
+	const questions = getProgramQuizQuestions(programKey, module.number);
+	const deadlineHasPassed = currentAttempt?.status === "in-progress" &&
+		Number.isFinite(currentAttempt.deadline) &&
+		currentAttempt.deadline <= clockNow;
+	const isFinished = ["completed", "expired"].includes(currentAttempt?.status) || deadlineHasPassed;
+	const label = currentAttempt?.status === "in-progress" && !deadlineHasPassed
 		? "Continue Quiz"
-		: ["completed", "expired"].includes(currentAttempt?.status)
+		: isFinished
 			? "Retake Quiz"
 			: "Start Quiz";
+
+	useEffect(() => {
+		if (
+			!userId ||
+			currentAttempt?.status !== "in-progress" ||
+			!Number.isFinite(currentAttempt.deadline)
+		) return undefined;
+		const deadline = currentAttempt.deadline;
+
+		function expireIfTimeIsUp() {
+			const now = Date.now();
+			setClockNow(now);
+			if (now < deadline) return;
+			if (!questions) {
+				throw new Error(`Quiz questions were not found for ${programKey} module ${module.number}.`);
+			}
+			if (expireProgramModuleQuizAttempt(programKey, userId, module.number, questions)) {
+				setProgressRevision((revision) => revision + 1);
+			}
+		}
+
+		expireIfTimeIsUp();
+		const intervalId = window.setInterval(expireIfTimeIsUp, 1000);
+		return () => window.clearInterval(intervalId);
+	}, [currentAttempt?.deadline, currentAttempt?.status, module.number, programKey, questions, userId]);
 
 	function openQuiz() {
 		if (!userId) return;
@@ -109,7 +167,7 @@ export function ProgramModuleQuizAction({ programKey, basePath, module, compact 
 			<span className="relative inline-flex">
 				<button
 					type="button"
-					onClick={() => currentAttempt && ["completed", "expired"].includes(currentAttempt.status)
+					onClick={() => isFinished
 						? setIsConfirmingRetake(true)
 						: openQuiz()}
 					disabled={!userId}
@@ -119,7 +177,7 @@ export function ProgramModuleQuizAction({ programKey, basePath, module, compact 
 				>
 					{label}
 				</button>
-				{currentAttempt?.status === "expired" && (
+				{(currentAttempt?.status === "expired" || deadlineHasPassed) && (
 					<span className="group/quiz-expired absolute -right-1.5 -top-1.5">
 						<span role="img" aria-label="Quiz time expired" className="flex h-5 w-5 items-center justify-center rounded-full bg-[#dc2626] text-white shadow-sm">
 							<CircleAlert size={15} strokeWidth={2.5} />
@@ -171,6 +229,7 @@ function getModuleResults(modules, attempts) {
 export default function ProgramModuleQuizPanel({ programKey, basePath, modules }) {
 	const { profile } = useAuth();
 	const userId = profile?.userId;
+	const [, setProgressRevision] = useState(0);
 	const progress = userId ? readProgramModuleQuizProgress(programKey, userId) : { modules: {} };
 	const moduleResults = getModuleResults(modules, progress.modules);
 	const attemptedCount = moduleResults.filter(({ attempt }) =>
@@ -180,15 +239,15 @@ export default function ProgramModuleQuizPanel({ programKey, basePath, modules }
 	const coverage = modules.length ? Math.round((attemptedCount / modules.length) * 100) : 0;
 
 	return (
-		<div className="space-y-5">
+		<div className="min-w-0 space-y-5">
 			<QuizCoverageCard attemptedCount={attemptedCount} totalModules={modules.length} coverage={coverage} />
-			<div className="rounded-[18px] border border-[#d6e5e7] bg-white p-6">
+			<div className="min-w-0 overflow-hidden rounded-[18px] border border-[#d6e5e7] bg-white p-4 sm:p-6">
 				<h2 className="mb-5 text-xl font-bold">Practice quizzes</h2>
 				{moduleResults.map(({ module, attempt }) => (
 					<div key={module.number} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border-b border-[#e2ecec] py-3 text-sm last:border-0">
 						<div className="min-w-0">
 							<span className="block truncate font-medium">{module.number} {module.title}</span>
-							<strong className={`mt-1 block ${["completed", "expired"].includes(attempt?.status) || attempt?.status === "in-progress" ? "text-[#005b6b]" : "text-[#8b96a9]"}`}>
+							<strong className={`mt-1 block ${attempt?.status === "expired" ? "text-[#b42318]" : ["completed", "in-progress"].includes(attempt?.status) ? "text-[#005b6b]" : "text-[#8b96a9]"}`}>
 								{["completed", "expired"].includes(attempt?.status)
 									? `${attempt.score ?? 0}/20`
 									: attempt?.status === "in-progress"
@@ -201,7 +260,20 @@ export default function ProgramModuleQuizPanel({ programKey, basePath, modules }
 								{attempt?.status === "completed" ? (
 									<span className="text-xs font-semibold text-[#287849]">Completed</span>
 								) : attempt?.status === "in-progress" && Number.isFinite(attempt.deadline) ? (
-									<QuizTimeRemaining deadline={attempt.deadline} />
+									<QuizTimeRemaining
+										deadline={attempt.deadline}
+										onExpire={() => {
+											const questions = getProgramQuizQuestions(programKey, module.number);
+											if (!userId || !questions) {
+												throw new Error(`Unable to record the expired ${programKey} module ${module.number} quiz.`);
+											}
+											if (expireProgramModuleQuizAttempt(programKey, userId, module.number, questions)) {
+												setProgressRevision((revision) => revision + 1);
+											}
+										}}
+									/>
+								) : attempt?.status === "expired" ? (
+									<span className="whitespace-nowrap rounded-full bg-[#fff0ed] px-3 py-1 text-[11px] font-bold text-[#b42318]">Time expired</span>
 								) : null}
 							</div>
 							<ProgramModuleQuizAction

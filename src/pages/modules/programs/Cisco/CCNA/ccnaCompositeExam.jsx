@@ -370,9 +370,9 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 						{gradebookSaveError} Reload this page to retry.
 					</p>
 				)}
-				<header className="mb-7 flex flex-wrap items-center justify-between gap-4 border-b border-[#d6e5e7] pb-5">
+				<header className="mb-7 flex flex-col gap-4 border-b border-[#d6e5e7] pb-5 sm:flex-row sm:items-center sm:justify-between">
 					<div className="flex min-w-0 items-center gap-4">
-						<Link to="/modules/programs/ccna" aria-label="Back to CCNA course" className="shrink-0 rounded-lg bg-white px-3 py-2 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 motion-reduce:transition-none">
+						<Link to="/modules/programs/ccna" aria-label="Back to CCNA course" className="ccna-training-logo shrink-0 rounded-lg bg-white px-3 py-2 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 motion-reduce:transition-none">
 							<img src={TrainingLogo} alt="MATEKK Cybercore Academy" className="h-auto w-32 sm:w-36" />
 						</Link>
 						<div className="hidden min-w-0 border-l border-[#cbd5e1] pl-4 sm:block">
@@ -380,21 +380,30 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 							<p className="mt-1 truncate text-sm font-bold text-[#17233d]">{exam.name} · {exam.subtitle}</p>
 						</div>
 					</div>
-					<div className="flex items-center gap-2">
+					<div className="flex w-full items-center justify-between gap-2 sm:w-auto sm:justify-end">
 						<button
 							type="button"
 							onClick={() => setIsDark((value) => !value)}
 							aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
-							className="inline-flex items-center gap-2 rounded-full border border-[#c9dfe2] bg-white p-2.5 text-[#005b6b] transition hover:bg-[#e8f3f4]"
+							aria-pressed={isDark}
+							className="ccna-dark-hover inline-flex shrink-0 items-center gap-2 rounded-full border border-[#c9dfe2] bg-white px-3 py-2 text-xs font-semibold text-[#005b6b] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md hover:bg-[#e8f3f4] active:translate-y-0 motion-reduce:transition-none motion-reduce:hover:translate-y-0 sm:px-4 sm:text-sm"
 						>
 							{isDark ? <Sun size={16} /> : <Moon size={16} />}
+							<span className="hidden sm:inline">{isDark ? "Light mode" : "Dark mode"}</span>
 						</button>
 						{!isSubmitted && (
-							<div role="timer" aria-label={`${formatTime(secondsRemaining)} remaining`} className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold tabular-nums ${secondsRemaining <= 300 ? "border-[#f0c6a8] bg-[#fff5ee] text-[#a44b13]" : "border-[#c9dfe2] bg-white text-[#005b6b]"}`}>
+							<div
+								role="timer"
+								aria-label={`${formatTime(secondsRemaining)} remaining`}
+								className={`inline-flex shrink-0 items-center gap-2 rounded-full border px-3 py-2 text-xs font-semibold tabular-nums sm:px-4 sm:text-sm ${secondsRemaining <= 300
+									? "border-[#f0c6a8] bg-[#fff5ee] text-[#a44b13]"
+									: "border-[#c9dfe2] bg-white text-[#005b6b]"
+									}`}
+							>
 								<Clock3 size={16} /> {formatTime(secondsRemaining)}
 							</div>
 						)}
-						<Link to="/modules/programs/ccna" className="inline-flex items-center gap-2 rounded-full border border-[#c9dfe2] px-4 py-2 text-sm font-semibold text-[#005b6b] transition-all duration-200 ease-out hover:scale-105 hover:bg-[#e8f3f4] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100">
+						<Link to="/modules/programs/ccna" className="ccna-dark-hover inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-[#c9dfe2] px-3 py-2 text-xs font-semibold text-[#005b6b] transition-all duration-200 ease-out hover:scale-105 hover:bg-[#e8f3f4] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100 sm:gap-2 sm:px-4 sm:text-sm">
 							<X size={16} /> <span>Exit exam</span>
 						</Link>
 					</div>
@@ -413,12 +422,12 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 						</div>
 
 						<div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_300px]">
-							<section className="rounded-[20px] border border-[#d6e5e7] bg-white p-5 shadow-sm sm:p-7">
+							<section className="rounded-[20px] border border-[#d6e5e7] bg-white p-4 shadow-sm sm:p-7">
 								<p className="mb-2 text-sm text-[#70809a]">
 									Question {currentIndex + 1} of {questions.length}
 									{question.moduleNumber && ` · Module ${question.moduleNumber}: ${question.moduleTitle}`}
 								</p>
-								<h1 className="mb-6 text-[1.45rem] font-bold leading-snug tracking-tight sm:text-[1.7rem]">{question.prompt}</h1>
+								<h1 className="mb-4 text-lg font-bold leading-snug tracking-tight sm:mb-6 sm:text-[1.7rem]">{question.prompt}</h1>
 								<QuestionInput
 									question={question}
 									value={answers[currentIndex]}
