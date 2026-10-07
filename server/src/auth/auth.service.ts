@@ -17,8 +17,13 @@ export class AuthService {
     findRegistrationPrograms() {
         return this.prisma.program.findMany({
             where: { parentId: null },
-            select: { id: true, name: true },
-            orderBy: { name: 'asc' },
+            select: {
+                id: true,
+                name: true,
+                training: { select: { id: true, name: true } },
+                modules: { select: { id: true, name: true }, orderBy: { name: 'asc' } },
+            },
+            orderBy: [{ training: { name: 'asc' } }, { name: 'asc' }],
         });
     }
 
@@ -37,6 +42,11 @@ export class AuthService {
                 password,
                 role: 'Student',
                 programs_enrolled: '',
+                first_name: dto.firstName,
+                last_name: dto.lastName,
+                birth_date: dto.birthdate ? new Date(dto.birthdate) : undefined,
+                gender: dto.gender,
+                city_province: dto.city,
                 enrollments: { create: { programId: dto.programId } },
             },
         });

@@ -5,12 +5,6 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
 
-const DEFAULT_PROGRAMS = [
-  { name: 'CCNA' },
-  { name: 'Network+' },
-  { name: 'Security+' },
-] as const;
-
 interface CreateEnrollmentData {
   userId: number;
   programIds: number[];
@@ -31,18 +25,13 @@ export class EnrollmentsService {
   }
 
   async findPrograms() {
-    const programs = await this.prisma.program.findMany();
-
-    for (const defaultProgram of DEFAULT_PROGRAMS) {
-      if (!programs.some((program) => program.name === defaultProgram.name && program.parentId === null)) {
-        programs.push(await this.prisma.program.create({ data: { name: defaultProgram.name } }));
-      }
-    }
-
     const rootPrograms = await this.prisma.program.findMany({
       where: { parentId: null },
-      include: { modules: { orderBy: { name: 'asc' } } },
-      orderBy: { name: 'asc' },
+      include: {
+        training: { select: { id: true, name: true } },
+        modules: { orderBy: { name: 'asc' } },
+      },
+      orderBy: [{ training: { name: 'asc' } }, { name: 'asc' }],
     });
 
     return rootPrograms.map((program) => ({
@@ -55,7 +44,18 @@ export class EnrollmentsService {
     return this.prisma.enrollment.findMany({
       include: {
         user: { select: { id: true, username: true, email: true } },
-        program: { include: { parent: { select: { id: true, name: true } } } },
+        program: {
+          include: {
+            training: { select: { id: true, name: true } },
+            parent: {
+              select: {
+                id: true,
+                name: true,
+                training: { select: { id: true, name: true } },
+              },
+            },
+          },
+        },
       },
       orderBy: { enrolledAt: 'desc' },
     });
@@ -126,7 +126,18 @@ export class EnrollmentsService {
       where: { userId: data.userId, programId: { in: programIds } },
       include: {
         user: { select: { id: true, username: true, email: true } },
-        program: { include: { parent: { select: { id: true, name: true } } } },
+        program: {
+          include: {
+            training: { select: { id: true, name: true } },
+            parent: {
+              select: {
+                id: true,
+                name: true,
+                training: { select: { id: true, name: true } },
+              },
+            },
+          },
+        },
       },
       orderBy: { enrolledAt: 'desc' },
     });

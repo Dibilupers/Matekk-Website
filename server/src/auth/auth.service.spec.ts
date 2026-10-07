@@ -46,6 +46,11 @@ describe('AuthService', () => {
       email: 'student@example.com',
       password: 'plain-password',
       programId: 4,
+      firstName: 'Sample',
+      lastName: 'Student',
+      birthdate: '2000-01-02',
+      gender: 'Female',
+      city: 'Rizal',
     })).resolves.toEqual({ message: 'Registration submitted. Please wait for approval.' });
 
     expect(mocks.create).toHaveBeenCalledWith({
@@ -55,6 +60,11 @@ describe('AuthService', () => {
         password: '$argon2id$registration-hash',
         role: 'Student',
         programs_enrolled: '',
+        first_name: 'Sample',
+        last_name: 'Student',
+        birth_date: new Date('2000-01-02'),
+        gender: 'Female',
+        city_province: 'Rizal',
         enrollments: { create: { programId: 4 } },
       },
     });

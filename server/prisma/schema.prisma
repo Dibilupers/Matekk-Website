@@ -40,6 +40,11 @@ model Users {
   pending_status    String       @default("Pending")
   enrollments       Enrollment[]
   gradebooks        UserGradebook[]
+  first_name        String       @default("")
+  last_name         String       @default("")
+  birth_date        DateTime     @default(now())
+  gender            String?
+  city_province     String       @default("")
 }
 
 model UserGradebook {
@@ -69,12 +74,21 @@ model Questions {
 model Program {
   id          Int          @id @default(autoincrement())
   name        String
+  trainingId  Int?
+  training    Training?    @relation(fields: [trainingId], references: [id], onDelete: Restrict)
   parentId    Int?
   parent      Program?     @relation("ProgramModules", fields: [parentId], references: [id], onDelete: Cascade)
   modules     Program[]    @relation("ProgramModules")
   enrollmens  Enrollment[]
 
   @@index([parentId])
+  @@index([trainingId])
+}
+
+model Training {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  programs Program[]
 }
 
 model Enrollment {

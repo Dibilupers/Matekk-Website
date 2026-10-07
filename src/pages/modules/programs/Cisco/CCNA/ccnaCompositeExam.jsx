@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ArrowLeft, ArrowRight, ArrowUp, Clock3, Moon, RotateCcw, Sun, X } from "lucide-react";
 import { Link, useBlocker, useLocation, useNavigate } from "react-router-dom";
+import API_URL from "../../../../../config/api";
 import { useAuth } from "../../../../../context/AuthContext";
 import TrainingLogo from "../../../../../assets/MATEKK_training_logo.png";
 import { CCNA_EXAMS } from "./ccnaExamFormats";
@@ -10,6 +11,8 @@ import { getCcnaExamSessionKey } from "../../../../../utils/ccnaShortExamSession
 import { isAnswerCorrect, isQuestionAnswered, isValidQuestion } from "../../../../../utils/ccnaExamGrading";
 import { QuestionInput, QuestionReview } from "./ccnaExamQuestionViews";
 import { saveGradebookAssessment } from "../../../../../utils/gradebookApi";
+
+
 
 const EXAM_PASS_PERCENTAGE = 80;
 function createExamSession(exam) {
@@ -160,6 +163,74 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 		);
 	const [isDark, setIsDark] = useState(false);
 	const [gradebookSaveError, setGradebookSaveError] = useState(null);
+	const [questionsLoading, setQuestionsLoading] = useState(false);
+	const [questionsError, setQuestionsError] = useState("");
+
+	useEffect(() => {
+		if (isViewingSavedResult || shouldStartNewAttempt) return undefined;
+
+		const hasSavedSession = Boolean(
+			sessionStorageKey &&
+			typeof window !== "undefined" &&
+			window.sessionStorage.getItem(sessionStorageKey),
+		);
+		if (hasSavedSession) return undefined;
+
+		let isActive = true;
+		const loadQuestions = async () => {
+			const token = localStorage.getItem("accessToken");
+			if (!token) {
+				if (isActive) setQuestionsLoading(false);
+				return;
+			}
+
+			setQuestionsLoading(true);
+			setQuestionsError("");
+
+			try {
+				const response = await fetch(`${API_URL}/questions`, {
+					headers: { Authorization: "Bearer " + token },
+				});
+				if (!response.ok) {
+					throw new Error("Failed to load questions.");
+				}
+				const data = await response.json();
+				if (!Array.isArray(data)) {
+					throw new Error("The question response was not a list.");
+				}
+
+				const validQuestions = data.filter(isValidQuestion).slice(0, exam.questionCount);
+				if (validQuestions.length === 0) {
+					throw new Error("The question response did not include any valid questions.");
+				}
+
+				if (!isActive) return;
+				setQuestions(validQuestions);
+				setAnswers({});
+				setLockedQuestions({});
+				setCurrentIndex(0);
+				setDeadline(Date.now() + exam.durationSeconds * 1000);
+				setAttemptId(createCcnaMockExamAttemptId());
+				setSubmittedAt(null);
+				setSecondsRemaining(exam.durationSeconds);
+				setIsSubmitted(false);
+				setExamAttempt((attempt) => attempt + 1);
+			} catch (error) {
+				if (isActive) {
+					setQuestionsError(error.message || "Unable to load questions.");
+				}
+			} finally {
+				if (isActive) {
+					setQuestionsLoading(false);
+				}
+			}
+		};
+
+		loadQuestions();
+		return () => {
+			isActive = false;
+		};
+	}, [exam.durationSeconds, exam.name, exam.questionCount, isViewingSavedResult, sessionStorageKey, shouldStartNewAttempt]);
 
 	useEffect(() => {
 		if (!shouldStartNewAttempt) return;
@@ -364,20 +435,54 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 
 	return (
 		<main data-theme={isDark ? "dark" : "light"} className="ccna-page-enter min-h-screen bg-[#f5f9f9] px-4 py-6 text-[#17233d] sm:px-8 sm:py-8">
-			<div className="mx-auto max-w-[1125px]">
+						<div className="mx-auto max-w-[1125px]">
 				{gradebookSaveError && isResultView && (
 					<p role="alert" className="mb-4 rounded-xl border border-[#f2c6c3] bg-white px-4 py-3 text-sm font-medium text-[#b42318]">
 						{gradebookSaveError} Reload this page to retry.
 					</p>
 				)}
+				{questionsLoading && (
+					<p role="status" className="mb-4 rounded-xl border border-[#d6e5e7] bg-white px-4 py-3 text-sm font-medium text-[#005b6b]">
+						Loading the CCNA question set...
+					</p>
+				)}
+				{questionsError && (
+					<p role="alert" className="mb-4 rounded-xl border border-[#f2c6c3] bg-white px-4 py-3 text-sm font-medium text-[#b42318]">
+						{questionsError} Continuing with the local exam question bank.
+					</p>
+				)}
 				<header className="mb-7 flex flex-wrap items-center justify-between gap-4 border-b border-[#d6e5e7] pb-5">
 					<div className="flex min-w-0 items-center gap-4">
-						<Link to="/modules/programs/ccna" aria-label="Back to CCNA course" className="shrink-0 rounded-lg bg-white px-3 py-2 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 motion-reduce:transition-none">
-							<img src={TrainingLogo} alt="MATEKK Cybercore Academy" className="h-auto w-32 sm:w-36" />
+						<Link to="/modules/programs/ccna" aria-label="Back to CCNA course" className="group shrink-0 rounded-full bg-white/80 p-2 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 motion-reduce:transition-none">
+							<div className="relative flex h-20 w-20 items-center justify-center rounded-full border border-[#cfe4ea] bg-white shadow-[0_10px_20px_rgba(15,23,42,0.12)]">
+								<div className="absolute inset-0 animate-[spin_30s_linear_infinite]">
+									{[
+										{ label: "CCNA", angle: 0 },
+										{ label: "NET", angle: 45 },
+										{ label: "LAB", angle: 90 },
+										{ label: "SEC", angle: 135 },
+										{ label: "OPS", angle: 180 },
+										{ label: "IT", angle: 225 },
+										{ label: "CIS", angle: 270 },
+										{ label: "AI", angle: 315 },
+									].map((chip) => (
+										<div
+											key={chip.label}
+											style={{ "--angle": `${chip.angle}deg` }}
+											className="absolute left-1/2 top-1/2 -ml-[1.35rem] -mt-[1.35rem] flex h-[2.7rem] w-[2.7rem] items-center justify-center rounded-full border border-[#dbeaf0] bg-[#f5fbff] text-[7px] font-bold uppercase tracking-[0.12em] text-[#005b6b] shadow-sm [transform:rotate(var(--angle))_translateY(-4.8rem)]"
+										>
+											{chip.label}
+										</div>
+									))}
+								</div>
+								<div className="relative z-10 flex h-14 w-14 items-center justify-center rounded-full bg-white">
+									<img src={TrainingLogo} alt="MATEKK Cybercore Academy" className="h-10 w-auto object-contain" />
+								</div>
+							</div>
 						</Link>
 						<div className="hidden min-w-0 border-l border-[#cbd5e1] pl-4 sm:block">
 							<p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#70809a]">CCNA composite exam</p>
-							<p className="mt-1 truncate text-sm font-bold text-[#17233d]">{exam.name} · {exam.subtitle}</p>
+							<p className="mt-1 truncate text-sm font-bold text-[#17233d]">{exam.name} Â· {exam.subtitle}</p>
 						</div>
 					</div>
 					<div className="flex items-center gap-2">
@@ -416,7 +521,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 							<section className="rounded-[20px] border border-[#d6e5e7] bg-white p-5 shadow-sm sm:p-7">
 								<p className="mb-2 text-sm text-[#70809a]">
 									Question {currentIndex + 1} of {questions.length}
-									{question.moduleNumber && ` · Module ${question.moduleNumber}: ${question.moduleTitle}`}
+									{question.moduleNumber && ` Â· Module ${question.moduleNumber}: ${question.moduleTitle}`}
 								</p>
 								<h1 className="mb-6 text-[1.45rem] font-bold leading-snug tracking-tight sm:text-[1.7rem]">{question.prompt}</h1>
 								<QuestionInput
@@ -464,7 +569,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 							<div>
 								<p className="inline-flex items-center gap-2 rounded-full bg-[#e8f3f4] px-3 py-1.5 text-xs font-bold tracking-wide text-[#005b6b]">
 									<span className="h-2 w-2 rounded-full bg-[#005b6b]" />
-									{exam.name} · CCNA
+									{exam.name} Â· CCNA
 								</p>
 								<h1 className="mt-5 max-w-xl text-4xl font-extrabold leading-tight tracking-tight text-[#17233d] sm:text-5xl">
 									{examPassed ? (
@@ -474,7 +579,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 									)}
 								</h1>
 								<p className="mt-4 max-w-xl leading-7 text-[#64748b]">
-									You got {resultScore} of {resultMaxScore} questions correct{examKey === "short" ? " across CCNA modules 1.0–6.0" : ""}.
+									You got {resultScore} of {resultMaxScore} questions correct{examKey === "short" ? " across CCNA modules 1.0â€“6.0" : ""}.
 									{examPassed
 										? " You passed this exam."
 										: isViewingSavedResult
@@ -572,7 +677,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 												<div className="flex flex-wrap items-center gap-2">
 													<span className="text-sm font-semibold text-[#64748b]">
 														Question {item.index + 1} of {questions.length}
-														{item.moduleNumber && ` · Module ${item.moduleNumber}: ${item.moduleTitle}`}
+														{item.moduleNumber && ` Â· Module ${item.moduleNumber}: ${item.moduleTitle}`}
 													</span>
 													<span className={`rounded-full px-3 py-1 text-xs font-bold ${item.isCorrect ? "bg-[#e8f3f4] text-[#005b6b]" : "bg-[#fff0e8] text-[#b4532a]"
 														}`}>
@@ -676,3 +781,6 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 		</main>
 	);
 }
+
+
+
