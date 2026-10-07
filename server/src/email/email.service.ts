@@ -48,15 +48,15 @@ export class EmailService {
         const content: Record<UserStatus, { title: string; body: string }> = {
             pending: {
                 title: 'Thanks for registering!',
-                body: '<p>Your request is pending approval. This usually takes 24-48 hours.</p>',
+                body: 'Your request is pending approval. This usually takes 24-48 hours.',
             },
             accepted: {
                 title: 'Account approved!',
-                body: '<p>Great news — your account has been approved. You can now log in.</p>',
+                body: 'Great news — your account has been approved. You can now log in.',
             },
             rejected: {
                 title: 'Registration update',
-                body: '<p>Unfortunately we were unable to approve your registration at this time.</p>',
+                body: 'Unfortunately we were unable to approve your registration at this time.',
             },
         };
 

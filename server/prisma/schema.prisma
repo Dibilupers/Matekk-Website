@@ -69,6 +69,7 @@ model Questions {
   choices        String
   correct_answer String
   explanation    String
+  imageUrl       String?
 }
 
 model Program {

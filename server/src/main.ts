@@ -31,7 +31,23 @@ async function bootstrap() {
       callback(new Error('Origin is not allowed by CORS'), false);
     },
   });
-  app.use(helmet())
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: [`'self'`],
+          scriptSrc: [`'self'`],
+          styleSrc: [`'self'`, `'unsafe-inline'`],
+          imgSrc: [`'self'`, 'data:', 'https:'],
+          fontSrc: [`'self'`, 'https:', 'data:'],
+          connectSrc: [`'self'`],
+          objectSrc: [`'none'`],
+          frameAncestors: [`'self'`],
+          upgradeInsecureRequests: [],
+        },
+      },
+    }),
+  );
   await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
 }
 await bootstrap();
