@@ -57,20 +57,20 @@ export default function CCNACybersecurityKnowledgeArticle() {
 
 	return (
 		<main className="ccna-page-enter min-h-screen bg-white text-[#526584]">
-			<div className="mx-auto max-w-[1440px] px-5 pb-10 pt-8 sm:px-10 sm:pt-10 lg:px-14">
-				<nav className="mb-6 flex flex-wrap items-center gap-2 text-sm sm:text-base" aria-label="Breadcrumb">
+			<div className="mx-auto min-w-0 max-w-[1440px] px-5 pb-10 pt-8 sm:px-10 sm:pt-10 lg:px-14">
+				<nav className="mb-6 flex min-w-0 flex-wrap items-center gap-2 text-sm sm:text-base" aria-label="Breadcrumb">
 					<Link to="/modules/programs/ccna-cybersecurity" className="font-semibold text-[#005b6b] hover:underline">CCNA Cybersecurity</Link>
 					<span>/</span>
 					<Link to="/modules/programs/ccna-cybersecurity/knowledge-hub" className="font-semibold text-[#005b6b] hover:underline">Knowledge Hub</Link>
 					<span>/</span>
-					<span className="truncate text-[#8492a9]">{lesson.title}</span>
+					<span className="min-w-0 truncate text-[#8492a9]">{lesson.title}</span>
 				</nav>
 
-				<div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_300px]">
-					<article className="rounded-[24px] border border-[#dbe5f5] px-6 py-8 sm:px-10 sm:py-10">
+				<div className="grid min-w-0 grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_300px]">
+					<article className="min-w-0 rounded-[24px] border border-[#dbe5f5] px-6 py-8 sm:px-10 sm:py-10">
 						<div className="inline-flex items-center gap-2 rounded-full bg-[#e8f3f4] px-4 py-2 text-sm font-semibold text-[#005b6b]"><BookOpen size={15} /> CCNA Cybersecurity · Module {lesson.moduleNumber}</div>
 						<h1 className="mt-6 text-3xl font-bold leading-tight tracking-tight text-[#071126] sm:text-5xl">{lesson.number} {lesson.title}</h1>
-						<p className="mt-4 flex items-center gap-2 text-base text-[#7b8ca7]"><Clock size={17} /> {lesson.duration} read</p>
+						<p className="mt-4 flex min-w-0 items-center gap-2 text-base text-[#7b8ca7]"><Clock size={17} /> {lesson.duration} read</p>
 
 						{lesson.contentType ? (
 							<CcnaKnowledgeModuleFive article={{ ...lesson, meta: `CCNA ${lesson.number} · Security Fundamentals` }} />

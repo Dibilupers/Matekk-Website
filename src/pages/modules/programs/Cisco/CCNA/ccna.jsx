@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../../../context/AuthContext";
 import CcnaLogo from "../../../../../assets/CCNA.png";
 import {
 	ArrowRight,
+	ArrowLeft,
 	BookOpen,
 	Check,
 	ChevronDown,
@@ -445,12 +446,20 @@ export default function CCNA() {
 	const { profile } = useAuth();
 	const userId = profile?.userId;
 	const [typedIntro, setTypedIntro] = useState("");
+	const [hasScrolled, setHasScrolled] = useState(false);
 	const [openSection, setOpenSection] = useState(null);
 	const [isQuizPickerOpen, setIsQuizPickerOpen] = useState(false);
 	const [isExamPickerOpen, setIsExamPickerOpen] = useState(false);
 	const [selectedExamFormat, setSelectedExamFormat] = useState(null);
 	const [retakeQuizModule, setRetakeQuizModule] = useState(null);
 	const [retakeExamFormat, setRetakeExamFormat] = useState(null);
+
+	useEffect(() => {
+		const updateBackButtonVisibility = () => setHasScrolled(window.scrollY > 120);
+		updateBackButtonVisibility();
+		window.addEventListener("scroll", updateBackButtonVisibility, { passive: true });
+		return () => window.removeEventListener("scroll", updateBackButtonVisibility);
+	}, []);
 	const [shortExamProgressState, setShortExamProgressState] = useState(() => ({
 		userId,
 		progress: readCcnaShortExamProgress(userId),
@@ -483,6 +492,7 @@ export default function CCNA() {
 	const [examClockNow, setExamClockNow] = useState(Date.now);
 	const [quizClockNow, setQuizClockNow] = useState(Date.now);
 	const [progressSlide, setProgressSlide] = useState(0);
+	const progressTouchStart = useRef(null);
 	const [quizProgressState, setQuizProgressState] = useState(() => ({
 		userId,
 		progress: userId ? readCcnaModuleQuizProgress(userId) : { activeModule: null, modules: {} },
@@ -666,7 +676,27 @@ export default function CCNA() {
 	}
 
 	return (
-		<main className="ccna-page-enter min-h-screen bg-white text-[#071126]">
+		<main className="ccna-page-enter relative min-h-screen bg-white text-[#071126]">
+			{hasScrolled
+				? createPortal(
+					<Link
+						to="/pages/blank"
+						aria-label="Back"
+						className="fixed left-6 top-24 z-[60] text-[#005b6b] transition hover:text-[#004653] active:scale-95 lg:hidden"
+					>
+						<ArrowLeft size={28} strokeWidth={2.5} />
+					</Link>,
+					document.body,
+				)
+				: (
+					<Link
+						to="/pages/blank"
+						aria-label="Back"
+						className="absolute left-6 top-2 z-40 text-[#005b6b] transition hover:text-[#004653] active:scale-95 lg:hidden"
+					>
+						<ArrowLeft size={28} strokeWidth={2.5} />
+					</Link>
+				)}
 			<section className="mx-auto max-w-[1440px] px-6 pb-16 pt-14 sm:px-10 lg:px-14 lg:pb-20 lg:pt-16">
 				<div className="grid items-center gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-4">
 					<div>
@@ -721,7 +751,23 @@ export default function CCNA() {
 					</div>
 
 					<aside className="min-w-0 space-y-5">
-						<div className="overflow-hidden rounded-[18px] border border-[#d6e5e7] bg-white">
+						<div
+							className="overflow-hidden rounded-[18px] border border-[#d6e5e7] bg-white touch-pan-y"
+							onTouchStart={(event) => {
+								const touch = event.changedTouches[0];
+								progressTouchStart.current = { x: touch.clientX, y: touch.clientY };
+							}}
+							onTouchEnd={(event) => {
+								const start = progressTouchStart.current;
+								progressTouchStart.current = null;
+								if (!start) return;
+								const touch = event.changedTouches[0];
+								const deltaX = touch.clientX - start.x;
+								const deltaY = touch.clientY - start.y;
+								if (Math.abs(deltaX) < 40 || Math.abs(deltaX) <= Math.abs(deltaY)) return;
+								setProgressSlide(deltaX < 0 ? 1 : 0);
+							}}
+						>
 							<div className="flex transition-transform duration-300 ease-out" style={{ transform: `translateX(-${progressSlide * 100}%)` }}>
 								<div className="flex w-full shrink-0 items-center gap-5 p-6">
 									<div
@@ -765,12 +811,12 @@ export default function CCNA() {
 								</div>
 							</div>
 							<div className="flex h-8 items-center justify-center gap-2 pb-2" aria-label="Progress panels">
-								<button type="button" onClick={() => setProgressSlide(0)} disabled={progressSlide === 0} aria-label="Show quiz progress" className="rounded-full p-1 text-[#005b6b] transition hover:bg-[#e8f3f4] disabled:cursor-default disabled:opacity-30"><ChevronLeft size={16} /></button>
-								<div className="flex items-center gap-2" aria-hidden="true">
-									<span className={`h-2 rounded-full transition-all ${progressSlide === 0 ? "w-6 bg-[#005b6b]" : "w-2 bg-[#cbd5e1]"}`} />
-									<span className={`h-2 rounded-full transition-all ${progressSlide === 1 ? "w-6 bg-[#005b6b]" : "w-2 bg-[#cbd5e1]"}`} />
+								<button type="button" onClick={() => setProgressSlide(0)} disabled={progressSlide === 0} aria-label="Show quiz progress" className="hidden rounded-full p-1 text-[#005b6b] transition hover:bg-[#e8f3f4] disabled:cursor-default disabled:opacity-30 sm:inline-flex"><ChevronLeft size={16} /></button>
+								<div className="flex items-center gap-2">
+									<button type="button" onClick={() => setProgressSlide(0)} aria-label="Show quiz coverage" aria-current={progressSlide === 0 ? "true" : undefined} className={`h-2 rounded-full transition-all ${progressSlide === 0 ? "w-6 bg-[#005b6b]" : "w-2 bg-[#cbd5e1]"}`} />
+									<button type="button" onClick={() => setProgressSlide(1)} aria-label="Show exam progress" aria-current={progressSlide === 1 ? "true" : undefined} className={`h-2 rounded-full transition-all ${progressSlide === 1 ? "w-6 bg-[#005b6b]" : "w-2 bg-[#cbd5e1]"}`} />
 								</div>
-								<button type="button" onClick={() => setProgressSlide(1)} disabled={progressSlide === 1} aria-label="Show exam progress" className="rounded-full p-1 text-[#005b6b] transition hover:bg-[#e8f3f4] disabled:cursor-default disabled:opacity-30"><ChevronRight size={16} /></button>
+								<button type="button" onClick={() => setProgressSlide(1)} disabled={progressSlide === 1} aria-label="Show exam progress" className="hidden rounded-full p-1 text-[#005b6b] transition hover:bg-[#e8f3f4] disabled:cursor-default disabled:opacity-30 sm:inline-flex"><ChevronRight size={16} /></button>
 							</div>
 						</div>
 						<div className="min-w-0 overflow-hidden rounded-[18px] border border-[#d6e5e7] bg-white p-4 sm:p-6">
@@ -786,7 +832,7 @@ export default function CCNA() {
 											<div key={module.number} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border-b border-[#e2ecec] py-3 text-sm last:border-0">
 												<div className="min-w-0">
 													<span className="block truncate font-medium">{module.number} {module.title}</span>
-													<strong className={`mt-0.5 block ${moduleProgress?.status === "completed" || moduleProgress?.status === "expired" || moduleProgress?.status === "in-progress" ? "text-[#005b6b]" : "text-[#8b96a9]"}`}>
+													<strong className={`mt-0.5 block ${moduleProgress?.status === "expired" ? "text-[#b42318]" : moduleProgress?.status === "completed" || moduleProgress?.status === "in-progress" ? "text-[#005b6b]" : "text-[#8b96a9]"}`}>
 														{moduleProgress?.status === "completed" || moduleProgress?.status === "expired"
 															? `${moduleProgress.score}/${moduleQuestionCount}`
 															: moduleProgress?.status === "in-progress"
@@ -798,6 +844,8 @@ export default function CCNA() {
 													<div className="flex h-6 items-center justify-end">
 														{moduleProgress?.status === "completed" ? (
 															<span className="text-xs font-semibold text-[#287849]">Completed</span>
+														) : moduleProgress?.status === "expired" ? (
+															<span className="whitespace-nowrap rounded-full bg-[#fff0ed] px-3 py-1 text-[11px] font-bold text-[#b42318]">Time expired</span>
 														) : moduleProgress?.status === "in-progress" && Number.isFinite(moduleProgress.deadline) ? (
 															<QuizTimeRemaining deadline={moduleProgress.deadline} />
 														) : null}

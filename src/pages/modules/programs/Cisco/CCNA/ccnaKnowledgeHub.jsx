@@ -28,6 +28,7 @@ import {
 	Monitor,
 	Network,
 	Power,
+	X,
 	RefreshCw,
 	Router,
 	Search,
@@ -253,8 +254,12 @@ export default function CCNAKnowledgeHub() {
 	const [searchQuery, setSearchQuery] = useState("");
 	const [activeSectionNumber, setActiveSectionNumber] = useState(curriculum[0]?.number ?? "");
 	const [showFloatingSearch, setShowFloatingSearch] = useState(false);
+	const [showFloatingBack, setShowFloatingBack] = useState(false);
+	const [isFloatingSearchOpen, setIsFloatingSearchOpen] = useState(false);
 	const [recentTutorial, setRecentTutorial] = useState(getRecentTutorial);
 	const searchFieldRef = useRef(null);
+	const floatingSearchInputRef = useRef(null);
+	const dashboardLinkRef = useRef(null);
 	const featuredTutorial = recentTutorial || {
 		number: "Extra",
 		title: "Spine-Leaf Architecture Tutorial",
@@ -314,6 +319,28 @@ export default function CCNAKnowledgeHub() {
 		return () => observer.disconnect();
 	}, []);
 
+	useEffect(() => {
+		const dashboardLink = dashboardLinkRef.current;
+		if (!dashboardLink) return undefined;
+
+		const observer = new IntersectionObserver(([entry]) => {
+			setShowFloatingBack(!entry.isIntersecting && entry.boundingClientRect.top < 0);
+		}, { threshold: 0.05 });
+		observer.observe(dashboardLink);
+		return () => observer.disconnect();
+	}, []);
+
+	useEffect(() => {
+		if (!isFloatingSearchOpen) return undefined;
+
+		floatingSearchInputRef.current?.focus();
+		function closeOnEscape(event) {
+			if (event.key === "Escape") setIsFloatingSearchOpen(false);
+		}
+		window.addEventListener("keydown", closeOnEscape);
+		return () => window.removeEventListener("keydown", closeOnEscape);
+	}, [isFloatingSearchOpen]);
+
 	return (
 		<main className="ccna-page-enter min-h-screen bg-white text-[#111a2d]">
 			<header className="border-y border-[#dddddd] bg-[#fafafa] px-5 py-10 text-center sm:py-14">
@@ -337,6 +364,7 @@ export default function CCNAKnowledgeHub() {
 
 			<div className="mx-auto max-w-[1440px] px-5 py-8 sm:px-10 sm:py-10 lg:px-6 xl:px-8">
 				<Link
+					ref={dashboardLinkRef}
 					to="/modules/programs/ccna"
 					className="mb-2 inline-flex items-center gap-1 text-sm font-semibold text-[#005b6b] hover:underline"
 				>
@@ -422,15 +450,50 @@ export default function CCNAKnowledgeHub() {
 						document.body,
 					)}
 					{showFloatingSearch && createPortal(
-						<button
-							type="button"
-							onClick={() => searchFieldRef.current?.scrollIntoView({ behavior: "smooth", block: "center" })}
-							aria-label="Back to search"
-							title="Back to search"
-							className="fixed bottom-5 left-4 z-[100] flex h-12 w-12 items-center justify-center rounded-full border border-[#9fc8ce] bg-[#005b6b] text-white shadow-[0_8px_24px_rgba(7,17,38,0.2)] transition hover:bg-[#004653] active:scale-95 lg:hidden"
+						<div className="fixed bottom-5 left-4 z-[100] flex items-center gap-2">
+							<button
+								type="button"
+								onClick={() => setIsFloatingSearchOpen((open) => !open)}
+								aria-label={isFloatingSearchOpen ? "Close search" : "Open search"}
+								aria-expanded={isFloatingSearchOpen}
+								title="Search tutorials"
+								className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[#9fc8ce] bg-[#005b6b] text-white shadow-[0_8px_24px_rgba(7,17,38,0.2)] transition hover:bg-[#004653] active:scale-95"
+							>
+								<Search size={20} />
+							</button>
+							{isFloatingSearchOpen && (
+								<div className="flex w-[min(17rem,calc(100vw-6rem))] items-center gap-2 rounded-full border border-[#c9dfe2] bg-white p-1.5 pl-4 shadow-[0_8px_24px_rgba(7,17,38,0.2)]">
+									<input
+										ref={floatingSearchInputRef}
+										type="search"
+										value={searchQuery}
+										onChange={(event) => setSearchQuery(event.target.value)}
+										placeholder="Search tutorials"
+										aria-label="Search CCNA tutorials"
+										className="min-w-0 flex-1 bg-transparent text-sm text-[#172642] outline-none placeholder:text-[#8492a9]"
+									/>
+									<button
+										type="button"
+										onClick={() => setIsFloatingSearchOpen(false)}
+										aria-label="Close search"
+										className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[#71819b] transition hover:bg-[#f0f7f7] hover:text-[#005b6b]"
+									>
+										<X size={17} />
+									</button>
+								</div>
+							)}
+						</div>,
+						document.body,
+					)}
+					{showFloatingBack && createPortal(
+						<Link
+							to="/modules/programs/ccna"
+							aria-label="Back to dashboard"
+							title="Back to dashboard"
+							className="fixed left-4 top-24 z-[100] flex h-12 w-12 items-center justify-center rounded-full border border-[#9fc8ce] bg-white text-[#005b6b] shadow-[0_8px_24px_rgba(7,17,38,0.2)] transition hover:bg-[#e8f3f4] active:scale-95"
 						>
-							<Search size={20} />
-						</button>,
+							<ArrowLeft size={21} />
+						</Link>,
 						document.body,
 					)}
 

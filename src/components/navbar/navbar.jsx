@@ -7,10 +7,10 @@ import InquireNowButton from "../ui/InquireNowButton";
 import MainLogo from "../../assets/MATEKK_logo.webp";
 import TrainingLogo from "../../assets/MATEKK_training_logo.png";
 import SolutionsLogo from "../../assets/MATEKK_services_logo.png";
-import ProfileImage from "../../assets/person_holding_laptop.webp";
 import {
   ArrowRight,
   BookOpen,
+  CircleUserRound,
   ClipboardList,
   Globe,
   LayoutDashboard,
@@ -95,7 +95,6 @@ function NavBar() {
 
   const profileName = profile?.username || "My Profile";
   const profileRole = profile?.role || "Learner";
-  const profileImage = profile?.profileImage || profile?.avatar || ProfileImage;
   const closeProfile = () => {
     setIsProfileOpen(false);
     setIsOpen(false);
@@ -131,22 +130,24 @@ function NavBar() {
         <div className="absolute -right-8 -top-10 h-32 w-52 rounded-full border border-white/80" />
         <div className="absolute -bottom-16 right-12 h-32 w-64 rounded-full border border-white/80" />
         <div className="relative flex min-w-0 items-center gap-3">
-          <img src={profileImage} alt={`${profileName} profile`} className="h-12 w-12 shrink-0 rounded-full border-2 border-white object-cover shadow-sm" />
+          <CircleUserRound aria-hidden="true" size={48} strokeWidth={1.7} className="shrink-0 text-[#1775ee]" />
           <div className="min-w-0 flex-1">
             <strong className="block truncate text-sm font-semibold text-[#1775ee]">{profileName}</strong>
             <span className="block text-xs text-slate-600">{profileRole}</span>
           </div>
-          <button
-            type="button"
-            onClick={handleLogout}
-            aria-label="Log out"
-            className="flex shrink-0 items-center justify-center rounded-full bg-[#1775ee] p-2 text-white transition hover:bg-[#0062e0]"
-          >
-            <LogOut size={16} />
-          </button>
           {mobile && (
             <button type="button" onClick={closeProfile} aria-label="Close profile menu" className="absolute -right-1 -top-5 rounded-full p-1 text-[#1775ee] hover:bg-white/70">
               <X size={18} />
+            </button>
+          )}
+          {!mobile && (
+            <button
+              type="button"
+              onClick={handleLogout}
+              aria-label="Log out"
+              className="flex shrink-0 items-center justify-center rounded-full bg-[#1775ee] p-2 text-white transition hover:bg-[#0062e0]"
+            >
+              <LogOut size={16} />
             </button>
           )}
         </div>
@@ -170,6 +171,16 @@ function NavBar() {
         <div className="pt-3">
           <h3 className="flex items-center gap-3 px-5 pb-1 pt-1 text-sm font-bold"><MessageCircle size={19} className="text-[#1775ee]" /> Support</h3>
           {profileLink("Support Center", null, closeProfile)}
+          {mobile && (
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="mt-2 flex w-full items-center gap-3 border-t border-slate-200 px-5 py-4 text-left text-sm font-semibold text-[#1775ee] transition hover:bg-[#eef6ff] hover:text-[#0062e0]"
+            >
+              <LogOut size={18} aria-hidden="true" />
+              Log out
+            </button>
+          )}
         </div>
       </div>
       </aside>
@@ -802,7 +813,7 @@ function NavBar() {
               aria-expanded={isProfileOpen}
               className="flex max-w-52 shrink-0 items-center gap-2 border-b-2 border-white hover:border-[#1775ee] bg-white px-2 py-1 text-left transition-all duration-300 hover:bg-[#eef6ff]"
             >
-              <img src={profileImage} alt="" className="h-9 w-9 rounded-full border-2 border-[#1775ee] object-cover" />
+              <CircleUserRound aria-hidden="true" size={36} strokeWidth={1.7} className="shrink-0 text-[#1775ee]" />
               <span className="min-w-0">
                 <span className="block max-w-28 truncate text-sm font-semibold text-[#1775ee]">{profileName}</span>
                 <span className="block text-xs text-slate-600">{profileRole}</span>
@@ -818,9 +829,22 @@ function NavBar() {
       </div>
 
       {/* Mobile + Tablet Hamburger */}
-      <div className="flex lg:hidden justify-center items-center">
+      <div className="flex lg:hidden items-center justify-end gap-3">
+        {isAuthenticated && (
+          <button
+            type="button"
+            onClick={() => setIsProfileOpen(true)}
+            aria-label="Open profile menu"
+            aria-expanded={isProfileOpen}
+            className="flex h-10 w-10 items-center justify-center rounded-full text-[#1775ee] transition hover:bg-[#eef6ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1775ee]"
+          >
+            <CircleUserRound aria-hidden="true" size={30} strokeWidth={1.7} />
+          </button>
+        )}
         <button
           onClick={() => setIsOpen(!isOpen)}
+          aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
+          aria-expanded={isOpen}
           className="focus:outline-none"
         >
           <svg

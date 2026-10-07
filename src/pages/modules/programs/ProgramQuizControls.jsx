@@ -15,7 +15,7 @@ export default function ProgramQuizControls({ programKey, basePath, modules, lea
 	const navigate = useNavigate();
 	const [isQuizPickerOpen, setIsQuizPickerOpen] = useState(false);
 	const progress = userId ? readProgramModuleQuizProgress(programKey, userId) : { modules: {} };
-	const buttonClass = "flex h-[58px] items-center gap-2 rounded-full px-7 text-base font-bold transition-all duration-200 ease-out hover:-translate-y-0.5 active:translate-y-0";
+	const buttonClass = "flex h-12 items-center gap-2 rounded-full px-5 text-sm font-bold transition-all duration-200 ease-out hover:-translate-y-0.5 active:translate-y-0 sm:h-[58px] sm:px-7 sm:text-base";
 
 	useEffect(() => {
 		if (!isQuizPickerOpen) return undefined;
