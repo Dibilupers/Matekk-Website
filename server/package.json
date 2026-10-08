@@ -15,6 +15,7 @@
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "prestart": "npm run prisma:generate",
     "start": "nest start",
+    "postinstall": "prisma generate",
     "prestart:dev": "npm run prisma:generate",
     "start:dev": "nest start --watch",
     "prestart:debug": "npm run prisma:generate",
