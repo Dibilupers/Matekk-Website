@@ -15,7 +15,8 @@ describe('GradebookService', () => {
     const prisma = {
       userGradebook: { findUnique, upsert },
     } as unknown as PrismaService;
-    const service = new GradebookService(prisma);
+    const programAccess = { assertEnrollment: vi.fn(async () => undefined) };
+    const service = new GradebookService(prisma, programAccess as never);
 
     await service.save(12, 'ccna', {
       assessments: {
@@ -36,5 +37,38 @@ describe('GradebookService', () => {
     });
     expect(findUnique).toHaveBeenCalledTimes(2);
     expect(upsert).toHaveBeenCalledTimes(2);
+    expect(programAccess.assertEnrollment).toHaveBeenCalledTimes(2);
+  });
+
+  it('checks course enrollment before reading a gradebook', async () => {
+    const assertEnrollment = vi.fn(async () => undefined);
+    const findUnique = vi.fn(async () => null);
+    const service = new GradebookService(
+      { userGradebook: { findUnique } } as unknown as PrismaService,
+      { assertEnrollment } as never,
+    );
+
+    await service.findOne(12, 'ccna');
+
+    expect(assertEnrollment).toHaveBeenCalledWith(12, 'ccna');
+    expect(findUnique).toHaveBeenCalled();
+  });
+
+  it('does not read or write a gradebook when enrollment is denied', async () => {
+    const findUnique = vi.fn();
+    const upsert = vi.fn();
+    const service = new GradebookService(
+      { userGradebook: { findUnique, upsert } } as unknown as PrismaService,
+      {
+        assertEnrollment: vi.fn(async () => {
+          throw new Error('not enrolled');
+        }),
+      } as never,
+    );
+
+    await expect(service.findOne(12, 'ccna')).rejects.toThrow('not enrolled');
+    await expect(service.save(12, 'ccna', { assessments: {} })).rejects.toThrow('not enrolled');
+    expect(findUnique).not.toHaveBeenCalled();
+    expect(upsert).not.toHaveBeenCalled();
   });
 });

@@ -60,6 +60,14 @@ model UserGradebook {
   @@index([programKey])
 }
 
+model AuthLoginAttempt {
+  key             String   @id
+  windowStartedAt DateTime
+  attempts        Int
+
+  @@index([windowStartedAt])
+}
+
 model Questions {
   id             Int    @id @default(autoincrement())
   module         String

@@ -6,6 +6,7 @@ import { PasswordService } from './password.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { RegisterDto } from './dto/register.dto.js';
 import { EmailService } from '../email/email.service.js';
+import { Prisma } from '../generated/prisma/client.js';
 
 @Injectable()
 export class AuthService {
@@ -33,7 +34,7 @@ export class AuthService {
 
     async register(dto: RegisterDto) {
         const normalizedUsername = dto.username.trim();
-        const normalizedEmail = dto.email.trim();
+        const normalizedEmail = dto.email.trim().toLowerCase();
         const normalizedFirstName = dto.firstName.trim();
         const normalizedLastName = dto.lastName.trim();
 
@@ -48,23 +49,33 @@ export class AuthService {
 
         const password = await this.passwords.hash(dto.password);
 
-        await this.prisma.users.create({
-            data: {
-                username: normalizedUsername,
-                email: normalizedEmail,
-                password,
-                role: 'Student',
-                programs_enrolled: '',
-                first_name: normalizedFirstName,
-                last_name: normalizedLastName,
-                birth_date: dto.birthdate ? new Date(dto.birthdate) : new Date(),
-                gender: dto.gender ?? null,
-                city_province: dto.city ?? '',
-                active_status: false,
-                pending_status: 'Pending',
-                enrollments: { create: { programId: dto.programId } },
-            },
-        });
+        try {
+            await this.prisma.users.create({
+                data: {
+                    username: normalizedUsername,
+                    email: normalizedEmail,
+                    password,
+                    role: 'Student',
+                    programs_enrolled: '',
+                    first_name: normalizedFirstName,
+                    last_name: normalizedLastName,
+                    birth_date: dto.birthdate ? new Date(dto.birthdate) : new Date(),
+                    gender: dto.gender ?? null,
+                    city_province: dto.city ?? '',
+                    active_status: false,
+                    pending_status: 'Pending',
+                    enrollments: { create: { programId: dto.programId } },
+                },
+            });
+        } catch (error) {
+            if (
+                error instanceof Prisma.PrismaClientKnownRequestError &&
+                error.code === 'P2002'
+            ) {
+                throw new ConflictException('Username or email already in use');
+            }
+            throw error;
+        }
 
         const applicant = {
             name: `${normalizedFirstName} ${normalizedLastName}`,

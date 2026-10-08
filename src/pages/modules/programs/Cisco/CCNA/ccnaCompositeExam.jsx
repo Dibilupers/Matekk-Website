@@ -2,7 +2,6 @@
 import { createPortal } from "react-dom";
 import { ArrowLeft, ArrowRight, ArrowUp, Clock3, Moon, RotateCcw, Sun, X } from "lucide-react";
 import { Link, useBlocker, useLocation, useNavigate } from "react-router-dom";
-import API_URL from "../../../../../config/api";
 import { useAuth } from "../../../../../context/AuthContext";
 import TrainingLogo from "../../../../../assets/MATEKK_training_logo.png";
 import { CCNA_EXAMS } from "./ccnaExamFormats";
@@ -163,74 +162,6 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 		);
 	const [isDark, setIsDark] = useState(false);
 	const [gradebookSaveError, setGradebookSaveError] = useState(null);
-	const [questionsLoading, setQuestionsLoading] = useState(false);
-	const [questionsError, setQuestionsError] = useState("");
-
-	useEffect(() => {
-		if (isViewingSavedResult || shouldStartNewAttempt) return undefined;
-
-		const hasSavedSession = Boolean(
-			sessionStorageKey &&
-			typeof window !== "undefined" &&
-			window.sessionStorage.getItem(sessionStorageKey),
-		);
-		if (hasSavedSession) return undefined;
-
-		let isActive = true;
-		const loadQuestions = async () => {
-			const token = localStorage.getItem("accessToken");
-			if (!token) {
-				if (isActive) setQuestionsLoading(false);
-				return;
-			}
-
-			setQuestionsLoading(true);
-			setQuestionsError("");
-
-			try {
-				const response = await fetch(`${API_URL}/questions`, {
-					headers: { Authorization: "Bearer " + token },
-				});
-				if (!response.ok) {
-					throw new Error("Failed to load questions.");
-				}
-				const data = await response.json();
-				if (!Array.isArray(data)) {
-					throw new Error("The question response was not a list.");
-				}
-
-				const validQuestions = data.filter(isValidQuestion).slice(0, exam.questionCount);
-				if (validQuestions.length === 0) {
-					throw new Error("The question response did not include any valid questions.");
-				}
-
-				if (!isActive) return;
-				setQuestions(validQuestions);
-				setAnswers({});
-				setLockedQuestions({});
-				setCurrentIndex(0);
-				setDeadline(Date.now() + exam.durationSeconds * 1000);
-				setAttemptId(createCcnaMockExamAttemptId());
-				setSubmittedAt(null);
-				setSecondsRemaining(exam.durationSeconds);
-				setIsSubmitted(false);
-				setExamAttempt((attempt) => attempt + 1);
-			} catch (error) {
-				if (isActive) {
-					setQuestionsError(error.message || "Unable to load questions.");
-				}
-			} finally {
-				if (isActive) {
-					setQuestionsLoading(false);
-				}
-			}
-		};
-
-		loadQuestions();
-		return () => {
-			isActive = false;
-		};
-	}, [exam.durationSeconds, exam.name, exam.questionCount, isViewingSavedResult, sessionStorageKey, shouldStartNewAttempt]);
 
 	useEffect(() => {
 		if (!shouldStartNewAttempt) return;
@@ -439,16 +370,6 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 				{gradebookSaveError && isResultView && (
 					<p role="alert" className="mb-4 rounded-xl border border-[#f2c6c3] bg-white px-4 py-3 text-sm font-medium text-[#b42318]">
 						{gradebookSaveError} Reload this page to retry.
-					</p>
-				)}
-				{questionsLoading && (
-					<p role="status" className="mb-4 rounded-xl border border-[#d6e5e7] bg-white px-4 py-3 text-sm font-medium text-[#005b6b]">
-						Loading the CCNA question set...
-					</p>
-				)}
-				{questionsError && (
-					<p role="alert" className="mb-4 rounded-xl border border-[#f2c6c3] bg-white px-4 py-3 text-sm font-medium text-[#b42318]">
-						{questionsError} Continuing with the local exam question bank.
 					</p>
 				)}
 				<header className="mb-7 flex flex-wrap items-center justify-between gap-4 border-b border-[#d6e5e7] pb-5">
@@ -790,6 +711,5 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 		</main>
 	);
 }
-
 
 

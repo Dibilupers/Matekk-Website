@@ -313,20 +313,13 @@ export default function Blank() {
 	}, [introText, hasProfile]);
 
 	useEffect(() => {
-		const accessToken = localStorage.getItem("accessToken");
-		if (!accessToken) {
-			navigate("/login", { replace: true });
-			return;
-		}
-		/* Fetch the user's profile from the server using the access token. If the token is invalid or expired, redirect to login. */
 		async function loadProfile() {
 			try {
 				const response = await fetch(`${API_URL}/auth/profile`, {
-					headers: { Authorization: `Bearer ${accessToken}` },
+					credentials: "include",
 				});
 
 				if (!response.ok) {
-					localStorage.removeItem("accessToken");
 					navigate("/login", { replace: true });
 					return;
 				}

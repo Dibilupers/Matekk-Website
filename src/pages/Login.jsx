@@ -96,33 +96,29 @@ export default function Login() {
   }, [navigate, pendingLoginRedirect]);
 
   useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
-    if (!accessToken) {
-      setIsCheckingSession(false);
-      return;
-    }
-
+    let mounted = true;
     async function checkSession() {
       try {
         const response = await fetch(`${API_URL}/auth/profile`, {
-          headers: { Authorization: `Bearer ${accessToken}` },
+          credentials: "include",
         });
 
         if (response.ok) {
           const profile = await response.json();
+          if (!mounted) return;
           navigateAfterLogin(profile.active_status === false ? "/account-pending" : "/pages/blank");
-          return;
         }
-
-        localStorage.removeItem("accessToken");
       } catch {
-        setMsg("Unable to verify your existing session.");
+        if (mounted) setMsg("Unable to verify your existing session.");
       } finally {
-        setIsCheckingSession(false);
+        if (mounted) setIsCheckingSession(false);
       }
     }
 
     checkSession();
+    return () => {
+      mounted = false;
+    };
   }, [navigate, navigateAfterLogin]);
 
   useEffect(() => {

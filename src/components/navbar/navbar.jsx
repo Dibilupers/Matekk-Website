@@ -43,30 +43,25 @@ function NavBar() {
   const location = useLocation();
 
   useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
-    if (!accessToken) {
-      return;
-    }
-
     let isMounted = true;
 
     async function checkSession() {
       try {
         const response = await fetch(`${API_URL}/auth/profile`, {
-          headers: { Authorization: `Bearer ${accessToken}` },
+          credentials: "include",
         });
 
-        if (isMounted && !response.ok) {
-          localStorage.removeItem("accessToken");
-        }
-        if (isMounted) {
-          setProfile(await response.json());
-          setIsAuthenticated(response.ok);
-        }
-      } catch {
-        if (isMounted) {
+        if (!isMounted) return;
+        if (!response.ok) {
+          setProfile(null);
           setIsAuthenticated(false);
+          return;
         }
+        setProfile(await response.json());
+        setIsAuthenticated(true);
+      } catch (error) {
+        console.error("Unable to verify the navigation session.", error);
+        if (isMounted) setIsAuthenticated(false);
       }
     }
 

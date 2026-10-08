@@ -10,6 +10,7 @@ import { QuestionsModule } from './questions/questions.module.js';
 import { PrismaModule } from './prisma/prisma.module.js';
 import { EnrollmentsModule } from './enrollments/enrollments.module.js';
 import { GradebookModule } from './gradebook/gradebook.module.js';
+import { envValidationSchema } from './config/env.validation.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 const observeAppKey = process.env.OBSERVE_APP_KEY?.trim();
@@ -19,16 +20,20 @@ if (Boolean(observeAppKey) !== Boolean(observeAppSecret)) {
 }
 const observeOptions = observeAppKey && observeAppSecret
   ? {
-      appKey: observeAppKey,
-      appSecret: observeAppSecret,
-      serviceId: process.env.OBSERVE_SERVICE_ID?.trim() || 'server',
-    }
+    appKey: observeAppKey,
+    appSecret: observeAppSecret,
+    serviceId: process.env.OBSERVE_SERVICE_ID?.trim() || 'server',
+  }
   : null;
 export const isObserveEnabled = observeOptions !== null;
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      validationSchema: envValidationSchema,
+      validationOptions: { abortEarly: true } as any,
+    }),
     ...(observeOptions ? [ObserveModule.forRoot(observeOptions)] : []),
     AuthModule,
     UsersModule,

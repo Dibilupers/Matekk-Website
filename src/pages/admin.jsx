@@ -23,11 +23,10 @@ function getLocalDateTimeValue() {
 }
 
 async function fetchAdminJson(url, options = {}) {
-	const token = localStorage.getItem("accessToken");
 	const response = await fetch(url, {
 		...options,
+		credentials: "include",
 		headers: {
-			...(token ? { Authorization: `Bearer ${token}` } : {}),
 			...options.headers,
 		},
 	});
@@ -87,7 +86,7 @@ export default function UsersDashboard() {
 		setUsersLoading(true);
 		setUsersError("");
 		fetch(`${API_URL}/users`, {
-			headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+			credentials: "include",
 		})
 			.then(async (response) => {
 				if (!response.ok) {
@@ -124,7 +123,7 @@ export default function UsersDashboard() {
 		const loadInquiries = async () => {
 			try {
 				const response = await fetch(`${API_URL}/inquires`, {
-					headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+					credentials: "include",
 					signal: controller.signal,
 				});
 				if (!response.ok) {

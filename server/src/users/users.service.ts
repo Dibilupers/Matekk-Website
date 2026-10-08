@@ -158,4 +158,23 @@ export class UsersService {
             ),
         };
     }
+
+    async findAuthUserById(
+        userId: number,
+    ): Promise<{ userId: number; username: string; active_status: boolean } | undefined> {
+        const databaseUser = await this.prisma.users.findUnique({
+            where: { id: userId },
+            select: { id: true, username: true, active_status: true },
+        });
+
+        if (!databaseUser) {
+            return undefined;
+        }
+
+        return {
+            userId: databaseUser.id,
+            username: databaseUser.username,
+            active_status: databaseUser.active_status,
+        };
+    }
 }
