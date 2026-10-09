@@ -419,8 +419,12 @@ h6 {
   opacity: 0;
 }
 
+.login-orbit-ring.login-orbit-sinking {
+  animation-play-state: paused;
+}
+
 .login-orbit-ripple-active {
-  animation: login-orbit-ripple 1.2s ease-out 2.5s forwards;
+  animation: login-orbit-ripple 1.2s ease-out 2.055s forwards;
 }
 
 .login-orbit-badge > div {
@@ -428,15 +432,61 @@ h6 {
 }
 
 .login-orbit-badge-sinking {
-  animation: login-orbit-sink 1.3s ease-in forwards;
+  animation: login-orbit-sink 950ms cubic-bezier(0.55, 0, 0.9, 0.35) forwards;
+  will-change: transform, opacity;
+}
+
+.login-orbit-badge-sinking > div {
+  animation-play-state: paused;
 }
 
 .login-orbit-core {
-  animation: login-orbit-glow 4s ease-in-out infinite;
+  box-shadow: 0 0 0 14px rgb(56 189 248 / 10%), 0 0 40px rgb(56 189 248 / 24%);
+  isolation: isolate;
+  will-change: transform;
+}
+
+.login-orbit-core::before,
+.login-orbit-core::after {
+  position: absolute;
+  inset: -1.25rem;
+  z-index: -1;
+  border-radius: 9999px;
+  content: "";
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.login-orbit-core::before {
+  background: radial-gradient(circle, rgb(56 189 248 / 42%), rgb(56 189 248 / 0%) 68%);
+  transform: scale(1.15);
+}
+
+.login-orbit-core::after {
+  border: 2px solid rgb(255 77 109 / 45%);
+  opacity: 0;
 }
 
 .login-orbit-core-absorbing {
-  animation: login-orbit-absorb 2.8s ease-in forwards;
+  animation: login-orbit-cyber-pop 700ms cubic-bezier(0.2, 1.4, 0.4, 1) 2.055s both;
+}
+
+.login-orbit-core-absorbing::before {
+  animation: login-orbit-aura-pop 700ms ease-out 2.055s both;
+}
+
+.login-orbit-core-absorbing::after {
+  animation: login-orbit-chromatic-pop 700ms ease-out 2.055s both;
+}
+
+.login-access-status {
+  color: #7dd3fc;
+  font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  opacity: 0;
+  animation: login-access-status-appear 300ms ease-out 2.055s forwards;
 }
 
 @keyframes login-orbit-spin {
@@ -452,19 +502,58 @@ h6 {
   }
 }
 
-@keyframes login-orbit-absorb {
+@keyframes login-orbit-cyber-pop {
   0% {
     transform: scale(1);
   }
 
-  85% {
-    box-shadow: 0 0 0 24px rgb(22 119 255 / 12%), 0 0 80px rgb(22 119 255 / 50%);
-    transform: scale(1.18);
+  25% {
+    transform: scale(1.34);
+  }
+
+  45% {
+    transform: scale(0.94);
+  }
+
+  70% {
+    transform: scale(1.1);
   }
 
   100% {
-    box-shadow: 0 0 0 16px rgb(22 119 255 / 10%), 0 0 60px rgb(22 119 255 / 40%);
-    transform: scale(1.08);
+    transform: scale(1);
+  }
+}
+
+@keyframes login-orbit-aura-pop {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(1.15);
+  }
+
+  25% {
+    opacity: 1;
+    transform: scale(1.55);
+  }
+}
+
+@keyframes login-orbit-chromatic-pop {
+  25%,
+  45% {
+    opacity: 0.85;
+    transform: scale(1.12);
+  }
+
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(1.3);
+  }
+}
+
+@keyframes login-access-status-appear {
+  to {
+    opacity: 1;
   }
 }
 
@@ -480,21 +569,12 @@ h6 {
   }
 }
 
-@keyframes login-orbit-glow {
-  0%,
-  100% {
-    box-shadow: 0 0 0 14px rgb(22 119 255 / 7%), 0 0 40px rgb(22 119 255 / 12%);
-  }
-
-  50% {
-    box-shadow: 0 0 0 26px rgb(22 119 255 / 4%), 0 0 70px rgb(22 119 255 / 25%);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .login-orbit-ring,
   .login-orbit-badge > div,
-  .login-orbit-core {
+  .login-orbit-core,
+  .login-orbit-core::before,
+  .login-orbit-core::after {
     animation: none;
   }
 

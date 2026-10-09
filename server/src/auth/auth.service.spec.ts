@@ -19,23 +19,30 @@ describe('AuthService', () => {
     hash?: string;
     verify?: boolean;
     needsRehash?: boolean;
+    matchingEmail?: boolean;
   } = {}) {
     const findOne = vi.fn(async () => options.foundUser ?? user);
+    const findById = vi.fn(async () => options.foundUser ?? user);
     const signAsync = vi.fn(async () => 'access-token');
     const hash = vi.fn(async () => options.hash ?? '$argon2id$hashed-password');
     const verify = vi.fn(async () => options.verify ?? true);
     const needsRehash = vi.fn(() => options.needsRehash ?? false);
-    const findFirst = vi.fn(async () => null);
+    const findFirst = vi.fn(async () => options.matchingEmail ? { id: 99 } : null);
+    const findUnique = vi.fn(async () => options.foundUser ?? user);
+    const findMany = vi.fn(async () => []);
     const create = vi.fn(async () => user);
     const update = vi.fn(async () => user);
     const service = new AuthService(
-      { findOne } as unknown as UsersService,
+      { findOne, findById } as unknown as UsersService,
       { signAsync } as unknown as import('@nestjs/jwt').JwtService,
       { hash, verify, needsRehash } as unknown as PasswordService,
-      { users: { findFirst, create, update } } as unknown as PrismaService,
+      {
+        users: { findFirst, findUnique, create, update },
+        enrollment: { findMany },
+      } as unknown as PrismaService,
     );
 
-    return { service, findOne, signAsync, hash, verify, needsRehash, findFirst, create, update };
+    return { service, findOne, findById, signAsync, hash, verify, needsRehash, findFirst, findUnique, findMany, create, update };
   }
 
   it('stores a hashed password and required enrollment field at registration', async () => {
@@ -103,5 +110,109 @@ describe('AuthService', () => {
 
     expect(mocks.update).not.toHaveBeenCalled();
     expect(mocks.signAsync).not.toHaveBeenCalled();
+  });
+
+  it('updates only editable profile fields and rejects duplicate email addresses', async () => {
+    const mocks = createService();
+    await mocks.service.updateProfile(12, {
+      first_name: '  Updated  ',
+      email: 'student@example.com',
+    });
+    expect(mocks.update).toHaveBeenCalledWith({
+      where: { id: 12 },
+      data: { first_name: 'Updated', email: 'student@example.com' },
+    });
+
+    const duplicateEmailMocks = createService({ matchingEmail: true });
+    await expect(duplicateEmailMocks.service.updateProfile(12, {
+      email: 'taken@example.com',
+    })).rejects.toThrow('Email address is already in use.');
+    expect(duplicateEmailMocks.update).not.toHaveBeenCalled();
+  });
+
+  it('allows a user to change username and rejects case-insensitive duplicates', async () => {
+    const mocks = createService();
+    await mocks.service.updateProfile(12, { username: '  new.name  ' });
+    expect(mocks.findFirst).toHaveBeenCalledWith({
+      where: {
+        username: { equals: 'new.name', mode: 'insensitive' },
+        NOT: { id: 12 },
+      },
+      select: { id: true },
+    });
+    expect(mocks.update).toHaveBeenCalledWith({
+      where: { id: 12 },
+      data: { username: 'new.name' },
+    });
+
+    const duplicateUsernameMocks = createService({ matchingEmail: true });
+    await expect(duplicateUsernameMocks.service.updateProfile(12, {
+      username: 'existing',
+    })).rejects.toThrow('Username is already in use.');
+    expect(duplicateUsernameMocks.update).not.toHaveBeenCalled();
+  });
+
+  it('loads profile by stable user ID rather than the mutable username', async () => {
+    const mocks = createService();
+    await mocks.service.getProfileById(12);
+    expect(mocks.findById).toHaveBeenCalledWith(12);
+  });
+
+  it('persists supported profile photos and rejects invalid image contents', async () => {
+    const mocks = createService();
+    const pngHeader = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]).toString('base64');
+    const photoDataUrl = `data:image/png;base64,${pngHeader}`;
+
+    await expect(mocks.service.updateProfilePhoto(12, { photoDataUrl }))
+      .resolves.toEqual({ message: 'Profile photo updated successfully.' });
+    expect(mocks.update).toHaveBeenCalledWith({
+      where: { id: 12 },
+      data: { profile_photo: photoDataUrl },
+      select: { id: true },
+    });
+
+    await expect(mocks.service.updateProfilePhoto(12, {
+      photoDataUrl: 'data:image/png;base64,ZmFrZQ==',
+    })).rejects.toThrow('Profile photo must be a valid JPG or PNG no larger than 2 MB.');
+  });
+
+  it('removes the saved profile photo', async () => {
+    const mocks = createService();
+    await mocks.service.removeProfilePhoto(12);
+    expect(mocks.update).toHaveBeenCalledWith({
+      where: { id: 12 },
+      data: { profile_photo: null },
+      select: { id: true },
+    });
+  });
+
+  it('changes a password only after verifying the current password', async () => {
+    const hashedUser = { ...user, password: '$argon2id$stored-hash' };
+    const mocks = createService({ foundUser: hashedUser, hash: '$argon2id$new-hash' });
+    await mocks.service.changePassword(12, {
+      currentPassword: 'current-password',
+      newPassword: 'new-password-value',
+    });
+
+    expect(mocks.verify).toHaveBeenCalledWith(hashedUser.password, 'current-password');
+    expect(mocks.update).toHaveBeenCalledWith({
+      where: { id: 12 },
+      data: { password: '$argon2id$new-hash' },
+    });
+
+    const invalidPasswordMocks = createService({ foundUser: hashedUser, verify: false });
+    await expect(invalidPasswordMocks.service.changePassword(12, {
+      currentPassword: 'incorrect',
+      newPassword: 'new-password-value',
+    })).rejects.toBeInstanceOf(UnauthorizedException);
+    expect(invalidPasswordMocks.update).not.toHaveBeenCalled();
+  });
+
+  it('scopes learning history to the authenticated user', async () => {
+    const mocks = createService();
+    await mocks.service.getLearningHistory(12);
+    expect(mocks.findMany).toHaveBeenCalledWith(expect.objectContaining({
+      where: { userId: 12 },
+    }));
   });
 });

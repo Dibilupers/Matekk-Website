@@ -3,6 +3,7 @@ import { ArrowRight, Eye, EyeOff, Facebook, Instagram, Phone } from "lucide-reac
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import API_URL from "../config/api";
+import NetworkBackground from "../components/NetworkBackground";
 import MainLogo from "../assets/MATEKK_logo.webp";
 import CrestLogo from "../assets/MATEKK_tab_logo.webp";
 import TikTokLogo from "../assets/tiktok.png";
@@ -288,15 +289,15 @@ export default function Login() {
   }
 
   if (isCheckingSession) {
-    return <main className="flex min-h-[calc(100vh-5rem)] items-center justify-center bg-[#f8fafc] text-slate-600">Checking your session...</main>;
+    return <main className="flex min-h-[calc(100vh-5rem)] items-center justify-center bg-[#070D1F] text-slate-200">Checking your session...</main>;
   }
 
   return (
-    <main className="fade-in-up relative isolate min-h-[calc(100vh-5rem)] overflow-hidden bg-[#f8fafc] px-5 py-10 sm:px-10 lg:px-16">
-      <div className="pointer-events-none absolute inset-0 -z-10 opacity-70 [background-image:linear-gradient(35deg,transparent_0_35%,rgba(226,232,240,0.45)_35.2%_48%,transparent_48.2%),linear-gradient(145deg,transparent_0_46%,rgba(226,232,240,0.35)_46.2%_58%,transparent_58.2%),linear-gradient(75deg,transparent_0_62%,rgba(241,245,249,0.95)_62.2%_78%,transparent_78.2%)]" />
+    <main className="fade-in-up relative isolate min-h-[calc(100vh-5rem)] overflow-hidden bg-[#070D1F] px-4 py-8 sm:px-10 sm:py-10 lg:px-16">
+      <NetworkBackground paused={isLoginAnimating} />
 
-      <div className="mx-auto grid w-full max-w-6xl items-center gap-12 lg:grid-cols-[minmax(320px,390px)_1fr] lg:gap-20">
-          <section className="order-2 space-y-7 text-center lg:order-2 lg:text-left">
+      <div className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-12 lg:grid-cols-[minmax(320px,390px)_1fr] lg:gap-20">
+          <section className="order-2 mx-auto w-full max-w-2xl space-y-7 text-center lg:order-2 lg:text-left">
             <div className="relative mx-auto flex min-h-[27rem] w-full max-w-[32rem] items-center justify-center">
               <div
                 ref={orbitRingRef}
@@ -307,7 +308,7 @@ export default function Login() {
                 {trainingLogos.map((logo, index) => (
                   <div
                     key={logo.alt}
-                    style={{ "--angle": `${index * 30}deg`, animationDelay: `${index * 150}ms` }}
+                    style={{ "--angle": `${index * 30}deg`, animationDelay: `${index * 85}ms` }}
                     className={`login-orbit-badge pointer-events-auto absolute left-1/2 top-1/2 -ml-[2rem] -mt-[2rem] flex h-[4rem] w-[4rem] items-center justify-center rounded-full border border-slate-100 bg-white p-2 shadow-[0_8px_14px_rgba(15,23,42,0.18)] [transform:rotate(var(--angle))_translateY(-10.75rem)] ${isLoginAnimating ? "login-orbit-badge-sinking" : ""}`}
                   >
                     <div className="h-full w-full">
@@ -319,19 +320,24 @@ export default function Login() {
               <div className={`login-orbit-core relative z-10 flex h-56 w-56 items-center justify-center rounded-full bg-white/90 ${isLoginAnimating ? "login-orbit-core-absorbing" : ""}`}>
                 <img src={CrestLogo} alt="Matekk crest" className="h-44 w-44 object-contain" />
               </div>
+              {isLoginAnimating && (
+                <p className="login-access-status absolute bottom-0 left-1/2 -translate-x-1/2" role="status">
+                  ACCESS GRANTED
+                </p>
+              )}
             </div>
-            <div className="grid grid-cols-4 gap-3 lg:hidden" aria-label="Training certifications">
+            <div className="mx-auto grid w-full max-w-md grid-cols-4 gap-3 lg:hidden" aria-label="Training certifications">
               {trainingLogos.map((logo) => (
                 <div key={logo.alt} className="flex h-16 items-center justify-center rounded-full bg-white p-2 shadow-sm">
                   <img src={logo.src} alt={logo.alt} className="h-full w-full object-contain" />
                 </div>
               ))}
             </div>
-            <div className="max-w-xl space-y-2">
+            <div className="mx-auto w-full max-w-xl space-y-2 rounded-2xl border border-white/80 bg-white/75 p-5 shadow-[0_12px_32px_rgba(15,23,42,0.12)] backdrop-blur-sm sm:p-6">
               <h2 className="text-2xl font-bold text-slate-900 sm:text-3xl">Grow with <span className="text-[#1775EE]">Matekk</span></h2>
               <p className="text-base leading-relaxed text-slate-800">MATEKK Cybercore Technologies delivers industry-driven ICT, engineering solutions, and professional training designed to empower businesses and individuals.</p>
             </div>
-            <div className="grid max-w-xl grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className="mx-auto grid w-full max-w-xl grid-cols-1 gap-3 sm:grid-cols-2">
               <a href="https://www.facebook.com/matekkcybercore/" className="group flex items-center gap-3 rounded-lg bg-white/85 p-3 shadow-sm transition hover:shadow-md">
                 <Facebook className="text-[#1877F2]" size={22} /><span className="text-sm font-semibold text-slate-700 transition-colors group-hover:text-[#087ff5]">Matekk Cybercore Academy</span>
               </a>
@@ -348,7 +354,7 @@ export default function Login() {
             </div>
           </section>
 
-          <section className="order-1 w-full space-y-5 rounded-2xl border border-slate-300 bg-white px-8 py-9 shadow-[0_14px_35px_rgba(15,23,42,0.1)] sm:px-11 lg:order-1">
+          <section className="order-1 mx-auto w-full max-w-md space-y-5 rounded-2xl border border-slate-300 bg-white px-5 py-7 shadow-[0_14px_35px_rgba(15,23,42,0.1)] sm:px-11 sm:py-9 lg:order-1">
             <div className="flex justify-center">
               <img src={MainLogo} alt="Matekk Cybercore Technologies" className="h-auto w-56" />
             </div>

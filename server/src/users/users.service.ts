@@ -11,6 +11,13 @@ export type User = {
     email?: string;
     module_enrolled?: string;
     course_enrolled?: string[];
+    first_name?: string;
+    last_name?: string;
+    birth_date?: Date;
+    gender?: string | null;
+    city_province?: string;
+    phone_number?: string | null;
+    profile_photo?: string | null;
 };
 
 @Injectable()
@@ -71,6 +78,35 @@ export class UsersService {
             pending_status: databaseUser.active_status ? 'Active' : 'Pending',
             email: databaseUser.email ?? undefined,
             module_enrolled: databaseUser.programs_enrolled ?? undefined,
+            first_name: databaseUser.first_name,
+            last_name: databaseUser.last_name,
+            birth_date: databaseUser.birth_date,
+            gender: databaseUser.gender,
+            city_province: databaseUser.city_province,
+            phone_number: databaseUser.phone_number,
+        };
+    }
+
+    async findById(userId: number): Promise<User | undefined> {
+        const user = await this.prisma.users.findUnique({ where: { id: userId } });
+        if (!user) return undefined;
+
+        return {
+            userId: user.id,
+            username: user.username,
+            password: user.password,
+            role: user.role,
+            active_status: user.active_status,
+            pending_status: user.active_status ? 'Active' : 'Pending',
+            email: user.email ?? undefined,
+            module_enrolled: user.programs_enrolled ?? undefined,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            birth_date: user.birth_date,
+            gender: user.gender,
+            city_province: user.city_province,
+            phone_number: user.phone_number,
+            profile_photo: user.profile_photo,
         };
     }
 }
