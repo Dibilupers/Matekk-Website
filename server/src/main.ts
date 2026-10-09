@@ -1,4 +1,5 @@
 import { NestFactory } from '@nestjs/core';
+import { json, urlencoded } from 'express';
 import { AppModule, isObserveEnabled, ObserveInstrument } from './app.module.js';
 import helmet from 'helmet';
 import { ValidationPipe } from '@nestjs/common';
@@ -6,7 +7,10 @@ import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(
     AppModule,
-    isObserveEnabled ? { instrument: ObserveInstrument } : {},
+    {
+      bodyParser: false,
+      ...(isObserveEnabled ? { instrument: ObserveInstrument } : {}),
+    },
   );
   app.useGlobalPipes(
     new ValidationPipe({
@@ -15,6 +19,8 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
     }),
   );
+  app.use(json({ limit: '4mb' }));
+  app.use(urlencoded({ extended: true, limit: '4mb' }));
   const allowedOrigins = (process.env.CORS_ORIGINS ?? '')
     .split(',')
     .map((origin) => origin.trim())

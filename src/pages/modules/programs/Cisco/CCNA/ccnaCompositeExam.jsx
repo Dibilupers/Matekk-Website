@@ -374,8 +374,32 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 				)}
 				<header className="mb-7 flex flex-wrap items-center justify-between gap-4 border-b border-[#d6e5e7] pb-5">
 					<div className="flex min-w-0 items-center gap-4">
-						<Link to="/modules/programs/ccna" aria-label="Back to CCNA course" className="ccna-training-logo shrink-0 rounded-lg bg-white px-3 py-2 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
-							<img src={TrainingLogo} alt="MATEKK Cybercore Academy" className="h-auto w-32 sm:w-36" />
+						<Link to="/modules/programs/ccna" aria-label="Back to CCNA course" className="group shrink-0 rounded-full bg-white/80 p-2 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 motion-reduce:transition-none">
+							<div className="relative flex h-20 w-20 items-center justify-center rounded-full border border-[#cfe4ea] bg-white shadow-[0_10px_20px_rgba(15,23,42,0.12)]">
+								<div className="absolute inset-0 animate-[spin_30s_linear_infinite]">
+									{[
+										{ label: "CCNA", angle: 0 },
+										{ label: "NET", angle: 45 },
+										{ label: "LAB", angle: 90 },
+										{ label: "SEC", angle: 135 },
+										{ label: "OPS", angle: 180 },
+										{ label: "IT", angle: 225 },
+										{ label: "CIS", angle: 270 },
+										{ label: "AI", angle: 315 },
+									].map((chip) => (
+										<div
+											key={chip.label}
+											style={{ "--angle": `${chip.angle}deg` }}
+											className="absolute left-1/2 top-1/2 -ml-[1.35rem] -mt-[1.35rem] flex h-[2.7rem] w-[2.7rem] items-center justify-center rounded-full border border-[#dbeaf0] bg-[#f5fbff] text-[7px] font-bold uppercase tracking-[0.12em] text-[#005b6b] shadow-sm [transform:rotate(var(--angle))_translateY(-4.8rem)]"
+										>
+											{chip.label}
+										</div>
+									))}
+								</div>
+								<div className="relative z-10 flex h-14 w-14 items-center justify-center rounded-full bg-white">
+									<img src={TrainingLogo} alt="MATEKK Cybercore Academy" className="h-10 w-auto object-contain" />
+								</div>
+							</div>
 						</Link>
 						<div className="hidden min-w-0 border-l border-[#cbd5e1] pl-4 sm:block">
 							<p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#70809a]">CCNA composite exam</p>
@@ -430,6 +454,13 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 									{question.moduleNumber && ` · Module ${question.moduleNumber}: ${question.moduleTitle}`}
 								</p>
 								<h1 className="mb-4 text-lg font-bold leading-snug tracking-tight sm:mb-6 sm:text-[1.7rem]">{question.prompt}</h1>
+								{/* Exhibit: a picture and/or device output shown above the choices */}
+								{question.exhibitImage && (
+									<img src={question.exhibitImage} alt="Exhibit" className="mb-6 w-auto max-w-full max-h-[32rem] rounded-xl border border-[#d6e5e7] bg-white" />
+								)}
+								{question.exhibit && (
+									<pre aria-label="Exhibit" className="mb-6 max-h-96 overflow-auto rounded-xl bg-[#0f1b2d] p-4 text-xs leading-5 text-[#e2e8f0] sm:text-[13px]"><code>{question.exhibit}</code></pre>
+								)}
 								<QuestionInput
 									question={question}
 									value={answers[currentIndex]}
@@ -591,6 +622,12 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 													</span>
 												</div>
 												<h3 className="mt-4 text-lg font-bold leading-snug text-[#17233d] sm:text-xl">{item.prompt}</h3>
+												{item.exhibitImage && (
+													<img src={item.exhibitImage} alt="Exhibit" loading="lazy" className="mt-4 w-auto max-w-full max-h-[26rem] rounded-xl border border-[#d6e5e7] bg-white" />
+												)}
+												{item.exhibit && (
+													<pre aria-label="Exhibit" className="mt-4 max-h-80 overflow-auto rounded-xl bg-[#0f1b2d] p-4 text-xs leading-5 text-[#e2e8f0]"><code>{item.exhibit}</code></pre>
+												)}
 												<div className="mt-5">
 													<QuestionReview question={item} value={item.selectedAnswer} />
 												</div>

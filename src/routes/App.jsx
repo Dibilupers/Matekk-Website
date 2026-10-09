@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Navigate, Routes, Route, useLocation } from "react-router-dom";
+import { Link, Navigate, Routes, Route, useLocation } from "react-router-dom";
 import { X } from "lucide-react";
 import NavBar from "../components/navbar/navbar";
 import Footer from "../components/footer/footer";
@@ -106,6 +106,7 @@ import Renewable from "../pages/solutions/pece/renewable";
 /* PECE (PBOOT) */
 
 import Blank from "../pages/Blank";
+import Account from "../pages/Account";
 import AdminPage from "../pages/admin";
 import CCNADashboard from "../pages/modules/programs/Cisco/CCNA/ccna";
 import CCNAAutomationDashboard from "../pages/modules/programs/Cisco/CCNAAutomation/ccnaAutomationDashboard";
@@ -154,8 +155,33 @@ export default function App() {
       {/* Keyed by path so every page change replays the fade-in (navbar stays outside, so it never flickers) */}
       <div key={location.pathname} className="page-transition">
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<OfflineEntryRoute><Home /></OfflineEntryRoute>} />
+        <Route path="/login" element={<OfflineEntryRoute><Login /></OfflineEntryRoute>} />
+        <Route path="/modules/programs" element={<OfflineModulesPage />} />
+        <Route
+          path="/account/profile"
+          element={
+            <ProtectedRoute>
+              <Account view="profile" />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/account/learning-history"
+          element={
+            <ProtectedRoute>
+              <Account view="history" />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/account/transcript"
+          element={
+            <ProtectedRoute>
+              <Account view="transcript" />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/account-pending"
           element={(
@@ -677,8 +703,47 @@ function AccountStatusRoute({ children }) {
     : <Navigate to="/pages/blank" replace />;
 }
 
+function OfflineEntryRoute({ children }) {
+  const { isOnline } = useAuth();
+  return isOnline ? children : <Navigate to="/modules/programs" replace />;
+}
+
+function OfflineModulesPage() {
+  const programs = [
+    { name: "CCNA", path: "/modules/programs/ccna" },
+    { name: "CompTIA A+", path: "/modules/programs/comptia-aplus" },
+    { name: "CCNA Automation", path: "/modules/programs/ccna-automation" },
+    { name: "CCNA Cybersecurity", path: "/modules/programs/ccna-cybersecurity" },
+  ];
+
+  return (
+    <main className="mx-auto min-h-[60vh] w-full max-w-5xl px-4 py-12 sm:px-6">
+      <header className="mb-8 text-center">
+        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-600">Offline learning</p>
+        <h1 className="mt-2 text-3xl font-bold text-slate-900">Choose a module</h1>
+        <p className="mt-2 text-slate-600">Open a module you have visited and cached while online.</p>
+      </header>
+      <div className="grid gap-4 sm:grid-cols-2">
+        {programs.map((program) => (
+          <Link
+            className="rounded-xl border border-slate-200 bg-white p-6 font-semibold text-slate-900 shadow-sm transition hover:border-blue-400 hover:shadow-md"
+            key={program.path}
+            to={program.path}
+          >
+            {program.name}
+          </Link>
+        ))}
+      </div>
+    </main>
+  );
+}
+
 function ProtectedRoute({ children }) {
-  const { profile, isAuthenticated, isLoading } = useAuth();
+  const { profile, isAuthenticated, isLoading, isOnline } = useAuth();
+  const { pathname } = useLocation();
+  const isModuleRoute = /^\/modules\/programs(?:\/|$)/.test(pathname);
+  const isExamRoute = /(?:^|\/)exam(?:\/|$)/.test(pathname);
+  const canAccessOfflineModule = isModuleRoute && !isExamRoute && !isOnline;
 
   if (isLoading) {
     return (
@@ -688,7 +753,21 @@ function ProtectedRoute({ children }) {
     );
   }
 
-  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  if (!isOnline && isModuleRoute && isExamRoute) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6 text-center text-white">
+        <section className="max-w-lg space-y-3">
+          <h1 className="text-2xl font-semibold">Internet connection required</h1>
+          <p className="text-slate-300">Exams are not available offline. Reconnect to the internet to continue.</p>
+        </section>
+      </main>
+    );
+  }
+
+  if (!isAuthenticated && !canAccessOfflineModule) {
+    return <Navigate to="/login" replace />;
+  }
+  if (!isAuthenticated) return children;
   return profile.active_status === false
     ? <Navigate to="/account-pending" replace />
     : children;

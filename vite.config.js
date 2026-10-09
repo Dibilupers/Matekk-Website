@@ -1,6 +1,87 @@
+import { createHash } from 'node:crypto'
+import { readFileSync } from 'node:fs'
+import { basename, resolve } from 'node:path'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
+
+const serviceWorkerTemplate = readFileSync(
+  new URL('./src/pwa/service-worker.js', import.meta.url),
+  'utf8',
+)
+
+function moduleOfflineSupport() {
+  return {
+    name: 'matekk-module-offline-support',
+    apply: 'build',
+    generateBundle(_options, bundle) {
+      const assetsBySource = new Map()
+      const assetsByName = new Map()
+      Object.values(bundle).forEach((output) => {
+        if (output.type !== 'asset') return
+        assetsByName.set(output.name, output.fileName)
+        const sourceNames = output.originalFileNames || []
+        sourceNames.forEach((sourceName) => {
+          assetsBySource.set(resolve(sourceName), output.fileName)
+        })
+      })
+
+      const moduleAssetFiles = new Set()
+      const visitedModules = new Set()
+      const visitModule = (id) => {
+        if (visitedModules.has(id) || id.includes('/node_modules/')) return
+        visitedModules.add(id)
+        const moduleInfo = this.getModuleInfo(id)
+        if (!moduleInfo) return
+
+        moduleInfo.importedIds.forEach((importedId) => {
+          const sourceId = importedId.split('?')[0]
+          const emittedAsset = assetsBySource.get(resolve(sourceId))
+            || assetsByName.get(basename(sourceId))
+          if (emittedAsset) {
+            moduleAssetFiles.add(emittedAsset)
+            return
+          }
+          if (/[\\/]src[\\/]/.test(sourceId)) visitModule(sourceId)
+        })
+      }
+      Array.from(this.getModuleIds())
+        .filter((id) => /[\\/]src[\\/]pages[\\/]modules[\\/]/.test(id))
+        .filter((id) => !/(?:quiz|exam)/i.test(basename(id)))
+        .forEach(visitModule)
+
+      const precacheFiles = [
+        ...Object.keys(bundle).filter((fileName) => (
+          fileName === 'index.html'
+          || /\.(?:js|css|woff2?|ttf|otf|eot)$/i.test(fileName)
+          || moduleAssetFiles.has(fileName)
+        )),
+        'manifest.webmanifest',
+        'icons/matekk-icon.svg',
+      ]
+      const sortedPrecacheFiles = [...new Set(precacheFiles)].sort()
+      const buildId = createHash('sha256')
+        .update(Date.now().toString())
+        .update(sortedPrecacheFiles.map((fileName) => {
+          const output = bundle[fileName]
+          if (!output) return fileName
+          const content = output.type === 'chunk' ? output.code : output.source
+          return `${fileName}\n${content}`
+        }).join('\n'))
+        .digest('hex')
+        .slice(0, 12)
+      const serviceWorker = serviceWorkerTemplate
+        .replace('__BUILD_ID__', buildId)
+        .replace("JSON.parse('[]')", `JSON.parse(${JSON.stringify(JSON.stringify(sortedPrecacheFiles))})`)
+
+      this.emitFile({
+        type: 'asset',
+        fileName: 'sw.js',
+        source: serviceWorker,
+      })
+    },
+  }
+}
 
 export default defineConfig({
   plugins: [
@@ -10,6 +91,7 @@ export default defineConfig({
       },
     }),
     tailwindcss(),
+    moduleOfflineSupport(),
   ],
   
   build: {

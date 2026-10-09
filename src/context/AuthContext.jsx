@@ -16,9 +16,52 @@ function readCachedProfile() {
   }
 }
 
+// Small copy of the profile kept for offline use (the site can still show who is signed in without internet)
+const OFFLINE_PROFILE_KEY = "matekkOfflineProfile";
+
+function readOfflineProfile() {
+  const serialized = localStorage.getItem(OFFLINE_PROFILE_KEY);
+  if (!serialized) return null;
+
+  try {
+    const profile = JSON.parse(serialized);
+    if (!profile || (typeof profile.userId !== "string" && typeof profile.userId !== "number")) {
+      localStorage.removeItem(OFFLINE_PROFILE_KEY);
+      return null;
+    }
+    return profile;
+  } catch {
+    localStorage.removeItem(OFFLINE_PROFILE_KEY);
+    return null;
+  }
+}
+
+function storeOfflineProfile(profile) {
+  if (!profile || (typeof profile.userId !== "string" && typeof profile.userId !== "number")) return;
+  localStorage.setItem(OFFLINE_PROFILE_KEY, JSON.stringify({
+    userId: profile.userId,
+    username: profile.username,
+    role: profile.role,
+    active_status: profile.active_status,
+    first_name: profile.first_name,
+    last_name: profile.last_name,
+  }));
+}
+
 export function AuthProvider({ children }) {
   const [profile, setProfile] = useState(readCachedProfile);
   const [isLoading, setIsLoading] = useState(true);
+  const [isOnline, setIsOnline] = useState(() => navigator.onLine);
+
+  useEffect(() => {
+    const updateOnlineStatus = () => setIsOnline(navigator.onLine);
+    window.addEventListener("online", updateOnlineStatus);
+    window.addEventListener("offline", updateOnlineStatus);
+    return () => {
+      window.removeEventListener("online", updateOnlineStatus);
+      window.removeEventListener("offline", updateOnlineStatus);
+    };
+  }, []);
 
   async function refreshProfile() {
     const response = await fetch(`${API_URL}/auth/profile`, {
@@ -29,6 +72,7 @@ export function AuthProvider({ children }) {
     }
 
     const nextProfile = await response.json();
+    storeOfflineProfile(nextProfile);
     setProfile(nextProfile);
     sessionStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(nextProfile));
     return nextProfile;
@@ -38,16 +82,23 @@ export function AuthProvider({ children }) {
     localStorage.removeItem("accessToken");
 
     let mounted = true;
+    const cachedProfile = readOfflineProfile();
     fetch(`${API_URL}/auth/profile`, {
       credentials: "include",
     })
       .then(async (response) => {
         if (!response.ok) {
+          // Signed out or session expired: forget the saved copies. Other errors (server down) fall through to the offline copy.
+          if (response.status !== 401 && response.status !== 403) {
+            throw new Error("Unable to verify the current session.");
+          }
           sessionStorage.removeItem(PROFILE_CACHE_KEY);
+          localStorage.removeItem(OFFLINE_PROFILE_KEY);
           if (mounted) setProfile(null);
           return;
         }
         const nextProfile = await response.json();
+        storeOfflineProfile(nextProfile);
         if (mounted) {
           setProfile(nextProfile);
           sessionStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(nextProfile));
@@ -55,8 +106,7 @@ export function AuthProvider({ children }) {
       })
       .catch((error) => {
         console.error("Unable to restore the signed-in session.", error);
-        sessionStorage.removeItem(PROFILE_CACHE_KEY);
-        if (mounted) setProfile(null);
+        if (mounted) setProfile((current) => current ?? cachedProfile);
       })
       .finally(() => mounted && setIsLoading(false));
 
@@ -94,11 +144,13 @@ export function AuthProvider({ children }) {
     }
     setProfile(signedInProfile);
     sessionStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(signedInProfile));
+    storeOfflineProfile(signedInProfile);
     return { response, profile: signedInProfile };
   }
 
   function logout() {
     sessionStorage.removeItem(PROFILE_CACHE_KEY);
+    localStorage.removeItem(OFFLINE_PROFILE_KEY);
     setProfile(null);
     void fetch(`${API_URL}/auth/logout`, {
       method: "POST",
@@ -109,8 +161,8 @@ export function AuthProvider({ children }) {
   }
 
   const value = useMemo(
-    () => ({ profile, isAuthenticated: Boolean(profile), isLoading, login, logout, refreshProfile }),
-    [isLoading, profile],
+    () => ({ profile, isAuthenticated: Boolean(profile), isLoading, isOnline, login, logout, refreshProfile }),
+    [isLoading, isOnline, profile],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
