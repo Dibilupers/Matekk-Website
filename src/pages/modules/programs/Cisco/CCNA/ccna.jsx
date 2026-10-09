@@ -677,26 +677,17 @@ export default function CCNA() {
 
 	return (
 		<main className="ccna-page-enter relative min-h-screen bg-white text-[#071126]">
-			{hasScrolled
-				? createPortal(
-					<Link
-						to="/pages/blank"
-						aria-label="Back"
-						className="fixed left-6 top-24 z-[60] text-[#005b6b] transition hover:text-[#004653] active:scale-95 lg:hidden"
-					>
-						<ArrowLeft size={28} strokeWidth={2.5} />
-					</Link>,
-					document.body,
-				)
-				: (
-					<Link
-						to="/pages/blank"
-						aria-label="Back"
-						className="absolute left-6 top-2 z-40 text-[#005b6b] transition hover:text-[#004653] active:scale-95 lg:hidden"
-					>
-						<ArrowLeft size={28} strokeWidth={2.5} />
-					</Link>
-				)}
+			{/* Phones/tablets: Back button pinned to the screen (outside the page's slide-in animation),
+			    so it stays still while the page moves; a white pill appears behind it once you scroll */}
+			{createPortal(
+				<Link
+					to="/pages/blank"
+					className={`fixed left-4 top-20 z-[60] flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-base font-bold text-[#005b6b] transition hover:text-[#004653] active:scale-95 lg:hidden ${hasScrolled ? "bg-white/90 shadow-md backdrop-blur-sm" : ""}`}
+				>
+					<ArrowLeft size={24} strokeWidth={2.5} /> Back
+				</Link>,
+				document.body,
+			)}
 			<section className="mx-auto max-w-[1440px] px-6 pb-16 pt-14 sm:px-10 lg:px-14 lg:pb-20 lg:pt-16">
 				<div className="grid items-center gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-4">
 					<div>
@@ -723,6 +714,7 @@ export default function CCNA() {
 							</button>
 							<button onClick={() => setIsQuizPickerOpen(true)} className="flex h-12 items-center gap-2 rounded-full bg-[#005b6b] px-5 text-sm font-bold text-white shadow-[0_10px_20px_rgba(0,91,107,0.16)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-[#004653] hover:shadow-[0_14px_26px_rgba(0,91,107,0.24)] active:translate-y-0 sm:h-[58px] sm:px-7 sm:text-base">{heroQuizLabel} <ArrowRight size={18} /></button>
 							<Link to="/modules/programs/ccna/knowledge-hub" className="flex h-12 items-center rounded-full border border-[#005b6b] px-5 text-sm font-bold text-[#005b6b] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-[#f0f7f7] hover:shadow-[0_10px_20px_rgba(0,91,107,0.12)] active:translate-y-0 sm:h-[58px] sm:px-7 sm:text-base">View All Modules</Link>
+							<Link to="/modules/programs/ccna/practice-lab" className="flex h-12 items-center gap-2 rounded-full border border-[#005b6b] px-5 text-sm font-bold text-[#005b6b] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-[#f0f7f7] hover:shadow-[0_10px_20px_rgba(0,91,107,0.12)] active:translate-y-0 sm:h-[58px] sm:px-7 sm:text-base">Practice Lab <ArrowRight size={18} /></Link>
 						</div>
 						<div className="mt-8 grid grid-cols-3 gap-2 sm:mt-11 sm:flex sm:flex-wrap sm:gap-5 sm:divide-x sm:divide-[#dce5f2]">
 							<Stat value={`${attemptedModules}/6`} label="Quizzes attempted" />

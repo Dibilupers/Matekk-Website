@@ -142,26 +142,17 @@ export default function CCNAProgramDashboard({
 
 	return (
 		<main className="ccna-page-enter relative min-h-screen bg-white text-[#071126]">
-			{hasScrolled
-				? createPortal(
-					<Link
-						to="/pages/blank"
-						aria-label="Back"
-						className="fixed left-6 top-24 z-[60] text-[#005b6b] transition hover:text-[#004653] active:scale-95 lg:hidden"
-					>
-						<ArrowLeft size={28} strokeWidth={2.5} />
-					</Link>,
-					document.body,
-				)
-				: (
-					<Link
-						to="/pages/blank"
-						aria-label="Back"
-						className="absolute left-6 top-2 z-40 text-[#005b6b] transition hover:text-[#004653] active:scale-95 lg:hidden"
-					>
-						<ArrowLeft size={28} strokeWidth={2.5} />
-					</Link>
-				)}
+			{/* Phones/tablets: Back button pinned to the screen (outside the page's slide-in animation),
+			    so it stays still while the page moves; a white pill appears behind it once you scroll */}
+			{createPortal(
+				<Link
+					to="/pages/blank"
+					className={`fixed left-4 top-20 z-[60] flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-base font-bold text-[#005b6b] transition hover:text-[#004653] active:scale-95 lg:hidden ${hasScrolled ? "bg-white/90 shadow-md backdrop-blur-sm" : ""}`}
+				>
+					<ArrowLeft size={24} strokeWidth={2.5} /> Back
+				</Link>,
+				document.body,
+			)}
 			<section className="mx-auto min-w-0 max-w-[1440px] px-6 pb-16 pt-14 sm:px-10 lg:px-14 lg:pb-20 lg:pt-16">
 				<div className="grid min-w-0 items-center gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-4">
 					<div className="min-w-0">

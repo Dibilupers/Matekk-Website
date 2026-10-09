@@ -51,7 +51,7 @@ import DcfcLogo from "../assets/dcfc.webp";
 import CdcpLogo from "../assets/cdcp.webp";
 import CdcsLogo from "../assets/cdcs.webp";
 import CdthLogo from "../assets/cdth.png";
-import MatekkTrainingLogo from "../assets/MATEKK_training_logo.png";
+import PehLogo from "../assets/ejpt.svg"; // official eJPT badge (INE)
 import AzureFundamentalsLogo from "../assets/azure.svg";
 import AwsEssentialsLogo from "../assets/awsessentials.png";
 import Itil5FoundationLogo from "../assets/itil5.webp";
@@ -116,7 +116,7 @@ const programLogos = {
 	"/training/datacenter/cdcp": CdcpLogo,
 	"/training/datacenter/cdcs": CdcsLogo,
 	"/training/cybersecurity/cdth": CdthLogo,
-	"/training/cybersecurity/peh": MatekkTrainingLogo,
+	"/training/cybersecurity/peh": PehLogo,
 	"/training/cloud/microsoft/azurefundamentals": AzureFundamentalsLogo,
 	"/training/cloud/aws/practitioner": AwsLogo,
 	"/training/cloud/aws/essentials": AwsEssentialsLogo,

@@ -4,7 +4,7 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 // COURSE-SPECIFIC ASSETS - Replace these for different courses
-import vapt from "../../../assets/MATEKK_training_logo.png"; // Course badge image
+import vapt from "../../../assets/ejpt.svg"; // official eJPT badge (INE) // Course badge image
 import CybersecurityHero from "../../../assets/training/cybersecurity/peh-hero.webp"; // Hero banner background
 import CybersecurityFooter from "../../../assets/training/cybersecurity/peh-footer.webp"; // Footer banner background
 import MealIcon from "../../../assets/Meal.svg";
@@ -222,7 +222,7 @@ export default function VAPT() {
             {/* Cert Badge - Change/Update Image */}
             <img
               src={vapt}
-              alt=" Vulnerability Assessment & Penetration Testing (VAPT) Bootcamp Certification Badge"
+              alt="eJPT (Junior Penetration Tester) certification badge"
               className="w-45 h-45 lg:w-50 lg:h-50 object-contain"
             />
           </div>

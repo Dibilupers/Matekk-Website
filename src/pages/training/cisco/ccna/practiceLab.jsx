@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Link, useSearchParams } from "react-router-dom";
-import { CheckCircle2, Circle, Download, Eye, Lightbulb, RotateCcw, XCircle } from "lucide-react";
+import { CheckCircle2, Circle, Download, Eye, Lightbulb, Maximize2, RotateCcw, X, XCircle, ZoomIn, ZoomOut } from "lucide-react";
 import { PRACTICE_LABS } from "./labs/labDefinitions";
 import { canReach, configCommands, createLabState, execute, fullIfName, promptFor } from "./labs/labEngine";
 import LabTopology from "./labs/LabTopology";
@@ -119,6 +120,52 @@ function PacketTracerSection({ lab }) {
 	);
 }
 
+// ---------- full-screen topology ----------
+const ZOOM_STEPS = [1, 1.5, 2, 3];
+
+// Rendered into <body> so the dashboard's page animation (a CSS transform) can't trap the fixed overlay.
+function TopologyFullscreen({ lab, state, device, onClose }) {
+	// Phones start zoomed in: the whole diagram at 100% is too small to read in portrait
+	const [zoomIndex, setZoomIndex] = useState(() => (window.innerWidth < 640 ? 2 : 0));
+	const zoom = ZOOM_STEPS[zoomIndex];
+
+	useEffect(() => {
+		const onKey = (e) => { if (e.key === "Escape") onClose(); };
+		const prevOverflow = document.body.style.overflow;
+		document.body.style.overflow = "hidden";
+		window.addEventListener("keydown", onKey);
+		return () => {
+			document.body.style.overflow = prevOverflow;
+			window.removeEventListener("keydown", onKey);
+		};
+	}, [onClose]);
+
+	const btn = "flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#17233d] shadow border border-[#d6e0ee] disabled:opacity-40";
+	return createPortal(
+		<div role="dialog" aria-modal="true" aria-label={`Topology: ${lab.title}`} className="topology-zoom-in fixed inset-0 z-1000 flex flex-col bg-[#f4f8fd]">
+			<div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-[#d6e0ee] bg-white">
+				<p className="font-bold text-[#17233d] truncate">Lab {lab.id} topology</p>
+				<div className="flex items-center gap-2 shrink-0">
+					<button type="button" className={btn} onClick={() => setZoomIndex((i) => Math.max(0, i - 1))} disabled={zoomIndex === 0} aria-label="Zoom out"><ZoomOut size={18} /></button>
+					<span className="w-12 text-center text-sm font-semibold text-[#17233d]">{Math.round(zoom * 100)}%</span>
+					<button type="button" className={btn} onClick={() => setZoomIndex((i) => Math.min(ZOOM_STEPS.length - 1, i + 1))} disabled={zoomIndex === ZOOM_STEPS.length - 1} aria-label="Zoom in"><ZoomIn size={18} /></button>
+					<button type="button" className={`${btn} ml-2`} onClick={onClose} aria-label="Close full screen"><X size={20} /></button>
+				</div>
+			</div>
+			{/* Scrolls in both directions when zoomed in */}
+			<div className="flex-1 overflow-auto">
+				<div className="flex min-h-full items-center justify-center p-4" style={{ width: `${zoom * 100}%`, minWidth: "100%" }}>
+					<div className="w-full max-h-full rounded-2xl bg-white p-3 shadow-sm" style={{ maxWidth: zoom === 1 ? "min(100%, calc((100vh - 7rem) * 1.9))" : "none" }}>
+						<LabTopology lab={lab} state={state} activeDevice={device} />
+					</div>
+				</div>
+			</div>
+			<p className="px-4 py-2 text-center text-xs text-gray-600 bg-white border-t border-[#d6e0ee]">Use + / − to zoom, drag or scroll to move around. Tip: turn your phone sideways for a bigger view.</p>
+		</div>,
+		document.body,
+	);
+}
+
 // ---------- page ----------
 function LabWorkspace({ lab, selectLab, fromDashboard }) {
 
@@ -131,6 +178,8 @@ function LabWorkspace({ lab, selectLab, fromDashboard }) {
 	const [showHints, setShowHints] = useState(false);
 	const [showSolution, setShowSolution] = useState(false);
 	const [examMode, setExamMode] = useState(false);
+	const [topologyOpen, setTopologyOpen] = useState(false);
+	const closeTopology = useCallback(() => setTopologyOpen(false), []);
 	const [submitted, setSubmitted] = useState(false);
 	const termRef = useRef(null);
 	const inputRef = useRef(null);
@@ -243,11 +292,26 @@ function LabWorkspace({ lab, selectLab, fromDashboard }) {
 			<div className="p-5 rounded-2xl bg-[#EBF5FD]">
 				<div className="flex items-center justify-between mb-2">
 					<h5 className="text-[#1775EE]">Topology</h5>
-					<span className={`text-xs font-bold px-2.5 py-1 rounded-full ${LEVEL_STYLE[lab.level]}`}>{lab.level}</span>
+					<div className="flex items-center gap-2">
+						<span className={`text-xs font-bold px-2.5 py-1 rounded-full ${LEVEL_STYLE[lab.level]}`}>{lab.level}</span>
+						<button
+							type="button"
+							onClick={() => setTopologyOpen(true)}
+							className="flex items-center gap-1.5 rounded-full border border-[#1775EE] bg-white px-3 py-1 text-xs font-bold text-[#1775EE] hover:bg-[#1775EE] hover:text-white transition"
+						>
+							<Maximize2 size={14} /> Expand
+						</button>
+					</div>
 				</div>
-				<div className="mx-auto w-full max-w-4xl">
+				<button
+					type="button"
+					onClick={() => setTopologyOpen(true)}
+					className="block mx-auto w-full max-w-4xl cursor-zoom-in"
+					aria-label="Open the topology full screen"
+				>
 					<LabTopology lab={lab} state={state} activeDevice={device} />
-				</div>
+				</button>
+				{topologyOpen && <TopologyFullscreen lab={lab} state={state} device={device} onClose={closeTopology} />}
 				<p className="text-xs text-gray-600 mt-1">Green links are up; red dashed links are down. The router you are configuring is circled.</p>
 			</div>
 

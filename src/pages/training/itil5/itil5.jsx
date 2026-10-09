@@ -299,11 +299,6 @@ export default function ITIL5() {
               </span>
               <p>Certificate of Completion</p>
             </div>
-
-            {/* CHANGE: Download link text and URL */}
-            <a href="#" className="text-sm font-medium underline mt-2">
-              Download the ITIL5 Exam Topics Here
-            </a>
           </div>
         </aside>
       </div>
