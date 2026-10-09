@@ -46,6 +46,12 @@ function storeOfflineProfile(profile) {
   }));
 }
 
+function clearAuthCaches() {
+  sessionStorage.removeItem(PROFILE_CACHE_KEY);
+  localStorage.removeItem(OFFLINE_PROFILE_KEY);
+  localStorage.removeItem("accessToken");
+}
+
 export function AuthProvider({ children }) {
   const [profile, setProfile] = useState(readCachedProfile);
   const [isLoading, setIsLoading] = useState(true);
@@ -67,8 +73,7 @@ export function AuthProvider({ children }) {
     });
     if (!response.ok) {
       if (response.status === 401 || response.status === 403) {
-        sessionStorage.removeItem(PROFILE_CACHE_KEY);
-        localStorage.removeItem(OFFLINE_PROFILE_KEY);
+        clearAuthCaches();
         setProfile(null);
       }
       throw new Error("Unable to refresh account approval status.");
@@ -77,7 +82,6 @@ export function AuthProvider({ children }) {
     const nextProfile = await response.json();
     storeOfflineProfile(nextProfile);
     setProfile(nextProfile);
-    sessionStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(nextProfile));
     return nextProfile;
   }
 
@@ -92,8 +96,7 @@ export function AuthProvider({ children }) {
           if (response.status !== 401 && response.status !== 403) {
             throw new Error("Unable to verify the current session.");
           }
-          sessionStorage.removeItem(PROFILE_CACHE_KEY);
-          localStorage.removeItem(OFFLINE_PROFILE_KEY);
+          clearAuthCaches();
           if (mounted) setProfile(null);
           return;
         }
@@ -140,8 +143,7 @@ export function AuthProvider({ children }) {
       }).catch((logoutError) =>
         console.error("Unable to clear a session after profile loading failed.", logoutError),
       );
-      sessionStorage.removeItem(PROFILE_CACHE_KEY);
-      localStorage.removeItem(OFFLINE_PROFILE_KEY);
+      clearAuthCaches();
       throw error;
     }
     setProfile(signedInProfile);
@@ -151,9 +153,7 @@ export function AuthProvider({ children }) {
   }
 
   function logout() {
-    sessionStorage.removeItem(PROFILE_CACHE_KEY);
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem(OFFLINE_PROFILE_KEY);
+    clearAuthCaches();
     setProfile(null);
     void fetch(`${API_URL}/auth/logout`, {
       method: "POST",

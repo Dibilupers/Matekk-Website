@@ -10,6 +10,10 @@ import {
     Delete,
     UsePipes,
     ValidationPipe,
+    Patch,
+    Delete,
+    UsePipes,
+    ValidationPipe,
     Res,
     HttpException,
     Header,
@@ -19,6 +23,11 @@ import { Public } from './decorators/public.decorator.js';
 import { AllowPendingAccount } from './decorators/allow-pending.decorator.js';
 import type { Request as ExpressRequest, Response } from 'express';
 import { RegisterDto } from './dto/register.dto.js';
+<<<<<<<<< Temporary merge branch 1
+import { UpdateProfileDto } from './dto/profile.dto.js';
+import { ChangePasswordDto } from './dto/change-password.dto.js';
+import { ProfilePhotoDto } from './dto/profile-photo.dto.js';
+=========
 import { LoginDto } from './dto/login.dto.js';
 import { LoginRateLimitService } from './login-rate-limit.service.js';
 import { accessTokenCookieOptions, ACCESS_TOKEN_COOKIE } from './auth-cookie.js';

@@ -164,6 +164,13 @@ describe('UsersService', () => {
         active_status: true,
         email: true,
         programs_enrolled: true,
+        first_name: true,
+        last_name: true,
+        birth_date: true,
+        gender: true,
+        city_province: true,
+        phone_number: true,
+        profile_photo: true,
         enrollments: {
           select: {
             program: {
