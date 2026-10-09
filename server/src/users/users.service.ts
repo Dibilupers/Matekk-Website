@@ -1,66 +1,180 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service.js';
+import { EmailService } from '../email/email.service.js';
 
 export type User = {
     userId: number;
     username: string;
     password: string;
     role: string;
+    active_status: boolean;
+    pending_status?: string;
+    email?: string;
     module_enrolled?: string;
     course_enrolled?: string[];
 };
 
+function getEnrolledProgramNames(
+    enrollments: Array<{
+        program: { name: string; parentId: number | null; modules: Array<{ name: string }> };
+    }>,
+    legacyPrograms: string | null | undefined,
+): string | undefined {
+    const names = [...new Set(
+        enrollments
+            .flatMap(({ program }) => program.parentId === null
+                ? [program.name, ...program.modules.map((module) => module.name)]
+                : [program.name])
+            .map((name) => name.trim())
+            .filter(Boolean),
+    )];
+
+    return names.length > 0 ? names.join(', ') : legacyPrograms || undefined;
+}
+
 @Injectable()
 export class UsersService {
-    private readonly users: User[] = [
-        {
-            userId: 1,
-            username: 'test',
-            password: 'testpass',
-            role: 'student',
-            module_enrolled: 'CCNA, CCNP Security, Network+',
-            course_enrolled: ['Cisco', 'CompTIA', 'Fortinet', 'Palo Alto', 'Data Center', 'Cybersecurity', 'Cloyd Computing', 'IT Management', 'Project Management'],
-        },
-        {
-            userId: 2,
-            username: 'brian',
-            password: 'sabrido',
-            role: 'student',
-            course_enrolled: ['Cisco', 'Palo Alto', 'CompTIA', 'Fortinet', 'Project Management', 'Data Center', 'Cloud Computing', 'Cybersecurity'],
-        },
-        {
-            userId: 3,
-            username: 'Emman',
-            password: 'emmanpogi',
-            role: 'student',
-            course_enrolled: ['Cisco', 'Palo Alto', 'CompTIA', 'Fortinet', 'Data Center', 'Cloud Computing', 'Cybersecurity'],
-        },
-        {
-            userId: 4,
-            username: 'Kulatoy',
-            password: 'Parale',
-            role: 'student',
-            course_enrolled: ['Cisco', 'Palo Alto', 'CompTIA', 'Fortinet'],
-        },
-        {
-            userId: 5,
-            username: 'junard',
-            password: 'bacarroo',
-            role: 'student',
-            course_enrolled: ['Cisco', 'Palo Alto', 'CompTIA', 'Fortinet', 'Data Center', 'Cloud Computing', 'Cybersecurity'],
-        },
-    ];
+    private readonly logger = new Logger(UsersService.name);
+
+    constructor(
+        private readonly prisma: PrismaService,
+        private readonly emailService: EmailService,
+    ) {}
 
     async findAll(): Promise<Omit<User, 'password'>[]> {
-        return this.users.map(({ password, ...user }) => user);
+        const databaseUsers = await this.prisma.users.findMany({
+            select: {
+                id: true,
+                username: true,
+                email: true,
+                role: true,
+                active_status: true,
+                programs_enrolled: true,
+                enrollments: {
+                    select: {
+                        program: {
+                            select: {
+                                name: true,
+                                parentId: true,
+                                modules: { select: { name: true } },
+                            },
+                        },
+                    },
+                },
+            },
+        });
+
+        return databaseUsers.map((user) => ({
+                userId: user.id,
+                username: user.username,
+                email: user.email ?? undefined,
+                role: user.role,
+                active_status: user.active_status,
+                pending_status: user.active_status ? 'Active' : 'Pending',
+                module_enrolled: getEnrolledProgramNames(user.enrollments, user.programs_enrolled),
+            }));
+    }
+
+    async approve(userId: number): Promise<{ userId: number; active_status: true }> {
+        const user = await this.prisma.users.findUnique({
+            where: { id: userId },
+            select: {
+                active_status: true,
+                email: true,
+                first_name: true,
+                last_name: true,
+                username: true,
+            },
+        });
+        if (!user) {
+            throw new NotFoundException('User not found.');
+        }
+
+        // Only send approval email when the account transitions from pending to active.
+        const result = await this.prisma.users.updateMany({
+            where: { id: userId, active_status: false },
+            data: { active_status: true },
+        });
+
+        if (!user.active_status && result.count > 0) {
+            if (!user.email) {
+                this.logger.warn('Approved user has no email address; approval email was not sent.');
+            } else {
+                try {
+                    const name = [user.first_name, user.last_name].filter(Boolean).join(' ') || user.username;
+                    await this.emailService.sendUserStatusEmail({ name, email: user.email }, 'accepted');
+                } catch (error) {
+                    this.logger.error(
+                        'Unable to send account approval email.',
+                        error instanceof Error ? error.stack : String(error),
+                    );
+                }
+            }
+        }
+
+        return { userId, active_status: true };
     }
 
     async findOne(username: string): Promise<User | undefined> {
-        const normalizedUsername = this.normalizeUsername(username);
+        const databaseUser = await this.prisma.users.findFirst({
+            where: { username: { equals: username.trim(), mode: 'insensitive' } },
+            select: {
+                id: true,
+                username: true,
+                password: true,
+                role: true,
+                active_status: true,
+                email: true,
+                programs_enrolled: true,
+                enrollments: {
+                    select: {
+                        program: {
+                            select: {
+                                name: true,
+                                parentId: true,
+                                modules: { select: { name: true } },
+                            },
+                        },
+                    },
+                },
+            },
+        });
 
-        return this.users.find((user) => this.normalizeUsername(user.username) === normalizedUsername);
+        if (!databaseUser) {
+            return undefined;
+        }
+
+        return {
+            userId: databaseUser.id,
+            username: databaseUser.username,
+            password: databaseUser.password,
+            role: databaseUser.role,
+            active_status: databaseUser.active_status,
+            pending_status: databaseUser.active_status ? 'Active' : 'Pending',
+            email: databaseUser.email ?? undefined,
+            module_enrolled: getEnrolledProgramNames(
+                databaseUser.enrollments,
+                databaseUser.programs_enrolled,
+            ),
+        };
     }
 
-    private normalizeUsername(username: string): string {
-        return username.trim().toLowerCase();
+    async findAuthUserById(
+        userId: number,
+    ): Promise<{ userId: number; username: string; active_status: boolean } | undefined> {
+        const databaseUser = await this.prisma.users.findUnique({
+            where: { id: userId },
+            select: { id: true, username: true, active_status: true },
+        });
+
+        if (!databaseUser) {
+            return undefined;
+        }
+
+        return {
+            userId: databaseUser.id,
+            username: databaseUser.username,
+            active_status: databaseUser.active_status,
+        };
     }
 }

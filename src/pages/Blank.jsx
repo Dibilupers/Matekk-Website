@@ -123,6 +123,53 @@ const programLogos = {
 	"/training/projectmanagement/pmp": PmpLogo,
 };
 
+const PROGRAM_DESCRIPTIONS = {
+	"CCNA": "Build networking foundations in IP connectivity, network access, services, security, and automation.",
+	"CCNA Automation": "Learn to automate Cisco networks with Python, APIs, programmable infrastructure, and modern development practices.",
+	"CCNA Cybersecurity": "Develop skills in security monitoring, host and network analysis, threat detection, and incident response.",
+	"CCNP Enterprise": "Advance your enterprise networking skills across routing, infrastructure, and network assurance.",
+	"CCNP Security": "Build advanced skills for securing enterprise networks, managing access, and protecting infrastructure.",
+	"CCNP Data Center": "Learn to design, operate, and troubleshoot data center networks and compute infrastructure.",
+	"CCNP Collaboration": "Develop expertise in collaboration technologies, voice, video, and Cisco collaboration infrastructure.",
+	"A+ (Core 1 & 2)": "Prepare for IT support work through hardware, operating systems, troubleshooting, and security fundamentals.",
+	"Network+": "Strengthen your skills in network technologies, operations, security, and troubleshooting.",
+	"Security+": "Learn the core security concepts used to protect systems, networks, and organizational data.",
+	"CySA+": "Practice security monitoring, threat analysis, vulnerability management, and incident response.",
+	"PenTest+": "Learn penetration testing methods, from planning and assessment to exploitation and reporting.",
+	"Linux+": "Build practical Linux administration skills in system management, security, and troubleshooting.",
+	"FortiOS": "Learn to configure and manage FortiGate security features with FortiOS.",
+	"Secure Networking": "Build secure networking skills with Fortinet switching, wireless, and network security solutions.",
+	"SASE": "Explore secure access service edge concepts, cloud-delivered security, and zero-trust connectivity.",
+	"Cloud Security": "Learn to secure cloud environments, applications, and workloads with Fortinet solutions.",
+	"Security Operations": "Develop security operations skills in monitoring, analysis, and response using Fortinet tools.",
+	"Cybersecurity Expert": "Practice advanced cybersecurity engineering through hands-on Fortinet solution labs.",
+	"Cybersecurity Apprentice": "Start learning cybersecurity fundamentals, common threats, and practical protection methods.",
+	"Cybersecurity Practitioner": "Build practical cybersecurity skills for identifying threats and applying security controls.",
+	"Network Security Professional": "Learn professional network security concepts for protecting enterprise infrastructure.",
+	"Network Security Analyst": "Practice analyzing network activity, investigating alerts, and identifying security threats.",
+	"Next-Generation Firewall Engineer": "Learn to deploy, configure, and troubleshoot next-generation firewall solutions.",
+	"SD-WAN Engineer": "Build skills in secure SD-WAN design, deployment, and operations.",
+	"Security Service Edge Engineer": "Learn to implement cloud-delivered security and secure service edge connectivity.",
+	"Network Security Architect": "Develop architecture skills for designing resilient enterprise network security.",
+	"Security Operations Professional": "Strengthen security operations through detection, investigation, and incident handling.",
+	"XSIAM Analyst": "Learn to investigate security incidents and analyze threats with Cortex XSIAM.",
+	"XDR Analyst": "Practice investigating alerts and correlating endpoint, network, and cloud security data with XDR.",
+	"XSIAM Engineer": "Build engineering skills for deploying and managing Cortex XSIAM security operations.",
+	"XDR Engineer": "Learn to configure and operate extended detection and response integrations and workflows.",
+	"XSOAR Engineer": "Develop skills in security orchestration, automated playbooks, and incident response workflows.",
+	"Cloud Security Professional": "Learn to protect cloud workloads, applications, and data with Palo Alto Networks security tools.",
+	"Data Centre Foundation Certificate (DCFC)": "Explore data centre fundamentals, facilities, infrastructure, and operational practices.",
+	"Certified Data Centre Professional (CDCP)": "Build the knowledge to operate and maintain reliable data centre facilities.",
+	"Certified Data Centre Specialist (CDCS)": "Advance your expertise in data centre design, infrastructure, and operational resilience.",
+	"Cyber Defense & Threat Hunting (SOC)": "Practice SOC workflows for detecting, investigating, and responding to cyber threats.",
+	"Practical Ethical Hacking (VAPT)": "Learn hands-on ethical hacking techniques for assessing vulnerabilities and testing defenses.",
+	"Azure Fundamentals": "Understand cloud concepts, Azure services, security, and core cloud management.",
+	"Cloud Practitioner": "Learn AWS cloud fundamentals, core services, security, and cloud value propositions.",
+	"Technical Essentials": "Get hands-on with core AWS services and the technical building blocks of cloud solutions.",
+	"ITIL 5 Foundation": "Learn IT service management concepts, practices, and value-focused service delivery.",
+	"Project Management Professional": "Build project leadership skills across planning, delivery, risk, and stakeholder management.",
+};
+
 function getCategoryCourses(category) {
 	const selectedCategory = TRAINING_COURSES.find((item) => item.name === category);
 	if (!selectedCategory) return [];
@@ -150,13 +197,15 @@ function getCoursesForEnrollment(enrollment) {
 				...course,
 				category: category.name,
 				image: programLogos[course.path] ?? categoryLogos[category.name],
-				description: `Explore the ${course.name} program and develop industry-ready skills with MATEKK Cybercore Technologies.`,
+				description: PROGRAM_DESCRIPTIONS[course.name]
+					?? `Study ${course.name} through focused lessons, practical activities, and certification preparation.`,
 			}));
 	});
 }
 
 function getProgramPath(course) {
 	if (course.name === "CCNA") return "/modules/programs/ccna";
+	if (course.name === "A+ (Core 1 & 2)") return "/modules/programs/comptia-aplus";
 	if (course.name === "CCNA Automation") return "/modules/programs/ccna-automation";
 	if (course.name === "CCNA Cybersecurity") return "/modules/programs/ccna-cybersecurity";
 	return course.path;
@@ -264,20 +313,13 @@ export default function Blank() {
 	}, [introText, hasProfile]);
 
 	useEffect(() => {
-		const accessToken = localStorage.getItem("accessToken");
-		if (!accessToken) {
-			navigate("/login", { replace: true });
-			return;
-		}
-		/* Fetch the user's profile from the server using the access token. If the token is invalid or expired, redirect to login. */
 		async function loadProfile() {
 			try {
 				const response = await fetch(`${API_URL}/auth/profile`, {
-					headers: { Authorization: `Bearer ${accessToken}` },
+					credentials: "include",
 				});
 
 				if (!response.ok) {
-					localStorage.removeItem("accessToken");
 					navigate("/login", { replace: true });
 					return;
 				}
@@ -317,7 +359,7 @@ export default function Blank() {
 				</div>
 
 				<div className="grid gap-10 lg:grid-cols-[14rem_1fr] lg:gap-14">
-					<aside className="fade-in-up lg:sticky lg:top-24 lg:self-start" style={{ "--fade-delay": 100 }}>
+					<aside className="fade-in-up hidden lg:sticky lg:top-24 lg:block lg:self-start" style={{ "--fade-delay": 100 }}>
 						<h2 className="mb-5 text-2xl font-bold text-slate-950">Category</h2>
 						<nav
 							className="flex max-h-56 w-full flex-col gap-0 overflow-y-auto overscroll-contain rounded-lg border border-slate-200 bg-slate-50 px-3 pb-1 touch-pan-y lg:max-h-none lg:overflow-visible lg:rounded-none lg:border-0 lg:bg-transparent lg:px-0 lg:pb-0 lg:block lg:space-y-1"
@@ -337,11 +379,42 @@ export default function Blank() {
 					</aside>
 
 					<section className="min-w-0" aria-live="polite">
-						<div className="mb-5 flex flex-wrap items-center justify-between gap-4">
-							<p className="flex items-center gap-2 text-sm font-medium text-slate-500"><BookOpen size={17} /> {visibleCourses.length} programs</p>
-							<div className="flex items-center gap-4">
-								<span className="text-sm font-semibold text-slate-400">{activeCategory}</span>
-								<label className="relative block">
+						<div className="mb-5 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 sm:flex sm:flex-wrap sm:justify-between sm:gap-4">
+							<label className="col-span-2 block sm:hidden">
+								<span className="sr-only">Filter by category</span>
+								<select
+									value={activeCategory}
+									onChange={(event) => selectCategory(event.target.value)}
+									aria-label="Filter programs by category"
+									className="h-11 w-full rounded-md border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-700 outline-none transition focus:border-[#1775EE] focus:ring-2 focus:ring-[#1775EE]/20"
+								>
+									{categories.map((category) => <option key={category} value={category}>{category}</option>)}
+								</select>
+							</label>
+							<p className="flex min-w-0 items-center gap-2 text-sm font-medium text-slate-500"><BookOpen size={17} className="shrink-0" /> {visibleCourses.length} programs</p>
+							<div role="group" aria-label="Program layout" className="col-start-2 row-start-2 flex items-center justify-end gap-2 sm:order-3 sm:ml-auto">
+								<button
+									type="button"
+									onClick={() => setProgramLayout("grid")}
+									aria-label="Grid view"
+									aria-pressed={programLayout === "grid"}
+									className={`flex h-10 w-10 items-center justify-center rounded-md border transition-colors ${programLayout === "grid" ? "border-[#1775EE] bg-[#1775EE] text-white" : "border-slate-200 bg-white text-slate-500 hover:border-[#1775EE] hover:text-[#1775EE]"}`}
+								>
+									<LayoutGrid size={19} />
+								</button>
+								<button
+									type="button"
+									onClick={() => setProgramLayout("list")}
+									aria-label="List view"
+									aria-pressed={programLayout === "list"}
+									className={`flex h-10 w-10 items-center justify-center rounded-md border transition-colors ${programLayout === "list" ? "border-[#1775EE] bg-[#1775EE] text-white" : "border-slate-200 bg-white text-slate-500 hover:border-[#1775EE] hover:text-[#1775EE]"}`}
+								>
+									<List size={20} />
+								</button>
+							</div>
+							<div className="col-span-2 row-start-3 flex min-w-0 items-center gap-3 sm:order-2 sm:ml-auto sm:w-auto">
+								<span className="hidden text-sm font-semibold text-slate-400 sm:block">{activeCategory}</span>
+								<label className="relative block min-w-0 flex-1 sm:w-52 sm:flex-none">
 									<Search size={17} aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
 									<input
 										type="search"
@@ -349,7 +422,7 @@ export default function Blank() {
 										onChange={(event) => setProgramSearch(event.target.value)}
 										placeholder="Search programs"
 										aria-label="Search programs"
-										className="h-10 w-44 rounded-md border border-slate-200 bg-white py-2 pl-9 pr-8 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-[#1775EE] focus:ring-2 focus:ring-[#1775EE]/20 sm:w-52"
+										className="h-11 w-full rounded-md border border-slate-200 bg-white py-2 pl-9 pr-8 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-[#1775EE] focus:ring-2 focus:ring-[#1775EE]/20 sm:h-10"
 									/>
 									{programSearch && (
 										<button
@@ -362,35 +435,15 @@ export default function Blank() {
 										</button>
 									)}
 								</label>
-								<div role="group" aria-label="Program layout" className="flex items-center gap-2">
-									<button
-										type="button"
-										onClick={() => setProgramLayout("grid")}
-										aria-label="Grid view"
-										aria-pressed={programLayout === "grid"}
-										className={`flex h-10 w-10 items-center justify-center rounded-md border transition-colors ${programLayout === "grid" ? "border-[#1775EE] bg-[#1775EE] text-white" : "border-slate-200 bg-white text-slate-500 hover:border-[#1775EE] hover:text-[#1775EE]"}`}
-									>
-										<LayoutGrid size={19} />
-									</button>
-									<button
-										type="button"
-										onClick={() => setProgramLayout("list")}
-										aria-label="List view"
-										aria-pressed={programLayout === "list"}
-										className={`flex h-10 w-10 items-center justify-center rounded-md border transition-colors ${programLayout === "list" ? "border-[#1775EE] bg-[#1775EE] text-white" : "border-slate-200 bg-white text-slate-500 hover:border-[#1775EE] hover:text-[#1775EE]"}`}
-									>
-										<List size={20} />
-									</button>
-								</div>
 							</div>
 						</div>
 						<div className={programLayout === "grid" ? "grid min-w-0 gap-7 sm:grid-cols-2" : "flex min-w-0 flex-col gap-4"}>
 							{visibleCourses.map((course, index) => (
-								<article key={course.path} className={`fade-in-up-stagger group flex min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:border-[#1775EE] hover:shadow-xl ${programLayout === "grid" ? "min-h-[25rem] flex-col hover:-translate-y-1" : "flex-col sm:flex-row"}`} style={{ "--fade-delay": 150 + index * 75 }}>
-									<div className={`flex shrink-0 items-center justify-center bg-slate-50 p-7 ${programLayout === "grid" ? "h-44" : "h-36 sm:h-auto sm:w-52"}`}>
-										<img src={course.image} alt={`${course.name} certification`} className={`object-contain transition duration-300 group-hover:scale-105 ${programLayout === "grid" ? "h-full max-w-[13rem]" : "h-full max-h-28 max-w-[10rem]"}`} />
+								<article key={course.path} className={`fade-in-up-stagger group flex min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:border-[#1775EE] hover:shadow-xl ${programLayout === "grid" ? "min-h-[25rem] flex-col hover:-translate-y-1" : "flex-row"}`} style={{ "--fade-delay": 150 + index * 75 }}>
+									<div className={`flex shrink-0 items-center justify-center overflow-hidden bg-slate-50 ${programLayout === "grid" ? "h-44 p-7" : "w-24 p-3 sm:h-auto sm:w-52 sm:p-7"}`}>
+										<img src={course.image} alt={`${course.name} certification`} className={`object-contain transition duration-300 group-hover:scale-105 ${programLayout === "grid" ? "h-full max-w-[13rem]" : "h-16 w-16 sm:h-28 sm:w-40"}`} />
 									</div>
-									<div className={`flex min-w-0 flex-1 flex-col p-5 ${programLayout === "list" ? "sm:flex-row sm:items-center sm:gap-6" : ""}`}>
+									<div className={`flex min-w-0 flex-1 flex-col ${programLayout === "list" ? "p-3 sm:flex-row sm:items-center sm:gap-6 sm:p-5" : "p-5"}`}>
 										<div className="min-w-0 flex-1">
 										<p className="mb-2 text-xs font-bold uppercase tracking-[0.14em] text-[#1775EE]">{course.category}</p>
 										<h3 className="break-words text-xl font-bold text-slate-950">{course.name}</h3>

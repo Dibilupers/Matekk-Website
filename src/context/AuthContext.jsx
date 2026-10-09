@@ -7,25 +7,31 @@ export function AuthProvider({ children }) {
   const [profile, setProfile] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    if (!token) {
-      setIsLoading(false);
-      return;
+  async function refreshProfile() {
+    const response = await fetch(`${API_URL}/auth/profile`, {
+      credentials: "include",
+    });
+    if (!response.ok) {
+      throw new Error("Unable to refresh account approval status.");
     }
+
+    const nextProfile = await response.json();
+    setProfile(nextProfile);
+    return nextProfile;
+  }
+
+  useEffect(() => {
+    localStorage.removeItem("accessToken");
 
     let mounted = true;
     fetch(`${API_URL}/auth/profile`, {
-      headers: { Authorization: "Bearer " + token },
+      credentials: "include",
     })
       .then(async (response) => {
-        if (!response.ok) {
-          localStorage.removeItem("accessToken");
-          return;
-        }
+        if (!response.ok) return;
         if (mounted) setProfile(await response.json());
       })
-      .catch(() => localStorage.removeItem("accessToken"))
+      .catch((error) => console.error("Unable to restore the signed-in session.", error))
       .finally(() => mounted && setIsLoading(false));
 
     return () => {
@@ -36,31 +42,46 @@ export function AuthProvider({ children }) {
   async function login(username, password) {
     const response = await fetch(`${API_URL}/auth/login`, {
       method: "POST",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
     });
-    if (!response.ok) return response;
+    if (!response.ok) return { response, profile: null };
 
-    const { access_token: token } = await response.json();
-    localStorage.setItem("accessToken", token);
-    const profileResponse = await fetch(`${API_URL}/auth/profile`, {
-      headers: { Authorization: "Bearer " + token },
-    });
-    if (!profileResponse.ok) {
-      localStorage.removeItem("accessToken");
-      throw new Error("Unable to load the signed-in user.");
+    let signedInProfile;
+    try {
+      const profileResponse = await fetch(`${API_URL}/auth/profile`, {
+        credentials: "include",
+      });
+      if (!profileResponse.ok) {
+        throw new Error("Unable to load the signed-in user.");
+      }
+      signedInProfile = await profileResponse.json();
+    } catch (error) {
+      await fetch(`${API_URL}/auth/logout`, {
+        method: "POST",
+        credentials: "include",
+      }).catch((logoutError) =>
+        console.error("Unable to clear a session after profile loading failed.", logoutError),
+      );
+      throw error;
     }
-    setProfile(await profileResponse.json());
-    return response;
+    setProfile(signedInProfile);
+    return { response, profile: signedInProfile };
   }
 
   function logout() {
-    localStorage.removeItem("accessToken");
     setProfile(null);
+    void fetch(`${API_URL}/auth/logout`, {
+      method: "POST",
+      credentials: "include",
+    }).then((response) => {
+      if (!response.ok) throw new Error(`Logout request failed (${response.status}).`);
+    }).catch((error) => console.error("Unable to clear the server session.", error));
   }
 
   const value = useMemo(
-    () => ({ profile, isAuthenticated: Boolean(profile), isLoading, login, logout }),
+    () => ({ profile, isAuthenticated: Boolean(profile), isLoading, login, logout, refreshProfile }),
     [isLoading, profile],
   );
 
