@@ -655,7 +655,7 @@ R 10.18.75.113/27 [120/14] via G0/23`),
 	], 3, "Without a configured router ID or loopbacks, OSPF uses the highest IP address of an up/up physical interface."),
 ];
 
-// 14 more questions from the second question set (brings the Medium Exam to 100).
+// 15 more questions from the second question set (brings the Medium Exam pool to 101).
 export const CCNA_COMPOSITE_SET2_QUESTIONS = [
 	one("Which switch technology establishes a network connection immediately when it is plugged in?", ["BPDU guard", "PortFast", "UplinkFast", "BackboneFast"], 1,
 		"PortFast moves an access port straight to the forwarding state, skipping the spanning-tree listening and learning stages."),
@@ -762,4 +762,19 @@ interface Ethernet0/2
 	one("An engineer observes high usage on the 2.4GHz channels and lower usage on the 5GHz channels. What must be configured to allow clients to preferentially use 5GHz access points?", [
 		"Client Band Select", "Re-Anchor Roamed Clients", "OEAP Split Tunnel", "11ac MU-MIMO",
 	], 0, "Band Select delays 2.4 GHz probe responses so dual-band clients are steered to the less congested 5 GHz band."),
+
+	one("Refer to the exhibit. Which command provides this output?", [
+		"show ip route", "show ip interface", "show interface", "show cdp neighbor",
+	], 3, "The capability codes and columns for Device ID, Local Intrfce, Holdtme, Capability, Platform, and Port ID identify CDP neighbor output. The command is show cdp neighbors; show cdp neighbor is an accepted abbreviation.",
+	`Capability Codes: R - Router, T - Trans Bridge, B - Source Route Bridge
+S - Switch, H - Host, I - IGMP, r - Repeater, P - Phone,
+D - Remote, C - CVTA, M - Two-port Mac Relay
+
+Device ID  Local Intrfce  Holdtme  Capability  Platform  Port ID
+10.1.1.2   Gig37/3       176      RI          CPT 600   Gig36/41
+10.1.1.2   Gig37/1       174      RI          CPT 600   Gig36/43
+10.1.1.2   Gig36/41      134      RI          CPT 600   Gig37/3
+10.1.1.2   Gig36/43      134      RI          CPT 600   Gig37/1
+10.1.1.2   Ten3/2        132      RI          CPT 600   Ten4/2
+10.1.1.2   Ten4/2        174      RI          CPT 600   Ten3/2`),
 ];

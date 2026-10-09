@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import { IsDateString, IsEmail, IsInt, IsOptional, IsString, Length, MaxLength, MinLength } from 'class-validator';
 
 export class RegisterDto {
@@ -10,6 +11,7 @@ export class RegisterDto {
     @IsString() @MinLength(10) @MaxLength(128)
     password: string;
 
+    @Type(() => Number)
     @IsInt()
     programId: number;
 

@@ -1,4 +1,12 @@
 import InquireNowButton from "../ui/InquireNowButton";
+import TypewriterText from "../ui/TypewriterText";
+
+// Typing speeds (ms per letter). Title and description type together, the description starting a beat later (like the Courses page)
+const TITLE_SPEED = 28;
+const DESCRIPTION_SPEED = 18;
+const TYPE_START = 300;
+const TITLE_MAX_MS = 1100;
+const DESCRIPTION_LAG = 150;
 import Button from "../ui/button";
 
 // ==================== PROP SHAPES ====================
@@ -85,8 +93,8 @@ export default function SolutionsTemplate({
               {category}
             </h6>
             <div className="flex flex-col justify-center items-center text-center text-shadow-[0px_4px_8px_rgba(0,0,0,0.5)] space-y-1 text-white">
-              <h1 className="max-w-5xl">{heroTitle}</h1>
-              <p className="max-w-2xl">{heroDescription}</p>
+              <h1 data-no-type className="max-w-5xl"><TypewriterText text={heroTitle} speed={TITLE_SPEED} maxDuration={TITLE_MAX_MS} startDelay={TYPE_START} /></h1>
+              <p className="max-w-2xl"><TypewriterText text={heroDescription} speed={DESCRIPTION_SPEED} startDelay={TYPE_START + DESCRIPTION_LAG} /></p>
             </div>
           </div>
 
@@ -96,7 +104,7 @@ export default function SolutionsTemplate({
             <Button
               title="Learn More"
               type="none"
-              buttonCustomStyle="text-blue-600 border border-blue-600 hover:bg-[#0062E0] hover:border-[#0062E0] hover:text-white transition-all duration-300"
+              buttonCustomStyle="bg-white text-blue-600 border border-blue-600 shadow-md hover:bg-[#0062E0] hover:border-[#0062E0] hover:text-white transition-all duration-300"
               btnFunc={handleLearnMoreClick}
             />
           </div>

@@ -5,25 +5,15 @@ const AuthContext = createContext(null);
 const PROFILE_CACHE_KEY = "matekk-session-profile";
 
 function readCachedProfile() {
-  const token = localStorage.getItem("accessToken");
-  if (!token) return null;
-
   try {
     const cachedProfile = JSON.parse(sessionStorage.getItem(PROFILE_CACHE_KEY) || "null");
-    if (cachedProfile && typeof cachedProfile === "object") return cachedProfile;
+    if (cachedProfile && typeof cachedProfile === "object" && !Array.isArray(cachedProfile)) {
+      return cachedProfile;
+    }
   } catch {
     sessionStorage.removeItem(PROFILE_CACHE_KEY);
   }
-
-  try {
-    const encodedPayload = token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
-    const payload = JSON.parse(atob(encodedPayload.padEnd(Math.ceil(encodedPayload.length / 4) * 4, "=")));
-    return typeof payload.username === "string" && payload.username
-      ? { userId: payload.sub, username: payload.username }
-      : null;
-  } catch {
-    return null;
-  }
+  return null;
 }
 
 export function AuthProvider({ children }) {
@@ -31,17 +21,12 @@ export function AuthProvider({ children }) {
   const [isLoading, setIsLoading] = useState(true);
 
   async function refreshProfile() {
-    const token = localStorage.getItem("accessToken");
-    if (!token) {
-      setProfile(null);
-      sessionStorage.removeItem(PROFILE_CACHE_KEY);
-      return null;
-    }
-
     const response = await fetch(`${API_URL}/auth/profile`, {
-      headers: { Authorization: "Bearer " + token },
+      credentials: "include",
     });
     if (!response.ok) {
+      sessionStorage.removeItem(PROFILE_CACHE_KEY);
+      setProfile(null);
       throw new Error("Unable to refresh account approval status.");
     }
 
@@ -52,19 +37,12 @@ export function AuthProvider({ children }) {
   }
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    if (!token) {
-      setIsLoading(false);
-      return;
-    }
-
     let mounted = true;
     fetch(`${API_URL}/auth/profile`, {
-      headers: { Authorization: "Bearer " + token },
+      credentials: "include",
     })
       .then(async (response) => {
         if (!response.ok) {
-          localStorage.removeItem("accessToken");
           sessionStorage.removeItem(PROFILE_CACHE_KEY);
           if (mounted) setProfile(null);
           return;
@@ -75,11 +53,7 @@ export function AuthProvider({ children }) {
           sessionStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(nextProfile));
         }
       })
-      .catch(() => {
-        localStorage.removeItem("accessToken");
-        sessionStorage.removeItem(PROFILE_CACHE_KEY);
-        if (mounted) setProfile(null);
-      })
+      .catch((error) => console.error("Unable to restore the signed-in session.", error))
       .finally(() => mounted && setIsLoading(false));
 
     return () => {
@@ -90,24 +64,29 @@ export function AuthProvider({ children }) {
   async function login(username, password) {
     const response = await fetch(`${API_URL}/auth/login`, {
       method: "POST",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
     });
     if (!response.ok) return { response, profile: null };
 
-    const { access_token: token } = await response.json();
-    localStorage.setItem("accessToken", token);
     let signedInProfile;
     try {
       const profileResponse = await fetch(`${API_URL}/auth/profile`, {
-        headers: { Authorization: "Bearer " + token },
+        credentials: "include",
       });
       if (!profileResponse.ok) {
         throw new Error("Unable to load the signed-in user.");
       }
       signedInProfile = await profileResponse.json();
     } catch (error) {
-      localStorage.removeItem("accessToken");
+      await fetch(`${API_URL}/auth/logout`, {
+        method: "POST",
+        credentials: "include",
+      }).catch((logoutError) =>
+        console.error("Unable to clear a session after profile loading failed.", logoutError),
+      );
+      sessionStorage.removeItem(PROFILE_CACHE_KEY);
       throw error;
     }
     setProfile(signedInProfile);
@@ -116,9 +95,14 @@ export function AuthProvider({ children }) {
   }
 
   function logout() {
-    localStorage.removeItem("accessToken");
     sessionStorage.removeItem(PROFILE_CACHE_KEY);
     setProfile(null);
+    void fetch(`${API_URL}/auth/logout`, {
+      method: "POST",
+      credentials: "include",
+    }).then((response) => {
+      if (!response.ok) throw new Error(`Logout request failed (${response.status}).`);
+    }).catch((error) => console.error("Unable to clear the server session.", error));
   }
 
   const value = useMemo(

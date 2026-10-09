@@ -716,6 +716,14 @@ function SuccessScreen({ onClose, reset }) {
 
 // ─── Modal UI (rendered via Portal) ───────────────────────────────────────
 function ModalContent({ f, handleClose, initialInquiryType }) {
+  // Remember which way the user moved, so going back slides in from the left
+  const [prevStep, setPrevStep] = useState(f.step);
+  const [goingBack, setGoingBack] = useState(false);
+  if (f.step !== prevStep) {
+    setPrevStep(f.step);
+    setGoingBack(f.step < prevStep);
+  }
+
   const renderStep = () => {
     if (f.step === 0) return <Step0 onSelect={f.selectInquiryType} />;
     if (f.inquiryType === "training") {
@@ -728,11 +736,12 @@ function ModalContent({ f, handleClose, initialInquiryType }) {
 
   return (
     <div
-      className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+      className="modal-backdrop-in fixed inset-0 z-[9999] flex items-center justify-center p-4"
       style={{ backgroundColor: "rgba(0,0,0,0.55)", backdropFilter: "blur(2px)" }}
       onClick={(e) => { if (e.target === e.currentTarget) handleClose(); }}
     >
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto">
+      {/* Same fade-and-rise entrance as the login page */}
+      <div className="fade-in-up w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto">
         <div className="flex justify-end px-7 pt-5">
           <button type="button" onClick={handleClose}
             className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center
@@ -748,7 +757,10 @@ function ModalContent({ f, handleClose, initialInquiryType }) {
           ) : (
             <>
               <ProgressBar step={f.step} />
-              {renderStep()}
+              {/* Keyed by screen, so each step (choice → form → details) slides in when it changes */}
+              <div key={`${f.inquiryType}-${f.step}`} className={goingBack ? "modal-step-back" : "modal-step-in"}>
+                {renderStep()}
+              </div>
             </>
           )}
         </div>

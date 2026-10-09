@@ -20,6 +20,7 @@ import CCNACybersecurityLogo from "../assets/CCNAcybersecurity.webp";
 import CCNPDatacenterLogo from "../assets/CCNPDatacenter.webp";
 import CCNPEnterpriseLogo from "../assets/CCNPEnterprise.webp";
 import CCNPSecurityLogo from "../assets/CCNPSecurity.png";
+import CCNPCollaborationLogo from "../assets/CCNPCollaboration.png";
 import CiscoLogo from "../assets/cisco.png";
 import SecurityPlusLogo from "../assets/security+.webp";
 import CySAPlusLogo from "../assets/cysa.webp";
@@ -50,7 +51,7 @@ import DcfcLogo from "../assets/dcfc.webp";
 import CdcpLogo from "../assets/cdcp.webp";
 import CdcsLogo from "../assets/cdcs.webp";
 import CdthLogo from "../assets/cdth.png";
-import MatekkTrainingLogo from "../assets/MATEKK_training_logo.png";
+import PehLogo from "../assets/ejpt.svg"; // official eJPT badge (INE)
 import AzureFundamentalsLogo from "../assets/azure.svg";
 import AwsEssentialsLogo from "../assets/awsessentials.png";
 import Itil5FoundationLogo from "../assets/itil5.webp";
@@ -84,7 +85,7 @@ const programLogos = {
 	"/training/cisco/ccnp/enterprise": CCNPEnterpriseLogo,
 	"/training/cisco/ccnp/security": CCNPSecurityLogo,
 	"/training/cisco/ccnp/datacenter": CCNPDatacenterLogo,
-	"/training/cisco/ccnp/collaboration": CiscoLogo,
+	"/training/cisco/ccnp/collaboration": CCNPCollaborationLogo,
 	"/training/comptia/aplus": APlusLogo,
 	"/training/comptia/network": NetworkPlusLogo,
 	"/training/comptia/security+": SecurityPlusLogo,
@@ -116,7 +117,7 @@ const programLogos = {
 	"/training/datacenter/cdcp": CdcpLogo,
 	"/training/datacenter/cdcs": CdcsLogo,
 	"/training/cybersecurity/cdth": CdthLogo,
-	"/training/cybersecurity/peh": MatekkTrainingLogo,
+	"/training/cybersecurity/peh": PehLogo,
 	"/training/cloud/microsoft/azurefundamentals": AzureFundamentalsLogo,
 	"/training/cloud/aws/practitioner": AwsLogo,
 	"/training/cloud/aws/essentials": AwsEssentialsLogo,
@@ -346,7 +347,7 @@ export default function Blank() {
 
 	useEffect(() => {
 		const controller = new AbortController();
-		fetch(`${API_URL}/auth/programs`, { signal: controller.signal })
+		fetch(`${API_URL}/auth/programs`, { credentials: "include", signal: controller.signal })
 			.then(async (response) => {
 				if (!response.ok) {
 					throw new Error(`Program catalog request failed with status ${response.status}.`);

@@ -44,6 +44,14 @@ import CyberSolutionImage from "../assets/solutions/redteam-hero.webp";
 import SmartImage from "../assets/featured-extra/network-design-blueprints.webp";
 import RenewableImage from "../assets/solutions/renewable-hero.webp";
 import SafetySystemsImage from "../assets/solutions/ipcctv-hero.webp";
+import TypewriterText from "../components/ui/TypewriterText";
+import HeroNetwork from "../assets/hero-network.svg";
+
+// Homepage headline, typed part by part (the second part is the blue highlight)
+const HERO_HEADLINE = [
+  { text: "Empowering Businesses and Individuals " },
+  { text: "Through ICT Excellence", className: "text-[#1775EE]" },
+];
 
 /* ── Contact Us email link: opens a pre-filled Gmail message ──
    Edit the subject or template text below; the link is built from them. */
@@ -364,8 +372,17 @@ export default function Home() {
       {/* ==================== HERO BANNER ====================*/}
       <section
         id="home"
-        className="flex justify-center items-center py-25 md:py-20 lg:py-0 scroll-mt-18 px-[2.063rem] sm:px-[2.063rem] md:px-16 xl:px-[7.438rem] w-full"
+        className="relative isolate flex justify-center items-center py-25 md:py-20 lg:py-0 scroll-mt-18 px-[2.063rem] sm:px-[2.063rem] md:px-16 xl:px-[7.438rem] w-full"
       >
+        {/* Pale blue fade + faint network diagram behind the hero. Phones: one diagram stretched to the screen width.
+            Desktop: the same diagram repeated at its normal size, so the dots stay small and subtle */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 bg-linear-to-b from-[#eef5fe] to-white to-75%">
+          <img src={HeroNetwork} alt="" className="w-full lg:hidden" />
+          <div
+            className="absolute inset-0 hidden lg:block [mask-image:linear-gradient(to_bottom,black_55%,transparent)]"
+            style={{ backgroundImage: `url("${HeroNetwork}")`, backgroundSize: "520px auto", backgroundRepeat: "repeat" }}
+          />
+        </div>
         {/* ====== HERO BANNER - Content ======*/}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           {/* ====== LEFT SIDE - Content (Title, description, buttons, images) ====== */}
@@ -377,12 +394,16 @@ export default function Home() {
                   ICT & Engineering
                 </h6>
 
-                <h1 className="pr-9 sm:pr-8 lg:pr-7 font-bold leading-tight space-x-2">
-                  Empowering Businesses and Individuals
-                  <span className="text-[#1775EE]">
-                    {" "}
-                    Through ICT Excellence
-                  </span>
+                {/* Types itself out, holds, backspaces quickly, then types again */}
+                <h1 data-no-type className="pr-9 sm:pr-8 lg:pr-7 font-bold leading-tight">
+                  <TypewriterText
+                    segments={HERO_HEADLINE}
+                    speed={45}
+                    startDelay={400}
+                    loop
+                    holdMs={4000}
+                    eraseDuration={500}
+                  />
                 </h1>
 
                 <p className="max-w-lg text-left">
@@ -405,11 +426,30 @@ export default function Home() {
                 <Button
                   title="View Training Programs"
                   type="none"
-                  buttonCustomStyle="text-blue-600 border border-blue-600 hover:bg-[#0062E0] hover:border-[#0062E0] hover:text-white  transition-all duration-300"
+                  buttonCustomStyle="bg-white text-blue-600 border border-blue-600 hover:bg-[#0062E0] hover:border-[#0062E0] hover:text-white transition-all duration-300"
                   btnFunc={() => {
-                    document.getElementById("training-programs")?.scrollIntoView({
+                    const trainingSection = document.getElementById("training-programs");
+                    if (!trainingSection) return;
+
+                    const currentTop = trainingSection.getBoundingClientRect().top;
+                    const scrollMargin = Number.parseFloat(
+                      window.getComputedStyle(trainingSection).scrollMarginTop,
+                    );
+                    const nextSection = trainingSection.closest("section")?.nextElementSibling;
+                    const nextSectionTop = nextSection?.getBoundingClientRect().top;
+                    const sectionGap = nextSectionTop === undefined
+                      ? Number.POSITIVE_INFINITY
+                      : nextSectionTop - currentTop;
+                    // Phones: the section is about a screen tall, so just put its heading under the
+                    // top bar (fitting the whole section left the previous carousel's dots showing)
+                    const isPhone = window.matchMedia("(max-width: 767px)").matches;
+                    const targetTop = isPhone
+                      ? scrollMargin
+                      : Math.max(scrollMargin, window.innerHeight + 24 - sectionGap);
+
+                    window.scrollTo({
+                      top: Math.max(0, window.scrollY + currentTop - targetTop),
                       behavior: "smooth",
-                      block: "start",
                     });
                   }}
                 />
@@ -643,7 +683,7 @@ export default function Home() {
           </div>
 
           {/* ====== TRAINING - ICT Training & Skills Development ======*/}
-          <div id="training-programs" className="scroll-mt-24">
+          <div id="training-programs" className="scroll-mt-24 md:scroll-mt-40">
             <div className="flex flex-col md:flex-row justify-center items-center gap-10">
               {/* Controls — on mobile: top + right-aligned | on desktop: right column */}
               {/* Training title */}

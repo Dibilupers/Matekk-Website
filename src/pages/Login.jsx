@@ -18,6 +18,7 @@ import LinuxLogo from "../assets/linux+.webp";
 import CiscoLogo from "../assets/cisco.png";
 import PythonLogo from "../assets/python.png";
 import PaloAltoLogo from "../assets/paloalto.png";
+import PlaceAutocomplete from "../components/ui/PlaceAutocomplete";
 
 const trainingLogos = [
   { src: PaloAltoLogo, alt: "Palo Alto certification" },
@@ -48,6 +49,7 @@ export default function Login() {
   const [isCheckingSession, setIsCheckingSession] = useState(true);
   const [isRegistering, setIsRegistering] = useState(false);
   const [registrationStep, setRegistrationStep] = useState(0);
+  const formCardRef = useRef(null);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [birthdate, setBirthdate] = useState("");
@@ -76,6 +78,15 @@ export default function Login() {
     setPendingLoginRedirect(path);
   }, [navigate]);
 
+  // Switching between Sign In / Create Account or between sign-up steps changes the form's height.
+  // On phones that can leave the page scrolled past the form, so bring the form back into view.
+  useEffect(() => {
+    const card = formCardRef.current;
+    if (card && card.getBoundingClientRect().top < 0) {
+      card.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [isRegistering, registrationStep]);
+
   useEffect(() => {
     if (!pendingLoginRedirect) return undefined;
 
@@ -96,33 +107,29 @@ export default function Login() {
   }, [navigate, pendingLoginRedirect]);
 
   useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
-    if (!accessToken) {
-      setIsCheckingSession(false);
-      return;
-    }
-
+    let mounted = true;
     async function checkSession() {
       try {
         const response = await fetch(`${API_URL}/auth/profile`, {
-          headers: { Authorization: `Bearer ${accessToken}` },
+          credentials: "include",
         });
 
         if (response.ok) {
           const profile = await response.json();
+          if (!mounted) return;
           navigateAfterLogin(profile.active_status === false ? "/account-pending" : "/pages/blank");
-          return;
         }
-
-        localStorage.removeItem("accessToken");
       } catch {
-        setMsg("Unable to verify your existing session.");
+        if (mounted) setMsg("Unable to verify your existing session.");
       } finally {
-        setIsCheckingSession(false);
+        if (mounted) setIsCheckingSession(false);
       }
     }
 
     checkSession();
+    return () => {
+      mounted = false;
+    };
   }, [navigate, navigateAfterLogin]);
 
   useEffect(() => {
@@ -348,7 +355,7 @@ export default function Login() {
             </div>
           </section>
 
-          <section className="order-1 w-full space-y-5 rounded-2xl border border-slate-300 bg-white px-8 py-9 shadow-[0_14px_35px_rgba(15,23,42,0.1)] sm:px-11 lg:order-1">
+          <section ref={formCardRef} className="scroll-mt-24 order-1 w-full space-y-5 rounded-2xl border border-slate-300 bg-white px-8 py-9 shadow-[0_14px_35px_rgba(15,23,42,0.1)] sm:px-11 lg:order-1">
             <div className="flex justify-center">
               <img src={MainLogo} alt="Matekk Cybercore Technologies" className="h-auto w-56" />
             </div>
@@ -361,6 +368,19 @@ export default function Login() {
               </p>
             </div>
 
+            {isRegistering && (
+              // Small "Step 1/2/3" labels, spaced to sit right above each tab below
+              <div className="mb-1.5 flex gap-3 px-1 text-center text-[0.7rem] font-semibold uppercase tracking-wider" aria-hidden="true">
+                {[0, 1, 2].map((index) => (
+                  <span
+                    key={index}
+                    className={`flex-1 transition-colors ${index <= registrationStep ? "text-[#1775EE]" : "text-slate-400"}`}
+                  >
+                    Step {index + 1}
+                  </span>
+                ))}
+              </div>
+            )}
             {isRegistering && (
               <div className="mb-5 flex items-center gap-3 rounded-full border border-slate-200 bg-[#eef3f8] p-1 text-center text-sm font-medium text-slate-500">
                 {[
@@ -432,17 +452,16 @@ export default function Login() {
                             <option value="">Select</option>
                             <option value="Female">Female</option>
                             <option value="Male">Male</option>
-                            <option value="Non-binary">Non-binary</option>
+                            <option value="Prefer not to say">Prefer not to say</option>
                           </select>
                         </label>
                       </div>
 
                       <label className="block text-sm font-medium text-slate-700">
                         <span className="mb-2 block">City / Province</span>
-                        <input
-                          type="text"
+                        <PlaceAutocomplete
                           value={city}
-                          onChange={(e) => setCity(e.target.value)}
+                          onChange={setCity}
                           placeholder="e.g. San Mateo, Rizal"
                           className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-slate-800 outline-none transition focus:border-[#1775EE] focus:ring-2 focus:ring-blue-100"
                         />
@@ -592,8 +611,14 @@ export default function Login() {
                     </div>
                   </label>
 
-                  <div className="text-right text-sm font-medium text-slate-600">
-                    Forgot Password
+                  <div className="text-right text-sm font-medium">
+                    {/* Clickable, but no password reset page exists yet */}
+                    <button
+                      type="button"
+                      className="cursor-pointer text-slate-600 underline-offset-4 transition hover:text-[#1775EE] hover:underline"
+                    >
+                      Forgot Password
+                    </button>
                   </div>
                 </>
               )}
@@ -632,7 +657,17 @@ export default function Login() {
               {msg && <p role="status" className="text-center text-sm text-slate-600">{msg}</p>}
 
               <div className="space-y-3 pt-1 text-center">
-                <p className="text-xs text-slate-400">New to Matekk?</p>
+                {isRegistering ? (
+                  <p className="text-xs text-slate-400">Already have an account?</p>
+                ) : (
+                  // Clickable, but nothing is linked to it yet
+                  <button
+                    type="button"
+                    className="cursor-pointer text-xs text-slate-400 underline-offset-4 transition hover:text-[#1775EE] hover:underline"
+                  >
+                    New to Matekk?
+                  </button>
+                )}
                 {isRegistering ? (
                   <button
                     type="button"

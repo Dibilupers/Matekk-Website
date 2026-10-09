@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Prisma } from '../generated/prisma/client.js';
 import { PrismaService } from '../prisma/prisma.service.js';
+import { ProgramAccessService } from '../users/program-access.service.js';
 
 function isJsonObject(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -8,9 +9,13 @@ function isJsonObject(value: unknown): value is Record<string, unknown> {
 
 @Injectable()
 export class GradebookService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly programAccess: ProgramAccessService,
+  ) {}
 
-  findOne(userId: number, programKey: string) {
+  async findOne(userId: number, programKey: string) {
+    await this.programAccess.assertEnrollment(userId, programKey);
     return this.prisma.userGradebook.findUnique({
       where: {
         userId_programKey: {
@@ -25,7 +30,8 @@ export class GradebookService {
     });
   }
 
-  save(userId: number, programKey: string, data: unknown) {
+  async save(userId: number, programKey: string, data: unknown) {
+    await this.programAccess.assertEnrollment(userId, programKey);
     if (!isJsonObject(data)) {
       throw new BadRequestException('Gradebook data must be a JSON object.');
     }

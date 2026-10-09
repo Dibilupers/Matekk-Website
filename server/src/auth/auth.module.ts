@@ -5,22 +5,39 @@ import { APP_GUARD } from '@nestjs/core';
 import { AuthController } from './auth.controller.js';
 import { AuthService } from './auth.service.js';
 import { PasswordService } from './password.service.js';
-import { jwtConstants } from './constants.js';
 import { UsersModule } from '../users/users.module.js';
 import { JwtAuthGuard } from './guards/jwt-auth.guard.js';
+import { ActiveAccountGuard } from './guards/active-account.guard.js';
 import { JwtStrategy } from './strategies/jwt.strategy.js';
+import { EmailModule } from '../email/email.module.js';
+import { ConfigService } from '@nestjs/config';
+import { LoginRateLimitService } from './login-rate-limit.service.js';
 
 @Module({
   imports: [
     UsersModule,
+    EmailModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
-    JwtModule.register({
-      secret: jwtConstants.secret,
-      signOptions: { expiresIn: '4h' },
+    JwtModule.registerAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        secret: config.getOrThrow<string>('JWT_SECRET'),
+        signOptions: {
+          expiresIn: config.get('JWT_EXPIRES_IN', '15m'),
+          algorithm: 'HS256',
+        },
+      }),
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, PasswordService, JwtStrategy, { provide: APP_GUARD, useClass: JwtAuthGuard }],
+  providers: [
+    AuthService,
+    PasswordService,
+    LoginRateLimitService,
+    JwtStrategy,
+    { provide: APP_GUARD, useClass: JwtAuthGuard },
+    { provide: APP_GUARD, useClass: ActiveAccountGuard },
+  ],
   exports: [AuthService],
 })
 export class AuthModule { }
