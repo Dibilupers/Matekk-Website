@@ -18,6 +18,7 @@ import {
 	isCurrentProgramModuleQuizAttempt,
 	readProgramModuleQuizProgress,
 } from "../../../../../utils/programModuleQuizProgress";
+import useGradebookQuizStats from "../../useGradebookQuizStats";
 
 const PROGRAM_KEY = "ccna-automation";
 const PROGRAM_PATH = "/modules/programs/ccna-automation";
@@ -149,6 +150,16 @@ export default function CCNAAutomationDashboard() {
 			Object.keys(attempt.answers ?? {}).length > 0
 		);
 	}).length;
+	const {
+		stats: gradebookQuizStats,
+		error: gradebookStatsError,
+	} = useGradebookQuizStats(
+		PROGRAM_KEY,
+		userId,
+		CCNA_AUTOMATION_CURRICULUM,
+		attemptedQuizzes,
+		quizScore,
+	);
 
 	function toggleModule(index) {
 		const opening = openModuleIndex !== index;
@@ -166,25 +177,26 @@ export default function CCNAAutomationDashboard() {
 			modules={programModules}
 			activeModule={activeModule ?? CCNA_AUTOMATION_CURRICULUM[0]}
 			modulesLeft={modulesLeft}
-			modulesSummary={`${attemptedQuizzes} of ${CCNA_AUTOMATION_CURRICULUM.length} quizzes attempted`}
-			quizScore={quizScore}
+			modulesSummary={`${gradebookQuizStats.attempted} of ${CCNA_AUTOMATION_CURRICULUM.length} quizzes attempted`}
+			quizScore={gradebookQuizStats.average}
+			gradebookStatsError={gradebookStatsError}
 			gradebookPath={`${PROGRAM_PATH}/gradebook`}
 			heroIntros={HERO_INTROS}
 			quote={HERO_INTROS[0]}
-			heroActions={<ProgramQuizControls programKey={PROGRAM_KEY} basePath={PROGRAM_PATH} modules={CCNA_AUTOMATION_CURRICULUM} learningProgress={progress} />}
+			heroActions={<ProgramQuizControls programKey={PROGRAM_KEY} basePath={PROGRAM_PATH} modules={CCNA_AUTOMATION_CURRICULUM} learningProgress={progress} gradebookPath={`${PROGRAM_PATH}/gradebook`} />}
 			topStats={(
 				<>
 					<div className="flex min-w-0 flex-col items-start gap-1 sm:flex-row sm:items-center sm:gap-3">
-						<strong className="text-xl leading-none tracking-tight text-[#071126] sm:text-[2rem]">{attemptedQuizzes}/{CCNA_AUTOMATION_CURRICULUM.length}</strong>
-						<span className="text-[11px] leading-tight text-[#6f7d99] sm:max-w-20 sm:text-sm">Quizzes attempted</span>
+						<strong className="text-xl leading-none tracking-tight text-[#071126] transition-colors duration-200 lg:group-hover/stats:text-white sm:text-[2rem]">{gradebookQuizStats.attempted}/{CCNA_AUTOMATION_CURRICULUM.length}</strong>
+						<span className="text-[11px] leading-tight text-[#6f7d99] transition-colors duration-200 lg:group-hover/stats:text-white sm:max-w-20 sm:text-sm">Quizzes attempted</span>
 					</div>
 					<div className="flex min-w-0 flex-col items-start gap-1 sm:flex-row sm:items-center sm:gap-3 sm:pl-7">
-						<strong className="text-xl leading-none tracking-tight text-[#071126] sm:text-[2rem]">{quizScore}%</strong>
-						<span className="text-[11px] leading-tight text-[#6f7d99] sm:max-w-20 sm:text-sm">Quiz average</span>
+						<strong className="text-xl leading-none tracking-tight text-[#071126] transition-colors duration-200 lg:group-hover/stats:text-white sm:text-[2rem]">{gradebookQuizStats.average}%</strong>
+						<span className="text-[11px] leading-tight text-[#6f7d99] transition-colors duration-200 lg:group-hover/stats:text-white sm:max-w-20 sm:text-sm">Quiz average</span>
 					</div>
 					<div className="flex min-w-0 flex-col items-start gap-1 sm:flex-row sm:items-center sm:gap-3 sm:pl-7">
-						<strong className="text-xl leading-none tracking-tight text-[#071126] sm:text-[2rem]">{modulesLeft}</strong>
-						<span className="text-[11px] leading-tight text-[#6f7d99] sm:max-w-20 sm:text-sm">Modules left</span>
+						<strong className="text-xl leading-none tracking-tight text-[#071126] transition-colors duration-200 lg:group-hover/stats:text-white sm:text-[2rem]">{modulesLeft}</strong>
+						<span className="text-[11px] leading-tight text-[#6f7d99] transition-colors duration-200 lg:group-hover/stats:text-white sm:max-w-20 sm:text-sm">Modules left</span>
 					</div>
 				</>
 			)}

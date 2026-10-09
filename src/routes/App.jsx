@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 import NavBar from "../components/navbar/navbar";
 import Footer from "../components/footer/footer";
 import ScrollToTop from "../components/scroll/ScrollToTop";
+import useHeadingTypeIn from "../utils/useHeadingTypeIn";
 
 /* Pages */
 import Home from "../pages/Home";
@@ -143,6 +144,7 @@ export default function App() {
     || location.pathname.startsWith("/modules/programs/ccna-cybersecurity/quiz/");
   const isAdminPage = location.pathname === "/admin";
   const isAccountPendingPage = location.pathname === "/account-pending";
+  useHeadingTypeIn(location.pathname);
 
   return (
     <>
@@ -150,6 +152,8 @@ export default function App() {
       {!isCCNAQuiz && !isAccountPendingPage && <NavBar />}
       <ScrollToTop />
 
+      {/* Keyed by path so every page change replays the fade-in (navbar stays outside, so it never flickers) */}
+      <div key={location.pathname} className="page-transition">
       <Routes>
         <Route path="/" element={<OfflineEntryRoute><Home /></OfflineEntryRoute>} />
         <Route path="/login" element={<OfflineEntryRoute><Login /></OfflineEntryRoute>} />
@@ -561,8 +565,8 @@ export default function App() {
         <Route path="*" element={<NotFound />} />
       </Routes>
 
-
       {!isCCNAQuiz && !isAdminPage && !isAccountPendingPage && <Footer />}
+      </div>
     </>
   );
 }

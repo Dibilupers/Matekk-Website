@@ -1,7 +1,17 @@
 ﻿import { CCNA_MODULE_QUIZZES } from "./ccnaModuleQuizData";
 import { CCNA_MEDIUM_EXAM_QUESTIONS } from "./ccnaMediumExamData";
 import { CCNA_COMPOSITE_SET_QUESTIONS, CCNA_COMPOSITE_SET2_QUESTIONS } from "./ccnaCompositeSetQuestions";
+import { CCNA_LEGACY_QUESTIONS } from "./ccnaLegacyQuestions";
 import { CCNA_LEGACY_200_301_QUESTIONS } from "./ccnaLegacyQuestionBank";
+
+// Both legacy files come from the same CCNA 200-301 PDF. CCNA_LEGACY_QUESTIONS is the fuller set
+// (with explanations), so only questions it is missing are taken from the other file.
+const legacyPromptKey = (prompt) => prompt.replace(/\s+/g, " ").trim().toLowerCase();
+const LEGACY_PROMPTS = new Set(CCNA_LEGACY_QUESTIONS.map((question) => legacyPromptKey(question.prompt)));
+const CCNA_LEGACY_ALL_QUESTIONS = [
+  ...CCNA_LEGACY_QUESTIONS,
+  ...CCNA_LEGACY_200_301_QUESTIONS.filter((question) => !LEGACY_PROMPTS.has(legacyPromptKey(question.prompt))),
+];
 
 export function shuffle(items) {
   const shuffled = [...items];
@@ -40,7 +50,7 @@ export const CCNA_QUESTION_BANK = [
     moduleTitle: "Medium Exam",
   })),
   // Kept tagged so older CCNA 200-301 questions remain identifiable in the shared bank.
-  ...CCNA_LEGACY_200_301_QUESTIONS.map((question) => ({
+  ...CCNA_LEGACY_ALL_QUESTIONS.map((question) => ({
     ...question,
     source: "legacy-ccna-200-301",
     moduleNumber: null,

@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import API_URL from "../../config/api";
 import InquireNowButton from "../ui/InquireNowButton";
 import MainLogo from "../../assets/MATEKK_logo.webp";
 import TrainingLogo from "../../assets/MATEKK_training_logo.png";
@@ -34,6 +33,15 @@ function NavBar() {
   const [openSubSubSubcourse, setOpenSubSubSubcourse] = useState(null);
   const [openThirdLevel, setOpenThirdLevel] = useState(null);
   const [openFourthLevel, setOpenFourthLevel] = useState(null);
+  // How deep the mobile menu is, so going back can slide in from the left instead of the right
+  const menuDepth = [openDropdown, openSubcourse, openThirdLevel, openSubSubcourse, openSubSubSubcourse, openFourthLevel].filter(Boolean).length;
+  const [prevMenuDepth, setPrevMenuDepth] = useState(menuDepth);
+  const [menuGoingBack, setMenuGoingBack] = useState(false);
+  if (menuDepth !== prevMenuDepth) {
+    setPrevMenuDepth(menuDepth);
+    setMenuGoingBack(menuDepth < prevMenuDepth);
+  }
+  const subPanelClass = `mobile-menu-sub${menuGoingBack ? " mobile-menu-back" : ""}`;
   const { logout, profile: sessionProfile } = useAuth();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [profile, setProfile] = useState(sessionProfile);
@@ -43,30 +51,25 @@ function NavBar() {
   const location = useLocation();
 
   useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
-    if (!accessToken) {
-      return;
-    }
-
     let isMounted = true;
 
     async function checkSession() {
       try {
         const response = await fetch(`${API_URL}/auth/profile`, {
-          headers: { Authorization: `Bearer ${accessToken}` },
+          credentials: "include",
         });
 
-        if (isMounted && !response.ok) {
-          localStorage.removeItem("accessToken");
-        }
-        if (isMounted) {
-          setProfile(await response.json());
-          setIsAuthenticated(response.ok);
-        }
-      } catch {
-        if (isMounted) {
+        if (!isMounted) return;
+        if (!response.ok) {
+          setProfile(null);
           setIsAuthenticated(false);
+          return;
         }
+        setProfile(await response.json());
+        setIsAuthenticated(true);
+      } catch (error) {
+        console.error("Unable to verify the navigation session.", error);
+        if (isMounted) setIsAuthenticated(false);
       }
     }
 
@@ -87,7 +90,6 @@ function NavBar() {
 
   function handleLogout() {
     logout();
-    setIsAuthenticated(false);
     setIsOpen(false);
     setIsProfileOpen(false);
     navigate("/login");
@@ -125,7 +127,7 @@ function NavBar() {
         onClick={closeProfile}
         className="profile-menu-fade-in fixed inset-0 z-[55] cursor-default bg-slate-950/25"
       />
-      <aside className="profile-menu-fade-in fixed right-0 top-0 z-[60] box-border flex h-dvh max-h-dvh w-[min(27rem,100vw)] max-w-full flex-col overflow-x-hidden bg-white text-slate-900 shadow-2xl">
+      <aside className="profile-panel-slide fixed right-0 top-0 z-[60] box-border flex h-dvh max-h-dvh w-[min(27rem,100vw)] max-w-full flex-col overflow-x-hidden bg-white text-slate-900 shadow-2xl">
       <div className="relative min-h-[6.5rem] shrink-0 overflow-hidden bg-gradient-to-br from-[#eef6ff] to-[#f7fbff] px-6 py-5">
         <div className="absolute -right-8 -top-10 h-32 w-52 rounded-full border border-white/80" />
         <div className="absolute -bottom-16 right-12 h-32 w-64 rounded-full border border-white/80" />
@@ -407,7 +409,7 @@ function NavBar() {
 
   return (
     <header
-      className={`flex flex-row items-center justify-between py-4 bg-white sticky top-0 z-50 ${t} px-[2.063rem] md:px-16 xl:px-[7.438rem] ${scrolled ? "shadow-md" : ""}`}
+      className={`flex flex-row items-center justify-between py-4 bg-white border-b border-slate-200 sticky top-0 z-50 ${t} px-[2.063rem] md:px-16 xl:px-[7.438rem] ${scrolled ? "shadow-md" : ""}`}
     >
       {/* Logo */}
       <button
@@ -847,6 +849,16 @@ function NavBar() {
               : <CircleUserRound aria-hidden="true" size={30} strokeWidth={1.7} />}
           </button>
         )}
+        {/* Logged-out visitors get a Login shortcut here instead (not needed on the login page itself) */}
+        {!isAuthenticated && location.pathname !== "/login" && (
+          <button
+            type="button"
+            onClick={() => { setIsOpen(false); navigate("/login"); }}
+            className="rounded-full bg-[#1775EE] px-4 py-1.5 text-sm font-medium text-white transition-all duration-300 hover:bg-[#0062E0]"
+          >
+            Login
+          </button>
+        )}
         <button
           onClick={() => setIsOpen(!isOpen)}
           aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
@@ -854,7 +866,8 @@ function NavBar() {
           className="focus:outline-none"
         >
           <svg
-            className={`w-7 h-7 text-[#1775EE] ${t}`}
+            key={isOpen ? "close" : "open"}
+            className={`menu-icon-swap w-7 h-7 text-[#1775EE] ${t}`}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -879,7 +892,7 @@ function NavBar() {
 
         {/* Main Menu - Full Screen */}
         {isOpen && !openDropdown && (
-          <div className="fixed inset-0 bg-white z-50 flex flex-col animate-in fade-in duration-300">
+          <div className={`fixed inset-0 bg-white z-50 flex flex-col ${menuGoingBack ? subPanelClass : "mobile-menu-panel"}`}>
             <div className="flex items-center justify-between py-4 px-8 border-b border-gray-200">
               <button
                 onClick={handleHomeClick}
@@ -907,7 +920,7 @@ function NavBar() {
               </button>
             </div>
 
-            <nav className="flex-1 flex flex-col mt-[6vh] px-6 space-y-6 font-poppins font-bold">
+            <nav className="mobile-menu-stagger flex-1 flex flex-col mt-[6vh] px-6 space-y-6 font-poppins font-bold">
               <button
                 onClick={handleHomeClick}
                 className={`text-2xl font-semibold text-left text-black hover:text-[#1775EE] ${t}`}
@@ -1025,11 +1038,11 @@ function NavBar() {
 
         {/* Solutions Mobile — Level 1 */}
         {openDropdown === "solutions-mobile" && !openSubcourse && (
-          <div className="fixed inset-0 bg-white z-50 flex flex-col">
-            <div className="flex items-center p-6 border-b border-gray-200">
+          <div className={`fixed inset-0 bg-white z-50 flex flex-col ${subPanelClass}`}>
+            <div className="flex flex-col items-start gap-1.5 px-6 py-5 border-b border-gray-200">
               <button
                 onClick={() => setOpenDropdown(null)}
-                className="focus:outline-none mr-4"
+                className="-ml-1.5 flex items-center gap-0.5 text-base font-semibold text-[#1775EE] focus:outline-none"
               >
                 <svg
                   className={`w-6 h-6 text-[#1775EE] ${t}`}
@@ -1044,8 +1057,9 @@ function NavBar() {
                     d="M15 19l-7-7 7-7"
                   />
                 </svg>
+                Back
               </button>
-              <h2 className="text-xl font-bold text-[#1775EE] font-poppins">
+              <h2 className="mobile-menu-title text-xl font-bold text-[#1775EE] font-poppins">
                 Solutions
               </h2>
             </div>
@@ -1081,11 +1095,11 @@ function NavBar() {
         {openDropdown === "solutions-mobile" &&
           openSubcourse &&
           !openThirdLevel && (
-            <div className="fixed inset-0 bg-white z-50 flex flex-col">
-              <div className="flex items-center p-6 border-b border-gray-200">
+            <div className={`fixed inset-0 bg-white z-50 flex flex-col ${subPanelClass}`}>
+              <div className="flex flex-col items-start gap-1.5 px-6 py-5 border-b border-gray-200">
                 <button
                   onClick={() => setOpenSubcourse(null)}
-                  className="focus:outline-none mr-4"
+                  className="-ml-1.5 flex items-center gap-0.5 text-base font-semibold text-[#1775EE] focus:outline-none"
                 >
                   <svg
                     className={`w-6 h-6 text-[#1775EE] ${t}`}
@@ -1100,8 +1114,9 @@ function NavBar() {
                       d="M15 19l-7-7 7-7"
                     />
                   </svg>
+                  Back
                 </button>
-                <h2 className="text-xl font-bold text-[#1775EE] font-poppins">
+                <h2 className="mobile-menu-title text-xl font-bold text-[#1775EE] font-poppins">
                   Solutions / {openSubcourse}
                 </h2>
               </div>
@@ -1150,11 +1165,11 @@ function NavBar() {
         {openDropdown === "solutions-mobile" &&
           openSubcourse &&
           openThirdLevel && (
-            <div className="fixed inset-0 bg-white z-50 flex flex-col">
-              <div className="flex items-center p-6 border-b border-gray-200">
+            <div className={`fixed inset-0 bg-white z-50 flex flex-col ${subPanelClass}`}>
+              <div className="flex flex-col items-start gap-1.5 px-6 py-5 border-b border-gray-200">
                 <button
                   onClick={() => setOpenThirdLevel(null)}
-                  className="focus:outline-none mr-4"
+                  className="-ml-1.5 flex items-center gap-0.5 text-base font-semibold text-[#1775EE] focus:outline-none"
                 >
                   <svg
                     className={`w-6 h-6 text-[#1775EE] ${t}`}
@@ -1169,8 +1184,9 @@ function NavBar() {
                       d="M15 19l-7-7 7-7"
                     />
                   </svg>
+                  Back
                 </button>
-                <h2 className="text-xl font-bold text-[#1775EE] font-poppins">
+                <h2 className="mobile-menu-title text-xl font-bold text-[#1775EE] font-poppins">
                   Solutions / {openSubcourse} / {openThirdLevel}
                 </h2>
               </div>
@@ -1200,11 +1216,11 @@ function NavBar() {
           
         {/* Training Mobile — Level 1 */}
         {openDropdown === "training-mobile" && !openSubcourse && (
-          <div className="fixed inset-0 bg-white z-50 flex flex-col">
-            <div className="flex items-center p-6 border-b border-gray-200">
+          <div className={`fixed inset-0 bg-white z-50 flex flex-col ${subPanelClass}`}>
+            <div className="flex flex-col items-start gap-1.5 px-6 py-5 border-b border-gray-200">
               <button
                 onClick={() => setOpenDropdown(null)}
-                className="focus:outline-none mr-4"
+                className="-ml-1.5 flex items-center gap-0.5 text-base font-semibold text-[#1775EE] focus:outline-none"
               >
                 <svg
                   className={`w-6 h-6 text-[#1775EE] ${t}`}
@@ -1219,8 +1235,9 @@ function NavBar() {
                     d="M15 19l-7-7 7-7"
                   />
                 </svg>
+                Back
               </button>
-              <h2 className="text-xl font-bold text-[#1775EE] font-poppins">
+              <h2 className="mobile-menu-title text-xl font-bold text-[#1775EE] font-poppins">
                 Training
               </h2>
             </div>
@@ -1256,11 +1273,11 @@ function NavBar() {
         {openDropdown === "training-mobile" &&
           openSubcourse &&
           !openThirdLevel && (
-            <div className="fixed inset-0 bg-white z-50 flex flex-col">
-              <div className="flex items-center p-6 border-b border-gray-200">
+            <div className={`fixed inset-0 bg-white z-50 flex flex-col ${subPanelClass}`}>
+              <div className="flex flex-col items-start gap-1.5 px-6 py-5 border-b border-gray-200">
                 <button
                   onClick={() => setOpenSubcourse(null)}
-                  className="focus:outline-none mr-4"
+                  className="-ml-1.5 flex items-center gap-0.5 text-base font-semibold text-[#1775EE] focus:outline-none"
                 >
                   <svg
                     className={`w-6 h-6 text-[#1775EE] ${t}`}
@@ -1275,8 +1292,9 @@ function NavBar() {
                       d="M15 19l-7-7 7-7"
                     />
                   </svg>
+                  Back
                 </button>
-                <h2 className="text-xl font-bold text-[#1775EE] font-poppins">
+                <h2 className="mobile-menu-title text-xl font-bold text-[#1775EE] font-poppins">
                   Training/{openSubcourse}
                 </h2>
               </div>
@@ -1325,11 +1343,11 @@ function NavBar() {
         {openDropdown === "training-mobile" &&
           openThirdLevel &&
           !openFourthLevel && (
-            <div className="fixed inset-0 bg-white z-50 flex flex-col">
-              <div className="flex items-center p-6 border-b border-gray-200">
+            <div className={`fixed inset-0 bg-white z-50 flex flex-col ${subPanelClass}`}>
+              <div className="flex flex-col items-start gap-1.5 px-6 py-5 border-b border-gray-200">
                 <button
                   onClick={() => setOpenThirdLevel(null)}
-                  className="focus:outline-none mr-4"
+                  className="-ml-1.5 flex items-center gap-0.5 text-base font-semibold text-[#1775EE] focus:outline-none"
                 >
                   <svg
                     className={`w-6 h-6 text-[#1775EE] ${t}`}
@@ -1344,8 +1362,9 @@ function NavBar() {
                       d="M15 19l-7-7 7-7"
                     />
                   </svg>
+                  Back
                 </button>
-                <h2 className="text-xl font-bold text-[#1775EE] font-poppins">
+                <h2 className="mobile-menu-title text-xl font-bold text-[#1775EE] font-poppins">
                   Training/{openSubcourse}/{openThirdLevel}
                 </h2>
               </div>
@@ -1402,11 +1421,11 @@ function NavBar() {
 
         {/* Training Mobile — Level 4 */}
         {openDropdown === "training-mobile" && openFourthLevel && (
-          <div className="fixed inset-0 bg-white z-50 flex flex-col">
-            <div className="flex items-center p-6 border-b border-gray-200">
+          <div className={`fixed inset-0 bg-white z-50 flex flex-col ${subPanelClass}`}>
+            <div className="flex flex-col items-start gap-1.5 px-6 py-5 border-b border-gray-200">
               <button
                 onClick={() => setOpenFourthLevel(null)}
-                className="focus:outline-none mr-4"
+                className="-ml-1.5 flex items-center gap-0.5 text-base font-semibold text-[#1775EE] focus:outline-none"
               >
                 <svg
                   className={`w-6 h-6 text-[#1775EE] ${t}`}
@@ -1421,8 +1440,9 @@ function NavBar() {
                     d="M15 19l-7-7 7-7"
                   />
                 </svg>
+                Back
               </button>
-              <h2 className="text-xl font-bold text-[#1775EE] font-poppins">
+              <h2 className="mobile-menu-title text-xl font-bold text-[#1775EE] font-poppins">
                 Training/{openSubcourse}/{openFourthLevel}
               </h2>
             </div>

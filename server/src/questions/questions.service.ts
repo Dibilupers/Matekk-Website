@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateQuestionDto } from './dto/questions.dto.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 
@@ -8,6 +8,10 @@ export class QuestionsService {
     constructor(private prisma: PrismaService) { }
 
     create(data: CreateQuestionDto) {
+        if (!data.choices.includes(data.correct_answer)) {
+          throw new BadRequestException('The correct answer must be one of the question choices.');
+        }
+
         return this.prisma.questionsRls.create({
             data: {
                 module: data.module,

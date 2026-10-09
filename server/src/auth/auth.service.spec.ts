@@ -4,6 +4,7 @@ import { AuthService } from './auth.service.js';
 import { PasswordService } from './password.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { UsersService, type User } from '../users/users.service.js';
+import { EmailService } from '../email/email.service.js';
 
 describe('AuthService', () => {
   const user: User = {
@@ -32,6 +33,8 @@ describe('AuthService', () => {
     const findMany = vi.fn(async () => []);
     const create = vi.fn(async () => user);
     const update = vi.fn(async () => user);
+    const sendUserStatusEmail = vi.fn(async () => undefined);
+    const sendAdminNotification = vi.fn(async () => undefined);
     const service = new AuthService(
       { findOne, findById } as unknown as UsersService,
       { signAsync } as unknown as import('@nestjs/jwt').JwtService,
@@ -40,12 +43,16 @@ describe('AuthService', () => {
         users: { findFirst, findUnique, create, update },
         enrollment: { findMany },
       } as unknown as PrismaService,
+      { sendUserStatusEmail, sendAdminNotification } as unknown as EmailService,
     );
 
-    return { service, findOne, findById, signAsync, hash, verify, needsRehash, findFirst, findUnique, findMany, create, update };
+    return {
+      service, findOne, findById, signAsync, hash, verify, needsRehash, findFirst, findUnique, findMany, create, update,
+      sendUserStatusEmail, sendAdminNotification,
+    };
   }
 
-  it('stores a hashed password and required enrollment field at registration', async () => {
+  it('stores a hashed password and selected full-program enrollment at registration', async () => {
     const mocks = createService({ hash: '$argon2id$registration-hash' });
 
     await expect(mocks.service.register({
@@ -72,8 +79,38 @@ describe('AuthService', () => {
         birth_date: new Date('2000-01-02'),
         gender: 'Female',
         city_province: 'Rizal',
+        active_status: false,
+        pending_status: 'Pending',
         enrollments: { create: { programId: 4 } },
       },
+    });
+    expect(mocks.create.mock.calls[0][0].data.enrollments).toEqual({
+      create: { programId: 4 },
+    });
+    expect(mocks.sendUserStatusEmail).toHaveBeenCalledWith(
+      { name: 'Sample Student', email: 'student@example.com' },
+      'pending',
+    );
+    expect(mocks.sendAdminNotification).toHaveBeenCalledWith({
+      name: 'Sample Student',
+      email: 'student@example.com',
+    });
+  });
+
+  it('stores the selected module id rather than its parent when registering for one module', async () => {
+    const mocks = createService();
+
+    await mocks.service.register({
+      username: 'module-student',
+      email: 'module@example.com',
+      password: 'plain-password',
+      programId: 9,
+      firstName: 'Module',
+      lastName: 'Student',
+    });
+
+    expect(mocks.create.mock.calls[0][0].data.enrollments).toEqual({
+      create: { programId: 9 },
     });
   });
 

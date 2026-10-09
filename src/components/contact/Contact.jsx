@@ -195,7 +195,7 @@ export default function ContactForm() {
           <label htmlFor="name">Full Name</label>
           <span className="text-red-400">*</span>
         </div>
-        <input id="name" name="name" type="text" className="contact_form_input" required />
+        <input id="name" name="name" type="text" placeholder="e.g. Juan Dela Cruz" className="contact_form_input" required />
       </div>
 
       {/* Email & Phone */}
@@ -205,14 +205,14 @@ export default function ContactForm() {
             <label htmlFor="email">Email</label>
             <span className="text-red-400">*</span>
           </div>
-          <input id="email" name="email" type="email" className="contact_form_input" required />
+          <input id="email" name="email" type="email" placeholder="e.g. juan.delacruz@gmail.com" className="contact_form_input" required />
         </div>
         <div className="flex flex-col space-y-1 w-full">
           <div className="flex items-center space-x-1">
             <label htmlFor="phone">Mobile Number</label>
             <span className="text-red-400">*</span>
           </div>
-          <input id="phone" name="phone" type="tel" className="contact_form_input" required />
+          <input id="phone" name="phone" type="tel" placeholder="e.g. 0917 123 4567" className="contact_form_input" required />
         </div>
       </div>
 
@@ -222,7 +222,7 @@ export default function ContactForm() {
           <label htmlFor="subject">Subject</label>
           <span className="text-red-400">*</span>
         </div>
-        <input id="subject" name="subject" type="text" className="contact_form_input" required />
+        <input id="subject" name="subject" type="text" placeholder="e.g. CCNA training schedule" className="contact_form_input" required />
       </div>
 
       {/* Message */}
@@ -234,6 +234,7 @@ export default function ContactForm() {
         <textarea
           id="message"
           name="message"
+          placeholder="e.g. Hi! I would like to ask about the next CCNA batch and the training fee."
           className="contact_form_input h-32 resize-none"
           required
         />

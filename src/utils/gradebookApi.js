@@ -1,11 +1,5 @@
 import API_URL from "../config/api";
 
-function getAccessToken() {
-	const token = window.localStorage.getItem("accessToken");
-	if (!token) throw new Error("Sign in to save or view gradebook results.");
-	return token;
-}
-
 async function readResponse(response) {
 	if (!response.ok) {
 		throw new Error(`Gradebook request failed (${response.status}).`);
@@ -21,7 +15,7 @@ async function readResponse(response) {
 
 export async function readGradebookAssessments(programKey) {
 	const response = await fetch(`${API_URL}/gradebook/${encodeURIComponent(programKey)}`, {
-		headers: { Authorization: `Bearer ${getAccessToken()}` },
+		credentials: "include",
 	});
 	const gradebook = await readResponse(response);
 	const assessments = gradebook?.data?.assessments;
@@ -52,8 +46,8 @@ export async function saveGradebookAssessments(programKey, assessments) {
 	const assessmentMap = Object.fromEntries(assessments.map((assessment) => [assessment.id, assessment]));
 	const response = await fetch(`${API_URL}/gradebook/${encodeURIComponent(programKey)}`, {
 		method: "PUT",
+		credentials: "include",
 		headers: {
-			Authorization: `Bearer ${getAccessToken()}`,
 			"Content-Type": "application/json",
 		},
 		body: JSON.stringify({ data: { assessments: assessmentMap } }),

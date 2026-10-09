@@ -1,21 +1,25 @@
 
-import { BadRequestException, ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { Prisma } from '../generated/prisma/client.js';
 import { UsersService } from '../users/users.service.js';
-import { JwtService } from '@nestjs/jwt'
+import { JwtService } from '@nestjs/jwt';
 import { PasswordService } from './password.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { RegisterDto } from './dto/register.dto.js';
 import { UpdateProfileDto } from './dto/profile.dto.js';
 import { ChangePasswordDto } from './dto/change-password.dto.js';
 import { ProfilePhotoDto } from './dto/profile-photo.dto.js';
+import { EmailService } from '../email/email.service.js';
 
 @Injectable()
 export class AuthService {
+    private readonly logger = new Logger(AuthService.name);
+
     constructor(private readonly usersService: UsersService,
         private readonly jwtService: JwtService,
         private readonly passwords: PasswordService,
         private readonly prisma: PrismaService,
+        private readonly emailService: EmailService,
     ) { }
 
     findRegistrationPrograms() {
@@ -32,27 +36,63 @@ export class AuthService {
     }
 
     async register(dto: RegisterDto) {
+        const normalizedUsername = dto.username.trim();
+        const normalizedEmail = dto.email.trim().toLowerCase();
+        const normalizedFirstName = dto.firstName.trim();
+        const normalizedLastName = dto.lastName.trim();
+
+        if (!normalizedUsername || !normalizedEmail || !normalizedFirstName || !normalizedLastName) {
+            throw new BadRequestException('Please complete all required registration fields.');
+        }
+
         const exists = await this.prisma.users.findFirst({
-            where: { OR: [{ username: dto.username }, { email: dto.email }] }
+            where: { OR: [{ username: { equals: normalizedUsername, mode: 'insensitive' } }, { email: { equals: normalizedEmail, mode: 'insensitive' } }] }
         });
         if (exists) throw new ConflictException('Username or email already in use');
 
         const password = await this.passwords.hash(dto.password);
 
-        await this.prisma.users.create({
-            data: {
-                username: dto.username,
-                email: dto.email,
-                password,
-                role: 'Student',
-                programs_enrolled: '',
-                first_name: dto.firstName,
-                last_name: dto.lastName,
-                birth_date: dto.birthdate ? new Date(dto.birthdate) : undefined,
-                gender: dto.gender,
-                city_province: dto.city,
-                enrollments: { create: { programId: dto.programId } },
-            },
+        try {
+            await this.prisma.users.create({
+                data: {
+                    username: normalizedUsername,
+                    email: normalizedEmail,
+                    password,
+                    role: 'Student',
+                    programs_enrolled: '',
+                    first_name: normalizedFirstName,
+                    last_name: normalizedLastName,
+                    birth_date: dto.birthdate ? new Date(dto.birthdate) : new Date(),
+                    gender: dto.gender ?? null,
+                    city_province: dto.city ?? '',
+                    active_status: false,
+                    pending_status: 'Pending',
+                    enrollments: { create: { programId: dto.programId } },
+                },
+            });
+        } catch (error) {
+            if (
+                error instanceof Prisma.PrismaClientKnownRequestError &&
+                error.code === 'P2002'
+            ) {
+                throw new ConflictException('Username or email already in use');
+            }
+            throw error;
+        }
+
+        const applicant = {
+            name: `${normalizedFirstName} ${normalizedLastName}`,
+            email: normalizedEmail,
+        };
+        const notifications = await Promise.allSettled([
+            this.emailService.sendUserStatusEmail(applicant, 'pending'),
+            this.emailService.sendAdminNotification(applicant),
+        ]);
+        notifications.forEach((result, index) => {
+            if (result.status === 'rejected') {
+                const notification = index === 0 ? 'applicant pending-status email' : 'admin registration notification';
+                this.logger.error(`Unable to send ${notification}.`, String(result.reason));
+            }
         });
 
         return { message: 'Registration submitted. Please wait for approval.' }

@@ -35,6 +35,11 @@ $ npm install
 
 Prisma Client is generated automatically before building or starting the server.
 Make sure `DATABASE_URL` is set in `server/.env`.
+Automatic registration and approval emails use EmailJS. Configure
+`EMAILJS_SERVICE_ID`, `EMAILJS_PUBLIC_KEY`, `EMAILJS_PRIVATE_KEY`,
+`EMAILJS_USER_TEMPLATE_ID`, and `EMAILJS_ADMIN_TEMPLATE_ID`. Set
+`FRONTEND_URL` to the deployed website origin so the administrator
+notification links to the correct request review page.
 Observe telemetry is optional. To enable it, set both `OBSERVE_APP_KEY` and
 `OBSERVE_APP_SECRET`; otherwise telemetry is disabled. `OBSERVE_SERVICE_ID`
 defaults to `server`.

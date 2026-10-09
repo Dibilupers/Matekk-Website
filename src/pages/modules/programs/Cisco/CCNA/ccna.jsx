@@ -14,9 +14,7 @@ import {
 	CircleAlert,
 	ClipboardList,
 	Clock3,
-	MessageSquare,
-	Pencil,
-	Settings,
+	FileQuestion,
 	X,
 } from "lucide-react";
 import {
@@ -36,6 +34,7 @@ import {
 import { readCcnaExamProgress, readCcnaShortExamProgress } from "../../../../../utils/ccnaShortExamSession";
 import { readCcnaMockExamResults } from "../../../../../utils/ccnaGradebook";
 import { CCNA_EXAMS } from "./ccnaExamFormats";
+import useGradebookQuizStats from "../../useGradebookQuizStats";
 
 const modules = CCNA_CURRICULUM.map((section) => ({
 	...section,
@@ -46,48 +45,6 @@ const EXAM_FORMATS = [
 	{ name: "Medium Exam", questions: CCNA_EXAMS.medium.questionCount, duration: "1 hour & 30 mins", description: "A balanced, longer practice session." },
 	{ name: "Long Exam", questions: CCNA_EXAMS.long.questionCount, duration: "2 hours", description: "A full-length practice session." },
 ];
-const SHORT_EXAM_SESSION_KEY = "matekk-ccna-short-exam-session";
-
-function getShortExamSessionKey(userId) {
-	if ((typeof userId !== "string" && typeof userId !== "number") || String(userId).trim() === "") return null;
-	return `${SHORT_EXAM_SESSION_KEY}:${encodeURIComponent(String(userId))}`;
-}
-
-function readShortExamProgress(userId) {
-	const sessionKey = getShortExamSessionKey(userId);
-	if (!sessionKey) return { status: "not-started", deadline: null, answeredCount: 0, score: 0 };
-	const savedSession = window.sessionStorage.getItem(sessionKey);
-	if (!savedSession) return { status: "not-started", deadline: null, answeredCount: 0, score: 0 };
-
-	try {
-		const session = JSON.parse(savedSession);
-		if (
-			!session ||
-			!Array.isArray(session.questions) ||
-			!session.answers ||
-			typeof session.answers !== "object" ||
-			!Number.isFinite(session.deadline) ||
-			typeof session.isSubmitted !== "boolean"
-		) {
-			throw new TypeError("Saved CCNA short exam progress has an invalid structure.");
-		}
-		const score = session.questions.reduce(
-			(total, question, index) => total + Number(session.answers[index] === question.answer),
-			0,
-		);
-		const isExpired = !session.isSubmitted && session.deadline <= Date.now();
-		return {
-			status: session.isSubmitted ? "completed" : isExpired ? "expired" : "in-progress",
-			deadline: session.isSubmitted || isExpired ? null : session.deadline,
-			answeredCount: Object.keys(session.answers).length,
-			score,
-		};
-	} catch (error) {
-		console.error("Unable to restore the saved CCNA short exam status.", error);
-		return { status: "not-started", deadline: null, answeredCount: 0, score: 0 };
-	}
-}
-
 function formatExamTime(totalSeconds) {
 	const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, "0");
 	const seconds = (totalSeconds % 60).toString().padStart(2, "0");
@@ -105,10 +62,10 @@ const HERO_INTROS = [
 function Stat({ value, label }) {
 	return (
 		<div className="flex min-w-0 flex-col items-start gap-1 sm:flex-row sm:items-center sm:gap-3">
-			<strong className="text-xl leading-none tracking-tight text-[#071126] sm:text-[2rem]">
+			<strong className="text-xl leading-none tracking-tight text-[#071126] transition-colors duration-200 lg:group-hover/stats:text-white sm:text-[2rem]">
 				{value}
 			</strong>
-			<span className="text-[11px] leading-tight text-[#6f7d99] sm:max-w-20 sm:text-sm">
+			<span className="text-[11px] leading-tight text-[#6f7d99] transition-colors duration-200 lg:group-hover/stats:text-white sm:max-w-20 sm:text-sm">
 				{label}
 			</span>
 		</div>
@@ -143,6 +100,7 @@ function getDashboardExamCards(examResults, examProgress) {
 function NetworkIllustration({ quizAverage, examCards }) {
 	const { profile } = useAuth();
 	const [examCardIndex, setExamCardIndex] = useState(0);
+	const [isExamCardOpen, setIsExamCardOpen] = useState(false);
 	const examCard = examCards[examCardIndex];
 	const starsFill = `${Math.max(0, Math.min(100, quizAverage))}%`;
 	const hasExamResult = examCard.hasResult;
@@ -159,7 +117,7 @@ function NetworkIllustration({ quizAverage, examCards }) {
 	}
 
 	return (
-		<div className="relative mx-auto h-[320px] w-full max-w-[440px] sm:h-[380px] sm:max-w-[470px]">
+		<div className="relative order-2 mx-auto h-[320px] w-full max-w-[440px] sm:order-none sm:h-[380px] sm:max-w-[470px]">
 			<div aria-hidden="true" className="absolute left-1/2 top-1/2 h-[270px] w-[270px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#e4f0f1] sm:h-[356px] sm:w-[356px]" />
 			<img
 				src={CcnaLogo}
@@ -167,7 +125,7 @@ function NetworkIllustration({ quizAverage, examCards }) {
 				aria-hidden="true"
 				className="absolute left-1/2 top-1/2 z-10 h-[210px] w-[210px] -translate-x-1/2 -translate-y-1/2 object-contain sm:h-[270px] sm:w-[270px]"
 			/>
-			<div className="absolute left-0 top-[31%] z-30 flex h-[94px] w-[128px] flex-col justify-center rounded-xl border border-[#e4eaf5] bg-white px-4 shadow-[0_14px_28px_rgba(15,35,75,0.1)] transition-transform duration-200 ease-out hover:scale-105 motion-reduce:transition-none motion-reduce:hover:scale-100 sm:left-[-4px]">
+			<div className="absolute left-0 top-[2%] z-30 flex h-[94px] w-[128px] flex-col justify-center rounded-xl border border-[#e4eaf5] bg-white px-4 shadow-[0_14px_28px_rgba(15,35,75,0.1)] transition-transform duration-200 ease-out hover:scale-105 motion-reduce:transition-none motion-reduce:hover:scale-100 sm:left-[-4px] sm:top-[31%]">
 				<strong className="text-xl leading-none text-[#005b6b]">{quizAverage}%</strong>
 				<span className="mt-2 text-sm leading-none text-[#15203a]">Quiz score</span>
 				<span
@@ -183,19 +141,33 @@ function NetworkIllustration({ quizAverage, examCards }) {
 				to="/modules/programs/ccna/results"
 				aria-label="Open CCNA gradebook"
 				title="Gradebook"
-				className="absolute right-[12%] top-[2%] z-30 flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#005b6b] shadow-[0_8px_20px_rgba(15,35,75,0.1)] transition-all duration-200 ease-out hover:-translate-y-1 hover:scale-110 hover:shadow-lg active:translate-y-0 motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:hover:scale-100"
+				className="absolute right-[12%] top-[2%] z-30 hidden h-12 w-12 items-center justify-center rounded-full bg-white text-[#005b6b] shadow-[0_8px_20px_rgba(15,35,75,0.1)] transition-all duration-200 ease-out hover:-translate-y-1 hover:scale-110 hover:shadow-lg active:translate-y-0 motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:hover:scale-100 sm:flex"
 			>
 				<ClipboardList size={21} />
 			</Link>
-			<div className="absolute right-0 top-[17%] z-30 flex h-12 w-12 items-center justify-center rounded-full bg-[#005b6b] text-white shadow-lg transition-transform duration-200 ease-out hover:scale-110 motion-reduce:transition-none motion-reduce:hover:scale-100"><Settings size={21} /></div>
-			<div className="absolute right-[-4px] top-[32%] z-30 flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#005b6b] shadow-[0_8px_20px_rgba(15,35,75,0.1)] transition-transform duration-200 ease-out hover:scale-110 motion-reduce:transition-none motion-reduce:hover:scale-100"><Pencil size={18} /></div>
-			<div className="absolute right-[2%] top-[70%] z-30 flex h-12 w-12 items-center justify-center rounded-full bg-[#005b6b] text-white shadow-lg transition-transform duration-200 ease-out hover:scale-110 motion-reduce:transition-none motion-reduce:hover:scale-100"><MessageSquare size={19} /></div>
-			<div key={examCardIndex} className="ccna-notification-boink absolute bottom-0 right-0 z-30 w-[238px] rounded-2xl border border-[#e4eaf5] bg-white p-4 shadow-[0_14px_28px_rgba(15,35,75,0.1)] transition-transform duration-200 ease-out hover:scale-[1.03] motion-reduce:transition-none motion-reduce:hover:scale-100 sm:right-[-2%] sm:w-[275px]">
+			<button
+				type="button"
+				onClick={() => setIsExamCardOpen((isOpen) => !isOpen)}
+				aria-label={isExamCardOpen ? "Close exam notification" : `Open ${examCard.name} exam notification`}
+				aria-expanded={isExamCardOpen}
+				className="absolute bottom-2 right-2 z-30 flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#005b6b] shadow-[0_8px_20px_rgba(15,35,75,0.1)] transition-all duration-200 ease-out hover:-translate-y-1 hover:scale-110 hover:shadow-lg active:translate-y-0 motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:hover:scale-100 sm:hidden"
+			>
+				<FileQuestion size={21} />
+			</button>
+			<div key={examCardIndex} className={`ccna-notification-boink absolute bottom-0 right-0 z-30 w-[210px] flex-col rounded-2xl border border-[#e4eaf5] bg-white p-3 shadow-[0_14px_28px_rgba(15,35,75,0.1)] transition-transform duration-200 ease-out hover:scale-[1.03] motion-reduce:transition-none motion-reduce:hover:scale-100 sm:right-[-2%] sm:w-[275px] sm:p-4 ${isExamCardOpen ? "flex" : "hidden"} sm:flex`}>
+				<button
+					type="button"
+					onClick={() => setIsExamCardOpen(false)}
+					aria-label="Close exam notification"
+					className="absolute right-2 top-2 inline-flex h-7 w-7 items-center justify-center rounded-full text-[#64708a] transition hover:bg-[#f0f7f7] hover:text-[#005b6b] sm:hidden"
+				>
+					<X size={16} />
+				</button>
 				<button
 					type="button"
 					onClick={showNextExamCard}
 					aria-label={`Show next exam notification. Showing ${examCard.name}, ${examCardIndex + 1} of ${examCards.length}.`}
-					className="block w-full rounded-lg text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#005b6b]"
+					className="block w-full rounded-lg pr-7 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#005b6b] sm:pr-0"
 				>
 					<div className="flex items-center justify-between gap-2">
 						<strong className="text-sm text-[#005b6b]">{profile?.username}</strong>
@@ -230,7 +202,7 @@ function NetworkIllustration({ quizAverage, examCards }) {
 							maxScore: examCard.maxScore,
 						},
 					} : undefined}
-					className="mt-3 flex h-11 w-full items-center justify-center rounded-full bg-[#005b6b] text-sm font-bold text-white transition-all duration-200 ease-out hover:scale-105 hover:bg-[#004653] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100"
+					className="mt-3 flex h-10 w-full items-center justify-center rounded-full bg-[#005b6b] text-sm font-bold text-white transition-all duration-200 ease-out hover:scale-105 hover:bg-[#004653] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100 sm:h-11"
 				>
 					{examActionLabel}
 				</Link>
@@ -540,7 +512,20 @@ export default function CCNA() {
 		module.tutorials.some((tutorial) => tutorialProgress.has(tutorial.number)),
 	);
 	const navigate = useNavigate();
-	const { quizAverage, attemptedModules, quizCoverage } = getQuizMetrics(quizProgress);
+	const localQuizMetrics = getQuizMetrics(quizProgress);
+	const {
+		stats: gradebookQuizStats,
+		error: gradebookStatsError,
+	} = useGradebookQuizStats(
+		"ccna",
+		userId,
+		CCNA_MODULE_QUIZZES,
+		localQuizMetrics.attemptedModules,
+		localQuizMetrics.quizAverage,
+	);
+	const quizAverage = gradebookQuizStats.average;
+	const attemptedModules = gradebookQuizStats.attempted;
+	const quizCoverage = Math.round((attemptedModules / CCNA_MODULE_QUIZZES.length) * 100);
 	const latestOpenedModuleNumber = [...savedOpenedModules].at(-1);
 	const lastOpenedTutorialNumber = [...tutorialProgress].at(-1);
 	const openedModuleDetails = modules.find((module) => module.number === latestOpenedModuleNumber) ??
@@ -677,29 +662,21 @@ export default function CCNA() {
 
 	return (
 		<main className="ccna-page-enter relative min-h-screen bg-white text-[#071126]">
-			{hasScrolled
-				? createPortal(
-					<Link
-						to="/pages/blank"
-						aria-label="Back"
-						className="fixed left-6 top-24 z-[60] text-[#005b6b] transition hover:text-[#004653] active:scale-95 lg:hidden"
-					>
-						<ArrowLeft size={28} strokeWidth={2.5} />
-					</Link>,
-					document.body,
-				)
-				: (
-					<Link
-						to="/pages/blank"
-						aria-label="Back"
-						className="absolute left-6 top-2 z-40 text-[#005b6b] transition hover:text-[#004653] active:scale-95 lg:hidden"
-					>
-						<ArrowLeft size={28} strokeWidth={2.5} />
-					</Link>
-				)}
+			{/* Phones/tablets: Back button pinned to the screen (outside the page's slide-in animation),
+			    so it stays still while the page moves; a white pill appears behind it once you scroll */}
+			{createPortal(
+				<Link
+					to="/pages/blank"
+					className={`fixed left-4 top-20 z-[60] flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-base font-bold text-[#005b6b] transition hover:text-[#004653] active:scale-95 lg:hidden ${hasScrolled ? "bg-white/90 shadow-md backdrop-blur-sm" : ""}`}
+				>
+					<ArrowLeft size={24} strokeWidth={2.5} /> Back
+				</Link>,
+				document.body,
+			)}
 			<section className="mx-auto max-w-[1440px] px-6 pb-16 pt-14 sm:px-10 lg:px-14 lg:pb-20 lg:pt-16">
 				<div className="grid items-center gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-4">
-					<div>
+					<div className="contents sm:block">
+						<div className="order-1 sm:order-none">
 						<div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#c9dfe2] bg-[#f0f7f7] px-4 py-2 text-sm font-semibold text-[#005b6b]">
 							<span className="h-2 w-2 rounded-full bg-[#005b6b]" />
 							Module {openedModuleDetails?.number.replace(".0", "") ?? "1"} of {modules.length} · {openedModuleDetails?.title ?? "Network Fundamentals"}
@@ -723,12 +700,16 @@ export default function CCNA() {
 							</button>
 							<button onClick={() => setIsQuizPickerOpen(true)} className="flex h-12 items-center gap-2 rounded-full bg-[#005b6b] px-5 text-sm font-bold text-white shadow-[0_10px_20px_rgba(0,91,107,0.16)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-[#004653] hover:shadow-[0_14px_26px_rgba(0,91,107,0.24)] active:translate-y-0 sm:h-[58px] sm:px-7 sm:text-base">{heroQuizLabel} <ArrowRight size={18} /></button>
 							<Link to="/modules/programs/ccna/knowledge-hub" className="flex h-12 items-center rounded-full border border-[#005b6b] px-5 text-sm font-bold text-[#005b6b] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-[#f0f7f7] hover:shadow-[0_10px_20px_rgba(0,91,107,0.12)] active:translate-y-0 sm:h-[58px] sm:px-7 sm:text-base">View All Modules</Link>
+							<Link to="/modules/programs/ccna/results" className="inline-flex h-12 items-center rounded-full border border-[#005b6b] px-5 text-sm font-bold text-[#005b6b] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-[#f0f7f7] hover:shadow-[0_10px_20px_rgba(0,91,107,0.12)] active:translate-y-0 sm:hidden">Gradebook</Link>
+							<Link to="/modules/programs/ccna/practice-lab" className="flex h-12 items-center gap-2 rounded-full border border-[#005b6b] px-5 text-sm font-bold text-[#005b6b] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-[#f0f7f7] hover:shadow-[0_10px_20px_rgba(0,91,107,0.12)] active:translate-y-0 sm:h-[58px] sm:px-7 sm:text-base">Practice Lab <ArrowRight size={18} /></Link>
 						</div>
-						<div className="mt-8 grid grid-cols-3 gap-2 sm:mt-11 sm:flex sm:flex-wrap sm:gap-5 sm:divide-x sm:divide-[#dce5f2]">
+						</div>
+						<div className="group/stats order-3 mt-8 inline-grid w-fit max-w-full grid-cols-3 gap-3 rounded-2xl border border-[#c9dfe2] bg-white p-4 shadow-[0_8px_24px_rgba(0,91,107,0.12)] transition-colors duration-200 lg:hover:border-[#005b6b] lg:hover:bg-[#005b6b] lg:hover:shadow-[0_12px_28px_rgba(0,91,107,0.24)] sm:order-none sm:mt-11 sm:flex sm:flex-wrap sm:gap-5 sm:divide-x sm:divide-[#c9dfe2] sm:p-5">
 							<Stat value={`${attemptedModules}/6`} label="Quizzes attempted" />
 							<div className="min-w-0 sm:pl-7"><Stat value={`${quizAverage}%`} label="Quiz average" /></div>
 							<div className="min-w-0 sm:pl-7"><Stat value={remainingModules} label="Modules left" /></div>
 						</div>
+						{gradebookStatsError && <p role="alert" className="mt-2 text-xs font-medium text-[#a44b13]">{gradebookStatsError}</p>}
 					</div>
 					<NetworkIllustration quizAverage={quizAverage} examCards={examCards} />
 				</div>

@@ -1,10 +1,24 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, UseGuards } from '@nestjs/common';
 import { EnrollmentsService } from './enrollments.service.js';
 import { AdminGuard } from '../auth/guards/admin.guard.js';
+import { ArrayMaxSize, ArrayMinSize, ArrayUnique, IsArray, IsDateString, IsInt, Min } from 'class-validator';
+import { Type } from 'class-transformer';
 
-interface CreateEnrollmentDto {
+class CreateEnrollmentDto {
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
   userId: number;
+
+  @IsArray()
+  @ArrayMinSize(1)
+  @ArrayMaxSize(100)
+  @ArrayUnique()
+  @IsInt({ each: true })
+  @Min(1, { each: true })
   programIds: number[];
+
+  @IsDateString()
   enrolledAt: string;
 }
 

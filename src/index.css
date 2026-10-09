@@ -89,6 +89,11 @@ h6 {
   @apply border px-2 py-2 border-[#1775EE] rounded-lg;
 }
 
+/* Dim example text inside the contact form boxes */
+.contact_form_input::placeholder {
+  color: #9ca3af;
+}
+
 .profile-menu-fade-in {
   animation: profile-menu-fade-in 180ms ease-out both;
 }
@@ -297,15 +302,14 @@ h6 {
   animation: typewriter-caret-blink 750ms steps(1, end) infinite;
 }
 
+/* Fade only, so the dashboard's Back links don't slide */
 @keyframes ccna-page-enter {
   from {
     opacity: 0;
-    transform: translateY(0.75rem);
   }
 
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 
@@ -644,3 +648,184 @@ h6 {
 .ccna-lab-theme > *:nth-child(3) { animation-delay: 180ms; }
 .ccna-lab-theme > *:nth-child(4) { animation-delay: 270ms; }
 @media (prefers-reduced-motion: reduce) { .ccna-lab-theme > * { animation: none; } }
+
+/* ---------- Mobile navigation menu ---------- */
+/* Full-screen menu: drops in softly when opened from the page; each submenu screen's contents slide in from the right (or left when going back). */
+.mobile-menu-panel {
+  animation: mobile-menu-drop 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* The white screen itself stays solid (so the page never flashes through between menu screens);
+   only its contents (title bar + list) slide in. */
+.mobile-menu-sub > * {
+  animation: mobile-menu-slide-in 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.mobile-menu-sub.mobile-menu-back > * {
+  animation-name: mobile-menu-slide-back;
+}
+
+/* The top bar (with the Back button) stays still like in phone apps; only the title inside it slides */
+.mobile-menu-sub > :first-child {
+  animation: none;
+}
+
+.mobile-menu-sub .mobile-menu-title {
+  animation: mobile-menu-slide-in 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.mobile-menu-sub.mobile-menu-back .mobile-menu-title {
+  animation-name: mobile-menu-slide-back;
+}
+
+/* Menu links fade up one after another */
+.mobile-menu-stagger > * {
+  animation: mobile-menu-item 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.mobile-menu-stagger > *:nth-child(1) { animation-delay: 40ms; }
+.mobile-menu-stagger > *:nth-child(2) { animation-delay: 80ms; }
+.mobile-menu-stagger > *:nth-child(3) { animation-delay: 120ms; }
+.mobile-menu-stagger > *:nth-child(4) { animation-delay: 160ms; }
+.mobile-menu-stagger > *:nth-child(5) { animation-delay: 200ms; }
+.mobile-menu-stagger > *:nth-child(6) { animation-delay: 240ms; }
+.mobile-menu-stagger > *:nth-child(7) { animation-delay: 280ms; }
+.mobile-menu-stagger > *:nth-child(n + 8) { animation-delay: 320ms; }
+
+/* Hamburger ↔ X: the icon spins in when it changes */
+.menu-icon-swap {
+  animation: menu-icon-swap 300ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Profile side panel slides in from the right */
+.profile-panel-slide {
+  animation: profile-panel-slide 300ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes mobile-menu-drop {
+  from { opacity: 0; transform: translateY(-12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes mobile-menu-slide-in {
+  from { opacity: 0; transform: translateX(32px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes mobile-menu-slide-back {
+  from { opacity: 0; transform: translateX(-32px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes mobile-menu-item {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes menu-icon-swap {
+  from { opacity: 0; transform: rotate(-90deg) scale(0.6); }
+  to { opacity: 1; transform: rotate(0) scale(1); }
+}
+
+@keyframes profile-panel-slide {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-menu-panel,
+  .mobile-menu-sub > *,
+  .mobile-menu-sub .mobile-menu-title,
+  .mobile-menu-stagger > *,
+  .menu-icon-swap,
+  .profile-panel-slide {
+    animation: none;
+  }
+}
+
+/* ---------- Page transitions ---------- */
+/* Each new page fades in and drifts up slightly. Only "backwards" fill is used, so once the
+   animation ends the wrapper has no transform left (a lingering transform would break
+   position: fixed pop-ups inside the page). */
+.page-transition {
+  animation: page-enter 1s cubic-bezier(0.45, 0, 0.25, 1) backwards;
+}
+
+/* Fade only (no sliding), so Back buttons and other controls stay exactly in place while the page appears */
+@keyframes page-enter {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Headings "type" themselves in: revealed left to right in small steps (see useHeadingTypeIn.js) */
+[data-type-in="run"] {
+  animation: heading-type-in 700ms steps(22, end) 250ms backwards;
+}
+
+@keyframes heading-type-in {
+  from { clip-path: inset(-0.2em 100% -0.2em 0); }
+  to { clip-path: inset(-0.2em 0 -0.2em 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-transition,
+  [data-type-in="run"] {
+    animation: none;
+  }
+}
+
+/* Caret used by TypewriterText: floats at the end of the typed text without being part of the line,
+   so it can't create a line break mid-word or push the invisible letters after it */
+.typewriter-caret-inplace {
+  position: relative;
+}
+
+.typewriter-caret-inplace::after {
+  position: absolute;
+  right: -0.12em;
+  bottom: 0.12em;
+  margin: 0;
+}
+
+/* ---------- Pop-up entrances ---------- */
+/* Dark backdrop behind the Enroll Now / Inquire Now form fades in (the form itself uses .fade-in-up, like the login page) */
+.modal-backdrop-in {
+  animation: modal-backdrop-in 300ms ease-out both;
+}
+
+/* Practice lab "Expand": the full-screen diagram fades and zooms in */
+.topology-zoom-in {
+  animation: topology-zoom-in 350ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes modal-backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes topology-zoom-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal-backdrop-in,
+  .topology-zoom-in {
+    animation: none;
+  }
+}
+
+/* Enroll Now / Inquire Now: each screen of the form slides in (from the left when going back) */
+.modal-step-in {
+  animation: mobile-menu-slide-in 300ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.modal-step-back {
+  animation: mobile-menu-slide-back 300ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal-step-in,
+  .modal-step-back {
+    animation: none;
+  }
+}

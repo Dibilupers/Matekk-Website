@@ -1,6 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { json, urlencoded } from 'express';
 import { AppModule, isObserveEnabled, ObserveInstrument } from './app.module.js';
+import helmet from 'helmet';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(
@@ -12,6 +14,13 @@ async function bootstrap() {
   );
   app.use(json({ limit: '4mb' }));
   app.use(urlencoded({ extended: true, limit: '4mb' }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    }),
+  );
   const allowedOrigins = (process.env.CORS_ORIGINS ?? '')
     .split(',')
     .map((origin) => origin.trim())
@@ -19,6 +28,7 @@ async function bootstrap() {
   const isDevelopment = process.env.NODE_ENV !== 'production';
 
   app.enableCors({
+    credentials: true,
     origin: (
       requestOrigin: string | undefined,
       callback: (error: Error | null, allow?: boolean) => void,
@@ -36,6 +46,23 @@ async function bootstrap() {
       callback(new Error('Origin is not allowed by CORS'), false);
     },
   });
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: [`'self'`],
+          scriptSrc: [`'self'`],
+          styleSrc: [`'self'`, `'unsafe-inline'`],
+          imgSrc: [`'self'`, 'data:', 'https:'],
+          fontSrc: [`'self'`, 'https:', 'data:'],
+          connectSrc: [`'self'`],
+          objectSrc: [`'none'`],
+          frameAncestors: [`'self'`],
+          upgradeInsecureRequests: [],
+        },
+      },
+    }),
+  );
   await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
 }
 await bootstrap();
