@@ -67,7 +67,7 @@ export default function CCNACybersecurityKnowledgeArticle() {
 				</nav>
 
 				<div className="grid min-w-0 grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_300px]">
-					<article className="min-w-0 rounded-[24px] border border-[#dbe5f5] px-6 py-8 sm:px-10 sm:py-10">
+					<article className="min-w-0 break-words rounded-[24px] border border-[#dbe5f5] px-6 py-8 sm:px-10 sm:py-10">
 						<div className="inline-flex items-center gap-2 rounded-full bg-[#e8f3f4] px-4 py-2 text-sm font-semibold text-[#005b6b]"><BookOpen size={15} /> CCNA Cybersecurity · Module {lesson.moduleNumber}</div>
 						<h1 className="mt-6 text-3xl font-bold leading-tight tracking-tight text-[#071126] sm:text-5xl">{lesson.number} {lesson.title}</h1>
 						<p className="mt-4 flex min-w-0 items-center gap-2 text-base text-[#7b8ca7]"><Clock size={17} /> {lesson.duration} read</p>

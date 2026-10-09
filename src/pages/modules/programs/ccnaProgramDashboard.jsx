@@ -85,6 +85,7 @@ export default function CCNAProgramDashboard({
 	modulesSummary,
 	quizScore = 0,
 	gradebookPath,
+	gradebookStatsError,
 	heroIntros = NO_HERO_INTROS,
 	overviewDescription,
 }) {
@@ -155,7 +156,8 @@ export default function CCNAProgramDashboard({
 			)}
 			<section className="mx-auto min-w-0 max-w-[1440px] px-6 pb-16 pt-14 sm:px-10 lg:px-14 lg:pb-20 lg:pt-16">
 				<div className="grid min-w-0 items-center gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-4">
-					<div className="min-w-0">
+					<div className="contents sm:block">
+						<div className="order-1 min-w-0 sm:order-none">
 						<div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#c9dfe2] bg-[#f0f7f7] px-4 py-2 text-sm font-semibold text-[#005b6b]">
 							<span className="h-2 w-2 rounded-full bg-[#005b6b]" />
 							{activeModule
@@ -173,32 +175,34 @@ export default function CCNAProgramDashboard({
 								</a>
 							</div>
 						)}
-						<div className="mt-8 grid grid-cols-3 gap-2 sm:mt-11 sm:flex sm:flex-wrap sm:gap-5 sm:divide-x sm:divide-[#dce5f2]">
+						</div>
+						<div className="group/stats order-3 mt-8 inline-grid w-fit max-w-full grid-cols-3 gap-3 rounded-2xl border border-[#c9dfe2] bg-white p-4 shadow-[0_8px_24px_rgba(0,91,107,0.12)] transition-colors duration-200 lg:hover:border-[#005b6b] lg:hover:bg-[#005b6b] lg:hover:shadow-[0_12px_28px_rgba(0,91,107,0.24)] sm:order-none sm:mt-11 sm:flex sm:flex-wrap sm:gap-5 sm:divide-x sm:divide-[#c9dfe2] sm:p-5">
 							{topStats ?? (
 								<>
 									<div className="flex min-w-0 flex-col items-start gap-1 sm:flex-row sm:items-center sm:gap-3">
-										<strong className="text-xl leading-none tracking-tight text-[#071126] sm:text-[2rem]">{modules.length}</strong>
-										<span className="text-[11px] leading-tight text-[#6f7d99] sm:max-w-20 sm:text-sm">Course modules</span>
+										<strong className="text-xl leading-none tracking-tight text-[#071126] transition-colors duration-200 lg:group-hover/stats:text-white sm:text-[2rem]">{modules.length}</strong>
+										<span className="text-[11px] leading-tight text-[#6f7d99] transition-colors duration-200 lg:group-hover/stats:text-white sm:max-w-20 sm:text-sm">Course modules</span>
 									</div>
 									<div className="flex min-w-0 flex-col items-start gap-1 sm:flex-row sm:items-center sm:gap-3 sm:pl-7">
-										<strong className="text-xl leading-none tracking-tight text-[#071126] sm:text-[2rem]">0</strong>
-										<span className="text-[11px] leading-tight text-[#6f7d99] sm:max-w-20 sm:text-sm">Quizzes available</span>
+										<strong className="text-xl leading-none tracking-tight text-[#071126] transition-colors duration-200 lg:group-hover/stats:text-white sm:text-[2rem]">0</strong>
+										<span className="text-[11px] leading-tight text-[#6f7d99] transition-colors duration-200 lg:group-hover/stats:text-white sm:max-w-20 sm:text-sm">Quizzes available</span>
 									</div>
 									<div className="flex min-w-0 flex-col items-start gap-1 sm:flex-row sm:items-center sm:gap-3 sm:pl-7">
-										<strong className="text-xl leading-none tracking-tight text-[#071126] sm:text-[2rem]">0</strong>
-										<span className="text-[11px] leading-tight text-[#6f7d99] sm:max-w-20 sm:text-sm">Exams available</span>
+										<strong className="text-xl leading-none tracking-tight text-[#071126] transition-colors duration-200 lg:group-hover/stats:text-white sm:text-[2rem]">0</strong>
+										<span className="text-[11px] leading-tight text-[#6f7d99] transition-colors duration-200 lg:group-hover/stats:text-white sm:max-w-20 sm:text-sm">Exams available</span>
 									</div>
 								</>
 							)}
 						</div>
+						{gradebookStatsError && <p role="alert" className="mt-2 text-xs font-medium text-[#a44b13]">{gradebookStatsError}</p>}
 					</div>
 
-					<div className="relative mx-auto flex h-[320px] w-full max-w-[440px] items-center justify-center sm:h-[380px] sm:max-w-[470px]">
+					<div className="relative order-2 mx-auto flex h-[320px] w-full max-w-[440px] items-center justify-center sm:order-none sm:h-[380px] sm:max-w-[470px]">
 						<div aria-hidden="true" className="absolute h-[270px] w-[270px] rounded-full bg-[#e4f0f1] sm:h-[356px] sm:w-[356px]" />
 						<img src={badge} alt={`${programName} certification badge`} className="relative z-10 h-[210px] w-[210px] object-contain sm:h-[270px] sm:w-[270px]" />
 						{gradebookPath ? (
 							<>
-								<div className="absolute left-0 top-[31%] z-20 flex h-[94px] w-[128px] flex-col justify-center rounded-xl border border-[#e4eaf5] bg-white px-4 shadow-[0_14px_28px_rgba(15,35,75,0.1)] transition-transform duration-200 ease-out hover:scale-105 sm:left-[-4px]">
+								<div className="absolute left-0 top-[2%] z-20 flex h-[94px] w-[128px] flex-col justify-center rounded-xl border border-[#e4eaf5] bg-white px-4 shadow-[0_14px_28px_rgba(15,35,75,0.1)] transition-transform duration-200 ease-out hover:scale-105 sm:left-[-4px] sm:top-[31%]">
 									<strong className="text-xl leading-none text-[#005b6b]">{quizScore}%</strong>
 									<span className="mt-2 text-sm leading-none text-[#15203a]">Quiz score</span>
 									<span
@@ -214,7 +218,7 @@ export default function CCNAProgramDashboard({
 									to={gradebookPath}
 									aria-label={`Open ${programName} gradebook`}
 									title="Gradebook"
-									className="absolute right-[12%] top-[2%] z-30 flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#005b6b] shadow-[0_8px_20px_rgba(15,35,75,0.1)] transition-all duration-200 ease-out hover:-translate-y-1 hover:scale-110 hover:shadow-lg active:translate-y-0"
+									className="absolute right-[12%] top-[2%] z-30 hidden h-12 w-12 items-center justify-center rounded-full bg-white text-[#005b6b] shadow-[0_8px_20px_rgba(15,35,75,0.1)] transition-all duration-200 ease-out hover:-translate-y-1 hover:scale-110 hover:shadow-lg active:translate-y-0 sm:flex"
 								>
 									<ClipboardList size={21} />
 								</Link>

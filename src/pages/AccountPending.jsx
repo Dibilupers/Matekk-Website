@@ -34,9 +34,9 @@ export default function AccountPending() {
 	return (
 		<main className="min-h-screen bg-[#f3f6ff] px-4 py-8 font-poppins text-[#14213d] sm:px-8 sm:py-12">
 			<div className="mx-auto max-w-[940px] overflow-hidden bg-white shadow-sm">
-				<header className="bg-[#2166f3] px-6 py-8 text-white sm:px-12 sm:py-9">
+				<header className="bg-[#2166f3] px-5 pb-16 pt-8 text-white sm:px-12 sm:py-9">
 					<h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Almost there!</h1>
-					<p className="mt-2 text-sm text-blue-100 sm:text-base">Your account is being reviewed by our team.</p>
+					<p className="mt-2 break-words text-sm text-blue-100 sm:text-base">Your account is being reviewed by our team.</p>
 				</header>
 
 				<section className="relative mx-auto -mt-10 max-w-[510px] rounded-2xl border border-[#e7edf8] bg-white px-6 pb-8 pt-11 text-center shadow-[0_18px_45px_rgba(32,95,190,0.12)] sm:px-8">

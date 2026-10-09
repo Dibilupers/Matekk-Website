@@ -1,4 +1,5 @@
 import { TutorialDiagramFrame } from "./ccnaTutorialDiagramFrame";
+import LessonImageExpand from "../../LessonImageExpand";
 import CcnaKnowledgeModulePlaceholder from "./ccnaKnowledgeModulePlaceholder";
 
 function SecurityHouseDiagram() {
@@ -483,7 +484,8 @@ Router(config-if)# ip access-group 101 in`}</code></pre>
 
 			<section>
 				<h2 className="text-xl font-bold text-[#071126] sm:text-2xl">Numbered versus named ACLs</h2>
-				<div className="mt-5 overflow-x-auto rounded-xl border border-[#dbe5f5]">
+				<LessonImageExpand label="table">
+					<div className="mt-5 overflow-x-auto rounded-xl border border-[#dbe5f5]">
 					<table className="w-full min-w-[620px] border-collapse text-left text-sm">
 						<thead className="bg-[#f1f6ff] text-[#173b76]">
 							<tr><th className="px-4 py-3 font-bold">Feature</th><th className="px-4 py-3 font-bold">Numbered ACL</th><th className="px-4 py-3 font-bold">Named ACL</th></tr>
@@ -495,7 +497,8 @@ Router(config-if)# ip access-group 101 in`}</code></pre>
 							<tr><td className="px-4 py-3 font-semibold">VTY access-class</td><td className="px-4 py-3">Platform and feature dependent; verify accepted ACL type and version.</td><td className="px-4 py-3">Modern IOS/IOS XE platforms may support named ACLs; do not assume numbered-only across all releases.</td></tr>
 						</tbody>
 					</table>
-				</div>
+					</div>
+				</LessonImageExpand>
 				<p className="mt-4">
 					For example, <code>show access-lists</code> may display named ACL entries with
 					sequence numbers. On a platform supporting sequence editing, remove entry 20
@@ -1096,7 +1099,8 @@ function AaaLesson() {
 					centralized service. Configure matching shared secrets at both ends and
 					restrict reachability to the intended clients and servers.
 				</p>
-				<div className="mt-5 overflow-x-auto rounded-xl border border-[#dbe5f5]">
+				<LessonImageExpand label="table">
+					<div className="mt-5 overflow-x-auto rounded-xl border border-[#dbe5f5]">
 					<table className="w-full min-w-[760px] border-collapse text-left text-sm">
 						<thead className="bg-[#f1f6ff] text-[#173b76]">
 							<tr><th className="px-4 py-3 font-bold">Property</th><th className="px-4 py-3 font-bold">RADIUS</th><th className="px-4 py-3 font-bold">TACACS+</th></tr>
@@ -1109,7 +1113,8 @@ function AaaLesson() {
 							<tr><td className="px-4 py-3 font-semibold">Standards and history</td><td className="px-4 py-3">An IETF-standardized protocol with broad multi-vendor use.</td><td className="px-4 py-3">Originated as a Cisco protocol; TACACS+ is documented in RFC 8907. It is distinct from the older TACACS described by RFC 1492.</td></tr>
 						</tbody>
 					</table>
-				</div>
+					</div>
+				</LessonImageExpand>
 				<p className="mt-4">
 					RADIUS is not simply “insecure” and TACACS+ is not automatically secure:
 					protect management networks, use strong shared secrets, limit server-client
@@ -1634,7 +1639,8 @@ Switch(config-if)# switchport port-security maximum 2`}</code></pre>
 					All modes discard traffic from a violating source; they differ in reporting
 					and interface state:
 				</p>
-				<div className="mt-5 overflow-x-auto rounded-xl border border-[#dbe5f5]">
+				<LessonImageExpand label="table">
+					<div className="mt-5 overflow-x-auto rounded-xl border border-[#dbe5f5]">
 					<table className="w-full min-w-[690px] border-collapse text-left text-sm">
 						<thead className="bg-[#f1f6ff] text-[#173b76]">
 							<tr><th className="px-4 py-3 font-bold">Mode</th><th className="px-4 py-3 font-bold">Traffic action</th><th className="px-4 py-3 font-bold">Reporting / port state</th></tr>
@@ -1645,7 +1651,8 @@ Switch(config-if)# switchport port-security maximum 2`}</code></pre>
 							<tr><td className="px-4 py-3 font-semibold text-[#a44b13]">shutdown</td><td className="px-4 py-3">Stops traffic by placing the interface into error-disabled state.</td><td className="px-4 py-3">Generates a violation notification/log where supported; the port requires recovery after the cause is addressed. This is commonly the default mode.</td></tr>
 						</tbody>
 					</table>
-				</div>
+					</div>
+				</LessonImageExpand>
 				<p className="mt-4">
 					The exact logging, SNMP, counter, and recovery behavior may vary by platform
 					and software. Verify the switch's command reference and test the chosen mode

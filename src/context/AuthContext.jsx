@@ -2,9 +2,22 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import API_URL from "../config/api";
 
 const AuthContext = createContext(null);
+const PROFILE_CACHE_KEY = "matekk-session-profile";
+
+// Shows the last known profile instantly on refresh (sessions use a secure cookie, so there is no token
+// to read here); the server check below replaces it, or clears it if the session has ended.
+function readCachedProfile() {
+  try {
+    const cachedProfile = JSON.parse(sessionStorage.getItem(PROFILE_CACHE_KEY) || "null");
+    return cachedProfile && typeof cachedProfile === "object" ? cachedProfile : null;
+  } catch {
+    sessionStorage.removeItem(PROFILE_CACHE_KEY);
+    return null;
+  }
+}
 
 export function AuthProvider({ children }) {
-  const [profile, setProfile] = useState(null);
+  const [profile, setProfile] = useState(readCachedProfile);
   const [isLoading, setIsLoading] = useState(true);
 
   async function refreshProfile() {
@@ -17,6 +30,7 @@ export function AuthProvider({ children }) {
 
     const nextProfile = await response.json();
     setProfile(nextProfile);
+    sessionStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(nextProfile));
     return nextProfile;
   }
 
@@ -28,10 +42,22 @@ export function AuthProvider({ children }) {
       credentials: "include",
     })
       .then(async (response) => {
-        if (!response.ok) return;
-        if (mounted) setProfile(await response.json());
+        if (!response.ok) {
+          sessionStorage.removeItem(PROFILE_CACHE_KEY);
+          if (mounted) setProfile(null);
+          return;
+        }
+        const nextProfile = await response.json();
+        if (mounted) {
+          setProfile(nextProfile);
+          sessionStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(nextProfile));
+        }
       })
-      .catch((error) => console.error("Unable to restore the signed-in session.", error))
+      .catch((error) => {
+        console.error("Unable to restore the signed-in session.", error);
+        sessionStorage.removeItem(PROFILE_CACHE_KEY);
+        if (mounted) setProfile(null);
+      })
       .finally(() => mounted && setIsLoading(false));
 
     return () => {
@@ -67,10 +93,12 @@ export function AuthProvider({ children }) {
       throw error;
     }
     setProfile(signedInProfile);
+    sessionStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(signedInProfile));
     return { response, profile: signedInProfile };
   }
 
   function logout() {
+    sessionStorage.removeItem(PROFILE_CACHE_KEY);
     setProfile(null);
     void fetch(`${API_URL}/auth/logout`, {
       method: "POST",
