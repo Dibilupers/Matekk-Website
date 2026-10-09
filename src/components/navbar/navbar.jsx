@@ -42,42 +42,11 @@ function NavBar() {
     setMenuGoingBack(menuDepth < prevMenuDepth);
   }
   const subPanelClass = `mobile-menu-sub${menuGoingBack ? " mobile-menu-back" : ""}`;
-  const { logout, profile: sessionProfile } = useAuth();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [profile, setProfile] = useState(sessionProfile);
+  const { logout, profile, isAuthenticated } = useAuth();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isGradebookChooserOpen, setIsGradebookChooserOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-
-  useEffect(() => {
-    let isMounted = true;
-
-    async function checkSession() {
-      try {
-        const response = await fetch(`${API_URL}/auth/profile`, {
-          credentials: "include",
-        });
-
-        if (!isMounted) return;
-        if (!response.ok) {
-          setProfile(null);
-          setIsAuthenticated(false);
-          return;
-        }
-        setProfile(await response.json());
-        setIsAuthenticated(true);
-      } catch (error) {
-        console.error("Unable to verify the navigation session.", error);
-        if (isMounted) setIsAuthenticated(false);
-      }
-    }
-
-    checkSession();
-    return () => {
-      isMounted = false;
-    };
-  }, [location.pathname, sessionProfile?.username, sessionProfile?.profile_photo]);
 
   useEffect(() => {
     if (!isGradebookChooserOpen) return undefined;
