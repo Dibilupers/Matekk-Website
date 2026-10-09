@@ -121,6 +121,8 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 	const [backToTopVisibility, setBackToTopVisibility] = useState({ attempt: -1, visible: false });
 	const answerReviewRef = useRef(null);
 	const resultsTopRef = useRef(null);
+	const questionCardRef = useRef(null);
+	const previousIndexRef = useRef(currentIndex);
 	const blocker = useBlocker(({ currentLocation, nextLocation }) =>
 		!isSubmitted &&
 		(currentLocation.pathname !== nextLocation.pathname ||
@@ -345,6 +347,17 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 		resultsTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
 	}
 
+	// When the question changes, bring the start of the new question into view (it may be scrolled
+	// far down after reading a long exhibit). Skipped on first load so the page opens at the top.
+	useEffect(() => {
+		if (previousIndexRef.current === currentIndex) return;
+		previousIndexRef.current = currentIndex;
+		const card = questionCardRef.current;
+		if (!card) return;
+		const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+		card.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+	}, [currentIndex]);
+
 	function goToQuestion(index) {
 		if (index < 0 || index >= questions.length) return;
 		if (
@@ -447,8 +460,8 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 							</div>
 						</div>
 
-						<div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_300px]">
-							<section className="rounded-[20px] border border-[#d6e5e7] bg-white p-4 shadow-sm sm:p-7">
+						<div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-[minmax(0,1fr)_300px]">
+							<section ref={questionCardRef} className="min-w-0 scroll-mt-4 rounded-[20px] border border-[#d6e5e7] bg-white p-4 shadow-sm sm:p-7">
 								<p className="mb-2 text-sm text-[#70809a]">
 									Question {currentIndex + 1} of {questions.length}
 									{question.moduleNumber && ` · Module ${question.moduleNumber}: ${question.moduleTitle}`}

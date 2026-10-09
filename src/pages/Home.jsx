@@ -1584,7 +1584,7 @@ export default function Home() {
       {/* ==================== ABOUT THE COMPANY ====================*/}
       <section
         id="about"
-        className="scroll-mt-18 py-16 bg-[#EBF5FD] px-[2.063rem] sm:px-[2.063rem] md:px-16 xl:px-[7.438rem] space-y-6 "
+        className="scroll-mt-6 md:scroll-mt-18 py-16 bg-[#EBF5FD] px-[2.063rem] sm:px-[2.063rem] md:px-16 xl:px-[7.438rem] space-y-6 "
       >
         {/* Title and Description */}
         <div className="flex flex-col justify-center items-center space-y-2">

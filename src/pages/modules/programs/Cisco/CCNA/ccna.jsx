@@ -1305,7 +1305,8 @@ export default function CCNA() {
 										}}
 										className="justify-self-start rounded-full bg-[#005b6b] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#004653] disabled:cursor-not-allowed disabled:opacity-50 sm:justify-self-end"
 									>
-										{hasActiveShortExam ? "Continue Exam" : "Start Short Exam"}
+										{/* Unfinished attempts are handled above, so this always starts the chosen exam */}
+										{`Start ${selectedExamFormat}`}
 									</button>
 								)}
 							</div>
