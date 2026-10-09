@@ -9,6 +9,13 @@ import { readGradebookAssessments } from "../utils/gradebookApi";
 const INPUT_CLASS = "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-[#2f5bea] focus:ring-2 focus:ring-blue-100";
 const LABEL_CLASS = "block space-y-2 text-sm font-semibold text-slate-900";
 
+function cookieFetch(url, options = {}) {
+  return fetch(url, {
+    credentials: "include",
+    ...options,
+  });
+}
+
 function dateInputValue(value) {
   if (!value) return "";
   const date = new Date(value);
@@ -107,10 +114,9 @@ function ProfileForm({ profile, refreshProfile }) {
     setMessage("");
     setError("");
     try {
-      const response = await fetch(`${API_URL}/auth/profile`, {
+      const response = await cookieFetch(`${API_URL}/auth/profile`, {
         method: "PATCH",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -161,10 +167,9 @@ function ProfileForm({ profile, refreshProfile }) {
         reader.onerror = () => reject(new Error("Unable to read the selected image."));
         reader.readAsDataURL(file);
       });
-      const response = await fetch(`${API_URL}/auth/profile/photo`, {
+      const response = await cookieFetch(`${API_URL}/auth/profile/photo`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ photoDataUrl }),
@@ -186,9 +191,8 @@ function ProfileForm({ profile, refreshProfile }) {
     setMessage("");
     setError("");
     try {
-      const response = await fetch(`${API_URL}/auth/profile/photo`, {
+      const response = await cookieFetch(`${API_URL}/auth/profile/photo`, {
         method: "DELETE",
-        headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
       });
       const body = await response.json().catch(() => null);
       if (!response.ok) throw new Error(body?.message || "Unable to remove your profile photo.");
@@ -214,10 +218,9 @@ function ProfileForm({ profile, refreshProfile }) {
     }
 
     try {
-      const response = await fetch(`${API_URL}/auth/password`, {
+      const response = await cookieFetch(`${API_URL}/auth/password`, {
         method: "PATCH",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -535,9 +538,7 @@ function Transcript({ profile }) {
     let isActive = true;
     async function loadTranscript() {
       try {
-        const token = localStorage.getItem("accessToken");
-        const historyResponse = await fetch(`${API_URL}/auth/learning-history`, {
-          headers: { Authorization: `Bearer ${token}` },
+        const historyResponse = await cookieFetch(`${API_URL}/auth/learning-history`, {
           signal: controller.signal,
         });
         const historyBody = await historyResponse.json().catch(() => null);
