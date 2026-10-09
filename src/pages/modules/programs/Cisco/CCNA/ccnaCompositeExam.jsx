@@ -372,6 +372,16 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 						{gradebookSaveError} Reload this page to retry.
 					</p>
 				)}
+				{questionsLoading && (
+					<p role="status" className="mb-4 rounded-xl border border-[#d6e5e7] bg-white px-4 py-3 text-sm font-medium text-[#005b6b]">
+						Loading the CCNA question set...
+					</p>
+				)}
+				{questionsError && (
+					<p role="alert" className="mb-4 rounded-xl border border-[#f2c6c3] bg-white px-4 py-3 text-sm font-medium text-[#b42318]">
+						{questionsError} Continuing with the local exam question bank.
+					</p>
+				)}
 				<header className="mb-7 flex flex-wrap items-center justify-between gap-4 border-b border-[#d6e5e7] pb-5">
 					<div className="flex min-w-0 items-center gap-4">
 						<Link to="/modules/programs/ccna" aria-label="Back to CCNA course" className="ccna-training-logo shrink-0 rounded-lg bg-white px-3 py-2 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">

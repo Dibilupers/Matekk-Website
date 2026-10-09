@@ -77,7 +77,7 @@ function NavBar() {
     return () => {
       isMounted = false;
     };
-  }, [location.pathname]);
+  }, [location.pathname, sessionProfile?.username, sessionProfile?.profile_photo]);
 
   useEffect(() => {
     if (!isGradebookChooserOpen) return undefined;
@@ -132,7 +132,9 @@ function NavBar() {
         <div className="absolute -right-8 -top-10 h-32 w-52 rounded-full border border-white/80" />
         <div className="absolute -bottom-16 right-12 h-32 w-64 rounded-full border border-white/80" />
         <div className="relative flex min-w-0 items-center gap-3">
-          <CircleUserRound aria-hidden="true" size={48} strokeWidth={1.7} className="shrink-0 text-[#1775ee]" />
+          {profile?.profile_photo
+            ? <img src={profile.profile_photo} alt="" className="h-12 w-12 shrink-0 rounded-full border border-blue-200 object-cover" />
+            : <CircleUserRound aria-hidden="true" size={48} strokeWidth={1.7} className="shrink-0 text-[#1775ee]" />}
           <div className="min-w-0 flex-1">
             <strong className="block truncate text-sm font-semibold text-[#1775ee]">{profileName}</strong>
             <span className="block text-xs text-slate-600">{profileRole}</span>
@@ -162,9 +164,9 @@ function NavBar() {
         </div>
         <div className="pt-3">
           <h3 className="flex items-center gap-3 px-5 pb-1 pt-1 text-sm font-bold"><User size={19} className="text-[#1775ee]" /> Profile</h3>
-          {profileLink("Update Profile", null, closeProfile)}
-          {profileLink("Learning History", null, closeProfile)}
-          {profileLink("Transcript", null, closeProfile)}
+          {profileLink("Update Profile", null, () => { closeProfile(); navigate("/account/profile"); })}
+          {profileLink("Learning History", null, () => { closeProfile(); navigate("/account/learning-history"); })}
+          {profileLink("Transcript", null, () => { closeProfile(); navigate("/account/transcript"); })}
         </div>
         <div className="flex items-center justify-between px-5 py-4">
           <span className="flex items-center gap-3 text-sm font-bold"><Globe size={19} className="text-[#1775ee]" /> Language</span>
@@ -815,7 +817,9 @@ function NavBar() {
               aria-expanded={isProfileOpen}
               className="flex max-w-52 shrink-0 items-center gap-2 border-b-2 border-white hover:border-[#1775ee] bg-white px-2 py-1 text-left transition-all duration-300 hover:bg-[#eef6ff]"
             >
-              <CircleUserRound aria-hidden="true" size={36} strokeWidth={1.7} className="shrink-0 text-[#1775ee]" />
+              {profile?.profile_photo
+                ? <img src={profile.profile_photo} alt="" className="h-9 w-9 shrink-0 rounded-full border border-blue-200 object-cover" />
+                : <CircleUserRound aria-hidden="true" size={36} strokeWidth={1.7} className="shrink-0 text-[#1775ee]" />}
               <span className="min-w-0">
                 <span className="block max-w-28 truncate text-sm font-semibold text-[#1775ee]">{profileName}</span>
                 <span className="block text-xs text-slate-600">{profileRole}</span>
@@ -840,7 +844,9 @@ function NavBar() {
             aria-expanded={isProfileOpen}
             className="flex h-10 w-10 items-center justify-center rounded-full text-[#1775ee] transition hover:bg-[#eef6ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1775ee]"
           >
-            <CircleUserRound aria-hidden="true" size={30} strokeWidth={1.7} />
+            {profile?.profile_photo
+              ? <img src={profile.profile_photo} alt="" className="h-[30px] w-[30px] rounded-full border border-blue-200 object-cover" />
+              : <CircleUserRound aria-hidden="true" size={30} strokeWidth={1.7} />}
           </button>
         )}
         {/* Logged-out visitors get a Login shortcut here instead (not needed on the login page itself) */}

@@ -7,6 +7,13 @@ import { AuthProvider } from "./context/AuthContext";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react"
 
+if (import.meta.env.PROD && "serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register(`${import.meta.env.BASE_URL}sw.js`)
+      .catch((error) => console.error("Unable to register the Matekk offline service worker.", error));
+  }, { once: true });
+}
+
 const router = createBrowserRouter([
   {
     path: "*",

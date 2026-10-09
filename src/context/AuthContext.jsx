@@ -3,6 +3,7 @@ import API_URL from "../config/api";
 
 const AuthContext = createContext(null);
 const PROFILE_CACHE_KEY = "matekk-session-profile";
+const OFFLINE_PROFILE_KEY = "matekkOfflineProfile";
 
 function readCachedProfile() {
   try {
@@ -13,24 +14,68 @@ function readCachedProfile() {
   } catch {
     sessionStorage.removeItem(PROFILE_CACHE_KEY);
   }
-  return null;
+  return readOfflineProfile();
+}
+
+function readOfflineProfile() {
+  const serialized = localStorage.getItem(OFFLINE_PROFILE_KEY);
+  if (!serialized) return null;
+
+  try {
+    const profile = JSON.parse(serialized);
+    if (!profile || (typeof profile.userId !== "string" && typeof profile.userId !== "number")) {
+      localStorage.removeItem(OFFLINE_PROFILE_KEY);
+      return null;
+    }
+    return profile;
+  } catch {
+    localStorage.removeItem(OFFLINE_PROFILE_KEY);
+    return null;
+  }
+}
+
+function storeOfflineProfile(profile) {
+  if (!profile || (typeof profile.userId !== "string" && typeof profile.userId !== "number")) return;
+  localStorage.setItem(OFFLINE_PROFILE_KEY, JSON.stringify({
+    userId: profile.userId,
+    username: profile.username,
+    role: profile.role,
+    active_status: profile.active_status,
+    first_name: profile.first_name,
+    last_name: profile.last_name,
+  }));
 }
 
 export function AuthProvider({ children }) {
   const [profile, setProfile] = useState(readCachedProfile);
   const [isLoading, setIsLoading] = useState(true);
+  const [isOnline, setIsOnline] = useState(() => navigator.onLine);
+
+  useEffect(() => {
+    const updateOnlineStatus = () => setIsOnline(navigator.onLine);
+    window.addEventListener("online", updateOnlineStatus);
+    window.addEventListener("offline", updateOnlineStatus);
+    return () => {
+      window.removeEventListener("online", updateOnlineStatus);
+      window.removeEventListener("offline", updateOnlineStatus);
+    };
+  }, []);
 
   async function refreshProfile() {
     const response = await fetch(`${API_URL}/auth/profile`, {
       credentials: "include",
     });
     if (!response.ok) {
-      sessionStorage.removeItem(PROFILE_CACHE_KEY);
-      setProfile(null);
+      if (response.status === 401 || response.status === 403) {
+        sessionStorage.removeItem(PROFILE_CACHE_KEY);
+        localStorage.removeItem(OFFLINE_PROFILE_KEY);
+        setProfile(null);
+      }
       throw new Error("Unable to refresh account approval status.");
     }
 
     const nextProfile = await response.json();
+    storeOfflineProfile(nextProfile);
     setProfile(nextProfile);
     sessionStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(nextProfile));
     return nextProfile;
@@ -38,22 +83,31 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     let mounted = true;
+    const cachedProfile = readCachedProfile();
     fetch(`${API_URL}/auth/profile`, {
       credentials: "include",
     })
       .then(async (response) => {
         if (!response.ok) {
+          if (response.status !== 401 && response.status !== 403) {
+            throw new Error("Unable to verify the current session.");
+          }
           sessionStorage.removeItem(PROFILE_CACHE_KEY);
+          localStorage.removeItem(OFFLINE_PROFILE_KEY);
           if (mounted) setProfile(null);
           return;
         }
         const nextProfile = await response.json();
+        storeOfflineProfile(nextProfile);
         if (mounted) {
           setProfile(nextProfile);
           sessionStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(nextProfile));
         }
       })
-      .catch((error) => console.error("Unable to restore the signed-in session.", error))
+      .catch((error) => {
+        console.error("Unable to restore the signed-in session.", error);
+        if (mounted && cachedProfile) setProfile(cachedProfile);
+      })
       .finally(() => mounted && setIsLoading(false));
 
     return () => {
@@ -87,15 +141,19 @@ export function AuthProvider({ children }) {
         console.error("Unable to clear a session after profile loading failed.", logoutError),
       );
       sessionStorage.removeItem(PROFILE_CACHE_KEY);
+      localStorage.removeItem(OFFLINE_PROFILE_KEY);
       throw error;
     }
     setProfile(signedInProfile);
     sessionStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(signedInProfile));
+    storeOfflineProfile(signedInProfile);
     return { response, profile: signedInProfile };
   }
 
   function logout() {
     sessionStorage.removeItem(PROFILE_CACHE_KEY);
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem(OFFLINE_PROFILE_KEY);
     setProfile(null);
     void fetch(`${API_URL}/auth/logout`, {
       method: "POST",
@@ -106,8 +164,8 @@ export function AuthProvider({ children }) {
   }
 
   const value = useMemo(
-    () => ({ profile, isAuthenticated: Boolean(profile), isLoading, login, logout, refreshProfile }),
-    [isLoading, profile],
+    () => ({ profile, isAuthenticated: Boolean(profile), isLoading, isOnline, login, logout, refreshProfile }),
+    [isLoading, isOnline, profile],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

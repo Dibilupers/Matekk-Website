@@ -12,6 +12,13 @@ export type User = {
     email?: string;
     module_enrolled?: string;
     course_enrolled?: string[];
+    first_name?: string;
+    last_name?: string;
+    birth_date?: Date;
+    gender?: string | null;
+    city_province?: string;
+    phone_number?: string | null;
+    profile_photo?: string | null;
 };
 
 function getEnrolledProgramNames(
@@ -126,6 +133,13 @@ export class UsersService {
                 active_status: true,
                 email: true,
                 programs_enrolled: true,
+                first_name: true,
+                last_name: true,
+                birth_date: true,
+                gender: true,
+                city_province: true,
+                phone_number: true,
+                profile_photo: true,
                 enrollments: {
                     select: {
                         program: {
@@ -156,6 +170,13 @@ export class UsersService {
                 databaseUser.enrollments,
                 databaseUser.programs_enrolled,
             ),
+            first_name: databaseUser.first_name,
+            last_name: databaseUser.last_name,
+            birth_date: databaseUser.birth_date,
+            gender: databaseUser.gender,
+            city_province: databaseUser.city_province,
+            phone_number: databaseUser.phone_number,
+            profile_photo: databaseUser.profile_photo,
         };
     }
 
@@ -175,6 +196,32 @@ export class UsersService {
             userId: databaseUser.id,
             username: databaseUser.username,
             active_status: databaseUser.active_status,
+        };
+    }
+
+    async findById(userId: number): Promise<User | undefined> {
+        const user = await this.prisma.users.findUnique({ where: { id: userId } });
+        if (!user) return undefined;
+
+        return {
+            userId: user.id,
+            username: user.username,
+            password: user.password,
+            role: user.role,
+            active_status: user.active_status,
+            pending_status: user.active_status ? 'Active' : 'Pending',
+            email: user.email ?? undefined,
+            module_enrolled: getEnrolledProgramNames(
+                user.enrollments ?? [],
+                user.programs_enrolled,
+            ),
+            first_name: user.first_name,
+            last_name: user.last_name,
+            birth_date: user.birth_date,
+            gender: user.gender,
+            city_province: user.city_province,
+            phone_number: user.phone_number,
+            profile_photo: user.profile_photo,
         };
     }
 }
