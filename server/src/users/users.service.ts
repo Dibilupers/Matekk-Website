@@ -200,7 +200,22 @@ export class UsersService {
     }
 
     async findById(userId: number): Promise<User | undefined> {
-        const user = await this.prisma.users.findUnique({ where: { id: userId } });
+        const user = await this.prisma.users.findUnique({
+            where: { id: userId },
+            include: {
+                enrollments: {
+                    select: {
+                        program: {
+                            select: {
+                                name: true,
+                                parentId: true,
+                                modules: { select: { name: true } },
+                            },
+                        },
+                    },
+                },
+            },
+        });
         if (!user) return undefined;
 
         return {
