@@ -9,7 +9,7 @@ import {
 } from "../../../utils/programModuleQuizProgress";
 import { ProgramModuleQuizAction } from "./ProgramModuleQuizPanel";
 
-export default function ProgramQuizControls({ programKey, basePath, modules, learningProgress }) {
+export default function ProgramQuizControls({ programKey, basePath, modules, learningProgress, gradebookPath }) {
 	const { profile } = useAuth();
 	const userId = profile?.userId;
 	const navigate = useNavigate();
@@ -43,6 +43,11 @@ export default function ProgramQuizControls({ programKey, basePath, modules, lea
 				<Link to={`${basePath}/knowledge-hub`} className={`${buttonClass} border border-[#005b6b] text-[#005b6b] hover:bg-[#f0f7f7] hover:shadow-[0_10px_20px_rgba(0,91,107,0.12)]`}>
 					View All Modules
 				</Link>
+				{gradebookPath && (
+					<Link to={gradebookPath} className={`${buttonClass} border border-[#005b6b] text-[#005b6b] hover:bg-[#f0f7f7] hover:shadow-[0_10px_20px_rgba(0,91,107,0.12)] sm:hidden`}>
+						Gradebook
+					</Link>
+				)}
 			</div>
 
 			{isQuizPickerOpen && (

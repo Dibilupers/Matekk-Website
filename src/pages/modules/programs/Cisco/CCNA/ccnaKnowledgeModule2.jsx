@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { TutorialDiagramFrame } from "./ccnaTutorialDiagramFrame";
+import LessonImageExpand from "../../LessonImageExpand";
 import VlanWithoutSegmentationImage from "../../../../../assets/ccna-vlan/vlan-without-segmentation.svg";
 import VlanDepartmentBenefitsImage from "../../../../../assets/ccna-vlan/vlan-department-benefits.svg";
 import VlanTrunkIdImage from "../../../../../assets/ccna-vlan/vlan-trunk-id.svg";
@@ -24,7 +24,9 @@ import EtherChannelLoadBalanceImage from "../../../../../assets/ccna-etherchanne
 function VlanDiagram({ image, title, description }) {
 	return (
 		<figure className="my-7 overflow-hidden rounded-2xl border border-[#dbe5f5] bg-white">
-			<img src={image} alt={title} className="mx-auto h-auto max-h-[420px] w-full object-contain" loading="lazy" />
+			<LessonImageExpand>
+				<img src={image} alt={title} className="mx-auto h-auto max-h-[420px] w-full object-contain" loading="lazy" />
+			</LessonImageExpand>
 			<figcaption className="border-t border-[#e5ebf4] bg-[#f8faff] px-4 py-3 text-center text-sm text-[#71819b]">
 				{description}
 			</figcaption>
@@ -35,7 +37,9 @@ function VlanDiagram({ image, title, description }) {
 function StpDiagram({ image, title, description }) {
 	return (
 		<figure className="my-7 overflow-hidden rounded-2xl border border-[#dbe5f5] bg-white">
-			<img src={image} alt={title} className="mx-auto h-auto max-h-[420px] w-full object-contain" loading="lazy" />
+			<LessonImageExpand>
+				<img src={image} alt={title} className="mx-auto h-auto max-h-[420px] w-full object-contain" loading="lazy" />
+			</LessonImageExpand>
 			<figcaption className="border-t border-[#e5ebf4] bg-[#f8faff] px-4 py-3 text-center text-sm text-[#71819b]">
 				{description}
 			</figcaption>

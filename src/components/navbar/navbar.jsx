@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import API_URL from "../../config/api";
 import InquireNowButton from "../ui/InquireNowButton";
 import MainLogo from "../../assets/MATEKK_logo.webp";
 import TrainingLogo from "../../assets/MATEKK_training_logo.png";
@@ -34,47 +33,12 @@ function NavBar() {
   const [openSubSubSubcourse, setOpenSubSubSubcourse] = useState(null);
   const [openThirdLevel, setOpenThirdLevel] = useState(null);
   const [openFourthLevel, setOpenFourthLevel] = useState(null);
-  const { logout, profile: sessionProfile } = useAuth();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [profile, setProfile] = useState(sessionProfile);
+  const { logout, profile } = useAuth();
+  const isAuthenticated = Boolean(profile);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isGradebookChooserOpen, setIsGradebookChooserOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-
-  useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
-    if (!accessToken) {
-      return;
-    }
-
-    let isMounted = true;
-
-    async function checkSession() {
-      try {
-        const response = await fetch(`${API_URL}/auth/profile`, {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
-
-        if (isMounted && !response.ok) {
-          localStorage.removeItem("accessToken");
-        }
-        if (isMounted) {
-          setProfile(await response.json());
-          setIsAuthenticated(response.ok);
-        }
-      } catch {
-        if (isMounted) {
-          setIsAuthenticated(false);
-        }
-      }
-    }
-
-    checkSession();
-    return () => {
-      isMounted = false;
-    };
-  }, [location.pathname]);
 
   useEffect(() => {
     if (!isGradebookChooserOpen) return undefined;
@@ -87,7 +51,6 @@ function NavBar() {
 
   function handleLogout() {
     logout();
-    setIsAuthenticated(false);
     setIsOpen(false);
     setIsProfileOpen(false);
     navigate("/login");

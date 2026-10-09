@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { ArrowRight, BookOpen, LayoutGrid, List, Search, X } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { ArrowRight, BookOpen, CircleSlash, LayoutGrid, List, Search, X } from "lucide-react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import API_URL from "../config/api";
 import { TRAINING_COURSES } from "../components/training/courses";
@@ -63,6 +63,7 @@ const PROGRAM_INTROS = [
 	"Find the right training program to strengthen your skills and move your career forward.",
 	"Explore technology courses that turn your curiosity into practical, career-ready skills.",
 ];
+const PROGRAM_CACHE_KEY = "matekk-training-programs";
 
 const categoryLogos = {
 	Cisco: CCNALogo,
@@ -211,16 +212,25 @@ function getProgramPath(course) {
 	return course.path;
 }
 
+function readCachedPrograms() {
+	try {
+		const cachedPrograms = JSON.parse(localStorage.getItem(PROGRAM_CACHE_KEY) || "null");
+		return Array.isArray(cachedPrograms) ? cachedPrograms : null;
+	} catch {
+		localStorage.removeItem(PROGRAM_CACHE_KEY);
+		return null;
+	}
+}
+
 /* Reads User's Profile to display enrolled courses */
 export default function Blank() {
-	const navigate = useNavigate();
 	const { profile: sessionProfile } = useAuth();
 	const [activeCategory, setActiveCategory] = useState("All Programs");
 	const [programLayout, setProgramLayout] = useState("grid");
 	const [programSearch, setProgramSearch] = useState("");
-	const [loadedProfile, setLoadedProfile] = useState(null);
-	const [profileError, setProfileError] = useState("");
-	const profile = sessionProfile ?? loadedProfile;
+	const [databasePrograms, setDatabasePrograms] = useState(readCachedPrograms);
+	const [programsError, setProgramsError] = useState("");
+	const profile = sessionProfile;
 	const hasProfile = profile !== null;
 	const [introText] = useState(() => PROGRAM_INTROS[Math.floor(Math.random() * PROGRAM_INTROS.length)]);
 	const [typedUsername, setTypedUsername] = useState("");
@@ -232,14 +242,36 @@ export default function Blank() {
 	const categories = ["All Programs", ...new Set(enrolledCourses.map((course) => course.category))];
 	const visibleCourses = useMemo(() => {
 		const normalizedSearch = programSearch.trim().toLowerCase();
-		return enrolledCourses.filter((course) => {
+		const databaseNames = new Set(
+			(databasePrograms ?? []).flatMap((program) => [
+				program.name,
+				...(program.modules ?? []).map((module) => module.name),
+			]).map((name) => name.trim().toLowerCase().replace(/[^a-z0-9]+/g, "")),
+		);
+		const courseAliases = {
+			"A+ (Core 1 & 2)": ["A+"],
+			"CCNA Cybersecurity": ["CCNA Security"],
+			"CCNP Enterprise": ["CCNP Enterprise Core"],
+			FortiOS: ["FortiGate Administrator"],
+			"Secure Networking": ["FortiGate Security"],
+		};
+		return enrolledCourses
+			.filter((course) => {
 			const matchesCategory = activeCategory === "All Programs" || course.category === activeCategory;
 			const matchesSearch = !normalizedSearch || `${course.name} ${course.category} ${course.description}`
 				.toLowerCase()
 				.includes(normalizedSearch);
-			return matchesCategory && matchesSearch;
-		});
-	}, [activeCategory, enrolledCourses, programSearch]);
+				return matchesCategory && matchesSearch;
+			})
+			.map((course) => {
+				const courseNames = [course.name, ...(courseAliases[course.name] ?? [])]
+					.map((name) => name.trim().toLowerCase().replace(/[^a-z0-9]+/g, ""));
+				return {
+					...course,
+					isInDatabase: databaseNames.size > 0 && courseNames.some((name) => databaseNames.has(name)),
+				};
+			});
+	}, [activeCategory, databasePrograms, enrolledCourses, programSearch]);
 
 	const selectCategory = (category) => {
 		setActiveCategory(category);
@@ -313,41 +345,32 @@ export default function Blank() {
 	}, [introText, hasProfile]);
 
 	useEffect(() => {
-		const accessToken = localStorage.getItem("accessToken");
-		if (!accessToken) {
-			navigate("/login", { replace: true });
-			return;
-		}
-		/* Fetch the user's profile from the server using the access token. If the token is invalid or expired, redirect to login. */
-		async function loadProfile() {
-			try {
-				const response = await fetch(`${API_URL}/auth/profile`, {
-					headers: { Authorization: `Bearer ${accessToken}` },
-				});
-
+		const controller = new AbortController();
+		fetch(`${API_URL}/auth/programs`, { signal: controller.signal })
+			.then(async (response) => {
 				if (!response.ok) {
-					localStorage.removeItem("accessToken");
-					navigate("/login", { replace: true });
-					return;
+					throw new Error(`Program catalog request failed with status ${response.status}.`);
 				}
+				const programs = await response.json();
+				if (!Array.isArray(programs)) {
+					throw new Error("Program catalog response was not a list.");
+				}
+				setDatabasePrograms(programs);
+				localStorage.setItem(PROGRAM_CACHE_KEY, JSON.stringify(programs));
+				setProgramsError("");
+			})
+			.catch((error) => {
+				if (error.name === "AbortError") return;
+				console.error("Unable to load the program catalog from the database.", error);
+				setProgramsError("Program availability could not be checked. Please refresh to try again.");
+			});
+		return () => controller.abort();
+	}, []);
 
-				setLoadedProfile(await response.json());
-			} catch {
-				setProfileError("We could not load your profile. Please try again.");
-			}
-		}
-
-		loadProfile();
-	}, [navigate]);
 
 
-
-	if (!profile && !profileError) {
+	if (!profile) {
 		return <main className="flex min-h-[calc(100vh-5rem)] items-center justify-center bg-[#f8fafc] text-slate-600">Loading your profile...</main>;
-	}
-
-	if (profileError) {
-		return <main className="flex min-h-[calc(100vh-5rem)] items-center justify-center bg-[#f8fafc] text-slate-600">{profileError}</main>;
 	}
 
 	return (
@@ -445,6 +468,11 @@ export default function Blank() {
 							</div>
 						</div>
 						<div className={programLayout === "grid" ? "grid min-w-0 gap-7 sm:grid-cols-2" : "flex min-w-0 flex-col gap-4"}>
+							{programsError && (
+								<p role="alert" className="col-span-full rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-medium text-amber-900">
+									{programsError}
+								</p>
+							)}
 							{visibleCourses.map((course, index) => (
 								<article key={course.path} className={`fade-in-up-stagger group flex min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:border-[#1775EE] hover:shadow-xl ${programLayout === "grid" ? "min-h-[25rem] flex-col hover:-translate-y-1" : "flex-row"}`} style={{ "--fade-delay": 150 + index * 75 }}>
 									<div className={`flex shrink-0 items-center justify-center overflow-hidden bg-slate-50 ${programLayout === "grid" ? "h-44 p-7" : "w-24 p-3 sm:h-auto sm:w-52 sm:p-7"}`}>
@@ -456,9 +484,27 @@ export default function Blank() {
 										<h3 className="break-words text-xl font-bold text-slate-950">{course.name}</h3>
 										<p className="mt-3 text-sm leading-6 text-slate-600">{course.description}</p>
 										</div>
-										<Link to={getProgramPath(course)} className={`mt-5 flex items-center justify-center gap-2 rounded-lg bg-[#1775EE] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#1262c9] ${programLayout === "list" ? "sm:mt-0 sm:w-48 sm:shrink-0" : ""}`}>
-											View Program <ArrowRight size={16} />
-										</Link>
+										{course.isInDatabase && getProgramPath(course) ? (
+											<Link to={getProgramPath(course)} className={`mt-5 flex items-center justify-center gap-2 rounded-lg bg-[#1775EE] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#1262c9] ${programLayout === "list" ? "sm:mt-0 sm:w-48 sm:shrink-0" : ""}`}>
+												View Program <ArrowRight size={16} />
+											</Link>
+										) : (
+											<div className={`group/program relative mt-5 ${programLayout === "list" ? "sm:mt-0 sm:w-48 sm:shrink-0" : ""}`}>
+												<button
+													type="button"
+													disabled
+													title={programsError ? "Program availability unknown" : "Coming soon"}
+													aria-label={`${course.name} ${programsError ? "availability could not be checked" : "program coming soon"}`}
+													className="flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-lg bg-[#1775EE] px-4 py-2.5 text-sm font-semibold text-white opacity-45"
+												>
+													<CircleSlash size={16} />
+													View Program <ArrowRight size={16} />
+												</button>
+												<span role="tooltip" className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2 whitespace-nowrap rounded-md bg-slate-900 px-3 py-1.5 text-xs font-semibold text-white opacity-0 shadow-lg transition-opacity group-hover/program:opacity-100 group-focus-within/program:opacity-100">
+													{programsError ? "Availability unavailable" : !databasePrograms ? "Checking availability..." : "Coming soon"}
+												</span>
+											</div>
+										)}
 									</div>
 								</article>
 							))}

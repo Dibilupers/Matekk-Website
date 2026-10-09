@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { TutorialDiagramFrame } from "./ccnaTutorialDiagramFrame";
+import LessonImageExpand from "../../LessonImageExpand";
 import OsiVsTcpIpImage from "../../../../../assets/tcp-udp/osi-vs-tcpip.png";
 import TcpThreeWayHandshakeImage from "../../../../../assets/tcp-udp/tcp-three-way-handshake.png";
 import TcpHandshakeExampleImage from "../../../../../assets/tcp-udp/tcp-handshake-example.png";
@@ -916,8 +917,23 @@ function OsiModelLesson() {
 
 			<section aria-labelledby="osi-summary-heading">
 				<h2 id="osi-summary-heading" className="text-2xl font-bold text-[#071126] sm:text-3xl">OSI model quick reference</h2>
-				<div className="mt-4 overflow-x-auto rounded-xl border border-[#dbe5f5]">
-					<table className="w-full min-w-[800px] border-collapse text-left text-sm">
+				<LessonImageExpand label="table">
+					<div className="mt-4">
+						<div className="space-y-3 sm:hidden">
+							{osiLayers.map((layer) => (
+								<article key={layer.number} className="rounded-xl border border-[#dbe5f5] bg-white p-4">
+									<h3 className="font-bold text-[#172642]">Layer {layer.number}: {layer.name}</h3>
+									<dl className="mt-3 space-y-2 text-sm leading-5 text-[#526584]">
+										<div><dt className="font-semibold text-[#172642]">Description</dt><dd>{layer.description}</dd></div>
+										<div><dt className="font-semibold text-[#172642]">Protocols / examples</dt><dd>{layer.protocols}</dd></div>
+										<div><dt className="font-semibold text-[#172642]">Protocol data unit</dt><dd>{layer.pdu}</dd></div>
+										<div><dt className="font-semibold text-[#172642]">Devices</dt><dd>{layer.devices}</dd></div>
+									</dl>
+								</article>
+							))}
+						</div>
+						<div className="hidden overflow-x-auto rounded-xl border border-[#dbe5f5] sm:block">
+						<table className="w-full min-w-[800px] border-collapse text-left text-sm">
 						<thead className="bg-[#a5f3a0] text-[#142414]">
 							<tr>
 								<th scope="col" className="px-4 py-3 font-bold">Layer</th>
@@ -939,7 +955,9 @@ function OsiModelLesson() {
 							))}
 						</tbody>
 					</table>
-				</div>
+						</div>
+					</div>
+				</LessonImageExpand>
 			</section>
 
 			<section aria-labelledby="osi-troubleshooting-heading" className="rounded-2xl border border-[#dbe5f5] bg-[#f8faff] p-5 sm:p-6">

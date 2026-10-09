@@ -1,4 +1,4 @@
-import { ChevronDown, Clock, Folder, Search } from "lucide-react";
+import { ArrowLeft, ArrowRight, ChevronDown, Clock, Folder, Search } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import CcnaKnowledgeModuleOne from "./ccnaKnowledgeModule1";
@@ -601,6 +601,14 @@ export default function CCNAKnowledgeArticle() {
 		body: "Review the key terms, connect them to real network behavior, and use the module checklist to reinforce your understanding before moving to the next lesson.",
 		tags: ["CCNA", "Networking", "Study Guide"],
 	};
+	const flatTutorials = sections.flatMap((section) =>
+		section.items.map((item) => ({ title: item, slug: slugify(item) })),
+	);
+	const currentTutorialIndex = flatTutorials.findIndex((tutorial) => tutorial.slug === canonicalArticleSlug);
+	const previousTutorial = currentTutorialIndex > 0 ? flatTutorials[currentTutorialIndex - 1] : null;
+	const nextTutorial = currentTutorialIndex >= 0 && currentTutorialIndex < flatTutorials.length - 1
+		? flatTutorials[currentTutorialIndex + 1]
+		: null;
 
 	return (
 		<main className="min-h-screen bg-white text-[#526584]">
@@ -613,7 +621,7 @@ export default function CCNAKnowledgeArticle() {
 					<span className="min-w-0 truncate text-[#8492a9]">{article.title}</span>
 				</nav>
 				<div className="grid min-w-0 grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-6">
-					<article className="min-w-0 rounded-[24px] border border-[#dbe5f5] px-6 py-9 sm:px-10 sm:py-11">
+					<article className="min-w-0 break-words rounded-[24px] border border-[#dbe5f5] px-6 py-9 sm:px-10 sm:py-11">
 						<div className="inline-flex items-center gap-2 rounded-full bg-[#e8f3f4] px-4 py-2 text-sm font-semibold text-[#005b6b]"><Folder size={15} /> CCNA Knowledge</div>
 						<h1 className="mt-6 text-3xl font-bold leading-tight tracking-tight text-[#071126] sm:text-5xl">{article.title}</h1>
 						<p className="mt-4 flex min-w-0 items-center gap-2 text-base text-[#7b8ca7]"><Clock size={17} /> {article.meta}</p>
@@ -634,6 +642,21 @@ export default function CCNAKnowledgeArticle() {
 						)}
 						<div ref={lessonEndRef} aria-hidden="true" className="h-px" />
 						<div className="mt-7 flex flex-wrap gap-3">{article.tags.map((tag) => <span key={tag} className="rounded-full border border-[#d6e5e7] bg-[#f5f9f9] px-4 py-2 text-sm text-[#3d5c88]">{tag}</span>)}</div>
+						<div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-[#e2ecec] pt-5">
+							{previousTutorial ? (
+								<Link to={`/modules/programs/ccna/knowledge-hub/${previousTutorial.slug}`} className="inline-flex items-center gap-2 rounded-full border border-[#c9dfe2] px-5 py-2.5 text-sm font-semibold text-[#005b6b] transition hover:bg-[#e8f3f4]">
+									<ArrowLeft size={16} /> Previous
+								</Link>
+							) : <span />}
+							<Link to="/modules/programs/ccna/knowledge-hub" className="text-sm font-semibold text-[#005b6b] hover:underline">
+								Back to all lessons
+							</Link>
+							{nextTutorial ? (
+								<Link to={`/modules/programs/ccna/knowledge-hub/${nextTutorial.slug}`} className="inline-flex items-center gap-2 rounded-full bg-[#005b6b] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#004653]">
+									Next lesson <ArrowRight size={16} />
+								</Link>
+							) : <span />}
+						</div>
 					</article>
 					<TutorialSidebar activeSlug={canonicalArticleSlug} />
 				</div>
