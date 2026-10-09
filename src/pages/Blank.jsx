@@ -20,6 +20,7 @@ import CCNACybersecurityLogo from "../assets/CCNAcybersecurity.webp";
 import CCNPDatacenterLogo from "../assets/CCNPDatacenter.webp";
 import CCNPEnterpriseLogo from "../assets/CCNPEnterprise.webp";
 import CCNPSecurityLogo from "../assets/CCNPSecurity.png";
+import CCNPCollaborationLogo from "../assets/CCNPCollaboration.png";
 import CiscoLogo from "../assets/cisco.png";
 import SecurityPlusLogo from "../assets/security+.webp";
 import CySAPlusLogo from "../assets/cysa.webp";
@@ -83,7 +84,7 @@ const programLogos = {
 	"/training/cisco/ccnp/enterprise": CCNPEnterpriseLogo,
 	"/training/cisco/ccnp/security": CCNPSecurityLogo,
 	"/training/cisco/ccnp/datacenter": CCNPDatacenterLogo,
-	"/training/cisco/ccnp/collaboration": CiscoLogo,
+	"/training/cisco/ccnp/collaboration": CCNPCollaborationLogo,
 	"/training/comptia/aplus": APlusLogo,
 	"/training/comptia/network": NetworkPlusLogo,
 	"/training/comptia/security+": SecurityPlusLogo,

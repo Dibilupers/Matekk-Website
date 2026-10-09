@@ -3,7 +3,7 @@ import Button from "../../../../components/ui/button";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import ccnaBadge from "../../../../assets/CCNPSecurity.png";
+import ccnaBadge from "../../../../assets/CCNPCollaboration.png";
 import ccnaHero from "../../../../assets/CCNAHeroImageAutomation.webp";
 import ccnaFooter from "../../../../assets/CCNAFooterImageAutomation.webp";
 import MealIcon from "../../../../assets/Meal.svg";
