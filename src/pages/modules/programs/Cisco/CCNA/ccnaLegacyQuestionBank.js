@@ -1532,7 +1532,7 @@ export const CCNA_LEGACY_200_301_QUESTIONS = [
     "answer": 2
   },
   {
-    "prompt": "Refer to exhibit. An engineer is configuring the New York router to reach the Lo1 interface of the Atlanta router using interface S0/0/0 as the primary path. Which two commands must be configured on the New York router so that it can reach the Lo1 interface of the Atlanta router via Washington when the link between New York and Atlanta goes down? (Choose two) Configured interfaces: Atlanta: New York: Washington: S0/0/0: 2012::1/126 S0/0/0: 2012::2/126 S0/0/0: 2023::3/126 S0/0/1: 2013::1/126 S0/0/1: 2023::2/126 S0/0/1: 2013::3/126 Loopback1: Loopback2:2000::2/1 Loopback3: 2000::1/128 28 2000::3/128",
+    "prompt": "Refer to exhibit. An engineer is configuring the New York router to reach the Lo1 interface of the Atlanta router using interface S0/0/0 as the primary path. Which two commands must be configured on the New York router so that it can reach the Lo1 interface of the Atlanta router via Washington when the link between New York and Atlanta goes down? (Choose two)\n\nConfigured interfaces:\n\nAtlanta:\n  S0/0/0: 2012::1/126\n  S0/0/1: 2013::1/126\n  Loopback1: 2000::1/128\n\nNew York:\n  S0/0/0: 2012::2/126\n  S0/0/1: 2023::2/126\n  Loopback2: 2000::2/128\n\nWashington:\n  S0/0/0: 2023::3/126\n  S0/0/1: 2013::3/126\n  Loopback3: 2000::3/128",
     "options": [
       "ipv6 route 2000::1/128 2012::1",
       "ipv6 route 2000::1/128 2012::1 5",
@@ -1628,7 +1628,7 @@ export const CCNA_LEGACY_200_301_QUESTIONS = [
     "answer": 3
   },
   {
-    "prompt": "Refer to exhibit. The loopback1 interface of the Atlanta router must reach the loopback3 interface of the Washington router. Which two static host routes must be configured on the NEW York router? (Choose two) Configured interfaces: New York: Atlanta: Washington: S0/0/0: 2012::2/126 S0/0/0: 2012::1/126 S0/0/0: 2023::3/126 S0/0/1: 2023::2/126 Loopback1: Loopback3: Loopback2:2000::2/1 2000::1/128 2000::3/128 28",
+    "prompt": "Refer to exhibit. The loopback1 interface of the Atlanta router must reach the loopback3 interface of the Washington router. Which two static host routes must be configured on the NEW York router? (Choose two)\n\nConfigured interfaces:\n\nAtlanta:\n  S0/0/0: 2012::1/126\n  S0/0/1: 2013::1/126\n  Loopback1: 2000::1/128\n\nNew York:\n  S0/0/0: 2012::2/126\n  S0/0/1: 2023::2/126\n  Loopback2: 2000::2/128\n\nWashington:\n  S0/0/0: 2023::3/126\n  S0/0/1: 2013::3/126\n  Loopback3: 2000::3/128",
     "options": [
       "ipv6 route 2000::1/128 2012::1",
       "ipv6 route 2000::3/128 2023::3",

@@ -25,6 +25,9 @@ import {
 	saveProgramModuleQuizProgress,
 } from "../../../../../utils/programModuleQuizProgress";
 import { saveGradebookAssessment } from "../../../../../utils/gradebookApi";
+import { QuestionPrompt, QuestionReview } from "./ccnaExamQuestionViews";
+
+const CCNA_SOURCE_URL = "https://www.cisco.com/site/us/en/learn/training-certifications/certifications/enterprise/ccna/index.html";
 
 const PROGRAM_QUIZ_CONFIG = {
 	"ccna-automation": {
@@ -536,12 +539,10 @@ export default function CCNAModuleQuiz() {
 							<div className="ccna-progress-fill h-full rounded-full bg-[#005b6b] transition-[width] duration-300" style={{ width: `${(answeredCount / moduleQuiz.questions.length) * 100}%` }} />
 						</div>
 
-						<div className="grid items-stretch gap-5 lg:grid-cols-[minmax(0,1fr)_280px]">
+						<div className="mx-auto max-w-3xl">
 							<section className="rounded-[20px] border border-[#d6e5e7] bg-white p-4 shadow-sm sm:p-7">
-								<p className="mb-2 text-sm text-[#70809a]">Question {attempt.currentIndex + 1} of {moduleQuiz.questions.length} · {moduleQuiz.title}</p>
-								<h1 className="mb-4 text-lg font-bold leading-snug tracking-tight text-[#17233d] sm:mb-6 sm:text-[1.7rem]">
-									{currentQuestion.prompt}
-								</h1>
+								<p className="mb-2 text-sm font-semibold text-[#70809a]">Question {attempt.currentIndex + 1} of {moduleQuiz.questions.length} · {moduleQuiz.title}</p>
+								<QuestionPrompt prompt={currentQuestion.prompt} />
 								<div className="space-y-2.5">
 									{currentQuestion.options.map((option, optionIndex) => {
 										const isSelected = selectedAnswer === optionIndex;
@@ -578,36 +579,6 @@ export default function CCNAModuleQuiz() {
 								</div>
 							</section>
 
-							<aside aria-label="Question navigation" className="rounded-[20px] border border-[#d6e5e7] bg-white p-5 shadow-sm sm:p-6">
-								<h2 className="mb-4 text-base font-bold text-[#17233d]">Questions</h2>
-								<div className="grid grid-cols-5 gap-2">
-									{moduleQuiz.questions.map((_, index) => {
-										const hasAnswer = attempt.answers[index] !== undefined;
-										const isActive = index === attempt.currentIndex;
-										const canNavigate =
-											index === attempt.currentIndex ||
-											(index === attempt.currentIndex + 1 && answeredCurrentQuestion && !attempt.lockedQuestions?.[attempt.currentIndex]);
-										return (
-											<button
-												key={index}
-												type="button"
-												onClick={() => goToQuestion(index)}
-												disabled={!canNavigate}
-												aria-label={`Question ${index + 1}${hasAnswer ? ", answered" : ", unanswered"}`}
-												aria-current={isActive ? "step" : undefined}
-												className={`ccna-dark-hover h-10 w-full rounded-xl border text-sm font-semibold transition disabled:cursor-not-allowed ${
-													hasAnswer
-														? "border-[#005b6b] bg-[#e8f3f4] text-[#005b6b]"
-														: "border-[#d9e1ef] bg-white text-[#71809a]"
-												} ${isActive ? "ring-2 ring-[#005b6b] ring-offset-2" : ""} hover:border-[#005b6b] hover:bg-[#005b6b] hover:text-white disabled:hover:border-inherit disabled:hover:bg-inherit disabled:hover:text-inherit`}
-											>
-												{index + 1}
-											</button>
-										);
-									})}
-								</div>
-								<p className="mt-5 text-sm leading-6 text-[#70809a]">{answeredCount} of {moduleQuiz.questions.length} answered</p>
-							</aside>
 						</div>
 					</>
 				)}
@@ -733,38 +704,27 @@ export default function CCNAModuleQuiz() {
 													{question.isCorrect ? "Correct" : "Incorrect"}
 												</span>
 											</div>
-											<h3 className="mt-4 text-lg font-bold leading-snug text-[#17233d] sm:text-xl">{question.prompt}</h3>
-											<div className="mt-5 space-y-2.5">
-												{question.options.map((option, optionIndex) => {
-													const isCorrectAnswer = optionIndex === question.answer;
-													const isSelectedAnswer = optionIndex === question.selectedAnswer;
-													const optionStyle = isCorrectAnswer
-														? "border-[#54a879] bg-[#eff9f2] text-[#236a43]"
-														: isSelectedAnswer
-															? "border-[#e77945] bg-[#fff5ef] text-[#a44b13]"
-															: "border-[#e1e8ef] bg-white text-[#42516b]";
-
-													return (
-														<div key={option} className={`flex min-h-[54px] items-center gap-3 rounded-xl border px-4 py-3 ${optionStyle}`}>
-															<span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
-																isCorrectAnswer ? "bg-[#2d8a56] text-white" : isSelectedAnswer ? "bg-[#c7541a] text-white" : "bg-[#edf3fb] text-[#4764a8]"
-															}`}>
-																{String.fromCharCode(65 + optionIndex)}
-															</span>
-															<span className="flex-1 text-sm font-medium sm:text-base">{option}</span>
-															{isSelectedAnswer && !isCorrectAnswer && (
-																<span className="inline-flex items-center gap-1 text-xs font-bold text-[#a44b13]"><X size={15} /> Your answer</span>
-															)}
-															{isCorrectAnswer && (
-																<span className="inline-flex items-center gap-1 text-xs font-bold text-[#287849]"><Check size={15} /> Correct answer</span>
-															)}
-														</div>
-													);
-												})}
+											<QuestionPrompt prompt={question.prompt} />
+											<div className="mt-5">
+												<QuestionReview question={question} value={question.selectedAnswer} />
 											</div>
-											<p className="mt-4 rounded-xl bg-[#f5f9f9] px-4 py-3 text-sm leading-6 text-[#596983]">
-												<span className="font-bold text-[#005b6b]">Explanation: </span>{question.explanation}
-											</p>
+											{(() => {
+												const questionSource = question.source || "Cisco CCNA official learning materials and certification references";
+												const questionSourceUrl = question.sourceUrl || CCNA_SOURCE_URL;
+												return (
+													<p className="mt-4 rounded-xl bg-[#f5f9f9] px-4 py-3 text-sm leading-6 text-[#596983]">
+														<span className="font-semibold text-[#005b6b]">Explanation: </span>{question.explanation}
+														<a
+															href={questionSourceUrl}
+															target="_blank"
+															rel="noreferrer"
+															className="mt-3 block text-[11px] font-black uppercase tracking-[0.16em] text-[#0d6d7a] no-underline hover:text-[#0d5561]"
+														>
+															SOURCE: {questionSource}
+														</a>
+													</p>
+												);
+											})()}
 										</article>
 									))}
 									{reviewQuestions.length === 0 && (

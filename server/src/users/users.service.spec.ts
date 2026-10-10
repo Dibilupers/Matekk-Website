@@ -170,6 +170,7 @@ describe('UsersService', () => {
         gender: true,
         city_province: true,
         phone_number: true,
+        profile_photo: true,
         enrollments: {
           select: {
             program: {
