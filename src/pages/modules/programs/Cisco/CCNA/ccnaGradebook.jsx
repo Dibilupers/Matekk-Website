@@ -44,6 +44,12 @@ function getGradeTone(score) {
 	};
 }
 
+function getGradePercentage(score, maxScore) {
+	return Number.isFinite(score) && Number.isFinite(maxScore) && maxScore > 0
+		? Math.round((score / maxScore) * 100)
+		: null;
+}
+
 function getModuleRows(progress, storedAssessments) {
 	return CCNA_MODULE_QUIZZES.flatMap((quiz, index) => {
 		const attempt = progress.modules[quiz.number];
@@ -168,11 +174,11 @@ function getExamRows(examProgressByKey, examResults, storedAssessments) {
 			: hasLegacyShortResult
 				? { score: progress.score, maxScore: progress.maxScore }
 				: null;
-		const grade = points ? Math.round((points.score / points.maxScore) * 100) : null;
+		const grade = points ? getGradePercentage(points.score, points.maxScore) : null;
 		const bestPoints = bestResult
 			? { score: bestResult.score, maxScore: bestResult.maxScore }
 			: points;
-		const bestGrade = bestPoints ? Math.round((bestPoints.score / bestPoints.maxScore) * 100) : null;
+		const bestGrade = bestPoints ? getGradePercentage(bestPoints.score, bestPoints.maxScore) : null;
 		const isInProgress = progress.status === "in-progress";
 		const isExpired = progress.status === "expired" && !latestResult;
 
@@ -263,8 +269,8 @@ function AssessmentTable({ title, rows, filter, sort }) {
 									<td className="px-5 py-4 text-center text-[#445363]">{row.attempts || "--"}</td>
 									<td className="px-5 py-4 text-right">
 										{row.points ? (
-											<span className={`inline-flex min-w-[68px] justify-center rounded-full px-3 py-1.5 text-sm font-bold tabular-nums ${getGradeTone(Math.round((row.points.score / row.points.maxScore) * 100)).badge}`}>
-												{row.points.score}/{row.points.maxScore}
+											<span className={`inline-flex min-w-[120px] justify-center rounded-full px-3 py-1.5 text-sm font-bold tabular-nums ${getGradeTone(getGradePercentage(row.points.score, row.points.maxScore)).badge}`}>
+												{row.points.score}/{row.points.maxScore} · {getGradePercentage(row.points.score, row.points.maxScore)}%
 											</span>
 										) : <span className="text-[#8895a0]">--</span>}
 									</td>
@@ -387,7 +393,7 @@ export default function CCNAGradebook() {
 					</div>
 					<div className="relative left-1/2 w-screen -translate-x-1/2 bg-white shadow-sm">
 						<div className="mx-auto grid max-w-[1680px] grid-cols-2 gap-4 px-4 py-5 sm:grid-cols-3 sm:gap-5 sm:px-8 sm:py-8 lg:px-10 xl:grid-cols-5 2xl:px-12">
-							<SummaryStat label="Class grade" value={classGrade === null ? "--" : `${classGrade}%`} detail={overallPossiblePoints ? `${overallPoints}/${overallPossiblePoints} points` : "No graded assessments"} progress={classGrade ?? undefined} />
+							<SummaryStat label="Class grade" value={classGrade === null ? "--" : `${classGrade}%`} detail={overallPossiblePoints ? `${overallPoints}/${overallPossiblePoints} points earned` : "No graded assessments"} progress={classGrade ?? undefined} />
 							<SummaryStat label="Quizzes completed" value={`${latestModuleRows.length} of ${CCNA_MODULE_QUIZZES.length}`} detail="module quizzes completed" />
 							<SummaryStat label="Exams completed" value={`${completedExamCount} of ${Object.keys(CCNA_EXAMS).length}`} detail="exams completed" />
 							<SummaryStat label="Best score" value={bestAssessment ? `${bestAssessment.bestPoints.score}/${bestAssessment.bestPoints.maxScore}` : "--"} detail={bestAssessment?.name ?? "No results yet"} gradeScore={bestAssessment?.bestGrade} />
@@ -426,7 +432,7 @@ export default function CCNAGradebook() {
 					<AssessmentTable title="Module Quizzes" rows={moduleRows} filter={filter} sort={sort} />
 					<div className="flex items-center justify-between border border-[#dce4e8] bg-[#f2f5f6] px-5 py-4 text-sm text-[#4c5b67]">
 						<strong className="font-medium">Module quizzes average</strong>
-						<span className={getGradeTone(quizPossiblePoints ? Math.round(quizPoints / quizPossiblePoints * 100) : null).text}>{quizPossiblePoints ? `${quizPoints}/${quizPossiblePoints}` : "--"}</span>
+						<span className={getGradeTone(getGradePercentage(quizPoints, quizPossiblePoints)).text}>{quizPossiblePoints ? `${quizPoints}/${quizPossiblePoints} · ${getGradePercentage(quizPoints, quizPossiblePoints)}%` : "--"}</span>
 					</div>
 				</div>
 
@@ -434,7 +440,7 @@ export default function CCNAGradebook() {
 					<AssessmentTable title="Exams" rows={examRows} filter={filter} sort={sort} />
 					<div className="flex items-center justify-between border border-[#dce4e8] bg-[#f2f5f6] px-5 py-4 text-sm text-[#4c5b67]">
 						<strong className="font-medium">Exam average</strong>
-						<span className={getGradeTone(examPossiblePoints ? Math.round(examPoints / examPossiblePoints * 100) : null).text}>{examPossiblePoints ? `${examPoints}/${examPossiblePoints}` : "--"}</span>
+						<span className={getGradeTone(getGradePercentage(examPoints, examPossiblePoints)).text}>{examPossiblePoints ? `${examPoints}/${examPossiblePoints} · ${getGradePercentage(examPoints, examPossiblePoints)}%` : "--"}</span>
 					</div>
 				</div>
 			</div>

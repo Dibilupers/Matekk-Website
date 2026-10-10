@@ -1,81 +1,28 @@
 ﻿import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { ArrowLeft, ArrowRight, ArrowUp, Clock3, Moon, RotateCcw, Sun, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUp, Clock3, Flag, Moon, RotateCcw, Sun, X } from "lucide-react";
 import { Link, useBlocker, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../../../context/AuthContext";
 import TrainingLogo from "../../../../../assets/MATEKK_training_logo.png";
 import { CCNA_EXAMS } from "./ccnaExamFormats";
-import { createCcnaMockExamAttemptId, saveCcnaMockExamResult } from "../../../../../utils/ccnaGradebook";
+import { saveCcnaMockExamResult } from "../../../../../utils/ccnaGradebook";
 import { getCcnaExamSessionKey } from "../../../../../utils/ccnaShortExamSession";
-import { isAnswerCorrect, isQuestionAnswered, isValidQuestion } from "../../../../../utils/ccnaExamGrading";
-import { QuestionInput, QuestionReview } from "./ccnaExamQuestionViews";
+import { isQuestionAnswered } from "../../../../../utils/ccnaExamGrading";
+import { QuestionInput, QuestionPrompt, QuestionReview } from "./ccnaExamQuestionViews";
 import { saveGradebookAssessment } from "../../../../../utils/gradebookApi";
+import { resumeCcnaExam, startCcnaExam, submitCcnaExam } from "../../../../../utils/ccnaExamApi";
 
 
+
+const CCNA_SOURCE_URL = "https://www.cisco.com/site/us/en/learn/training-certifications/certifications/enterprise/ccna/index.html";
 
 const EXAM_PASS_PERCENTAGE = 80;
-function createExamSession(exam) {
-	const questions = exam.createQuestions();
-	if (!Array.isArray(questions) || questions.length !== exam.questionCount || !questions.every(isValidQuestion)) {
-		throw new Error(`${exam.name} could not create its required set of valid questions.`);
-	}
-	return {
-		attemptId: createCcnaMockExamAttemptId(),
-		submittedAt: null,
-		questions,
-		answers: {},
-		lockedQuestions: {},
-		currentIndex: 0,
-		deadline: Date.now() + exam.durationSeconds * 1000,
-		isSubmitted: false,
-	};
-}
-
-function restoreExamSession(exam, sessionStorageKey) {
-	const createSession = () => createExamSession(exam);
-	if (!sessionStorageKey || typeof window === "undefined") return createSession();
-	const savedSession = window.sessionStorage.getItem(sessionStorageKey);
-	if (!savedSession) return createSession();
-
-	try {
-		const session = JSON.parse(savedSession);
-		const isValid = session &&
-			Array.isArray(session.questions) &&
-			session.questions.length === exam.questionCount &&
-			session.questions.every(isValidQuestion) &&
-			session.answers &&
-			typeof session.answers === "object" &&
-			!Array.isArray(session.answers) &&
-			session.lockedQuestions &&
-			typeof session.lockedQuestions === "object" &&
-			!Array.isArray(session.lockedQuestions) &&
-			Number.isInteger(session.currentIndex) &&
-			session.currentIndex >= 0 &&
-			session.currentIndex < exam.questionCount &&
-			Number.isFinite(session.deadline) &&
-			typeof session.isSubmitted === "boolean";
-
-		if (!isValid) throw new TypeError(`Saved ${exam.name} session has an invalid structure.`);
-		const isSubmitted = session.isSubmitted || session.deadline <= Date.now();
-		return {
-			...session,
-			attemptId: typeof session.attemptId === "string" ? session.attemptId : createCcnaMockExamAttemptId(),
-			submittedAt: Number.isFinite(session.submittedAt)
-				? session.submittedAt
-				: isSubmitted ? Date.now() : null,
-			isSubmitted,
-		};
-	} catch (error) {
-		console.error(`Unable to restore the saved ${exam.name} session.`, error);
-		window.sessionStorage.removeItem(sessionStorageKey);
-		return createSession();
-	}
-}
 
 function formatTime(totalSeconds) {
-	const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, "0");
+	const hours = Math.floor(totalSeconds / 3600);
+	const minutes = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, "0");
 	const seconds = (totalSeconds % 60).toString().padStart(2, "0");
-	return `${minutes}:${seconds}`;
+	return hours > 0 ? `${hours.toString().padStart(2, "0")}:${minutes}:${seconds}` : `${minutes}:${seconds}`;
 }
 
 export default function CCNACompositeExam({ examKey = "short" }) {
@@ -91,27 +38,30 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 	const sessionStorageKey = userId === null || userId === undefined
 		? null
 		: getCcnaExamSessionKey(exam.sessionKey, userId);
-	const [initialSession] = useState(() =>
-		shouldStartNewAttempt ? createExamSession(exam) : restoreExamSession(exam, sessionStorageKey),
-	);
 	const hasLinkedExamResult = shouldShowExamResult &&
 		Number.isFinite(linkedExamResult?.score) &&
 		Number.isFinite(linkedExamResult?.maxScore) &&
 		linkedExamResult.maxScore > 0;
+	const [examLoadState, setExamLoadState] = useState({ status: "loading", error: null });
+	const [loadAttempt, setLoadAttempt] = useState(0);
+	const [attemptId, setAttemptId] = useState(null);
+	const [submittedAt, setSubmittedAt] = useState(null);
+	const [questions, setQuestions] = useState([]);
+	const [answers, setAnswers] = useState({});
+	const [lockedQuestions, setLockedQuestions] = useState({});
+	const [flaggedQuestions, setFlaggedQuestions] = useState({});
+	const [currentIndex, setCurrentIndex] = useState(0);
+	const [deadline, setDeadline] = useState(null);
+	const [secondsRemaining, setSecondsRemaining] = useState(exam.durationSeconds);
+	const [isSubmitted, setIsSubmitted] = useState(false);
+	const [serverResult, setServerResult] = useState(null);
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [submitError, setSubmitError] = useState(null);
+	const shouldStartNewAttemptRef = useRef(shouldStartNewAttempt);
+	const submitInFlightRef = useRef(false);
+	const submitExamRef = useRef(null);
 	const isViewingSavedResult = hasLinkedExamResult &&
-		(!initialSession.isSubmitted ||
-			(typeof linkedExamResult.id === "string" && initialSession.attemptId !== linkedExamResult.id));
-	const [attemptId, setAttemptId] = useState(initialSession.attemptId);
-	const [submittedAt, setSubmittedAt] = useState(initialSession.submittedAt);
-	const [questions, setQuestions] = useState(initialSession.questions);
-	const [answers, setAnswers] = useState(initialSession.answers);
-	const [lockedQuestions, setLockedQuestions] = useState(initialSession.lockedQuestions);
-	const [currentIndex, setCurrentIndex] = useState(initialSession.currentIndex);
-	const [deadline, setDeadline] = useState(initialSession.deadline);
-	const [secondsRemaining, setSecondsRemaining] = useState(() =>
-		Math.max(0, Math.ceil((initialSession.deadline - Date.now()) / 1000)),
-	);
-	const [isSubmitted, setIsSubmitted] = useState(initialSession.isSubmitted);
+		(!isSubmitted || (typeof linkedExamResult.id === "string" && attemptId !== linkedExamResult.id));
 	const isResultView = isSubmitted || isViewingSavedResult;
 	const [isRetakeConfirmationOpen, setIsRetakeConfirmationOpen] = useState(false);
 	const [examAttempt, setExamAttempt] = useState(0);
@@ -131,10 +81,10 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 	const answeredCount = questions.filter((item, index) =>
 		isQuestionAnswered(item, answers[index]),
 	).length;
-	const score = questions.reduce(
-		(total, item, index) => total + Number(isAnswerCorrect(item, answers[index])),
-		0,
-	);
+	const unansweredCount = questions.length - answeredCount;
+	const flaggedCount = Object.values(flaggedQuestions).filter(Boolean).length;
+	const answeredPercentage = questions.length > 0 ? Math.round((answeredCount / questions.length) * 100) : 0;
+	const score = serverResult?.score ?? 0;
 	const animatedScore = animatedResult.attempt === examAttempt ? animatedResult.score : 0;
 	const animatedElapsedSeconds = animatedResult.attempt === examAttempt ? animatedResult.elapsedSeconds : 0;
 	const resultScore = isViewingSavedResult ? linkedExamResult.score : score;
@@ -148,13 +98,21 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 	const progressColor = `hsl(${progressHue} 75% 42%)`;
 	const examPassed = (isViewingSavedResult ? resultPercentage : Math.round((score / questions.length) * 100)) >= EXAM_PASS_PERCENTAGE;
 	const showBackToTop = backToTopVisibility.attempt === examAttempt && backToTopVisibility.visible;
-	const reviewQuestions = questions
-		.map((item, index) => ({
-			...item,
-			index,
-			selectedAnswer: answers[index],
-			isCorrect: isAnswerCorrect(item, answers[index]),
-		}))
+	const reviewQuestions = (Array.isArray(serverResult?.review) ? serverResult.review : [])
+		.map((item, index) => {
+			const question = questions[index];
+			const isMatch = question?.type === "match";
+			return {
+				...question,
+				index,
+				answer: isMatch ? item.correctAnswer : question?.options.indexOf(item.correctAnswer),
+				selectedAnswer: isMatch
+					? item.selectedAnswer
+					: question?.options.indexOf(item.selectedAnswer),
+				isCorrect: item.isCorrect,
+				explanation: item.explanation,
+			};
+		})
 		.filter((item) =>
 			answerFilter === "all" ||
 			(answerFilter === "correct" && item.isCorrect) ||
@@ -164,23 +122,133 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 	const [gradebookSaveError, setGradebookSaveError] = useState(null);
 
 	useEffect(() => {
-		if (!shouldStartNewAttempt) return;
-		navigate(location.pathname, { replace: true, state: null });
-	}, [location.pathname, navigate, shouldStartNewAttempt]);
+		let isActive = true;
+
+		async function loadExamAttempt() {
+			setExamLoadState({ status: "loading", error: null });
+			try {
+				let savedSession = null;
+				const isRetake = shouldStartNewAttemptRef.current;
+				if (!isRetake && sessionStorageKey) {
+					const savedValue = window.sessionStorage.getItem(sessionStorageKey);
+					if (savedValue) {
+						try {
+							const parsed = JSON.parse(savedValue);
+							if (
+								parsed &&
+								typeof parsed.attemptId === "string" &&
+								Array.isArray(parsed.questions) &&
+								parsed.questions.every((question) =>
+									Number.isInteger(question?.id) &&
+									typeof question.prompt === "string" &&
+									(question.type === "match"
+										? Array.isArray(question.items) && Array.isArray(question.choices)
+										: Array.isArray(question.options)),
+								)
+							) savedSession = parsed;
+							else window.sessionStorage.removeItem(sessionStorageKey);
+						} catch (error) {
+							console.error(`Unable to restore the saved ${exam.name} attempt.`, error);
+							window.sessionStorage.removeItem(sessionStorageKey);
+						}
+					}
+				}
+
+				let apiAttempt;
+				if (savedSession) {
+					try {
+						apiAttempt = await resumeCcnaExam(examKey, savedSession.attemptId);
+					} catch (error) {
+						if (error?.status !== 404) throw error;
+						console.warn(`The saved ${exam.name} attempt no longer exists; starting a new attempt.`);
+						window.sessionStorage.removeItem(sessionStorageKey);
+						apiAttempt = await startCcnaExam(examKey);
+					}
+				} else {
+					apiAttempt = await startCcnaExam(examKey);
+				}
+				if (!isActive) return;
+				if (apiAttempt.questions.length !== exam.questionCount) {
+					throw new TypeError(`The backend did not return ${exam.questionCount} questions for this exam.`);
+				}
+
+				const cachedQuestionsMatch = savedSession?.questions?.length === apiAttempt.questions.length &&
+					savedSession.questions.every((savedQuestion, index) =>
+						savedQuestion.id === apiAttempt.questions[index].id &&
+						(savedQuestion.type ?? "single") === apiAttempt.questions[index].type &&
+						JSON.stringify(savedQuestion.options) === JSON.stringify(apiAttempt.questions[index].options) &&
+						JSON.stringify(savedQuestion.items) === JSON.stringify(apiAttempt.questions[index].items) &&
+						JSON.stringify(savedQuestion.choices) === JSON.stringify(apiAttempt.questions[index].choices),
+					);
+				const restoredAnswers = cachedQuestionsMatch && savedSession.answers &&
+					typeof savedSession.answers === "object" && !Array.isArray(savedSession.answers)
+					? savedSession.answers
+					: {};
+				const restoredIndex = cachedQuestionsMatch && Number.isInteger(savedSession.currentIndex) &&
+					savedSession.currentIndex >= 0 && savedSession.currentIndex < apiAttempt.questions.length
+					? savedSession.currentIndex
+					: 0;
+				const restoredLocks = cachedQuestionsMatch && savedSession.lockedQuestions &&
+					typeof savedSession.lockedQuestions === "object" && !Array.isArray(savedSession.lockedQuestions)
+					? savedSession.lockedQuestions
+					: {};
+				const restoredFlags = cachedQuestionsMatch && savedSession.flaggedQuestions &&
+					typeof savedSession.flaggedQuestions === "object" && !Array.isArray(savedSession.flaggedQuestions)
+					? savedSession.flaggedQuestions
+					: {};
+				const result = apiAttempt.isSubmitted
+					? {
+						score: apiAttempt.score,
+						maxScore: apiAttempt.questions.length,
+						review: apiAttempt.review,
+					}
+					: null;
+
+				setAttemptId(apiAttempt.attemptId);
+				setQuestions(apiAttempt.questions);
+				setAnswers(restoredAnswers);
+				setLockedQuestions(restoredLocks);
+				setFlaggedQuestions(restoredFlags);
+				setCurrentIndex(restoredIndex);
+				setDeadline(apiAttempt.deadline);
+				setSecondsRemaining(Math.max(0, Math.ceil((apiAttempt.deadline - Date.now()) / 1000)));
+				setSubmittedAt(apiAttempt.submittedAt);
+				setServerResult(result);
+				setIsSubmitted(apiAttempt.isSubmitted);
+				setExamLoadState({ status: "ready", error: null });
+				shouldStartNewAttemptRef.current = false;
+				if (isRetake) navigate(location.pathname, { replace: true, state: null });
+			} catch (error) {
+				console.error(`Unable to load the ${exam.name} questions from the backend.`, error);
+				if (isActive) setExamLoadState({
+					status: "error",
+					error: error instanceof Error ? error.message : "The exam could not be loaded.",
+				});
+			}
+		}
+
+		loadExamAttempt();
+		return () => {
+			isActive = false;
+		};
+	}, [exam.durationSeconds, exam.name, exam.questionCount, examKey, loadAttempt, location.pathname, navigate, sessionStorageKey]);
 
 	useEffect(() => {
-		if (isViewingSavedResult || !sessionStorageKey) return;
+		if (!attemptId || examLoadState.status !== "ready" || isViewingSavedResult || !sessionStorageKey) return;
 		window.sessionStorage.setItem(sessionStorageKey, JSON.stringify({
 			attemptId,
 			submittedAt,
 			questions,
 			answers,
 			lockedQuestions,
+			flaggedQuestions,
 			currentIndex,
 			deadline,
 			isSubmitted,
+			serverResult,
+			score: serverResult?.score ?? null,
 		}));
-	}, [answers, attemptId, currentIndex, deadline, isSubmitted, isViewingSavedResult, lockedQuestions, questions, sessionStorageKey, submittedAt]);
+	}, [answers, attemptId, currentIndex, deadline, examLoadState.status, flaggedQuestions, isSubmitted, isViewingSavedResult, lockedQuestions, questions, serverResult, sessionStorageKey, submittedAt]);
 
 	useEffect(() => {
 		if (!isSubmitted || isViewingSavedResult || !userId || !Number.isFinite(submittedAt)) return;
@@ -217,24 +285,54 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 		};
 	}, [attemptId, exam.name, isSubmitted, isViewingSavedResult, questions.length, score, submittedAt, userId]);
 
-	function submitExam(finishedAt = Date.now()) {
-		setSubmittedAt((previousSubmittedAt) => previousSubmittedAt ?? finishedAt);
-		setIsSubmitted(true);
+	async function submitExam() {
+		if (submitInFlightRef.current || isSubmitted || !attemptId) return;
+		submitInFlightRef.current = true;
+		setIsSubmitting(true);
+		setSubmitError(null);
+		try {
+			const submittedAnswers = questions.map((item, index) => ({
+				questionId: item.id,
+				...(item.type === "match"
+					? { selectedMatches: Array.isArray(answers[index]) ? answers[index] : null }
+					: { selectedAnswer: Number.isInteger(answers[index]) ? item.options[answers[index]] : null }),
+			}));
+			const result = await submitCcnaExam(examKey, attemptId, submittedAnswers);
+			if (
+				!Number.isInteger(result?.score) ||
+				result.score < 0 ||
+				result.score > questions.length ||
+				!Array.isArray(result.review) ||
+				result.review.length !== questions.length
+			) {
+				throw new TypeError("The backend returned an invalid exam result.");
+			}
+			setServerResult({ score: result.score, maxScore: questions.length, review: result.review });
+			setSubmittedAt(result.submittedAt ?? Date.now());
+			setIsSubmitted(true);
+		} catch (error) {
+			console.error("Unable to submit the exam for backend grading.", error);
+			setSubmitError(error instanceof Error ? error.message : "Your answers could not be submitted.");
+		} finally {
+			submitInFlightRef.current = false;
+			setIsSubmitting(false);
+		}
 	}
+	submitExamRef.current = submitExam;
 
 	useEffect(() => {
-		if (isSubmitted || isViewingSavedResult) return undefined;
+		if (examLoadState.status !== "ready" || isSubmitted || isViewingSavedResult || !deadline) return undefined;
 
 		function updateTimer() {
 			const remaining = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
 			setSecondsRemaining(remaining);
-			if (remaining === 0) submitExam();
+			if (remaining === 0) submitExamRef.current?.();
 		}
 
 		updateTimer();
 		const timer = window.setInterval(updateTimer, 1000);
 		return () => window.clearInterval(timer);
-	}, [deadline, isSubmitted, isViewingSavedResult]);
+	}, [deadline, examLoadState.status, isSubmitted, isViewingSavedResult]);
 
 	useEffect(() => {
 		if (!isSubmitted) return undefined;
@@ -318,19 +416,35 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 	}, [isResultView, shouldShowExamResult]);
 
 	function restartExam() {
-		const newSession = createExamSession(exam);
-		setQuestions(newSession.questions);
-		setAnswers({});
-		setLockedQuestions({});
-		setCurrentIndex(0);
-		setDeadline(newSession.deadline);
-		setAttemptId(newSession.attemptId);
-		setSubmittedAt(null);
-		setSecondsRemaining(exam.durationSeconds);
-		setIsSubmitted(false);
-		setExamAttempt((attempt) => attempt + 1);
-		setAnswerFilter("all");
-		setIsAnswerReviewVisible(false);
+		setExamLoadState({ status: "loading", error: null });
+		shouldStartNewAttemptRef.current = true;
+		startCcnaExam(examKey).then((newAttempt) => {
+			if (newAttempt.questions.length !== exam.questionCount) {
+				throw new TypeError(`The backend did not return ${exam.questionCount} questions for this exam.`);
+			}
+			setAttemptId(newAttempt.attemptId);
+			setQuestions(newAttempt.questions);
+			setAnswers({});
+			setLockedQuestions({});
+			setFlaggedQuestions({});
+			setCurrentIndex(0);
+			setDeadline(newAttempt.deadline);
+			setSubmittedAt(null);
+			setSecondsRemaining(Math.max(0, Math.ceil((newAttempt.deadline - Date.now()) / 1000)));
+			setServerResult(null);
+			setIsSubmitted(false);
+			setExamAttempt((attempt) => attempt + 1);
+			setAnswerFilter("all");
+			setIsAnswerReviewVisible(false);
+			shouldStartNewAttemptRef.current = false;
+			setExamLoadState({ status: "ready", error: null });
+		}).catch((error) => {
+			console.error(`Unable to start a new ${exam.name} attempt.`, error);
+			setExamLoadState({
+				status: "error",
+				error: error instanceof Error ? error.message : "A new exam attempt could not be started.",
+			});
+		});
 	}
 
 	function reviewAnswers() {
@@ -350,18 +464,38 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 		if (
 			index < currentIndex ||
 			index > currentIndex + 1 ||
-			(index > currentIndex && (
-				!isQuestionAnswered(questions[currentIndex], answers[currentIndex]) ||
-				lockedQuestions[currentIndex]
-			))
+			(index > currentIndex && !isQuestionAnswered(questions[currentIndex], answers[currentIndex]))
 		) return;
 
-		if (index > currentIndex) {
+		if (index > currentIndex && isQuestionAnswered(questions[currentIndex], answers[currentIndex])) {
 			setLockedQuestions((previous) => ({ ...previous, [currentIndex]: true }));
 		}
 		setCurrentIndex(index);
 	}
 
+	if (examLoadState.status !== "ready") {
+		return (
+			<main className="min-h-screen bg-[#f5f9f9] px-4 py-16 text-[#17233d] sm:px-8">
+				<section className="mx-auto max-w-xl rounded-2xl border border-[#d6e5e7] bg-white p-8 text-center shadow-sm">
+					<h1 className="text-2xl font-bold">{examLoadState.status === "loading" ? "Preparing your exam" : "Unable to load your exam"}</h1>
+					<p role={examLoadState.status === "error" ? "alert" : undefined} className="mt-3 text-sm leading-6 text-[#64748b]">
+						{examLoadState.status === "loading"
+							? "Loading a randomized set of questions from the question database…"
+							: examLoadState.error}
+					</p>
+					{examLoadState.status === "error" && (
+						<button
+							type="button"
+							onClick={() => setLoadAttempt((attempt) => attempt + 1)}
+							className="mt-6 rounded-full bg-[#005b6b] px-6 py-3 font-semibold text-white transition hover:bg-[#004653]"
+						>
+							Try again
+						</button>
+					)}
+				</section>
+			</main>
+		);
+	}
 	if (!question) return null;
 
 	return (
@@ -370,6 +504,11 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 				{gradebookSaveError && isResultView && (
 					<p role="alert" className="mb-4 rounded-xl border border-[#f2c6c3] bg-white px-4 py-3 text-sm font-medium text-[#b42318]">
 						{gradebookSaveError} Reload this page to retry.
+					</p>
+				)}
+				{submitError && !isResultView && (
+					<p role="alert" className="mb-4 rounded-xl border border-[#f2c6c3] bg-white px-4 py-3 text-sm font-medium text-[#b42318]">
+						{submitError} Your answers are still saved in this browser; try submitting again.
 					</p>
 				)}
 				<header className="mb-7 flex flex-wrap items-center justify-between gap-4 border-b border-[#d6e5e7] pb-5">
@@ -393,18 +532,6 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 							{isDark ? <Sun size={16} /> : <Moon size={16} />}
 							<span className="hidden sm:inline">{isDark ? "Light mode" : "Dark mode"}</span>
 						</button>
-						{!isSubmitted && (
-							<div
-								role="timer"
-								aria-label={`${formatTime(secondsRemaining)} remaining`}
-								className={`inline-flex shrink-0 items-center gap-2 rounded-full border px-3 py-2 text-xs font-semibold tabular-nums sm:px-4 sm:text-sm ${secondsRemaining <= 300
-									? "border-[#f0c6a8] bg-[#fff5ee] text-[#a44b13]"
-									: "border-[#c9dfe2] bg-white text-[#005b6b]"
-									}`}
-							>
-								<Clock3 size={16} /> {formatTime(secondsRemaining)}
-							</div>
-						)}
 						<Link to="/modules/programs/ccna" className="ccna-dark-hover inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-[#c9dfe2] px-3 py-2 text-xs font-semibold text-[#005b6b] transition-all duration-200 ease-out hover:scale-105 hover:bg-[#e8f3f4] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100 sm:gap-2 sm:px-4 sm:text-sm">
 							<X size={16} /> <span>Exit exam</span>
 						</Link>
@@ -413,59 +540,86 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 
 				{!isResultView ? (
 					<>
-						<div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-							<div>
-								<p className="text-sm font-bold uppercase tracking-[0.12em] text-[#005b6b]">{exam.name}</p>
-								<p className="mt-1 text-sm text-[#70809a]">{answeredCount} of {questions.length} questions answered</p>
+						<section aria-label="Exam progress" className="mb-5 rounded-2xl border border-[#d6e5e7] bg-white p-5 shadow-sm sm:mb-6 sm:p-8">
+							<div className="flex flex-wrap items-center justify-between gap-3">
+								<p className="rounded-xl bg-[#e1f5ef] px-4 py-2 text-sm font-semibold text-[#075b4a]">{exam.name}</p>
+								<div
+									role="timer"
+									aria-label={`${formatTime(secondsRemaining)} remaining`}
+									className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm tabular-nums ${secondsRemaining <= 300
+										? "bg-[#fff5ee] text-[#a44b13]"
+										: "bg-[#f7f9fc] text-[#526584]"
+										}`}
+								>
+									<Clock3 size={17} /> {formatTime(secondsRemaining)}
+								</div>
 							</div>
-							<div role="progressbar" aria-label="Exam progress" aria-valuemin={0} aria-valuemax={questions.length} aria-valuenow={answeredCount} className="h-2 w-full max-w-xs overflow-hidden rounded-full bg-[#dfe9eb]">
-								<div className="h-full rounded-full bg-[#005b6b] transition-[width]" style={{ width: `${(answeredCount / questions.length) * 100}%` }} />
-							</div>
-						</div>
 
-						<div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_300px]">
+							<div className="mt-5 flex flex-wrap items-baseline justify-between gap-2">
+								<h1 className="text-xl font-semibold text-[#17233d] sm:text-2xl">
+									Question {currentIndex + 1} <span className="text-base font-normal text-[#64748b] sm:text-lg">of {questions.length}</span>
+								</h1>
+								<p className="text-sm text-[#64748b] sm:text-base">{answeredCount} answered <span aria-hidden="true">·</span> {answeredPercentage}%</p>
+							</div>
+							<div
+								role="progressbar"
+								aria-label="Exam progress"
+								aria-valuemin={0}
+								aria-valuemax={questions.length}
+								aria-valuenow={answeredCount}
+								aria-valuetext={`${answeredCount} of ${questions.length} answered, ${answeredPercentage}%`}
+								className="mt-3 h-2 overflow-hidden rounded-full bg-[#e7e7e7]"
+							>
+								<div className="h-full rounded-full bg-[#159b73] transition-[width]" style={{ width: `${answeredPercentage}%` }} />
+							</div>
+							<div className="mt-4 flex flex-wrap gap-2.5 text-sm text-[#526584]">
+								<span className="rounded-xl bg-[#f8fafb] px-3 py-2">{answeredCount} answered</span>
+								<button
+									type="button"
+									onClick={() => setFlaggedQuestions((previous) => ({
+										...previous,
+										[currentIndex]: !previous[currentIndex],
+									}))}
+									aria-label={`${flaggedQuestions[currentIndex] ? "Unflag" : "Flag"} question ${currentIndex + 1}; ${flaggedCount} flagged`}
+									aria-pressed={Boolean(flaggedQuestions[currentIndex])}
+									className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 transition ${flaggedQuestions[currentIndex]
+										? "bg-[#fff1d6] text-[#8a5200]"
+										: "bg-[#f8fafb] hover:bg-[#eef3f5]"
+										}`}
+								>
+									<Flag size={15} fill={flaggedQuestions[currentIndex] ? "currentColor" : "none"} />
+									{flaggedCount} flagged
+								</button>
+								<span className="rounded-xl bg-[#f8fafb] px-3 py-2">{unansweredCount} left</span>
+							</div>
+						</section>
+
+						<div className="w-full">
 							<section className="rounded-[20px] border border-[#d6e5e7] bg-white p-4 shadow-sm sm:p-7">
-								<p className="mb-2 text-sm text-[#70809a]">
-									Question {currentIndex + 1} of {questions.length}
-									{question.moduleNumber && ` · Module ${question.moduleNumber}: ${question.moduleTitle}`}
-								</p>
-								<h1 className="mb-4 text-lg font-bold leading-snug tracking-tight sm:mb-6 sm:text-[1.7rem]">{question.prompt}</h1>
+								<QuestionPrompt prompt={question.prompt} />
 								<QuestionInput
 									question={question}
 									value={answers[currentIndex]}
 									onChange={(value) => setAnswers((previous) => ({ ...previous, [currentIndex]: value }))}
 									disabled={Boolean(lockedQuestions[currentIndex])}
 								/>
-								<div className="mt-6 flex justify-end">
+								<div className="mt-6 flex justify-end gap-3">
 									<button
 										type="button"
 										onClick={() => currentIndex === questions.length - 1 ? submitExam() : goToQuestion(currentIndex + 1)}
-										disabled={!isQuestionAnswered(question, answers[currentIndex])}
+										disabled={isSubmitting || (currentIndex < questions.length - 1 && !isQuestionAnswered(question, answers[currentIndex]))}
 										className="rounded-full bg-[#005b6b] px-6 py-3 font-semibold text-white transition hover:bg-[#004653] disabled:cursor-not-allowed disabled:opacity-40"
 									>
-										{currentIndex === questions.length - 1 ? "Submit" : "Next Question"}
+										{isSubmitting ? "Submitting…" : currentIndex === questions.length - 1 ? "Submit exam" : "Next Question"}
 									</button>
 								</div>
+								{currentIndex === questions.length - 1 && unansweredCount > 0 && (
+									<p className="mt-3 text-right text-sm text-[#a44b13]">
+										{unansweredCount} {unansweredCount === 1 ? "question is" : "questions are"} unanswered and will be marked incorrect.
+									</p>
+								)}
 							</section>
 
-							<aside aria-label="Exam question navigation" className="rounded-[20px] border border-[#d6e5e7] bg-white p-5 shadow-sm sm:p-6">
-								<h2 className="mb-4 text-base font-bold">Questions</h2>
-								<div className="grid grid-cols-5 gap-2">
-									{questions.map((item, index) => {
-										const isAnswered = isQuestionAnswered(item, answers[index]);
-										const isCurrent = currentIndex === index;
-										const canNavigate =
-											index === currentIndex ||
-											(index === currentIndex + 1 && isQuestionAnswered(questions[currentIndex], answers[currentIndex]) && !lockedQuestions[currentIndex]);
-										return (
-											<button key={`${item.moduleNumber}-${index}`} type="button" onClick={() => goToQuestion(index)} disabled={!canNavigate} aria-label={`Question ${index + 1}${isAnswered ? ", answered" : ", unanswered"}`} aria-current={isCurrent ? "step" : undefined} className={`h-10 rounded-xl border text-sm font-semibold transition disabled:cursor-not-allowed ${isAnswered ? "border-[#005b6b] bg-[#e8f3f4] text-[#005b6b]" : "border-[#d9e1ef] bg-white text-[#71809a]"} ${isCurrent ? "ring-2 ring-[#005b6b] ring-offset-2" : ""} hover:border-[#005b6b] hover:bg-[#005b6b] hover:text-white disabled:hover:border-inherit disabled:hover:bg-inherit disabled:hover:text-inherit`}>
-												{index + 1}
-											</button>
-										);
-									})}
-								</div>
-								<p className="mt-5 text-sm leading-6 text-[#70809a]">{answeredCount} of {questions.length} answered</p>
-							</aside>
 						</div>
 					</>
 				) : (
@@ -590,13 +744,27 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 														{item.isCorrect ? "Correct" : "Incorrect"}
 													</span>
 												</div>
-												<h3 className="mt-4 text-lg font-bold leading-snug text-[#17233d] sm:text-xl">{item.prompt}</h3>
+												<QuestionPrompt prompt={item.prompt} />
 												<div className="mt-5">
 													<QuestionReview question={item} value={item.selectedAnswer} />
 												</div>
-												<p className="mt-4 rounded-xl bg-[#f5f9f9] px-4 py-3 text-sm leading-6 text-[#596983]">
-													<span className="font-bold text-[#005b6b]">Explanation: </span>{item.explanation}
-												</p>
+												{(() => {
+													const itemSource = item.source || "Cisco CCNA official learning materials and certification references";
+													const itemSourceUrl = item.sourceUrl || CCNA_SOURCE_URL;
+													return (
+														<p className="mt-4 rounded-xl bg-[#f5f9f9] px-4 py-3 text-sm leading-6 text-[#596983]">
+															<span className="font-semibold text-[#005b6b]">Explanation: </span>{item.explanation}
+															<a
+																href={itemSourceUrl}
+																target="_blank"
+																rel="noreferrer"
+																className="mt-3 block text-[11px] font-black uppercase tracking-[0.16em] text-[#0d6d7a] no-underline hover:text-[#0d5561]"
+															>
+																SOURCE: {itemSource}
+															</a>
+														</p>
+													);
+												})()}
 											</article>
 										))}
 										{reviewQuestions.length === 0 && (
