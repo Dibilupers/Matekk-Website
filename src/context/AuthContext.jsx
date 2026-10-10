@@ -49,7 +49,7 @@ function storeOfflineProfile(profile) {
 }
 
 export function AuthProvider({ children }) {
-  const [profile, setProfile] = useState(() => readCachedProfile() ?? readOfflineProfile());
+  const [profile, setProfile] = useState(readCachedProfile);
   const [isLoading, setIsLoading] = useState(true);
   const [isOnline, setIsOnline] = useState(() => navigator.onLine);
 
@@ -68,18 +68,19 @@ export function AuthProvider({ children }) {
       credentials: "include",
     });
     if (!response.ok) {
-      localStorage.removeItem(OFFLINE_PROFILE_KEY);
-      setProfile(null);
       throw new Error("Unable to refresh account approval status.");
     }
 
     const nextProfile = await response.json();
     storeOfflineProfile(nextProfile);
     setProfile(nextProfile);
+    sessionStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(nextProfile));
     return nextProfile;
   }
 
   useEffect(() => {
+    localStorage.removeItem("accessToken");
+
     let mounted = true;
     const cachedProfile = readOfflineProfile();
     fetch(`${API_URL}/auth/profile`, {
@@ -87,6 +88,7 @@ export function AuthProvider({ children }) {
     })
       .then(async (response) => {
         if (!response.ok) {
+          // Signed out or session expired: forget the saved copies. Other errors (server down) fall through to the offline copy.
           if (response.status !== 401 && response.status !== 403) {
             throw new Error("Unable to verify the current session.");
           }
@@ -138,7 +140,6 @@ export function AuthProvider({ children }) {
       }).catch((logoutError) =>
         console.error("Unable to clear a session after profile loading failed.", logoutError),
       );
-      localStorage.removeItem(OFFLINE_PROFILE_KEY);
       throw error;
     }
     setProfile(signedInProfile);

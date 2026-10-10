@@ -45,6 +45,48 @@ const EXAM_FORMATS = [
 	{ name: "Medium Exam", questions: CCNA_EXAMS.medium.questionCount, duration: "1 hour & 30 mins", description: "A balanced, longer practice session." },
 	{ name: "Long Exam", questions: CCNA_EXAMS.long.questionCount, duration: "2 hours", description: "A full-length practice session." },
 ];
+const SHORT_EXAM_SESSION_KEY = "matekk-ccna-short-exam-session";
+
+function getShortExamSessionKey(userId) {
+	if ((typeof userId !== "string" && typeof userId !== "number") || String(userId).trim() === "") return null;
+	return `${SHORT_EXAM_SESSION_KEY}:${encodeURIComponent(String(userId))}`;
+}
+
+function readShortExamProgress(userId) {
+	const sessionKey = getShortExamSessionKey(userId);
+	if (!sessionKey) return { status: "not-started", deadline: null, answeredCount: 0, score: 0 };
+	const savedSession = window.sessionStorage.getItem(sessionKey);
+	if (!savedSession) return { status: "not-started", deadline: null, answeredCount: 0, score: 0 };
+
+	try {
+		const session = JSON.parse(savedSession);
+		if (
+			!session ||
+			!Array.isArray(session.questions) ||
+			!session.answers ||
+			typeof session.answers !== "object" ||
+			!Number.isFinite(session.deadline) ||
+			typeof session.isSubmitted !== "boolean"
+		) {
+			throw new TypeError("Saved CCNA short exam progress has an invalid structure.");
+		}
+		const score = session.questions.reduce(
+			(total, question, index) => total + Number(session.answers[index] === question.answer),
+			0,
+		);
+		const isExpired = !session.isSubmitted && session.deadline <= Date.now();
+		return {
+			status: session.isSubmitted ? "completed" : isExpired ? "expired" : "in-progress",
+			deadline: session.isSubmitted || isExpired ? null : session.deadline,
+			answeredCount: Object.keys(session.answers).length,
+			score,
+		};
+	} catch (error) {
+		console.error("Unable to restore the saved CCNA short exam status.", error);
+		return { status: "not-started", deadline: null, answeredCount: 0, score: 0 };
+	}
+}
+
 function formatExamTime(totalSeconds) {
 	const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, "0");
 	const seconds = (totalSeconds % 60).toString().padStart(2, "0");
@@ -700,8 +742,8 @@ export default function CCNA() {
 							</button>
 							<button onClick={() => setIsQuizPickerOpen(true)} className="flex h-12 items-center gap-2 rounded-full bg-[#005b6b] px-5 text-sm font-bold text-white shadow-[0_10px_20px_rgba(0,91,107,0.16)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-[#004653] hover:shadow-[0_14px_26px_rgba(0,91,107,0.24)] active:translate-y-0 sm:h-[58px] sm:px-7 sm:text-base">{heroQuizLabel} <ArrowRight size={18} /></button>
 							<Link to="/modules/programs/ccna/knowledge-hub" className="flex h-12 items-center rounded-full border border-[#005b6b] px-5 text-sm font-bold text-[#005b6b] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-[#f0f7f7] hover:shadow-[0_10px_20px_rgba(0,91,107,0.12)] active:translate-y-0 sm:h-[58px] sm:px-7 sm:text-base">View All Modules</Link>
-							<Link to="/modules/programs/ccna/results" className="inline-flex h-12 items-center rounded-full border border-[#005b6b] px-5 text-sm font-bold text-[#005b6b] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-[#f0f7f7] hover:shadow-[0_10px_20px_rgba(0,91,107,0.12)] active:translate-y-0 sm:hidden">Gradebook</Link>
 							<Link to="/modules/programs/ccna/practice-lab" className="flex h-12 items-center gap-2 rounded-full border border-[#005b6b] px-5 text-sm font-bold text-[#005b6b] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-[#f0f7f7] hover:shadow-[0_10px_20px_rgba(0,91,107,0.12)] active:translate-y-0 sm:h-[58px] sm:px-7 sm:text-base">Practice Lab <ArrowRight size={18} /></Link>
+							<Link to="/modules/programs/ccna/results" className="inline-flex h-12 items-center rounded-full border border-[#005b6b] px-5 text-sm font-bold text-[#005b6b] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-[#f0f7f7] hover:shadow-[0_10px_20px_rgba(0,91,107,0.12)] active:translate-y-0 sm:hidden">Gradebook</Link>
 						</div>
 						</div>
 						<div className="group/stats order-3 mt-8 inline-grid w-fit max-w-full grid-cols-3 gap-3 rounded-2xl border border-[#c9dfe2] bg-white p-4 shadow-[0_8px_24px_rgba(0,91,107,0.12)] transition-colors duration-200 lg:hover:border-[#005b6b] lg:hover:bg-[#005b6b] lg:hover:shadow-[0_12px_28px_rgba(0,91,107,0.24)] sm:order-none sm:mt-11 sm:flex sm:flex-wrap sm:gap-5 sm:divide-x sm:divide-[#c9dfe2] sm:p-5">

@@ -35,13 +35,11 @@ model Users {
   email             String?
   role              String       @default("Student ")
   active_status     Boolean      @default(false)
-  sessionVersion    Int          @default(0)
   createdAt         DateTime     @default(now())
   programs_enrolled String
   pending_status    String       @default("Pending")
   enrollments       Enrollment[]
   gradebooks        UserGradebook[]
-  examAttempts      ExamAttempt[]
   first_name        String       @default("")
   last_name         String       @default("")
   birth_date        DateTime     @default(now())
@@ -49,23 +47,6 @@ model Users {
   city_province     String       @default("")
   phone_number      String?
   profile_photo     String?
-  expiration_date   DateTime?
-}
-
-model ExamAttempt {
-  // Store the randomized exam snapshot so attempts can be resumed and graded consistently.
-  id            String   @id
-  userId        Int
-  examKey       String
-  questionSet   Json     @db.JsonB
-  durationSeconds Int
-  deadline      DateTime
-  score         Int?
-  review        Json?    @db.JsonB
-  submittedAt   DateTime?
-  user          Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId, examKey])
 }
 
 model UserGradebook {
@@ -89,21 +70,6 @@ model AuthLoginAttempt {
   @@index([windowStartedAt])
 }
 
-model OtpCode {
-  id               Int       @id @default(autoincrement())
-  email            String
-  purpose          String
-  codeHash         String
-  expiresAt        DateTime
-  attempts         Int       @default(0)
-  consumedAt       DateTime?
-  verificationHash String?
-  verifiedUntil    DateTime?
-  createdAt        DateTime  @default(now())
-
-  @@index([email, purpose, consumedAt, createdAt])
-}
-
 model Questions {
   id             Int    @id @default(autoincrement())
   module         String
@@ -113,8 +79,6 @@ model Questions {
   choices        String
   correct_answer String
   explanation    String
-  question_type  String @default("single")
-  match_items    Json?  @db.JsonB
   imageUrl       String?
 }
 
