@@ -146,8 +146,8 @@ function ZoomViewer({ title, theme, onClose, children }) {
 				)}
 				<button type="button" className={button} onClick={onClose} aria-label="Close full screen"><X size={18} /></button>
 			</div>
-			<div ref={scrollerRef} className="flex-1 overflow-auto overscroll-contain" style={{ touchAction: "pan-x pan-y" }}>
-				<div className="p-3" style={natural ? { width: natural.width * scale + 24, height: natural.height * scale + 24 } : undefined}>
+			<div ref={scrollerRef} className="flex flex-1 overflow-auto overscroll-contain" style={{ touchAction: "pan-x pan-y" }}>
+				<div className="m-auto shrink-0 p-3" style={natural ? { width: natural.width * scale + 24, height: natural.height * scale + 24 } : undefined}>
 					<div ref={contentRef} className="w-max origin-top-left" style={{ transform: `scale(${scale})` }}>
 						{children}
 					</div>
@@ -209,9 +209,9 @@ export function ExhibitText({ text, className = "" }) {
 	}, [text]);
 
 	return (
-		<div ref={wrapRef} className={`ccna-term overflow-hidden rounded-xl shadow-sm ${className}`}>
+		<div ref={wrapRef} className={`ccna-term relative left-1/2 w-[min(80rem,calc(100vw_-_2rem))] max-w-none -translate-x-1/2 overflow-hidden rounded-xl shadow-sm lg:left-auto lg:w-full lg:translate-x-0 ${className}`}>
 			<TerminalBar label={label} onExpand={overflows ? () => setOpenTheme(pageTheme(wrapRef.current)) : null} />
-			<pre ref={boxRef} aria-label="Exhibit" className="max-h-96 overflow-auto p-4 text-xs leading-5 sm:text-[13px]"><code>{text}</code></pre>
+			<pre ref={boxRef} aria-label="Exhibit" className="max-h-96 overflow-auto whitespace-pre p-4 text-xs leading-5 sm:text-[13px]"><code>{text}</code></pre>
 			{openTheme && (
 				<ZoomViewer title={label} theme={openTheme} onClose={() => setOpenTheme(null)}>
 					<pre className="ccna-term rounded-lg border-0 p-4 font-mono text-[14px] leading-[1.6]"><code>{text}</code></pre>

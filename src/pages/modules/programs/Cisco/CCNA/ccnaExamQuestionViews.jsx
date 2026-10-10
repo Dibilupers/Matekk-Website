@@ -58,7 +58,7 @@ function AssignMatchInput({ question, value, onChange, disabled }) {
 											onClick={() => place(itemIndex, choiceIndex)}
 											aria-pressed={isPlaced}
 											aria-label={isPlaced ? `${question.choices[choiceIndex]} (placed, click to undo)` : `Place ${question.choices[choiceIndex]} here`}
-											className={`rounded-lg px-3 py-2 text-left text-sm transition-all duration-200 ease-out disabled:cursor-default motion-reduce:transition-none ${isPlaced
+											className={`rounded-lg px-3 py-2 text-left text-sm font-semibold transition-all duration-300 ease-out disabled:cursor-default motion-reduce:transition-none ${isPlaced
 												? "border-2 border-[#2d8a56] bg-[#eff9f2] font-semibold text-[#1f5e3b]"
 												: "border border-dashed border-[#9aa8bc] bg-white text-[#42516b] hover:-translate-y-0.5 hover:border-[#005b6b] hover:bg-[#f0f7f7] active:translate-y-0 active:scale-[0.98]"} ${isPlaced ? "ccna-match-choice-placed" : ""}`}
 										>
@@ -98,7 +98,7 @@ function GroupMatchInput({ question, value, onChange, disabled }) {
 					{question.items.map((item, itemIndex) => (
 						<li key={itemIndex} className="flex items-start gap-3 rounded-xl border border-[#cfe0f5] bg-[#eef5fe] px-3 py-2.5">
 							<span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#1d4ed8] text-sm font-bold text-white">{itemIndex + 1}</span>
-							<span className="text-sm whitespace-pre-wrap text-[#263654] sm:text-[15px]">{item}</span>
+							<span className="text-sm font-semibold whitespace-pre-wrap text-[#263654] sm:text-[15px]">{item}</span>
 						</li>
 					))}
 				</ol>
@@ -173,7 +173,7 @@ export function QuestionInput({ question, value, onChange, disabled }) {
 				<p className="text-sm text-[#70809a]">Match each item on the left with the correct answer.</p>
 				{question.items.map((item, itemIndex) => (
 					<div key={item} className="ccna-answer-choice grid gap-2 rounded-2xl border border-[#d9e1ef] bg-white px-4 py-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,16rem)] sm:items-center">
-						<span className="text-[15px] sm:text-base whitespace-pre-wrap text-[#263654]">{item}</span>
+						<span className="text-[15px] font-semibold sm:text-base whitespace-pre-wrap text-[#263654]">{item}</span>
 						<select
 							value={current[itemIndex] ?? ""}
 							disabled={disabled}
@@ -225,7 +225,7 @@ export function QuestionInput({ question, value, onChange, disabled }) {
 						<span className={`flex h-8 w-8 shrink-0 items-center justify-center ${isMulti ? "rounded-md" : "rounded-full"} text-sm font-bold ${isSelected ? "bg-[#005b6b] text-white" : "bg-[#e8f3f4] text-[#005b6b]"}`}>
 							{letter(optionIndex)}
 						</span>
-						<OptionText text={option} className="min-w-0 flex-1 text-sm sm:text-base" />
+						<OptionText text={option} className="min-w-0 flex-1 text-sm font-semibold sm:text-base" />
 					</button>
 				);
 			})}

@@ -101,17 +101,19 @@ function dragAndDrop(row) {
 export function convertBankRow(row) {
   const rawText = cleanText(row.question_text);
   const { prompt, exhibit } = splitPromptExhibit(rawText);
+  const exhibitImage = row.imageUrl || undefined;
+  if (mentionsExhibit(rawText) && !exhibit && !exhibitImage) {
+    return { problem: "referenced exhibit has no available text or image" };
+  }
+
   const choices = parseChoices(row.choices);
   const body = choices ? multipleChoice(row, choices) : dragAndDrop(row);
   if (!body) return { problem: choices ? "answer letter not among the choices" : "drag-and-drop answer could not be read" };
-  const exhibitImage = row.imageUrl || undefined;
   return {
     question: {
       prompt: cleanText(prompt),
       ...(exhibit ? { exhibit } : {}),
       ...(exhibitImage ? { exhibitImage } : {}),
-      // Says "refer to the exhibit" but the picture hasn't been added to the bank yet
-      ...(mentionsExhibit(rawText) && !exhibit && !exhibitImage ? { needsPicture: true } : {}),
       ...body,
       explanation: cleanText(row.explanation),
       bankId: row.id,
