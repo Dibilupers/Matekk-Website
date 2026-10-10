@@ -3,6 +3,7 @@ import { CCNA_MEDIUM_EXAM_QUESTIONS } from "./ccnaMediumExamData";
 import { CCNA_COMPOSITE_SET_QUESTIONS, CCNA_COMPOSITE_SET2_QUESTIONS } from "./ccnaCompositeSetQuestions";
 import { CCNA_LEGACY_QUESTIONS } from "./ccnaLegacyQuestions";
 import { CCNA_LEGACY_200_301_QUESTIONS } from "./ccnaLegacyQuestionBank";
+import { splitPromptExhibit } from "../../../../../utils/splitPromptExhibit";
 
 // Both legacy files come from the same CCNA 200-301 PDF. CCNA_LEGACY_QUESTIONS is the fuller set
 // (with explanations), so only questions it is missing are taken from the other file.
@@ -52,10 +53,14 @@ export const CCNA_QUESTION_BANK = [
   // Kept tagged so older CCNA 200-301 questions remain identifiable in the shared bank.
   ...CCNA_LEGACY_ALL_QUESTIONS.map((question) => ({
     ...question,
+    // Router output pasted into the question text moves into the exhibit box
+    ...(question.exhibit ? {} : splitPromptExhibit(question.prompt)),
     source: "legacy-ccna-200-301",
     moduleNumber: null,
     moduleTitle: "Legacy CCNA 200-301",
-  })),
+  }))
+    // Skip questions whose exhibit picture was lost when they were taken from the PDF (they can't be answered)
+    .filter((question) => !/\bexhibit\b/i.test(question.prompt) || question.exhibit || question.exhibitImage),
 ];
 
 const SHORT_EXAM_SOURCES = new Set(["legacy-ccna-200-301"]);
@@ -75,7 +80,15 @@ export function pickRandomQuestions(sourceQuestions, count) {
   return selected;
 }
 
+// The exams draw from the database question bank once it has loaded (see ccnaQuestionBankApi.js);
+// until then, or if it can't be reached, they use the questions built into the site.
+let databaseQuestions = null;
+export function setDatabaseQuestions(questions) {
+  databaseQuestions = Array.isArray(questions) && questions.length ? questions : null;
+}
+
 export function createShortExamQuestions() {
+  if (databaseQuestions) return pickRandomQuestions(databaseQuestions, 50);
   const moduleQuestions = CCNA_QUESTION_BANK.filter((question) => {
     const moduleNumber = question.moduleNumber;
     return (typeof moduleNumber === "string" && /^([1-6])\.0$/.test(moduleNumber)) ||
@@ -86,9 +99,9 @@ export function createShortExamQuestions() {
 }
 
 export function createMediumExamQuestions() {
-  return pickRandomQuestions(CCNA_QUESTION_BANK, 100);
+  return pickRandomQuestions(databaseQuestions ?? CCNA_QUESTION_BANK, 100);
 }
 
 export function createLongExamQuestions() {
-  return pickRandomQuestions(CCNA_QUESTION_BANK, 150);
+  return pickRandomQuestions(databaseQuestions ?? CCNA_QUESTION_BANK, 150);
 }

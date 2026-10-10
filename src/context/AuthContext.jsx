@@ -2,6 +2,21 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import API_URL from "../config/api";
 
 const AuthContext = createContext(null);
+const PROFILE_CACHE_KEY = "matekk-session-profile";
+
+// Shows the last known profile instantly on refresh (sessions use a secure cookie, so there is no token
+// to read here); the server check below replaces it, or clears it if the session has ended.
+function readCachedProfile() {
+  try {
+    const cachedProfile = JSON.parse(sessionStorage.getItem(PROFILE_CACHE_KEY) || "null");
+    return cachedProfile && typeof cachedProfile === "object" ? cachedProfile : null;
+  } catch {
+    sessionStorage.removeItem(PROFILE_CACHE_KEY);
+    return null;
+  }
+}
+
+// Small copy of the profile kept for offline use (the site can still show who is signed in without internet)
 const OFFLINE_PROFILE_KEY = "matekkOfflineProfile";
 
 function readOfflineProfile() {
@@ -34,7 +49,7 @@ function storeOfflineProfile(profile) {
 }
 
 export function AuthProvider({ children }) {
-  const [profile, setProfile] = useState(readOfflineProfile);
+  const [profile, setProfile] = useState(() => readCachedProfile() ?? readOfflineProfile());
   const [isLoading, setIsLoading] = useState(true);
   const [isOnline, setIsOnline] = useState(() => navigator.onLine);
 
@@ -75,17 +90,21 @@ export function AuthProvider({ children }) {
           if (response.status !== 401 && response.status !== 403) {
             throw new Error("Unable to verify the current session.");
           }
+          sessionStorage.removeItem(PROFILE_CACHE_KEY);
           localStorage.removeItem(OFFLINE_PROFILE_KEY);
           if (mounted) setProfile(null);
           return;
         }
         const nextProfile = await response.json();
         storeOfflineProfile(nextProfile);
-        if (mounted) setProfile(nextProfile);
+        if (mounted) {
+          setProfile(nextProfile);
+          sessionStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(nextProfile));
+        }
       })
       .catch((error) => {
-        if (mounted && cachedProfile) setProfile(cachedProfile);
-        else if (mounted) console.error("Unable to restore the signed-in session.", error);
+        console.error("Unable to restore the signed-in session.", error);
+        if (mounted) setProfile((current) => current ?? cachedProfile);
       })
       .finally(() => mounted && setIsLoading(false));
 
@@ -123,11 +142,13 @@ export function AuthProvider({ children }) {
       throw error;
     }
     setProfile(signedInProfile);
+    sessionStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(signedInProfile));
     storeOfflineProfile(signedInProfile);
     return { response, profile: signedInProfile };
   }
 
   function logout() {
+    sessionStorage.removeItem(PROFILE_CACHE_KEY);
     localStorage.removeItem(OFFLINE_PROFILE_KEY);
     setProfile(null);
     void fetch(`${API_URL}/auth/logout`, {

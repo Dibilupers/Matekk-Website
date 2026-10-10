@@ -1,4 +1,5 @@
-import { questionType, requiredSelections } from "../../../../../utils/ccnaExamGrading";
+import { useState } from "react";
+import { groupCode, groupSizes, matchMode, parseGroupCode, questionType, requiredSelections } from "../../../../../utils/ccnaExamGrading";
 import { getDisplayedOption, parseFormattedOptions } from "./ccnaExamQuestionFormatting";
 import { MatchingQuestionInput, MatchingQuestionReview } from "./ccnaExamMatching";
 
@@ -69,9 +70,153 @@ export function QuestionPrompt({ prompt }) {
 	);
 }
 
+/* "Click to place" matching: each row shows the choices nobody has used yet; clicking one places it
+   on that row (solid green box) and removes it from the other rows. Clicking a placed box undoes it. */
+// Same mixed-up order for everyone (based on the text), so the boxes never line up with the answers
+function stableShuffle(indexes, seed) {
+	const hash = (text) => [...text].reduce((h, c) => (Math.imul(h, 31) + c.charCodeAt(0)) | 0, 7);
+	return [...indexes].sort((a, b) => hash(seed + a) - hash(seed + b));
+}
+
+function AssignMatchInput({ question, value, onChange, disabled }) {
+	const choiceOrder = stableShuffle(question.choices.map((_, i) => i), question.prompt);
+	const current = Array.isArray(value) ? value : question.items.map(() => null);
+	const used = new Set(current.filter((v) => Number.isInteger(v)));
+	const place = (itemIndex, choiceIndex) => {
+		const next = [...current];
+		next[itemIndex] = next[itemIndex] === choiceIndex ? null : choiceIndex;
+		onChange(next);
+	};
+	return (
+		<div className="space-y-3">
+			<p className="text-sm text-[#70809a]">Click a box on the right to place it next to the matching item. Click a placed box to undo it.</p>
+			<div className="overflow-hidden rounded-2xl border border-[#d9e1ef] bg-white">
+				{question.items.map((item, itemIndex) => {
+					const picked = current[itemIndex];
+					const available = Number.isInteger(picked)
+						? [picked]
+						: choiceOrder.filter((i) => !used.has(i));
+					return (
+						<div key={itemIndex} className="grid gap-3 border-b border-[#e6ecf3] px-4 py-3 last:border-b-0 sm:grid-cols-[minmax(0,0.9fr)_minmax(0,1.4fr)] sm:items-center">
+							<span className="text-[15px] font-semibold whitespace-pre-wrap text-[#263654] sm:text-base">{item}</span>
+							<div className="flex flex-wrap gap-2">
+								{available.map((choiceIndex) => {
+									const isPlaced = picked === choiceIndex;
+									return (
+										<button
+											key={choiceIndex}
+											type="button"
+											disabled={disabled}
+											onClick={() => place(itemIndex, choiceIndex)}
+											aria-pressed={isPlaced}
+											aria-label={isPlaced ? `${question.choices[choiceIndex]} (placed, click to undo)` : `Place ${question.choices[choiceIndex]} here`}
+											className={`rounded-lg px-3 py-2 text-left text-sm font-semibold transition-all duration-300 ease-out disabled:cursor-default motion-reduce:transition-none ${isPlaced
+												? "border-2 border-[#2d8a56] bg-[#eff9f2] font-semibold text-[#1f5e3b]"
+												: "border border-dashed border-[#9aa8bc] bg-white text-[#42516b] hover:-translate-y-0.5 hover:border-[#005b6b] hover:bg-[#f0f7f7] active:translate-y-0 active:scale-[0.98]"} ${isPlaced ? "ccna-match-choice-placed" : ""}`}
+										>
+											{question.choices[choiceIndex]}
+										</button>
+									);
+								})}
+							</div>
+						</div>
+					);
+				})}
+			</div>
+		</div>
+	);
+}
+
+/* "Type the numbers" matching: items are numbered, each group shows its slots, and the answer is the
+   item numbers group by group (e.g. "1324" = 1 and 3 in the first group, 2 and 4 in the second). */
+function GroupMatchInput({ question, value, onChange, disabled }) {
+	const [code, setCode] = useState(() => groupCode(question, value));
+	const [duplicateNumberError, setDuplicateNumberError] = useState(false);
+	const [duplicateAttempt, setDuplicateAttempt] = useState(0);
+	const { error: parsedError } = parseGroupCode(question, code);
+	const error = duplicateNumberError ? "Each number can only be used once." : parsedError;
+	const sizes = groupSizes(question);
+	// Worked example using this question's box sizes, e.g. "1234 means 1 and 2 go in copper, 3 and 4 in single-mode fiber"
+	const exampleGroups = sizes.map((size, g) => Array.from({ length: size }, (_, k) => k + 1 + sizes.slice(0, g).reduce((a, b) => a + b, 0)));
+	const example = exampleGroups.map((group) => group.join("")).join("");
+	const exampleMeaning = exampleGroups
+		.map((group, g) => (group.length ? `${group.join(" and ")} go in "${question.choices[g]}"` : null))
+		.filter(Boolean)
+		.join(", ");
+	return (
+		<div className="space-y-4">
+			<div className="grid gap-4 sm:grid-cols-2">
+				<ol className="space-y-2">
+					{question.items.map((item, itemIndex) => (
+						<li key={itemIndex} className="flex items-start gap-3 rounded-xl border border-[#cfe0f5] bg-[#eef5fe] px-3 py-2.5">
+							<span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#1d4ed8] text-sm font-bold text-white">{itemIndex + 1}</span>
+							<span className="text-sm font-semibold whitespace-pre-wrap text-[#263654] sm:text-[15px]">{item}</span>
+						</li>
+					))}
+				</ol>
+				<div className="space-y-3">
+					{question.choices.map((choice, choiceIndex) => (
+						<div key={choiceIndex} className="overflow-hidden rounded-xl border border-[#e6d9a8]">
+							<div className="bg-[#fdf8dc] px-3 py-2 text-center text-sm font-semibold text-[#5b4d12]">{choice}</div>
+							{Array.from({ length: sizes[choiceIndex] }).map((_, k) => (
+								<div key={k} className="h-7 border-t border-[#f1d4d4] bg-[#fbe7e7]" aria-hidden="true" />
+							))}
+						</div>
+					))}
+				</div>
+			</div>
+			<label className="block">
+				<span className="block text-sm text-[#526584]">
+					Type the item numbers for each box in order from top to bottom, with each box's numbers in ascending order.
+					For example, <strong className="font-mono text-[#263654]">{example}</strong> would mean {exampleMeaning}.
+				</span>
+				<input
+					type="text"
+					inputMode="numeric"
+					autoComplete="off"
+					value={code}
+					disabled={disabled}
+					maxLength={question.items.length}
+					onChange={(event) => {
+						const next = event.target.value.replace(/\D/g, "");
+						if (new Set(next).size !== next.length) {
+							setDuplicateNumberError(true);
+							setDuplicateAttempt((attempt) => attempt + 1);
+							return;
+						}
+						setDuplicateNumberError(false);
+						setCode(next);
+						const parsed = parseGroupCode(question, next);
+						onChange(parsed.value ?? question.items.map(() => null));
+					}}
+					placeholder={"e.g. " + example}
+					aria-label="Your answer (item numbers)"
+					className="mt-2 w-48 rounded-xl border border-[#c9dfe2] bg-white px-3 py-2 font-mono text-lg tracking-[0.3em] text-[#005b6b] outline-none focus:border-[#005b6b] focus:ring-2 focus:ring-[#cfe7ea] disabled:cursor-default disabled:bg-[#f5f9f9]"
+				/>
+				{error && (
+					<span
+						key={duplicateAttempt}
+						role="alert"
+						className={`mt-1 block text-sm font-semibold text-[#b42318] ${duplicateNumberError ? "ccna-validation-shake" : ""}`}
+					>
+						{error}
+					</span>
+				)}
+			</label>
+		</div>
+	);
+}
+
 /* Answer input for one exam question (pick one, choose two, or matching). */
 export function QuestionInput({ question, value, onChange, disabled }) {
 	const type = questionType(question);
+
+	if (type === "match" && matchMode(question) === "assign") {
+		return <AssignMatchInput question={question} value={value} onChange={onChange} disabled={disabled} />;
+	}
+	if (type === "match" && matchMode(question) === "group") {
+		return <GroupMatchInput question={question} value={value} onChange={onChange} disabled={disabled} />;
+	}
 
 	if (type === "match") {
 		return <MatchingQuestionInput question={question} value={value} onChange={onChange} disabled={disabled} />;

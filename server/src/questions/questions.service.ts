@@ -8,6 +8,7 @@ import { randomInt, randomUUID } from 'node:crypto';
 import { CreateQuestionDto, ExamAnswerDto } from './dto/questions.dto.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import type { Prisma } from '../generated/prisma/client.js';
+import { StorageService } from '../storage/storage.service.js';
 
 const EXAM_CONFIG = {
   short: { questionCount: 50, durationSeconds: 45 * 60 },
@@ -33,7 +34,10 @@ type ExamQuestion = SingleExamQuestion | MatchExamQuestion;
 
 @Injectable()
 export class QuestionsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private storage: StorageService,
+  ) {}
 
   create(data: CreateQuestionDto) {
     const questionType = data.question_type ?? 'single';
@@ -525,5 +529,34 @@ export class QuestionsService {
       [shuffled[index], shuffled[nextIndex]] = [shuffled[nextIndex], shuffled[index]];
     }
     return shuffled;
+  }
+
+  async findBank() {
+    const rows = await this.prisma.questions.findMany({
+      select: {
+        id: true,
+        module: true,
+        topic: true,
+        difficulty: true,
+        question_text: true,
+        choices: true,
+        correct_answer: true,
+        explanation: true,
+        question_type: true,
+        match_items: true,
+        imageUrl: true,
+      },
+      orderBy: { id: 'asc' },
+    });
+    const imagePaths = [...new Set(rows.flatMap((row) => {
+      const imageUrl = row.imageUrl;
+      return imageUrl && !/^https?:\/\//i.test(imageUrl) ? [imageUrl] : [];
+    }))];
+    const signedUrls = await this.storage.createSignedQuestionImageUrls(imagePaths);
+
+    return rows.map((row) => ({
+      ...row,
+      imageUrl: row.imageUrl ? signedUrls.get(row.imageUrl) ?? row.imageUrl : null,
+    }));
   }
 }

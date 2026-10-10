@@ -56,3 +56,48 @@ export function isAnswerCorrect(question, value) {
 	}
 	return value === question.answer;
 }
+
+// How a matching question is answered on screen:
+//   "assign" — each choice is used exactly once (e.g. order the route sources, match benefits to examples):
+//              click a choice box to place it on a row; it disappears from the other rows.
+//   "group"  — several items share a few groups (e.g. copper vs single-mode fiber):
+//              type the item numbers, group by group, e.g. "1324".
+//   "select" — anything else (or 10+ items, where typed numbers would be ambiguous): a dropdown per item.
+export function matchMode(question) {
+	if (questionType(question) !== "match") return null;
+	const { items, choices, answer } = question;
+	if (items.length === choices.length && new Set(answer).size === answer.length) return "assign";
+	if (choices.length < items.length && items.length <= 9) return "group";
+	return "select";
+}
+
+// Group mode: how many items belong in each group (shown as slots, like the original exam)
+export function groupSizes(question) {
+	return question.choices.map((_, choiceIndex) => question.answer.filter((a) => a === choiceIndex).length);
+}
+
+// Group mode: turns typed digits ("1324") into a choice index per item, or explains what's wrong
+export function parseGroupCode(question, code) {
+	const digits = String(code ?? "").replace(/\s+/g, "");
+	const total = question.items.length;
+	if (!digits) return { value: question.items.map(() => null), error: "" };
+	if (!/^\d+$/.test(digits)) return { value: null, error: "Use numbers only." };
+	const numbers = [...digits].map(Number);
+	if (numbers.some((n) => n < 1 || n > total)) return { value: null, error: `Use item numbers 1 to ${total}.` };
+	if (new Set(numbers).size !== numbers.length) return { value: null, error: "Each number can only be used once." };
+	const value = question.items.map(() => null);
+	let position = 0;
+	groupSizes(question).forEach((size, choiceIndex) => {
+		for (let k = 0; k < size && position < numbers.length; k += 1, position += 1) value[numbers[position] - 1] = choiceIndex;
+	});
+	return { value, error: numbers.length > total ? "Too many numbers." : "" };
+}
+
+// Group mode: the number string for a set of answers, each group's numbers in ascending order
+export function groupCode(question, value) {
+	if (!Array.isArray(value)) return "";
+	return question.choices.map((_, choiceIndex) => value
+		.map((choice, itemIndex) => (choice === choiceIndex ? itemIndex + 1 : null))
+		.filter((n) => n !== null)
+		.join("")).join("");
+}

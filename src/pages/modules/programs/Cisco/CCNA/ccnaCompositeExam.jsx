@@ -11,6 +11,7 @@ import { isQuestionAnswered } from "../../../../../utils/ccnaExamGrading";
 import { QuestionInput, QuestionPrompt, QuestionReview } from "./ccnaExamQuestionViews";
 import { saveGradebookAssessment } from "../../../../../utils/gradebookApi";
 import { resumeCcnaExam, startCcnaExam, submitCcnaExam } from "../../../../../utils/ccnaExamApi";
+import { ExhibitImage, ExhibitText } from "./ccnaExhibit";
 
 
 
@@ -25,7 +26,7 @@ function formatTime(totalSeconds) {
 	return hours > 0 ? `${hours.toString().padStart(2, "0")}:${minutes}:${seconds}` : `${minutes}:${seconds}`;
 }
 
-export default function CCNACompositeExam({ examKey = "short" }) {
+export default function CCNACompositeExamPage({ examKey = "short" }) {
 	const exam = CCNA_EXAMS[examKey];
 	const location = useLocation();
 	const navigate = useNavigate();
@@ -71,6 +72,8 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 	const [backToTopVisibility, setBackToTopVisibility] = useState({ attempt: -1, visible: false });
 	const answerReviewRef = useRef(null);
 	const resultsTopRef = useRef(null);
+	const questionCardRef = useRef(null);
+	const previousIndexRef = useRef(currentIndex);
 	const blocker = useBlocker(({ currentLocation, nextLocation }) =>
 		!isSubmitted &&
 		(currentLocation.pathname !== nextLocation.pathname ||
@@ -459,6 +462,17 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 		resultsTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
 	}
 
+	// When the question changes, bring the start of the new question into view (it may be scrolled
+	// far down after reading a long exhibit). Skipped on first load so the page opens at the top.
+	useEffect(() => {
+		if (previousIndexRef.current === currentIndex) return;
+		previousIndexRef.current = currentIndex;
+		const card = questionCardRef.current;
+		if (!card) return;
+		const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+		card.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+	}, [currentIndex]);
+
 	function goToQuestion(index) {
 		if (index < 0 || index >= questions.length) return;
 		if (
@@ -595,8 +609,14 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 						</section>
 
 						<div className="w-full">
-							<section className="rounded-[20px] border border-[#d6e5e7] bg-white p-4 shadow-sm sm:p-7">
+							<section ref={questionCardRef} className="scroll-mt-4 rounded-[20px] border border-[#d6e5e7] bg-white p-4 shadow-sm sm:p-7">
 								<QuestionPrompt prompt={question.prompt} />
+								{question.exhibitImage && (
+									<ExhibitImage src={question.exhibitImage} className="mb-6" imageClassName="max-h-[32rem]" />
+								)}
+								{question.exhibit && (
+									<ExhibitText text={question.exhibit} className="mb-6" />
+								)}
 								<QuestionInput
 									question={question}
 									value={answers[currentIndex]}
@@ -745,6 +765,12 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 													</span>
 												</div>
 												<QuestionPrompt prompt={item.prompt} />
+												{item.exhibitImage && (
+													<ExhibitImage src={item.exhibitImage} lazy className="mt-4" imageClassName="max-h-[26rem]" />
+												)}
+												{item.exhibit && (
+													<ExhibitText text={item.exhibit} className="mt-4" />
+												)}
 												<div className="mt-5">
 													<QuestionReview question={item} value={item.selectedAnswer} />
 												</div>

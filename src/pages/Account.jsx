@@ -68,7 +68,7 @@ function ProfileForm({ profile, refreshProfile }) {
     async function loadProfilePhoto() {
       try {
         const response = await fetch(`${API_URL}/auth/profile/photo`, {
-          headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+          credentials: "include",
           signal: controller.signal,
         });
         const body = await response.json().catch(() => null);
@@ -109,8 +109,8 @@ function ProfileForm({ profile, refreshProfile }) {
     try {
       const response = await fetch(`${API_URL}/auth/profile`, {
         method: "PATCH",
+        credentials: "include",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -163,8 +163,8 @@ function ProfileForm({ profile, refreshProfile }) {
       });
       const response = await fetch(`${API_URL}/auth/profile/photo`, {
         method: "POST",
+        credentials: "include",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ photoDataUrl }),
@@ -188,7 +188,7 @@ function ProfileForm({ profile, refreshProfile }) {
     try {
       const response = await fetch(`${API_URL}/auth/profile/photo`, {
         method: "DELETE",
-        headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+        credentials: "include",
       });
       const body = await response.json().catch(() => null);
       if (!response.ok) throw new Error(body?.message || "Unable to remove your profile photo.");
@@ -216,8 +216,8 @@ function ProfileForm({ profile, refreshProfile }) {
     try {
       const response = await fetch(`${API_URL}/auth/password`, {
         method: "PATCH",
+        credentials: "include",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -413,7 +413,7 @@ function LearningHistory() {
     async function loadHistory() {
       try {
         const response = await fetch(`${API_URL}/auth/learning-history`, {
-          headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+          credentials: "include",
           signal: controller.signal,
         });
         const body = await response.json().catch(() => null);
@@ -535,9 +535,8 @@ function Transcript({ profile }) {
     let isActive = true;
     async function loadTranscript() {
       try {
-        const token = localStorage.getItem("accessToken");
         const historyResponse = await fetch(`${API_URL}/auth/learning-history`, {
-          headers: { Authorization: `Bearer ${token}` },
+          credentials: "include",
           signal: controller.signal,
         });
         const historyBody = await historyResponse.json().catch(() => null);
