@@ -48,6 +48,7 @@ function validateExamAttempt(attempt) {
 		!attempt.questions.every((question) =>
 			Number.isInteger(question?.id) &&
 			typeof question.prompt === "string" &&
+			(question.imageUrl === undefined || question.imageUrl === null || typeof question.imageUrl === "string") &&
 			(isSingleQuestion(question) || isMatchQuestion(question)) &&
 			!("answer" in question) &&
 			!("correct_answer" in question),

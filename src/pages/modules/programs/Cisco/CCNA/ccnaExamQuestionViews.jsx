@@ -1,32 +1,68 @@
 import { useState } from "react";
-import { groupCode, groupSizes, matchMode, parseGroupCode, questionType, requiredSelections } from "../../../../../utils/ccnaExamGrading";
+import { groupCode, groupSizes, isValidQuestion, matchMode, parseGroupCode, questionType, requiredSelections } from "../../../../../utils/ccnaExamGrading";
 import { getDisplayedOption, parseFormattedOptions } from "./ccnaExamQuestionFormatting";
 import { MatchingQuestionInput, MatchingQuestionReview } from "./ccnaExamMatching";
+import { splitPromptExhibit } from "../../../../../utils/splitPromptExhibit";
+import { ExhibitImage } from "./ccnaExhibit";
 
 const letter = (i) => String.fromCharCode(65 + i);
+const TERMINAL_TEXT = /(?:^|\n)\s*(?:[\w.-]+(?:\([^)]*\))?[>#]\s*(?:show|conf(?:igure)?|interface|ip|ipv6|router|network|enable|copy|ping|traceroute|access-list|line|username|hostname|vtp|switchport|no\b)?|(?:Gateway of last resort|Codes:|Protocol\s+Next Hop|Vlan\s+Mac Address|Building configuration|Current configuration|% Invalid input|Destination\s+Gateway|Interface\s+IP-Address)\b)|^\s*(?:interface\s+[\w/.-]+|ip\s+(?:address|route|default-gateway|nat)\b|ipv6\s+(?:address|route)\b|switchport\s+(?:mode|access|trunk)\b|router\s+(?:ospf|eigrp|rip)\b|network\s+\S+|no\s+shutdown\b)/im;
+const CLI_PROMPT = /(^|\s)[\w.-]+(\([\w-]+\))?[>#]/;
+const splitCliLines = (text) => text.replace(/[ \t]+(?=[\w.-]+(\([\w-]+\))?[>#])/g, "\n");
 
-function AnswerOptionContent({ option, codeStyle = false }) {
-	const text = String(option ?? "");
-	if (!codeStyle && !text.includes("\n")) {
-		return <span className="min-w-0 flex-1 whitespace-pre-wrap text-sm sm:text-base">{text}</span>;
-	}
+function isTerminalText(text) {
+	return typeof text === "string" && (CLI_PROMPT.test(text) || TERMINAL_TEXT.test(text));
+}
 
+function TerminalCodeOutput({ text, label = "Terminal output", compact = false }) {
 	return (
-		<pre className="min-w-0 flex-1 overflow-x-auto rounded-lg bg-[#101b31] px-3 py-2 font-mono text-xs leading-5 text-[#e7efff] whitespace-pre-wrap break-words [overflow-wrap:anywhere] sm:text-sm">
-			<code>{text}</code>
-		</pre>
+		<div className={`min-w-0 overflow-hidden rounded-lg border border-[#29364a] bg-[#0b1220] text-[#e2e8f0] ${compact ? "flex-1" : ""}`}>
+			<div className="flex items-center gap-1.5 border-b border-white/10 bg-[#172235] px-3 py-2" aria-hidden="true">
+				<span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
+				<span className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
+				<span className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
+				<span className="ml-2 truncate text-[11px] font-semibold text-slate-300">{label}</span>
+			</div>
+			<pre className={`overflow-x-auto whitespace-pre-wrap break-words px-3 py-2 font-mono text-xs leading-5 [overflow-wrap:anywhere] sm:text-sm ${compact ? "" : "p-4"}`}>
+				<code>{splitCliLines(text)}</code>
+			</pre>
+		</div>
 	);
 }
 
+function AnswerOptionContent({ option }) {
+	const text = String(option ?? "");
+	return <span className="min-w-0 flex-1 whitespace-pre-wrap break-words text-sm [overflow-wrap:anywhere] sm:text-base">{text}</span>;
+}
+
 function hasMultilineOption(question) {
-	return question.options.some((option) =>
+	return Array.isArray(question?.options) && question.options.some((option) =>
 		String(getDisplayedOption(question, option) ?? "").includes("\n"),
 	);
 }
 
-export function QuestionPrompt({ prompt }) {
+function hasMatchContent(question, includeAnswer = false) {
+	return Array.isArray(question?.items) &&
+		question.items.length > 0 &&
+		question.items.every((item) => typeof item === "string") &&
+		Array.isArray(question.choices) &&
+		question.choices.length > 0 &&
+		question.choices.every((choice) => typeof choice === "string") &&
+		(!includeAnswer || Array.isArray(question.answer));
+}
+
+function InvalidQuestionMessage() {
+	return (
+		<p role="alert" className="rounded-xl border border-[#f2c6c3] bg-[#fff8f6] px-4 py-3 text-sm font-medium text-[#a44b13]">
+			This question has invalid answer data. Reload the page to try again.
+		</p>
+	);
+}
+
+export function QuestionPrompt({ prompt, imageUrl }) {
 	const formattedOptions = parseFormattedOptions(prompt);
 	const normalizedPrompt = (formattedOptions?.prompt ?? String(prompt ?? "")).replace(/\r\n/g, "\n").trim();
+	const parsedTerminal = splitPromptExhibit(normalizedPrompt);
 
 	const configuredMatch = normalizedPrompt.match(/\bConfigured (?:router IPv6 )?interfaces:\s*/i);
 	const promptBeforeConfigured = configuredMatch ? normalizedPrompt.slice(0, configuredMatch.index).trim() : normalizedPrompt;
@@ -36,7 +72,11 @@ export function QuestionPrompt({ prompt }) {
 	let exhibit = null;
 	let exhibitTitle = "Exhibit";
 
-	if (configuredMatch) {
+	if (parsedTerminal.exhibit && isTerminalText(parsedTerminal.exhibit)) {
+		promptText = parsedTerminal.prompt;
+		exhibit = parsedTerminal.exhibit;
+		exhibitTitle = "System output";
+	} else if (configuredMatch) {
 		exhibit = normalizedPrompt.slice(configuredMatch.index + configuredMatch[0].length).trim();
 		exhibitTitle = configuredMatch[0].replace(/:\s*$/, "");
 	} else if (doubleNewlineMatch) {
@@ -56,15 +96,27 @@ export function QuestionPrompt({ prompt }) {
 			<h2 className="whitespace-pre-wrap text-base font-semibold leading-relaxed tracking-tight text-[#17233d] sm:text-lg">
 				{promptText}
 			</h2>
+			{imageUrl && (
+				<ExhibitImage
+					src={imageUrl}
+					lazy
+					imageClassName="max-h-56 object-contain sm:max-h-64"
+					className="max-w-full"
+				/>
+			)}
 			{exhibit && (
-				<section aria-label={exhibitTitle} className="overflow-hidden rounded-xl border border-[#d9e1ef] bg-[#f7f9fc]">
-					<p className="border-b border-[#d9e1ef] px-4 py-2 text-xs font-bold uppercase tracking-wide text-[#526584]">
-						{exhibitTitle}
-					</p>
-					<pre className="overflow-x-hidden whitespace-pre-wrap break-words px-4 py-3 font-mono text-xs leading-6 text-[#263654] [overflow-wrap:anywhere] sm:text-sm">
-						{exhibit}
-					</pre>
-				</section>
+				isTerminalText(exhibit)
+					? <TerminalCodeOutput text={exhibit} label={exhibitTitle} />
+					: (
+						<section aria-label={exhibitTitle} className="overflow-hidden rounded-xl border border-[#d9e1ef] bg-[#f7f9fc]">
+							<p className="border-b border-[#d9e1ef] px-4 py-2 text-xs font-bold uppercase tracking-wide text-[#526584]">
+								{exhibitTitle}
+							</p>
+							<pre className="overflow-x-hidden whitespace-pre-wrap break-words px-4 py-3 font-mono text-xs leading-6 text-[#263654] [overflow-wrap:anywhere] sm:text-sm">
+								{exhibit}
+							</pre>
+						</section>
+					)
 			)}
 		</div>
 	);
@@ -211,6 +263,12 @@ function GroupMatchInput({ question, value, onChange, disabled }) {
 export function QuestionInput({ question, value, onChange, disabled }) {
 	const type = questionType(question);
 
+	if (type === "match" && !hasMatchContent(question)) return <InvalidQuestionMessage />;
+	if (type !== "match" && !Array.isArray(question?.options)) return <InvalidQuestionMessage />;
+	if (type === "multi" && (!Array.isArray(question.answer) || question.answer.length === 0)) {
+		return <InvalidQuestionMessage />;
+	}
+
 	if (type === "match" && matchMode(question) === "assign") {
 		return <AssignMatchInput question={question} value={value} onChange={onChange} disabled={disabled} />;
 	}
@@ -223,7 +281,7 @@ export function QuestionInput({ question, value, onChange, disabled }) {
 	}
 
 	const isMulti = type === "multi";
-	const codeStyle = hasMultilineOption(question);
+	const hasMultilineChoices = hasMultilineOption(question);
 	const needed = requiredSelections(question);
 	const selected = isMulti ? (Array.isArray(value) ? value : []) : value;
 
@@ -241,7 +299,7 @@ export function QuestionInput({ question, value, onChange, disabled }) {
 			{question.options.map((option, optionIndex) => {
 				const displayedOption = getDisplayedOption(question, option);
 				const isSelected = isMulti ? selected.includes(optionIndex) : selected === optionIndex;
-				const isMultiline = codeStyle || String(displayedOption ?? "").includes("\n");
+				const isMultiline = hasMultilineChoices || String(displayedOption ?? "").includes("\n");
 				return (
 					<button
 						key={option}
@@ -254,7 +312,7 @@ export function QuestionInput({ question, value, onChange, disabled }) {
 						<span className={`flex h-8 w-8 shrink-0 items-center justify-center ${isMulti ? "rounded-md" : "rounded-full"} text-sm font-bold ${isSelected ? "bg-[#005b6b] text-white" : "bg-[#e8f3f4] text-[#005b6b]"}`}>
 							{letter(optionIndex)}
 						</span>
-						<AnswerOptionContent option={displayedOption} codeStyle={codeStyle} />
+						<AnswerOptionContent option={displayedOption} />
 					</button>
 				);
 			})}
@@ -267,11 +325,13 @@ export function QuestionReview({ question, value }) {
 	const type = questionType(question);
 
 	if (type === "match") {
+		if (!hasMatchContent(question, true)) return <InvalidQuestionMessage />;
 		return <MatchingQuestionReview question={question} value={value} />;
 	}
+	if (!isValidQuestion(question)) return <InvalidQuestionMessage />;
 
 	const correctSet = new Set(type === "multi" ? question.answer : [question.answer]);
-	const codeStyle = hasMultilineOption(question);
+	const hasMultilineChoices = hasMultilineOption(question);
 	const pickedSet = new Set(type === "multi" ? (Array.isArray(value) ? value : []) : value === undefined ? [] : [value]);
 
 	return (
@@ -285,15 +345,15 @@ export function QuestionReview({ question, value }) {
 					: isSelectedAnswer
 						? "border-[#e77945] bg-[#fff5ef] text-[#a44b13]"
 						: "border-[#e1e8ef] bg-white text-[#42516b]";
-				const isMultiline = codeStyle || String(displayedOption ?? "").includes("\n");
+				const isMultiline = hasMultilineChoices || String(displayedOption ?? "").includes("\n");
 				return (
-					<div key={option} className={`flex min-h-[54px] ${isMultiline ? "items-start" : "items-center"} gap-3 rounded-xl border px-4 py-3 ${optionStyle}`}>
+					<div key={option} className={`flex min-h-[52px] ${isMultiline ? "items-start" : "items-center"} gap-2.5 rounded-2xl border px-3 py-2.5 ${optionStyle} sm:min-h-[60px] sm:gap-3 sm:px-4 sm:py-3`}>
 						<span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
 							isCorrectAnswer ? "bg-[#2d8a56] text-white" : isSelectedAnswer ? "bg-[#c7541a] text-white" : "bg-[#edf3fb] text-[#4764a8]"
 						}`}>
 							{letter(optionIndex)}
 						</span>
-						<AnswerOptionContent option={displayedOption} codeStyle={codeStyle} />
+						<AnswerOptionContent option={displayedOption} />
 						{isSelectedAnswer && !isCorrectAnswer && <span className="shrink-0 text-xs font-semibold text-[#a44b13]">Your answer</span>}
 						{isCorrectAnswer && <span className="shrink-0 text-xs font-semibold text-[#287849]">Correct answer</span>}
 					</div>

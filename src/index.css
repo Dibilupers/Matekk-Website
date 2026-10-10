@@ -879,20 +879,10 @@ h6 {
   }
 }
 
-/* ---------- Exam exhibits: terminal window, light and dark ---------- */
-/* Light mode (default): a light terminal window */
-.ccna-term { background: #f8fafc; color: #1e293b; border: 1px solid #d6e0ea; }
-.ccna-term-bar { background: #e8eef5; color: #475569; border-bottom: 1px solid #d6e0ea; }
-.ccna-term-btn { background: #ffffff; color: #1e293b; border: 1px solid #c7d3e1; }
-.ccna-term-btn:hover { background: #f1f5f9; }
-.ccna-term-screen { background: #eef2f7; }
-.ccna-term-hint { color: #64748b; }
-
-/* Dark mode: the classic black terminal */
-[data-theme="dark"] .ccna-term { background: #0f1b2d; color: #e2e8f0; border-color: transparent; }
-[data-theme="dark"] .ccna-term-bar { background: #1b2433; color: rgba(255, 255, 255, 0.65); border-bottom-color: rgba(255, 255, 255, 0.1); }
-[data-theme="dark"] .ccna-term-btn { background: rgba(255, 255, 255, 0.1); color: #ffffff; border-color: rgba(255, 255, 255, 0.2); }
-[data-theme="dark"] .ccna-term-btn:hover { background: rgba(255, 255, 255, 0.2); }
-[data-theme="dark"] .ccna-term-screen,
-[data-theme="dark"].ccna-term-screen { background: #0b1220; }
-[data-theme="dark"] .ccna-term-hint { color: rgba(255, 255, 255, 0.55); }
+/* ---------- Exam exhibits: terminal styling stays distinct in either exam theme ---------- */
+.ccna-term { background: #0b1220; color: #e2e8f0; border: 1px solid #29364a; }
+.ccna-term-bar { background: #172235; color: rgba(255, 255, 255, 0.75); border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+.ccna-term-btn { background: rgba(255, 255, 255, 0.1); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.2); }
+.ccna-term-btn:hover { background: rgba(255, 255, 255, 0.2); }
+.ccna-term-screen { background: #0b1220; }
+.ccna-term-hint { color: rgba(255, 255, 255, 0.55); }

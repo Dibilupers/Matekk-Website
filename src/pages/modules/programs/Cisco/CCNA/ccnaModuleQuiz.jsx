@@ -25,7 +25,7 @@ import {
 	saveProgramModuleQuizProgress,
 } from "../../../../../utils/programModuleQuizProgress";
 import { saveGradebookAssessment } from "../../../../../utils/gradebookApi";
-import { QuestionPrompt, QuestionReview } from "./ccnaExamQuestionViews";
+import { QuestionInput, QuestionPrompt, QuestionReview } from "./ccnaExamQuestionViews";
 
 const CCNA_SOURCE_URL = "https://www.cisco.com/site/us/en/learn/training-certifications/certifications/enterprise/ccna/index.html";
 
@@ -542,31 +542,13 @@ export default function CCNAModuleQuiz() {
 						<div className="mx-auto max-w-3xl">
 							<section className="rounded-[20px] border border-[#d6e5e7] bg-white p-4 shadow-sm sm:p-7">
 								<p className="mb-2 text-sm font-semibold text-[#70809a]">Question {attempt.currentIndex + 1} of {moduleQuiz.questions.length} · {moduleQuiz.title}</p>
-								<QuestionPrompt prompt={currentQuestion.prompt} />
-								<div className="space-y-2.5">
-									{currentQuestion.options.map((option, optionIndex) => {
-										const isSelected = selectedAnswer === optionIndex;
-										return (
-											<button
-												key={option}
-												type="button"
-												onClick={() => chooseAnswer(optionIndex)}
-												disabled={Boolean(attempt.lockedQuestions?.[attempt.currentIndex])}
-												aria-pressed={isSelected}
-												className={`ccna-answer-choice ccna-dark-hover flex min-h-[52px] w-full items-center gap-2.5 rounded-2xl border px-3 py-2.5 text-left transition disabled:cursor-default sm:min-h-[60px] sm:gap-3 sm:px-4 sm:py-3 ${
-													isSelected
-														? "border-[#005b6b] bg-[#e8f3f4] text-[#263654]"
-														: "border-[#d9e1ef] bg-white text-[#263654] hover:border-[#8bb8bf] hover:bg-[#f0f7f7]"
-												}`}
-											>
-												<span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold ${isSelected ? "bg-[#005b6b] text-white" : "bg-[#e8f3f4] text-[#005b6b]"}`}>
-													{String.fromCharCode(65 + optionIndex)}
-												</span>
-												<span className="text-sm sm:text-base">{option}</span>
-											</button>
-										);
-									})}
-								</div>
+								<QuestionPrompt prompt={currentQuestion.prompt} imageUrl={currentQuestion.imageUrl} />
+								<QuestionInput
+									question={currentQuestion}
+									value={selectedAnswer}
+									onChange={chooseAnswer}
+									disabled={Boolean(attempt.lockedQuestions?.[attempt.currentIndex])}
+								/>
 								<div className="mt-5 flex justify-end">
 									<button
 										type="button"
@@ -704,7 +686,7 @@ export default function CCNAModuleQuiz() {
 													{question.isCorrect ? "Correct" : "Incorrect"}
 												</span>
 											</div>
-											<QuestionPrompt prompt={question.prompt} />
+											<QuestionPrompt prompt={question.prompt} imageUrl={question.imageUrl} />
 											<div className="mt-5">
 												<QuestionReview question={question} value={question.selectedAnswer} />
 											</div>

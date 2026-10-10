@@ -9,7 +9,6 @@ import { saveCcnaMockExamResult } from "../../../../../utils/ccnaGradebook";
 import { getCcnaExamSessionKey } from "../../../../../utils/ccnaShortExamSession";
 import { isQuestionAnswered } from "../../../../../utils/ccnaExamGrading";
 import { QuestionInput, QuestionPrompt, QuestionReview } from "./ccnaExamQuestionViews";
-import { saveGradebookAssessment } from "../../../../../utils/gradebookApi";
 import { resumeCcnaExam, startCcnaExam, submitCcnaExam } from "../../../../../utils/ccnaExamApi";
 import { ExhibitImage, ExhibitText } from "./ccnaExhibit";
 
@@ -122,7 +121,6 @@ export default function CCNACompositeExamPage({ examKey = "short" }) {
 			(answerFilter === "incorrect" && !item.isCorrect),
 		);
 	const [isDark, setIsDark] = useState(false);
-	const [gradebookSaveError, setGradebookSaveError] = useState(null);
 
 	useEffect(() => {
 		let isActive = true;
@@ -262,30 +260,6 @@ export default function CCNACompositeExamPage({ examKey = "short" }) {
 			maxScore: questions.length,
 			submittedAt,
 		});
-	}, [attemptId, exam.name, isSubmitted, isViewingSavedResult, questions.length, score, submittedAt, userId]);
-
-	useEffect(() => {
-		if (!isSubmitted || isViewingSavedResult || !userId || !Number.isFinite(submittedAt)) return undefined;
-
-		let isActive = true;
-		saveGradebookAssessment("ccna", {
-			id: attemptId,
-			type: "exam",
-			programKey: "ccna",
-			title: exam.name,
-			score,
-			maxScore: questions.length,
-			submittedAt,
-		}).catch((error) => {
-			console.error("Unable to save the exam result to the gradebook.", error);
-			if (isActive) {
-				setGradebookSaveError("Your exam result could not be saved to the backend gradebook.");
-			}
-		});
-
-		return () => {
-			isActive = false;
-		};
 	}, [attemptId, exam.name, isSubmitted, isViewingSavedResult, questions.length, score, submittedAt, userId]);
 
 	async function submitExam() {
@@ -515,11 +489,6 @@ export default function CCNACompositeExamPage({ examKey = "short" }) {
 	return (
 		<main data-theme={isDark ? "dark" : "light"} className="ccna-page-enter min-h-screen bg-[#f5f9f9] px-4 py-6 text-[#17233d] sm:px-8 sm:py-8">
 						<div className="mx-auto max-w-[1125px]">
-				{gradebookSaveError && isResultView && (
-					<p role="alert" className="mb-4 rounded-xl border border-[#f2c6c3] bg-white px-4 py-3 text-sm font-medium text-[#b42318]">
-						{gradebookSaveError} Reload this page to retry.
-					</p>
-				)}
 				{submitError && !isResultView && (
 					<p role="alert" className="mb-4 rounded-xl border border-[#f2c6c3] bg-white px-4 py-3 text-sm font-medium text-[#b42318]">
 						{submitError} Your answers are still saved in this browser; try submitting again.
@@ -610,7 +579,7 @@ export default function CCNACompositeExamPage({ examKey = "short" }) {
 
 						<div className="w-full">
 							<section ref={questionCardRef} className="scroll-mt-4 rounded-[20px] border border-[#d6e5e7] bg-white p-4 shadow-sm sm:p-7">
-								<QuestionPrompt prompt={question.prompt} />
+								<QuestionPrompt prompt={question.prompt} imageUrl={question.imageUrl} />
 								{question.exhibitImage && (
 									<ExhibitImage src={question.exhibitImage} className="mb-6" imageClassName="max-h-[32rem]" />
 								)}
@@ -764,7 +733,7 @@ export default function CCNACompositeExamPage({ examKey = "short" }) {
 														{item.isCorrect ? "Correct" : "Incorrect"}
 													</span>
 												</div>
-												<QuestionPrompt prompt={item.prompt} />
+												<QuestionPrompt prompt={item.prompt} imageUrl={item.imageUrl} />
 												{item.exhibitImage && (
 													<ExhibitImage src={item.exhibitImage} lazy className="mt-4" imageClassName="max-h-[26rem]" />
 												)}
