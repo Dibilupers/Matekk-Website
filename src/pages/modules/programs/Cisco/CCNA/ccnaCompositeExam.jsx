@@ -10,6 +10,10 @@ import { getCcnaExamSessionKey } from "../../../../../utils/ccnaShortExamSession
 import { isAnswerCorrect, isQuestionAnswered, isValidQuestion } from "../../../../../utils/ccnaExamGrading";
 import { QuestionInput, QuestionReview } from "./ccnaExamQuestionViews";
 import { saveGradebookAssessment } from "../../../../../utils/gradebookApi";
+import { splitPromptExhibit } from "../../../../../utils/splitPromptExhibit";
+import { ExhibitImage, ExhibitText } from "./ccnaExhibit";
+import { loadCcnaQuestionBank } from "../../../../../utils/ccnaQuestionBankApi";
+import { setDatabaseQuestions } from "./ccnaQuestionBank";
 
 
 
@@ -59,6 +63,10 @@ function restoreExamSession(exam, sessionStorageKey) {
 		const isSubmitted = session.isSubmitted || session.deadline <= Date.now();
 		return {
 			...session,
+			// Attempts saved before router output was split out of the question text get the same clean-up
+			questions: session.questions.map((question) => (question.exhibit || question.exhibitImage
+				? question
+				: { ...question, ...splitPromptExhibit(question.prompt) })),
 			attemptId: typeof session.attemptId === "string" ? session.attemptId : createCcnaMockExamAttemptId(),
 			submittedAt: Number.isFinite(session.submittedAt)
 				? session.submittedAt
@@ -78,7 +86,7 @@ function formatTime(totalSeconds) {
 	return `${minutes}:${seconds}`;
 }
 
-export default function CCNACompositeExam({ examKey = "short" }) {
+function CCNACompositeExamPage({ examKey = "short" }) {
 	const exam = CCNA_EXAMS[examKey];
 	const location = useLocation();
 	const navigate = useNavigate();
@@ -465,14 +473,20 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 								<p className="mb-2 text-sm text-[#70809a]">
 									Question {currentIndex + 1} of {questions.length}
 									{question.moduleNumber && ` · Module ${question.moduleNumber}: ${question.moduleTitle}`}
+									{import.meta.env.DEV && question.bankId && <span className="font-semibold text-[#b45309]">{` · Bank #${question.bankId} (${question.moduleTitle})`}</span>}
 								</p>
 								<h1 className="mb-4 text-lg font-bold leading-snug tracking-tight sm:mb-6 sm:text-[1.7rem]">{question.prompt}</h1>
 								{/* Exhibit: a picture and/or device output shown above the choices */}
+								{question.needsPicture && (
+									<p role="note" className="mb-6 rounded-xl border border-dashed border-[#e0b44c] bg-[#fffbeb] px-4 py-3 text-sm font-medium text-[#8a5a00]">
+										This question refers to an exhibit picture that hasn't been added to the question bank yet.
+									</p>
+								)}
 								{question.exhibitImage && (
-									<img src={question.exhibitImage} alt="Exhibit" className="mb-6 w-auto max-w-full max-h-[32rem] rounded-xl border border-[#d6e5e7] bg-white" />
+									<ExhibitImage src={question.exhibitImage} className="mb-6" imageClassName="max-h-[32rem]" />
 								)}
 								{question.exhibit && (
-									<pre aria-label="Exhibit" className="mb-6 max-h-96 overflow-auto rounded-xl bg-[#0f1b2d] p-4 text-xs leading-5 text-[#e2e8f0] sm:text-[13px]"><code>{question.exhibit}</code></pre>
+									<ExhibitText text={question.exhibit} className="mb-6" />
 								)}
 								<QuestionInput
 									question={question}
@@ -480,7 +494,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 									onChange={(value) => setAnswers((previous) => ({ ...previous, [currentIndex]: value }))}
 									disabled={Boolean(lockedQuestions[currentIndex])}
 								/>
-								<div className="mt-6 flex justify-end">
+								<div className="mt-6 flex justify-end gap-3">
 									<button
 										type="button"
 										onClick={() => currentIndex === questions.length - 1 ? submitExam() : goToQuestion(currentIndex + 1)}
@@ -635,11 +649,16 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 													</span>
 												</div>
 												<h3 className="mt-4 text-lg font-bold leading-snug text-[#17233d] sm:text-xl">{item.prompt}</h3>
+												{item.needsPicture && (
+													<p role="note" className="mt-4 rounded-xl border border-dashed border-[#e0b44c] bg-[#fffbeb] px-4 py-3 text-sm font-medium text-[#8a5a00]">
+														This question refers to an exhibit picture that hasn't been added to the question bank yet.
+													</p>
+												)}
 												{item.exhibitImage && (
-													<img src={item.exhibitImage} alt="Exhibit" loading="lazy" className="mt-4 w-auto max-w-full max-h-[26rem] rounded-xl border border-[#d6e5e7] bg-white" />
+													<ExhibitImage src={item.exhibitImage} lazy className="mt-4" imageClassName="max-h-[26rem]" />
 												)}
 												{item.exhibit && (
-													<pre aria-label="Exhibit" className="mt-4 max-h-80 overflow-auto rounded-xl bg-[#0f1b2d] p-4 text-xs leading-5 text-[#e2e8f0]"><code>{item.exhibit}</code></pre>
+													<ExhibitText text={item.exhibit} className="mt-4" />
 												)}
 												<div className="mt-5">
 													<QuestionReview question={item} value={item.selectedAnswer} />
@@ -736,4 +755,34 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 			)}
 		</main>
 	);
+}
+
+// Loads the database question bank first, so a new attempt draws its questions from it.
+// (If the bank can't be reached, the exam still works with the questions built into the site.)
+export default function CCNACompositeExam(props) {
+	const [status, setStatus] = useState("loading");
+	useEffect(() => {
+		let active = true;
+		loadCcnaQuestionBank()
+			.then(({ questions }) => {
+				setDatabaseQuestions(questions);
+				if (active) setStatus("ready");
+			})
+			.catch((error) => {
+				console.error("Unable to load the CCNA question bank; using the built-in questions instead.", error);
+				if (active) setStatus("ready");
+			});
+		return () => { active = false; };
+	}, []);
+
+	if (status === "loading") {
+		return (
+			<main className="flex min-h-screen items-center justify-center bg-[#f5f9f9] px-4 text-[#17233d]">
+				<p role="status" className="rounded-2xl border border-[#d6e5e7] bg-white px-6 py-4 text-sm font-semibold text-[#005b6b] shadow-sm">
+					Loading the CCNA question bank…
+				</p>
+			</main>
+		);
+	}
+	return <CCNACompositeExamPage {...props} />;
 }

@@ -3176,7 +3176,7 @@ export const CCNA_LEGACY_QUESTIONS = [
       "different overlapping channels"
     ],
     "answer": 0,
-    "explanation": "In the 2.4 GHz band, 1, 6, and 11 are the only non-overlapping channels so they should be chosen while\ninstalling APs.\n\nemium Member: You can test your knowledge with these questions first via this link (via HTML).\n\n SDN Quick Summary\n\n Everything that networking devices do can be categorized into three planes: Data Plane, Control\n Plane and Management Plane.\n + Data Plane: responsible for the switching of packets through the router. In short, it includes any\n action after receiving data (processing, encapsulating/decapsulating, matching destination MAC &\n IP addresses, forwarding, QoS, filtering with access-list)\n + Control Plane: responsible for maintaining sessions and exchanging protocol information with\n other network devices. It consists of dynamic IP routing protocols (OSPF, EIGRP, BGP...), the RIB,\n routing updates, in addition to other protocols such as STP, ARP, ICMP, PIM, IGMP, LACP...\n + Management Plane: is used to manage a device through its connection to the network. Examples\n of protocols processed in the management plane include Simple Network Management Protocol\n (SNMP), Telnet, File Transfer Protocol (FTP), Secure FTP, and Secure Shell (SSH). These\n management protocols are used for monitoring and for command-line interface (CLI) access\n\n Most traditional devices use a distributed architecture, in which each control plane is resided in a\n networking device. Therefore they need to communicate with each other via messages to work\n correctly.\n\n In contrast to distributed architecture, centralized (or controller-based) architectures centralizes the\n control of networking devices into one device, called SDN controller.\n\n Software-Defined Networking (SDN) is an approach to networking that centralizes the control plane\n into an application called a controller.\n\n As we took the control planes off networking devices but not data planes so we need a way to\n communicate with them. So we put a southbound interface (SBI) at the bottom of SDN controller\n for this task. An SBI communicates with the devices via an application programming interface\n (API).\n\nNow, in turn, the networking administrators and SDN applications want to control the controller! So\nthe controller need a northbound interface (NBI) to communicate with us. The NBI applications\nincluded various network services, including network virtualization, dynamic virtual network\nprovisioning, firewall monitoring, user identity management and access policy control.\n\n- REST (Representational State Transfer) describes a type of API that allows applications to sit on\ndifferent hosts, using HTTP messages to transfer data over the API.\nThree SDN controllers which are mentioned in CCNA:\n+ OpenDaylight Controller: an OpenFlow-based SDN\n+ Cisco Application Centric Infrastructure (ACI)\n+ Cisco APIC Enterprise Module (APIC-EM)\nSDN northbound APIs are usually RESTful APIs used to communicate between the SDN Controller\nand the services and applications running over the network. Another northbound API is Simple\n\n Object Access Protocol (SOAP).\n OpenFlow and NETCONF are Southbound APIs used for most SDN implementations. Another\n Southbound API is OpFlex, which is an open-standard, distributed control system. It send \"summary\n policy\" to network elements."
+    "explanation": "In the 2.4 GHz band, 1, 6, and 11 are the only non-overlapping channels so they should be chosen while\ninstalling APs."
   },
   {
     "legacyIndex": 240,
@@ -3994,7 +3994,7 @@ export const CCNA_LEGACY_QUESTIONS = [
       3,
       4
     ],
-    "explanation": "In the output above, three lines under \"Link-local IPv6 Address\" line have been blacked out so we have to\nfigure out what they are. They are the IP address of the Wireless card and the Default gateway of this\ncomputer.\nremium Member: You can test your knowledge with these questions first via this link (via HTML)."
+    "explanation": "In the output above, three lines under \"Link-local IPv6 Address\" line have been blacked out so we have to\nfigure out what they are. They are the IP address of the Wireless card and the Default gateway of this\ncomputer."
   },
   {
     "legacyIndex": 276,
@@ -4199,24 +4199,21 @@ export const CCNA_LEGACY_QUESTIONS = [
       "unknown DHCP server within an administrative domain",
       "network component that propagates IP addresses to hosts on the network",
       "default state of all interfaces",
-      "internal device under the control of the network administrator",
-      "remium Member"
+      "internal device under the control of the network administrator"
     ],
     "choices": [
       "snooping binding database",
       "spurious DHCP server",
       "DHCP server",
       "untrusted",
-      "trusted",
-      "You can test your knowledge with these questions first via this link (via HTML)."
+      "trusted"
     ],
     "answer": [
       0,
       1,
       2,
       3,
-      4,
-      5
+      4
     ],
     "explanation": ""
   },

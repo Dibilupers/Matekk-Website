@@ -8,7 +8,7 @@ import {
 export const CCNA_EXAMS = {
   short: {
     name: "Short Exam",
-    subtitle: "Modules 1.0–6.0",
+    subtitle: "CCNA question bank",
     questionCount: 50,
     durationSeconds: 45 * 60,
     sessionKey: "matekk-ccna-short-exam-session",

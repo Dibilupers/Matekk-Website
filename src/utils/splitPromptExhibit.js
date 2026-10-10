@@ -21,7 +21,10 @@ function isCode(block) {
 }
 
 function isQuestionProse(block) {
-  return QUESTION_START.test(block) && !CODE_HINTS.some((re) => re.test(block));
+  if (CODE_HINTS.some((re) => re.test(block))) return false;
+  // A question-style opening, or an ordinary sentence (several words, ends with . or ?, not indented)
+  const isSentence = !/^\s/.test(block) && /[.?]\s*$/.test(block) && block.trim().split(/\s+/).length >= 6;
+  return QUESTION_START.test(block) || isSentence;
 }
 
 const tidyProse = (block) => block.replace(/\s*\n\s*/g, " ").trim();
