@@ -473,9 +473,8 @@ function CCNACompositeExamPage({ examKey = "short" }) {
 								<p className="mb-2 text-sm text-[#70809a]">
 									Question {currentIndex + 1} of {questions.length}
 									{question.moduleNumber && ` · Module ${question.moduleNumber}: ${question.moduleTitle}`}
-									{import.meta.env.DEV && question.bankId && <span className="font-semibold text-[#b45309]">{` · Bank #${question.bankId} (${question.moduleTitle})`}</span>}
 								</p>
-								<h1 className="mb-4 text-lg font-bold leading-snug tracking-tight sm:mb-6 sm:text-[1.7rem]">{question.prompt}</h1>
+								<h1 className="mb-4 text-base font-semibold leading-snug tracking-tight sm:mb-6 sm:text-2xl">{question.prompt}</h1>
 								{/* Exhibit: a picture and/or device output shown above the choices */}
 								{question.needsPicture && (
 									<p role="note" className="mb-6 rounded-xl border border-dashed border-[#e0b44c] bg-[#fffbeb] px-4 py-3 text-sm font-medium text-[#8a5a00]">
