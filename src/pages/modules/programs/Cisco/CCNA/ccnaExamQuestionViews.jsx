@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
-import { groupCode, groupSizes, matchMode, parseGroupCode, questionType, requiredSelections } from "../../../../../utils/ccnaExamGrading";
+import { groupCode, groupSizes, isValidQuestion, matchMode, parseGroupCode, questionType, requiredSelections } from "../../../../../utils/ccnaExamGrading";
 import { getDisplayedOption, getOptionTableExhibit, parseFormattedOptions } from "./ccnaExamQuestionFormatting";
-import { ExhibitText } from "./ccnaExhibit";
+import { ExhibitImage, ExhibitText } from "./ccnaExhibit";
 import { looksLikeCode, tidySentence } from "../../../../../utils/answerTextStyle";
 import { MatchingQuestionInput, MatchingQuestionReview } from "./ccnaExamMatching";
 
@@ -257,11 +257,32 @@ function AnswerOptionContent({ option, codeStyle = false }) {
 // so the choices line up. One answer that merely starts with a command word ("service port",
 // "shutdown command issued on the port") doesn't count; nor does a line break alone.
 function hasMultilineOption(question) {
+	if (!Array.isArray(question?.options)) return false;
 	const codeAnswers = question.options.filter((option) => looksLikeCode(getDisplayedOption(question, option))).length;
 	return codeAnswers > 0 && codeAnswers >= question.options.length / 2;
 }
 
-export function QuestionPrompt({ prompt }) {
+// Guards against broken question data (e.g. an old saved attempt), so the page shows a message instead of crashing
+function hasMatchContent(question, includeAnswer = false) {
+	return Array.isArray(question?.items) &&
+		question.items.length > 0 &&
+		question.items.every((item) => typeof item === "string") &&
+		Array.isArray(question.choices) &&
+		question.choices.length > 0 &&
+		question.choices.every((choice) => typeof choice === "string") &&
+		(!includeAnswer || Array.isArray(question.answer));
+}
+
+function InvalidQuestionMessage() {
+	return (
+		<p role="alert" className="rounded-xl border border-[#f2c6c3] bg-[#fff8f6] px-4 py-3 text-sm font-medium text-[#a44b13]">
+			This question has invalid answer data. Reload the page to try again.
+		</p>
+	);
+}
+
+// imageUrl: the question's picture, for pages that don't show it themselves (the exam page shows it separately)
+export function QuestionPrompt({ prompt, imageUrl }) {
 	const formattedOptions = parseFormattedOptions(prompt);
 	// A scrambled "Option A / Option B" table: show the question, then the whole table as it appears in the source
 	const optionTable = formattedOptions ? null : getOptionTableExhibit(prompt);
@@ -271,6 +292,7 @@ export function QuestionPrompt({ prompt }) {
 				<h2 className="whitespace-pre-wrap text-base font-semibold leading-relaxed tracking-tight text-[#17233d] sm:text-lg">
 					{optionTable.prompt}
 				</h2>
+				{imageUrl && <ExhibitImage src={imageUrl} lazy imageClassName="max-h-[32rem]" />}
 				<ExhibitText text={optionTable.exhibit} />
 			</div>
 		);
@@ -305,6 +327,7 @@ export function QuestionPrompt({ prompt }) {
 			<h2 className="whitespace-pre-wrap text-base font-semibold leading-relaxed tracking-tight text-[#17233d] sm:text-lg">
 				{promptText}
 			</h2>
+			{imageUrl && <ExhibitImage src={imageUrl} lazy imageClassName="max-h-[32rem]" />}
 			{exhibit && (
 				<section aria-label={exhibitTitle} className="overflow-hidden rounded-xl border border-[#d9e1ef] bg-[#f7f9fc]">
 					<p className="border-b border-[#d9e1ef] px-4 py-2 text-xs font-bold uppercase tracking-wide text-[#526584]">
@@ -328,6 +351,12 @@ export function QuestionInput({ question, value, onChange, disabled }) {
 	// One-to-one questions (each box used once) use the click-to-place boxes, like the original exam
 	const isOneToOne = Array.isArray(question.items) && Array.isArray(question.choices) && question.items.length === question.choices.length;
 	const localMatchMode = Array.isArray(question.answer) ? matchMode(question) : hasGroupSizes ? "group" : isOneToOne ? "assign" : "select";
+
+	if (type === "match" && !hasMatchContent(question)) return <InvalidQuestionMessage />;
+	if (type !== "match" && !Array.isArray(question?.options)) return <InvalidQuestionMessage />;
+	if (type === "multi" && (!Array.isArray(question.answer) || question.answer.length === 0)) {
+		return <InvalidQuestionMessage />;
+	}
 
 	if (type === "match" && localMatchMode === "assign") {
 		return <AssignMatchInput question={question} value={value} onChange={onChange} disabled={disabled} />;
@@ -387,6 +416,8 @@ export function QuestionInput({ question, value, onChange, disabled }) {
 /* Results review for one question: shows the student's answer and the correct one. */
 export function QuestionReview({ question, value }) {
 	const type = questionType(question);
+	if (type === "match" && !hasMatchContent(question, true)) return <InvalidQuestionMessage />;
+	if (type !== "match" && !isValidQuestion(question)) return <InvalidQuestionMessage />;
 
 	if (type === "match" && matchMode(question) === "group") {
 		const current = Array.isArray(value) ? value : [];

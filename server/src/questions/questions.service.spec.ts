@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { QuestionsService } from './questions.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { StorageService } from '../storage/storage.service.js';
+import { GradebookService } from '../gradebook/gradebook.service.js';
 
 function examQuestionBank(questionCount: number) {
   const matchingCount = questionCount / 10;
@@ -34,6 +35,8 @@ function examQuestionBank(questionCount: number) {
 
 describe('QuestionsService', () => {
   let service: QuestionsService;
+  let gradebookMock: { recordAssessment: ReturnType<typeof vi.fn> };
+  let storageMock: { createSignedQuestionImageUrls: ReturnType<typeof vi.fn> };
   let prismaMock: {
     questions: {
       create: ReturnType<typeof vi.fn>;
@@ -47,6 +50,10 @@ describe('QuestionsService', () => {
   };
 
   beforeEach(async () => {
+    gradebookMock = { recordAssessment: vi.fn().mockResolvedValue(null) };
+    storageMock = {
+      createSignedQuestionImageUrls: vi.fn().mockResolvedValue(new Map()),
+    };
     prismaMock = {
       questions: {
         create: vi.fn().mockResolvedValue(null),
@@ -67,9 +74,11 @@ describe('QuestionsService', () => {
         },
         {
           provide: StorageService,
-          useValue: {
-            createSignedQuestionImageUrls: vi.fn().mockResolvedValue(new Map()),
-          },
+          useValue: storageMock,
+        },
+        {
+          provide: GradebookService,
+          useValue: gradebookMock,
         },
       ],
     }).compile();
@@ -91,38 +100,6 @@ describe('QuestionsService', () => {
       correct_answer: 'C',
       explanation: 'Explanation',
     })).toThrow('The correct answer must be one of the question choices.');
-  });
-
-  it('returns signed URLs for private question images', async () => {
-    const row = {
-      id: 1,
-      module: 'CCNA Part 5',
-      topic: 'Security',
-      question_text: 'Refer to the exhibit.',
-      choices: '{}',
-      correct_answer: 'A',
-      explanation: '',
-      imageUrl: 'questions/ccna-question-1.png',
-    };
-    const signedUrl = 'https://example.supabase.co/storage/v1/object/sign/question-images/questions/ccna-question-1.png?token=test';
-    const prisma = {
-      questions: { findMany: vi.fn().mockResolvedValue([row]) },
-    };
-    const storage = {
-      createSignedQuestionImageUrls: vi.fn().mockResolvedValue(new Map([[row.imageUrl, signedUrl]])),
-    };
-    const module = await Test.createTestingModule({
-      providers: [
-        QuestionsService,
-        { provide: PrismaService, useValue: prisma },
-        { provide: StorageService, useValue: storage },
-      ],
-    }).compile();
-
-    const questionsService = module.get<QuestionsService>(QuestionsService);
-
-    await expect(questionsService.findBank()).resolves.toEqual([{ ...row, imageUrl: signedUrl }]);
-    expect(storage.createSignedQuestionImageUrls).toHaveBeenCalledWith([row.imageUrl]);
   });
 
   it('stores a matching question and its answer key as matching metadata', async () => {
@@ -183,6 +160,23 @@ describe('QuestionsService', () => {
     expect(prismaMock.examAttempt.create.mock.calls[0][0].data.userId).toBe(7);
   });
 
+  it('returns signed database image URLs with exam questions', async () => {
+    const imagePath = 'questions/ccna-exhibit.webp';
+    const signedUrl = 'https://storage.example/questions/ccna-exhibit.webp?token=signed';
+    const bank = examQuestionBank(50).map((question) =>
+      question.id === 1 ? { ...question, imageUrl: imagePath } : question,
+    );
+    prismaMock.questions.findMany.mockResolvedValue(bank);
+    storageMock.createSignedQuestionImageUrls.mockResolvedValue(new Map([[imagePath, signedUrl]]));
+
+    const attempt = await service.startExam('short', 7);
+
+    expect(attempt.questions.find((question) => question.id === 1)?.imageUrl).toBe(signedUrl);
+    expect(storageMock.createSignedQuestionImageUrls).toHaveBeenCalledWith([imagePath]);
+    expect(prismaMock.examAttempt.create.mock.calls[0][0].data.questionSet)
+      .toEqual(expect.arrayContaining([expect.objectContaining({ id: 1, imageUrl: imagePath })]));
+  });
+
   it('grades database exam answers and returns answer review after submission', async () => {
     const databaseQuestions = Array.from({ length: 50 }, (_, index) => ({
       id: index + 1,
@@ -231,6 +225,19 @@ describe('QuestionsService', () => {
       isCorrect: true,
     });
     expect(prismaMock.examAttempt.updateMany).toHaveBeenCalledOnce();
+    expect(gradebookMock.recordAssessment).toHaveBeenCalledWith(
+      7,
+      'ccna',
+      {
+        id: 'attempt-id',
+        type: 'exam',
+        programKey: 'ccna',
+        title: 'Short Exam',
+        score: 1,
+        maxScore: 50,
+        submittedAt: expect.any(Number),
+      },
+    );
   });
 
   it('uses only the Questions table to create an exam', async () => {
@@ -320,5 +327,75 @@ describe('QuestionsService', () => {
     });
 
     await expect(service.resumeExam('short', 'attempt-id', 7)).rejects.toThrow('Exam attempt not found.');
+  });
+
+  it('repairs the gradebook when resuming an already submitted attempt', async () => {
+    const submittedAt = new Date();
+    prismaMock.examAttempt.findUnique.mockResolvedValue({
+      id: 'attempt-id',
+      userId: 7,
+      examKey: 'short',
+      questionSet: [{
+        id: 1,
+        prompt: 'Question',
+        options: ['A', 'B'],
+        module: 'CCNA',
+        topic: 'Routing',
+      }],
+      durationSeconds: 2700,
+      deadline: new Date(Date.now() + 2700000),
+      score: 1,
+      review: [],
+      submittedAt,
+    });
+
+    const result = await service.resumeExam('short', 'attempt-id', 7);
+
+    expect(result.isSubmitted).toBe(true);
+    expect(gradebookMock.recordAssessment).toHaveBeenCalledWith(7, 'ccna', {
+      id: 'attempt-id',
+      type: 'exam',
+      programKey: 'ccna',
+      title: 'Short Exam',
+      score: 1,
+      maxScore: 1,
+      submittedAt: submittedAt.getTime(),
+    });
+  });
+
+  it('returns signed URLs for private question images', async () => {
+    const row = {
+      id: 1,
+      module: 'CCNA Part 5',
+      topic: 'Security',
+      question_text: 'Refer to the exhibit.',
+      choices: '{}',
+      correct_answer: 'A',
+      explanation: '',
+      imageUrl: 'questions/ccna-question-1.png',
+    };
+    const signedUrl = 'https://example.supabase.co/storage/v1/object/sign/question-images/questions/ccna-question-1.png?token=test';
+    const prisma = {
+      questions: { findMany: vi.fn().mockResolvedValue([row]) },
+    };
+    const storage = {
+      createSignedQuestionImageUrls: vi.fn().mockResolvedValue(new Map([[row.imageUrl, signedUrl]])),
+    };
+    const module = await Test.createTestingModule({
+      providers: [
+        QuestionsService,
+        { provide: PrismaService, useValue: prisma },
+        { provide: StorageService, useValue: storage },
+        {
+          provide: GradebookService,
+          useValue: { recordAssessment: vi.fn().mockResolvedValue(null) },
+        },
+      ],
+    }).compile();
+
+    const questionsService = module.get<QuestionsService>(QuestionsService);
+
+    await expect(questionsService.findBank()).resolves.toEqual([{ ...row, imageUrl: signedUrl }]);
+    expect(storage.createSignedQuestionImageUrls).toHaveBeenCalledWith([row.imageUrl]);
   });
 });

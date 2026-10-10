@@ -10,17 +10,19 @@ import { CreateQuestionDto, ExamAnswerDto } from './dto/questions.dto.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { StorageService } from '../storage/storage.service.js';
 import type { Prisma } from '../generated/prisma/client.js';
+import { GradebookService } from '../gradebook/gradebook.service.js';
 
 const EXAM_CONFIG = {
-  short: { questionCount: 50, durationSeconds: 45 * 60 },
-  medium: { questionCount: 100, durationSeconds: 90 * 60 },
-  long: { questionCount: 150, durationSeconds: 120 * 60 },
+  short: { questionCount: 50, durationSeconds: 45 * 60, title: 'Short Exam' },
+  medium: { questionCount: 100, durationSeconds: 90 * 60, title: 'Medium Exam' },
+  long: { questionCount: 150, durationSeconds: 120 * 60, title: 'Long Exam' },
 } as const;
 
 type ExamKey = keyof typeof EXAM_CONFIG;
 type ExamQuestionBase = {
   id: number;
   prompt: string;
+  imageUrl?: string | null;
   options: string[];
   module: string | null;
   topic: string | null;
@@ -41,6 +43,7 @@ export class QuestionsService {
   constructor(
     private prisma: PrismaService,
     private storage: StorageService,
+    private gradebook: GradebookService,
   ) {}
 
   create(data: CreateQuestionDto) {
@@ -170,6 +173,9 @@ export class QuestionsService {
     }
 
     const questionSet = this.parseQuestionSet(attempt.questionSet);
+    if (attempt.submittedAt) {
+      await this.recordGradebookResult(attempt, examKey, userId);
+    }
     return this.toAttemptResponse(attempt, questionSet);
   }
 
@@ -185,7 +191,10 @@ export class QuestionsService {
       throw new NotFoundException('Exam attempt not found.');
     }
     // Return the original result for retries instead of grading or recording a second submission.
-    if (attempt.submittedAt) return this.toAttemptResponse(attempt, this.parseQuestionSet(attempt.questionSet));
+    if (attempt.submittedAt) {
+      await this.recordGradebookResult(attempt, examKey, userId);
+      return this.toAttemptResponse(attempt, this.parseQuestionSet(attempt.questionSet));
+    }
 
     const questionSet = this.parseQuestionSet(attempt.questionSet);
     const questionIds = new Set(questionSet.map(({ id }) => id));
@@ -243,6 +252,7 @@ export class QuestionsService {
         return {
           id: question.id,
           prompt: question.prompt,
+          imageUrl: question.imageUrl,
           type: question.type,
           items: question.items,
           choices: question.choices,
@@ -266,6 +276,7 @@ export class QuestionsService {
       return {
         id: question.id,
         prompt: question.prompt,
+        imageUrl: question.imageUrl,
         type: question.type,
         options: question.options,
         module: question.module,
@@ -287,13 +298,42 @@ export class QuestionsService {
     if (saved.count === 0) {
       const alreadySubmitted = await this.prisma.examAttempt.findUnique({ where: { id: attemptId } });
       if (!alreadySubmitted) throw new NotFoundException('Exam attempt not found.');
+      await this.recordGradebookResult(alreadySubmitted, examKey, userId);
       return this.toAttemptResponse(alreadySubmitted, this.parseQuestionSet(alreadySubmitted.questionSet));
     }
 
+    const submittedAttempt = { ...attempt, score, review, submittedAt };
+    await this.recordGradebookResult(submittedAttempt, examKey, userId);
     return this.toAttemptResponse(
-      { ...attempt, score, review, submittedAt },
+      submittedAttempt,
       questionSet,
     );
+  }
+
+  private async recordGradebookResult(
+    attempt: {
+      id: string;
+      score: number | null;
+      submittedAt: Date | null;
+      questionSet: Prisma.JsonValue;
+    },
+    examKey: string,
+    userId: number,
+  ) {
+    if (attempt.score === null || !attempt.submittedAt) {
+      throw new InternalServerErrorException('The submitted exam result is incomplete.');
+    }
+    const config = this.getExamConfig(examKey);
+    const questionSet = this.parseQuestionSet(attempt.questionSet);
+    await this.gradebook.recordAssessment(userId, 'ccna', {
+      id: attempt.id,
+      type: 'exam',
+      programKey: 'ccna',
+      title: config.title,
+      score: attempt.score,
+      maxScore: questionSet.length,
+      submittedAt: attempt.submittedAt.getTime(),
+    });
   }
 
   private getExamConfig(examKey: string) {
@@ -312,6 +352,7 @@ export class QuestionsService {
     module: string | null;
     topic: string | null;
     correct_answer: string | null;
+    imageUrl?: string | null;
   }): ExamQuestion | null {
     // Drag-and-drop questions imported from the PDFs keep their answer as text and have no choices.
     if (record.question_text?.trim() && !record.choices?.trim() && (!record.question_type || record.question_type === 'single')) {
@@ -320,6 +361,7 @@ export class QuestionsService {
         ? {
           id: record.id,
           prompt: record.question_text.trim(),
+          imageUrl: record.imageUrl ?? null,
           type: 'match',
           items: dragDrop.items,
           choices: dragDrop.choices,
@@ -363,6 +405,7 @@ export class QuestionsService {
       return {
         id: record.id,
         prompt: record.question_text.trim(),
+        imageUrl: record.imageUrl ?? null,
         type: 'match',
         items: matchItems,
         choices: options,
@@ -384,6 +427,7 @@ export class QuestionsService {
     return {
       id: record.id,
       prompt: record.question_text.trim(),
+      imageUrl: record.imageUrl ?? null,
       type: 'single',
       options,
       module: record.module,
@@ -495,6 +539,9 @@ export class QuestionsService {
         return {
           id: item.id,
           prompt: item.prompt,
+          imageUrl: 'imageUrl' in item && (typeof item.imageUrl === 'string' || item.imageUrl === null)
+            ? item.imageUrl
+            : null,
           type: 'match',
           items: item.items,
           choices: item.choices,
@@ -515,6 +562,9 @@ export class QuestionsService {
       return {
         id: item.id,
         prompt: item.prompt,
+        imageUrl: 'imageUrl' in item && (typeof item.imageUrl === 'string' || item.imageUrl === null)
+          ? item.imageUrl
+          : null,
         type: 'single',
         options: item.options,
         module: item.module,
@@ -523,7 +573,7 @@ export class QuestionsService {
     });
   }
 
-  private toAttemptResponse(
+  private async toAttemptResponse(
     attempt: {
       id: string;
       examKey: string;
@@ -535,6 +585,29 @@ export class QuestionsService {
     },
     questions: ExamQuestion[],
   ) {
+    const imagePaths = [...new Set(questions.flatMap((question) =>
+      question.imageUrl && !/^https?:\/\//i.test(question.imageUrl) ? [question.imageUrl] : [],
+    ))];
+    const signedImageUrls = await this.storage.createSignedQuestionImageUrls(imagePaths);
+    const signedQuestions = questions.map((question) => ({
+      ...question,
+      imageUrl: question.imageUrl && !/^https?:\/\//i.test(question.imageUrl)
+        ? signedImageUrls.get(question.imageUrl) ?? question.imageUrl
+        : question.imageUrl ?? null,
+    }));
+    const signedImageByQuestionId = new Map(
+      signedQuestions.map((question) => [question.id, question.imageUrl]),
+    );
+    const review = Array.isArray(attempt.review)
+      ? attempt.review.map((entry) => {
+        if (entry === null || Array.isArray(entry) || typeof entry !== 'object') return entry;
+        const questionId = entry.id;
+        if (typeof questionId !== 'number') return entry;
+        const imageUrl = signedImageByQuestionId.get(questionId);
+        return imageUrl ? { ...entry, imageUrl } : entry;
+      })
+      : attempt.review;
+
     // Keep correct answers out of start/resume responses; include them only in the post-submit review.
     return {
       attemptId: attempt.id,
@@ -542,14 +615,15 @@ export class QuestionsService {
       durationSeconds: attempt.durationSeconds,
       deadline: attempt.deadline.getTime(),
       score: attempt.score,
-      review: attempt.review,
+      review,
       submittedAt: attempt.submittedAt?.getTime() ?? null,
       isSubmitted: attempt.submittedAt !== null,
-      questions: questions.map((question) =>
+      questions: signedQuestions.map((question) =>
         question.type === 'match'
           ? {
               id: question.id,
               prompt: question.prompt,
+              imageUrl: question.imageUrl,
               type: question.type,
               items: question.items,
               choices: question.choices,
@@ -562,6 +636,7 @@ export class QuestionsService {
           : {
               id: question.id,
               prompt: question.prompt,
+              imageUrl: question.imageUrl,
               type: question.type,
               options: question.options,
               module: question.module,

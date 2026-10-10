@@ -29,16 +29,20 @@ export function isValidQuestion(question) {
 
 // How many choices a "multi" question needs (e.g. 2 for "Choose two")
 export function requiredSelections(question) {
-	return questionType(question) === "multi" ? question.answer.length : 1;
+	return questionType(question) === "multi" && Array.isArray(question?.answer)
+		? question.answer.length
+		: 1;
 }
 
 export function isQuestionAnswered(question, value) {
 	const type = questionType(question);
-	if (type === "multi") return Array.isArray(value) && value.length === question.answer.length;
+	if (type === "multi") return Array.isArray(question?.answer) && Array.isArray(value) && value.length === question.answer.length;
 	if (type === "match") {
-		return Array.isArray(value) &&
+		return Array.isArray(question?.items) &&
+			Array.isArray(question?.choices) &&
+			Array.isArray(value) &&
 			value.length === question.items.length &&
-			value.every((v) => Number.isInteger(v));
+			value.every((v) => Number.isInteger(v) && v >= 0 && v < question.choices.length);
 	}
 	return value !== undefined && value !== null;
 }
@@ -46,15 +50,16 @@ export function isQuestionAnswered(question, value) {
 export function isAnswerCorrect(question, value) {
 	const type = questionType(question);
 	if (type === "multi") {
-		if (!Array.isArray(value) || value.length !== question.answer.length) return false;
+		if (!Array.isArray(question?.answer) || !Array.isArray(value) || value.length !== question.answer.length) return false;
 		const picked = [...value].sort((a, b) => a - b);
 		const correct = [...question.answer].sort((a, b) => a - b);
 		return picked.every((v, i) => v === correct[i]);
 	}
 	if (type === "match") {
-		return Array.isArray(value) && question.answer.every((a, i) => value[i] === a);
+		return Array.isArray(question?.answer) && Array.isArray(value) &&
+			question.answer.every((a, i) => value[i] === a);
 	}
-	return value === question.answer;
+	return value === question?.answer;
 }
 
 // How a matching question is answered on screen:
@@ -65,7 +70,13 @@ export function isAnswerCorrect(question, value) {
 //   "select" — anything else (or 10+ items, where typed numbers would be ambiguous): a dropdown per item.
 export function matchMode(question) {
 	if (questionType(question) !== "match") return null;
-	const { items, choices, answer } = question;
+	const { items, choices, answer } = question ?? {};
+	if (!Array.isArray(items) || !Array.isArray(choices)) return null;
+	if (
+		!Array.isArray(answer) ||
+		answer.length !== items.length ||
+		answer.some((index) => !Number.isInteger(index) || index < 0 || index >= choices.length)
+	) return "select";
 	if (items.length === choices.length && new Set(answer).size === answer.length) return "assign";
 	if (choices.length < items.length && items.length <= 9) return "group";
 	return "select";
@@ -75,11 +86,16 @@ export function matchMode(question) {
 export function groupSizes(question) {
 	// Exams from the backend send only the box sizes (the answer key stays on the server)
 	if (Array.isArray(question?.groupSizes) && question.groupSizes.length === question.choices?.length) return question.groupSizes;
+	if (!Array.isArray(question?.choices) || !Array.isArray(question?.answer)) return [];
 	return question.choices.map((_, choiceIndex) => question.answer.filter((a) => a === choiceIndex).length);
 }
 
 // Group mode: turns typed digits ("1324") into a choice index per item, or explains what's wrong
 export function parseGroupCode(question, code) {
+	// Exams send box sizes instead of the answer key, so either one is enough here
+	if (!Array.isArray(question?.items) || !Array.isArray(question?.choices) || (!Array.isArray(question?.answer) && !Array.isArray(question?.groupSizes))) {
+		return { value: null, error: "This matching question has invalid data. Reload the exam and try again." };
+	}
 	const digits = String(code ?? "").replace(/\s+/g, "");
 	const total = question.items.length;
 	if (!digits) return { value: question.items.map(() => null), error: "" };
@@ -97,7 +113,7 @@ export function parseGroupCode(question, code) {
 
 // Group mode: the number string for a set of answers, each group's numbers in ascending order
 export function groupCode(question, value) {
-	if (!Array.isArray(value)) return "";
+	if (!Array.isArray(question?.choices) || !Array.isArray(value)) return "";
 	return question.choices.map((_, choiceIndex) => value
 		.map((choice, itemIndex) => (choice === choiceIndex ? itemIndex + 1 : null))
 		.filter((n) => n !== null)

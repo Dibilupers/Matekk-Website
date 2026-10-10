@@ -9,7 +9,6 @@ import { saveCcnaMockExamResult } from "../../../../../utils/ccnaGradebook";
 import { getCcnaExamSessionKey } from "../../../../../utils/ccnaShortExamSession";
 import { isQuestionAnswered } from "../../../../../utils/ccnaExamGrading";
 import { QuestionInput, QuestionPrompt, QuestionReview } from "./ccnaExamQuestionViews";
-import { saveGradebookAssessment } from "../../../../../utils/gradebookApi";
 import { splitPromptExhibit } from "../../../../../utils/splitPromptExhibit";
 import { cleanText } from "../../../../../utils/ccnaBankConverter";
 import { ExhibitImage, ExhibitText } from "./ccnaExhibit";
@@ -121,7 +120,6 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 			(answerFilter === "incorrect" && !item.isCorrect),
 		);
 	const [isDark, setIsDark] = useState(false);
-	const [gradebookSaveError, setGradebookSaveError] = useState(null);
 
 	useEffect(() => {
 		let isActive = true;
@@ -203,7 +201,8 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 						...(typeof apiQuestion.explanation === "string" ? { explanation: cleanText(apiQuestion.explanation) } : {}),
 						...(exhibit ? { exhibit } : {}),
 						...(bankQuestion?.exhibit && !isOptionTable ? { exhibit: bankQuestion.exhibit } : {}),
-						...(bankQuestion?.exhibitImage ? { exhibitImage: bankQuestion.exhibitImage } : {}),
+						// The picture: from the question bank, or the signed link the exam itself sends
+						...((bankQuestion?.exhibitImage || apiQuestion.imageUrl) ? { exhibitImage: bankQuestion?.exhibitImage || apiQuestion.imageUrl } : {}),
 					};
 				});
 
@@ -294,30 +293,6 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 			maxScore: questions.length,
 			submittedAt,
 		});
-	}, [attemptId, exam.name, isSubmitted, isViewingSavedResult, questions.length, score, submittedAt, userId]);
-
-	useEffect(() => {
-		if (!isSubmitted || isViewingSavedResult || !userId || !Number.isFinite(submittedAt)) return undefined;
-
-		let isActive = true;
-		saveGradebookAssessment("ccna", {
-			id: attemptId,
-			type: "exam",
-			programKey: "ccna",
-			title: exam.name,
-			score,
-			maxScore: questions.length,
-			submittedAt,
-		}).catch((error) => {
-			console.error("Unable to save the exam result to the gradebook.", error);
-			if (isActive) {
-				setGradebookSaveError("Your exam result could not be saved to the backend gradebook.");
-			}
-		});
-
-		return () => {
-			isActive = false;
-		};
 	}, [attemptId, exam.name, isSubmitted, isViewingSavedResult, questions.length, score, submittedAt, userId]);
 
 	async function submitExam() {
@@ -547,11 +522,6 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 	return (
 		<main data-theme={isDark ? "dark" : "light"} className="ccna-page-enter min-h-screen bg-[#f5f9f9] px-4 py-6 text-[#17233d] sm:px-8 sm:py-8">
 						<div className="mx-auto max-w-[1125px]">
-				{gradebookSaveError && isResultView && (
-					<p role="alert" className="mb-4 rounded-xl border border-[#f2c6c3] bg-white px-4 py-3 text-sm font-medium text-[#b42318]">
-						{gradebookSaveError} Reload this page to retry.
-					</p>
-				)}
 				{submitError && !isResultView && (
 					<p role="alert" className="mb-4 rounded-xl border border-[#f2c6c3] bg-white px-4 py-3 text-sm font-medium text-[#b42318]">
 						{submitError} Your answers are still saved in this browser; try submitting again.
