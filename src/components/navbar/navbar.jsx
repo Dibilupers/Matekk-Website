@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/auth-context";
 import InquireNowButton from "../ui/InquireNowButton";
 import MainLogo from "../../assets/MATEKK_logo.webp";
 import TrainingLogo from "../../assets/MATEKK_training_logo.png";

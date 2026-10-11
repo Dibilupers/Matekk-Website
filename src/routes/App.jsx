@@ -126,7 +126,7 @@ import ProgramCompositeExam from "../pages/modules/programs/Cisco/CCNA/programCo
 import CCNAModuleQuiz from "../pages/modules/programs/Cisco/CCNA/ccnaModuleQuiz";
 import CCNAGradebook from "../pages/modules/programs/Cisco/CCNA/ccnaGradebook";
 import AplusDashboard from "../pages/modules/programs/CompTIA/A+ (Core 1 & 2)/aplusDashboard";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/auth-context";
 import {
   readCcnaModuleQuizProgress,
   recordCcnaModuleQuizAttempt,

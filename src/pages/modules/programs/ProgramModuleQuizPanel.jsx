@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight, CircleAlert } from "lucide-react";
-import { useAuth } from "../../../context/AuthContext";
+import { useAuth } from "../../../context/auth-context";
 import {
 	beginProgramModuleQuiz,
 	expireProgramModuleQuizAttempt,

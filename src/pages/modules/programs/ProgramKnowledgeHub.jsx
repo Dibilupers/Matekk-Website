@@ -27,7 +27,7 @@ import {
 } from "lucide-react";
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
-import { useAuth } from "../../../context/AuthContext";
+import { useAuth } from "../../../context/auth-context";
 
 function sectionId(number) {
 	return `program-module-${number.replace(".", "-")}`;

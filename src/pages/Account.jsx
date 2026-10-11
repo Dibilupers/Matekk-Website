@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowRight, BookOpen, CircleUserRound, FileText, Printer, Search, UserRound, X } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/auth-context";
 import API_URL from "../config/api";
 import { FLAT_COURSES } from "../components/training/courses";
 import { readGradebookAssessments } from "../utils/gradebookApi";

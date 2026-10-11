@@ -2,7 +2,7 @@ import AutomationBadge from "../../../../../assets/CCNAAutomation.webp";
 import { useState } from "react";
 import { ArrowRight, BookOpen, Check, ChevronDown, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../../../../../context/AuthContext";
+import { useAuth } from "../../../../../context/auth-context";
 import { CCNA_AUTOMATION_CURRICULUM } from "./ccnaAutomationCurriculum";
 import {
 	markCcnaAutomationModuleOpened,

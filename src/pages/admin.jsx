@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowDown, ArrowUp, ChevronDown, Download, Inbox, Pencil, Search, Trash2, UserMinus, Users, X } from "lucide-react";
 import API_URL from "../config/api";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/auth-context";
 
 function mapApiUser(user) {
 	const normalizedRole = typeof user.role === "string" ? user.role.trim() : "";

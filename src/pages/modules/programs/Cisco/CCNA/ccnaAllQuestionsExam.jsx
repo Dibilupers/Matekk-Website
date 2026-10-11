@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { BookOpen, CheckCircle2, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../../../../../context/AuthContext";
+import { useAuth } from "../../../../../context/auth-context";
 import TrainingLogo from "../../../../../assets/MATEKK_training_logo.png";
 import { isAnswerCorrect, isQuestionAnswered } from "../../../../../utils/ccnaExamGrading";
 import { loadCcnaQuestionBank } from "../../../../../utils/ccnaQuestionBankApi";

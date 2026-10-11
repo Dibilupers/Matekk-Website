@@ -2,7 +2,7 @@
 import { createPortal } from "react-dom";
 import { ArrowLeft, ArrowRight, ArrowUp, Clock3, Flag, Moon, RotateCcw, Sun, X } from "lucide-react";
 import { Link, useBlocker, useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "../../../../../context/AuthContext";
+import { useAuth } from "../../../../../context/auth-context";
 import TrainingLogo from "../../../../../assets/MATEKK_training_logo.png";
 import { CCNA_EXAMS } from "./ccnaExamFormats";
 import { saveCcnaMockExamResult } from "../../../../../utils/ccnaGradebook";
