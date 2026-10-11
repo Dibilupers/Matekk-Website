@@ -9,22 +9,25 @@ const PARTICLES = [
 	{ x: 93, y: 47, size: 4, duration: 8.1, delay: -5.7 },
 ];
 
-export default function ProgramBackgroundParticles() {
+export default function ProgramBackgroundParticles({ children, className = "" }) {
 	return (
-		<div className="program-background-particles" aria-hidden="true">
-			{PARTICLES.map((particle) => (
-				<span
-					key={particle.x}
-					className="program-background-particle"
-					style={{
-						left: `${particle.x}%`,
-						top: `${particle.y}%`,
-						"--particle-size": `${particle.size}px`,
-						"--particle-duration": `${particle.duration}s`,
-						"--particle-delay": `${particle.delay}s`,
-					}}
-				/>
-			))}
-		</div>
+		<section className={`program-particle-hero ${className}`}>
+			<div className="program-background-particles" aria-hidden="true">
+				{PARTICLES.map((particle) => (
+					<span
+						key={particle.x}
+						className="program-background-particle"
+						style={{
+							left: `${particle.x}%`,
+							top: `${particle.y}%`,
+							"--particle-size": `${particle.size}px`,
+							"--particle-duration": `${particle.duration}s`,
+							"--particle-delay": `${particle.delay}s`,
+						}}
+					/>
+				))}
+			</div>
+			<div className="program-particle-hero-content">{children}</div>
+		</section>
 	);
 }
