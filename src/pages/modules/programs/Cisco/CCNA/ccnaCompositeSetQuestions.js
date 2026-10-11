@@ -16,14 +16,20 @@ import ospfDrotherImg from "../../../../../assets/ccna-exam/ospf-drother-r1.webp
 import wlcAdvancedImg from "../../../../../assets/ccna-exam/wlc-advanced-tab.webp";
 import oldNewSwitchImg from "../../../../../assets/ccna-exam/oldswitch-newswitch-trunk.webp";
 import routersAbcFloatingImg from "../../../../../assets/ccna-exam/routers-abc-floating-route.webp";
-import subinterfaceImg from "../../../../../assets/ccna-exam/subinterface-r1-sw1-sw2.webp";
 
 // pic(image, text?) = picture exhibit, optionally with device output shown below it
 const pic = (image, text) => ({ image, text });
-const ex = (exhibit) => (exhibit && typeof exhibit === "object" ? { exhibitImage: exhibit.image, exhibit: exhibit.text } : { exhibit });
+const ex = (exhibit) => (exhibit && typeof exhibit === "object"
+	? {
+		...(exhibit.image ? { exhibitImage: exhibit.image } : {}),
+		...(exhibit.diagram ? { exhibitDiagram: exhibit.diagram } : {}),
+		...(exhibit.text ? { exhibit: exhibit.text } : {}),
+	}
+	: { exhibit });
 const one = (prompt, options, answer, explanation, exhibit) => ({ prompt, ...ex(exhibit), options, answer, explanation });
 const two = (prompt, options, answer, explanation, exhibit) => ({ type: "multi", prompt, ...ex(exhibit), options, answer, explanation });
 const match = (prompt, items, choices, answer, explanation, exhibit) => ({ type: "match", prompt, ...ex(exhibit), items, choices, answer, explanation });
+const siteExhibit = (diagram, text) => ({ diagram, text });
 
 const AAA = ["Accounting", "Authentication", "Authorization"];
 
@@ -725,8 +731,8 @@ L   FF00::/8 [0/0]
 		"R1(config)#interface ethernet0/0.20\nR1(config)#encapsulation dot1q 20\nR1(config)#ip address 10.20.20.1 255.255.255.0",
 		"R1(config)#interface ethernet0/0.20\nR1(config)#ip address 10.20.20.1 255.255.255.0",
 		"R1(config)#interface ethernet0/0\nR1(config)#ip address 10.20.20.1 255.255.255.0",
-	], 1, "Router-on-a-stick needs a subinterface (e0/0.20) tagged with \"encapsulation dot1q 20\" before the IP address is assigned.",
-	pic(subinterfaceImg, `R1
+	], 1, "Router-on-a-stick needs a subinterface (e0/0.20) tagged with \"encapsulation dot1q 20\" before the IP address is assigned. VLAN 20 must also be allowed on the switch trunks shown in the exhibit.",
+	siteExhibit("router-on-a-stick-vlan20", `R1
 interface Ethernet0/0
  no ip address
 
@@ -736,7 +742,7 @@ interface Ethernet0/0
  switchport mode trunk
 !
 interface Ethernet0/1
- switchport trunk allowed vlan 10
+ switchport trunk allowed vlan 10,20
  switchport trunk encapsulation dot1q
  switchport mode trunk
 

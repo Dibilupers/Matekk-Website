@@ -139,6 +139,7 @@ export class UsersService {
                 gender: true,
                 city_province: true,
                 phone_number: true,
+                profile_photo: true,
                 enrollments: {
                     select: {
                         program: {
@@ -175,25 +176,7 @@ export class UsersService {
             gender: databaseUser.gender,
             city_province: databaseUser.city_province,
             phone_number: databaseUser.phone_number,
-        };
-    }
-
-    async findAuthUserById(
-        userId: number,
-    ): Promise<{ userId: number; username: string; active_status: boolean } | undefined> {
-        const databaseUser = await this.prisma.users.findUnique({
-            where: { id: userId },
-            select: { id: true, username: true, active_status: true },
-        });
-
-        if (!databaseUser) {
-            return undefined;
-        }
-
-        return {
-            userId: databaseUser.id,
-            username: databaseUser.username,
-            active_status: databaseUser.active_status,
+            profile_photo: databaseUser.profile_photo,
         };
     }
 
@@ -232,6 +215,23 @@ export class UsersService {
             city_province: user.city_province,
             phone_number: user.phone_number,
             profile_photo: user.profile_photo,
+        };
+    }
+
+    async findAuthUserById(
+        userId: number,
+    ): Promise<{ userId: number; username: string; active_status: boolean } | undefined> {
+        const databaseUser = await this.prisma.users.findUnique({
+            where: { id: userId },
+            select: { id: true, username: true, active_status: true },
+        });
+
+        if (!databaseUser) return undefined;
+
+        return {
+            userId: databaseUser.id,
+            username: databaseUser.username,
+            active_status: databaseUser.active_status,
         };
     }
 }

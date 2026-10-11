@@ -142,7 +142,15 @@ h6 {
 }
 
 .ccna-match-choice-placed {
-  animation: ccna-match-choice-placed 360ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation: ccna-match-choice-placed 680ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.ccna-match-choice-returned {
+  animation: ccna-match-choice-returned 520ms ease-out both;
+}
+
+.ccna-match-row-feedback {
+  animation: ccna-match-row-feedback 680ms ease-out both;
 }
 
 [data-theme="dark"].ccna-page-enter {
@@ -378,13 +386,41 @@ h6 {
 
 @keyframes ccna-match-choice-placed {
   from {
-    opacity: 0.7;
-    transform: scale(0.96);
+    opacity: 0.2;
+    transform: translateY(0.65rem) scale(0.88);
+    box-shadow: 0 0 0 0 rgb(45 138 86 / 28%);
+  }
+
+  55% {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 0 0.3rem rgb(45 138 86 / 12%);
+  }
+
+  to {
+    box-shadow: 0 0 0 0 rgb(45 138 86 / 0%);
+  }
+}
+
+@keyframes ccna-match-choice-returned {
+  from {
+    opacity: 0;
+    transform: translateY(0.35rem) scale(0.96);
   }
 
   to {
     opacity: 1;
-    transform: scale(1);
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes ccna-match-row-feedback {
+  from {
+    background-color: #e8f3f4;
+  }
+
+  to {
+    background-color: #ffffff;
   }
 }
 
@@ -417,6 +453,8 @@ h6 {
   .ccna-notification-boink,
   .ccna-validation-shake,
   .ccna-match-choice-placed,
+  .ccna-match-choice-returned,
+  .ccna-match-row-feedback,
   .ccna-stars-enter,
   .ccna-stars-fill {
     animation: none;

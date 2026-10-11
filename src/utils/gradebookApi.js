@@ -3,10 +3,10 @@ import API_URL from "../config/api";
 async function readResponse(response) {
 	const body = await response.text();
 	if (!response.ok) {
+		// Include the server's own reason when it sent one
 		let detail = "";
 		try {
-			const errorBody = JSON.parse(body);
-			const message = errorBody?.message;
+			const message = JSON.parse(body)?.message;
 			if (typeof message === "string") detail = message;
 			else if (Array.isArray(message)) detail = message.filter((item) => typeof item === "string").join(" ");
 		} catch {

@@ -84,13 +84,16 @@ export function matchMode(question) {
 
 // Group mode: how many items belong in each group (shown as slots, like the original exam)
 export function groupSizes(question) {
+	// Exams from the backend send only the box sizes (the answer key stays on the server)
+	if (Array.isArray(question?.groupSizes) && question.groupSizes.length === question.choices?.length) return question.groupSizes;
 	if (!Array.isArray(question?.choices) || !Array.isArray(question?.answer)) return [];
 	return question.choices.map((_, choiceIndex) => question.answer.filter((a) => a === choiceIndex).length);
 }
 
 // Group mode: turns typed digits ("1324") into a choice index per item, or explains what's wrong
 export function parseGroupCode(question, code) {
-	if (!Array.isArray(question?.items) || !Array.isArray(question?.choices) || !Array.isArray(question?.answer)) {
+	// Exams send box sizes instead of the answer key, so either one is enough here
+	if (!Array.isArray(question?.items) || !Array.isArray(question?.choices) || (!Array.isArray(question?.answer) && !Array.isArray(question?.groupSizes))) {
 		return { value: null, error: "This matching question has invalid data. Reload the exam and try again." };
 	}
 	const digits = String(code ?? "").replace(/\s+/g, "");

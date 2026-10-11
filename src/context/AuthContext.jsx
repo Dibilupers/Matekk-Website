@@ -16,7 +16,7 @@ function readCachedProfile() {
   }
 }
 
-// Small copy of the profile kept for offline use (the site can still show who is signed in without internet)
+// Small copy of the profile kept for offline use (the site can still show who is signed in without internet).
 const OFFLINE_PROFILE_KEY = "matekkOfflineProfile";
 
 function readOfflineProfile() {
