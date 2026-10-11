@@ -62,6 +62,9 @@ export default function Login() {
   const [registerUsername, setRegisterUsername] = useState("");
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
+  const [registrationOtpSent, setRegistrationOtpSent] = useState(false);
+  const [registrationOtp, setRegistrationOtp] = useState("");
+  const [emailVerificationToken, setEmailVerificationToken] = useState("");
   const [trainingId, setTrainingId] = useState("");
   const [programId, setProgramId] = useState("");
   const [moduleId, setModuleId] = useState("");
@@ -249,10 +252,53 @@ export default function Login() {
       setMsg("Please complete all required fields before creating your account.");
       return;
     }
+    if (registrationOtpSent && !/^\d{6}$/.test(registrationOtp)) {
+      setMsg("Enter the six-digit verification code sent to your email.");
+      return;
+    }
 
     setIsSubmitting(true);
 
     try {
+      if (!registrationOtpSent) {
+        const otpResponse = await fetch(`${API_URL}/auth/register/email-otp`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: registerEmail }),
+        });
+        if (!otpResponse.ok) {
+          const error = await otpResponse.json().catch(() => null);
+          const message = Array.isArray(error?.message) ? error.message.join(" ") : error?.message;
+          setMsg(message || "Unable to send the verification code.");
+          return;
+        }
+        setRegistrationOtp("");
+        setEmailVerificationToken("");
+        setRegistrationOtpSent(true);
+        setMsg(`A verification code was sent to ${registerEmail}.`);
+        return;
+      }
+
+      let verificationToken = emailVerificationToken;
+      if (!verificationToken) {
+        const verificationResponse = await fetch(`${API_URL}/auth/register/verify-email`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: registerEmail, code: registrationOtp }),
+        });
+        if (!verificationResponse.ok) {
+          const error = await verificationResponse.json().catch(() => null);
+          const message = Array.isArray(error?.message) ? error.message.join(" ") : error?.message;
+          setMsg(message || "The verification code is invalid or expired.");
+          return;
+        }
+        ({ verificationToken } = await verificationResponse.json());
+        if (typeof verificationToken !== "string" || verificationToken.length < 40) {
+          throw new Error("The email verification response did not include a valid verification token.");
+        }
+        setEmailVerificationToken(verificationToken);
+      }
+
       const response = await fetch(`${API_URL}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -264,6 +310,7 @@ export default function Login() {
           city,
           username: registerUsername,
           email: registerEmail,
+          verificationToken,
           password: registerPassword,
           programId: Number(moduleId || programId),
         }),
@@ -276,19 +323,19 @@ export default function Login() {
         return;
       }
 
-      const { response: loginResponse } = await login(registerUsername, registerPassword);
-      if (!loginResponse.ok) {
-        setMsg("Your account was created. Please sign in to continue to the approval page.");
-        setIsRegistering(false);
-        setUsername(registerUsername);
-        setPass("");
-        return;
-      }
-
-      navigateAfterLogin("/account-pending");
+      setIsRegistering(false);
+      setRegistrationOtpSent(false);
+      setRegistrationOtp("");
+      setEmailVerificationToken("");
+      setUsername(registerUsername);
+      setPass("");
+      setLoginOtpRequired(false);
+      setMsg("Your account was created. Sign in and verify your email to continue.");
     } catch (error) {
       console.error("Unable to complete account registration.", error);
-      setMsg("Unable to connect to the registration server.");
+      setMsg(error instanceof TypeError
+        ? "Unable to connect to the registration server."
+        : "Email verification could not be completed. Please request a new code and try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -570,7 +617,8 @@ export default function Login() {
                           placeholder="you@example.com"
                           autoComplete="email"
                           required
-                          className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-slate-800 outline-none transition focus:border-[#1775EE] focus:ring-2 focus:ring-blue-100"
+                          disabled={registrationOtpSent}
+                          className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-slate-800 outline-none transition focus:border-[#1775EE] focus:ring-2 focus:ring-blue-100 disabled:bg-slate-100"
                         />
                       </label>
 
@@ -598,6 +646,41 @@ export default function Login() {
                           </button>
                         </div>
                       </label>
+
+                      {registrationOtpSent && (
+                        <>
+                          <p className="text-sm text-slate-600">
+                            Enter the six-digit verification code sent to {registerEmail}.
+                          </p>
+                          <label className="block text-sm font-medium text-slate-700">
+                            <span className="mb-2 block">Email verification code</span>
+                            <input
+                              type="text"
+                              inputMode="numeric"
+                              autoComplete="one-time-code"
+                              value={registrationOtp}
+                              onChange={(e) => setRegistrationOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                              placeholder="000000"
+                              pattern="[0-9]{6}"
+                              maxLength={6}
+                              required
+                              className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 tracking-[0.3em] text-slate-800 outline-none transition focus:border-[#1775EE] focus:ring-2 focus:ring-blue-100"
+                            />
+                          </label>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setRegistrationOtpSent(false);
+                              setRegistrationOtp("");
+                              setEmailVerificationToken("");
+                              setMsg("");
+                            }}
+                            className="text-left text-sm font-medium text-slate-600 underline-offset-4 transition hover:text-[#1775EE] hover:underline"
+                          >
+                            Change email or resend code
+                          </button>
+                        </>
+                      )}
                     </div>
                   )}
                 </>
@@ -704,7 +787,11 @@ export default function Login() {
                     disabled={isSubmitting || (isLoadingPrograms || !programId || !trainingId)}
                     className="flex-1 rounded-xl bg-[#1775EE] px-4 py-3 text-base font-semibold text-white shadow-[0_10px_20px_rgba(23,117,238,0.28)] transition hover:bg-[#0f64d8] disabled:cursor-wait disabled:opacity-70"
                   >
-                    {isSubmitting ? "Creating account..." : registrationStep === 2 ? "Create account" : "Continue"}
+                    {isSubmitting
+                      ? (registrationOtpSent ? "Verifying email..." : registrationStep === 2 ? "Sending code..." : "Continuing...")
+                      : registrationStep === 2
+                        ? (registrationOtpSent ? "Verify & create account" : "Send verification code")
+                        : "Continue"}
                   </button>
                 </div>
               )}
