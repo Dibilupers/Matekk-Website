@@ -44,6 +44,7 @@ const EXAM_FORMATS = [
 	{ name: "Short Exam", questions: CCNA_EXAMS.short.questionCount, duration: "45 mins", description: "A quick practice session." },
 	{ name: "Medium Exam", questions: CCNA_EXAMS.medium.questionCount, duration: "1 hour & 30 mins", description: "A balanced, longer practice session." },
 	{ name: "Long Exam", questions: CCNA_EXAMS.long.questionCount, duration: "2 hours", description: "A full-length practice session." },
+	{ name: "All Questions Exam", questions: "All", duration: "No time limit", description: "Every usable online-bank question, in database order." },
 ];
 function formatExamTime(totalSeconds) {
 	const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, "0");
@@ -580,6 +581,10 @@ export default function CCNA() {
 			path: CCNA_EXAMS.long.path,
 			summary: `${longQuestionCount} questions · 2 hours · ${longExamSecondsRemaining > 0 ? `${formatExamTime(longExamSecondsRemaining)} remaining` : "CCNA practice questions"}`,
 		},
+		"All Questions Exam": {
+			path: "/modules/programs/ccna/exam/all",
+			summary: "Every usable question from the online bank · Database order · No time limit",
+		},
 	};
 
 	useEffect(() => {
@@ -662,14 +667,13 @@ export default function CCNA() {
 
 	return (
 		<main className="ccna-page-enter relative min-h-screen bg-white text-[#071126]">
-			{/* Phones/tablets: Back button pinned to the screen (outside the page's slide-in animation),
-			    so it stays still while the page moves; a white pill appears behind it once you scroll */}
+			{/* Keep course navigation visible while scrolling, outside the page's slide-in animation. */}
 			{createPortal(
 				<Link
 					to="/pages/blank"
-					className={`fixed left-4 top-20 z-[60] flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-base font-bold text-[#005b6b] transition hover:text-[#004653] active:scale-95 lg:hidden ${hasScrolled ? "bg-white/90 shadow-md backdrop-blur-sm" : ""}`}
+					className={`fixed left-4 top-20 z-[60] flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-bold text-[#005b6b] transition hover:text-[#004653] active:scale-95 ${hasScrolled ? "bg-white/90 shadow-md backdrop-blur-sm" : "bg-white/80"}`}
 				>
-					<ArrowLeft size={24} strokeWidth={2.5} /> Back
+					<ArrowLeft size={20} strokeWidth={2.5} /> Back to Courses
 				</Link>,
 				document.body,
 			)}
@@ -1169,9 +1173,9 @@ export default function CCNA() {
 							</button>
 						</header>
 						<p className="mt-3 text-sm leading-6 text-[#71819b]">
-							All exam formats randomly select questions from the CCNA Question Bank. Choose the number of questions and time limit that suit your practice session.
+							The first three formats randomly select a set of questions. All Questions Exam goes through every usable question in the online bank in database order, with no time limit.
 						</p>
-						<div className="mt-6 grid gap-3 md:grid-cols-3">
+						<div className="mt-6 grid gap-3 sm:grid-cols-2">
 							{EXAM_FORMATS.map((format) => {
 								const isSelected = selectedExamFormat === format.name;
 								const examRun = examRuns[format.name];

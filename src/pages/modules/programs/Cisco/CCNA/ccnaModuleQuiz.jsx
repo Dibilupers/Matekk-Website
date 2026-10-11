@@ -555,7 +555,11 @@ export default function CCNAModuleQuiz() {
 						<div className="mx-auto max-w-3xl">
 							<section className="rounded-[20px] border border-[#d6e5e7] bg-white p-4 shadow-sm sm:p-7">
 								<p className="mb-2 text-sm font-semibold text-[#70809a]">Question {attempt.currentIndex + 1} of {moduleQuiz.questions.length} · {moduleQuiz.title}</p>
-								<QuestionPrompt prompt={currentQuestion.prompt} imageUrl={currentQuestion.imageUrl} />
+								<QuestionPrompt
+									prompt={currentQuestion.prompt}
+									imageUrl={currentQuestion.imageUrl}
+									hasSeparateExhibit={Boolean(currentQuestion.exhibit || currentQuestion.imageUrl)}
+								/>
 								<QuestionInput
 									key={attempt.currentIndex}
 									question={currentQuestion}
@@ -700,7 +704,11 @@ export default function CCNAModuleQuiz() {
 													{question.isCorrect ? "Correct" : "Incorrect"}
 												</span>
 											</div>
-											<QuestionPrompt prompt={question.prompt} imageUrl={question.imageUrl} />
+											<QuestionPrompt
+												prompt={question.prompt}
+												imageUrl={question.imageUrl}
+												hasSeparateExhibit={Boolean(question.exhibit || question.imageUrl)}
+											/>
 											<div className="mt-5">
 												<QuestionReview question={question} value={question.selectedAnswer} />
 											</div>

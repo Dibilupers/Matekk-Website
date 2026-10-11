@@ -666,6 +666,8 @@ export class QuestionsService {
         choices: true,
         correct_answer: true,
         explanation: true,
+        question_type: true,
+        match_items: true,
         imageUrl: true,
       },
       orderBy: { id: 'asc' },

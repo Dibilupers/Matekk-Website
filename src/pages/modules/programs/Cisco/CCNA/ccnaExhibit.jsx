@@ -244,12 +244,19 @@ export function ExhibitDiagram({ type, className = "" }) {
 }
 
 /* Picture exhibit: always expandable, since diagrams shrink a lot on phones. */
-export function ExhibitImage({ src, className = "", imageClassName = "", lazy = false }) {
+export function ExhibitImage({ src, className = "", imageClassName = "", lazy = false, cropTop = false }) {
 	const [openTheme, setOpenTheme] = useState(null);
 	const wrapRef = useRef(null);
+	const image = cropTop
+		? (
+			<div className="aspect-[578/260] w-full overflow-hidden rounded-xl border border-[#d6e5e7] bg-white">
+				<img key={src} src={src} alt="Exhibit" loading={lazy ? "lazy" : undefined} className={`h-full w-full object-cover object-top ${imageClassName}`} />
+			</div>
+		)
+		: <img key={src} src={src} alt="Exhibit" loading={lazy ? "lazy" : undefined} className={`w-auto max-w-full rounded-xl border border-[#d6e5e7] bg-white ${imageClassName}`} />;
 	return (
-		<div ref={wrapRef} className={`relative mx-auto w-fit max-w-full ${className}`}>
-			<img key={src} src={src} alt="Exhibit" loading={lazy ? "lazy" : undefined} className={`w-auto max-w-full rounded-xl border border-[#d6e5e7] bg-white ${imageClassName}`} />
+		<div ref={wrapRef} className={`relative mx-auto ${cropTop ? "w-full max-w-[36rem]" : "w-fit max-w-full"} ${className}`}>
+			{image}
 			<button
 				type="button"
 				onClick={() => setOpenTheme(pageTheme(wrapRef.current))}
@@ -259,7 +266,13 @@ export function ExhibitImage({ src, className = "", imageClassName = "", lazy = 
 			</button>
 			{openTheme && (
 				<ZoomViewer title="Exhibit" theme={openTheme} onClose={() => setOpenTheme(null)}>
-					<img src={src} alt="Exhibit (full screen)" className="block max-w-none rounded-lg bg-white" />
+					{cropTop
+						? (
+							<div className="aspect-[578/260] w-[36rem] max-w-[90vw] overflow-hidden rounded-lg bg-white">
+								<img src={src} alt="Exhibit (full screen)" className="h-full w-full object-cover object-top" />
+							</div>
+						)
+						: <img src={src} alt="Exhibit (full screen)" className="block max-w-none rounded-lg bg-white" />}
 				</ZoomViewer>
 			)}
 		</div>

@@ -123,6 +123,10 @@ h6 {
   animation: ccna-page-enter 550ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
+.ccna-question-transition {
+  animation: ccna-question-transition 240ms ease-out both;
+}
+
 .ccna-notification-boink {
   animation: ccna-notification-boink 420ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
@@ -132,7 +136,11 @@ h6 {
 }
 
 .ccna-match-choice-placed {
-  animation: ccna-match-choice-placed 680ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation: ccna-match-choice-placed 800ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.ccna-match-choice-fading {
+  animation: ccna-match-choice-fading 1100ms ease-in both;
 }
 
 .ccna-match-choice-returned {
@@ -341,6 +349,18 @@ h6 {
   }
 }
 
+@keyframes ccna-question-transition {
+  from {
+    opacity: 0.75;
+    transform: translateY(0.4rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes ccna-notification-boink {
   0% {
     transform: scale(1);
@@ -392,6 +412,13 @@ h6 {
   }
 }
 
+@keyframes ccna-match-choice-fading {
+  to {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+}
+
 @keyframes ccna-match-choice-returned {
   from {
     opacity: 0;
@@ -440,9 +467,11 @@ h6 {
 
 @media (prefers-reduced-motion: reduce) {
   .ccna-page-enter,
+  .ccna-question-transition,
   .ccna-notification-boink,
   .ccna-validation-shake,
   .ccna-match-choice-placed,
+  .ccna-match-choice-fading,
   .ccna-match-choice-returned,
   .ccna-match-row-feedback,
   .ccna-stars-enter,
