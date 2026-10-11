@@ -135,6 +135,10 @@ h6 {
   animation: ccna-match-choice-placed 680ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
+.ccna-match-choice-returned {
+  animation: ccna-match-choice-returned 520ms ease-out both;
+}
+
 .ccna-match-row-feedback {
   animation: ccna-match-row-feedback 680ms ease-out both;
 }
@@ -388,6 +392,18 @@ h6 {
   }
 }
 
+@keyframes ccna-match-choice-returned {
+  from {
+    opacity: 0;
+    transform: translateY(0.35rem) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 @keyframes ccna-match-row-feedback {
   from {
     background-color: #e8f3f4;
@@ -427,6 +443,7 @@ h6 {
   .ccna-notification-boink,
   .ccna-validation-shake,
   .ccna-match-choice-placed,
+  .ccna-match-choice-returned,
   .ccna-match-row-feedback,
   .ccna-stars-enter,
   .ccna-stars-fill {

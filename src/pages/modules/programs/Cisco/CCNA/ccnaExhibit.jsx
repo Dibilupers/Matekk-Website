@@ -214,6 +214,35 @@ export function ExhibitText({ text, className = "" }) {
 	);
 }
 
+function TopologyNode({ role, name, details }) {
+	return (
+		<div className="min-w-0 rounded-xl border border-[#d6e5e7] bg-white px-3 py-3 text-center shadow-sm">
+			<p className="text-[11px] font-bold uppercase tracking-wide text-[#70809a]">{role}</p>
+			<p className="mt-1 font-bold text-[#17324a]">{name}</p>
+			<p className="mt-1 whitespace-pre-line text-xs leading-5 text-[#526584]">{details}</p>
+		</div>
+	);
+}
+
+export function ExhibitDiagram({ type, className = "" }) {
+	if (type !== "router-on-a-stick-vlan20") return null;
+
+	return (
+		<section aria-label="Network topology exhibit" className={`mb-4 rounded-2xl border border-[#d9e1ef] bg-[#f7f9fc] p-4 sm:p-5 ${className}`}>
+			<p className="mb-3 text-xs font-bold uppercase tracking-wide text-[#526584]">Network topology</p>
+			<div className="grid gap-2 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)] md:items-center">
+				<TopologyNode role="Router" name="R1" details={"E0/0\nSubinterface E0/0.20"} />
+				<p className="text-center text-xs font-semibold text-[#526584]">E0/0 to E0/0</p>
+				<TopologyNode role="Switch" name="SW1" details={"E0/0 trunk\nE0/1 trunk: VLANs 10, 20"} />
+				<p className="text-center text-xs font-semibold text-[#526584]">E0/1 to E0/1</p>
+				<TopologyNode role="Switch" name="SW2" details={"E0/1 trunk\nE0/2 access: VLAN 20"} />
+				<p className="text-center text-xs font-semibold text-[#526584]">E0/2</p>
+				<TopologyNode role="End device" name="VLAN 20 host" details="Connected to SW2 E0/2" />
+			</div>
+		</section>
+	);
+}
+
 /* Picture exhibit: always expandable, since diagrams shrink a lot on phones. */
 export function ExhibitImage({ src, className = "", imageClassName = "", lazy = false }) {
 	const [openTheme, setOpenTheme] = useState(null);

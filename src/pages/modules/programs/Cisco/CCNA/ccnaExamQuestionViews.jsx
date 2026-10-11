@@ -87,13 +87,80 @@ function animateChoiceCopies(root, target, choiceIndex) {
 	});
 }
 
+function animateChoiceReturn(root, source, choiceIndex) {
+	if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+	const sourceRect = source.getBoundingClientRect();
+	const sourceClone = source.cloneNode(true);
+	const computed = window.getComputedStyle(source);
+	for (const property of [
+		"background-color", "border", "border-radius", "box-shadow", "box-sizing", "color",
+		"display", "font-family", "font-size", "font-weight", "line-height", "padding", "text-align",
+	]) {
+		sourceClone.style.setProperty(property, computed.getPropertyValue(property));
+	}
+	Object.assign(sourceClone.style, {
+		position: "fixed",
+		left: `${sourceRect.left}px`,
+		top: `${sourceRect.top}px`,
+		width: `${sourceRect.width}px`,
+		height: `${sourceRect.height}px`,
+		margin: "0",
+		pointerEvents: "none",
+		zIndex: "1200",
+	});
+	sourceClone.classList.remove("ccna-match-choice-placed");
+	sourceClone.setAttribute("aria-hidden", "true");
+	sourceClone.tabIndex = -1;
+	document.body.append(sourceClone);
+
+	requestAnimationFrame(() => {
+		const destinations = [...root.querySelectorAll(`[data-match-choice="${choiceIndex}"]:not(.ccna-match-choice-placed)`)]
+			.filter((choice) => choice !== source);
+		if (destinations.length === 0) {
+			sourceClone.remove();
+			return;
+		}
+
+		destinations.forEach((destination) => {
+			const destinationRect = destination.getBoundingClientRect();
+			const clone = sourceClone.cloneNode(true);
+			document.body.append(clone);
+			const x = destinationRect.left + destinationRect.width / 2 - (sourceRect.left + sourceRect.width / 2);
+			const y = destinationRect.top + destinationRect.height / 2 - (sourceRect.top + sourceRect.height / 2);
+			destination.classList.add("ccna-match-choice-returned");
+			const animation = clone.animate(
+				[
+					{ transform: "translate(0, 0) scale(1)", opacity: 1 },
+					{
+						transform: `translate(${x}px, ${y}px) scale(${destinationRect.width / sourceRect.width}, ${destinationRect.height / sourceRect.height})`,
+						opacity: 0,
+					},
+				],
+				{ duration: 520, easing: "cubic-bezier(0.22, 0.61, 0.36, 1)" },
+			);
+			animation.onfinish = () => {
+				clone.remove();
+				destination.classList.remove("ccna-match-choice-returned");
+			};
+			animation.oncancel = () => {
+				clone.remove();
+				destination.classList.remove("ccna-match-choice-returned");
+			};
+		});
+		sourceClone.remove();
+	});
+}
+
 function AssignMatchInput({ question, value, onChange, disabled }) {
 	const choiceOrder = stableShuffle(question.choices.map((_, i) => i), question.prompt);
 	const current = Array.isArray(value) ? value : question.items.map(() => null);
 	const rootRef = useRef(null);
 	const used = new Set(current.filter((v) => Number.isInteger(v)));
 	const place = (itemIndex, choiceIndex, target) => {
-		if (current[itemIndex] !== choiceIndex) {
+		if (current[itemIndex] === choiceIndex) {
+			animateChoiceReturn(rootRef.current, target, choiceIndex);
+		} else {
 			animateChoiceCopies(rootRef.current, target, choiceIndex);
 		}
 		const next = [...current];

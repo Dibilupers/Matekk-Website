@@ -11,7 +11,7 @@ import { isQuestionAnswered } from "../../../../../utils/ccnaExamGrading";
 import { QuestionInput, QuestionPrompt, QuestionReview } from "./ccnaExamQuestionViews";
 import { splitPromptExhibit } from "../../../../../utils/splitPromptExhibit";
 import { cleanText } from "../../../../../utils/ccnaBankConverter";
-import { ExhibitImage, ExhibitText } from "./ccnaExhibit";
+import { ExhibitDiagram, ExhibitImage, ExhibitText } from "./ccnaExhibit";
 import { loadCcnaQuestionBank } from "../../../../../utils/ccnaQuestionBankApi";
 import { getDatabaseQuestionById, setDatabaseQuestions } from "./ccnaQuestionBank";
 import { resumeCcnaExam, startCcnaExam, submitCcnaExam } from "../../../../../utils/ccnaExamApi";
@@ -617,6 +617,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 						<div className="w-full">
 							<section ref={questionCardRef} className="scroll-mt-4 rounded-[20px] border border-[#d6e5e7] bg-white p-4 shadow-sm sm:p-7">
 								<QuestionPrompt prompt={question.prompt} />
+								{question.exhibitDiagram && <ExhibitDiagram type={question.exhibitDiagram} />}
 								{question.exhibitImage && (
 									<ExhibitImage src={question.exhibitImage} className="mb-6" imageClassName="max-h-[32rem]" />
 								)}
@@ -641,11 +642,6 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 										{isSubmitting ? "Submitting…" : currentIndex === questions.length - 1 ? "Submit exam" : "Next Question"}
 									</button>
 								</div>
-								{currentIndex === questions.length - 1 && unansweredCount > 0 && (
-									<p className="mt-3 text-right text-sm text-[#a44b13]">
-										{unansweredCount} {unansweredCount === 1 ? "question is" : "questions are"} unanswered and will be marked incorrect.
-									</p>
-								)}
 							</section>
 
 						</div>
@@ -772,6 +768,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 													</span>
 												</div>
 												<QuestionPrompt prompt={item.prompt} />
+												{item.exhibitDiagram && <ExhibitDiagram type={item.exhibitDiagram} className="mt-4" />}
 												{item.exhibitImage && (
 													<ExhibitImage src={item.exhibitImage} lazy className="mt-4" imageClassName="max-h-[26rem]" />
 												)}
