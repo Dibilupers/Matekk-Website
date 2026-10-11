@@ -201,7 +201,9 @@ export default function Login() {
         setLoginOtpRequired(true);
         setLoginMaskedEmail(result.maskedEmail);
         setLoginOtp("");
-        setMsg(`A verification code was sent to ${result.maskedEmail}.`);
+        setMsg(result.emailSent === false
+          ? `A valid verification code was already sent to ${result.maskedEmail}. Use the code from that email.`
+          : `A verification code was sent to ${result.maskedEmail}.`);
         return;
       }
 
@@ -272,10 +274,13 @@ export default function Login() {
           setMsg(message || "Unable to send the verification code.");
           return;
         }
+        const { emailSent } = await otpResponse.json();
         setRegistrationOtp("");
         setEmailVerificationToken("");
         setRegistrationOtpSent(true);
-        setMsg(`A verification code was sent to ${registerEmail}.`);
+        setMsg(emailSent === false
+          ? "A valid verification code was already sent. Check your inbox and use that code."
+          : `A verification code was sent to ${registerEmail}.`);
         return;
       }
 
