@@ -94,13 +94,17 @@ function ZoomViewer({ title, theme, onClose, children }) {
 			}
 		};
 		const onMove = (event) => {
-			if (event.touches.length !== 2 || !pinch.current) return;
+			const activePinch = pinch.current;
+			if (event.touches.length !== 2 || !activePinch) return;
 			event.preventDefault();
 			const [x, y] = center(event.touches);
 			setScale((current) => {
-				pinch.current.scale ??= current;
-				const next = pinch.current.scale * (distance(event.touches) / pinch.current.distance);
-				queueMicrotask(() => zoomTo(next, x, y));
+				if (pinch.current !== activePinch) return current;
+				activePinch.scale ??= current;
+				const next = activePinch.scale * (distance(event.touches) / activePinch.distance);
+				queueMicrotask(() => {
+					if (pinch.current === activePinch) zoomTo(next, x, y);
+				});
 				return current;
 			});
 		};
