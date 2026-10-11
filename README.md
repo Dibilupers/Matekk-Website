@@ -1,4 +1,4 @@
-# MATEKK Cybercore Academy
+# MATEKK Cybercore Academ
 
 > **Empowering the Next Generation of ICT Professionals**
 
