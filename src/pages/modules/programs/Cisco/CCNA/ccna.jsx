@@ -727,9 +727,8 @@ export default function CCNA() {
 				</Link>,
 				document.body,
 			)}
-			<section className="relative isolate mx-auto max-w-[1440px] px-6 pb-16 pt-14 sm:px-10 lg:px-14 lg:pb-20 lg:pt-16">
-				<ProgramBackgroundParticles />
-				<div className="relative z-10 grid items-center gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-4">
+			<ProgramBackgroundParticles className="mx-auto max-w-[1440px] px-6 pb-16 pt-14 sm:px-10 lg:px-14 lg:pb-20 lg:pt-16">
+				<div className="grid items-center gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-4">
 					<div className="contents sm:block">
 						<div className="order-1 sm:order-none">
 						<div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#c9dfe2] bg-[#f0f7f7] px-4 py-2 text-sm font-semibold text-[#005b6b]">
@@ -768,7 +767,7 @@ export default function CCNA() {
 					</div>
 					<NetworkIllustration quizAverage={quizAverage} examCards={examCards} />
 				</div>
-			</section>
+			</ProgramBackgroundParticles>
 
 			<div className="bg-[#eaf3f4] py-12 text-center sm:py-14">
 				<p className="text-2xl font-bold tracking-tight text-[#071126] sm:text-[28px]">Built on real <span className="text-[#005b6b]">network topologies.</span></p>
