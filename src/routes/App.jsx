@@ -121,10 +121,12 @@ import { CCNA_CYBERSECURITY_CURRICULUM } from "../pages/modules/programs/Cisco/C
 import CCNAKnowledgeHub from "../pages/modules/programs/Cisco/CCNA/ccnaKnowledgeHub";
 import CCNAKnowledgeArticle from "../pages/modules/programs/Cisco/CCNA/ccnaKnowledgeArticle";
 import CCNACompositeExam from "../pages/modules/programs/Cisco/CCNA/ccnaCompositeExam";
+import CCNAAllQuestionsExam from "../pages/modules/programs/Cisco/CCNA/ccnaAllQuestionsExam";
+import ProgramCompositeExam from "../pages/modules/programs/Cisco/CCNA/programCompositeExam";
 import CCNAModuleQuiz from "../pages/modules/programs/Cisco/CCNA/ccnaModuleQuiz";
 import CCNAGradebook from "../pages/modules/programs/Cisco/CCNA/ccnaGradebook";
 import AplusDashboard from "../pages/modules/programs/CompTIA/A+ (Core 1 & 2)/aplusDashboard";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/auth-context";
 import {
   readCcnaModuleQuizProgress,
   recordCcnaModuleQuizAttempt,
@@ -138,10 +140,12 @@ if ("scrollRestoration" in history) {
 
 export default function App() {
   const location = useLocation();
-  const isCCNAQuiz = location.pathname.startsWith("/modules/programs/ccna/quiz/")
+  const isFullScreenAssessment = location.pathname.startsWith("/modules/programs/ccna/quiz/")
     || location.pathname.startsWith("/modules/programs/ccna/exam/")
     || location.pathname.startsWith("/modules/programs/ccna-automation/quiz/")
-    || location.pathname.startsWith("/modules/programs/ccna-cybersecurity/quiz/");
+    || location.pathname.startsWith("/modules/programs/ccna-automation/exam/")
+    || location.pathname.startsWith("/modules/programs/ccna-cybersecurity/quiz/")
+    || location.pathname.startsWith("/modules/programs/ccna-cybersecurity/exam/");
   const isAdminPage = location.pathname === "/admin";
   const isAccountPendingPage = location.pathname === "/account-pending";
   useHeadingTypeIn(location.pathname);
@@ -149,7 +153,7 @@ export default function App() {
   return (
     <>
       <CCNAExamTimeNotification />
-      {!isCCNAQuiz && !isAccountPendingPage && <NavBar />}
+      {!isFullScreenAssessment && !isAccountPendingPage && <NavBar />}
       <ScrollToTop />
 
       {/* Keyed by path so every page change replays the fade-in (navbar stays outside, so it never flickers) */}
@@ -530,6 +534,30 @@ export default function App() {
           }
         />
         <Route
+          path="/modules/programs/ccna/exam/all"
+          element={
+            <ProtectedRoute>
+              <CCNAAllQuestionsExam />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/ccna-automation/exam/:examKey"
+          element={
+            <ProtectedRoute>
+              <ProgramCompositeExam programKey="ccna-automation" />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/ccna-cybersecurity/exam/:examKey"
+          element={
+            <ProtectedRoute>
+              <ProgramCompositeExam programKey="ccna-cybersecurity" />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/modules/programs/ccna/results"
           element={
             <ProtectedRoute>
@@ -565,7 +593,7 @@ export default function App() {
         <Route path="*" element={<NotFound />} />
       </Routes>
 
-      {!isCCNAQuiz && !isAdminPage && !isAccountPendingPage && <Footer />}
+      {!isFullScreenAssessment && !isAdminPage && !isAccountPendingPage && <Footer />}
       </div>
     </>
   );
@@ -636,7 +664,7 @@ function CCNAExamTimeNotification() {
     checkExamDeadline();
     const timer = window.setInterval(checkExamDeadline, 500);
     return () => window.clearInterval(timer);
-  }, []);
+  }, [userId]);
 
   function dismissNotification() {
     if (notification?.type === "module") {

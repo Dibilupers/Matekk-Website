@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { BadgeCheck, Check, Clock3, LogOut, Mail, RefreshCw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/auth-context";
 
 export default function AccountPending() {
 	const navigate = useNavigate();

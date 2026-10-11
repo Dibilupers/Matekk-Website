@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { ArrowLeft, ArrowRight, BookOpen, Check, Clock } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
-import { useAuth } from "../../../../../context/AuthContext";
+import { useAuth } from "../../../../../context/auth-context";
 import {
 	CCNA_CYBERSECURITY_CURRICULUM,
 	findCybersecurityLesson,

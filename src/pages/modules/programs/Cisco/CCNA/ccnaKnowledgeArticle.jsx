@@ -8,7 +8,7 @@ import CcnaKnowledgeModuleFour from "./ccnaKnowledgeModule4";
 import CcnaKnowledgeModuleFive from "./ccnaKnowledgeModule5";
 import CcnaKnowledgeModuleSix from "./ccnaKnowledgeModule6";
 import { markCcnaTutorialOpened } from "../../../../../utils/ccnaTutorialProgress";
-import { useAuth } from "../../../../../context/AuthContext";
+import { useAuth } from "../../../../../context/auth-context";
 
 const ccnaModuleOneSlugs = new Set([
 	"spine-leaf-architecture-tutorial",

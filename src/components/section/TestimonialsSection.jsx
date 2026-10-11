@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import TestimonialCard from "../cards/TestimonialCard";
 import { testimonials } from "../data/testimonials";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -9,19 +9,23 @@ export default function TestimonialsSection() {
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
   const [cardsPerSlide, setCardsPerSlide] = useState(4);
   const [isMobile, setIsMobile] = useState(false);
+  const cardsPerSlideRef = useRef(cardsPerSlide);
 
   // Dynamic cards per slide based on screen size
   useEffect(() => {
     const calculateCardsPerSlide = () => {
       const width = window.innerWidth;
+      const nextCardsPerSlide = width < 768 ? 1 : width < 1024 ? 2 : 4;
+      if (cardsPerSlideRef.current !== nextCardsPerSlide) {
+        cardsPerSlideRef.current = nextCardsPerSlide;
+        setCurrentSlide(0);
+      }
+      setCardsPerSlide(nextCardsPerSlide);
       if (width < 768) {
-        setCardsPerSlide(1); // Mobile: 1 card
         setIsMobile(true);
       } else if (width >= 768 && width < 1024) {
-        setCardsPerSlide(2); // Tablet: 2 cards
         setIsMobile(false);
       } else {
-        setCardsPerSlide(4); // Desktop: 4 cards
         setIsMobile(false);
       }
     };
@@ -30,11 +34,6 @@ export default function TestimonialsSection() {
     window.addEventListener("resize", calculateCardsPerSlide);
     return () => window.removeEventListener("resize", calculateCardsPerSlide);
   }, []);
-
-  // Reset to slide 0 when cardsPerSlide changes
-  useEffect(() => {
-    setCurrentSlide(0);
-  }, [cardsPerSlide]);
 
   const totalSlides = Math.ceil(testimonials.length / cardsPerSlide);
 

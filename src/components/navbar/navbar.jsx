@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/auth-context";
 import InquireNowButton from "../ui/InquireNowButton";
 import MainLogo from "../../assets/MATEKK_logo.webp";
 import TrainingLogo from "../../assets/MATEKK_training_logo.png";
@@ -42,8 +42,7 @@ function NavBar() {
     setMenuGoingBack(menuDepth < prevMenuDepth);
   }
   const subPanelClass = `mobile-menu-sub${menuGoingBack ? " mobile-menu-back" : ""}`;
-  const { logout, profile } = useAuth();
-  const isAuthenticated = Boolean(profile);
+  const { logout, profile, isAuthenticated } = useAuth();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isGradebookChooserOpen, setIsGradebookChooserOpen] = useState(false);
   const navigate = useNavigate();
@@ -785,7 +784,7 @@ function NavBar() {
               type="button"
               onClick={() => setIsProfileOpen((current) => !current)}
               aria-expanded={isProfileOpen}
-              className="flex max-w-52 shrink-0 items-center gap-2 border-b-2 border-white hover:border-[#1775ee] bg-white px-2 py-1 text-left transition-all duration-300 hover:bg-[#eef6ff]"
+              className="flex max-w-52 shrink-0 items-center gap-2 rounded-xl border-b-2 border-white bg-white px-2 py-1 text-left transition-all duration-300 hover:border-[#1775ee] hover:bg-[#eef6ff]"
             >
               {profile?.profile_photo
                 ? <img src={profile.profile_photo} alt="" className="h-9 w-9 shrink-0 rounded-full border border-blue-200 object-cover" />

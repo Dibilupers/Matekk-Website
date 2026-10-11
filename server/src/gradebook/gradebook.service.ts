@@ -68,6 +68,36 @@ export class GradebookService {
     });
   }
 
+  async recordAssessment(
+    userId: number,
+    programKey: string,
+    assessment: Record<string, unknown>,
+  ) {
+    if (typeof assessment.id !== 'string' || !assessment.id) {
+      throw new BadRequestException('A gradebook assessment must include an ID.');
+    }
+
+    let jsonAssessment: Prisma.InputJsonObject;
+    try {
+      jsonAssessment = JSON.parse(JSON.stringify(assessment)) as Prisma.InputJsonObject;
+    } catch {
+      throw new BadRequestException('Gradebook assessments must contain valid JSON values.');
+    }
+
+    return this.mergeAssessments(userId, programKey, {
+      assessments: { [assessment.id]: jsonAssessment },
+    });
+  }
+
+  async saveAssessment(
+    userId: number,
+    programKey: string,
+    assessment: Record<string, unknown>,
+  ) {
+    await this.programAccess.assertEnrollment(userId, programKey);
+    return this.recordAssessment(userId, programKey, assessment);
+  }
+
   private async mergeAssessments(
     userId: number,
     programKey: string,

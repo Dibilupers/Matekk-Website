@@ -1,3 +1,4 @@
+import { DEVICE_LABEL, looksLikeCode } from "./answerTextStyle";
 // The legacy CCNA questions were pulled out of a PDF, so router output / configs sit inside the
 // question text. This separates them: prose stays as the question, device output becomes the
 // `exhibit` (shown in the dark monospace box, keeping its line breaks and column spacing).
@@ -14,10 +15,11 @@ const CODE_HINTS = [
 const QUESTION_START = /^\s*(Which|What|How|Why|When|Where|Drag|An? |The |If |After |Refer)\b/;
 
 const EXHIBIT_CUE = /\brefer\s+to\s+(?:the\s+)?exhibit\b\s*\.?/i;
+const FORMATTED_OPTION_COLUMNS = /^\s*Option [A-H]\s*:?[ \t]{2,}Option [A-H]\b/im;
 const INLINE_CODE_START = [
   /\bOutput from R1\b/i,
   /\bSW\d+#/i,
-  /\b[A-Za-z][\w.-]*(?:\([^)]*\))?#\s*(?:show|config|conf|ip|interface|router|enable|copy|ping|traceroute|access-list|line|username|hostname|vtp|spanning|switchport|no )/i,
+  /\b[A-Za-z0-9][\w.-]*(?:\([^)]*\))?#\s*(?:show|config|conf|ip|interface|router|enable|copy|ping|traceroute|access-list|line|username|hostname|vtp|spanning|switchport|no )/i,
   /\b(?:RIP|OSPF|EIGRP)\s+\d{1,3}(?:\.\d+){1,3}\/\d+/i,
   /\bSW\d+\s*=\s*\d+/i,
   /\bMacOs\$\s*ifconfig\b/i,
@@ -102,25 +104,48 @@ function splitInlineCodeExhibit(prompt) {
   }
   if (start < 0) return null;
 
-  const before = prompt.slice(0, start).trim();
-  const output = prompt.slice(start).trim();
+  // A device name just above the commands ("R1") is the commands' heading, so it goes with them
+  const beforeLines = prompt.slice(0, start).trimEnd().split("\n");
+  const label = beforeLines.length > 1 && DEVICE_LABEL.test(beforeLines[beforeLines.length - 1]) ? beforeLines.pop().trim() : "";
+  const before = beforeLines.join("\n").trim();
+  const output = [label, prompt.slice(start).trim()].filter(Boolean).join("\n\n");
   let questionStart = -1;
   for (const match of output.matchAll(TRAILING_QUESTION)) {
     if (match.index > 0) questionStart = match.index;
   }
   if (questionStart < 0) return { prompt: before, exhibit: output };
 
-  const question = capitalizeQuestion(output.slice(questionStart).trim());
-  const exhibit = output.slice(0, questionStart).trim();
+  let glued = output.slice(0, questionStart).trimEnd();
+  let rest = output.slice(questionStart).trim();
+  // The question can start mid-sentence ("... at IP address 10.0.0.1. Through which router ...?"):
+  // bring the start of that sentence along with it
+  // (a capital "Which" after printout starts its own sentence; the line before it stays in the printout)
+  if (glued && !/[.?!:]$/.test(glued) && /^[a-z]/.test(rest)) {
+    let cut = -1;
+    for (const match of glued.matchAll(/[.?!:](?=\s|[A-Z])|\n/g)) cut = match.index;
+    rest = `${glued.slice(cut + 1).trim()} ${rest}`;
+    glued = glued.slice(0, cut + 1).trimEnd();
+  } else {
+    rest = capitalizeQuestion(rest);
+  }
+  const blocks = glued.split(/\n\s*\n/);
+  // Plain sentences right before the question ("... routers as shown.", "must meet these requirements:")
+  // belong with the question, not in the printout
+  const isLeadIn = (block) => !isCode(block) && (isQuestionProse(block) || /^[A-Z][^\n]{40,}:\s*$/.test(block.trim()));
+  const leads = [];
+  while (blocks.length > 1 && isLeadIn(blocks[blocks.length - 1])) leads.unshift(tidyProse(blocks.pop()));
+  const lead = leads.join(" ");
+  const exhibit = blocks.join("\n\n").trim();
   if (!exhibit) return null;
-  return { prompt: `${before} ${question}`.replace(/\s+/g, " ").trim(), exhibit };
+  return { prompt: `${before} ${lead} ${rest}`.replace(/\s+/g, " ").trim(), exhibit };
 }
 
-export function splitPromptExhibit(prompt) {
+function splitPromptExhibitRaw(prompt) {
   if (typeof prompt !== "string") return { prompt };
 
   const structured = splitStructuredExhibit(prompt);
   if (structured) return structured;
+  if (FORMATTED_OPTION_COLUMNS.test(prompt)) return { prompt };
 
   const inlineCode = splitInlineCodeExhibit(prompt);
   if (inlineCode) return inlineCode;
@@ -143,4 +168,76 @@ export function splitPromptExhibit(prompt) {
   });
   if (!code.length) return { prompt };
   return { prompt: prose.filter(Boolean).join(" "), exhibit: code.join("\n\n") };
+}
+
+// Some questions put their instruction after the printout ("... Gig0/2\n\nA packet is destined for ...
+// Drag and drop ..."). Move such a closing paragraph back up into the question text.
+function isTrailingInstruction(block) {
+  const text = block.trim();
+  if (!text || /^\s/.test(block) || CODE_HINTS.some((re) => re.test(text))) return false;
+  return /[.?)]$/.test(text) &&
+    text.split(/\s+/).length >= 8 &&
+    /\b(?:Drag|Which|What|How|Why|When|Where|must|should|Refer)\b/i.test(text);
+}
+
+export function splitPromptExhibit(prompt) {
+  const result = splitPromptExhibitRaw(prompt);
+  if (!result.exhibit) return splitCommandRun(result.prompt) ?? result;
+  const blocks = result.exhibit.split(/\n\s*\n/);
+  const last = blocks[blocks.length - 1];
+  // The question line can also be glued straight onto the last line of output (no blank line before it)
+  const lastLines = last.split("\n");
+  const lastLine = lastLines[lastLines.length - 1];
+  if (lastLines.length > 1 && /\?\s*$/.test(lastLine) && isTrailingInstruction(lastLine)) {
+    return {
+      prompt: [result.prompt, lastLine.trim()].filter(Boolean).join(" "),
+      exhibit: [...blocks.slice(0, -1), lastLines.slice(0, -1).join("\n")].join("\n\n").replace(/\s+$/, ""),
+    };
+  }
+  if (blocks.length < 2 || !isTrailingInstruction(last)) return result;
+  const instruction = last.replace(/\s*\n\s*/g, " ").trim();
+  return {
+    prompt: [result.prompt, instruction].filter(Boolean).join(" "),
+    exhibit: blocks.slice(0, -1).join("\n\n").replace(/\s+$/, ""),
+  };
+}
+
+export function removeDuplicateExhibitLeadIn(prompt) {
+  return String(prompt ?? "")
+    .replace(/^\s*Refer to (?:the )?exhibit\.?\s*(?:\r?\n\s*)+(Refer to (?:the )?exhibit\.?)/i, "$1")
+    .replace(/^(Refer to (?:the )?exhibit\.)(?:[ \t]+)(?=\S)/i, "$1\n\n")
+    .trim();
+}
+
+export function removeTrailingOptionExhibitLabel(prompt) {
+  return String(prompt ?? "")
+    .replace(/\n\s*\nOption [A-H]\s*$/i, "")
+    .trim();
+}
+
+// Device commands typed straight under the question with no blank line around them
+// ("How does SW2 interact ...?\nSW2\nvtp domain cisco\n..."): move that run of lines into the exhibit.
+function splitCommandRun(text) {
+  const lines = String(text ?? "").split("\n");
+  if (lines.length < 3) return null;
+  let start = -1;
+  let end = -1;
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index].trim();
+    const continuesCommand = start !== -1 && end === index - 1 &&
+      // a command wrapped onto the next line, e.g. "switchport trunk encapsulation" / "dot1q"
+      /^\S+(?:\s\S+){0,2}$/.test(line) && !/[.?]$/.test(line);
+    // A device name ("SW2") heading the commands belongs with them
+    if (line && (looksLikeCode(line) || DEVICE_LABEL.test(line) || continuesCommand)) {
+      if (start === -1) start = index;
+      end = index;
+    } else if (start !== -1) {
+      break;
+    }
+  }
+  if (start === -1 || end - start < 1) return null;
+  const before = lines.slice(0, start).join(" ").replace(/\s+/g, " ").trim();
+  const after = lines.slice(end + 1).join(" ").replace(/\s+/g, " ").trim();
+  if (!before && !after) return null;
+  return { prompt: [before, after].filter(Boolean).join(" "), exhibit: lines.slice(start, end + 1).join("\n") };
 }

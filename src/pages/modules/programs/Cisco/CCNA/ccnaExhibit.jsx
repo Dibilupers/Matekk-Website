@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { Maximize2, Minus, Plus, X } from "lucide-react";
+import { Maximize2, X } from "lucide-react";
 
 /* Exam exhibits (router output and pictures). Each one can open full screen, where it starts zoomed
    to fit the screen and can be zoomed by touch: pinch with two fingers, drag with one, double-tap to
@@ -137,13 +137,6 @@ function ZoomViewer({ title, theme, onClose, children }) {
 				</span>
 				<p className="min-w-0 flex-1 truncate text-sm font-semibold">{title}</p>
 				<span className="ccna-term-hint hidden text-xs sm:inline">Pinch or Ctrl + scroll to zoom</span>
-				{import.meta.env.DEV && (
-					<>
-						<button type="button" className={button} onClick={() => zoomTo(scale / 1.25)} aria-label="Zoom out (dev)"><Minus size={16} /></button>
-						<span className="w-11 text-center text-xs font-semibold">{Math.round(scale * 100)}%</span>
-						<button type="button" className={button} onClick={() => zoomTo(scale * 1.25)} aria-label="Zoom in (dev)"><Plus size={16} /></button>
-					</>
-				)}
 				<button type="button" className={button} onClick={onClose} aria-label="Close full screen"><X size={18} /></button>
 			</div>
 			<div ref={scrollerRef} className="flex flex-1 overflow-auto overscroll-contain" style={{ touchAction: "pan-x pan-y" }}>
@@ -221,13 +214,49 @@ export function ExhibitText({ text, className = "" }) {
 	);
 }
 
+function TopologyNode({ role, name, details }) {
+	return (
+		<div className="min-w-0 rounded-xl border border-[#d6e5e7] bg-white px-3 py-3 text-center shadow-sm">
+			<p className="text-[11px] font-bold uppercase tracking-wide text-[#70809a]">{role}</p>
+			<p className="mt-1 font-bold text-[#17324a]">{name}</p>
+			<p className="mt-1 whitespace-pre-line text-xs leading-5 text-[#526584]">{details}</p>
+		</div>
+	);
+}
+
+export function ExhibitDiagram({ type, className = "" }) {
+	if (type !== "router-on-a-stick-vlan20") return null;
+
+	return (
+		<section aria-label="Network topology exhibit" className={`mb-4 rounded-2xl border border-[#d9e1ef] bg-[#f7f9fc] p-4 sm:p-5 ${className}`}>
+			<p className="mb-3 text-xs font-bold uppercase tracking-wide text-[#526584]">Network topology</p>
+			<div className="grid gap-2 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)] md:items-center">
+				<TopologyNode role="Router" name="R1" details={"E0/0\nSubinterface E0/0.20"} />
+				<p className="text-center text-xs font-semibold text-[#526584]">E0/0 to E0/0</p>
+				<TopologyNode role="Switch" name="SW1" details={"E0/0 trunk\nE0/1 trunk: VLANs 10, 20"} />
+				<p className="text-center text-xs font-semibold text-[#526584]">E0/1 to E0/1</p>
+				<TopologyNode role="Switch" name="SW2" details={"E0/1 trunk\nE0/2 access: VLAN 20"} />
+				<p className="text-center text-xs font-semibold text-[#526584]">E0/2</p>
+				<TopologyNode role="End device" name="VLAN 20 host" details="Connected to SW2 E0/2" />
+			</div>
+		</section>
+	);
+}
+
 /* Picture exhibit: always expandable, since diagrams shrink a lot on phones. */
-export function ExhibitImage({ src, className = "", imageClassName = "", lazy = false }) {
+export function ExhibitImage({ src, className = "", imageClassName = "", lazy = false, cropTop = false }) {
 	const [openTheme, setOpenTheme] = useState(null);
 	const wrapRef = useRef(null);
+	const image = cropTop
+		? (
+			<div className="aspect-[578/260] w-full overflow-hidden rounded-xl border border-[#d6e5e7] bg-white">
+				<img key={src} src={src} alt="Exhibit" loading={lazy ? "lazy" : undefined} className={`h-full w-full object-cover object-top ${imageClassName}`} />
+			</div>
+		)
+		: <img key={src} src={src} alt="Exhibit" loading={lazy ? "lazy" : undefined} className={`w-auto max-w-full rounded-xl border border-[#d6e5e7] bg-white ${imageClassName}`} />;
 	return (
-		<div ref={wrapRef} className={`relative w-fit max-w-full ${className}`}>
-			<img src={src} alt="Exhibit" loading={lazy ? "lazy" : undefined} className={`w-auto max-w-full rounded-xl border border-[#d6e5e7] bg-white ${imageClassName}`} />
+		<div ref={wrapRef} className={`relative mx-auto ${cropTop ? "w-full max-w-[36rem]" : "w-fit max-w-full"} ${className}`}>
+			{image}
 			<button
 				type="button"
 				onClick={() => setOpenTheme(pageTheme(wrapRef.current))}
@@ -237,7 +266,13 @@ export function ExhibitImage({ src, className = "", imageClassName = "", lazy = 
 			</button>
 			{openTheme && (
 				<ZoomViewer title="Exhibit" theme={openTheme} onClose={() => setOpenTheme(null)}>
-					<img src={src} alt="Exhibit (full screen)" className="block max-w-none rounded-lg bg-white" />
+					{cropTop
+						? (
+							<div className="aspect-[578/260] w-[36rem] max-w-[90vw] overflow-hidden rounded-lg bg-white">
+								<img src={src} alt="Exhibit (full screen)" className="h-full w-full object-cover object-top" />
+							</div>
+						)
+						: <img src={src} alt="Exhibit (full screen)" className="block max-w-none rounded-lg bg-white" />}
 				</ZoomViewer>
 			)}
 		</div>

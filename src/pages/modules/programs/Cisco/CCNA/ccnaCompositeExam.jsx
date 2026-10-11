@@ -2,125 +2,73 @@
 import { createPortal } from "react-dom";
 import { ArrowLeft, ArrowRight, ArrowUp, Clock3, Flag, Moon, RotateCcw, Sun, X } from "lucide-react";
 import { Link, useBlocker, useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "../../../../../context/AuthContext";
+import { useAuth } from "../../../../../context/auth-context";
 import TrainingLogo from "../../../../../assets/MATEKK_training_logo.png";
 import { CCNA_EXAMS } from "./ccnaExamFormats";
-import { createCcnaMockExamAttemptId, saveCcnaMockExamResult } from "../../../../../utils/ccnaGradebook";
+import { saveCcnaMockExamResult } from "../../../../../utils/ccnaGradebook";
 import { getCcnaExamSessionKey } from "../../../../../utils/ccnaShortExamSession";
-import { isAnswerCorrect, isQuestionAnswered, isValidQuestion } from "../../../../../utils/ccnaExamGrading";
-import { QuestionInput, QuestionReview } from "./ccnaExamQuestionViews";
-import { saveGradebookAssessment } from "../../../../../utils/gradebookApi";
-import { splitPromptExhibit } from "../../../../../utils/splitPromptExhibit";
-import { ExhibitImage, ExhibitText } from "./ccnaExhibit";
+import { isQuestionAnswered } from "../../../../../utils/ccnaExamGrading";
+import { QuestionInput, QuestionPrompt, QuestionReview } from "./ccnaExamQuestionViews";
+import {
+	removeDuplicateExhibitLeadIn,
+	removeTrailingOptionExhibitLabel,
+	splitPromptExhibit,
+} from "../../../../../utils/splitPromptExhibit";
+import { cleanText } from "../../../../../utils/ccnaBankConverter";
+import { ExhibitDiagram, ExhibitImage, ExhibitText } from "./ccnaExhibit";
 import { loadCcnaQuestionBank } from "../../../../../utils/ccnaQuestionBankApi";
-import { setDatabaseQuestions } from "./ccnaQuestionBank";
-
-
-
+import { getDatabaseQuestionById, setDatabaseQuestions } from "./ccnaQuestionBank";
+import { resumeCcnaExam, startCcnaExam, submitCcnaExam } from "../../../../../utils/ccnaExamApi";
 const EXAM_PASS_PERCENTAGE = 80;
-function createExamSession(exam) {
-	const questions = exam.createQuestions();
-	if (!Array.isArray(questions) || questions.length !== exam.questionCount || !questions.every(isValidQuestion)) {
-		throw new Error(`${exam.name} could not create its required set of valid questions.`);
-	}
-	return {
-		attemptId: createCcnaMockExamAttemptId(),
-		submittedAt: null,
-		questions,
-		answers: {},
-		lockedQuestions: {},
-		currentIndex: 0,
-		deadline: Date.now() + exam.durationSeconds * 1000,
-		isSubmitted: false,
-	};
-}
-
-function restoreExamSession(exam, sessionStorageKey) {
-	const createSession = () => createExamSession(exam);
-	if (!sessionStorageKey || typeof window === "undefined") return createSession();
-	const savedSession = window.sessionStorage.getItem(sessionStorageKey);
-	if (!savedSession) return createSession();
-
-	try {
-		const session = JSON.parse(savedSession);
-		const isValid = session &&
-			Array.isArray(session.questions) &&
-			session.questions.length === exam.questionCount &&
-			session.questions.every(isValidQuestion) &&
-			session.answers &&
-			typeof session.answers === "object" &&
-			!Array.isArray(session.answers) &&
-			session.lockedQuestions &&
-			typeof session.lockedQuestions === "object" &&
-			!Array.isArray(session.lockedQuestions) &&
-			Number.isInteger(session.currentIndex) &&
-			session.currentIndex >= 0 &&
-			session.currentIndex < exam.questionCount &&
-			Number.isFinite(session.deadline) &&
-			typeof session.isSubmitted === "boolean";
-
-		if (!isValid) throw new TypeError(`Saved ${exam.name} session has an invalid structure.`);
-		const isSubmitted = session.isSubmitted || session.deadline <= Date.now();
-		return {
-			...session,
-			// Attempts saved before router output was split out of the question text get the same clean-up
-			questions: session.questions.map((question) => (question.exhibit || question.exhibitImage
-				? question
-				: { ...question, ...splitPromptExhibit(question.prompt) })),
-			attemptId: typeof session.attemptId === "string" ? session.attemptId : createCcnaMockExamAttemptId(),
-			submittedAt: Number.isFinite(session.submittedAt)
-				? session.submittedAt
-				: isSubmitted ? Date.now() : null,
-			isSubmitted,
-		};
-	} catch (error) {
-		console.error(`Unable to restore the saved ${exam.name} session.`, error);
-		window.sessionStorage.removeItem(sessionStorageKey);
-		return createSession();
-	}
-}
+const RECREATED_MATCH_EXHIBIT_QUESTION_IDS = new Set([570]);
+const isRoutingProtocolComparisonQuestion = (question) =>
+	question?.prompt?.includes("three different routing protocols") &&
+	question.prompt.includes("172.16.32.1");
 
 function formatTime(totalSeconds) {
-	const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, "0");
+	const hours = Math.floor(totalSeconds / 3600);
+	const minutes = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, "0");
 	const seconds = (totalSeconds % 60).toString().padStart(2, "0");
-	return `${minutes}:${seconds}`;
+	return hours > 0 ? `${hours.toString().padStart(2, "0")}:${minutes}:${seconds}` : `${minutes}:${seconds}`;
 }
 
-function CCNACompositeExamPage({ examKey = "short" }) {
+export default function CCNACompositeExam({ examKey = "short" }) {
 	const exam = CCNA_EXAMS[examKey];
 	const location = useLocation();
 	const navigate = useNavigate();
 	const shouldShowExamResult = location.state?.showExamResult === true;
 	const linkedExamResult = location.state?.examResult;
 	const shouldStartNewAttempt = location.state?.retakeExam === true;
-	const { profile, isLoading: isAuthLoading, isOnline } = useAuth();
+	const { profile } = useAuth();
 	const userId = profile?.userId;
 	// Each student's exam progress is saved separately (per signed-in user)
 	const sessionStorageKey = userId === null || userId === undefined
 		? null
 		: getCcnaExamSessionKey(exam.sessionKey, userId);
-	const [initialSession] = useState(() =>
-		shouldStartNewAttempt ? createExamSession(exam) : restoreExamSession(exam, sessionStorageKey),
-	);
 	const hasLinkedExamResult = shouldShowExamResult &&
 		Number.isFinite(linkedExamResult?.score) &&
 		Number.isFinite(linkedExamResult?.maxScore) &&
 		linkedExamResult.maxScore > 0;
-	const isViewingSavedResult = hasLinkedExamResult &&
-		(!initialSession.isSubmitted ||
-			(typeof linkedExamResult.id === "string" && initialSession.attemptId !== linkedExamResult.id));
-	const [attemptId, setAttemptId] = useState(initialSession.attemptId);
-	const [submittedAt, setSubmittedAt] = useState(initialSession.submittedAt);
-	const [questions, setQuestions] = useState(initialSession.questions);
-	const [answers, setAnswers] = useState(initialSession.answers);
-	const [lockedQuestions, setLockedQuestions] = useState(initialSession.lockedQuestions);
-	const [currentIndex, setCurrentIndex] = useState(initialSession.currentIndex);
-	const [deadline, setDeadline] = useState(initialSession.deadline);
-	const [secondsRemaining, setSecondsRemaining] = useState(() =>
-		Math.max(0, Math.ceil((initialSession.deadline - Date.now()) / 1000)),
-	);
+	const [examLoadState, setExamLoadState] = useState({ status: "loading", error: null });
+	const [loadAttempt, setLoadAttempt] = useState(0);
+	const [attemptId, setAttemptId] = useState(null);
+	const [submittedAt, setSubmittedAt] = useState(null);
+	const [questions, setQuestions] = useState([]);
+	const [answers, setAnswers] = useState({});
+	const [lockedQuestions, setLockedQuestions] = useState({});
 	const [flaggedQuestions, setFlaggedQuestions] = useState({});
-	const [isSubmitted, setIsSubmitted] = useState(initialSession.isSubmitted);
+	const [currentIndex, setCurrentIndex] = useState(0);
+	const [deadline, setDeadline] = useState(null);
+	const [secondsRemaining, setSecondsRemaining] = useState(exam.durationSeconds);
+	const [isSubmitted, setIsSubmitted] = useState(false);
+	const [serverResult, setServerResult] = useState(null);
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [submitError, setSubmitError] = useState(null);
+	const shouldStartNewAttemptRef = useRef(shouldStartNewAttempt);
+	const submitInFlightRef = useRef(false);
+	const submitExamRef = useRef(null);
+	const isViewingSavedResult = hasLinkedExamResult &&
+		(!isSubmitted || (typeof linkedExamResult.id === "string" && attemptId !== linkedExamResult.id));
 	const isResultView = isSubmitted || isViewingSavedResult;
 	const [isRetakeConfirmationOpen, setIsRetakeConfirmationOpen] = useState(false);
 	const [examAttempt, setExamAttempt] = useState(0);
@@ -139,16 +87,14 @@ function CCNACompositeExamPage({ examKey = "short" }) {
 			currentLocation.hash !== nextLocation.hash),
 	);
 	const question = questions[currentIndex];
+	const enlargeRouteExhibit = isRoutingProtocolComparisonQuestion(question);
 	const answeredCount = questions.filter((item, index) =>
 		isQuestionAnswered(item, answers[index]),
 	).length;
 	const unansweredCount = questions.length - answeredCount;
-	const answeredPercentage = questions.length > 0 ? Math.round((answeredCount / questions.length) * 100) : 0;
 	const flaggedCount = Object.values(flaggedQuestions).filter(Boolean).length;
-	const score = questions.reduce(
-		(total, item, index) => total + Number(isAnswerCorrect(item, answers[index])),
-		0,
-	);
+	const answeredPercentage = questions.length > 0 ? Math.round((answeredCount / questions.length) * 100) : 0;
+	const score = serverResult?.score ?? 0;
 	const animatedScore = animatedResult.attempt === examAttempt ? animatedResult.score : 0;
 	const animatedElapsedSeconds = animatedResult.attempt === examAttempt ? animatedResult.elapsedSeconds : 0;
 	const resultScore = isViewingSavedResult ? linkedExamResult.score : score;
@@ -162,40 +108,213 @@ function CCNACompositeExamPage({ examKey = "short" }) {
 	const progressColor = `hsl(${progressHue} 75% 42%)`;
 	const examPassed = (isViewingSavedResult ? resultPercentage : Math.round((score / questions.length) * 100)) >= EXAM_PASS_PERCENTAGE;
 	const showBackToTop = backToTopVisibility.attempt === examAttempt && backToTopVisibility.visible;
-	const reviewQuestions = questions
-		.map((item, index) => ({
-			...item,
-			index,
-			selectedAnswer: answers[index],
-			isCorrect: isAnswerCorrect(item, answers[index]),
-		}))
+	const reviewQuestions = (Array.isArray(serverResult?.review) ? serverResult.review : [])
+		.map((item, index) => {
+			const question = questions[index];
+			const isMatch = question?.type === "match";
+			return {
+				...question,
+				index,
+				answer: isMatch ? item.correctAnswer : question?.options.indexOf(typeof item.correctAnswer === "string" ? cleanText(item.correctAnswer) : item.correctAnswer),
+				selectedAnswer: isMatch
+					? item.selectedAnswer
+					: question?.options.indexOf(typeof item.selectedAnswer === "string" ? cleanText(item.selectedAnswer) : item.selectedAnswer),
+				isCorrect: item.isCorrect,
+				explanation: item.explanation,
+			};
+		})
 		.filter((item) =>
 			answerFilter === "all" ||
 			(answerFilter === "correct" && item.isCorrect) ||
 			(answerFilter === "incorrect" && !item.isCorrect),
 		);
 	const [isDark, setIsDark] = useState(false);
-	const [gradebookSaveError, setGradebookSaveError] = useState(null);
-	const [gradebookSaveAttempt, setGradebookSaveAttempt] = useState(0);
 
 	useEffect(() => {
-		if (!shouldStartNewAttempt) return;
-		navigate(location.pathname, { replace: true, state: null });
-	}, [location.pathname, navigate, shouldStartNewAttempt]);
+		let isActive = true;
+
+		async function loadExamAttempt() {
+			setExamLoadState({ status: "loading", error: null });
+			// The question bank supplies each question's picture / printout; load it alongside the exam questions
+			const bankReady = loadCcnaQuestionBank()
+				.then(({ questions: bankQuestions }) => setDatabaseQuestions(bankQuestions))
+				.catch((error) => console.error("Unable to load the CCNA question bank; exam pictures may be missing.", error));
+			try {
+				let savedSession = null;
+				const isRetake = shouldStartNewAttemptRef.current;
+				if (!isRetake && sessionStorageKey) {
+					const savedValue = window.sessionStorage.getItem(sessionStorageKey);
+					if (savedValue) {
+						try {
+							const parsed = JSON.parse(savedValue);
+							if (
+								parsed &&
+								typeof parsed.attemptId === "string" &&
+								Array.isArray(parsed.questions) &&
+								parsed.questions.every((question) =>
+									Number.isInteger(question?.id) &&
+									typeof question.prompt === "string" &&
+									(question.type === "match"
+										? Array.isArray(question.items) && Array.isArray(question.choices)
+										: Array.isArray(question.options)),
+								)
+							) savedSession = parsed;
+							else window.sessionStorage.removeItem(sessionStorageKey);
+						} catch (error) {
+							console.error(`Unable to restore the saved ${exam.name} attempt.`, error);
+							window.sessionStorage.removeItem(sessionStorageKey);
+						}
+					}
+				}
+
+				let apiAttempt;
+				if (savedSession) {
+					try {
+						apiAttempt = await resumeCcnaExam(examKey, savedSession.attemptId);
+					} catch (error) {
+						if (error?.status !== 404) throw error;
+						console.warn(`The saved ${exam.name} attempt no longer exists; starting a new attempt.`);
+						window.sessionStorage.removeItem(sessionStorageKey);
+						apiAttempt = await startCcnaExam(examKey);
+					}
+				} else {
+					apiAttempt = await startCcnaExam(examKey);
+				}
+				if (!isActive) return;
+				if (apiAttempt.questions.length !== exam.questionCount) {
+					throw new TypeError(`The backend did not return ${exam.questionCount} questions for this exam.`);
+				}
+				await bankReady;
+				if (!isActive) return;
+				const loadedQuestions = apiAttempt.questions.map((apiQuestion) => {
+					const bankQuestion = getDatabaseQuestionById(apiQuestion.id);
+					const hasRecreatedMatchExhibit = apiQuestion.type === "match" &&
+						RECREATED_MATCH_EXHIBIT_QUESTION_IDS.has(apiQuestion.id);
+					// Fix text saved with the wrong encoding ("â€œwarningâ€" -> “warning”) for display.
+					// The original option text is kept for submitting, since the backend grades by exact text.
+					const cleanList = (list) => (Array.isArray(list) ? list.map((value) => (typeof value === "string" ? cleanText(value) : value)) : list);
+					// "Option A / Option B …" questions: the options are described in a table inside the question text.
+					// Keep that text whole (the question view lays the table out itself) and list the answers A, B, C, D in order.
+					const isOptionTable = Array.isArray(apiQuestion.options) &&
+						apiQuestion.options.every((option) => /^\s*Option [A-H]\s*$/i.test(String(option)));
+					const hasExpandedOptionTable = isOptionTable &&
+						Array.isArray(bankQuestion?.options) &&
+						bankQuestion.options.length === apiQuestion.options.length &&
+						bankQuestion.options.every((option) =>
+							typeof option === "string" && option.trim() && !/^\s*Option [A-H]\s*$/i.test(option),
+						);
+					const { prompt, exhibit } = hasExpandedOptionTable
+						? { prompt: bankQuestion.prompt }
+						: isOptionTable
+						? { prompt: cleanText(apiQuestion.prompt) }
+						: splitPromptExhibit(cleanText(apiQuestion.prompt));
+					const exhibitImage = bankQuestion?.exhibitImage || apiQuestion.imageUrl;
+					const displayedExhibit = bankQuestion?.exhibit && !isOptionTable ? bankQuestion.exhibit : exhibit;
+					const hasSeparateExhibit = Boolean(
+						exhibitImage || (displayedExhibit && !/^Option [A-H]$/i.test(displayedExhibit.trim())),
+					);
+					const cleanedPrompt = removeDuplicateExhibitLeadIn(cleanText(prompt));
+					const displayPrompt = hasSeparateExhibit
+						? removeTrailingOptionExhibitLabel(cleanedPrompt)
+						: cleanedPrompt;
+					const shouldDisplayExhibit = displayedExhibit &&
+						!(hasSeparateExhibit && /^Option [A-H]$/i.test(displayedExhibit.trim()));
+					const rawOptions = isOptionTable
+						? [...apiQuestion.options].sort((left, right) => String(left).trim().localeCompare(String(right).trim()))
+						: apiQuestion.options;
+					const orderedOptions = hasExpandedOptionTable ? bankQuestion.options : rawOptions;
+					return {
+						...apiQuestion,
+						prompt: displayPrompt,
+						...(Array.isArray(orderedOptions) ? { options: cleanList(orderedOptions), rawOptions } : {}),
+						...(Array.isArray(apiQuestion.items) ? { items: cleanList(apiQuestion.items) } : {}),
+						...(Array.isArray(apiQuestion.choices) ? { choices: cleanList(apiQuestion.choices) } : {}),
+						...(typeof apiQuestion.explanation === "string" ? { explanation: cleanText(apiQuestion.explanation) } : {}),
+						...(shouldDisplayExhibit ? { exhibit: displayedExhibit } : {}),
+						...(bankQuestion?.hidePrompt ? { hidePrompt: true } : {}),
+						...(bankQuestion?.exhibitImageCropTop ? { exhibitImageCropTop: true } : {}),
+						// Question 570's image is a screenshot of the matching interaction recreated by the site.
+						...(!hasRecreatedMatchExhibit && exhibitImage ? { exhibitImage } : {}),
+					};
+				});
+
+				const cachedQuestionsMatch = savedSession?.questions?.length === loadedQuestions.length &&
+					savedSession.questions.every((savedQuestion, index) =>
+						savedQuestion.id === loadedQuestions[index].id &&
+						(savedQuestion.type ?? "single") === loadedQuestions[index].type &&
+						JSON.stringify(savedQuestion.options) === JSON.stringify(loadedQuestions[index].options) &&
+						JSON.stringify(savedQuestion.items) === JSON.stringify(loadedQuestions[index].items) &&
+						JSON.stringify(savedQuestion.choices) === JSON.stringify(loadedQuestions[index].choices),
+					);
+				const restoredAnswers = cachedQuestionsMatch && savedSession.answers &&
+					typeof savedSession.answers === "object" && !Array.isArray(savedSession.answers)
+					? savedSession.answers
+					: {};
+				const restoredIndex = cachedQuestionsMatch && Number.isInteger(savedSession.currentIndex) &&
+					savedSession.currentIndex >= 0 && savedSession.currentIndex < loadedQuestions.length
+					? savedSession.currentIndex
+					: 0;
+				const restoredLocks = cachedQuestionsMatch && savedSession.lockedQuestions &&
+					typeof savedSession.lockedQuestions === "object" && !Array.isArray(savedSession.lockedQuestions)
+					? savedSession.lockedQuestions
+					: {};
+				const restoredFlags = cachedQuestionsMatch && savedSession.flaggedQuestions &&
+					typeof savedSession.flaggedQuestions === "object" && !Array.isArray(savedSession.flaggedQuestions)
+					? savedSession.flaggedQuestions
+					: {};
+				const result = apiAttempt.isSubmitted
+					? {
+						score: apiAttempt.score,
+						maxScore: apiAttempt.questions.length,
+						review: apiAttempt.review,
+					}
+					: null;
+
+				setAttemptId(apiAttempt.attemptId);
+				setQuestions(loadedQuestions);
+				setAnswers(restoredAnswers);
+				setLockedQuestions(restoredLocks);
+				setFlaggedQuestions(restoredFlags);
+				setCurrentIndex(restoredIndex);
+				setDeadline(apiAttempt.deadline);
+				setSecondsRemaining(Math.max(0, Math.ceil((apiAttempt.deadline - Date.now()) / 1000)));
+				setSubmittedAt(apiAttempt.submittedAt);
+				setServerResult(result);
+				setIsSubmitted(apiAttempt.isSubmitted);
+				setExamLoadState({ status: "ready", error: null });
+				shouldStartNewAttemptRef.current = false;
+				if (isRetake) navigate(location.pathname, { replace: true, state: null });
+			} catch (error) {
+				console.error(`Unable to load the ${exam.name} questions from the backend.`, error);
+				if (isActive) setExamLoadState({
+					status: "error",
+					error: error instanceof Error ? error.message : "The exam could not be loaded.",
+				});
+			}
+		}
+
+		loadExamAttempt();
+		return () => {
+			isActive = false;
+		};
+	}, [exam.durationSeconds, exam.name, exam.questionCount, examKey, loadAttempt, location.pathname, navigate, sessionStorageKey]);
 
 	useEffect(() => {
-		if (isViewingSavedResult || !sessionStorageKey) return;
+		if (!attemptId || examLoadState.status !== "ready" || isViewingSavedResult || !sessionStorageKey) return;
 		window.sessionStorage.setItem(sessionStorageKey, JSON.stringify({
 			attemptId,
 			submittedAt,
 			questions,
 			answers,
 			lockedQuestions,
+			flaggedQuestions,
 			currentIndex,
 			deadline,
 			isSubmitted,
+			serverResult,
+			score: serverResult?.score ?? null,
 		}));
-	}, [answers, attemptId, currentIndex, deadline, isSubmitted, isViewingSavedResult, lockedQuestions, questions, sessionStorageKey, submittedAt]);
+	}, [answers, attemptId, currentIndex, deadline, examLoadState.status, flaggedQuestions, isSubmitted, isViewingSavedResult, lockedQuestions, questions, serverResult, sessionStorageKey, submittedAt]);
 
 	useEffect(() => {
 		if (!isSubmitted || isViewingSavedResult || !userId || !Number.isFinite(submittedAt)) return;
@@ -208,50 +327,54 @@ function CCNACompositeExamPage({ examKey = "short" }) {
 		});
 	}, [attemptId, exam.name, isSubmitted, isViewingSavedResult, questions.length, score, submittedAt, userId]);
 
-	useEffect(() => {
-		if (isAuthLoading || !isOnline || !isSubmitted || isViewingSavedResult || !userId || !Number.isFinite(submittedAt)) return undefined;
-
-		let isActive = true;
-		saveGradebookAssessment("ccna", {
-			id: attemptId,
-			type: "exam",
-			programKey: "ccna",
-			title: exam.name,
-			score,
-			maxScore: questions.length,
-			submittedAt,
-		}).then(() => {
-			if (isActive) setGradebookSaveError(null);
-		}).catch((error) => {
-			console.error("Unable to save the exam result to the gradebook.", error);
-			if (isActive) {
-				setGradebookSaveError(error instanceof Error ? error.message : "The gradebook request failed.");
+	async function submitExam() {
+		if (submitInFlightRef.current || isSubmitted || !attemptId) return;
+		submitInFlightRef.current = true;
+		setIsSubmitting(true);
+		setSubmitError(null);
+		try {
+			const submittedAnswers = questions.map((item, index) => ({
+				questionId: item.id,
+				...(item.type === "match"
+					? { selectedMatches: Array.isArray(answers[index]) ? answers[index] : null }
+					: { selectedAnswer: Number.isInteger(answers[index]) ? (item.rawOptions ?? item.options)[answers[index]] : null }),
+			}));
+			const result = await submitCcnaExam(examKey, attemptId, submittedAnswers);
+			if (
+				!Number.isInteger(result?.score) ||
+				result.score < 0 ||
+				result.score > questions.length ||
+				!Array.isArray(result.review) ||
+				result.review.length !== questions.length
+			) {
+				throw new TypeError("The backend returned an invalid exam result.");
 			}
-		});
-
-		return () => {
-			isActive = false;
-		};
-	}, [attemptId, exam.name, gradebookSaveAttempt, isAuthLoading, isOnline, isSubmitted, isViewingSavedResult, questions.length, score, submittedAt, userId]);
-
-	function submitExam(finishedAt = Date.now()) {
-		setSubmittedAt((previousSubmittedAt) => previousSubmittedAt ?? finishedAt);
-		setIsSubmitted(true);
+			setServerResult({ score: result.score, maxScore: questions.length, review: result.review });
+			setSubmittedAt(result.submittedAt ?? Date.now());
+			setIsSubmitted(true);
+		} catch (error) {
+			console.error("Unable to submit the exam for backend grading.", error);
+			setSubmitError(error instanceof Error ? error.message : "Your answers could not be submitted.");
+		} finally {
+			submitInFlightRef.current = false;
+			setIsSubmitting(false);
+		}
 	}
+	submitExamRef.current = submitExam;
 
 	useEffect(() => {
-		if (isSubmitted || isViewingSavedResult) return undefined;
+		if (examLoadState.status !== "ready" || isSubmitted || isViewingSavedResult || !deadline) return undefined;
 
 		function updateTimer() {
 			const remaining = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
 			setSecondsRemaining(remaining);
-			if (remaining === 0) submitExam();
+			if (remaining === 0) submitExamRef.current?.();
 		}
 
 		updateTimer();
 		const timer = window.setInterval(updateTimer, 1000);
 		return () => window.clearInterval(timer);
-	}, [deadline, isSubmitted, isViewingSavedResult]);
+	}, [deadline, examLoadState.status, isSubmitted, isViewingSavedResult]);
 
 	useEffect(() => {
 		if (!isSubmitted) return undefined;
@@ -335,20 +458,35 @@ function CCNACompositeExamPage({ examKey = "short" }) {
 	}, [isResultView, shouldShowExamResult]);
 
 	function restartExam() {
-		const newSession = createExamSession(exam);
-		setQuestions(newSession.questions);
-		setAnswers({});
-		setLockedQuestions({});
-		setCurrentIndex(0);
-		setFlaggedQuestions({});
-		setDeadline(newSession.deadline);
-		setAttemptId(newSession.attemptId);
-		setSubmittedAt(null);
-		setSecondsRemaining(exam.durationSeconds);
-		setIsSubmitted(false);
-		setExamAttempt((attempt) => attempt + 1);
-		setAnswerFilter("all");
-		setIsAnswerReviewVisible(false);
+		setExamLoadState({ status: "loading", error: null });
+		shouldStartNewAttemptRef.current = true;
+		startCcnaExam(examKey).then((newAttempt) => {
+			if (newAttempt.questions.length !== exam.questionCount) {
+				throw new TypeError(`The backend did not return ${exam.questionCount} questions for this exam.`);
+			}
+			setAttemptId(newAttempt.attemptId);
+			setQuestions(newAttempt.questions);
+			setAnswers({});
+			setLockedQuestions({});
+			setFlaggedQuestions({});
+			setCurrentIndex(0);
+			setDeadline(newAttempt.deadline);
+			setSubmittedAt(null);
+			setSecondsRemaining(Math.max(0, Math.ceil((newAttempt.deadline - Date.now()) / 1000)));
+			setServerResult(null);
+			setIsSubmitted(false);
+			setExamAttempt((attempt) => attempt + 1);
+			setAnswerFilter("all");
+			setIsAnswerReviewVisible(false);
+			shouldStartNewAttemptRef.current = false;
+			setExamLoadState({ status: "ready", error: null });
+		}).catch((error) => {
+			console.error(`Unable to start a new ${exam.name} attempt.`, error);
+			setExamLoadState({
+				status: "error",
+				error: error instanceof Error ? error.message : "A new exam attempt could not be started.",
+			});
+		});
 	}
 
 	function reviewAnswers() {
@@ -379,36 +517,46 @@ function CCNACompositeExamPage({ examKey = "short" }) {
 		if (
 			index < currentIndex ||
 			index > currentIndex + 1 ||
-			(index > currentIndex && (
-				!isQuestionAnswered(questions[currentIndex], answers[currentIndex]) ||
-				lockedQuestions[currentIndex]
-			))
+			(index > currentIndex && !isQuestionAnswered(questions[currentIndex], answers[currentIndex]))
 		) return;
 
-		if (index > currentIndex) {
+		if (index > currentIndex && isQuestionAnswered(questions[currentIndex], answers[currentIndex])) {
 			setLockedQuestions((previous) => ({ ...previous, [currentIndex]: true }));
 		}
 		setCurrentIndex(index);
 	}
 
+	if (examLoadState.status !== "ready") {
+		return (
+			<main className="flex min-h-screen items-center justify-center bg-[#f5f9f9] px-4 py-16 text-[#17233d] sm:px-8">
+				<section className="w-full max-w-xl rounded-2xl border border-[#d6e5e7] bg-white p-8 text-center shadow-sm">
+					<h1 className="text-2xl font-bold">{examLoadState.status === "loading" ? "Preparing your exam" : "Unable to load your exam"}</h1>
+					<p role={examLoadState.status === "error" ? "alert" : undefined} className="mt-3 text-sm leading-6 text-[#64748b]">
+						{examLoadState.status === "loading"
+							? "Loading a randomized set of questions from the question database…"
+							: examLoadState.error}
+					</p>
+					{examLoadState.status === "error" && (
+						<button
+							type="button"
+							onClick={() => setLoadAttempt((attempt) => attempt + 1)}
+							className="mt-6 rounded-full bg-[#005b6b] px-6 py-3 font-semibold text-white transition hover:bg-[#004653]"
+						>
+							Try again
+						</button>
+					)}
+				</section>
+			</main>
+		);
+	}
 	if (!question) return null;
 
 	return (
 		<main data-theme={isDark ? "dark" : "light"} className="ccna-page-enter min-h-screen bg-[#f5f9f9] px-4 py-6 text-[#17233d] sm:px-8 sm:py-8">
 						<div className="mx-auto max-w-[1125px]">
-				{gradebookSaveError && isResultView && (
+				{submitError && !isResultView && (
 					<p role="alert" className="mb-4 rounded-xl border border-[#f2c6c3] bg-white px-4 py-3 text-sm font-medium text-[#b42318]">
-						Your exam result could not be saved to the backend gradebook. {gradebookSaveError}{" "}
-						<button
-							type="button"
-							onClick={() => {
-								setGradebookSaveError(null);
-								setGradebookSaveAttempt((attempt) => attempt + 1);
-							}}
-							className="font-bold underline underline-offset-2 hover:no-underline"
-						>
-							Retry save
-						</button>
+						{submitError} Your answers are still saved in this browser; try submitting again.
 					</p>
 				)}
 				<header className="mb-7 flex flex-wrap items-center justify-between gap-4 border-b border-[#d6e5e7] pb-5">
@@ -460,7 +608,7 @@ function CCNACompositeExamPage({ examKey = "short" }) {
 							</div>
 
 							<div className="mt-5 flex flex-wrap items-baseline justify-between gap-2">
-								<h1 className="text-4xl font-extrabold leading-tight tracking-tight text-[#17233d] sm:text-[2.65rem]">
+								<h1 className="text-xl font-semibold text-[#17233d] sm:text-2xl">
 									Question {currentIndex + 1} <span className="text-base font-normal text-[#64748b] sm:text-lg">of {questions.length}</span>
 								</h1>
 								<p className="text-sm text-[#64748b] sm:text-base">{answeredCount} answered <span aria-hidden="true">·</span> {answeredPercentage}%</p>
@@ -500,19 +648,27 @@ function CCNACompositeExamPage({ examKey = "short" }) {
 
 						<div className="w-full">
 							<section ref={questionCardRef} className="scroll-mt-4 rounded-[20px] border border-[#d6e5e7] bg-white p-4 shadow-sm sm:p-7">
-								<p className="mb-2 text-sm text-[#70809a]">
-									Question {currentIndex + 1} of {questions.length}
-									{question.moduleNumber && ` · Module ${question.moduleNumber}: ${question.moduleTitle}`}
-								</p>
-								<h1 className="ccna-exam-question-prompt mb-4 leading-snug tracking-tight sm:mb-6">{question.prompt}</h1>
-								{/* Exhibit: a picture and/or device output shown above the choices */}
+								{!question.hidePrompt && (
+									<QuestionPrompt
+										prompt={question.prompt}
+										hasSeparateExhibit={Boolean(question.exhibit || question.exhibitImage || question.exhibitDiagram)}
+									/>
+								)}
+								{question.exhibitDiagram && <ExhibitDiagram type={question.exhibitDiagram} />}
 								{question.exhibitImage && (
-									<ExhibitImage src={question.exhibitImage} className="mb-6" imageClassName="max-h-[32rem]" />
+									<ExhibitImage
+										src={question.exhibitImage}
+										className="mb-6"
+										imageClassName={`max-h-[32rem] ${enlargeRouteExhibit ? "!w-[min(30rem,calc(100vw_-_3rem))]" : ""}`}
+										cropTop={question.exhibitImageCropTop}
+									/>
 								)}
 								{question.exhibit && (
 									<ExhibitText text={question.exhibit} className="mb-6" />
 								)}
+								{/* key: a fresh answer box per question, so text typed on one question never carries over */}
 								<QuestionInput
+									key={currentIndex}
 									question={question}
 									value={answers[currentIndex]}
 									onChange={(value) => setAnswers((previous) => ({ ...previous, [currentIndex]: value }))}
@@ -522,10 +678,10 @@ function CCNACompositeExamPage({ examKey = "short" }) {
 									<button
 										type="button"
 										onClick={() => currentIndex === questions.length - 1 ? submitExam() : goToQuestion(currentIndex + 1)}
-										disabled={!isQuestionAnswered(question, answers[currentIndex])}
+										disabled={isSubmitting || (currentIndex < questions.length - 1 && !isQuestionAnswered(question, answers[currentIndex]))}
 										className="rounded-full bg-[#005b6b] px-6 py-3 font-semibold text-white transition hover:bg-[#004653] disabled:cursor-not-allowed disabled:opacity-40"
 									>
-										{currentIndex === questions.length - 1 ? "Submit" : "Next Question"}
+										{isSubmitting ? "Submitting…" : currentIndex === questions.length - 1 ? "Submit exam" : "Next Question"}
 									</button>
 								</div>
 							</section>
@@ -647,16 +803,27 @@ function CCNACompositeExamPage({ examKey = "short" }) {
 												<div className="flex flex-wrap items-center gap-2">
 													<span className="text-sm font-semibold text-[#64748b]">
 														Question {item.index + 1} of {questions.length}
-														{item.moduleNumber && ` · Module ${item.moduleNumber}: ${item.moduleTitle}`}
 													</span>
 													<span className={`rounded-full px-3 py-1 text-xs font-bold ${item.isCorrect ? "bg-[#e8f3f4] text-[#005b6b]" : "bg-[#fff0e8] text-[#b4532a]"
 														}`}>
 														{item.isCorrect ? "Correct" : "Incorrect"}
 													</span>
 												</div>
-												<h3 className="mt-4 text-lg font-bold leading-snug text-[#17233d] sm:text-xl">{item.prompt}</h3>
+												{!item.hidePrompt && (
+													<QuestionPrompt
+														prompt={item.prompt}
+														hasSeparateExhibit={Boolean(item.exhibit || item.exhibitImage || item.exhibitDiagram)}
+													/>
+												)}
+												{item.exhibitDiagram && <ExhibitDiagram type={item.exhibitDiagram} className="mt-4" />}
 												{item.exhibitImage && (
-													<ExhibitImage src={item.exhibitImage} lazy className="mt-4" imageClassName="max-h-[26rem]" />
+													<ExhibitImage
+														src={item.exhibitImage}
+														lazy
+														className="mt-4"
+														imageClassName={`max-h-[26rem] ${isRoutingProtocolComparisonQuestion(item) ? "!w-[min(30rem,calc(100vw_-_3rem))]" : ""}`}
+														cropTop={item.exhibitImageCropTop}
+													/>
 												)}
 												{item.exhibit && (
 													<ExhibitText text={item.exhibit} className="mt-4" />
@@ -664,9 +831,11 @@ function CCNACompositeExamPage({ examKey = "short" }) {
 												<div className="mt-5">
 													<QuestionReview question={item} value={item.selectedAnswer} />
 												</div>
-												<p className="mt-4 rounded-xl bg-[#f5f9f9] px-4 py-3 text-sm leading-6 text-[#596983]">
-													<span className="font-bold text-[#005b6b]">Explanation: </span>{item.explanation}
-												</p>
+												{typeof item.explanation === "string" && item.explanation.trim() && (
+													<p className="mt-4 rounded-xl bg-[#f5f9f9] px-4 py-3 text-sm leading-6 text-[#596983]">
+														<span className="font-semibold text-[#005b6b]">Explanation: </span>{item.explanation}
+													</p>
+												)}
 											</article>
 										))}
 										{reviewQuestions.length === 0 && (
@@ -756,34 +925,4 @@ function CCNACompositeExamPage({ examKey = "short" }) {
 			)}
 		</main>
 	);
-}
-
-// Loads the database question bank first, so a new attempt draws its questions from it.
-// (If the bank can't be reached, the exam still works with the questions built into the site.)
-export default function CCNACompositeExam(props) {
-	const [status, setStatus] = useState("loading");
-	useEffect(() => {
-		let active = true;
-		loadCcnaQuestionBank()
-			.then(({ questions }) => {
-				setDatabaseQuestions(questions);
-				if (active) setStatus("ready");
-			})
-			.catch((error) => {
-				console.error("Unable to load the CCNA question bank; using the built-in questions instead.", error);
-				if (active) setStatus("ready");
-			});
-		return () => { active = false; };
-	}, []);
-
-	if (status === "loading") {
-		return (
-			<main className="flex min-h-screen items-center justify-center bg-[#f5f9f9] px-4 text-[#17233d]">
-				<p role="status" className="rounded-2xl border border-[#d6e5e7] bg-white px-6 py-4 text-sm font-semibold text-[#005b6b] shadow-sm">
-					Loading the CCNA question bank…
-				</p>
-			</main>
-		);
-	}
-	return <CCNACompositeExamPage {...props} />;
 }

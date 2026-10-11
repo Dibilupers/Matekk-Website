@@ -576,7 +576,7 @@ export default function NetworkBackground({ paused = false }) {
         ref={canvasRef}
         className="block h-full w-full"
         style={{
-          background: "radial-gradient(ellipse at 50% 38%, #10224A 0%, #0A1430 45%, #050914 100%)",
+          background: "radial-gradient(ellipse at 50% 38%, #142650 0%, #0D1A3B 45%, #080F1D 100%)",
         }}
       />
     </div>

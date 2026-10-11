@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowRight, Eye, EyeOff, Facebook, Instagram, Phone } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/auth-context";
 import API_URL from "../config/api";
 import NetworkBackground from "../components/NetworkBackground";
 import MainLogo from "../assets/MATEKK_logo.webp";
@@ -296,11 +296,11 @@ export default function Login() {
   }
 
   if (isCheckingSession) {
-    return <main className="flex min-h-[calc(100vh-5rem)] items-center justify-center bg-[#070D1F] text-slate-200">Checking your session...</main>;
+    return <main className="flex min-h-[calc(100vh-5rem)] items-center justify-center bg-[#0A1225] text-slate-200">Checking your session...</main>;
   }
 
   return (
-    <main className="fade-in-up relative isolate min-h-[calc(100vh-5rem)] overflow-hidden bg-[#070D1F] px-4 py-8 sm:px-10 sm:py-10 lg:px-16">
+    <main className="fade-in-up relative isolate min-h-[calc(100vh-5rem)] overflow-hidden bg-[#0A1225] px-4 py-8 sm:px-10 sm:py-10 lg:px-16">
       <NetworkBackground paused={isLoginAnimating} />
 
       <div className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-12 lg:grid-cols-[minmax(320px,390px)_1fr] lg:gap-20">

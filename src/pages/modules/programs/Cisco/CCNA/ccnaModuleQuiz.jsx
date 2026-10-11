@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ArrowLeft, ArrowUp, Check, Moon, RotateCcw, Sun, X } from "lucide-react";
 import { Link, useBlocker, useLocation, useParams } from "react-router-dom";
-import { useAuth } from "../../../../../context/AuthContext";
+import { useAuth } from "../../../../../context/auth-context";
 import TrainingLogo from "../../../../../assets/MATEKK_training_logo.png";
 import { CCNA_MODULE_QUIZZES } from "./ccnaModuleQuizData";
 import {
@@ -25,6 +25,9 @@ import {
 	saveProgramModuleQuizProgress,
 } from "../../../../../utils/programModuleQuizProgress";
 import { saveGradebookAssessment } from "../../../../../utils/gradebookApi";
+import { QuestionInput, QuestionPrompt, QuestionReview } from "./ccnaExamQuestionViews";
+
+const CCNA_SOURCE_URL = "https://www.cisco.com/site/us/en/learn/training-certifications/certifications/enterprise/ccna/index.html";
 
 const PROGRAM_QUIZ_CONFIG = {
 	"ccna-automation": {
@@ -154,6 +157,7 @@ export default function CCNAModuleQuiz() {
 	const [animatedResult, setAnimatedResult] = useState({ key: null, score: 0, elapsedSeconds: 0 });
 	const [backToTopVisibility, setBackToTopVisibility] = useState({ key: null, visible: false });
 	const [gradebookSaveError, setGradebookSaveError] = useState(null);
+	const [gradebookSaveAttempt, setGradebookSaveAttempt] = useState(0);
 	const answerReviewRef = useRef(null);
 	const resultsTopRef = useRef(null);
 	const attempt = useMemo(
@@ -279,17 +283,19 @@ export default function CCNAModuleQuiz() {
 			score: attempt.score,
 			maxScore: moduleQuiz.questions.length,
 			submittedAt: attempt.submittedAt,
+		}, userId).then(() => {
+			if (isActive) setGradebookSaveError(null);
 		}).catch((error) => {
 			console.error("Unable to save the quiz result to the gradebook.", error);
 			if (isActive) {
-				setGradebookSaveError("Your quiz result could not be saved to the backend gradebook.");
+				setGradebookSaveError(error instanceof Error ? error.message : "The gradebook request failed.");
 			}
 		});
 
 		return () => {
 			isActive = false;
 		};
-	}, [attempt.attempts, attempt.score, attempt.status, attempt.submittedAt, courseTitle, isCompleted, moduleQuiz, programKey, userId]);
+	}, [attempt.attempts, attempt.score, attempt.status, attempt.submittedAt, courseTitle, gradebookSaveAttempt, isCompleted, moduleQuiz, programKey, userId]);
 
 	useEffect(() => {
 		if (!isCompleted || !isAnswerReviewVisible) return undefined;
@@ -475,7 +481,17 @@ export default function CCNAModuleQuiz() {
 			<div className="mx-auto min-w-0 max-w-[1125px]">
 				{gradebookSaveError && isCompleted && (
 					<p role="alert" className="mb-4 rounded-xl border border-[#f2c6c3] bg-white px-4 py-3 text-sm font-medium text-[#b42318]">
-						{gradebookSaveError} Reload this page to retry.
+						Your quiz result could not be saved to the backend gradebook. {gradebookSaveError}{" "}
+						<button
+							type="button"
+							onClick={() => {
+								setGradebookSaveError(null);
+								setGradebookSaveAttempt((attempt) => attempt + 1);
+							}}
+							className="font-bold underline underline-offset-2 hover:no-underline"
+						>
+							Retry save
+						</button>
 					</p>
 				)}
 				<header className="mb-7 flex flex-col gap-4 border-b border-[#d6e5e7] pb-5 sm:flex-row sm:items-center sm:justify-between">
@@ -538,34 +554,19 @@ export default function CCNAModuleQuiz() {
 
 						<div className="grid items-stretch gap-5 lg:grid-cols-[minmax(0,1fr)_280px]">
 							<section className="rounded-[20px] border border-[#d6e5e7] bg-white p-4 shadow-sm sm:p-7">
-								<p className="mb-2 text-sm text-[#70809a]">Question {attempt.currentIndex + 1} of {moduleQuiz.questions.length} · {moduleQuiz.title}</p>
-								<h1 className="mb-4 text-lg font-bold leading-snug tracking-tight text-[#17233d] sm:mb-6 sm:text-[1.7rem]">
-									{currentQuestion.prompt}
-								</h1>
-								<div className="space-y-2.5">
-									{currentQuestion.options.map((option, optionIndex) => {
-										const isSelected = selectedAnswer === optionIndex;
-										return (
-											<button
-												key={option}
-												type="button"
-												onClick={() => chooseAnswer(optionIndex)}
-												disabled={Boolean(attempt.lockedQuestions?.[attempt.currentIndex])}
-												aria-pressed={isSelected}
-												className={`ccna-answer-choice ccna-dark-hover flex min-h-[52px] w-full items-center gap-2.5 rounded-2xl border px-3 py-2.5 text-left transition disabled:cursor-default sm:min-h-[60px] sm:gap-3 sm:px-4 sm:py-3 ${
-													isSelected
-														? "border-[#005b6b] bg-[#e8f3f4] text-[#263654]"
-														: "border-[#d9e1ef] bg-white text-[#263654] hover:border-[#8bb8bf] hover:bg-[#f0f7f7]"
-												}`}
-											>
-												<span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold ${isSelected ? "bg-[#005b6b] text-white" : "bg-[#e8f3f4] text-[#005b6b]"}`}>
-													{String.fromCharCode(65 + optionIndex)}
-												</span>
-												<span className="text-sm sm:text-base">{option}</span>
-											</button>
-										);
-									})}
-								</div>
+								<p className="mb-2 text-sm font-semibold text-[#70809a]">Question {attempt.currentIndex + 1} of {moduleQuiz.questions.length} · {moduleQuiz.title}</p>
+								<QuestionPrompt
+									prompt={currentQuestion.prompt}
+									imageUrl={currentQuestion.imageUrl}
+									hasSeparateExhibit={Boolean(currentQuestion.exhibit || currentQuestion.imageUrl)}
+								/>
+								<QuestionInput
+									key={attempt.currentIndex}
+									question={currentQuestion}
+									value={selectedAnswer}
+									onChange={chooseAnswer}
+									disabled={Boolean(attempt.lockedQuestions?.[attempt.currentIndex])}
+								/>
 								<div className="mt-5 flex justify-end">
 									<button
 										type="button"
@@ -733,38 +734,19 @@ export default function CCNAModuleQuiz() {
 													{question.isCorrect ? "Correct" : "Incorrect"}
 												</span>
 											</div>
-											<h3 className="mt-4 text-lg font-bold leading-snug text-[#17233d] sm:text-xl">{question.prompt}</h3>
-											<div className="mt-5 space-y-2.5">
-												{question.options.map((option, optionIndex) => {
-													const isCorrectAnswer = optionIndex === question.answer;
-													const isSelectedAnswer = optionIndex === question.selectedAnswer;
-													const optionStyle = isCorrectAnswer
-														? "border-[#54a879] bg-[#eff9f2] text-[#236a43]"
-														: isSelectedAnswer
-															? "border-[#e77945] bg-[#fff5ef] text-[#a44b13]"
-															: "border-[#e1e8ef] bg-white text-[#42516b]";
-
-													return (
-														<div key={option} className={`flex min-h-[54px] items-center gap-3 rounded-xl border px-4 py-3 ${optionStyle}`}>
-															<span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
-																isCorrectAnswer ? "bg-[#2d8a56] text-white" : isSelectedAnswer ? "bg-[#c7541a] text-white" : "bg-[#edf3fb] text-[#4764a8]"
-															}`}>
-																{String.fromCharCode(65 + optionIndex)}
-															</span>
-															<span className="flex-1 text-sm font-medium sm:text-base">{option}</span>
-															{isSelectedAnswer && !isCorrectAnswer && (
-																<span className="inline-flex items-center gap-1 text-xs font-bold text-[#a44b13]"><X size={15} /> Your answer</span>
-															)}
-															{isCorrectAnswer && (
-																<span className="inline-flex items-center gap-1 text-xs font-bold text-[#287849]"><Check size={15} /> Correct answer</span>
-															)}
-														</div>
-													);
-												})}
+											<QuestionPrompt
+												prompt={question.prompt}
+												imageUrl={question.imageUrl}
+												hasSeparateExhibit={Boolean(question.exhibit || question.imageUrl)}
+											/>
+											<div className="mt-5">
+												<QuestionReview question={question} value={question.selectedAnswer} />
 											</div>
-											<p className="mt-4 rounded-xl bg-[#f5f9f9] px-4 py-3 text-sm leading-6 text-[#596983]">
-												<span className="font-bold text-[#005b6b]">Explanation: </span>{question.explanation}
-											</p>
+											{question.explanation?.trim() && (
+												<p className="mt-4 rounded-xl bg-[#f5f9f9] px-4 py-3 text-sm leading-6 text-[#596983]">
+													<span className="font-bold text-[#005b6b]">Explanation: </span>{question.explanation}
+												</p>
+											)}
 										</article>
 									))}
 									{reviewQuestions.length === 0 && (

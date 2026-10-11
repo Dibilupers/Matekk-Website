@@ -170,6 +170,7 @@ describe('UsersService', () => {
         gender: true,
         city_province: true,
         phone_number: true,
+        profile_photo: true,
         enrollments: {
           select: {
             program: {
@@ -235,6 +236,52 @@ describe('UsersService', () => {
 
     const result = await service.findOne('module-student');
     expect(result?.module_enrolled).toBe('CCNA Automation');
+  });
+
+  it('includes enrolled programs in the signed-in profile used by the programs page', async () => {
+    findUnique.mockResolvedValue({
+      id: 47,
+      username: 'programs-student',
+      password: 'hashed',
+      role: 'Student',
+      active_status: true,
+      email: 'programs@example.com',
+      programs_enrolled: '',
+      first_name: 'Programs',
+      last_name: 'Student',
+      birth_date: new Date('2000-01-01'),
+      gender: null,
+      city_province: '',
+      phone_number: null,
+      profile_photo: null,
+      enrollments: [{
+        program: {
+          name: 'CCNA',
+          parentId: null,
+          modules: [{ name: 'CCNA Automation' }, { name: 'CCNA Cybersecurity' }],
+        },
+      }],
+    });
+
+    const result = await service.findById(47);
+
+    expect(result?.module_enrolled).toBe('CCNA, CCNA Automation, CCNA Cybersecurity');
+    expect(findUnique).toHaveBeenCalledWith({
+      where: { id: 47 },
+      include: {
+        enrollments: {
+          include: {
+            program: {
+              select: {
+                name: true,
+                parentId: true,
+                modules: { select: { name: true } },
+              },
+            },
+          },
+        },
+      },
+    });
   });
 
   it('approves an existing user', async () => {

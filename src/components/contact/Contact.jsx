@@ -49,7 +49,7 @@ export default function ContactForm() {
     }
   };
 
-  const startCooldownTimer = (lastSent) => {
+  const startCooldownTimer = () => {
     clearInterval(cooldownRef.current);
     cooldownRef.current = setInterval(() => {
       const sLeft = Math.ceil(
@@ -77,7 +77,7 @@ export default function ContactForm() {
     if (lastSent && now - Number(lastSent) < COOLDOWN_MS) {
       const sLeft = Math.ceil((COOLDOWN_MS - (now - Number(lastSent))) / 1000);
       setStatus(`Please wait ${sLeft}s before sending again.`);
-      startCooldownTimer(lastSent);
+      startCooldownTimer();
       return;
     }
 
