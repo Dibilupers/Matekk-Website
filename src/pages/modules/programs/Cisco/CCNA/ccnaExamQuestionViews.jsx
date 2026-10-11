@@ -415,7 +415,7 @@ export function QuestionInput({ question, value, onChange, disabled }) {
 	// Backend exams don't include the answer key; "type the numbers" questions come with their box sizes instead
 	const hasGroupSizes = Array.isArray(question.groupSizes) && question.groupSizes.length === question.choices?.length &&
 		question.groupSizes.reduce((sum, size) => sum + size, 0) === question.items?.length;
-	// One-to-one questions (each box used once) use the click-to-place boxes, like the original exam
+	// One-to-one matching uses the same connect-the-dots board as answer review.
 	const isOneToOne = Array.isArray(question.items) && Array.isArray(question.choices) && question.items.length === question.choices.length;
 	const localMatchMode = Array.isArray(question.answer) ? matchMode(question) : hasGroupSizes ? "group" : isOneToOne ? "assign" : "select";
 
@@ -425,7 +425,7 @@ export function QuestionInput({ question, value, onChange, disabled }) {
 		return <InvalidQuestionMessage />;
 	}
 
-	if (type === "match" && localMatchMode === "assign") {
+	if (type === "match" && localMatchMode === "assign" && question.matchLayout === "boxes") {
 		return <AssignMatchInput question={question} value={value} onChange={onChange} disabled={disabled} />;
 	}
 	if (type === "match" && localMatchMode === "group") {
