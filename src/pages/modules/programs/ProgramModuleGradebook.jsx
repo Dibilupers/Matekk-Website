@@ -118,45 +118,6 @@ function getModuleRows(modules, progress, storedAssessments) {
 	});
 }
 
-function getExamRows(storedAssessments) {
-	const examFormatLabels = { short: "Short", medium: "Medium", long: "Long" };
-	const attemptsByExam = new Map();
-	storedAssessments
-		.filter((assessment) =>
-			assessment.type === "exam" &&
-			typeof assessment.title === "string" &&
-			Number.isFinite(assessment.score) &&
-			Number.isFinite(assessment.maxScore) &&
-			assessment.maxScore > 0,
-		)
-		.sort((first, second) => (first.submittedAt ?? 0) - (second.submittedAt ?? 0))
-		.forEach((assessment) => {
-			const attempts = attemptsByExam.get(assessment.title) ?? [];
-			attempts.push(assessment);
-			attemptsByExam.set(assessment.title, attempts);
-		});
-
-	return [...attemptsByExam.entries()].flatMap(([title, attempts], examIndex) =>
-		attempts.map((assessment, attemptIndex) => {
-			const grade = Math.round((assessment.score / assessment.maxScore) * 100);
-			return {
-				id: assessment.id,
-				name: title,
-				formatLabel: examFormatLabels[assessment.examFormat] ?? null,
-				status: "graded",
-				statusLabel: attempts.length > 1 ? `Attempt ${attemptIndex + 1}` : null,
-				submittedAt: assessment.submittedAt,
-				attempts: attemptIndex + 1,
-				points: { score: assessment.score, maxScore: assessment.maxScore },
-				grade,
-				bestPoints: { score: assessment.score, maxScore: assessment.maxScore },
-				bestGrade: grade,
-				order: 10000 + examIndex * 100 + attemptIndex,
-			};
-		}),
-	);
-}
-
 function formatDate(timestamp) {
 	if (!Number.isFinite(timestamp)) return "--";
 	return new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric", year: "numeric" }).format(timestamp);
@@ -223,7 +184,6 @@ function AssessmentTable({ title, rows, filter, sort }) {
 								<tr key={row.id} className="border-b border-[#e9edef] last:border-0">
 									<th scope="row" className="px-5 py-4 font-semibold text-[#172536]">
 										<span>{row.name}</span>
-										{row.formatLabel && <span className="ml-2 rounded-full bg-[#e8f3f4] px-2.5 py-1 text-xs font-semibold text-[#005b6b]">{row.formatLabel} format</span>}
 										{row.statusLabel && <span className="ml-2 text-sm font-medium text-[#a44b13]">{row.statusLabel}</span>}
 									</th>
 									<td className="whitespace-nowrap px-5 py-4 text-[#445363]">{formatDate(row.submittedAt)}</td>
@@ -276,12 +236,11 @@ export default function ProgramModuleGradebook({ programKey, programName, module
 	const storedAssessments = backendGradebook.userId === userId ? backendGradebook.assessments : [];
 	const completedExamCount = Math.min(
 		new Set(storedAssessments
-			.filter((assessment) => assessment.type === "exam" && ["short", "medium", "long"].includes(assessment.examFormat))
-			.map((assessment) => assessment.examFormat)).size,
+			.filter((assessment) => assessment.type === "exam" && typeof assessment.title === "string")
+			.map((assessment) => assessment.title)).size,
 		PROGRAM_EXAM_COUNT,
 	);
 	const moduleRows = getModuleRows(modules, progress, storedAssessments);
-	const examRows = getExamRows(storedAssessments);
 	const completedRows = moduleRows.filter((row) => row.status === "graded");
 	const latestRows = modules.flatMap((module) => {
 		const attempts = completedRows.filter((row) => row.name.startsWith(`${module.number} `)).sort((first, second) => first.attempts - second.attempts);
@@ -351,7 +310,6 @@ export default function ProgramModuleGradebook({ programKey, programName, module
 						<span>Class Grades</span><span className={getGradeTone(classGrade).text}>{classGrade === null ? "--" : `${classGrade}%`}</span>
 					</div>
 					<AssessmentTable title="Module Quizzes" rows={moduleRows} filter={filter} sort={sort} />
-					<AssessmentTable title="Program Exams" rows={examRows} filter={filter} sort={sort} />
 					<div className="flex items-center justify-between border border-[#dce4e8] bg-[#f2f5f6] px-5 py-4 text-sm text-[#4c5b67]">
 						<strong className="font-medium">Module quizzes average</strong>
 						<span className={getGradeTone(classGrade).text}>{totalPossiblePoints ? `${totalPoints}/${totalPossiblePoints} (${classGrade}%)` : "--"}</span>

@@ -36,22 +36,6 @@ describe('ProgramAccessService', () => {
     await expect(service.assertEnrollment(7, 'ccna')).resolves.toBeUndefined();
   });
 
-  it('allows legacy enrollment in a parent program when its module has no enrollment row', async () => {
-    programFindFirst.mockResolvedValue({
-      id: 22,
-      name: 'CCNA Automation',
-      parentId: 10,
-      parent: { name: 'CCNA' },
-    });
-    findFirst.mockResolvedValue(null);
-    userFindUnique.mockResolvedValue({
-      role: 'Student',
-      programs_enrolled: 'CompTIA, CCNA',
-    });
-
-    await expect(service.assertEnrollment(7, 'ccna-automation')).resolves.toBeUndefined();
-  });
-
   it('allows admins to access a program gradebook without learner enrollment', async () => {
     programFindFirst.mockResolvedValue({ id: 10, name: 'CCNA', parentId: null });
     userFindUnique.mockResolvedValue({ role: ' Admin ' });

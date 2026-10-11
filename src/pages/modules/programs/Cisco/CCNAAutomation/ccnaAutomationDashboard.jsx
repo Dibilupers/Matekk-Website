@@ -153,7 +153,6 @@ export default function CCNAAutomationDashboard() {
 	const {
 		stats: gradebookQuizStats,
 		error: gradebookStatsError,
-		retry: retryGradebookStats,
 	} = useGradebookQuizStats(
 		PROGRAM_KEY,
 		userId,
@@ -181,7 +180,6 @@ export default function CCNAAutomationDashboard() {
 			modulesSummary={`${gradebookQuizStats.attempted} of ${CCNA_AUTOMATION_CURRICULUM.length} quizzes attempted`}
 			quizScore={gradebookQuizStats.average}
 			gradebookStatsError={gradebookStatsError}
-			retryGradebookStats={retryGradebookStats}
 			gradebookPath={`${PROGRAM_PATH}/gradebook`}
 			heroIntros={HERO_INTROS}
 			quote={HERO_INTROS[0]}

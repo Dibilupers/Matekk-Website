@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, ChevronDown, ChevronUp } from "lucide-react";
 import { useAuth } from "../../../../../context/AuthContext";
@@ -8,6 +8,7 @@ import {
 	readCcnaModuleQuizProgress,
 } from "../../../../../utils/ccnaModuleQuizProgress";
 import { readCcnaExamProgress, readCcnaShortExamProgress } from "../../../../../utils/ccnaShortExamSession";
+import { readCcnaMockExamResults } from "../../../../../utils/ccnaGradebook";
 import { readGradebookAssessments } from "../../../../../utils/gradebookApi";
 import { CCNA_MODULE_QUIZZES } from "./ccnaModuleQuizData";
 import { CCNA_EXAMS } from "./ccnaExamFormats";
@@ -41,6 +42,12 @@ function getGradeTone(score) {
 		fill: "bg-[#d04438]",
 		badge: "bg-[#fff0ed] text-[#b42318]",
 	};
+}
+
+function getGradePercentage(score, maxScore) {
+	return Number.isFinite(score) && Number.isFinite(maxScore) && maxScore > 0
+		? Math.round((score / maxScore) * 100)
+		: null;
 }
 
 function getModuleRows(progress, storedAssessments) {
@@ -140,39 +147,49 @@ function getModuleRows(progress, storedAssessments) {
 	});
 }
 
-function getExamRows(examProgressByKey, storedAssessments) {
-	const examFormatLabels = { short: "Short", medium: "Medium", long: "Long" };
-	return Object.entries(CCNA_EXAMS).map(([examFormat, exam], index) => {
+function getExamRows(examProgressByKey, examResults, storedAssessments) {
+	return Object.values(CCNA_EXAMS).map((exam, index) => {
 		const progress = examProgressByKey[exam.name];
-		const results = storedAssessments
-			.filter((result) => result.type === "exam" && (
-				result.examFormat === examFormat ||
-				(!result.examFormat && result.title === exam.name)
-			))
+		const resultById = new Map(
+			examResults.filter((result) => result.title === exam.name).map((result) => [result.id, result]),
+		);
+		for (const result of storedAssessments) {
+			if (result.type === "exam" && result.title === exam.name) {
+				resultById.set(result.id, result);
+			}
+		}
+		const results = [...resultById.values()]
 			.sort((first, second) => first.submittedAt - second.submittedAt);
 		const latestResult = results.at(-1);
 		const bestResult = results.reduce(
 			(best, result) => !best || result.score / result.maxScore > best.score / best.maxScore ? result : best,
 			null,
 		);
-		const points = latestResult ? { score: latestResult.score, maxScore: latestResult.maxScore } : null;
-		const grade = points ? Math.round((points.score / points.maxScore) * 100) : null;
+		const hasLegacyShortResult = exam.name === "Short Exam" &&
+			!latestResult &&
+			["completed", "expired"].includes(progress.status) &&
+			progress.maxScore > 0;
+		const points = latestResult
+			? { score: latestResult.score, maxScore: latestResult.maxScore }
+			: hasLegacyShortResult
+				? { score: progress.score, maxScore: progress.maxScore }
+				: null;
+		const grade = points ? getGradePercentage(points.score, points.maxScore) : null;
 		const bestPoints = bestResult
 			? { score: bestResult.score, maxScore: bestResult.maxScore }
 			: points;
-		const bestGrade = bestPoints ? Math.round((bestPoints.score / bestPoints.maxScore) * 100) : null;
+		const bestGrade = bestPoints ? getGradePercentage(bestPoints.score, bestPoints.maxScore) : null;
 		const isInProgress = progress.status === "in-progress";
 		const isExpired = progress.status === "expired" && !latestResult;
 
 		return {
 			id: exam.name.toLowerCase().replaceAll(" ", "-"),
 			name: exam.name,
-			formatLabel: examFormatLabels[examFormat],
 			status: isInProgress ? "in-progress" : points ? "graded" : "upcoming",
 			statusLabel: isExpired ? "Time expired" : null,
 			submittedAt: latestResult?.submittedAt ?? null,
 			deadline: isInProgress ? progress.deadline : null,
-			attempts: Math.max(results.length, isExpired ? 1 : 0) + Number(isInProgress),
+			attempts: Math.max(results.length, hasLegacyShortResult ? 1 : 0) + Number(isInProgress),
 			points,
 			grade,
 			bestPoints,
@@ -246,15 +263,14 @@ function AssessmentTable({ title, rows, filter, sort }) {
 								<tr key={row.id} className="border-b border-[#e9edef] last:border-0">
 									<th scope="row" className="px-5 py-4 font-semibold text-[#172536]">
 										<span>{row.name}</span>
-										{row.formatLabel && <span className="ml-2 rounded-full bg-[#e8f3f4] px-2.5 py-1 text-xs font-semibold text-[#005b6b]">{row.formatLabel} format</span>}
 										{row.statusLabel && <span className="ml-2 text-sm font-medium text-[#a44b13]">{row.statusLabel}</span>}
 									</th>
 									<td className="whitespace-nowrap px-5 py-4 text-[#445363]">{formatDate(row.submittedAt)}</td>
 									<td className="px-5 py-4 text-center text-[#445363]">{row.attempts || "--"}</td>
 									<td className="px-5 py-4 text-right">
 										{row.points ? (
-											<span className={`inline-flex min-w-[68px] justify-center rounded-full px-3 py-1.5 text-sm font-bold tabular-nums ${getGradeTone(Math.round((row.points.score / row.points.maxScore) * 100)).badge}`}>
-												{row.points.score}/{row.points.maxScore}
+											<span className={`inline-flex min-w-[120px] justify-center rounded-full px-3 py-1.5 text-sm font-bold tabular-nums ${getGradeTone(getGradePercentage(row.points.score, row.points.maxScore)).badge}`}>
+												{row.points.score}/{row.points.maxScore} · {getGradePercentage(row.points.score, row.points.maxScore)}%
 											</span>
 										) : <span className="text-[#8895a0]">--</span>}
 									</td>
@@ -307,12 +323,10 @@ export default function CCNAGradebook() {
 			? shortExamProgress
 			: readCcnaExamProgress(exam.sessionKey, userId),
 	]));
-	const storedAssessments = useMemo(
-		() => backendGradebook.userId === userId ? backendGradebook.assessments : [],
-		[backendGradebook.assessments, backendGradebook.userId, userId],
-	);
+	const examResults = readCcnaMockExamResults(userId);
+	const storedAssessments = backendGradebook.userId === userId ? backendGradebook.assessments : [];
 	const moduleRows = getModuleRows(progress, storedAssessments);
-	const examRows = getExamRows(examProgressByKey, storedAssessments);
+	const examRows = getExamRows(examProgressByKey, examResults, storedAssessments);
 	const allRows = [...moduleRows, ...examRows];
 	const [filter, setFilter] = useState("all");
 	const [sort, setSort] = useState("default");
@@ -379,7 +393,7 @@ export default function CCNAGradebook() {
 					</div>
 					<div className="relative left-1/2 w-screen -translate-x-1/2 bg-white shadow-sm">
 						<div className="mx-auto grid max-w-[1680px] grid-cols-2 gap-4 px-4 py-5 sm:grid-cols-3 sm:gap-5 sm:px-8 sm:py-8 lg:px-10 xl:grid-cols-5 2xl:px-12">
-							<SummaryStat label="Class grade" value={classGrade === null ? "--" : `${classGrade}%`} detail={overallPossiblePoints ? `${overallPoints}/${overallPossiblePoints} points` : "No graded assessments"} progress={classGrade ?? undefined} />
+							<SummaryStat label="Class grade" value={classGrade === null ? "--" : `${classGrade}%`} detail={overallPossiblePoints ? `${overallPoints}/${overallPossiblePoints} points earned` : "No graded assessments"} progress={classGrade ?? undefined} />
 							<SummaryStat label="Quizzes completed" value={`${latestModuleRows.length} of ${CCNA_MODULE_QUIZZES.length}`} detail="module quizzes completed" />
 							<SummaryStat label="Exams completed" value={`${completedExamCount} of ${Object.keys(CCNA_EXAMS).length}`} detail="exams completed" />
 							<SummaryStat label="Best score" value={bestAssessment ? `${bestAssessment.bestPoints.score}/${bestAssessment.bestPoints.maxScore}` : "--"} detail={bestAssessment?.name ?? "No results yet"} gradeScore={bestAssessment?.bestGrade} />
@@ -418,7 +432,7 @@ export default function CCNAGradebook() {
 					<AssessmentTable title="Module Quizzes" rows={moduleRows} filter={filter} sort={sort} />
 					<div className="flex items-center justify-between border border-[#dce4e8] bg-[#f2f5f6] px-5 py-4 text-sm text-[#4c5b67]">
 						<strong className="font-medium">Module quizzes average</strong>
-						<span className={getGradeTone(quizPossiblePoints ? Math.round(quizPoints / quizPossiblePoints * 100) : null).text}>{quizPossiblePoints ? `${quizPoints}/${quizPossiblePoints}` : "--"}</span>
+						<span className={getGradeTone(getGradePercentage(quizPoints, quizPossiblePoints)).text}>{quizPossiblePoints ? `${quizPoints}/${quizPossiblePoints} · ${getGradePercentage(quizPoints, quizPossiblePoints)}%` : "--"}</span>
 					</div>
 				</div>
 
@@ -426,7 +440,7 @@ export default function CCNAGradebook() {
 					<AssessmentTable title="Exams" rows={examRows} filter={filter} sort={sort} />
 					<div className="flex items-center justify-between border border-[#dce4e8] bg-[#f2f5f6] px-5 py-4 text-sm text-[#4c5b67]">
 						<strong className="font-medium">Exam average</strong>
-						<span className={getGradeTone(examPossiblePoints ? Math.round(examPoints / examPossiblePoints * 100) : null).text}>{examPossiblePoints ? `${examPoints}/${examPossiblePoints}` : "--"}</span>
+						<span className={getGradeTone(getGradePercentage(examPoints, examPossiblePoints)).text}>{examPossiblePoints ? `${examPoints}/${examPossiblePoints} · ${getGradePercentage(examPoints, examPossiblePoints)}%` : "--"}</span>
 					</div>
 				</div>
 			</div>

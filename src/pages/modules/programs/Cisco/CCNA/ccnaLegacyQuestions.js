@@ -2555,7 +2555,7 @@ export const CCNA_LEGACY_QUESTIONS = [
   {
     "legacyIndex": 192,
     "legacyNumber": 3,
-    "prompt": "Refer to the exhibit. The New York router is configured with static routes pointing to the Atlanta and\nWashington sites. Which two tasks must be performed so that the Serial0/0/0 interfaces on the Atlanta and\nWashington routers can reach one another? (Choose two)\n\nConfigured interfaces:\n\nAtlanta:                New York:            Washington:\nS0/0/0: 2012::1/126     S0/0/0: 2012::2/126  S0/0/0: 2023::3/126\nLoopback1:              S0/0/1: 2023::2/126  Loopback3:\n2000::1/128             Loopback2:2000::2/1  2000::3/128\n                        28",
+    "prompt": "Refer to the exhibit. The New York router is configured with static routes pointing to the Atlanta and Washington sites. Which two tasks must be performed so that the Serial0/0/0 interfaces on the Atlanta and Washington routers can reach one another? (Choose two)\n\nConfigured interfaces:\n\nAtlanta:\n  S0/0/0: 2012::1/126\n  Loopback1: 2000::1/128\n\nNew York:\n  S0/0/0: 2012::2/126\n  S0/0/1: 2023::2/126\n  Loopback2: 2000::2/128\n\nWashington:\n  S0/0/0: 2023::3/126\n  Loopback3: 2000::3/128",
     "options": [
       "Configure the ipv6 route 2012::/126 2023::1 command on the Washington router",
       "Configure the ipv6 route 2023::/126 2012::1 command on the Atlanta router",
@@ -2573,7 +2573,7 @@ export const CCNA_LEGACY_QUESTIONS = [
   {
     "legacyIndex": 193,
     "legacyNumber": 4,
-    "prompt": "Refer to exhibit. An engineer is configuring the New York router to reach the Lo1 interface of the Atlanta\nrouter using interface S0/0/0 as the primary path. Which two commands must be configured on the New\nYork router so that it can reach the Lo1 interface of the Atlanta router via Washington when the link between\nNew York and Atlanta goes down? (Choose two)\n\nConfigured interfaces:\n\nAtlanta:             New York:            Washington:\nS0/0/0: 2012::1/126  S0/0/0: 2012::2/126  S0/0/0: 2023::3/126\nS0/0/1: 2013::1/126  S0/0/1: 2023::2/126  S0/0/1: 2013::3/126\nLoopback1:           Loopback2:2000::2/1  Loopback3:\n2000::1/128          28                   2000::3/128",
+    "prompt": "Refer to exhibit. An engineer is configuring the New York router to reach the Lo1 interface of the Atlanta router using interface S0/0/0 as the primary path. Which two commands must be configured on the New York router so that it can reach the Lo1 interface of the Atlanta router via Washington when the link between New York and Atlanta goes down? (Choose two)\n\nConfigured interfaces:\n\nAtlanta:\n  S0/0/0: 2012::1/126\n  S0/0/1: 2013::1/126\n  Loopback1: 2000::1/128\n\nNew York:\n  S0/0/0: 2012::2/126\n  S0/0/1: 2023::2/126\n  Loopback2: 2000::2/128\n\nWashington:\n  S0/0/0: 2023::3/126\n  S0/0/1: 2013::3/126\n  Loopback3: 2000::3/128",
     "options": [
       "ipv6 route 2000::1/128 2012::1",
       "ipv6 route 2000::1/128 2012::1 5",
@@ -2687,7 +2687,7 @@ export const CCNA_LEGACY_QUESTIONS = [
   {
     "legacyIndex": 201,
     "legacyNumber": 12,
-    "prompt": "Refer to exhibit. The loopback1 interface of the Atlanta router must reach the loopback3 interface of the\nWashington router. Which two static host routes must be configured on the NEW York router? (Choose two)\n\nConfigured interfaces:\n\nAtlanta:                New York:            Washington:\nS0/0/0: 2012::1/126     S0/0/0: 2012::2/126  S0/0/0: 2023::3/126\nLoopback1:              S0/0/1: 2023::2/126  Loopback3:\n2000::1/128             Loopback2:2000::2/1  2000::3/128\n                        28",
+    "prompt": "Refer to exhibit. The loopback1 interface of the Atlanta router must reach the loopback3 interface of the Washington router. Which two static host routes must be configured on the NEW York router? (Choose two)\n\nConfigured interfaces:\n\nAtlanta:\n  S0/0/0: 2012::1/126\n  Loopback1: 2000::1/128\n\nNew York:\n  S0/0/0: 2012::2/126\n  S0/0/1: 2023::2/126\n  Loopback2: 2000::2/128\n\nWashington:\n  S0/0/0: 2023::3/126\n  Loopback3: 2000::3/128",
     "options": [
       "ipv6 route 2000::1/128 2012::1",
       "ipv6 route 2000::3/128 2023::3",
@@ -2718,7 +2718,7 @@ export const CCNA_LEGACY_QUESTIONS = [
   {
     "legacyIndex": 203,
     "legacyNumber": 14,
-    "prompt": "Refer to the exhibit. An engineer configured the New York router with static routes that point to the Atlanta\nand Washington sites. Which command must be configured on the Atlanta and Washington routers so that\nboth sites are able to reach the loopback2 interface on the New York router?\n\nConfigured router IPv6 interfaces:\n\nAtlanta:                    New York:            Washington:\nS0/0/0: 2012::1/126         S0/0/0: 2012::2/126  S0/0/0: 2023::3/126\nLoopback1:                  S0/0/1: 2023::2/126  Loopback3:\n2000::1/128                 Loopback2:2000::2/1  2000::3/128\n                            28",
+    "prompt": "Refer to the exhibit. An engineer configured the New York router with static routes that point to the Atlanta and Washington sites. Which command must be configured on the Atlanta and Washington routers so that both sites are able to reach the loopback2 interface on the New York router?\n\nConfigured router IPv6 interfaces:\n\nAtlanta:\n  S0/0/0: 2012::1/126\n  Loopback1: 2000::1/128\n\nNew York:\n  S0/0/0: 2012::2/126\n  S0/0/1: 2023::2/126\n  Loopback2: 2000::2/128\n\nWashington:\n  S0/0/0: 2023::3/126\n  Loopback3: 2000::3/128",
     "options": [
       "ip route 0.0.0.0.0.0.0.0 Serial 0/0/0",
       "ipv6 route 0/0 Serial 0/0/0",

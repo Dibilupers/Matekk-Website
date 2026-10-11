@@ -121,6 +121,7 @@ import { CCNA_CYBERSECURITY_CURRICULUM } from "../pages/modules/programs/Cisco/C
 import CCNAKnowledgeHub from "../pages/modules/programs/Cisco/CCNA/ccnaKnowledgeHub";
 import CCNAKnowledgeArticle from "../pages/modules/programs/Cisco/CCNA/ccnaKnowledgeArticle";
 import CCNACompositeExam from "../pages/modules/programs/Cisco/CCNA/ccnaCompositeExam";
+import CCNAAllQuestionsExam from "../pages/modules/programs/Cisco/CCNA/ccnaAllQuestionsExam";
 import CCNAModuleQuiz from "../pages/modules/programs/Cisco/CCNA/ccnaModuleQuiz";
 import CCNAGradebook from "../pages/modules/programs/Cisco/CCNA/ccnaGradebook";
 import AplusDashboard from "../pages/modules/programs/CompTIA/A+ (Core 1 & 2)/aplusDashboard";
@@ -530,18 +531,10 @@ export default function App() {
           }
         />
         <Route
-          path="/modules/programs/ccna-automation/exam/:examKey"
+          path="/modules/programs/ccna/exam/all"
           element={
             <ProtectedRoute>
-              <CCNACompositeExam programKey="ccna-automation" />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/modules/programs/ccna-cybersecurity/exam/:examKey"
-          element={
-            <ProtectedRoute>
-              <CCNACompositeExam programKey="ccna-cybersecurity" />
+              <CCNAAllQuestionsExam />
             </ProtectedRoute>
           }
         />

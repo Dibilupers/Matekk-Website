@@ -44,49 +44,8 @@ const EXAM_FORMATS = [
 	{ name: "Short Exam", questions: CCNA_EXAMS.short.questionCount, duration: "45 mins", description: "A quick practice session." },
 	{ name: "Medium Exam", questions: CCNA_EXAMS.medium.questionCount, duration: "1 hour & 30 mins", description: "A balanced, longer practice session." },
 	{ name: "Long Exam", questions: CCNA_EXAMS.long.questionCount, duration: "2 hours", description: "A full-length practice session." },
+	{ name: "All Questions Exam", questions: "All", duration: "No time limit", description: "Every usable online-bank question, in database order." },
 ];
-const SHORT_EXAM_SESSION_KEY = "matekk-ccna-short-exam-session";
-
-function getShortExamSessionKey(userId) {
-	if ((typeof userId !== "string" && typeof userId !== "number") || String(userId).trim() === "") return null;
-	return `${SHORT_EXAM_SESSION_KEY}:${encodeURIComponent(String(userId))}`;
-}
-
-function readShortExamProgress(userId) {
-	const sessionKey = getShortExamSessionKey(userId);
-	if (!sessionKey) return { status: "not-started", deadline: null, answeredCount: 0, score: 0 };
-	const savedSession = window.sessionStorage.getItem(sessionKey);
-	if (!savedSession) return { status: "not-started", deadline: null, answeredCount: 0, score: 0 };
-
-	try {
-		const session = JSON.parse(savedSession);
-		if (
-			!session ||
-			!Array.isArray(session.questions) ||
-			!session.answers ||
-			typeof session.answers !== "object" ||
-			!Number.isFinite(session.deadline) ||
-			typeof session.isSubmitted !== "boolean"
-		) {
-			throw new TypeError("Saved CCNA short exam progress has an invalid structure.");
-		}
-		const score = session.questions.reduce(
-			(total, question, index) => total + Number(session.answers[index] === question.answer),
-			0,
-		);
-		const isExpired = !session.isSubmitted && session.deadline <= Date.now();
-		return {
-			status: session.isSubmitted ? "completed" : isExpired ? "expired" : "in-progress",
-			deadline: session.isSubmitted || isExpired ? null : session.deadline,
-			answeredCount: Object.keys(session.answers).length,
-			score,
-		};
-	} catch (error) {
-		console.error("Unable to restore the saved CCNA short exam status.", error);
-		return { status: "not-started", deadline: null, answeredCount: 0, score: 0 };
-	}
-}
-
 function formatExamTime(totalSeconds) {
 	const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, "0");
 	const seconds = (totalSeconds % 60).toString().padStart(2, "0");
@@ -558,7 +517,6 @@ export default function CCNA() {
 	const {
 		stats: gradebookQuizStats,
 		error: gradebookStatsError,
-		retry: retryGradebookStats,
 	} = useGradebookQuizStats(
 		"ccna",
 		userId,
@@ -622,6 +580,10 @@ export default function CCNA() {
 			isActive: longExamSecondsRemaining > 0,
 			path: CCNA_EXAMS.long.path,
 			summary: `${longQuestionCount} questions · 2 hours · ${longExamSecondsRemaining > 0 ? `${formatExamTime(longExamSecondsRemaining)} remaining` : "CCNA practice questions"}`,
+		},
+		"All Questions Exam": {
+			path: "/modules/programs/ccna/exam/all",
+			summary: "Every usable question from the online bank · Database order · No time limit",
 		},
 	};
 
@@ -752,18 +714,7 @@ export default function CCNA() {
 							<div className="min-w-0 sm:pl-7"><Stat value={`${quizAverage}%`} label="Quiz average" /></div>
 							<div className="min-w-0 sm:pl-7"><Stat value={remainingModules} label="Modules left" /></div>
 						</div>
-						{gradebookStatsError && (
-							<p role="alert" className="mt-2 flex flex-wrap items-center gap-x-2 text-xs font-medium text-[#a44b13]">
-								<span>{gradebookStatsError}</span>
-								<button
-									type="button"
-									onClick={retryGradebookStats}
-									className="font-bold underline underline-offset-2 hover:no-underline"
-								>
-									Retry
-								</button>
-							</p>
-						)}
+						{gradebookStatsError && <p role="alert" className="mt-2 text-xs font-medium text-[#a44b13]">{gradebookStatsError}</p>}
 					</div>
 					<NetworkIllustration quizAverage={quizAverage} examCards={examCards} />
 				</div>
@@ -1223,9 +1174,9 @@ export default function CCNA() {
 							</button>
 						</header>
 						<p className="mt-3 text-sm leading-6 text-[#71819b]">
-							All exam formats randomly select questions from the CCNA Question Bank. Choose the number of questions and time limit that suit your practice session.
+							The first three formats randomly select a set of questions. All Questions Exam goes through every usable question in the online bank in database order, with no time limit.
 						</p>
-						<div className="mt-6 grid gap-3 md:grid-cols-3">
+						<div className="mt-6 grid gap-3 sm:grid-cols-2">
 							{EXAM_FORMATS.map((format) => {
 								const isSelected = selectedExamFormat === format.name;
 								const examRun = examRuns[format.name];

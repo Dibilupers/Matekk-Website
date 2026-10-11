@@ -134,7 +134,6 @@ export default function CCNACybersecurityDashboard() {
 	const {
 		stats: gradebookQuizStats,
 		error: gradebookStatsError,
-		retry: retryGradebookStats,
 	} = useGradebookQuizStats(
 		PROGRAM_KEY,
 		userId,
@@ -162,7 +161,6 @@ export default function CCNACybersecurityDashboard() {
 			modulesSummary={`${gradebookQuizStats.attempted} of ${CCNA_CYBERSECURITY_CURRICULUM.length} quizzes attempted`}
 			quizScore={gradebookQuizStats.average}
 			gradebookStatsError={gradebookStatsError}
-			retryGradebookStats={retryGradebookStats}
 			gradebookPath={`${PROGRAM_PATH}/gradebook`}
 			heroIntros={HERO_INTROS}
 			quote={HERO_INTROS[0]}
