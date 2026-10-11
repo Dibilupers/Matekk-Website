@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { ArrowRight, BookOpen, CircleSlash, LayoutGrid, List, Search, X } from "lucide-react";
+import { ArrowRight, BookOpen, CircleSlash, CircleUserRound, LayoutGrid, List, Search, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/auth-context";
 import API_URL from "../config/api";
@@ -231,6 +231,7 @@ export default function Blank() {
 	const [programSearch, setProgramSearch] = useState("");
 	const [databasePrograms, setDatabasePrograms] = useState(readCachedPrograms);
 	const [programsError, setProgramsError] = useState("");
+	const [isDpPreviewOpen, setIsDpPreviewOpen] = useState(false);
 	const profile = sessionProfile;
 	const hasProfile = profile !== null;
 	const [introText] = useState(() => PROGRAM_INTROS[Math.floor(Math.random() * PROGRAM_INTROS.length)]);
@@ -277,6 +278,16 @@ export default function Blank() {
 	const selectCategory = (category) => {
 		setActiveCategory(category);
 	};
+
+	useEffect(() => {
+		if (!isDpPreviewOpen) return undefined;
+
+		const closeOnEscape = (event) => {
+			if (event.key === "Escape") setIsDpPreviewOpen(false);
+		};
+		window.addEventListener("keydown", closeOnEscape);
+		return () => window.removeEventListener("keydown", closeOnEscape);
+	}, [isDpPreviewOpen]);
 
 	useEffect(() => {
 		if (!profile?.username) return undefined;
@@ -347,7 +358,7 @@ export default function Blank() {
 
 	useEffect(() => {
 		const controller = new AbortController();
-		fetch(`${API_URL}/auth/programs`, { signal: controller.signal })
+		fetch(`${API_URL}/auth/programs`, { credentials: "include", signal: controller.signal })
 			.then(async (response) => {
 				if (!response.ok) {
 					throw new Error(`Program catalog request failed with status ${response.status}.`);
@@ -377,8 +388,19 @@ export default function Blank() {
 	return (
 		<main className="h-[calc(100vh-5rem)] w-full max-w-full overflow-x-hidden overflow-y-auto bg-[#f8fafc] px-5 py-10 sm:px-8 lg:px-16">
 			<div className="mx-auto w-full min-w-0 max-w-7xl">
-				<div className="fade-in-up mb-10 max-w-2xl">
-					<div>
+				<div className="fade-in-up mb-10 flex max-w-5xl items-center gap-5 sm:gap-7">
+					<button
+						type="button"
+						onClick={() => profile.profile_photo && setIsDpPreviewOpen(true)}
+						disabled={!profile.profile_photo}
+						aria-label={profile.profile_photo ? "View profile picture" : "No profile picture uploaded"}
+						className="group flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-blue-200 bg-white text-[#087ff5] shadow-sm transition hover:scale-105 hover:border-[#087ff5] disabled:cursor-default disabled:text-slate-400 sm:h-24 sm:w-24"
+					>
+						{profile.profile_photo
+							? <img src={profile.profile_photo} alt="" className="h-full w-full object-cover" />
+							: <CircleUserRound aria-hidden="true" size={56} strokeWidth={1.5} />}
+					</button>
+					<div className="min-w-0">
 						<p className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-[#087ff5]">MATEKK Training Academy</p>
 						<h1 className="text-3xl font-bold text-slate-950 sm:text-4xl">
 							Welcome, <span className={typedUsername.length < String(profile.username).length ? "typewriter-caret" : ""}>{typedUsername}</span>
@@ -518,6 +540,35 @@ export default function Blank() {
 					</section>
 				</div>
 			</div>
+			{isDpPreviewOpen && profile.profile_photo && (
+				<div
+					className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/80 p-4 sm:p-8"
+					onClick={(event) => {
+						if (event.target === event.currentTarget) setIsDpPreviewOpen(false);
+					}}
+				>
+					<section
+						role="dialog"
+						aria-modal="true"
+						aria-label="Profile picture preview"
+						className="relative flex max-h-full max-w-full items-center justify-center"
+					>
+						<button
+							type="button"
+							onClick={() => setIsDpPreviewOpen(false)}
+							aria-label="Close profile picture preview"
+							className="absolute -right-2 -top-2 z-10 rounded-full bg-white p-2 text-slate-800 shadow-lg transition hover:bg-slate-100 sm:-right-4 sm:-top-4"
+						>
+							<X size={20} />
+						</button>
+						<img
+							src={profile.profile_photo}
+							alt="Enlarged profile picture"
+							className="max-h-[85vh] max-w-[min(90vw,48rem)] rounded-2xl object-contain shadow-2xl"
+						/>
+					</section>
+				</div>
+			)}
 		</main>
 	);
 }

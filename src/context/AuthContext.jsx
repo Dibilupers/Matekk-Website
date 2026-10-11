@@ -4,19 +4,6 @@ import { AuthContext } from "./auth-context";
 
 const PROFILE_CACHE_KEY = "matekk-session-profile";
 
-// Shows the last known profile instantly on refresh (sessions use a secure cookie, so there is no token
-// to read here); the server check below replaces it, or clears it if the session has ended.
-function readCachedProfile() {
-  try {
-    const cachedProfile = JSON.parse(sessionStorage.getItem(PROFILE_CACHE_KEY) || "null");
-    return cachedProfile && typeof cachedProfile === "object" ? cachedProfile : null;
-  } catch {
-    sessionStorage.removeItem(PROFILE_CACHE_KEY);
-    return null;
-  }
-}
-
-// Small copy of the profile kept for offline use (the site can still show who is signed in without internet)
 const OFFLINE_PROFILE_KEY = "matekkOfflineProfile";
 
 function readOfflineProfile() {
@@ -49,7 +36,7 @@ function storeOfflineProfile(profile) {
 }
 
 export function AuthProvider({ children }) {
-  const [profile, setProfile] = useState(readCachedProfile);
+  const [profile, setProfile] = useState(readOfflineProfile);
   const [isLoading, setIsLoading] = useState(true);
   const [isOnline, setIsOnline] = useState(() => navigator.onLine);
 
@@ -68,19 +55,18 @@ export function AuthProvider({ children }) {
       credentials: "include",
     });
     if (!response.ok) {
+      localStorage.removeItem(OFFLINE_PROFILE_KEY);
+      setProfile(null);
       throw new Error("Unable to refresh account approval status.");
     }
 
     const nextProfile = await response.json();
     storeOfflineProfile(nextProfile);
     setProfile(nextProfile);
-    sessionStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(nextProfile));
     return nextProfile;
   }, []);
 
   useEffect(() => {
-    localStorage.removeItem("accessToken");
-
     let mounted = true;
     const cachedProfile = readOfflineProfile();
     fetch(`${API_URL}/auth/profile`, {
@@ -132,6 +118,7 @@ export function AuthProvider({ children }) {
       }).catch((logoutError) =>
         console.error("Unable to clear a session after profile loading failed.", logoutError),
       );
+      localStorage.removeItem(OFFLINE_PROFILE_KEY);
       throw error;
     }
     setProfile(signedInProfile);

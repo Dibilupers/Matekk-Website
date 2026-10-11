@@ -85,6 +85,7 @@ function removeFlushedAssessments(scope, sentAssessments) {
 	);
 	writePendingAssessments(scope, pending);
 }
+
 async function readResponse(response) {
 	const body = await response.text();
 	if (!response.ok) {
