@@ -15,6 +15,7 @@ import { ExhibitImage, ExhibitText } from "./ccnaExhibit";
 import { loadCcnaQuestionBank } from "../../../../../utils/ccnaQuestionBankApi";
 import { setDatabaseQuestions } from "./ccnaQuestionBank";
 import { getProgramExamFormats } from "../../programExamFormats";
+import { getCcnaQuestionExplanation } from "../../../../../utils/ccnaQuestionExplanations";
 
 
 
@@ -172,6 +173,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null }) {
 			index,
 			selectedAnswer: answers[index],
 			isCorrect: isAnswerCorrect(item, answers[index]),
+			reviewExplanation: getCcnaQuestionExplanation(item),
 		}))
 		.filter((item) =>
 			answerFilter === "all" ||
@@ -213,7 +215,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null }) {
 	}, [attemptId, exam.name, isSubmitted, isViewingSavedResult, programKey, questions.length, score, submittedAt, userId]);
 
 	useEffect(() => {
-		if (isAuthLoading || !isOnline || !isSubmitted || isViewingSavedResult || !userId || !Number.isFinite(submittedAt)) return undefined;
+		if (isAuthLoading || !isSubmitted || isViewingSavedResult || !userId || !Number.isFinite(submittedAt)) return undefined;
 
 		let isActive = true;
 		const assessmentProgramKey = programKey ?? "ccna";
@@ -225,7 +227,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null }) {
 			score,
 			maxScore: questions.length,
 			submittedAt,
-		}).then(() => {
+		}, userId).then(() => {
 			if (isActive) setGradebookSaveError(null);
 		}).catch((error) => {
 			console.error("Unable to save the exam result to the gradebook.", error);
@@ -418,12 +420,8 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null }) {
 				)}
 				<header className="mb-7 flex flex-wrap items-center justify-between gap-4 border-b border-[#d6e5e7] pb-5">
 					<div className="flex min-w-0 items-center gap-4">
-						<Link to={dashboardPath} aria-label={`Back to ${programName} course`} className="group shrink-0 rounded-full bg-white/80 p-2 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 motion-reduce:transition-none">
-							<div className="relative flex h-20 w-20 items-center justify-center rounded-full border border-[#cfe4ea] bg-white shadow-[0_10px_20px_rgba(15,23,42,0.12)]">
-								<div className="flex h-14 w-14 items-center justify-center rounded-full bg-white">
-									<img src={TrainingLogo} alt="MATEKK Cybercore Academy" className="h-10 w-auto object-contain" />
-								</div>
-							</div>
+						<Link to={dashboardPath} aria-label={`Back to ${programName} course`} className="ccna-training-logo shrink-0 rounded-lg bg-white px-3 py-2 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+							<img src={TrainingLogo} alt="MATEKK Cybercore Academy" className="h-auto w-32 sm:w-36" />
 						</Link>
 						<div className="hidden min-w-0 border-l border-[#cbd5e1] pl-4 sm:block">
 							<p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#70809a]">{programName} exam</p>
@@ -451,13 +449,13 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null }) {
 					<>
 						<section aria-label="Exam progress" className="mb-5 rounded-2xl border border-[#d6e5e7] bg-white p-5 shadow-sm sm:mb-6 sm:p-8">
 							<div className="flex flex-wrap items-center justify-between gap-3">
-								<p className="rounded-xl bg-[#e1f5ef] px-4 py-2 text-sm font-semibold text-[#075b4a]">{exam.name}</p>
+								<p className="rounded-xl bg-[#e8f3f4] px-4 py-2 text-sm font-semibold text-[#005b6b]">{exam.name}</p>
 								<div
 									role="timer"
 									aria-label={`${formatTime(secondsRemaining)} remaining`}
-									className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm tabular-nums ${secondsRemaining <= 300
-										? "bg-[#fff5ee] text-[#a44b13]"
-										: "bg-[#f7f9fc] text-[#526584]"
+									className={`ccna-dark-hover inline-flex shrink-0 items-center gap-2 rounded-full border px-3 py-2 text-xs font-semibold tabular-nums transition-all duration-200 ease-out sm:px-4 sm:text-sm ${secondsRemaining <= 10
+										? "border-[#edbd9b] bg-[#fff5ee] text-[#a44b13]"
+										: "border-[#c9dfe2] bg-white text-[#005b6b]"
 										}`}
 								>
 									<Clock3 size={17} /> {formatTime(secondsRemaining)}
@@ -477,12 +475,12 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null }) {
 								aria-valuemax={questions.length}
 								aria-valuenow={answeredCount}
 								aria-valuetext={`${answeredCount} of ${questions.length} answered, ${answeredPercentage}%`}
-								className="mt-3 h-2 overflow-hidden rounded-full bg-[#e7e7e7]"
+								className="ccna-exam-progress-track mt-3 h-2 overflow-hidden rounded-full bg-[#dfe9eb]"
 							>
-								<div className="h-full rounded-full bg-[#159b73] transition-[width]" style={{ width: `${answeredPercentage}%` }} />
+								<div className="ccna-progress-fill h-full rounded-full bg-[#005b6b] transition-[width] duration-300" style={{ width: `${answeredPercentage}%` }} />
 							</div>
-							<div className="mt-4 flex flex-wrap gap-2.5 text-sm text-[#526584]">
-								<span className="rounded-xl bg-[#f8fafb] px-3 py-2">{answeredCount} answered</span>
+							<div className="mt-4 flex flex-wrap gap-2.5 text-sm text-[#64748b]">
+								<span className="rounded-xl bg-[#dfe9eb] px-3 py-2">{answeredCount} answered</span>
 								<button
 									type="button"
 									onClick={() => setFlaggedQuestions((previous) => ({
@@ -493,13 +491,13 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null }) {
 									aria-pressed={Boolean(flaggedQuestions[currentIndex])}
 									className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 transition ${flaggedQuestions[currentIndex]
 										? "bg-[#fff1d6] text-[#8a5200]"
-										: "bg-[#f8fafb] hover:bg-[#eef3f5]"
+										: "bg-[#dfe9eb] hover:bg-[#eef3f5]"
 										}`}
 								>
 									<Flag size={15} fill={flaggedQuestions[currentIndex] ? "currentColor" : "none"} />
 									{flaggedCount} flagged
 								</button>
-								<span className="rounded-xl bg-[#f8fafb] px-3 py-2">{unansweredCount} left</span>
+								<span className="rounded-xl bg-[#dfe9eb] px-3 py-2">{unansweredCount} left</span>
 							</div>
 						</section>
 
@@ -667,9 +665,13 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null }) {
 												<div className="mt-5">
 													<QuestionReview question={item} value={item.selectedAnswer} />
 												</div>
-												{typeof item.explanation === "string" && item.explanation.trim() && (
+												{item.reviewExplanation ? (
 													<p className="mt-4 rounded-xl bg-[#f5f9f9] px-4 py-3 text-sm leading-6 text-[#596983]">
-														<span className="font-semibold text-[#005b6b]">Explanation: </span>{item.explanation}
+														<span className="font-semibold text-[#005b6b]">Explanation: </span>{item.reviewExplanation}
+													</p>
+												) : (
+													<p className="mt-4 rounded-xl border border-[#e2ecec] bg-[#f8fbfb] px-4 py-3 text-sm leading-6 text-[#71819b]">
+														No explanation is available for this question in the question bank yet.
 													</p>
 												)}
 											</article>

@@ -19,6 +19,8 @@ import {
 	readProgramModuleQuizProgress,
 } from "../../../../../utils/programModuleQuizProgress";
 import useGradebookQuizStats from "../../useGradebookQuizStats";
+import { readCcnaExamProgress } from "../../../../../utils/ccnaShortExamSession";
+import { getProgramExamFormats } from "../../programExamFormats";
 
 const PROGRAM_KEY = "ccna-cybersecurity";
 const PROGRAM_PATH = "/modules/programs/ccna-cybersecurity";
@@ -45,7 +47,7 @@ function CybersecurityModuleCard({ module, index, isOpen, progress, quizAttempt,
 
 	return (
 		<article className="overflow-hidden rounded-[18px] border border-[#d6e5e7] bg-white transition-[transform,box-shadow,border-color] duration-200 ease-out hover:border-[#b5d4d9] hover:shadow-[0_10px_24px_rgba(0,91,107,0.1)]">
-			<button type="button" onClick={onToggle} aria-expanded={isOpen} className="flex min-h-[92px] w-full items-center gap-4 px-5 py-4 text-left sm:px-6">
+			<button type="button" onClick={onToggle} aria-expanded={isOpen} aria-controls={`cybersecurity-module-content-${index}`} className="flex min-h-[92px] w-full items-center gap-4 px-5 py-4 text-left sm:px-6">
 				<span
 					role="progressbar"
 					aria-label={`${module.title} lesson progress`}
@@ -63,8 +65,9 @@ function CybersecurityModuleCard({ module, index, isOpen, progress, quizAttempt,
 				</span>
 				{isOpen ? <ChevronDown className="shrink-0 text-[#005b6b]" size={19} /> : <ChevronRight className="shrink-0 text-[#91a0b9]" size={19} />}
 			</button>
-			{isOpen && (
-				<div className="space-y-4 border-t border-[#e2ecec] px-6 pb-6 pt-5 sm:pl-[91px]">
+			<div id={`cybersecurity-module-content-${index}`} aria-hidden={!isOpen} inert={!isOpen} className={`course-module-fold${isOpen ? " is-open" : ""}`}>
+				<div className="course-module-fold-inner">
+					<div className="space-y-4 border-t border-[#e2ecec] px-6 pb-6 pt-5 sm:pl-[91px]">
 					<div className="space-y-4">
 						{module.lessons.map((lesson) => {
 							const isComplete = progress.completedLessons.includes(lesson.slug);
@@ -99,8 +102,9 @@ function CybersecurityModuleCard({ module, index, isOpen, progress, quizAttempt,
 							<ProgramModuleQuizAction programKey={PROGRAM_KEY} basePath={PROGRAM_PATH} module={module} />
 						</div>
 					</div>
+					</div>
 				</div>
-			)}
+			</div>
 		</article>
 	);
 }
@@ -131,6 +135,15 @@ export default function CCNACybersecurityDashboard() {
 			Object.keys(attempt.answers ?? {}).length > 0
 		);
 	}).length;
+	const completedQuizzes = CCNA_CYBERSECURITY_CURRICULUM.filter((module) => {
+		const attempt = quizProgress.modules[module.number];
+		return isCurrentProgramModuleQuizAttempt(attempt) &&
+			["completed", "expired"].includes(attempt.status);
+	}).length;
+	const examFormats = getProgramExamFormats(PROGRAM_KEY) ?? {};
+	const completedExams = Object.values(examFormats).filter((exam) =>
+		["completed", "expired"].includes(readCcnaExamProgress(exam.sessionKey, userId).status),
+	).length;
 	const {
 		stats: gradebookQuizStats,
 		error: gradebookStatsError,
@@ -140,6 +153,8 @@ export default function CCNACybersecurityDashboard() {
 		CCNA_CYBERSECURITY_CURRICULUM,
 		attemptedQuizzes,
 		quizScore,
+		completedQuizzes,
+		completedExams,
 	);
 
 	function toggleModule(index) {
@@ -154,11 +169,13 @@ export default function CCNACybersecurityDashboard() {
 	return (
 		<CCNAProgramDashboard
 			programName="CCNA Cybersecurity"
+			programKey={PROGRAM_KEY}
+			programPath={PROGRAM_PATH}
 			badge={CybersecurityBadge}
 			modules={programModules}
 			activeModule={activeModule ?? CCNA_CYBERSECURITY_CURRICULUM[0]}
 			modulesLeft={modulesLeft}
-			modulesSummary={`${gradebookQuizStats.attempted} of ${CCNA_CYBERSECURITY_CURRICULUM.length} quizzes attempted`}
+			modulesSummary={`${gradebookQuizStats.completedQuizzes} of ${CCNA_CYBERSECURITY_CURRICULUM.length} quizzes completed`}
 			quizScore={gradebookQuizStats.average}
 			gradebookStatsError={gradebookStatsError}
 			gradebookPath={`${PROGRAM_PATH}/gradebook`}
@@ -167,17 +184,17 @@ export default function CCNACybersecurityDashboard() {
 			heroActions={<ProgramQuizControls programKey={PROGRAM_KEY} basePath={PROGRAM_PATH} modules={CCNA_CYBERSECURITY_CURRICULUM} learningProgress={progress} gradebookPath={`${PROGRAM_PATH}/gradebook`} />}
 			topStats={(
 				<>
-					<div className="flex min-w-0 flex-col items-start gap-1 sm:flex-row sm:items-center sm:gap-3">
-						<strong className="text-xl leading-none tracking-tight text-[#071126] transition-colors duration-200 lg:group-hover/stats:text-white sm:text-[2rem]">{gradebookQuizStats.attempted}/{CCNA_CYBERSECURITY_CURRICULUM.length}</strong>
-						<span className="text-[11px] leading-tight text-[#6f7d99] transition-colors duration-200 lg:group-hover/stats:text-white sm:max-w-20 sm:text-sm">Quizzes attempted</span>
+					<div className="program-stat-item flex min-w-0 flex-col items-center gap-1 px-1 py-4 text-center sm:flex-row sm:justify-center sm:gap-3 sm:px-3 sm:py-5 sm:text-left">
+						<strong className="text-xl leading-none tracking-tight text-[#071126] sm:text-[2rem]">{gradebookQuizStats.completedQuizzes}/{CCNA_CYBERSECURITY_CURRICULUM.length}</strong>
+						<span className="text-[11px] leading-tight text-[#6f7d99] sm:max-w-20 sm:text-sm">Quizzes completed</span>
 					</div>
-					<div className="flex min-w-0 flex-col items-start gap-1 sm:flex-row sm:items-center sm:gap-3 sm:pl-7">
-						<strong className="text-xl leading-none tracking-tight text-[#071126] transition-colors duration-200 lg:group-hover/stats:text-white sm:text-[2rem]">{gradebookQuizStats.average}%</strong>
-						<span className="text-[11px] leading-tight text-[#6f7d99] transition-colors duration-200 lg:group-hover/stats:text-white sm:max-w-20 sm:text-sm">Quiz average</span>
+					<div className="program-stat-item flex min-w-0 flex-col items-center gap-1 border-l border-[#c9dfe2] px-1 py-4 text-center sm:flex-row sm:justify-center sm:gap-3 sm:px-3 sm:py-5 sm:text-left">
+						<strong className="text-xl leading-none tracking-tight text-[#071126] sm:text-[2rem]">{gradebookQuizStats.completedExams}/3</strong>
+						<span className="text-[11px] leading-tight text-[#6f7d99] sm:max-w-20 sm:text-sm">Exams completed</span>
 					</div>
-					<div className="flex min-w-0 flex-col items-start gap-1 sm:flex-row sm:items-center sm:gap-3 sm:pl-7">
-						<strong className="text-xl leading-none tracking-tight text-[#071126] transition-colors duration-200 lg:group-hover/stats:text-white sm:text-[2rem]">{modulesLeft}</strong>
-						<span className="text-[11px] leading-tight text-[#6f7d99] transition-colors duration-200 lg:group-hover/stats:text-white sm:max-w-20 sm:text-sm">Modules left</span>
+					<div className="program-stat-item flex min-w-0 flex-col items-center gap-1 border-l border-[#c9dfe2] px-1 py-4 text-center sm:flex-row sm:justify-center sm:gap-3 sm:px-3 sm:py-5 sm:text-left">
+						<strong className="text-xl leading-none tracking-tight text-[#071126] sm:text-[2rem]">{modulesLeft}</strong>
+						<span className="text-[11px] leading-tight text-[#6f7d99] sm:max-w-20 sm:text-sm">Modules left</span>
 					</div>
 				</>
 			)}

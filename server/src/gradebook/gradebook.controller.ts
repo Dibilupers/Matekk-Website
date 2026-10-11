@@ -4,10 +4,14 @@ import {
   Controller,
   Get,
   Param,
+  Post,
   Put,
 } from '@nestjs/common';
 import { CurrentUser } from '../auth/decorators/current-user.decorator.js';
-import { SaveGradebookDto } from './dto/save-gradebook.dto.js';
+import {
+  RecordGradebookAssessmentDto,
+  SaveGradebookDto,
+} from './dto/save-gradebook.dto.js';
 import { GradebookService } from './gradebook.service.js';
 
 interface AuthenticatedUser {
@@ -36,6 +40,19 @@ export class GradebookController {
       user.userId,
       this.validateProgramKey(programKey),
       body?.data,
+    );
+  }
+
+  @Post(':programKey/assessments')
+  recordAssessment(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('programKey') programKey: string,
+    @Body() body: RecordGradebookAssessmentDto,
+  ) {
+    return this.gradebookService.recordAssessment(
+      user.userId,
+      this.validateProgramKey(programKey),
+      body?.assessment,
     );
   }
 

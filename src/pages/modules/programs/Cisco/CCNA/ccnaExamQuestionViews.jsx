@@ -19,24 +19,6 @@ function OptionText({ text, className = "" }) {
 	);
 }
 
-export function QuestionPrompt({ prompt, imageUrl }) {
-	return (
-		<div className="mb-5 space-y-4 sm:mb-6">
-			<h2 className="whitespace-pre-wrap text-base font-semibold leading-relaxed tracking-tight text-[#17233d] sm:text-lg">
-				{prompt}
-			</h2>
-			{imageUrl && (
-				<ExhibitImage
-					src={imageUrl}
-					lazy
-					imageClassName="max-h-56 object-contain sm:max-h-64"
-					className="max-w-full"
-				/>
-			)}
-		</div>
-	);
-}
-
 /* Matching choices can be dragged between rows or clicked to assign; clicking a placed choice clears it. */
 // Same mixed-up order for everyone (based on the text), so the boxes never line up with the answers
 function stableShuffle(indexes, seed) {
@@ -124,7 +106,7 @@ function AssignMatchInput({ question, value, onChange, disabled }) {
 	return (
 		<div ref={rootRef} className="space-y-3">
 			<p className="text-sm text-[#70809a]">Drag a choice to a matching row, or click a choice to place it. Click a placed choice to undo it.</p>
-			<div className="overflow-hidden rounded-2xl border border-[#d9e1ef] bg-white">
+			<div className="ccna-match-board overflow-hidden rounded-2xl border border-[#d9e1ef] bg-white">
 				{question.items.map((item, itemIndex) => {
 					const picked = current[itemIndex];
 					const available = Number.isInteger(picked)
@@ -153,9 +135,9 @@ function AssignMatchInput({ question, value, onChange, disabled }) {
 									place(itemIndex, choiceIndex, event.currentTarget, true);
 								}
 							}}
-							className={`grid gap-3 border-b border-[#e6ecf3] px-4 py-3 last:border-b-0 sm:grid-cols-[minmax(0,0.9fr)_minmax(0,1.4fr)] sm:items-center ${dragOverItem === itemIndex ? "bg-[#f0f7f7] ring-2 ring-inset ring-[#005b6b]" : Number.isInteger(picked) ? "ccna-match-row-feedback" : ""}`}
+							className={`ccna-match-row grid gap-3 border-b border-[#e6ecf3] px-4 py-3 last:border-b-0 sm:grid-cols-[minmax(0,0.9fr)_minmax(0,1.4fr)] sm:items-center ${dragOverItem === itemIndex ? "bg-[#f0f7f7] ring-2 ring-inset ring-[#005b6b]" : Number.isInteger(picked) ? "ccna-match-row-feedback" : ""}`}
 						>
-							<span className="text-[15px] font-semibold whitespace-pre-wrap text-[#263654] sm:text-base">{item}</span>
+							<span className="ccna-match-prompt text-[15px] font-semibold whitespace-pre-wrap text-[#263654] sm:text-base">{item}</span>
 							<div className="flex flex-wrap gap-2">
 								{available.map((choiceIndex) => {
 									const isPlaced = picked === choiceIndex;
@@ -174,7 +156,7 @@ function AssignMatchInput({ question, value, onChange, disabled }) {
 											onDragEnd={() => setDragOverItem(null)}
 											aria-pressed={isPlaced}
 											aria-label={isPlaced ? `${question.choices[choiceIndex]} (placed, click to undo)` : `Place ${question.choices[choiceIndex]} here`}
-											className={`cursor-grab rounded-lg px-3 py-2 text-left text-sm font-semibold transition-all duration-300 ease-out active:cursor-grabbing disabled:cursor-default motion-reduce:transition-none ${isPlaced
+											className={`ccna-match-choice cursor-grab rounded-lg px-3 py-2 text-left text-sm font-semibold transition-all duration-300 ease-out active:cursor-grabbing disabled:cursor-default motion-reduce:transition-none ${isPlaced
 												? "border-2 border-[#2d8a56] bg-[#eff9f2] font-semibold text-[#1f5e3b]"
 												: "border border-dashed border-[#9aa8bc] bg-white text-[#42516b] hover:-translate-y-0.5 hover:border-[#005b6b] hover:bg-[#f0f7f7] active:translate-y-0 active:scale-[0.98]"} ${isPlaced ? "ccna-match-choice-placed" : ""}`}
 										>
@@ -208,29 +190,29 @@ function GroupMatchInput({ question, value, onChange, disabled }) {
 		.filter(Boolean)
 		.join(", ");
 	return (
-		<div className="space-y-4">
+		<div className="ccna-group-match space-y-4">
 			<div className="grid gap-4 sm:grid-cols-2">
 				<ol className="space-y-2">
 					{question.items.map((item, itemIndex) => (
-						<li key={itemIndex} className="flex items-start gap-3 rounded-xl border border-[#cfe0f5] bg-[#eef5fe] px-3 py-2.5">
+						<li key={itemIndex} className="ccna-group-match-item flex items-start gap-3 rounded-xl border border-[#cfe0f5] bg-[#eef5fe] px-3 py-2.5">
 							<span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#1d4ed8] text-sm font-bold text-white">{itemIndex + 1}</span>
-							<span className="text-sm font-semibold whitespace-pre-wrap text-[#263654] sm:text-[15px]">{item}</span>
+							<span className="ccna-group-match-item-text text-sm font-semibold whitespace-pre-wrap text-[#263654] sm:text-[15px]">{item}</span>
 						</li>
 					))}
 				</ol>
 				<div className="space-y-3">
 					{question.choices.map((choice, choiceIndex) => (
-						<div key={choiceIndex} className="overflow-hidden rounded-xl border border-[#e6d9a8]">
-							<div className="bg-[#fdf8dc] px-3 py-2 text-center text-sm font-semibold text-[#5b4d12]">{choice}</div>
+						<div key={choiceIndex} className="ccna-group-match-box overflow-hidden rounded-xl border border-[#e6d9a8]">
+							<div className="ccna-group-match-box-title bg-[#fdf8dc] px-3 py-2 text-center text-sm font-semibold text-[#5b4d12]">{choice}</div>
 							{Array.from({ length: sizes[choiceIndex] }).map((_, k) => (
-								<div key={k} className="h-7 border-t border-[#f1d4d4] bg-[#fbe7e7]" aria-hidden="true" />
+								<div key={k} className="ccna-group-match-slot h-7 border-t border-[#f1d4d4] bg-[#fbe7e7]" aria-hidden="true" />
 							))}
 						</div>
 					))}
 				</div>
 			</div>
 			<label className="block">
-				<span className="block text-sm text-[#526584]">
+				<span className="ccna-group-match-instructions block text-sm text-[#526584]">
 					Type the item numbers for each box in order from top to bottom, with each box's numbers in ascending order.
 					For example, <strong className="font-mono text-[#263654]">{example}</strong> would mean {exampleMeaning}.
 				</span>
@@ -271,7 +253,7 @@ function GroupMatchInput({ question, value, onChange, disabled }) {
 					}}
 					placeholder={"e.g. " + example}
 					aria-label="Your answer (item numbers)"
-					className="mt-2 w-48 rounded-xl border border-[#c9dfe2] bg-white px-3 py-2 font-mono text-lg tracking-[0.3em] text-[#005b6b] outline-none focus:border-[#005b6b] focus:ring-2 focus:ring-[#cfe7ea] disabled:cursor-default disabled:bg-[#f5f9f9]"
+					className="ccna-group-match-code mt-2 w-48 rounded-xl border border-[#c9dfe2] bg-white px-3 py-2 font-mono text-lg tracking-[0.3em] text-[#005b6b] outline-none focus:border-[#005b6b] focus:ring-2 focus:ring-[#cfe7ea] disabled:cursor-default disabled:bg-[#f5f9f9]"
 				/>
 				{error && (
 					<span
@@ -304,7 +286,7 @@ function hasMultilineOption(question) {
 	return question.options.some((option) => String(option ?? "").includes("\n"));
 }
 
-export function QuestionPrompt({ prompt }) {
+export function QuestionPrompt({ prompt, imageUrl }) {
 	const normalizedPrompt = String(prompt ?? "").replace(/\r\n/g, "\n").trim();
 
 	const configuredMatch = normalizedPrompt.match(/\bConfigured (?:router IPv6 )?interfaces:\s*/i);
@@ -344,6 +326,14 @@ export function QuestionPrompt({ prompt }) {
 						{exhibit}
 					</pre>
 				</section>
+			)}
+			{imageUrl && (
+				<ExhibitImage
+					src={imageUrl}
+					lazy
+					imageClassName="max-h-56 object-contain sm:max-h-64"
+					className="max-w-full"
+				/>
 			)}
 		</div>
 	);

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight, CircleAlert } from "lucide-react";
 import { useAuth } from "../../../context/auth-context";
+import { readCcnaExamProgress } from "../../../utils/ccnaShortExamSession";
 import {
 	beginProgramModuleQuiz,
 	expireProgramModuleQuizAttempt,
@@ -12,6 +13,7 @@ import {
 	CCNA_AUTOMATION_MODULE_QUIZZES,
 	CCNA_CYBERSECURITY_MODULE_QUIZZES,
 } from "./programModuleQuizData";
+import { getProgramExamFormats } from "./programExamFormats";
 
 export const PROGRAM_MODULE_QUIZ_DURATION_SECONDS = 20 * 60;
 const PROGRAM_QUIZZES = {
@@ -23,12 +25,16 @@ function getProgramQuizQuestions(programKey, moduleNumber) {
 	return PROGRAM_QUIZZES[programKey]?.find((quiz) => quiz.number === moduleNumber)?.questions;
 }
 
-function QuizCoverageCard({ attemptedCount, totalModules, coverage }) {
-	const [slide, setSlide] = useState(0);
+function formatExamTime(totalSeconds) {
+	const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, "0");
+	const seconds = (totalSeconds % 60).toString().padStart(2, "0");
+	return `${minutes}:${seconds}`;
+}
 
+function QuizCoverageCard({ attemptedCount, totalModules, coverage, examProgress, examCoverage, progressSlide, setProgressSlide }) {
 	return (
 		<div className="overflow-hidden rounded-[18px] border border-[#d6e5e7] bg-white">
-			<div className="flex transition-transform duration-300 ease-out" style={{ transform: `translateX(-${slide * 100}%)` }}>
+			<div className="flex transition-transform duration-300 ease-out" style={{ transform: `translateX(-${progressSlide * 100}%)` }}>
 				<div className="flex w-full shrink-0 items-center gap-5 p-6">
 					<div
 						role="progressbar"
@@ -49,28 +55,28 @@ function QuizCoverageCard({ attemptedCount, totalModules, coverage }) {
 				<div className="flex w-full shrink-0 items-center gap-5 p-6">
 					<div
 						role="progressbar"
-						aria-label="Exam progress"
+						aria-label="Exam coverage"
 						aria-valuemin={0}
 						aria-valuemax={100}
-						aria-valuenow={0}
+						aria-valuenow={examCoverage}
 						className="relative h-16 w-16 shrink-0 rounded-full"
-						style={{ background: "conic-gradient(#005b6b 0%, #e4eaf4 0)" }}
+						style={{ background: `conic-gradient(#005b6b ${examCoverage}%, #e4eaf4 0)` }}
 					>
-						<span className="absolute inset-[7px] flex items-center justify-center rounded-full bg-white text-xs font-bold text-[#005b6b]">0%</span>
+						<span className="absolute inset-[7px] flex items-center justify-center rounded-full bg-white text-xs font-bold text-[#005b6b]">{examCoverage}%</span>
 					</div>
 					<div className="min-w-0">
 						<strong className="text-lg">Exam progress</strong>
-						<p className="mt-1 text-sm text-[#7c89a1]">Exams are not available yet</p>
+						<p className="mt-1 text-sm text-[#7c89a1]">{examProgress.attemptedCount} of {examProgress.totalCount} exam formats attempted</p>
 					</div>
 				</div>
 			</div>
 			<div className="flex h-8 items-center justify-center gap-2 pb-2" aria-label="Progress panels">
-				<button type="button" onClick={() => setSlide(0)} disabled={slide === 0} aria-label="Show quiz progress" className="rounded-full p-1 text-[#005b6b] transition hover:bg-[#e8f3f4] disabled:cursor-default disabled:opacity-30"><ChevronLeft size={16} /></button>
-				<div className="flex items-center gap-2" aria-hidden="true">
-					<span className={`h-2 rounded-full transition-all ${slide === 0 ? "w-6 bg-[#005b6b]" : "w-2 bg-[#cbd5e1]"}`} />
-					<span className={`h-2 rounded-full transition-all ${slide === 1 ? "w-6 bg-[#005b6b]" : "w-2 bg-[#cbd5e1]"}`} />
+				<button type="button" onClick={() => setProgressSlide(0)} disabled={progressSlide === 0} aria-label="Show quiz progress" className="rounded-full p-1 text-[#005b6b] transition hover:bg-[#e8f3f4] disabled:cursor-default disabled:opacity-30"><ChevronLeft size={16} /></button>
+				<div className="flex items-center gap-2">
+					<button type="button" onClick={() => setProgressSlide(0)} aria-label="Show quiz coverage" aria-current={progressSlide === 0 ? "true" : undefined} className={`h-2 rounded-full transition-all ${progressSlide === 0 ? "w-6 bg-[#005b6b]" : "w-2 bg-[#cbd5e1]"}`} />
+					<button type="button" onClick={() => setProgressSlide(1)} aria-label="Show exam progress" aria-current={progressSlide === 1 ? "true" : undefined} className={`h-2 rounded-full transition-all ${progressSlide === 1 ? "w-6 bg-[#005b6b]" : "w-2 bg-[#cbd5e1]"}`} />
 				</div>
-				<button type="button" onClick={() => setSlide(1)} disabled={slide === 1} aria-label="Show exam progress" className="rounded-full p-1 text-[#005b6b] transition hover:bg-[#e8f3f4] disabled:cursor-default disabled:opacity-30"><ChevronRight size={16} /></button>
+				<button type="button" onClick={() => setProgressSlide(1)} disabled={progressSlide === 1} aria-label="Show exam progress" className="rounded-full p-1 text-[#005b6b] transition hover:bg-[#e8f3f4] disabled:cursor-default disabled:opacity-30"><ChevronRight size={16} /></button>
 			</div>
 		</div>
 	);
@@ -229,7 +235,10 @@ function getModuleResults(modules, attempts) {
 export default function ProgramModuleQuizPanel({ programKey, basePath, modules }) {
 	const { profile } = useAuth();
 	const userId = profile?.userId;
+	const navigate = useNavigate();
 	const [, setProgressRevision] = useState(0);
+	const [progressSlide, setProgressSlide] = useState(0);
+	const [examClockNow, setExamClockNow] = useState(Date.now);
 	const progress = userId ? readProgramModuleQuizProgress(programKey, userId) : { modules: {} };
 	const moduleResults = getModuleResults(modules, progress.modules);
 	const attemptedCount = moduleResults.filter(({ attempt }) =>
@@ -237,13 +246,64 @@ export default function ProgramModuleQuizPanel({ programKey, basePath, modules }
 		(attempt?.status === "in-progress" && Object.keys(attempt.answers ?? {}).length > 0),
 	).length;
 	const coverage = modules.length ? Math.round((attemptedCount / modules.length) * 100) : 0;
+	const examFormats = getProgramExamFormats(programKey) ?? {};
+	const examRuns = Object.entries(examFormats).map(([examKey, exam]) => ({
+		examKey,
+		exam,
+		progress: readCcnaExamProgress(exam.sessionKey, userId),
+	}));
+	const hasActiveExam = examRuns.some(({ progress: examProgress }) => examProgress.status === "in-progress");
+	const attemptedExamCount = examRuns.filter(({ progress: examProgress }) =>
+		examProgress.status !== "not-started",
+	).length;
+	const examCoverage = examRuns.length
+		? Math.round(examRuns.reduce((total, { exam, progress: examProgress }) =>
+			total + Math.min(examProgress.answeredCount, exam.questionCount) / exam.questionCount, 0,
+		) / examRuns.length * 100)
+		: 0;
+
+	useEffect(() => {
+		if (!hasActiveExam) return undefined;
+		const intervalId = window.setInterval(() => setExamClockNow(Date.now()), 1000);
+		return () => window.clearInterval(intervalId);
+	}, [hasActiveExam]);
 
 	return (
 		<div className="min-w-0 space-y-5">
-			<QuizCoverageCard attemptedCount={attemptedCount} totalModules={modules.length} coverage={coverage} />
+			<div
+				className="touch-pan-y"
+				onTouchStart={(event) => {
+					const touch = event.changedTouches[0];
+					event.currentTarget.dataset.touchStartX = String(touch.clientX);
+					event.currentTarget.dataset.touchStartY = String(touch.clientY);
+				}}
+				onTouchEnd={(event) => {
+					const startX = Number(event.currentTarget.dataset.touchStartX);
+					const startY = Number(event.currentTarget.dataset.touchStartY);
+					delete event.currentTarget.dataset.touchStartX;
+					delete event.currentTarget.dataset.touchStartY;
+					const touch = event.changedTouches[0];
+					const deltaX = touch.clientX - startX;
+					const deltaY = touch.clientY - startY;
+					if (Math.abs(deltaX) < 40 || Math.abs(deltaX) <= Math.abs(deltaY)) return;
+					setProgressSlide(deltaX < 0 ? 1 : 0);
+				}}
+			>
+				<QuizCoverageCard
+					attemptedCount={attemptedCount}
+					totalModules={modules.length}
+					coverage={coverage}
+					examProgress={{ attemptedCount: attemptedExamCount, totalCount: examRuns.length }}
+					examCoverage={examCoverage}
+					progressSlide={progressSlide}
+					setProgressSlide={setProgressSlide}
+				/>
+			</div>
 			<div className="min-w-0 overflow-hidden rounded-[18px] border border-[#d6e5e7] bg-white p-4 sm:p-6">
-				<h2 className="mb-5 text-xl font-bold">Practice quizzes</h2>
-				{moduleResults.map(({ module, attempt }) => (
+				{progressSlide === 0 ? (
+					<>
+						<h2 className="mb-5 text-xl font-bold">Practice quizzes</h2>
+						{moduleResults.map(({ module, attempt }) => (
 					<div key={module.number} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border-b border-[#e2ecec] py-3 text-sm last:border-0">
 						<div className="min-w-0">
 							<span className="block truncate font-medium">{module.number} {module.title}</span>
@@ -284,7 +344,59 @@ export default function ProgramModuleQuizPanel({ programKey, basePath, modules }
 							/>
 						</div>
 					</div>
-				))}
+						))}
+					</>
+				) : (
+					<>
+						<h2 className="mb-5 text-xl font-bold">Exam progress</h2>
+						{examRuns.map(({ examKey, exam, progress: examProgress }) => {
+							const answeredCount = examProgress.answeredCount;
+							const statusText = examProgress.status === "completed"
+								? `Completed · Score ${examProgress.score}/${exam.questionCount}`
+								: examProgress.status === "expired"
+									? `Time expired · Score ${examProgress.score}/${exam.questionCount}`
+									: examProgress.status === "in-progress"
+										? `${answeredCount}/${exam.questionCount} answered`
+										: "Not started";
+							const secondsRemaining = examProgress.deadline
+								? Math.max(0, Math.ceil((examProgress.deadline - examClockNow) / 1000))
+								: null;
+
+							return (
+								<div key={examKey} className="border-b border-[#e2ecec] py-3 last:border-0">
+									<div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
+										<div className="min-w-0">
+											<span className="block truncate text-sm font-medium">{exam.name}</span>
+											<span className="mt-0.5 block text-xs text-[#7c89a1]">{exam.questionCount} questions</span>
+											<strong className={`mt-1 block text-sm ${examProgress.status !== "not-started" ? "text-[#005b6b]" : "text-[#8b96a9]"}`}>
+												{statusText}
+											</strong>
+										</div>
+										<div className="flex min-h-[58px] min-w-[112px] flex-col items-end justify-between">
+											<div className="flex h-6 items-center justify-end">
+												{examProgress.status === "in-progress" && secondsRemaining !== null && (
+													<span role="timer" aria-label={`${exam.name}: ${formatExamTime(secondsRemaining)} remaining`} className={`inline-flex min-w-[88px] justify-center whitespace-nowrap rounded-full px-3 py-1 text-xs font-bold tabular-nums ${secondsRemaining <= 60 ? "bg-[#fff0ed] text-[#b42318]" : "bg-[#e8f3f4] text-[#005b6b]"}`}>
+														{formatExamTime(secondsRemaining)} left
+													</span>
+												)}
+											</div>
+											{examProgress.status === "in-progress" && (
+												<button type="button" onClick={() => navigate(`${basePath}/exam/${examKey}`)} className="rounded-full border border-[#c9dfe2] px-3 py-1.5 text-xs font-semibold text-[#005b6b] transition hover:bg-[#e8f3f4]">
+													Continue Exam
+												</button>
+											)}
+										</div>
+									</div>
+									{examProgress.status !== "not-started" && examProgress.status !== "in-progress" && (
+										<div role="progressbar" aria-label={`${exam.name} completion`} aria-valuemin={0} aria-valuemax={100} aria-valuenow={examProgress.status === "completed" ? 100 : Math.round((answeredCount / exam.questionCount) * 100)} className="mt-3 h-1.5 overflow-hidden rounded-full bg-[#e4eaf4]">
+											<div className={`h-full ${examProgress.status === "expired" ? "bg-[#dc2626]" : "bg-[#005b6b]"}`} style={{ width: `${examProgress.status === "completed" ? 100 : Math.round((answeredCount / exam.questionCount) * 100)}%` }} />
+										</div>
+									)}
+								</div>
+							);
+						})}
+					</>
+				)}
 			</div>
 		</div>
 	);

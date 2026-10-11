@@ -1,7 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
-import { ArrowLeft, ArrowRight, BookOpen, Check, ChevronDown, ChevronRight, ClipboardList, Clock3, LockKeyhole } from "lucide-react";
-import { Link } from "react-router-dom";
+import { ArrowLeft, ArrowRight, BookOpen, Check, ChevronDown, ChevronRight, ClipboardList, Clock3, FileQuestion, LockKeyhole, X } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../../context/auth-context";
+import { readCcnaExamProgress } from "../../../utils/ccnaShortExamSession";
+import { readGradebookAssessments } from "../../../utils/gradebookApi";
+import { getProgramExamFormats } from "./programExamFormats";
 
 const NO_HERO_INTROS = [];
 
@@ -19,6 +23,149 @@ function ComingSoonCard({ title, description, icon }) {
 				</span>
 			</div>
 		</div>
+	);
+}
+
+function ProgramExamNotification({ programKey, basePath }) {
+	const { profile } = useAuth();
+	const navigate = useNavigate();
+	const userId = profile?.userId;
+	const examFormats = useMemo(() => getProgramExamFormats(programKey) ?? {}, [programKey]);
+	const examEntries = Object.entries(examFormats);
+	const [examCardIndex, setExamCardIndex] = useState(0);
+	const [isOpen, setIsOpen] = useState(true);
+	const [assessmentsState, setAssessmentsState] = useState({ userId: null, assessments: [], error: null });
+	const assessments = assessmentsState.userId === userId ? assessmentsState.assessments : [];
+	const gradebookError = assessmentsState.userId === userId ? assessmentsState.error : null;
+
+	useEffect(() => {
+		if (!userId) return undefined;
+		let isActive = true;
+		readGradebookAssessments(programKey, userId)
+			.then((loadedAssessments) => {
+				if (isActive) setAssessmentsState({ userId, assessments: loadedAssessments, error: null });
+			})
+			.catch((error) => {
+				console.error(`Unable to load ${programKey} exam notifications.`, error);
+				if (isActive) setAssessmentsState({
+					userId,
+					assessments: [],
+					error: "Exam results could not be loaded from the gradebook.",
+				});
+			});
+		return () => {
+			isActive = false;
+		};
+	}, [programKey, userId]);
+
+	const examCards = examEntries.map(([examKey, exam]) => {
+		const examDisplayName = `${examKey.charAt(0).toUpperCase()}${examKey.slice(1)} Exam`;
+		const progress = readCcnaExamProgress(exam.sessionKey, userId);
+		const result = assessments
+			.filter((assessment) =>
+				assessment.type === "exam" &&
+				(assessment.title === `${exam.name} · ${exam.programName}` || assessment.title === exam.name),
+			)
+			.sort((first, second) => second.submittedAt - first.submittedAt)[0];
+		const hasResult = progress.status !== "in-progress" && (
+			Boolean(result) ||
+			(["completed", "expired"].includes(progress.status) && progress.maxScore > 0)
+		);
+		return {
+			examKey,
+			exam: { ...exam, displayName: examDisplayName },
+			progress,
+			result: result ?? {
+				score: progress.score,
+				maxScore: progress.maxScore,
+				hasResult: false,
+			},
+			hasResult,
+		};
+	});
+
+	if (examCards.length === 0) return null;
+
+	const safeIndex = examCardIndex % examCards.length;
+	const examCard = examCards[safeIndex];
+	const passedExam = examCard.hasResult && examCard.result.score / examCard.result.maxScore >= 0.8;
+	const examActionLabel = examCard.hasResult
+		? "View result"
+		: examCard.progress.status === "in-progress"
+			? "Continue exam"
+			: `Start ${examCard.exam.displayName.toLowerCase()}`;
+	const examPath = `${basePath}/exam/${examCard.examKey}`;
+
+	return (
+		<>
+			<button
+				type="button"
+				onClick={() => setIsOpen((open) => !open)}
+				aria-label={isOpen ? "Close exam notification" : `Open ${examCard.exam.displayName} exam notification`}
+				aria-expanded={isOpen}
+				className="absolute bottom-2 right-2 z-30 flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#005b6b] shadow-[0_8px_20px_rgba(15,35,75,0.1)] transition-all duration-200 ease-out hover:-translate-y-1 hover:scale-110 hover:shadow-lg active:translate-y-0 motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:hover:scale-100"
+			>
+				<FileQuestion size={21} />
+			</button>
+			{isOpen && (
+				<div key={safeIndex} className="ccna-notification-boink absolute bottom-0 right-0 z-30 flex w-[210px] flex-col rounded-2xl border border-[#e4eaf5] bg-white p-3 shadow-[0_14px_28px_rgba(15,35,75,0.1)] transition-transform duration-200 ease-out hover:scale-[1.03] motion-reduce:transition-none motion-reduce:hover:scale-100 sm:right-[-2%] sm:w-[275px] sm:p-4">
+					<button
+						type="button"
+						onClick={() => setIsOpen(false)}
+						aria-label="Close exam notification"
+						className="absolute right-2 top-2 inline-flex h-7 w-7 items-center justify-center rounded-full text-[#64708a] transition hover:bg-[#f0f7f7] hover:text-[#005b6b]"
+					>
+						<X size={16} />
+					</button>
+					<button
+						type="button"
+						onClick={() => setExamCardIndex((index) => (index + 1) % examCards.length)}
+						aria-label={`Show next exam notification. Showing ${examCard.exam.displayName}, ${safeIndex + 1} of ${examCards.length}.`}
+						className="block w-full rounded-lg pr-7 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#005b6b]"
+					>
+						<div className="flex items-center justify-between gap-2">
+							<strong className="text-sm text-[#005b6b]">{profile?.username}</strong>
+							<span className="text-xs font-semibold text-[#7c89a1]">{safeIndex + 1}/{examCards.length}</span>
+						</div>
+						<p className="mt-0.5 text-sm leading-snug text-[#64708a]">
+							{examCard.hasResult
+								? passedExam
+									? `You just passed the ${examCard.exam.displayName.toLowerCase()}!`
+									: `You didn't pass the ${examCard.exam.displayName.toLowerCase()}!`
+								: examCard.progress.status === "in-progress"
+									? `You're taking the ${examCard.exam.displayName.toLowerCase()}!`
+									: `You haven't taken the ${examCard.exam.displayName.toLowerCase()} yet.`}
+							{examCard.hasResult && <span className="mt-1 block">{passedExam ? "Good job! :)" : "Better luck next time! :("}</span>}
+							{examCard.hasResult && <span className="mt-1 block">Score: {examCard.result.score}/{examCard.result.maxScore}</span>}
+							<span className="mt-1 block text-xs text-[#7c89a1]">Click to see the next exam update</span>
+						</p>
+					</button>
+					{gradebookError && <p role="alert" className="mt-2 text-xs text-[#a44b13]">{gradebookError}</p>}
+					{examCard.hasResult ? (
+						<button
+							type="button"
+							onClick={() => navigate(examPath, {
+								state: {
+									showExamResult: true,
+									examResult: {
+										id: examCard.result.id,
+										score: examCard.result.score,
+										maxScore: examCard.result.maxScore,
+									},
+								},
+							})}
+							className="mt-3 flex h-10 w-full items-center justify-center rounded-full bg-[#005b6b] text-sm font-bold text-white transition-all duration-200 ease-out hover:scale-105 hover:bg-[#004653] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100 sm:h-11"
+						>
+							{examActionLabel}
+						</button>
+					) : (
+						<Link to={examPath} className="mt-3 flex h-10 w-full items-center justify-center rounded-full bg-[#005b6b] text-sm font-bold text-white transition-all duration-200 ease-out hover:scale-105 hover:bg-[#004653] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100 sm:h-11">
+							{examActionLabel}
+						</Link>
+					)}
+				</div>
+			)}
+		</>
 	);
 }
 
@@ -88,6 +235,8 @@ export default function CCNAProgramDashboard({
 	gradebookStatsError,
 	heroIntros = NO_HERO_INTROS,
 	overviewDescription,
+	programKey,
+	programPath,
 }) {
 	const [typedIntro, setTypedIntro] = useState("");
 	const [hasScrolled, setHasScrolled] = useState(false);
@@ -176,20 +325,20 @@ export default function CCNAProgramDashboard({
 							</div>
 						)}
 						</div>
-						<div className="group/stats order-3 mt-8 inline-grid w-fit max-w-full grid-cols-3 gap-3 rounded-2xl border border-[#c9dfe2] bg-white p-4 shadow-[0_8px_24px_rgba(0,91,107,0.12)] transition-colors duration-200 lg:hover:border-[#005b6b] lg:hover:bg-[#005b6b] lg:hover:shadow-[0_12px_28px_rgba(0,91,107,0.24)] sm:order-none sm:mt-11 sm:flex sm:flex-wrap sm:gap-5 sm:divide-x sm:divide-[#c9dfe2] sm:p-5">
+						<div className="order-3 mt-8 grid w-full max-w-[680px] grid-cols-[repeat(3,minmax(0,1fr))] overflow-hidden rounded-2xl border border-[#c9dfe2] bg-white shadow-[0_8px_24px_rgba(0,91,107,0.12)] transition-shadow duration-200 hover:shadow-[0_12px_28px_rgba(0,91,107,0.24)] sm:order-none sm:mt-11 sm:p-0">
 							{topStats ?? (
 								<>
-									<div className="flex min-w-0 flex-col items-start gap-1 sm:flex-row sm:items-center sm:gap-3">
-										<strong className="text-xl leading-none tracking-tight text-[#071126] transition-colors duration-200 lg:group-hover/stats:text-white sm:text-[2rem]">{modules.length}</strong>
-										<span className="text-[11px] leading-tight text-[#6f7d99] transition-colors duration-200 lg:group-hover/stats:text-white sm:max-w-20 sm:text-sm">Course modules</span>
+									<div className="program-stat-item flex min-w-0 flex-col items-center gap-1 px-1 py-4 text-center sm:flex-row sm:justify-center sm:gap-3 sm:px-3 sm:py-5">
+										<strong className="text-xl leading-none tracking-tight text-[#071126] sm:text-[2rem]">{modules.length}</strong>
+										<span className="text-[11px] leading-tight text-[#6f7d99] sm:max-w-20 sm:text-left sm:text-sm">Course modules</span>
 									</div>
-									<div className="flex min-w-0 flex-col items-start gap-1 sm:flex-row sm:items-center sm:gap-3 sm:pl-7">
-										<strong className="text-xl leading-none tracking-tight text-[#071126] transition-colors duration-200 lg:group-hover/stats:text-white sm:text-[2rem]">0</strong>
-										<span className="text-[11px] leading-tight text-[#6f7d99] transition-colors duration-200 lg:group-hover/stats:text-white sm:max-w-20 sm:text-sm">Quizzes available</span>
+									<div className="program-stat-item flex min-w-0 flex-col items-center gap-1 border-l border-[#c9dfe2] px-1 py-4 text-center sm:flex-row sm:justify-center sm:gap-3 sm:px-3 sm:py-5">
+										<strong className="text-xl leading-none tracking-tight text-[#071126] sm:text-[2rem]">0</strong>
+										<span className="text-[11px] leading-tight text-[#6f7d99] sm:max-w-20 sm:text-left sm:text-sm">Quizzes available</span>
 									</div>
-									<div className="flex min-w-0 flex-col items-start gap-1 sm:flex-row sm:items-center sm:gap-3 sm:pl-7">
-										<strong className="text-xl leading-none tracking-tight text-[#071126] transition-colors duration-200 lg:group-hover/stats:text-white sm:text-[2rem]">0</strong>
-										<span className="text-[11px] leading-tight text-[#6f7d99] transition-colors duration-200 lg:group-hover/stats:text-white sm:max-w-20 sm:text-sm">Exams available</span>
+									<div className="program-stat-item flex min-w-0 flex-col items-center gap-1 border-l border-[#c9dfe2] px-1 py-4 text-center sm:flex-row sm:justify-center sm:gap-3 sm:px-3 sm:py-5">
+										<strong className="text-xl leading-none tracking-tight text-[#071126] sm:text-[2rem]">0</strong>
+										<span className="text-[11px] leading-tight text-[#6f7d99] sm:max-w-20 sm:text-left sm:text-sm">Exams available</span>
 									</div>
 								</>
 							)}
@@ -198,8 +347,9 @@ export default function CCNAProgramDashboard({
 					</div>
 
 					<div className="relative order-2 mx-auto flex h-[320px] w-full max-w-[440px] items-center justify-center sm:order-none sm:h-[380px] sm:max-w-[470px]">
-						<div aria-hidden="true" className="absolute h-[270px] w-[270px] rounded-full bg-[#e4f0f1] sm:h-[356px] sm:w-[356px]" />
+						<div aria-hidden="true" className="ccna-logo-circle absolute h-[270px] w-[270px] rounded-full bg-[#e4f0f1] sm:h-[356px] sm:w-[356px]" />
 						<img src={badge} alt={`${programName} certification badge`} className="relative z-10 h-[210px] w-[210px] object-contain sm:h-[270px] sm:w-[270px]" />
+						{programKey && programPath && <ProgramExamNotification programKey={programKey} basePath={programPath} />}
 						{gradebookPath ? (
 							<>
 								<div className="absolute left-0 top-[2%] z-20 flex h-[94px] w-[128px] flex-col justify-center rounded-xl border border-[#e4eaf5] bg-white px-4 shadow-[0_14px_28px_rgba(15,35,75,0.1)] transition-transform duration-200 ease-out hover:scale-105 sm:left-[-4px] sm:top-[31%]">

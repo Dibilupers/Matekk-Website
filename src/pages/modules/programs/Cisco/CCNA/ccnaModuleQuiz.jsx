@@ -283,7 +283,7 @@ export default function CCNAModuleQuiz() {
 			score: attempt.score,
 			maxScore: moduleQuiz.questions.length,
 			submittedAt: attempt.submittedAt,
-		}).then(() => {
+		}, userId).then(() => {
 			if (isActive) setGradebookSaveError(null);
 		}).catch((error) => {
 			console.error("Unable to save the quiz result to the gradebook.", error);
