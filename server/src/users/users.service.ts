@@ -180,6 +180,23 @@ export class UsersService {
         };
     }
 
+    async findAuthUserById(
+        userId: number,
+    ): Promise<{ userId: number; username: string; active_status: boolean } | undefined> {
+        const databaseUser = await this.prisma.users.findUnique({
+            where: { id: userId },
+            select: { id: true, username: true, active_status: true },
+        });
+
+        if (!databaseUser) return undefined;
+
+        return {
+            userId: databaseUser.id,
+            username: databaseUser.username,
+            active_status: databaseUser.active_status,
+        };
+    }
+
     async findById(userId: number): Promise<User | undefined> {
         const user = await this.prisma.users.findUnique({
             where: { id: userId },
@@ -207,7 +224,10 @@ export class UsersService {
             active_status: user.active_status,
             pending_status: user.active_status ? 'Active' : 'Pending',
             email: user.email ?? undefined,
-            module_enrolled: getEnrolledProgramNames(user.enrollments, user.programs_enrolled),
+            module_enrolled: getEnrolledProgramNames(
+                user.enrollments ?? [],
+                user.programs_enrolled,
+            ),
             first_name: user.first_name,
             last_name: user.last_name,
             birth_date: user.birth_date,
@@ -215,23 +235,6 @@ export class UsersService {
             city_province: user.city_province,
             phone_number: user.phone_number,
             profile_photo: user.profile_photo,
-        };
-    }
-
-    async findAuthUserById(
-        userId: number,
-    ): Promise<{ userId: number; username: string; active_status: boolean } | undefined> {
-        const databaseUser = await this.prisma.users.findUnique({
-            where: { id: userId },
-            select: { id: true, username: true, active_status: true },
-        });
-
-        if (!databaseUser) return undefined;
-
-        return {
-            userId: databaseUser.id,
-            username: databaseUser.username,
-            active_status: databaseUser.active_status,
         };
     }
 }

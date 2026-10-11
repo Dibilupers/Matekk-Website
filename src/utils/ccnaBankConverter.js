@@ -5,6 +5,7 @@
 //                      ("TCP:\n+ SMTP\n+ HTTP\n\nUDP:\n+ DNS") — become matching questions
 // Questions that can't be turned into something gradable are reported, not guessed.
 import { splitPromptExhibit } from "./splitPromptExhibit";
+import { findCcnaQuestionExplanation } from "./ccnaQuestionExplanations";
 
 // Text that went through the wrong character encoding somewhere ("â€“" should be "–")
 const MOJIBAKE = [
@@ -119,7 +120,7 @@ export function convertBankRow(row) {
       ...(exhibit ? { exhibit } : {}),
       ...(exhibitImage ? { exhibitImage } : {}),
       ...body,
-      explanation: cleanText(row.explanation),
+      explanation: cleanText(row.explanation) || findCcnaQuestionExplanation(prompt),
       bankId: row.id,
       moduleNumber: null,
       moduleTitle: row.module,

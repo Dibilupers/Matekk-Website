@@ -1,11 +1,7 @@
 function Button({
   title,
   btnFunc,
-  type = "default",
-  imageUrl,
   buttonCustomStyle = "",
-  imageCustomStyle = "",
-  formSubmit = "button",
 }) {
   return (
     <button

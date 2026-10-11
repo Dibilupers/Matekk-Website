@@ -21,7 +21,7 @@ import email from "../assets/email.svg";
 import availability from "../assets/availability.svg";
 import Button from "../../src/components/ui/button";
 import Handshake from "../../src/assets/why-choose-melendres.webp";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import TestimonialsSection from "../components/section/TestimonialsSection.jsx";
 import PasserSpotlight from "../components/section/PasserSpotlight.jsx";
 /* Services Section Images */
@@ -242,25 +242,24 @@ export default function Home() {
   const [bottomSlide, setBottomSlide] = useState(0);
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
   const location = useLocation();
-  const [submissionMessage, setSubmissionMessage] = useState("");
+  const navigate = useNavigate();
+  const isInitialMount = useRef(true);
+  const submissionMessage = location.state?.submissionMessage ?? "";
   /* Scroll function for when user comes form another page scrolls to home */
   useEffect(() => {
-    if (location.state?.submissionMessage) {
-      setSubmissionMessage(location.state.submissionMessage);
-      window.history.replaceState({}, document.title);
-      const timer = window.setTimeout(() => setSubmissionMessage(""), 3_000);
-      return () => window.clearTimeout(timer);
-    }
-
     if (location.state?.scrollTo) {
       const element = document.getElementById(location.state.scrollTo);
       if (element) {
         element.scrollIntoView({ behavior: "smooth", block: "start" });
       }
-
-      window.history.replaceState({}, document.title);
     }
-  }, [location.state]);
+
+    if (!location.state) return undefined;
+    const timer = window.setTimeout(() => {
+      navigate(location.pathname, { replace: true, state: null });
+    }, submissionMessage ? 3_000 : 0);
+    return () => window.clearTimeout(timer);
+  }, [location.pathname, location.state, navigate, submissionMessage]);
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
@@ -269,11 +268,13 @@ export default function Home() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
   useEffect(() => {
+    if (!isInitialMount.current) return;
+    isInitialMount.current = false;
     // Only scroll to top on fresh page load (no scrollTo state)
     if (!location.state?.scrollTo) {
       window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     }
-  }, []);
+  }, [location.state?.scrollTo]);
   /* Solutions Gallery Images */
   const [isTouch, setIsTouch] = useState(
     () => window.matchMedia("(hover: none) and (pointer: coarse)").matches,

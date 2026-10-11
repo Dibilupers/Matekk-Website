@@ -1,9 +1,10 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import API_URL from "../config/api";
+import { AuthContext, useAuth } from "./auth-context";
 
-const AuthContext = createContext(null);
+export { useAuth };
+
 const PROFILE_CACHE_KEY = "matekk-session-profile";
-
 const OFFLINE_PROFILE_KEY = "matekkOfflineProfile";
 
 function readOfflineProfile() {
@@ -23,6 +24,18 @@ function readOfflineProfile() {
   }
 }
 
+function readCachedProfile() {
+  try {
+    const cachedProfile = JSON.parse(sessionStorage.getItem(PROFILE_CACHE_KEY) || "null");
+    if (cachedProfile && typeof cachedProfile === "object" && !Array.isArray(cachedProfile)) {
+      return cachedProfile;
+    }
+  } catch {
+    sessionStorage.removeItem(PROFILE_CACHE_KEY);
+  }
+  return readOfflineProfile();
+}
+
 function storeOfflineProfile(profile) {
   if (!profile || (typeof profile.userId !== "string" && typeof profile.userId !== "number")) return;
   localStorage.setItem(OFFLINE_PROFILE_KEY, JSON.stringify({
@@ -35,8 +48,14 @@ function storeOfflineProfile(profile) {
   }));
 }
 
+function clearAuthCaches() {
+  sessionStorage.removeItem(PROFILE_CACHE_KEY);
+  localStorage.removeItem(OFFLINE_PROFILE_KEY);
+  localStorage.removeItem("accessToken");
+}
+
 export function AuthProvider({ children }) {
-  const [profile, setProfile] = useState(readOfflineProfile);
+  const [profile, setProfile] = useState(readCachedProfile);
   const [isLoading, setIsLoading] = useState(true);
   const [isOnline, setIsOnline] = useState(() => navigator.onLine);
 
@@ -55,31 +74,34 @@ export function AuthProvider({ children }) {
       credentials: "include",
     });
     if (!response.ok) {
-      localStorage.removeItem(OFFLINE_PROFILE_KEY);
-      setProfile(null);
+      if (response.status === 401 || response.status === 403) {
+        clearAuthCaches();
+        setProfile(null);
+      }
       throw new Error("Unable to refresh account approval status.");
     }
 
     const nextProfile = await response.json();
     storeOfflineProfile(nextProfile);
     setProfile(nextProfile);
+    sessionStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(nextProfile));
     return nextProfile;
   }
 
   useEffect(() => {
+    localStorage.removeItem("accessToken");
+
     let mounted = true;
-    const cachedProfile = readOfflineProfile();
+    const cachedProfile = readCachedProfile();
     fetch(`${API_URL}/auth/profile`, {
       credentials: "include",
     })
       .then(async (response) => {
         if (!response.ok) {
-          // Signed out or session expired: forget the saved copies. Other errors (server down) fall through to the offline copy.
           if (response.status !== 401 && response.status !== 403) {
             throw new Error("Unable to verify the current session.");
           }
-          sessionStorage.removeItem(PROFILE_CACHE_KEY);
-          localStorage.removeItem(OFFLINE_PROFILE_KEY);
+          clearAuthCaches();
           if (mounted) setProfile(null);
           return;
         }
@@ -126,7 +148,7 @@ export function AuthProvider({ children }) {
       }).catch((logoutError) =>
         console.error("Unable to clear a session after profile loading failed.", logoutError),
       );
-      localStorage.removeItem(OFFLINE_PROFILE_KEY);
+      clearAuthCaches();
       throw error;
     }
     setProfile(signedInProfile);
@@ -136,8 +158,7 @@ export function AuthProvider({ children }) {
   }
 
   function logout() {
-    sessionStorage.removeItem(PROFILE_CACHE_KEY);
-    localStorage.removeItem(OFFLINE_PROFILE_KEY);
+    clearAuthCaches();
     setProfile(null);
     void fetch(`${API_URL}/auth/logout`, {
       method: "POST",
@@ -153,10 +174,4 @@ export function AuthProvider({ children }) {
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-}
-
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth must be used within an AuthProvider");
-  return context;
 }

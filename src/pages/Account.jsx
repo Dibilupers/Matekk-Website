@@ -1,13 +1,20 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowRight, BookOpen, CircleUserRound, FileText, Printer, Search, UserRound, X } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/auth-context";
 import API_URL from "../config/api";
 import { FLAT_COURSES } from "../components/training/courses";
 import { readGradebookAssessments } from "../utils/gradebookApi";
 
 const INPUT_CLASS = "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-[#2f5bea] focus:ring-2 focus:ring-blue-100";
 const LABEL_CLASS = "block space-y-2 text-sm font-semibold text-slate-900";
+
+function cookieFetch(url, options = {}) {
+  return fetch(url, {
+    credentials: "include",
+    ...options,
+  });
+}
 
 function dateInputValue(value) {
   if (!value) return "";
@@ -25,13 +32,13 @@ function AccountSidebar({ view }) {
   return (
     <aside className="w-full lg:sticky lg:top-24 lg:w-64 lg:self-start">
       <h2 className="mb-3 text-2xl font-bold text-slate-950">Account</h2>
-      <nav aria-label="Account pages" className="grid grid-cols-2 overflow-hidden rounded-2xl border border-slate-200 bg-white sm:grid-cols-3 lg:block lg:rounded-none lg:border-x-0 lg:border-t-0">
+      <nav aria-label="Account pages" className="grid grid-cols-2 gap-1 overflow-hidden rounded-2xl border border-slate-200 bg-white p-1 sm:grid-cols-3 lg:grid-cols-1">
         {links.map((link) => (
           <Link
             key={link.to}
             to={link.to}
             aria-current={link.active ? "page" : undefined}
-            className={`flex min-h-14 items-center justify-between gap-2 border-b-2 px-3 py-3 text-sm font-semibold transition sm:px-5 lg:border-b lg:py-4 ${link.active ? "border-[#2f5bea] bg-[#e9f0fd] text-[#2f5bea]" : "border-transparent text-slate-700 hover:bg-slate-50"}`}
+            className={`flex min-h-14 items-center justify-between gap-2 rounded-xl border-b-2 px-3 py-3 text-sm font-semibold transition sm:px-5 lg:py-4 ${link.active ? "border-[#2f5bea] bg-[#e9f0fd] text-[#2f5bea]" : "border-transparent text-slate-700 hover:bg-slate-50"}`}
           >
             <span>{link.label}</span>
             {link.active && <ArrowRight size={18} aria-hidden="true" />}
@@ -67,8 +74,7 @@ function ProfileForm({ profile, refreshProfile }) {
     const controller = new AbortController();
     async function loadProfilePhoto() {
       try {
-        const response = await fetch(`${API_URL}/auth/profile/photo`, {
-          credentials: "include",
+        const response = await cookieFetch(`${API_URL}/auth/profile/photo`, {
           signal: controller.signal,
         });
         const body = await response.json().catch(() => null);
@@ -107,7 +113,7 @@ function ProfileForm({ profile, refreshProfile }) {
     setMessage("");
     setError("");
     try {
-      const response = await fetch(`${API_URL}/auth/profile`, {
+      const response = await cookieFetch(`${API_URL}/auth/profile`, {
         method: "PATCH",
         credentials: "include",
         headers: {
@@ -161,7 +167,7 @@ function ProfileForm({ profile, refreshProfile }) {
         reader.onerror = () => reject(new Error("Unable to read the selected image."));
         reader.readAsDataURL(file);
       });
-      const response = await fetch(`${API_URL}/auth/profile/photo`, {
+      const response = await cookieFetch(`${API_URL}/auth/profile/photo`, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -186,9 +192,8 @@ function ProfileForm({ profile, refreshProfile }) {
     setMessage("");
     setError("");
     try {
-      const response = await fetch(`${API_URL}/auth/profile/photo`, {
+      const response = await cookieFetch(`${API_URL}/auth/profile/photo`, {
         method: "DELETE",
-        credentials: "include",
       });
       const body = await response.json().catch(() => null);
       if (!response.ok) throw new Error(body?.message || "Unable to remove your profile photo.");
@@ -214,7 +219,7 @@ function ProfileForm({ profile, refreshProfile }) {
     }
 
     try {
-      const response = await fetch(`${API_URL}/auth/password`, {
+      const response = await cookieFetch(`${API_URL}/auth/password`, {
         method: "PATCH",
         credentials: "include",
         headers: {
@@ -412,8 +417,7 @@ function LearningHistory() {
     const controller = new AbortController();
     async function loadHistory() {
       try {
-        const response = await fetch(`${API_URL}/auth/learning-history`, {
-          credentials: "include",
+        const response = await cookieFetch(`${API_URL}/auth/learning-history`, {
           signal: controller.signal,
         });
         const body = await response.json().catch(() => null);
@@ -535,8 +539,7 @@ function Transcript({ profile }) {
     let isActive = true;
     async function loadTranscript() {
       try {
-        const historyResponse = await fetch(`${API_URL}/auth/learning-history`, {
-          credentials: "include",
+        const historyResponse = await cookieFetch(`${API_URL}/auth/learning-history`, {
           signal: controller.signal,
         });
         const historyBody = await historyResponse.json().catch(() => null);
@@ -562,7 +565,7 @@ function Transcript({ profile }) {
           return null;
         }).filter(Boolean))];
         const results = await Promise.allSettled(
-          programKeys.map(async (programKey) => [programKey, await readGradebookAssessments(programKey)]),
+          programKeys.map(async (programKey) => [programKey, await readGradebookAssessments(programKey, profile?.userId)]),
         );
         if (!isActive) return;
         const loadedGradebooks = {};
@@ -593,7 +596,7 @@ function Transcript({ profile }) {
       isActive = false;
       controller.abort();
     };
-  }, []);
+  }, [profile?.userId]);
 
   const latestGradebooks = useMemo(() => Object.fromEntries(
     Object.entries(gradebooks).map(([programKey, assessments]) => [

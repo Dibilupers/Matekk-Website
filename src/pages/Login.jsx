@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowRight, Eye, EyeOff, Facebook, Instagram, Phone } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/auth-context";
 import API_URL from "../config/api";
 import NetworkBackground from "../components/NetworkBackground";
 import MainLogo from "../assets/MATEKK_logo.webp";

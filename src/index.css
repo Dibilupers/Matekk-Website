@@ -140,12 +140,380 @@ h6 {
 }
 
 .ccna-match-row-feedback {
+  --ccna-match-row-feedback-start: #e8f3f4;
+  --ccna-match-row-feedback-color: #ffffff;
   animation: ccna-match-row-feedback 680ms ease-out both;
+}
+
+.program-stat-item {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 0;
+}
+
+.program-stat-item:first-child,
+.program-stat-item:first-child::before {
+  border-top-left-radius: 1rem;
+  border-bottom-left-radius: 1rem;
+}
+
+.program-stat-item:last-child,
+.program-stat-item:last-child::before {
+  border-top-right-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+}
+
+.program-stat-item::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  transform: translateY(101%);
+  border-radius: inherit;
+  background: linear-gradient(145deg, #087a91, #005b6b 65%, #004653);
+  content: "";
+  transition: transform 460ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.program-stat-item:hover::before,
+.program-stat-item:focus-within::before {
+  transform: translateY(0);
+}
+
+.program-stat-item > strong,
+.program-stat-item > span {
+  position: relative;
+  z-index: 1;
+  transition: color 180ms ease-out;
+}
+
+.program-stat-item:hover > strong,
+.program-stat-item:hover > span,
+.program-stat-item:focus-within > strong,
+.program-stat-item:focus-within > span {
+  color: #ffffff !important;
+}
+
+.program-faceted-page {
+  background-image:
+    linear-gradient(132deg, transparent 0 13%, rgb(8 122 145 / 3%) 13.1% 22%, transparent 22.1% 100%),
+    linear-gradient(48deg, transparent 0 57%, rgb(8 122 145 / 4%) 57.1% 70%, transparent 70.1% 100%),
+    linear-gradient(135deg, transparent 0 34%, rgb(0 91 107 / 2.5%) 34.1% 45%, transparent 45.1% 100%),
+    linear-gradient(315deg, transparent 0 76%, rgb(255 255 255 / 85%) 76.1% 86%, transparent 86.1% 100%),
+    radial-gradient(ellipse at 50% 45%, rgb(32 197 214 / 5%), transparent 70%);
+  background-size: 100% 100%;
+}
+
+.program-background-particles {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.program-particle-hero {
+  position: relative;
+  isolation: isolate;
+}
+
+.program-particle-hero-content {
+  position: relative;
+  z-index: 10;
+}
+
+.program-background-particle {
+  position: absolute;
+  display: block;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(32 197 214 / 82%) 0 var(--particle-size), rgb(32 197 214 / 13%) calc(var(--particle-size) + 1px), transparent 13px);
+  pointer-events: none;
+  animation: program-particle-float var(--particle-duration) ease-in-out var(--particle-delay) infinite alternate;
+}
+
+@keyframes program-particle-float {
+  from {
+    translate: 0 7px;
+  }
+
+  to {
+    translate: 0 -13px;
+  }
+}
+
+.gradebook-stat-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: #fafbfb;
+  perspective: 700px;
+  transition:
+    border-color 220ms ease-out,
+    box-shadow 220ms ease-out;
+}
+
+.gradebook-stat-card::before {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  transform: translateY(101%);
+  border-radius: inherit;
+  background: linear-gradient(145deg, #087a91, #005b6b 65%, #004653);
+  content: "";
+  transition: transform 460ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.gradebook-stat-content {
+  position: relative;
+  z-index: 1;
+  min-height: inherit;
+}
+
+.gradebook-stat-card:hover::before {
+  transform: translateY(0);
+}
+
+.gradebook-stat-card:hover {
+  border-color: #005b6b;
+  box-shadow: 0 12px 24px rgb(0 91 107 / 16%);
+}
+
+.gradebook-stat-card:hover .gradebook-stat-label,
+.gradebook-stat-card:hover .gradebook-stat-value,
+.gradebook-stat-card:hover .gradebook-stat-detail {
+  color: #ffffff !important;
+}
+
+.gradebook-stat-card:hover .gradebook-stat-progress-track {
+  background-color: rgb(255 255 255 / 28%);
+}
+
+.ccna-logo-circle {
+  border: 3px solid #087a91;
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 85%),
+    0 0 16px rgb(0 91 107 / 24%),
+    inset 0 0 12px rgb(0 91 107 / 10%);
+  transition:
+    scale 260ms ease-out,
+    box-shadow 260ms ease-out;
+}
+
+.ccna-logo-circle::before {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  transform: translateY(-8%);
+  border-radius: inherit;
+  background:
+    linear-gradient(
+      115deg,
+      transparent 15%,
+      rgb(32 197 214 / 22%) 35%,
+      rgb(255 255 255 / 48%) 50%,
+      rgb(156 100 255 / 20%) 65%,
+      transparent 85%
+    );
+  background-size: 220% 220%;
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 260ms ease-out,
+    transform 500ms ease-out,
+    background-position 700ms ease-out;
+}
+
+.ccna-logo-circle:hover,
+.ccna-logo-circle:has(+ img:hover) {
+  scale: 1.05;
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 85%),
+    0 0 28px rgb(0 190 210 / 52%),
+    0 0 48px rgb(156 100 255 / 22%),
+    inset 0 0 16px rgb(0 91 107 / 14%);
+}
+
+.ccna-logo-circle:hover::before,
+.ccna-logo-circle:has(+ img:hover)::before {
+  transform: translateY(0);
+  background-position: 100% 100%;
+  opacity: 0.9;
+}
+
+.ccna-logo-circle::after {
+  position: absolute;
+  inset: -3px;
+  border-radius: inherit;
+  padding: 3px;
+  background: conic-gradient(
+    from 0deg,
+    #005b6b 0deg,
+    #3bc3ce 45deg,
+    #e8ffff 68deg,
+    #138ba0 92deg,
+    #005b6b 160deg,
+    #2da9b6 235deg,
+    #f4ffff 258deg,
+    #087a91 282deg,
+    #005b6b 360deg
+  );
+  content: "";
+  pointer-events: none;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  animation: ccna-logo-ring-shine 6s linear infinite;
+}
+
+[data-theme="dark"] .ccna-logo-circle {
+  border-color: #20a6b8;
+  box-shadow:
+    0 0 0 1px rgb(11 16 36 / 85%),
+    0 0 20px rgb(32 197 214 / 30%),
+    inset 0 0 12px rgb(32 197 214 / 12%);
+}
+
+[data-theme="dark"] .ccna-logo-circle:hover,
+[data-theme="dark"] .ccna-logo-circle:has(+ img:hover) {
+  box-shadow:
+    0 0 0 1px rgb(11 16 36 / 85%),
+    0 0 30px rgb(32 197 214 / 55%),
+    0 0 48px rgb(156 100 255 / 25%),
+    inset 0 0 16px rgb(32 197 214 / 18%);
+}
+
+[data-theme="dark"] .ccna-logo-circle::after {
+  background: conic-gradient(
+    from 0deg,
+    #087a91 0deg,
+    #20c5d6 45deg,
+    #e8ffff 68deg,
+    #138ba0 92deg,
+    #005b6b 160deg,
+    #38bfd0 235deg,
+    #f4ffff 258deg,
+    #087a91 282deg,
+    #005b6b 360deg
+  );
+}
+
+[data-theme="dark"] .ccna-match-board {
+  border-color: #303a60 !important;
+  background-color: #11182f !important;
+}
+
+[data-theme="dark"] .ccna-match-row {
+  border-color: #303a60 !important;
+}
+
+[data-theme="dark"] .ccna-match-row-feedback {
+  --ccna-match-row-feedback-start: #1b2947;
+  --ccna-match-row-feedback-color: #11182f;
+}
+
+[data-theme="dark"] .ccna-match-prompt {
+  color: #e0e5f3 !important;
+}
+
+[data-theme="dark"] .ccna-match-choice[aria-pressed="true"] {
+  border-color: #43b875 !important;
+  background-color: #173a2b !important;
+  color: #b8f2ce !important;
+}
+
+[data-theme="dark"] .ccna-match-choice[aria-pressed="false"] {
+  border-color: #687895 !important;
+  background-color: #1b2947 !important;
+  color: #d7deed !important;
+}
+
+[data-theme="dark"] .ccna-match-choice[aria-pressed="false"]:not(:disabled):hover {
+  border-color: #20c5d6 !important;
+  background-color: #26385a !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .ccna-group-match-item {
+  border-color: #394b70 !important;
+  background-color: #1b2947 !important;
+}
+
+[data-theme="dark"] .ccna-group-match-item-text {
+  color: #e0e5f3 !important;
+}
+
+[data-theme="dark"] .ccna-group-match-box {
+  border-color: #586784 !important;
+}
+
+[data-theme="dark"] .ccna-group-match-box-title {
+  background-color: #3b3525 !important;
+  color: #f5e5a8 !important;
+}
+
+[data-theme="dark"] .ccna-group-match-slot {
+  border-color: #463543 !important;
+  background-color: #302333 !important;
+}
+
+[data-theme="dark"] .ccna-group-match-instructions {
+  color: #b9c5dd !important;
+}
+
+[data-theme="dark"] .ccna-group-match-instructions strong {
+  color: #e0e5f3 !important;
+}
+
+[data-theme="dark"] .ccna-group-match-code {
+  border-color: #4a5d82 !important;
+  background-color: #161d38 !important;
+  color: #8ee8ef !important;
+}
+
+[data-theme="dark"] .ccna-group-match-code:disabled {
+  background-color: #11182f !important;
+  color: #a6b1ce !important;
+}
+
+.course-module-fold {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 620ms cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.course-module-fold.is-open {
+  grid-template-rows: 1fr;
+}
+
+.course-module-fold-inner {
+  min-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition:
+    clip-path 620ms cubic-bezier(0.65, 0, 0.35, 1),
+    opacity 180ms ease-out;
+  clip-path: inset(0 0 100% 0);
+}
+
+.course-module-fold.is-open .course-module-fold-inner {
+  opacity: 1;
+  clip-path: inset(0);
 }
 
 [data-theme="dark"].ccna-page-enter {
   background-color: #0b1024 !important;
   color: #e0e5f3;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .course-module-fold,
+  .course-module-fold-inner {
+    transition-duration: 1ms;
+  }
 }
 
 .ccna-gradebook-banner {
@@ -406,11 +774,17 @@ h6 {
 
 @keyframes ccna-match-row-feedback {
   from {
-    background-color: #e8f3f4;
+    background-color: var(--ccna-match-row-feedback-start);
+  }
+
+  @keyframes ccna-logo-ring-shine {
+    to {
+      transform: rotate(360deg);
+    }
   }
 
   to {
-    background-color: #ffffff;
+    background-color: var(--ccna-match-row-feedback-color);
   }
 }
 
@@ -439,6 +813,31 @@ h6 {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .program-stat-item::before,
+  .program-stat-item > strong,
+  .program-stat-item > span,
+  .gradebook-stat-card::before {
+    transition-duration: 1ms;
+  }
+
+  .program-background-particle {
+    animation: none;
+  }
+
+  .ccna-logo-circle::after {
+    animation: none;
+  }
+
+  .ccna-logo-circle,
+  .ccna-logo-circle::before {
+    transition-duration: 1ms;
+  }
+
+  .ccna-logo-circle:hover,
+  .ccna-logo-circle:has(+ img:hover) {
+    scale: 1;
+  }
+
   .ccna-page-enter,
   .ccna-notification-boink,
   .ccna-validation-shake,

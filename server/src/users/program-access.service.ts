@@ -15,9 +15,22 @@ export class ProgramAccessService {
 
   async assertEnrollment(userId: number, programKey: string): Promise<void> {
     const requestedName = programKey.replace(/-/g, ' ');
-    const program = await this.prisma.program.findFirst({
+    const programSelect = {
+      id: true,
+      name: true,
+      parentId: true,
+      parent: { select: { name: true } },
+    } as const;
+    const rootProgram = await this.prisma.program.findFirst({
+      where: {
+        name: { equals: requestedName, mode: 'insensitive' },
+        parentId: null,
+      },
+      select: programSelect,
+    });
+    const program = rootProgram ?? await this.prisma.program.findFirst({
       where: { name: { equals: requestedName, mode: 'insensitive' } },
-      select: { id: true, name: true, parentId: true },
+      select: programSelect,
     });
     if (!program || toProgramSlug(program.name) !== programKey) {
       throw new NotFoundException('Program not found.');
@@ -25,7 +38,7 @@ export class ProgramAccessService {
 
     const user = await this.prisma.users.findUnique({
       where: { id: userId },
-      select: { role: true },
+      select: { role: true, programs_enrolled: true },
     });
     if (user?.role.trim().toLowerCase() === 'admin') {
       return;
@@ -42,7 +55,14 @@ export class ProgramAccessService {
       select: { programId: true },
     });
 
-    if (!enrollment) {
+    const legacyEnrollments = (user?.programs_enrolled ?? '')
+      .split(',')
+      .map((name) => name.trim().toLowerCase());
+    const hasLegacyEnrollment = [program.name, program.parent?.name]
+      .filter((name): name is string => Boolean(name))
+      .some((name) => legacyEnrollments.includes(name.trim().toLowerCase()));
+
+    if (!enrollment && !hasLegacyEnrollment) {
       throw new ForbiddenException('Enrollment in this program is required.');
     }
   }
