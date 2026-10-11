@@ -139,7 +139,6 @@ export class UsersService {
                 gender: true,
                 city_province: true,
                 phone_number: true,
-                profile_photo: true,
                 enrollments: {
                     select: {
                         program: {
@@ -176,7 +175,6 @@ export class UsersService {
             gender: databaseUser.gender,
             city_province: databaseUser.city_province,
             phone_number: databaseUser.phone_number,
-            profile_photo: databaseUser.profile_photo,
         };
     }
 
@@ -204,7 +202,7 @@ export class UsersService {
             where: { id: userId },
             include: {
                 enrollments: {
-                    select: {
+                    include: {
                         program: {
                             select: {
                                 name: true,
@@ -226,10 +224,7 @@ export class UsersService {
             active_status: user.active_status,
             pending_status: user.active_status ? 'Active' : 'Pending',
             email: user.email ?? undefined,
-            module_enrolled: getEnrolledProgramNames(
-                user.enrollments ?? [],
-                user.programs_enrolled,
-            ),
+            module_enrolled: getEnrolledProgramNames(user.enrollments, user.programs_enrolled),
             first_name: user.first_name,
             last_name: user.last_name,
             birth_date: user.birth_date,

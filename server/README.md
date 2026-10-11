@@ -34,11 +34,7 @@ $ npm install
 ## Compile and run the project
 
 Prisma Client is generated automatically before building or starting the server.
-Copy `server/.env.example` to `server/.env` and replace the placeholder values.
-At minimum, set `DATABASE_URL`, `DIRECT_URL`, and a secure `JWT_SECRET` before
-running the app in production. For local development and tests, the server now
-falls back to a non-production JWT secret so the app can boot without extra
-configuration.
+Make sure `DATABASE_URL` is set in `server/.env`.
 Automatic registration and approval emails use EmailJS. Configure
 `EMAILJS_SERVICE_ID`, `EMAILJS_PUBLIC_KEY`, `EMAILJS_PRIVATE_KEY`,
 `EMAILJS_USER_TEMPLATE_ID`, and `EMAILJS_ADMIN_TEMPLATE_ID`. Set

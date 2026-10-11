@@ -425,7 +425,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null }) {
 						</button>
 					</p>
 				)}
-				{questionsLoading && (
+				{isSubmitted && !isViewingSavedResult && !gradebookSaveError && !gradebookSaved && (
 					<p role="status" className="mb-4 rounded-xl border border-[#d6e5e7] bg-white px-4 py-3 text-sm font-medium text-[#005b6b]">
 						Saving your exam result to the backend gradebook…
 					</p>
@@ -437,8 +437,12 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null }) {
 				)}
 				<header className="mb-7 flex flex-wrap items-center justify-between gap-4 border-b border-[#d6e5e7] pb-5">
 					<div className="flex min-w-0 items-center gap-4">
-						<Link to="/modules/programs/ccna" aria-label="Back to CCNA course" className="ccna-training-logo shrink-0 rounded-lg bg-white px-3 py-2 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
-							<img src={TrainingLogo} alt="MATEKK Cybercore Academy" className="h-auto w-32 sm:w-36" />
+						<Link to={dashboardPath} aria-label={`Back to ${programName} course`} className="group shrink-0 rounded-full bg-white/80 p-2 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 motion-reduce:transition-none">
+							<div className="relative flex h-20 w-20 items-center justify-center rounded-full border border-[#cfe4ea] bg-white shadow-[0_10px_20px_rgba(15,23,42,0.12)]">
+								<div className="flex h-14 w-14 items-center justify-center rounded-full bg-white">
+									<img src={TrainingLogo} alt="MATEKK Cybercore Academy" className="h-10 w-auto object-contain" />
+								</div>
+							</div>
 						</Link>
 						<div className="hidden min-w-0 border-l border-[#cbd5e1] pl-4 sm:block">
 							<p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#70809a]">{programName} exam</p>

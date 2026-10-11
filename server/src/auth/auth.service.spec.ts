@@ -40,7 +40,7 @@ describe('AuthService', () => {
       { signAsync } as unknown as import('@nestjs/jwt').JwtService,
       { hash, verify, needsRehash } as unknown as PasswordService,
       {
-        users: { findFirst, findUnique, findMany, create, update },
+        users: { findFirst, findUnique, create, update },
         enrollment: { findMany },
       } as unknown as PrismaService,
       { sendUserStatusEmail, sendAdminNotification } as unknown as EmailService,
