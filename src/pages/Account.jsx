@@ -25,13 +25,13 @@ function AccountSidebar({ view }) {
   return (
     <aside className="w-full lg:sticky lg:top-24 lg:w-64 lg:self-start">
       <h2 className="mb-3 text-2xl font-bold text-slate-950">Account</h2>
-      <nav aria-label="Account pages" className="grid grid-cols-2 overflow-hidden rounded-2xl border border-slate-200 bg-white sm:grid-cols-3 lg:block lg:rounded-none lg:border-x-0 lg:border-t-0">
+      <nav aria-label="Account pages" className="grid grid-cols-2 gap-1 overflow-hidden rounded-2xl border border-slate-200 bg-white p-1 sm:grid-cols-3 lg:grid-cols-1">
         {links.map((link) => (
           <Link
             key={link.to}
             to={link.to}
             aria-current={link.active ? "page" : undefined}
-            className={`flex min-h-14 items-center justify-between gap-2 border-b-2 px-3 py-3 text-sm font-semibold transition sm:px-5 lg:border-b lg:py-4 ${link.active ? "border-[#2f5bea] bg-[#e9f0fd] text-[#2f5bea]" : "border-transparent text-slate-700 hover:bg-slate-50"}`}
+            className={`flex min-h-14 items-center justify-between gap-2 rounded-xl border-b-2 px-3 py-3 text-sm font-semibold transition sm:px-5 lg:py-4 ${link.active ? "border-[#2f5bea] bg-[#e9f0fd] text-[#2f5bea]" : "border-transparent text-slate-700 hover:bg-slate-50"}`}
           >
             <span>{link.label}</span>
             {link.active && <ArrowRight size={18} aria-hidden="true" />}
