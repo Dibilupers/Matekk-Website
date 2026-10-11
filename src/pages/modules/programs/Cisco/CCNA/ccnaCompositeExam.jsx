@@ -1,7 +1,7 @@
 ﻿import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ArrowLeft, ArrowRight, ArrowUp, Clock3, Flag, Moon, RotateCcw, Sun, X } from "lucide-react";
-import { Link, useBlocker, useLocation, useNavigate } from "react-router-dom";
+import { Link, Navigate, useBlocker, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../../../../context/AuthContext";
 import TrainingLogo from "../../../../../assets/MATEKK_training_logo.png";
 import { CCNA_EXAMS } from "./ccnaExamFormats";
@@ -14,6 +14,7 @@ import { splitPromptExhibit } from "../../../../../utils/splitPromptExhibit";
 import { ExhibitImage, ExhibitText } from "./ccnaExhibit";
 import { loadCcnaQuestionBank } from "../../../../../utils/ccnaQuestionBankApi";
 import { setDatabaseQuestions } from "./ccnaQuestionBank";
+import { getProgramExamFormats } from "../../programExamFormats";
 
 
 
@@ -86,8 +87,11 @@ function formatTime(totalSeconds) {
 	return `${minutes}:${seconds}`;
 }
 
-function CCNACompositeExamPage({ examKey = "short" }) {
-	const exam = CCNA_EXAMS[examKey];
+function CCNACompositeExamPage({ examKey = "short", programKey = null }) {
+	const exam = programKey ? getProgramExamFormats(programKey)?.[examKey] : CCNA_EXAMS[examKey];
+	if (!exam) throw new Error(`No exam is configured for ${programKey ?? "CCNA"} format "${examKey}".`);
+	const programName = exam.programName ?? "CCNA";
+	const dashboardPath = `/modules/programs/${programKey ?? "ccna"}`;
 	const location = useLocation();
 	const navigate = useNavigate();
 	const shouldShowExamResult = location.state?.showExamResult === true;
@@ -198,7 +202,7 @@ function CCNACompositeExamPage({ examKey = "short" }) {
 	}, [answers, attemptId, currentIndex, deadline, isSubmitted, isViewingSavedResult, lockedQuestions, questions, sessionStorageKey, submittedAt]);
 
 	useEffect(() => {
-		if (!isSubmitted || isViewingSavedResult || !userId || !Number.isFinite(submittedAt)) return;
+		if (programKey || !isSubmitted || isViewingSavedResult || !userId || !Number.isFinite(submittedAt)) return;
 		saveCcnaMockExamResult(userId, {
 			id: attemptId,
 			title: exam.name,
@@ -206,17 +210,18 @@ function CCNACompositeExamPage({ examKey = "short" }) {
 			maxScore: questions.length,
 			submittedAt,
 		});
-	}, [attemptId, exam.name, isSubmitted, isViewingSavedResult, questions.length, score, submittedAt, userId]);
+	}, [attemptId, exam.name, isSubmitted, isViewingSavedResult, programKey, questions.length, score, submittedAt, userId]);
 
 	useEffect(() => {
 		if (isAuthLoading || !isOnline || !isSubmitted || isViewingSavedResult || !userId || !Number.isFinite(submittedAt)) return undefined;
 
 		let isActive = true;
-		saveGradebookAssessment("ccna", {
+		const assessmentProgramKey = programKey ?? "ccna";
+		saveGradebookAssessment(assessmentProgramKey, {
 			id: attemptId,
 			type: "exam",
-			programKey: "ccna",
-			title: exam.name,
+			programKey: assessmentProgramKey,
+			title: programKey ? `${exam.name} · ${programName}` : exam.name,
 			score,
 			maxScore: questions.length,
 			submittedAt,
@@ -232,7 +237,7 @@ function CCNACompositeExamPage({ examKey = "short" }) {
 		return () => {
 			isActive = false;
 		};
-	}, [attemptId, exam.name, gradebookSaveAttempt, isAuthLoading, isOnline, isSubmitted, isViewingSavedResult, questions.length, score, submittedAt, userId]);
+	}, [attemptId, exam.name, gradebookSaveAttempt, isAuthLoading, isOnline, isSubmitted, isViewingSavedResult, programKey, programName, questions.length, score, submittedAt, userId]);
 
 	function submitExam(finishedAt = Date.now()) {
 		setSubmittedAt((previousSubmittedAt) => previousSubmittedAt ?? finishedAt);
@@ -413,7 +418,7 @@ function CCNACompositeExamPage({ examKey = "short" }) {
 				)}
 				<header className="mb-7 flex flex-wrap items-center justify-between gap-4 border-b border-[#d6e5e7] pb-5">
 					<div className="flex min-w-0 items-center gap-4">
-						<Link to="/modules/programs/ccna" aria-label="Back to CCNA course" className="group shrink-0 rounded-full bg-white/80 p-2 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 motion-reduce:transition-none">
+						<Link to={dashboardPath} aria-label={`Back to ${programName} course`} className="group shrink-0 rounded-full bg-white/80 p-2 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 motion-reduce:transition-none">
 							<div className="relative flex h-20 w-20 items-center justify-center rounded-full border border-[#cfe4ea] bg-white shadow-[0_10px_20px_rgba(15,23,42,0.12)]">
 								<div className="flex h-14 w-14 items-center justify-center rounded-full bg-white">
 									<img src={TrainingLogo} alt="MATEKK Cybercore Academy" className="h-10 w-auto object-contain" />
@@ -421,7 +426,7 @@ function CCNACompositeExamPage({ examKey = "short" }) {
 							</div>
 						</Link>
 						<div className="hidden min-w-0 border-l border-[#cbd5e1] pl-4 sm:block">
-							<p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#70809a]">CCNA composite exam</p>
+							<p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#70809a]">{programName} exam</p>
 							<p className="mt-1 truncate text-sm font-bold text-[#17233d]">{exam.name} · {exam.subtitle}</p>
 						</div>
 					</div>
@@ -436,7 +441,7 @@ function CCNACompositeExamPage({ examKey = "short" }) {
 							{isDark ? <Sun size={16} /> : <Moon size={16} />}
 							<span className="hidden sm:inline">{isDark ? "Light mode" : "Dark mode"}</span>
 						</button>
-						<Link to="/modules/programs/ccna" className="ccna-dark-hover inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-[#c9dfe2] px-3 py-2 text-xs font-semibold text-[#005b6b] transition-all duration-200 ease-out hover:scale-105 hover:bg-[#e8f3f4] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100 sm:gap-2 sm:px-4 sm:text-sm">
+						<Link to={dashboardPath} className="ccna-dark-hover inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-[#c9dfe2] px-3 py-2 text-xs font-semibold text-[#005b6b] transition-all duration-200 ease-out hover:scale-105 hover:bg-[#e8f3f4] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100 sm:gap-2 sm:px-4 sm:text-sm">
 							<X size={16} /> <span>Exit exam</span>
 						</Link>
 					</div>
@@ -539,7 +544,7 @@ function CCNACompositeExamPage({ examKey = "short" }) {
 							<div>
 								<p className="inline-flex items-center gap-2 rounded-full bg-[#e8f3f4] px-3 py-1.5 text-xs font-bold tracking-wide text-[#005b6b]">
 									<span className="h-2 w-2 rounded-full bg-[#005b6b]" />
-									{exam.name} · CCNA
+									{exam.name} · {programName}
 								</p>
 								<h1 className="mt-5 max-w-xl text-4xl font-extrabold leading-tight tracking-tight text-[#17233d] sm:text-5xl">
 									{examPassed ? (
@@ -760,9 +765,22 @@ function CCNACompositeExamPage({ examKey = "short" }) {
 
 // Loads the database question bank first, so a new attempt draws its questions from it.
 // (If the bank can't be reached, the exam still works with the questions built into the site.)
-export default function CCNACompositeExam(props) {
+export default function CCNACompositeExam({ programKey = null, ...props }) {
+	const routeParams = useParams();
+	const examKey = props.examKey ?? routeParams.examKey ?? "short";
+	const resolvedProgramKey = programKey ?? (
+		routeParams.programKey === "ccna-automation" || routeParams.programKey === "ccna-cybersecurity"
+			? routeParams.programKey
+			: null
+	);
+	const isProgramExam = Boolean(resolvedProgramKey);
 	const [status, setStatus] = useState("loading");
+	const isReady = isProgramExam || status === "ready";
+	const hasValidExam = resolvedProgramKey
+		? Boolean(getProgramExamFormats(resolvedProgramKey)?.[examKey])
+		: Boolean(CCNA_EXAMS[examKey]);
 	useEffect(() => {
+		if (isProgramExam) return undefined;
 		let active = true;
 		loadCcnaQuestionBank()
 			.then(({ questions }) => {
@@ -774,9 +792,10 @@ export default function CCNACompositeExam(props) {
 				if (active) setStatus("ready");
 			});
 		return () => { active = false; };
-	}, []);
+	}, [isProgramExam]);
 
-	if (status === "loading") {
+	if (!hasValidExam) return <Navigate to={`/modules/programs/${resolvedProgramKey ?? "ccna"}`} replace />;
+	if (!isReady) {
 		return (
 			<main className="flex min-h-screen items-center justify-center bg-[#f5f9f9] px-4 text-[#17233d]">
 				<p role="status" className="rounded-2xl border border-[#d6e5e7] bg-white px-6 py-4 text-sm font-semibold text-[#005b6b] shadow-sm">
@@ -785,5 +804,5 @@ export default function CCNACompositeExam(props) {
 			</main>
 		);
 	}
-	return <CCNACompositeExamPage {...props} />;
+	return <CCNACompositeExamPage key={`${resolvedProgramKey ?? "ccna"}-${examKey}`} {...props} examKey={examKey} programKey={resolvedProgramKey} />;
 }

@@ -530,6 +530,22 @@ export default function App() {
           }
         />
         <Route
+          path="/modules/programs/ccna-automation/exam/:examKey"
+          element={
+            <ProtectedRoute>
+              <CCNACompositeExam programKey="ccna-automation" />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/ccna-cybersecurity/exam/:examKey"
+          element={
+            <ProtectedRoute>
+              <CCNACompositeExam programKey="ccna-cybersecurity" />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/modules/programs/ccna/results"
           element={
             <ProtectedRoute>

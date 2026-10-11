@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { ArrowRight, BookOpen, CircleSlash, LayoutGrid, List, Search, X } from "lucide-react";
+import { createPortal } from "react-dom";
+import { ArrowRight, BookOpen, CircleSlash, CircleUserRound, LayoutGrid, List, Search, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import API_URL from "../config/api";
@@ -231,6 +232,7 @@ export default function Blank() {
 	const [programSearch, setProgramSearch] = useState("");
 	const [databasePrograms, setDatabasePrograms] = useState(readCachedPrograms);
 	const [programsError, setProgramsError] = useState("");
+	const [isProfilePhotoZoomed, setIsProfilePhotoZoomed] = useState(false);
 	const profile = sessionProfile;
 	const hasProfile = profile !== null;
 	const [introText] = useState(() => PROGRAM_INTROS[Math.floor(Math.random() * PROGRAM_INTROS.length)]);
@@ -273,6 +275,15 @@ export default function Blank() {
 				};
 			});
 	}, [activeCategory, databasePrograms, enrolledCourses, programSearch]);
+
+	useEffect(() => {
+		if (!isProfilePhotoZoomed) return undefined;
+		function closeOnEscape(event) {
+			if (event.key === "Escape") setIsProfilePhotoZoomed(false);
+		}
+		window.addEventListener("keydown", closeOnEscape);
+		return () => window.removeEventListener("keydown", closeOnEscape);
+	}, [isProfilePhotoZoomed]);
 
 	const selectCategory = (category) => {
 		setActiveCategory(category);
@@ -380,8 +391,21 @@ export default function Blank() {
 				<div className="fade-in-up mb-10 max-w-2xl">
 					<div>
 						<p className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-[#087ff5]">MATEKK Training Academy</p>
-						<h1 className="text-3xl font-bold text-slate-950 sm:text-4xl">
-							Welcome, <span className={typedUsername.length < String(profile.username).length ? "typewriter-caret" : ""}>{typedUsername}</span>
+						<h1 className="flex flex-wrap items-center gap-x-2 text-3xl font-bold text-slate-950 sm:text-4xl">
+							{profile.profile_photo
+								? (
+									<button
+										type="button"
+										onClick={() => setIsProfilePhotoZoomed(true)}
+										aria-label="Zoom in on profile photo"
+										className="h-9 w-9 shrink-0 overflow-hidden rounded-full border border-blue-200 transition-transform hover:scale-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1775ee] sm:h-11 sm:w-11"
+									>
+										<img src={profile.profile_photo} alt="" aria-hidden="true" className="h-full w-full scale-125 object-cover" />
+									</button>
+								)
+								: <CircleUserRound aria-hidden="true" size={40} strokeWidth={1.7} className="shrink-0 text-[#1775ee] sm:h-11 sm:w-11" />}
+							<span>Welcome,</span>
+							<span className={typedUsername.length < String(profile.username).length ? "typewriter-caret" : ""}>{typedUsername}</span>
 						</h1>
 						<p className="mt-3 text-slate-600">
 							<span className="typewriter-caret">{typedIntro}</span>
@@ -518,6 +542,27 @@ export default function Blank() {
 					</section>
 				</div>
 			</div>
+			{isProfilePhotoZoomed && profile.profile_photo && createPortal(
+				<div
+					className="fixed inset-0 z-[120] flex items-center justify-center bg-slate-950/80 p-5 backdrop-blur-sm"
+					onMouseDown={(event) => {
+						if (event.target === event.currentTarget) setIsProfilePhotoZoomed(false);
+					}}
+				>
+					<section role="dialog" aria-modal="true" aria-label="Profile photo" className="relative flex max-h-[90vh] max-w-[90vw] items-center justify-center">
+						<button
+							type="button"
+							onClick={() => setIsProfilePhotoZoomed(false)}
+							aria-label="Close enlarged profile photo"
+							className="absolute -right-3 -top-3 z-10 rounded-full bg-white p-2 text-slate-800 shadow-lg transition hover:scale-105"
+						>
+							<X size={20} />
+						</button>
+						<img src={profile.profile_photo} alt="Enlarged profile photo" className="max-h-[85vh] max-w-[90vw] rounded-full object-contain shadow-2xl" />
+					</section>
+				</div>,
+				document.body,
+			)}
 		</main>
 	);
 }
