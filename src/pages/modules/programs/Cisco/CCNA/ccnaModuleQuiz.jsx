@@ -157,6 +157,7 @@ export default function CCNAModuleQuiz() {
 	const [animatedResult, setAnimatedResult] = useState({ key: null, score: 0, elapsedSeconds: 0 });
 	const [backToTopVisibility, setBackToTopVisibility] = useState({ key: null, visible: false });
 	const [gradebookSaveError, setGradebookSaveError] = useState(null);
+	const [gradebookSaveAttempt, setGradebookSaveAttempt] = useState(0);
 	const answerReviewRef = useRef(null);
 	const resultsTopRef = useRef(null);
 	const attempt = useMemo(
@@ -282,17 +283,19 @@ export default function CCNAModuleQuiz() {
 			score: attempt.score,
 			maxScore: moduleQuiz.questions.length,
 			submittedAt: attempt.submittedAt,
+		}).then(() => {
+			if (isActive) setGradebookSaveError(null);
 		}).catch((error) => {
 			console.error("Unable to save the quiz result to the gradebook.", error);
 			if (isActive) {
-				setGradebookSaveError("Your quiz result could not be saved to the backend gradebook.");
+				setGradebookSaveError(error instanceof Error ? error.message : "The gradebook request failed.");
 			}
 		});
 
 		return () => {
 			isActive = false;
 		};
-	}, [attempt.attempts, attempt.score, attempt.status, attempt.submittedAt, courseTitle, isCompleted, moduleQuiz, programKey, userId]);
+	}, [attempt.attempts, attempt.score, attempt.status, attempt.submittedAt, courseTitle, gradebookSaveAttempt, isCompleted, moduleQuiz, programKey, userId]);
 
 	useEffect(() => {
 		if (!isCompleted || !isAnswerReviewVisible) return undefined;
@@ -478,7 +481,17 @@ export default function CCNAModuleQuiz() {
 			<div className="mx-auto min-w-0 max-w-[1125px]">
 				{gradebookSaveError && isCompleted && (
 					<p role="alert" className="mb-4 rounded-xl border border-[#f2c6c3] bg-white px-4 py-3 text-sm font-medium text-[#b42318]">
-						{gradebookSaveError} Reload this page to retry.
+						Your quiz result could not be saved to the backend gradebook. {gradebookSaveError}{" "}
+						<button
+							type="button"
+							onClick={() => {
+								setGradebookSaveError(null);
+								setGradebookSaveAttempt((attempt) => attempt + 1);
+							}}
+							className="font-bold underline underline-offset-2 hover:no-underline"
+						>
+							Retry save
+						</button>
 					</p>
 				)}
 				<header className="mb-7 flex flex-col gap-4 border-b border-[#d6e5e7] pb-5 sm:flex-row sm:items-center sm:justify-between">

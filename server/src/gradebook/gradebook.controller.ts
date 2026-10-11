@@ -7,7 +7,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { CurrentUser } from '../auth/decorators/current-user.decorator.js';
-import type { SaveGradebookDto } from './dto/save-gradebook.dto.js';
+import { SaveGradebookDto } from './dto/save-gradebook.dto.js';
 import { GradebookService } from './gradebook.service.js';
 
 interface AuthenticatedUser {

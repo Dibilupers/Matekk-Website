@@ -9,7 +9,10 @@ async function readResponse(response) {
 	try {
 		return JSON.parse(body);
 	} catch {
-		throw new TypeError("The gradebook API returned an invalid JSON response.");
+		const contentType = response.headers.get("content-type") ?? "unknown content type";
+		throw new TypeError(
+			`The gradebook API returned a non-JSON response (${contentType}). Check that VITE_API_URL points to the backend.`,
+		);
 	}
 }
 
