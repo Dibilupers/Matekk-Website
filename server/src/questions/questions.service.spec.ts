@@ -160,6 +160,29 @@ describe('QuestionsService', () => {
     expect(prismaMock.examAttempt.create.mock.calls[0][0].data.userId).toBe(7);
   });
 
+  it('shows every second one-to-one matching question as circles, with at least one per 50-question block', async () => {
+    const bank = examQuestionBank(100);
+    const extraMatches = Array.from({ length: 10 }, (_, index) => ({
+      ...bank[bank.length - 1],
+      id: 1000 + index,
+      question_text: `Extra match question ${index + 1}`,
+    }));
+    prismaMock.questions.findMany.mockResolvedValue([...bank, ...extraMatches]);
+
+    const attempt = await service.startExam('medium', 7);
+    const matches = attempt.questions.filter((question) => question.type === 'match');
+
+    expect(matches).toHaveLength(10);
+    for (const block of [attempt.questions.slice(0, 50), attempt.questions.slice(50, 100)]) {
+      const blockMatches = block.filter((question) => question.type === 'match');
+      expect(blockMatches.some((question) => 'matchStyle' in question && question.matchStyle === 'lines')).toBe(true);
+      expect(blockMatches.some((question) => !('matchStyle' in question))).toBe(true);
+    }
+    // the saved attempt keeps the style, so a resumed exam shows the same question the same way
+    const saved = prismaMock.examAttempt.create.mock.calls[0][0].data.questionSet as { matchStyle?: string }[];
+    expect(saved.some((question) => question.matchStyle === 'lines')).toBe(true);
+  });
+
   it('returns signed database image URLs with exam questions', async () => {
     const imagePath = 'questions/ccna-exhibit.webp';
     const signedUrl = 'https://storage.example/questions/ccna-exhibit.webp?token=signed';
