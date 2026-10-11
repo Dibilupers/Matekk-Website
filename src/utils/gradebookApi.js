@@ -1,10 +1,19 @@
 import API_URL from "../config/api";
 
 async function readResponse(response) {
-	if (!response.ok) {
-		throw new Error(`Gradebook request failed (${response.status}).`);
-	}
 	const body = await response.text();
+	if (!response.ok) {
+		// Include the server's own reason when it sent one
+		let detail = "";
+		try {
+			const message = JSON.parse(body)?.message;
+			if (typeof message === "string") detail = message;
+			else if (Array.isArray(message)) detail = message.filter((item) => typeof item === "string").join(" ");
+		} catch {
+			// The status remains useful when a proxy or server returns a non-JSON error body.
+		}
+		throw new Error(`Gradebook request failed (${response.status})${detail ? `: ${detail}` : "."}`);
+	}
 	if (!body.trim()) return null;
 	try {
 		return JSON.parse(body);
