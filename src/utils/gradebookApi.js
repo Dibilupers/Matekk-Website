@@ -68,5 +68,34 @@ export async function saveGradebookAssessments(programKey, assessments) {
 }
 
 export async function saveGradebookAssessment(programKey, assessment) {
-	return saveGradebookAssessments(programKey, [assessment]);
+	if (
+		typeof assessment?.id !== "string" ||
+		!Number.isFinite(assessment.score) ||
+		!Number.isFinite(assessment.maxScore) ||
+		assessment.maxScore <= 0 ||
+		!Number.isFinite(assessment.submittedAt)
+	) {
+		throw new TypeError("A gradebook assessment must include an ID, valid score, maximum score, and submission time.");
+	}
+
+	const response = await fetch(`${API_URL}/gradebook/${encodeURIComponent(programKey)}/assessments`, {
+		method: "POST",
+		credentials: "include",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({ assessment }),
+	});
+	const gradebook = await readResponse(response);
+	const savedAssessment = gradebook?.data?.assessments?.[assessment.id];
+	if (
+		!savedAssessment ||
+		savedAssessment.id !== assessment.id ||
+		savedAssessment.score !== assessment.score ||
+		savedAssessment.maxScore !== assessment.maxScore ||
+		savedAssessment.submittedAt !== assessment.submittedAt
+	) {
+		throw new Error("The backend did not confirm that this assessment was saved to UserGradebook.");
+	}
+	return gradebook;
 }

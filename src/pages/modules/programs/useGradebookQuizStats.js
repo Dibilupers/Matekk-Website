@@ -31,6 +31,7 @@ function getLatestQuizStats(assessments, modules) {
 
 export default function useGradebookQuizStats(programKey, userId, modules, fallbackAttempted, fallbackAverage) {
 	const [backendState, setBackendState] = useState(null);
+	const [retryCount, setRetryCount] = useState(0);
 	const fallbackStatsRef = useRef({ attempted: fallbackAttempted, average: fallbackAverage });
 	const hasCurrentBackendState = backendState?.programKey === programKey && backendState?.userId === userId;
 
@@ -68,9 +69,12 @@ export default function useGradebookQuizStats(programKey, userId, modules, fallb
 		return () => {
 			isActive = false;
 		};
-	}, [modules, programKey, userId]);
+	}, [modules, programKey, retryCount, userId]);
 
-	return hasCurrentBackendState
-		? backendState
-		: { stats: { attempted: fallbackAttempted, average: fallbackAverage }, error: null };
+	return {
+		...(hasCurrentBackendState
+			? backendState
+			: { stats: { attempted: fallbackAttempted, average: fallbackAverage }, error: null }),
+		retry: () => setRetryCount((count) => count + 1),
+	};
 }

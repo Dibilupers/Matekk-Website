@@ -25,14 +25,24 @@ describe('GradebookService', () => {
     });
     await service.save(12, 'ccna', {
       assessments: {
-        'exam:attempt-1': { id: 'exam:attempt-1', score: 40 },
+        'exam:attempt-1': {
+          id: 'exam:attempt-1',
+          type: 'exam',
+          examFormat: 'long',
+          score: 40,
+        },
       },
     });
 
     expect(savedData).toEqual({
       assessments: {
         'quiz:1.0:1': { id: 'quiz:1.0:1', score: 8 },
-        'exam:attempt-1': { id: 'exam:attempt-1', score: 40 },
+        'exam:attempt-1': {
+          id: 'exam:attempt-1',
+          type: 'exam',
+          examFormat: 'long',
+          score: 40,
+        },
       },
     });
     expect(findUnique).toHaveBeenCalledTimes(2);
@@ -52,6 +62,45 @@ describe('GradebookService', () => {
 
     expect(assertEnrollment).toHaveBeenCalledWith(12, 'ccna');
     expect(findUnique).toHaveBeenCalled();
+  });
+
+  it('saves one assessment after checking enrollment', async () => {
+    let savedData: Record<string, unknown> | null = null;
+    const findUnique = vi.fn(async () => savedData ? { data: savedData } : null);
+    const upsert = vi.fn(async ({ create, update }: {
+      create: { data: Record<string, unknown> };
+      update: { data: Record<string, unknown> };
+    }) => {
+      savedData = update.data ?? create.data;
+      return { data: savedData, updatedAt: new Date() };
+    });
+    const assertEnrollment = vi.fn(async () => undefined);
+    const service = new GradebookService(
+      { userGradebook: { findUnique, upsert } } as unknown as PrismaService,
+      { assertEnrollment } as never,
+    );
+    const assessment = {
+      id: 'exam:long:attempt-1',
+      type: 'exam',
+      examFormat: 'long',
+      score: 42,
+      maxScore: 50,
+      submittedAt: 123456,
+    };
+
+    const result = await service.saveAssessment(12, 'ccna', assessment);
+
+    expect(assertEnrollment).toHaveBeenCalledWith(12, 'ccna');
+    expect(result.data).toEqual({ assessments: { [assessment.id]: assessment } });
+    expect(upsert).toHaveBeenCalledWith(expect.objectContaining({
+      where: { userId_programKey: { userId: 12, programKey: 'ccna' } },
+      create: {
+        userId: 12,
+        programKey: 'ccna',
+        data: { assessments: { [assessment.id]: assessment } },
+      },
+      update: { data: { assessments: { [assessment.id]: assessment } } },
+    }));
   });
 
   it('records a trusted completed assessment without requiring a second enrollment check', async () => {
@@ -75,6 +124,7 @@ describe('GradebookService', () => {
       score: 42,
       maxScore: 50,
       submittedAt: 123456,
+      examFormat: 'medium',
     });
 
     expect(savedData).toEqual({
@@ -85,6 +135,7 @@ describe('GradebookService', () => {
           score: 42,
           maxScore: 50,
           submittedAt: 123456,
+          examFormat: 'medium',
         },
       },
     });

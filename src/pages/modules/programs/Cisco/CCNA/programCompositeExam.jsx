@@ -100,7 +100,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null }) {
 	const shouldShowExamResult = location.state?.showExamResult === true;
 	const linkedExamResult = location.state?.examResult;
 	const shouldStartNewAttempt = location.state?.retakeExam === true;
-	const { profile, isLoading: isAuthLoading, isOnline } = useAuth();
+	const { profile, isLoading: isAuthLoading } = useAuth();
 	const userId = profile?.userId;
 	// Each student's exam progress is saved separately (per signed-in user)
 	const sessionStorageKey = userId === null || userId === undefined
@@ -183,6 +183,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null }) {
 		);
 	const [isDark, setIsDark] = useState(false);
 	const [gradebookSaveError, setGradebookSaveError] = useState(null);
+	const [gradebookSaved, setGradebookSaved] = useState(false);
 	const [gradebookSaveAttempt, setGradebookSaveAttempt] = useState(0);
 
 	useEffect(() => {
@@ -216,23 +217,29 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null }) {
 	}, [attemptId, exam.name, isSubmitted, isViewingSavedResult, programKey, questions.length, score, submittedAt, userId]);
 
 	useEffect(() => {
-		if (isAuthLoading || !isOnline || !isSubmitted || isViewingSavedResult || !userId || !Number.isFinite(submittedAt)) return undefined;
+		if (isAuthLoading || !isSubmitted || isViewingSavedResult || !userId || !Number.isFinite(submittedAt)) return undefined;
 
 		let isActive = true;
 		const assessmentProgramKey = programKey ?? "ccna";
 		saveGradebookAssessment(assessmentProgramKey, {
-			id: attemptId,
+			id: `exam:${examKey}:${attemptId}`,
+			attemptId,
 			type: "exam",
 			programKey: assessmentProgramKey,
+			examFormat: examKey,
 			title: programKey ? `${exam.name} · ${programName}` : exam.name,
 			score,
 			maxScore: questions.length,
 			submittedAt,
 		}).then(() => {
-			if (isActive) setGradebookSaveError(null);
-		}).catch((error) => {
-			console.error("Unable to save the exam result to the gradebook.", error);
 			if (isActive) {
+				setGradebookSaveError(null);
+				setGradebookSaved(true);
+			}
+		}).catch((error) => {
+			console.error("Unable to save the exam result to UserGradebook.", error);
+			if (isActive) {
+				setGradebookSaved(false);
 				setGradebookSaveError(error instanceof Error ? error.message : "The gradebook request failed.");
 			}
 		});
@@ -240,7 +247,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null }) {
 		return () => {
 			isActive = false;
 		};
-	}, [attemptId, exam.name, gradebookSaveAttempt, isAuthLoading, isOnline, isSubmitted, isViewingSavedResult, programKey, programName, questions.length, score, submittedAt, userId]);
+	}, [attemptId, exam.name, examKey, gradebookSaveAttempt, isAuthLoading, isSubmitted, isViewingSavedResult, programKey, programName, questions.length, score, submittedAt, userId]);
 
 	function submitExam(finishedAt = Date.now()) {
 		setSubmittedAt((previousSubmittedAt) => previousSubmittedAt ?? finishedAt);
@@ -352,6 +359,8 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null }) {
 		setDeadline(newSession.deadline);
 		setAttemptId(newSession.attemptId);
 		setSubmittedAt(null);
+		setGradebookSaved(false);
+		setGradebookSaveError(null);
 		setSecondsRemaining(exam.durationSeconds);
 		setIsSubmitted(false);
 		setExamAttempt((attempt) => attempt + 1);
@@ -417,6 +426,16 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null }) {
 						>
 							Retry save
 						</button>
+					</p>
+				)}
+				{isSubmitted && !isViewingSavedResult && !gradebookSaveError && !gradebookSaved && (
+					<p role="status" className="mb-4 rounded-xl border border-[#d6e5e7] bg-white px-4 py-3 text-sm font-medium text-[#005b6b]">
+						Saving your exam result to the backend gradebook…
+					</p>
+				)}
+				{isSubmitted && !isViewingSavedResult && gradebookSaved && (
+					<p role="status" className="mb-4 rounded-xl border border-[#b8dfce] bg-white px-4 py-3 text-sm font-medium text-[#16724e]">
+						Your exam result was saved to the backend gradebook.
 					</p>
 				)}
 				<header className="mb-7 flex flex-wrap items-center justify-between gap-4 border-b border-[#d6e5e7] pb-5">
@@ -662,7 +681,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null }) {
 														{item.isCorrect ? "Correct" : "Incorrect"}
 													</span>
 												</div>
-												<h3 className="mt-4 text-lg font-bold leading-snug text-[#17233d] sm:text-xl">{item.prompt}</h3>
+												<h3 className="ccna-exam-review-question mt-4 text-[#17233d]">{item.prompt}</h3>
 												{item.exhibitImage && (
 													<ExhibitImage src={item.exhibitImage} lazy className="mt-4" imageClassName="max-h-[26rem]" />
 												)}

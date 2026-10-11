@@ -329,6 +329,7 @@ export class QuestionsService {
       id: attempt.id,
       type: 'exam',
       programKey: 'ccna',
+      examFormat: examKey,
       title: config.title,
       score: attempt.score,
       maxScore: questionSet.length,

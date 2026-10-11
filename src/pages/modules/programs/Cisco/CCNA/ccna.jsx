@@ -517,6 +517,7 @@ export default function CCNA() {
 	const {
 		stats: gradebookQuizStats,
 		error: gradebookStatsError,
+		retry: retryGradebookStats,
 	} = useGradebookQuizStats(
 		"ccna",
 		userId,
@@ -713,7 +714,18 @@ export default function CCNA() {
 							<div className="min-w-0 sm:pl-7"><Stat value={`${quizAverage}%`} label="Quiz average" /></div>
 							<div className="min-w-0 sm:pl-7"><Stat value={remainingModules} label="Modules left" /></div>
 						</div>
-						{gradebookStatsError && <p role="alert" className="mt-2 text-xs font-medium text-[#a44b13]">{gradebookStatsError}</p>}
+						{gradebookStatsError && (
+							<p role="alert" className="mt-2 flex flex-wrap items-center gap-x-2 text-xs font-medium text-[#a44b13]">
+								<span>{gradebookStatsError}</span>
+								<button
+									type="button"
+									onClick={retryGradebookStats}
+									className="font-bold underline underline-offset-2 hover:no-underline"
+								>
+									Retry
+								</button>
+							</p>
+						)}
 					</div>
 					<NetworkIllustration quizAverage={quizAverage} examCards={examCards} />
 				</div>
