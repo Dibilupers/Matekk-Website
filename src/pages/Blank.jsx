@@ -274,15 +274,6 @@ export default function Blank() {
 			});
 	}, [activeCategory, databasePrograms, enrolledCourses, programSearch]);
 
-	useEffect(() => {
-		if (!isDpPreviewOpen) return undefined;
-		function closeOnEscape(event) {
-			if (event.key === "Escape") setIsDpPreviewOpen(false);
-		}
-		window.addEventListener("keydown", closeOnEscape);
-		return () => window.removeEventListener("keydown", closeOnEscape);
-	}, [isDpPreviewOpen]);
-
 	const selectCategory = (category) => {
 		setActiveCategory(category);
 	};
