@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { groupCode, groupSizes, matchMode, parseGroupCode, questionType, requiredSelections } from "../../../../../utils/ccnaExamGrading";
 import { getDisplayedOption, parseFormattedOptions } from "./ccnaExamQuestionFormatting";
 import { MatchingQuestionInput, MatchingQuestionReview } from "./ccnaExamMatching";
@@ -7,14 +7,14 @@ const letter = (i) => String.fromCharCode(65 + i);
 
 // Answer choices that are router/switch commands (e.g. "R1(config)#ip route ...") are shown like a terminal:
 // monospace, one command per line (some imported questions had all commands squashed onto one line).
-const CLI_PROMPT = /(^|\s)[\w.-]+(\([\w-]+\))?#/;
+const CLI_PROMPT = /(^|\s)[\w.-]+(\([\w-]+\))?[>#]/;
 const isCliText = (text) => typeof text === "string" && CLI_PROMPT.test(text);
-const splitCliLines = (text) => text.replace(/[ \t]+(?=[\w.-]+(\([\w-]+\))?#)/g, "\n");
+const splitCliLines = (text) => text.replace(/[ \t]+(?=[\w.-]+(\([\w-]+\))?[>#])/g, "\n");
 
 function OptionText({ text, className = "" }) {
 	if (!isCliText(text)) return <span className={`whitespace-pre-wrap ${className}`}>{text}</span>;
 	return (
-		<code className={`block min-w-0 max-w-full flex-1 overflow-x-hidden whitespace-pre-wrap break-words rounded-lg bg-[#f1f5f9] px-3 py-2 font-mono text-[13px] leading-6 text-[#0f1b2d] [overflow-wrap:anywhere] sm:text-sm ${className}`}>
+		<code className={`block min-w-0 w-full max-w-full flex-1 overflow-x-hidden break-words whitespace-pre-wrap rounded-lg bg-[#f1f5f9] px-2 py-1.5 font-mono text-xs leading-5 text-[#0f1b2d] [overflow-wrap:anywhere] sm:px-3 sm:py-2 sm:text-sm sm:leading-6 ${className}`}>
 			{splitCliLines(text)}
 		</code>
 	);
@@ -28,17 +28,74 @@ function stableShuffle(indexes, seed) {
 	return [...indexes].sort((a, b) => hash(seed + a) - hash(seed + b));
 }
 
+function animateChoiceCopies(root, target, choiceIndex) {
+	if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+	const targetRect = target.getBoundingClientRect();
+	const copies = [...root.querySelectorAll(`[data-match-choice="${choiceIndex}"]`)]
+		.filter((choice) => choice !== target)
+		.map((choice) => {
+			const rect = choice.getBoundingClientRect();
+			if (rect.bottom <= 0 || rect.top >= window.innerHeight || rect.right <= 0 || rect.left >= window.innerWidth) return null;
+
+			const clone = choice.cloneNode(true);
+			const computed = window.getComputedStyle(choice);
+			for (const property of [
+				"background-color", "border", "border-radius", "box-shadow", "box-sizing", "color",
+				"display", "font-family", "font-size", "font-weight", "line-height", "padding", "text-align",
+			]) {
+				clone.style.setProperty(property, computed.getPropertyValue(property));
+			}
+			Object.assign(clone.style, {
+				position: "fixed",
+				left: `${rect.left}px`,
+				top: `${rect.top}px`,
+				width: `${rect.width}px`,
+				height: `${rect.height}px`,
+				margin: "0",
+				pointerEvents: "none",
+				zIndex: "1200",
+			});
+			clone.setAttribute("aria-hidden", "true");
+			clone.tabIndex = -1;
+			document.body.append(clone);
+			return { clone, rect };
+		})
+		.filter(Boolean);
+
+	copies.forEach(({ clone, rect }, index) => {
+		const x = targetRect.left + targetRect.width / 2 - (rect.left + rect.width / 2);
+		const y = targetRect.top + targetRect.height / 2 - (rect.top + rect.height / 2);
+		const animation = clone.animate(
+			[
+				{ transform: "translate(0, 0) scale(1)", opacity: 1 },
+				{
+					transform: `translate(${x}px, ${y}px) scale(${targetRect.width / rect.width}, ${targetRect.height / rect.height})`,
+					opacity: 0,
+				},
+			],
+			{ duration: 720, delay: Math.min(index * 30, 150), easing: "cubic-bezier(0.22, 0.61, 0.36, 1)" },
+		);
+		animation.onfinish = () => clone.remove();
+		animation.oncancel = () => clone.remove();
+	});
+}
+
 function AssignMatchInput({ question, value, onChange, disabled }) {
 	const choiceOrder = stableShuffle(question.choices.map((_, i) => i), question.prompt);
 	const current = Array.isArray(value) ? value : question.items.map(() => null);
+	const rootRef = useRef(null);
 	const used = new Set(current.filter((v) => Number.isInteger(v)));
-	const place = (itemIndex, choiceIndex) => {
+	const place = (itemIndex, choiceIndex, target) => {
+		if (current[itemIndex] !== choiceIndex) {
+			animateChoiceCopies(rootRef.current, target, choiceIndex);
+		}
 		const next = [...current];
 		next[itemIndex] = next[itemIndex] === choiceIndex ? null : choiceIndex;
 		onChange(next);
 	};
 	return (
-		<div className="space-y-3">
+		<div ref={rootRef} className="space-y-3">
 			<p className="text-sm text-[#70809a]">Click a box on the right to place it next to the matching item. Click a placed box to undo it.</p>
 			<div className="overflow-hidden rounded-2xl border border-[#d9e1ef] bg-white">
 				{question.items.map((item, itemIndex) => {
@@ -47,7 +104,7 @@ function AssignMatchInput({ question, value, onChange, disabled }) {
 						? [picked]
 						: choiceOrder.filter((i) => !used.has(i));
 					return (
-						<div key={itemIndex} className="grid gap-3 border-b border-[#e6ecf3] px-4 py-3 last:border-b-0 sm:grid-cols-[minmax(0,0.9fr)_minmax(0,1.4fr)] sm:items-center">
+						<div key={itemIndex} className={`grid gap-3 border-b border-[#e6ecf3] px-4 py-3 last:border-b-0 sm:grid-cols-[minmax(0,0.9fr)_minmax(0,1.4fr)] sm:items-center ${Number.isInteger(picked) ? "ccna-match-row-feedback" : ""}`}>
 							<span className="text-[15px] font-semibold whitespace-pre-wrap text-[#263654] sm:text-base">{item}</span>
 							<div className="flex flex-wrap gap-2">
 								{available.map((choiceIndex) => {
@@ -56,8 +113,9 @@ function AssignMatchInput({ question, value, onChange, disabled }) {
 										<button
 											key={choiceIndex}
 											type="button"
+											data-match-choice={choiceIndex}
 											disabled={disabled}
-											onClick={() => place(itemIndex, choiceIndex)}
+											onClick={(event) => place(itemIndex, choiceIndex, event.currentTarget)}
 											aria-pressed={isPlaced}
 											aria-label={isPlaced ? `${question.choices[choiceIndex]} (placed, click to undo)` : `Place ${question.choices[choiceIndex]} here`}
 											className={`rounded-lg px-3 py-2 text-left text-sm font-semibold transition-all duration-300 ease-out disabled:cursor-default motion-reduce:transition-none ${isPlaced
@@ -81,10 +139,10 @@ function AssignMatchInput({ question, value, onChange, disabled }) {
    item numbers group by group (e.g. "1324" = 1 and 3 in the first group, 2 and 4 in the second). */
 function GroupMatchInput({ question, value, onChange, disabled }) {
 	const [code, setCode] = useState(() => groupCode(question, value));
-	const [duplicateNumberError, setDuplicateNumberError] = useState(false);
-	const [duplicateAttempt, setDuplicateAttempt] = useState(0);
+	const [inputError, setInputError] = useState("");
+	const [invalidInputAttempt, setInvalidInputAttempt] = useState(0);
 	const { error: parsedError } = parseGroupCode(question, code);
-	const error = duplicateNumberError ? "Each number can only be used once." : parsedError;
+	const error = inputError || parsedError;
 	const sizes = groupSizes(question);
 	// Worked example using this question's box sizes, e.g. "1234 means 1 and 2 go in copper, 3 and 4 in single-mode fiber"
 	const exampleGroups = sizes.map((size, g) => Array.from({ length: size }, (_, k) => k + 1 + sizes.slice(0, g).reduce((a, b) => a + b, 0)));
@@ -126,15 +184,31 @@ function GroupMatchInput({ question, value, onChange, disabled }) {
 					autoComplete="off"
 					value={code}
 					disabled={disabled}
-					maxLength={question.items.length}
 					onChange={(event) => {
-						const next = event.target.value.replace(/\D/g, "");
-						if (new Set(next).size !== next.length) {
-							setDuplicateNumberError(true);
-							setDuplicateAttempt((attempt) => attempt + 1);
-							return;
+						let next = "";
+						let nextError = "";
+						for (const digit of event.target.value) {
+							if (!/^\d$/.test(digit)) {
+								nextError ||= "Use numbers only.";
+								continue;
+							}
+							const number = Number(digit);
+							if (number < 1 || number > question.items.length) {
+								nextError ||= `Use item numbers 1 to ${question.items.length}.`;
+								continue;
+							}
+							if (next.includes(digit)) {
+								nextError ||= "Each number can only be used once.";
+								continue;
+							}
+							if (next.length >= question.items.length) {
+								nextError ||= "Too many numbers.";
+								continue;
+							}
+							next += digit;
 						}
-						setDuplicateNumberError(false);
+						setInputError(nextError);
+						if (nextError) setInvalidInputAttempt((attempt) => attempt + 1);
 						setCode(next);
 						const parsed = parseGroupCode(question, next);
 						onChange(parsed.value ?? question.items.map(() => null));
@@ -145,9 +219,9 @@ function GroupMatchInput({ question, value, onChange, disabled }) {
 				/>
 				{error && (
 					<span
-						key={duplicateAttempt}
+						key={invalidInputAttempt}
 						role="alert"
-						className={`mt-1 block text-sm font-semibold text-[#b42318] ${duplicateNumberError ? "ccna-validation-shake" : ""}`}
+						className={`mt-1 block text-sm font-semibold text-[#b42318] ${inputError ? "ccna-validation-shake" : ""}`}
 					>
 						{error}
 					</span>
