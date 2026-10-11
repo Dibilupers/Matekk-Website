@@ -552,7 +552,7 @@ export default function CCNAModuleQuiz() {
 							<div className="ccna-progress-fill h-full rounded-full bg-[#005b6b] transition-[width] duration-300" style={{ width: `${(answeredCount / moduleQuiz.questions.length) * 100}%` }} />
 						</div>
 
-						<div className="mx-auto max-w-3xl">
+						<div className="grid items-stretch gap-5 lg:grid-cols-[minmax(0,1fr)_280px]">
 							<section className="rounded-[20px] border border-[#d6e5e7] bg-white p-4 shadow-sm sm:p-7">
 								<p className="mb-2 text-sm font-semibold text-[#70809a]">Question {attempt.currentIndex + 1} of {moduleQuiz.questions.length} · {moduleQuiz.title}</p>
 								<QuestionPrompt
@@ -579,6 +579,36 @@ export default function CCNAModuleQuiz() {
 								</div>
 							</section>
 
+							<aside aria-label="Question navigation" className="rounded-[20px] border border-[#d6e5e7] bg-white p-5 shadow-sm sm:p-6">
+								<h2 className="mb-4 text-base font-bold text-[#17233d]">Questions</h2>
+								<div className="grid grid-cols-5 gap-2">
+									{moduleQuiz.questions.map((_, index) => {
+										const hasAnswer = attempt.answers[index] !== undefined;
+										const isActive = index === attempt.currentIndex;
+										const canNavigate =
+											index === attempt.currentIndex ||
+											(index === attempt.currentIndex + 1 && answeredCurrentQuestion && !attempt.lockedQuestions?.[attempt.currentIndex]);
+										return (
+											<button
+												key={index}
+												type="button"
+												onClick={() => goToQuestion(index)}
+												disabled={!canNavigate}
+												aria-label={`Question ${index + 1}${hasAnswer ? ", answered" : ", unanswered"}`}
+												aria-current={isActive ? "step" : undefined}
+												className={`ccna-dark-hover h-10 w-full rounded-xl border text-sm font-semibold transition disabled:cursor-not-allowed ${
+													hasAnswer
+														? "border-[#005b6b] bg-[#e8f3f4] text-[#005b6b]"
+														: "border-[#d9e1ef] bg-white text-[#71809a]"
+												} ${isActive ? "ring-2 ring-[#005b6b] ring-offset-2" : ""} hover:border-[#005b6b] hover:bg-[#005b6b] hover:text-white disabled:hover:border-inherit disabled:hover:bg-inherit disabled:hover:text-inherit`}
+											>
+												{index + 1}
+											</button>
+										);
+									})}
+								</div>
+								<p className="mt-5 text-sm leading-6 text-[#70809a]">{answeredCount} of {moduleQuiz.questions.length} answered</p>
+							</aside>
 						</div>
 					</>
 				)}

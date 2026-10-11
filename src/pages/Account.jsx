@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowRight, BookOpen, CircleUserRound, FileText, Printer, Search, UserRound, X } from "lucide-react";
+import { ArrowRight, BookOpen, CircleUserRound, FileText, Printer, Search, UserRound } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/auth-context";
 import API_URL from "../config/api";
@@ -50,18 +50,7 @@ function ProfileForm({ profile, refreshProfile }) {
   const [error, setError] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [profilePhoto, setProfilePhoto] = useState(null);
-  const [isPhotoPreviewOpen, setIsPhotoPreviewOpen] = useState(false);
   const photoInputRef = useRef(null);
-
-  useEffect(() => {
-    if (!isPhotoPreviewOpen) return undefined;
-
-    const closeOnEscape = (event) => {
-      if (event.key === "Escape") setIsPhotoPreviewOpen(false);
-    };
-    window.addEventListener("keydown", closeOnEscape);
-    return () => window.removeEventListener("keydown", closeOnEscape);
-  }, [isPhotoPreviewOpen]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -275,20 +264,11 @@ function ProfileForm({ profile, refreshProfile }) {
         {tab === "personal" ? (
           <form onSubmit={saveProfile} className="space-y-6">
             <div className="flex flex-wrap items-center gap-4 rounded-2xl bg-slate-50 p-4 sm:p-5">
-              {profilePhoto ? (
-                <button
-                  type="button"
-                  onClick={() => setIsPhotoPreviewOpen(true)}
-                  aria-label="View profile photo larger"
-                  className="h-16 w-16 shrink-0 overflow-hidden rounded-full border-2 border-blue-400 bg-white transition hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2f5bea]"
-                >
-                  <img src={profilePhoto} alt="" className="h-full w-full object-cover" />
-                </button>
-              ) : (
-                <span className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-blue-400 bg-white text-[#2f5bea]" aria-hidden="true">
-                  <CircleUserRound size={39} strokeWidth={1.6} />
-                </span>
-              )}
+              <span className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-blue-400 bg-white text-[#2f5bea]" aria-hidden="true">
+                {profilePhoto
+                  ? <img src={profilePhoto} alt="" className="h-full w-full object-cover" />
+                  : <CircleUserRound size={39} strokeWidth={1.6} />}
+              </span>
               <div className="min-w-0 flex-1">
                 <p className="font-semibold text-slate-900">Profile photo</p>
                 <p className="mt-1 text-xs text-slate-500">JPG or PNG, up to 2 MB</p>
@@ -363,35 +343,6 @@ function ProfileForm({ profile, refreshProfile }) {
           </form>
         )}
       </section>
-      {isPhotoPreviewOpen && profilePhoto && (
-        <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/80 p-4 sm:p-8"
-          onClick={(event) => {
-            if (event.target === event.currentTarget) setIsPhotoPreviewOpen(false);
-          }}
-        >
-          <section
-            role="dialog"
-            aria-modal="true"
-            aria-label="Profile photo preview"
-            className="relative flex max-h-full max-w-full items-center justify-center"
-          >
-            <button
-              type="button"
-              onClick={() => setIsPhotoPreviewOpen(false)}
-              aria-label="Close profile photo preview"
-              className="absolute -right-2 -top-2 z-10 rounded-full bg-white p-2 text-slate-800 shadow-lg transition hover:bg-slate-100 sm:-right-4 sm:-top-4"
-            >
-              <X size={20} />
-            </button>
-            <img
-              src={profilePhoto}
-              alt="Enlarged profile photo"
-              className="max-h-[85vh] max-w-[min(90vw,48rem)] rounded-2xl object-contain shadow-2xl"
-            />
-          </section>
-        </div>
-      )}
     </>
   );
 }

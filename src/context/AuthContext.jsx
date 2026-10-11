@@ -1,9 +1,22 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import API_URL from "../config/api";
 import { AuthContext } from "./auth-context";
 
 const PROFILE_CACHE_KEY = "matekk-session-profile";
 
+// Shows the last known profile instantly on refresh (sessions use a secure cookie, so there is no token
+// to read here); the server check below replaces it, or clears it if the session has ended.
+function readCachedProfile() {
+  try {
+    const cachedProfile = JSON.parse(sessionStorage.getItem(PROFILE_CACHE_KEY) || "null");
+    return cachedProfile && typeof cachedProfile === "object" ? cachedProfile : null;
+  } catch {
+    sessionStorage.removeItem(PROFILE_CACHE_KEY);
+    return null;
+  }
+}
+
+// Small copy of the profile kept for offline use (the site can still show who is signed in without internet)
 const OFFLINE_PROFILE_KEY = "matekkOfflineProfile";
 
 function readOfflineProfile() {
@@ -36,7 +49,7 @@ function storeOfflineProfile(profile) {
 }
 
 export function AuthProvider({ children }) {
-  const [profile, setProfile] = useState(readOfflineProfile);
+  const [profile, setProfile] = useState(readCachedProfile);
   const [isLoading, setIsLoading] = useState(true);
   const [isOnline, setIsOnline] = useState(() => navigator.onLine);
 
@@ -50,23 +63,24 @@ export function AuthProvider({ children }) {
     };
   }, []);
 
-  async function refreshProfile() {
+  const refreshProfile = useCallback(async () => {
     const response = await fetch(`${API_URL}/auth/profile`, {
       credentials: "include",
     });
     if (!response.ok) {
-      localStorage.removeItem(OFFLINE_PROFILE_KEY);
-      setProfile(null);
       throw new Error("Unable to refresh account approval status.");
     }
 
     const nextProfile = await response.json();
     storeOfflineProfile(nextProfile);
     setProfile(nextProfile);
+    sessionStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(nextProfile));
     return nextProfile;
-  }
+  }, []);
 
   useEffect(() => {
+    localStorage.removeItem("accessToken");
+
     let mounted = true;
     const cachedProfile = readOfflineProfile();
     fetch(`${API_URL}/auth/profile`, {
@@ -101,15 +115,7 @@ export function AuthProvider({ children }) {
     };
   }, []);
 
-  async function login(username, password) {
-    const response = await fetch(`${API_URL}/auth/login`, {
-      method: "POST",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
-    });
-    if (!response.ok) return { response, profile: null };
-
+  const completeLogin = useCallback(async (response) => {
     let signedInProfile;
     try {
       const profileResponse = await fetch(`${API_URL}/auth/profile`, {
@@ -126,16 +132,47 @@ export function AuthProvider({ children }) {
       }).catch((logoutError) =>
         console.error("Unable to clear a session after profile loading failed.", logoutError),
       );
-      localStorage.removeItem(OFFLINE_PROFILE_KEY);
       throw error;
     }
     setProfile(signedInProfile);
     sessionStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(signedInProfile));
     storeOfflineProfile(signedInProfile);
     return { response, profile: signedInProfile };
-  }
+  }, []);
 
-  function logout() {
+  const login = useCallback(async (username, password) => {
+    const response = await fetch(`${API_URL}/auth/login`, {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
+    });
+    if (!response.ok) return { response, profile: null };
+
+    const result = await response.json();
+    if (result.requiresOtp) {
+      return {
+        response,
+        profile: null,
+        requiresOtp: true,
+        maskedEmail: result.maskedEmail,
+      };
+    }
+    return completeLogin(response);
+  }, [completeLogin]);
+
+  const verifyLoginOtp = useCallback(async (username, code) => {
+    const response = await fetch(`${API_URL}/auth/login/verify-otp`, {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, code }),
+    });
+    if (!response.ok) return { response, profile: null };
+    return completeLogin(response);
+  }, [completeLogin]);
+
+  const logout = useCallback(() => {
     sessionStorage.removeItem(PROFILE_CACHE_KEY);
     localStorage.removeItem(OFFLINE_PROFILE_KEY);
     setProfile(null);
@@ -145,11 +182,20 @@ export function AuthProvider({ children }) {
     }).then((response) => {
       if (!response.ok) throw new Error(`Logout request failed (${response.status}).`);
     }).catch((error) => console.error("Unable to clear the server session.", error));
-  }
+  }, []);
 
   const value = useMemo(
-    () => ({ profile, isAuthenticated: Boolean(profile), isLoading, isOnline, login, logout, refreshProfile }),
-    [isLoading, isOnline, profile],
+    () => ({
+      profile,
+      isAuthenticated: Boolean(profile),
+      isLoading,
+      isOnline,
+      login,
+      verifyLoginOtp,
+      logout,
+      refreshProfile,
+    }),
+    [isLoading, isOnline, profile, login, verifyLoginOtp, logout, refreshProfile],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

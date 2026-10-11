@@ -155,7 +155,15 @@ function getExamRows(examProgressByKey, storedAssessments) {
 			(best, result) => !best || result.score / result.maxScore > best.score / best.maxScore ? result : best,
 			null,
 		);
-		const points = latestResult ? { score: latestResult.score, maxScore: latestResult.maxScore } : null;
+		const hasLegacyShortResult = exam.name === "Short Exam" &&
+			!latestResult &&
+			["completed", "expired"].includes(progress.status) &&
+			progress.maxScore > 0;
+		const points = latestResult
+			? { score: latestResult.score, maxScore: latestResult.maxScore }
+			: hasLegacyShortResult
+				? { score: progress.score, maxScore: progress.maxScore }
+				: null;
 		const grade = points ? Math.round((points.score / points.maxScore) * 100) : null;
 		const bestPoints = bestResult
 			? { score: bestResult.score, maxScore: bestResult.maxScore }
