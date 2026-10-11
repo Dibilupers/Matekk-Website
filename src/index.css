@@ -31,9 +31,19 @@ h1 {
   line-height: 1.375;
 }
 
+.ccna-exam-review-question {
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.375;
+}
+
 @media (min-width: 640px) {
   .ccna-exam-question-prompt {
     font-size: 1.5rem;
+  }
+
+  .ccna-exam-review-question {
+    font-size: 1.25rem;
   }
 }
 

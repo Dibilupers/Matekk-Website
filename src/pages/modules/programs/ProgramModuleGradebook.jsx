@@ -119,6 +119,7 @@ function getModuleRows(modules, progress, storedAssessments) {
 }
 
 function getExamRows(storedAssessments) {
+	const examFormatLabels = { short: "Short", medium: "Medium", long: "Long" };
 	const attemptsByExam = new Map();
 	storedAssessments
 		.filter((assessment) =>
@@ -141,6 +142,7 @@ function getExamRows(storedAssessments) {
 			return {
 				id: assessment.id,
 				name: title,
+				formatLabel: examFormatLabels[assessment.examFormat] ?? null,
 				status: "graded",
 				statusLabel: attempts.length > 1 ? `Attempt ${attemptIndex + 1}` : null,
 				submittedAt: assessment.submittedAt,
@@ -221,6 +223,7 @@ function AssessmentTable({ title, rows, filter, sort }) {
 								<tr key={row.id} className="border-b border-[#e9edef] last:border-0">
 									<th scope="row" className="px-5 py-4 font-semibold text-[#172536]">
 										<span>{row.name}</span>
+										{row.formatLabel && <span className="ml-2 rounded-full bg-[#e8f3f4] px-2.5 py-1 text-xs font-semibold text-[#005b6b]">{row.formatLabel} format</span>}
 										{row.statusLabel && <span className="ml-2 text-sm font-medium text-[#a44b13]">{row.statusLabel}</span>}
 									</th>
 									<td className="whitespace-nowrap px-5 py-4 text-[#445363]">{formatDate(row.submittedAt)}</td>
@@ -273,8 +276,8 @@ export default function ProgramModuleGradebook({ programKey, programName, module
 	const storedAssessments = backendGradebook.userId === userId ? backendGradebook.assessments : [];
 	const completedExamCount = Math.min(
 		new Set(storedAssessments
-			.filter((assessment) => assessment.type === "exam" && typeof assessment.title === "string")
-			.map((assessment) => assessment.title)).size,
+			.filter((assessment) => assessment.type === "exam" && ["short", "medium", "long"].includes(assessment.examFormat))
+			.map((assessment) => assessment.examFormat)).size,
 		PROGRAM_EXAM_COUNT,
 	);
 	const moduleRows = getModuleRows(modules, progress, storedAssessments);
