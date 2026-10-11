@@ -762,9 +762,11 @@ export default function CCNAModuleQuiz() {
 													);
 												})}
 											</div>
-											<p className="mt-4 rounded-xl bg-[#f5f9f9] px-4 py-3 text-sm leading-6 text-[#596983]">
-												<span className="font-bold text-[#005b6b]">Explanation: </span>{question.explanation}
-											</p>
+											{question.explanation?.trim() && (
+												<p className="mt-4 rounded-xl bg-[#f5f9f9] px-4 py-3 text-sm leading-6 text-[#596983]">
+													<span className="font-bold text-[#005b6b]">Explanation: </span>{question.explanation}
+												</p>
+											)}
 										</article>
 									))}
 									{reviewQuestions.length === 0 && (

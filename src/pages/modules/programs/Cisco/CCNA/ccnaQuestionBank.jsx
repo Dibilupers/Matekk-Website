@@ -87,6 +87,10 @@ export function setDatabaseQuestions(questions) {
   databaseQuestions = Array.isArray(questions) && questions.length ? questions : null;
 }
 
+export function getDatabaseQuestionById(id) {
+  return databaseQuestions?.find((question) => question.bankId === id) ?? null;
+}
+
 export function createShortExamQuestions() {
   if (databaseQuestions) return pickRandomQuestions(databaseQuestions, 50);
   const moduleQuestions = CCNA_QUESTION_BANK.filter((question) => {

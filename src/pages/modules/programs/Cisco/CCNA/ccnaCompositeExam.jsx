@@ -8,7 +8,7 @@ import { CCNA_EXAMS } from "./ccnaExamFormats";
 import { createCcnaMockExamAttemptId, saveCcnaMockExamResult } from "../../../../../utils/ccnaGradebook";
 import { getCcnaExamSessionKey } from "../../../../../utils/ccnaShortExamSession";
 import { isAnswerCorrect, isQuestionAnswered, isValidQuestion } from "../../../../../utils/ccnaExamGrading";
-import { QuestionInput, QuestionReview } from "./ccnaExamQuestionViews";
+import { QuestionInput, QuestionPrompt, QuestionReview } from "./ccnaExamQuestionViews";
 import { saveGradebookAssessment } from "../../../../../utils/gradebookApi";
 import { splitPromptExhibit } from "../../../../../utils/splitPromptExhibit";
 import { ExhibitImage, ExhibitText } from "./ccnaExhibit";
@@ -504,8 +504,7 @@ function CCNACompositeExamPage({ examKey = "short" }) {
 									Question {currentIndex + 1} of {questions.length}
 									{question.moduleNumber && ` · Module ${question.moduleNumber}: ${question.moduleTitle}`}
 								</p>
-								<h1 className="ccna-exam-question-prompt mb-4 leading-snug tracking-tight sm:mb-6">{question.prompt}</h1>
-								{/* Exhibit: a picture and/or device output shown above the choices */}
+								<QuestionPrompt prompt={question.prompt} />
 								{question.exhibitImage && (
 									<ExhibitImage src={question.exhibitImage} className="mb-6" imageClassName="max-h-[32rem]" />
 								)}
@@ -647,14 +646,13 @@ function CCNACompositeExamPage({ examKey = "short" }) {
 												<div className="flex flex-wrap items-center gap-2">
 													<span className="text-sm font-semibold text-[#64748b]">
 														Question {item.index + 1} of {questions.length}
-														{item.moduleNumber && ` · Module ${item.moduleNumber}: ${item.moduleTitle}`}
 													</span>
 													<span className={`rounded-full px-3 py-1 text-xs font-bold ${item.isCorrect ? "bg-[#e8f3f4] text-[#005b6b]" : "bg-[#fff0e8] text-[#b4532a]"
 														}`}>
 														{item.isCorrect ? "Correct" : "Incorrect"}
 													</span>
 												</div>
-												<h3 className="mt-4 text-lg font-bold leading-snug text-[#17233d] sm:text-xl">{item.prompt}</h3>
+												<QuestionPrompt prompt={item.prompt} />
 												{item.exhibitImage && (
 													<ExhibitImage src={item.exhibitImage} lazy className="mt-4" imageClassName="max-h-[26rem]" />
 												)}
@@ -664,9 +662,11 @@ function CCNACompositeExamPage({ examKey = "short" }) {
 												<div className="mt-5">
 													<QuestionReview question={item} value={item.selectedAnswer} />
 												</div>
-												<p className="mt-4 rounded-xl bg-[#f5f9f9] px-4 py-3 text-sm leading-6 text-[#596983]">
-													<span className="font-bold text-[#005b6b]">Explanation: </span>{item.explanation}
-												</p>
+												{typeof item.explanation === "string" && item.explanation.trim() && (
+													<p className="mt-4 rounded-xl bg-[#f5f9f9] px-4 py-3 text-sm leading-6 text-[#596983]">
+														<span className="font-semibold text-[#005b6b]">Explanation: </span>{item.explanation}
+													</p>
+												)}
 											</article>
 										))}
 										{reviewQuestions.length === 0 && (
@@ -757,7 +757,6 @@ function CCNACompositeExamPage({ examKey = "short" }) {
 		</main>
 	);
 }
-
 // Loads the database question bank first, so a new attempt draws its questions from it.
 // (If the bank can't be reached, the exam still works with the questions built into the site.)
 export default function CCNACompositeExam(props) {

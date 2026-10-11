@@ -59,5 +59,4 @@ export class QuestionsService {
             imageUrl: row.imageUrl ? signedUrls.get(row.imageUrl) ?? row.imageUrl : null,
         }));
     }
-
 }

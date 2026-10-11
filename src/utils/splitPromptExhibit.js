@@ -15,6 +15,7 @@ const QUESTION_START = /^\s*(Which|What|How|Why|When|Where|Drag|An? |The |If |Af
 
 const EXHIBIT_CUE = /\brefer\s+to\s+(?:the\s+)?exhibit\b\s*\.?/i;
 const INLINE_CODE_START = [
+  /^\s*Option A[ \t]{2,}Option B\b/im,
   /\bOutput from R1\b/i,
   /\bSW\d+#/i,
   /\b[A-Za-z][\w.-]*(?:\([^)]*\))?#\s*(?:show|config|conf|ip|interface|router|enable|copy|ping|traceroute|access-list|line|username|hostname|vtp|spanning|switchport|no )/i,
