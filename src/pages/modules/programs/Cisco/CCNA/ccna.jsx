@@ -714,7 +714,7 @@ export default function CCNA() {
 	}
 
 	return (
-		<main className="ccna-page-enter relative min-h-screen bg-white text-[#071126]">
+		<main className="program-faceted-page ccna-page-enter relative min-h-screen bg-white text-[#071126]">
 			{/* Phones/tablets: Back button pinned to the screen (outside the page's slide-in animation),
 			    so it stays still while the page moves; a white pill appears behind it once you scroll */}
 			{createPortal(

@@ -190,6 +190,16 @@ h6 {
   color: #ffffff !important;
 }
 
+.program-faceted-page {
+  background-image:
+    linear-gradient(132deg, transparent 0 13%, rgb(8 122 145 / 3%) 13.1% 22%, transparent 22.1% 100%),
+    linear-gradient(48deg, transparent 0 57%, rgb(8 122 145 / 4%) 57.1% 70%, transparent 70.1% 100%),
+    linear-gradient(135deg, transparent 0 34%, rgb(0 91 107 / 2.5%) 34.1% 45%, transparent 45.1% 100%),
+    linear-gradient(315deg, transparent 0 76%, rgb(255 255 255 / 85%) 76.1% 86%, transparent 86.1% 100%),
+    radial-gradient(ellipse at 50% 45%, rgb(32 197 214 / 5%), transparent 70%);
+  background-size: 100% 100%;
+}
+
 .gradebook-stat-card {
   position: relative;
   isolation: isolate;
