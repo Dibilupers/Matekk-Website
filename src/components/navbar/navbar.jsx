@@ -42,7 +42,8 @@ function NavBar() {
     setMenuGoingBack(menuDepth < prevMenuDepth);
   }
   const subPanelClass = `mobile-menu-sub${menuGoingBack ? " mobile-menu-back" : ""}`;
-  const { logout, profile, isAuthenticated } = useAuth();
+  const { logout, profile } = useAuth();
+  const isAuthenticated = Boolean(profile);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isGradebookChooserOpen, setIsGradebookChooserOpen] = useState(false);
   const navigate = useNavigate();

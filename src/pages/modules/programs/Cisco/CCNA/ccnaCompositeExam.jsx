@@ -1,6 +1,6 @@
 ﻿import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { ArrowLeft, ArrowRight, ArrowUp, Clock3, Moon, RotateCcw, Sun, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUp, Clock3, Flag, Moon, RotateCcw, Sun, X } from "lucide-react";
 import { Link, useBlocker, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../../../context/auth-context";
 import TrainingLogo from "../../../../../assets/MATEKK_training_logo.png";
@@ -10,6 +10,10 @@ import { getCcnaExamSessionKey } from "../../../../../utils/ccnaShortExamSession
 import { isAnswerCorrect, isQuestionAnswered, isValidQuestion } from "../../../../../utils/ccnaExamGrading";
 import { QuestionInput, QuestionReview } from "./ccnaExamQuestionViews";
 import { saveGradebookAssessment } from "../../../../../utils/gradebookApi";
+import { splitPromptExhibit } from "../../../../../utils/splitPromptExhibit";
+import { ExhibitImage, ExhibitText } from "./ccnaExhibit";
+import { loadCcnaQuestionBank } from "../../../../../utils/ccnaQuestionBankApi";
+import { setDatabaseQuestions } from "./ccnaQuestionBank";
 
 
 
@@ -59,6 +63,10 @@ function restoreExamSession(exam, sessionStorageKey) {
 		const isSubmitted = session.isSubmitted || session.deadline <= Date.now();
 		return {
 			...session,
+			// Attempts saved before router output was split out of the question text get the same clean-up
+			questions: session.questions.map((question) => (question.exhibit || question.exhibitImage
+				? question
+				: { ...question, ...splitPromptExhibit(question.prompt) })),
 			attemptId: typeof session.attemptId === "string" ? session.attemptId : createCcnaMockExamAttemptId(),
 			submittedAt: Number.isFinite(session.submittedAt)
 				? session.submittedAt
@@ -78,14 +86,14 @@ function formatTime(totalSeconds) {
 	return `${minutes}:${seconds}`;
 }
 
-export default function CCNACompositeExam({ examKey = "short" }) {
+function CCNACompositeExamPage({ examKey = "short" }) {
 	const exam = CCNA_EXAMS[examKey];
 	const location = useLocation();
 	const navigate = useNavigate();
 	const shouldShowExamResult = location.state?.showExamResult === true;
 	const linkedExamResult = location.state?.examResult;
 	const shouldStartNewAttempt = location.state?.retakeExam === true;
-	const { profile } = useAuth();
+	const { profile, isLoading: isAuthLoading, isOnline } = useAuth();
 	const userId = profile?.userId;
 	// Each student's exam progress is saved separately (per signed-in user)
 	const sessionStorageKey = userId === null || userId === undefined
@@ -111,6 +119,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 	const [secondsRemaining, setSecondsRemaining] = useState(() =>
 		Math.max(0, Math.ceil((initialSession.deadline - Date.now()) / 1000)),
 	);
+	const [flaggedQuestions, setFlaggedQuestions] = useState({});
 	const [isSubmitted, setIsSubmitted] = useState(initialSession.isSubmitted);
 	const isResultView = isSubmitted || isViewingSavedResult;
 	const [isRetakeConfirmationOpen, setIsRetakeConfirmationOpen] = useState(false);
@@ -121,6 +130,8 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 	const [backToTopVisibility, setBackToTopVisibility] = useState({ attempt: -1, visible: false });
 	const answerReviewRef = useRef(null);
 	const resultsTopRef = useRef(null);
+	const questionCardRef = useRef(null);
+	const previousIndexRef = useRef(currentIndex);
 	const blocker = useBlocker(({ currentLocation, nextLocation }) =>
 		!isSubmitted &&
 		(currentLocation.pathname !== nextLocation.pathname ||
@@ -131,6 +142,9 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 	const answeredCount = questions.filter((item, index) =>
 		isQuestionAnswered(item, answers[index]),
 	).length;
+	const unansweredCount = questions.length - answeredCount;
+	const answeredPercentage = questions.length > 0 ? Math.round((answeredCount / questions.length) * 100) : 0;
+	const flaggedCount = Object.values(flaggedQuestions).filter(Boolean).length;
 	const score = questions.reduce(
 		(total, item, index) => total + Number(isAnswerCorrect(item, answers[index])),
 		0,
@@ -162,6 +176,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 		);
 	const [isDark, setIsDark] = useState(false);
 	const [gradebookSaveError, setGradebookSaveError] = useState(null);
+	const [gradebookSaveAttempt, setGradebookSaveAttempt] = useState(0);
 
 	useEffect(() => {
 		if (!shouldStartNewAttempt) return;
@@ -194,7 +209,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 	}, [attemptId, exam.name, isSubmitted, isViewingSavedResult, questions.length, score, submittedAt, userId]);
 
 	useEffect(() => {
-		if (!isSubmitted || isViewingSavedResult || !userId || !Number.isFinite(submittedAt)) return undefined;
+		if (isAuthLoading || !isOnline || !isSubmitted || isViewingSavedResult || !userId || !Number.isFinite(submittedAt)) return undefined;
 
 		let isActive = true;
 		saveGradebookAssessment("ccna", {
@@ -205,17 +220,19 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 			score,
 			maxScore: questions.length,
 			submittedAt,
+		}).then(() => {
+			if (isActive) setGradebookSaveError(null);
 		}).catch((error) => {
 			console.error("Unable to save the exam result to the gradebook.", error);
 			if (isActive) {
-				setGradebookSaveError("Your exam result could not be saved to the backend gradebook.");
+				setGradebookSaveError(error instanceof Error ? error.message : "The gradebook request failed.");
 			}
 		});
 
 		return () => {
 			isActive = false;
 		};
-	}, [attemptId, exam.name, isSubmitted, isViewingSavedResult, questions.length, score, submittedAt, userId]);
+	}, [attemptId, exam.name, gradebookSaveAttempt, isAuthLoading, isOnline, isSubmitted, isViewingSavedResult, questions.length, score, submittedAt, userId]);
 
 	function submitExam(finishedAt = Date.now()) {
 		setSubmittedAt((previousSubmittedAt) => previousSubmittedAt ?? finishedAt);
@@ -323,6 +340,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 		setAnswers({});
 		setLockedQuestions({});
 		setCurrentIndex(0);
+		setFlaggedQuestions({});
 		setDeadline(newSession.deadline);
 		setAttemptId(newSession.attemptId);
 		setSubmittedAt(null);
@@ -344,6 +362,17 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 	function backToTop() {
 		resultsTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
 	}
+
+	// When the question changes, bring the start of the new question into view (it may be scrolled
+	// far down after reading a long exhibit). Skipped on first load so the page opens at the top.
+	useEffect(() => {
+		if (previousIndexRef.current === currentIndex) return;
+		previousIndexRef.current = currentIndex;
+		const card = questionCardRef.current;
+		if (!card) return;
+		const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+		card.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+	}, [currentIndex]);
 
 	function goToQuestion(index) {
 		if (index < 0 || index >= questions.length) return;
@@ -369,13 +398,27 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 						<div className="mx-auto max-w-[1125px]">
 				{gradebookSaveError && isResultView && (
 					<p role="alert" className="mb-4 rounded-xl border border-[#f2c6c3] bg-white px-4 py-3 text-sm font-medium text-[#b42318]">
-						{gradebookSaveError} Reload this page to retry.
+						Your exam result could not be saved to the backend gradebook. {gradebookSaveError}{" "}
+						<button
+							type="button"
+							onClick={() => {
+								setGradebookSaveError(null);
+								setGradebookSaveAttempt((attempt) => attempt + 1);
+							}}
+							className="font-bold underline underline-offset-2 hover:no-underline"
+						>
+							Retry save
+						</button>
 					</p>
 				)}
 				<header className="mb-7 flex flex-wrap items-center justify-between gap-4 border-b border-[#d6e5e7] pb-5">
 					<div className="flex min-w-0 items-center gap-4">
-						<Link to="/modules/programs/ccna" aria-label="Back to CCNA course" className="ccna-training-logo shrink-0 rounded-lg bg-white px-3 py-2 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
-							<img src={TrainingLogo} alt="MATEKK Cybercore Academy" className="h-auto w-32 sm:w-36" />
+						<Link to="/modules/programs/ccna" aria-label="Back to CCNA course" className="group shrink-0 rounded-full bg-white/80 p-2 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 motion-reduce:transition-none">
+							<div className="relative flex h-20 w-20 items-center justify-center rounded-full border border-[#cfe4ea] bg-white shadow-[0_10px_20px_rgba(15,23,42,0.12)]">
+								<div className="flex h-14 w-14 items-center justify-center rounded-full bg-white">
+									<img src={TrainingLogo} alt="MATEKK Cybercore Academy" className="h-10 w-auto object-contain" />
+								</div>
+							</div>
 						</Link>
 						<div className="hidden min-w-0 border-l border-[#cbd5e1] pl-4 sm:block">
 							<p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#70809a]">CCNA composite exam</p>
@@ -393,18 +436,6 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 							{isDark ? <Sun size={16} /> : <Moon size={16} />}
 							<span className="hidden sm:inline">{isDark ? "Light mode" : "Dark mode"}</span>
 						</button>
-						{!isSubmitted && (
-							<div
-								role="timer"
-								aria-label={`${formatTime(secondsRemaining)} remaining`}
-								className={`inline-flex shrink-0 items-center gap-2 rounded-full border px-3 py-2 text-xs font-semibold tabular-nums sm:px-4 sm:text-sm ${secondsRemaining <= 300
-									? "border-[#f0c6a8] bg-[#fff5ee] text-[#a44b13]"
-									: "border-[#c9dfe2] bg-white text-[#005b6b]"
-									}`}
-							>
-								<Clock3 size={16} /> {formatTime(secondsRemaining)}
-							</div>
-						)}
 						<Link to="/modules/programs/ccna" className="ccna-dark-hover inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-[#c9dfe2] px-3 py-2 text-xs font-semibold text-[#005b6b] transition-all duration-200 ease-out hover:scale-105 hover:bg-[#e8f3f4] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100 sm:gap-2 sm:px-4 sm:text-sm">
 							<X size={16} /> <span>Exit exam</span>
 						</Link>
@@ -413,30 +444,81 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 
 				{!isResultView ? (
 					<>
-						<div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-							<div>
-								<p className="text-sm font-bold uppercase tracking-[0.12em] text-[#005b6b]">{exam.name}</p>
-								<p className="mt-1 text-sm text-[#70809a]">{answeredCount} of {questions.length} questions answered</p>
+						<section aria-label="Exam progress" className="mb-5 rounded-2xl border border-[#d6e5e7] bg-white p-5 shadow-sm sm:mb-6 sm:p-8">
+							<div className="flex flex-wrap items-center justify-between gap-3">
+								<p className="rounded-xl bg-[#e1f5ef] px-4 py-2 text-sm font-semibold text-[#075b4a]">{exam.name}</p>
+								<div
+									role="timer"
+									aria-label={`${formatTime(secondsRemaining)} remaining`}
+									className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm tabular-nums ${secondsRemaining <= 300
+										? "bg-[#fff5ee] text-[#a44b13]"
+										: "bg-[#f7f9fc] text-[#526584]"
+										}`}
+								>
+									<Clock3 size={17} /> {formatTime(secondsRemaining)}
+								</div>
 							</div>
-							<div role="progressbar" aria-label="Exam progress" aria-valuemin={0} aria-valuemax={questions.length} aria-valuenow={answeredCount} className="h-2 w-full max-w-xs overflow-hidden rounded-full bg-[#dfe9eb]">
-								<div className="h-full rounded-full bg-[#005b6b] transition-[width]" style={{ width: `${(answeredCount / questions.length) * 100}%` }} />
-							</div>
-						</div>
 
-						<div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_300px]">
-							<section className="rounded-[20px] border border-[#d6e5e7] bg-white p-4 shadow-sm sm:p-7">
+							<div className="mt-5 flex flex-wrap items-baseline justify-between gap-2">
+								<h1 className="text-4xl font-extrabold leading-tight tracking-tight text-[#17233d] sm:text-[2.65rem]">
+									Question {currentIndex + 1} <span className="text-base font-normal text-[#64748b] sm:text-lg">of {questions.length}</span>
+								</h1>
+								<p className="text-sm text-[#64748b] sm:text-base">{answeredCount} answered <span aria-hidden="true">·</span> {answeredPercentage}%</p>
+							</div>
+							<div
+								role="progressbar"
+								aria-label="Exam progress"
+								aria-valuemin={0}
+								aria-valuemax={questions.length}
+								aria-valuenow={answeredCount}
+								aria-valuetext={`${answeredCount} of ${questions.length} answered, ${answeredPercentage}%`}
+								className="mt-3 h-2 overflow-hidden rounded-full bg-[#e7e7e7]"
+							>
+								<div className="h-full rounded-full bg-[#159b73] transition-[width]" style={{ width: `${answeredPercentage}%` }} />
+							</div>
+							<div className="mt-4 flex flex-wrap gap-2.5 text-sm text-[#526584]">
+								<span className="rounded-xl bg-[#f8fafb] px-3 py-2">{answeredCount} answered</span>
+								<button
+									type="button"
+									onClick={() => setFlaggedQuestions((previous) => ({
+										...previous,
+										[currentIndex]: !previous[currentIndex],
+									}))}
+									aria-label={`${flaggedQuestions[currentIndex] ? "Unflag" : "Flag"} question ${currentIndex + 1}; ${flaggedCount} flagged`}
+									aria-pressed={Boolean(flaggedQuestions[currentIndex])}
+									className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 transition ${flaggedQuestions[currentIndex]
+										? "bg-[#fff1d6] text-[#8a5200]"
+										: "bg-[#f8fafb] hover:bg-[#eef3f5]"
+										}`}
+								>
+									<Flag size={15} fill={flaggedQuestions[currentIndex] ? "currentColor" : "none"} />
+									{flaggedCount} flagged
+								</button>
+								<span className="rounded-xl bg-[#f8fafb] px-3 py-2">{unansweredCount} left</span>
+							</div>
+						</section>
+
+						<div className="w-full">
+							<section ref={questionCardRef} className="scroll-mt-4 rounded-[20px] border border-[#d6e5e7] bg-white p-4 shadow-sm sm:p-7">
 								<p className="mb-2 text-sm text-[#70809a]">
 									Question {currentIndex + 1} of {questions.length}
 									{question.moduleNumber && ` · Module ${question.moduleNumber}: ${question.moduleTitle}`}
 								</p>
-								<h1 className="mb-4 text-lg font-bold leading-snug tracking-tight sm:mb-6 sm:text-[1.7rem]">{question.prompt}</h1>
+								<h1 className="ccna-exam-question-prompt mb-4 leading-snug tracking-tight sm:mb-6">{question.prompt}</h1>
+								{/* Exhibit: a picture and/or device output shown above the choices */}
+								{question.exhibitImage && (
+									<ExhibitImage src={question.exhibitImage} className="mb-6" imageClassName="max-h-[32rem]" />
+								)}
+								{question.exhibit && (
+									<ExhibitText text={question.exhibit} className="mb-6" />
+								)}
 								<QuestionInput
 									question={question}
 									value={answers[currentIndex]}
 									onChange={(value) => setAnswers((previous) => ({ ...previous, [currentIndex]: value }))}
 									disabled={Boolean(lockedQuestions[currentIndex])}
 								/>
-								<div className="mt-6 flex justify-end">
+								<div className="mt-6 flex justify-end gap-3">
 									<button
 										type="button"
 										onClick={() => currentIndex === questions.length - 1 ? submitExam() : goToQuestion(currentIndex + 1)}
@@ -448,24 +530,6 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 								</div>
 							</section>
 
-							<aside aria-label="Exam question navigation" className="rounded-[20px] border border-[#d6e5e7] bg-white p-5 shadow-sm sm:p-6">
-								<h2 className="mb-4 text-base font-bold">Questions</h2>
-								<div className="grid grid-cols-5 gap-2">
-									{questions.map((item, index) => {
-										const isAnswered = isQuestionAnswered(item, answers[index]);
-										const isCurrent = currentIndex === index;
-										const canNavigate =
-											index === currentIndex ||
-											(index === currentIndex + 1 && isQuestionAnswered(questions[currentIndex], answers[currentIndex]) && !lockedQuestions[currentIndex]);
-										return (
-											<button key={`${item.moduleNumber}-${index}`} type="button" onClick={() => goToQuestion(index)} disabled={!canNavigate} aria-label={`Question ${index + 1}${isAnswered ? ", answered" : ", unanswered"}`} aria-current={isCurrent ? "step" : undefined} className={`h-10 rounded-xl border text-sm font-semibold transition disabled:cursor-not-allowed ${isAnswered ? "border-[#005b6b] bg-[#e8f3f4] text-[#005b6b]" : "border-[#d9e1ef] bg-white text-[#71809a]"} ${isCurrent ? "ring-2 ring-[#005b6b] ring-offset-2" : ""} hover:border-[#005b6b] hover:bg-[#005b6b] hover:text-white disabled:hover:border-inherit disabled:hover:bg-inherit disabled:hover:text-inherit`}>
-												{index + 1}
-											</button>
-										);
-									})}
-								</div>
-								<p className="mt-5 text-sm leading-6 text-[#70809a]">{answeredCount} of {questions.length} answered</p>
-							</aside>
 						</div>
 					</>
 				) : (
@@ -591,6 +655,12 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 													</span>
 												</div>
 												<h3 className="mt-4 text-lg font-bold leading-snug text-[#17233d] sm:text-xl">{item.prompt}</h3>
+												{item.exhibitImage && (
+													<ExhibitImage src={item.exhibitImage} lazy className="mt-4" imageClassName="max-h-[26rem]" />
+												)}
+												{item.exhibit && (
+													<ExhibitText text={item.exhibit} className="mt-4" />
+												)}
 												<div className="mt-5">
 													<QuestionReview question={item} value={item.selectedAnswer} />
 												</div>
@@ -686,4 +756,34 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 			)}
 		</main>
 	);
+}
+
+// Loads the database question bank first, so a new attempt draws its questions from it.
+// (If the bank can't be reached, the exam still works with the questions built into the site.)
+export default function CCNACompositeExam(props) {
+	const [status, setStatus] = useState("loading");
+	useEffect(() => {
+		let active = true;
+		loadCcnaQuestionBank()
+			.then(({ questions }) => {
+				setDatabaseQuestions(questions);
+				if (active) setStatus("ready");
+			})
+			.catch((error) => {
+				console.error("Unable to load the CCNA question bank; using the built-in questions instead.", error);
+				if (active) setStatus("ready");
+			});
+		return () => { active = false; };
+	}, []);
+
+	if (status === "loading") {
+		return (
+			<main className="flex min-h-screen items-center justify-center bg-[#f5f9f9] px-4 text-[#17233d]">
+				<p role="status" className="rounded-2xl border border-[#d6e5e7] bg-white px-6 py-4 text-sm font-semibold text-[#005b6b] shadow-sm">
+					Loading the CCNA question bank…
+				</p>
+			</main>
+		);
+	}
+	return <CCNACompositeExamPage {...props} />;
 }

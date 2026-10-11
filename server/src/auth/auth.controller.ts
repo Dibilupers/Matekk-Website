@@ -8,11 +8,11 @@ import {
     Get,
     Patch,
     Delete,
-    UsePipes,
-    ValidationPipe,
     Res,
     HttpException,
     Header,
+    UsePipes,
+    ValidationPipe,
 } from '@nestjs/common';
 import { AuthService } from './auth.service.js';
 import { Public } from './decorators/public.decorator.js';

@@ -777,4 +777,5 @@ Device ID  Local Intrfce  Holdtme  Capability  Platform  Port ID
 10.1.1.2   Gig36/43      134      RI          CPT 600   Gig37/1
 10.1.1.2   Ten3/2        132      RI          CPT 600   Ten4/2
 10.1.1.2   Ten4/2        174      RI          CPT 600   Ten3/2`),
+
 ];

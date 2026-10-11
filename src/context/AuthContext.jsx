@@ -5,18 +5,6 @@ import { AuthContext } from "./auth-context";
 const PROFILE_CACHE_KEY = "matekk-session-profile";
 const OFFLINE_PROFILE_KEY = "matekkOfflineProfile";
 
-function readCachedProfile() {
-  try {
-    const cachedProfile = JSON.parse(sessionStorage.getItem(PROFILE_CACHE_KEY) || "null");
-    if (cachedProfile && typeof cachedProfile === "object" && !Array.isArray(cachedProfile)) {
-      return cachedProfile;
-    }
-  } catch {
-    sessionStorage.removeItem(PROFILE_CACHE_KEY);
-  }
-  return readOfflineProfile();
-}
-
 function readOfflineProfile() {
   const serialized = localStorage.getItem(OFFLINE_PROFILE_KEY);
   if (!serialized) return null;
@@ -32,6 +20,18 @@ function readOfflineProfile() {
     localStorage.removeItem(OFFLINE_PROFILE_KEY);
     return null;
   }
+}
+
+function readCachedProfile() {
+  try {
+    const cachedProfile = JSON.parse(sessionStorage.getItem(PROFILE_CACHE_KEY) || "null");
+    if (cachedProfile && typeof cachedProfile === "object" && !Array.isArray(cachedProfile)) {
+      return cachedProfile;
+    }
+  } catch {
+    sessionStorage.removeItem(PROFILE_CACHE_KEY);
+  }
+  return readOfflineProfile();
 }
 
 function storeOfflineProfile(profile) {
@@ -82,10 +82,13 @@ export function AuthProvider({ children }) {
     const nextProfile = await response.json();
     storeOfflineProfile(nextProfile);
     setProfile(nextProfile);
+    sessionStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(nextProfile));
     return nextProfile;
   }
 
   useEffect(() => {
+    localStorage.removeItem("accessToken");
+
     let mounted = true;
     const cachedProfile = readCachedProfile();
     fetch(`${API_URL}/auth/profile`, {
@@ -109,7 +112,7 @@ export function AuthProvider({ children }) {
       })
       .catch((error) => {
         console.error("Unable to restore the signed-in session.", error);
-        if (mounted && cachedProfile) setProfile(cachedProfile);
+        if (mounted) setProfile((current) => current ?? cachedProfile);
       })
       .finally(() => mounted && setIsLoading(false));
 
