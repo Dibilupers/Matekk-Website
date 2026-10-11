@@ -37,6 +37,8 @@ export default function CCNAAllQuestionsExam() {
 	const [score, setScore] = useState(0);
 	const [storageError, setStorageError] = useState(null);
 	const [questionNumberInput, setQuestionNumberInput] = useState("1");
+	// Results page: show only correct / incorrect / unanswered questions when stepping through the review
+	const [reviewFilter, setReviewFilter] = useState("all");
 	const questionCardRef = useRef(null);
 	const question = questions[currentIndex];
 	const answeredCount = useMemo(
@@ -44,6 +46,28 @@ export default function CCNAAllQuestionsExam() {
 		[answers, questions],
 	);
 	const percentage = questions.length ? Math.round((score / questions.length) * 100) : 0;
+	const reviewStatuses = useMemo(
+		() => (isSubmitted
+			? questions.map((item, index) => (isAnswerCorrect(item, answers[index])
+				? "correct"
+				: isQuestionAnswered(item, answers[index]) ? "incorrect" : "unanswered"))
+			: []),
+		[answers, isSubmitted, questions],
+	);
+	const reviewCounts = useMemo(() => reviewStatuses.reduce(
+		(counts, status) => ({ ...counts, [status]: counts[status] + 1 }),
+		{ all: reviewStatuses.length, correct: 0, incorrect: 0, unanswered: 0 },
+	), [reviewStatuses]);
+	const matchesReviewFilter = (index) => reviewFilter === "all" || reviewStatuses[index] === reviewFilter;
+	// The nearest question before / after the current one that fits the chosen filter (-1 if none)
+	const findReviewIndex = (from, step) => {
+		for (let index = from + step; index >= 0 && index < questions.length; index += step) {
+			if (matchesReviewFilter(index)) return index;
+		}
+		return -1;
+	};
+	const previousReviewIndex = isSubmitted ? findReviewIndex(currentIndex, -1) : -1;
+	const nextReviewIndex = isSubmitted ? findReviewIndex(currentIndex, 1) : -1;
 
 	useEffect(() => {
 		let isActive = true;
@@ -160,11 +184,19 @@ export default function CCNAAllQuestionsExam() {
 	function jumpToQuestion(event) {
 		event.preventDefault();
 		const questionNumber = Number(questionNumberInput);
-		if (Number.isInteger(questionNumber) && questionNumber >= 1 && questionNumber <= furthestOpenedIndex + 1) {
+		const lastAllowed = isSubmitted ? questions.length : furthestOpenedIndex + 1;
+		if (Number.isInteger(questionNumber) && questionNumber >= 1 && questionNumber <= lastAllowed) {
 			goToQuestion(questionNumber - 1);
 		} else {
 			setQuestionNumberInput(String(currentIndex + 1));
 		}
+	}
+
+	function chooseReviewFilter(filter) {
+		setReviewFilter(filter);
+		if (filter === "all" || reviewStatuses[currentIndex] === filter) return;
+		const first = reviewStatuses.findIndex((status) => status === filter);
+		if (first >= 0) goToQuestion(first);
 	}
 
 	function submitExam() {
@@ -330,6 +362,42 @@ export default function CCNAAllQuestionsExam() {
 								{answeredCount.toLocaleString()} answered · {questions.length - answeredCount} unanswered. Browse the numbered questions below to review your answers.
 							</p>
 						</section>
+						<section aria-label="Find a question" className="mb-5 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[#d6e5e7] bg-white p-4 shadow-sm sm:p-5">
+							<div role="group" aria-label="Show questions" className="flex flex-wrap gap-2">
+								{[
+									["all", "All"],
+									["incorrect", "Incorrect"],
+									["unanswered", "Unanswered"],
+									["correct", "Correct"],
+								].map(([filter, label]) => (
+									<button
+										key={filter}
+										type="button"
+										onClick={() => chooseReviewFilter(filter)}
+										disabled={reviewCounts[filter] === 0}
+										aria-pressed={reviewFilter === filter}
+										className={`rounded-full border px-4 py-2 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-40 ${reviewFilter === filter ? "border-[#005b6b] bg-[#005b6b] text-white" : "border-[#c9dfe2] bg-white text-[#005b6b] hover:bg-[#e8f3f4]"}`}
+									>
+										{label} <span className="tabular-nums opacity-80">({reviewCounts[filter].toLocaleString()})</span>
+									</button>
+								))}
+							</div>
+							<form onSubmit={jumpToQuestion} className="flex items-center gap-2 text-sm text-[#64748b]">
+								<label htmlFor="ccna-all-review-number">Go to</label>
+								<input
+									id="ccna-all-review-number"
+									type="number"
+									min="1"
+									max={questions.length}
+									value={questionNumberInput}
+									onChange={(event) => setQuestionNumberInput(event.target.value)}
+									className="w-24 rounded-lg border border-[#c9dfe2] bg-white px-3 py-2 text-[#17233d]"
+								/>
+								<button type="submit" className="rounded-lg bg-[#e8f3f4] px-3 py-2 font-semibold text-[#005b6b] hover:bg-[#d8ebed]">
+									Go
+								</button>
+							</form>
+						</section>
 						<section key={`review-${currentIndex}`} ref={questionCardRef} className="ccna-question-transition scroll-mt-4 rounded-[20px] border border-[#d6e5e7] bg-white p-4 shadow-sm sm:p-7">
 							<div className="flex flex-wrap items-center justify-between gap-3">
 								<h2 className="text-lg font-bold text-[#17233d]">
@@ -352,16 +420,16 @@ export default function CCNAAllQuestionsExam() {
 							<div className="mt-7 flex flex-wrap items-center justify-between gap-3">
 								<button
 									type="button"
-									onClick={() => goToQuestion(currentIndex - 1)}
-									disabled={currentIndex === 0}
+									onClick={() => goToQuestion(previousReviewIndex)}
+									disabled={previousReviewIndex < 0}
 									className="inline-flex items-center gap-2 rounded-full border border-[#9fc8ce] px-5 py-3 font-semibold text-[#005b6b] transition hover:bg-[#e8f3f4] disabled:cursor-not-allowed disabled:opacity-40"
 								>
 									<ChevronLeft size={18} /> Previous
 								</button>
 								<button
 									type="button"
-									onClick={() => goToQuestion(currentIndex + 1)}
-									disabled={currentIndex === questions.length - 1}
+									onClick={() => goToQuestion(nextReviewIndex)}
+									disabled={nextReviewIndex < 0}
 									className="inline-flex items-center gap-2 rounded-full bg-[#005b6b] px-6 py-3 font-semibold text-white transition hover:bg-[#004653] disabled:cursor-not-allowed disabled:opacity-40"
 								>
 									Next <ChevronRight size={18} />
