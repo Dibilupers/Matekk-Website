@@ -678,7 +678,7 @@ export default function CCNA() {
 	}
 
 	return (
-		<main className="ccna-page-enter relative min-h-screen bg-white text-[#071126]">
+		<main className="program-faceted-page ccna-page-enter relative min-h-screen bg-white text-[#071126]">
 			{/* Keep course navigation visible while scrolling, outside the page's slide-in animation. */}
 			{createPortal(
 				<Link
