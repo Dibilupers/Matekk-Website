@@ -140,13 +140,6 @@ export class UsersService {
                 city_province: true,
                 phone_number: true,
                 profile_photo: true,
-                first_name: true,
-                last_name: true,
-                birth_date: true,
-                gender: true,
-                city_province: true,
-                phone_number: true,
-                profile_photo: true,
                 enrollments: {
                     select: {
                         program: {
@@ -184,44 +177,6 @@ export class UsersService {
             city_province: databaseUser.city_province,
             phone_number: databaseUser.phone_number,
             profile_photo: databaseUser.profile_photo,
-        };
-    }
-
-    async findById(userId: number): Promise<User | undefined> {
-        const user = await this.prisma.users.findUnique({
-            where: { id: userId },
-            include: {
-                enrollments: {
-                    include: {
-                        program: {
-                            select: {
-                                name: true,
-                                parentId: true,
-                                modules: { select: { name: true } },
-                            },
-                        },
-                    },
-                },
-            },
-        });
-        if (!user) return undefined;
-
-        return {
-            userId: user.id,
-            username: user.username,
-            password: user.password,
-            role: user.role,
-            active_status: user.active_status,
-            pending_status: user.active_status ? 'Active' : 'Pending',
-            email: user.email ?? undefined,
-            module_enrolled: getEnrolledProgramNames(user.enrollments, user.programs_enrolled),
-            first_name: user.first_name,
-            last_name: user.last_name,
-            birth_date: user.birth_date,
-            gender: user.gender,
-            city_province: user.city_province,
-            phone_number: user.phone_number,
-            profile_photo: user.profile_photo,
         };
     }
 

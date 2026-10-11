@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ArrowLeft, ArrowUp, Check, Moon, RotateCcw, Sun, X } from "lucide-react";
 import { Link, useBlocker, useLocation, useParams } from "react-router-dom";
-import { useAuth } from "../../../../../context/AuthContext";
+import { useAuth } from "../../../../../context/auth-context";
 import TrainingLogo from "../../../../../assets/MATEKK_training_logo.png";
 import { CCNA_MODULE_QUIZZES } from "./ccnaModuleQuizData";
 import {

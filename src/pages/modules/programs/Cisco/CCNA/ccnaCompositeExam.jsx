@@ -2,7 +2,7 @@
 import { createPortal } from "react-dom";
 import { ArrowLeft, ArrowRight, ArrowUp, Clock3, Moon, RotateCcw, Sun, X } from "lucide-react";
 import { Link, useBlocker, useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "../../../../../context/AuthContext";
+import { useAuth } from "../../../../../context/auth-context";
 import TrainingLogo from "../../../../../assets/MATEKK_training_logo.png";
 import { CCNA_EXAMS } from "./ccnaExamFormats";
 import { createCcnaMockExamAttemptId, saveCcnaMockExamResult } from "../../../../../utils/ccnaGradebook";
@@ -370,16 +370,6 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 				{gradebookSaveError && isResultView && (
 					<p role="alert" className="mb-4 rounded-xl border border-[#f2c6c3] bg-white px-4 py-3 text-sm font-medium text-[#b42318]">
 						{gradebookSaveError} Reload this page to retry.
-					</p>
-				)}
-				{questionsLoading && (
-					<p role="status" className="mb-4 rounded-xl border border-[#d6e5e7] bg-white px-4 py-3 text-sm font-medium text-[#005b6b]">
-						Loading the CCNA question set...
-					</p>
-				)}
-				{questionsError && (
-					<p role="alert" className="mb-4 rounded-xl border border-[#f2c6c3] bg-white px-4 py-3 text-sm font-medium text-[#b42318]">
-						{questionsError} Continuing with the local exam question bank.
 					</p>
 				)}
 				<header className="mb-7 flex flex-wrap items-center justify-between gap-4 border-b border-[#d6e5e7] pb-5">

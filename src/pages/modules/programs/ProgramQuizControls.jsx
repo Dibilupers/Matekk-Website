@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate, Link } from "react-router-dom";
 import { ArrowRight, BookOpen, Check, Clock3, X } from "lucide-react";
-import { useAuth } from "../../../context/AuthContext";
+import { useAuth } from "../../../context/auth-context";
 import {
 	isCurrentProgramModuleQuizAttempt,
 	readProgramModuleQuizProgress,

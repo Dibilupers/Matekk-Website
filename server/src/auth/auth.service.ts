@@ -1,7 +1,6 @@
 
 import { BadRequestException, ConflictException, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { Prisma } from '../generated/prisma/client.js';
-import { Prisma } from '../generated/prisma/client.js';
 import { UsersService } from '../users/users.service.js';
 import { JwtService } from '@nestjs/jwt';
 import { PasswordService } from './password.service.js';
@@ -11,10 +10,6 @@ import { EmailService } from '../email/email.service.js';
 import { UpdateProfileDto } from './dto/profile.dto.js';
 import { ChangePasswordDto } from './dto/change-password.dto.js';
 import { ProfilePhotoDto } from './dto/profile-photo.dto.js';
-=========
-import { EmailService } from '../email/email.service.js';
-import { Prisma } from '../generated/prisma/client.js';
->>>>>>>>> Temporary merge branch 2
 
 @Injectable()
 export class AuthService {

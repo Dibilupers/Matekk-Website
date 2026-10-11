@@ -2,7 +2,7 @@ import CybersecurityBadge from "../../../../../assets/CCNAcybersecurity.webp";
 import { useState } from "react";
 import { ArrowRight, Check, ChevronDown, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../../../../../context/AuthContext";
+import { useAuth } from "../../../../../context/auth-context";
 import { CCNA_CYBERSECURITY_CURRICULUM } from "./ccnaCybersecurityCurriculum";
 import {
 	markCcnaCybersecurityModuleOpened,

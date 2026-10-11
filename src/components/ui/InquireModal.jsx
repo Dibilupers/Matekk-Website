@@ -272,7 +272,7 @@ function useEnrollForm(onClose, initialStep = 0, initialInquiryType = null, pres
     setCaptchaError("CAPTCHA could not load. Check your connection and try again.");
   }, []);
 
-  const reset = () => {
+  const reset = useCallback(() => {
     clearInterval(cooldownRef.current);
     setStep(initialStep);
     setInquiryType(initialInquiryType);
@@ -289,7 +289,7 @@ function useEnrollForm(onClose, initialStep = 0, initialInquiryType = null, pres
       name: "", email: "", phone: "", serviceInterest: "",
       projectScale: "", timeline: "", budget: "", projectDesc: "", techSpecs: "", message: "",
     });
-  };
+  }, [initialStep, initialInquiryType, resolvedCourse]);
 
   return {
     step, inquiryType, trainingForm, solutionsForm, errors, status,
@@ -786,7 +786,8 @@ export default function InquireModal({
 }) {
   const f = useEnrollForm(onClose, initialStep, initialInquiryType, preselectedCourse);
   const navigate = useNavigate();
-  const handleClose = () => { f.reset(); onClose(); };
+  const reset = f.reset;
+  const handleClose = useCallback(() => { reset(); onClose(); }, [reset, onClose]);
 
   useEffect(() => {
     if (isOpen) f.reset();
@@ -805,7 +806,7 @@ export default function InquireModal({
     navigate("/", {
       state: { submissionMessage: "Message sent successfully!" },
     });
-  }, [f.status, navigate]);
+  }, [f.status, navigate, handleClose]);
 
   if (!isOpen) return null;
 
