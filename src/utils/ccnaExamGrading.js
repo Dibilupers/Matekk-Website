@@ -73,6 +73,8 @@ export function matchMode(question) {
 
 // Group mode: how many items belong in each group (shown as slots, like the original exam)
 export function groupSizes(question) {
+	// Exams from the backend send only the box sizes (the answer key stays on the server)
+	if (Array.isArray(question?.groupSizes) && question.groupSizes.length === question.choices?.length) return question.groupSizes;
 	return question.choices.map((_, choiceIndex) => question.answer.filter((a) => a === choiceIndex).length);
 }
 

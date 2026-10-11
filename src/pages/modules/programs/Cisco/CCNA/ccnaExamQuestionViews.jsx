@@ -1,6 +1,8 @@
 import { useRef, useState } from "react";
 import { groupCode, groupSizes, matchMode, parseGroupCode, questionType, requiredSelections } from "../../../../../utils/ccnaExamGrading";
-import { getDisplayedOption, parseFormattedOptions } from "./ccnaExamQuestionFormatting";
+import { getDisplayedOption, getOptionTableExhibit, parseFormattedOptions } from "./ccnaExamQuestionFormatting";
+import { ExhibitText } from "./ccnaExhibit";
+import { looksLikeCode, tidySentence } from "../../../../../utils/answerTextStyle";
 import { MatchingQuestionInput, MatchingQuestionReview } from "./ccnaExamMatching";
 
 const letter = (i) => String.fromCharCode(65 + i);
@@ -32,7 +34,11 @@ function animateChoiceCopies(root, target, choiceIndex) {
 	if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
 	const targetRect = target.getBoundingClientRect();
-	const copies = [...root.querySelectorAll(`[data-match-choice="${choiceIndex}"]`)]
+	// The same box in the other rows, plus the boxes NOT chosen in this row: all of them slide into
+	// the chosen box (left/right/up/down depending on where each one sits) and fade away.
+	const sameChoiceElsewhere = [...root.querySelectorAll(`[data-match-choice="${choiceIndex}"]`)];
+	const notChosenInRow = [...(target.parentElement?.querySelectorAll("[data-match-choice]") ?? [])];
+	const copies = [...new Set([...sameChoiceElsewhere, ...notChosenInRow])]
 		.filter((choice) => choice !== target)
 		.map((choice) => {
 			const rect = choice.getBoundingClientRect();
@@ -233,25 +239,42 @@ function GroupMatchInput({ question, value, onChange, disabled }) {
 
 function AnswerOptionContent({ option, codeStyle = false }) {
 	const text = String(option ?? "");
-	if (!codeStyle && !text.includes("\n")) {
-		return <span className="min-w-0 flex-1 whitespace-pre-wrap text-sm sm:text-base">{text}</span>;
+	// Ordinary sentences stay normal text (sentences cut over two lines in the PDFs are joined back up).
+	// A single word like "service port" or "router" is a plain answer here, not a command.
+	if (!codeStyle && !(text.includes("\n") && looksLikeCode(text))) {
+		return <span className="min-w-0 flex-1 whitespace-pre-wrap text-sm sm:text-base">{tidySentence(text)}</span>;
 	}
+	const formattedText = text.replace(/(?<=\S)[ \t]{3,}(?=\S)/g, "\n");
 
 	return (
-		<pre className="min-w-0 flex-1 overflow-x-auto rounded-lg bg-[#101b31] px-3 py-2 font-mono text-xs leading-5 text-[#e7efff] whitespace-pre-wrap break-words [overflow-wrap:anywhere] sm:text-sm">
-			<code>{text}</code>
+		<pre className="min-w-0 flex-1 overflow-x-hidden rounded-lg border border-[#d9e1ef] bg-[#f1f5f9] px-2 py-1.5 font-mono text-xs leading-5 text-[#263654] whitespace-pre-wrap break-words [overflow-wrap:anywhere] sm:px-3 sm:py-2 sm:text-sm">
+			<code>{formattedText}</code>
 		</pre>
 	);
 }
 
+// Use the terminal-style box for every answer when at least half the answers are device commands/output,
+// so the choices line up. One answer that merely starts with a command word ("service port",
+// "shutdown command issued on the port") doesn't count; nor does a line break alone.
 function hasMultilineOption(question) {
-	return question.options.some((option) =>
-		String(getDisplayedOption(question, option) ?? "").includes("\n"),
-	);
+	const codeAnswers = question.options.filter((option) => looksLikeCode(getDisplayedOption(question, option))).length;
+	return codeAnswers > 0 && codeAnswers >= question.options.length / 2;
 }
 
 export function QuestionPrompt({ prompt }) {
 	const formattedOptions = parseFormattedOptions(prompt);
+	// A scrambled "Option A / Option B" table: show the question, then the whole table as it appears in the source
+	const optionTable = formattedOptions ? null : getOptionTableExhibit(prompt);
+	if (optionTable) {
+		return (
+			<div className="mb-5 space-y-4 sm:mb-6">
+				<h2 className="whitespace-pre-wrap text-base font-semibold leading-relaxed tracking-tight text-[#17233d] sm:text-lg">
+					{optionTable.prompt}
+				</h2>
+				<ExhibitText text={optionTable.exhibit} />
+			</div>
+		);
+	}
 	const normalizedPrompt = (formattedOptions?.prompt ?? String(prompt ?? "")).replace(/\r\n/g, "\n").trim();
 
 	const configuredMatch = normalizedPrompt.match(/\bConfigured (?:router IPv6 )?interfaces:\s*/i);
@@ -299,7 +322,12 @@ export function QuestionPrompt({ prompt }) {
 /* Answer input for one exam question (pick one, choose two, or matching). */
 export function QuestionInput({ question, value, onChange, disabled }) {
 	const type = questionType(question);
-	const localMatchMode = Array.isArray(question.answer) ? matchMode(question) : "select";
+	// Backend exams don't include the answer key; "type the numbers" questions come with their box sizes instead
+	const hasGroupSizes = Array.isArray(question.groupSizes) && question.groupSizes.length === question.choices?.length &&
+		question.groupSizes.reduce((sum, size) => sum + size, 0) === question.items?.length;
+	// One-to-one questions (each box used once) use the click-to-place boxes, like the original exam
+	const isOneToOne = Array.isArray(question.items) && Array.isArray(question.choices) && question.items.length === question.choices.length;
+	const localMatchMode = Array.isArray(question.answer) ? matchMode(question) : hasGroupSizes ? "group" : isOneToOne ? "assign" : "select";
 
 	if (type === "match" && localMatchMode === "assign") {
 		return <AssignMatchInput question={question} value={value} onChange={onChange} disabled={disabled} />;

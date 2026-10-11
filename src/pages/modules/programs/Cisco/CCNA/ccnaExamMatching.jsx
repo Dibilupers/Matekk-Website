@@ -1,7 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 const letter = (index) => String.fromCharCode(65 + index);
-const ROW_HEIGHT = 76;
 const EMPTY_CONNECTIONS = [];
 
 function MatchBoard({ question, value, onChange, disabled = false, review = false }) {
@@ -12,8 +11,6 @@ function MatchBoard({ question, value, onChange, disabled = false, review = fals
 	const [boardSize, setBoardSize] = useState({ width: 0, height: 0 });
 	const [lines, setLines] = useState([]);
 	const connections = Array.isArray(value) ? value : EMPTY_CONNECTIONS;
-	const boardHeight = Math.max(question.items.length, question.choices.length) * ROW_HEIGHT;
-
 	useEffect(() => {
 		const board = boardRef.current;
 		if (!board) return undefined;
@@ -31,7 +28,7 @@ function MatchBoard({ question, value, onChange, disabled = false, review = fals
 		const observer = new ResizeObserver(updateBoardSize);
 		observer.observe(board);
 		return () => observer.disconnect();
-	}, [boardHeight]);
+	}, [question.choices.length, question.items.length]);
 
 	function connectTo(choiceIndex) {
 		if (disabled || activeItem === null) return;
@@ -77,10 +74,12 @@ function MatchBoard({ question, value, onChange, disabled = false, review = fals
 				{review ? "Your connections are shown below." : "Select a dot in Column A, then select its match in Column B."}
 			</p>
 			<div
-				ref={boardRef}
-				className="relative overflow-hidden rounded-2xl border border-[#d9e1ef] bg-white"
-				style={{ minHeight: boardHeight }}
+				role="region"
+				aria-label="Scrollable matching board"
+				tabIndex={0}
+				className="overflow-x-auto rounded-2xl border border-[#d9e1ef] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5746bd]"
 			>
+				<div ref={boardRef} className="relative min-w-[640px] overflow-hidden bg-white md:min-w-0">
 				{boardSize.width > 0 && (
 					<svg
 						aria-hidden="true"
@@ -105,78 +104,85 @@ function MatchBoard({ question, value, onChange, disabled = false, review = fals
 						})}
 					</svg>
 				)}
-				<div className="relative z-20 grid h-full grid-cols-2">
-					<section aria-label="Column A" className="border-r border-[#e5eaf1]">
-						<div role="heading" aria-level={3} className="grid h-12 place-items-center border-b border-[#e5eaf1] text-xs font-bold uppercase tracking-wider text-[#64748b]">
+				<div className="relative z-20 flex flex-col">
+					<div className="grid grid-cols-[minmax(0,1.3fr)_minmax(0,0.7fr)] sm:grid-cols-2">
+						<div role="heading" aria-level={3} aria-label="Column A" className="grid h-12 place-items-center border-b border-r border-[#e5eaf1] text-xs font-bold uppercase tracking-wider text-[#64748b]">
 							Column A
 						</div>
-						<div className="flex flex-col">
-							{question.items.map((item, itemIndex) => {
-								const isActive = activeItem === itemIndex;
-								const connected = Number.isInteger(connections[itemIndex]);
-								const correct = review && connections[itemIndex] === question.answer[itemIndex];
-								return (
-									<div key={itemIndex} className="grid h-[76px] grid-cols-[2.25rem_minmax(0,1fr)_18px] items-center gap-2 px-3 sm:gap-4 sm:px-5">
-										<span className="text-left text-sm font-semibold tabular-nums text-[#263654] sm:text-base">{itemIndex + 1}.</span>
-										<span className="min-w-0 break-words text-left text-sm leading-snug text-[#263654] sm:text-base">{item}</span>
-										<button
-											ref={(element) => { leftDots.current[itemIndex] = element; }}
-											type="button"
-											disabled={disabled || review}
-											onClick={() => activateItem(itemIndex)}
-											aria-label={`${isActive ? "Cancel connection from" : "Connect"} ${item}`}
-											aria-pressed={isActive}
-											className={`h-[18px] w-[18px] shrink-0 rounded-full border-2 transition ${review
-												? (correct ? "border-[#287849] bg-[#287849]" : connected ? "border-[#c7541a] bg-[#c7541a]" : "border-[#a8b2bf] bg-white")
-												: isActive || connected ? "border-[#5746bd] bg-[#5746bd]"
-													: "border-[#a8b2bf] bg-white hover:border-[#5746bd]"
-											} disabled:cursor-default`}
-										/>
-									</div>
-								);
-							})}
-						</div>
-					</section>
-					<section aria-label="Column B">
-						<div role="heading" aria-level={3} className="grid h-12 place-items-center border-b border-[#e5eaf1] text-xs font-bold uppercase tracking-wider text-[#64748b]">
+						<div role="heading" aria-level={3} aria-label="Column B" className="grid h-12 place-items-center border-b border-[#e5eaf1] text-xs font-bold uppercase tracking-wider text-[#64748b]">
 							Column B
 						</div>
-						<div className="flex flex-col">
-							{question.choices.map((choice, choiceIndex) => {
-								const connectedItem = connections.findIndex((answer) => answer === choiceIndex);
-								const correctItem = review ? question.answer.findIndex((answer) => answer === choiceIndex) : -1;
-								const connected = connectedItem >= 0;
-								const correct = review && connectedItem === correctItem;
-								return (
-									<div key={choiceIndex} className="grid h-[76px] grid-cols-[18px_minmax(0,1fr)] items-center gap-2 px-3 sm:gap-4 sm:px-5">
-										<button
-											ref={(element) => { rightDots.current[choiceIndex] = element; }}
-											type="button"
-											disabled={disabled || review}
-											onClick={() => {
-												if (activeItem !== null) connectTo(choiceIndex);
-												else if (connected) setActiveItem(connectedItem);
-											}}
-											aria-label={connected ? `Connected to ${question.items[connectedItem]}. Select to change connection.` : `Connect to ${choice}`}
-											className={`h-[18px] w-[18px] shrink-0 rounded-full border-2 transition ${review
-												? (correct ? "border-[#287849] bg-[#287849]" : connected ? "border-[#c7541a] bg-[#c7541a]" : "border-[#a8b2bf] bg-white")
-												: connected ? "border-[#5746bd] bg-[#5746bd]" : "border-[#a8b2bf] bg-white hover:border-[#5746bd]"
-											} disabled:cursor-default`}
-										/>
-										<span className="min-w-0 break-words text-sm leading-snug text-[#263654] sm:text-base">
-											<span className="font-semibold">{letter(choiceIndex)}.</span> {choice}
-										</span>
-									</div>
-								);
-							})}
-						</div>
-					</section>
+					</div>
+					{Array.from({ length: Math.max(question.items.length, question.choices.length) }, (_, rowIndex) => {
+						const item = question.items[rowIndex];
+						const choice = question.choices[rowIndex];
+						const isActive = activeItem === rowIndex;
+						const itemConnected = Number.isInteger(connections[rowIndex]);
+						const itemCorrect = review && connections[rowIndex] === question.answer[rowIndex];
+						const connectedItem = connections.findIndex((answer) => answer === rowIndex);
+						const choiceConnected = connectedItem >= 0;
+						const choiceCorrect = review && connectedItem === question.answer.findIndex((answer) => answer === rowIndex);
+
+						return (
+							<div key={rowIndex} className="grid grid-cols-[minmax(0,1.3fr)_minmax(0,0.7fr)] items-stretch border-b border-[#e5eaf1] sm:grid-cols-2">
+								<div className={`grid min-h-[76px] min-w-0 grid-cols-[1.75rem_minmax(0,1fr)_4rem] items-center gap-1 border-r border-[#e5eaf1] px-2 py-2 sm:grid-cols-[2.25rem_minmax(0,1fr)_4rem] sm:gap-4 sm:px-5 ${isActive ? "bg-[#f6f4ff]" : ""}`}>
+									{item !== undefined && (
+										<>
+											<span className="text-left text-sm font-semibold tabular-nums text-[#263654] sm:text-base">{rowIndex + 1}.</span>
+											<span className="min-w-0 break-words text-left text-[13px] leading-snug text-[#263654] sm:text-base">{item}</span>
+											<button
+												ref={(element) => { leftDots.current[rowIndex] = element; }}
+												type="button"
+												disabled={disabled || review}
+												onClick={() => activateItem(rowIndex)}
+												aria-label={`${isActive ? "Cancel connection from" : "Connect"} ${item}`}
+												aria-pressed={isActive}
+												className="group grid h-16 w-16 shrink-0 place-items-center rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[#5746bd] disabled:cursor-default"
+											>
+												<span aria-hidden="true" className={`h-[18px] w-[18px] rounded-full border-2 transition ${review
+													? (itemCorrect ? "border-[#287849] bg-[#287849]" : itemConnected ? "border-[#c7541a] bg-[#c7541a]" : "border-[#a8b2bf] bg-white")
+													: isActive || itemConnected ? "border-[#5746bd] bg-[#5746bd]"
+														: "border-[#a8b2bf] bg-white group-hover:border-[#5746bd]"
+												}`} />
+											</button>
+										</>
+									)}
+								</div>
+								<div className="grid min-h-[76px] min-w-0 grid-cols-[4rem_minmax(0,1fr)] items-center gap-1 px-2 py-2 sm:gap-4 sm:px-5">
+									{choice !== undefined && (
+										<>
+											<button
+												ref={(element) => { rightDots.current[rowIndex] = element; }}
+												type="button"
+												disabled={disabled || review}
+												onClick={() => {
+													if (activeItem !== null) connectTo(rowIndex);
+													else if (choiceConnected) setActiveItem(connectedItem);
+												}}
+												aria-label={choiceConnected ? `Connected to ${question.items[connectedItem]}. Select to change connection.` : `Connect to ${choice}`}
+												className="group grid h-16 w-16 shrink-0 place-items-center rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[#5746bd] disabled:cursor-default"
+											>
+												<span aria-hidden="true" className={`h-[18px] w-[18px] rounded-full border-2 transition ${review
+													? (choiceCorrect ? "border-[#287849] bg-[#287849]" : choiceConnected ? "border-[#c7541a] bg-[#c7541a]" : "border-[#a8b2bf] bg-white")
+													: choiceConnected ? "border-[#5746bd] bg-[#5746bd]" : "border-[#a8b2bf] bg-white group-hover:border-[#5746bd]"
+												}`} />
+											</button>
+											<span className="min-w-0 break-words text-[13px] leading-snug text-[#263654] sm:text-base">
+												<span className="font-semibold">{letter(rowIndex)}.</span> {choice}
+											</span>
+										</>
+									)}
+								</div>
+							</div>
+						);
+					})}
 				</div>
 				{!review && activeItem !== null && (
 					<p className="sr-only" aria-live="polite">
 						Select the matching answer in Column B for {question.items[activeItem]}.
 					</p>
 				)}
+			</div>
 			</div>
 		</div>
 	);

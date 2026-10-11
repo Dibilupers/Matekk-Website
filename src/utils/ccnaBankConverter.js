@@ -14,6 +14,8 @@ const MOJIBAKE = [
 export function cleanText(text) {
   let out = String(text ?? "");
   for (const [bad, good] of MOJIBAKE) out = out.split(bad).join(good);
+  // Website text that got copied in with the questions ("Premium Member: You can test your knowledge ... (via HTML).")
+  out = out.replace(/\+?\s*\w*mium Member:?\s*(?:You can test your knowledge[^\n]*)?/gi, "");
   return out
     .split("\n")
     // leftovers from the source document, e.g. "===== New Questions (added on 13th-Feb-2022) ====="
@@ -76,19 +78,21 @@ function parseGroups(answerText, seed) {
 // "+ left: right" / "Step 1: text" / "1 – text" / "10.10.13.0 – 255.255.255.128"  ->  one-to-one matching
 function parsePairs(answerText) {
   const lines = answerText
-    .replace(/\s\+\s(?=[^:\n]{1,40}:\s)/g, "\n") // two pairs run together on one line
+    .replace(/\s\+\s(?=[^:+\n]{1,150}:\s)/g, "\n") // several pairs run together on one line
     .split("\n")
     .map((line) => line.replace(/^\+\s*/, "").trim())
     .filter(Boolean);
   const pairs = lines.map((line) => {
-    const match = /^(.{1,80}?)\s*(?::\s+|\s+:\s*|\s+[–-]\s+)(.+)$/.exec(line);
+    const match = /^(.{1,150}?)\s*(?::\s+|\s+:\s*|\s+[–-]\s+)(.+)$/.exec(line);
     return match ? { left: match[1].trim(), right: match[2].trim() } : null;
   });
   if (pairs.length < 2 || pairs.some((p) => !p)) return null;
   const lefts = pairs.map((p) => p.left);
   const rights = pairs.map((p) => p.right);
   if (new Set(lefts).size !== lefts.length || new Set(rights).size !== rights.length) return null;
-  return { type: "match", items: lefts, choices: rights, answer: rights.map((_, i) => i) };
+  // Ordering questions ("1: switchport mode access", "2: ...") read better as "Step 1", "Step 2"
+  const items = lefts.every((left) => /^\d+$/.test(left)) ? lefts.map((left) => `Step ${left}`) : lefts;
+  return { type: "match", items, choices: rights, answer: rights.map((_, i) => i) };
 }
 
 function dragAndDrop(row) {

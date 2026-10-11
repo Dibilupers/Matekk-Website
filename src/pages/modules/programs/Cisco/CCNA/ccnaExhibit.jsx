@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { Maximize2, Minus, Plus, X } from "lucide-react";
+import { Maximize2, X } from "lucide-react";
 
 /* Exam exhibits (router output and pictures). Each one can open full screen, where it starts zoomed
    to fit the screen and can be zoomed by touch: pinch with two fingers, drag with one, double-tap to
@@ -137,13 +137,6 @@ function ZoomViewer({ title, theme, onClose, children }) {
 				</span>
 				<p className="min-w-0 flex-1 truncate text-sm font-semibold">{title}</p>
 				<span className="ccna-term-hint hidden text-xs sm:inline">Pinch or Ctrl + scroll to zoom</span>
-				{import.meta.env.DEV && (
-					<>
-						<button type="button" className={button} onClick={() => zoomTo(scale / 1.25)} aria-label="Zoom out (dev)"><Minus size={16} /></button>
-						<span className="w-11 text-center text-xs font-semibold">{Math.round(scale * 100)}%</span>
-						<button type="button" className={button} onClick={() => zoomTo(scale * 1.25)} aria-label="Zoom in (dev)"><Plus size={16} /></button>
-					</>
-				)}
 				<button type="button" className={button} onClick={onClose} aria-label="Close full screen"><X size={18} /></button>
 			</div>
 			<div ref={scrollerRef} className="flex flex-1 overflow-auto overscroll-contain" style={{ touchAction: "pan-x pan-y" }}>
@@ -226,8 +219,8 @@ export function ExhibitImage({ src, className = "", imageClassName = "", lazy = 
 	const [openTheme, setOpenTheme] = useState(null);
 	const wrapRef = useRef(null);
 	return (
-		<div ref={wrapRef} className={`relative w-fit max-w-full ${className}`}>
-			<img src={src} alt="Exhibit" loading={lazy ? "lazy" : undefined} className={`w-auto max-w-full rounded-xl border border-[#d6e5e7] bg-white ${imageClassName}`} />
+		<div ref={wrapRef} className={`relative mx-auto w-fit max-w-full ${className}`}>
+			<img key={src} src={src} alt="Exhibit" loading={lazy ? "lazy" : undefined} className={`w-auto max-w-full rounded-xl border border-[#d6e5e7] bg-white ${imageClassName}`} />
 			<button
 				type="button"
 				onClick={() => setOpenTheme(pageTheme(wrapRef.current))}

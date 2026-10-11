@@ -11,6 +11,7 @@ import { isQuestionAnswered } from "../../../../../utils/ccnaExamGrading";
 import { QuestionInput, QuestionPrompt, QuestionReview } from "./ccnaExamQuestionViews";
 import { saveGradebookAssessment } from "../../../../../utils/gradebookApi";
 import { splitPromptExhibit } from "../../../../../utils/splitPromptExhibit";
+import { cleanText } from "../../../../../utils/ccnaBankConverter";
 import { ExhibitImage, ExhibitText } from "./ccnaExhibit";
 import { loadCcnaQuestionBank } from "../../../../../utils/ccnaQuestionBankApi";
 import { getDatabaseQuestionById, setDatabaseQuestions } from "./ccnaQuestionBank";
@@ -24,7 +25,7 @@ function formatTime(totalSeconds) {
 	return hours > 0 ? `${hours.toString().padStart(2, "0")}:${minutes}:${seconds}` : `${minutes}:${seconds}`;
 }
 
-function CCNACompositeExamPage({ examKey = "short" }) {
+export default function CCNACompositeExam({ examKey = "short" }) {
 	const exam = CCNA_EXAMS[examKey];
 	const location = useLocation();
 	const navigate = useNavigate();
@@ -106,10 +107,10 @@ function CCNACompositeExamPage({ examKey = "short" }) {
 			return {
 				...question,
 				index,
-				answer: isMatch ? item.correctAnswer : question?.options.indexOf(item.correctAnswer),
+				answer: isMatch ? item.correctAnswer : question?.options.indexOf(typeof item.correctAnswer === "string" ? cleanText(item.correctAnswer) : item.correctAnswer),
 				selectedAnswer: isMatch
 					? item.selectedAnswer
-					: question?.options.indexOf(item.selectedAnswer),
+					: question?.options.indexOf(typeof item.selectedAnswer === "string" ? cleanText(item.selectedAnswer) : item.selectedAnswer),
 				isCorrect: item.isCorrect,
 				explanation: item.explanation,
 			};
@@ -127,6 +128,10 @@ function CCNACompositeExamPage({ examKey = "short" }) {
 
 		async function loadExamAttempt() {
 			setExamLoadState({ status: "loading", error: null });
+			// The question bank supplies each question's picture / printout; load it alongside the exam questions
+			const bankReady = loadCcnaQuestionBank()
+				.then(({ questions: bankQuestions }) => setDatabaseQuestions(bankQuestions))
+				.catch((error) => console.error("Unable to load the CCNA question bank; exam pictures may be missing.", error));
 			try {
 				let savedSession = null;
 				const isRetake = shouldStartNewAttemptRef.current;
@@ -172,14 +177,32 @@ function CCNACompositeExamPage({ examKey = "short" }) {
 				if (apiAttempt.questions.length !== exam.questionCount) {
 					throw new TypeError(`The backend did not return ${exam.questionCount} questions for this exam.`);
 				}
+				await bankReady;
+				if (!isActive) return;
 				const loadedQuestions = apiAttempt.questions.map((apiQuestion) => {
 					const bankQuestion = getDatabaseQuestionById(apiQuestion.id);
-					const { prompt, exhibit } = splitPromptExhibit(apiQuestion.prompt);
+					// Fix text saved with the wrong encoding ("â€œwarningâ€" -> “warning”) for display.
+					// The original option text is kept for submitting, since the backend grades by exact text.
+					const cleanList = (list) => (Array.isArray(list) ? list.map((value) => (typeof value === "string" ? cleanText(value) : value)) : list);
+					// "Option A / Option B …" questions: the options are described in a table inside the question text.
+					// Keep that text whole (the question view lays the table out itself) and list the answers A, B, C, D in order.
+					const isOptionTable = Array.isArray(apiQuestion.options) &&
+						apiQuestion.options.every((option) => /^\s*Option [A-H]\s*$/i.test(String(option)));
+					const { prompt, exhibit } = isOptionTable
+						? { prompt: cleanText(apiQuestion.prompt) }
+						: splitPromptExhibit(cleanText(apiQuestion.prompt));
+					const orderedOptions = isOptionTable
+						? [...apiQuestion.options].sort((left, right) => String(left).trim().localeCompare(String(right).trim()))
+						: apiQuestion.options;
 					return {
 						...apiQuestion,
 						prompt,
+						...(Array.isArray(orderedOptions) ? { options: cleanList(orderedOptions), rawOptions: orderedOptions } : {}),
+						...(Array.isArray(apiQuestion.items) ? { items: cleanList(apiQuestion.items) } : {}),
+						...(Array.isArray(apiQuestion.choices) ? { choices: cleanList(apiQuestion.choices) } : {}),
+						...(typeof apiQuestion.explanation === "string" ? { explanation: cleanText(apiQuestion.explanation) } : {}),
 						...(exhibit ? { exhibit } : {}),
-						...(bankQuestion?.exhibit ? { exhibit: bankQuestion.exhibit } : {}),
+						...(bankQuestion?.exhibit && !isOptionTable ? { exhibit: bankQuestion.exhibit } : {}),
 						...(bankQuestion?.exhibitImage ? { exhibitImage: bankQuestion.exhibitImage } : {}),
 					};
 				});
@@ -307,7 +330,7 @@ function CCNACompositeExamPage({ examKey = "short" }) {
 				questionId: item.id,
 				...(item.type === "match"
 					? { selectedMatches: Array.isArray(answers[index]) ? answers[index] : null }
-					: { selectedAnswer: Number.isInteger(answers[index]) ? item.options[answers[index]] : null }),
+					: { selectedAnswer: Number.isInteger(answers[index]) ? (item.rawOptions ?? item.options)[answers[index]] : null }),
 			}));
 			const result = await submitCcnaExam(examKey, attemptId, submittedAnswers);
 			if (
@@ -498,8 +521,8 @@ function CCNACompositeExamPage({ examKey = "short" }) {
 
 	if (examLoadState.status !== "ready") {
 		return (
-			<main className="min-h-screen bg-[#f5f9f9] px-4 py-16 text-[#17233d] sm:px-8">
-				<section className="mx-auto max-w-xl rounded-2xl border border-[#d6e5e7] bg-white p-8 text-center shadow-sm">
+			<main className="flex min-h-screen items-center justify-center bg-[#f5f9f9] px-4 py-16 text-[#17233d] sm:px-8">
+				<section className="w-full max-w-xl rounded-2xl border border-[#d6e5e7] bg-white p-8 text-center shadow-sm">
 					<h1 className="text-2xl font-bold">{examLoadState.status === "loading" ? "Preparing your exam" : "Unable to load your exam"}</h1>
 					<p role={examLoadState.status === "error" ? "alert" : undefined} className="mt-3 text-sm leading-6 text-[#64748b]">
 						{examLoadState.status === "loading"
@@ -630,7 +653,9 @@ function CCNACompositeExamPage({ examKey = "short" }) {
 								{question.exhibit && (
 									<ExhibitText text={question.exhibit} className="mb-6" />
 								)}
+								{/* key: a fresh answer box per question, so text typed on one question never carries over */}
 								<QuestionInput
+									key={currentIndex}
 									question={question}
 									value={answers[currentIndex]}
 									onChange={(value) => setAnswers((previous) => ({ ...previous, [currentIndex]: value }))}
@@ -880,33 +905,4 @@ function CCNACompositeExamPage({ examKey = "short" }) {
 			)}
 		</main>
 	);
-}
-// Loads the database question bank first, so a new attempt draws its questions from it.
-// (If the bank can't be reached, the exam still works with the questions built into the site.)
-export default function CCNACompositeExam(props) {
-	const [status, setStatus] = useState("loading");
-	useEffect(() => {
-		let active = true;
-		loadCcnaQuestionBank()
-			.then(({ questions }) => {
-				setDatabaseQuestions(questions);
-				if (active) setStatus("ready");
-			})
-			.catch((error) => {
-				console.error("Unable to load the CCNA question bank; using the built-in questions instead.", error);
-				if (active) setStatus("ready");
-			});
-		return () => { active = false; };
-	}, []);
-
-	if (status === "loading") {
-		return (
-			<main className="flex min-h-screen items-center justify-center bg-[#f5f9f9] px-4 text-[#17233d]">
-				<p role="status" className="rounded-2xl border border-[#d6e5e7] bg-white px-6 py-4 text-sm font-semibold text-[#005b6b] shadow-sm">
-					Loading the CCNA question bank…
-				</p>
-			</main>
-		);
-	}
-	return <CCNACompositeExamPage {...props} />;
 }

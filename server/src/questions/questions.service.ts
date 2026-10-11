@@ -5,6 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { randomInt, randomUUID } from 'node:crypto';
+import { isGroupMatch, parseDragDropAnswer } from './drag-drop-answer.js';
 import { CreateQuestionDto, ExamAnswerDto } from './dto/questions.dto.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { StorageService } from '../storage/storage.service.js';
@@ -29,6 +30,9 @@ type MatchExamQuestion = Omit<ExamQuestionBase, 'options'> & {
   type: 'match';
   items: string[];
   choices: string[];
+  // "Type the numbers" questions: how many items go in each box (keyed by box name). Only the counts,
+  // never which item goes where, so the exam can show the right number of slots like the real exam.
+  groupCounts?: Record<string, number>;
 };
 type ExamQuestion = SingleExamQuestion | MatchExamQuestion;
 
@@ -116,7 +120,22 @@ export class QuestionsService {
       );
     }
 
-    const randomizedMatches = this.shuffle(matchingQuestions);
+    // Every 50-question block gets at least one of each matching style: one "drag and drop" question
+    // (each item has its own box) and one "type the numbers" question (several items share a few boxes).
+    // The rest of the matching slots stay random.
+    const shuffledMatches = this.shuffle(matchingQuestions);
+    const groupMatches = shuffledMatches.filter((question) => question.type === 'match' && isGroupMatch(question));
+    const pairMatches = shuffledMatches.filter((question) => !groupMatches.includes(question));
+    const guaranteedGroups = groupMatches.slice(0, questionBlocks);
+    const guaranteedPairs = pairMatches.slice(0, questionBlocks);
+    const remainingMatches = this.shuffle([...groupMatches.slice(questionBlocks), ...pairMatches.slice(questionBlocks)]);
+    const randomizedMatches = Array.from({ length: questionBlocks }, (_, blockIndex) => {
+      const guaranteed = [
+        ...guaranteedGroups.slice(blockIndex, blockIndex + 1),
+        ...guaranteedPairs.slice(blockIndex, blockIndex + 1),
+      ];
+      return [...guaranteed, ...remainingMatches.splice(0, 5 - guaranteed.length)];
+    }).flat();
     const randomizedSingles = this.shuffle(singleQuestions);
     const selectedQuestions = Array.from({ length: questionBlocks }, (_, blockIndex) => [
       ...randomizedMatches.slice(blockIndex * 5, (blockIndex + 1) * 5),
@@ -194,11 +213,15 @@ export class QuestionsService {
       }
 
       if (question.type === 'match') {
-        const originalChoices = this.parseChoices(source.choices);
+        // PDF drag-and-drop rows: the choices and answer come from the answer text itself
+        const dragDrop = source.choices?.trim() ? null : parseDragDropAnswer(source.correct_answer, source.id);
+        const originalChoices = dragDrop ? dragDrop.choices : this.parseChoices(source.choices);
         if (!originalChoices) {
           throw new InternalServerErrorException('A matching question has invalid choices.');
         }
-        const correctIndexes = this.parseMatchAnswer(source.correct_answer, question.items.length, originalChoices.length);
+        const correctIndexes = dragDrop
+          ? dragDrop.answer
+          : this.parseMatchAnswer(source.correct_answer, question.items.length, originalChoices.length);
         const correctAnswer = correctIndexes.map((index) => question.choices.indexOf(originalChoices[index]));
         if (correctAnswer.some((index) => index < 0)) {
           throw new InternalServerErrorException('A matching answer is no longer available for grading.');
@@ -290,6 +313,25 @@ export class QuestionsService {
     topic: string | null;
     correct_answer: string | null;
   }): ExamQuestion | null {
+    // Drag-and-drop questions imported from the PDFs keep their answer as text and have no choices.
+    if (record.question_text?.trim() && !record.choices?.trim() && (!record.question_type || record.question_type === 'single')) {
+      const dragDrop = parseDragDropAnswer(record.correct_answer, record.id);
+      return dragDrop
+        ? {
+          id: record.id,
+          prompt: record.question_text.trim(),
+          type: 'match',
+          items: dragDrop.items,
+          choices: dragDrop.choices,
+          ...(isGroupMatch(dragDrop)
+            ? { groupCounts: Object.fromEntries(dragDrop.choices.map((choice, index) => [choice, dragDrop.answer.filter((answer) => answer === index).length])) }
+            : {}),
+          module: record.module,
+          topic: record.topic,
+        }
+        : null;
+    }
+
     // Ignore malformed bank rows so only questions that can be safely rendered and graded are selected.
     if (!record.question_text?.trim() || !record.choices || !record.correct_answer) return null;
 
@@ -447,12 +489,16 @@ export class QuestionsService {
         ) {
           throw new InternalServerErrorException('The saved exam attempt has invalid questions.');
         }
+        const groupCounts = 'groupCounts' in item && item.groupCounts && typeof item.groupCounts === 'object' && !Array.isArray(item.groupCounts)
+          ? Object.fromEntries(Object.entries(item.groupCounts).filter((entry): entry is [string, number] => typeof entry[1] === 'number'))
+          : undefined;
         return {
           id: item.id,
           prompt: item.prompt,
           type: 'match',
           items: item.items,
           choices: item.choices,
+          ...(groupCounts ? { groupCounts } : {}),
           module: item.module,
           topic: item.topic,
         };
@@ -507,6 +553,9 @@ export class QuestionsService {
               type: question.type,
               items: question.items,
               choices: question.choices,
+              ...(question.groupCounts
+                ? { groupSizes: question.choices.map((choice) => question.groupCounts?.[choice] ?? 0) }
+                : {}),
               module: question.module,
               topic: question.topic,
             }
