@@ -231,7 +231,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null }) {
 			score,
 			maxScore: questions.length,
 			submittedAt,
-		}).then(() => {
+		}, userId).then(() => {
 			if (isActive) {
 				setGradebookSaveError(null);
 				setGradebookSaved(true);

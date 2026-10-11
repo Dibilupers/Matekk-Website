@@ -4,6 +4,7 @@ import { CCNA_COMPOSITE_SET_QUESTIONS, CCNA_COMPOSITE_SET2_QUESTIONS } from "./c
 import { CCNA_LEGACY_QUESTIONS } from "./ccnaLegacyQuestions";
 import { CCNA_LEGACY_200_301_QUESTIONS } from "./ccnaLegacyQuestionBank";
 import { splitPromptExhibit } from "../../../../../utils/splitPromptExhibit";
+import { findCcnaQuestionExplanation } from "../../../../../utils/ccnaQuestionExplanations";
 
 // Both legacy files come from the same CCNA 200-301 PDF. CCNA_LEGACY_QUESTIONS is the fuller set
 // (with explanations), so only questions it is missing are taken from the other file.
@@ -62,6 +63,12 @@ export const CCNA_QUESTION_BANK = [
     // Skip questions whose exhibit picture was lost when they were taken from the PDF (they can't be answered)
     .filter((question) => !/\bexhibit\b/i.test(question.prompt) || question.exhibit || question.exhibitImage),
 ];
+// Questions without their own explanation borrow one from the same question elsewhere in the site
+CCNA_QUESTION_BANK.forEach((question, index) => {
+  if (!question.explanation?.trim()) {
+    CCNA_QUESTION_BANK[index] = { ...question, explanation: findCcnaQuestionExplanation(question.prompt) };
+  }
+});
 
 const SHORT_EXAM_SOURCES = new Set(["legacy-ccna-200-301"]);
 

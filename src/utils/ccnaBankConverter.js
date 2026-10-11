@@ -10,6 +10,7 @@ import {
   splitPromptExhibit,
 } from "./splitPromptExhibit";
 import { parseOptionTable } from "./ccnaOptionTable";
+import { findCcnaQuestionExplanation } from "./ccnaQuestionExplanations";
 
 // Text that went through the wrong character encoding somewhere ("â€“" should be "–")
 const MOJIBAKE = [
@@ -334,7 +335,7 @@ export function convertBankRow(row) {
         ? { hideExhibitImage: true }
         : {}),
       ...body,
-      explanation: cleanText(row.explanation),
+      explanation: cleanText(row.explanation) || findCcnaQuestionExplanation(prompt),
       bankId: row.id,
       moduleNumber: null,
       moduleTitle: row.module,

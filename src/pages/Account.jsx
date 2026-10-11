@@ -562,7 +562,7 @@ function Transcript({ profile }) {
           return null;
         }).filter(Boolean))];
         const results = await Promise.allSettled(
-          programKeys.map(async (programKey) => [programKey, await readGradebookAssessments(programKey)]),
+          programKeys.map(async (programKey) => [programKey, await readGradebookAssessments(programKey, profile?.userId)]),
         );
         if (!isActive) return;
         const loadedGradebooks = {};
@@ -593,7 +593,7 @@ function Transcript({ profile }) {
       isActive = false;
       controller.abort();
     };
-  }, []);
+  }, [profile?.userId]);
 
   const latestGradebooks = useMemo(() => Object.fromEntries(
     Object.entries(gradebooks).map(([programKey, assessments]) => [

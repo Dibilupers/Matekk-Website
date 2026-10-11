@@ -281,7 +281,7 @@ export default function CCNAGradebook() {
 	useEffect(() => {
 		if (!userId) return undefined;
 		let isActive = true;
-		readGradebookAssessments("ccna")
+		readGradebookAssessments("ccna", userId)
 			.then((assessments) => {
 				if (isActive) setBackendGradebook({ userId, assessments, error: null });
 			})
@@ -440,15 +440,17 @@ function SummaryStat({ label, value, detail, progress, gradeScore, compactValue 
 	const progressValue = progress ?? 0;
 
 	return (
-		<div className="min-h-[132px] min-w-0 rounded-md border border-[#e0e6e9] bg-[#fafbfb] px-5 py-5">
-			<p className="text-sm text-[#687887]">{label}</p>
-			<strong className={`mt-1 block font-bold leading-tight ${compactValue ? "break-words text-lg" : "truncate text-2xl"} ${hasGrade ? gradeTone.text : "text-[#152536]"}`}>{value}</strong>
-			{progress !== undefined && (
-				<div role="progressbar" aria-label="Class grade" aria-valuemin={0} aria-valuemax={100} aria-valuenow={progressValue} className="mt-2 h-1.5 overflow-hidden rounded-full bg-[#e0e6e9]">
-					<div className={`h-full transition-[width] duration-700 motion-reduce:transition-none ${gradeTone.fill}`} style={{ width: `${progressValue}%` }} />
-				</div>
-			)}
-			<p className="mt-1 truncate text-sm text-[#6c7a86]">{detail}</p>
+		<div className="gradebook-stat-card min-h-[132px] min-w-0 rounded-md border border-[#e0e6e9] px-5 py-5">
+			<div className="gradebook-stat-content">
+				<p className="gradebook-stat-label text-sm text-[#687887]">{label}</p>
+				<strong className={`gradebook-stat-value mt-1 block font-bold leading-tight ${compactValue ? "break-words text-lg" : "truncate text-2xl"} ${hasGrade ? gradeTone.text : "text-[#152536]"}`}>{value}</strong>
+				{progress !== undefined && (
+					<div role="progressbar" aria-label="Class grade" aria-valuemin={0} aria-valuemax={100} aria-valuenow={progressValue} className="gradebook-stat-progress-track mt-2 h-1.5 overflow-hidden rounded-full bg-[#e0e6e9]">
+						<div className={`h-full transition-[width] duration-700 motion-reduce:transition-none ${gradeTone.fill}`} style={{ width: `${progressValue}%` }} />
+					</div>
+				)}
+				<p className="gradebook-stat-detail mt-1 truncate text-sm text-[#6c7a86]">{detail}</p>
+			</div>
 		</div>
 	);
 }

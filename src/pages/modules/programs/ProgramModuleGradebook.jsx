@@ -8,8 +8,7 @@ import {
 	readProgramModuleQuizProgress,
 } from "../../../utils/programModuleQuizProgress";
 import { readGradebookAssessments } from "../../../utils/gradebookApi";
-
-const PROGRAM_EXAM_COUNT = 3;
+import { getProgramExamFormats } from "./programExamFormats";
 
 function getGradeTone(score) {
 	if (!Number.isFinite(score)) {
@@ -118,43 +117,61 @@ function getModuleRows(modules, progress, storedAssessments) {
 	});
 }
 
-function getExamRows(storedAssessments) {
+function getExamRows(storedAssessments, programKey) {
+	const examFormats = getProgramExamFormats(programKey) ?? {};
 	const examFormatLabels = { short: "Short", medium: "Medium", long: "Long" };
-	const attemptsByExam = new Map();
-	storedAssessments
+	const validExamAssessments = storedAssessments
 		.filter((assessment) =>
 			assessment.type === "exam" &&
 			typeof assessment.title === "string" &&
 			Number.isFinite(assessment.score) &&
 			Number.isFinite(assessment.maxScore) &&
-			assessment.maxScore > 0,
-		)
-		.sort((first, second) => (first.submittedAt ?? 0) - (second.submittedAt ?? 0))
-		.forEach((assessment) => {
-			const attempts = attemptsByExam.get(assessment.title) ?? [];
-			attempts.push(assessment);
-			attemptsByExam.set(assessment.title, attempts);
-		});
+			assessment.maxScore > 0 &&
+			Number.isFinite(assessment.submittedAt),
+		);
 
-	return [...attemptsByExam.entries()].flatMap(([title, attempts], examIndex) =>
-		attempts.map((assessment, attemptIndex) => {
+	return Object.entries(examFormats).flatMap(([examKey, exam], examIndex) => {
+		const savedTitle = `${exam.name} · ${exam.programName}`;
+		const attempts = validExamAssessments
+			.filter((assessment) => assessment.examFormat === examKey || assessment.title === savedTitle || assessment.title === exam.name)
+			.sort((first, second) => first.submittedAt - second.submittedAt);
+		if (!attempts.length) {
+			return [{
+				id: `exam-${examKey}-upcoming`,
+				name: exam.name,
+				status: "upcoming",
+				statusLabel: "Not started",
+				submittedAt: null,
+				attempts: 0,
+				points: null,
+				grade: null,
+				bestPoints: null,
+				bestGrade: null,
+				order: 10000 + examIndex * 100,
+			}];
+		}
+		const bestAssessment = attempts.reduce(
+			(best, current) => current.score / current.maxScore > best.score / best.maxScore ? current : best,
+			attempts[0],
+		);
+		return attempts.map((assessment, attemptIndex) => {
 			const grade = Math.round((assessment.score / assessment.maxScore) * 100);
 			return {
 				id: assessment.id,
-				name: title,
-				formatLabel: examFormatLabels[assessment.examFormat] ?? null,
+				name: exam.name,
+				formatLabel: examFormatLabels[examKey] ?? null,
 				status: "graded",
 				statusLabel: attempts.length > 1 ? `Attempt ${attemptIndex + 1}` : null,
 				submittedAt: assessment.submittedAt,
 				attempts: attemptIndex + 1,
 				points: { score: assessment.score, maxScore: assessment.maxScore },
 				grade,
-				bestPoints: { score: assessment.score, maxScore: assessment.maxScore },
-				bestGrade: grade,
+				bestPoints: { score: bestAssessment.score, maxScore: bestAssessment.maxScore },
+				bestGrade: Math.round((bestAssessment.score / bestAssessment.maxScore) * 100),
 				order: 10000 + examIndex * 100 + attemptIndex,
 			};
-		}),
-	);
+		});
+	});
 }
 
 function formatDate(timestamp) {
@@ -180,15 +197,17 @@ function SummaryStat({ label, value, detail, progress, gradeScore, compactValue 
 	const tone = getGradeTone(gradeScore ?? progress);
 	const progressValue = progress ?? 0;
 	return (
-		<div className="min-h-[132px] min-w-0 rounded-md border border-[#e0e6e9] bg-[#fafbfb] px-5 py-5">
-			<p className="text-sm text-[#687887]">{label}</p>
-			<strong className={`mt-1 block font-bold leading-tight ${compactValue ? "break-words text-lg" : "truncate text-2xl"} ${hasGrade ? tone.text : "text-[#152536]"}`}>{value}</strong>
-			{progress !== undefined && (
-				<div role="progressbar" aria-label="Class grade" aria-valuemin={0} aria-valuemax={100} aria-valuenow={progressValue} className="mt-2 h-1.5 overflow-hidden rounded-full bg-[#e0e6e9]">
-					<div className={`h-full transition-[width] duration-700 motion-reduce:transition-none ${tone.fill}`} style={{ width: `${progressValue}%` }} />
-				</div>
-			)}
-			<p className="mt-1 truncate text-sm text-[#6c7a86]">{detail}</p>
+		<div className="gradebook-stat-card min-h-[132px] min-w-0 rounded-md border border-[#e0e6e9] px-5 py-5">
+			<div className="gradebook-stat-content">
+				<p className="gradebook-stat-label text-sm text-[#687887]">{label}</p>
+				<strong className={`gradebook-stat-value mt-1 block font-bold leading-tight ${compactValue ? "break-words text-lg" : "truncate text-2xl"} ${hasGrade ? tone.text : "text-[#152536]"}`}>{value}</strong>
+				{progress !== undefined && (
+					<div role="progressbar" aria-label="Class grade" aria-valuemin={0} aria-valuemax={100} aria-valuenow={progressValue} className="gradebook-stat-progress-track mt-2 h-1.5 overflow-hidden rounded-full bg-[#e0e6e9]">
+						<div className={`h-full transition-[width] duration-700 motion-reduce:transition-none ${tone.fill}`} style={{ width: `${progressValue}%` }} />
+					</div>
+				)}
+				<p className="gradebook-stat-detail mt-1 truncate text-sm text-[#6c7a86]">{detail}</p>
+			</div>
 		</div>
 	);
 }
@@ -254,7 +273,7 @@ export default function ProgramModuleGradebook({ programKey, programName, module
 	useEffect(() => {
 		if (!userId) return undefined;
 		let isActive = true;
-		readGradebookAssessments(programKey)
+		readGradebookAssessments(programKey, userId)
 			.then((assessments) => {
 				if (isActive) setBackendGradebook({ userId, assessments, error: null });
 			})
@@ -274,24 +293,37 @@ export default function ProgramModuleGradebook({ programKey, programName, module
 	}, [programKey, userId]);
 	const progress = userId ? readProgramModuleQuizProgress(programKey, userId) : { activeModule: null, modules: {} };
 	const storedAssessments = backendGradebook.userId === userId ? backendGradebook.assessments : [];
-	const completedExamCount = Math.min(
-		new Set(storedAssessments
-			.filter((assessment) => assessment.type === "exam" && ["short", "medium", "long"].includes(assessment.examFormat))
-			.map((assessment) => assessment.examFormat)).size,
-		PROGRAM_EXAM_COUNT,
-	);
 	const moduleRows = getModuleRows(modules, progress, storedAssessments);
-	const examRows = getExamRows(storedAssessments);
+	const examRows = getExamRows(storedAssessments, programKey);
+	const completedExamCount = new Set(examRows.filter((row) => row.status === "graded").map((row) => row.name)).size;
 	const completedRows = moduleRows.filter((row) => row.status === "graded");
 	const latestRows = modules.flatMap((module) => {
 		const attempts = completedRows.filter((row) => row.name.startsWith(`${module.number} `)).sort((first, second) => first.attempts - second.attempts);
 		return attempts.length ? [attempts.at(-1)] : [];
 	});
-	const totalPoints = latestRows.reduce((total, row) => total + row.points.score, 0);
-	const totalPossiblePoints = latestRows.reduce((total, row) => total + row.points.maxScore, 0);
+	const latestExamRowsByTitle = new Map();
+	for (const row of examRows) {
+		if (row.status !== "graded" || !row.points) continue;
+		const previous = latestExamRowsByTitle.get(row.name);
+		if (!previous || row.submittedAt > previous.submittedAt) latestExamRowsByTitle.set(row.name, row);
+	}
+	const latestExamRows = [...latestExamRowsByTitle.values()];
+	const bestExamRowsByTitle = new Map();
+	for (const row of examRows) {
+		if (row.status !== "graded" || !row.bestPoints || !Number.isFinite(row.bestGrade)) continue;
+		const previous = bestExamRowsByTitle.get(row.name);
+		if (!previous || row.bestGrade > previous.bestGrade) bestExamRowsByTitle.set(row.name, row);
+	}
+	const quizPoints = latestRows.reduce((total, row) => total + row.points.score, 0);
+	const quizPossiblePoints = latestRows.reduce((total, row) => total + row.points.maxScore, 0);
+	const examPoints = latestExamRows.reduce((total, row) => total + row.points.score, 0);
+	const examPossiblePoints = latestExamRows.reduce((total, row) => total + row.points.maxScore, 0);
+	const totalPoints = quizPoints + examPoints;
+	const totalPossiblePoints = quizPossiblePoints + examPossiblePoints;
 	const classGrade = totalPossiblePoints ? Math.round((totalPoints / totalPossiblePoints) * 100) : null;
-	const bestAssessment = completedRows.reduce((best, row) => !best || row.bestGrade > best.bestGrade ? row : best, null);
-	const nextAssessment = moduleRows.find((row) => row.status !== "graded");
+	const bestAssessment = [...latestRows, ...bestExamRowsByTitle.values()]
+		.reduce((best, row) => !best || row.bestGrade > best.bestGrade ? row : best, null);
+	const nextAssessment = [...moduleRows, ...examRows].find((row) => row.status !== "graded");
 
 	useEffect(() => {
 		if (prefersReducedMotion) return undefined;
@@ -327,9 +359,9 @@ export default function ProgramModuleGradebook({ programKey, programName, module
 					<div className="grid grid-cols-2 gap-4 p-5 sm:grid-cols-3 sm:gap-5 sm:p-8 xl:grid-cols-5">
 						<SummaryStat label="Class grade" value={classGrade === null ? "--" : `${classGrade}%`} detail={totalPossiblePoints ? `${totalPoints}/${totalPossiblePoints} points` : "No graded assessments"} progress={classGrade ?? undefined} />
 						<SummaryStat label="Quizzes completed" value={`${latestRows.length} of ${modules.length}`} detail="module quizzes completed" />
-						<SummaryStat label="Exams completed" value={`${completedExamCount} of ${PROGRAM_EXAM_COUNT}`} detail="exams completed" />
+						<SummaryStat label="Exams completed" value={`${completedExamCount} of ${Object.keys(getProgramExamFormats(programKey) ?? {}).length}`} detail="exams completed" />
 						<SummaryStat label="Best score" value={bestAssessment ? `${bestAssessment.bestPoints.score}/${bestAssessment.bestPoints.maxScore}` : "--"} detail={bestAssessment?.name ?? "No results yet"} gradeScore={bestAssessment?.bestGrade} />
-						<SummaryStat label="Up next" value={nextAssessment?.name ?? "All complete"} detail={nextAssessment?.status === "in-progress" ? "In progress" : nextAssessment ? "Not submitted" : "Quiz list complete"} compactValue />
+						<SummaryStat label="Up next" value={nextAssessment?.name ?? "All complete"} detail={nextAssessment?.status === "in-progress" ? "In progress" : nextAssessment ? "Not submitted" : "All assessments complete"} compactValue />
 					</div>
 				</header>
 
@@ -354,7 +386,9 @@ export default function ProgramModuleGradebook({ programKey, programName, module
 					<AssessmentTable title="Program Exams" rows={examRows} filter={filter} sort={sort} />
 					<div className="flex items-center justify-between border border-[#dce4e8] bg-[#f2f5f6] px-5 py-4 text-sm text-[#4c5b67]">
 						<strong className="font-medium">Module quizzes average</strong>
-						<span className={getGradeTone(classGrade).text}>{totalPossiblePoints ? `${totalPoints}/${totalPossiblePoints} (${classGrade}%)` : "--"}</span>
+						<span className={getGradeTone(quizPossiblePoints ? Math.round((quizPoints / quizPossiblePoints) * 100) : null).text}>
+							{quizPossiblePoints ? `${quizPoints}/${quizPossiblePoints} (${Math.round((quizPoints / quizPossiblePoints) * 100)}%)` : "--"}
+						</span>
 					</div>
 				</div>
 			</div>
