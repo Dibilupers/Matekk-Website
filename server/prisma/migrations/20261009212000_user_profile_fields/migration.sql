@@ -1,3 +1,0 @@
-ALTER TABLE "Users"
-ADD COLUMN IF NOT EXISTS "phone_number" TEXT,
-ADD COLUMN IF NOT EXISTS "profile_photo" TEXT;

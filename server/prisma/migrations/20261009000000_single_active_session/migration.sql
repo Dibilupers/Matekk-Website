@@ -1,2 +1,0 @@
-ALTER TABLE "Users"
-ADD COLUMN "sessionVersion" INTEGER NOT NULL DEFAULT 0;
