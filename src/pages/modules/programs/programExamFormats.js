@@ -1,0 +1,64 @@
+import {
+	CCNA_AUTOMATION_MODULE_QUIZZES,
+	CCNA_CYBERSECURITY_MODULE_QUIZZES,
+} from "./programModuleQuizData";
+
+const QUESTION_COUNTS = {
+	short: 20,
+	medium: 50,
+	long: 100,
+};
+
+const EXAM_DETAILS = {
+	short: { name: "Quick Exam", subtitle: "20 questions", durationSeconds: 20 * 60 },
+	medium: { name: "Standard Exam", subtitle: "50 questions", durationSeconds: 50 * 60 },
+	long: { name: "Comprehensive Exam", subtitle: "100 questions", durationSeconds: 100 * 60 },
+};
+
+const PROGRAM_QUIZZES = {
+	"ccna-automation": CCNA_AUTOMATION_MODULE_QUIZZES,
+	"ccna-cybersecurity": CCNA_CYBERSECURITY_MODULE_QUIZZES,
+};
+
+const PROGRAM_NAMES = {
+	"ccna-automation": "CCNA Automation",
+	"ccna-cybersecurity": "CCNA Cybersecurity",
+};
+
+function shuffle(items) {
+	const shuffled = [...items];
+	for (let index = shuffled.length - 1; index > 0; index -= 1) {
+		const randomIndex = Math.floor(Math.random() * (index + 1));
+		[shuffled[index], shuffled[randomIndex]] = [shuffled[randomIndex], shuffled[index]];
+	}
+	return shuffled;
+}
+
+export function getProgramExamFormats(programKey) {
+	const moduleQuizzes = PROGRAM_QUIZZES[programKey];
+	const programName = PROGRAM_NAMES[programKey];
+	if (!moduleQuizzes || !programName) return null;
+
+	const questionPool = moduleQuizzes.flatMap((module) =>
+		module.questions.map((question) => ({
+			...question,
+			moduleNumber: module.number,
+			moduleTitle: module.title,
+		})),
+	);
+	const uniqueQuestionPool = [...new Map(questionPool.map((question) => [question.prompt, question])).values()];
+
+	return Object.fromEntries(Object.entries(EXAM_DETAILS).map(([examKey, details]) => {
+		const questionCount = QUESTION_COUNTS[examKey];
+		if (questionCount > uniqueQuestionPool.length) {
+			throw new Error(`${programName} does not have enough unique questions for the ${details.name}.`);
+		}
+		return [examKey, {
+			...details,
+			questionCount,
+			sessionKey: `${programKey}-${examKey}-exam`,
+			createQuestions: () => shuffle(uniqueQuestionPool).slice(0, questionCount),
+			programName,
+		}];
+	}));
+}

@@ -202,7 +202,7 @@ export class UsersService {
             where: { id: userId },
             include: {
                 enrollments: {
-                    select: {
+                    include: {
                         program: {
                             select: {
                                 name: true,

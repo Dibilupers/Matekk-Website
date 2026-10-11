@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { groupCode, groupSizes, matchMode, parseGroupCode, questionType, requiredSelections } from "../../../../../utils/ccnaExamGrading";
+import { ExhibitImage } from "./ccnaExhibit";
 
 const letter = (i) => String.fromCharCode(65 + i);
 
@@ -15,6 +16,24 @@ function OptionText({ text, className = "" }) {
 		<code className={`block min-w-0 w-full max-w-full flex-1 overflow-x-hidden break-words whitespace-pre-wrap rounded-lg bg-[#f1f5f9] px-2 py-1.5 font-mono text-xs leading-5 text-[#0f1b2d] [overflow-wrap:anywhere] sm:px-3 sm:py-2 sm:text-sm sm:leading-6 ${className}`}>
 			{splitCliLines(text)}
 		</code>
+	);
+}
+
+export function QuestionPrompt({ prompt, imageUrl }) {
+	return (
+		<div className="mb-5 space-y-4 sm:mb-6">
+			<h2 className="whitespace-pre-wrap text-base font-semibold leading-relaxed tracking-tight text-[#17233d] sm:text-lg">
+				{prompt}
+			</h2>
+			{imageUrl && (
+				<ExhibitImage
+					src={imageUrl}
+					lazy
+					imageClassName="max-h-56 object-contain sm:max-h-64"
+					className="max-w-full"
+				/>
+			)}
+		</div>
 	);
 }
 

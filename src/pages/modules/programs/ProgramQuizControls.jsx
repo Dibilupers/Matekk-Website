@@ -8,33 +8,39 @@ import {
 	readProgramModuleQuizProgress,
 } from "../../../utils/programModuleQuizProgress";
 import { ProgramModuleQuizAction } from "./ProgramModuleQuizPanel";
+import { getProgramExamFormats } from "./programExamFormats";
 
 export default function ProgramQuizControls({ programKey, basePath, modules, learningProgress, gradebookPath }) {
 	const { profile } = useAuth();
 	const userId = profile?.userId;
 	const navigate = useNavigate();
 	const [isQuizPickerOpen, setIsQuizPickerOpen] = useState(false);
+	const [isExamPickerOpen, setIsExamPickerOpen] = useState(false);
 	const progress = userId ? readProgramModuleQuizProgress(programKey, userId) : { modules: {} };
 	const buttonClass = "flex h-12 items-center gap-2 rounded-full px-5 text-sm font-bold transition-all duration-200 ease-out hover:-translate-y-0.5 active:translate-y-0 sm:h-[58px] sm:px-7 sm:text-base";
+	const examFormats = getProgramExamFormats(programKey);
 
 	useEffect(() => {
-		if (!isQuizPickerOpen) return undefined;
+		if (!isQuizPickerOpen && !isExamPickerOpen) return undefined;
 		const previousOverflow = document.body.style.overflow;
 		document.body.style.overflow = "hidden";
 		function closeOnEscape(event) {
-			if (event.key === "Escape") setIsQuizPickerOpen(false);
+			if (event.key === "Escape") {
+				setIsQuizPickerOpen(false);
+				setIsExamPickerOpen(false);
+			}
 		}
 		window.addEventListener("keydown", closeOnEscape);
 		return () => {
 			document.body.style.overflow = previousOverflow;
 			window.removeEventListener("keydown", closeOnEscape);
 		};
-	}, [isQuizPickerOpen]);
+	}, [isExamPickerOpen, isQuizPickerOpen]);
 
 	return (
 		<>
 			<div className="mt-8 flex flex-wrap gap-3">
-				<button type="button" className={`${buttonClass} bg-[#005b6b] text-white shadow-[0_10px_20px_rgba(0,91,107,0.16)] hover:bg-[#004653] hover:shadow-[0_14px_26px_rgba(0,91,107,0.24)]`}>
+				<button type="button" onClick={() => setIsExamPickerOpen(true)} className={`${buttonClass} bg-[#005b6b] text-white shadow-[0_10px_20px_rgba(0,91,107,0.16)] hover:bg-[#004653] hover:shadow-[0_14px_26px_rgba(0,91,107,0.24)]`}>
 					Start Exam <ArrowRight size={18} />
 				</button>
 				<button type="button" onClick={() => setIsQuizPickerOpen(true)} className={`${buttonClass} bg-[#005b6b] text-white shadow-[0_10px_20px_rgba(0,91,107,0.16)] hover:bg-[#004653] hover:shadow-[0_14px_26px_rgba(0,91,107,0.24)]`}>
@@ -49,6 +55,45 @@ export default function ProgramQuizControls({ programKey, basePath, modules, lea
 					</Link>
 				)}
 			</div>
+
+			{isExamPickerOpen && examFormats && (
+				createPortal(
+					<div className="fixed inset-0 z-[110] flex items-center justify-center overflow-y-auto bg-[#071126]/55 p-4 backdrop-blur-sm" onMouseDown={(event) => {
+						if (event.target === event.currentTarget) setIsExamPickerOpen(false);
+					}}>
+						<section role="dialog" aria-modal="true" aria-labelledby={`${programKey}-exam-picker-title`} className="ccna-page-enter w-full max-w-xl rounded-3xl bg-white p-5 shadow-2xl sm:p-8">
+							<div className="flex items-start justify-between gap-4">
+								<div>
+									<p className="text-sm font-semibold text-[#005b6b]">{programKey === "ccna-automation" ? "CCNA Automation" : "CCNA Cybersecurity"}</p>
+									<h2 id={`${programKey}-exam-picker-title`} className="mt-1 text-2xl font-bold text-[#071126]">Choose an exam</h2>
+									<p className="mt-2 text-sm text-[#71819b]">Your exam progress is saved for this program and signed-in account.</p>
+								</div>
+								<button type="button" onClick={() => setIsExamPickerOpen(false)} aria-label="Close exam picker" className="rounded-full p-2 text-[#71819b] transition hover:bg-[#f0f7f7] hover:text-[#005b6b]"><X size={20} /></button>
+							</div>
+							<div className="mt-6 space-y-3">
+								{Object.entries(examFormats).map(([examKey, exam]) => (
+									<button
+										key={examKey}
+										type="button"
+										onClick={() => {
+											setIsExamPickerOpen(false);
+											navigate(`${basePath}/exam/${examKey}`);
+										}}
+										className="flex w-full items-center justify-between gap-4 rounded-2xl border border-[#d6e5e7] p-4 text-left transition hover:border-[#005b6b] hover:bg-[#f3f9f9]"
+									>
+										<span>
+											<strong className="block text-base text-[#17233d]">{exam.name}</strong>
+											<span className="mt-1 block text-sm text-[#71819b]">{exam.subtitle} · {Math.round(exam.durationSeconds / 60)} minutes</span>
+										</span>
+										<ArrowRight size={18} className="shrink-0 text-[#005b6b]" />
+									</button>
+								))}
+							</div>
+						</section>
+					</div>,
+					document.body,
+				)
+			)}
 
 			{isQuizPickerOpen && (
 				createPortal(				<div className="fixed inset-0 z-[110] flex items-center justify-center overflow-x-hidden overflow-y-auto bg-[#071126]/55 p-2 backdrop-blur-sm sm:p-5" onMouseDown={(event) => {

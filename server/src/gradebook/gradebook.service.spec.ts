@@ -54,6 +54,43 @@ describe('GradebookService', () => {
     expect(findUnique).toHaveBeenCalled();
   });
 
+  it('records a trusted completed assessment without requiring a second enrollment check', async () => {
+    let savedData: Record<string, unknown> | null = null;
+    const findUnique = vi.fn(async () => savedData ? { data: savedData } : null);
+    const upsert = vi.fn(async ({ update }: {
+      update: { data: Record<string, unknown> };
+    }) => {
+      savedData = update.data;
+      return { data: savedData, updatedAt: new Date() };
+    });
+    const assertEnrollment = vi.fn();
+    const service = new GradebookService(
+      { userGradebook: { findUnique, upsert } } as unknown as PrismaService,
+      { assertEnrollment } as never,
+    );
+
+    await service.recordAssessment(12, 'ccna', {
+      id: 'attempt-1',
+      type: 'exam',
+      score: 42,
+      maxScore: 50,
+      submittedAt: 123456,
+    });
+
+    expect(savedData).toEqual({
+      assessments: {
+        'attempt-1': {
+          id: 'attempt-1',
+          type: 'exam',
+          score: 42,
+          maxScore: 50,
+          submittedAt: 123456,
+        },
+      },
+    });
+    expect(assertEnrollment).not.toHaveBeenCalled();
+  });
+
   it('does not read or write a gradebook when enrollment is denied', async () => {
     const findUnique = vi.fn();
     const upsert = vi.fn();

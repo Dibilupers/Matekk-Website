@@ -118,6 +118,43 @@ function getModuleRows(modules, progress, storedAssessments) {
 	});
 }
 
+function getExamRows(storedAssessments) {
+	const attemptsByExam = new Map();
+	storedAssessments
+		.filter((assessment) =>
+			assessment.type === "exam" &&
+			typeof assessment.title === "string" &&
+			Number.isFinite(assessment.score) &&
+			Number.isFinite(assessment.maxScore) &&
+			assessment.maxScore > 0,
+		)
+		.sort((first, second) => (first.submittedAt ?? 0) - (second.submittedAt ?? 0))
+		.forEach((assessment) => {
+			const attempts = attemptsByExam.get(assessment.title) ?? [];
+			attempts.push(assessment);
+			attemptsByExam.set(assessment.title, attempts);
+		});
+
+	return [...attemptsByExam.entries()].flatMap(([title, attempts], examIndex) =>
+		attempts.map((assessment, attemptIndex) => {
+			const grade = Math.round((assessment.score / assessment.maxScore) * 100);
+			return {
+				id: assessment.id,
+				name: title,
+				status: "graded",
+				statusLabel: attempts.length > 1 ? `Attempt ${attemptIndex + 1}` : null,
+				submittedAt: assessment.submittedAt,
+				attempts: attemptIndex + 1,
+				points: { score: assessment.score, maxScore: assessment.maxScore },
+				grade,
+				bestPoints: { score: assessment.score, maxScore: assessment.maxScore },
+				bestGrade: grade,
+				order: 10000 + examIndex * 100 + attemptIndex,
+			};
+		}),
+	);
+}
+
 function formatDate(timestamp) {
 	if (!Number.isFinite(timestamp)) return "--";
 	return new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric", year: "numeric" }).format(timestamp);
@@ -241,6 +278,7 @@ export default function ProgramModuleGradebook({ programKey, programName, module
 		PROGRAM_EXAM_COUNT,
 	);
 	const moduleRows = getModuleRows(modules, progress, storedAssessments);
+	const examRows = getExamRows(storedAssessments);
 	const completedRows = moduleRows.filter((row) => row.status === "graded");
 	const latestRows = modules.flatMap((module) => {
 		const attempts = completedRows.filter((row) => row.name.startsWith(`${module.number} `)).sort((first, second) => first.attempts - second.attempts);
@@ -310,6 +348,7 @@ export default function ProgramModuleGradebook({ programKey, programName, module
 						<span>Class Grades</span><span className={getGradeTone(classGrade).text}>{classGrade === null ? "--" : `${classGrade}%`}</span>
 					</div>
 					<AssessmentTable title="Module Quizzes" rows={moduleRows} filter={filter} sort={sort} />
+					<AssessmentTable title="Program Exams" rows={examRows} filter={filter} sort={sort} />
 					<div className="flex items-center justify-between border border-[#dce4e8] bg-[#f2f5f6] px-5 py-4 text-sm text-[#4c5b67]">
 						<strong className="font-medium">Module quizzes average</strong>
 						<span className={getGradeTone(classGrade).text}>{totalPossiblePoints ? `${totalPoints}/${totalPossiblePoints} (${classGrade}%)` : "--"}</span>
