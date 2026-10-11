@@ -40,13 +40,16 @@ export default function Login() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [pass, setPass] = useState("");
+  const [loginOtpRequired, setLoginOtpRequired] = useState(false);
+  const [loginOtp, setLoginOtp] = useState("");
+  const [loginMaskedEmail, setLoginMaskedEmail] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [msg, setMsg] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoginAnimating, setIsLoginAnimating] = useState(false);
   const [pendingLoginRedirect, setPendingLoginRedirect] = useState("");
   const orbitRingRef = useRef(null);
-  const { login } = useAuth();
+  const { login, verifyLoginOtp } = useAuth();
   const [isCheckingSession, setIsCheckingSession] = useState(true);
   const [isRegistering, setIsRegistering] = useState(false);
   const [registrationStep, setRegistrationStep] = useState(0);
@@ -164,8 +167,12 @@ export default function Login() {
 
   async function submit(e) {
     e.preventDefault();
-    if (!username || !pass) {
-      setMsg("Please enter your username and password.");
+    if (!username || (!loginOtpRequired && !pass)) {
+      setMsg(loginOtpRequired ? "Please enter your username." : "Please enter your username and password.");
+      return;
+    }
+    if (loginOtpRequired && !/^\d{6}$/.test(loginOtp)) {
+      setMsg("Enter the six-digit verification code sent to your email.");
       return;
     }
 
@@ -173,10 +180,25 @@ export default function Login() {
     setMsg("");
 
     try {
-      const { response, profile } = await login(username, pass);
+      const result = loginOtpRequired
+        ? await verifyLoginOtp(username, loginOtp)
+        : await login(username, pass);
+      const { response, profile } = result;
 
       if (!response.ok) {
-        setMsg(response.status === 401 ? "Invalid username or password." : "Unable to log in.");
+        const error = await response.json().catch(() => null);
+        const message = Array.isArray(error?.message) ? error.message.join(" ") : error?.message;
+        setMsg(message || (response.status === 401
+          ? (loginOtpRequired ? "The verification code is invalid or expired." : "Invalid username or password.")
+          : "Unable to log in."));
+        return;
+      }
+
+      if (result.requiresOtp) {
+        setLoginOtpRequired(true);
+        setLoginMaskedEmail(result.maskedEmail);
+        setLoginOtp("");
+        setMsg(`A verification code was sent to ${result.maskedEmail}.`);
         return;
       }
 
@@ -590,42 +612,80 @@ export default function Login() {
                       placeholder="username"
                       autoComplete="username"
                       required
-                      className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-slate-800 outline-none transition focus:border-[#1775EE] focus:ring-2 focus:ring-blue-100"
+                      disabled={loginOtpRequired}
+                      className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-slate-800 outline-none transition focus:border-[#1775EE] focus:ring-2 focus:ring-blue-100 disabled:bg-slate-100"
                     />
                   </label>
 
-                  <label className="block text-sm font-medium text-slate-700">
-                    <span className="mb-2 block">Password</span>
-                    <div className="relative">
-                      <input
-                        type={showPassword ? "text" : "password"}
-                        value={pass}
-                        onChange={(e) => setPass(e.target.value)}
-                        placeholder="••••••••••••"
-                        autoComplete="current-password"
-                        required
-                        className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 pr-11 text-slate-800 outline-none transition focus:border-[#1775EE] focus:ring-2 focus:ring-blue-100"
-                      />
+                  {loginOtpRequired ? (
+                    <>
+                      <p className="text-sm text-slate-600">
+                        Enter the six-digit code sent to {loginMaskedEmail}.
+                      </p>
+                      <label className="block text-sm font-medium text-slate-700">
+                        <span className="mb-2 block">Verification code</span>
+                        <input
+                          type="text"
+                          inputMode="numeric"
+                          autoComplete="one-time-code"
+                          value={loginOtp}
+                          onChange={(e) => setLoginOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                          placeholder="000000"
+                          pattern="[0-9]{6}"
+                          maxLength={6}
+                          required
+                          className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 tracking-[0.3em] text-slate-800 outline-none transition focus:border-[#1775EE] focus:ring-2 focus:ring-blue-100"
+                        />
+                      </label>
                       <button
                         type="button"
-                        onClick={() => setShowPassword((visible) => !visible)}
-                        aria-label={showPassword ? "Hide password" : "Show password"}
-                        className="absolute inset-y-0 right-0 flex items-center px-3 text-slate-500 transition-colors hover:text-[#087ff5]"
+                        onClick={() => {
+                          setLoginOtpRequired(false);
+                          setLoginOtp("");
+                          setLoginMaskedEmail("");
+                          setMsg("");
+                        }}
+                        className="text-left text-sm font-medium text-slate-600 underline-offset-4 transition hover:text-[#1775EE] hover:underline"
                       >
-                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                        Use a different account
                       </button>
-                    </div>
-                  </label>
+                    </>
+                  ) : (
+                    <>
+                      <label className="block text-sm font-medium text-slate-700">
+                        <span className="mb-2 block">Password</span>
+                        <div className="relative">
+                          <input
+                            type={showPassword ? "text" : "password"}
+                            value={pass}
+                            onChange={(e) => setPass(e.target.value)}
+                            placeholder="••••••••••••"
+                            autoComplete="current-password"
+                            required
+                            className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 pr-11 text-slate-800 outline-none transition focus:border-[#1775EE] focus:ring-2 focus:ring-blue-100"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword((visible) => !visible)}
+                            aria-label={showPassword ? "Hide password" : "Show password"}
+                            className="absolute inset-y-0 right-0 flex items-center px-3 text-slate-500 transition-colors hover:text-[#087ff5]"
+                          >
+                            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                          </button>
+                        </div>
+                      </label>
 
-                  <div className="text-right text-sm font-medium">
-                    {/* Clickable, but no password reset page exists yet */}
-                    <button
-                      type="button"
-                      className="cursor-pointer text-slate-600 underline-offset-4 transition hover:text-[#1775EE] hover:underline"
-                    >
-                      Forgot Password
-                    </button>
-                  </div>
+                      <div className="text-right text-sm font-medium">
+                        {/* Clickable, but no password reset page exists yet */}
+                        <button
+                          type="button"
+                          className="cursor-pointer text-slate-600 underline-offset-4 transition hover:text-[#1775EE] hover:underline"
+                        >
+                          Forgot Password
+                        </button>
+                      </div>
+                    </>
+                  )}
                 </>
               )}
 
@@ -655,7 +715,7 @@ export default function Login() {
                   disabled={isSubmitting}
                   className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-[#1775EE] px-4 py-3 text-lg font-semibold text-white shadow-[0_10px_20px_rgba(23,117,238,0.28)] transition hover:bg-[#0f64d8] disabled:cursor-wait disabled:opacity-70"
                 >
-                  {isSubmitting ? "Signing in..." : "Sign In"}
+                  {isSubmitting ? (loginOtpRequired ? "Verifying..." : "Signing in...") : (loginOtpRequired ? "Verify code" : "Sign In")}
                   {!isSubmitting && <ArrowRight size={18} />}
                 </button>
               )}
