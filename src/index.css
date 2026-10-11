@@ -200,6 +200,37 @@ h6 {
   background-size: 100% 100%;
 }
 
+.program-background-particles {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.program-background-particle {
+  position: absolute;
+  display: block;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(32 197 214 / 82%) 0 var(--particle-size), rgb(32 197 214 / 13%) calc(var(--particle-size) + 1px), transparent 13px);
+  pointer-events: none;
+  animation: program-particle-float var(--particle-duration) ease-in-out var(--particle-delay) infinite alternate;
+}
+
+@keyframes program-particle-float {
+  from {
+    translate: 0 7px;
+  }
+
+  to {
+    translate: 0 -13px;
+  }
+}
+
 .gradebook-stat-card {
   position: relative;
   isolation: isolate;
@@ -763,6 +794,10 @@ h6 {
   .program-stat-item > span,
   .gradebook-stat-card::before {
     transition-duration: 1ms;
+  }
+
+  .program-background-particle {
+    animation: none;
   }
 
   .ccna-logo-circle::after {

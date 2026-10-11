@@ -6,6 +6,7 @@ import { useAuth } from "../../../context/auth-context";
 import { readCcnaExamProgress } from "../../../utils/ccnaShortExamSession";
 import { readGradebookAssessments } from "../../../utils/gradebookApi";
 import { getProgramExamFormats } from "./programExamFormats";
+import ProgramBackgroundParticles from "./ProgramBackgroundParticles";
 
 const NO_HERO_INTROS = [];
 
@@ -303,8 +304,9 @@ export default function CCNAProgramDashboard({
 				</Link>,
 				document.body,
 			)}
-			<section className="mx-auto min-w-0 max-w-[1440px] px-6 pb-16 pt-14 sm:px-10 lg:px-14 lg:pb-20 lg:pt-16">
-				<div className="grid min-w-0 items-center gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-4">
+			<section className="relative isolate mx-auto min-w-0 max-w-[1440px] px-6 pb-16 pt-14 sm:px-10 lg:px-14 lg:pb-20 lg:pt-16">
+				<ProgramBackgroundParticles />
+				<div className="relative z-10 grid min-w-0 items-center gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-4">
 					<div className="contents sm:block">
 						<div className="order-1 min-w-0 sm:order-none">
 						<div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#c9dfe2] bg-[#f0f7f7] px-4 py-2 text-sm font-semibold text-[#005b6b]">
