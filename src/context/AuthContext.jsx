@@ -3,21 +3,19 @@ import API_URL from "../config/api";
 
 const AuthContext = createContext(null);
 const PROFILE_CACHE_KEY = "matekk-session-profile";
+const OFFLINE_PROFILE_KEY = "matekkOfflineProfile";
 
-// Shows the last known profile instantly on refresh (sessions use a secure cookie, so there is no token
-// to read here); the server check below replaces it, or clears it if the session has ended.
 function readCachedProfile() {
   try {
     const cachedProfile = JSON.parse(sessionStorage.getItem(PROFILE_CACHE_KEY) || "null");
-    return cachedProfile && typeof cachedProfile === "object" ? cachedProfile : null;
+    if (cachedProfile && typeof cachedProfile === "object" && !Array.isArray(cachedProfile)) {
+      return cachedProfile;
+    }
   } catch {
     sessionStorage.removeItem(PROFILE_CACHE_KEY);
-    return null;
   }
+  return readOfflineProfile();
 }
-
-// Small copy of the profile kept for offline use (the site can still show who is signed in without internet)
-const OFFLINE_PROFILE_KEY = "matekkOfflineProfile";
 
 function readOfflineProfile() {
   const serialized = localStorage.getItem(OFFLINE_PROFILE_KEY);
@@ -68,6 +66,11 @@ export function AuthProvider({ children }) {
       credentials: "include",
     });
     if (!response.ok) {
+      if (response.status === 401 || response.status === 403) {
+        sessionStorage.removeItem(PROFILE_CACHE_KEY);
+        localStorage.removeItem(OFFLINE_PROFILE_KEY);
+        setProfile(null);
+      }
       throw new Error("Unable to refresh account approval status.");
     }
 
@@ -82,7 +85,7 @@ export function AuthProvider({ children }) {
     localStorage.removeItem("accessToken");
 
     let mounted = true;
-    const cachedProfile = readOfflineProfile();
+    const cachedProfile = readCachedProfile();
     fetch(`${API_URL}/auth/profile`, {
       credentials: "include",
     })
@@ -106,7 +109,7 @@ export function AuthProvider({ children }) {
       })
       .catch((error) => {
         console.error("Unable to restore the signed-in session.", error);
-        if (mounted) setProfile((current) => current ?? cachedProfile);
+        if (mounted && cachedProfile) setProfile(cachedProfile);
       })
       .finally(() => mounted && setIsLoading(false));
 
@@ -140,6 +143,8 @@ export function AuthProvider({ children }) {
       }).catch((logoutError) =>
         console.error("Unable to clear a session after profile loading failed.", logoutError),
       );
+      sessionStorage.removeItem(PROFILE_CACHE_KEY);
+      localStorage.removeItem(OFFLINE_PROFILE_KEY);
       throw error;
     }
     setProfile(signedInProfile);
@@ -150,6 +155,7 @@ export function AuthProvider({ children }) {
 
   function logout() {
     sessionStorage.removeItem(PROFILE_CACHE_KEY);
+    localStorage.removeItem("accessToken");
     localStorage.removeItem(OFFLINE_PROFILE_KEY);
     setProfile(null);
     void fetch(`${API_URL}/auth/logout`, {

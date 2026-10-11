@@ -8,6 +8,8 @@ import {
     Get,
     Patch,
     Delete,
+    UsePipes,
+    ValidationPipe,
     Res,
     HttpException,
     Header,
