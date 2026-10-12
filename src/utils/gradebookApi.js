@@ -128,16 +128,34 @@ async function flushPendingAssessments(scope, programKey) {
 
 	const flush = (async () => {
 		for (const assessment of pending) {
-			const response = await fetch(`${API_URL}/gradebook/${encodeURIComponent(programKey)}/assessments`, {
-				method: "POST",
-				credentials: "include",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ assessment }),
-			});
-			await readResponse(response);
-		}
-		removeFlushedAssessments(scope, pending);
-	})();
+				const sendAssessment = async (method, url, body) => {
+					const response = await fetch(url, {
+						method,
+						credentials: "include",
+						headers: { "Content-Type": "application/json" },
+						body,
+					});
+					await readResponse(response);
+				};
+
+				try {
+					await sendAssessment(
+						"PUT",
+						`${API_URL}/gradebook/${encodeURIComponent(programKey)}`,
+						JSON.stringify({ data: { assessments: { [assessment.id]: assessment } } }),
+					);
+				} catch (error) {
+					const isLegacyRouteError = typeof error?.message === "string" && /(404|405)\b/.test(error.message);
+					if (!isLegacyRouteError) throw error;
+					await sendAssessment(
+						"POST",
+						`${API_URL}/gradebook/${encodeURIComponent(programKey)}/assessments`,
+						JSON.stringify({ assessment }),
+					);
+				}
+			}
+			removeFlushedAssessments(scope, pending);
+		})();
 	activeFlushes.set(scope, flush);
 	try {
 		await flush;
