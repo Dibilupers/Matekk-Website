@@ -129,34 +129,34 @@ async function flushPendingAssessments(scope, programKey) {
 
 	const flush = (async () => {
 		for (const assessment of pending) {
-				const sendAssessment = async (method, url, body) => {
-					const response = await fetch(url, {
-						method,
-						credentials: "include",
-						headers: { "Content-Type": "application/json" },
-						body,
-					});
-					await readResponse(response);
-				};
+			const sendAssessment = async (method, url, body) => {
+				const response = await fetch(url, {
+					method,
+					credentials: "include",
+					headers: { "Content-Type": "application/json" },
+					body,
+				});
+				await readResponse(response);
+			};
 
-				try {
-					await sendAssessment(
-						"PUT",
-						`${API_URL}/gradebook/${encodeURIComponent(programKey)}`,
-						JSON.stringify({ data: { assessments: { [assessment.id]: assessment } } }),
-					);
-				} catch (error) {
-					const isLegacyRouteError = typeof error?.message === "string" && /(404|405)\b/.test(error.message);
-					if (!isLegacyRouteError) throw error;
-					await sendAssessment(
-						"POST",
-						`${API_URL}/gradebook/${encodeURIComponent(programKey)}/assessments`,
-						JSON.stringify({ assessment }),
-					);
-				}
+			try {
+				await sendAssessment(
+					"POST",
+					`${API_URL}/gradebook/${encodeURIComponent(programKey)}/assessments`,
+					JSON.stringify({ assessment }),
+				);
+			} catch (error) {
+				const isLegacyRouteError = typeof error?.message === "string" && /\b(404|405)\b/.test(error.message);
+				if (!isLegacyRouteError) throw error;
+				await sendAssessment(
+					"PUT",
+					`${API_URL}/gradebook/${encodeURIComponent(programKey)}`,
+					JSON.stringify({ data: { assessments: { [assessment.id]: assessment } } }),
+				);
 			}
-			removeFlushedAssessments(scope, pending);
-		})();
+		}
+		removeFlushedAssessments(scope, pending);
+	})();
 	activeFlushes.set(scope, flush);
 	try {
 		await flush;
@@ -168,6 +168,7 @@ async function flushPendingAssessments(scope, programKey) {
 		return flushPendingAssessments(scope, programKey);
 	}
 }
+
 
 function ensureOnlineSync(scope, userId, programKey) {
 	if (onlineSyncHandlers.has(scope)) return;
