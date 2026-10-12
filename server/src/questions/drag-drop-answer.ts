@@ -92,3 +92,16 @@ export function parseDragDropAnswer(correctAnswer: string | null | undefined, qu
 export function isGroupMatch(question: { items: string[]; choices: string[] }): boolean {
   return question.choices.length < question.items.length;
 }
+
+/**
+ * Which one-to-one matching questions (each answer used once) are shown as "connect the circles"
+ * instead of click-to-place boxes: every second one, counting up by bank ID, so about half of them
+ * and always the same ones.
+ */
+export function pickLineMatchIds(questions: { id: number; items: string[]; choices: string[] }[]): Set<number> {
+  const oneToOne = questions
+    .filter((question) => question.items.length === question.choices.length)
+    .map((question) => question.id)
+    .sort((first, second) => first - second);
+  return new Set(oneToOne.filter((_, index) => index % 2 === 1));
+}

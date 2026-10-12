@@ -468,7 +468,8 @@ export function QuestionInput({ question, value, onChange, disabled }) {
 		return <InvalidQuestionMessage />;
 	}
 
-	if (type === "match" && localMatchMode === "assign") {
+	// About half of the one-to-one questions are shown as "connect the circles" instead of boxes
+	if (type === "match" && localMatchMode === "assign" && question.matchStyle !== "lines") {
 		return <AssignMatchInput question={question} value={value} onChange={onChange} disabled={disabled} />;
 	}
 	if (type === "match" && localMatchMode === "group") {

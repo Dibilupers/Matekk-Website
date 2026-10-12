@@ -226,9 +226,7 @@ export class UsersService {
             select: { id: true, username: true, active_status: true },
         });
 
-        if (!databaseUser) {
-            return undefined;
-        }
+        if (!databaseUser) return undefined;
 
         return {
             userId: databaseUser.id,

@@ -1,9 +1,3 @@
-import {
-  createShortExamQuestions,
-  createMediumExamQuestions,
-  createLongExamQuestions,
-} from "./ccnaQuestionBank";
-
 // Settings for each CCNA practice exam, shared by the exam page and the CCNA dashboard.
 export const CCNA_EXAMS = {
   short: {
@@ -13,7 +7,6 @@ export const CCNA_EXAMS = {
     durationSeconds: 45 * 60,
     sessionKey: "matekk-ccna-short-exam-session",
     path: "/modules/programs/ccna/exam/short",
-    createQuestions: createShortExamQuestions,
   },
   medium: {
     name: "Medium Exam",
@@ -22,7 +15,6 @@ export const CCNA_EXAMS = {
     durationSeconds: 90 * 60,
     sessionKey: "matekk-ccna-medium-exam-session",
     path: "/modules/programs/ccna/exam/medium",
-    createQuestions: createMediumExamQuestions,
   },
   long: {
     name: "Long Exam",
@@ -31,6 +23,5 @@ export const CCNA_EXAMS = {
     durationSeconds: 120 * 60,
     sessionKey: "matekk-ccna-long-exam-session",
     path: "/modules/programs/ccna/exam/long",
-    createQuestions: createLongExamQuestions,
   },
 };
