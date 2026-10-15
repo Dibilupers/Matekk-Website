@@ -36,6 +36,7 @@ export default function CCNAAllQuestionsExam() {
 	const [isSubmitted, setIsSubmitted] = useState(false);
 	const [score, setScore] = useState(0);
 	const [storageError, setStorageError] = useState(null);
+	const [skippedQuestionCount, setSkippedQuestionCount] = useState(0);
 	const [questionNumberInput, setQuestionNumberInput] = useState("1");
 	// Results page: show only correct / incorrect / unanswered questions when stepping through the review
 	const [reviewFilter, setReviewFilter] = useState("all");
@@ -73,9 +74,8 @@ export default function CCNAAllQuestionsExam() {
 		let isActive = true;
 		setLoadState({ status: "loading", error: null });
 		loadCcnaQuestionBank()
-			.then(({ allQuestions, questions: validQuestions, problems = [], rowCount }) => {
-				const bankQuestions = allQuestions ?? validQuestions ?? [];
-				const orderedQuestions = [...bankQuestions].sort((left, right) => left.bankId - right.bankId);
+			.then(({ questions: validQuestions, problems = [], rowCount }) => {
+				const orderedQuestions = [...validQuestions].sort((left, right) => left.bankId - right.bankId);
 				if (!orderedQuestions.length) {
 					const problemCounts = problems.reduce((counts, { problem }) => ({
 						...counts,
@@ -88,10 +88,11 @@ export default function CCNAAllQuestionsExam() {
 						.join("; ");
 					throw new TypeError(rowCount === 0
 						? "The Questions table returned no rows."
-						: `Received ${rowCount ?? problems.length} rows from the Questions table, but none could be converted.${commonProblems ? ` ${commonProblems}.` : ""}`);
+						: `Received ${rowCount ?? problems.length} rows from the Questions table, but none had valid questions to show.${commonProblems ? ` ${commonProblems}.` : ""}`);
 				}
 				if (!isActive) return;
 
+				setSkippedQuestionCount(Math.max(0, (rowCount ?? orderedQuestions.length + problems.length) - orderedQuestions.length));
 				setQuestions(orderedQuestions);
 				if (storageKey) {
 					try {
@@ -274,6 +275,11 @@ export default function CCNAAllQuestionsExam() {
 				{storageError && (
 					<p role="status" className="mb-4 rounded-xl border border-[#f0d79e] bg-[#fffaf0] px-4 py-3 text-sm text-[#805b12]">
 						{storageError}
+					</p>
+				)}
+				{skippedQuestionCount > 0 && (
+					<p role="status" className="mb-4 rounded-xl border border-[#f0d79e] bg-[#fffaf0] px-4 py-3 text-sm text-[#805b12]">
+						{skippedQuestionCount.toLocaleString()} invalid or unsupported database question{skippedQuestionCount === 1 ? " was" : "s were"} skipped.
 					</p>
 				)}
 

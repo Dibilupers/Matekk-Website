@@ -15,7 +15,7 @@ export function loadCcnaQuestionBank() {
       const rows = await response.json();
       if (!Array.isArray(rows)) throw new TypeError("Question bank response was not a list.");
       const { questions, problems } = convertBank(rows);
-      cached = { questions: questions.filter(isValidQuestion), allQuestions: questions, problems, rowCount: rows.length };
+      cached = { questions: questions.filter(isValidQuestion), problems, rowCount: rows.length };
       if (problems.length) console.warn(`CCNA question bank: ${problems.length} question(s) could not be converted and were skipped.`, problems);
       return cached;
     })

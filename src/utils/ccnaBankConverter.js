@@ -75,13 +75,18 @@ function multipleChoice(row, choices) {
     : Object.entries(choices);
   const options = entries.map(([, option]) => cleanText(option));
   const picked = cleanText(row.correct_answer);
+  const normalizeOption = (value) => cleanText(value)
+    .replace(/^\s*(?:(?:option)\s+)?\(?[a-h]\)?[.)\s:-]+/i, "")
+    .replace(/^["'“”‘’]+|["'“”‘’]+$/g, "")
+    .trim()
+    .toLocaleLowerCase();
 
   function findOptionIndex(answer) {
     const normalizedAnswer = answer.trim().toLocaleLowerCase();
     const exactMatch = options.findIndex((option) => option.trim().toLocaleLowerCase() === normalizedAnswer);
     if (exactMatch >= 0) return exactMatch;
 
-    const letterMatch = normalizedAnswer.match(/^\(?([a-h])\)?(?:[.)])?$/i);
+    const letterMatch = normalizedAnswer.match(/^(?:(?:option)\s+)?\(?([a-h])\)?(?:[.)]|\s*:\s*|\s+-\s+|\s+.+)?$/i);
     if (letterMatch) {
       const letter = letterMatch[1].toUpperCase();
       const keyedIndex = entries.findIndex(([key]) => String(key).toUpperCase() === letter);
@@ -96,6 +101,14 @@ function multipleChoice(row, choices) {
       const index = Number(normalizedAnswer.replace(/[().]/g, ""));
       if (index >= 1 && index <= options.length) return index - 1;
       if (index < options.length) return index;
+    }
+
+    const normalizedOptionAnswer = normalizeOption(answer);
+    if (normalizedOptionAnswer) {
+      const matchingOptions = options.flatMap((option, index) =>
+        normalizeOption(option) === normalizedOptionAnswer ? [index] : [],
+      );
+      if (matchingOptions.length === 1) return matchingOptions[0];
     }
     return -1;
   }
