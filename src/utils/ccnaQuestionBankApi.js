@@ -6,6 +6,8 @@ import { isValidQuestion } from "./ccnaExamGrading";
 
 let cached = null; // { questions, problems }
 let pending = null;
+let cachedAllQuestions = null;
+let pendingAllQuestions = null;
 
 export function loadCcnaQuestionBank() {
   if (cached) return Promise.resolve(cached);
@@ -21,4 +23,20 @@ export function loadCcnaQuestionBank() {
     })
     .finally(() => { pending = null; });
   return pending;
+}
+
+export function loadCcnaAllQuestionsBank() {
+  if (cachedAllQuestions) return Promise.resolve(cachedAllQuestions);
+  pendingAllQuestions ??= fetch(`${API_URL}/questions/bank/all-usable`, { credentials: "include" })
+    .then(async (response) => {
+      if (!response.ok) throw new Error(`Question bank request failed (${response.status}).`);
+      const payload = await response.json();
+      if (!payload || !Array.isArray(payload.questions) || !Number.isInteger(payload.skippedCount)) {
+        throw new TypeError("Usable question bank response was invalid.");
+      }
+      cachedAllQuestions = payload;
+      return cachedAllQuestions;
+    })
+    .finally(() => { pendingAllQuestions = null; });
+  return pendingAllQuestions;
 }

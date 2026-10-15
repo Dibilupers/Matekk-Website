@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../../../../context/auth-context";
 import TrainingLogo from "../../../../../assets/MATEKK_training_logo.png";
 import { isAnswerCorrect, isQuestionAnswered } from "../../../../../utils/ccnaExamGrading";
-import { loadCcnaQuestionBank } from "../../../../../utils/ccnaQuestionBankApi";
+import { loadCcnaAllQuestionsBank } from "../../../../../utils/ccnaQuestionBankApi";
 import { ExhibitImage, ExhibitText } from "./ccnaExhibit";
 import { QuestionInput, QuestionPrompt, QuestionReview } from "./ccnaExamQuestionViews";
 
@@ -73,26 +73,15 @@ export default function CCNAAllQuestionsExam() {
 	useEffect(() => {
 		let isActive = true;
 		setLoadState({ status: "loading", error: null });
-		loadCcnaQuestionBank()
-			.then(({ questions: validQuestions, problems = [], rowCount }) => {
+		loadCcnaAllQuestionsBank()
+			.then(({ questions: validQuestions, skippedCount }) => {
 				const orderedQuestions = [...validQuestions].sort((left, right) => left.bankId - right.bankId);
 				if (!orderedQuestions.length) {
-					const problemCounts = problems.reduce((counts, { problem }) => ({
-						...counts,
-						[problem]: (counts[problem] ?? 0) + 1,
-					}), {});
-					const commonProblems = Object.entries(problemCounts)
-						.sort((first, second) => second[1] - first[1])
-						.slice(0, 3)
-						.map(([problem, count]) => `${count} ${problem}`)
-						.join("; ");
-					throw new TypeError(rowCount === 0
-						? "The Questions table returned no rows."
-						: `Received ${rowCount ?? problems.length} rows from the Questions table, but none had valid questions to show.${commonProblems ? ` ${commonProblems}.` : ""}`);
+					throw new TypeError("The Questions table has no questions that can be rendered and graded.");
 				}
 				if (!isActive) return;
 
-				setSkippedQuestionCount(Math.max(0, (rowCount ?? orderedQuestions.length + problems.length) - orderedQuestions.length));
+				setSkippedQuestionCount(skippedCount);
 				setQuestions(orderedQuestions);
 				if (storageKey) {
 					try {

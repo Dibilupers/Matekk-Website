@@ -703,4 +703,30 @@ export class QuestionsService {
       imageUrl: row.imageUrl ? signedUrls.get(row.imageUrl) ?? row.imageUrl : null,
     }));
   }
+
+  async findUsableBank() {
+    const rows = await this.findBank();
+    const questions = rows.flatMap((row) => {
+      const question = this.readQuestion(row);
+      if (!question) return [];
+
+      const answer = question.type === 'match'
+        ? row.question_type === 'match'
+          ? this.parseMatchAnswer(row.correct_answer, question.items.length, question.choices.length)
+          : parseDragDropAnswer(row.correct_answer, row.id)?.answer
+        : question.type === 'single'
+          ? question.options.indexOf(this.findCorrectOption(question.options, row.correct_answer) ?? '')
+          : -1;
+      if (answer === undefined || answer === -1 || (Array.isArray(answer) && answer.length === 0)) return [];
+
+      return [{
+        ...question,
+        bankId: row.id,
+        answer,
+        explanation: row.explanation,
+        source: 'question-bank',
+      }];
+    });
+    return { questions, skippedCount: rows.length - questions.length };
+  }
 }

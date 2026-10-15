@@ -111,6 +111,56 @@ describe('QuestionsService', () => {
     }));
   });
 
+  it('returns only renderable Questions table rows with normalized answer keys', async () => {
+    prismaMock.questions.findMany.mockResolvedValue([
+      {
+        id: 1,
+        module: 'CCNA',
+        topic: 'Routing',
+        question_text: 'Which answer is correct?',
+        choices: JSON.stringify(['First', 'Second']),
+        correct_answer: 'Second',
+        explanation: 'The second answer.',
+        question_type: 'single',
+        match_items: null,
+        imageUrl: null,
+      },
+      {
+        id: 2,
+        module: 'CCNA',
+        topic: 'Routing',
+        question_text: 'This row has no matching answer.',
+        choices: JSON.stringify(['First', 'Second']),
+        correct_answer: 'Not an option',
+        explanation: '',
+        question_type: 'single',
+        match_items: null,
+        imageUrl: null,
+      },
+      {
+        id: 3,
+        module: 'CCNA',
+        topic: 'Routing',
+        question_text: 'Match each item.',
+        choices: JSON.stringify(['Answer A', 'Answer B']),
+        correct_answer: '[1,0]',
+        explanation: 'The answers are reversed.',
+        question_type: 'match',
+        match_items: ['Item A', 'Item B'],
+        imageUrl: null,
+      },
+    ]);
+
+    const { questions, skippedCount } = await service.findUsableBank();
+
+    expect(questions).toHaveLength(2);
+    expect(skippedCount).toBe(1);
+    expect(questions).toEqual(expect.arrayContaining([
+      expect.objectContaining({ bankId: 1, answer: 1, type: 'single' }),
+      expect.objectContaining({ bankId: 3, answer: [1, 0], type: 'match' }),
+    ]));
+  });
+
   it('rejects a correct answer that is not one of the available choices', () => {
     expect(() => service.create({
       module: 'CCNA',
