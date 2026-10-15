@@ -90,6 +90,27 @@ describe('QuestionsService', () => {
     expect(service).toBeDefined();
   });
 
+  it('returns every question from the Questions table in database order', async () => {
+    const rows = Array.from({ length: 3 }, (_, index) => ({
+      id: index + 1,
+      module: 'CCNA',
+      topic: 'Routing',
+      question_text: `Question ${index + 1}`,
+      choices: JSON.stringify({ A: 'Choice A', B: 'Choice B' }),
+      correct_answer: 'A',
+      explanation: '',
+      question_type: 'single',
+      match_items: null,
+      imageUrl: null,
+    }));
+    prismaMock.questions.findMany.mockResolvedValue(rows);
+
+    await expect(service.findBank()).resolves.toEqual(rows);
+    expect(prismaMock.questions.findMany).toHaveBeenCalledWith(expect.objectContaining({
+      orderBy: { id: 'asc' },
+    }));
+  });
+
   it('rejects a correct answer that is not one of the available choices', () => {
     expect(() => service.create({
       module: 'CCNA',

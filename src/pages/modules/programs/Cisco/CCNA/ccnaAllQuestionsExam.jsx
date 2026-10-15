@@ -73,7 +73,7 @@ export default function CCNAAllQuestionsExam() {
 		let isActive = true;
 		setLoadState({ status: "loading", error: null });
 		loadCcnaQuestionBank()
-			.then(({ questions: bankQuestions }) => {
+			.then(({ allQuestions: bankQuestions }) => {
 				const orderedQuestions = [...bankQuestions].sort((left, right) => left.bankId - right.bankId);
 				if (!orderedQuestions.length) throw new TypeError("The online question bank has no questions that can be rendered.");
 				if (!isActive) return;

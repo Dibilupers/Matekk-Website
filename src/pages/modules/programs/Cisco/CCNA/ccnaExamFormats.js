@@ -24,4 +24,10 @@ export const CCNA_EXAMS = {
     sessionKey: "matekk-ccna-long-exam-session",
     path: "/modules/programs/ccna/exam/long",
   },
+  all_questions: {
+    name: "All Questions",
+    subtitle: "All questions from the database",
+    sessionKey: "matekk-ccna-all-questions-session",
+    path: "/modules/programs/ccna/exam/all",
+  }
 };
