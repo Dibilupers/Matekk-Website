@@ -70,28 +70,44 @@ function parseChoices(raw) {
 }
 
 function multipleChoice(row, choices) {
-  if (Array.isArray(choices)) {
-    const options = choices.map(cleanText);
-    const picked = cleanText(row.correct_answer);
-    const selectedAnswers = picked.split(/\s*,\s*/).filter(Boolean);
-    const selectedIndexes = selectedAnswers.map((answer) => {
-      const exactOptionIndex = options.indexOf(answer);
-      if (exactOptionIndex >= 0) return exactOptionIndex;
-      return /^[A-Z]$/i.test(answer) ? answer.toUpperCase().charCodeAt(0) - 65 : -1;
-    });
-    if (!selectedIndexes.length || selectedIndexes.some((index) => index < 0 || index >= options.length)) return null;
-    return selectedIndexes.length > 1
-      ? { type: "multi", options, answer: selectedIndexes }
-      : { options, answer: selectedIndexes[0] };
+  const entries = Array.isArray(choices)
+    ? choices.map((option, index) => [String.fromCharCode(65 + index), option])
+    : Object.entries(choices);
+  const options = entries.map(([, option]) => cleanText(option));
+  const picked = cleanText(row.correct_answer);
+
+  function findOptionIndex(answer) {
+    const normalizedAnswer = answer.trim().toLocaleLowerCase();
+    const exactMatch = options.findIndex((option) => option.trim().toLocaleLowerCase() === normalizedAnswer);
+    if (exactMatch >= 0) return exactMatch;
+
+    const letterMatch = normalizedAnswer.match(/^\(?([a-h])\)?(?:[.)])?$/i);
+    if (letterMatch) {
+      const letter = letterMatch[1].toUpperCase();
+      const keyedIndex = entries.findIndex(([key]) => String(key).toUpperCase() === letter);
+      if (keyedIndex >= 0) return keyedIndex;
+      const labeledIndex = options.findIndex((option) => new RegExp(`^\\s*\\(?${letter}\\)?[.)\\s:-]+`, "i").test(option));
+      if (labeledIndex >= 0) return labeledIndex;
+      const index = letter.charCodeAt(0) - 65;
+      if (index < options.length) return index;
+    }
+
+    if (/^\(?\d+\)?(?:[.)])?$/.test(normalizedAnswer)) {
+      const index = Number(normalizedAnswer.replace(/[().]/g, ""));
+      if (index >= 1 && index <= options.length) return index - 1;
+      if (index < options.length) return index;
+    }
+    return -1;
   }
-  const letters = Object.keys(choices);
-  const picked = cleanText(row.correct_answer).split(/\s*,\s*/).filter(Boolean);
-  const indexes = picked.map((letter) => letters.indexOf(letter));
-  if (!indexes.length || indexes.some((i) => i < 0)) return null;
-  const options = letters.map((letter) => cleanText(choices[letter]));
-  return indexes.length > 1
-    ? { type: "multi", options, answer: indexes }
-    : { options, answer: indexes[0] };
+
+  if (options.some((option) => !option)) return null;
+  const exactAnswerIndex = findOptionIndex(picked);
+  const selectedAnswers = exactAnswerIndex >= 0 ? [picked] : picked.split(/\s*,\s*/).filter(Boolean);
+  const selectedIndexes = selectedAnswers.map(findOptionIndex);
+  if (!selectedIndexes.length || selectedIndexes.some((index) => index < 0)) return null;
+  return selectedIndexes.length > 1
+    ? { type: "multi", options, answer: selectedIndexes }
+    : { options, answer: selectedIndexes[0] };
 }
 
 function matchingQuestion(row, choices) {
