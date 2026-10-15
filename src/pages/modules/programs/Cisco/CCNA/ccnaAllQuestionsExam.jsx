@@ -73,9 +73,23 @@ export default function CCNAAllQuestionsExam() {
 		let isActive = true;
 		setLoadState({ status: "loading", error: null });
 		loadCcnaQuestionBank()
-			.then(({ allQuestions: bankQuestions }) => {
+			.then(({ allQuestions, questions: validQuestions, problems = [], rowCount }) => {
+				const bankQuestions = allQuestions ?? validQuestions ?? [];
 				const orderedQuestions = [...bankQuestions].sort((left, right) => left.bankId - right.bankId);
-				if (!orderedQuestions.length) throw new TypeError("The online question bank has no questions that can be rendered.");
+				if (!orderedQuestions.length) {
+					const problemCounts = problems.reduce((counts, { problem }) => ({
+						...counts,
+						[problem]: (counts[problem] ?? 0) + 1,
+					}), {});
+					const commonProblems = Object.entries(problemCounts)
+						.sort((first, second) => second[1] - first[1])
+						.slice(0, 3)
+						.map(([problem, count]) => `${count} ${problem}`)
+						.join("; ");
+					throw new TypeError(rowCount === 0
+						? "The Questions table returned no rows."
+						: `Received ${rowCount ?? problems.length} rows from the Questions table, but none could be converted.${commonProblems ? ` ${commonProblems}.` : ""}`);
+				}
 				if (!isActive) return;
 
 				setQuestions(orderedQuestions);

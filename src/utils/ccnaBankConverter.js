@@ -279,18 +279,23 @@ export function convertBankRow(row) {
     : choices && typeof choices === "object"
       ? Object.entries(choices)
       : [];
+  const hasOptionTableChoices = choiceEntries.length === 0 && Boolean(parsedOptionTable);
   const hasPlaceholderChoices = choiceEntries.length > 0 &&
     choiceEntries.every(([letter, choice]) =>
       /^[A-H]$/i.test(letter) && new RegExp(`^Option ${letter}$`, "i").test(String(choice).trim()),
     );
-  const hasCompleteOptionTable = hasPlaceholderChoices &&
+  const hasCompleteOptionTable = hasOptionTableChoices || (
+    hasPlaceholderChoices &&
     parsedOptionTable &&
     choiceEntries.length === Object.keys(parsedOptionTable.options).length &&
-    choiceEntries.every(([letter]) => Boolean(parsedOptionTable.options[letter]?.trim()));
+    choiceEntries.every(([letter]) => Boolean(parsedOptionTable.options[letter]?.trim()))
+  );
   const expandedChoices = hasCompleteOptionTable
     ? Array.isArray(choices)
       ? choiceEntries.map(([letter]) => parsedOptionTable.options[letter])
-      : Object.fromEntries(choiceEntries.map(([letter]) => [letter, parsedOptionTable.options[letter]]))
+      : hasOptionTableChoices
+        ? parsedOptionTable.options
+        : Object.fromEntries(choiceEntries.map(([letter]) => [letter, parsedOptionTable.options[letter]]))
     : choices;
   const { prompt, exhibit } = hasCompleteOptionTable
     ? { prompt: parsedOptionTable.prompt }
