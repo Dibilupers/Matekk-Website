@@ -469,6 +469,7 @@ export default function CCNA() {
 			short: shortExamProgress,
 			medium: mediumExamProgress,
 			long: longExamProgress,
+			all_questions: readCcnaExamProgress(CCNA_EXAMS.all_questions.sessionKey, userId),
 		},
 	);
 	const [examClockNow, setExamClockNow] = useState(Date.now);
