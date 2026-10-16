@@ -7,7 +7,6 @@ import {
 	removeDuplicateExhibitLeadIn,
 	removeTrailingOptionExhibitLabel,
 } from "../../../../../utils/splitPromptExhibit";
-import { MatchingQuestionInput, MatchingQuestionReview } from "./ccnaExamMatching";
 
 const OPTION_LABELS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 function letter(index) {
@@ -455,12 +454,9 @@ export function QuestionPrompt({ prompt, imageUrl, hasSeparateExhibit = Boolean(
 /* Answer input for one exam question (pick one, choose two, or matching). */
 export function QuestionInput({ question, value, onChange, disabled }) {
 	const type = questionType(question);
-	// Backend exams don't include the answer key; "type the numbers" questions come with their box sizes instead
-	const hasGroupSizes = Array.isArray(question.groupSizes) && question.groupSizes.length === question.choices?.length &&
-		question.groupSizes.reduce((sum, size) => sum + size, 0) === question.items?.length;
-	// One-to-one matching uses the same connect-the-dots board as answer review.
-	const isOneToOne = Array.isArray(question.items) && Array.isArray(question.choices) && question.items.length === question.choices.length;
-	const localMatchMode = Array.isArray(question.answer) ? matchMode(question) : hasGroupSizes ? "group" : isOneToOne ? "assign" : "select";
+	const isOneToOne = Array.isArray(question.items) && Array.isArray(question.choices) &&
+		question.items.length === question.choices.length &&
+		(!Array.isArray(question.answer) || new Set(question.answer).size === question.answer.length);
 
 	if (type === "match" && !hasMatchContent(question)) return <InvalidQuestionMessage />;
 	if (type !== "match" && !Array.isArray(question?.options)) return <InvalidQuestionMessage />;
@@ -468,16 +464,40 @@ export function QuestionInput({ question, value, onChange, disabled }) {
 		return <InvalidQuestionMessage />;
 	}
 
-	// About half of the one-to-one questions are shown as "connect the circles" instead of boxes
-	if (type === "match" && localMatchMode === "assign" && question.matchStyle !== "lines") {
+	if (type === "match" && isOneToOne) {
 		return <AssignMatchInput question={question} value={value} onChange={onChange} disabled={disabled} />;
 	}
-	if (type === "match" && localMatchMode === "group") {
+	if (type === "match" && Array.isArray(question.groupSizes)) {
 		return <GroupMatchInput question={question} value={value} onChange={onChange} disabled={disabled} />;
 	}
 
 	if (type === "match") {
-		return <MatchingQuestionInput question={question} value={value} onChange={onChange} disabled={disabled} />;
+		const current = Array.isArray(value) ? value : question.items.map(() => null);
+		return (
+			<div className="space-y-3">
+				{question.items.map((item, itemIndex) => (
+					<label key={itemIndex} className="grid gap-2 rounded-xl border border-[#d9e1ef] bg-white p-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] sm:items-center">
+						<span className="text-sm font-semibold whitespace-pre-wrap text-[#263654]">{item}</span>
+						<select
+							value={Number.isInteger(current[itemIndex]) ? current[itemIndex] : ""}
+							disabled={disabled}
+							onChange={(event) => {
+								const next = [...current];
+								next[itemIndex] = event.target.value === "" ? null : Number(event.target.value);
+								onChange(next);
+							}}
+							aria-label={`Match for ${item}`}
+							className="min-h-11 rounded-lg border border-[#cbd5e1] bg-white px-3 py-2 text-sm text-[#263654] outline-none focus:border-[#005b6b] focus:ring-2 focus:ring-[#cfe7ea] disabled:cursor-default disabled:bg-[#f5f9f9]"
+						>
+							<option value="">Select an answer</option>
+							{question.choices.map((choice, choiceIndex) => (
+								<option key={choiceIndex} value={choiceIndex}>{choice}</option>
+							))}
+						</select>
+					</label>
+				))}
+			</div>
+		);
 	}
 
 	const isMulti = type === "multi";
@@ -559,7 +579,28 @@ export function QuestionReview({ question, value }) {
 	}
 
 	if (type === "match") {
-		return <MatchingQuestionReview question={question} value={value} />;
+		const current = Array.isArray(value) ? value : [];
+		return (
+			<div className="space-y-2.5">
+				{question.items.map((item, itemIndex) => {
+					const picked = current[itemIndex];
+					const correct = question.answer?.[itemIndex];
+					const hasAnswerKey = Number.isInteger(correct);
+					const isCorrect = hasAnswerKey && picked === correct;
+					return (
+						<div key={itemIndex} className={`grid gap-1 rounded-xl border px-4 py-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,16rem)] sm:items-center ${hasAnswerKey ? (isCorrect ? "border-[#54a879] bg-[#eff9f2]" : "border-[#e77945] bg-[#fff5ef]") : "border-[#e1e8ef] bg-white"}`}>
+							<span className="text-sm font-medium whitespace-pre-wrap text-[#263654] sm:text-base">{item}</span>
+							<span className="text-sm">
+								<span className={`font-bold ${hasAnswerKey ? (isCorrect ? "text-[#287849]" : "text-[#a44b13]") : "text-[#42516b]"}`}>
+									{Number.isInteger(picked) ? question.choices[picked] : "No answer"}
+								</span>
+								{hasAnswerKey && !isCorrect && <span className="block text-xs font-bold text-[#287849]">Correct: {question.choices[correct]}</span>}
+							</span>
+						</div>
+					);
+				})}
+			</div>
+		);
 	}
 
 	const correctSet = new Set(type === "multi" ? question.answer : [question.answer]);

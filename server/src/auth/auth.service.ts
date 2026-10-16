@@ -10,6 +10,7 @@ import { EmailService } from '../email/email.service.js';
 import { UpdateProfileDto } from './dto/profile.dto.js';
 import { ChangePasswordDto } from './dto/change-password.dto.js';
 import { ProfilePhotoDto } from './dto/profile-photo.dto.js';
+import { EnrollmentRequestDto } from './dto/enrollment-request.dto.js';
 
 @Injectable()
 export class AuthService {
@@ -33,6 +34,79 @@ export class AuthService {
             },
             orderBy: [{ training: { name: 'asc' } }, { name: 'asc' }],
         });
+    }
+
+    async createEnrollmentRequest(userId: number, dto: EnrollmentRequestDto) {
+        const email = dto.email.trim().toLowerCase();
+        const phone = dto.phone.trim();
+        if (!email || !phone) {
+            throw new BadRequestException('Enter a valid email address and mobile number.');
+        }
+
+        const [user, program] = await Promise.all([
+            this.prisma.users.findUnique({
+                where: { id: userId },
+                select: { username: true, first_name: true, last_name: true },
+            }),
+            this.prisma.program.findUnique({
+                where: { id: dto.programId },
+                include: {
+                    training: { select: { name: true } },
+                    parent: {
+                        include: { training: { select: { name: true } } },
+                    },
+                },
+            }),
+        ]);
+        if (!user) throw new UnauthorizedException();
+        if (!program) throw new BadRequestException('Select an available program.');
+
+        const enrolledPrograms = await this.prisma.enrollment.findMany({
+            where: { userId },
+            include: { program: { select: { id: true, parentId: true } } },
+        });
+        const targetRootId = program.parentId ?? program.id;
+        const alreadyEnrolled = enrolledPrograms.some(({ program: enrolledProgram }) =>
+            enrolledProgram.id === program.id
+            || (program.parentId === null && enrolledProgram.parentId === program.id)
+            || (program.parentId !== null && enrolledProgram.id === targetRootId),
+        );
+        if (alreadyEnrolled) {
+            throw new ConflictException('You are already enrolled in this program.');
+        }
+
+        const trainingName = program.training?.name ?? program.parent?.training?.name ?? 'Training';
+        const courseName = program.parent
+            ? `${program.parent.name} - ${program.name}`
+            : program.name;
+        const subject = `Enrollment request: ${courseName}`;
+        const requestMetadata = `Account ID: ${userId}; Program ID: ${program.id}`;
+        const existingRequest = await this.prisma.inquires.findFirst({
+            where: {
+                inquiry_type: 'Enrollment Request',
+                project_desc: requestMetadata,
+                status: true,
+            },
+            select: { id: true },
+        });
+        if (existingRequest) {
+            throw new ConflictException('You already have a pending request for this program.');
+        }
+
+        const fullName = `${user.first_name} ${user.last_name}`.trim() || user.username;
+        await this.prisma.inquires.create({
+            data: {
+                inquiry_type: 'Enrollment Request',
+                name: fullName,
+                email,
+                phone,
+                subject,
+                message: `Enrollment request for ${courseName}. Please review and approve before granting program access.`,
+                course: `${trainingName} - ${courseName}`,
+                project_desc: requestMetadata,
+            },
+        });
+        return { message: 'Your enrollment request has been submitted for review.' };
     }
 
     async register(dto: RegisterDto) {

@@ -387,15 +387,5 @@ export function convertBank(rows) {
     if (question) questions.push(question);
     else problems.push({ id: row.id, module: row.module, problem, text: cleanText(row.question_text).slice(0, 160) });
   }
-  // Same rule as the backend (pickLineMatchIds): every second one-to-one matching question,
-  // counting up by bank ID, is shown as "connect the circles" instead of click-to-place boxes
-  const oneToOneIds = questions
-    .filter((question) => question.type === "match" && question.items.length === question.choices.length)
-    .map((question) => question.bankId)
-    .sort((first, second) => first - second);
-  const lineMatchIds = new Set(oneToOneIds.filter((_, index) => index % 2 === 1));
-  return {
-    questions: questions.map((question) => (lineMatchIds.has(question.bankId) ? { ...question, matchStyle: "lines" } : question)),
-    problems,
-  };
+  return { questions, problems };
 }
