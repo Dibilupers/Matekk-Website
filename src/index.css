@@ -31,9 +31,19 @@ h1 {
   line-height: 1.375;
 }
 
+.ccna-exam-review-question {
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.375;
+}
+
 @media (min-width: 640px) {
   .ccna-exam-question-prompt {
     font-size: 1.5rem;
+  }
+
+  .ccna-exam-review-question {
+    font-size: 1.25rem;
   }
 }
 
@@ -123,6 +133,10 @@ h6 {
   animation: ccna-page-enter 550ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
+.ccna-question-transition {
+  animation: ccna-question-transition 240ms ease-out both;
+}
+
 .ccna-notification-boink {
   animation: ccna-notification-boink 420ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
@@ -132,7 +146,15 @@ h6 {
 }
 
 .ccna-match-choice-placed {
-  animation: ccna-match-choice-placed 680ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation: ccna-match-choice-placed 800ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.ccna-match-choice-fading {
+  animation: ccna-match-choice-fading 1100ms ease-in both;
+}
+
+.ccna-match-choice-returned {
+  animation: ccna-match-choice-returned 520ms ease-out both;
 }
 
 .ccna-match-row-feedback {
@@ -705,6 +727,18 @@ h6 {
   }
 }
 
+@keyframes ccna-question-transition {
+  from {
+    opacity: 0.75;
+    transform: translateY(0.4rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes ccna-notification-boink {
   0% {
     transform: scale(1);
@@ -753,6 +787,25 @@ h6 {
 
   to {
     box-shadow: 0 0 0 0 rgb(45 138 86 / 0%);
+  }
+}
+
+@keyframes ccna-match-choice-fading {
+  to {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+}
+
+@keyframes ccna-match-choice-returned {
+  from {
+    opacity: 0;
+    transform: translateY(0.35rem) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 
@@ -823,9 +876,12 @@ h6 {
   }
 
   .ccna-page-enter,
+  .ccna-question-transition,
   .ccna-notification-boink,
   .ccna-validation-shake,
   .ccna-match-choice-placed,
+  .ccna-match-choice-fading,
+  .ccna-match-choice-returned,
   .ccna-match-row-feedback,
   .ccna-stars-enter,
   .ccna-stars-fill {
@@ -1299,10 +1355,20 @@ h6 {
   }
 }
 
-/* ---------- Exam exhibits: terminal styling stays distinct in either exam theme ---------- */
-.ccna-term { background: #0b1220; color: #e2e8f0; border: 1px solid #29364a; }
-.ccna-term-bar { background: #172235; color: rgba(255, 255, 255, 0.75); border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
-.ccna-term-btn { background: rgba(255, 255, 255, 0.1); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.2); }
-.ccna-term-btn:hover { background: rgba(255, 255, 255, 0.2); }
-.ccna-term-screen { background: #0b1220; }
-.ccna-term-hint { color: rgba(255, 255, 255, 0.55); }
+/* ---------- Exam exhibits: terminal window, light and dark ---------- */
+/* Light mode (default): a light terminal window */
+.ccna-term { background: #f8fafc; color: #1e293b; border: 1px solid #d6e0ea; }
+.ccna-term-bar { background: #e8eef5; color: #475569; border-bottom: 1px solid #d6e0ea; }
+.ccna-term-btn { background: #ffffff; color: #1e293b; border: 1px solid #c7d3e1; }
+.ccna-term-btn:hover { background: #f1f5f9; }
+.ccna-term-screen { background: #eef2f7; }
+.ccna-term-hint { color: #64748b; }
+
+/* Dark mode: the classic black terminal */
+[data-theme="dark"] .ccna-term { background: #0f1b2d; color: #e2e8f0; border-color: transparent; }
+[data-theme="dark"] .ccna-term-bar { background: #1b2433; color: rgba(255, 255, 255, 0.65); border-bottom-color: rgba(255, 255, 255, 0.1); }
+[data-theme="dark"] .ccna-term-btn { background: rgba(255, 255, 255, 0.1); color: #ffffff; border-color: rgba(255, 255, 255, 0.2); }
+[data-theme="dark"] .ccna-term-btn:hover { background: rgba(255, 255, 255, 0.2); }
+[data-theme="dark"] .ccna-term-screen,
+[data-theme="dark"].ccna-term-screen { background: #0b1220; }
+[data-theme="dark"] .ccna-term-hint { color: rgba(255, 255, 255, 0.55); }

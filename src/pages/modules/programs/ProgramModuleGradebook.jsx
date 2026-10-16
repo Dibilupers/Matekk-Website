@@ -119,6 +119,7 @@ function getModuleRows(modules, progress, storedAssessments) {
 
 function getExamRows(storedAssessments, programKey) {
 	const examFormats = getProgramExamFormats(programKey) ?? {};
+	const examFormatLabels = { short: "Short", medium: "Medium", long: "Long" };
 	const validExamAssessments = storedAssessments
 		.filter((assessment) =>
 			assessment.type === "exam" &&
@@ -132,7 +133,7 @@ function getExamRows(storedAssessments, programKey) {
 	return Object.entries(examFormats).flatMap(([examKey, exam], examIndex) => {
 		const savedTitle = `${exam.name} · ${exam.programName}`;
 		const attempts = validExamAssessments
-			.filter((assessment) => assessment.title === savedTitle || assessment.title === exam.name)
+			.filter((assessment) => assessment.examFormat === examKey || assessment.title === savedTitle || assessment.title === exam.name)
 			.sort((first, second) => first.submittedAt - second.submittedAt);
 		if (!attempts.length) {
 			return [{
@@ -158,6 +159,7 @@ function getExamRows(storedAssessments, programKey) {
 			return {
 				id: assessment.id,
 				name: exam.name,
+				formatLabel: examFormatLabels[examKey] ?? null,
 				status: "graded",
 				statusLabel: attempts.length > 1 ? `Attempt ${attemptIndex + 1}` : null,
 				submittedAt: assessment.submittedAt,
@@ -240,6 +242,7 @@ function AssessmentTable({ title, rows, filter, sort }) {
 								<tr key={row.id} className="border-b border-[#e9edef] last:border-0">
 									<th scope="row" className="px-5 py-4 font-semibold text-[#172536]">
 										<span>{row.name}</span>
+										{row.formatLabel && <span className="ml-2 rounded-full bg-[#e8f3f4] px-2.5 py-1 text-xs font-semibold text-[#005b6b]">{row.formatLabel} format</span>}
 										{row.statusLabel && <span className="ml-2 text-sm font-medium text-[#a44b13]">{row.statusLabel}</span>}
 									</th>
 									<td className="whitespace-nowrap px-5 py-4 text-[#445363]">{formatDate(row.submittedAt)}</td>

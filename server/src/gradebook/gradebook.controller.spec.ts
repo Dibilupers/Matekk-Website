@@ -1,32 +1,52 @@
+import { BadRequestException } from '@nestjs/common';
 import { GradebookController } from './gradebook.controller.js';
+import { vi } from 'vitest';
 
 describe('GradebookController', () => {
-  it('records a CCNA assessment through the user gradebook service', async () => {
-    const recordAssessment = vi.fn(async () => ({ data: { assessments: {} } }));
-    const controller = new GradebookController({
-      recordAssessment,
-    } as never);
+  const user = { userId: 7 };
+  const programKey = 'ccna';
+  const data = { assessments: { 'quiz:1': { id: 'quiz:1' } } };
+  const assessment = { id: 'quiz:1', score: 8, maxScore: 10, submittedAt: 123 };
 
-    await controller.recordAssessment(
-      { userId: 12 },
-      'ccna',
-      {
-        assessment: {
-          id: 'exam-attempt-1',
-          type: 'exam',
-          score: 42,
-          maxScore: 50,
-          submittedAt: 123456,
-        },
-      },
-    );
+  function createController() {
+    const gradebookService = {
+      save: vi.fn().mockResolvedValue({ data }),
+      saveAssessment: vi.fn().mockResolvedValue({ data }),
+    };
+    return {
+      controller: new GradebookController(gradebookService as never),
+      gradebookService,
+    };
+  }
 
-    expect(recordAssessment).toHaveBeenCalledWith(12, 'ccna', {
-      id: 'exam-attempt-1',
-      type: 'exam',
-      score: 42,
-      maxScore: 50,
-      submittedAt: 123456,
-    });
+  it('accepts gradebook data on both save routes', async () => {
+    const { controller, gradebookService } = createController();
+
+    await controller.save(user, programKey, { data });
+    await controller.saveAssessment(user, programKey, { data });
+
+    expect(gradebookService.save).toHaveBeenCalledTimes(2);
+    expect(gradebookService.save).toHaveBeenCalledWith(user.userId, programKey, data);
+    expect(gradebookService.saveAssessment).not.toHaveBeenCalled();
+  });
+
+  it('accepts a single assessment on both save routes', async () => {
+    const { controller, gradebookService } = createController();
+
+    await controller.save(user, programKey, { assessment });
+    await controller.saveAssessment(user, programKey, { assessment });
+
+    expect(gradebookService.saveAssessment).toHaveBeenCalledTimes(2);
+    expect(gradebookService.saveAssessment).toHaveBeenCalledWith(user.userId, programKey, assessment);
+    expect(gradebookService.save).not.toHaveBeenCalled();
+  });
+
+  it('rejects payloads that contain both shapes or neither shape', () => {
+    const { controller } = createController();
+
+    expect(() => controller.save(user, programKey, { data, assessment }))
+      .toThrow(BadRequestException);
+    expect(() => controller.saveAssessment(user, programKey, {}))
+      .toThrow(BadRequestException);
   });
 });

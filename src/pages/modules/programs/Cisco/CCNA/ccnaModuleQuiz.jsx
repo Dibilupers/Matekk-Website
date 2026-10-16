@@ -555,8 +555,13 @@ export default function CCNAModuleQuiz() {
 						<div className="mx-auto max-w-3xl">
 							<section className="rounded-[20px] border border-[#d6e5e7] bg-white p-4 shadow-sm sm:p-7">
 								<p className="mb-2 text-sm font-semibold text-[#70809a]">Question {attempt.currentIndex + 1} of {moduleQuiz.questions.length} · {moduleQuiz.title}</p>
-								<QuestionPrompt prompt={currentQuestion.prompt} imageUrl={currentQuestion.imageUrl} />
+								<QuestionPrompt
+									prompt={currentQuestion.prompt}
+									imageUrl={currentQuestion.imageUrl}
+									hasSeparateExhibit={Boolean(currentQuestion.exhibit || currentQuestion.imageUrl)}
+								/>
 								<QuestionInput
+									key={attempt.currentIndex}
 									question={currentQuestion}
 									value={selectedAnswer}
 									onChange={chooseAnswer}
@@ -699,27 +704,19 @@ export default function CCNAModuleQuiz() {
 													{question.isCorrect ? "Correct" : "Incorrect"}
 												</span>
 											</div>
-											<QuestionPrompt prompt={question.prompt} imageUrl={question.imageUrl} />
+											<QuestionPrompt
+												prompt={question.prompt}
+												imageUrl={question.imageUrl}
+												hasSeparateExhibit={Boolean(question.exhibit || question.imageUrl)}
+											/>
 											<div className="mt-5">
 												<QuestionReview question={question} value={question.selectedAnswer} />
 											</div>
-											{(() => {
-												const questionSource = question.source || "Cisco CCNA official learning materials and certification references";
-												const questionSourceUrl = question.sourceUrl || CCNA_SOURCE_URL;
-												return (
-													<p className="mt-4 rounded-xl bg-[#f5f9f9] px-4 py-3 text-sm leading-6 text-[#596983]">
-														<span className="font-semibold text-[#005b6b]">Explanation: </span>{question.explanation}
-														<a
-															href={questionSourceUrl}
-															target="_blank"
-															rel="noreferrer"
-															className="mt-3 block text-[11px] font-black uppercase tracking-[0.16em] text-[#0d6d7a] no-underline hover:text-[#0d5561]"
-														>
-															SOURCE: {questionSource}
-														</a>
-													</p>
-												);
-											})()}
+											{question.explanation?.trim() && (
+												<p className="mt-4 rounded-xl bg-[#f5f9f9] px-4 py-3 text-sm leading-6 text-[#596983]">
+													<span className="font-bold text-[#005b6b]">Explanation: </span>{question.explanation}
+												</p>
+											)}
 										</article>
 									))}
 									{reviewQuestions.length === 0 && (

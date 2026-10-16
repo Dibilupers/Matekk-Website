@@ -1,8 +1,24 @@
-import { useRef, useState } from "react";
-import { groupCode, groupSizes, matchMode, parseGroupCode, questionType, requiredSelections } from "../../../../../utils/ccnaExamGrading";
-import { ExhibitImage } from "./ccnaExhibit";
+import { useEffect, useRef, useState } from "react";
+import { groupCode, groupSizes, isValidQuestion, matchMode, parseGroupCode, questionType, requiredSelections } from "../../../../../utils/ccnaExamGrading";
+import { getDisplayedOption, getOptionTableExhibit, parseFormattedOptions } from "./ccnaExamQuestionFormatting";
+import { ExhibitImage, ExhibitText } from "./ccnaExhibit";
+import { looksLikeCode, tidySentence } from "../../../../../utils/answerTextStyle";
+import {
+	removeDuplicateExhibitLeadIn,
+	removeTrailingOptionExhibitLabel,
+} from "../../../../../utils/splitPromptExhibit";
+import { MatchingQuestionInput, MatchingQuestionReview } from "./ccnaExamMatching";
 
-const letter = (i) => String.fromCharCode(65 + i);
+const OPTION_LABELS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+function letter(index) {
+	let label = "";
+	for (let number = index + 1; number > 0; number = Math.floor((number - 1) / OPTION_LABELS.length)) {
+		label = `${OPTION_LABELS[(number - 1) % OPTION_LABELS.length]}${label}`;
+	}
+	return label;
+}
+const MATCH_CHOICE_MOTION_MS = 900;
+const MATCH_CHOICE_STAGGER_MS = 40;
 
 // Answer choices that are router/switch commands (e.g. "R1(config)#ip route ...") are shown like a terminal:
 // monospace, one command per line (some imported questions had all commands squashed onto one line).
@@ -19,7 +35,8 @@ function OptionText({ text, className = "" }) {
 	);
 }
 
-/* Matching choices can be dragged between rows or clicked to assign; clicking a placed choice clears it. */
+/* "Click to place" matching: each row shows the choices nobody has used yet; clicking one places it
+   on that row (solid green box) and removes it from the other rows. Clicking a placed box undoes it. */
 // Same mixed-up order for everyone (based on the text), so the boxes never line up with the answers
 function stableShuffle(indexes, seed) {
 	const hash = (text) => [...text].reduce((h, c) => (Math.imul(h, 31) + c.charCodeAt(0)) | 0, 7);
@@ -27,10 +44,14 @@ function stableShuffle(indexes, seed) {
 }
 
 function animateChoiceCopies(root, target, choiceIndex) {
-	if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+	if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return Promise.resolve();
 
 	const targetRect = target.getBoundingClientRect();
-	const copies = [...root.querySelectorAll(`[data-match-choice="${choiceIndex}"]`)]
+	// The same box in the other rows, plus the boxes NOT chosen in this row: all of them slide into
+	// the chosen box (left/right/up/down depending on where each one sits) and fade away.
+	const sameChoiceElsewhere = [...root.querySelectorAll(`[data-match-choice="${choiceIndex}"]`)];
+	const notChosenInRow = [...(target.parentElement?.querySelectorAll("[data-match-choice]") ?? [])];
+	const copies = [...new Set([...sameChoiceElsewhere, ...notChosenInRow])]
 		.filter((choice) => choice !== target)
 		.map((choice) => {
 			const rect = choice.getBoundingClientRect();
@@ -57,11 +78,12 @@ function animateChoiceCopies(root, target, choiceIndex) {
 			clone.setAttribute("aria-hidden", "true");
 			clone.tabIndex = -1;
 			document.body.append(clone);
-			return { clone, rect };
+			choice.classList.add("ccna-match-choice-fading");
+			return { choice, clone, rect };
 		})
 		.filter(Boolean);
 
-	copies.forEach(({ clone, rect }, index) => {
+	const animations = copies.map(({ choice, clone, rect }, index) => {
 		const x = targetRect.left + targetRect.width / 2 - (rect.left + rect.width / 2);
 		const y = targetRect.top + targetRect.height / 2 - (rect.top + rect.height / 2);
 		const animation = clone.animate(
@@ -72,72 +94,131 @@ function animateChoiceCopies(root, target, choiceIndex) {
 					opacity: 0,
 				},
 			],
-			{ duration: 720, delay: Math.min(index * 30, 150), easing: "cubic-bezier(0.22, 0.61, 0.36, 1)" },
+			{
+				duration: MATCH_CHOICE_MOTION_MS,
+				delay: Math.min(index * MATCH_CHOICE_STAGGER_MS, 200),
+				easing: "cubic-bezier(0.22, 0.61, 0.36, 1)",
+			},
 		);
-		animation.onfinish = () => clone.remove();
-		animation.oncancel = () => clone.remove();
+		animation.finished.then(
+			() => clone.remove(),
+			() => {
+				clone.remove();
+				choice.classList.remove("ccna-match-choice-fading");
+			},
+		);
+		return animation;
+	});
+	return Promise.all(animations.map((animation) => animation.finished.catch(() => undefined))).then(() => undefined);
+}
+
+function animateChoiceReturn(root, source, choiceIndex) {
+	if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+	const sourceRect = source.getBoundingClientRect();
+	const sourceClone = source.cloneNode(true);
+	const computed = window.getComputedStyle(source);
+	for (const property of [
+		"background-color", "border", "border-radius", "box-shadow", "box-sizing", "color",
+		"display", "font-family", "font-size", "font-weight", "line-height", "padding", "text-align",
+	]) {
+		sourceClone.style.setProperty(property, computed.getPropertyValue(property));
+	}
+	Object.assign(sourceClone.style, {
+		position: "fixed",
+		left: `${sourceRect.left}px`,
+		top: `${sourceRect.top}px`,
+		width: `${sourceRect.width}px`,
+		height: `${sourceRect.height}px`,
+		margin: "0",
+		pointerEvents: "none",
+		zIndex: "1200",
+	});
+	sourceClone.classList.remove("ccna-match-choice-placed");
+	sourceClone.setAttribute("aria-hidden", "true");
+	sourceClone.tabIndex = -1;
+	document.body.append(sourceClone);
+
+	requestAnimationFrame(() => {
+		const destinations = [...root.querySelectorAll(`[data-match-choice="${choiceIndex}"]:not(.ccna-match-choice-placed)`)]
+			.filter((choice) => choice !== source);
+		if (destinations.length === 0) {
+			sourceClone.remove();
+			return;
+		}
+
+		destinations.forEach((destination) => {
+			const destinationRect = destination.getBoundingClientRect();
+			const clone = sourceClone.cloneNode(true);
+			document.body.append(clone);
+			const x = destinationRect.left + destinationRect.width / 2 - (sourceRect.left + sourceRect.width / 2);
+			const y = destinationRect.top + destinationRect.height / 2 - (sourceRect.top + sourceRect.height / 2);
+			destination.classList.add("ccna-match-choice-returned");
+			const animation = clone.animate(
+				[
+					{ transform: "translate(0, 0) scale(1)", opacity: 1 },
+					{
+						transform: `translate(${x}px, ${y}px) scale(${destinationRect.width / sourceRect.width}, ${destinationRect.height / sourceRect.height})`,
+						opacity: 0,
+					},
+				],
+				{ duration: 520, easing: "cubic-bezier(0.22, 0.61, 0.36, 1)" },
+			);
+			animation.onfinish = () => {
+				clone.remove();
+				destination.classList.remove("ccna-match-choice-returned");
+			};
+			animation.oncancel = () => {
+				clone.remove();
+				destination.classList.remove("ccna-match-choice-returned");
+			};
+		});
+		sourceClone.remove();
 	});
 }
 
 function AssignMatchInput({ question, value, onChange, disabled }) {
-	const [dragOverItem, setDragOverItem] = useState(null);
 	const choiceOrder = stableShuffle(question.choices.map((_, i) => i), question.prompt);
 	const current = Array.isArray(value) ? value : question.items.map(() => null);
 	const rootRef = useRef(null);
+	const mountedRef = useRef(true);
+	const [isAnimating, setIsAnimating] = useState(false);
 	const used = new Set(current.filter((v) => Number.isInteger(v)));
-	const place = (itemIndex, choiceIndex, target, move = false) => {
-		if (target && current[itemIndex] !== choiceIndex) {
-			animateChoiceCopies(rootRef.current, target, choiceIndex);
-		}
-		const next = [...current];
-		if (move) {
-			const previousItem = next.indexOf(choiceIndex);
-			if (previousItem === itemIndex) return;
-			if (previousItem !== -1) {
-				const displacedChoice = next[itemIndex];
-				next[previousItem] = Number.isInteger(displacedChoice) ? displacedChoice : null;
-			}
-			next[itemIndex] = choiceIndex;
+	useEffect(() => {
+		mountedRef.current = true;
+		return () => {
+			mountedRef.current = false;
+		};
+	}, []);
+	const place = (itemIndex, choiceIndex, target) => {
+		if (current[itemIndex] === choiceIndex) {
+			animateChoiceReturn(rootRef.current, target, choiceIndex);
+			const next = [...current];
+			next[itemIndex] = null;
+			onChange(next);
 		} else {
-			next[itemIndex] = next[itemIndex] === choiceIndex ? null : choiceIndex;
+			setIsAnimating(true);
+			const next = [...current];
+			next[itemIndex] = choiceIndex;
+			void animateChoiceCopies(rootRef.current, target, choiceIndex).then(() => {
+				if (!mountedRef.current) return;
+				onChange(next);
+				setIsAnimating(false);
+			});
 		}
-		onChange(next);
 	};
 	return (
 		<div ref={rootRef} className="space-y-3">
-			<p className="text-sm text-[#70809a]">Drag a choice to a matching row, or click a choice to place it. Click a placed choice to undo it.</p>
-			<div className="ccna-match-board overflow-hidden rounded-2xl border border-[#d9e1ef] bg-white">
+			<p className="text-sm text-[#70809a]">Click a box on the right to place it next to the matching item. Click a placed box to undo it.</p>
+			<div className="overflow-hidden rounded-2xl border border-[#d9e1ef] bg-white">
 				{question.items.map((item, itemIndex) => {
 					const picked = current[itemIndex];
 					const available = Number.isInteger(picked)
 						? [picked]
 						: choiceOrder.filter((i) => !used.has(i));
 					return (
-						<div
-							key={itemIndex}
-							onDragOver={(event) => {
-								if (disabled) return;
-								event.preventDefault();
-								event.dataTransfer.dropEffect = "move";
-								setDragOverItem(itemIndex);
-							}}
-							onDragLeave={(event) => {
-								if (!event.currentTarget.contains(event.relatedTarget)) setDragOverItem(null);
-							}}
-							onDrop={(event) => {
-								event.preventDefault();
-								setDragOverItem(null);
-								if (disabled) return;
-								const draggedChoice = event.dataTransfer.getData("text/plain");
-								if (!draggedChoice) return;
-								const choiceIndex = Number(draggedChoice);
-								if (Number.isInteger(choiceIndex) && choiceIndex >= 0 && choiceIndex < question.choices.length) {
-									place(itemIndex, choiceIndex, event.currentTarget, true);
-								}
-							}}
-							className={`ccna-match-row grid gap-3 border-b border-[#e6ecf3] px-4 py-3 last:border-b-0 sm:grid-cols-[minmax(0,0.9fr)_minmax(0,1.4fr)] sm:items-center ${dragOverItem === itemIndex ? "bg-[#f0f7f7] ring-2 ring-inset ring-[#005b6b]" : Number.isInteger(picked) ? "ccna-match-row-feedback" : ""}`}
-						>
-							<span className="ccna-match-prompt text-[15px] font-semibold whitespace-pre-wrap text-[#263654] sm:text-base">{item}</span>
+						<div key={itemIndex} className={`grid gap-3 border-b border-[#e6ecf3] px-4 py-3 last:border-b-0 sm:grid-cols-[minmax(0,0.9fr)_minmax(0,1.4fr)] sm:items-center ${Number.isInteger(picked) ? "ccna-match-row-feedback" : ""}`}>
+							<span className="text-[15px] font-semibold whitespace-pre-wrap text-[#263654] sm:text-base">{item}</span>
 							<div className="flex flex-wrap gap-2">
 								{available.map((choiceIndex) => {
 									const isPlaced = picked === choiceIndex;
@@ -146,17 +227,11 @@ function AssignMatchInput({ question, value, onChange, disabled }) {
 											key={choiceIndex}
 											type="button"
 											data-match-choice={choiceIndex}
-											disabled={disabled}
+											disabled={disabled || isAnimating}
 											onClick={(event) => place(itemIndex, choiceIndex, event.currentTarget)}
-											draggable={!disabled}
-											onDragStart={(event) => {
-												event.dataTransfer.setData("text/plain", String(choiceIndex));
-												event.dataTransfer.effectAllowed = "move";
-											}}
-											onDragEnd={() => setDragOverItem(null)}
 											aria-pressed={isPlaced}
 											aria-label={isPlaced ? `${question.choices[choiceIndex]} (placed, click to undo)` : `Place ${question.choices[choiceIndex]} here`}
-											className={`ccna-match-choice cursor-grab rounded-lg px-3 py-2 text-left text-sm font-semibold transition-all duration-300 ease-out active:cursor-grabbing disabled:cursor-default motion-reduce:transition-none ${isPlaced
+											className={`rounded-lg px-3 py-2 text-left text-sm font-semibold transition-all duration-300 ease-out disabled:cursor-default motion-reduce:transition-none ${isPlaced
 												? "border-2 border-[#2d8a56] bg-[#eff9f2] font-semibold text-[#1f5e3b]"
 												: "border border-dashed border-[#9aa8bc] bg-white text-[#42516b] hover:-translate-y-0.5 hover:border-[#005b6b] hover:bg-[#f0f7f7] active:translate-y-0 active:scale-[0.98]"} ${isPlaced ? "ccna-match-choice-placed" : ""}`}
 										>
@@ -190,29 +265,29 @@ function GroupMatchInput({ question, value, onChange, disabled }) {
 		.filter(Boolean)
 		.join(", ");
 	return (
-		<div className="ccna-group-match space-y-4">
+		<div className="space-y-4">
 			<div className="grid gap-4 sm:grid-cols-2">
 				<ol className="space-y-2">
 					{question.items.map((item, itemIndex) => (
-						<li key={itemIndex} className="ccna-group-match-item flex items-start gap-3 rounded-xl border border-[#cfe0f5] bg-[#eef5fe] px-3 py-2.5">
+						<li key={itemIndex} className="flex items-start gap-3 rounded-xl border border-[#cfe0f5] bg-[#eef5fe] px-3 py-2.5">
 							<span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#1d4ed8] text-sm font-bold text-white">{itemIndex + 1}</span>
-							<span className="ccna-group-match-item-text text-sm font-semibold whitespace-pre-wrap text-[#263654] sm:text-[15px]">{item}</span>
+							<span className="text-sm font-semibold whitespace-pre-wrap text-[#263654] sm:text-[15px]">{item}</span>
 						</li>
 					))}
 				</ol>
 				<div className="space-y-3">
 					{question.choices.map((choice, choiceIndex) => (
-						<div key={choiceIndex} className="ccna-group-match-box overflow-hidden rounded-xl border border-[#e6d9a8]">
-							<div className="ccna-group-match-box-title bg-[#fdf8dc] px-3 py-2 text-center text-sm font-semibold text-[#5b4d12]">{choice}</div>
+						<div key={choiceIndex} className="overflow-hidden rounded-xl border border-[#e6d9a8]">
+							<div className="bg-[#fdf8dc] px-3 py-2 text-center text-sm font-semibold text-[#5b4d12]">{choice}</div>
 							{Array.from({ length: sizes[choiceIndex] }).map((_, k) => (
-								<div key={k} className="ccna-group-match-slot h-7 border-t border-[#f1d4d4] bg-[#fbe7e7]" aria-hidden="true" />
+								<div key={k} className="h-7 border-t border-[#f1d4d4] bg-[#fbe7e7]" aria-hidden="true" />
 							))}
 						</div>
 					))}
 				</div>
 			</div>
 			<label className="block">
-				<span className="ccna-group-match-instructions block text-sm text-[#526584]">
+				<span className="block text-sm text-[#526584]">
 					Type the item numbers for each box in order from top to bottom, with each box's numbers in ascending order.
 					For example, <strong className="font-mono text-[#263654]">{example}</strong> would mean {exampleMeaning}.
 				</span>
@@ -253,7 +328,7 @@ function GroupMatchInput({ question, value, onChange, disabled }) {
 					}}
 					placeholder={"e.g. " + example}
 					aria-label="Your answer (item numbers)"
-					className="ccna-group-match-code mt-2 w-48 rounded-xl border border-[#c9dfe2] bg-white px-3 py-2 font-mono text-lg tracking-[0.3em] text-[#005b6b] outline-none focus:border-[#005b6b] focus:ring-2 focus:ring-[#cfe7ea] disabled:cursor-default disabled:bg-[#f5f9f9]"
+					className="mt-2 w-48 rounded-xl border border-[#c9dfe2] bg-white px-3 py-2 font-mono text-lg tracking-[0.3em] text-[#005b6b] outline-none focus:border-[#005b6b] focus:ring-2 focus:ring-[#cfe7ea] disabled:cursor-default disabled:bg-[#f5f9f9]"
 				/>
 				{error && (
 					<span
@@ -271,34 +346,79 @@ function GroupMatchInput({ question, value, onChange, disabled }) {
 
 function AnswerOptionContent({ option, codeStyle = false }) {
 	const text = String(option ?? "");
-	if (!codeStyle && !text.includes("\n")) {
-		return <span className="min-w-0 flex-1 whitespace-pre-wrap text-sm sm:text-base">{text}</span>;
+	// Ordinary sentences stay normal text (sentences cut over two lines in the PDFs are joined back up).
+	// A single word like "service port" or "router" is a plain answer here, not a command.
+	if (!codeStyle && !(text.includes("\n") && looksLikeCode(text))) {
+		return <span className="min-w-0 flex-1 whitespace-pre-wrap text-sm sm:text-base">{tidySentence(text)}</span>;
 	}
+	const formattedText = text.replace(/(?<=\S)[ \t]{3,}(?=\S)/g, "\n");
 
 	return (
-		<pre className="min-w-0 flex-1 overflow-x-auto rounded-lg bg-[#101b31] px-3 py-2 font-mono text-xs leading-5 text-[#e7efff] whitespace-pre-wrap break-words [overflow-wrap:anywhere] sm:text-sm">
-			<code>{text}</code>
+		<pre className="min-w-0 flex-1 overflow-x-hidden rounded-lg border border-[#d9e1ef] bg-[#f1f5f9] px-2 py-1.5 font-mono text-xs leading-5 text-[#263654] whitespace-pre-wrap break-words [overflow-wrap:anywhere] sm:px-3 sm:py-2 sm:text-sm">
+			<code>{formattedText}</code>
 		</pre>
 	);
 }
 
+// Use the terminal-style box for every answer when at least half the answers are device commands/output,
+// so the choices line up. One answer that merely starts with a command word ("service port",
+// "shutdown command issued on the port") doesn't count; nor does a line break alone.
 function hasMultilineOption(question) {
-	return question.options.some((option) => String(option ?? "").includes("\n"));
+	if (!Array.isArray(question?.options)) return false;
+	const codeAnswers = question.options.filter((option) => looksLikeCode(getDisplayedOption(question, option))).length;
+	return codeAnswers > 0 && codeAnswers >= question.options.length / 2;
 }
 
-export function QuestionPrompt({ prompt, imageUrl }) {
-	const normalizedPrompt = String(prompt ?? "").replace(/\r\n/g, "\n").trim();
+// Guards against broken question data (e.g. an old saved attempt), so the page shows a message instead of crashing
+function hasMatchContent(question, includeAnswer = false) {
+	return Array.isArray(question?.items) &&
+		question.items.length > 0 &&
+		question.items.every((item) => typeof item === "string") &&
+		Array.isArray(question.choices) &&
+		question.choices.length > 0 &&
+		question.choices.every((choice) => typeof choice === "string") &&
+		(!includeAnswer || Array.isArray(question.answer));
+}
 
-	const configuredMatch = normalizedPrompt.match(/\bConfigured (?:router IPv6 )?interfaces:\s*/i);
-	const promptBeforeConfigured = configuredMatch ? normalizedPrompt.slice(0, configuredMatch.index).trim() : normalizedPrompt;
-	const doubleNewlineMatch = normalizedPrompt.match(/\n\s*\n([\s\S]+)/);
+function InvalidQuestionMessage() {
+	return (
+		<p role="alert" className="rounded-xl border border-[#f2c6c3] bg-[#fff8f6] px-4 py-3 text-sm font-medium text-[#a44b13]">
+			This question has invalid answer data. Reload the page to try again.
+		</p>
+	);
+}
+
+// imageUrl: the question's picture, for pages that don't show it themselves (the exam page shows it separately)
+export function QuestionPrompt({ prompt, imageUrl, hasSeparateExhibit = Boolean(imageUrl) }) {
+	const normalizedPrompt = removeDuplicateExhibitLeadIn(
+		hasSeparateExhibit ? removeTrailingOptionExhibitLabel(prompt) : prompt,
+	);
+	const formattedOptions = parseFormattedOptions(normalizedPrompt);
+	// A scrambled "Option A / Option B" table: show the question, then the whole table as it appears in the source
+	const optionTable = formattedOptions ? null : getOptionTableExhibit(normalizedPrompt);
+	if (optionTable) {
+		return (
+			<div className="mb-5 space-y-4 sm:mb-6">
+				<h2 className="whitespace-pre-wrap text-base font-semibold leading-relaxed tracking-tight text-[#17233d] sm:text-lg">
+					{optionTable.prompt}
+				</h2>
+				{imageUrl && <ExhibitImage src={imageUrl} lazy imageClassName="max-h-[32rem]" />}
+				<ExhibitText text={optionTable.exhibit} />
+			</div>
+		);
+	}
+	const displayPrompt = (formattedOptions?.prompt ?? normalizedPrompt).replace(/\r\n/g, "\n").trim();
+
+	const configuredMatch = displayPrompt.match(/\bConfigured (?:router IPv6 )?interfaces:\s*/i);
+	const promptBeforeConfigured = configuredMatch ? displayPrompt.slice(0, configuredMatch.index).trim() : displayPrompt;
+	const doubleNewlineMatch = displayPrompt.match(/\n\s*\n([\s\S]+)/);
 
 	let promptText = promptBeforeConfigured;
 	let exhibit = null;
 	let exhibitTitle = "Exhibit";
 
 	if (configuredMatch) {
-		exhibit = normalizedPrompt.slice(configuredMatch.index + configuredMatch[0].length).trim();
+		exhibit = displayPrompt.slice(configuredMatch.index + configuredMatch[0].length).trim();
 		exhibitTitle = configuredMatch[0].replace(/:\s*$/, "");
 	} else if (doubleNewlineMatch) {
 		const candidate = doubleNewlineMatch[1].trim();
@@ -306,7 +426,7 @@ export function QuestionPrompt({ prompt, imageUrl }) {
 		const isExhibit = lines.length >= 2 && lines.some((line) => /^%/.test(line) || /^(?:[A-Za-z0-9.-]+(?:\s+\(config\))?#|[A-Za-z0-9_.-]+\s*:\s*.+|[A-Za-z0-9_.-]+\s+\w+\s*:\s*.+)/.test(line));
 
 		if (isExhibit) {
-			promptText = normalizedPrompt.slice(0, doubleNewlineMatch.index).trim();
+			promptText = displayPrompt.slice(0, doubleNewlineMatch.index).trim();
 			exhibit = candidate;
 			exhibitTitle = "System output";
 		}
@@ -317,6 +437,7 @@ export function QuestionPrompt({ prompt, imageUrl }) {
 			<h2 className="whitespace-pre-wrap text-base font-semibold leading-relaxed tracking-tight text-[#17233d] sm:text-lg">
 				{promptText}
 			</h2>
+			{imageUrl && <ExhibitImage src={imageUrl} lazy imageClassName="max-h-[32rem]" />}
 			{exhibit && (
 				<section aria-label={exhibitTitle} className="overflow-hidden rounded-xl border border-[#d9e1ef] bg-[#f7f9fc]">
 					<p className="border-b border-[#d9e1ef] px-4 py-2 text-xs font-bold uppercase tracking-wide text-[#526584]">
@@ -327,14 +448,6 @@ export function QuestionPrompt({ prompt, imageUrl }) {
 					</pre>
 				</section>
 			)}
-			{imageUrl && (
-				<ExhibitImage
-					src={imageUrl}
-					lazy
-					imageClassName="max-h-56 object-contain sm:max-h-64"
-					className="max-w-full"
-				/>
-			)}
 		</div>
 	);
 }
@@ -342,9 +455,21 @@ export function QuestionPrompt({ prompt, imageUrl }) {
 /* Answer input for one exam question (pick one, choose two, or matching). */
 export function QuestionInput({ question, value, onChange, disabled }) {
 	const type = questionType(question);
-	const localMatchMode = Array.isArray(question.answer) ? matchMode(question) : "select";
+	// Backend exams don't include the answer key; "type the numbers" questions come with their box sizes instead
+	const hasGroupSizes = Array.isArray(question.groupSizes) && question.groupSizes.length === question.choices?.length &&
+		question.groupSizes.reduce((sum, size) => sum + size, 0) === question.items?.length;
+	// One-to-one questions (each box used once) use the click-to-place boxes, like the original exam
+	const isOneToOne = Array.isArray(question.items) && Array.isArray(question.choices) && question.items.length === question.choices.length;
+	const localMatchMode = Array.isArray(question.answer) ? matchMode(question) : hasGroupSizes ? "group" : isOneToOne ? "assign" : "select";
 
-	if (type === "match" && localMatchMode === "assign") {
+	if (type === "match" && !hasMatchContent(question)) return <InvalidQuestionMessage />;
+	if (type !== "match" && !Array.isArray(question?.options)) return <InvalidQuestionMessage />;
+	if (type === "multi" && (!Array.isArray(question.answer) || question.answer.length === 0)) {
+		return <InvalidQuestionMessage />;
+	}
+
+	// About half of the one-to-one questions are shown as "connect the circles" instead of boxes
+	if (type === "match" && localMatchMode === "assign" && question.matchStyle !== "lines") {
 		return <AssignMatchInput question={question} value={value} onChange={onChange} disabled={disabled} />;
 	}
 	if (type === "match" && localMatchMode === "group") {
@@ -352,33 +477,7 @@ export function QuestionInput({ question, value, onChange, disabled }) {
 	}
 
 	if (type === "match") {
-		const current = Array.isArray(value) ? value : question.items.map(() => null);
-		return (
-			<div className="space-y-3">
-				<p className="text-sm text-[#70809a]">Match each item on the left with the correct answer.</p>
-				{question.items.map((item, itemIndex) => (
-					<div key={itemIndex} className="ccna-answer-choice grid gap-2 rounded-2xl border border-[#d9e1ef] bg-white px-4 py-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,16rem)] sm:items-center">
-						<span className="whitespace-pre-wrap text-[15px] font-semibold text-[#263654] sm:text-base">{item}</span>
-						<select
-							value={current[itemIndex] ?? ""}
-							disabled={disabled}
-							aria-label={`Answer for: ${item}`}
-							onChange={(event) => {
-								const next = [...current];
-								next[itemIndex] = event.target.value === "" ? null : Number(event.target.value);
-								onChange(next);
-							}}
-							className="w-full rounded-xl border border-[#c9dfe2] bg-[#f5f9f9] px-3 py-2 text-sm font-semibold text-[#005b6b] disabled:cursor-default"
-						>
-							<option value="">Select…</option>
-							{question.choices.map((choice, choiceIndex) => (
-								<option key={choiceIndex} value={choiceIndex}>{choice}</option>
-							))}
-						</select>
-					</div>
-				))}
-			</div>
-		);
+		return <MatchingQuestionInput question={question} value={value} onChange={onChange} disabled={disabled} />;
 	}
 
 	const isMulti = type === "multi";
@@ -398,8 +497,9 @@ export function QuestionInput({ question, value, onChange, disabled }) {
 		<div className="space-y-2.5">
 			{isMulti && <p className="text-sm text-[#70809a]">Select {needed} answers ({selected.length}/{needed} selected).</p>}
 			{question.options.map((option, optionIndex) => {
-				const displayedOption = option;
+				const displayedOption = getDisplayedOption(question, option);
 				const isSelected = isMulti ? selected.includes(optionIndex) : selected === optionIndex;
+				const isMultiline = codeStyle || String(displayedOption ?? "").includes("\n");
 				return (
 					<button
 						key={option}
@@ -407,7 +507,7 @@ export function QuestionInput({ question, value, onChange, disabled }) {
 						onClick={() => choose(optionIndex)}
 						disabled={disabled}
 						aria-pressed={isSelected}
-						className={`ccna-answer-choice ccna-dark-hover flex min-h-[52px] w-full items-center gap-2.5 rounded-2xl border px-3 py-2.5 text-left transition disabled:cursor-default sm:min-h-[60px] sm:gap-3 sm:px-4 sm:py-3 ${isSelected ? "border-[#005b6b] bg-[#e8f3f4] text-[#263654]" : "border-[#d9e1ef] bg-white text-[#263654] hover:border-[#8bb8bf] hover:bg-[#f0f7f7]"}`}
+						className={`ccna-answer-choice ccna-dark-hover flex min-h-[52px] w-full ${isMultiline ? "items-start" : "items-center"} gap-2.5 rounded-2xl border px-3 py-2.5 text-left transition disabled:cursor-default sm:min-h-[60px] sm:gap-3 sm:px-4 sm:py-3 ${isSelected ? "border-[#005b6b] bg-[#e8f3f4] text-[#263654]" : "border-[#d9e1ef] bg-white text-[#263654] hover:border-[#8bb8bf] hover:bg-[#f0f7f7]"}`}
 					>
 						<span className={`flex h-8 w-8 shrink-0 items-center justify-center ${isMulti ? "rounded-md" : "rounded-full"} text-sm font-bold ${isSelected ? "bg-[#005b6b] text-white" : "bg-[#e8f3f4] text-[#005b6b]"}`}>
 							{letter(optionIndex)}
@@ -427,6 +527,8 @@ export function QuestionInput({ question, value, onChange, disabled }) {
 /* Results review for one question: shows the student's answer and the correct one. */
 export function QuestionReview({ question, value }) {
 	const type = questionType(question);
+	if (type === "match" && !hasMatchContent(question, true)) return <InvalidQuestionMessage />;
+	if (type !== "match" && !isValidQuestion(question)) return <InvalidQuestionMessage />;
 
 	if (type === "match" && matchMode(question) === "group") {
 		const current = Array.isArray(value) ? value : [];
@@ -457,27 +559,7 @@ export function QuestionReview({ question, value }) {
 	}
 
 	if (type === "match") {
-		const current = Array.isArray(value) ? value : [];
-		return (
-			<div className="space-y-2.5">
-				{question.items.map((item, itemIndex) => {
-					const picked = current[itemIndex];
-					const correct = question.answer[itemIndex];
-					const isCorrect = picked === correct;
-					return (
-						<div key={itemIndex} className={`grid gap-1 rounded-xl border px-4 py-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,16rem)] sm:items-center ${isCorrect ? "border-[#54a879] bg-[#eff9f2]" : "border-[#e77945] bg-[#fff5ef]"}`}>
-							<span className="whitespace-pre-wrap text-sm font-medium text-[#263654] sm:text-base">{item}</span>
-							<span className="text-sm">
-								<span className={`font-bold ${isCorrect ? "text-[#287849]" : "text-[#a44b13]"}`}>
-									{Number.isInteger(picked) ? question.choices[picked] : "No answer"}
-								</span>
-								{!isCorrect && <span className="block text-xs font-bold text-[#287849]">Correct: {question.choices[correct]}</span>}
-							</span>
-						</div>
-					);
-				})}
-			</div>
-		);
+		return <MatchingQuestionReview question={question} value={value} />;
 	}
 
 	const correctSet = new Set(type === "multi" ? question.answer : [question.answer]);
@@ -487,7 +569,7 @@ export function QuestionReview({ question, value }) {
 	return (
 		<div className="space-y-2.5">
 			{question.options.map((option, optionIndex) => {
-				const displayedOption = option;
+				const displayedOption = getDisplayedOption(question, option);
 				const isCorrectAnswer = correctSet.has(optionIndex);
 				const isSelectedAnswer = pickedSet.has(optionIndex);
 				const optionStyle = isCorrectAnswer
@@ -495,8 +577,9 @@ export function QuestionReview({ question, value }) {
 					: isSelectedAnswer
 						? "border-[#e77945] bg-[#fff5ef] text-[#a44b13]"
 						: "border-[#e1e8ef] bg-white text-[#42516b]";
+				const isMultiline = codeStyle || String(displayedOption ?? "").includes("\n");
 				return (
-					<div key={option} className={`flex min-h-[54px] items-center gap-3 rounded-xl border px-4 py-3 ${optionStyle}`}>
+					<div key={option} className={`flex min-h-[54px] ${isMultiline ? "items-start" : "items-center"} gap-3 rounded-xl border px-4 py-3 ${optionStyle}`}>
 						<span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
 							isCorrectAnswer ? "bg-[#2d8a56] text-white" : isSelectedAnswer ? "bg-[#c7541a] text-white" : "bg-[#edf3fb] text-[#4764a8]"
 						}`}>

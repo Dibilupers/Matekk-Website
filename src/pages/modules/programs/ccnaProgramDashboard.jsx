@@ -234,6 +234,7 @@ export default function CCNAProgramDashboard({
 	quizScore = 0,
 	gradebookPath,
 	gradebookStatsError,
+	retryGradebookStats,
 	heroIntros = NO_HERO_INTROS,
 	overviewDescription,
 	programKey,
@@ -344,7 +345,18 @@ export default function CCNAProgramDashboard({
 								</>
 							)}
 						</div>
-						{gradebookStatsError && <p role="alert" className="mt-2 text-xs font-medium text-[#a44b13]">{gradebookStatsError}</p>}
+						{gradebookStatsError && (
+							<p role="alert" className="mt-2 flex flex-wrap items-center gap-x-2 text-xs font-medium text-[#a44b13]">
+								<span>{gradebookStatsError}</span>
+								<button
+									type="button"
+									onClick={retryGradebookStats}
+									className="font-bold underline underline-offset-2 hover:no-underline"
+								>
+									Retry
+								</button>
+							</p>
+						)}
 					</div>
 
 					<div className="relative order-2 mx-auto flex h-[320px] w-full max-w-[440px] items-center justify-center sm:order-none sm:h-[380px] sm:max-w-[470px]">

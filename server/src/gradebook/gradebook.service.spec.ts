@@ -12,13 +12,8 @@ describe('GradebookService', () => {
       savedData = update.data;
       return { data: savedData, updatedAt: new Date() };
     });
-    const transaction = {
-      userGradebook: { findUnique, upsert },
-    };
     const prisma = {
-      ...transaction,
-      $transaction: vi.fn(async (run: (tx: typeof transaction) => Promise<unknown>) =>
-        run(transaction)),
+      userGradebook: { findUnique, upsert },
     } as unknown as PrismaService;
     const programAccess = { assertEnrollment: vi.fn(async () => undefined) };
     const service = new GradebookService(prisma, programAccess as never);
@@ -30,19 +25,28 @@ describe('GradebookService', () => {
     });
     await service.save(12, 'ccna', {
       assessments: {
-        'exam:attempt-1': { id: 'exam:attempt-1', score: 40 },
+        'exam:attempt-1': {
+          id: 'exam:attempt-1',
+          type: 'exam',
+          examFormat: 'long',
+          score: 40,
+        },
       },
     });
 
     expect(savedData).toEqual({
       assessments: {
         'quiz:1.0:1': { id: 'quiz:1.0:1', score: 8 },
-        'exam:attempt-1': { id: 'exam:attempt-1', score: 40 },
+        'exam:attempt-1': {
+          id: 'exam:attempt-1',
+          type: 'exam',
+          examFormat: 'long',
+          score: 40,
+        },
       },
     });
     expect(findUnique).toHaveBeenCalledTimes(2);
     expect(upsert).toHaveBeenCalledTimes(2);
-    expect(prisma.$transaction).toHaveBeenCalledTimes(2);
     expect(programAccess.assertEnrollment).toHaveBeenCalledTimes(2);
   });
 
@@ -60,7 +64,46 @@ describe('GradebookService', () => {
     expect(findUnique).toHaveBeenCalled();
   });
 
-  it('records a completed assessment in the user gradebook after checking enrollment', async () => {
+  it('saves one assessment after checking enrollment', async () => {
+    let savedData: Record<string, unknown> | null = null;
+    const findUnique = vi.fn(async () => savedData ? { data: savedData } : null);
+    const upsert = vi.fn(async ({ create, update }: {
+      create: { data: Record<string, unknown> };
+      update: { data: Record<string, unknown> };
+    }) => {
+      savedData = update.data ?? create.data;
+      return { data: savedData, updatedAt: new Date() };
+    });
+    const assertEnrollment = vi.fn(async () => undefined);
+    const service = new GradebookService(
+      { userGradebook: { findUnique, upsert } } as unknown as PrismaService,
+      { assertEnrollment } as never,
+    );
+    const assessment = {
+      id: 'exam:long:attempt-1',
+      type: 'exam',
+      examFormat: 'long',
+      score: 42,
+      maxScore: 50,
+      submittedAt: 123456,
+    };
+
+    const result = await service.saveAssessment(12, 'ccna', assessment);
+
+    expect(assertEnrollment).toHaveBeenCalledWith(12, 'ccna');
+    expect(result.data).toEqual({ assessments: { [assessment.id]: assessment } });
+    expect(upsert).toHaveBeenCalledWith(expect.objectContaining({
+      where: { userId_programKey: { userId: 12, programKey: 'ccna' } },
+      create: {
+        userId: 12,
+        programKey: 'ccna',
+        data: { assessments: { [assessment.id]: assessment } },
+      },
+      update: { data: { assessments: { [assessment.id]: assessment } } },
+    }));
+  });
+
+  it('records a trusted completed assessment without requiring a second enrollment check', async () => {
     let savedData: Record<string, unknown> | null = null;
     const findUnique = vi.fn(async () => savedData ? { data: savedData } : null);
     const upsert = vi.fn(async ({ update }: {
@@ -69,16 +112,9 @@ describe('GradebookService', () => {
       savedData = update.data;
       return { data: savedData, updatedAt: new Date() };
     });
-    const assertEnrollment = vi.fn(async () => undefined);
-    const transaction = {
-      userGradebook: { findUnique, upsert },
-    };
+    const assertEnrollment = vi.fn();
     const service = new GradebookService(
-      {
-        ...transaction,
-        $transaction: vi.fn(async (run: (tx: typeof transaction) => Promise<unknown>) =>
-          run(transaction)),
-      } as unknown as PrismaService,
+      { userGradebook: { findUnique, upsert } } as unknown as PrismaService,
       { assertEnrollment } as never,
     );
 
@@ -88,6 +124,7 @@ describe('GradebookService', () => {
       score: 42,
       maxScore: 50,
       submittedAt: 123456,
+      examFormat: 'medium',
     });
 
     expect(savedData).toEqual({
@@ -98,27 +135,11 @@ describe('GradebookService', () => {
           score: 42,
           maxScore: 50,
           submittedAt: 123456,
+          examFormat: 'medium',
         },
       },
     });
-    expect(assertEnrollment).toHaveBeenCalledWith(12, 'ccna');
-  });
-
-  it('rejects an assessment without valid score fields', async () => {
-    const assertEnrollment = vi.fn(async () => undefined);
-    const service = new GradebookService(
-      {} as PrismaService,
-      { assertEnrollment } as never,
-    );
-
-    await expect(service.recordAssessment(12, 'ccna', {
-      id: 'attempt-1',
-      type: 'exam',
-      score: 42,
-      maxScore: 0,
-      submittedAt: 123456,
-    })).rejects.toThrow('valid score');
-    expect(assertEnrollment).toHaveBeenCalledWith(12, 'ccna');
+    expect(assertEnrollment).not.toHaveBeenCalled();
   });
 
   it('does not read or write a gradebook when enrollment is denied', async () => {

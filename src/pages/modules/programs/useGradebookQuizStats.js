@@ -48,6 +48,7 @@ export default function useGradebookQuizStats(
 	fallbackCompletedExams = 0,
 ) {
 	const [backendState, setBackendState] = useState(null);
+	const [retryCount, setRetryCount] = useState(0);
 	const fallbackStatsRef = useRef({
 		attempted: fallbackAttempted,
 		average: fallbackAverage,
@@ -95,17 +96,20 @@ export default function useGradebookQuizStats(
 		return () => {
 			isActive = false;
 		};
-	}, [modules, programKey, userId]);
+	}, [modules, programKey, retryCount, userId]);
 
-	return hasCurrentBackendState
-		? backendState
-		: {
-			stats: {
-				attempted: fallbackAttempted,
-				average: fallbackAverage,
-				completedQuizzes: fallbackCompletedQuizzes,
-				completedExams: fallbackCompletedExams,
-			},
-			error: null,
-		};
+	return {
+		...(hasCurrentBackendState
+			? backendState
+			: {
+				stats: {
+					attempted: fallbackAttempted,
+					average: fallbackAverage,
+					completedQuizzes: fallbackCompletedQuizzes,
+					completedExams: fallbackCompletedExams,
+				},
+				error: null,
+			}),
+		retry: () => setRetryCount((count) => count + 1),
+	};
 }

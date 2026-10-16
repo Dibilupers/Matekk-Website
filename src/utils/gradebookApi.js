@@ -129,13 +129,31 @@ async function flushPendingAssessments(scope, programKey) {
 
 	const flush = (async () => {
 		for (const assessment of pending) {
-			const response = await fetch(`${API_URL}/gradebook/${encodeURIComponent(programKey)}/assessments`, {
-				method: "POST",
-				credentials: "include",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ assessment }),
-			});
-			await readResponse(response);
+			const sendAssessment = async (method, url, body) => {
+				const response = await fetch(url, {
+					method,
+					credentials: "include",
+					headers: { "Content-Type": "application/json" },
+					body,
+				});
+				await readResponse(response);
+			};
+
+			try {
+				await sendAssessment(
+					"POST",
+					`${API_URL}/gradebook/${encodeURIComponent(programKey)}/assessments`,
+					JSON.stringify({ assessment }),
+				);
+			} catch (error) {
+				const isLegacyRouteError = typeof error?.message === "string" && /\b(404|405)\b/.test(error.message);
+				if (!isLegacyRouteError) throw error;
+				await sendAssessment(
+					"PUT",
+					`${API_URL}/gradebook/${encodeURIComponent(programKey)}`,
+					JSON.stringify({ data: { assessments: { [assessment.id]: assessment } } }),
+				);
+			}
 		}
 		removeFlushedAssessments(scope, pending);
 	})();
@@ -150,6 +168,7 @@ async function flushPendingAssessments(scope, programKey) {
 		return flushPendingAssessments(scope, programKey);
 	}
 }
+
 
 function ensureOnlineSync(scope, userId, programKey) {
 	if (onlineSyncHandlers.has(scope)) return;
