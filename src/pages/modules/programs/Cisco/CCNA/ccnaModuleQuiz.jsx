@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ArrowLeft, ArrowUp, Check, Moon, RotateCcw, Sun, X } from "lucide-react";
 import { Link, useBlocker, useLocation, useParams } from "react-router-dom";
-import { useAuth } from "../../../../../context/AuthContext";
+import { useAuth } from "../../../../../context/auth-context";
 import TrainingLogo from "../../../../../assets/MATEKK_training_logo.png";
 import { CCNA_MODULE_QUIZZES } from "./ccnaModuleQuizData";
 import {
@@ -283,7 +283,7 @@ export default function CCNAModuleQuiz() {
 			score: attempt.score,
 			maxScore: moduleQuiz.questions.length,
 			submittedAt: attempt.submittedAt,
-		}).then(() => {
+		}, userId).then(() => {
 			if (isActive) setGradebookSaveError(null);
 		}).catch((error) => {
 			console.error("Unable to save the quiz result to the gradebook.", error);
@@ -555,7 +555,11 @@ export default function CCNAModuleQuiz() {
 						<div className="mx-auto max-w-3xl">
 							<section className="rounded-[20px] border border-[#d6e5e7] bg-white p-4 shadow-sm sm:p-7">
 								<p className="mb-2 text-sm font-semibold text-[#70809a]">Question {attempt.currentIndex + 1} of {moduleQuiz.questions.length} · {moduleQuiz.title}</p>
-								<QuestionPrompt prompt={currentQuestion.prompt} imageUrl={currentQuestion.imageUrl} />
+								<QuestionPrompt
+									prompt={currentQuestion.prompt}
+									imageUrl={currentQuestion.imageUrl}
+									hasSeparateExhibit={Boolean(currentQuestion.exhibit || currentQuestion.imageUrl)}
+								/>
 								<QuestionInput
 									key={attempt.currentIndex}
 									question={currentQuestion}
@@ -700,7 +704,11 @@ export default function CCNAModuleQuiz() {
 													{question.isCorrect ? "Correct" : "Incorrect"}
 												</span>
 											</div>
-											<QuestionPrompt prompt={question.prompt} imageUrl={question.imageUrl} />
+											<QuestionPrompt
+												prompt={question.prompt}
+												imageUrl={question.imageUrl}
+												hasSeparateExhibit={Boolean(question.exhibit || question.imageUrl)}
+											/>
 											<div className="mt-5">
 												<QuestionReview question={question} value={question.selectedAnswer} />
 											</div>

@@ -202,6 +202,19 @@ export function splitPromptExhibit(prompt) {
   };
 }
 
+export function removeDuplicateExhibitLeadIn(prompt) {
+  return String(prompt ?? "")
+    .replace(/^\s*Refer to (?:the )?exhibit\.?\s*(?:\r?\n\s*)+(Refer to (?:the )?exhibit\.?)/i, "$1")
+    .replace(/^(Refer to (?:the )?exhibit\.)(?:[ \t]+)(?=\S)/i, "$1\n\n")
+    .trim();
+}
+
+export function removeTrailingOptionExhibitLabel(prompt) {
+  return String(prompt ?? "")
+    .replace(/\n\s*\nOption [A-H]\s*$/i, "")
+    .trim();
+}
+
 // Device commands typed straight under the question with no blank line around them
 // ("How does SW2 interact ...?\nSW2\nvtp domain cisco\n..."): move that run of lines into the exhibit.
 function splitCommandRun(text) {

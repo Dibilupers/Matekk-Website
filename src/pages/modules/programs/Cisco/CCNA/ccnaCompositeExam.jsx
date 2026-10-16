@@ -2,20 +2,28 @@
 import { createPortal } from "react-dom";
 import { ArrowLeft, ArrowRight, ArrowUp, Clock3, Flag, Moon, RotateCcw, Sun, X } from "lucide-react";
 import { Link, useBlocker, useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "../../../../../context/AuthContext";
+import { useAuth } from "../../../../../context/auth-context";
 import TrainingLogo from "../../../../../assets/MATEKK_training_logo.png";
 import { CCNA_EXAMS } from "./ccnaExamFormats";
 import { saveCcnaMockExamResult } from "../../../../../utils/ccnaGradebook";
 import { getCcnaExamSessionKey } from "../../../../../utils/ccnaShortExamSession";
 import { isQuestionAnswered } from "../../../../../utils/ccnaExamGrading";
 import { QuestionInput, QuestionPrompt, QuestionReview } from "./ccnaExamQuestionViews";
-import { splitPromptExhibit } from "../../../../../utils/splitPromptExhibit";
+import {
+	removeDuplicateExhibitLeadIn,
+	removeTrailingOptionExhibitLabel,
+	splitPromptExhibit,
+} from "../../../../../utils/splitPromptExhibit";
 import { cleanText } from "../../../../../utils/ccnaBankConverter";
 import { ExhibitDiagram, ExhibitImage, ExhibitText } from "./ccnaExhibit";
 import { loadCcnaQuestionBank } from "../../../../../utils/ccnaQuestionBankApi";
 import { getDatabaseQuestionById, setDatabaseQuestions } from "./ccnaQuestionBank";
 import { resumeCcnaExam, startCcnaExam, submitCcnaExam } from "../../../../../utils/ccnaExamApi";
 const EXAM_PASS_PERCENTAGE = 80;
+const RECREATED_MATCH_EXHIBIT_QUESTION_IDS = new Set([570]);
+const isRoutingProtocolComparisonQuestion = (question) =>
+	question?.prompt?.includes("three different routing protocols") &&
+	question.prompt.includes("172.16.32.1");
 
 function formatTime(totalSeconds) {
 	const hours = Math.floor(totalSeconds / 3600);
@@ -79,6 +87,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 			currentLocation.hash !== nextLocation.hash),
 	);
 	const question = questions[currentIndex];
+	const enlargeRouteExhibit = isRoutingProtocolComparisonQuestion(question);
 	const answeredCount = questions.filter((item, index) =>
 		isQuestionAnswered(item, answers[index]),
 	).length;
@@ -179,6 +188,8 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 				if (!isActive) return;
 				const loadedQuestions = apiAttempt.questions.map((apiQuestion) => {
 					const bankQuestion = getDatabaseQuestionById(apiQuestion.id);
+					const hasRecreatedMatchExhibit = apiQuestion.type === "match" &&
+						RECREATED_MATCH_EXHIBIT_QUESTION_IDS.has(apiQuestion.id);
 					// Fix text saved with the wrong encoding ("â€œwarningâ€" -> “warning”) for display.
 					// The original option text is kept for submitting, since the backend grades by exact text.
 					const cleanList = (list) => (Array.isArray(list) ? list.map((value) => (typeof value === "string" ? cleanText(value) : value)) : list);
@@ -186,23 +197,44 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 					// Keep that text whole (the question view lays the table out itself) and list the answers A, B, C, D in order.
 					const isOptionTable = Array.isArray(apiQuestion.options) &&
 						apiQuestion.options.every((option) => /^\s*Option [A-H]\s*$/i.test(String(option)));
-					const { prompt, exhibit } = isOptionTable
+					const hasExpandedOptionTable = isOptionTable &&
+						Array.isArray(bankQuestion?.options) &&
+						bankQuestion.options.length === apiQuestion.options.length &&
+						bankQuestion.options.every((option) =>
+							typeof option === "string" && option.trim() && !/^\s*Option [A-H]\s*$/i.test(option),
+						);
+					const { prompt, exhibit } = hasExpandedOptionTable
+						? { prompt: bankQuestion.prompt }
+						: isOptionTable
 						? { prompt: cleanText(apiQuestion.prompt) }
 						: splitPromptExhibit(cleanText(apiQuestion.prompt));
-					const orderedOptions = isOptionTable
+					const exhibitImage = bankQuestion?.exhibitImage || apiQuestion.imageUrl;
+					const displayedExhibit = bankQuestion?.exhibit && !isOptionTable ? bankQuestion.exhibit : exhibit;
+					const hasSeparateExhibit = Boolean(
+						exhibitImage || (displayedExhibit && !/^Option [A-H]$/i.test(displayedExhibit.trim())),
+					);
+					const cleanedPrompt = removeDuplicateExhibitLeadIn(cleanText(prompt));
+					const displayPrompt = hasSeparateExhibit
+						? removeTrailingOptionExhibitLabel(cleanedPrompt)
+						: cleanedPrompt;
+					const shouldDisplayExhibit = displayedExhibit &&
+						!(hasSeparateExhibit && /^Option [A-H]$/i.test(displayedExhibit.trim()));
+					const rawOptions = isOptionTable
 						? [...apiQuestion.options].sort((left, right) => String(left).trim().localeCompare(String(right).trim()))
 						: apiQuestion.options;
+					const orderedOptions = hasExpandedOptionTable ? bankQuestion.options : rawOptions;
 					return {
 						...apiQuestion,
-						prompt,
-						...(Array.isArray(orderedOptions) ? { options: cleanList(orderedOptions), rawOptions: orderedOptions } : {}),
+						prompt: displayPrompt,
+						...(Array.isArray(orderedOptions) ? { options: cleanList(orderedOptions), rawOptions } : {}),
 						...(Array.isArray(apiQuestion.items) ? { items: cleanList(apiQuestion.items) } : {}),
 						...(Array.isArray(apiQuestion.choices) ? { choices: cleanList(apiQuestion.choices) } : {}),
 						...(typeof apiQuestion.explanation === "string" ? { explanation: cleanText(apiQuestion.explanation) } : {}),
-						...(exhibit ? { exhibit } : {}),
-						...(bankQuestion?.exhibit && !isOptionTable ? { exhibit: bankQuestion.exhibit } : {}),
-						// The picture: from the question bank, or the signed link the exam itself sends
-						...((bankQuestion?.exhibitImage || apiQuestion.imageUrl) ? { exhibitImage: bankQuestion?.exhibitImage || apiQuestion.imageUrl } : {}),
+						...(shouldDisplayExhibit ? { exhibit: displayedExhibit } : {}),
+						...(bankQuestion?.hidePrompt ? { hidePrompt: true } : {}),
+						...(bankQuestion?.exhibitImageCropTop ? { exhibitImageCropTop: true } : {}),
+						// Question 570's image is a screenshot of the matching interaction recreated by the site.
+						...(!hasRecreatedMatchExhibit && exhibitImage ? { exhibitImage } : {}),
 					};
 				});
 
@@ -616,10 +648,20 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 
 						<div className="w-full">
 							<section ref={questionCardRef} className="scroll-mt-4 rounded-[20px] border border-[#d6e5e7] bg-white p-4 shadow-sm sm:p-7">
-								<QuestionPrompt prompt={question.prompt} />
+								{!question.hidePrompt && (
+									<QuestionPrompt
+										prompt={question.prompt}
+										hasSeparateExhibit={Boolean(question.exhibit || question.exhibitImage || question.exhibitDiagram)}
+									/>
+								)}
 								{question.exhibitDiagram && <ExhibitDiagram type={question.exhibitDiagram} />}
 								{question.exhibitImage && (
-									<ExhibitImage src={question.exhibitImage} className="mb-6" imageClassName="max-h-[32rem]" />
+									<ExhibitImage
+										src={question.exhibitImage}
+										className="mb-6"
+										imageClassName={`max-h-[32rem] ${enlargeRouteExhibit ? "!w-[min(30rem,calc(100vw_-_3rem))]" : ""}`}
+										cropTop={question.exhibitImageCropTop}
+									/>
 								)}
 								{question.exhibit && (
 									<ExhibitText text={question.exhibit} className="mb-6" />
@@ -767,10 +809,21 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 														{item.isCorrect ? "Correct" : "Incorrect"}
 													</span>
 												</div>
-												<QuestionPrompt prompt={item.prompt} />
+												{!item.hidePrompt && (
+													<QuestionPrompt
+														prompt={item.prompt}
+														hasSeparateExhibit={Boolean(item.exhibit || item.exhibitImage || item.exhibitDiagram)}
+													/>
+												)}
 												{item.exhibitDiagram && <ExhibitDiagram type={item.exhibitDiagram} className="mt-4" />}
 												{item.exhibitImage && (
-													<ExhibitImage src={item.exhibitImage} lazy className="mt-4" imageClassName="max-h-[26rem]" />
+													<ExhibitImage
+														src={item.exhibitImage}
+														lazy
+														className="mt-4"
+														imageClassName={`max-h-[26rem] ${isRoutingProtocolComparisonQuestion(item) ? "!w-[min(30rem,calc(100vw_-_3rem))]" : ""}`}
+														cropTop={item.exhibitImageCropTop}
+													/>
 												)}
 												{item.exhibit && (
 													<ExhibitText text={item.exhibit} className="mt-4" />

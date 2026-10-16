@@ -237,4 +237,5 @@ export class UsersService {
             profile_photo: user.profile_photo,
         };
     }
+
 }

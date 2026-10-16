@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { BookOpen, CheckCircle2, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../../../../../context/AuthContext";
+import { useAuth } from "../../../../../context/auth-context";
 import TrainingLogo from "../../../../../assets/MATEKK_training_logo.png";
 import { isAnswerCorrect, isQuestionAnswered } from "../../../../../utils/ccnaExamGrading";
-import { loadCcnaQuestionBank } from "../../../../../utils/ccnaQuestionBankApi";
+import { loadCcnaAllQuestionsBank } from "../../../../../utils/ccnaQuestionBankApi";
 import { ExhibitImage, ExhibitText } from "./ccnaExhibit";
 import { QuestionInput, QuestionPrompt, QuestionReview } from "./ccnaExamQuestionViews";
 
@@ -36,6 +36,7 @@ export default function CCNAAllQuestionsExam() {
 	const [isSubmitted, setIsSubmitted] = useState(false);
 	const [score, setScore] = useState(0);
 	const [storageError, setStorageError] = useState(null);
+	const [skippedQuestionCount, setSkippedQuestionCount] = useState(0);
 	const [questionNumberInput, setQuestionNumberInput] = useState("1");
 	// Results page: show only correct / incorrect / unanswered questions when stepping through the review
 	const [reviewFilter, setReviewFilter] = useState("all");
@@ -72,12 +73,15 @@ export default function CCNAAllQuestionsExam() {
 	useEffect(() => {
 		let isActive = true;
 		setLoadState({ status: "loading", error: null });
-		loadCcnaQuestionBank()
-			.then(({ questions: bankQuestions }) => {
-				const orderedQuestions = [...bankQuestions].sort((left, right) => left.bankId - right.bankId);
-				if (!orderedQuestions.length) throw new TypeError("The online question bank has no questions that can be rendered.");
+		loadCcnaAllQuestionsBank()
+			.then(({ questions: validQuestions, skippedCount }) => {
+				const orderedQuestions = [...validQuestions].sort((left, right) => left.bankId - right.bankId);
+				if (!orderedQuestions.length) {
+					throw new TypeError("The Questions table has no questions that can be rendered and graded.");
+				}
 				if (!isActive) return;
 
+				setSkippedQuestionCount(skippedCount);
 				setQuestions(orderedQuestions);
 				if (storageKey) {
 					try {
@@ -260,6 +264,11 @@ export default function CCNAAllQuestionsExam() {
 				{storageError && (
 					<p role="status" className="mb-4 rounded-xl border border-[#f0d79e] bg-[#fffaf0] px-4 py-3 text-sm text-[#805b12]">
 						{storageError}
+					</p>
+				)}
+				{skippedQuestionCount > 0 && (
+					<p role="status" className="mb-4 rounded-xl border border-[#f0d79e] bg-[#fffaf0] px-4 py-3 text-sm text-[#805b12]">
+						{skippedQuestionCount.toLocaleString()} invalid or unsupported database question{skippedQuestionCount === 1 ? " was" : "s were"} skipped.
 					</p>
 				)}
 

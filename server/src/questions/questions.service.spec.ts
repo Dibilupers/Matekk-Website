@@ -90,6 +90,77 @@ describe('QuestionsService', () => {
     expect(service).toBeDefined();
   });
 
+  it('returns every question from the Questions table in database order', async () => {
+    const rows = Array.from({ length: 3 }, (_, index) => ({
+      id: index + 1,
+      module: 'CCNA',
+      topic: 'Routing',
+      question_text: `Question ${index + 1}`,
+      choices: JSON.stringify({ A: 'Choice A', B: 'Choice B' }),
+      correct_answer: 'A',
+      explanation: '',
+      question_type: 'single',
+      match_items: null,
+      imageUrl: null,
+    }));
+    prismaMock.questions.findMany.mockResolvedValue(rows);
+
+    await expect(service.findBank()).resolves.toEqual(rows);
+    expect(prismaMock.questions.findMany).toHaveBeenCalledWith(expect.objectContaining({
+      orderBy: { id: 'asc' },
+    }));
+  });
+
+  it('returns only renderable Questions table rows with normalized answer keys', async () => {
+    prismaMock.questions.findMany.mockResolvedValue([
+      {
+        id: 1,
+        module: 'CCNA',
+        topic: 'Routing',
+        question_text: 'Which answer is correct?',
+        choices: JSON.stringify(['First', 'Second']),
+        correct_answer: 'Second',
+        explanation: 'The second answer.',
+        question_type: 'single',
+        match_items: null,
+        imageUrl: null,
+      },
+      {
+        id: 2,
+        module: 'CCNA',
+        topic: 'Routing',
+        question_text: 'This row has no matching answer.',
+        choices: JSON.stringify(['First', 'Second']),
+        correct_answer: 'Not an option',
+        explanation: '',
+        question_type: 'single',
+        match_items: null,
+        imageUrl: null,
+      },
+      {
+        id: 3,
+        module: 'CCNA',
+        topic: 'Routing',
+        question_text: 'Match each item.',
+        choices: JSON.stringify(['Answer A', 'Answer B']),
+        correct_answer: '[1,0]',
+        explanation: 'The answers are reversed.',
+        question_type: 'match',
+        match_items: ['Item A', 'Item B'],
+        imageUrl: null,
+      },
+    ]);
+
+    const { questions, skippedCount } = await service.findUsableBank();
+
+    expect(questions).toHaveLength(2);
+    expect(skippedCount).toBe(1);
+    expect(questions).toEqual(expect.arrayContaining([
+      expect.objectContaining({ bankId: 1, answer: 1, type: 'single' }),
+      expect.objectContaining({ bankId: 3, answer: [1, 0], type: 'match' }),
+    ]));
+  });
+
   it('rejects a correct answer that is not one of the available choices', () => {
     expect(() => service.create({
       module: 'CCNA',
@@ -158,6 +229,29 @@ describe('QuestionsService', () => {
     });
     expect(prismaMock.examAttempt.create).toHaveBeenCalledOnce();
     expect(prismaMock.examAttempt.create.mock.calls[0][0].data.userId).toBe(7);
+  });
+
+  it('shows every second one-to-one matching question as circles, with at least one per 50-question block', async () => {
+    const bank = examQuestionBank(100);
+    const extraMatches = Array.from({ length: 10 }, (_, index) => ({
+      ...bank[bank.length - 1],
+      id: 1000 + index,
+      question_text: `Extra match question ${index + 1}`,
+    }));
+    prismaMock.questions.findMany.mockResolvedValue([...bank, ...extraMatches]);
+
+    const attempt = await service.startExam('medium', 7);
+    const matches = attempt.questions.filter((question) => question.type === 'match');
+
+    expect(matches).toHaveLength(10);
+    for (const block of [attempt.questions.slice(0, 50), attempt.questions.slice(50, 100)]) {
+      const blockMatches = block.filter((question) => question.type === 'match');
+      expect(blockMatches.some((question) => 'matchStyle' in question && question.matchStyle === 'lines')).toBe(true);
+      expect(blockMatches.some((question) => !('matchStyle' in question))).toBe(true);
+    }
+    // the saved attempt keeps the style, so a resumed exam shows the same question the same way
+    const saved = prismaMock.examAttempt.create.mock.calls[0][0].data.questionSet as { matchStyle?: string }[];
+    expect(saved.some((question) => question.matchStyle === 'lines')).toBe(true);
   });
 
   it('returns signed database image URLs with exam questions', async () => {
@@ -232,6 +326,7 @@ describe('QuestionsService', () => {
         id: 'attempt-id',
         type: 'exam',
         programKey: 'ccna',
+        examFormat: 'short',
         title: 'Short Exam',
         score: 1,
         maxScore: 50,
@@ -356,6 +451,7 @@ describe('QuestionsService', () => {
       id: 'attempt-id',
       type: 'exam',
       programKey: 'ccna',
+      examFormat: 'short',
       title: 'Short Exam',
       score: 1,
       maxScore: 1,

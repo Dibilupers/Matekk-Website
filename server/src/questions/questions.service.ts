@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { randomInt, randomUUID } from 'node:crypto';
-import { isGroupMatch, parseDragDropAnswer } from './drag-drop-answer.js';
+import { isGroupMatch, parseDragDropAnswer, pickLineMatchIds } from './drag-drop-answer.js';
 import { CreateQuestionDto, ExamAnswerDto } from './dto/questions.dto.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { StorageService } from '../storage/storage.service.js';
@@ -35,6 +35,8 @@ type MatchExamQuestion = Omit<ExamQuestionBase, 'options'> & {
   // "Type the numbers" questions: how many items go in each box (keyed by box name). Only the counts,
   // never which item goes where, so the exam can show the right number of slots like the real exam.
   groupCounts?: Record<string, number>;
+  // 'lines': shown as "connect the circles" instead of click-to-place boxes (see pickLineMatchIds)
+  matchStyle?: 'lines';
 };
 type ExamQuestion = SingleExamQuestion | MatchExamQuestion;
 
@@ -93,7 +95,7 @@ export class QuestionsService {
     const config = this.getExamConfig(examKey);
     const bank = await this.prisma.questions.findMany();
     const seenPrompts = new Set<string>();
-    const usableQuestions = bank.flatMap((record) => {
+    const readableQuestions = bank.flatMap((record) => {
       const question = this.readQuestion(record);
       return question ? [question] : [];
     }).filter((question) => {
@@ -102,6 +104,12 @@ export class QuestionsService {
       seenPrompts.add(promptKey);
       return true;
     });
+    const lineMatchIds = pickLineMatchIds(
+      readableQuestions.filter((question): question is MatchExamQuestion => question.type === 'match'),
+    );
+    const usableQuestions: ExamQuestion[] = readableQuestions.map((question) =>
+      question.type === 'match' && lineMatchIds.has(question.id) ? { ...question, matchStyle: 'lines' as const } : question,
+    );
 
     if (usableQuestions.length < config.questionCount) {
       throw new BadRequestException(
@@ -123,19 +131,28 @@ export class QuestionsService {
       );
     }
 
-    // Every 50-question block gets at least one of each matching style: one "drag and drop" question
-    // (each item has its own box) and one "type the numbers" question (several items share a few boxes).
-    // The rest of the matching slots stay random.
+    // Every 50-question block gets at least one of each matching style: one "type the numbers" question
+    // (several items share a few boxes), one click-to-place boxes question (each answer used once) and
+    // one "connect the circles" question. The rest of the matching slots stay random.
     const shuffledMatches = this.shuffle(matchingQuestions);
+    const isLineStyle = (question: ExamQuestion) => question.type === 'match' &&
+      (question.matchStyle === 'lines' || question.choices.length > question.items.length);
     const groupMatches = shuffledMatches.filter((question) => question.type === 'match' && isGroupMatch(question));
-    const pairMatches = shuffledMatches.filter((question) => !groupMatches.includes(question));
+    const lineMatches = shuffledMatches.filter((question) => !groupMatches.includes(question) && isLineStyle(question));
+    const pairMatches = shuffledMatches.filter((question) => !groupMatches.includes(question) && !lineMatches.includes(question));
     const guaranteedGroups = groupMatches.slice(0, questionBlocks);
     const guaranteedPairs = pairMatches.slice(0, questionBlocks);
-    const remainingMatches = this.shuffle([...groupMatches.slice(questionBlocks), ...pairMatches.slice(questionBlocks)]);
+    const guaranteedLines = lineMatches.slice(0, questionBlocks);
+    const remainingMatches = this.shuffle([
+      ...groupMatches.slice(questionBlocks),
+      ...pairMatches.slice(questionBlocks),
+      ...lineMatches.slice(questionBlocks),
+    ]);
     const randomizedMatches = Array.from({ length: questionBlocks }, (_, blockIndex) => {
       const guaranteed = [
         ...guaranteedGroups.slice(blockIndex, blockIndex + 1),
         ...guaranteedPairs.slice(blockIndex, blockIndex + 1),
+        ...guaranteedLines.slice(blockIndex, blockIndex + 1),
       ];
       return [...guaranteed, ...remainingMatches.splice(0, 5 - guaranteed.length)];
     }).flat();
@@ -329,6 +346,7 @@ export class QuestionsService {
       id: attempt.id,
       type: 'exam',
       programKey: 'ccna',
+      examFormat: examKey,
       title: config.title,
       score: attempt.score,
       maxScore: questionSet.length,
@@ -546,6 +564,7 @@ export class QuestionsService {
           items: item.items,
           choices: item.choices,
           ...(groupCounts ? { groupCounts } : {}),
+          ...('matchStyle' in item && item.matchStyle === 'lines' ? { matchStyle: 'lines' as const } : {}),
           module: item.module,
           topic: item.topic,
         };
@@ -630,6 +649,7 @@ export class QuestionsService {
               ...(question.groupCounts
                 ? { groupSizes: question.choices.map((choice) => question.groupCounts?.[choice] ?? 0) }
                 : {}),
+              ...(question.matchStyle ? { matchStyle: question.matchStyle } : {}),
               module: question.module,
               topic: question.topic,
             }
@@ -666,6 +686,8 @@ export class QuestionsService {
         choices: true,
         correct_answer: true,
         explanation: true,
+        question_type: true,
+        match_items: true,
         imageUrl: true,
       },
       orderBy: { id: 'asc' },
@@ -680,5 +702,31 @@ export class QuestionsService {
       ...row,
       imageUrl: row.imageUrl ? signedUrls.get(row.imageUrl) ?? row.imageUrl : null,
     }));
+  }
+
+  async findUsableBank() {
+    const rows = await this.findBank();
+    const questions = rows.flatMap((row) => {
+      const question = this.readQuestion(row);
+      if (!question) return [];
+
+      const answer = question.type === 'match'
+        ? row.question_type === 'match'
+          ? this.parseMatchAnswer(row.correct_answer, question.items.length, question.choices.length)
+          : parseDragDropAnswer(row.correct_answer, row.id)?.answer
+        : question.type === 'single'
+          ? question.options.indexOf(this.findCorrectOption(question.options, row.correct_answer) ?? '')
+          : -1;
+      if (answer === undefined || answer === -1 || (Array.isArray(answer) && answer.length === 0)) return [];
+
+      return [{
+        ...question,
+        bankId: row.id,
+        answer,
+        explanation: row.explanation,
+        source: 'question-bank',
+      }];
+    });
+    return { questions, skippedCount: rows.length - questions.length };
   }
 }

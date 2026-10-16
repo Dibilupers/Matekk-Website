@@ -4,9 +4,11 @@ import {
   Controller,
   Get,
   Param,
+  Post,
   Put,
 } from '@nestjs/common';
 import { CurrentUser } from '../auth/decorators/current-user.decorator.js';
+import { RecordGradebookAssessmentDto } from './dto/record-gradebook-assessment.dto.js';
 import { SaveGradebookDto } from './dto/save-gradebook.dto.js';
 import { GradebookService } from './gradebook.service.js';
 
@@ -32,11 +34,33 @@ export class GradebookController {
     @Param('programKey') programKey: string,
     @Body() body: SaveGradebookDto,
   ) {
-    return this.gradebookService.save(
-      user.userId,
-      this.validateProgramKey(programKey),
-      body?.data,
-    );
+    return this.savePayload(user.userId, this.validateProgramKey(programKey), body);
+  }
+
+  @Post(':programKey/assessments')
+  saveAssessment(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('programKey') programKey: string,
+    @Body() body: RecordGradebookAssessmentDto,
+  ) {
+    return this.savePayload(user.userId, this.validateProgramKey(programKey), body);
+  }
+
+  private savePayload(
+    userId: number,
+    programKey: string,
+    body: { data?: Record<string, unknown>; assessment?: Record<string, unknown> },
+  ) {
+    if (body.data && body.assessment) {
+      throw new BadRequestException('Provide either gradebook data or one assessment, not both.');
+    }
+    if (body.data) {
+      return this.gradebookService.save(userId, programKey, body.data);
+    }
+    if (body.assessment) {
+      return this.gradebookService.saveAssessment(userId, programKey, body.assessment);
+    }
+    throw new BadRequestException('Provide gradebook data or one assessment to save.');
   }
 
   private validateProgramKey(programKey: string): string {

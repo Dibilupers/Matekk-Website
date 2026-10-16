@@ -1,14 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, ChevronDown, ChevronUp } from "lucide-react";
-import { useAuth } from "../../../../../context/AuthContext";
+import { useAuth } from "../../../../../context/auth-context";
 import {
 	getCcnaModuleQuizAttemptHistory,
 	isCurrentCcnaModuleQuizAttempt,
 	readCcnaModuleQuizProgress,
 } from "../../../../../utils/ccnaModuleQuizProgress";
 import { readCcnaExamProgress, readCcnaShortExamProgress } from "../../../../../utils/ccnaShortExamSession";
-import { readCcnaMockExamResults } from "../../../../../utils/ccnaGradebook";
 import { readGradebookAssessments } from "../../../../../utils/gradebookApi";
 import { CCNA_MODULE_QUIZZES } from "./ccnaModuleQuizData";
 import { CCNA_EXAMS } from "./ccnaExamFormats";
@@ -147,18 +146,15 @@ function getModuleRows(progress, storedAssessments) {
 	});
 }
 
-function getExamRows(examProgressByKey, examResults, storedAssessments) {
-	return Object.values(CCNA_EXAMS).map((exam, index) => {
+function getExamRows(examProgressByKey, storedAssessments) {
+	const examFormatLabels = { short: "Short", medium: "Medium", long: "Long" };
+	return Object.entries(CCNA_EXAMS).map(([examFormat, exam], index) => {
 		const progress = examProgressByKey[exam.name];
-		const resultById = new Map(
-			examResults.filter((result) => result.title === exam.name).map((result) => [result.id, result]),
-		);
-		for (const result of storedAssessments) {
-			if (result.type === "exam" && result.title === exam.name) {
-				resultById.set(result.id, result);
-			}
-		}
-		const results = [...resultById.values()]
+		const results = storedAssessments
+			.filter((result) => result.type === "exam" && (
+				result.examFormat === examFormat ||
+				(!result.examFormat && result.title === exam.name)
+			))
 			.sort((first, second) => first.submittedAt - second.submittedAt);
 		const latestResult = results.at(-1);
 		const bestResult = results.reduce(
@@ -185,11 +181,12 @@ function getExamRows(examProgressByKey, examResults, storedAssessments) {
 		return {
 			id: exam.name.toLowerCase().replaceAll(" ", "-"),
 			name: exam.name,
+			formatLabel: examFormatLabels[examFormat],
 			status: isInProgress ? "in-progress" : points ? "graded" : "upcoming",
 			statusLabel: isExpired ? "Time expired" : null,
 			submittedAt: latestResult?.submittedAt ?? null,
 			deadline: isInProgress ? progress.deadline : null,
-			attempts: Math.max(results.length, hasLegacyShortResult ? 1 : 0) + Number(isInProgress),
+			attempts: Math.max(results.length, isExpired ? 1 : 0) + Number(isInProgress),
 			points,
 			grade,
 			bestPoints,
@@ -263,6 +260,7 @@ function AssessmentTable({ title, rows, filter, sort }) {
 								<tr key={row.id} className="border-b border-[#e9edef] last:border-0">
 									<th scope="row" className="px-5 py-4 font-semibold text-[#172536]">
 										<span>{row.name}</span>
+										{row.formatLabel && <span className="ml-2 rounded-full bg-[#e8f3f4] px-2.5 py-1 text-xs font-semibold text-[#005b6b]">{row.formatLabel} format</span>}
 										{row.statusLabel && <span className="ml-2 text-sm font-medium text-[#a44b13]">{row.statusLabel}</span>}
 									</th>
 									<td className="whitespace-nowrap px-5 py-4 text-[#445363]">{formatDate(row.submittedAt)}</td>
@@ -297,7 +295,7 @@ export default function CCNAGradebook() {
 	useEffect(() => {
 		if (!userId) return undefined;
 		let isActive = true;
-		readGradebookAssessments("ccna")
+		readGradebookAssessments("ccna", userId)
 			.then((assessments) => {
 				if (isActive) setBackendGradebook({ userId, assessments, error: null });
 			})
@@ -323,10 +321,12 @@ export default function CCNAGradebook() {
 			? shortExamProgress
 			: readCcnaExamProgress(exam.sessionKey, userId),
 	]));
-	const examResults = readCcnaMockExamResults(userId);
-	const storedAssessments = backendGradebook.userId === userId ? backendGradebook.assessments : [];
+	const storedAssessments = useMemo(
+		() => backendGradebook.userId === userId ? backendGradebook.assessments : [],
+		[backendGradebook.assessments, backendGradebook.userId, userId],
+	);
 	const moduleRows = getModuleRows(progress, storedAssessments);
-	const examRows = getExamRows(examProgressByKey, examResults, storedAssessments);
+	const examRows = getExamRows(examProgressByKey, storedAssessments);
 	const allRows = [...moduleRows, ...examRows];
 	const [filter, setFilter] = useState("all");
 	const [sort, setSort] = useState("default");
@@ -454,15 +454,17 @@ function SummaryStat({ label, value, detail, progress, gradeScore, compactValue 
 	const progressValue = progress ?? 0;
 
 	return (
-		<div className="min-h-[132px] min-w-0 rounded-md border border-[#e0e6e9] bg-[#fafbfb] px-5 py-5">
-			<p className="text-sm text-[#687887]">{label}</p>
-			<strong className={`mt-1 block font-bold leading-tight ${compactValue ? "break-words text-lg" : "truncate text-2xl"} ${hasGrade ? gradeTone.text : "text-[#152536]"}`}>{value}</strong>
-			{progress !== undefined && (
-				<div role="progressbar" aria-label="Class grade" aria-valuemin={0} aria-valuemax={100} aria-valuenow={progressValue} className="mt-2 h-1.5 overflow-hidden rounded-full bg-[#e0e6e9]">
-					<div className={`h-full transition-[width] duration-700 motion-reduce:transition-none ${gradeTone.fill}`} style={{ width: `${progressValue}%` }} />
-				</div>
-			)}
-			<p className="mt-1 truncate text-sm text-[#6c7a86]">{detail}</p>
+		<div className="gradebook-stat-card min-h-[132px] min-w-0 rounded-md border border-[#e0e6e9] px-5 py-5">
+			<div className="gradebook-stat-content">
+				<p className="gradebook-stat-label text-sm text-[#687887]">{label}</p>
+				<strong className={`gradebook-stat-value mt-1 block font-bold leading-tight ${compactValue ? "break-words text-lg" : "truncate text-2xl"} ${hasGrade ? gradeTone.text : "text-[#152536]"}`}>{value}</strong>
+				{progress !== undefined && (
+					<div role="progressbar" aria-label="Class grade" aria-valuemin={0} aria-valuemax={100} aria-valuenow={progressValue} className="gradebook-stat-progress-track mt-2 h-1.5 overflow-hidden rounded-full bg-[#e0e6e9]">
+						<div className={`h-full transition-[width] duration-700 motion-reduce:transition-none ${gradeTone.fill}`} style={{ width: `${progressValue}%` }} />
+					</div>
+				)}
+				<p className="gradebook-stat-detail mt-1 truncate text-sm text-[#6c7a86]">{detail}</p>
+			</div>
 		</div>
 	);
 }

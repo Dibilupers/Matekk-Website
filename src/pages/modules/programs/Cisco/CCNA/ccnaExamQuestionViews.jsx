@@ -1,11 +1,24 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { groupCode, groupSizes, isValidQuestion, matchMode, parseGroupCode, questionType, requiredSelections } from "../../../../../utils/ccnaExamGrading";
 import { getDisplayedOption, getOptionTableExhibit, parseFormattedOptions } from "./ccnaExamQuestionFormatting";
 import { ExhibitImage, ExhibitText } from "./ccnaExhibit";
 import { looksLikeCode, tidySentence } from "../../../../../utils/answerTextStyle";
+import {
+	removeDuplicateExhibitLeadIn,
+	removeTrailingOptionExhibitLabel,
+} from "../../../../../utils/splitPromptExhibit";
 import { MatchingQuestionInput, MatchingQuestionReview } from "./ccnaExamMatching";
 
-const letter = (i) => String.fromCharCode(65 + i);
+const OPTION_LABELS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+function letter(index) {
+	let label = "";
+	for (let number = index + 1; number > 0; number = Math.floor((number - 1) / OPTION_LABELS.length)) {
+		label = `${OPTION_LABELS[(number - 1) % OPTION_LABELS.length]}${label}`;
+	}
+	return label;
+}
+const MATCH_CHOICE_MOTION_MS = 900;
+const MATCH_CHOICE_STAGGER_MS = 40;
 
 // Answer choices that are router/switch commands (e.g. "R1(config)#ip route ...") are shown like a terminal:
 // monospace, one command per line (some imported questions had all commands squashed onto one line).
@@ -31,7 +44,7 @@ function stableShuffle(indexes, seed) {
 }
 
 function animateChoiceCopies(root, target, choiceIndex) {
-	if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+	if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return Promise.resolve();
 
 	const targetRect = target.getBoundingClientRect();
 	// The same box in the other rows, plus the boxes NOT chosen in this row: all of them slide into
@@ -65,11 +78,12 @@ function animateChoiceCopies(root, target, choiceIndex) {
 			clone.setAttribute("aria-hidden", "true");
 			clone.tabIndex = -1;
 			document.body.append(clone);
-			return { clone, rect };
+			choice.classList.add("ccna-match-choice-fading");
+			return { choice, clone, rect };
 		})
 		.filter(Boolean);
 
-	copies.forEach(({ clone, rect }, index) => {
+	const animations = copies.map(({ choice, clone, rect }, index) => {
 		const x = targetRect.left + targetRect.width / 2 - (rect.left + rect.width / 2);
 		const y = targetRect.top + targetRect.height / 2 - (rect.top + rect.height / 2);
 		const animation = clone.animate(
@@ -80,11 +94,22 @@ function animateChoiceCopies(root, target, choiceIndex) {
 					opacity: 0,
 				},
 			],
-			{ duration: 720, delay: Math.min(index * 30, 150), easing: "cubic-bezier(0.22, 0.61, 0.36, 1)" },
+			{
+				duration: MATCH_CHOICE_MOTION_MS,
+				delay: Math.min(index * MATCH_CHOICE_STAGGER_MS, 200),
+				easing: "cubic-bezier(0.22, 0.61, 0.36, 1)",
+			},
 		);
-		animation.onfinish = () => clone.remove();
-		animation.oncancel = () => clone.remove();
+		animation.finished.then(
+			() => clone.remove(),
+			() => {
+				clone.remove();
+				choice.classList.remove("ccna-match-choice-fading");
+			},
+		);
+		return animation;
 	});
+	return Promise.all(animations.map((animation) => animation.finished.catch(() => undefined))).then(() => undefined);
 }
 
 function animateChoiceReturn(root, source, choiceIndex) {
@@ -156,16 +181,31 @@ function AssignMatchInput({ question, value, onChange, disabled }) {
 	const choiceOrder = stableShuffle(question.choices.map((_, i) => i), question.prompt);
 	const current = Array.isArray(value) ? value : question.items.map(() => null);
 	const rootRef = useRef(null);
+	const mountedRef = useRef(true);
+	const [isAnimating, setIsAnimating] = useState(false);
 	const used = new Set(current.filter((v) => Number.isInteger(v)));
+	useEffect(() => {
+		mountedRef.current = true;
+		return () => {
+			mountedRef.current = false;
+		};
+	}, []);
 	const place = (itemIndex, choiceIndex, target) => {
 		if (current[itemIndex] === choiceIndex) {
 			animateChoiceReturn(rootRef.current, target, choiceIndex);
+			const next = [...current];
+			next[itemIndex] = null;
+			onChange(next);
 		} else {
-			animateChoiceCopies(rootRef.current, target, choiceIndex);
+			setIsAnimating(true);
+			const next = [...current];
+			next[itemIndex] = choiceIndex;
+			void animateChoiceCopies(rootRef.current, target, choiceIndex).then(() => {
+				if (!mountedRef.current) return;
+				onChange(next);
+				setIsAnimating(false);
+			});
 		}
-		const next = [...current];
-		next[itemIndex] = next[itemIndex] === choiceIndex ? null : choiceIndex;
-		onChange(next);
 	};
 	return (
 		<div ref={rootRef} className="space-y-3">
@@ -187,7 +227,7 @@ function AssignMatchInput({ question, value, onChange, disabled }) {
 											key={choiceIndex}
 											type="button"
 											data-match-choice={choiceIndex}
-											disabled={disabled}
+											disabled={disabled || isAnimating}
 											onClick={(event) => place(itemIndex, choiceIndex, event.currentTarget)}
 											aria-pressed={isPlaced}
 											aria-label={isPlaced ? `${question.choices[choiceIndex]} (placed, click to undo)` : `Place ${question.choices[choiceIndex]} here`}
@@ -349,10 +389,13 @@ function InvalidQuestionMessage() {
 }
 
 // imageUrl: the question's picture, for pages that don't show it themselves (the exam page shows it separately)
-export function QuestionPrompt({ prompt, imageUrl }) {
-	const formattedOptions = parseFormattedOptions(prompt);
+export function QuestionPrompt({ prompt, imageUrl, hasSeparateExhibit = Boolean(imageUrl) }) {
+	const normalizedPrompt = removeDuplicateExhibitLeadIn(
+		hasSeparateExhibit ? removeTrailingOptionExhibitLabel(prompt) : prompt,
+	);
+	const formattedOptions = parseFormattedOptions(normalizedPrompt);
 	// A scrambled "Option A / Option B" table: show the question, then the whole table as it appears in the source
-	const optionTable = formattedOptions ? null : getOptionTableExhibit(prompt);
+	const optionTable = formattedOptions ? null : getOptionTableExhibit(normalizedPrompt);
 	if (optionTable) {
 		return (
 			<div className="mb-5 space-y-4 sm:mb-6">
@@ -364,18 +407,18 @@ export function QuestionPrompt({ prompt, imageUrl }) {
 			</div>
 		);
 	}
-	const normalizedPrompt = (formattedOptions?.prompt ?? String(prompt ?? "")).replace(/\r\n/g, "\n").trim();
+	const displayPrompt = (formattedOptions?.prompt ?? normalizedPrompt).replace(/\r\n/g, "\n").trim();
 
-	const configuredMatch = normalizedPrompt.match(/\bConfigured (?:router IPv6 )?interfaces:\s*/i);
-	const promptBeforeConfigured = configuredMatch ? normalizedPrompt.slice(0, configuredMatch.index).trim() : normalizedPrompt;
-	const doubleNewlineMatch = normalizedPrompt.match(/\n\s*\n([\s\S]+)/);
+	const configuredMatch = displayPrompt.match(/\bConfigured (?:router IPv6 )?interfaces:\s*/i);
+	const promptBeforeConfigured = configuredMatch ? displayPrompt.slice(0, configuredMatch.index).trim() : displayPrompt;
+	const doubleNewlineMatch = displayPrompt.match(/\n\s*\n([\s\S]+)/);
 
 	let promptText = promptBeforeConfigured;
 	let exhibit = null;
 	let exhibitTitle = "Exhibit";
 
 	if (configuredMatch) {
-		exhibit = normalizedPrompt.slice(configuredMatch.index + configuredMatch[0].length).trim();
+		exhibit = displayPrompt.slice(configuredMatch.index + configuredMatch[0].length).trim();
 		exhibitTitle = configuredMatch[0].replace(/:\s*$/, "");
 	} else if (doubleNewlineMatch) {
 		const candidate = doubleNewlineMatch[1].trim();
@@ -383,7 +426,7 @@ export function QuestionPrompt({ prompt, imageUrl }) {
 		const isExhibit = lines.length >= 2 && lines.some((line) => /^%/.test(line) || /^(?:[A-Za-z0-9.-]+(?:\s+\(config\))?#|[A-Za-z0-9_.-]+\s*:\s*.+|[A-Za-z0-9_.-]+\s+\w+\s*:\s*.+)/.test(line));
 
 		if (isExhibit) {
-			promptText = normalizedPrompt.slice(0, doubleNewlineMatch.index).trim();
+			promptText = displayPrompt.slice(0, doubleNewlineMatch.index).trim();
 			exhibit = candidate;
 			exhibitTitle = "System output";
 		}
@@ -425,7 +468,8 @@ export function QuestionInput({ question, value, onChange, disabled }) {
 		return <InvalidQuestionMessage />;
 	}
 
-	if (type === "match" && localMatchMode === "assign" && question.matchLayout === "boxes") {
+	// About half of the one-to-one questions are shown as "connect the circles" instead of boxes
+	if (type === "match" && localMatchMode === "assign" && question.matchStyle !== "lines") {
 		return <AssignMatchInput question={question} value={value} onChange={onChange} disabled={disabled} />;
 	}
 	if (type === "match" && localMatchMode === "group") {
