@@ -70,10 +70,22 @@ function NavBar() {
     setIsProfileOpen(false);
     setIsOpen(false);
   };
-  const gradebookPrograms = [
-    { name: "CCNA", path: "/modules/programs/ccna/results" },
-    { name: "CCNA Automation", path: "/modules/programs/ccna-automation/gradebook" },
-    { name: "CCNA Cybersecurity", path: "/modules/programs/ccna-cybersecurity/gradebook" },
+  const gradebookProgramGroups = [
+    {
+      name: "Cisco",
+      programs: [
+        { name: "CCNA", path: "/modules/programs/ccna/results" },
+        { name: "CCNA Automation", path: "/modules/programs/ccna-automation/gradebook" },
+        { name: "CCNA Cybersecurity", path: "/modules/programs/ccna-cybersecurity/gradebook" },
+      ],
+    },
+    {
+      name: "CompTIA",
+      programs: [
+        { name: "Network+", path: "/modules/programs/comptia-network-plus/gradebook" },
+        { name: "Security+", path: "/modules/programs/comptia-security-plus/gradebook" },
+      ],
+    },
   ];
 
   const profileLink = (label, icon, onClick) => (
@@ -184,21 +196,33 @@ function NavBar() {
                 <X size={19} />
               </button>
             </div>
-            <nav aria-label="Choose a gradebook" className="space-y-1 p-3">
-              {gradebookPrograms.map((program) => (
-                <button
-                  key={program.path}
-                  type="button"
-                  onClick={() => {
-                    setIsGradebookChooserOpen(false);
-                    closeProfile();
-                    navigate(program.path);
-                  }}
-                  className="flex w-full items-center justify-between rounded-xl px-4 py-3 text-left font-medium text-slate-800 transition hover:bg-[#eef6ff] hover:text-[#1775ee]"
-                >
-                  {program.name}
-                  <ArrowRight size={18} className="text-[#1775ee]" />
-                </button>
+            <nav aria-label="Choose a gradebook" className="max-h-[min(65dvh,28rem)] space-y-4 overflow-y-auto p-3">
+              {gradebookProgramGroups.map((group) => (
+                <section key={group.name} aria-labelledby={`gradebook-${group.name.toLowerCase()}-title`}>
+                  <h3
+                    id={`gradebook-${group.name.toLowerCase()}-title`}
+                    className="px-4 pb-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[#1775ee]"
+                  >
+                    {group.name}
+                  </h3>
+                  <div className="space-y-1">
+                    {group.programs.map((program) => (
+                      <button
+                        key={program.path}
+                        type="button"
+                        onClick={() => {
+                          setIsGradebookChooserOpen(false);
+                          closeProfile();
+                          navigate(program.path);
+                        }}
+                        className="flex w-full items-center justify-between rounded-xl px-4 py-3 text-left font-medium text-slate-800 transition hover:bg-[#eef6ff] hover:text-[#1775ee]"
+                      >
+                        {program.name}
+                        <ArrowRight size={18} className="text-[#1775ee]" />
+                      </button>
+                    ))}
+                  </div>
+                </section>
               ))}
             </nav>
           </section>

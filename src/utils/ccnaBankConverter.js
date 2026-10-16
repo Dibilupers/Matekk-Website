@@ -373,6 +373,7 @@ export function convertBankRow(row) {
       bankId: row.id,
       moduleNumber: null,
       moduleTitle: row.module,
+      topic: row.topic,
       source: "question-bank",
     },
   };

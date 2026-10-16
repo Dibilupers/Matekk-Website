@@ -36,6 +36,7 @@ import { readCcnaMockExamResults } from "../../../../../utils/ccnaGradebook";
 import { CCNA_EXAMS } from "./ccnaExamFormats";
 import useGradebookQuizStats from "../../useGradebookQuizStats";
 import ProgramBackgroundParticles from "../../ProgramBackgroundParticles";
+import ScoreRotationCard from "../../ScoreRotationCard";
 
 const modules = CCNA_CURRICULUM.map((section) => ({
 	...section,
@@ -100,12 +101,11 @@ function getDashboardExamCards(examResults, examProgress) {
 	});
 }
 
-function NetworkIllustration({ quizAverage, examCards }) {
+function NetworkIllustration({ quizAverage, examAverage, examCards }) {
 	const { profile } = useAuth();
 	const [examCardIndex, setExamCardIndex] = useState(0);
 	const [isExamCardOpen, setIsExamCardOpen] = useState(true);
 	const examCard = examCards[examCardIndex];
-	const starsFill = `${Math.max(0, Math.min(100, quizAverage))}%`;
 	const hasExamResult = examCard.hasResult;
 	const passedExam = hasExamResult && examCard.score / examCard.maxScore >= 0.8;
 	const examActionLabel = hasExamResult
@@ -128,18 +128,7 @@ function NetworkIllustration({ quizAverage, examCards }) {
 				aria-hidden="true"
 				className="absolute left-1/2 top-1/2 z-10 h-[210px] w-[210px] -translate-x-1/2 -translate-y-1/2 object-contain sm:h-[270px] sm:w-[270px]"
 			/>
-			<div className="absolute left-0 top-[2%] z-30 flex h-[94px] w-[128px] flex-col justify-center rounded-xl border border-[#e4eaf5] bg-white px-4 shadow-[0_14px_28px_rgba(15,35,75,0.1)] transition-transform duration-200 ease-out hover:scale-105 motion-reduce:transition-none motion-reduce:hover:scale-100 sm:left-[-4px] sm:top-[31%]">
-				<strong className="text-xl leading-none text-[#005b6b]">{quizAverage}%</strong>
-				<span className="mt-2 text-sm leading-none text-[#15203a]">Quiz score</span>
-				<span
-					role="img"
-					aria-label={`${quizAverage}% quiz score, ${Math.round((quizAverage / 100) * 50) / 10} out of 5 stars`}
-					className="ccna-stars-enter mt-2 inline-block text-sm leading-none tracking-[2px]"
-				>
-					<span aria-hidden="true" className="text-[#d7dee9]">★★★★★</span>
-					<span aria-hidden="true" className="ccna-stars-fill" style={{ width: starsFill }}>★★★★★</span>
-				</span>
-			</div>
+			<ScoreRotationCard quizScore={quizAverage} examScore={examAverage} />
 			<Link
 				to="/modules/programs/ccna/results"
 				aria-label="Open CCNA gradebook"
@@ -536,6 +525,14 @@ export default function CCNA() {
 		localQuizMetrics.quizAverage,
 		localQuizMetrics.completedQuizzes,
 		examCards.filter((card) => card.hasResult).length,
+		(() => {
+			const completedExams = examCards.filter((card) =>
+				card.hasResult && Number.isFinite(card.score) && Number.isFinite(card.maxScore) && card.maxScore > 0,
+			);
+			const points = completedExams.reduce((total, card) => total + card.score, 0);
+			const possiblePoints = completedExams.reduce((total, card) => total + card.maxScore, 0);
+			return possiblePoints ? Math.round((points / possiblePoints) * 100) : null;
+		})(),
 	);
 	const quizAverage = gradebookQuizStats.average;
 	const attemptedModules = gradebookQuizStats.attempted;
@@ -741,7 +738,7 @@ export default function CCNA() {
 							</p>
 						)}
 					</div>
-					<NetworkIllustration quizAverage={quizAverage} examCards={examCards} />
+					<NetworkIllustration quizAverage={quizAverage} examAverage={gradebookQuizStats.examAverage} examCards={examCards} />
 				</div>
 			</ProgramBackgroundParticles>
 

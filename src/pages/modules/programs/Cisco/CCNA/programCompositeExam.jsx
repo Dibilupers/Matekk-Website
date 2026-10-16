@@ -27,6 +27,9 @@ function createExamSession(exam) {
 	if (!Array.isArray(questions) || questions.length !== exam.questionCount || !questions.every(isValidQuestion)) {
 		throw new Error(`${exam.name} could not create its required set of valid questions.`);
 	}
+	const deadline = exam.durationSeconds === null
+		? null
+		: Date.now() + exam.durationSeconds * 1000;
 	return {
 		attemptId: createCcnaMockExamAttemptId(),
 		submittedAt: null,
@@ -34,7 +37,7 @@ function createExamSession(exam) {
 		answers: {},
 		lockedQuestions: {},
 		currentIndex: 0,
-		deadline: Date.now() + exam.durationSeconds * 1000,
+		deadline,
 		isSubmitted: false,
 	};
 }
@@ -60,11 +63,12 @@ function restoreExamSession(exam, sessionStorageKey) {
 			Number.isInteger(session.currentIndex) &&
 			session.currentIndex >= 0 &&
 			session.currentIndex < exam.questionCount &&
-			Number.isFinite(session.deadline) &&
+			(exam.durationSeconds === null ? session.deadline === null : Number.isFinite(session.deadline)) &&
 			typeof session.isSubmitted === "boolean";
 
 		if (!isValid) throw new TypeError(`Saved ${exam.name} session has an invalid structure.`);
-		const isSubmitted = session.isSubmitted || session.deadline <= Date.now();
+		const isSubmitted = session.isSubmitted ||
+			(exam.durationSeconds !== null && session.deadline <= Date.now());
 		return {
 			...session,
 			// Attempts saved before router output was split out of the question text get the same clean-up
@@ -90,10 +94,11 @@ function formatTime(totalSeconds) {
 	return `${minutes}:${seconds}`;
 }
 
-function CCNACompositeExamPage({ examKey = "short", programKey = null }) {
-	const exam = programKey ? getProgramExamFormats(programKey)?.[examKey] : CCNA_EXAMS[examKey];
+function CCNACompositeExamPage({ examKey = "short", programKey = null, examFormats = null, theme = "ccna" }) {
+	const exam = examFormats?.[examKey] ?? (programKey ? getProgramExamFormats(programKey)?.[examKey] : CCNA_EXAMS[examKey]);
 	if (!exam) throw new Error(`No exam is configured for ${programKey ?? "CCNA"} format "${examKey}".`);
 	const programName = exam.programName ?? "CCNA";
+	const isCompTIAExam = theme === "comptia";
 	const dashboardPath = `/modules/programs/${programKey ?? "ccna"}`;
 	const location = useLocation();
 	const navigate = useNavigate();
@@ -124,7 +129,9 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null }) {
 	const [currentIndex, setCurrentIndex] = useState(initialSession.currentIndex);
 	const [deadline, setDeadline] = useState(initialSession.deadline);
 	const [secondsRemaining, setSecondsRemaining] = useState(() =>
-		Math.max(0, Math.ceil((initialSession.deadline - Date.now()) / 1000)),
+		initialSession.deadline === null
+			? 0
+			: Math.max(0, Math.ceil((initialSession.deadline - Date.now()) / 1000)),
 	);
 	const [flaggedQuestions, setFlaggedQuestions] = useState({});
 	const [isSubmitted, setIsSubmitted] = useState(initialSession.isSubmitted);
@@ -255,7 +262,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null }) {
 	}
 
 	useEffect(() => {
-		if (isSubmitted || isViewingSavedResult) return undefined;
+		if (exam.durationSeconds === null || isSubmitted || isViewingSavedResult) return undefined;
 
 		function updateTimer() {
 			const remaining = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
@@ -266,7 +273,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null }) {
 		updateTimer();
 		const timer = window.setInterval(updateTimer, 1000);
 		return () => window.clearInterval(timer);
-	}, [deadline, isSubmitted, isViewingSavedResult]);
+	}, [deadline, exam.durationSeconds, isSubmitted, isViewingSavedResult]);
 
 	useEffect(() => {
 		if (!isSubmitted) return undefined;
@@ -275,7 +282,9 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null }) {
 		const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 		let animationFrame;
 		let startTime;
-		const finalElapsedSeconds = exam.durationSeconds - secondsRemaining;
+		const finalElapsedSeconds = exam.durationSeconds === null
+			? 0
+			: exam.durationSeconds - secondsRemaining;
 
 		function animateScore(timestamp) {
 			if (reducedMotion) {
@@ -361,7 +370,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null }) {
 		setSubmittedAt(null);
 		setGradebookSaved(false);
 		setGradebookSaveError(null);
-		setSecondsRemaining(exam.durationSeconds);
+		setSecondsRemaining(exam.durationSeconds ?? 0);
 		setIsSubmitted(false);
 		setExamAttempt((attempt) => attempt + 1);
 		setAnswerFilter("all");
@@ -411,7 +420,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null }) {
 	if (!question) return null;
 
 	return (
-		<main data-theme={isDark ? "dark" : "light"} className="ccna-page-enter min-h-screen bg-[#f5f9f9] px-4 py-6 text-[#17233d] sm:px-8 sm:py-8">
+		<main data-theme={isDark ? "dark" : "light"} className={`ccna-page-enter min-h-screen bg-[#f5f9f9] px-4 py-6 text-[#17233d] sm:px-8 sm:py-8 ${isCompTIAExam ? "comptia-exam-page" : ""}`}>
 						<div className="mx-auto max-w-[1125px]">
 				{gradebookSaveError && isResultView && (
 					<p role="alert" className="mb-4 rounded-xl border border-[#f2c6c3] bg-white px-4 py-3 text-sm font-medium text-[#b42318]">
@@ -440,12 +449,8 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null }) {
 				)}
 				<header className="mb-7 flex flex-wrap items-center justify-between gap-4 border-b border-[#d6e5e7] pb-5">
 					<div className="flex min-w-0 items-center gap-4">
-						<Link to={dashboardPath} aria-label={`Back to ${programName} course`} className="group shrink-0 rounded-full bg-white/80 p-2 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 motion-reduce:transition-none">
-							<div className="relative flex h-20 w-20 items-center justify-center rounded-full border border-[#cfe4ea] bg-white shadow-[0_10px_20px_rgba(15,23,42,0.12)]">
-								<div className="flex h-14 w-14 items-center justify-center rounded-full bg-white">
-									<img src={TrainingLogo} alt="MATEKK Cybercore Academy" className="h-10 w-auto object-contain" />
-								</div>
-							</div>
+						<Link to={dashboardPath} aria-label={`Back to ${programName} course`} className="ccna-training-logo shrink-0 rounded-lg bg-white px-3 py-2 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 motion-reduce:transition-none">
+							<img src={TrainingLogo} alt="MATEKK Cybercore Academy" className="h-auto w-32 sm:w-36" />
 						</Link>
 						<div className="hidden min-w-0 border-l border-[#cbd5e1] pl-4 sm:block">
 							<p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#70809a]">{programName} exam</p>
@@ -474,16 +479,19 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null }) {
 						<section aria-label="Exam progress" className="mb-5 rounded-2xl border border-[#d6e5e7] bg-white p-5 shadow-sm sm:mb-6 sm:p-8">
 							<div className="flex flex-wrap items-center justify-between gap-3">
 								<p className="rounded-xl bg-[#e1f5ef] px-4 py-2 text-sm font-semibold text-[#075b4a]">{exam.name}</p>
-								<div
-									role="timer"
-									aria-label={`${formatTime(secondsRemaining)} remaining`}
-									className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm tabular-nums ${secondsRemaining <= 300
-										? "bg-[#fff5ee] text-[#a44b13]"
-										: "bg-[#f7f9fc] text-[#526584]"
-										}`}
-								>
-									<Clock3 size={17} /> {formatTime(secondsRemaining)}
-								</div>
+								{exam.durationSeconds === null ? (
+									<div className="shrink-0 rounded-full border border-[#c9dfe2] bg-white px-3 py-2 text-xs font-semibold text-[#005b6b] sm:px-4 sm:text-sm">
+										No time limit
+									</div>
+								) : (
+									<div
+										role="timer"
+										aria-label={`${formatTime(secondsRemaining)} remaining`}
+										className={`shrink-0 rounded-full border px-3 py-2 text-xs font-semibold tabular-nums sm:px-4 sm:text-sm ${secondsRemaining <= 10 ? "border-[#edbd9b] bg-[#fff5ee] text-[#a44b13]" : "border-[#c9dfe2] bg-white text-[#005b6b]"}`}
+									>
+										{formatTime(secondsRemaining)}
+									</div>
+								)}
 							</div>
 
 							<div className="mt-5 flex flex-wrap items-baseline justify-between gap-2">
@@ -603,8 +611,12 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null }) {
 										<span className="text-xs leading-4 text-[#71819b]">Total<br />questions</span>
 									</div>
 									<div className="pl-4">
-										<strong className="block text-3xl font-extrabold tabular-nums text-[#17233d]">{isViewingSavedResult ? "--:--" : formatTime(Math.round(animatedElapsedSeconds))}</strong>
-										<span className="text-xs leading-4 text-[#71819b]">Time<br />elapsed</span>
+										<strong className="block text-xl font-extrabold text-[#17233d]">
+											{exam.durationSeconds === null ? "No limit" : isViewingSavedResult ? "--:--" : formatTime(Math.round(animatedElapsedSeconds))}
+										</strong>
+										<span className="text-xs leading-4 text-[#71819b]">
+											{exam.durationSeconds === null ? <>Time<br />limit</> : <>Time<br />elapsed</>}
+										</span>
 									</div>
 								</div>
 							</div>
@@ -717,7 +729,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null }) {
 				)}
 			</div>
 			{isRetakeConfirmationOpen && createPortal(
-				<div data-theme="light" className="fixed inset-0 z-[120] grid place-items-center bg-[#071126]/60 p-4 backdrop-blur-sm">
+				<div data-theme="light" className={`fixed inset-0 z-[120] grid place-items-center bg-[#071126]/60 p-4 backdrop-blur-sm ${isCompTIAExam ? "comptia-exam-dialog" : ""}`}>
 					<section
 						role="alertdialog"
 						aria-modal="true"
@@ -730,7 +742,9 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null }) {
 							Are you sure you want to retake the {exam.name.toLowerCase()}?
 						</h2>
 						<p id="ccna-exam-retake-description" className="mt-3 text-sm leading-6 text-[#64748b]">
-							A new attempt will start with a fresh set of randomly selected questions. Your previous result will remain saved.
+							{exam.durationSeconds === null
+								? "A new attempt will include every question in database order. Your previous result will remain saved."
+								: "A new attempt will start with a fresh set of randomly selected questions. Your previous result will remain saved."}
 						</p>
 						<div className="mt-6 flex flex-wrap justify-end gap-3">
 							<button
@@ -756,7 +770,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null }) {
 				document.body,
 			)}
 			{blocker.state === "blocked" && createPortal(
-				<div data-theme="light" className="fixed inset-0 z-[120] grid place-items-center overflow-y-auto bg-[#071126]/55 p-4 backdrop-blur-[2px] sm:p-6">
+				<div data-theme="light" className={`fixed inset-0 z-[120] grid place-items-center overflow-y-auto bg-[#071126]/55 p-4 backdrop-blur-[2px] sm:p-6 ${isCompTIAExam ? "comptia-exam-dialog" : ""}`}>
 					<section
 						role="alertdialog"
 						aria-modal="true"
@@ -787,7 +801,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null }) {
 
 // Loads the database question bank first, so a new attempt draws its questions from it.
 // (If the bank can't be reached, the exam still works with the questions built into the site.)
-export default function CCNACompositeExam({ programKey = null, ...props }) {
+export default function CCNACompositeExam({ programKey = null, examFormats = null, theme = "ccna", ...props }) {
 	const routeParams = useParams();
 	const examKey = props.examKey ?? routeParams.examKey ?? "short";
 	const resolvedProgramKey = programKey ?? (
@@ -799,7 +813,7 @@ export default function CCNACompositeExam({ programKey = null, ...props }) {
 	const [status, setStatus] = useState("loading");
 	const isReady = isProgramExam || status === "ready";
 	const hasValidExam = resolvedProgramKey
-		? Boolean(getProgramExamFormats(resolvedProgramKey)?.[examKey])
+		? Boolean(examFormats?.[examKey] ?? getProgramExamFormats(resolvedProgramKey)?.[examKey])
 		: Boolean(CCNA_EXAMS[examKey]);
 	useEffect(() => {
 		if (isProgramExam) return undefined;
@@ -826,5 +840,5 @@ export default function CCNACompositeExam({ programKey = null, ...props }) {
 			</main>
 		);
 	}
-	return <CCNACompositeExamPage key={`${resolvedProgramKey ?? "ccna"}-${examKey}`} {...props} examKey={examKey} programKey={resolvedProgramKey} />;
+	return <CCNACompositeExamPage key={`${resolvedProgramKey ?? "ccna"}-${examKey}`} {...props} examKey={examKey} programKey={resolvedProgramKey} examFormats={examFormats} theme={theme} />;
 }

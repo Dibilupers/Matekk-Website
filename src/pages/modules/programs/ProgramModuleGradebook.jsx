@@ -118,7 +118,11 @@ function getModuleRows(modules, progress, storedAssessments) {
 }
 
 function getExamRows(storedAssessments, programKey) {
-	const examFormats = getProgramExamFormats(programKey) ?? {};
+	const examFormats = getProgramExamFormats(programKey) ?? {
+		short: { name: "Short Exam" },
+		medium: { name: "Medium Exam" },
+		long: { name: "Long Exam" },
+	};
 	const examFormatLabels = { short: "Short", medium: "Medium", long: "Long" };
 	const validExamAssessments = storedAssessments
 		.filter((assessment) =>
@@ -222,7 +226,7 @@ function AssessmentTable({ title, rows, filter, sort }) {
 		<section className="overflow-hidden border border-[#dce4e8] bg-white">
 			<header className="flex min-h-14 items-center justify-between gap-4 bg-[#f2f5f6] px-5 py-3">
 				<h2 id={`${sectionId}-title`} className="text-base font-bold text-[#152536]">{title}</h2>
-				<button type="button" onClick={() => setIsOpen((open) => !open)} aria-expanded={isOpen} aria-controls={sectionId} aria-label={`${isOpen ? "Collapse" : "Expand"} ${title}`} className="flex h-9 w-9 items-center justify-center rounded-md bg-[#087a91] text-white transition hover:bg-[#06677a]">
+				<button type="button" onClick={() => setIsOpen((open) => !open)} aria-expanded={isOpen} aria-controls={sectionId} aria-label={`${isOpen ? "Collapse" : "Expand"} ${title}`} className="gradebook-section-toggle flex h-9 w-9 items-center justify-center rounded-md bg-[#087a91] text-white transition hover:bg-[#06677a]">
 					<Chevron size={19} />
 				</button>
 			</header>
@@ -242,7 +246,7 @@ function AssessmentTable({ title, rows, filter, sort }) {
 								<tr key={row.id} className="border-b border-[#e9edef] last:border-0">
 									<th scope="row" className="px-5 py-4 font-semibold text-[#172536]">
 										<span>{row.name}</span>
-										{row.formatLabel && <span className="ml-2 rounded-full bg-[#e8f3f4] px-2.5 py-1 text-xs font-semibold text-[#005b6b]">{row.formatLabel} format</span>}
+										{row.formatLabel && <span className="gradebook-format-badge ml-2 rounded-full bg-[#e8f3f4] px-2.5 py-1 text-xs font-semibold text-[#005b6b]">{row.formatLabel} format</span>}
 										{row.statusLabel && <span className="ml-2 text-sm font-medium text-[#a44b13]">{row.statusLabel}</span>}
 									</th>
 									<td className="whitespace-nowrap px-5 py-4 text-[#445363]">{formatDate(row.submittedAt)}</td>
@@ -263,6 +267,7 @@ function AssessmentTable({ title, rows, filter, sort }) {
 
 export default function ProgramModuleGradebook({ programKey, programName, modules, dashboardPath }) {
 	const { profile } = useAuth();
+	const isCompTIAProgram = ["comptia-network-plus", "comptia-security-plus"].includes(programKey);
 	const userId = profile?.userId;
 	const welcomeText = `Welcome, ${profile?.username ?? "Student"}!`;
 	const [prefersReducedMotion] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
@@ -339,7 +344,7 @@ export default function ProgramModuleGradebook({ programKey, programName, module
 	}, [prefersReducedMotion, welcomeText]);
 
 	return (
-		<main className="ccna-page-enter min-h-screen bg-[#f5f7f8] pb-12 text-[#152536]">
+		<main className={`ccna-page-enter min-h-screen bg-[#f5f7f8] pb-12 text-[#152536] ${isCompTIAProgram ? "comptia-gradebook" : ""}`}>
 			<div className="mx-auto max-w-[1680px] px-4 py-6 sm:px-8 lg:px-10 2xl:px-12">
 				{backendGradebook.error && backendGradebook.userId === userId && (
 					<p role="alert" className="mb-4 rounded-md border border-[#f2c6c3] bg-white px-4 py-3 text-sm font-medium text-[#b42318]">
@@ -359,7 +364,7 @@ export default function ProgramModuleGradebook({ programKey, programName, module
 					<div className="grid grid-cols-2 gap-4 p-5 sm:grid-cols-3 sm:gap-5 sm:p-8 xl:grid-cols-5">
 						<SummaryStat label="Class grade" value={classGrade === null ? "--" : `${classGrade}%`} detail={totalPossiblePoints ? `${totalPoints}/${totalPossiblePoints} points` : "No graded assessments"} progress={classGrade ?? undefined} />
 						<SummaryStat label="Quizzes completed" value={`${latestRows.length} of ${modules.length}`} detail="module quizzes completed" />
-						<SummaryStat label="Exams completed" value={`${completedExamCount} of ${Object.keys(getProgramExamFormats(programKey) ?? {}).length}`} detail="exams completed" />
+						<SummaryStat label="Exams completed" value={`${completedExamCount} of ${Object.keys(getProgramExamFormats(programKey) ?? { short: true, medium: true, long: true }).length}`} detail="exams completed" />
 						<SummaryStat label="Best score" value={bestAssessment ? `${bestAssessment.bestPoints.score}/${bestAssessment.bestPoints.maxScore}` : "--"} detail={bestAssessment?.name ?? "No results yet"} gradeScore={bestAssessment?.bestGrade} />
 						<SummaryStat label="Up next" value={nextAssessment?.name ?? "All complete"} detail={nextAssessment?.status === "in-progress" ? "In progress" : nextAssessment ? "Not submitted" : "All assessments complete"} compactValue />
 					</div>
@@ -367,12 +372,12 @@ export default function ProgramModuleGradebook({ programKey, programName, module
 
 				<div className="mt-6 flex flex-wrap items-center justify-end gap-x-5 gap-y-3 text-base">
 					<label className="flex items-center gap-2 font-semibold text-[#334454]">Show
-						<select value={filter} onChange={(event) => setFilter(event.target.value)} className="h-10 min-w-32 rounded-md border border-[#bcc8ce] bg-white px-3 font-normal text-[#233442] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#087a91]">
+						<select value={filter} onChange={(event) => setFilter(event.target.value)} className="gradebook-filter h-10 min-w-32 rounded-md border border-[#bcc8ce] bg-white px-3 font-normal text-[#233442] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#087a91]">
 							<option value="all">All</option><option value="graded">Completed</option><option value="in-progress">In progress</option><option value="upcoming">Not started</option>
 						</select>
 					</label>
 					<label className="flex items-center gap-2 font-semibold text-[#334454]">Sort
-						<select value={sort} onChange={(event) => setSort(event.target.value)} className="h-10 min-w-40 rounded-md border border-[#bcc8ce] bg-white px-3 font-normal text-[#233442] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#087a91]">
+						<select value={sort} onChange={(event) => setSort(event.target.value)} className="gradebook-sort h-10 min-w-40 rounded-md border border-[#bcc8ce] bg-white px-3 font-normal text-[#233442] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#087a91]">
 							<option value="default">Default</option><option value="recent">Newest first</option><option value="oldest">Oldest first</option><option value="highest">Highest score</option><option value="lowest">Lowest score</option>
 						</select>
 					</label>
