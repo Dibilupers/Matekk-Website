@@ -1,5 +1,3 @@
-import { useEffect, useRef, useState } from "react";
-
 function assignChoice(question, assignments, choiceIndex, itemIndex) {
 	if (!Number.isInteger(choiceIndex) || !Number.isInteger(itemIndex) ||
 		choiceIndex < 0 || choiceIndex >= question.choices.length ||
@@ -18,96 +16,13 @@ function assignChoice(question, assignments, choiceIndex, itemIndex) {
 
 export function ClickBoxesQuestionInput({ question, value, onChange, disabled }) {
 	const assignments = Array.isArray(value) ? value : question.items.map(() => null);
-	const boardRef = useRef(null);
-	const previousAssignments = useRef(assignments);
-	const [animatingChoices, setAnimatingChoices] = useState(() => new Set());
-
-	useEffect(() => {
-		const previous = previousAssignments.current;
-		const changedItems = assignments.flatMap((assigned, index) =>
-			assigned === previous[index] ? [] : [index],
-		);
-		if (changedItems.length === 0) return;
-		const changedChoices = new Set(changedItems.flatMap((index) =>
-			[previous[index], assignments[index]].filter(Number.isInteger),
-		));
-		const board = boardRef.current;
-		setAnimatingChoices((current) => new Set([...current, ...changedChoices]));
-		const animations = [];
-		if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-			for (const choiceIndex of changedChoices) {
-				const currentOwner = assignments.indexOf(choiceIndex);
-				const previousOwner = previous.indexOf(choiceIndex);
-				const sourceItem = currentOwner >= 0 ? currentOwner : previousOwner;
-				if (sourceItem < 0) continue;
-				const source = board?.querySelector(
-					`[data-click-box="${sourceItem}"][data-choice="${choiceIndex}"]`,
-				);
-				if (!source) continue;
-				const destinations = [...(board?.querySelectorAll(`[data-choice="${choiceIndex}"]`) ?? [])]
-					.filter((element) => element !== source);
-				const sourceBounds = source.getBoundingClientRect();
-				const isBeingAssigned = currentOwner >= 0;
-				for (const destination of destinations) {
-					const destinationBounds = destination.getBoundingClientRect();
-					const clone = source.cloneNode(true);
-					clone.textContent = question.choices[choiceIndex];
-					const style = window.getComputedStyle(source);
-					Object.assign(clone.style, {
-						position: "fixed",
-						left: `${sourceBounds.left}px`,
-						top: `${sourceBounds.top}px`,
-						width: `${sourceBounds.width}px`,
-						height: `${sourceBounds.height}px`,
-						margin: "0",
-						pointerEvents: "none",
-						zIndex: "1200",
-					});
-					clone.style.backgroundColor = style.backgroundColor;
-					clone.style.border = style.border;
-					clone.style.color = style.color;
-					clone.setAttribute("aria-hidden", "true");
-					clone.tabIndex = -1;
-					document.body.append(clone);
-					destination.style.visibility = "hidden";
-					const x = destinationBounds.left - sourceBounds.left;
-					const y = destinationBounds.top - sourceBounds.top;
-					const animation = clone.animate(
-						isBeingAssigned
-							? [
-								{ transform: "translate(0, 0) scale(1)", opacity: 1 },
-								{ transform: `translate(${x}px, ${y}px) scale(0.85)`, opacity: 0 },
-							]
-							: [
-								{ transform: `translate(${x}px, ${y}px) scale(0.85)`, opacity: 0 },
-								{ transform: "translate(0, 0) scale(1)", opacity: 1 },
-							],
-						{ duration: 420, easing: "cubic-bezier(0.22, 0.61, 0.36, 1)" },
-					);
-					animations.push(animation.finished.finally(() => {
-						clone.remove();
-						destination.style.visibility = "";
-					}));
-				}
-			}
-		}
-
-		previousAssignments.current = assignments;
-		Promise.allSettled(animations).then(() => {
-			setAnimatingChoices((current) => {
-				const next = new Set(current);
-				for (const choiceIndex of changedChoices) next.delete(choiceIndex);
-				return next;
-			});
-		});
-	}, [assignments, question.choices]);
 
 	return (
 		<div className="space-y-2">
 			<p className="text-sm text-[#263654]">
 				Click one of the boxes on the right to match it with the corresponding box on the left.
 			</p>
-			<div ref={boardRef} className="overflow-x-auto border border-[#bdbdbd] bg-white">
+			<div className="overflow-x-auto border border-[#bdbdbd] bg-white">
 				<div className="min-w-[760px]">
 					{question.items.map((item, itemIndex) => (
 						<div
@@ -117,29 +32,27 @@ export function ClickBoxesQuestionInput({ question, value, onChange, disabled })
 							<div className="flex min-w-0 items-center border-r border-[#d0d0d0] px-2.5 py-2 text-sm leading-5 text-[#263654]">
 								{item}
 							</div>
-							<div className="flex items-center gap-2 overflow-x-auto px-2.5 py-2">
+							<div className="flex items-center overflow-x-auto px-2.5 py-2">
 								{question.choices.map((choice, choiceIndex) => {
 									const selected = assignments[itemIndex] === choiceIndex;
 									const usedElsewhere = assignments.some((assigned, index) =>
 										index !== itemIndex && assigned === choiceIndex,
 									);
-									const animating = animatingChoices.has(choiceIndex);
 									return (
 										<button
 											key={choiceIndex}
 											type="button"
-											data-click-box={itemIndex}
-											data-choice={choiceIndex}
-											disabled={disabled || (usedElsewhere && !animating)}
+											disabled={disabled || usedElsewhere}
+											aria-hidden={usedElsewhere}
 											aria-pressed={selected}
 											aria-label={`${choice}${usedElsewhere ? ", already matched" : ""}`}
 											onClick={() => onChange(assignChoice(question, assignments, choiceIndex, itemIndex))}
-											className={`shrink-0 border border-dashed px-2 py-1.5 text-left text-[13px] leading-5 transition duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[#005b6b] disabled:cursor-default ${
+											className={`box-border min-w-0 shrink-0 overflow-hidden whitespace-nowrap border border-dashed px-2 py-1.5 text-left text-[13px] leading-5 transition-[max-width,opacity,padding,border-width,margin,background-color] duration-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[#005b6b] disabled:cursor-default motion-reduce:transition-none ${
 												selected
-													? "border-[#405f8c] bg-[#e8eef7] font-semibold text-[#17345f]"
-													: usedElsewhere || animating
-														? "pointer-events-none scale-90 border-transparent bg-transparent text-transparent opacity-0"
-														: "border-[#999] bg-white text-[#17345f] hover:bg-[#f1f5fa]"
+													? "mr-2 max-w-[640px] border-2 border-[#16a34a] bg-[#ecfdf3] font-semibold text-[#14532d] shadow-[0_0_0_1px_rgba(22,163,74,0.18)]"
+													: usedElsewhere
+														? "pointer-events-none mr-0 max-w-0 border-0 px-0 py-0 opacity-0"
+														: "mr-2 max-w-[640px] border-[#999] bg-white text-[#17345f] hover:bg-[#f1f5fa]"
 											}`}
 										>
 											{choice}
