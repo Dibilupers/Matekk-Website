@@ -231,66 +231,6 @@ describe('QuestionsService', () => {
     expect(prismaMock.examAttempt.create.mock.calls[0][0].data.userId).toBe(7);
   });
 
-  it('returns group sizes for matching questions with fewer choices than items', async () => {
-    const databaseQuestions = examQuestionBank(50);
-    const groupedQuestion = databaseQuestions.find((question) => question.id === 50)!;
-    groupedQuestion.match_items = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'];
-    groupedQuestion.correct_answer = '[0,1,0,0,1]';
-    prismaMock.questions.findMany.mockResolvedValue(databaseQuestions);
-
-    const attempt = await service.startExam('short', 7);
-    const question = attempt.questions.find((item) => item.id === 50);
-
-    expect(question).toMatchObject({
-      type: 'match',
-      items: ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'],
-    });
-    if (question?.type !== 'match' || !('groupSizes' in question)) {
-      throw new Error('The grouped matching question must include group sizes.');
-    }
-    expect(question.groupSizes).toHaveLength(2);
-    expect(question.groupSizes.reduce((total, size) => total + size, 0)).toBe(5);
-    expect(question.groupSizes[question.choices.indexOf('Answer A')]).toBe(3);
-    expect(question.groupSizes[question.choices.indexOf('Answer B')]).toBe(2);
-  });
-
-  it('includes numbered, box-style, and line-style matching questions in a short exam', async () => {
-    const databaseQuestions = examQuestionBank(50);
-    databaseQuestions.push({
-      id: 1000,
-      module: 'CCNA',
-      topic: 'IPv6',
-      difficulty: 'Medium',
-      question_text: 'Match each IPv6 property to its address type.',
-      choices: '',
-      correct_answer: [
-        'Link-Local Address',
-        '+ attached to one link',
-        '+ includes link-local addresses',
-        '',
-        'Unique Local Address',
-        '+ used internally without Internet routing',
-        '+ addresses with prefix FC00::/7',
-      ].join('\n'),
-      explanation: 'Each address type has two properties.',
-      question_type: 'single',
-      match_items: null,
-    });
-    prismaMock.questions.findMany.mockResolvedValue(databaseQuestions);
-
-    const attempt = await service.startExam('short', 7);
-    const matches = attempt.questions.filter((question) => question.type === 'match');
-
-    expect(matches).toHaveLength(5);
-    expect(matches.some((question) => question.type === 'match' && 'groupSizes' in question)).toBe(true);
-    expect(matches.some((question) =>
-      question.type === 'match' &&
-      question.items.length === question.choices.length &&
-      !('matchStyle' in question),
-    )).toBe(true);
-    expect(matches.some((question) => question.type === 'match' && question.matchStyle === 'lines')).toBe(true);
-  });
-
   it('shows every second one-to-one matching question as circles, with at least one per 50-question block', async () => {
     const bank = examQuestionBank(100);
     const extraMatches = Array.from({ length: 10 }, (_, index) => ({

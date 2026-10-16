@@ -33,10 +33,8 @@ function MatchBoard({ question, value, onChange, disabled = false, review = fals
 	function connectTo(choiceIndex) {
 		if (disabled || activeItem === null) return;
 		const next = Array.from({ length: question.items.length }, (_, index) => connections[index] ?? null);
-		if (question.choices.length >= question.items.length) {
-			for (let index = 0; index < next.length; index += 1) {
-				if (index !== activeItem && next[index] === choiceIndex) next[index] = null;
-			}
+		for (let index = 0; index < next.length; index += 1) {
+			if (index !== activeItem && next[index] === choiceIndex) next[index] = null;
 		}
 		next[activeItem] = choiceIndex;
 		onChange(next);
