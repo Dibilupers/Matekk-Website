@@ -37,7 +37,12 @@ function validateExamAttempt(attempt) {
 		Array.isArray(question.choices) &&
 		question.choices.length >= 2 &&
 		question.choices.length <= 8 &&
-		question.choices.every((choice) => typeof choice === "string");
+		question.choices.every((choice) => typeof choice === "string") &&
+		(question.groupSizes === undefined ||
+			(Array.isArray(question.groupSizes) &&
+				question.groupSizes.length === question.choices.length &&
+				question.groupSizes.every((size) => Number.isInteger(size) && size >= 0) &&
+				question.groupSizes.reduce((total, size) => total + size, 0) === question.items.length));
 	if (
 		!attempt ||
 		typeof attempt.attemptId !== "string" ||

@@ -7,6 +7,7 @@ import {
 	removeDuplicateExhibitLeadIn,
 	removeTrailingOptionExhibitLabel,
 } from "../../../../../utils/splitPromptExhibit";
+import { MatchingQuestionInput, MatchingQuestionReview } from "./ccnaExamMatching";
 
 const OPTION_LABELS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 function letter(index) {
@@ -471,7 +472,7 @@ export function QuestionInput({ question, value, onChange, disabled }) {
 	}
 
 	if (type === "match" && localMatchMode === "assign") {
-		return <AssignMatchInput question={question} value={value} onChange={onChange} disabled={disabled} />;
+		return <MatchingQuestionInput question={question} value={value} onChange={onChange} disabled={disabled} />;
 	}
 	if (type === "match" && localMatchMode === "group") {
 		return <GroupMatchInput question={question} value={value} onChange={onChange} disabled={disabled} />;
@@ -582,6 +583,10 @@ export function QuestionReview({ question, value }) {
 				})}
 			</div>
 		);
+	}
+
+	if (type === "match" && matchMode(question) === "assign") {
+		return <MatchingQuestionReview question={question} value={value} />;
 	}
 
 	if (type === "match") {
