@@ -123,11 +123,28 @@ function createExamQuestions(sourceQuestions, count) {
   const imagePool = getUniqueQuestions([...sourceImages, ...builtInImages]);
   const otherPool = getUniqueQuestions([...sourceOther, ...builtInOther]);
   const matchingQuestions = shuffle(matchingPool).slice(0, requiredMatchingCount);
-  const dragDropQuota = dragDropPool.length >= blockCount * dragDropPerBlock ? dragDropPerBlock : 0;
-  const clickBoxesQuota = clickBoxesPool.length >= blockCount * clickBoxesPerBlock ? clickBoxesPerBlock : 0;
+  const requiredDragDropCount = blockCount * dragDropPerBlock;
+  const requiredClickBoxesCount = blockCount * clickBoxesPerBlock;
+  const clickBoxesShortage = Math.max(0, requiredClickBoxesCount - clickBoxesPool.length);
+  const randomizedDragDropPool = shuffle(dragDropPool);
+  const canBorrowClickBoxes = randomizedDragDropPool.length >= requiredDragDropCount + clickBoxesShortage;
+  const dragDropQuota = canBorrowClickBoxes && randomizedDragDropPool.length >= requiredDragDropCount
+    ? dragDropPerBlock
+    : 0;
+  const borrowedClickBoxes = canBorrowClickBoxes
+    ? randomizedDragDropPool.slice(requiredDragDropCount, requiredDragDropCount + clickBoxesShortage)
+      .map((question) => ({ ...question, type: "click_boxes" }))
+    : [];
+  const clickBoxesQuota = clickBoxesPool.length + borrowedClickBoxes.length >= requiredClickBoxesCount
+    ? clickBoxesPerBlock
+    : 0;
   const imageQuota = imagePool.length >= blockCount * imagePerBlock ? imagePerBlock : 0;
-  const dragDropQuestions = shuffle(dragDropPool).slice(0, blockCount * dragDropQuota);
-  const clickBoxesQuestions = shuffle(clickBoxesPool).slice(0, blockCount * clickBoxesQuota);
+  const borrowedIds = new Set(borrowedClickBoxes.map((question) => question.bankId ?? question.id));
+  const dragDropQuestions = randomizedDragDropPool
+    .filter((question) => !borrowedIds.has(question.bankId ?? question.id))
+    .slice(0, blockCount * dragDropQuota);
+  const clickBoxesQuestions = shuffle([...clickBoxesPool, ...borrowedClickBoxes])
+    .slice(0, blockCount * clickBoxesQuota);
   const imageQuestions = shuffle(imagePool).slice(0, blockCount * imageQuota);
   const reservedQuestionCount = matchingQuestions.length + dragDropQuestions.length +
     clickBoxesQuestions.length + imageQuestions.length;

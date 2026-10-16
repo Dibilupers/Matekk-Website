@@ -5,7 +5,9 @@ function assignChoice(question, assignments, choiceIndex, itemIndex) {
 		choiceIndex < 0 || choiceIndex >= question.choices.length ||
 		itemIndex < 0 || itemIndex >= question.items.length) return assignments;
 	const next = Array.from({ length: question.items.length }, (_, index) => assignments[index] ?? null);
-	if (next.some((assigned, index) => index !== itemIndex && assigned === choiceIndex)) return assignments;
+	next.forEach((assigned, index) => {
+		if (index !== itemIndex && assigned === choiceIndex) next[index] = null;
+	});
 	next[itemIndex] = choiceIndex;
 	return next;
 }
@@ -50,7 +52,9 @@ export function ClickBoxesQuestionInput({ question, value, onChange, disabled })
 								disabled={disabled}
 								onClick={() => clickBox(itemIndex)}
 								aria-label={Number.isInteger(choiceIndex)
-									? `${activeChoice !== null ? "Place selected answer in" : "Remove"} answer ${Number.isInteger(activeChoice) ? `for ${item}` : ` ${question.choices[choiceIndex]} from ${item}`}`
+									? activeChoice !== null
+										? `Place ${question.choices[activeChoice]} on ${item}`
+										: `Remove ${question.choices[choiceIndex]} from ${item}`
 									: `Answer box for ${item}`}
 								className={`min-h-11 rounded-lg border-2 border-dashed px-3 py-2 text-left text-sm transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#005b6b] disabled:cursor-default ${
 									Number.isInteger(choiceIndex)
