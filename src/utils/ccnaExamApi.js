@@ -24,7 +24,7 @@ async function readExamResponse(response) {
 
 function validateExamAttempt(attempt) {
 	const isMatchingQuestion = (question) =>
-		["match", "drag_drop", "image"].includes(question?.type);
+		["match", "drag_drop", "click_boxes", "image"].includes(question?.type);
 	const isSingleQuestion = (question) =>
 		!isMatchingQuestion(question) &&
 		Array.isArray(question?.options) &&
@@ -41,6 +41,7 @@ function validateExamAttempt(attempt) {
 		question.choices.length <= 8 &&
 		question.choices.every((choice) => typeof choice === "string") &&
 		(question.type !== "drag_drop" || question.items.length === question.choices.length) &&
+		(question.type !== "click_boxes" || question.items.length === question.choices.length) &&
 		(question.type !== "image" || Array.isArray(question.groupSizes)) &&
 		(question.groupSizes === undefined ||
 			(Array.isArray(question.groupSizes) &&

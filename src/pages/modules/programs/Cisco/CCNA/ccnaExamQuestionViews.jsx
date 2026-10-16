@@ -9,6 +9,7 @@ import {
 } from "../../../../../utils/splitPromptExhibit";
 import { MatchingQuestionInput, MatchingQuestionReview } from "./ccnaExamMatching";
 import { DragDropQuestionInput, DragDropQuestionReview } from "./ccnaExamDragDrop";
+import { ClickBoxesQuestionInput, ClickBoxesQuestionReview } from "./ccnaExamClickBoxes";
 
 const OPTION_LABELS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 function letter(index) {
@@ -456,7 +457,7 @@ export function QuestionPrompt({ prompt, imageUrl, hasSeparateExhibit = Boolean(
 /* Answer input for one exam question (pick one, choose two, or matching). */
 export function QuestionInput({ question, value, onChange, disabled }) {
 	const type = questionType(question);
-	const isMatching = ["match", "drag_drop", "image"].includes(type);
+	const isMatching = ["match", "drag_drop", "click_boxes", "image"].includes(type);
 	// Backend exams don't include the answer key; "type the numbers" questions come with their box sizes instead
 	const hasGroupSizes = Array.isArray(question.groupSizes) && question.groupSizes.length === question.choices?.length &&
 		question.groupSizes.reduce((sum, size) => sum + size, 0) === question.items?.length;
@@ -475,6 +476,9 @@ export function QuestionInput({ question, value, onChange, disabled }) {
 
 	if (type === "drag_drop") {
 		return <DragDropQuestionInput question={question} value={value} onChange={onChange} disabled={disabled} />;
+	}
+	if (type === "click_boxes") {
+		return <ClickBoxesQuestionInput question={question} value={value} onChange={onChange} disabled={disabled} />;
 	}
 	if (isMatching && localMatchMode === "assign") {
 		return <MatchingQuestionInput question={question} value={value} onChange={onChange} disabled={disabled} />;
@@ -559,7 +563,7 @@ export function QuestionInput({ question, value, onChange, disabled }) {
 /* Results review for one question: shows the student's answer and the correct one. */
 export function QuestionReview({ question, value }) {
 	const type = questionType(question);
-	const isMatching = ["match", "drag_drop", "image"].includes(type);
+	const isMatching = ["match", "drag_drop", "click_boxes", "image"].includes(type);
 	if (isMatching && !hasMatchContent(question, true)) return <InvalidQuestionMessage />;
 	if (!isMatching && !isValidQuestion(question)) return <InvalidQuestionMessage />;
 
@@ -593,6 +597,9 @@ export function QuestionReview({ question, value }) {
 
 	if (type === "drag_drop") {
 		return <DragDropQuestionReview question={question} value={value} />;
+	}
+	if (type === "click_boxes") {
+		return <ClickBoxesQuestionReview question={question} value={value} />;
 	}
 
 	if (isMatching && matchMode(question) === "assign") {

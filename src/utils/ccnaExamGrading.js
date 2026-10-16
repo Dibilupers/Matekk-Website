@@ -10,7 +10,7 @@ export function questionType(question) {
 }
 
 function isMatchingQuestion(question) {
-	return ["match", "drag_drop", "image"].includes(questionType(question));
+	return ["match", "drag_drop", "click_boxes", "image"].includes(questionType(question));
 }
 
 export function isValidQuestion(question) {
@@ -20,7 +20,10 @@ export function isValidQuestion(question) {
 			Array.isArray(question.choices) &&
 			Array.isArray(question.answer) &&
 			question.answer.length === question.items.length &&
-			question.answer.every((a) => Number.isInteger(a) && a >= 0 && a < question.choices.length);
+			question.answer.every((a) => Number.isInteger(a) && a >= 0 && a < question.choices.length) &&
+			(question.type !== "click_boxes" ||
+				(question.items.length === question.choices.length &&
+					new Set(question.answer).size === question.answer.length));
 	}
 	if (!Array.isArray(question?.options)) return false;
 	if (type === "multi") {

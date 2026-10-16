@@ -336,17 +336,22 @@ export function convertBankRow(row) {
     return { problem: "referenced exhibit has no available text or image" };
   }
 
-  if (!["single", "match", "drag_drop", "image"].includes(questionType)) {
+  if (!["single", "match", "drag_drop", "click_boxes", "image"].includes(questionType)) {
     return { problem: `unsupported question type: ${questionType}` };
   }
   let body;
-  if (["match", "drag_drop", "image"].includes(questionType)) {
+  if (["match", "drag_drop", "click_boxes", "image"].includes(questionType)) {
     const matching = matchingQuestion(row, choices);
     if (!matching.question) return { problem: matching.problem };
     body = { ...matching.question, type: questionType };
     if (questionType === "drag_drop" &&
       new Set(body.answer).size !== body.answer.length) {
       return { problem: "each drag-and-drop item must use a different answer choice" };
+    }
+    if (questionType === "click_boxes" &&
+      (body.items.length !== body.choices.length ||
+        new Set(body.answer).size !== body.answer.length)) {
+      return { problem: "click-the-boxes questions must use each answer choice exactly once" };
     }
     if (questionType === "image") {
       if (!exhibitImage) return { problem: "image question has no available image" };

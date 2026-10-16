@@ -9,10 +9,13 @@ import { ExhibitImage, ExhibitText } from "./ccnaExhibit";
 import { QuestionInput, QuestionPrompt, QuestionReview } from "./ccnaExamQuestionViews";
 
 function isValidSavedAnswer(question, answer) {
-	if (["match", "drag_drop", "image"].includes(question.type)) {
-		return Array.isArray(answer) &&
+	if (["match", "drag_drop", "click_boxes", "image"].includes(question.type)) {
+		const validMatchingAnswer = Array.isArray(answer) &&
 			answer.length === question.items.length &&
 			answer.every((index) => Number.isInteger(index) && index >= 0 && index < question.choices.length);
+		return validMatchingAnswer &&
+			(question.type !== "click_boxes" ||
+				(question.items.length === question.choices.length && new Set(answer).size === answer.length));
 	}
 	if (question.type === "multi") {
 		return Array.isArray(answer) &&

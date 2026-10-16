@@ -21,7 +21,7 @@ import { getDatabaseQuestionById, setDatabaseQuestions } from "./ccnaQuestionBan
 import { resumeCcnaExam, startCcnaExam, submitCcnaExam } from "../../../../../utils/ccnaExamApi";
 const EXAM_PASS_PERCENTAGE = 80;
 const RECREATED_MATCH_EXHIBIT_QUESTION_IDS = new Set([570]);
-const isMatchingQuestion = (question) => ["match", "drag_drop", "image"].includes(question?.type);
+const isMatchingQuestion = (question) => ["match", "drag_drop", "click_boxes", "image"].includes(question?.type);
 const isRoutingProtocolComparisonQuestion = (question) =>
 	question?.prompt?.includes("three different routing protocols") &&
 	question.prompt.includes("172.16.32.1");

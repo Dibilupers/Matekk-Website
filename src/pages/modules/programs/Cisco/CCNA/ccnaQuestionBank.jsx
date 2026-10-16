@@ -96,27 +96,64 @@ function getUniqueQuestions(sourceQuestions) {
 
 function createExamQuestions(sourceQuestions, count) {
   const matchingPerBlock = 5;
+  const dragDropPerBlock = 3;
+  const clickBoxesPerBlock = 1;
+  const imagePerBlock = 1;
   const blockSize = 50;
   const blockCount = Math.ceil(count / blockSize);
   const requiredMatchingCount = blockCount * matchingPerBlock;
   const uniqueSource = getUniqueQuestions(sourceQuestions);
   const sourceMatching = uniqueSource.filter((question) => question.type === "match");
-  const sourceOther = uniqueSource.filter((question) => question.type !== "match");
+  const sourceDragDrop = uniqueSource.filter((question) => question.type === "drag_drop");
+  const sourceClickBoxes = uniqueSource.filter((question) => question.type === "click_boxes");
+  const sourceImages = uniqueSource.filter((question) => question.type === "image");
+  const sourceOther = uniqueSource.filter((question) =>
+    !["match", "drag_drop", "click_boxes", "image"].includes(question.type),
+  );
   const builtInMatching = CCNA_QUESTION_BANK.filter((question) => question.type === "match");
-  const builtInOther = CCNA_QUESTION_BANK.filter((question) => question.type !== "match");
+  const builtInDragDrop = CCNA_QUESTION_BANK.filter((question) => question.type === "drag_drop");
+  const builtInClickBoxes = CCNA_QUESTION_BANK.filter((question) => question.type === "click_boxes");
+  const builtInImages = CCNA_QUESTION_BANK.filter((question) => question.type === "image");
+  const builtInOther = CCNA_QUESTION_BANK.filter((question) =>
+    !["match", "drag_drop", "click_boxes", "image"].includes(question.type),
+  );
   const matchingPool = getUniqueQuestions([...sourceMatching, ...builtInMatching]);
+  const dragDropPool = getUniqueQuestions([...sourceDragDrop, ...builtInDragDrop]);
+  const clickBoxesPool = getUniqueQuestions([...sourceClickBoxes, ...builtInClickBoxes]);
+  const imagePool = getUniqueQuestions([...sourceImages, ...builtInImages]);
   const otherPool = getUniqueQuestions([...sourceOther, ...builtInOther]);
   const matchingQuestions = shuffle(matchingPool).slice(0, requiredMatchingCount);
-  const otherQuestions = shuffle(otherPool).slice(0, count - requiredMatchingCount);
+  const dragDropQuota = dragDropPool.length >= blockCount * dragDropPerBlock ? dragDropPerBlock : 0;
+  const clickBoxesQuota = clickBoxesPool.length >= blockCount * clickBoxesPerBlock ? clickBoxesPerBlock : 0;
+  const imageQuota = imagePool.length >= blockCount * imagePerBlock ? imagePerBlock : 0;
+  const dragDropQuestions = shuffle(dragDropPool).slice(0, blockCount * dragDropQuota);
+  const clickBoxesQuestions = shuffle(clickBoxesPool).slice(0, blockCount * clickBoxesQuota);
+  const imageQuestions = shuffle(imagePool).slice(0, blockCount * imageQuota);
+  const reservedQuestionCount = matchingQuestions.length + dragDropQuestions.length +
+    clickBoxesQuestions.length + imageQuestions.length;
+  const fallbackQuestions = [
+    ...(dragDropQuota ? [] : dragDropPool),
+    ...(clickBoxesQuota ? [] : clickBoxesPool),
+    ...(imageQuota ? [] : imagePool),
+  ];
+  const otherQuestions = shuffle(getUniqueQuestions([...otherPool, ...fallbackQuestions]))
+    .slice(0, count - reservedQuestionCount);
   const questions = [];
 
   for (let blockIndex = 0; blockIndex < blockCount; blockIndex += 1) {
     const blockLength = Math.min(blockSize, count - blockIndex * blockSize);
     const matchingStart = blockIndex * matchingPerBlock;
-    const otherStart = blockIndex * (blockSize - matchingPerBlock);
+    const dragDropStart = blockIndex * dragDropQuota;
+    const clickBoxesStart = blockIndex * clickBoxesQuota;
+    const imageStart = blockIndex * imageQuota;
+    const otherPerBlock = blockSize - matchingPerBlock - dragDropQuota - clickBoxesQuota - imageQuota;
+    const otherStart = blockIndex * otherPerBlock;
     const blockQuestions = [
       ...matchingQuestions.slice(matchingStart, matchingStart + matchingPerBlock),
-      ...otherQuestions.slice(otherStart, otherStart + blockLength - matchingPerBlock),
+      ...dragDropQuestions.slice(dragDropStart, dragDropStart + dragDropQuota),
+      ...clickBoxesQuestions.slice(clickBoxesStart, clickBoxesStart + clickBoxesQuota),
+      ...imageQuestions.slice(imageStart, imageStart + imageQuota),
+      ...otherQuestions.slice(otherStart, otherStart + Math.min(otherPerBlock, blockLength - matchingPerBlock - dragDropQuota - clickBoxesQuota - imageQuota)),
     ];
     questions.push(...shuffle(blockQuestions));
   }
