@@ -1,7 +1,8 @@
 import { UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { UsersService } from '../../users/users.service.js';
-import { JwtStrategy } from './jwt.strategy.js';
+import { ExtractJwt } from 'passport-jwt';
+import { JwtStrategy, extractAccessTokenFromCookie } from './jwt.strategy.js';
 
 describe('JwtStrategy', () => {
   const activeUser = {
@@ -20,6 +21,20 @@ describe('JwtStrategy', () => {
 
   beforeEach(() => {
     findAuthUserById.mockReset();
+  });
+
+  it('extracts a JWT from the session cookie when present', () => {
+    expect(
+      extractAccessTokenFromCookie({ headers: { cookie: 'other=1; access_token=abc.def.ghi; theme=dark' } } as never),
+    ).toBe('abc.def.ghi');
+  });
+
+  it('falls back to bearer tokens when the session cookie is absent', () => {
+    const extractor = ExtractJwt.fromAuthHeaderAsBearerToken();
+
+    expect(
+      extractor({ headers: { authorization: 'Bearer abc.def.ghi' } } as never),
+    ).toBe('abc.def.ghi');
   });
 
   it('resolves the current account and returns its current approval status', async () => {

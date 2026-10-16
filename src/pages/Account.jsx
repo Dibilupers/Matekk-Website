@@ -9,6 +9,13 @@ import { readGradebookAssessments } from "../utils/gradebookApi";
 const INPUT_CLASS = "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-[#2f5bea] focus:ring-2 focus:ring-blue-100";
 const LABEL_CLASS = "block space-y-2 text-sm font-semibold text-slate-900";
 
+function cookieFetch(url, options = {}) {
+  return fetch(url, {
+    credentials: "include",
+    ...options,
+  });
+}
+
 function dateInputValue(value) {
   if (!value) return "";
   const date = new Date(value);
@@ -67,8 +74,7 @@ function ProfileForm({ profile, refreshProfile }) {
     const controller = new AbortController();
     async function loadProfilePhoto() {
       try {
-        const response = await fetch(`${API_URL}/auth/profile/photo`, {
-          credentials: "include",
+        const response = await cookieFetch(`${API_URL}/auth/profile/photo`, {
           signal: controller.signal,
         });
         const body = await response.json().catch(() => null);
@@ -107,7 +113,7 @@ function ProfileForm({ profile, refreshProfile }) {
     setMessage("");
     setError("");
     try {
-      const response = await fetch(`${API_URL}/auth/profile`, {
+      const response = await cookieFetch(`${API_URL}/auth/profile`, {
         method: "PATCH",
         credentials: "include",
         headers: {
@@ -161,7 +167,7 @@ function ProfileForm({ profile, refreshProfile }) {
         reader.onerror = () => reject(new Error("Unable to read the selected image."));
         reader.readAsDataURL(file);
       });
-      const response = await fetch(`${API_URL}/auth/profile/photo`, {
+      const response = await cookieFetch(`${API_URL}/auth/profile/photo`, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -186,9 +192,8 @@ function ProfileForm({ profile, refreshProfile }) {
     setMessage("");
     setError("");
     try {
-      const response = await fetch(`${API_URL}/auth/profile/photo`, {
+      const response = await cookieFetch(`${API_URL}/auth/profile/photo`, {
         method: "DELETE",
-        credentials: "include",
       });
       const body = await response.json().catch(() => null);
       if (!response.ok) throw new Error(body?.message || "Unable to remove your profile photo.");
@@ -214,7 +219,7 @@ function ProfileForm({ profile, refreshProfile }) {
     }
 
     try {
-      const response = await fetch(`${API_URL}/auth/password`, {
+      const response = await cookieFetch(`${API_URL}/auth/password`, {
         method: "PATCH",
         credentials: "include",
         headers: {
@@ -412,8 +417,7 @@ function LearningHistory() {
     const controller = new AbortController();
     async function loadHistory() {
       try {
-        const response = await fetch(`${API_URL}/auth/learning-history`, {
-          credentials: "include",
+        const response = await cookieFetch(`${API_URL}/auth/learning-history`, {
           signal: controller.signal,
         });
         const body = await response.json().catch(() => null);
@@ -535,8 +539,7 @@ function Transcript({ profile }) {
     let isActive = true;
     async function loadTranscript() {
       try {
-        const historyResponse = await fetch(`${API_URL}/auth/learning-history`, {
-          credentials: "include",
+        const historyResponse = await cookieFetch(`${API_URL}/auth/learning-history`, {
           signal: controller.signal,
         });
         const historyBody = await historyResponse.json().catch(() => null);

@@ -62,13 +62,10 @@ export const CCNA_QUESTION_BANK = [
   }))
     // Skip questions whose exhibit picture was lost when they were taken from the PDF (they can't be answered)
     .filter((question) => !/\bexhibit\b/i.test(question.prompt) || question.exhibit || question.exhibitImage),
-];
-// Questions without their own explanation borrow one from the same question elsewhere in the site
-CCNA_QUESTION_BANK.forEach((question, index) => {
-  if (!question.explanation?.trim()) {
-    CCNA_QUESTION_BANK[index] = { ...question, explanation: findCcnaQuestionExplanation(question.prompt) };
-  }
-});
+].map((question) => ({
+  ...question,
+  explanation: question.explanation?.trim() || findCcnaQuestionExplanation(question.prompt),
+}));
 
 const SHORT_EXAM_SOURCES = new Set(["legacy-ccna-200-301"]);
 

@@ -30,20 +30,37 @@ function isJwtPayload(payload: unknown): payload is JwtPayload {
   );
 }
 
-function extractAccessTokenFromCookie(request: Request): string | null {
-  const cookie = request.headers.cookie
-    ?.split(';')
-    .map((part) => part.trim())
-    .find((part) => part.startsWith(`${ACCESS_TOKEN_COOKIE}=`));
+export function extractAccessTokenFromCookie(request: Request): string | null {
+  const cookieHeader = request.headers.cookie;
+  if (!cookieHeader) {
+    return null;
+  }
 
-  return cookie ? cookie.slice(ACCESS_TOKEN_COOKIE.length + 1) : null;
+  const cookie = cookieHeader
+    .split(';')
+    .map((part) => part.trim())
+    .find((part) => {
+      const [name] = part.split('=');
+      return name === ACCESS_TOKEN_COOKIE;
+    });
+
+  if (!cookie) {
+    return null;
+  }
+
+  const [, ...valueParts] = cookie.split('=');
+  const value = valueParts.join('=');
+  return value ? decodeURIComponent(value) : null;
 }
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(config: ConfigService, private readonly usersService: UsersService) {
     super({
-      jwtFromRequest: ExtractJwt.fromExtractors([extractAccessTokenFromCookie]),
+      jwtFromRequest: ExtractJwt.fromExtractors([
+        extractAccessTokenFromCookie,
+        ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ]),
       ignoreExpiration: false,
       secretOrKey: config.getOrThrow<string>('JWT_SECRET'),
       algorithms: ['HS256'],

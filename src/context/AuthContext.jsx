@@ -3,7 +3,6 @@ import API_URL from "../config/api";
 import { AuthContext } from "./auth-context";
 
 const PROFILE_CACHE_KEY = "matekk-session-profile";
-
 const OFFLINE_PROFILE_KEY = "matekkOfflineProfile";
 
 function readOfflineProfile() {
@@ -23,6 +22,18 @@ function readOfflineProfile() {
   }
 }
 
+function readCachedProfile() {
+  try {
+    const cachedProfile = JSON.parse(sessionStorage.getItem(PROFILE_CACHE_KEY) || "null");
+    if (cachedProfile && typeof cachedProfile === "object" && !Array.isArray(cachedProfile)) {
+      return cachedProfile;
+    }
+  } catch {
+    sessionStorage.removeItem(PROFILE_CACHE_KEY);
+  }
+  return readOfflineProfile();
+}
+
 function storeOfflineProfile(profile) {
   if (!profile || (typeof profile.userId !== "string" && typeof profile.userId !== "number")) return;
   localStorage.setItem(OFFLINE_PROFILE_KEY, JSON.stringify({
@@ -33,6 +44,12 @@ function storeOfflineProfile(profile) {
     first_name: profile.first_name,
     last_name: profile.last_name,
   }));
+}
+
+function clearAuthCaches() {
+  sessionStorage.removeItem(PROFILE_CACHE_KEY);
+  localStorage.removeItem(OFFLINE_PROFILE_KEY);
+  localStorage.removeItem("accessToken");
 }
 
 export function AuthProvider({ children }) {
@@ -55,8 +72,10 @@ export function AuthProvider({ children }) {
       credentials: "include",
     });
     if (!response.ok) {
-      localStorage.removeItem(OFFLINE_PROFILE_KEY);
-      setProfile(null);
+      if (response.status === 401 || response.status === 403) {
+        clearAuthCaches();
+        setProfile(null);
+      }
       throw new Error("Unable to refresh account approval status.");
     }
 
@@ -68,18 +87,16 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     let mounted = true;
-    const cachedProfile = readOfflineProfile();
+    const cachedProfile = readCachedProfile();
     fetch(`${API_URL}/auth/profile`, {
       credentials: "include",
     })
       .then(async (response) => {
         if (!response.ok) {
-          // Signed out or session expired: forget the saved copies. Other errors (server down) fall through to the offline copy.
           if (response.status !== 401 && response.status !== 403) {
             throw new Error("Unable to verify the current session.");
           }
-          sessionStorage.removeItem(PROFILE_CACHE_KEY);
-          localStorage.removeItem(OFFLINE_PROFILE_KEY);
+          clearAuthCaches();
           if (mounted) setProfile(null);
           return;
         }
@@ -118,7 +135,7 @@ export function AuthProvider({ children }) {
       }).catch((logoutError) =>
         console.error("Unable to clear a session after profile loading failed.", logoutError),
       );
-      localStorage.removeItem(OFFLINE_PROFILE_KEY);
+      clearAuthCaches();
       throw error;
     }
     setProfile(signedInProfile);
@@ -160,8 +177,7 @@ export function AuthProvider({ children }) {
   }, [completeLogin]);
 
   const logout = useCallback(() => {
-    sessionStorage.removeItem(PROFILE_CACHE_KEY);
-    localStorage.removeItem(OFFLINE_PROFILE_KEY);
+    clearAuthCaches();
     setProfile(null);
     void fetch(`${API_URL}/auth/logout`, {
       method: "POST",

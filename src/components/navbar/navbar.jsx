@@ -11,6 +11,7 @@ import {
   BookOpen,
   CircleUserRound,
   ClipboardList,
+  GraduationCap,
   Globe,
   LayoutDashboard,
   LogOut,
@@ -130,6 +131,18 @@ function NavBar() {
           <h3 className="flex items-center gap-3 px-5 pb-1 pt-4 text-sm font-bold"><LayoutDashboard size={19} className="text-[#1775ee]" /> Dashboard</h3>
           {profileLink("My Learning", <BookOpen size={19} className="text-[#1775ee]" />, () => { closeProfile(); navigate("../pages/blank"); })}
           {profileLink("My Gradebook", <ClipboardList size={19} className="text-[#1775ee]" />, () => setIsGradebookChooserOpen(true))}
+          <button
+            type="button"
+            onClick={() => { closeProfile(); navigate("/account/enroll"); }}
+            className="mx-3 flex w-[calc(100%-1.5rem)] items-center justify-between gap-3 rounded-xl bg-[#eef6ff] px-3 py-2.5 text-left text-sm font-medium text-[#1775ee] transition hover:bg-[#e2efff]"
+          >
+            <span className="flex items-center gap-2">
+              <GraduationCap size={20} aria-hidden="true" className="shrink-0 text-[#1775ee]" />
+              <span>Enroll in a program</span>
+              <span className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-[#1775ee]">New</span>
+            </span>
+            <ArrowRight size={18} className="shrink-0 text-[#1775ee]" />
+          </button>
         </div>
         <div className="pt-3">
           <h3 className="flex items-center gap-3 px-5 pb-1 pt-1 text-sm font-bold"><User size={19} className="text-[#1775ee]" /> Profile</h3>

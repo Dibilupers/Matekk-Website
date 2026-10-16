@@ -10,6 +10,7 @@ import useHeadingTypeIn from "../utils/useHeadingTypeIn";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
 import AccountPending from "../pages/AccountPending";
+import EnrollmentRequest from "../pages/EnrollmentRequest";
 import NotFound from "../pages/NotFound";
 
 /* Cisco */
@@ -167,6 +168,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <Account view="profile" />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/account/enroll"
+          element={
+            <ProtectedRoute>
+              <EnrollmentRequest />
             </ProtectedRoute>
           }
         />

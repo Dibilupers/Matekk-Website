@@ -418,9 +418,9 @@ function ModuleCard({ module, index, openSection, onToggle, quizProgress, tutori
 							</span>
 						</div>
 					</div>
+					</div>
 				</div>
 			</div>
-		</div>
 	);
 }
 
@@ -539,8 +539,8 @@ export default function CCNA() {
 	);
 	const quizAverage = gradebookQuizStats.average;
 	const attemptedModules = gradebookQuizStats.attempted;
-	const completedQuizzes = gradebookQuizStats.completedQuizzes;
-	const completedExams = gradebookQuizStats.completedExams;
+	const completedQuizzes = localQuizMetrics.completedQuizzes;
+	const completedExams = examCards.filter((card) => card.hasResult).length;
 	const quizCoverage = Math.round((attemptedModules / CCNA_MODULE_QUIZZES.length) * 100);
 	const latestOpenedModuleNumber = [...savedOpenedModules].at(-1);
 	const lastOpenedTutorialNumber = [...tutorialProgress].at(-1);
