@@ -8,6 +8,7 @@ import {
 	removeTrailingOptionExhibitLabel,
 } from "../../../../../utils/splitPromptExhibit";
 import { MatchingQuestionInput, MatchingQuestionReview } from "./ccnaExamMatching";
+import { DragDropQuestionInput, DragDropQuestionReview } from "./ccnaExamDragDrop";
 
 const OPTION_LABELS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 function letter(index) {
@@ -455,30 +456,34 @@ export function QuestionPrompt({ prompt, imageUrl, hasSeparateExhibit = Boolean(
 /* Answer input for one exam question (pick one, choose two, or matching). */
 export function QuestionInput({ question, value, onChange, disabled }) {
 	const type = questionType(question);
+	const isMatching = ["match", "drag_drop", "image"].includes(type);
 	// Backend exams don't include the answer key; "type the numbers" questions come with their box sizes instead
 	const hasGroupSizes = Array.isArray(question.groupSizes) && question.groupSizes.length === question.choices?.length &&
 		question.groupSizes.reduce((sum, size) => sum + size, 0) === question.items?.length;
 	const isOneToOne = Array.isArray(question.items) && Array.isArray(question.choices) &&
 		question.items.length === question.choices.length &&
 		(!Array.isArray(question.answer) || new Set(question.answer).size === question.answer.length);
-	const localMatchMode = question.matchStyle === "numbers"
+	const localMatchMode = type === "image" || question.matchStyle === "numbers"
 		? "group"
 		: Array.isArray(question.answer) ? matchMode(question) : hasGroupSizes ? "group" : isOneToOne ? "assign" : "select";
 
-	if (type === "match" && !hasMatchContent(question)) return <InvalidQuestionMessage />;
-	if (type !== "match" && !Array.isArray(question?.options)) return <InvalidQuestionMessage />;
+	if (isMatching && !hasMatchContent(question)) return <InvalidQuestionMessage />;
+	if (!isMatching && !Array.isArray(question?.options)) return <InvalidQuestionMessage />;
 	if (type === "multi" && (!Array.isArray(question.answer) || question.answer.length === 0)) {
 		return <InvalidQuestionMessage />;
 	}
 
-	if (type === "match" && localMatchMode === "assign") {
+	if (type === "drag_drop") {
+		return <DragDropQuestionInput question={question} value={value} onChange={onChange} disabled={disabled} />;
+	}
+	if (isMatching && localMatchMode === "assign") {
 		return <MatchingQuestionInput question={question} value={value} onChange={onChange} disabled={disabled} />;
 	}
-	if (type === "match" && localMatchMode === "group") {
+	if (isMatching && localMatchMode === "group") {
 		return <GroupMatchInput question={question} value={value} onChange={onChange} disabled={disabled} />;
 	}
 
-	if (type === "match") {
+	if (isMatching) {
 		const current = Array.isArray(value) ? value : question.items.map(() => null);
 		return (
 			<div className="space-y-3">
@@ -554,10 +559,11 @@ export function QuestionInput({ question, value, onChange, disabled }) {
 /* Results review for one question: shows the student's answer and the correct one. */
 export function QuestionReview({ question, value }) {
 	const type = questionType(question);
-	if (type === "match" && !hasMatchContent(question, true)) return <InvalidQuestionMessage />;
-	if (type !== "match" && !isValidQuestion(question)) return <InvalidQuestionMessage />;
+	const isMatching = ["match", "drag_drop", "image"].includes(type);
+	if (isMatching && !hasMatchContent(question, true)) return <InvalidQuestionMessage />;
+	if (!isMatching && !isValidQuestion(question)) return <InvalidQuestionMessage />;
 
-	if (type === "match" && matchMode(question) === "group") {
+	if (isMatching && (type === "image" || matchMode(question) === "group")) {
 		const current = Array.isArray(value) ? value : [];
 		return (
 			<div className="space-y-2.5">
@@ -585,11 +591,15 @@ export function QuestionReview({ question, value }) {
 		);
 	}
 
-	if (type === "match" && matchMode(question) === "assign") {
+	if (type === "drag_drop") {
+		return <DragDropQuestionReview question={question} value={value} />;
+	}
+
+	if (isMatching && matchMode(question) === "assign") {
 		return <MatchingQuestionReview question={question} value={value} />;
 	}
 
-	if (type === "match") {
+	if (isMatching) {
 		const current = Array.isArray(value) ? value : [];
 		return (
 			<div className="space-y-2.5">

@@ -21,6 +21,7 @@ import { getDatabaseQuestionById, setDatabaseQuestions } from "./ccnaQuestionBan
 import { resumeCcnaExam, startCcnaExam, submitCcnaExam } from "../../../../../utils/ccnaExamApi";
 const EXAM_PASS_PERCENTAGE = 80;
 const RECREATED_MATCH_EXHIBIT_QUESTION_IDS = new Set([570]);
+const isMatchingQuestion = (question) => ["match", "drag_drop", "image"].includes(question?.type);
 const isRoutingProtocolComparisonQuestion = (question) =>
 	question?.prompt?.includes("three different routing protocols") &&
 	question.prompt.includes("172.16.32.1");
@@ -111,7 +112,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 	const reviewQuestions = (Array.isArray(serverResult?.review) ? serverResult.review : [])
 		.map((item, index) => {
 			const question = questions[index];
-			const isMatch = question?.type === "match";
+			const isMatch = isMatchingQuestion(question);
 			return {
 				...question,
 				index,
@@ -154,7 +155,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 								parsed.questions.every((question) =>
 									Number.isInteger(question?.id) &&
 									typeof question.prompt === "string" &&
-									(question.type === "match"
+									(isMatchingQuestion(question)
 										? Array.isArray(question.items) && Array.isArray(question.choices)
 										: Array.isArray(question.options)),
 								)
@@ -335,7 +336,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 		try {
 			const submittedAnswers = questions.map((item, index) => ({
 				questionId: item.id,
-				...(item.type === "match"
+				...(isMatchingQuestion(item)
 					? { selectedMatches: Array.isArray(answers[index]) ? answers[index] : null }
 					: { selectedAnswer: Number.isInteger(answers[index]) ? (item.rawOptions ?? item.options)[answers[index]] : null }),
 			}));

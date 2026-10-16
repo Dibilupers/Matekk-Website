@@ -9,9 +9,13 @@ export function questionType(question) {
 	return question?.type ?? "single";
 }
 
+function isMatchingQuestion(question) {
+	return ["match", "drag_drop", "image"].includes(questionType(question));
+}
+
 export function isValidQuestion(question) {
 	const type = questionType(question);
-	if (type === "match") {
+	if (isMatchingQuestion(question)) {
 		return Array.isArray(question.items) &&
 			Array.isArray(question.choices) &&
 			Array.isArray(question.answer) &&
@@ -37,7 +41,7 @@ export function requiredSelections(question) {
 export function isQuestionAnswered(question, value) {
 	const type = questionType(question);
 	if (type === "multi") return Array.isArray(question?.answer) && Array.isArray(value) && value.length === question.answer.length;
-	if (type === "match") {
+	if (isMatchingQuestion(question)) {
 		return Array.isArray(question?.items) &&
 			Array.isArray(question?.choices) &&
 			Array.isArray(value) &&
@@ -55,7 +59,7 @@ export function isAnswerCorrect(question, value) {
 		const correct = [...question.answer].sort((a, b) => a - b);
 		return picked.every((v, i) => v === correct[i]);
 	}
-	if (type === "match") {
+	if (isMatchingQuestion(question)) {
 		return Array.isArray(question?.answer) && Array.isArray(value) &&
 			question.answer.every((a, i) => value[i] === a);
 	}
@@ -69,9 +73,15 @@ export function isAnswerCorrect(question, value) {
 //              type the item numbers, group by group, e.g. "1324".
 //   "select" — anything else (or 10+ items, where typed numbers would be ambiguous): a dropdown per item.
 export function matchMode(question) {
-	if (questionType(question) !== "match") return null;
+	if (!isMatchingQuestion(question)) return null;
 	const { items, choices, answer } = question ?? {};
 	if (!Array.isArray(items) || !Array.isArray(choices)) return null;
+	if (
+		question.type === "image" &&
+		Array.isArray(question.groupSizes) &&
+		question.groupSizes.length === choices.length &&
+		question.groupSizes.reduce((total, size) => total + size, 0) === items.length
+	) return "group";
 	if (
 		!Array.isArray(answer) ||
 		answer.length !== items.length ||

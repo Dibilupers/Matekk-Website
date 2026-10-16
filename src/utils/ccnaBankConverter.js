@@ -336,14 +336,27 @@ export function convertBankRow(row) {
     return { problem: "referenced exhibit has no available text or image" };
   }
 
-  if (questionType !== "single" && questionType !== "match") {
+  if (!["single", "match", "drag_drop", "image"].includes(questionType)) {
     return { problem: `unsupported question type: ${questionType}` };
   }
   let body;
-  if (questionType === "match") {
+  if (["match", "drag_drop", "image"].includes(questionType)) {
     const matching = matchingQuestion(row, choices);
     if (!matching.question) return { problem: matching.problem };
-    body = matching.question;
+    body = { ...matching.question, type: questionType };
+    if (questionType === "drag_drop" &&
+      new Set(body.answer).size !== body.answer.length) {
+      return { problem: "each drag-and-drop item must use a different answer choice" };
+    }
+    if (questionType === "image") {
+      if (!exhibitImage) return { problem: "image question has no available image" };
+      if (body.choices.length > body.items.length) {
+        return { problem: "image question has fewer items than answer groups" };
+      }
+      body.groupSizes = body.choices.map((_, choiceIndex) =>
+        body.answer.filter((answer) => answer === choiceIndex).length,
+      );
+    }
   } else if (expandedChoices) {
     body = multipleChoice(row, expandedChoices);
     if (!body) return { problem: "correct answer does not match the available choices" };
@@ -352,6 +365,16 @@ export function convertBankRow(row) {
   } else {
     body = dragAndDrop(row);
     if (!body) return { problem: "answer format is not a supported matching format" };
+    if (exhibitImage) {
+      body.type = "image";
+      body.groupSizes = body.choices.map((_, choiceIndex) =>
+        body.answer.filter((answer) => answer === choiceIndex).length,
+      );
+    } else {
+      const isOneToOne = body.items.length === body.choices.length &&
+        new Set(body.answer).size === body.answer.length;
+      body.type = isOneToOne ? "drag_drop" : "match";
+    }
   }
   const remadeQuestion = questionType === "single" ? interfaceRequirementMatch(row, body) : null;
   if (remadeQuestion) {

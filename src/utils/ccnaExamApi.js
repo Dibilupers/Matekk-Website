@@ -23,13 +23,15 @@ async function readExamResponse(response) {
 }
 
 function validateExamAttempt(attempt) {
+	const isMatchingQuestion = (question) =>
+		["match", "drag_drop", "image"].includes(question?.type);
 	const isSingleQuestion = (question) =>
-		question?.type !== "match" &&
+		!isMatchingQuestion(question) &&
 		Array.isArray(question?.options) &&
 		question.options.length >= 2 &&
 		question.options.every((option) => typeof option === "string");
 	const isMatchQuestion = (question) =>
-		question?.type === "match" &&
+		isMatchingQuestion(question) &&
 		Array.isArray(question.items) &&
 		question.items.length >= 2 &&
 		question.items.length <= 8 &&
@@ -38,6 +40,8 @@ function validateExamAttempt(attempt) {
 		question.choices.length >= 2 &&
 		question.choices.length <= 8 &&
 		question.choices.every((choice) => typeof choice === "string") &&
+		(question.type !== "drag_drop" || question.items.length === question.choices.length) &&
+		(question.type !== "image" || Array.isArray(question.groupSizes)) &&
 		(question.groupSizes === undefined ||
 			(Array.isArray(question.groupSizes) &&
 				question.groupSizes.length === question.choices.length &&

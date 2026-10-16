@@ -9,7 +9,7 @@ import { ExhibitImage, ExhibitText } from "./ccnaExhibit";
 import { QuestionInput, QuestionPrompt, QuestionReview } from "./ccnaExamQuestionViews";
 
 function isValidSavedAnswer(question, answer) {
-	if (question.type === "match") {
+	if (["match", "drag_drop", "image"].includes(question.type)) {
 		return Array.isArray(answer) &&
 			answer.length === question.items.length &&
 			answer.every((index) => Number.isInteger(index) && index >= 0 && index < question.choices.length);
