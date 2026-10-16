@@ -36,7 +36,7 @@ type MatchExamQuestion = Omit<ExamQuestionBase, 'options'> & {
   // never which item goes where, so the exam can show the right number of slots like the real exam.
   groupCounts?: Record<string, number>;
   // 'lines': shown as "connect the circles" instead of click-to-place boxes (see pickLineMatchIds)
-  matchStyle?: 'lines' | 'numbers';
+  matchStyle?: 'lines';
 };
 type ExamQuestion = SingleExamQuestion | MatchExamQuestion;
 
@@ -137,9 +137,7 @@ export class QuestionsService {
     const shuffledMatches = this.shuffle(matchingQuestions);
     const isLineStyle = (question: ExamQuestion) => question.type === 'match' &&
       (question.matchStyle === 'lines' || question.choices.length > question.items.length);
-    const groupMatches = shuffledMatches.filter((question) =>
-      question.type === 'match' && (question.matchStyle === 'numbers' || isGroupMatch(question)),
-    );
+    const groupMatches = shuffledMatches.filter((question) => question.type === 'match' && isGroupMatch(question));
     const lineMatches = shuffledMatches.filter((question) => !groupMatches.includes(question) && isLineStyle(question));
     const pairMatches = shuffledMatches.filter((question) => !groupMatches.includes(question) && !lineMatches.includes(question));
     const guaranteedGroups = groupMatches.slice(0, questionBlocks);
@@ -385,16 +383,8 @@ export class QuestionsService {
           type: 'match',
           items: dragDrop.items,
           choices: dragDrop.choices,
-          ...(dragDrop.matchStyle === 'numbers'
-            ? {
-                groupCounts: Object.fromEntries(
-                  dragDrop.choices.map((choice, index) => [
-                    choice,
-                    dragDrop.answer.filter((answer) => answer === index).length,
-                  ]),
-                ),
-                matchStyle: 'numbers' as const,
-              }
+          ...(isGroupMatch(dragDrop)
+            ? { groupCounts: Object.fromEntries(dragDrop.choices.map((choice, index) => [choice, dragDrop.answer.filter((answer) => answer === index).length])) }
             : {}),
           module: record.module,
           topic: record.topic,
@@ -574,9 +564,7 @@ export class QuestionsService {
           items: item.items,
           choices: item.choices,
           ...(groupCounts ? { groupCounts } : {}),
-          ...('matchStyle' in item && (item.matchStyle === 'lines' || item.matchStyle === 'numbers')
-            ? { matchStyle: item.matchStyle }
-            : {}),
+          ...('matchStyle' in item && item.matchStyle === 'lines' ? { matchStyle: 'lines' as const } : {}),
           module: item.module,
           topic: item.topic,
         };

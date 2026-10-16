@@ -77,7 +77,6 @@ export function matchMode(question) {
 		answer.length !== items.length ||
 		answer.some((index) => !Number.isInteger(index) || index < 0 || index >= choices.length)
 	) return "select";
-	if (question.matchStyle === "numbers") return "group";
 	if (items.length === choices.length && new Set(answer).size === answer.length) return "assign";
 	if (choices.length < items.length && items.length <= 9) return "group";
 	return "select";
