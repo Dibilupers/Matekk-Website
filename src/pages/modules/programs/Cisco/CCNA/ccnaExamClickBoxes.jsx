@@ -39,14 +39,17 @@ export function ClickBoxesQuestionInput({ question, value, onChange, disabled })
 	return (
 		<div className="space-y-3">
 			<p className="text-sm text-[#70809a]">
-				Click an available answer, then click the box beside its matching item. Each answer can be used once. Click a filled box to remove its answer.
+				Click an answer, then click the box beside the matching statement. Each answer can be used once.
 			</p>
-			<div className="space-y-2">
+			<div className="overflow-hidden rounded-xl border border-[#cbd5e1] bg-white">
 				{question.items.map((item, itemIndex) => {
 					const choiceIndex = assignments[itemIndex];
 					return (
-						<div key={itemIndex} className="grid gap-2 rounded-xl border border-[#d9e1ef] bg-white p-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] sm:items-center">
-							<span className="whitespace-pre-wrap text-sm font-semibold text-[#263654]">{item}</span>
+						<div key={itemIndex} className={`grid gap-2 border-b border-[#e2e8f0] p-2.5 last:border-b-0 sm:grid-cols-[minmax(0,1fr)_15rem] sm:items-center sm:px-3 ${activeChoice !== null && !Number.isInteger(choiceIndex) ? "bg-[#f8fafc]" : ""}`}>
+							<span className="flex min-w-0 items-start gap-2 whitespace-pre-wrap text-sm text-[#263654]">
+								<span className="shrink-0 font-semibold">{itemIndex + 1}.</span>
+								<span>{item}</span>
+							</span>
 							<button
 								type="button"
 								disabled={disabled}
@@ -56,21 +59,27 @@ export function ClickBoxesQuestionInput({ question, value, onChange, disabled })
 										? `Place ${question.choices[activeChoice]} on ${item}`
 										: `Remove ${question.choices[choiceIndex]} from ${item}`
 									: `Answer box for ${item}`}
-								className={`min-h-11 rounded-lg border-2 border-dashed px-3 py-2 text-left text-sm transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#005b6b] disabled:cursor-default ${
+								className={`min-h-10 w-full rounded border px-2.5 py-1.5 text-left text-sm transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#005b6b] disabled:cursor-default sm:justify-self-end ${
 									Number.isInteger(choiceIndex)
-										? "border-[#8bb8bf] bg-[#e8f3f4] font-semibold text-[#005b6b]"
-										: "border-[#b8c4d3] bg-[#f8fafc] text-[#64748b] hover:border-[#005b6b]"
+										? "border-[#7b8da8] bg-white font-medium text-[#263654]"
+										: activeChoice !== null
+											? "border-[#64748b] bg-white text-[#526584] hover:border-[#005b6b] hover:bg-[#f0f7f7]"
+											: "border-[#aab6c6] bg-white text-[#64748b] hover:border-[#005b6b]"
 								}`}
 							>
-								{Number.isInteger(choiceIndex) ? question.choices[choiceIndex] : activeChoice !== null ? "Click to place selected answer" : "Click an answer, then place it here"}
+								{Number.isInteger(choiceIndex)
+									? question.choices[choiceIndex]
+									: activeChoice !== null
+										? "Click to place selected answer"
+										: "Click the box"}
 							</button>
 						</div>
 					);
 				})}
 			</div>
-			<section aria-label="Available answers" className="rounded-2xl border border-[#d9e1ef] bg-[#f7f9fc] p-3">
-				<h3 className="mb-2 text-xs font-bold uppercase tracking-wide text-[#64748b]">Available answers</h3>
-				<div className="flex flex-wrap gap-2">
+			<section aria-label="Answer choices" className="rounded-xl border border-[#cbd5e1] bg-[#f8fafc] p-3">
+				<div className="mb-2 text-sm font-semibold text-[#263654]">Answer choices</div>
+				<div className="flex flex-wrap gap-1.5">
 					{question.choices.map((choice, choiceIndex) => {
 						const used = usedChoices.has(choiceIndex);
 						return (
@@ -80,9 +89,9 @@ export function ClickBoxesQuestionInput({ question, value, onChange, disabled })
 								disabled={disabled || (used && activeChoice !== choiceIndex)}
 								onClick={() => activateAnswer(choiceIndex)}
 								aria-pressed={activeChoice === choiceIndex}
-								className={`min-h-10 rounded-lg border px-3 py-2 text-left text-sm font-semibold transition disabled:cursor-default ${
+								className={`min-h-9 rounded border px-2.5 py-1.5 text-left text-sm transition disabled:cursor-default ${
 									activeChoice === choiceIndex
-										? "border-[#005b6b] bg-[#e8f3f4] text-[#005b6b]"
+										? "border-[#005b6b] bg-[#e8f3f4] font-semibold text-[#005b6b] ring-1 ring-[#005b6b]"
 										: used
 										? "border-[#d5deea] bg-[#e9eef5] text-[#8793a5]"
 										: "border-[#9aa8bc] bg-white text-[#263654] hover:border-[#005b6b] hover:bg-[#e8f3f4]"
