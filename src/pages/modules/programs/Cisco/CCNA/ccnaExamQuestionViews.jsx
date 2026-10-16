@@ -460,7 +460,9 @@ export function QuestionInput({ question, value, onChange, disabled }) {
 		question.groupSizes.reduce((sum, size) => sum + size, 0) === question.items?.length;
 	// One-to-one questions (each box used once) use the click-to-place boxes, like the original exam
 	const isOneToOne = Array.isArray(question.items) && Array.isArray(question.choices) && question.items.length === question.choices.length;
-	const localMatchMode = Array.isArray(question.answer) ? matchMode(question) : hasGroupSizes ? "group" : isOneToOne ? "assign" : "select";
+	const localMatchMode = question.matchStyle === "numbers"
+		? "group"
+		: Array.isArray(question.answer) ? matchMode(question) : hasGroupSizes ? "group" : isOneToOne ? "assign" : "select";
 
 	if (type === "match" && !hasMatchContent(question)) return <InvalidQuestionMessage />;
 	if (type !== "match" && !Array.isArray(question?.options)) return <InvalidQuestionMessage />;

@@ -9,6 +9,7 @@ export interface DragDropAnswer {
   items: string[];
   choices: string[];
   answer: number[]; // choice index for each item
+  matchStyle?: 'numbers';
 }
 
 // Text that went through the wrong character encoding somewhere ("â€“" should be "–")
@@ -37,14 +38,27 @@ function stableShuffle<T extends { key: string }>(list: T[], seed: string): T[] 
 }
 
 function parseGroups(answerText: string, seed: string): DragDropAnswer | null {
-  const lines = answerText.split('\n').map((line) => line.trim()).filter(Boolean);
+  const lines = answerText.split('\n').map((line) => line.trim());
   const groups: Array<{ name: string; items: string[] }> = [];
   lines.forEach((line, index) => {
-    const isBullet = /^\+\s*/.test(line);
-    const nextIsBullet = /^\+/.test(lines[index + 1] ?? '');
-    const isHeader = !isBullet && ((/:$/.test(line) && line.length <= 60) || nextIsBullet);
+    if (!line) return;
+    const isBullet = line.startsWith('+');
+    let nextNonEmpty = index + 1;
+    while (nextNonEmpty < lines.length && !lines[nextNonEmpty]) nextNonEmpty += 1;
+    const nextIsBullet = (lines[nextNonEmpty] ?? '').startsWith('+');
+    const previousIsBlank = index === 0 || !lines[index - 1];
+    const isHeader = !isBullet && (
+      (line.endsWith(':') && line.length <= 60) ||
+      (nextIsBullet && (groups.length === 0 || previousIsBlank))
+    );
     if (isHeader) groups.push({ name: line.replace(/:$/, '').trim(), items: [] });
-    else if (groups.length) groups[groups.length - 1].items.push(line.replace(/^\+\s*/, '').trim());
+    else if (groups.length) {
+      const currentGroup = groups[groups.length - 1];
+      if (isBullet) currentGroup.items.push(line.replace(/^\+\s*/, '').trim());
+      else if (currentGroup.items.length) {
+        currentGroup.items[currentGroup.items.length - 1] += ` ${line}`;
+      }
+    }
   });
   if (groups.length < 2 || groups.some((group) => !group.items.length)) return null;
   const all = groups.flatMap((group, groupIndex) => group.items.map((item) => ({ key: item, item, groupIndex })));
@@ -53,6 +67,7 @@ function parseGroups(answerText: string, seed: string): DragDropAnswer | null {
     items: shuffled.map((x) => x.item),
     choices: groups.map((group) => group.name),
     answer: shuffled.map((x) => x.groupIndex),
+    matchStyle: 'numbers',
   };
 }
 
@@ -98,9 +113,11 @@ export function isGroupMatch(question: { items: string[]; choices: string[] }): 
  * instead of click-to-place boxes: every second one, counting up by bank ID, so about half of them
  * and always the same ones.
  */
-export function pickLineMatchIds(questions: { id: number; items: string[]; choices: string[] }[]): Set<number> {
+export function pickLineMatchIds(
+  questions: { id: number; items: string[]; choices: string[]; matchStyle?: 'lines' | 'numbers' }[],
+): Set<number> {
   const oneToOne = questions
-    .filter((question) => question.items.length === question.choices.length)
+    .filter((question) => question.matchStyle !== 'numbers' && question.items.length === question.choices.length)
     .map((question) => question.id)
     .sort((first, second) => first - second);
   return new Set(oneToOne.filter((_, index) => index % 2 === 1));

@@ -231,6 +231,56 @@ describe('QuestionsService', () => {
     expect(prismaMock.examAttempt.create.mock.calls[0][0].data.userId).toBe(7);
   });
 
+  it('preserves numbered-input metadata for wrapped grouped questions in the exam attempt', async () => {
+    const databaseQuestions = examQuestionBank(50);
+    databaseQuestions[49] = {
+      ...databaseQuestions[49],
+      id: 1307,
+      question_text: 'An interface has been configured with the access list shown below.',
+      choices: '',
+      correct_answer: [
+        'Permitted:',
+        '+ source IP: 207.16.32.14,',
+        'destination application: http',
+        '+ source IP: 207.16.15.9,',
+        'destination port: 23',
+        '+ source IP: 207.16.16.14,',
+        'destination port: 53',
+        '',
+        'Denied:',
+        '+ source IP: 207.16.14.7,',
+        'destination port: 80',
+        '+ source IP: 207.16.13.14,',
+        'destination application: http',
+      ].join('\n'),
+      question_type: 'single',
+      match_items: null,
+    };
+    prismaMock.questions.findMany.mockResolvedValue(databaseQuestions);
+
+    const attempt = await service.startExam('short', 7);
+    const question = attempt.questions.find((item) => item.id === 1307);
+
+    expect(question).toMatchObject({
+      type: 'match',
+      matchStyle: 'numbers',
+      items: expect.arrayContaining([
+        'source IP: 207.16.32.14, destination application: http',
+        'source IP: 207.16.15.9, destination port: 23',
+        'source IP: 207.16.16.14, destination port: 53',
+        'source IP: 207.16.14.7, destination port: 80',
+        'source IP: 207.16.13.14, destination application: http',
+      ]),
+      choices: expect.arrayContaining(['Permitted', 'Denied']),
+    });
+    if (question?.type !== 'match' || !('groupSizes' in question)) {
+      throw new Error('The grouped question must include numbered-input sizes.');
+    }
+    expect(question.groupSizes).toHaveLength(2);
+    expect(question.groupSizes[question.choices.indexOf('Permitted')]).toBe(3);
+    expect(question.groupSizes[question.choices.indexOf('Denied')]).toBe(2);
+  });
+
   it('shows every second one-to-one matching question as circles, with at least one per 50-question block', async () => {
     const bank = examQuestionBank(100);
     const extraMatches = Array.from({ length: 10 }, (_, index) => ({
