@@ -1,10 +1,14 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 function assignChoice(question, assignments, choiceIndex, itemIndex) {
 	if (!Number.isInteger(choiceIndex) || !Number.isInteger(itemIndex) ||
 		choiceIndex < 0 || choiceIndex >= question.choices.length ||
 		itemIndex < 0 || itemIndex >= question.items.length) return assignments;
 	const next = Array.from({ length: question.items.length }, (_, index) => assignments[index] ?? null);
+	if (next[itemIndex] === choiceIndex) {
+		next[itemIndex] = null;
+		return next;
+	}
 	next.forEach((assigned, index) => {
 		if (index !== itemIndex && assigned === choiceIndex) next[index] = null;
 	});
@@ -13,96 +17,140 @@ function assignChoice(question, assignments, choiceIndex, itemIndex) {
 }
 
 export function ClickBoxesQuestionInput({ question, value, onChange, disabled }) {
-	const [activeChoice, setActiveChoice] = useState(null);
 	const assignments = Array.isArray(value) ? value : question.items.map(() => null);
-	const usedChoices = new Set(assignments.filter(Number.isInteger));
+	const boardRef = useRef(null);
+	const previousAssignments = useRef(assignments);
+	const [animatingChoices, setAnimatingChoices] = useState(() => new Set());
 
-	function activateAnswer(choiceIndex) {
-		if (disabled) return;
-		setActiveChoice((current) => current === choiceIndex ? null : choiceIndex);
-	}
+	useEffect(() => {
+		const previous = previousAssignments.current;
+		const changedItems = assignments.flatMap((assigned, index) =>
+			assigned === previous[index] ? [] : [index],
+		);
+		if (changedItems.length === 0) return;
+		const changedChoices = new Set(changedItems.flatMap((index) =>
+			[previous[index], assignments[index]].filter(Number.isInteger),
+		));
+		const board = boardRef.current;
+		setAnimatingChoices((current) => new Set([...current, ...changedChoices]));
+		const animations = [];
+		if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+			for (const choiceIndex of changedChoices) {
+				const currentOwner = assignments.indexOf(choiceIndex);
+				const previousOwner = previous.indexOf(choiceIndex);
+				const sourceItem = currentOwner >= 0 ? currentOwner : previousOwner;
+				if (sourceItem < 0) continue;
+				const source = board?.querySelector(
+					`[data-click-box="${sourceItem}"][data-choice="${choiceIndex}"]`,
+				);
+				if (!source) continue;
+				const destinations = [...(board?.querySelectorAll(`[data-choice="${choiceIndex}"]`) ?? [])]
+					.filter((element) => element !== source);
+				const sourceBounds = source.getBoundingClientRect();
+				const isBeingAssigned = currentOwner >= 0;
+				for (const destination of destinations) {
+					const destinationBounds = destination.getBoundingClientRect();
+					const clone = source.cloneNode(true);
+					clone.textContent = question.choices[choiceIndex];
+					const style = window.getComputedStyle(source);
+					Object.assign(clone.style, {
+						position: "fixed",
+						left: `${sourceBounds.left}px`,
+						top: `${sourceBounds.top}px`,
+						width: `${sourceBounds.width}px`,
+						height: `${sourceBounds.height}px`,
+						margin: "0",
+						pointerEvents: "none",
+						zIndex: "1200",
+					});
+					clone.style.backgroundColor = style.backgroundColor;
+					clone.style.border = style.border;
+					clone.style.color = style.color;
+					clone.setAttribute("aria-hidden", "true");
+					clone.tabIndex = -1;
+					document.body.append(clone);
+					destination.style.visibility = "hidden";
+					const x = destinationBounds.left - sourceBounds.left;
+					const y = destinationBounds.top - sourceBounds.top;
+					const animation = clone.animate(
+						isBeingAssigned
+							? [
+								{ transform: "translate(0, 0) scale(1)", opacity: 1 },
+								{ transform: `translate(${x}px, ${y}px) scale(0.85)`, opacity: 0 },
+							]
+							: [
+								{ transform: `translate(${x}px, ${y}px) scale(0.85)`, opacity: 0 },
+								{ transform: "translate(0, 0) scale(1)", opacity: 1 },
+							],
+						{ duration: 420, easing: "cubic-bezier(0.22, 0.61, 0.36, 1)" },
+					);
+					animations.push(animation.finished.finally(() => {
+						clone.remove();
+						destination.style.visibility = "";
+					}));
+				}
+			}
+		}
 
-	function clickBox(itemIndex) {
-		if (disabled) return;
-		if (activeChoice !== null) {
-			onChange(assignChoice(question, assignments, activeChoice, itemIndex));
-			setActiveChoice(null);
-			return;
-		}
-		if (Number.isInteger(assignments[itemIndex])) {
-			const next = [...assignments];
-			next[itemIndex] = null;
-			onChange(next);
-		}
-	}
+		previousAssignments.current = assignments;
+		Promise.allSettled(animations).then(() => {
+			setAnimatingChoices((current) => {
+				const next = new Set(current);
+				for (const choiceIndex of changedChoices) next.delete(choiceIndex);
+				return next;
+			});
+		});
+	}, [assignments, question.choices]);
 
 	return (
-		<div className="space-y-3">
-			<p className="text-sm text-[#70809a]">
-				Click an answer, then click the box beside the matching statement. Each answer can be used once.
+		<div className="space-y-2">
+			<p className="text-sm text-[#263654]">
+				Click one of the boxes on the right to match it with the corresponding box on the left.
 			</p>
-			<div className="overflow-hidden rounded-xl border border-[#cbd5e1] bg-white">
-				{question.items.map((item, itemIndex) => {
-					const choiceIndex = assignments[itemIndex];
-					return (
-						<div key={itemIndex} className={`grid gap-2 border-b border-[#e2e8f0] p-2.5 last:border-b-0 sm:grid-cols-[minmax(0,1fr)_15rem] sm:items-center sm:px-3 ${activeChoice !== null && !Number.isInteger(choiceIndex) ? "bg-[#f8fafc]" : ""}`}>
-							<span className="flex min-w-0 items-start gap-2 whitespace-pre-wrap text-sm text-[#263654]">
-								<span className="shrink-0 font-semibold">{itemIndex + 1}.</span>
-								<span>{item}</span>
-							</span>
-							<button
-								type="button"
-								disabled={disabled}
-								onClick={() => clickBox(itemIndex)}
-								aria-label={Number.isInteger(choiceIndex)
-									? activeChoice !== null
-										? `Place ${question.choices[activeChoice]} on ${item}`
-										: `Remove ${question.choices[choiceIndex]} from ${item}`
-									: `Answer box for ${item}`}
-								className={`min-h-10 w-full rounded border px-2.5 py-1.5 text-left text-sm transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#005b6b] disabled:cursor-default sm:justify-self-end ${
-									Number.isInteger(choiceIndex)
-										? "border-[#7b8da8] bg-white font-medium text-[#263654]"
-										: activeChoice !== null
-											? "border-[#64748b] bg-white text-[#526584] hover:border-[#005b6b] hover:bg-[#f0f7f7]"
-											: "border-[#aab6c6] bg-white text-[#64748b] hover:border-[#005b6b]"
-								}`}
-							>
-								{Number.isInteger(choiceIndex)
-									? question.choices[choiceIndex]
-									: activeChoice !== null
-										? "Click to place selected answer"
-										: "Click the box"}
-							</button>
+			<div ref={boardRef} className="overflow-x-auto border border-[#bdbdbd] bg-white">
+				<div className="min-w-[760px]">
+					{question.items.map((item, itemIndex) => (
+						<div
+							key={itemIndex}
+							className="grid min-h-[54px] grid-cols-[minmax(280px,1fr)_minmax(660px,1fr)] border-b border-[#d0d0d0] last:border-b-0"
+						>
+							<div className="flex min-w-0 items-center border-r border-[#d0d0d0] px-2.5 py-2 text-sm leading-5 text-[#263654]">
+								{item}
+							</div>
+							<div className="flex items-center gap-2 overflow-x-auto px-2.5 py-2">
+								{question.choices.map((choice, choiceIndex) => {
+									const selected = assignments[itemIndex] === choiceIndex;
+									const usedElsewhere = assignments.some((assigned, index) =>
+										index !== itemIndex && assigned === choiceIndex,
+									);
+									const animating = animatingChoices.has(choiceIndex);
+									return (
+										<button
+											key={choiceIndex}
+											type="button"
+											data-click-box={itemIndex}
+											data-choice={choiceIndex}
+											disabled={disabled || (usedElsewhere && !animating)}
+											aria-pressed={selected}
+											aria-label={`${choice}${usedElsewhere ? ", already matched" : ""}`}
+											onClick={() => onChange(assignChoice(question, assignments, choiceIndex, itemIndex))}
+											className={`shrink-0 border border-dashed px-2 py-1.5 text-left text-[13px] leading-5 transition duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[#005b6b] disabled:cursor-default ${
+												selected
+													? "border-[#405f8c] bg-[#e8eef7] font-semibold text-[#17345f]"
+													: usedElsewhere || animating
+														? "pointer-events-none scale-90 border-transparent bg-transparent text-transparent opacity-0"
+														: "border-[#999] bg-white text-[#17345f] hover:bg-[#f1f5fa]"
+											}`}
+										>
+											{choice}
+										</button>
+									);
+								})}
+							</div>
 						</div>
-					);
-				})}
-			</div>
-			<section aria-label="Answer choices" className="rounded-xl border border-[#cbd5e1] bg-[#f8fafc] p-3">
-				<div className="mb-2 text-sm font-semibold text-[#263654]">Answer choices</div>
-				<div className="flex flex-wrap gap-1.5">
-					{question.choices.map((choice, choiceIndex) => {
-						const used = usedChoices.has(choiceIndex);
-						return (
-							<button
-								key={choiceIndex}
-								type="button"
-								disabled={disabled || (used && activeChoice !== choiceIndex)}
-								onClick={() => activateAnswer(choiceIndex)}
-								aria-pressed={activeChoice === choiceIndex}
-								className={`min-h-9 rounded border px-2.5 py-1.5 text-left text-sm transition disabled:cursor-default ${
-									activeChoice === choiceIndex
-										? "border-[#005b6b] bg-[#e8f3f4] font-semibold text-[#005b6b] ring-1 ring-[#005b6b]"
-										: used
-										? "border-[#d5deea] bg-[#e9eef5] text-[#8793a5]"
-										: "border-[#9aa8bc] bg-white text-[#263654] hover:border-[#005b6b] hover:bg-[#e8f3f4]"
-								}`}
-							>
-								{choice}
-							</button>
-						);
-					})}
+					))}
 				</div>
-			</section>
+			</div>
 		</div>
 	);
 }
@@ -110,30 +158,36 @@ export function ClickBoxesQuestionInput({ question, value, onChange, disabled })
 export function ClickBoxesQuestionReview({ question, value }) {
 	const selected = Array.isArray(value) ? value : [];
 	return (
-		<div className="space-y-2.5">
-			{question.items.map((item, itemIndex) => {
-				const picked = selected[itemIndex];
-				const correct = question.answer?.[itemIndex];
-				const isCorrect = Number.isInteger(correct) && picked === correct;
-				return (
-					<div
-						key={itemIndex}
-						className={`grid gap-1 rounded-xl border px-4 py-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,16rem)] sm:items-center ${
-							isCorrect ? "border-[#54a879] bg-[#eff9f2]" : "border-[#e77945] bg-[#fff5ef]"
-						}`}
-					>
-						<span className="whitespace-pre-wrap text-sm font-medium text-[#263654] sm:text-base">{item}</span>
-						<span className="text-sm">
-							<span className="font-bold text-[#263654]">
-								{Number.isInteger(picked) ? question.choices[picked] : "No answer"}
-							</span>
-							{Number.isInteger(correct) && !isCorrect && (
-								<span className="block text-xs font-bold text-[#287849]">Correct: {question.choices[correct]}</span>
-							)}
-						</span>
-					</div>
-				);
-			})}
+		<div className="overflow-x-auto border border-[#bdbdbd] bg-white">
+			<div className="min-w-[540px]">
+				{question.items.map((item, itemIndex) => {
+					const picked = selected[itemIndex];
+					const correct = question.answer?.[itemIndex];
+					const isCorrect = Number.isInteger(correct) && picked === correct;
+					return (
+						<div
+							key={itemIndex}
+							className={`grid min-h-[54px] grid-cols-[minmax(280px,1fr)_minmax(240px,0.8fr)] border-b border-[#d0d0d0] last:border-b-0 ${
+								isCorrect ? "bg-white" : "bg-[#fff8f4]"
+							}`}
+						>
+							<div className="flex items-center border-r border-[#d0d0d0] px-2.5 py-2 text-sm text-[#263654]">
+								{item}
+							</div>
+							<div className="flex flex-wrap items-center gap-2 px-2.5 py-2 text-sm">
+								<span className={isCorrect ? "text-[#236a43]" : "text-[#a44b13]"}>
+									{Number.isInteger(picked) ? question.choices[picked] : "No answer"}
+								</span>
+								{Number.isInteger(correct) && !isCorrect && (
+									<span className="text-xs font-semibold text-[#287849]">
+										Correct: {question.choices[correct]}
+									</span>
+								)}
+							</div>
+						</div>
+					);
+				})}
+			</div>
 		</div>
 	);
 }
