@@ -152,14 +152,27 @@ function matchingQuestion(row, choices) {
 
 // "Header:\n+ item\n+ item\n\nHeader2:\n..."  ->  group matching (type the numbers)
 function parseGroups(answerText, seed) {
-  const lines = answerText.split("\n").map((line) => line.trim()).filter(Boolean);
+  const lines = answerText.split("\n").map((line) => line.trim());
   const groups = [];
   lines.forEach((line, index) => {
+    if (!line) return;
     const isBullet = /^\+\s*/.test(line);
-    const nextIsBullet = /^\+/.test(lines[index + 1] ?? "");
-    const isHeader = !isBullet && (/:$/.test(line) && line.length <= 60 || nextIsBullet);
+    let nextNonEmpty = index + 1;
+    while (nextNonEmpty < lines.length && !lines[nextNonEmpty]) nextNonEmpty += 1;
+    const nextIsBullet = /^\+/.test(lines[nextNonEmpty] ?? "");
+    const previousIsBlank = index === 0 || !lines[index - 1];
+    const isHeader = !isBullet && (
+      (/:$/.test(line) && line.length <= 60) ||
+      (nextIsBullet && (groups.length === 0 || previousIsBlank))
+    );
     if (isHeader) groups.push({ name: line.replace(/:$/, "").trim(), items: [] });
-    else if (groups.length) groups[groups.length - 1].items.push(line.replace(/^\+\s*/, "").trim());
+    else if (groups.length) {
+      const currentGroup = groups[groups.length - 1];
+      if (isBullet) currentGroup.items.push(line.replace(/^\+\s*/, "").trim());
+      else if (currentGroup.items.length) {
+        currentGroup.items[currentGroup.items.length - 1] += ` ${line}`;
+      }
+    }
   });
   if (groups.length < 2 || groups.some((g) => !g.items.length)) return null;
   const all = groups.flatMap((group, groupIndex) => group.items.map((item) => ({ key: item, item, groupIndex })));
@@ -169,6 +182,7 @@ function parseGroups(answerText, seed) {
     items: shuffled.map((x) => x.item),
     choices: groups.map((g) => g.name),
     answer: shuffled.map((x) => x.groupIndex),
+    matchStyle: "numbers",
   };
 }
 
@@ -390,7 +404,11 @@ export function convertBank(rows) {
   // Same rule as the backend (pickLineMatchIds): every second one-to-one matching question,
   // counting up by bank ID, is shown as "connect the circles" instead of click-to-place boxes
   const oneToOneIds = questions
-    .filter((question) => question.type === "match" && question.items.length === question.choices.length)
+    .filter((question) =>
+      question.type === "match" &&
+      question.matchStyle !== "numbers" &&
+      question.items.length === question.choices.length,
+    )
     .map((question) => question.bankId)
     .sort((first, second) => first - second);
   const lineMatchIds = new Set(oneToOneIds.filter((_, index) => index % 2 === 1));
