@@ -415,8 +415,9 @@ export class QuestionsService {
       ) {
         return null;
       }
+      let matchAnswer: number[];
       try {
-        this.parseMatchAnswer(record.correct_answer, matchItems.length, options.length);
+        matchAnswer = this.parseMatchAnswer(record.correct_answer, matchItems.length, options.length);
       } catch {
         return null;
       }
@@ -427,6 +428,16 @@ export class QuestionsService {
         type: 'match',
         items: matchItems,
         choices: options,
+        ...(isGroupMatch({ items: matchItems, choices: options })
+          ? {
+              groupCounts: Object.fromEntries(
+                options.map((choice, index) => [
+                  choice,
+                  matchAnswer.filter((answer) => answer === index).length,
+                ]),
+              ),
+            }
+          : {}),
         module: record.module,
         topic: record.topic,
       };
