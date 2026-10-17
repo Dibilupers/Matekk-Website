@@ -1,5 +1,4 @@
 import API_URL from "../../../../../config/api";
-import { convertBank } from "../../../../../utils/ccnaBankConverter";
 import { isValidQuestion } from "../../../../../utils/ccnaExamGrading";
 
 function hasCompTIACertificationLabel(value, programName) {
@@ -8,109 +7,76 @@ function hasCompTIACertificationLabel(value, programName) {
 	return new RegExp(`comptia\\s+${certificationName}\\s*(?:\\+|plus)`, "i").test(value);
 }
 
-function getChoiceText(choice) {
-	if (typeof choice === "string" && choice.trim()) return choice.trim();
-	if (typeof choice === "number") return String(choice);
-	if (!choice || typeof choice !== "object" || Array.isArray(choice)) return null;
-	const fields = new Map(Object.entries(choice).map(([key, value]) => [key.toLowerCase().replace(/[_-]/g, ""), value]));
-	for (const key of ["text", "optiontext", "choicetext", "answertext", "value", "label", "option", "choice", "content", "answer", "description"]) {
-		const value = fields.get(key);
-		if (typeof value === "string" && value.trim()) return value.trim();
-		if (typeof value === "number") return String(value);
-	}
-	const textValues = Object.entries(choice)
-		.filter(([key, value]) =>
-			!["id", "key", "letter", "code", "iscorrect", "correct", "selected"].includes(key.toLowerCase().replace(/[_-]/g, "")) &&
-			typeof value === "string" && value.trim(),
-		)
-		.map(([, value]) => value.trim());
-	return textValues.sort((first, second) => second.length - first.length)[0] ?? null;
+function isSingleChoiceQuestion(question) {
+	const type = String(question?.type ?? question?.question_type ?? "")
+		.trim()
+		.toLowerCase()
+		.replace(/[_-]+/g, " ");
+	return ["single", "single choice", "multiple choice", "mcq", "radio"].includes(type);
 }
 
-function normalizeChoices(row) {
-	let parsedChoices = row.choices;
-	if (typeof parsedChoices === "string") {
-		try {
-			parsedChoices = JSON.parse(parsedChoices);
-		} catch {
-			return row;
-		}
+function normalizeMultipleChoiceQuestion(question, programName) {
+	if (!question || typeof question !== "object" || Array.isArray(question)) {
+		throw new TypeError(`The CompTIA ${programName} question bank contains a malformed question.`);
 	}
-	const entries = Array.isArray(parsedChoices)
-		? parsedChoices
-		: parsedChoices && typeof parsedChoices === "object"
-			? Object.entries(parsedChoices).map(([key, value]) =>
-				typeof value === "string" ? { key, text: value } : value,
-			)
-			: null;
-	if (!entries) return row;
-	const choices = entries.map(getChoiceText);
-	if (!choices.every(Boolean)) return row;
-
-	const rawType = String(row.question_type ?? "single").trim().toLowerCase().replace(/[_-]+/g, " ");
-	const isMatchingQuestion = /^(match|matching|drag and drop)$/.test(rawType);
-	let correctAnswer = row.correct_answer;
-	if (!isMatchingQuestion && correctAnswer && typeof correctAnswer === "object") {
-		correctAnswer = Array.isArray(correctAnswer)
-			? correctAnswer.map(getChoiceText).join(",")
-			: getChoiceText(correctAnswer);
-	} else if (!isMatchingQuestion && typeof correctAnswer === "string") {
-		try {
-			const parsedAnswer = JSON.parse(correctAnswer);
-			if (Array.isArray(parsedAnswer)) {
-				correctAnswer = parsedAnswer.map(getChoiceText).join(",");
-			} else if (parsedAnswer && typeof parsedAnswer === "object") {
-				correctAnswer = getChoiceText(parsedAnswer) ?? correctAnswer;
-			}
-		} catch {
-			// Most bank answers are plain text or option letters rather than JSON.
-		}
+	if (
+		typeof question.prompt !== "string" ||
+		!question.prompt.trim() ||
+		!Array.isArray(question.options) ||
+		question.options.length < 2 ||
+		!question.options.every((option) => typeof option === "string" && option.trim())
+	) {
+		throw new TypeError(`The CompTIA ${programName} question bank contains a single-choice question with an invalid prompt or options.`);
+	}
+	if (!Number.isInteger(question.answer) || question.answer < 0 || question.answer >= question.options.length) {
+		throw new TypeError(`The CompTIA ${programName} question bank contains a single-choice question with an invalid answer index.`);
+	}
+	if (typeof question.explanation !== "string") {
+		throw new TypeError(`The CompTIA ${programName} question bank contains a single-choice question without an explanation.`);
 	}
 
-	const questionType = isMatchingQuestion
-		? "match"
-		: /^(single|single choice|multiple choice|multiple select|multiple response|mcq|radio)$/.test(rawType)
-			? "single"
-			: row.question_type;
-	return {
-		...row,
-		choices: JSON.stringify(choices),
-		correct_answer: correctAnswer,
-		question_type: questionType,
+	const normalized = {
+		...question,
+		type: "single",
+		prompt: question.prompt.trim(),
+		options: question.options.map((option) => option.trim()),
 	};
+	if (!isValidQuestion(normalized)) {
+		throw new TypeError(`The CompTIA ${programName} question bank contains an invalid multiple-choice question.`);
+	}
+	return normalized;
 }
 
 export async function loadCompTIAExamQuestions(programName) {
 	const certificationName = `CompTIA ${programName}`;
-	const response = await fetch(`${API_URL}/questions/bank`, { credentials: "include" });
+	const response = await fetch(`${API_URL}/questions/bank/all-usable`, { credentials: "include" });
 	if (!response.ok) {
 		throw new Error(`${certificationName} question bank request failed (${response.status}).`);
 	}
-	const rows = await response.json();
-	if (!Array.isArray(rows)) {
-		throw new TypeError(`${certificationName} question bank response was not a list.`);
+
+	const bank = await response.json();
+	if (!bank || typeof bank !== "object" || !Array.isArray(bank.questions)) {
+		throw new TypeError(`${certificationName} question bank response must contain a questions list.`);
 	}
 
-	const certificationRows = rows.filter((row) =>
-		hasCompTIACertificationLabel(row.module, programName) ||
-		hasCompTIACertificationLabel(row.topic, programName),
+	const certificationQuestions = bank.questions.filter((question) =>
+		hasCompTIACertificationLabel(question.module, programName) ||
+		hasCompTIACertificationLabel(question.topic, programName),
 	);
-	if (certificationRows.length === 0) {
-		throw new Error(`No questions labeled "${certificationName}" were found in the question bank.`);
+	if (certificationQuestions.length === 0) {
+		throw new Error(`No questions labeled "${certificationName}" were found in the usable question bank.`);
 	}
 
-	const normalizedRows = certificationRows.map(normalizeChoices);
-	const { questions, problems } = convertBank(normalizedRows);
-	const validQuestions = questions.filter(isValidQuestion);
-	if (problems.length > 0) {
-		console.warn(`${certificationName}: skipped ${problems.length} unsupported question(s).`, problems);
+	const multipleChoiceQuestions = certificationQuestions.filter(isSingleChoiceQuestion);
+	const skippedQuestionCount = certificationQuestions.length - multipleChoiceQuestions.length;
+	if (skippedQuestionCount > 0) {
+		console.info(`${certificationName}: excluded ${skippedQuestionCount} non-multiple-choice question(s).`);
 	}
-	if (validQuestions.length === 0) {
-		const firstProblem = problems[0];
-		const detail = firstProblem ? ` First row issue: ${firstProblem.problem} (question ID ${firstProblem.id}).` : "";
-		throw new Error(`Found ${certificationRows.length} ${programName} rows, but none could be converted into valid exam questions.${detail}`);
+	if (multipleChoiceQuestions.length === 0) {
+		throw new Error(`No multiple-choice questions labeled "${certificationName}" were found in the usable question bank.`);
 	}
-	return validQuestions;
+
+	return multipleChoiceQuestions.map((question) => normalizeMultipleChoiceQuestion(question, programName));
 }
 
 export function loadNetworkPlusExamQuestions() {
