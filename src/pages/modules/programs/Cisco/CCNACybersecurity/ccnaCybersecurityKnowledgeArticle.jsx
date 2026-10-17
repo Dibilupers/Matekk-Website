@@ -13,6 +13,7 @@ import {
 import CcnaKnowledgeModuleFive from "../CCNA/ccnaKnowledgeModule5";
 import ProgramStudyContent from "../../ProgramStudyContent";
 import ProgramLessonSidebar from "../../ProgramLessonSidebar";
+import CybersecurityMarkdownContent from "./CybersecurityMarkdownContent";
 
 export default function CCNACybersecurityKnowledgeArticle() {
 	const { profile } = useAuth();
@@ -72,7 +73,9 @@ export default function CCNACybersecurityKnowledgeArticle() {
 						<h1 className="mt-6 text-3xl font-bold leading-tight tracking-tight text-[#071126] sm:text-5xl">{lesson.number} {lesson.title}</h1>
 						<p className="mt-4 flex min-w-0 items-center gap-2 text-base text-[#7b8ca7]"><Clock size={17} /> {lesson.duration} read</p>
 
-						{lesson.contentType ? (
+						{lesson.contentMarkdown ? (
+							<CybersecurityMarkdownContent markdown={lesson.contentMarkdown} />
+						) : lesson.contentType ? (
 							<CcnaKnowledgeModuleFive article={{ ...lesson, meta: `CCNA ${lesson.number} · Security Fundamentals` }} />
 						) : (
 							<>

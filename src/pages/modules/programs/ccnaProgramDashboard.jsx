@@ -7,6 +7,7 @@ import { readCcnaExamProgress } from "../../../utils/ccnaShortExamSession";
 import { readGradebookAssessments } from "../../../utils/gradebookApi";
 import { getProgramExamFormats } from "./programExamFormats";
 import ProgramBackgroundParticles from "./ProgramBackgroundParticles";
+import ScoreRotationCard from "./ScoreRotationCard";
 
 const NO_HERO_INTROS = [];
 
@@ -232,6 +233,7 @@ export default function CCNAProgramDashboard({
 	practiceQuizzes,
 	modulesSummary,
 	quizScore = 0,
+	examScore = null,
 	gradebookPath,
 	gradebookStatsError,
 	retryGradebookStats,
@@ -365,18 +367,7 @@ export default function CCNAProgramDashboard({
 						{programKey && programPath && <ProgramExamNotification programKey={programKey} basePath={programPath} />}
 						{gradebookPath ? (
 							<>
-								<div className="absolute left-0 top-[2%] z-20 flex h-[94px] w-[128px] flex-col justify-center rounded-xl border border-[#e4eaf5] bg-white px-4 shadow-[0_14px_28px_rgba(15,35,75,0.1)] transition-transform duration-200 ease-out hover:scale-105 sm:left-[-4px] sm:top-[31%]">
-									<strong className="text-xl leading-none text-[#005b6b]">{quizScore}%</strong>
-									<span className="mt-2 text-sm leading-none text-[#15203a]">Quiz score</span>
-									<span
-										role="img"
-										aria-label={`${quizScore}% quiz score, ${Math.round((quizScore / 100) * 5 * 10) / 10} out of 5 stars`}
-										className="relative mt-2 inline-block text-sm leading-none tracking-[2px]"
-									>
-										<span aria-hidden="true" className="text-[#d7dee9]">★★★★★</span>
-										<span aria-hidden="true" className="absolute inset-y-0 left-0 overflow-hidden whitespace-nowrap text-[#f59e0b]" style={{ width: `${Math.max(0, Math.min(100, quizScore))}%` }}>★★★★★</span>
-									</span>
-								</div>
+								<ScoreRotationCard quizScore={quizScore} examScore={examScore} />
 								<Link
 									to={gradebookPath}
 									aria-label={`Open ${programName} gradebook`}

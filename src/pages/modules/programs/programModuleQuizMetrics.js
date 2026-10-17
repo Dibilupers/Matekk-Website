@@ -22,7 +22,7 @@ export function getProgramModuleQuizAverage(programKey, userId) {
 
 	for (const quiz of quizzes) {
 		const attempt = progress.modules[quiz.number];
-		if (!isCurrentProgramModuleQuizAttempt(attempt)) continue;
+		if (!isCurrentProgramModuleQuizAttempt(attempt, programKey, quiz.number)) continue;
 
 		const answers = attempt.answers ?? {};
 		const answeredIndexes = Object.keys(answers)

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { BookOpen, CheckCircle2, ChevronLeft, ChevronRight, X } from "lucide-react";
+import { BookOpen, CheckCircle2, ChevronLeft, ChevronRight, Moon, Sun, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../../../../context/auth-context";
 import TrainingLogo from "../../../../../assets/MATEKK_training_logo.png";
@@ -37,6 +37,7 @@ export default function CCNAAllQuestionsExam() {
 	const [currentIndex, setCurrentIndex] = useState(0);
 	const [furthestOpenedIndex, setFurthestOpenedIndex] = useState(0);
 	const [isSubmitted, setIsSubmitted] = useState(false);
+	const [isDark, setIsDark] = useState(false);
 	const [score, setScore] = useState(0);
 	const [storageError, setStorageError] = useState(null);
 	const [skippedQuestionCount, setSkippedQuestionCount] = useState(0);
@@ -245,23 +246,33 @@ export default function CCNAAllQuestionsExam() {
 	if (!question) return null;
 
 	return (
-		<main className="ccna-page-enter min-h-screen bg-[#f5f9f9] px-4 py-6 text-[#17233d] sm:px-8 sm:py-8">
+		<main data-theme={isDark ? "dark" : "light"} className="ccna-page-enter min-h-screen bg-[#f5f9f9] px-4 py-6 text-[#17233d] sm:px-8 sm:py-8">
 			<div className="mx-auto max-w-[1125px]">
 				<header className="mb-7 flex flex-wrap items-center justify-between gap-4 border-b border-[#d6e5e7] pb-5">
 					<div className="flex min-w-0 items-center gap-4">
-						<Link to="/modules/programs/ccna" aria-label="Back to CCNA course" className="shrink-0 rounded-full bg-white/80 p-2 shadow-sm">
-							<div className="flex h-16 w-16 items-center justify-center rounded-full border border-[#cfe4ea] bg-white sm:h-20 sm:w-20">
-								<img src={TrainingLogo} alt="MATEKK Cybercore Academy" className="h-9 w-auto object-contain sm:h-10" />
-							</div>
+						<Link to="/modules/programs/ccna" aria-label="Back to CCNA course" className="ccna-training-logo shrink-0 rounded-lg bg-white px-3 py-2 shadow-sm">
+							<img src={TrainingLogo} alt="MATEKK Cybercore Academy" className="h-auto w-32 sm:w-36" />
 						</Link>
 						<div className="min-w-0 border-l border-[#cbd5e1] pl-4">
 							<p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#70809a]">CCNA practice</p>
 							<p className="mt-1 truncate text-sm font-bold text-[#17233d]">All Questions Exam · Online Question Bank</p>
 						</div>
 					</div>
-					<Link to="/modules/programs/ccna" className="inline-flex items-center gap-2 rounded-full border border-[#c9dfe2] bg-white px-4 py-2 text-sm font-semibold text-[#005b6b] transition hover:bg-[#e8f3f4]">
-						<X size={16} /> Exit exam
-					</Link>
+					<div className="flex w-full items-center justify-between gap-2 sm:w-auto sm:justify-end">
+						<button
+							type="button"
+							onClick={() => setIsDark((current) => !current)}
+							aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
+							aria-pressed={isDark}
+							className="ccna-dark-hover inline-flex shrink-0 items-center gap-2 rounded-full border border-[#c9dfe2] bg-white px-3 py-2 text-xs font-semibold text-[#005b6b] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md hover:bg-[#e8f3f4] active:translate-y-0 motion-reduce:transition-none motion-reduce:hover:translate-y-0 sm:px-4 sm:text-sm"
+						>
+							{isDark ? <Sun size={16} /> : <Moon size={16} />}
+							<span className="hidden sm:inline">{isDark ? "Light mode" : "Dark mode"}</span>
+						</button>
+						<Link to="/modules/programs/ccna" className="ccna-dark-hover inline-flex shrink-0 items-center gap-2 rounded-full border border-[#c9dfe2] bg-white px-3 py-2 text-xs font-semibold text-[#005b6b] transition hover:bg-[#e8f3f4] sm:px-4 sm:text-sm">
+							<X size={16} /> Exit exam
+						</Link>
+					</div>
 				</header>
 
 				{storageError && (
@@ -279,9 +290,14 @@ export default function CCNAAllQuestionsExam() {
 					<>
 						<section aria-label="Exam progress" className="mb-5 rounded-2xl border border-[#d6e5e7] bg-white p-5 shadow-sm sm:mb-6 sm:p-8">
 							<div className="flex flex-wrap items-center justify-between gap-3">
-								<p className="inline-flex items-center gap-2 rounded-xl bg-[#e8f3f4] px-4 py-2 text-sm font-semibold text-[#005b6b]">
-									<BookOpen size={16} /> Untimed · Database order
-								</p>
+								<div className="flex flex-wrap items-center gap-2">
+									<p className="inline-flex items-center gap-2 rounded-xl bg-[#e8f3f4] px-4 py-2 text-sm font-semibold text-[#005b6b]">
+										<BookOpen size={16} /> Untimed · Database order
+									</p>
+									<span className="shrink-0 rounded-full border border-[#c9dfe2] bg-white px-3 py-2 text-xs font-semibold text-[#005b6b] sm:px-4 sm:text-sm">
+										No time limit
+									</span>
+								</div>
 								<span className="rounded-xl bg-[#f8fafb] px-3 py-2 text-sm text-[#526584]">
 									{answeredCount.toLocaleString()} of {questions.length.toLocaleString()} answered
 								</span>

@@ -1,3 +1,5 @@
+import { CCNA_CYBERSECURITY_MODULE_2_QUESTIONS } from "./Cisco/CCNACybersecurity/ccnaCybersecurityModule2QuizQuestions.js";
+
 function createQuestion(prompt, correctAnswer, ...distractors) {
 	const options = [correctAnswer, ...distractors];
 	let hash = 0;
@@ -199,28 +201,7 @@ export const CCNA_CYBERSECURITY_MODULE_QUIZZES = [
 		createQuestion("What does least privilege mean?", "Grant only the access necessary for assigned work", "Give all users administrator access", "Never review permissions", "Use one shared account for every service"),
 		createQuestion("What does the 5-tuple commonly identify for a network flow?", "Source IP, destination IP, source port, destination port, and protocol", "User, role, password, token, and group", "MAC, VLAN, DNS, gateway, and route", "Alert, severity, time, actor, and host"),
 	]),
-	createQuiz("2.0", "Security Concepts", [
-		createQuestion("What is an agent-based security deployment?", "A software agent runs on the protected host and provides local telemetry or control", "A service operates only on a router with no host component", "A policy is applied without any software or device", "A network flow is converted into a VLAN"),
-		createQuestion("What is an agentless security deployment?", "Protection or monitoring is provided without installing a persistent agent on each endpoint", "A host runs a dedicated local monitoring agent", "A user authenticates without a password", "A device has no operating system"),
-		createQuestion("What is a primary function of legacy signature-based antivirus?", "Identify known malicious files or patterns using signatures", "Guarantee detection of every new threat", "Replace network access control", "Manage cloud workload identities"),
-		createQuestion("What is threat modeling used for?", "Identify likely threats and weaknesses during system design", "Calculate a device's MAC address", "Restore deleted files", "Replace incident response"),
-		createQuestion("What is reverse engineering in malware analysis?", "Examine a program to understand its structure and behavior", "Deploy a patch without testing", "Forward a packet to its gateway", "Create a user access role"),
-		createQuestion("What does DevSecOps emphasize?", "Integrating security practices throughout software development and operations", "Moving all security checks to the end of a project", "Removing security responsibility from developers", "Replacing automated tests with manual approvals"),
-		createQuestion("What is runbook automation?", "Automating repeatable operational steps documented in a runbook", "Deleting an incident record after response", "Scanning physical cables", "Changing a user's password without a policy"),
-		createQuestion("What is a sliding-window anomaly detection approach?", "Compare recent activity within a moving time window to expected behavior", "Inspect only the first packet of a connection", "Allow every action after one successful login", "Compare only static source-code files"),
-		createQuestion("What does risk weighting help an organization do?", "Prioritize risks according to their relative likelihood and impact", "Prove that a vulnerability is exploited", "Replace vulnerability remediation", "Make every alert equally urgent"),
-		createQuestion("Which statement distinguishes risk from vulnerability?", "Risk combines potential impact and likelihood; a vulnerability is a weakness", "Risk is a software patch; vulnerability is a threat actor", "They always mean the same thing", "A vulnerability is a security policy"),
-		createQuestion("What is discretionary access control?", "An owner can decide who may access a resource", "A central authority labels all data and users", "Access is assigned only by job role", "Access depends only on time of day"),
-		createQuestion("What is mandatory access control?", "A central policy uses security labels and clearances to control access", "Every resource owner chooses permissions freely", "All users share identical access", "Permissions are granted by network port"),
-		createQuestion("What is nondiscretionary access control?", "Access is governed by centrally defined rules rather than individual owners", "A user may bypass every rule", "Access depends only on a file owner", "A process has no authorization"),
-		createQuestion("What does rule-based access control commonly use?", "Defined rules or conditions to permit or deny access", "A user-selected encryption key only", "A public DNS record", "A packet's payload length"),
-		createQuestion("What is time-based access control?", "Access is allowed or denied according to a time condition", "Access is based only on a user's job title", "Access depends on file hashes", "Access is always public"),
-		createQuestion("What does CVSS attack complexity describe?", "Conditions beyond the attacker's control that affect exploitation difficulty", "The number of hosts on a subnet", "The amount of data in a log", "The cost of a license"),
-		createQuestion("What does CVSS privileges required measure?", "The level of access an attacker must already have to exploit the issue", "How many administrators work at an organization", "Whether the victim uses a VPN", "How many patches are available"),
-		createQuestion("What does CVSS user interaction describe?", "Whether another user must take an action for exploitation to succeed", "Whether the attacker has an account", "How many users are affected", "Whether the service uses a web browser"),
-		createQuestion("What does CVSS scope represent?", "Whether exploitation impacts resources beyond the vulnerable component's security authority", "The network mask of the affected system", "The number of firewall rules", "The length of a certificate"),
-		createQuestion("Why can limited cloud or host visibility weaken detection?", "Relevant events may not be collected or observable by monitoring tools", "Cloud workloads cannot generate logs", "Host data always duplicates network data", "Visibility has no relationship to detection"),
-	]),
+	createQuiz("2.0", "Security Concepts", CCNA_CYBERSECURITY_MODULE_2_QUESTIONS),
 	createQuiz("3.0", "Security Monitoring", [
 		createQuestion("What is an attack surface?", "The set of exposed points an attacker could target", "A list of all installed security vendors", "A single firewall rule", "A backup storage format"),
 		createQuestion("What can a packet capture provide that flow records may not?", "Detailed packet contents and protocol exchanges", "Only summarized byte counts", "A complete user identity history", "Guaranteed malware attribution"),
