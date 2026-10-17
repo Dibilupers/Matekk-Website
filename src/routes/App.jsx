@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 import NavBar from "../components/navbar/navbar";
 import Footer from "../components/footer/footer";
 import ScrollToTop from "../components/scroll/ScrollToTop";
+import OfflineModuleAccess from "../components/OfflineModuleAccess";
 import useHeadingTypeIn from "../utils/useHeadingTypeIn";
 
 /* Pages */
@@ -870,9 +871,15 @@ function ProtectedRoute({ children }) {
   if (!isAuthenticated && !canAccessOfflineModule) {
     return <Navigate to="/login" replace />;
   }
+  if (isAuthenticated && profile.active_status === false) {
+    return <Navigate to="/account-pending" replace />;
+  }
+  if (canAccessOfflineModule) {
+    return <OfflineModuleAccess isOnline={false}>{children}</OfflineModuleAccess>;
+  }
   if (!isAuthenticated) return children;
-  return profile.active_status === false
-    ? <Navigate to="/account-pending" replace />
+  return isModuleRoute && !isExamRoute
+    ? <OfflineModuleAccess isOnline>{children}</OfflineModuleAccess>
     : children;
 }
 

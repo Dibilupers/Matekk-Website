@@ -10,10 +10,15 @@ import {
     Delete,
     Res,
     HttpException,
+    UnauthorizedException,
+    ServiceUnavailableException,
+    ForbiddenException,
     Header,
     UsePipes,
     ValidationPipe,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { createHash, timingSafeEqual } from 'node:crypto';
 import { AuthService } from './auth.service.js';
 import { Public } from './decorators/public.decorator.js';
 import { AllowPendingAccount } from './decorators/allow-pending.decorator.js';
@@ -26,12 +31,14 @@ import { UpdateProfileDto } from './dto/profile.dto.js';
 import { ChangePasswordDto } from './dto/change-password.dto.js';
 import { ProfilePhotoDto } from './dto/profile-photo.dto.js';
 import { EnrollmentRequestDto } from './dto/enrollment-request.dto.js';
+import { OfflineModulePinDto } from './dto/offline-module-pin.dto.js';
 
 @Controller('auth')
 export class AuthController {
     constructor(
         private readonly authService: AuthService,
         private readonly loginRateLimit: LoginRateLimitService,
+        private readonly configService: ConfigService,
     ) { }
 
     @Public()
@@ -90,6 +97,43 @@ export class AuthController {
         response.clearCookie(ACCESS_TOKEN_COOKIE, accessTokenCookieOptions());
         return { message: 'Signed out.' };
     }
+
+    @Header('Cache-Control', 'no-store')
+    @HttpCode(HttpStatus.OK)
+    @Post('offline-pin/verify')
+    @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
+    async verifyOfflineModulePin(
+        @Body() pinDto: OfflineModulePinDto,
+        @Request() request: ExpressRequest & { user: { role?: string } },
+    ) {
+        if (request.user.role?.trim().toLowerCase() !== 'admin') {
+            throw new ForbiddenException('Only administrators can set up offline module access.');
+        }
+
+        const configuredPin = this.configService.get<string>('OFFLINE_MODULE_PIN');
+        if (!configuredPin) {
+            throw new ServiceUnavailableException('Offline module PIN is not configured.');
+        }
+
+        const allowed = await this.loginRateLimit.consume(
+            request.ip ?? request.socket.remoteAddress ?? 'unknown',
+            'offline-module-pin',
+        );
+        if (!allowed) {
+            throw new HttpException(
+                'Too many offline PIN attempts. Please try again later.',
+                HttpStatus.TOO_MANY_REQUESTS,
+            );
+        }
+
+        const submittedHash = createHash('sha256').update(pinDto.pin).digest();
+        const configuredHash = createHash('sha256').update(configuredPin).digest();
+        if (!timingSafeEqual(submittedHash, configuredHash)) {
+            throw new UnauthorizedException('The shared offline PIN is incorrect.');
+        }
+        return { message: 'Offline PIN verified.' };
+    }
+
     @Header('Cache-Control', 'no-store')
     @Get('profile')
     @AllowPendingAccount()

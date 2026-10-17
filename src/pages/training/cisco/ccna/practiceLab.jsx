@@ -64,22 +64,20 @@ function buildGuideText(lab) {
 
 function PacketTracerSection({ lab }) {
 	const pktFile = `/downloads/ccna-lab${lab.id}.pkt`;
-	const [pktReady, setPktReady] = useState(false);
+	const [showDownloadPicker, setShowDownloadPicker] = useState(false);
 	const [showSteps, setShowSteps] = useState(false);
 	const guide = useMemo(() => buildGuideText(lab), [lab]);
 	const guideUrl = useMemo(() => URL.createObjectURL(new Blob([guide], { type: "text/plain" })), [guide]);
 	useEffect(() => () => URL.revokeObjectURL(guideUrl), [guideUrl]);
 
-	// The .pkt download appears automatically once the file is added to public/downloads
 	useEffect(() => {
-		let alive = true;
-		fetch(pktFile, { method: "HEAD" })
-			.then((r) => alive && setPktReady(r.ok && !(r.headers.get("content-type") || "").includes("text/html")))
-			.catch(() => {});
-		return () => {
-			alive = false;
+		if (!showDownloadPicker) return undefined;
+		const onKeyDown = (event) => {
+			if (event.key === "Escape") setShowDownloadPicker(false);
 		};
-	}, [pktFile]);
+		window.addEventListener("keydown", onKeyDown);
+		return () => window.removeEventListener("keydown", onKeyDown);
+	}, [showDownloadPicker]);
 
 	return (
 		<section className="p-6 rounded-2xl bg-[#EBF5FD] flex flex-col gap-5">
@@ -92,18 +90,9 @@ function PacketTracerSection({ lab }) {
 				</p>
 			</div>
 			<div className="flex flex-wrap gap-3">
-				{pktReady && (
-					<a href={pktFile} download className="inline-flex items-center gap-2 w-fit rounded-full bg-[#1775EE] text-white px-5 py-3 hover:bg-[#0062E0] transition shadow-lg">
-						<Download className="w-4 h-4" /> Download Lab File (.pkt)
-					</a>
-				)}
-				<a
-					href={guideUrl}
-					download={`ccna-lab${lab.id}-setup-guide.txt`}
-					className={`inline-flex items-center gap-2 w-fit rounded-full px-5 py-3 transition ${pktReady ? "border border-[#1775EE] text-[#1775EE] hover:bg-[#1775EE] hover:text-white" : "bg-[#1775EE] text-white hover:bg-[#0062E0] shadow-lg"}`}
-				>
-					<Download className="w-4 h-4" /> Download Lab Setup Guide
-				</a>
+				<button type="button" onClick={() => setShowDownloadPicker(true)} className="inline-flex w-fit items-center gap-2 rounded-full bg-[#005b6b] px-5 py-3 font-semibold text-white shadow-lg transition hover:bg-[#004653]">
+					<Download className="w-4 h-4" /> Download Lab Files
+				</button>
 				<button type="button" onClick={() => setShowSteps((v) => !v)} className="inline-flex items-center gap-2 w-fit rounded-full border border-[#1775EE] text-[#1775EE] px-5 py-3 hover:bg-[#1775EE] hover:text-white transition">
 					{showSteps ? "Hide build steps" : "Show build steps"}
 				</button>
@@ -116,6 +105,64 @@ function PacketTracerSection({ lab }) {
 				Packet Tracer is free from Cisco Networking Academy (sign in with a free NetAcad account, then choose the installer for
 				Windows, macOS, or Ubuntu).
 			</p>
+			{showDownloadPicker && createPortal(
+				<div
+					className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-[#071126]/55 p-2 backdrop-blur-sm sm:p-4"
+					onMouseDown={(event) => {
+						if (event.target === event.currentTarget) setShowDownloadPicker(false);
+					}}
+				>
+					<section
+						role="dialog"
+						aria-modal="true"
+						aria-labelledby={`lab-download-title-${lab.id}`}
+						className="ccna-page-enter my-auto max-h-[calc(100dvh-1rem)] w-[calc(100vw-1rem)] max-w-3xl overflow-y-auto rounded-3xl bg-white p-4 shadow-2xl sm:max-h-[calc(100dvh-2rem)] sm:w-full sm:p-8"
+					>
+						<header className="flex items-start justify-between gap-4">
+							<div>
+								<p className="text-sm font-semibold text-[#005b6b]">CCNA practice · Lab {lab.id}</p>
+								<h2 id={`lab-download-title-${lab.id}`} className="mt-1 text-xl font-bold text-[#071126] sm:text-2xl">Choose a lab file</h2>
+							</div>
+							<button
+								type="button"
+								onClick={() => setShowDownloadPicker(false)}
+								aria-label="Close lab file selection"
+								className="rounded-full p-2 text-[#71819b] transition hover:bg-[#f0f7f7] hover:text-[#005b6b]"
+							>
+								<X size={20} />
+							</button>
+						</header>
+						<p className="mt-3 text-sm leading-6 text-[#71819b]">
+							Choose the configuration guide to build the lab yourself, or download the ready-to-open Cisco Packet Tracer project.
+						</p>
+						<div className="mt-6 grid gap-3 sm:grid-cols-2">
+							<a
+								href={guideUrl}
+								download={`ccna-lab${lab.id}-setup-guide.txt`}
+								onClick={() => setShowDownloadPicker(false)}
+								className="min-w-0 rounded-2xl border border-[#d6e5e7] p-4 text-left text-[#263654] transition-colors hover:border-[#a9cdd2] hover:bg-[#f8fbfc] sm:p-5"
+							>
+								<span className="block text-lg font-bold">Configuration/context file</span>
+								<span className="mt-3 block text-3xl font-extrabold">.TXT</span>
+								<span className="block text-sm font-medium text-[#71819b]">Text file</span>
+								<span className="mt-4 block text-sm leading-5 text-[#71819b]">Device setup, cabling, starting configuration, and lab tasks.</span>
+							</a>
+							<a
+								href={pktFile}
+								download
+								onClick={() => setShowDownloadPicker(false)}
+								className="min-w-0 rounded-2xl border border-[#d6e5e7] p-4 text-left text-[#263654] transition-colors hover:border-[#a9cdd2] hover:bg-[#f8fbfc] sm:p-5"
+							>
+								<span className="block text-lg font-bold">Packet Tracer project</span>
+								<span className="mt-3 block text-3xl font-extrabold">.PKT</span>
+								<span className="block text-sm font-medium text-[#71819b]">Cisco Packet Tracer</span>
+								<span className="mt-4 block text-sm leading-5 text-[#71819b]">Ready-to-open project file for Lab {lab.id}.</span>
+							</a>
+						</div>
+					</section>
+				</div>,
+				document.body,
+			)}
 		</section>
 	);
 }

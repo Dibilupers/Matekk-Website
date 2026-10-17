@@ -1,5 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import API_URL from "../config/api";
+import {
+	clearOfflineModulePin,
+	hasOfflineModulePin,
+	saveOfflineModulePin,
+	verifyOfflineModulePin,
+} from "../utils/offlineModulePin";
 import { AuthContext } from "./auth-context";
 
 const PROFILE_CACHE_KEY = "matekk-session-profile";
@@ -8,6 +14,7 @@ const OFFLINE_PROFILE_KEY = "matekkOfflineProfile";
 function clearAuthCaches() {
   sessionStorage.removeItem(PROFILE_CACHE_KEY);
   localStorage.removeItem(OFFLINE_PROFILE_KEY);
+  clearOfflineModulePin();
 }
 
 function readOfflineProfile() {
@@ -43,6 +50,8 @@ export function AuthProvider({ children }) {
   const [profile, setProfile] = useState(readOfflineProfile);
   const [isLoading, setIsLoading] = useState(true);
   const [isOnline, setIsOnline] = useState(() => navigator.onLine);
+  const [hasOfflinePin, setHasOfflinePin] = useState(hasOfflineModulePin);
+  const [isOfflinePinUnlocked, setIsOfflinePinUnlocked] = useState(false);
 
   useEffect(() => {
     const updateOnlineStatus = () => setIsOnline(navigator.onLine);
@@ -54,6 +63,10 @@ export function AuthProvider({ children }) {
     };
   }, []);
 
+  useEffect(() => {
+    if (isOnline) setIsOfflinePinUnlocked(false);
+  }, [isOnline]);
+
   const refreshProfile = useCallback(async () => {
     const response = await fetch(`${API_URL}/auth/profile`, {
       credentials: "include",
@@ -62,6 +75,8 @@ export function AuthProvider({ children }) {
       if (response.status === 401 || response.status === 403) {
         clearAuthCaches();
         setProfile(null);
+        setHasOfflinePin(false);
+        setIsOfflinePinUnlocked(false);
       }
       throw new Error("Unable to refresh account approval status.");
     }
@@ -86,7 +101,12 @@ export function AuthProvider({ children }) {
           }
           sessionStorage.removeItem(PROFILE_CACHE_KEY);
           localStorage.removeItem(OFFLINE_PROFILE_KEY);
+          clearOfflineModulePin();
           if (mounted) setProfile(null);
+          if (mounted) {
+            setHasOfflinePin(false);
+            setIsOfflinePinUnlocked(false);
+          }
           return;
         }
         const nextProfile = await response.json();
@@ -168,6 +188,8 @@ export function AuthProvider({ children }) {
   const logout = useCallback(() => {
     clearAuthCaches();
     setProfile(null);
+    setHasOfflinePin(false);
+    setIsOfflinePinUnlocked(false);
     void fetch(`${API_URL}/auth/logout`, {
       method: "POST",
       credentials: "include",
@@ -176,18 +198,62 @@ export function AuthProvider({ children }) {
     }).catch((error) => console.error("Unable to clear the server session.", error));
   }, []);
 
+  const configureOfflinePin = useCallback(async (pin) => {
+    if (!navigator.onLine) {
+      throw new Error("Connect to the internet before setting up offline access.");
+    }
+    const response = await fetch(`${API_URL}/auth/offline-pin/verify`, {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ pin }),
+    });
+    if (!response.ok) {
+      const error = await response.json().catch(() => null);
+      const message = Array.isArray(error?.message) ? error.message.join(" ") : error?.message;
+      throw new Error(message || (response.status === 401
+        ? "The shared offline PIN is incorrect."
+        : "Unable to set up offline access."));
+    }
+    await saveOfflineModulePin(pin);
+    setHasOfflinePin(true);
+    setIsOfflinePinUnlocked(false);
+  }, []);
+
+  const unlockOfflineModules = useCallback(async (pin) => {
+    const verified = await verifyOfflineModulePin(pin);
+    if (verified) setIsOfflinePinUnlocked(true);
+    return verified;
+  }, []);
+
   const value = useMemo(
     () => ({
       profile,
       isAuthenticated: Boolean(profile),
       isLoading,
       isOnline,
+      hasOfflinePin,
+      isOfflinePinUnlocked,
       login,
       verifyLoginOtp,
       logout,
       refreshProfile,
+      configureOfflinePin,
+      verifyOfflinePin: unlockOfflineModules,
     }),
-    [isLoading, isOnline, profile, login, verifyLoginOtp, logout, refreshProfile],
+    [
+      isLoading,
+      isOnline,
+      hasOfflinePin,
+      isOfflinePinUnlocked,
+      profile,
+      login,
+      verifyLoginOtp,
+      logout,
+      refreshProfile,
+      configureOfflinePin,
+      unlockOfflineModules,
+    ],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

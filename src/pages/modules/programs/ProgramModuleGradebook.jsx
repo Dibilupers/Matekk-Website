@@ -119,7 +119,11 @@ function getModuleRows(modules, progress, storedAssessments, programKey) {
 }
 
 function getExamRows(storedAssessments, programKey) {
-	const examFormats = getProgramExamFormats(programKey) ?? {};
+	const examFormats = getProgramExamFormats(programKey) ?? {
+		short: { name: "Short Exam" },
+		medium: { name: "Medium Exam" },
+		long: { name: "Long Exam" },
+	};
 	const examFormatLabels = { short: "Short", medium: "Medium", long: "Long" };
 	const validExamAssessments = storedAssessments
 		.filter((assessment) =>
