@@ -89,6 +89,7 @@ function removeFlushedAssessments(scope, sentAssessments) {
 async function readResponse(response) {
 	const body = await response.text();
 	if (!response.ok) {
+		// Include the server's own reason when it sent one
 		let detail = "";
 		try {
 			const errorBody = JSON.parse(body);

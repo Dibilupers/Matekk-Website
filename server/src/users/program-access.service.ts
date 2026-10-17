@@ -15,14 +15,22 @@ export class ProgramAccessService {
 
   async assertEnrollment(userId: number, programKey: string): Promise<void> {
     const requestedName = programKey.replace(/-/g, ' ');
-    const program = await this.prisma.program.findFirst({
-      where: { name: { equals: requestedName, mode: 'insensitive' } },
-      select: {
-        id: true,
-        name: true,
-        parentId: true,
-        parent: { select: { name: true } },
+    const programSelect = {
+      id: true,
+      name: true,
+      parentId: true,
+      parent: { select: { name: true } },
+    } as const;
+    const rootProgram = await this.prisma.program.findFirst({
+      where: {
+        name: { equals: requestedName, mode: 'insensitive' },
+        parentId: null,
       },
+      select: programSelect,
+    });
+    const program = rootProgram ?? await this.prisma.program.findFirst({
+      where: { name: { equals: requestedName, mode: 'insensitive' } },
+      select: programSelect,
     });
     if (!program || toProgramSlug(program.name) !== programKey) {
       throw new NotFoundException('Program not found.');

@@ -377,8 +377,11 @@ export default function Login() {
     <main className="fade-in-up relative isolate min-h-[calc(100vh-5rem)] overflow-hidden bg-[#0A1225] px-4 py-8 sm:px-10 sm:py-10 lg:px-16">
       <NetworkBackground paused={isLoginAnimating} />
 
-      <div className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-12 lg:grid-cols-[minmax(320px,390px)_1fr] lg:gap-20">
-          <section className="order-2 mx-auto w-full max-w-2xl space-y-7 text-center lg:order-2 lg:text-left">
+      <div className={isRegistering
+        ? "relative z-10 mx-auto grid w-full max-w-6xl items-center gap-12 lg:grid-cols-[minmax(320px,35rem)_minmax(0,1fr)] lg:gap-16"
+        : "relative z-10 mx-auto grid w-full max-w-6xl items-center gap-12 lg:grid-cols-[minmax(320px,390px)_1fr] lg:gap-20"}
+      >
+        <section className="order-2 mx-auto w-full max-w-2xl space-y-7 text-center lg:order-2 lg:text-left">
             <div className="relative mx-auto flex min-h-[27rem] w-full max-w-[32rem] items-center justify-center">
               <div
                 ref={orbitRingRef}
@@ -433,50 +436,52 @@ export default function Login() {
                 <span className="text-sm font-semibold text-slate-700 transition-colors group-hover:text-[#087ff5]">@training.matekk</span>
               </a>
             </div>
-          </section>
+        </section>
 
-          <section ref={formCardRef} className="scroll-mt-24 order-1 mx-auto w-full max-w-md space-y-5 rounded-2xl border border-slate-300 bg-white px-5 py-7 shadow-[0_14px_35px_rgba(15,23,42,0.1)] sm:px-11 sm:py-9 lg:order-1">
-            <div className="flex justify-center">
-              <img src={MainLogo} alt="Matekk Cybercore Technologies" className="h-auto w-56" />
-            </div>
-            <div className="space-y-1 text-center">
-              <h4 className="text-3xl uppercase tracking-tight">
-                {isRegistering ? <>Create your <span className="text-[#1775EE]">account</span></> : <>Welcome <span className="text-[#1775EE]">back</span></>}
-              </h4>
-              <p className="text-sm text-slate-400">
-                {isRegistering ? "Fill in your details to get started." : "Sign in to keep growing your skills"}
-              </p>
-            </div>
-
-            {isRegistering && (
-              // Small "Step 1/2/3" labels, spaced to sit right above each tab below
-              <div className="mb-1.5 flex gap-3 px-1 text-center text-[0.7rem] font-semibold uppercase tracking-wider" aria-hidden="true">
-                {[0, 1, 2].map((index) => (
-                  <span
-                    key={index}
-                    className={`flex-1 transition-colors ${index <= registrationStep ? "text-[#1775EE]" : "text-slate-400"}`}
-                  >
-                    Step {index + 1}
-                  </span>
-                ))}
+        <section
+          ref={formCardRef}
+          className={`scroll-mt-24 mx-auto w-full rounded-2xl border bg-white shadow-[0_14px_35px_rgba(15,23,42,0.1)] ${
+            isRegistering
+              ? "order-1 max-w-[35rem] space-y-5 border-slate-100 px-6 py-7 sm:px-8 sm:py-8 lg:order-1"
+              : "order-1 max-w-md space-y-5 border-slate-300 px-5 py-7 sm:px-11 sm:py-9 lg:order-1"
+          }`}
+        >
+            {isRegistering ? (
+              <div className="space-y-1">
+                <p className="text-lg font-bold tracking-wide text-[#17366B]">MATEKK</p>
+                <h4 className="text-2xl font-semibold tracking-tight text-slate-900">Create student account</h4>
+                <p className="text-lg text-slate-500">Fill in your details to get started.</p>
               </div>
+            ) : (
+              <>
+                <div className="flex justify-center">
+                  <img src={MainLogo} alt="Matekk Cybercore Technologies" className="h-auto w-56" />
+                </div>
+                <div className="space-y-1 text-center">
+                  <h4 className="text-3xl uppercase tracking-tight">
+                    Welcome <span className="text-[#1775EE]">back</span>
+                  </h4>
+                  <p className="text-sm text-slate-400">Sign in to keep growing your skills</p>
+                </div>
+              </>
             )}
+
             {isRegistering && (
-              <div className="mb-5 flex items-center gap-3 rounded-full border border-slate-200 bg-[#eef3f8] p-1 text-center text-sm font-medium text-slate-500">
-                {[
-                  "Personal",
-                  "Program",
-                  "Account",
-                ].map((tab, index) => (
+              <div className="flex gap-3 pt-1" aria-label={`Registration step ${registrationStep + 1} of 3`}>
+                {["Personal", "Program", "Account"].map((label, index) => (
                   <button
-                    key={tab}
+                    key={label}
                     type="button"
                     onClick={() => {
                       if (index <= registrationStep) setRegistrationStep(index);
                     }}
-                    className={`flex-1 rounded-full px-2 py-2 transition ${registrationStep === index ? "bg-white text-slate-700 shadow-sm" : ""}`}
+                    aria-current={registrationStep === index ? "step" : undefined}
+                    className="min-w-0 flex-1 text-left"
                   >
-                    {tab}
+                    <div className={`h-1 rounded-full ${index <= registrationStep ? "bg-[#1775EE]" : "bg-slate-300"}`} />
+                    <span className={`mt-1 block text-sm ${index === registrationStep ? "font-medium text-slate-800" : "text-slate-500"}`}>
+                      {label}
+                    </span>
                   </button>
                 ))}
               </div>
@@ -494,8 +499,7 @@ export default function Login() {
                             type="text"
                             value={firstName}
                             onChange={(e) => setFirstName(e.target.value)}
-                            placeholder="First name"
-                            className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-slate-800 outline-none transition focus:border-[#1775EE] focus:ring-2 focus:ring-blue-100"
+                            className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-base text-slate-800 outline-none transition focus:border-[#1775EE] focus:ring-2 focus:ring-blue-100"
                           />
                         </label>
 
@@ -505,8 +509,7 @@ export default function Login() {
                             type="text"
                             value={lastName}
                             onChange={(e) => setLastName(e.target.value)}
-                            placeholder="Last name"
-                            className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-slate-800 outline-none transition focus:border-[#1775EE] focus:ring-2 focus:ring-blue-100"
+                            className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-base text-slate-800 outline-none transition focus:border-[#1775EE] focus:ring-2 focus:ring-blue-100"
                           />
                         </label>
                       </div>
@@ -518,7 +521,7 @@ export default function Login() {
                             type="date"
                             value={birthdate}
                             onChange={(e) => setBirthdate(e.target.value)}
-                            className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-slate-800 outline-none transition focus:border-[#1775EE] focus:ring-2 focus:ring-blue-100"
+                            className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-base text-slate-800 outline-none transition focus:border-[#1775EE] focus:ring-2 focus:ring-blue-100"
                           />
                         </label>
 
@@ -527,7 +530,7 @@ export default function Login() {
                           <select
                             value={gender}
                             onChange={(e) => setGender(e.target.value)}
-                            className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-slate-800 outline-none transition focus:border-[#1775EE] focus:ring-2 focus:ring-blue-100"
+                            className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-base text-slate-800 outline-none transition focus:border-[#1775EE] focus:ring-2 focus:ring-blue-100"
                           >
                             <option value="">Select</option>
                             <option value="Female">Female</option>
@@ -543,7 +546,7 @@ export default function Login() {
                           value={city}
                           onChange={setCity}
                           placeholder="e.g. San Mateo, Rizal"
-                          className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-slate-800 outline-none transition focus:border-[#1775EE] focus:ring-2 focus:ring-blue-100"
+                          className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-base text-slate-800 outline-none transition focus:border-[#1775EE] focus:ring-2 focus:ring-blue-100"
                         />
                       </label>
                     </div>
@@ -778,19 +781,20 @@ export default function Login() {
               )}
 
               {isRegistering && (
-                <div className="flex gap-3 pt-2">
-                  <button
-                    type="button"
-                    onClick={() => setRegistrationStep((step) => Math.max(step - 1, 0))}
-                    disabled={registrationStep === 0}
-                    className="flex-1 rounded-xl border border-slate-300 bg-white px-4 py-3 font-semibold text-slate-700 transition hover:border-[#1775EE] hover:text-[#1775EE] disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    Previous
-                  </button>
+                <div className={`flex pt-2 ${registrationStep === 0 ? "" : "gap-3"}`}>
+                  {registrationStep > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setRegistrationStep((step) => Math.max(step - 1, 0))}
+                      className="flex-1 rounded-xl border border-slate-300 bg-white px-4 py-3 font-semibold text-slate-700 transition hover:border-[#1775EE] hover:text-[#1775EE]"
+                    >
+                      Previous
+                    </button>
+                  )}
                   <button
                     type="submit"
-                    disabled={isSubmitting || (isLoadingPrograms || !programId || !trainingId)}
-                    className="flex-1 rounded-xl bg-[#1775EE] px-4 py-3 text-base font-semibold text-white shadow-[0_10px_20px_rgba(23,117,238,0.28)] transition hover:bg-[#0f64d8] disabled:cursor-wait disabled:opacity-70"
+                    disabled={isSubmitting || isLoadingPrograms || !programId || !trainingId}
+                    className={`rounded-xl bg-[#1775EE] px-4 py-3 text-base font-semibold text-white shadow-[0_10px_20px_rgba(23,117,238,0.28)] transition hover:bg-[#0f64d8] disabled:cursor-wait disabled:opacity-70 ${registrationStep === 0 ? "w-full" : "flex-1"}`}
                   >
                     {isSubmitting
                       ? (registrationOtpSent ? "Verifying email..." : registrationStep === 2 ? "Sending code..." : "Continuing...")
@@ -816,7 +820,16 @@ export default function Login() {
 
               <div className="space-y-3 pt-1 text-center">
                 {isRegistering ? (
-                  <p className="text-xs text-slate-400">Already have an account?</p>
+                  <p className="text-base text-slate-500">
+                    Already have an account?{" "}
+                    <button
+                      type="button"
+                      onClick={() => { setMsg(""); setIsRegistering(false); setRegistrationStep(0); }}
+                      className="font-medium text-[#1775EE] hover:underline"
+                    >
+                      Sign in
+                    </button>
+                  </p>
                 ) : (
                   // Clickable, but nothing is linked to it yet
                   <button
@@ -826,15 +839,7 @@ export default function Login() {
                     New to Matekk?
                   </button>
                 )}
-                {isRegistering ? (
-                  <button
-                    type="button"
-                    onClick={() => { setMsg(""); setIsRegistering(false); setRegistrationStep(0); }}
-                    className="w-full rounded-lg border border-slate-500 px-4 py-2.5 text-sm text-slate-500 transition hover:border-[#1775EE] hover:text-[#1775EE]"
-                  >
-                    Back to Sign In
-                  </button>
-                ) : (
+                {!isRegistering && (
                   <button
                     type="button"
                     onClick={() => { setMsg(""); setIsRegistering(true); setRegistrationStep(0); }}
@@ -845,8 +850,8 @@ export default function Login() {
                 )}
               </div>
             </form>
-          </section>
-        </div>
+        </section>
+      </div>
     </main>
   );
 }

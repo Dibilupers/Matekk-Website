@@ -152,14 +152,27 @@ function matchingQuestion(row, choices) {
 
 // "Header:\n+ item\n+ item\n\nHeader2:\n..."  ->  group matching (type the numbers)
 function parseGroups(answerText, seed) {
-  const lines = answerText.split("\n").map((line) => line.trim()).filter(Boolean);
+  const lines = answerText.split("\n").map((line) => line.trim());
   const groups = [];
   lines.forEach((line, index) => {
+    if (!line) return;
     const isBullet = /^\+\s*/.test(line);
-    const nextIsBullet = /^\+/.test(lines[index + 1] ?? "");
-    const isHeader = !isBullet && (/:$/.test(line) && line.length <= 60 || nextIsBullet);
+    let nextNonEmpty = index + 1;
+    while (nextNonEmpty < lines.length && !lines[nextNonEmpty]) nextNonEmpty += 1;
+    const nextIsBullet = /^\+/.test(lines[nextNonEmpty] ?? "");
+    const previousIsBlank = index === 0 || !lines[index - 1];
+    const isHeader = !isBullet && (
+      (/:$/.test(line) && line.length <= 60) ||
+      (nextIsBullet && (groups.length === 0 || previousIsBlank))
+    );
     if (isHeader) groups.push({ name: line.replace(/:$/, "").trim(), items: [] });
-    else if (groups.length) groups[groups.length - 1].items.push(line.replace(/^\+\s*/, "").trim());
+    else if (groups.length) {
+      const currentGroup = groups[groups.length - 1];
+      if (isBullet) currentGroup.items.push(line.replace(/^\+\s*/, "").trim());
+      else if (currentGroup.items.length) {
+        currentGroup.items[currentGroup.items.length - 1] += ` ${line}`;
+      }
+    }
   });
   if (groups.length < 2 || groups.some((g) => !g.items.length)) return null;
   const all = groups.flatMap((group, groupIndex) => group.items.map((item) => ({ key: item, item, groupIndex })));
@@ -169,6 +182,7 @@ function parseGroups(answerText, seed) {
     items: shuffled.map((x) => x.item),
     choices: groups.map((g) => g.name),
     answer: shuffled.map((x) => x.groupIndex),
+    matchStyle: "numbers",
   };
 }
 
@@ -322,14 +336,32 @@ export function convertBankRow(row) {
     return { problem: "referenced exhibit has no available text or image" };
   }
 
-  if (questionType !== "single" && questionType !== "match") {
+  if (!["single", "match", "drag_drop", "click_boxes", "image"].includes(questionType)) {
     return { problem: `unsupported question type: ${questionType}` };
   }
   let body;
-  if (questionType === "match") {
+  if (["match", "drag_drop", "click_boxes", "image"].includes(questionType)) {
     const matching = matchingQuestion(row, choices);
     if (!matching.question) return { problem: matching.problem };
-    body = matching.question;
+    body = { ...matching.question, type: questionType };
+    if (questionType === "drag_drop" &&
+      new Set(body.answer).size !== body.answer.length) {
+      return { problem: "each drag-and-drop item must use a different answer choice" };
+    }
+    if (questionType === "click_boxes" &&
+      (body.items.length !== body.choices.length ||
+        new Set(body.answer).size !== body.answer.length)) {
+      return { problem: "click-the-boxes questions must use each answer choice exactly once" };
+    }
+    if (questionType === "image") {
+      if (!exhibitImage) return { problem: "image question has no available image" };
+      if (body.choices.length > body.items.length) {
+        return { problem: "image question has fewer items than answer groups" };
+      }
+      body.groupSizes = body.choices.map((_, choiceIndex) =>
+        body.answer.filter((answer) => answer === choiceIndex).length,
+      );
+    }
   } else if (expandedChoices) {
     body = multipleChoice(row, expandedChoices);
     if (!body) return { problem: "correct answer does not match the available choices" };
@@ -338,6 +370,16 @@ export function convertBankRow(row) {
   } else {
     body = dragAndDrop(row);
     if (!body) return { problem: "answer format is not a supported matching format" };
+    if (exhibitImage) {
+      body.type = "image";
+      body.groupSizes = body.choices.map((_, choiceIndex) =>
+        body.answer.filter((answer) => answer === choiceIndex).length,
+      );
+    } else {
+      const isOneToOne = body.items.length === body.choices.length &&
+        new Set(body.answer).size === body.answer.length;
+      body.type = isOneToOne ? "drag_drop" : "match";
+    }
   }
   const remadeQuestion = questionType === "single" ? interfaceRequirementMatch(row, body) : null;
   if (remadeQuestion) {
@@ -388,15 +430,5 @@ export function convertBank(rows) {
     if (question) questions.push(question);
     else problems.push({ id: row.id, module: row.module, problem, text: cleanText(row.question_text).slice(0, 160) });
   }
-  // Same rule as the backend (pickLineMatchIds): every second one-to-one matching question,
-  // counting up by bank ID, is shown as "connect the circles" instead of click-to-place boxes
-  const oneToOneIds = questions
-    .filter((question) => question.type === "match" && question.items.length === question.choices.length)
-    .map((question) => question.bankId)
-    .sort((first, second) => first - second);
-  const lineMatchIds = new Set(oneToOneIds.filter((_, index) => index % 2 === 1));
-  return {
-    questions: questions.map((question) => (lineMatchIds.has(question.bankId) ? { ...question, matchStyle: "lines" } : question)),
-    problems,
-  };
+  return { questions, problems };
 }

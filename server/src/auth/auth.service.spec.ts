@@ -29,10 +29,24 @@ describe('AuthService', () => {
     const verify = vi.fn(async () => options.verify ?? true);
     const needsRehash = vi.fn(() => options.needsRehash ?? false);
     const findFirst = vi.fn(async () => options.matchingEmail ? { id: 99 } : null);
-    const findUnique = vi.fn(async () => options.foundUser ?? user);
+    const findUnique = vi.fn(async () => ({
+      ...(options.foundUser ?? user),
+      first_name: '',
+      last_name: '',
+    }));
     const findMany = vi.fn(async () => []);
     const create = vi.fn(async () => user);
     const update = vi.fn(async () => user);
+    const findPrograms = vi.fn(async () => []);
+    const findProgram = vi.fn(async () => ({
+      id: 4,
+      name: 'CCNA',
+      parentId: null,
+      training: { name: 'Cisco' },
+      parent: null,
+    }));
+    const findExistingRequest = vi.fn(async () => null);
+    const createInquiry = vi.fn(async () => ({ id: 21 }));
     const sendUserStatusEmail = vi.fn(async () => undefined);
     const sendAdminNotification = vi.fn(async () => undefined);
     const service = new AuthService(
@@ -40,17 +54,52 @@ describe('AuthService', () => {
       { signAsync } as unknown as import('@nestjs/jwt').JwtService,
       { hash, verify, needsRehash } as unknown as PasswordService,
       {
-        users: { findFirst, findUnique, findMany, create, update },
+        users: { findFirst, findUnique, create, update },
+        program: { findMany: findPrograms, findUnique: findProgram },
         enrollment: { findMany },
+        inquires: { findFirst: findExistingRequest, create: createInquiry },
       } as unknown as PrismaService,
       { sendUserStatusEmail, sendAdminNotification } as unknown as EmailService,
     );
 
     return {
       service, findOne, findById, signAsync, hash, verify, needsRehash, findFirst, findUnique, findMany, create, update,
+      findProgram, findPrograms, findExistingRequest, createInquiry,
       sendUserStatusEmail, sendAdminNotification,
     };
   }
+
+  it('submits a selected program as an enrollment request for administrator review', async () => {
+    const mocks = createService();
+
+    await expect(mocks.service.createEnrollmentRequest(12, {
+      programId: 4,
+      email: ' Student@Example.com ',
+      phone: ' 09171234567 ',
+    })).resolves.toEqual({
+      message: 'Your enrollment request has been submitted for review.',
+    });
+
+    expect(mocks.findProgram).toHaveBeenCalledWith({
+      where: { id: 4 },
+      include: {
+        training: { select: { name: true } },
+        parent: { include: { training: { select: { name: true } } } },
+      },
+    });
+    expect(mocks.createInquiry).toHaveBeenCalledWith({
+      data: {
+        inquiry_type: 'Enrollment Request',
+        name: 'student',
+        email: 'student@example.com',
+        phone: '09171234567',
+        subject: 'Enrollment request: CCNA',
+        message: 'Enrollment request for CCNA. Please review and approve before granting program access.',
+        course: 'Cisco - CCNA',
+        project_desc: 'Account ID: 12; Program ID: 4',
+      },
+    });
+  });
 
   it('stores a hashed password and selected full-program enrollment at registration', async () => {
     const mocks = createService({ hash: '$argon2id$registration-hash' });

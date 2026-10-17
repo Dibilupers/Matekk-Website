@@ -62,13 +62,11 @@ export const CCNA_QUESTION_BANK = [
   }))
     // Skip questions whose exhibit picture was lost when they were taken from the PDF (they can't be answered)
     .filter((question) => !/\bexhibit\b/i.test(question.prompt) || question.exhibit || question.exhibitImage),
-];
 // Questions without their own explanation borrow one from the same question elsewhere in the site
-CCNA_QUESTION_BANK.forEach((question, index) => {
-  if (!question.explanation?.trim()) {
-    CCNA_QUESTION_BANK[index] = { ...question, explanation: findCcnaQuestionExplanation(question.prompt) };
-  }
-});
+].map((question) => ({
+  ...question,
+  explanation: question.explanation?.trim() || findCcnaQuestionExplanation(question.prompt),
+}));
 
 const SHORT_EXAM_SOURCES = new Set(["legacy-ccna-200-301"]);
 
@@ -99,27 +97,81 @@ function getUniqueQuestions(sourceQuestions) {
 
 function createExamQuestions(sourceQuestions, count) {
   const matchingPerBlock = 5;
+  const dragDropPerBlock = 3;
+  const clickBoxesPerBlock = 1;
+  const imagePerBlock = 1;
   const blockSize = 50;
   const blockCount = Math.ceil(count / blockSize);
   const requiredMatchingCount = blockCount * matchingPerBlock;
   const uniqueSource = getUniqueQuestions(sourceQuestions);
   const sourceMatching = uniqueSource.filter((question) => question.type === "match");
-  const sourceOther = uniqueSource.filter((question) => question.type !== "match");
+  const sourceDragDrop = uniqueSource.filter((question) => question.type === "drag_drop");
+  const sourceClickBoxes = uniqueSource.filter((question) => question.type === "click_boxes");
+  const sourceImages = uniqueSource.filter((question) => question.type === "image");
+  const sourceOther = uniqueSource.filter((question) =>
+    !["match", "drag_drop", "click_boxes", "image"].includes(question.type),
+  );
   const builtInMatching = CCNA_QUESTION_BANK.filter((question) => question.type === "match");
-  const builtInOther = CCNA_QUESTION_BANK.filter((question) => question.type !== "match");
+  const builtInDragDrop = CCNA_QUESTION_BANK.filter((question) => question.type === "drag_drop");
+  const builtInClickBoxes = CCNA_QUESTION_BANK.filter((question) => question.type === "click_boxes");
+  const builtInImages = CCNA_QUESTION_BANK.filter((question) => question.type === "image");
+  const builtInOther = CCNA_QUESTION_BANK.filter((question) =>
+    !["match", "drag_drop", "click_boxes", "image"].includes(question.type),
+  );
   const matchingPool = getUniqueQuestions([...sourceMatching, ...builtInMatching]);
+  const dragDropPool = getUniqueQuestions([...sourceDragDrop, ...builtInDragDrop]);
+  const clickBoxesPool = getUniqueQuestions([...sourceClickBoxes, ...builtInClickBoxes]);
+  const imagePool = getUniqueQuestions([...sourceImages, ...builtInImages]);
   const otherPool = getUniqueQuestions([...sourceOther, ...builtInOther]);
   const matchingQuestions = shuffle(matchingPool).slice(0, requiredMatchingCount);
-  const otherQuestions = shuffle(otherPool).slice(0, count - requiredMatchingCount);
+  const requiredDragDropCount = blockCount * dragDropPerBlock;
+  const requiredClickBoxesCount = blockCount * clickBoxesPerBlock;
+  const clickBoxesShortage = Math.max(0, requiredClickBoxesCount - clickBoxesPool.length);
+  const randomizedDragDropPool = shuffle(dragDropPool);
+  const canBorrowClickBoxes = randomizedDragDropPool.length >= requiredDragDropCount + clickBoxesShortage;
+  const dragDropQuota = canBorrowClickBoxes && randomizedDragDropPool.length >= requiredDragDropCount
+    ? dragDropPerBlock
+    : 0;
+  const borrowedClickBoxes = canBorrowClickBoxes
+    ? randomizedDragDropPool.slice(requiredDragDropCount, requiredDragDropCount + clickBoxesShortage)
+      .map((question) => ({ ...question, type: "click_boxes" }))
+    : [];
+  const clickBoxesQuota = clickBoxesPool.length + borrowedClickBoxes.length >= requiredClickBoxesCount
+    ? clickBoxesPerBlock
+    : 0;
+  const imageQuota = imagePool.length >= blockCount * imagePerBlock ? imagePerBlock : 0;
+  const borrowedIds = new Set(borrowedClickBoxes.map((question) => question.bankId ?? question.id));
+  const dragDropQuestions = randomizedDragDropPool
+    .filter((question) => !borrowedIds.has(question.bankId ?? question.id))
+    .slice(0, blockCount * dragDropQuota);
+  const clickBoxesQuestions = shuffle([...clickBoxesPool, ...borrowedClickBoxes])
+    .slice(0, blockCount * clickBoxesQuota);
+  const imageQuestions = shuffle(imagePool).slice(0, blockCount * imageQuota);
+  const reservedQuestionCount = matchingQuestions.length + dragDropQuestions.length +
+    clickBoxesQuestions.length + imageQuestions.length;
+  const fallbackQuestions = [
+    ...(dragDropQuota ? [] : dragDropPool),
+    ...(clickBoxesQuota ? [] : clickBoxesPool),
+    ...(imageQuota ? [] : imagePool),
+  ];
+  const otherQuestions = shuffle(getUniqueQuestions([...otherPool, ...fallbackQuestions]))
+    .slice(0, count - reservedQuestionCount);
   const questions = [];
 
   for (let blockIndex = 0; blockIndex < blockCount; blockIndex += 1) {
     const blockLength = Math.min(blockSize, count - blockIndex * blockSize);
     const matchingStart = blockIndex * matchingPerBlock;
-    const otherStart = blockIndex * (blockSize - matchingPerBlock);
+    const dragDropStart = blockIndex * dragDropQuota;
+    const clickBoxesStart = blockIndex * clickBoxesQuota;
+    const imageStart = blockIndex * imageQuota;
+    const otherPerBlock = blockSize - matchingPerBlock - dragDropQuota - clickBoxesQuota - imageQuota;
+    const otherStart = blockIndex * otherPerBlock;
     const blockQuestions = [
       ...matchingQuestions.slice(matchingStart, matchingStart + matchingPerBlock),
-      ...otherQuestions.slice(otherStart, otherStart + blockLength - matchingPerBlock),
+      ...dragDropQuestions.slice(dragDropStart, dragDropStart + dragDropQuota),
+      ...clickBoxesQuestions.slice(clickBoxesStart, clickBoxesStart + clickBoxesQuota),
+      ...imageQuestions.slice(imageStart, imageStart + imageQuota),
+      ...otherQuestions.slice(otherStart, otherStart + Math.min(otherPerBlock, blockLength - matchingPerBlock - dragDropQuota - clickBoxesQuota - imageQuota)),
     ];
     questions.push(...shuffle(blockQuestions));
   }

@@ -1572,7 +1572,6 @@ h6 {
 [data-theme="dark"] .ccna-term-screen,
 [data-theme="dark"].ccna-term-screen { background: #0b1220; }
 [data-theme="dark"] .ccna-term-hint { color: rgba(255, 255, 255, 0.55); }
-
 .comptia-exam-page {
   background-color: #fff9fa !important;
 }

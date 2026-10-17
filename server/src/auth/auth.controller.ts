@@ -25,6 +25,7 @@ import { accessTokenCookieOptions, ACCESS_TOKEN_COOKIE } from './auth-cookie.js'
 import { UpdateProfileDto } from './dto/profile.dto.js';
 import { ChangePasswordDto } from './dto/change-password.dto.js';
 import { ProfilePhotoDto } from './dto/profile-photo.dto.js';
+import { EnrollmentRequestDto } from './dto/enrollment-request.dto.js';
 
 @Controller('auth')
 export class AuthController {
@@ -43,6 +44,16 @@ export class AuthController {
     @Post('register')
     register(@Body() registerDto: RegisterDto) {
         return this.authService.register(registerDto);
+    }
+
+    @Post('enrollment-requests')
+    @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
+    createEnrollmentRequest(
+        @Request() req: ExpressRequest & { user: unknown },
+        @Body() enrollmentRequestDto: EnrollmentRequestDto,
+    ) {
+        const { userId } = req.user as { userId: number };
+        return this.authService.createEnrollmentRequest(userId, enrollmentRequestDto);
     }
 
     @Public()

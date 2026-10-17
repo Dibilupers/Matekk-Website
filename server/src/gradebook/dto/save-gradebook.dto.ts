@@ -9,8 +9,3 @@ export class SaveGradebookDto {
   @IsObject()
   assessment?: Record<string, unknown>;
 }
-
-export class RecordGradebookAssessmentDto {
-  @IsObject()
-  assessment: Record<string, unknown>;
-}

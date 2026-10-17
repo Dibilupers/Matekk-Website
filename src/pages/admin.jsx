@@ -205,6 +205,9 @@ export default function UsersDashboard() {
 	const activeUserCount = userRows.filter((user) => user.status === "Active").length;
 	const pendingApprovalCount = userRows.filter((user) => user.status === "Pending").length;
 	const openInquiryCount = inquiries.filter((inquiry) => inquiry.status).length;
+	const pendingEnrollmentApprovalCount = inquiries.filter(
+		(inquiry) => inquiry.status && inquiry.inquiry_type === "Enrollment Request",
+	).length;
 	const resolvedInquiryCount = inquiries.length - openInquiryCount;
 	const enrolledStudentCount = new Set(enrollments.map((enrollment) => enrollment.userId)).size;
 	const filteredInquiries = useMemo(() => {
@@ -232,6 +235,17 @@ export default function UsersDashboard() {
 			})
 			.sort((firstInquiry, secondInquiry) => new Date(secondInquiry.createdAt) - new Date(firstInquiry.createdAt));
 	}, [inquiries, inquirySearch, inquiryStatus]);
+	const filteredEnrollmentRequests = useMemo(() => {
+		const query = search.trim().toLowerCase();
+		return inquiries
+			.filter((inquiry) => inquiry.status && inquiry.inquiry_type === "Enrollment Request")
+			.filter((inquiry) =>
+				!query || `${inquiry.name} ${inquiry.email} ${inquiry.phone} ${inquiry.course} ${inquiry.subject}`
+					.toLowerCase()
+					.includes(query),
+			)
+			.sort((firstInquiry, secondInquiry) => new Date(secondInquiry.createdAt) - new Date(firstInquiry.createdAt));
+	}, [inquiries, search]);
 
 	const filteredEnrollmentUsers = useMemo(() => {
 		const query = studentSearch.trim().toLowerCase();
@@ -423,13 +437,14 @@ export default function UsersDashboard() {
 				<div className="mx-auto max-w-[950px]">
 					<h1 className="text-2xl font-bold leading-tight tracking-wide sm:text-[32px]">{activeSection === "users" ? "Users" : activeSection === "enrollments" ? "Enroll a student" : "Inquiries"}</h1>
 					<p className="mt-1 text-sm sm:text-lg">{activeSection === "users" ? "Manage who has access to your workspace." : activeSection === "enrollments" ? "Add a student to a program and see who is already enrolled." : "Review messages and requests submitted through the website."}</p>
-					<div className={`mt-6 grid gap-3 text-center sm:mt-7 sm:gap-6 ${activeSection === "users" ? "grid-cols-2 sm:grid-cols-4" : "grid-cols-3"}`}>
+					<div className={`mt-6 grid gap-3 text-center sm:mt-7 sm:gap-6 ${activeSection === "users" ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5" : "grid-cols-3"}`}>
 						{activeSection === "users" ? (
 							<>
-								<div><span className="block text-xs sm:text-base">Total Users</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-[40px]">{userCount}</strong></div>
-								<div><span className="block text-xs sm:text-base">Active</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-[40px]">{activeUserCount}</strong></div>
-								<div><span className="block text-xs sm:text-base">Pending approval</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-[40px]">{pendingApprovalCount}</strong></div>
-								<div><span className="block text-xs sm:text-base">Inquiries</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-[40px]">{openInquiryCount}</strong></div>
+								<div className="flex min-w-0 flex-col items-stretch"><span className="flex h-12 items-start justify-center pt-1 text-center text-sm font-medium leading-5 sm:text-base">Total Users</span><strong className="mt-1 flex h-12 items-center justify-center text-4xl font-bold leading-none sm:text-[40px]">{userCount}</strong></div>
+								<div className="flex min-w-0 flex-col items-stretch"><span className="flex h-12 items-start justify-center pt-1 text-center text-sm font-medium leading-5 sm:text-base">Active</span><strong className="mt-1 flex h-12 items-center justify-center text-4xl font-bold leading-none sm:text-[40px]">{activeUserCount}</strong></div>
+								<div className="flex min-w-0 flex-col items-stretch"><span className="flex h-12 items-start justify-center pt-1 text-center text-sm font-medium leading-5 sm:text-base">Pending approval</span><strong className="mt-1 flex h-12 items-center justify-center text-4xl font-bold leading-none sm:text-[40px]">{pendingApprovalCount}</strong></div>
+								<div className="flex min-w-0 flex-col items-stretch"><span className="flex h-12 items-start justify-center pt-1 text-center text-sm font-medium leading-5 sm:text-base">Pending approval for enrollment</span><strong className="mt-1 flex h-12 items-center justify-center text-4xl font-bold leading-none sm:text-[40px]">{pendingEnrollmentApprovalCount}</strong></div>
+								<div className="flex min-w-0 flex-col items-stretch"><span className="flex h-12 items-start justify-center pt-1 text-center text-sm font-medium leading-5 sm:text-base">Inquiries</span><strong className="mt-1 flex h-12 items-center justify-center text-4xl font-bold leading-none sm:text-[40px]">{openInquiryCount}</strong></div>
 							</>
 						) : activeSection === "inquiries" ? (
 							<>
@@ -465,7 +480,7 @@ export default function UsersDashboard() {
 
 					{activeSection === "users" ? (
 						<>
-							<div role="tablist" aria-label="User lists" className="mb-5 flex gap-2 border-b border-[#e3e9f4]">
+							<div role="tablist" aria-label="User lists" className="mb-5 flex flex-wrap gap-2 border-b border-[#e3e9f4]">
 								<button
 									type="button"
 									role="tab"
@@ -489,6 +504,18 @@ export default function UsersDashboard() {
 									Pending approval
 									<span className={`rounded-full px-2 py-0.5 text-[11px] font-bold ${userListTab === "pending" ? "bg-[#edf3ff] text-[#2b5cf0]" : "bg-[#f1f3f8] text-[#667085]"}`}>{pendingApprovalCount}</span>
 								</button>
+								<button
+									type="button"
+									role="tab"
+									id="pending-enrollment-tab"
+									aria-selected={userListTab === "enrollment"}
+									aria-controls="users-list-panel"
+									onClick={() => setUserListTab("enrollment")}
+									className={`flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition ${userListTab === "enrollment" ? "border-[#2b5cf0] text-[#2b5cf0]" : "border-transparent text-[#667085] hover:text-[#2b5cf0]"}`}
+								>
+									Pending approval for enrollment
+									<span className={`rounded-full px-2 py-0.5 text-[11px] font-bold ${userListTab === "enrollment" ? "bg-[#edf3ff] text-[#2b5cf0]" : "bg-[#f1f3f8] text-[#667085]"}`}>{pendingEnrollmentApprovalCount}</span>
+								</button>
 							</div>
 							<div className="mb-4 flex flex-wrap gap-3">
 								<div className="relative">
@@ -497,32 +524,32 @@ export default function UsersDashboard() {
 										type="search"
 										value={search}
 										onChange={(event) => setSearch(event.target.value)}
-										placeholder="Search email or name"
+										placeholder={userListTab === "enrollment" ? "Search enrollment requests" : "Search email or name"}
 										className="h-11 w-full min-w-[240px] rounded-[14px] border border-[#e3e9f4] bg-white pl-11 pr-4 text-sm outline-none placeholder:text-[#667085] focus:border-[#2b5cf0] focus:ring-2 focus:ring-[#2b5cf0]/15 sm:flex-1"
 									/>
 								</div>
-								{userListTab === "all" && <select value={status} onChange={(event) => setStatus(event.target.value)} className="h-11 min-w-[150px] rounded-[14px] border border-[#e3e9f4] bg-white px-4 text-sm text-[#667085] outline-none focus:border-[#2b5cf0]">
+								{userListTab !== "enrollment" && userListTab === "all" && <select value={status} onChange={(event) => setStatus(event.target.value)} className="h-11 min-w-[150px] rounded-[14px] border border-[#e3e9f4] bg-white px-4 text-sm text-[#667085] outline-none focus:border-[#2b5cf0]">
 									<option>All statuses</option>
 									<option>Active</option>
 									<option>Pending</option>
 									<option>Inactive</option>
 									<option>Suspended</option>
 								</select>}
-								<select value={role} onChange={(event) => setRole(event.target.value)} className="h-11 min-w-[140px] rounded-[14px] border border-[#e3e9f4] bg-white px-4 text-sm text-[#667085] outline-none focus:border-[#2b5cf0]">
+								{userListTab !== "enrollment" && <select value={role} onChange={(event) => setRole(event.target.value)} className="h-11 min-w-[140px] rounded-[14px] border border-[#e3e9f4] bg-white px-4 text-sm text-[#667085] outline-none focus:border-[#2b5cf0]">
 									<option>All roles</option>
 									<option>Student</option>
 									<option>Admin</option>
-								</select>
-								<select value={subject} onChange={(event) => setSubject(event.target.value)} className="h-11 min-w-[150px] rounded-[14px] border border-[#e3e9f4] bg-white px-4 text-sm text-[#667085] outline-none focus:border-[#2b5cf0]">
+								</select>}
+								{userListTab !== "enrollment" && <select value={subject} onChange={(event) => setSubject(event.target.value)} className="h-11 min-w-[150px] rounded-[14px] border border-[#e3e9f4] bg-white px-4 text-sm text-[#667085] outline-none focus:border-[#2b5cf0]">
 									<option>All subjects</option>
 									<option>ECE Review</option>
 									<option>Networking</option>
 									<option>Cybersecurity</option>
-								</select>
-								<button type="button" onClick={exportUsers} title="Export users" aria-label="Export users" className="flex h-11 items-center justify-center gap-2 rounded-full border-[1.5px] border-[#2b5cf0] px-5 text-sm font-semibold text-[#2b5cf0] transition hover:bg-[#edf3ff]"><Download size={17} /><span>Export CSV</span></button>
+								</select>}
+								{userListTab !== "enrollment" && <button type="button" onClick={exportUsers} title="Export users" aria-label="Export users" className="flex h-11 items-center justify-center gap-2 rounded-full border-[1.5px] border-[#2b5cf0] px-5 text-sm font-semibold text-[#2b5cf0] transition hover:bg-[#edf3ff]"><Download size={17} /><span>Export CSV</span></button>}
 							</div>
 
-							{selectedCount > 0 && (
+							{userListTab !== "enrollment" && selectedCount > 0 && (
 								<div className="mb-4 flex flex-wrap items-center gap-4 rounded-[14px] border border-[#cddcff] bg-[#edf3ff] px-4 py-3 text-sm text-[#334155]">
 									<strong>{selectedCount} selected</strong>
 									<button type="button" onClick={() => suspendUsers(selectedUsers)} className="flex items-center gap-1 font-semibold text-[#2b5cf0] hover:underline"><UserMinus size={15} /> Suspend</button>
@@ -531,7 +558,7 @@ export default function UsersDashboard() {
 								</div>
 							)}
 
-							{usersError && (
+							{userListTab !== "enrollment" && usersError && (
 								<div role="alert" className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
 									<span>{usersError}</span>
 									<button type="button" onClick={() => setUsersRequestAttempt((attempt) => attempt + 1)} className="font-semibold underline">
@@ -539,7 +566,50 @@ export default function UsersDashboard() {
 									</button>
 								</div>
 							)}
-							{approvalError && <p role="alert" className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{approvalError}</p>}
+							{userListTab !== "enrollment" && approvalError && <p role="alert" className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{approvalError}</p>}
+							{userListTab === "enrollment" ? (
+								<>
+									{(inquiriesError || inquiryActionError) && <p role="alert" className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{inquiryActionError || inquiriesError}</p>}
+									<div id="users-list-panel" role="tabpanel" aria-labelledby="pending-enrollment-tab" className="overflow-x-auto rounded-[18px] border border-[#e3e9f4]">
+										<table className="w-full min-w-[760px] border-collapse text-left text-sm">
+											<thead>
+												<tr className="h-12 border-b border-[#e3e9f4] bg-[#f8faff] text-xs text-[#667085]">
+													<th className="px-3 py-3 sm:px-4">Student</th>
+													<th className="px-3 py-3 sm:px-4">Program</th>
+													<th className="px-3 py-3 sm:px-4">Contact</th>
+													<th className="px-3 py-3 sm:px-4">Requested</th>
+													<th className="px-3 py-3 sm:px-4">Action</th>
+												</tr>
+											</thead>
+											<tbody>
+												{inquiriesLoading ? (
+													<tr><td colSpan="5" className="h-20 text-center text-sm text-[#667085]">Loading enrollment requests...</td></tr>
+												) : filteredEnrollmentRequests.length ? filteredEnrollmentRequests.map((request) => {
+													const requestDate = new Date(request.createdAt);
+													return (
+														<tr key={request.id} className="border-b border-[#eef2f9] last:border-b-0 hover:bg-[#fbfcff]">
+															<td className="px-3 py-3 sm:px-4">
+																<span className="block font-semibold text-[#0f172a]">{request.name}</span>
+																<span className="text-xs text-[#667085]">{request.email}</span>
+															</td>
+															<td className="px-3 py-3 text-[#334155] sm:px-4">{request.course || request.subject}</td>
+															<td className="px-3 py-3 text-[#334155] sm:px-4">{request.phone || "—"}</td>
+															<td className="whitespace-nowrap px-3 py-3 text-[#667085] sm:px-4">{Number.isNaN(requestDate.getTime()) ? "—" : requestDate.toLocaleDateString()}</td>
+															<td className="px-3 py-3 sm:px-4">
+																{isAdmin && <button type="button" onClick={() => acceptInquiry(request)} disabled={acceptingInquiryId === request.id} className="whitespace-nowrap rounded-lg bg-[#2174fa] px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-[#145fd5] disabled:cursor-wait disabled:opacity-60">{acceptingInquiryId === request.id ? "Approving..." : "Approve & enroll"}</button>}
+															</td>
+														</tr>
+													);
+												}) : (
+													<tr><td colSpan="5" className="h-20 text-center text-sm text-[#667085]">{pendingEnrollmentApprovalCount ? "No enrollment requests match your search." : "No enrollment requests are waiting for approval."}</td></tr>
+												)}
+											</tbody>
+										</table>
+									</div>
+									<div className="flex items-center justify-between border-t border-[#e3e9f4] px-1 pt-4 text-xs text-[#667085]"><span>Showing {filteredEnrollmentRequests.length} of {pendingEnrollmentApprovalCount} pending enrollment requests</span><span>Page 1 of 1</span></div>
+								</>
+							) : (
+							<>
 							<div id="users-list-panel" role="tabpanel" aria-labelledby={userListTab === "pending" ? "pending-users-tab" : "all-users-tab"} className="overflow-x-auto rounded-[18px] border border-[#e3e9f4]">
 								<table className="w-full min-w-[760px] border-collapse text-left text-sm">
 									<thead>
@@ -580,6 +650,8 @@ export default function UsersDashboard() {
 								</table>
 							</div>
 							<div className="flex items-center justify-between border-t border-[#e3e9f4] px-1 pt-4 text-xs text-[#667085]"><span>Showing {filteredUsers.length} of {userListTab === "pending" ? pendingApprovalCount : userRows.length} {userListTab === "pending" ? "pending users" : "users"}</span><span>Page 1 of 1</span></div>
+							</>
+							)}
 						</>
 					) : (
 						<section aria-label={activeSection === "enrollments" ? "Student enrollments" : "Website inquiries"}>
@@ -743,7 +815,7 @@ export default function UsersDashboard() {
 																		<td className="px-3 py-3 sm:px-4"><span className={`rounded-full px-2 py-1 ${inquiry.status ? "bg-[#fff0cf] text-[#8b5b00]" : "bg-[#ccefcf] text-[#23752a]"}`}>{inquiry.status ? "Open" : "Resolved"}</span></td>
 																		<td className="whitespace-nowrap px-3 py-3 sm:px-4">{receivedLabel}</td>
 																		<td className="px-3 py-3 sm:px-4">
-																			{isAdmin && inquiry.status && <button type="button" onClick={() => acceptInquiry(inquiry)} disabled={acceptingInquiryId === inquiry.id} className="whitespace-nowrap rounded-lg bg-[#2174fa] px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-[#145fd5] disabled:cursor-wait disabled:opacity-60">{acceptingInquiryId === inquiry.id ? "Accepting..." : "Accept"}</button>}
+																			{isAdmin && inquiry.status && <button type="button" onClick={() => acceptInquiry(inquiry)} disabled={acceptingInquiryId === inquiry.id} className="whitespace-nowrap rounded-lg bg-[#2174fa] px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-[#145fd5] disabled:cursor-wait disabled:opacity-60">{acceptingInquiryId === inquiry.id ? "Accepting..." : inquiry.inquiry_type === "Enrollment Request" ? "Approve & enroll" : "Accept"}</button>}
 																		</td>
 																		<td className="px-3 py-3 sm:px-4">
 																			<button type="button" onClick={() => setExpandedInquiryId(isExpanded ? null : inquiry.id)} aria-expanded={isExpanded} aria-label={`${isExpanded ? "Hide" : "Show"} details for ${inquiry.name}`} className="rounded p-1 text-[#666666] hover:bg-[#eef5ff] hover:text-[#145bb7]"><ChevronDown size={17} className={isExpanded ? "rotate-180" : ""} /></button>

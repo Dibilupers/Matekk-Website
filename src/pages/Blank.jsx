@@ -172,29 +172,23 @@ const PROGRAM_DESCRIPTIONS = {
 	"Project Management Professional": "Build project leadership skills across planning, delivery, risk, and stakeholder management.",
 };
 
-function getCategoryCourses(category) {
-	const selectedCategory = TRAINING_COURSES.find((item) => item.name === category);
-	if (!selectedCategory) return [];
-
-	const flatten = (items) => items.flatMap((item) =>
-		item.path ? [{ name: item.name, path: item.path }] : flatten(item.subcourses || []),
-	);
-
-	return flatten(selectedCategory.subcourses || []);
-}
-
 function getCoursesForEnrollment(enrollment) {
 	if (!enrollment) return [];
 
-	const enrollments = (Array.isArray(enrollment) ? enrollment : [enrollment])
+	const enrolledNames = new Set((Array.isArray(enrollment) ? enrollment : [enrollment])
 		.flatMap((item) => String(item).split(","))
 		.map((item) => item.trim().toLowerCase())
-		.filter(Boolean);
+		.filter(Boolean));
+
+	const collectEnrolledCourses = (items, parentIsEnrolled) => items.flatMap((item) => {
+		const isEnrolled = parentIsEnrolled || enrolledNames.has(item.name.trim().toLowerCase());
+		if (item.path) return isEnrolled ? [{ name: item.name, path: item.path }] : [];
+		return collectEnrolledCourses(item.subcourses || [], isEnrolled);
+	});
 
 	return TRAINING_COURSES.flatMap((category) => {
-		const categoryMatches = enrollments.includes(category.name.toLowerCase());
-		return getCategoryCourses(category.name)
-			.filter((course) => categoryMatches || enrollments.includes(course.name.toLowerCase()))
+		const categoryIsEnrolled = enrolledNames.has(category.name.trim().toLowerCase());
+		return collectEnrolledCourses(category.subcourses || [], categoryIsEnrolled)
 			.map((course) => ({
 				...course,
 				category: category.name,

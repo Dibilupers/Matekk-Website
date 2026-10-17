@@ -1,8 +1,8 @@
-// Where the website sends its backend requests: "/api" on the website's own address.
-// - On your computer (npm run dev), the Vite proxy forwards /api to the local backend.
-// - On Vercel, vercel.json forwards /api to the backend (https://matekk-website1.vercel.app),
-//   so the login cookie belongs to the website's own domain and browsers don't block it.
-// VITE_API_URL (set in the hosting settings) overrides this when needed.
-const API_URL = (import.meta.env.VITE_API_URL?.trim() || "/api").replace(/\/+$/, "");
+const configuredApiUrl = import.meta.env.VITE_API_URL?.trim();
+
+// Keep API requests same-origin so the browser can send the authentication cookie.
+// In development, Vite proxies /api to the local backend; Vercel forwards it to the backend.
+// VITE_API_URL overrides this when a deployment uses a dedicated backend origin.
+const API_URL = (configuredApiUrl || "/api").replace(/\/+$/, "");
 
 export default API_URL;
