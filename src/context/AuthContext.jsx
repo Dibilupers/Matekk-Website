@@ -5,6 +5,11 @@ import { AuthContext } from "./auth-context";
 const PROFILE_CACHE_KEY = "matekk-session-profile";
 const OFFLINE_PROFILE_KEY = "matekkOfflineProfile";
 
+function clearAuthCaches() {
+  sessionStorage.removeItem(PROFILE_CACHE_KEY);
+  localStorage.removeItem(OFFLINE_PROFILE_KEY);
+}
+
 function readOfflineProfile() {
   const serialized = localStorage.getItem(OFFLINE_PROFILE_KEY);
   if (!serialized) return null;
@@ -22,18 +27,6 @@ function readOfflineProfile() {
   }
 }
 
-function readCachedProfile() {
-  try {
-    const cachedProfile = JSON.parse(sessionStorage.getItem(PROFILE_CACHE_KEY) || "null");
-    if (cachedProfile && typeof cachedProfile === "object" && !Array.isArray(cachedProfile)) {
-      return cachedProfile;
-    }
-  } catch {
-    sessionStorage.removeItem(PROFILE_CACHE_KEY);
-  }
-  return readOfflineProfile();
-}
-
 function storeOfflineProfile(profile) {
   if (!profile || (typeof profile.userId !== "string" && typeof profile.userId !== "number")) return;
   localStorage.setItem(OFFLINE_PROFILE_KEY, JSON.stringify({
@@ -44,12 +37,6 @@ function storeOfflineProfile(profile) {
     first_name: profile.first_name,
     last_name: profile.last_name,
   }));
-}
-
-function clearAuthCaches() {
-  sessionStorage.removeItem(PROFILE_CACHE_KEY);
-  localStorage.removeItem(OFFLINE_PROFILE_KEY);
-  localStorage.removeItem("accessToken");
 }
 
 export function AuthProvider({ children }) {
@@ -87,16 +74,18 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     let mounted = true;
-    const cachedProfile = readCachedProfile();
+    const cachedProfile = readOfflineProfile();
     fetch(`${API_URL}/auth/profile`, {
       credentials: "include",
     })
       .then(async (response) => {
         if (!response.ok) {
+          // Signed out or session expired: forget the saved copies. Other errors (server down) fall through to the offline copy.
           if (response.status !== 401 && response.status !== 403) {
             throw new Error("Unable to verify the current session.");
           }
-          clearAuthCaches();
+          sessionStorage.removeItem(PROFILE_CACHE_KEY);
+          localStorage.removeItem(OFFLINE_PROFILE_KEY);
           if (mounted) setProfile(null);
           return;
         }

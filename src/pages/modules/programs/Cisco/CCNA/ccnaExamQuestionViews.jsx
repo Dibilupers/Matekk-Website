@@ -487,6 +487,10 @@ export function QuestionInput({ question, value, onChange, disabled }) {
 		return <GroupMatchInput question={question} value={value} onChange={onChange} disabled={disabled} />;
 	}
 
+	if (type === "match") {
+		return <MatchingQuestionInput question={question} value={value} onChange={onChange} disabled={disabled} />;
+	}
+
 	if (isMatching) {
 		const current = Array.isArray(value) ? value : question.items.map(() => null);
 		return (
@@ -603,6 +607,10 @@ export function QuestionReview({ question, value }) {
 	}
 
 	if (isMatching && matchMode(question) === "assign") {
+		return <MatchingQuestionReview question={question} value={value} />;
+	}
+
+	if (type === "match") {
 		return <MatchingQuestionReview question={question} value={value} />;
 	}
 

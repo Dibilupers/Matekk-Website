@@ -7,7 +7,7 @@ import {
 const PROGRAM_QUIZ_PROGRESS_KEY = "matekk-program-module-quiz-progress";
 
 function getProgressKey(programKey, userId) {
-	if (!["ccna-automation", "ccna-cybersecurity"].includes(programKey)) {
+	if (!["ccna-automation", "ccna-cybersecurity", "comptia-network-plus", "comptia-security-plus"].includes(programKey)) {
 		throw new TypeError(`Unsupported program quiz key: ${programKey}`);
 	}
 	if ((typeof userId !== "string" && typeof userId !== "number") || String(userId).trim() === "") {

@@ -127,6 +127,12 @@ import ProgramCompositeExam from "../pages/modules/programs/Cisco/CCNA/programCo
 import CCNAModuleQuiz from "../pages/modules/programs/Cisco/CCNA/ccnaModuleQuiz";
 import CCNAGradebook from "../pages/modules/programs/Cisco/CCNA/ccnaGradebook";
 import AplusDashboard from "../pages/modules/programs/CompTIA/A+ (Core 1 & 2)/aplusDashboard";
+import NetworkPlusDashboard from "../pages/modules/programs/CompTIA/Network+/networkPlusDashboard";
+import SecurityPlusDashboard from "../pages/modules/programs/CompTIA/Security+/securityPlusDashboard";
+import NetworkPlusExam from "../pages/modules/programs/CompTIA/Network+/networkPlusExam";
+import SecurityPlusExam from "../pages/modules/programs/CompTIA/Security+/securityPlusExam";
+import NETWORK_PLUS_PROGRAM from "../pages/modules/programs/CompTIA/Network+/networkPlusProgram";
+import SECURITY_PLUS_PROGRAM from "../pages/modules/programs/CompTIA/Security+/securityPlusProgram";
 import { useAuth } from "../context/auth-context";
 import {
   readCcnaModuleQuizProgress,
@@ -146,7 +152,8 @@ export default function App() {
     || location.pathname.startsWith("/modules/programs/ccna-automation/quiz/")
     || location.pathname.startsWith("/modules/programs/ccna-automation/exam/")
     || location.pathname.startsWith("/modules/programs/ccna-cybersecurity/quiz/")
-    || location.pathname.startsWith("/modules/programs/ccna-cybersecurity/exam/");
+    || location.pathname.startsWith("/modules/programs/ccna-cybersecurity/exam/")
+    || location.pathname.startsWith("/modules/programs/comptia-network-plus/exam/");
   const isAdminPage = location.pathname === "/admin";
   const isAccountPendingPage = location.pathname === "/account-pending";
   useHeadingTypeIn(location.pathname);
@@ -409,6 +416,64 @@ export default function App() {
           element={
             <ProtectedRoute>
               <AplusDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/comptia-network-plus"
+          element={
+            <ProtectedRoute>
+              <NetworkPlusDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/comptia-security-plus"
+          element={
+            <ProtectedRoute>
+              <SecurityPlusDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/comptia-network-plus/exam/:examKey"
+          element={
+            <ProtectedRoute>
+              <NetworkPlusExam />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/comptia-security-plus/exam/:examKey"
+          element={
+            <ProtectedRoute>
+              <SecurityPlusExam />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/comptia-network-plus/gradebook"
+          element={
+            <ProtectedRoute>
+              <ProgramModuleGradebook
+                programKey="comptia-network-plus"
+                programName="CompTIA Network+"
+                modules={NETWORK_PLUS_PROGRAM.modules}
+                dashboardPath="/modules/programs/comptia-network-plus"
+              />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/comptia-security-plus/gradebook"
+          element={
+            <ProtectedRoute>
+              <ProgramModuleGradebook
+                programKey="comptia-security-plus"
+                programName="CompTIA Security+"
+                modules={SECURITY_PLUS_PROGRAM.modules}
+                dashboardPath="/modules/programs/comptia-security-plus"
+              />
             </ProtectedRoute>
           }
         />
