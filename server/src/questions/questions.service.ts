@@ -29,7 +29,7 @@ type ExamQuestionBase = {
 };
 type SingleExamQuestion = ExamQuestionBase & { type: 'single' };
 type MatchExamQuestion = Omit<ExamQuestionBase, 'options'> & {
-  type: 'match';
+  type: 'match' | 'drag_drop' | 'click_boxes';
   items: string[];
   choices: string[];
   // "Type the numbers" questions: how many items go in each box (keyed by box name). Only the counts,
@@ -107,9 +107,16 @@ export class QuestionsService {
     const lineMatchIds = pickLineMatchIds(
       readableQuestions.filter((question): question is MatchExamQuestion => question.type === 'match'),
     );
-    const usableQuestions: ExamQuestion[] = readableQuestions.map((question) =>
-      question.type === 'match' && lineMatchIds.has(question.id) ? { ...question, matchStyle: 'lines' as const } : question,
-    );
+    const usableQuestions: ExamQuestion[] = readableQuestions.map((question) => {
+      if (question.type !== 'match' || question.matchStyle === 'numbers') return question;
+      if (lineMatchIds.has(question.id) || question.choices.length > question.items.length) {
+        return { ...question, matchStyle: 'lines' as const };
+      }
+      if (question.items.length === question.choices.length) {
+        return { ...question, type: 'click_boxes' as const };
+      }
+      return question;
+    });
 
     if (usableQuestions.length < config.questionCount) {
       throw new BadRequestException(
@@ -122,7 +129,7 @@ export class QuestionsService {
     // Persist each randomized set so a resumed attempt keeps the same questions and option order.
     const questionBlocks = config.questionCount / 50;
     const matchingCount = questionBlocks * 5;
-    const matchingQuestions = usableQuestions.filter((question) => question.type === 'match');
+    const matchingQuestions = usableQuestions.filter((question) => question.type !== 'single');
     const singleQuestions = usableQuestions.filter((question) => question.type === 'single');
     if (matchingQuestions.length < matchingCount || singleQuestions.length < config.questionCount - matchingCount) {
       throw new BadRequestException(
@@ -131,31 +138,34 @@ export class QuestionsService {
       );
     }
 
-    // Every 50-question block gets at least one of each matching style: one "type the numbers" question
-    // (several items share a few boxes), one click-to-place boxes question (each answer used once) and
-    // one "connect the circles" question. The rest of the matching slots stay random.
-    const shuffledMatches = this.shuffle(matchingQuestions);
-    const isLineStyle = (question: ExamQuestion) => question.type === 'match' &&
-      (question.matchStyle === 'lines' || question.choices.length > question.items.length);
-    const groupMatches = shuffledMatches.filter((question) =>
+    const numberQuestions = matchingQuestions.filter((question) =>
       question.type === 'match' && (question.matchStyle === 'numbers' || isGroupMatch(question)),
     );
-    const lineMatches = shuffledMatches.filter((question) => !groupMatches.includes(question) && isLineStyle(question));
-    const pairMatches = shuffledMatches.filter((question) => !groupMatches.includes(question) && !lineMatches.includes(question));
-    const guaranteedGroups = groupMatches.slice(0, questionBlocks);
-    const guaranteedPairs = pairMatches.slice(0, questionBlocks);
-    const guaranteedLines = lineMatches.slice(0, questionBlocks);
-    const remainingMatches = this.shuffle([
-      ...groupMatches.slice(questionBlocks),
-      ...pairMatches.slice(questionBlocks),
-      ...lineMatches.slice(questionBlocks),
-    ]);
+    const boxQuestions = matchingQuestions.filter((question) => question.type === 'click_boxes');
+    const dragDropQuestions = matchingQuestions.filter((question) => question.type === 'drag_drop');
+    const lineQuestions = matchingQuestions.filter((question) =>
+      question.type === 'match' && question.matchStyle === 'lines',
+    );
+    const requiredQuestionTypes = [
+      ['number', numberQuestions],
+      ['box', boxQuestions],
+      ['drag-and-drop', dragDropQuestions],
+      ['matching', lineQuestions],
+    ] as const;
+    const shortage = requiredQuestionTypes.find(([, questions]) => questions.length < questionBlocks);
+    if (shortage) {
+      throw new BadRequestException(
+        `Every 50-question exam block requires at least one ${shortage[0]} question. ` +
+        `The Questions table has ${shortage[1].length} valid ${shortage[0]} question(s), but ${questionBlocks} are required.`,
+      );
+    }
+    const guaranteedTypes = requiredQuestionTypes.map(([, questions]) =>
+      this.shuffle(questions).slice(0, questionBlocks),
+    );
+    const reservedIds = new Set(guaranteedTypes.flatMap((questions) => questions.map(({ id }) => id)));
+    const remainingMatches = this.shuffle(matchingQuestions.filter((question) => !reservedIds.has(question.id)));
     const randomizedMatches = Array.from({ length: questionBlocks }, (_, blockIndex) => {
-      const guaranteed = [
-        ...guaranteedGroups.slice(blockIndex, blockIndex + 1),
-        ...guaranteedPairs.slice(blockIndex, blockIndex + 1),
-        ...guaranteedLines.slice(blockIndex, blockIndex + 1),
-      ];
+      const guaranteed = guaranteedTypes.map((questions) => questions[blockIndex]);
       return [...guaranteed, ...remainingMatches.splice(0, 5 - guaranteed.length)];
     }).flat();
     const randomizedSingles = this.shuffle(singleQuestions);
@@ -164,7 +174,7 @@ export class QuestionsService {
       ...randomizedSingles.slice(blockIndex * 45, (blockIndex + 1) * 45),
     ]).flatMap((block) => this.shuffle(block));
     const questionSet = selectedQuestions.map((question) =>
-      question.type === 'match'
+      question.type !== 'single'
         ? { ...question, choices: this.shuffle(question.choices) }
         : { ...question, options: this.shuffle(question.options) },
     );
@@ -240,7 +250,7 @@ export class QuestionsService {
         throw new InternalServerErrorException('A question in this exam is no longer available for grading.');
       }
 
-      if (question.type === 'match') {
+      if (question.type !== 'single') {
         // PDF drag-and-drop rows: the choices and answer come from the answer text itself
         const dragDrop = source.choices?.trim() ? null : parseDragDropAnswer(source.correct_answer, source.id);
         const originalChoices = dragDrop ? dragDrop.choices : this.parseChoices(source.choices);
@@ -382,7 +392,7 @@ export class QuestionsService {
           id: record.id,
           prompt: record.question_text.trim(),
           imageUrl: record.imageUrl ?? null,
-          type: 'match',
+          type: dragDrop.matchStyle === 'numbers' ? 'match' : 'drag_drop',
           items: dragDrop.items,
           choices: dragDrop.choices,
           ...(dragDrop.matchStyle === 'numbers'
@@ -545,8 +555,11 @@ export class QuestionsService {
       ) {
         throw new InternalServerErrorException('The saved exam attempt has invalid questions.');
       }
-      const type = 'type' in item && item.type === 'match' ? 'match' : 'single';
-      if (type === 'match') {
+      const type = 'type' in item &&
+        (item.type === 'match' || item.type === 'drag_drop' || item.type === 'click_boxes')
+        ? item.type
+        : 'single';
+      if (type !== 'single') {
         if (
           !('items' in item) ||
           !Array.isArray(item.items) ||
@@ -570,7 +583,7 @@ export class QuestionsService {
           imageUrl: 'imageUrl' in item && (typeof item.imageUrl === 'string' || item.imageUrl === null)
             ? item.imageUrl
             : null,
-          type: 'match',
+          type,
           items: item.items,
           choices: item.choices,
           ...(groupCounts ? { groupCounts } : {}),
@@ -650,7 +663,7 @@ export class QuestionsService {
       submittedAt: attempt.submittedAt?.getTime() ?? null,
       isSubmitted: attempt.submittedAt !== null,
       questions: signedQuestions.map((question) =>
-        question.type === 'match'
+        question.type !== 'single'
           ? {
               id: question.id,
               prompt: question.prompt,
@@ -722,7 +735,7 @@ export class QuestionsService {
       const question = this.readQuestion(row);
       if (!question) return [];
 
-      const answer = question.type === 'match'
+      const answer = question.type !== 'single'
         ? row.question_type === 'match'
           ? this.parseMatchAnswer(row.correct_answer, question.items.length, question.choices.length)
           : parseDragDropAnswer(row.correct_answer, row.id)?.answer

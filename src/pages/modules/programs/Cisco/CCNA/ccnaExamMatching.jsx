@@ -33,6 +33,12 @@ function MatchBoard({ question, value, onChange, disabled = false, review = fals
 	function connectTo(choiceIndex) {
 		if (disabled || activeItem === null) return;
 		const next = Array.from({ length: question.items.length }, (_, index) => connections[index] ?? null);
+		if (next[activeItem] === choiceIndex) {
+			next[activeItem] = null;
+			onChange(next);
+			setActiveItem(null);
+			return;
+		}
 		for (let index = 0; index < next.length; index += 1) {
 			if (index !== activeItem && next[index] === choiceIndex) next[index] = null;
 		}
@@ -43,7 +49,24 @@ function MatchBoard({ question, value, onChange, disabled = false, review = fals
 
 	function activateItem(itemIndex) {
 		if (disabled) return;
+		if (Number.isInteger(connections[itemIndex])) {
+			const next = [...connections];
+			next[itemIndex] = null;
+			onChange(next);
+			setActiveItem(null);
+			return;
+		}
 		setActiveItem((current) => current === itemIndex ? null : itemIndex);
+	}
+
+	function clearChoice(choiceIndex) {
+		if (disabled) return;
+		const itemIndex = connections.findIndex((answer) => answer === choiceIndex);
+		if (itemIndex < 0) return;
+		const next = [...connections];
+		next[itemIndex] = null;
+		onChange(next);
+		setActiveItem(null);
 	}
 
 	useLayoutEffect(() => {
@@ -71,7 +94,9 @@ function MatchBoard({ question, value, onChange, disabled = false, review = fals
 	return (
 		<div className="space-y-3">
 			<p className="text-sm text-[#70809a]">
-				{review ? "Your connections are shown below." : "Select a dot in Column A, then select its match in Column B."}
+				{review
+					? "Your connections are shown below."
+					: "Select an item in Column A, then select its match in Column B. Click a connected row to remove its match."}
 			</p>
 			<div
 				role="region"
@@ -125,54 +150,56 @@ function MatchBoard({ question, value, onChange, disabled = false, review = fals
 
 						return (
 							<div key={rowIndex} className="grid grid-cols-[minmax(0,1.3fr)_minmax(0,0.7fr)] items-stretch border-b border-[#e5eaf1] sm:grid-cols-2">
-								<div className={`grid min-h-[76px] min-w-0 grid-cols-[1.75rem_minmax(0,1fr)_4rem] items-center gap-1 border-r border-[#e5eaf1] px-2 py-2 sm:grid-cols-[2.25rem_minmax(0,1fr)_4rem] sm:gap-4 sm:px-5 ${isActive ? "bg-[#f6f4ff]" : ""}`}>
+								<button
+									ref={(element) => { if (element) leftDots.current[rowIndex] = element.querySelector("[data-match-dot]"); }}
+									type="button"
+									disabled={disabled || review || item === undefined}
+									onClick={() => activateItem(rowIndex)}
+									aria-label={itemConnected
+										? `Remove match for ${item}`
+										: `${isActive ? "Cancel connection from" : "Connect"} ${item ?? ""}`}
+									aria-pressed={isActive}
+									className={`grid min-h-[76px] min-w-0 grid-cols-[1.75rem_minmax(0,1fr)_4rem] items-center gap-1 border-r border-[#e5eaf1] bg-transparent px-2 py-2 text-left focus-visible:z-30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-[#5746bd] disabled:cursor-default sm:grid-cols-[2.25rem_minmax(0,1fr)_4rem] sm:gap-4 sm:px-5 ${isActive ? "bg-[#f6f4ff]/50" : ""}`}
+								>
 									{item !== undefined && (
 										<>
 											<span className="text-left text-sm font-semibold tabular-nums text-[#263654] sm:text-base">{rowIndex + 1}.</span>
 											<span className="min-w-0 break-words text-left text-[13px] leading-snug text-[#263654] sm:text-base">{item}</span>
-											<button
-												ref={(element) => { leftDots.current[rowIndex] = element; }}
-												type="button"
-												disabled={disabled || review}
-												onClick={() => activateItem(rowIndex)}
-												aria-label={`${isActive ? "Cancel connection from" : "Connect"} ${item}`}
-												aria-pressed={isActive}
-												className="group grid h-16 w-16 shrink-0 place-items-center rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[#5746bd] disabled:cursor-default"
-											>
-												<span aria-hidden="true" className={`h-[18px] w-[18px] rounded-full border-2 transition ${review
+											<span className="group grid h-16 w-16 shrink-0 place-items-center rounded-full">
+												<span data-match-dot aria-hidden="true" className={`h-[18px] w-[18px] rounded-full border-2 transition ${review
 													? (itemCorrect ? "border-[#287849] bg-[#287849]" : itemConnected ? "border-[#c7541a] bg-[#c7541a]" : "border-[#a8b2bf] bg-white")
 													: isActive || itemConnected ? "border-[#5746bd] bg-[#5746bd]"
 														: "border-[#a8b2bf] bg-white group-hover:border-[#5746bd]"
 												}`} />
-											</button>
-										</>
-									)}
-								</div>
-								<div className="grid min-h-[76px] min-w-0 grid-cols-[4rem_minmax(0,1fr)] items-center gap-1 px-2 py-2 sm:gap-4 sm:px-5">
-									{choice !== undefined && (
-										<>
-											<button
-												ref={(element) => { rightDots.current[rowIndex] = element; }}
-												type="button"
-												disabled={disabled || review}
-												onClick={() => {
-													if (activeItem !== null) connectTo(rowIndex);
-													else if (choiceConnected) setActiveItem(connectedItem);
-												}}
-												aria-label={choiceConnected ? `Connected to ${question.items[connectedItem]}. Select to change connection.` : `Connect to ${choice}`}
-												className="group grid h-16 w-16 shrink-0 place-items-center rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[#5746bd] disabled:cursor-default"
-											>
-												<span aria-hidden="true" className={`h-[18px] w-[18px] rounded-full border-2 transition ${review
-													? (choiceCorrect ? "border-[#287849] bg-[#287849]" : choiceConnected ? "border-[#c7541a] bg-[#c7541a]" : "border-[#a8b2bf] bg-white")
-													: choiceConnected ? "border-[#5746bd] bg-[#5746bd]" : "border-[#a8b2bf] bg-white group-hover:border-[#5746bd]"
-												}`} />
-											</button>
-											<span className="min-w-0 break-words text-[13px] leading-snug text-[#263654] sm:text-base">
-												<span className="font-semibold">{letter(rowIndex)}.</span> {choice}
 											</span>
 										</>
 									)}
-								</div>
+								</button>
+								{choice !== undefined ? (
+									<button
+										ref={(element) => { if (element) rightDots.current[rowIndex] = element.querySelector("[data-match-dot]"); }}
+										type="button"
+										disabled={disabled || review}
+										onClick={() => {
+											if (activeItem !== null) connectTo(rowIndex);
+											else if (choiceConnected) clearChoice(rowIndex);
+										}}
+										aria-label={choiceConnected ? `Remove match for ${question.items[connectedItem]}: ${choice}` : `Connect to ${choice}`}
+										className="grid min-h-[76px] min-w-0 grid-cols-[4rem_minmax(0,1fr)] items-center gap-1 bg-transparent px-2 py-2 text-left focus-visible:z-30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-[#5746bd] disabled:cursor-default sm:gap-4 sm:px-5"
+									>
+										<span className="group grid h-16 w-16 shrink-0 place-items-center rounded-full">
+											<span data-match-dot aria-hidden="true" className={`h-[18px] w-[18px] rounded-full border-2 transition ${review
+												? (choiceCorrect ? "border-[#287849] bg-[#287849]" : choiceConnected ? "border-[#c7541a] bg-[#c7541a]" : "border-[#a8b2bf] bg-white")
+												: choiceConnected ? "border-[#5746bd] bg-[#5746bd]" : "border-[#a8b2bf] bg-white group-hover:border-[#5746bd]"
+											}`} />
+										</span>
+										<span className="min-w-0 break-words text-[13px] leading-snug text-[#263654] sm:text-base">
+											<span className="font-semibold">{letter(rowIndex)}.</span> {choice}
+										</span>
+									</button>
+								) : (
+									<div className="min-h-[76px] border-r border-[#e5eaf1]" />
+								)}
 							</div>
 						);
 					})}

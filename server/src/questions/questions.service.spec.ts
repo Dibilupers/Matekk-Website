@@ -6,6 +6,7 @@ import { GradebookService } from '../gradebook/gradebook.service.js';
 
 function examQuestionBank(questionCount: number) {
   const matchingCount = questionCount / 10;
+  const questionBlocks = questionCount / 50;
   const singleQuestions = Array.from({ length: questionCount - matchingCount }, (_, index) => ({
     id: index + 1,
     module: 'CCNA',
@@ -18,8 +19,26 @@ function examQuestionBank(questionCount: number) {
     question_type: 'single',
     match_items: null,
   }));
-  const matchQuestions = Array.from({ length: matchingCount }, (_, index) => ({
-    id: questionCount - matchingCount + index + 1,
+  const generatedQuestions = Array.from({ length: questionBlocks }, (_, blockIndex) => {
+    const numberQuestion = {
+      ...singleQuestions[0],
+      id: singleQuestions.length + blockIndex * 2 + 1,
+      question_text: `Number question ${blockIndex + 1}`,
+      choices: '',
+      correct_answer: 'Group A:\n+ Item A\n+ Item B\nGroup B:\n+ Item C\n+ Item D',
+    };
+    const dragDropQuestion = {
+      ...singleQuestions[0],
+      id: singleQuestions.length + blockIndex * 2 + 2,
+      question_text: `Drag-and-drop question ${blockIndex + 1}`,
+      choices: '',
+      correct_answer: 'Item A: Answer A\nItem B: Answer B',
+    };
+    return [numberQuestion, dragDropQuestion];
+  }).flat();
+  const explicitMatchCount = matchingCount - generatedQuestions.length;
+  const matchQuestions = Array.from({ length: explicitMatchCount }, (_, index) => ({
+    id: singleQuestions.length + generatedQuestions.length + index + 1,
     module: 'CCNA',
     topic: 'Addressing',
     difficulty: 'Medium',
@@ -30,7 +49,7 @@ function examQuestionBank(questionCount: number) {
     question_type: 'match',
     match_items: ['Item A', 'Item B'],
   }));
-  return [...singleQuestions, ...matchQuestions];
+  return [...singleQuestions, ...generatedQuestions, ...matchQuestions];
 }
 
 describe('QuestionsService', () => {
@@ -213,7 +232,7 @@ describe('QuestionsService', () => {
     const attempt = await service.startExam('short', 7);
 
     expect(attempt.questions).toHaveLength(50);
-    expect(attempt.questions.filter((question) => question.type === 'match')).toHaveLength(5);
+    expect(attempt.questions.filter((question) => question.type !== 'single')).toHaveLength(5);
     expect(attempt.questions.every((question) =>
       !('correct_answer' in question) && !('answer' in question),
     )).toBe(true);
@@ -222,19 +241,43 @@ describe('QuestionsService', () => {
       prompt: expect.any(String),
       options: expect.arrayContaining(['Correct', 'Wrong A', 'Wrong B']),
     });
-    expect(attempt.questions.find((question) => question.type === 'match')).toMatchObject({
-      type: 'match',
+    expect(attempt.questions.find((question) => question.prompt === 'Match question 1')).toMatchObject({
+      type: expect.stringMatching(/^(match|click_boxes)$/),
       items: ['Item A', 'Item B'],
       choices: expect.arrayContaining(['Answer A', 'Answer B']),
     });
+    expect(attempt.questions).toEqual(expect.arrayContaining([
+      expect.objectContaining({ type: 'match', matchStyle: 'numbers' }),
+      expect.objectContaining({ type: 'click_boxes' }),
+      expect.objectContaining({ type: 'drag_drop' }),
+      expect.objectContaining({ type: 'match', matchStyle: 'lines' }),
+    ]));
     expect(prismaMock.examAttempt.create).toHaveBeenCalledOnce();
     expect(prismaMock.examAttempt.create.mock.calls[0][0].data.userId).toBe(7);
+    const savedAttempt = prismaMock.examAttempt.create.mock.calls[0][0].data;
+    prismaMock.examAttempt.findUnique.mockResolvedValue({
+      ...savedAttempt,
+      userId: 7,
+      score: null,
+      review: null,
+      submittedAt: null,
+    });
+    const resumedAttempt = await service.resumeExam('short', attempt.attemptId, 7);
+    expect(resumedAttempt.questions).toEqual(expect.arrayContaining([
+      expect.objectContaining({ type: 'match', matchStyle: 'numbers' }),
+      expect.objectContaining({ type: 'click_boxes' }),
+      expect.objectContaining({ type: 'drag_drop' }),
+      expect.objectContaining({ type: 'match', matchStyle: 'lines' }),
+    ]));
   });
 
   it('preserves numbered-input metadata for wrapped grouped questions in the exam attempt', async () => {
     const databaseQuestions = examQuestionBank(50);
-    databaseQuestions[49] = {
-      ...databaseQuestions[49],
+    const numberQuestionIndex = databaseQuestions.findIndex((question) =>
+      question.question_text.startsWith('Number question'),
+    );
+    databaseQuestions[numberQuestionIndex] = {
+      ...databaseQuestions[numberQuestionIndex],
       id: 1307,
       question_text: 'An interface has been configured with the access list shown below.',
       choices: '',
@@ -291,13 +334,15 @@ describe('QuestionsService', () => {
     prismaMock.questions.findMany.mockResolvedValue([...bank, ...extraMatches]);
 
     const attempt = await service.startExam('medium', 7);
-    const matches = attempt.questions.filter((question) => question.type === 'match');
+    const matches = attempt.questions.filter((question) => question.type !== 'single');
 
     expect(matches).toHaveLength(10);
     for (const block of [attempt.questions.slice(0, 50), attempt.questions.slice(50, 100)]) {
-      const blockMatches = block.filter((question) => question.type === 'match');
-      expect(blockMatches.some((question) => 'matchStyle' in question && question.matchStyle === 'lines')).toBe(true);
-      expect(blockMatches.some((question) => !('matchStyle' in question))).toBe(true);
+      const blockMatches = block.filter((question) => question.type !== 'single');
+      expect(blockMatches.some((question) => question.type === 'match' && question.matchStyle === 'lines')).toBe(true);
+      expect(blockMatches.some((question) => question.type === 'click_boxes')).toBe(true);
+      expect(blockMatches.some((question) => question.type === 'drag_drop')).toBe(true);
+      expect(blockMatches.some((question) => question.type === 'match' && question.matchStyle === 'numbers')).toBe(true);
     }
     // the saved attempt keeps the style, so a resumed exam shows the same question the same way
     const saved = prismaMock.examAttempt.create.mock.calls[0][0].data.questionSet as { matchStyle?: string }[];
@@ -405,9 +450,16 @@ describe('QuestionsService', () => {
 
     expect(attempt.questions).toHaveLength(count);
     for (let offset = 0; offset < count; offset += 50) {
+      const block = attempt.questions.slice(offset, offset + 50);
       expect(
-        attempt.questions.slice(offset, offset + 50).filter((question) => question.type === 'match'),
+        block.filter((question) => question.type !== 'single'),
       ).toHaveLength(5);
+      expect(block).toEqual(expect.arrayContaining([
+        expect.objectContaining({ type: 'match', matchStyle: 'numbers' }),
+        expect.objectContaining({ type: 'click_boxes' }),
+        expect.objectContaining({ type: 'drag_drop' }),
+        expect.objectContaining({ type: 'match', matchStyle: 'lines' }),
+      ]));
     }
   });
 
