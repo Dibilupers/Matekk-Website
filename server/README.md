@@ -40,6 +40,14 @@ At minimum, set `DATABASE_URL`, `DIRECT_URL`, a secure `JWT_SECRET`, and
 the app in production. Configure `VITE_API_URL` in the frontend deployment to
 the backend origin. Production auth cookies require HTTPS and use
 `SameSite=None` so credentialed frontend-to-API requests can authenticate.
+To enable offline module PIN setup, optionally configure `OFFLINE_MODULE_PIN`
+on the backend with the administrator's 4–6 digit shared PIN. Do not put this
+value in a `VITE_*` variable or frontend source: the server validates it for a
+signed-in user, then the browser stores only a salted verifier for offline
+unlocking. Users must validate the PIN once on each device while online.
+This PIN is a convenience gate for cached learning content, not a replacement
+for account authentication or a security boundary against someone with access
+to the device or browser storage.
 For local development and tests, the server now falls back to a non-production
 JWT secret so the app can boot without extra configuration.
 Automatic registration and approval emails use EmailJS. Configure

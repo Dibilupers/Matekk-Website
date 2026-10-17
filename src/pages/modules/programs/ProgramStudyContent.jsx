@@ -22,6 +22,11 @@ export default function ProgramStudyContent({ content, title = "Detailed study m
 							</li>
 						))}
 					</ul>
+					{section.code && (
+						<pre className="mt-3 overflow-x-auto rounded-lg bg-[#0f1b2d] p-4 text-sm leading-6 text-[#e2e8f0]">
+							<code>{section.code}</code>
+						</pre>
+					)}
 					<p className="mt-3 rounded-lg bg-[#f5f9f9] px-3 py-2 text-sm leading-5 text-[#526584]">
 						<strong className="text-[#111a2d]">Example: </strong>{section.example}
 					</p>
