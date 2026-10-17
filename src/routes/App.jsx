@@ -153,7 +153,8 @@ export default function App() {
     || location.pathname.startsWith("/modules/programs/ccna-automation/exam/")
     || location.pathname.startsWith("/modules/programs/ccna-cybersecurity/quiz/")
     || location.pathname.startsWith("/modules/programs/ccna-cybersecurity/exam/")
-    || location.pathname.startsWith("/modules/programs/comptia-network-plus/exam/");
+    || location.pathname.startsWith("/modules/programs/comptia-network-plus/exam/")
+    || location.pathname.startsWith("/modules/programs/comptia-security-plus/exam/");
   const isAdminPage = location.pathname === "/admin";
   const isAccountPendingPage = location.pathname === "/account-pending";
   useHeadingTypeIn(location.pathname);

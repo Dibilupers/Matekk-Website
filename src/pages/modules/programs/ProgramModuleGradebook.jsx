@@ -19,11 +19,12 @@ function getGradeTone(score) {
 	return { text: "text-[#b42318]", fill: "bg-[#d04438]", badge: "bg-[#fff0ed] text-[#b42318]" };
 }
 
-function getModuleRows(modules, progress, storedAssessments) {
+function getModuleRows(modules, progress, storedAssessments, programKey) {
 	return modules.flatMap((module, index) => {
 		const attempt = progress.modules[module.number];
-		const isCurrentAttempt = isCurrentProgramModuleQuizAttempt(attempt);
-		const localHistory = isCurrentAttempt
+		const isCurrentAttempt = isCurrentProgramModuleQuizAttempt(attempt, programKey, module.number);
+		const keepsLegacyHistory = programKey === "ccna-cybersecurity" && module.number === "2.0";
+		const localHistory = isCurrentAttempt || keepsLegacyHistory
 			? getCcnaModuleQuizAttemptHistory(attempt, 20)
 				.filter((result) => Number.isInteger(result.attemptNumber) && Number.isFinite(result.score))
 			: [];
@@ -294,7 +295,7 @@ export default function ProgramModuleGradebook({ programKey, programName, module
 	}, [programKey, userId]);
 	const progress = userId ? readProgramModuleQuizProgress(programKey, userId) : { activeModule: null, modules: {} };
 	const storedAssessments = backendGradebook.userId === userId ? backendGradebook.assessments : [];
-	const moduleRows = getModuleRows(modules, progress, storedAssessments);
+	const moduleRows = getModuleRows(modules, progress, storedAssessments, programKey);
 	const examRows = getExamRows(storedAssessments, programKey);
 	const completedExamCount = new Set(examRows.filter((row) => row.status === "graded").map((row) => row.name)).size;
 	const completedRows = moduleRows.filter((row) => row.status === "graded");

@@ -139,6 +139,7 @@ export default function CompTIAProgramDashboard({ program }) {
 	const { profile } = useAuth();
 	const navigate = useNavigate();
 	const isNetworkPlus = program.programKey === "comptia-network-plus";
+	const includesAllQuestionsExam = isNetworkPlus || program.includeAllQuestionsExam === true;
 	const { stats: gradebookScoreStats } = useGradebookQuizStats(
 		program.programKey,
 		profile?.userId,
@@ -162,13 +163,13 @@ export default function CompTIAProgramDashboard({ program }) {
 		{ name: "Short Exam", key: "short", length: "Short", questions: 50, duration: "45 mins", description: "A quick practice session." },
 		{ name: "Medium Exam", key: "medium", length: "Medium", questions: 100, duration: "1 hour & 30 mins", description: "A balanced, longer practice session." },
 		{ name: "Long Exam", key: "long", length: "Long", questions: 150, duration: "2 hours", description: "A full-length practice session." },
-		...(isNetworkPlus
-			? [{ name: "All Questions Exam", key: "all_questions", length: "All questions", questions: "All", duration: "No time limit", description: "Every question from the Network+ question bank, in database order." }]
+		...(includesAllQuestionsExam
+			? [{ name: "All Questions Exam", key: "all_questions", length: "All questions", questions: "All", duration: "No time limit", description: `Every question from the ${program.title} question bank, in database order.` }]
 			: []),
-	], [isNetworkPlus]);
+	], [includesAllQuestionsExam, program.title]);
 	const progressExamFormats = [
 		...STANDARD_EXAM_FORMATS,
-		...(isNetworkPlus
+		...(includesAllQuestionsExam
 			? [{ key: "all_questions", name: "All Questions Exam", questionCount: null, durationSeconds: null }]
 			: []),
 	];
@@ -702,9 +703,9 @@ export default function CompTIAProgramDashboard({ program }) {
 							</button>
 						</header>
 						<p className="mt-3 text-sm leading-6 text-[#71819b]">
-							{isNetworkPlus
-								? "The first three formats randomly select questions. All Questions Exam goes through every question from the Network+ question bank in database order, with no time limit."
-								: "Each exam randomly selects a set of questions from the CompTIA Security+ question bank. Choose the question count and time limit for your practice session."}
+							{includesAllQuestionsExam
+								? `The first three formats randomly select questions. All Questions Exam goes through every question from the ${program.title} question bank in database order, with no time limit.`
+								: `Each exam randomly selects a set of questions from the CompTIA ${program.title} question bank. Choose the question count and time limit for your practice session.`}
 						</p>
 						{examResultsState.error && examResultsState.userId === profile?.userId && (
 							<p role="alert" className="mt-3 rounded-xl border border-[#f2c6c3] bg-[#fff8f7] px-4 py-3 text-sm text-[#b42318]">

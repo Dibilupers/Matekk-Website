@@ -125,7 +125,7 @@ export function ProgramModuleQuizAction({ programKey, basePath, module, compact 
 	const [, setProgressRevision] = useState(0);
 	const progress = userId ? readProgramModuleQuizProgress(programKey, userId) : { modules: {} };
 	const attempt = progress.modules[module.number];
-	const currentAttempt = isCurrentProgramModuleQuizAttempt(attempt) ? attempt : null;
+	const currentAttempt = isCurrentProgramModuleQuizAttempt(attempt, programKey, module.number) ? attempt : null;
 	const questions = getProgramQuizQuestions(programKey, module.number);
 	const deadlineHasPassed = currentAttempt?.status === "in-progress" &&
 		Number.isFinite(currentAttempt.deadline) &&
@@ -224,10 +224,10 @@ export function ProgramModuleQuizAction({ programKey, basePath, module, compact 
 	);
 }
 
-function getModuleResults(modules, attempts) {
+function getModuleResults(modules, attempts, programKey) {
 	return modules.map((module) => {
 		const saved = attempts[module.number];
-		const attempt = isCurrentProgramModuleQuizAttempt(saved) ? saved : null;
+		const attempt = isCurrentProgramModuleQuizAttempt(saved, programKey, module.number) ? saved : null;
 		return { module, attempt };
 	});
 }
@@ -240,7 +240,7 @@ export default function ProgramModuleQuizPanel({ programKey, basePath, modules }
 	const [progressSlide, setProgressSlide] = useState(0);
 	const [examClockNow, setExamClockNow] = useState(Date.now);
 	const progress = userId ? readProgramModuleQuizProgress(programKey, userId) : { modules: {} };
-	const moduleResults = getModuleResults(modules, progress.modules);
+	const moduleResults = getModuleResults(modules, progress.modules, programKey);
 	const attemptedCount = moduleResults.filter(({ attempt }) =>
 		["completed", "expired"].includes(attempt?.status) ||
 		(attempt?.status === "in-progress" && Object.keys(attempt.answers ?? {}).length > 0),

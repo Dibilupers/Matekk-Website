@@ -270,7 +270,7 @@ export default function ProgramQuizControls({ programKey, basePath, modules, lea
 						<div className="min-h-0 flex-1 space-y-3 overflow-y-auto overscroll-contain p-4 sm:p-6">
 							{modules.map((module) => {
 								const savedAttempt = progress.modules[module.number];
-								const attempt = isCurrentProgramModuleQuizAttempt(savedAttempt) ? savedAttempt : null;
+								const attempt = isCurrentProgramModuleQuizAttempt(savedAttempt, programKey, module.number) ? savedAttempt : null;
 								const result = ["completed", "expired"].includes(attempt?.status);
 								const answeredCount = Object.keys(attempt?.answers ?? {}).length;
 								const lessonCount = module.lessons?.length ?? 0;

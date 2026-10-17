@@ -44,9 +44,9 @@ const PROGRAM_QUIZ_CONFIG = {
 	},
 };
 
-function isCurrentQuizAttempt(attempt, programKey) {
+function isCurrentQuizAttempt(attempt, programKey, moduleNumber) {
 	return programKey
-		? isCurrentProgramModuleQuizAttempt(attempt)
+		? isCurrentProgramModuleQuizAttempt(attempt, programKey, moduleNumber)
 		: isCurrentCcnaModuleQuizAttempt(attempt);
 }
 
@@ -86,7 +86,7 @@ function getModuleProgress(userId, moduleNumber, programKey, durationSeconds) {
 	}
 	const progress = readQuizProgress(userId, programKey);
 	const savedAttempt = progress.modules[moduleNumber];
-	if (savedAttempt && !isCurrentQuizAttempt(savedAttempt, programKey)) {
+	if (savedAttempt && !isCurrentQuizAttempt(savedAttempt, programKey, moduleNumber)) {
 		return {
 			status: "not-started",
 			currentIndex: 0,

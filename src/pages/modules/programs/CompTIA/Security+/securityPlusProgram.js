@@ -2,6 +2,7 @@ import SecurityPlusBadge from "../../../../../assets/security+.webp";
 
 const SECURITY_PLUS_PROGRAM = {
 	programKey: "comptia-security-plus",
+	includeAllQuestionsExam: true,
 	title: "Security+",
 	badge: SecurityPlusBadge,
 	coursePath: "/training/comptia/security+",

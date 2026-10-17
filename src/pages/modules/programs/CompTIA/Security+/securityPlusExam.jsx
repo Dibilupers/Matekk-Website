@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import ProgramCompositeExam from "../../Cisco/CCNA/programCompositeExam";
-import { createCompTIAExamFormats } from "../Network+/networkPlusExamFormats";
-import { loadCompTIAExamQuestions } from "../Network+/networkPlusExamQuestionBank";
+import { createSecurityPlusExamFormats } from "./securityPlusExamFormats";
+import { loadSecurityPlusExamQuestions } from "./securityPlusExamQuestionBank";
 
 export default function SecurityPlusExam() {
 	const { examKey } = useParams();
@@ -12,7 +12,7 @@ export default function SecurityPlusExam() {
 
 	useEffect(() => {
 		let isActive = true;
-		loadCompTIAExamQuestions("Security+")
+		loadSecurityPlusExamQuestions()
 			.then((questions) => {
 				if (isActive) setQuestionBankState({ status: "ready", questions, error: null });
 			})
@@ -32,10 +32,7 @@ export default function SecurityPlusExam() {
 	}, [loadAttempt]);
 
 	const examFormats = questionBankState.status === "ready"
-		? createCompTIAExamFormats(questionBankState.questions, {
-			programKey: "comptia-security-plus",
-			programName: "CompTIA Security+",
-		})
+		? createSecurityPlusExamFormats(questionBankState.questions)
 		: null;
 	const exam = examFormats?.[examKey];
 	if (questionBankState.status === "ready" && !exam) {
