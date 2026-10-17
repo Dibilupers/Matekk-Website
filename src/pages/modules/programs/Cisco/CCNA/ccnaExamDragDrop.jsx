@@ -87,7 +87,7 @@ export function DragDropQuestionInput({ question, value, onChange, disabled }) {
 								tabIndex={disabled ? -1 : 0}
 								aria-label={`Drop an answer for ${item}`}
 								className={`min-h-16 rounded-xl border p-3 text-left transition ${
-									activeChoice !== null && !disabled
+									activeChoice !== null && !disabled && !Number.isInteger(choiceIndex)
 										? "cursor-pointer border-dashed border-[#005b6b] bg-[#f0f7f7]"
 										: "border-[#d9e1ef] bg-white"
 								}`}
