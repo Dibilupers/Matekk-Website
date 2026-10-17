@@ -5,8 +5,9 @@ import { useAuth } from "../../../../../context/auth-context";
 import TrainingLogo from "../../../../../assets/MATEKK_training_logo.png";
 import { isAnswerCorrect, isQuestionAnswered } from "../../../../../utils/ccnaExamGrading";
 import { loadCcnaAllQuestionsBank } from "../../../../../utils/ccnaQuestionBankApi";
-import { ExhibitImage, ExhibitText } from "./ccnaExhibit";
+import { ExhibitDiagram, ExhibitImage, ExhibitText } from "./ccnaExhibit";
 import { QuestionInput, QuestionPrompt, QuestionReview } from "./ccnaExamQuestionViews";
+import { applyNativeExhibit } from "./ccnaCompositeSetQuestions";
 
 function isValidSavedAnswer(question, answer) {
 	if (["match", "drag_drop", "click_boxes", "image"].includes(question.type)) {
@@ -78,7 +79,9 @@ export default function CCNAAllQuestionsExam() {
 		setLoadState({ status: "loading", error: null });
 		loadCcnaAllQuestionsBank()
 			.then(({ questions: validQuestions, skippedCount }) => {
-				const orderedQuestions = [...validQuestions].sort((left, right) => left.bankId - right.bankId);
+				const orderedQuestions = [...validQuestions]
+					.map(applyNativeExhibit)
+					.sort((left, right) => left.bankId - right.bankId);
 				if (!orderedQuestions.length) {
 					throw new TypeError("The Questions table has no questions that can be rendered and graded.");
 				}
@@ -318,9 +321,10 @@ export default function CCNAAllQuestionsExam() {
 							{!question.hidePrompt && (
 								<QuestionPrompt
 									prompt={question.prompt}
-									hasSeparateExhibit={Boolean(question.exhibit || question.exhibitImage)}
+									hasSeparateExhibit={Boolean(question.exhibit || question.exhibitImage || question.exhibitDiagram)}
 								/>
 							)}
+							{question.exhibitDiagram && <ExhibitDiagram type={question.exhibitDiagram} className="mb-6" />}
 							{question.exhibitImage && !question.hideExhibitImage && <ExhibitImage src={question.exhibitImage} className="mb-6" imageClassName="max-h-[32rem]" cropTop={question.exhibitImageCropTop} />}
 							{question.exhibit && <ExhibitText text={question.exhibit} className="mb-6" />}
 							<QuestionInput
@@ -422,9 +426,10 @@ export default function CCNAAllQuestionsExam() {
 							{!question.hidePrompt && (
 								<QuestionPrompt
 									prompt={question.prompt}
-									hasSeparateExhibit={Boolean(question.exhibit || question.exhibitImage)}
+									hasSeparateExhibit={Boolean(question.exhibit || question.exhibitImage || question.exhibitDiagram)}
 								/>
 							)}
+							{question.exhibitDiagram && <ExhibitDiagram type={question.exhibitDiagram} className="mt-4" />}
 							{question.exhibitImage && !question.hideExhibitImage && <ExhibitImage src={question.exhibitImage} className="mb-6" imageClassName="max-h-[32rem]" cropTop={question.exhibitImageCropTop} />}
 							{question.exhibit && <ExhibitText text={question.exhibit} className="mb-6" />}
 							<QuestionReview question={question} value={answers[currentIndex]} />

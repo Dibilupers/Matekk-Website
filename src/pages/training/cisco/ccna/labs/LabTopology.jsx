@@ -3,7 +3,7 @@ import { linkUp } from "./labEngine";
 /* Packet Tracer-style network diagram. Links are green when both ends are up,
    red/dashed when down. Router labels follow the live hostname. */
 
-function RouterIcon({ x, y, label, sub, active }) {
+export function RouterIcon({ x, y, label, sub, details, active }) {
 	return (
 		<g transform={`translate(${x} ${y})`}>
 			{active && <ellipse cx="0" cy="3" rx="44" ry="25" fill="none" stroke="#1775EE" strokeWidth="2" strokeDasharray="4 3" />}
@@ -15,12 +15,31 @@ function RouterIcon({ x, y, label, sub, active }) {
 				<path d="M6 -3 L18 -9 M18 -9 L12 -9 M18 -9 L15 -4" />
 			</g>
 			<text x="0" y="40" textAnchor="middle" fontSize="13" fontWeight="700" fill="#17233d">{label}</text>
-			{sub && <text x="0" y="54" textAnchor="middle" fontSize="9.5" fill="#4b5b78">{sub}</text>}
+			{(details ?? (sub ? [sub] : [])).map((detail, index) => (
+				<text key={detail} x="0" y={54 + index * 12} textAnchor="middle" fontSize="9.5" fill="#4b5b78">{detail}</text>
+			))}
 		</g>
 	);
 }
 
-function PcIcon({ x, y, label, sub, server }) {
+export function SwitchIcon({ x, y, label, sub, details }) {
+	return (
+		<g transform={`translate(${x} ${y})`}>
+			<path d="M-34 -7 L-22 -20 H34 L23 -7 Z" fill="#4a9bda" stroke="#0f4c81" strokeWidth="1.5" />
+			<path d="M-34 -7 H23 V12 H-34 Z" fill="#1f6fb2" stroke="#0f4c81" strokeWidth="1.5" />
+			<path d="M23 -7 L34 -20 V0 L23 12 Z" fill="#155d99" stroke="#0f4c81" strokeWidth="1.5" />
+			<g stroke="#fff" strokeWidth="1.5" strokeLinecap="round">
+				<path d="M-22 -12h5M-10 -12h5M2 -12h5M14 -12h5" />
+			</g>
+			<text x="0" y="40" textAnchor="middle" fontSize="13" fontWeight="700" fill="#17233d">{label}</text>
+			{(details ?? (sub ? [sub] : [])).map((detail, index) => (
+				<text key={detail} x="0" y={54 + index * 12} textAnchor="middle" fontSize="9.5" fill="#4b5b78">{detail}</text>
+			))}
+		</g>
+	);
+}
+
+export function PcIcon({ x, y, label, sub, details, server }) {
 	return (
 		<g transform={`translate(${x} ${y})`}>
 			{server ? (
@@ -37,7 +56,9 @@ function PcIcon({ x, y, label, sub, server }) {
 				</>
 			)}
 			<text x="0" y="40" textAnchor="middle" fontSize="13" fontWeight="700" fill="#17233d">{label}</text>
-			{sub && <text x="0" y="54" textAnchor="middle" fontSize="9.5" fill="#4b5b78">{sub}</text>}
+			{(details ?? (sub ? [sub] : [])).map((detail, index) => (
+				<text key={detail} x="0" y={54 + index * 12} textAnchor="middle" fontSize="9.5" fill="#4b5b78">{detail}</text>
+			))}
 		</g>
 	);
 }

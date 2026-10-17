@@ -18,6 +18,7 @@ import { cleanText } from "../../../../../utils/ccnaBankConverter";
 import { ExhibitDiagram, ExhibitImage, ExhibitText } from "./ccnaExhibit";
 import { loadCcnaQuestionBank } from "../../../../../utils/ccnaQuestionBankApi";
 import { getDatabaseQuestionById, setDatabaseQuestions } from "./ccnaQuestionBank";
+import { applyNativeExhibit } from "./ccnaCompositeSetQuestions";
 import { resumeCcnaExam, startCcnaExam, submitCcnaExam } from "../../../../../utils/ccnaExamApi";
 const EXAM_PASS_PERCENTAGE = 80;
 const RECREATED_MATCH_EXHIBIT_QUESTION_IDS = new Set([570]);
@@ -188,7 +189,8 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 				await bankReady;
 				if (!isActive) return;
 				const loadedQuestions = apiAttempt.questions.map((apiQuestion) => {
-					const bankQuestion = getDatabaseQuestionById(apiQuestion.id);
+					const bankQuestion = getDatabaseQuestionById(apiQuestion.id) ??
+						applyNativeExhibit({ ...apiQuestion, bankId: apiQuestion.id });
 					const hasRecreatedMatchExhibit = apiQuestion.type === "match" &&
 						RECREATED_MATCH_EXHIBIT_QUESTION_IDS.has(apiQuestion.id);
 					// Fix text saved with the wrong encoding ("â€œwarningâ€" -> “warning”) for display.
@@ -209,10 +211,13 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 						: isOptionTable
 						? { prompt: cleanText(apiQuestion.prompt) }
 						: splitPromptExhibit(cleanText(apiQuestion.prompt));
-					const exhibitImage = bankQuestion?.exhibitImage || apiQuestion.imageUrl;
+					const exhibitDiagram = bankQuestion?.exhibitDiagram;
+					const exhibitImage = exhibitDiagram || bankQuestion?.nativeExhibitText
+						? undefined
+						: bankQuestion?.exhibitImage || apiQuestion.imageUrl;
 					const displayedExhibit = bankQuestion?.exhibit && !isOptionTable ? bankQuestion.exhibit : exhibit;
 					const hasSeparateExhibit = Boolean(
-						exhibitImage || (displayedExhibit && !/^Option [A-H]$/i.test(displayedExhibit.trim())),
+						exhibitDiagram || exhibitImage || (displayedExhibit && !/^Option [A-H]$/i.test(displayedExhibit.trim())),
 					);
 					const cleanedPrompt = removeDuplicateExhibitLeadIn(cleanText(prompt));
 					const displayPrompt = hasSeparateExhibit
@@ -232,6 +237,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 						...(Array.isArray(apiQuestion.choices) ? { choices: cleanList(apiQuestion.choices) } : {}),
 						...(typeof apiQuestion.explanation === "string" ? { explanation: cleanText(apiQuestion.explanation) } : {}),
 						...(shouldDisplayExhibit ? { exhibit: displayedExhibit } : {}),
+						...(exhibitDiagram ? { exhibitDiagram } : {}),
 						...(bankQuestion?.hidePrompt ? { hidePrompt: true } : {}),
 						...(bankQuestion?.exhibitImageCropTop ? { exhibitImageCropTop: true } : {}),
 						// Question 570's image is a screenshot of the matching interaction recreated by the site.
@@ -679,7 +685,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 									<button
 										type="button"
 										onClick={() => currentIndex === questions.length - 1 ? submitExam() : goToQuestion(currentIndex + 1)}
-										disabled={isSubmitting || (currentIndex < questions.length - 1 && !isQuestionAnswered(question, answers[currentIndex]))}
+										disabled={isSubmitting || !isQuestionAnswered(question, answers[currentIndex])}
 										className="rounded-full bg-[#005b6b] px-6 py-3 font-semibold text-white transition hover:bg-[#004653] disabled:cursor-not-allowed disabled:opacity-40"
 									>
 										{isSubmitting ? "Submitting…" : currentIndex === questions.length - 1 ? "Submit exam" : "Next Question"}
