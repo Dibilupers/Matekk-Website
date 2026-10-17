@@ -15,3 +15,11 @@ Changes included in the push:
 - Integrated the remote `origin/main` commit `e76d544` (`bug fixed`) before pushing, preserving its CompTIA Network+ and Security+ exam updates.
 
 Validation before push: frontend production build, server build, 19 focused server tests, targeted ESLint, and Git whitespace checks passed.
+
+## 2026-10-17 — `main`
+
+- Merged `a92cb7f` as `b107654` (`Merge changelog instructions into main`), adding the repository Copilot push-log instructions and the initial changelog.
+- Added repository Copilot instructions requiring a dated changelog entry before assistant-prepared pushes.
+- Added the `changelog/` folder and initialized this push log.
+
+Documentation-only changes; no build or test run was needed.
