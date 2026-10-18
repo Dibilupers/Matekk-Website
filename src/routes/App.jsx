@@ -670,7 +670,7 @@ export default function App() {
         <Route path="*" element={<NotFound />} />
       </Routes>
 
-      {!isFullScreenAssessment && !isAdminPage && !isAccountPendingPage && <Footer />}
+      {isOnline && !isFullScreenAssessment && !isAdminPage && !isAccountPendingPage && <Footer />}
       </div>
     </>
   );
