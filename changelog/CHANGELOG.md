@@ -4,6 +4,10 @@ Tracking begins 2026-10-17.
 
 ## 2026-10-19 — `main`
 
+- Reverted commit `6366191` (`Fix CCNA question-bank filtering`) at the user's request.
+
+## 2026-10-19 — `main`
+
 Merged `emman` into the latest `main` as `99d8b21`, including:
 
 - `96da371` — Added a Fortinet → FortiOS shortcut to the My Gradebook program chooser.
