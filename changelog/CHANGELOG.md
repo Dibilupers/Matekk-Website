@@ -72,3 +72,7 @@ Documentation-only changes; no build or test run was needed.
 - Converted 150 valid CCNA "Choose two/three" rows with stored multi-letter answer keys into graded multi-select questions.
 - Converted CCNA Part 9, question 70 (database ID 289) from flattened QoS term definitions into the existing drag-and-drop matching interaction. The configured database contains 1,367 CCNA rows, and the current loader returns all 1,367 as usable.
 - Added a confirmation step and a fresh-start retry option to the completed CCNA all-questions exam.
+
+## 2026-10-19 — `main`
+
+- Reverted the changes introduced by merge commit `1701c01` while preserving other mainline commits and subsequent independent changes. Retained four CCNA images required by the later offline exam bank.
