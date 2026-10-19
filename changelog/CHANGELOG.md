@@ -2,11 +2,11 @@
 
 Tracking begins 2026-10-17.
 
-## 2026-10-19 — Backend deployment fix (follow-up)
+## 2026-10-19 — Backend deployment compatibility
 
-- Used an explicit default import for Helmet's middleware to resolve the failed Vercel compilation.
+- Load Helmet through Node's CommonJS bridge with its declared middleware type to avoid Vercel's incorrect default-import typing.
 
-Validation: backend TypeScript check and NestJS build passed locally.
+Validation: backend TypeScript check, NestJS build, and Git whitespace checks passed locally.
 
 ## 2026-10-19 — `main`
 
