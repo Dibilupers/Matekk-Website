@@ -251,6 +251,7 @@ function getProgramPath(course) {
 	if (course.name === "A+ (Core 1 & 2)") return "/modules/programs/comptia-aplus";
 	if (course.name === "Network+") return "/modules/programs/comptia-network-plus";
 	if (course.name === "Security+") return "/modules/programs/comptia-security-plus";
+	if (course.name === "FortiOS") return "/modules/programs/fortinet-fortios";
 	if (course.name === "CCNA Automation") return "/modules/programs/ccna-automation";
 	if (course.name === "CCNA Cybersecurity") return "/modules/programs/ccna-cybersecurity";
 	return course.path;

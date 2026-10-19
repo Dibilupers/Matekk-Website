@@ -5,6 +5,10 @@
 import wlcMyWlanImg from "../../../../../assets/ccna-exam/wlc-my-wlan-layer2.webp";
 import wlcPskImg from "../../../../../assets/ccna-exam/wlc-psk-layer2.webp";
 import wlcAdvancedImg from "../../../../../assets/ccna-exam/wlc-advanced-tab.webp";
+import ccna181RapidPvstActionsImg from "../../../../../assets/ccna-exam/ccna-181-rapid-pvst-actions.png";
+import ccna382AnsibleFeaturesImg from "../../../../../assets/ccna-exam/ccna-382-ansible-features.png";
+import ccna608NorthboundApiImg from "../../../../../assets/ccna-exam/ccna-608-northbound-api.png";
+import ccna1306BroadcastAddressesImg from "../../../../../assets/ccna-exam/ccna-1306-broadcast-addresses.png";
 
 // pic(image, text?) = picture exhibit, optionally with device output shown below it
 const pic = (image, text) => ({ image, text });
@@ -802,6 +806,11 @@ const BUILT_IN_QUESTION_BY_PROMPT = new Map(
 );
 
 const DATABASE_NATIVE_EXHIBITS = new Map([
+	[1306, { exhibitImage: ccna1306BroadcastAddressesImg }],
+	[181, { exhibitImage: ccna181RapidPvstActionsImg }],
+	[382, { exhibitImage: ccna382AnsibleFeaturesImg }],
+	[608, { exhibitImage: ccna608NorthboundApiImg }],
+	[481, "static-route-r1-r2-r3"],
 	[23, "stp-hq-four-switch"],
 	[65, "sw1-sw2-dtp-trunk"],
 	[70, "stp-branch-four-switch"],
@@ -1847,12 +1856,14 @@ export function applyNativeExhibit(question) {
 		builtInQuestion?.exhibitDiagram;
 	const hasNativeTextExhibit = typeof databaseExhibit === "object" &&
 		typeof databaseExhibit.exhibit === "string";
-	if (!exhibitDiagram && !hasNativeTextExhibit) return question;
+	const exhibitImage = typeof databaseExhibit === "object" ? databaseExhibit.exhibitImage : undefined;
+	if (!exhibitDiagram && !hasNativeTextExhibit && !exhibitImage) return question;
 
 	return {
 		...question,
 		exhibitImage: undefined,
 		...(exhibitDiagram ? { exhibitDiagram } : {}),
+		...(exhibitImage ? { exhibitImage } : {}),
 		...(hasNativeTextExhibit ? { exhibit: databaseExhibit.exhibit, nativeExhibitText: true } : {}),
 		...(builtInQuestion?.exhibit ? { exhibit: builtInQuestion.exhibit } : {}),
 	};

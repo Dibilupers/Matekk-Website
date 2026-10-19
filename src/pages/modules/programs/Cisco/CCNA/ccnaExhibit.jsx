@@ -232,6 +232,24 @@ function TopologyNode({ role, name, details }) {
 }
 
 const NETWORK_TOPOLOGIES = {
+	"static-route-r1-r2-r3": {
+		title: "Static route topology: Host A to Host B",
+		note: "Host A: 10.10.14.10/24 · Host B: 10.10.13.10/25",
+		viewBox: { x: 0, y: 0, width: 1320, height: 420 },
+		nodes: [
+			{ id: "host-a", kind: "host", name: "Host A", x: 115, y: 205, details: ["10.10.14.10/24"] },
+			{ id: "r1", kind: "router", name: "R1", x: 390, y: 205, details: ["10.10.10.2"] },
+			{ id: "r2", kind: "router", name: "R2", x: 700, y: 205, details: ["10.10.10.1", "10.10.10.6"] },
+			{ id: "r3", kind: "router", name: "R3", x: 1010, y: 205, details: ["10.10.10.5"] },
+			{ id: "host-b", kind: "host", name: "Host B", x: 1230, y: 205, details: ["10.10.13.10/25"] },
+		],
+		links: [
+			{ from: "host-a", to: "r1", label: "10.10.14.0/24", labelY: 155 },
+			{ from: "r1", to: "r2", label: "10.10.10.0/30", labelY: 155 },
+			{ from: "r2", to: "r3", label: "10.10.10.4/30", labelY: 155 },
+			{ from: "r3", to: "host-b", label: "10.10.13.0/25", labelY: 155 },
+		],
+	},
 	"ipv6-block-r1-r2": {
 		title: "IPv6 block and access LANs",
 		note: "Address block: 2001:0db8:fff:fcf3::/64",

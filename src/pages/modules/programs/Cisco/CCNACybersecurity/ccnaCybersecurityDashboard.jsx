@@ -226,7 +226,13 @@ export default function CCNACybersecurityDashboard() {
 			description="Strengthen your security foundations and learn to recognize, investigate, and respond to network threats."
 			descriptionAccent="network threats."
 			overviewDescription="A guided path from security fundamentals to monitoring, analysis, and response."
+			courseOutlinePath="/training/cisco/ccna/cybersecurity"
 			focusAreas="Explore security fundamentals, security monitoring, host-based analysis, network intrusion analysis, and security policies and procedures."
+			learningFocusAreas={[
+				"Security fundamentals and policies",
+				"Host-based and network intrusion analysis",
+				"Security monitoring, investigation, and response",
+			]}
 		/>
 	);
 }
