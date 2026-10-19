@@ -77,7 +77,7 @@ self.addEventListener('fetch', (event) => {
     event.respondWith((async () => {
       const client = event.clientId ? await self.clients.get(event.clientId) : null;
       const clientPath = client ? new URL(client.url).pathname : '';
-      if (!MODULE_ROUTE.test(clientPath) || EXAM_ROUTE.test(clientPath)) {
+      if (!MODULE_ROUTE.test(clientPath)) {
         return fetch(request);
       }
 
