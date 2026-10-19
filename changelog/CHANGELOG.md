@@ -2,11 +2,11 @@
 
 Tracking begins 2026-10-17.
 
-## 2026-10-19 — Backend deployment fix
+## 2026-10-19 — Backend deployment compatibility
 
-- Updated the Helmet import in the server bootstrap to an explicit module namespace default, fixing Vercel's TypeScript build error.
+- Load Helmet through Node's CommonJS bridge with its declared middleware type to avoid Vercel's incorrect default-import typing.
 
-Validation: backend TypeScript check, NestJS build, focused environment configuration tests, and Git whitespace checks passed.
+Validation: backend TypeScript check, NestJS build, and Git whitespace checks passed locally.
 
 ## 2026-10-19 — `main`
 

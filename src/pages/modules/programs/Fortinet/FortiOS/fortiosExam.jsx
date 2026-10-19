@@ -43,7 +43,7 @@ export default function FortiOSExam() {
 		return (
 			<FortiOSExamMessage
 				title={`${exam.name} is not available yet`}
-				message={`The FortiOS question bank has ${questionBankState.questions.length} multiple-choice questions. This format requires ${exam.questionCount}.`}
+				message={`The FortiOS question bank has ${questionBankState.questions.length} usable questions. This format requires ${exam.questionCount}.`}
 			/>
 		);
 	}

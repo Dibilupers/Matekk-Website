@@ -640,7 +640,7 @@ export default function FortiOSDashboard() {
 											: null;
 										return (
 											<div key={examKey} className="border-b border-[#f0e2e0] py-3 last:border-0">
-												<div className="flex items-center justify-between gap-3">
+												<div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
 													<div className="min-w-0">
 														<span className="block truncate text-sm font-medium">{exam.name}</span>
 														<strong className={`mt-1 block text-sm ${progress.status === "not-started" ? "text-[#8b96a9]" : "text-[#bd2119]"}`}>
@@ -652,10 +652,27 @@ export default function FortiOSDashboard() {
 															)}
 														</strong>
 													</div>
-													{secondsRemaining !== null && progress.status === "in-progress" && (
-														<span role="timer" className="shrink-0 rounded-full bg-[#fff4f3] px-3 py-1 text-xs font-bold tabular-nums text-[#bd2119]">
-															{formatExamTime(secondsRemaining)} left
-														</span>
+													{progress.status === "in-progress" && (
+														<div className="flex min-h-[58px] min-w-[112px] flex-col items-end justify-between">
+															<div className="flex h-6 items-center justify-end">
+																{secondsRemaining !== null && (
+																	<span
+																		role="timer"
+																		aria-label={`${formatExamTime(secondsRemaining)} remaining`}
+																		className={`inline-flex min-w-[88px] justify-center whitespace-nowrap rounded-full px-3 py-1 text-xs font-bold tabular-nums ${secondsRemaining <= 60 ? "bg-[#fff0ed] text-[#b42318]" : "bg-[#fff4f3] text-[#bd2119]"}`}
+																	>
+																		{formatExamTime(secondsRemaining)} left
+																	</span>
+																)}
+															</div>
+															<button
+																type="button"
+																onClick={() => navigate(`/modules/programs/fortinet-fortios/exam/${examKey}`)}
+																className="rounded-full border border-[#efc6c3] px-3 py-1.5 text-xs font-semibold text-[#bd2119] transition-all duration-200 ease-out hover:scale-105 hover:bg-[#fff4f3] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100"
+															>
+																Continue Exam
+															</button>
+														</div>
 													)}
 												</div>
 											</div>

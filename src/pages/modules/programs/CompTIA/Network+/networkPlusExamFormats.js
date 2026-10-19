@@ -14,7 +14,7 @@ function shuffle(items) {
 }
 
 function shuffleQuestionChoices(question) {
-	if (question.type === "match") {
+	if (["match", "drag_drop", "click_boxes"].includes(question.type)) {
 		const order = shuffle(question.choices.map((_, index) => index));
 		const newIndexByOldIndex = new Map(order.map((oldIndex, newIndex) => [oldIndex, newIndex]));
 		return {
