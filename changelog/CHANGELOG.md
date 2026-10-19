@@ -4,6 +4,10 @@ Tracking begins 2026-10-17.
 
 ## 2026-10-19 — `main`
 
+- Reverted commit `9888be7` (`Filter all-question banks by course`) at the user's request.
+
+## 2026-10-19 — `main`
+
 - Reverted commit `6366191` (`Fix CCNA question-bank filtering`) at the user's request.
 
 ## 2026-10-19 — `main`
