@@ -130,6 +130,32 @@ describe('QuestionsService', () => {
     }));
   });
 
+  it('returns every raw FortiOS row across the supported module labels', async () => {
+    const labels = ['Fortinet FortiOS', 'FortiOS', 'FortiGate Administrator'];
+    const rows = Array.from({ length: 101 }, (_, index) => ({
+      id: index + 1,
+      module: labels[index % labels.length],
+      topic: 'FortiOS',
+      question_text: `Question ${index + 1}`,
+      choices: JSON.stringify({ A: 'Choice A', B: 'Choice B' }),
+      correct_answer: 'A',
+      explanation: '',
+      question_type: 'single',
+      match_items: null,
+      imageUrl: null,
+    }));
+    prismaMock.questions.findMany.mockResolvedValue(rows);
+
+    await expect(service.findBank('Fortinet FortiOS')).resolves.toHaveLength(101);
+    expect(prismaMock.questions.findMany).toHaveBeenCalledWith(expect.objectContaining({
+      where: {
+        OR: labels.map((label) => ({
+          module: { equals: label, mode: 'insensitive' },
+        })),
+      },
+    }));
+  });
+
   it('returns only renderable Questions table rows with normalized answer keys', async () => {
     prismaMock.questions.findMany.mockResolvedValue([
       {

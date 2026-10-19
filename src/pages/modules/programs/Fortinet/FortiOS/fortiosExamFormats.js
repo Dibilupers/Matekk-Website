@@ -26,6 +26,7 @@ export function createFortiOSExamFormats(questionBank) {
 		programKey: "fortinet-fortios",
 		programName: "FortiOS",
 		includeAllQuestions: true,
+		deduplicateQuestions: false,
 		examFormatDefinitions: Object.fromEntries(
 			Object.entries(FORTIOS_EXAM_FORMAT_DEFINITIONS)
 				.filter(([examKey]) => examKey !== "all_questions"),

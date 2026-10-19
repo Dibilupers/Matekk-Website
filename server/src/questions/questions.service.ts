@@ -701,8 +701,9 @@ export class QuestionsService {
   }
 
   // The full CCNA question bank used by the exams
-  async findBank() {
+  async findBank(module?: string) {
     const rows = await this.prisma.questions.findMany({
+      ...(module ? { where: this.getQuestionModuleFilter(module) } : {}),
       select: {
         id: true,
         module: true,
@@ -729,8 +730,8 @@ export class QuestionsService {
     }));
   }
 
-  async findUsableBank() {
-    const rows = await this.findBank();
+  async findUsableBank(module?: string) {
+    const rows = await this.findBank(module);
     const questions = rows.flatMap((row) => {
       const question = this.readQuestion(row);
       if (!question) return [];
@@ -753,5 +754,22 @@ export class QuestionsService {
       }];
     });
     return { questions, skippedCount: rows.length - questions.length };
+  }
+
+  private getQuestionModuleFilter(module: string): Prisma.QuestionsWhereInput {
+    const normalizedModule = module.trim();
+    if (!normalizedModule) {
+      throw new BadRequestException('Choose a course question bank.');
+    }
+    if (['fortios', 'fortinet fortios', 'fortigate administrator'].includes(normalizedModule.toLocaleLowerCase())) {
+      return {
+        OR: [
+          { module: { equals: 'Fortinet FortiOS', mode: 'insensitive' } },
+          { module: { equals: 'FortiOS', mode: 'insensitive' } },
+          { module: { equals: 'FortiGate Administrator', mode: 'insensitive' } },
+        ],
+      };
+    }
+    return { module: { equals: normalizedModule, mode: 'insensitive' } };
   }
 }

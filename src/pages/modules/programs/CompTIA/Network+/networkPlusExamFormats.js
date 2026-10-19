@@ -42,9 +42,12 @@ export function createCompTIAExamFormats(
 		programName = "CompTIA Network+",
 		includeAllQuestions = false,
 		examFormatDefinitions = EXAM_FORMATS,
+		deduplicateQuestions = true,
 	} = {},
 ) {
-	const uniqueQuestions = [...new Map(questionBank.map((question) => [question.prompt.trim().toLowerCase(), question])).values()];
+	const uniqueQuestions = deduplicateQuestions
+		? [...new Map(questionBank.map((question) => [question.prompt.trim().toLowerCase(), question])).values()]
+		: [...questionBank];
 
 	const timedFormats = Object.fromEntries(Object.entries(examFormatDefinitions).map(([examKey, format]) => [
 		examKey,
