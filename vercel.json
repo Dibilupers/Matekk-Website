@@ -1,6 +1,6 @@
 {
     "rewrites": [
-        { "source": "/api/:path*", "destination": "https://matekk-website1.vercel.app/:path*" },
+        { "source": "/api/:path*", "destination": "https://matekk-api.vercel.app/:path*" },
         { "source": "/(.*)", "destination": "/" }
     ]
 }

@@ -2,6 +2,12 @@
 
 Tracking begins 2026-10-17.
 
+## 2026-10-19 — API deployment routing
+
+- Routed the frontend `/api` proxy to the newly deployed `matekk-api` backend instead of the stale `matekk-website1` host.
+
+Validation: frontend production build and Git whitespace checks passed.
+
 ## 2026-10-19 — Backend deployment compatibility
 
 - Load Helmet through Node's CommonJS bridge with its declared middleware type to avoid Vercel's incorrect default-import typing.
