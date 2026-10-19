@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { ArrowLeft, ArrowRight, BookOpen, Check, ChevronDown, ChevronLeft, ChevronRight, ClipboardList, Clock3, FileQuestion, ShieldCheck, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, Check, ChevronDown, ChevronLeft, ChevronRight, CircleAlert, ClipboardList, Clock3, FileQuestion, ShieldCheck, X } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../../../context/auth-context";
 import FortiOSBadge from "../../../../../assets/nse-4-fortios.svg";
 import { readCcnaExamProgress } from "../../../../../utils/ccnaShortExamSession";
+import { readGradebookAssessments } from "../../../../../utils/gradebookApi";
 import { isCurrentProgramModuleQuizAttempt, readProgramModuleQuizProgress } from "../../../../../utils/programModuleQuizProgress";
 import ProgramBackgroundParticles from "../../ProgramBackgroundParticles";
 import ScoreRotationCard from "../../ScoreRotationCard";
+import useGradebookQuizStats from "../../useGradebookQuizStats";
 import { FORTIOS_EXAM_FORMAT_DEFINITIONS, FORTIOS_EXAM_PROGRESS_FORMATS } from "./fortiosExamFormats";
 
 export const FORTIOS_MODULES = [
@@ -95,17 +97,32 @@ function formatExamTime(totalSeconds) {
 	return `${minutes}:${seconds}`;
 }
 
+function getLatestExamResult(assessments, examKey) {
+	const format = FORTIOS_EXAM_PROGRESS_FORMATS[examKey];
+	if (!format) return null;
+	return assessments
+		.filter((assessment) =>
+			assessment.type === "exam" &&
+			(assessment.examFormat === examKey ||
+				assessment.title === `${format.name} · FortiOS` ||
+				assessment.title === format.name),
+		)
+		.sort((first, second) => second.submittedAt - first.submittedAt)[0] ?? null;
+}
+
 export default function FortiOSDashboard() {
 	const { profile } = useAuth();
 	const navigate = useNavigate();
 	const [typedIntro, setTypedIntro] = useState("");
 	const [hasScrolled, setHasScrolled] = useState(false);
 	const [isNoticeOpen, setIsNoticeOpen] = useState(true);
+	const [examCardIndex, setExamCardIndex] = useState(0);
 	const [openModule, setOpenModule] = useState(null);
 	const [progressSlide, setProgressSlide] = useState(0);
 	const [examClockNow, setExamClockNow] = useState(Date.now);
 	const [isExamPickerOpen, setIsExamPickerOpen] = useState(false);
 	const [selectedExamFormat, setSelectedExamFormat] = useState("short");
+	const [examResultsState, setExamResultsState] = useState({ userId: null, assessments: [], loading: false, error: null });
 	const userId = profile?.userId;
 	const quizProgress = userId ? readProgramModuleQuizProgress("fortinet-fortios", userId) : { modules: {} };
 	const quizAttempts = FORTIOS_MODULES.map((module) => {
@@ -123,22 +140,78 @@ export default function FortiOSDashboard() {
 		exam,
 		progress: readCcnaExamProgress(exam.sessionKey, userId),
 	}));
-	const attemptedExamCount = examRuns.filter(({ progress }) => progress.status !== "not-started").length;
-	const examCoverage = examRuns.length
-		? Math.round(examRuns.reduce((total, { exam, progress }) => {
+	const gradedExamRuns = examRuns.filter(({ examKey }) => examKey !== "all_questions");
+	const attemptedExamCount = gradedExamRuns.filter(({ progress }) => progress.status !== "not-started").length;
+	const completedExamCount = gradedExamRuns.filter(({ progress }) => progress.status === "completed").length;
+	const examCoverage = gradedExamRuns.length
+		? Math.round(gradedExamRuns.reduce((total, { exam, progress }) => {
 			const questionCount = exam.questionCount ?? progress.maxScore;
 			if (!questionCount) return total;
 			return total + Math.min(progress.answeredCount, questionCount) / questionCount;
-		}, 0) / examRuns.length * 100)
+		}, 0) / gradedExamRuns.length * 100)
 		: 0;
 	const activeExamCount = examRuns.filter(({ progress }) => progress.status === "in-progress").length;
+	const { stats: gradebookScoreStats } = useGradebookQuizStats(
+		"fortinet-fortios",
+		userId,
+		FORTIOS_MODULES,
+		attemptedQuizCount,
+		0,
+		attemptedQuizCount,
+		completedExamCount,
+	);
 	const selectedExam = FORTIOS_EXAM_PROGRESS_FORMATS[selectedExamFormat];
+	const examCards = examRuns.map(({ examKey, exam, progress }) => {
+		const result = userId ? getLatestExamResult(examResultsState.userId === userId ? examResultsState.assessments : [], examKey) : null;
+		const hasResult = progress.status !== "in-progress" && (
+			Boolean(result) ||
+			(["completed", "expired"].includes(progress.status) && progress.maxScore > 0)
+		);
+		return {
+			examKey,
+			exam,
+			progress,
+			gradebookResult: result,
+			result: result ?? { score: progress.score, maxScore: progress.maxScore },
+			hasResult,
+		};
+	});
+	const examCard = examCards[examCardIndex % examCards.length];
+	const examCardPassed = examCard.hasResult && examCard.result.score / examCard.result.maxScore >= 0.8;
+	const examCardActionLabel = examCard.hasResult
+		? "View result"
+		: examCard.progress.status === "in-progress"
+			? "Continue exam"
+			: `Start ${examCard.exam.name.toLowerCase()}`;
 
 	useEffect(() => {
 		if (!activeExamCount) return undefined;
 		const intervalId = window.setInterval(() => setExamClockNow(Date.now()), 1000);
 		return () => window.clearInterval(intervalId);
 	}, [activeExamCount]);
+
+	useEffect(() => {
+		if (!userId) return undefined;
+		let isActive = true;
+		readGradebookAssessments("fortinet-fortios", userId)
+			.then((assessments) => {
+				if (isActive) setExamResultsState({ userId, assessments, loading: false, error: null });
+			})
+			.catch((error) => {
+				console.error("Unable to load FortiOS exam results.", error);
+				if (isActive) {
+					setExamResultsState((current) => ({
+						userId,
+						assessments: current.userId === userId ? current.assessments : [],
+						loading: false,
+						error: error instanceof Error ? error.message : "Exam results could not be loaded.",
+					}));
+				}
+			});
+		return () => {
+			isActive = false;
+		};
+	}, [userId]);
 
 	useEffect(() => {
 		if (!isExamPickerOpen) return undefined;
@@ -211,7 +284,7 @@ export default function FortiOSDashboard() {
 			{createPortal(
 				<Link
 					to="/pages/blank"
-					className={`fixed left-4 top-20 z-[60] flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-bold text-[#d9271e] transition hover:text-[#b71c16] active:scale-95 ${hasScrolled ? "bg-white/90 shadow-md backdrop-blur-sm" : "bg-white/80"}`}
+					className={`fixed left-4 top-24 z-40 flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-bold text-[#d9271e] transition hover:text-[#b71c16] active:scale-95 ${hasScrolled ? "bg-white/90 shadow-md backdrop-blur-sm" : "bg-white/80"}`}
 				>
 					<ArrowLeft size={20} strokeWidth={2.5} /> Back to Courses
 				</Link>,
@@ -259,7 +332,7 @@ export default function FortiOSDashboard() {
 								<span className="text-[11px] leading-tight text-[#6f7d99] sm:text-sm">Quizzes<br />completed</span>
 							</div>
 							<div className="program-stat-item flex min-w-0 items-center justify-center gap-2 border-r border-[#f3e4e2] px-2 py-4 sm:gap-3 sm:px-4 sm:py-5">
-								<strong className="text-2xl leading-none tracking-tight sm:text-[2rem]">{examRuns.filter(({ progress }) => progress.status === "completed").length}/4</strong>
+								<strong className="text-2xl leading-none tracking-tight sm:text-[2rem]">{gradebookScoreStats.completedExams}/3</strong>
 								<span className="text-[11px] leading-tight text-[#6f7d99] sm:text-sm">Exams<br />completed</span>
 							</div>
 							<div className="program-stat-item flex min-w-0 items-center justify-center gap-2 px-2 py-4 sm:gap-3 sm:px-4 sm:py-5">
@@ -276,7 +349,11 @@ export default function FortiOSDashboard() {
 						alt="Fortinet NSE 4 FortiOS certification badge"
 						className="relative z-10 h-[150px] w-[150px] object-contain transition-transform duration-300 ease-out hover:scale-105 motion-reduce:transition-none motion-reduce:hover:scale-100 sm:h-[180px] sm:w-[180px]"
 					/>
-					<ScoreRotationCard quizScore={null} examScore={null} accentClassName="text-[#e2231a]" />
+					<ScoreRotationCard
+						quizScore={gradebookScoreStats.average}
+						examScore={gradebookScoreStats.examAverage}
+						accentClassName="text-[#e2231a]"
+					/>
 					<Link
 						to="/modules/programs/fortinet-fortios/gradebook"
 						aria-label="Open FortiOS gradebook"
@@ -285,17 +362,19 @@ export default function FortiOSDashboard() {
 					>
 						<ClipboardList size={21} />
 					</Link>
-					<button
-						type="button"
-						onClick={() => setIsNoticeOpen((isOpen) => !isOpen)}
-						aria-label={isNoticeOpen ? "Close FortiOS notification" : "Open FortiOS notification"}
-						aria-expanded={isNoticeOpen}
-						className="absolute bottom-[27%] right-[2%] z-30 flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#e2231a] shadow-[0_8px_20px_rgba(15,35,75,0.1)] transition-all duration-200 ease-out hover:-translate-y-1 hover:scale-110 hover:shadow-lg active:translate-y-0 motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:hover:scale-100"
-					>
-						<FileQuestion size={21} />
-					</button>
+					{!isNoticeOpen && (
+						<button
+							type="button"
+							onClick={() => setIsNoticeOpen(true)}
+							aria-label="Open FortiOS notification"
+							aria-expanded={false}
+							className="absolute bottom-[27%] right-[2%] z-30 flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#e2231a] shadow-[0_8px_20px_rgba(15,35,75,0.1)] transition-all duration-200 ease-out hover:-translate-y-1 hover:scale-110 hover:shadow-lg active:translate-y-0 motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:hover:scale-100"
+						>
+							<FileQuestion size={21} />
+						</button>
+					)}
 					{isNoticeOpen && (
-						<div className="ccna-notification-boink absolute bottom-0 right-0 z-30 w-[210px] rounded-2xl border border-[#f1e2e0] bg-white p-3 shadow-[0_14px_28px_rgba(15,35,75,0.1)] transition-transform duration-200 ease-out hover:scale-[1.03] motion-reduce:transition-none motion-reduce:hover:scale-100 sm:right-[-2%] sm:w-[275px] sm:p-4">
+							<div key={examCardIndex} className="ccna-notification-boink absolute bottom-0 right-0 z-30 flex w-[210px] flex-col rounded-2xl border border-[#f1e2e0] bg-white p-3 shadow-[0_14px_28px_rgba(15,35,75,0.1)] transition-transform duration-200 ease-out hover:scale-[1.03] motion-reduce:transition-none motion-reduce:hover:scale-100 sm:right-[-2%] sm:w-[275px] sm:p-4">
 							<button
 								type="button"
 								onClick={() => setIsNoticeOpen(false)}
@@ -304,15 +383,63 @@ export default function FortiOSDashboard() {
 							>
 								<X size={16} />
 							</button>
-							<div className="flex items-center justify-between gap-2">
-								<strong className="truncate pr-5 text-sm text-[#e2231a]">{profile?.username ?? "Student"}</strong>
-								<span className="text-xs font-semibold text-[#7c89a1]">{profile?.username ? "FortiOS" : "Student"}</span>
-							</div>
-							<p className="mt-2 text-sm leading-snug text-[#64708a]">
-								{profile?.username
-									? "Your FortiGate learning path is ready when you are."
-									: "Explore FortiGate administration and security."}
-							</p>
+								<button
+									type="button"
+									onClick={() => setExamCardIndex((index) => (index + 1) % examCards.length)}
+									aria-label={`Show next exam notification. Showing ${examCard.exam.name}, ${examCardIndex + 1} of ${examCards.length}.`}
+									className="block w-full rounded-lg pr-7 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e2231a]"
+								>
+									<div className="flex items-center justify-between gap-2">
+										<strong className="truncate text-sm text-[#e2231a]">{profile?.username ?? "Student"}</strong>
+										<span className="shrink-0 text-xs font-semibold text-[#7c89a1]">{examCardIndex + 1}/{examCards.length}</span>
+									</div>
+									<p className="mt-0.5 text-sm leading-snug text-[#64708a]">
+										{examCard.progress.status === "expired"
+											? `Time expired for the ${examCard.exam.name.toLowerCase()}.`
+											: examCard.hasResult
+											? examCardPassed
+												? `You passed the ${examCard.exam.name.toLowerCase()}!`
+												: `You didn't pass the ${examCard.exam.name.toLowerCase()}.`
+											: examCard.progress.status === "in-progress"
+												? `You're taking the ${examCard.exam.name.toLowerCase()}.`
+												: `You haven't taken the ${examCard.exam.name.toLowerCase()} yet.`}
+										{examCard.progress.status === "expired" && (
+											<span role="status" className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-[#fff0ef] px-2.5 py-1 text-xs font-bold text-[#bd2119]">
+												<CircleAlert size={14} /> Time expired
+											</span>
+										)}
+										{examCard.hasResult && (
+											<span className="mt-1 block">Score: {examCard.result.score}/{examCard.result.maxScore}</span>
+										)}
+										<span className="mt-1 block text-xs text-[#7c89a1]">Click to see the next exam update</span>
+									</p>
+								</button>
+								{examResultsState.error && examResultsState.userId === userId && (
+									<p role="alert" className="mt-2 text-xs text-[#a44b13]">Exam results could not be loaded from the gradebook.</p>
+								)}
+								<button
+									type="button"
+									onClick={() => {
+										const examPath = `/modules/programs/fortinet-fortios/exam/${examCard.examKey}`;
+										if (examCard.hasResult) {
+											const result = examCard.gradebookResult;
+											navigate(examPath, {
+												state: {
+													showExamResult: true,
+													...(result ? { examResult: result } : {}),
+												},
+											});
+										} else if (examCard.progress.status === "in-progress") {
+											navigate(examPath);
+										} else {
+											setSelectedExamFormat(examCard.examKey);
+											setIsExamPickerOpen(true);
+										}
+									}}
+									className="mt-3 flex h-10 w-full items-center justify-center rounded-full bg-[#e2231a] text-sm font-bold text-white transition-all duration-200 ease-out hover:scale-105 hover:bg-[#bd2119] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100 sm:h-11"
+								>
+									{examCardActionLabel}
+								</button>
 							</div>
 						)}
 					</div>
@@ -429,7 +556,7 @@ export default function FortiOSDashboard() {
 									</div>
 									<div className="min-w-0">
 										<strong className="text-lg">Exam progress</strong>
-										<p className="mt-1 text-sm text-[#7c89a1]">{attemptedExamCount} of {examRuns.length} exam formats attempted</p>
+										<p className="mt-1 text-sm text-[#7c89a1]">{attemptedExamCount} of 3 graded exam formats attempted</p>
 									</div>
 								</div>
 							</div>
@@ -518,6 +645,11 @@ export default function FortiOSDashboard() {
 														<span className="block truncate text-sm font-medium">{exam.name}</span>
 														<strong className={`mt-1 block text-sm ${progress.status === "not-started" ? "text-[#8b96a9]" : "text-[#bd2119]"}`}>
 															{statusText}
+															{progress.status === "expired" && (
+																<span role="img" aria-label="Exam time expired" className="ml-1.5 inline-flex h-5 w-5 align-middle items-center justify-center rounded-full bg-[#dc2626] text-white shadow-sm">
+																	<CircleAlert size={14} strokeWidth={2.5} />
+																</span>
+															)}
 														</strong>
 													</div>
 													{secondsRemaining !== null && progress.status === "in-progress" && (
@@ -604,6 +736,14 @@ export default function FortiOSDashboard() {
 						<p className="mt-3 text-sm leading-6 text-[#71819b]">
 							Choose a FortiOS question set and time limit. All Questions Exam includes every available FortiOS question without a time limit.
 						</p>
+						{examResultsState.loading && examResultsState.userId === userId && (
+							<p role="status" className="mt-3 text-sm text-[#71819b]">Loading previous exam results…</p>
+						)}
+						{examResultsState.error && examResultsState.userId === userId && (
+							<p role="alert" className="mt-4 rounded-xl border border-[#f2c6c3] bg-[#fff8f7] px-4 py-3 text-sm font-medium text-[#b42318]">
+								Previous exam results could not be loaded. {examResultsState.error}
+							</p>
+						)}
 						<div className="mt-5 grid gap-3 sm:grid-cols-2">
 							{Object.entries(FORTIOS_EXAM_FORMAT_DEFINITIONS).map(([examKey, format]) => {
 								const isSelected = selectedExamFormat === examKey;
@@ -645,6 +785,10 @@ export default function FortiOSDashboard() {
 						</div>
 						{selectedExam && (() => {
 							const progress = examRuns.find((run) => run.examKey === selectedExamFormat)?.progress;
+							const latestResult = examResultsState.userId === userId
+								? getLatestExamResult(examResultsState.assessments, selectedExamFormat)
+								: null;
+							const hasResult = Boolean(latestResult) || ["completed", "expired"].includes(progress?.status);
 							const questionLabel = selectedExam.questionCount ?? "All available";
 							const durationLabel = selectedExam.durationSeconds === null
 								? "No time limit"
@@ -660,7 +804,9 @@ export default function FortiOSDashboard() {
 											<p className="mt-1 text-sm font-semibold text-[#bd2119]">
 												{progress.status === "in-progress"
 													? `${progress.answeredCount} of ${progress.maxScore} answered`
-													: `Last result: ${progress.score}/${progress.maxScore}`}
+													: progress.status === "expired"
+														? `Time expired · Score ${progress.score}/${progress.maxScore}`
+														: `Last result: ${progress.score}/${progress.maxScore}`}
 											</p>
 										)}
 									</div>
@@ -675,17 +821,22 @@ export default function FortiOSDashboard() {
 										>
 											Continue Exam
 										</button>
-									) : ["completed", "expired"].includes(progress?.status) ? (
+									) : hasResult ? (
 										<div className="flex flex-wrap gap-2 sm:justify-self-end">
 											<button
 												type="button"
 												onClick={() => {
 													setIsExamPickerOpen(false);
-													navigate(examPath);
+													navigate(examPath, {
+														state: {
+															showExamResult: true,
+															...(latestResult ? { examResult: latestResult } : {}),
+														},
+													});
 												}}
 												className="rounded-full border border-[#efc6c3] px-4 py-3 text-sm font-bold text-[#bd2119] transition hover:bg-white"
 											>
-												Review Result
+												View Result
 											</button>
 											<button
 												type="button"
