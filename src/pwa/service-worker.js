@@ -39,7 +39,7 @@ self.addEventListener('fetch', (event) => {
   if (request.method !== 'GET') return;
 
   const url = new URL(request.url);
-  if (url.origin !== self.location.origin) return;
+  if (url.origin !== self.location.origin && request.destination !== 'image') return;
 
   if (request.mode === 'navigate' && MODULE_ROUTE.test(url.pathname)) {
     if (EXAM_ROUTE.test(url.pathname) && !OFFLINE_CCNA_EXAM_ROUTE.test(url.pathname)) {
@@ -84,12 +84,15 @@ self.addEventListener('fetch', (event) => {
       const cache = await caches.open(CACHE_NAME);
       try {
         const response = await fetch(request);
-        if (response.ok && response.type === 'basic') {
+        if ((response.ok && (response.type === 'basic' || response.type === 'cors')) || response.type === 'opaque') {
           try {
             await cache.put(request, response.clone());
           } catch (error) {
             console.error('Unable to cache a module image for offline use.', error);
           }
+        } else {
+          const cachedImage = await cache.match(request);
+          if (cachedImage) return cachedImage;
         }
         return response;
       } catch (error) {
