@@ -2,6 +2,15 @@
 
 Tracking begins 2026-10-17.
 
+## 2026-10-19 — `main`
+
+Merged `emman` into the latest `main` as `99d8b21`, including:
+
+- `96da371` — Added a Fortinet → FortiOS shortcut to the My Gradebook program chooser.
+- `99d8b21` — Merged the FortiOS gradebook shortcut into `main`.
+
+Validation before push: targeted ESLint, frontend production build, and Git whitespace checks passed.
+
 ## 2026-10-19 — Backend deployment compatibility
 
 - Load Helmet through Node's CommonJS bridge with its declared middleware type to avoid Vercel's incorrect default-import typing.
