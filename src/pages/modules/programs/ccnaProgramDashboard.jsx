@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
-import { ArrowLeft, ArrowRight, BookOpen, Check, ChevronDown, ChevronRight, ClipboardList, Clock3, FileQuestion, LockKeyhole, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, Check, ChevronDown, ChevronRight, CircleAlert, ClipboardList, Clock3, FileQuestion, LockKeyhole, X } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/auth-context";
 import { readCcnaExamProgress } from "../../../utils/ccnaShortExamSession";
 import { readGradebookAssessments } from "../../../utils/gradebookApi";
-import { getProgramExamFormats } from "./programExamFormats";
+import { getProgramExamFormats, LEGACY_PROGRAM_EXAM_NAMES } from "./programExamFormats";
 import ProgramBackgroundParticles from "./ProgramBackgroundParticles";
 import ScoreRotationCard from "./ScoreRotationCard";
 
@@ -66,7 +66,12 @@ function ProgramExamNotification({ programKey, basePath }) {
 		const result = assessments
 			.filter((assessment) =>
 				assessment.type === "exam" &&
-				(assessment.title === `${exam.name} · ${exam.programName}` || assessment.title === exam.name),
+				(assessment.examFormat === examKey ||
+					assessment.title === `${exam.name} · ${exam.programName}` ||
+					assessment.title === exam.name ||
+					(LEGACY_PROGRAM_EXAM_NAMES[examKey] ?? []).some((name) =>
+						assessment.title === `${name} · ${exam.programName}` || assessment.title === name,
+					)),
 			)
 			.sort((first, second) => second.submittedAt - first.submittedAt)[0];
 		const hasResult = progress.status !== "in-progress" && (
@@ -130,13 +135,20 @@ function ProgramExamNotification({ programKey, basePath }) {
 							<span className="text-xs font-semibold text-[#7c89a1]">{safeIndex + 1}/{examCards.length}</span>
 						</div>
 						<p className="mt-0.5 text-sm leading-snug text-[#64708a]">
-							{examCard.hasResult
+							{examCard.progress.status === "expired"
+								? `Time expired for the ${examCard.exam.displayName.toLowerCase()}.`
+								: examCard.hasResult
 								? passedExam
 									? `You just passed the ${examCard.exam.displayName.toLowerCase()}!`
 									: `You didn't pass the ${examCard.exam.displayName.toLowerCase()}!`
 								: examCard.progress.status === "in-progress"
 									? `You're taking the ${examCard.exam.displayName.toLowerCase()}!`
 									: `You haven't taken the ${examCard.exam.displayName.toLowerCase()} yet.`}
+							{examCard.progress.status === "expired" && (
+								<span role="status" className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-[#fff0ed] px-2.5 py-1 text-xs font-bold text-[#b42318]">
+									<CircleAlert size={14} /> Time expired
+								</span>
+							)}
 							{examCard.hasResult && <span className="mt-1 block">{passedExam ? "Good job! :)" : "Better luck next time! :("}</span>}
 							{examCard.hasResult && <span className="mt-1 block">Score: {examCard.result.score}/{examCard.result.maxScore}</span>}
 							<span className="mt-1 block text-xs text-[#7c89a1]">Click to see the next exam update</span>
@@ -298,14 +310,12 @@ export default function CCNAProgramDashboard({
 
 	return (
 		<main className="program-faceted-page ccna-page-enter relative min-h-screen bg-white text-[#071126]">
-			{/* Phones/tablets: Back button pinned to the screen (outside the page's slide-in animation),
-			    so it stays still while the page moves; a white pill appears behind it once you scroll */}
 			{createPortal(
 				<Link
 					to="/pages/blank"
-					className={`fixed left-4 top-20 z-[60] flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-base font-bold text-[#005b6b] transition hover:text-[#004653] active:scale-95 lg:hidden ${hasScrolled ? "bg-white/90 shadow-md backdrop-blur-sm" : ""}`}
+					className={`fixed left-4 top-24 z-40 flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-bold text-[#005b6b] transition hover:text-[#004653] active:scale-95 ${hasScrolled ? "bg-white/90 shadow-md backdrop-blur-sm" : "bg-white/80"}`}
 				>
-					<ArrowLeft size={24} strokeWidth={2.5} /> Back
+					<ArrowLeft size={20} strokeWidth={2.5} /> Back to Courses
 				</Link>,
 				document.body,
 			)}

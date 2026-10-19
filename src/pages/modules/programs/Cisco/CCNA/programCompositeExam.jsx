@@ -100,6 +100,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 	const programName = exam.programName ?? "CCNA";
 	const isCompTIAExam = theme === "comptia";
 	const isFortinetExam = theme === "fortinet";
+	const isPracticeOnlyExam = isFortinetExam && examKey === "all_questions";
 	const dashboardPath = `/modules/programs/${programKey ?? "ccna"}`;
 	const location = useLocation();
 	const navigate = useNavigate();
@@ -225,7 +226,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 	}, [attemptId, exam.name, isSubmitted, isViewingSavedResult, programKey, questions.length, score, submittedAt, userId]);
 
 	useEffect(() => {
-		if (isAuthLoading || !isSubmitted || isViewingSavedResult || !userId || !Number.isFinite(submittedAt)) return undefined;
+		if (isAuthLoading || !isSubmitted || isViewingSavedResult || isPracticeOnlyExam || !userId || !Number.isFinite(submittedAt)) return undefined;
 
 		let isActive = true;
 		const assessmentProgramKey = programKey ?? "ccna";
@@ -255,7 +256,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 		return () => {
 			isActive = false;
 		};
-	}, [attemptId, exam.name, examKey, gradebookSaveAttempt, isAuthLoading, isSubmitted, isViewingSavedResult, programKey, programName, questions.length, score, submittedAt, userId]);
+	}, [attemptId, exam.name, examKey, gradebookSaveAttempt, isAuthLoading, isPracticeOnlyExam, isSubmitted, isViewingSavedResult, programKey, programName, questions.length, score, submittedAt, userId]);
 
 	function submitExam(finishedAt = Date.now()) {
 		setSubmittedAt((previousSubmittedAt) => previousSubmittedAt ?? finishedAt);
@@ -423,7 +424,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 	return (
 		<main data-theme={isDark ? "dark" : "light"} className={`ccna-page-enter min-h-screen bg-[#f5f9f9] px-4 py-6 text-[#17233d] sm:px-8 sm:py-8 ${isCompTIAExam ? "comptia-exam-page" : ""} ${isFortinetExam ? "fortinet-exam-page" : ""}`}>
 						<div className="mx-auto max-w-[1125px]">
-				{gradebookSaveError && isResultView && (
+				{!isPracticeOnlyExam && gradebookSaveError && isResultView && (
 					<p role="alert" className="mb-4 rounded-xl border border-[#f2c6c3] bg-white px-4 py-3 text-sm font-medium text-[#b42318]">
 						Your exam result could not be saved to the backend gradebook. {gradebookSaveError}{" "}
 						<button
@@ -438,12 +439,12 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 						</button>
 					</p>
 				)}
-				{isSubmitted && !isViewingSavedResult && !gradebookSaveError && !gradebookSaved && (
+				{!isPracticeOnlyExam && isSubmitted && !isViewingSavedResult && !gradebookSaveError && !gradebookSaved && (
 					<p role="status" className="mb-4 rounded-xl border border-[#d6e5e7] bg-white px-4 py-3 text-sm font-medium text-[#005b6b]">
 						Saving your exam result to the backend gradebook…
 					</p>
 				)}
-				{isSubmitted && !isViewingSavedResult && gradebookSaved && (
+				{!isPracticeOnlyExam && isSubmitted && !isViewingSavedResult && gradebookSaved && (
 					<p role="status" className="mb-4 rounded-xl border border-[#b8dfce] bg-white px-4 py-3 text-sm font-medium text-[#16724e]">
 						Your exam result was saved to the backend gradebook.
 					</p>

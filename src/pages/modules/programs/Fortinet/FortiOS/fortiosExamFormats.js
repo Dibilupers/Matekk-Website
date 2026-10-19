@@ -1,9 +1,9 @@
 import { createCompTIAExamFormats } from "../../CompTIA/Network+/networkPlusExamFormats";
 
 export const FORTIOS_EXAM_FORMAT_DEFINITIONS = {
-	short: { name: "Short Exam", questionCount: 50, durationSeconds: 45 * 60 },
-	medium: { name: "Medium Exam", questionCount: 100, durationSeconds: 90 * 60 },
-	long: { name: "Long Exam", questionCount: 150, durationSeconds: 120 * 60 },
+	short: { name: "Short Exam", questionCount: 25, durationSeconds: 25 * 60 },
+	medium: { name: "Medium Exam", questionCount: 50, durationSeconds: 60 * 60 },
+	long: { name: "Long Exam", questionCount: 75, durationSeconds: 80 * 60 },
 	all_questions: { name: "All Questions Exam", questionCount: null, durationSeconds: null },
 };
 
@@ -26,6 +26,10 @@ export function createFortiOSExamFormats(questionBank) {
 		programKey: "fortinet-fortios",
 		programName: "FortiOS",
 		includeAllQuestions: true,
+		examFormatDefinitions: Object.fromEntries(
+			Object.entries(FORTIOS_EXAM_FORMAT_DEFINITIONS)
+				.filter(([examKey]) => examKey !== "all_questions"),
+		),
 	});
 	return {
 		...formats,

@@ -40,9 +40,12 @@ export function readCcnaExamProgress(baseKey, userId) {
 				(total, question, index) => total + Number(isAnswerCorrect(question, session.answers[index])),
 				0,
 			);
-		const isExpired = !session.isSubmitted && session.deadline !== null && session.deadline <= Date.now();
+		const expiredAtDeadline = session.deadline !== null &&
+			Number.isFinite(session.submittedAt) &&
+			session.submittedAt >= session.deadline;
+		const isExpired = expiredAtDeadline || (!session.isSubmitted && session.deadline !== null && session.deadline <= Date.now());
 		return {
-			status: session.isSubmitted ? "completed" : isExpired ? "expired" : "in-progress",
+			status: isExpired ? "expired" : session.isSubmitted ? "completed" : "in-progress",
 			deadline: session.isSubmitted || isExpired ? null : session.deadline,
 			answeredCount: session.questions.filter((question, index) => isQuestionAnswered(question, session.answers[index])).length,
 			score,

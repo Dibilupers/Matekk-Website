@@ -37,11 +37,16 @@ function shuffleQuestionChoices(question) {
 
 export function createCompTIAExamFormats(
 	questionBank,
-	{ programKey = "comptia-network-plus", programName = "CompTIA Network+", includeAllQuestions = false } = {},
+	{
+		programKey = "comptia-network-plus",
+		programName = "CompTIA Network+",
+		includeAllQuestions = false,
+		examFormatDefinitions = EXAM_FORMATS,
+	} = {},
 ) {
 	const uniqueQuestions = [...new Map(questionBank.map((question) => [question.prompt.trim().toLowerCase(), question])).values()];
 
-	const timedFormats = Object.fromEntries(Object.entries(EXAM_FORMATS).map(([examKey, format]) => [
+	const timedFormats = Object.fromEntries(Object.entries(examFormatDefinitions).map(([examKey, format]) => [
 		examKey,
 		{
 			...format,
