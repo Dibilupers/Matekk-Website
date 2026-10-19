@@ -8,7 +8,7 @@ import {
 	readProgramModuleQuizProgress,
 } from "../../../utils/programModuleQuizProgress";
 import { readGradebookAssessments } from "../../../utils/gradebookApi";
-import { getProgramExamFormats } from "./programExamFormats";
+import { getProgramExamFormats, LEGACY_PROGRAM_EXAM_NAMES } from "./programExamFormats";
 
 function getGradeTone(score) {
 	if (!Number.isFinite(score)) {
@@ -125,6 +125,9 @@ function getExamRows(storedAssessments, programKey) {
 		long: { name: "Long Exam" },
 	};
 	const examFormatLabels = { short: "Short", medium: "Medium", long: "Long" };
+	const gradedExamFormats = Object.entries(examFormats).filter(([examKey]) =>
+		programKey !== "fortinet-fortios" || examKey !== "all_questions",
+	);
 	const validExamAssessments = storedAssessments
 		.filter((assessment) =>
 			assessment.type === "exam" &&
@@ -135,10 +138,18 @@ function getExamRows(storedAssessments, programKey) {
 			Number.isFinite(assessment.submittedAt),
 		);
 
-	return Object.entries(examFormats).flatMap(([examKey, exam], examIndex) => {
+	return gradedExamFormats.flatMap(([examKey, exam], examIndex) => {
 		const savedTitle = `${exam.name} · ${exam.programName}`;
+		const legacyTitles = (LEGACY_PROGRAM_EXAM_NAMES[examKey] ?? []).flatMap((name) =>
+			exam.programName ? [`${name} · ${exam.programName}`, name] : [name],
+		);
 		const attempts = validExamAssessments
-			.filter((assessment) => assessment.examFormat === examKey || assessment.title === savedTitle || assessment.title === exam.name)
+			.filter((assessment) =>
+				assessment.examFormat === examKey ||
+				assessment.title === savedTitle ||
+				assessment.title === exam.name ||
+				legacyTitles.includes(assessment.title),
+			)
 			.sort((first, second) => first.submittedAt - second.submittedAt);
 		if (!attempts.length) {
 			return [{
@@ -366,7 +377,7 @@ export default function ProgramModuleGradebook({ programKey, programName, module
 					<div className="grid grid-cols-2 gap-4 p-5 sm:grid-cols-3 sm:gap-5 sm:p-8 xl:grid-cols-5">
 						<SummaryStat label="Class grade" value={classGrade === null ? "--" : `${classGrade}%`} detail={totalPossiblePoints ? `${totalPoints}/${totalPossiblePoints} points` : "No graded assessments"} progress={classGrade ?? undefined} />
 						<SummaryStat label="Quizzes completed" value={`${latestRows.length} of ${modules.length}`} detail="module quizzes completed" />
-						<SummaryStat label="Exams completed" value={`${completedExamCount} of ${Object.keys(getProgramExamFormats(programKey) ?? { short: true, medium: true, long: true }).length}`} detail="exams completed" />
+						<SummaryStat label="Exams completed" value={`${completedExamCount} of ${examRows.length}`} detail="exams completed" />
 						<SummaryStat label="Best score" value={bestAssessment ? `${bestAssessment.bestPoints.score}/${bestAssessment.bestPoints.maxScore}` : "--"} detail={bestAssessment?.name ?? "No results yet"} gradeScore={bestAssessment?.bestGrade} />
 						<SummaryStat label="Up next" value={nextAssessment?.name ?? "All complete"} detail={nextAssessment?.status === "in-progress" ? "In progress" : nextAssessment ? "Not submitted" : "All assessments complete"} compactValue />
 					</div>

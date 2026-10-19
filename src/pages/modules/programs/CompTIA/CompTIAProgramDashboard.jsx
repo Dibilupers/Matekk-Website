@@ -177,6 +177,8 @@ export default function CompTIAProgramDashboard({ program }) {
 		format,
 		progress: readCompTIAExamProgress(program.programKey, format, profile?.userId, examClockNow),
 	}));
+	const examCardFormat = examFormats[examCardIndex % examFormats.length];
+	const examCardProgress = examProgress.find(({ format }) => format.key === examCardFormat.key)?.progress;
 	const hasActiveTimedExam = examProgress.some(({ format, progress }) =>
 		format.durationSeconds !== null && progress.status === "in-progress",
 	);
@@ -290,11 +292,11 @@ export default function CompTIAProgramDashboard({ program }) {
 	}
 
 	return (
-		<main className="program-faceted-page ccna-page-enter comptia-program-page relative min-h-screen bg-white text-[#071126]">
+		<main className="program-faceted-page ccna-page-enter comptia-program-page relative min-h-screen w-full min-w-0 overflow-x-clip bg-white text-[#071126]">
 			{createPortal(
 				<Link
 					to="/pages/blank"
-					className={`fixed left-4 top-20 z-[60] flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-bold text-[#c8102e] transition hover:text-[#a80e27] active:scale-95 ${hasScrolled ? "bg-white/90 shadow-md backdrop-blur-sm" : "bg-white/80"}`}
+					className={`fixed left-4 top-24 z-40 flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-bold text-[#c8102e] transition hover:text-[#a80e27] active:scale-95 ${hasScrolled ? "bg-white/90 shadow-md backdrop-blur-sm" : "bg-white/80"}`}
 				>
 					<ArrowLeft size={20} strokeWidth={2.5} /> Back to Courses
 				</Link>,
@@ -302,9 +304,9 @@ export default function CompTIAProgramDashboard({ program }) {
 			)}
 
 			<ProgramBackgroundParticles className="mx-auto max-w-[1440px] px-6 pb-16 pt-14 sm:px-10 lg:px-14 lg:pb-20 lg:pt-16">
-				<div className="grid items-center gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-4">
+				<div className="grid min-w-0 grid-cols-1 items-center gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-4">
 					<div className="contents sm:block">
-						<div className="order-1 sm:order-none">
+						<div className="order-1 min-w-0 sm:order-none">
 							<div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#f0cbd3] bg-[#fff5f6] px-4 py-2 text-sm font-semibold text-[#b20d29]">
 								<span className="h-2 w-2 rounded-full bg-[#c8102e]" />
 								CompTIA · {program.title} Certification
@@ -336,24 +338,24 @@ export default function CompTIAProgramDashboard({ program }) {
 									View All Modules <ArrowRight size={18} />
 								</button>
 							</div>
-							<div className="mt-10 grid max-w-[810px] grid-cols-3 overflow-hidden rounded-2xl border border-[#ead7dc] bg-white shadow-[0_12px_28px_rgba(200,16,46,0.08)]">
-								<div className="program-stat-item flex min-w-0 items-center justify-center gap-2 border-r border-[#f0dfe3] px-2 py-4 sm:gap-3 sm:px-4 sm:py-5">
-									<strong className="text-2xl leading-none tracking-tight text-[#071126] sm:text-[2rem]">0/{program.modules.length}</strong>
-									<span className="text-[11px] leading-tight text-[#6f7d99] sm:text-sm">Quizzes<br />completed</span>
-								</div>
-								<div className="program-stat-item flex min-w-0 items-center justify-center gap-2 border-r border-[#f0dfe3] px-2 py-4 sm:gap-3 sm:px-4 sm:py-5">
-									<strong className="text-2xl leading-none tracking-tight text-[#071126] sm:text-[2rem]">0/3</strong>
-									<span className="text-[11px] leading-tight text-[#6f7d99] sm:text-sm">Exams<br />completed</span>
-								</div>
-								<div className="program-stat-item flex min-w-0 items-center justify-center gap-2 px-2 py-4 sm:gap-3 sm:px-4 sm:py-5">
-									<strong className="text-2xl leading-none tracking-tight text-[#071126] sm:text-[2rem]">{program.modules.length}</strong>
-									<span className="text-[11px] leading-tight text-[#6f7d99] sm:text-sm">Modules<br />left</span>
-								</div>
+						</div>
+						<div className="order-3 mt-8 grid w-full min-w-0 max-w-[810px] grid-cols-3 overflow-hidden rounded-2xl border border-[#ead7dc] bg-white shadow-[0_12px_28px_rgba(200,16,46,0.08)] sm:mt-11">
+							<div className="program-stat-item flex min-w-0 flex-col items-center justify-center gap-1 border-r border-[#f0dfe3] px-1 py-4 text-center sm:flex-row sm:gap-3 sm:px-4 sm:py-5 sm:text-left">
+								<strong className="text-xl leading-none tracking-tight text-[#071126] sm:text-[2rem]">0/{program.modules.length}</strong>
+								<span className="text-[11px] leading-tight text-[#6f7d99] sm:text-sm">Quizzes<br />completed</span>
+							</div>
+							<div className="program-stat-item flex min-w-0 flex-col items-center justify-center gap-1 border-r border-[#f0dfe3] px-1 py-4 text-center sm:flex-row sm:gap-3 sm:px-4 sm:py-5 sm:text-left">
+								<strong className="text-xl leading-none tracking-tight text-[#071126] sm:text-[2rem]">0/3</strong>
+								<span className="text-[11px] leading-tight text-[#6f7d99] sm:text-sm">Exams<br />completed</span>
+							</div>
+							<div className="program-stat-item flex min-w-0 flex-col items-center justify-center gap-1 px-1 py-4 text-center sm:flex-row sm:gap-3 sm:px-4 sm:py-5 sm:text-left">
+								<strong className="text-xl leading-none tracking-tight text-[#071126] sm:text-[2rem]">{program.modules.length}</strong>
+								<span className="text-[11px] leading-tight text-[#6f7d99] sm:text-sm">Modules<br />left</span>
 							</div>
 						</div>
 					</div>
 
-					<div className="relative order-2 mx-auto flex h-[320px] w-full max-w-[440px] items-center justify-center sm:order-none sm:h-[380px] sm:max-w-[470px]">
+					<div className="relative order-2 mx-auto flex h-[320px] w-full min-w-0 max-w-[440px] items-center justify-center sm:order-none sm:h-[380px] sm:max-w-[470px]">
 						<div
 							aria-hidden="true"
 							className="comptia-logo-circle absolute left-1/2 top-1/2 h-[270px] w-[270px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#fff0f2] sm:h-[356px] sm:w-[356px]"
@@ -408,16 +410,32 @@ export default function CompTIAProgramDashboard({ program }) {
 									<span className="text-xs font-semibold text-[#7c89a1]">{examCardIndex + 1}/{examFormats.length}</span>
 								</div>
 								<p className="mt-0.5 text-sm leading-snug text-[#64708a]">
-									You haven't taken the {examFormats[examCardIndex].name.toLowerCase()} yet.
+									{examCardProgress?.status === "expired"
+										? `Time expired for the ${examCardFormat.name.toLowerCase()}.`
+										: examCardProgress?.status === "in-progress"
+											? `You're taking the ${examCardFormat.name.toLowerCase()}.`
+											: `You haven't taken the ${examCardFormat.name.toLowerCase()} yet.`}
+									{examCardProgress?.status === "expired" && (
+										<span role="status" className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-[#fff0ed] px-2.5 py-1 text-xs font-bold text-[#b42318]">
+											<CircleAlert size={14} /> Time expired
+										</span>
+									)}
 									<span className="mt-1 block text-xs text-[#7c89a1]">Click to see the next exam update</span>
 								</p>
 							</button>
 							<button
 								type="button"
-								onClick={openExamPicker}
+								onClick={() => {
+									if (examCardProgress?.status === "expired") {
+										setSelectedExamFormat(examCardFormat.name);
+										setIsExamPickerOpen(true);
+										return;
+									}
+									openExamPicker();
+								}}
 								className="mt-3 flex h-10 w-full items-center justify-center rounded-full bg-[#c8102e] text-sm font-bold text-white transition-all duration-200 ease-out hover:scale-105 hover:bg-[#a80e27] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100 sm:h-11"
 							>
-								Start {examFormats[examCardIndex].length.toLowerCase()} exam
+								{examCardProgress?.status === "expired" ? "View Result" : `Start ${examCardFormat.length.toLowerCase()} exam`}
 							</button>
 						</div>
 					</div>
@@ -432,8 +450,8 @@ export default function CompTIAProgramDashboard({ program }) {
 			</div>
 
 			<section id="program-modules" className="scroll-mt-8 bg-[#fff9fa]">
-				<div className="mx-auto grid max-w-[1440px] gap-8 px-6 py-12 sm:px-10 lg:grid-cols-[minmax(0,1fr)_330px] lg:px-14 lg:py-14">
-					<div>
+				<div className="mx-auto grid w-full min-w-0 max-w-[1440px] grid-cols-1 gap-8 px-6 py-12 sm:px-10 lg:grid-cols-[minmax(0,1fr)_330px] lg:px-14 lg:py-14">
+					<div className="min-w-0">
 						<div className="mb-6 flex flex-wrap items-center justify-between gap-2">
 							<h2 className="text-xl font-bold text-[#111827] sm:text-[21px]">Course modules</h2>
 							<span className="text-sm text-[#7c89a1]">0 of {program.modules.length} quizzes completed</span>
@@ -451,7 +469,7 @@ export default function CompTIAProgramDashboard({ program }) {
 						</div>
 					</div>
 
-					<aside className="space-y-5">
+					<aside className="min-w-0 space-y-5">
 						<div
 							className="overflow-hidden rounded-[18px] border border-[#ead7dc] bg-white touch-pan-y"
 							onTouchStart={(event) => {
