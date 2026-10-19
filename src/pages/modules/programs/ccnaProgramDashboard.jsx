@@ -239,6 +239,8 @@ export default function CCNAProgramDashboard({
 	retryGradebookStats,
 	heroIntros = NO_HERO_INTROS,
 	overviewDescription,
+	learningFocusAreas = [],
+	courseOutlinePath,
 	programKey,
 	programPath,
 }) {
@@ -441,24 +443,38 @@ export default function CCNAProgramDashboard({
 						{practiceQuizzes ?? <ComingSoonCard title="Practice quizzes" description="Interactive quizzes are not available yet for this learning path." icon={<Check size={21} />} />}
 						{!practiceQuizzes && <ComingSoonCard title="Exams" description="Timed exams are not available yet for this learning path." icon={<Clock3 size={21} />} />}
 						<div className="rounded-[18px] border border-[#d6e5e7] bg-white p-6">
-							<div className="mb-4 flex items-center justify-between gap-3">
-								<div>
-									<h2 className="text-xl font-bold">Program Overview</h2>
-									<p className="mt-1 text-sm leading-6 text-[#7c89a1]">{overviewDescription ?? focusAreas}</p>
-								</div>
-								<BookOpen size={20} className="shrink-0 text-[#005b6b]" aria-hidden="true" />
+							<div className="mb-4 flex items-center gap-3">
+								<BookOpen className="text-[#005b6b]" size={21} />
+								<h2 className="text-xl font-bold">Program Overview</h2>
 							</div>
-							<h3 className="mb-3 text-xs font-bold uppercase tracking-wide text-[#7c89a1]">Course roadmap</h3>
-							<ol className="space-y-2.5">
-								{modules.map((module, index) => (
-									<li key={module.number ?? module.title} className="flex items-center gap-3 text-sm font-medium text-[#334454]">
-										<span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#e8f3f4] text-xs font-bold text-[#005b6b]">
-											{index + 1}
+							<p className="text-sm leading-6 text-[#7c89a1]">{overviewDescription ?? focusAreas}</p>
+							<h3 className="mb-3 mt-5 text-xs font-bold uppercase tracking-wide text-[#7c89a1]">Learning focus</h3>
+							<ul className="space-y-3">
+								{learningFocusAreas.map((area) => (
+									<li key={area} className="flex items-center gap-3 text-sm font-medium text-[#334454]">
+										<span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#e8f3f4] text-[#005b6b]">
+											<Check size={17} />
 										</span>
-										<span className="min-w-0">{module.title}</span>
+										{area}
 									</li>
 								))}
-							</ol>
+							</ul>
+							<p className="mt-5 flex items-center gap-2 border-t border-[#e2ecec] pt-4 text-xs text-[#7c89a1]">
+								<Clock3 size={15} className="text-[#005b6b]" />
+								{modules.length} modules · Self-paced study
+							</p>
+							<Link
+								to={courseOutlinePath}
+								className="mt-5 flex h-12 items-center justify-center gap-2 rounded-full bg-[#005b6b] px-5 text-sm font-bold text-white shadow-[0_10px_20px_rgba(0,91,107,0.16)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-[#004653] hover:shadow-[0_14px_26px_rgba(0,91,107,0.24)] active:translate-y-0 motion-reduce:transition-none"
+							>
+								View Course Outline <ArrowRight size={17} />
+							</Link>
+						</div>
+						<div className="overflow-hidden rounded-[18px] border border-[#d6e5e7] bg-white p-3">
+							<img src={badge} alt={`${programName} certification badge`} className="mx-auto h-44 w-full object-contain" />
+							<p className="pb-2 text-center text-xs font-semibold uppercase tracking-[0.16em] text-[#7c89a1]">
+								Official Cisco certification
+							</p>
 						</div>
 					</aside>
 				</div>
