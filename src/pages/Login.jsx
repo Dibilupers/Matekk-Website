@@ -713,6 +713,9 @@ export default function Login() {
                       <p className="text-sm text-slate-600">
                         Enter the six-digit code sent to {loginMaskedEmail}.
                       </p>
+                      <p className="text-sm text-slate-500">
+                        If you don&apos;t see the email, check your spam or junk folder.
+                      </p>
                       <label className="block text-sm font-medium text-slate-700">
                         <span className="mb-2 block">Verification code</span>
                         <input

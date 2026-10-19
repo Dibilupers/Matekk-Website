@@ -12,6 +12,14 @@ export interface DragDropAnswer {
   matchStyle?: 'numbers';
 }
 
+const QOS_TERMS = [
+  'Class-based weighted fair queuing',
+  'Classification',
+  'Congestion',
+  'Policing',
+  'Shaping',
+];
+
 // Text that went through the wrong character encoding somewhere ("â€“" should be "–")
 const MOJIBAKE: Array<[string, string]> = [
   ['â€“', '–'], ['â€”', '—'], ['â€™', '’'], ['â€˜', '‘'], ['â€œ', '“'], ['â€\u009d', '”'], ['â€³', '”'],
@@ -88,11 +96,41 @@ function parsePairs(answerText: string): DragDropAnswer | null {
   return { items: lefts, choices: rights, answer: rights.map((_, index) => index) };
 }
 
+function parseQosDefinitionPairs(answerText: string): DragDropAnswer | null {
+  const termPattern = QOS_TERMS.map((term) => term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+  const matches = [...answerText.matchAll(new RegExp(`(?:^|\\s)(${termPattern}):\\s*`, 'gi'))];
+  if (
+    matches.length !== QOS_TERMS.length ||
+    answerText.slice(0, matches[0].index).trim() ||
+    new Set(matches.map((match) => match[1].toLocaleLowerCase())).size !== QOS_TERMS.length
+  ) {
+    return null;
+  }
+
+  const items = matches.map((match, index) => {
+    const start = (match.index ?? 0) + match[0].length;
+    const end = matches[index + 1]?.index ?? answerText.length;
+    return answerText.slice(start, end).trim();
+  });
+  if (items.some((item) => !item)) return null;
+
+  const choices = matches.map((match) => QOS_TERMS.find(
+    (term) => term.toLocaleLowerCase() === match[1].toLocaleLowerCase(),
+  )!);
+  return {
+    items,
+    choices,
+    answer: choices.map((_, index) => index),
+  };
+}
+
 /** Turns a 9tut drag-and-drop answer into a matching question, or null if it can't be read safely. */
 export function parseDragDropAnswer(correctAnswer: string | null | undefined, questionId: number): DragDropAnswer | null {
   const answerText = cleanText(String(correctAnswer ?? ''));
   if (!answerText) return null;
-  const parsed = parseGroups(answerText, String(questionId)) ?? parsePairs(answerText);
+  const parsed = questionId === 289
+    ? parseQosDefinitionPairs(answerText)
+    : parseGroups(answerText, String(questionId)) ?? parsePairs(answerText);
   if (!parsed) return null;
   // Same limits the exam screens support (saved exam attempts allow up to 8 items and 8 boxes)
   if (parsed.items.length < 2 || parsed.items.length > 8 || parsed.choices.length < 2 || parsed.choices.length > 8) return null;

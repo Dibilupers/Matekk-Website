@@ -23,3 +23,17 @@ Validation before push: frontend production build, server build, 19 focused serv
 - Added the `changelog/` folder and initialized this push log.
 
 Documentation-only changes; no build or test run was needed.
+
+## 2026-10-19 — `Noah` (pending push)
+
+- Added the supplied exhibit for CCNA question 1306 and converted its broadcast-address choices into numbered answer slots.
+- Added the confirmed answer key A to CCNA question 720 so it is included in the usable bank.
+- Corrected CCNA question 181 to use numbered matching instead of multi-select, and added its supplied image as an exhibit. Added question 608's image and numbered answer slots.
+- Added the recovered image for CCNA question 382 and converted it into a gradable Ansible feature-matching question.
+- Rebuilt CCNA question 481 as a native router topology followed by its prompt and a numbered static-route matching question.
+- Added a reminder on the login verification screen to check the spam or junk folder if the code email is missing.
+- Scoped all-question and regular question-bank requests to the selected course module, separating CCNA questions from CompTIA and other course banks.
+- Included the separately labeled `CCNA 200-301 Set …` rows in the CCNA question bank so legacy CCNA questions aren't excluded by the course filter.
+- Removed the skipped-question count warning from the student-facing CCNA all-questions exam; unsupported rows remain excluded from scoring and display.
+- Converted 150 valid CCNA "Choose two/three" rows with stored multi-letter answer keys into graded multi-select questions.
+- Converted CCNA Part 9, question 70 (database ID 289) from flattened QoS term definitions into the existing drag-and-drop matching interaction. The configured database contains 1,367 CCNA rows, and the current loader returns all 1,367 as usable.

@@ -41,7 +41,6 @@ export default function CCNAAllQuestionsExam() {
 	const [isDark, setIsDark] = useState(false);
 	const [score, setScore] = useState(0);
 	const [storageError, setStorageError] = useState(null);
-	const [skippedQuestionCount, setSkippedQuestionCount] = useState(0);
 	const [questionNumberInput, setQuestionNumberInput] = useState("1");
 	// Results page: show only correct / incorrect / unanswered questions when stepping through the review
 	const [reviewFilter, setReviewFilter] = useState("all");
@@ -79,7 +78,7 @@ export default function CCNAAllQuestionsExam() {
 		let isActive = true;
 		setLoadState({ status: "loading", error: null });
 		loadCcnaAllQuestionsBank()
-			.then(({ questions: validQuestions, skippedCount }) => {
+			.then(({ questions: validQuestions }) => {
 				const orderedQuestions = [...validQuestions]
 					.map(applyNativeExhibit)
 					.sort((left, right) => left.bankId - right.bankId);
@@ -88,7 +87,6 @@ export default function CCNAAllQuestionsExam() {
 				}
 				if (!isActive) return;
 
-				setSkippedQuestionCount(skippedCount);
 				setQuestions(orderedQuestions);
 				if (storageKey) {
 					try {
@@ -283,12 +281,6 @@ export default function CCNAAllQuestionsExam() {
 						{storageError}
 					</p>
 				)}
-				{skippedQuestionCount > 0 && (
-					<p role="status" className="mb-4 rounded-xl border border-[#f0d79e] bg-[#fffaf0] px-4 py-3 text-sm text-[#805b12]">
-						{skippedQuestionCount.toLocaleString()} invalid or unsupported database question{skippedQuestionCount === 1 ? " was" : "s were"} skipped.
-					</p>
-				)}
-
 				{!isSubmitted ? (
 					<>
 						<section aria-label="Exam progress" className="mb-5 rounded-2xl border border-[#d6e5e7] bg-white p-5 shadow-sm sm:mb-6 sm:p-8">
@@ -334,14 +326,42 @@ export default function CCNAAllQuestionsExam() {
 						</section>
 
 						<section key={`question-${currentIndex}`} ref={questionCardRef} className="ccna-question-transition scroll-mt-4 rounded-[20px] border border-[#d6e5e7] bg-white p-4 shadow-sm sm:p-7">
-							{!question.hidePrompt && (
+							{question.bankId === 1306 && question.exhibitImage && (
+								<ExhibitImage src={question.exhibitImage} className="mb-4" imageClassName="max-h-[32rem]" />
+							)}
+							{question.bankId === 608 && question.exhibitImage && (
+								<ExhibitImage src={question.exhibitImage} className="mb-4" imageClassName="max-h-[32rem]" />
+							)}
+							{question.bankId === 181 && question.exhibitImage && (
+								<ExhibitImage src={question.exhibitImage} className="mb-4" imageClassName="max-h-[32rem]" />
+							)}
+							{question.bankId === 382 && question.exhibitImage && (
+								<ExhibitImage src={question.exhibitImage} className="mb-4" imageClassName="max-h-[32rem]" />
+							)}
+							{question.bankId === 481 && question.exhibitDiagram && (
+								<ExhibitDiagram type={question.exhibitDiagram} className="mb-4" />
+							)}
+							{question.bankId === 481 && !question.hidePrompt && (
+								<QuestionPrompt prompt={question.prompt} hasSeparateExhibit />
+							)}
+							{!question.hidePrompt && question.bankId === 1306 && (
+								<QuestionPrompt prompt={question.prompt} hasSeparateExhibit />
+							)}
+							{!question.hidePrompt && question.bankId === 181 && (
+								<QuestionPrompt prompt={question.prompt} hasSeparateExhibit />
+							)}
+							{!question.hidePrompt && question.bankId === 608 && (
+								<QuestionPrompt prompt={question.prompt} hasSeparateExhibit />
+							)}
+							{!question.hidePrompt && question.bankId !== 1306 && question.bankId !== 181 && question.bankId !== 608 && (
+								question.bankId !== 481 &&
 								<QuestionPrompt
 									prompt={question.prompt}
 									hasSeparateExhibit={Boolean(question.exhibit || question.exhibitImage || question.exhibitDiagram)}
 								/>
 							)}
-							{question.exhibitDiagram && <ExhibitDiagram type={question.exhibitDiagram} className="mb-6" />}
-							{question.exhibitImage && !question.hideExhibitImage && <ExhibitImage src={question.exhibitImage} className="mb-6" imageClassName="max-h-[32rem]" cropTop={question.exhibitImageCropTop} />}
+							{question.bankId !== 481 && question.exhibitDiagram && <ExhibitDiagram type={question.exhibitDiagram} className="mb-6" />}
+							{question.bankId !== 481 && question.bankId !== 382 && question.bankId !== 181 && question.bankId !== 608 && question.bankId !== 1306 && question.exhibitImage && !question.hideExhibitImage && <ExhibitImage src={question.exhibitImage} className="mb-6" imageClassName="max-h-[32rem]" cropTop={question.exhibitImageCropTop} />}
 							{question.exhibit && <ExhibitText text={question.exhibit} className="mb-6" />}
 							<QuestionInput
 								key={currentIndex}
@@ -439,14 +459,41 @@ export default function CCNAAllQuestionsExam() {
 									{isAnswerCorrect(question, answers[currentIndex]) ? "Correct" : isQuestionAnswered(question, answers[currentIndex]) ? "Incorrect" : "Unanswered"}
 								</span>
 							</div>
-							{!question.hidePrompt && (
+							{question.bankId === 481 && question.exhibitDiagram && (
+								<ExhibitDiagram type={question.exhibitDiagram} className="mb-4" />
+							)}
+							{question.bankId === 382 && question.exhibitImage && (
+								<ExhibitImage src={question.exhibitImage} className="mb-4" imageClassName="max-h-[32rem]" />
+							)}
+							{question.bankId === 181 && question.exhibitImage && (
+								<ExhibitImage src={question.exhibitImage} className="mb-4" imageClassName="max-h-[32rem]" />
+							)}
+							{question.bankId === 608 && question.exhibitImage && (
+								<ExhibitImage src={question.exhibitImage} className="mb-4" imageClassName="max-h-[32rem]" />
+							)}
+							{question.bankId === 1306 && question.exhibitImage && (
+								<ExhibitImage src={question.exhibitImage} className="mb-4" imageClassName="max-h-[32rem]" />
+							)}
+							{!question.hidePrompt && question.bankId === 481 && (
+								<QuestionPrompt prompt={question.prompt} hasSeparateExhibit />
+							)}
+							{!question.hidePrompt && question.bankId === 1306 && (
+								<QuestionPrompt prompt={question.prompt} hasSeparateExhibit />
+							)}
+							{!question.hidePrompt && question.bankId === 181 && (
+								<QuestionPrompt prompt={question.prompt} hasSeparateExhibit />
+							)}
+							{!question.hidePrompt && question.bankId === 608 && (
+								<QuestionPrompt prompt={question.prompt} hasSeparateExhibit />
+							)}
+							{!question.hidePrompt && question.bankId !== 481 && question.bankId !== 181 && question.bankId !== 608 && question.bankId !== 1306 && (
 								<QuestionPrompt
 									prompt={question.prompt}
 									hasSeparateExhibit={Boolean(question.exhibit || question.exhibitImage || question.exhibitDiagram)}
 								/>
 							)}
-							{question.exhibitDiagram && <ExhibitDiagram type={question.exhibitDiagram} className="mt-4" />}
-							{question.exhibitImage && !question.hideExhibitImage && <ExhibitImage src={question.exhibitImage} className="mb-6" imageClassName="max-h-[32rem]" cropTop={question.exhibitImageCropTop} />}
+							{question.bankId !== 481 && question.exhibitDiagram && <ExhibitDiagram type={question.exhibitDiagram} className="mt-4" />}
+							{question.bankId !== 481 && question.bankId !== 382 && question.bankId !== 181 && question.bankId !== 608 && question.bankId !== 1306 && question.exhibitImage && !question.hideExhibitImage && <ExhibitImage src={question.exhibitImage} className="mb-6" imageClassName="max-h-[32rem]" cropTop={question.exhibitImageCropTop} />}
 							{question.exhibit && <ExhibitText text={question.exhibit} className="mb-6" />}
 							<QuestionReview question={question} value={answers[currentIndex]} />
 							{question.explanation && <p className="mt-5 rounded-xl bg-[#f5f9f9] px-4 py-3 text-sm leading-6 text-[#596983]"><strong className="text-[#005b6b]">Explanation: </strong>{question.explanation}</p>}
