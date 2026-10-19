@@ -1117,7 +1117,7 @@ h6 {
 
 .login-orbit-ring {
   isolation: isolate;
-  animation: login-orbit-spin 48s linear infinite;
+  animation: login-orbit-spin 24s linear infinite;
 }
 
 .login-orbit-ring::before,
@@ -1157,7 +1157,7 @@ h6 {
 }
 
 .login-orbit-badge > div {
-  animation: login-orbit-spin 48s linear infinite reverse;
+  animation: login-orbit-spin 24s linear infinite reverse;
 }
 
 .login-orbit-badge-sinking {
