@@ -393,6 +393,19 @@ export const CCNA_LEGACY_QUESTIONS = [
     "explanation": "Each virtual machine has its own set of virtual hardware (RAM, CPU, NIC) upon which an operating system\nand fully configured applications are loaded. The operating system sees a consistent, normalized set of\nhardware regardless of the actual physical hardware components."
   },
   {
+    "legacyIndex": 28,
+    "legacyNumber": 6,
+    "prompt": "A manager asks a network engineer to advise which cloud service models are used so employees do not have\nto waste their time installing, managing, and updating software which is only used occasionally. Which cloud\nservice model does the engineer recommend?",
+    "options": [
+      "infrastructure-as-a-service",
+      "software-as-a-service",
+      "platform-as-a-service",
+      "business process as service to support different types of service"
+    ],
+    "answer": 1,
+    "explanation": "Software-as-a-service (SaaS) helps save a lot of time to install OS, softwares for running a business.\n\n CDP Quick Summary\n\n Cisco Discovery Protocol (CDP) is a Layer 2 protocol that runs on Cisco devices and enables\n\n networking applications to learn about directly connected devices nearby. The information contained\n in Cisco Discovery Protocol advertisements varies based on the type of device and the installed\n version of the operating system. Some of the information that Cisco Discovery Protocol can learn\n includes:\n + Cisco IOS version running on Cisco devices\n + Hardware platform of devices\n + IP addresses of interfaces on devices\n + Locally connected devices advertising Cisco Discovery Protocol\n + Interfaces active on Cisco devices, including encapsulation type\n + Hostname\n + Duplex setting\n + VLAN Trunking Protocol (VTP) domain\n + Native VLAN\n To enable the CDP, use the cdp run command in global configuration mode. To disable CDP, use\n the no form of this command.\n CDP is enabled by default at the global level and on each supported interface to send or receive\n CDP information. To disable CDP only on one interface, use the “no cdp enable” command under\n that interface. For example:\n Router(config)#interface e0/0\n Router(config-if)#no cdp enable\n LLDP Quick Summary\n Link Layer Discovery Protocol (LLDP) is a industry standard protocol that allows devices to\n advertise, and discover connected devices, and there capabilities (same as CDP of Cisco). To enable\n it on Cisco devices, we have to use this command under global configuration mode:\n Sw(config)# lldp run\n Note: LLDP is disabled by default.\n Other LLDP commands:\n + lldp holdtime seconds: Specify the amount of time a receiving device should hold the information\n from your device before discarding it\n + lldp reinit delay: Specify the delay time in seconds for LLDP to initialize on an interface\n + lldp timer rate: Set the sending frequency of LLDP updates in seconds\n + lldp port-description: specify the port description time length value (TLV) messages.\n To disable LLDP globally, use the command “no lldp run”.\n To disable LLDP on an interface, use these two commands under interface mode:\n + no lldp transmit: disallows sending LLDP packets on the interface.\n + no lldp receive: disallows receiving LLDP packets on the interface.\n To enable receiving and transmitting the LLDP packets on a specific interface, use “lldp transmit”\n and “lldp receive” commands under that interface."
+  },
+  {
     "legacyIndex": 29,
     "legacyNumber": 1,
     "prompt": "How can the Cisco Discovery Protocol be used?",
@@ -998,6 +1011,24 @@ export const CCNA_LEGACY_QUESTIONS = [
     "explanation": ""
   },
   {
+    "legacyIndex": 73,
+    "legacyNumber": 5,
+    "prompt": "Which two command sequences must you configure on a switch to establish a Layer 3 EtherChannel with an\nopen-standard protocol? (Choose two)",
+    "options": [
+      "interface GigabitEthernet0/0/1\nchannel-group 10 mode active",
+      "interface GigabitEthernet0/0/1\nchannel-group 10 mode auto",
+      "interface GigabitEthernet0/0/1\nchannel-group 10 mode on",
+      "interface port-channel 10\nno switchport\nip address 172.16.0.1 255.255.255.0",
+      "interface port-channel 10\nswitchport\nswitchport mode trunk"
+    ],
+    "answer": [
+      0,
+      3
+    ],
+    "type": "multi",
+    "explanation": "In order to configure a Layer 3 EtherChannel, we must use the “no switchport” command and set the IP\naddress on the (logical) port-channel interface. For open-standard EtherChannel protocol we must use LACP\nwith “passive” & “active” mode.\n\nNote: If you are not sure about TCP & UDP, please read our TCP and UDP Tutorial."
+  },
+  {
     "legacyIndex": 74,
     "legacyNumber": 1,
     "prompt": "What is the difference regarding reliability and communication type between TCP and UDP?",
@@ -1140,6 +1171,19 @@ export const CCNA_LEGACY_QUESTIONS = [
     ],
     "answer": 2,
     "explanation": "Each interface on a router must be in a different network. If two interfaces are in the same network, the\nrouter will not accept it and show error when the administrator assigns it."
+  },
+  {
+    "legacyIndex": 85,
+    "legacyNumber": 8,
+    "prompt": "Which goal is achieved by the implementation of private IPv4 addressing on a network?",
+    "options": [
+      "provides a reduction in size of the forwarding table on network routers",
+      "provides an added level of protection against Internet exposure",
+      "allows communication across the Internet to other private networks",
+      "allows servers and workstations to communicate across public network boundaries"
+    ],
+    "answer": 1,
+    "explanation": ""
   },
   {
     "legacyIndex": 86,
@@ -1425,6 +1469,19 @@ export const CCNA_LEGACY_QUESTIONS = [
     "explanation": ""
   },
   {
+    "legacyIndex": 107,
+    "legacyNumber": 7,
+    "prompt": "R1 has learned route 10.10.10.0/24 via numerous routing protocols. Which route is installed?",
+    "options": [
+      "route with the lowest cost",
+      "route with the next hop that has the highest IP",
+      "route with the shortest prefix length",
+      "route with the lowest administrative distance"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
     "legacyIndex": 108,
     "legacyNumber": 8,
     "prompt": "What are two reasons for an engineer to configure a floating static route? (Choose two)",
@@ -1495,6 +1552,19 @@ export const CCNA_LEGACY_QUESTIONS = [
     "explanation": "Floating static routes are static routes that have an administrative distance greater than the administrative\ndistance (AD) of another static route or dynamic routes. By default a static route has an AD of 1 then floating\nstatic route must have the AD greater than 1. Floating static route has a manually configured administrative\ndistance greater than that of the primary route and therefore would not be in the routing table until the\nprimary route fails.\nIn this question, the floating static route to subnet 209.165.200.224/27 is manually assigned the AD of 254.\note: If you are not sure about OSPF, please read our OSPF Tutorial.\n\n Quick OSPF review\n - OSPF is a link-state routing protocol, which runs Dijkstra algorithm to calculate the shortest path.\n - Link-state routing protocol like OSPF has a common view of entire topology\n - OSPF only uses bandwidth to calculate metric.\n - Area 0 is called the backbone area\n In order to become OSPF neighbor, the following values must be matched on both routers:\n + Area ID\n + Authentication\n\n + Hello and Dead Intervals\n + Stub area Flag\n + MTU Size\n - Two options for OSPF authentication:\n + Plain text authentication\n + MD5 authentication\n - Hello packets of OSPF are multicast to 224.0.0.5\n - \"Broadcast\" is the default network type for an OSPF enabled Ethernet interface (while Point-to-\n Point is the default OSPF network type for Serial interface with HDLC and PPP encapsulation). By\n default, the timers on a broadcast network (Ethernet, point-to-point and point-to-multipoint) are 10\n seconds hello and 40 seconds dead. The timers on a non-broadcast network are 30 seconds hello 120\n seconds dead.\n OSPF uses the following criteria to select the router ID:\n 1. Manual configuration of the router ID (via the \"router-id x.x.x.x\" command under OSPF router\n configuration mode).\n 2. Highest IP address on a loopback interface.\n 3. Highest IP address on a non-loopback and active (no shutdown) interface.\n The formula to calculate OSPF cost is:\n Cost = 108 / Bandwidth"
   },
   {
+    "legacyIndex": 113,
+    "legacyNumber": 1,
+    "prompt": "What is the purpose of the show ip ospf interface command?",
+    "options": [
+      "displaying OSPF-related interface information",
+      "displaying general information about OSPF routing processes",
+      "displaying OSPF neighbor information on a per-interface basis",
+      "displaying OSPF neighbor information on a per-interface-type basis"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
     "legacyIndex": 114,
     "legacyNumber": 2,
     "prompt": "When OSPF learns multiple paths to a network, how does it select a route?",
@@ -1558,6 +1628,19 @@ export const CCNA_LEGACY_QUESTIONS = [
     ],
     "answer": 2,
     "explanation": "Router2 does not have an entry for the subnet 10.10.13.128/25. It only has an entry for 10.10.13.0/25,\nwhich ranges from 10.10.13.0 to 10.10.13.127."
+  },
+  {
+    "legacyIndex": 119,
+    "legacyNumber": 7,
+    "prompt": "A user configured OSPF in a single area between two routers. A serial interface connecting R1 and R2 is\nrunning encapsulation PPP. By default which OSPF network type is seen on this interface when the user types\nshow ip ospf interface on R1 or R2?",
+    "options": [
+      "point-to-multipoint",
+      "broadcast",
+      "point-to-point",
+      "non-broadcast"
+    ],
+    "answer": 2,
+    "explanation": "The default OSPF network type for HDLC and PPP on Serial link is point-to-point (while the default OSPF\nnetwork type for Ethernet link is Broadcast)."
   },
   {
     "legacyIndex": 120,
@@ -2031,6 +2114,19 @@ export const CCNA_LEGACY_QUESTIONS = [
       1
     ],
     "type": "multi",
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 154,
+    "legacyNumber": 5,
+    "prompt": "How does HSRP provide first hop redundancy?",
+    "options": [
+      "It load-balances traffic by assigning the same metric value to more than one route to the same destination in the IP routing table",
+      "It load-balances Layer 2 traffic along the path by flooding traffic out all interfaces configured with the same VLAN",
+      "It forwards multiple packets to the same destination over different routed links and data path",
+      "It uses a shared virtual MAC and a virtual IP address to a group of routers that serve as the default gateway for hosts on a LAN"
+    ],
+    "answer": 3,
     "explanation": ""
   },
   {
@@ -2743,6 +2839,19 @@ export const CCNA_LEGACY_QUESTIONS = [
     "explanation": "FQDN stands for Fully Qualified Domain Name. The FQDN represents the absolute address of the internet\npresence. \"Fully qualified\" refers to the unique identification that guarantees that all of the domain levels are\nspecified. The FQDN contains the host name and domain, including the top level domain, and can be uniquely\nassigned to an IP address. For example:\n\nR1.9tut.com.\n\nThe command \"ip domain-lookup\" enables DNS-based host name-to-address translation. This command is\nenabled by default."
   },
   {
+    "legacyIndex": 205,
+    "legacyNumber": 3,
+    "prompt": "What facilitates a Telnet connection between devices by entering the device name?",
+    "options": [
+      "SNMP",
+      "DNS lookup",
+      "syslog",
+      "NTP"
+    ],
+    "answer": 1,
+    "explanation": "Your router can be configured to use DNS lookups if we wish to use the ping or traceroute commands with a\nhost name rather than an IP address. For example:\n\n R1(config)#ip domain-lookup\n R1(config)#ip name-server 10.10.10.1\n\nThen we can Telnet or ping to it:\n\n Router# ping www.cisco.com\n Translating \"www.cisco.com\"...domain server (10.10.10.1) [OK]\n Type escape sequence to abort.\n Sending 5, 100-byte ICMP Echos to 198.133.219.25, timeout is 2 seconds:\n !!!!!\n\nNote: In the above example, 10.10.10.1 is not the IP address of www.cisco.com. This IP address is just the\nDNS Name Server to resolve “www.cisco.com” to the public IP address “198.133.219.25”.\n\nNote:\n\nBy default, any single word entered on an IOS device that is not recognized as a valid command is treated as\na hostname to which you want to telnet. The device will try to translate that word to an IP address in a\nprocess that can last about a minute.\nConsider the following example:\n\n R1#test\n Translating \"test\"...domain server (255.255.255.255)\n % Unknown command or computer name, or unable to find computer address\n\nIn the output above we typed an unrecognized command “test”. The router entered the DNS resolution\nprocess which lasted about a minute. This can be annoying and this is why this feature is often turned off,\nespecially in the lab environments.\nIf you don’t need to have a DNS server configured for your router, you can use the “no ip domain-lookup”\ncommand to disable the DNS translation process:\n\n R1(config)#no ip domain-lookup\n\nNow, if I mistype a command, the router will not perform a DNS resolution process:\n\n R1#test\n Translating \"test\"\n\n % Unknown command or computer name, or unable to find computer address\n R1#"
+  },
+  {
     "legacyIndex": 206,
     "legacyNumber": 4,
     "prompt": "How does a router behave when configured with the default DNS lookup settings, and a URL is entered on\nthe CLI?",
@@ -2767,6 +2876,24 @@ export const CCNA_LEGACY_QUESTIONS = [
     ],
     "answer": 2,
     "explanation": "IP SLA allows an IT professional to collect information about network performance in real time. Therefore it\nhelps determine whether the QoS on the network is sufficient for IP services or not.\n\nCisco IOS Embedded Event Manager (EEM) is a powerful and flexible subsystem that provides real-time\nnetwork event detection and onboard automation. It gives you the ability to adapt the behavior of your\nnetwork devices to align with your business needs."
+  },
+  {
+    "legacyIndex": 208,
+    "legacyNumber": 2,
+    "prompt": "Which two actions are performed by the Weighted Random Early Detection mechanism? (Choose two)",
+    "options": [
+      "It drops lower-priority packets before it drops higher-priority packets",
+      "It can identify different flows with a high level of granularity",
+      "It guarantees the delivery of high-priority packets",
+      "It can mitigate congestion by preventing the queue from filling up",
+      "It supports protocol discovery"
+    ],
+    "answer": [
+      0,
+      3
+    ],
+    "type": "multi",
+    "explanation": "Weighted Random Early Detection (WRED) is just a congestion avoidance mechanism. WRED drops packets\nselectively based on IP precedence. Edge routers assign IP precedences to packets as they enter the\nnetwork. When a packet arrives, the following events occur:\n\n1. The average queue size is calculated.\n2. If the average is less than the minimum queue threshold, the arriving packet is queued.\n3. If the average is between the minimum queue threshold for that type of traffic and the maximum\nthreshold for the interface, the packet is either dropped or queued, depending on the packet drop probability\nfor that type of traffic.\n4. If the average queue size is greater than the maximum threshold, the packet is dropped.\n\nWRED reduces the chances of tail drop (when the queue is full, the packet is dropped) by selectively\ndropping packets when the output interface begins to show signs of congestion (thus it can mitigate\ncongestion by preventing the queue from filling up). By dropping some packets early rather than waiting until\nthe queue is full, WRED avoids dropping large numbers of packets at once and minimizes the chances of\nglobal synchronization. Thus, WRED allows the transmission line to be used fully at all times.\n\nWRED generally drops packets selectively based on IP precedence. Packets with a higher IP precedence are\nless likely to be dropped than packets with a lower precedence. Thus, the higher the priority of a packet, the\nhigher the probability that the packet will be delivered (-> answer A is correct)."
   },
   {
     "legacyIndex": 209,
@@ -3177,6 +3304,19 @@ export const CCNA_LEGACY_QUESTIONS = [
     ],
     "answer": 0,
     "explanation": "In the 2.4 GHz band, 1, 6, and 11 are the only non-overlapping channels so they should be chosen while\ninstalling APs."
+  },
+  {
+    "legacyIndex": 239,
+    "legacyNumber": 1,
+    "prompt": "Which statement about the Cisco ACI fabric is most accurate?",
+    "options": [
+      "The APIC is able to enforce security by inserting itself into the data path.",
+      "The fabric header carries the EPG from the egress to the ingress leaf switch.",
+      "An APIC is a cluster of at least three APIC controllers, providing a single point of management without a single point of failure.",
+      "The spine switch rewrites the EPG from ingress to egress when it performs the forwarding proxy function"
+    ],
+    "answer": 2,
+    "explanation": ""
   },
   {
     "legacyIndex": 240,
@@ -4556,6 +4696,19 @@ export const CCNA_LEGACY_QUESTIONS = [
     "explanation": "CRUD is short for CREATE, READ, UPDATE and DELETE operations. Only UPDATE operation modifies an\nexisting table or view."
   },
   {
+    "legacyIndex": 308,
+    "legacyNumber": 11,
+    "prompt": "Which configuration management mechanism uses TCP port 22 by default when communicating with\nmanaged nodes?",
+    "options": [
+      "Ansible",
+      "Python",
+      "Puppet",
+      "Chef"
+    ],
+    "answer": 0,
+    "explanation": "TCP port 22 is SSH, which is used by Ansible when communicating with the managed nodes.\n\n Quick Summary\n Login vs Login Local command\n We usually see the “login” or “login local” command under line VTY or line console but what are\n they different? Remember this rule of thumb:\n + “login”: 1 word, requires 1 piece of information (requires password only)\n + “login local”: 2 words, requires 2 pieces of information (requires both username and password)\n With “login” command, we have to configure a password on the local router (with the “password\n …” command) or we will get the warning: “% Login disbled on line …, until ‘password’ is set”.\n With “login local” command, we have to configure both username and password with the command\n “username {username} secret {password}” or the command “username {username} password\n {password}”. But if we forget to configure username and password, no warning message is shown."
+  },
+  {
     "legacyIndex": 309,
     "legacyNumber": 1,
     "prompt": "Which command can you enter to allow Telnet to be supported in addition to SSH?",
@@ -4663,5 +4816,14762 @@ export const CCNA_LEGACY_QUESTIONS = [
     ],
     "answer": 1,
     "explanation": "In this example, the clock time is set to 12:00 am with the clock date of January 1,2020.\nR1#clock set 12:00:00 jan 1 2020"
+  },
+  {
+    "legacyIndex": 317,
+    "legacyNumber": 1,
+    "prompt": "Which two QoS tools are used to guarantee minimum bandwidth to certain traffic? (Choose two)",
+    "options": [
+      "FIFO",
+      "CBWFQ",
+      "LLC",
+      "WFQ",
+      "RSVP"
+    ],
+    "answer": [
+      1,
+      3
+    ],
+    "type": "multi",
+    "explanation": "First-in, first-out (FIFO): FIFO entails no concept of priority or classes of traffic. With FIFO, transmission of\npackets out the interface occurs in the order the packets arrive, which means no QoS\n\nWeighted fair queueing (WFQ): offers dynamic, fair queuing that divides bandwidth across queues of traffic\nbased on weights. In standard WFQ, packets are classified into flows according to one of four criteria: the\nsource Internet Protocol address (IP address), the destination IP address, the source Transmission Control\nProtocol (TCP) or User Datagram Protocol (UDP) port, or the destination TCP or UDP port.\n\nClass-based weighted fair queueing (CBWFQ) extends the standard WFQ functionality to provide support for\nuser-defined traffic classes. For CBWFQ, you define traffic classes based on match criteria including protocols,\naccess control lists (ACLs), and input interfaces. Packets satisfying the match criteria for a class constitute\nthe traffic for that class. A queue is reserved for each class, and traffic belonging to a class is directed to the\nqueue for that class.\nOnce a class has been defined according to its match criteria, you can assign it characteristics. To\ncharacterize a class, you assign it bandwidth, weight, and maximum packet limit. The bandwidth assigned to\na class is the guaranteed bandwidth delivered to the class during congestion.\n\nThe Resource Reservation Protocol (RSVP) protocol allows applications to reserve bandwidth for their data\nflows. It is used by a host, on the behalf of an application data flow, to request a specific amount of\nbandwidth from the network. RSVP is also used by the routers to forward bandwidth reservation requests."
+  },
+  {
+    "legacyIndex": 318,
+    "legacyNumber": 2,
+    "prompt": "Drag and drop the SNMP manager and agent identifier commands from the left onto the functions on the\nright.",
+    "type": "match",
+    "items": [
+      "show snmp group",
+      "show snmp community",
+      "show snmp chassis",
+      "show snmp engineID",
+      "show snmp host"
+    ],
+    "choices": [
+      "displays the SNMP security model in use",
+      "displays the SNMP access string",
+      "displays the SNMP server serial number",
+      "displays the IP address of the remote SNMP device",
+      "displays information about the SNMP recipient"
+    ],
+    "answer": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "explanation": "The command “show snmp group” displays the names of groups on the router and the security model, the\nstatus of the different views, and the storage type of each group. Below is an example of this command.\n\nThe “show snmp engineID” displays the identification of the local SNMP engine and all remote engines that\nhave been configured on the router. The following example specifies 00000009020000000C025808 as the\nlocal engineID and 123456789ABCDEF000000000 as the remote engine ID, 171.69.37.61 as the IP address\nof the remote engine (copy of SNMP) and 162 as the port from which the remote device is connected to the\nlocal device:\n\n Router# show snmp engineID\n Local SNMP engineID: 00000009020000000C025808\n Remote Engine ID               IP-addr             Port\n 123456789ABCDEF000000000       171.69.37.61        162\n\nThe “show snmp community” command display the SNMP community strings configured on the switch.\n\n switch# show snmp community\n Community Group / Access context acl_filter\n --------- -------------- ------- ----------\n public       network-admin\n switch#\n\nThe “show snmp host” command displays details such as IP address of the Network Management System\n(NMS), notification type, SNMP version, and the port number of the NMS. The following is sample output\nfrom the show snmp host command.\n\n Router# show snmp host\n Notification host: 10.2.28.6 udp-port: 162 type: inform\n user: public security model: v2c\n traps: 00001000.00000000.00000000\n\nThe “show snmp chassis” command displays the SNMP server serial number. The output is self-explanatory.\nRouter# show snmp chassis\n01506199"
+  },
+  {
+    "legacyIndex": 319,
+    "legacyNumber": 3,
+    "prompt": "Which type of security program is violated when a group of employees enters a building using the ID badge\nof only one person?",
+    "options": [
+      "intrusion detection",
+      "user awareness",
+      "physical access control",
+      "network authorization"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 320,
+    "legacyNumber": 4,
+    "prompt": "A network administrator needs to aggregate 4 ports into a single logical link which must negotiate layer 2\nconnectivity to ports on another switch. What must be configured when using active mode on both sides of\nthe connection?",
+    "options": [
+      "802.1q trunks",
+      "Cisco vPC",
+      "LLDP",
+      "LACP"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 321,
+    "legacyNumber": 5,
+    "prompt": "In which situation is private IPv4 addressing appropriate for a new subnet on the network of an organization?",
+    "options": [
+      "There is limited unique address space, and traffic on the new subnet will stay local within the organization.",
+      "The network has multiple endpoint listeners, and it is desired to limit the number of broadcasts.",
+      "Traffic on the subnet must traverse a site-to-site VPN to an outside organization.",
+      "The ISP requires the new subnet to be advertised to the internet for web services."
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 322,
+    "legacyNumber": 6,
+    "prompt": "Aside from discarding, which two states does the switch port transition through while using RSTP (802.1w)?\n(Choose two)",
+    "options": [
+      "listening",
+      "blocking",
+      "forwarding",
+      "learning",
+      "speaking"
+    ],
+    "answer": [
+      2,
+      3
+    ],
+    "type": "multi",
+    "explanation": "There are only three port states left in RSTP that correspond to the three possible operational states. The\n802.1D blocking, and listening states are merged into the 802.1w discarding state.\n\n* Discarding – the port does not forward frames, process received frames, or learn MAC addresses – but it\ndoes listen for BPDUs (like the STP blocking state)\n* Learning – receives and transmits BPDUs and learns MAC addresses but does not yet forward frames (same\nas STP).\n* Forwarding – receives and sends data, normal operation, learns MAC address, receives and transmits\nBPDUs (same as STP).\n\n STP State              RSTP State\n (802.1d)               (802.1w)\n Blocking               Discarding\n Listening              Discarding\n Learning               Learning\n Forwarding             Forwarding\nAlthough the learning state is also used in RSTP but it only takes place for a short time as compared to STP.\nRSTP converges with all ports either in forwarding state or discarding state."
+  },
+  {
+    "legacyIndex": 323,
+    "legacyNumber": 7,
+    "prompt": "What is a role of wireless controllers in an enterprise network?",
+    "options": [
+      "serve as the first line of defense in an enterprise network",
+      "support standalone or controller-based architectures",
+      "centralize the management of access points in an enterprise network",
+      "provide secure user logins to devices on the network"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 324,
+    "legacyNumber": 8,
+    "prompt": "How do servers connect to the network in a virtual environment?",
+    "options": [
+      "wireless to an access point that is physically connected to the network",
+      "a cable connected to a physical switch on the network",
+      "a virtual switch that links to an access point that is physically connected to the network",
+      "a software switch on a hypervisor that is physically connected to the network"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 325,
+    "legacyNumber": 9,
+    "prompt": "Which CRUD operation corresponds to the HTTP GET method?",
+    "options": [
+      "read",
+      "update",
+      "create",
+      "delete"
+    ],
+    "answer": 0,
+    "explanation": "CRUD is short for CREATE, READ, UPDATE and DELETE operations. “GET” request is used to get a resource\nfrom a server. If you perform a “GET” request, the server looks for the data you requested and sends it back\nto you. In other words, a “GET” request performs a “READ” operation."
+  },
+  {
+    "legacyIndex": 326,
+    "legacyNumber": 10,
+    "prompt": "With REST API, which standard HTTP header tells a server which media type is expected by the client?",
+    "options": [
+      "Accept-Encoding: gzip, deflate",
+      "Accept-Patch: text/example; charset=utf-8",
+      "Content-Type: application/json; charset=utf-8",
+      "Accept: application/json"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 327,
+    "legacyNumber": 11,
+    "prompt": "Which device tracks the state of active connections in order to make a decision to forward a packet through?",
+    "options": [
+      "firewall",
+      "wireless access point",
+      "router",
+      "wireless LAN controller"
+    ],
+    "answer": 0,
+    "explanation": "Stateful inspection firewalls keep track of connection status. Ports can be dynamically opened and closed if\nnecessary for completing a transaction. For example, when you make a connection to a server using HTTP,\nthe server will initiate a new connection back to your system on a random port. A stateful inspection firewall\nwill automatically open a port for this return connection."
+  },
+  {
+    "legacyIndex": 328,
+    "legacyNumber": 12,
+    "prompt": "Which device controls the forwarding of authentication requests for users when connecting to the network\nusing a lightweight access point?",
+    "options": [
+      "TACACS server",
+      "wireless access point",
+      "RADIUS server",
+      "wireless LAN controller"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 329,
+    "legacyNumber": 13,
+    "prompt": "Refer to the exhibit. A network administrator has been tasked with securing VTY access to a router. Which\naccess-list entry accomplishes this task?",
+    "options": [
+      "access-list 101 permit tcp 10.1.1.0 0.0.0.255 172.16.1.0 0.0.0.255 eq ssh",
+      "access-list 101 permit tcp 10.1.1.0 0.0.0.255 172.16.1.0 0.0.0.255 eq scp",
+      "access-list 101 permit tcp 10.1.1.0 0.0.0.255 172.16.1.0 0.0.0.255 eq telnet",
+      "access-list 101 permit tcp 10.1.1.0 0.0.0.255 172.16.1.0 0.0.0.255 eq https"
+    ],
+    "answer": 0,
+    "explanation": "In order to secure VTY access to a router, we can allow only SSH to access the device."
+  },
+  {
+    "legacyIndex": 330,
+    "legacyNumber": 14,
+    "prompt": "A network administrator must enable DHCP services between two sites. What must be configured for the\nrouter to pass DHCPDISCOVER messages on to the server?",
+    "options": [
+      "a DHCP Relay Agent",
+      "DHCP Binding",
+      "a DHCP Pool",
+      "DHCP Snooping"
+    ],
+    "answer": 0,
+    "explanation": "If the DHCP Server is not on the same subnet with the DHCP Client, we need to configure the router on the\nDHCP client side to act as a DHCP Relay Agent so that it can forward DHCP messages between the DHCP\nClient & DHCP Server. To make a router a DHCP Relay Agent, simply put the “ip helper-address <IP-address-\nof-DHCP-Server>” command under the interface that receives the DHCP messages from the DHCP Client.\n\nAs we know, router does not forward broadcast packets (it drops them instead) so DHCP messages like\nDHCPDISCOVER message will be dropped. But with the “ip helper-address …” command, the router will\naccept that broadcast message and cover it into a unicast packet and forward it to the DHCP Server. The\ndestination IP address of the unicast packet is taken from the “ip helper-address …” command."
+  },
+  {
+    "legacyIndex": 331,
+    "legacyNumber": 15,
+    "prompt": "Refer to the exhibit. PC1 is trying to ping PC3 for the first time and sends out an ARP to S1. Which action is\ntaken by S1?",
+    "options": [
+      "It forwards it out G0/3 only",
+      "It is flooded out every port except G0/0",
+      "It drops the frame",
+      "It forwards it out interface G0/2 only"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 332,
+    "legacyNumber": 16,
+    "prompt": "Refer to the exhibit. What is the result if Gig1/11 receives an STP BPDU?\n\n switch(config)#interface gigabitEthernet 1/11\n switch(config-if)#switchport mode access\n switch(config-if)#spanning-tree portfast\n switch(config-if)#spanning-tree bpduguard\n enable",
+    "options": [
+      "The port transitions to STP blocking",
+      "The port transitions to the root port",
+      "The port immediately transitions to STP forwarding",
+      "The port goes into error-disable state"
+    ],
+    "answer": 3,
+    "explanation": "BPDU Guard feature allows STP to shut an access port in the event of receiving a BPDU and put that port into\nerr-disabled state."
+  },
+  {
+    "legacyIndex": 333,
+    "legacyNumber": 17,
+    "prompt": "An engineer must configure traffic for a VLAN that is untagged by the switch as it crosses a trunk link. Which\ncommand should be used?",
+    "options": [
+      "switchport trunk allowed vlan 10",
+      "switchport trunk native vlan 10",
+      "switchport mode trunk",
+      "switchport trunk encapsulation dot1q"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 334,
+    "legacyNumber": 18,
+    "prompt": "What is the maximum bandwidth of a T1 point-to-point connection?",
+    "options": [
+      "1.544 Mbps",
+      "2.048 Mbps",
+      "34.368 Mbps",
+      "43.7 Mbps"
+    ],
+    "answer": 0,
+    "explanation": "The speeds of these links are shown as below:\n\n+ T1: 1.544 Mbps\n+ 10BaseT: 10 Mbps\n+ 100BaseT (often referred to as FastEthernet): 100Mbps"
+  },
+  {
+    "legacyIndex": 335,
+    "legacyNumber": 19,
+    "prompt": "How does a Cisco Unified Wireless network respond to Wi-Fi channel overlap?",
+    "options": [
+      "It alternates automatically between 2.4 GHz and 5 GHz on adjacent access points",
+      "It allows the administrator to assign channels on a per-device or per-interface basis.",
+      "It segregates devices from different manufacturers onto different channels.",
+      "It analyzes client load and background noise and dynamically assigns a channel."
+    ],
+    "answer": 3,
+    "explanation": "In a Cisco Unified Wireless Network, the system uses features like Radio Resource Management (RRM) to\nautomatically manage and optimize the wireless environment. RRM continuously monitors the network for\nfactors such as client load, background noise, interference, and coverage gaps. Based on this analysis, it\n\ndynamically adjusts access point (AP) settings, including channel assignments and transmit power levels, to\nminimize channel overlap and improve performance.\n\nDynamic Channel Assignment\nTwo adjacent access points on the same channel can cause either signal contention or signal collision. In a\ncollision, data is not received by the access point. This functionality can become a problem, for example,\nwhen someone reading an e-mail in a café affects the performance of the access point in a neighboring\nbusiness. Even though these are separate networks, someone sending traffic to the café on channel 1 can\ndisrupt communication in an enterprise using the same channel. Controllers can dynamically allocate access\npoint channel assignments to avoid conflict and increase capacity and performance. Channels are reused to\navoid wasting scarce RF resources. In other words, channel 1 is allocated to a different access point far from\nthe café, which is more effective than not using channel 1 altogether."
+  },
+  {
+    "legacyIndex": 336,
+    "legacyNumber": 20,
+    "prompt": "What does a switch use to build its MAC address table?",
+    "options": [
+      "VTP",
+      "DTP",
+      "egress traffic",
+      "ingress traffic"
+    ],
+    "answer": 3,
+    "explanation": "The MAC addresses in the CAM table are the source MAC addresses only. Therefore it only learns MAC\naddress from ingress traffic."
+  },
+  {
+    "legacyIndex": 337,
+    "legacyNumber": 21,
+    "prompt": "Which network plane is centralized and manages routing decisions?",
+    "options": [
+      "policy plane",
+      "control plane",
+      "management plane",
+      "data plane"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 338,
+    "legacyNumber": 22,
+    "prompt": "What does a router do when configured with the default DNS lookup settings, and a URL is entered on the\nCLI?",
+    "options": [
+      "initiates a ping request to the URL",
+      "prompts the user to specify the desired IP address",
+      "continuously attempts to resolve the URL until the command is cancelled",
+      "sends a broadcast message in an attempt to resolve the URL"
+    ],
+    "answer": 3,
+    "explanation": "With default DNS lookup settings, the router will sends broadcast message to resolve an URL. Consider the\nfollowing example:\n\n R1#test\n Translating \"test\"...domain server (255.255.255.255)\n % Unknown command or computer name, or unable to find computer address\n\nIn the output above we typed an unrecognized command “test”. The router entered the DNS resolution\nprocess which lasted about a minute."
+  },
+  {
+    "legacyIndex": 339,
+    "legacyNumber": 23,
+    "prompt": "Refer to the exhibit.\n\n Switch 1\n VLAN 110 – 32778\n 0018.184e.3c00\n Switch 2\n VLAN 110 – 24586\n 001a.e3ff.a680\n Switch 3\n VLAN 110 – 28682\n 0022.55cf.cc00\n Switch 4\n VLAN 110 – 64000\n 0e38.7363.657f\nWhich switch becomes the root of the spanning tree for VLAN 110?",
+    "options": [
+      "Switch 1",
+      "Switch 2",
+      "Switch 3",
+      "Switch 4"
+    ],
+    "answer": 1,
+    "explanation": "The switch with lowest Bridge Priority would become the root bridge for that VLAN. In this case Switch 2 has\nthe lowest Bridge Priority of 24586 so it will become the root bridge."
+  },
+  {
+    "legacyIndex": 340,
+    "legacyNumber": 24,
+    "prompt": "Refer to the exhibit.\n\nAn administrator must configure interfaces Gi1/1 and Gi1/3 on switch SW11 PC-1 and PC-2 must be placed in\nthe Data VLAN and Phone-1 must be placed in the Voice VLAN. Which configuration meets these\nrequirements?\n\n Option A                      Option B\n interface                     interface\n gigabitethernet1/1            gigabitethernet1/1\n switchport mode access        switchport mode access\n switchport access vlan 8      switchport access vlan 9\n !                             !\n interface                     interface\n gigabitethernet1/3            gigabitethernet1/3\n switchport mode access        switchport mode trunk\n switchport voice vlan 8       switchport voice vlan 8\n switchport access vlan 9      switchport access vlan 9\n Option C                      Option D\n interface                     interface\n gigabitethernet1/1            gigabitethernet1/1\n switchport mode access        switchport mode access\n switchport access vlan 8      switchport access vlan 8\n !                             !\n interface                     interface\n gigabitethernet1/3            gigabitethernet1/3\n switchport mode access        switchport mode trunk\n switchport access vlan 8      switchport voice vlan 8\n switchport voice vlan 9       switchport access vlan 9",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 2,
+    "explanation": "According to the exhibit above, we have to configure VLAN 8 as access vlan and VLAN 9 as voice vlan.\n\nThe voice VLAN feature enables access ports to carry IP voice traffic from an IP phone. You can configure a\nvoice VLAN with the “switchport voice vlan …” command under interface mode. The full configuration is\nshown below:\n\n Switch(config)#interface fastethernet0/1\n Switch(config-if)#switchport mode access\n Switch(config-if)#switchport access vlan\n 10\n Switch(config-if)#switchport voice vlan\n 20\n\nNote: When you connect an IP phone to a switch using a trunk link, it can cause high CPU utilization in the\nswitches. As all the VLANs for a particular interface are trunked to the phone, it increases the number of STP\ninstances the switch has to manage. This increases the CPU utilization. Trunking also causes unnecessary\nbroadcast / multicast / unknown unicast traffic to hit the phone link.\n\nIn order to avoid this, remove the trunk configuration and keep the voice and access VLAN configured along\nwith Quality of Service (QoS). Technically, it is still a trunk, but it is called a Multi-VLAN Access Port (MVAP).\nBecause voice and data traffic can travel through the same port, you should specify a different VLAN for each\ntype of traffic. You can configure a switch port to forward voice and data traffic on different VLANs. Configure\nIP phone ports with a voice VLAN configuration. This configuration creates a pseudo trunk, but does not\nrequire you to manually prune the unnecessary VLANs."
+  },
+  {
+    "legacyIndex": 341,
+    "legacyNumber": 25,
+    "prompt": "Refer to exhibit.\n\nWhich configuration must be applied to the router that configures PAT to translate all addresses in VLAN 200\nwhile allowing devices on VLAN 100 to use their own IP addresses?\n\n Option A                                              Option B\n Router1(config)#access-list 99 permit                 Router1(config)#access-list 99 permit\n 209.165.201.2 0.0.0.0                                 209.165.201.2 255.255.255.255\n Router1(config)#ip nat inside source list 99          Router1(config)#ip nat inside source list 99\n interface gi1/0/0 overload                            interface gi1/0/0 overload\n Router1(config)#interface gi2/0/1.200                 Router1(config)#interface gi2/0/1.200\n Router1(config)#ip nat inside                         Router1(config)#ip nat inside\n Router1(config)#interface gi1/0/0                     Router1(config)#interface gi1/0/0\n Router1(config)#ip nat outside                        Router1(config)#ip nat outside\n\n Option C                                              Option D\n Router1(config)#access-list 99 permit                 Router1(config)#access-list 99 permit\n 192.168.100.0 0.0.0.255                               192.168.100.32 0.0.0.31\n Router1(config)#ip nat inside source list 99          Router1(config)#ip nat inside source list 99\n interface gi1/0/0 overload                            interface gi1/0/0 overload\n Router1(config)#interface gi2/0/1.200                 Router1(config)#interface gi2/0/1.200\n Router1(config)#ip nat inside                         Router1(config)#ip nat inside\n Router1(config)#interface gi1/0/0                     Router1(config)#interface gi1/0/0\n Router1(config)#ip nat outside                        Router1(config)#ip nat outside",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 342,
+    "legacyNumber": 26,
+    "prompt": "How does a switch process a frame received on Fa0/1 with the destination MAC address of 0e38.7363.657b\nwhen the table is missing the address?",
+    "options": [
+      "It floods the frame to all interfaces except Fa0/1.",
+      "It forwards the frame back out of interface Fa0/1.",
+      "It drops the frame immediately.",
+      "It holds the frame until the MAC address timer expires and then drops the frame."
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 343,
+    "legacyNumber": 27,
+    "prompt": "What is a benefit of VRRP?",
+    "options": [
+      "It provides traffic load balancing to destinations that are more than two hops from the source.",
+      "It provides the default gateway redundancy on a LAN using two or more routers.",
+      "It allows neighbors to share routing table information between each other.",
+      "It prevents loops in a Layer 2 LAN by forwarding all traffic to a root bridge, which then makes the final forwarding decision."
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 344,
+    "legacyNumber": 28,
+    "prompt": "Which protocol does an IPv4 host use to obtain a dynamically assigned IP address?",
+    "options": [
+      "ARP",
+      "DNS",
+      "CDP",
+      "DHCP"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 345,
+    "legacyNumber": 29,
+    "prompt": "Refer to the exhibit.\n\n Option A                             Option B\n ip access-list standard 99           ip access-list standard 99\n permit 10.100.100.0 0.0.0.255        permit 10.100.100.0 0.0.0.255\n deny 192.168.0.0 0.0.255.255         deny 192.168.0.0\n\n                                      0.255.255.255\n\n Option C\n                                      Option D\n ip access-list standard 100\n                                      ip access-list standard 199\n permit 10.100.100.0 0.0.0.255\n                                      permit 10.100.100.0 0.0.0.255\n deny 192.168.0.0\n                                      deny 192.168.0.0 0.0.255.255\n 0.255.255.255\nAn access list is required to permit traffic from any host on interface G0/0 and deny traffic from interface\nGi0/1. Which access list must be applied?",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 0,
+    "explanation": "The standard access lists are ranged from 1 to 99 and from 1300 to 1999 so only Option A & B are correct.\nThe subnet on interface Gi0/1 is 192.168.0.0/16 so we have to use the ACL statement “deny 192.168.0.0\n0.0.255.255“"
+  },
+  {
+    "legacyIndex": 346,
+    "legacyNumber": 30,
+    "prompt": "Which condition must be met before an NMS handles an SNMP trap from an agent?",
+    "options": [
+      "The NMS must be configured on the same router as the SNMP agent",
+      "The NMS must receive a trap and an inform message from the SNMP agent within a configured interval",
+      "The NMS software must be loaded with the MIB associated with the trap",
+      "The NMS must receive the same trap from two different SNMP agents to verify that it is reliable"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 347,
+    "legacyNumber": 31,
+    "prompt": "What is a characteristic of a SOHO network?",
+    "options": [
+      "connects each switch to every other switch in the network",
+      "enables multiple users to share a single broadband connection",
+      "provides high throughput access for 1000 or more users",
+      "includes at least three tiers of devices to provide load balancing and redundancy"
+    ],
+    "answer": 1,
+    "explanation": "SOHO is the abbreviation for Small Office/Home Office network.\nThese days, many budding entrepreneurs and small business owners prefer to work from home or to\n\nmaintain only a small office. Budding entrepreneurs and small business owners need small network and\naccess to the Internet for their daily work. SOHO network is a solution for this type of network requirement.\nSOHO network is meant for use in small businesses. Most cases, SOHO networks are configured for privately\nowned business or individuals who are self-employed.\nSOHO networks are small LANs (Local Area Networks). Typically, SOHO networks consists of less than 10\ncomputers. Network service servers like DNS server, email server, web server etc., are typically configured\noutside SOHO network."
+  },
+  {
+    "legacyIndex": 348,
+    "legacyNumber": 32,
+    "prompt": "Which resource is able to be shared among virtual machines deployed on the same physical server?",
+    "options": [
+      "applications",
+      "operating system",
+      "VM configuration file",
+      "disk"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 349,
+    "legacyNumber": 33,
+    "prompt": "Which implementation provides the strongest encryption combination for the wireless environment?",
+    "options": [
+      "WPA2 + AES",
+      "WPA + AES",
+      "WEP",
+      "WPA + TKIP"
+    ],
+    "answer": 0,
+    "explanation": "AES is a more secure encryption protocol introduced with WPA2 and it is currently the strongest encryption\ntype for WPA2-PSK."
+  },
+  {
+    "legacyIndex": 350,
+    "legacyNumber": 34,
+    "prompt": "Refer to the exhibit.\n\nAfter running the code in the exhibit, which step reduces the amount of data that the NETCONF server\nreturns to the NETCONF client, to only the interface’s configuration?",
+    "options": [
+      "Use the xml library to parse the data returned by the NETCONF server for the interface’s configuration.",
+      "Create an XML filter as a string and pass it to get_config() method as an argument.",
+      "Create a JSON filter as a string and pass it to the get_config() method as an argument.",
+      "Use the JSON library to parse the data returned by the NETCONF server for the interface’s configuration."
+    ],
+    "answer": 1,
+    "explanation": "Sometimes we are only interested in a very particular part of the config. NETCONF accommodates this with\nthe ability to specify a filter. In below script, we will specify a filter that only shows the information for\ninterface GigabitEthernet3. The get_config also accepts a filter parameter (documentation). So in below\nscript, we will simply pass that filter to the get_config method and see what happens."
+  },
+  {
+    "legacyIndex": 351,
+    "legacyNumber": 35,
+    "prompt": "What are two functions of an SDN controller? (Choose two)",
+    "options": [
+      "coordinating VTNs",
+      "Layer 2 forwarding",
+      "tracking hosts",
+      "managing the topology",
+      "protecting against DDoS attacks"
+    ],
+    "answer": [
+      0,
+      3
+    ],
+    "type": "multi",
+    "explanation": "Software-defined networking (SDN) and network function virtualization (NFV) have emerged as the most\npromising candidates for improving network function and protocol programmability and dynamic adjustment\nof network resources. On the one hand, SDN is responsible for providing an abstraction of network resources\nthrough well-defined application programming interfaces. This abstraction enables SDN to perform network\nvirtualization, that is, to slice the physical infrastructure and create multiple coexisting application-specific\nvirtual tenant networks (VTNs) with specific quality-of-service and service-levelagreement requirements,\nindependent of the underlying optical transport technology and network protocols."
+  },
+  {
+    "legacyIndex": 352,
+    "legacyNumber": 36,
+    "prompt": "If a switch port receives a new frame while it is actively transmitting a previous frame, how does it process\nthe frames?",
+    "options": [
+      "The previous frame is delivered, the new frame is dropped, and a retransmission request is sent.",
+      "The new frame is delivered first, the previous frame is dropped, and a retransmission request is sent.",
+      "The two frames are processed and delivered at the same time.",
+      "The new frame is placed in a queue for transmission after the previous frame."
+    ],
+    "answer": 3,
+    "explanation": "Each port in the switch has the ability to hold frames in memory, before transmitting them onto the Ethernet\ncable connected to the port. For example, if the port is already busy transmitting when a frame arrives for\ntransmission, then the frame can be held for the short time it takes for the port to complete transmitting the\nprevious frame."
+  },
+  {
+    "legacyIndex": 353,
+    "legacyNumber": 37,
+    "prompt": "Which WAN topology provides a combination of simplicity quality, and availability?",
+    "options": [
+      "partial mesh",
+      "full mesh",
+      "point-to-point",
+      "hub-and-spoke"
+    ],
+    "answer": 2,
+    "explanation": "Advantages/Disadvantages of Leased Lines\n\nAdvantages\n\nSimplicity: Point-to-point communication links require minimal expertise to install and maintain.\n\nQuality: Point-to-point communication links usually offer high service quality, if they have adequate\nbandwidth. The dedicated capacity removes latency or jitter between the endpoints.\n\nAvailability: Constant availability is essential for some applications, such as e-commerce. Point-to-point\ncommunication links provide permanent, dedicated capacity, which is required for VoIP or Video over IP.\n\nDisadvantages\n\nCost: Point-to-point links are generally the most expensive type of WAN access. The cost of leased-line\nsolutions can become significant when they are used to connect many sites over increasing distances. In\naddition, each endpoint requires an interface on the router, which increases equipment costs.\n\nLimited flexibility: WAN traffic is often variable, and leased lines have a fixed capacity, so the bandwidth of\nthe line seldom matches the need exactly. Any change to the leased line generally requires a site visit by ISP\npersonnel to adjust capacity."
+  },
+  {
+    "legacyIndex": 354,
+    "legacyNumber": 38,
+    "prompt": "Refer to the exhibit.\n\nThe ntp server 192.168.0.3 command has been configured on Router1 to make it an NTP client of router 2.\nWhich command must be configured on Router2 so that it operates in server-only mode and relies only on its\ninternal clock?",
+    "options": [
+      "Router2(config)#ntp passive",
+      "Router2(config)#ntp master 4",
+      "Router2(config)#ntp server 172.17.0.1",
+      "Router2(config)#ntp server 192.168.0.2"
+    ],
+    "answer": 1,
+    "explanation": "An Authoritative NTP Server can distribute time even when it is not synchronized to an existing time server.\nTo configure a Cisco device as an Authoritative NTP Server, use the ntp master [stratum] command."
+  },
+  {
+    "legacyIndex": 355,
+    "legacyNumber": 39,
+    "prompt": "Refer to the exhibit.\n\nA network engineer must configured communication between PC A and the File Server. To prevent\ninterruption for any other communications, which command must be configured?",
+    "options": [
+      "Switch trunk allowed vlan 12",
+      "Switchport trunk allowed vlan none",
+      "Switchport trunk allowed vlan add 13",
+      "Switchport trunk allowed vlan remove 10-11"
+    ],
+    "answer": 2,
+    "explanation": "Switch A does not allow VLAN 13 to go through so we must add VLAN 13 to the allowed list of interface Gi0/1\nof SwitchA by the command “switchport trunk allowed vlan add 13”."
+  },
+  {
+    "legacyIndex": 356,
+    "legacyNumber": 40,
+    "prompt": "Why does a switch flood a frame to all ports?",
+    "options": [
+      "The destination MAC address of the frame is unknown",
+      "The source MAC address of the frame is unknown",
+      "The source and destination MAC addresses of the frame are the same",
+      "The frame has zero destination MAC addresses"
+    ],
+    "answer": 0,
+    "explanation": "If the destination MAC address is not in the CAM table (that is, unknown unicast), the switch sends the frame\nout all other ports that are in the same VLAN as the received frame. This is called flooding. It does not flood\nthe frame out the same port on which the frame was received."
+  },
+  {
+    "legacyIndex": 357,
+    "legacyNumber": 41,
+    "prompt": "When DHCP is configured on a router, which command must be entered so the default gateway is\nautomatically distributed?",
+    "options": [
+      "default-router",
+      "default-gateway",
+      "ip helper-address",
+      "dns-server"
+    ],
+    "answer": 0,
+    "explanation": "The following example shows how to configure a DHCP Server on a Cisco router:\n\n Configuration                    Description\n Router(config)#ip dhcp\n                                  Create a DHCP Pool named CLIENTS\n pool CLIENTS\n Router(dhcp-\n config)#network                  Specifies the subnet and mask of the DHCP address pool\n 10.1.1.0 /24\n Router(dhcp-\n config)#default-router           Set the default gateway of the DHCP Clients\n 10.1.1.1\n Router(dhcp-config)#dns-\n                                  Configure a Domain Name Server (DNS)\n server 10.1.1.1\n Router(dhcp-\n config)#domain-name              Configure a domain-name\n 9tut.com\n                                  Duration of the lease (the time during which a client computer can\n                                  use an assigned IP address). The syntax is “lease {days[hours]\n Router(dhcp-config)#lease        [minutes] | infinite}”. In this case the lease is 12 hours. The default is\n 0 12                             a one-day lease.\n                                  Before the lease expires, the client typically needs to renew its\n                                  address lease assignment with the server\n Router(dhcp-config)#exit\n Router(config)# ip dhcp\n                                  The IP range that a DHCP Server should not assign to DHCP Clients.\n excluded-address 10.1.1.1\n                                  Notice this command is configured under global configuration mode\n 10.1.1.10"
+  },
+  {
+    "legacyIndex": 358,
+    "legacyNumber": 42,
+    "prompt": "What is a network appliance that checks the state of a packet to determine whether the packet is legitimate?",
+    "options": [
+      "Layer 2 switch",
+      "LAN controller",
+      "load balancer",
+      "firewall"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 359,
+    "legacyNumber": 43,
+    "prompt": "How is the native VLAN secured in a network?",
+    "options": [
+      "separate from other VLANs within the administrative domain",
+      "give it a value in the private VLAN range",
+      "assign it as VLAN 1",
+      "configure it as a different VLAN ID on each end of the link"
+    ],
+    "answer": 0,
+    "explanation": "If we assign the native VLAN to private VLAN, it will not be able to communicate with other devices ->\nAnswer B is not correct.\n\nVLAN 1 is the native VLAN by default -> Answer C is not correct.\n\nThe native VLAN number must match between two ends; otherwise the “native VLAN mismatch” error will\noccur -> We cannot configure different VLAN ID on each end -> Answer D is not correct.\n\nWe should assign the native VLAN to an unused VLAN on our network so that no one can access it. This also\nmitigate VLAN hopping attack (this attack is used on native VLAN)."
+  },
+  {
+    "legacyIndex": 360,
+    "legacyNumber": 44,
+    "prompt": "Which command on a port enters the forwarding state immediately when a PC is connected to it?",
+    "options": [
+      "switch(config)#spanning-tree portfast default",
+      "switch(config)#spanning-tree portfast bpduguard default",
+      "switch(config-if)#spanning-tree portfast trunk",
+      "switch(config-if)#no spanning-tree portfast"
+    ],
+    "answer": 0,
+    "explanation": "Although this question said “which command on a port” but it gave two answers in global configuration mode\nso it is a bit unclear. But we believe the correct answer should be “spanning-tree portfast default”, which\nenables PortFast on all non-trunking interfaces.\n\nNote: The command “spanning-tree portfast trunk” enables portfast on a trunk port. The trunk port enters\nthe STP forwarding-state immediately or upon a linkup event, thus bypassing the listening and learning\nstates."
+  },
+  {
+    "legacyIndex": 361,
+    "legacyNumber": 45,
+    "prompt": "What is the purpose of a southbound API in a control based networking architecture?",
+    "options": [
+      "facilities communication between the controller and the applications",
+      "integrates a controller with other automation and orchestration tools",
+      "allows application developers to interact with the network",
+      "facilities communication between the controller and the networking hardware"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 362,
+    "legacyNumber": 46,
+    "prompt": "Which switch technology establishes a network connection immediately when it is plugged in?",
+    "options": [
+      "UplinkFast",
+      "PortFast",
+      "BPDU guard",
+      "BackboneFast"
+    ],
+    "answer": 1,
+    "explanation": "Portfast is often configured on switch ports that connect to hosts. Interfaces with Portfast enabled will go to\nforwarding state immediately without passing the listening and learning state. Therefore it can save about 30\nto 45 seconds to transition through these states.\n\nUplinkFast is a Cisco specific feature that improves the convergence time of the Spanning-Tree Protocol (STP)\nin the event of the failure of an uplink."
+  },
+  {
+    "legacyIndex": 363,
+    "legacyNumber": 47,
+    "prompt": "What causes a port to be placed in the err-disabled state?",
+    "options": [
+      "latency",
+      "nothing plugged into the port",
+      "shutdown command issued on the port",
+      "port security violation"
+    ],
+    "answer": 3,
+    "explanation": "When a port security is violated, that port can be put into errdisable state."
+  },
+  {
+    "legacyIndex": 364,
+    "legacyNumber": 48,
+    "prompt": "Which technology is appropriate for communication between an SDN controller and applications running over\nthe network?",
+    "options": [
+      "OpenFlow",
+      "Southbound API",
+      "NETCONF",
+      "REST API"
+    ],
+    "answer": 3,
+    "explanation": "Software-defined northbound application program interfaces (SDN northbound APIs) are usually SDN RESTful\nAPIs used to communicate between the SDN Controller and the services and applications running over the\nnetwork.\n\nNote: OpenFlow and NETCONF are Southbound APIs used for most SDN implementations."
+  },
+  {
+    "legacyIndex": 365,
+    "legacyNumber": 49,
+    "prompt": "Which security program element involves installing badge readers on data-center doors to allow workers to\nenter and exit based on their job roles?",
+    "options": [
+      "physical access control",
+      "biometrics",
+      "role-based access control",
+      "multifactor authentication"
+    ],
+    "answer": 0,
+    "explanation": "Badge reader is a small, inexpensive reader connected to the USB port of any PC, which can read the\ninformation encoded on a badge (barcode, microchip or RFID, magnetic stripe) and restore it on any\ncomputer software. An example of badge reader is shown below:\n\nThe purpose of access control is to grant entrance to a building or office only to those who are authorized to\nbe there.\n\nThis paragraph is quoted from Cisco 200-301 Official Cert Guide:\n\nPhysical access control: Infrastructure locations, such as network closets and data centers, should remain\nsecurely locked. Badge access to sensitive locations is a scalable solution, offering an audit trail of identities\nand timestamps when access is granted. Administrators can control access on a granular basis and quickly\nremove access when an employee is dismissed."
+  },
+  {
+    "legacyIndex": 366,
+    "legacyNumber": 50,
+    "prompt": "What is a characteristic of private IPv4 addressing?",
+    "options": [
+      "used without tracking or registration",
+      "issued by IANA in conjunction with an autonomous system number",
+      "traverse the Internet when an outbound ACL is applied",
+      "composed of up to 65,536 available addresses"
+    ],
+    "answer": 0,
+    "explanation": "Only private address of class A (10.0.0.0 – 10.255.255.255) includes 16,777,216 so answer D is not correct."
+  },
+  {
+    "legacyIndex": 367,
+    "legacyNumber": 51,
+    "prompt": "Which network action occurs within the data plane?",
+    "options": [
+      "compare the destination IP address to the IP routing table",
+      "make a configuration change from an incoming NETCONF RPC",
+      "run routing protocols (OSPF, EIGRP, RIP, BGP)",
+      "reply to an incoming ICMP echo request"
+    ],
+    "answer": 0,
+    "explanation": "The following list details some of the more common actions that a networking device does that fit into the\ndata plane:\n+ De-encapsulating and re-encapsulating a packet in a data-link frame (routers, Layer 3 switches)\n+ Adding or removing an 802.1Q trunking header (routers and switches)\n+ Matching an Ethernet frame’s destination Media Access Control (MAC) address to the MAC address table\n(Layer 2 switches)\n+ Matching an IP packet’s destination IP address to the IP routing table (routers, Layer 3 switches)\n+ Encrypting the data and adding a new IP header (for virtual private network [VPN] processing)\n+ Changing the source or destination IP address (for Network Address Translation [NAT] processing)\n+ Discarding a message due to a filter (access control lists [ACLs], port security)"
+  },
+  {
+    "legacyIndex": 368,
+    "legacyNumber": 1,
+    "prompt": "What are two improvements provided by automation for network management in an SDN environment?\n(Choose two)",
+    "options": [
+      "Artificial intelligence identifies and prevents potential design failures",
+      "Data collection and analysis tools establish a baseline for the network",
+      "New devices are onboarded with minimal effort",
+      "Machine learning minimizes the overall error rate when automating troubleshooting processes",
+      "Proprietary Cisco APIs leverage multiple network management tools"
+    ],
+    "answer": [
+      0,
+      2
+    ],
+    "type": "multi",
+    "explanation": "Some key benefits of SDN automation:\n\nAutomated Policy Enforcement: Security, QoS, segmentation, and access policies are applied consistently\nacross the network. Reduces configuration drift -> Answer A is correct.\n\nFaster Deployment: New devices, services, and policies can be deployed in minutes instead of hours or days.\nEnables rapid scaling of the network -> Answer C is correct."
+  },
+  {
+    "legacyIndex": 369,
+    "legacyNumber": 2,
+    "prompt": "A network administrator must to configure SSH for remote access to router R1. The requirement is to use a\npublic and private key pair to encrypt management traffic to and from the connecting client. Which\nconfiguration, when applied, meets the requirements?",
+    "options": [
+      "R1#enable\nR1#configure terminal\nR1(config)#ip domain-name cisco.com\nR1(config)#crypto key generate ec keysize 1024",
+      "R1#enable\nR1#configure terminal\nR1(config)#ip domain-name cisco.com\nR1(config)#crypto key generate rsa modulus 1024",
+      "R1#enable\nR1#configure terminal\nR1(config)#ip domain-name cisco.com\nR1(config)#crypto key generate ec keysize 2048",
+      "R1#enable\nR1#configure terminal\nR1(config)#ip domain-name cisco.com\nR1(config)#crypto key encrypt rsa name myKey\nA. Option A\nB. Option B\nC. Option C\nD. Option D"
+    ],
+    "answer": 1,
+    "explanation": "Both RSA, elliptic curve cryptography (ECC) are asymmetrical encryption so it satisfies the requirement of\nthis question (to use a public and private key pair). Asymmetrical encryption is different from symmetrical\nencryption in that to send data in a single direction, two associated keys are needed. One of these keys is\nknown as the private key, while the other is called the public key.\n\nTo generate an Elliptic Curve (EC) key pair, use the crypto key generate ec keysize command in global\nconfiguration mode.\ncrypto key generate ec keysize {256 | 384} [exportable] [label key-label]\n\n-> EC only supports 256 or 384 bit key size -> Answer A and answer C are not correct.\n\nThe command “crypto key generate rsa modulus 1024” generate a 1024 bit RSA key pair. Although 1024-bit\nor smaller key pair should not be used but it is the only correct answer in this question.\n\nNote: The command “crypto key encrypt rsa name …” is used to encrypt the RSA key."
+  },
+  {
+    "legacyIndex": 370,
+    "legacyNumber": 3,
+    "prompt": "An engineer observes high usage on the 2.4GHz channels and lower usage on the 5GHz channels. What must\nbe configured to allow clients to preferentially use 5GHz access points?",
+    "options": [
+      "Client Band Select",
+      "OEAP Split Tunnel",
+      "11ac MU-MIMO",
+      "Re-Anchor Roamed Clients"
+    ],
+    "answer": 0,
+    "explanation": "Band selection works by regulating probe responses to clients and it can be enabled on a per-WLAN basis. It\nmakes 5-GHz channels more attractive to clients by delaying probe responses to clients on 2.4-GHz channels."
+  },
+  {
+    "legacyIndex": 371,
+    "legacyNumber": 4,
+    "prompt": "When a WLAN with WPA2 PSK is configured in the Wireless LAN Controller GUI which format is supported?",
+    "options": [
+      "Unicode",
+      "base64",
+      "ASCII",
+      "decimal"
+    ],
+    "answer": 2,
+    "explanation": "When configuring a WLAN with WPA2 Preshared Key (PSK), we can choose the encryption key format as\neither ASCII or HEX."
+  },
+  {
+    "legacyIndex": 372,
+    "legacyNumber": 5,
+    "prompt": "Which networking function occurs on the data plane?",
+    "options": [
+      "facilitates spanning-tree elections",
+      "processing inbound SSH management traffic",
+      "forwarding remote client/server traffic",
+      "sending and receiving OSPF Hello packets"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 373,
+    "legacyNumber": 6,
+    "prompt": "What does an SDN controller use as a communication protocol to relay forwarding changes to a southbound\nAPI?",
+    "options": [
+      "XML",
+      "Java",
+      "REST",
+      "OpenFlow"
+    ],
+    "answer": 3,
+    "explanation": "OpenFlow and NETCONF are Southbound APIs used for most SDN implementations.\n\nNote: SDN northbound APIs are usually RESTful APIs used to communicate between the SDN Controller and\nthe services and applications running over the network."
+  },
+  {
+    "legacyIndex": 374,
+    "legacyNumber": 7,
+    "prompt": "A network engineer must configure the router R1 GigabitEthernet1/1 interface to connect to the router R2\nGigabitEthernet1/1 interface. For the configuration to be applied the engineer must compress the address\n2001:0db8:0000:0000:0500:000a:400F:583B. Which command must be issued on the interface?",
+    "options": [
+      "ipv6 address 2001:db8::500:a:400F:583B",
+      "ipv6 address 2001 db8:0::500:a:4F:583B",
+      "ipv6 address 2001:0db8::5:a:4F:583B",
+      "ipv6 address 2001::db8:0000::500:a:400F:583B"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 375,
+    "legacyNumber": 8,
+    "prompt": "An administrator must secure the WLC from receiving spoofed association requests. Which steps must be\ntaken to configure the WLC to restrict the requests and force the user to wait 10 ms to retry an association\nrequest?",
+    "options": [
+      "Enable Security Association Teardown Protection and set the SA Query timeout to 10",
+      "Enable the Protected Management Frame service and set the Comeback timer to 10",
+      "Enable 802.1x Layer 2 security and set the Comeback timer to 10",
+      "Enable MAC filtering and set the SA Query timeout to 10"
+    ],
+    "answer": 1,
+    "explanation": "Comeback timer specifies the time which an associated client must wait before the association can be tried\nagain when first denied with a status code 30.\n\nSA query timeout specifies the amount of time the WLC waits for a response from the client for the query\nprocess.\n\nNote: We can use either 802.1x or PSK as the authentication key management method so answer C is not\ncorrect."
+  },
+  {
+    "legacyIndex": 376,
+    "legacyNumber": 9,
+    "prompt": "What is the benefit of using FHRP (First Hop Redundancy Protocol)?",
+    "options": [
+      "balancing traffic across multiple gateways in proportion to their loads",
+      "reduced management overhead on network routers",
+      "reduced ARP traffic on the network",
+      "higher degree of availability"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 377,
+    "legacyNumber": 10,
+    "prompt": "Which 802.11 management frame type is sent when a client roams between access points on the same\nSSID?",
+    "options": [
+      "Authentication Request",
+      "Probe Request",
+      "Reassociation Request",
+      "Association Request"
+    ],
+    "answer": 2,
+    "explanation": "Association request frame – (0x00) Sent from a wireless client, it enables the AP to allocate resources and\nsynchronize. The frame carries information about the wireless connection including supported data rates and\nSSID of the network to the wireless client that wants to associate. If the request is accepted, the AP reserves\nmemory and establishes an association ID for the device.\n\nAssociation response frame – (0x01) Sent from an AP to a wireless client containing the acceptance or\nrejection to an association request. If it is an acceptance, the frame contains information, such as an\nassociation ID and supported data rates.\n\nReassociation request frame – (0x02) A device sends a reassociation request when it drops from range of the\ncurrently associated AP and finds another AP with a stronger signal. The new AP coordinates the forwarding\nof any information that may still be contained in the buffer of the previous AP.\n\nReassociation response frame – (0x03) Sent from an AP containing the acceptance or rejection to a device\nreassociation request frame. The frame includes information required for association, such as the association\nID and supported data rates.\n\nProbe request frame – (0x04) Sent from a wireless client when it requires information from another wireless\nclient.\n\nAuthentication frame – (0x0B) The sending device sends an authentication frame to the AP containing its\nidentity."
+  },
+  {
+    "legacyIndex": 378,
+    "legacyNumber": 11,
+    "prompt": "What is a similarity between OM3 and OM4 fiber optic cable?",
+    "options": [
+      "Both have a 50 micron core diameter",
+      "Both have a 9 micron core diameter",
+      "Both have a 62.5 micron core diameter",
+      "Both have a 100 micron core diameter"
+    ],
+    "answer": 0,
+    "explanation": "At present, there are four kinds of c: OM1, OM2, OM3 and OM4. The letters “OM” stand for optical multi-\nmode. OM3 and OM4 fibers will support upcoming 40 and 100 Gb/s speeds. OM2, OM3, OM4 and OM5 have\n50 micron core diameter."
+  },
+  {
+    "legacyIndex": 379,
+    "legacyNumber": 12,
+    "prompt": "Which protocol does an access point use to draw power from a connected switch?",
+    "options": [
+      "Internet Group Management Protocol",
+      "Cisco Discovery Protocol",
+      "Adaptive Wireless Path Protocol",
+      "Neighbor Discovery Protocol"
+    ],
+    "answer": 1,
+    "explanation": "Restrictions for Cisco Discovery Protocol\n…\nThese TLVs are supported only by the access point:\n+ Power Consumption TLV: 0x0010 – The maximum amount of power consumed by the access point.\n+ Power Request TLV:0x0019 – The amount of power to be transmitted by a powerable device in order to\nnegotiate a suitable power level with the supplier of the network power\n\nCDP is the protocol used by Cisco access points to advertise their power requirements to power-sourcing\ndevices."
+  },
+  {
+    "legacyIndex": 380,
+    "legacyNumber": 13,
+    "prompt": "When deploying syslog, which severity level logs informational message?",
+    "options": [
+      "0",
+      "2",
+      "4",
+      "6"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 381,
+    "legacyNumber": 14,
+    "prompt": "Refer to the exhibit.\n\nWhich command must be executed for Gi1/1 on SW1 to passively become a trunk port if Gi1/1 on SW2 is\nconfigured in desirable or trunk mode?",
+    "options": [
+      "switchport mode trunk",
+      "switchport mode dot1-tunnel",
+      "switchport mode dynamic auto",
+      "switchport mode dynamic desirable"
+    ],
+    "answer": 2,
+    "explanation": "To form a trunk in this question, we can use either (dynamic) “auto” or (dynamic) “desirable” mode or even\n“trunk” mode but only dynamic auto mode will passively form a trunk port."
+  },
+  {
+    "legacyIndex": 382,
+    "legacyNumber": 15,
+    "prompt": "Refer to the exhibit.\n\nAn engineer must configure GigabitEthernet1/1 to accommodate voice and data traffic. Which configuration\naccomplishes this task?\n\n Option A                      Option B\n\n interface\n                                interface\n gigabitethernet1/1\n                                gigabitethernet1/1\n switchport mode access\n                                switchport mode access\n switchport access vlan\n                                switchport access vlan\n 300\n                                400\n switchport voice vlan\n                                switchport voice vlan 300\n 400\n Option C\n interface                      Option D\n gigabitethernet1/1             interface\n switchport mode trunk          gigabitethernet1/1\n switchport access vlan         switchport mode trunk\n 300                            switchport trunk vlan 300\n switchport voice vlan          switchport trunk vlan 400\n 400",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 383,
+    "legacyNumber": 16,
+    "prompt": "What describes the operation of virtual machines?",
+    "options": [
+      "Virtual machines are responsible for managing and allocating host hardware resources",
+      "Virtual machines are operating system instances that are decoupled from server hardware",
+      "Virtual machines are the physical hardware that support a virtual environment",
+      "In a virtual machine environment, physical servers must run one operating system at a time"
+    ],
+    "answer": 1,
+    "explanation": "Hypervisors are responsible for managing and allocating host hardware resources, not virtual machines ->\nAnswer A is not correct.\n\nVirtual machines are not the physical hardware but virtual instances -> Answer C is not correct.\n\nIn a virtual machine environment, a Type 1 physical server usually run a hypervisor (not operating system)\nto create multiple virtual machines -> Answer D is not correct.\n\n-> Only answer B is the best choice left."
+  },
+  {
+    "legacyIndex": 384,
+    "legacyNumber": 17,
+    "prompt": "What is a role of access points in an enterprise network?",
+    "options": [
+      "connect wireless devices to a wired network",
+      "support secure user logins to devices or the network",
+      "integrate with SNMP in preventing DDoS attacks",
+      "serve as a first line of defense in an enterprise network"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 385,
+    "legacyNumber": 18,
+    "prompt": "Refer to the exhibit.\n\n SiteA#show interface TenGigabitEthernet0/1/0\n TenGigabitEthernet0/1/0 is up, line protocol is up\n\n    Hardware is BUILT-IN-EPA-8x10G, address is aabb.cc00.0100 (bia aabb.cc00.0100)\n\n    Description: Connection to SiteB\n\n    Internet address is 10.10.10.1/30\n\n    MTU 8146 bytes, BW 10000000 Kbit/sec, DLY 10 usec,\n\n        reliability 166/255, txload 1/255, rxload 1/255\n\n    Full Duplex, 10000Mbps, link type is force-up, media type is SFP-LR\n\n    5 minute input rate 265746000 bits/sec, 24343 packets/sec\n\n    5 minute output rate 123245000 bits/sec, 12453 packets/sec\n\n SiteB#show interface TenGigabitEthernet0/1/0\n TenGigabitEthernet0/1/0 is up, line protocol is up\n\n    Hardware is BUILT-IN-EPA-8x10G, address is 0000.0c00.750c (bia 0000.0c00.750c)\n\n    Description: Connection to SiteA\n\n    Internet address is 10.10.10.2/30\n\n    MTU 8146 bytes, BW 10000000 Kbit/sec, DLY 10 usec,\n\n        reliability 255/255, txload 1/255, rxload 1/255\n\n    Full Duplex, 10000Mbps, link type is force-up, media type is SFP-LR\n\n    5 minute input rate 123245000 bits/sec, 15343 packets/sec\n\n    5 minute output rate 265746000 bits/sec, 12453 packets/sec\n\nShortly after SiteA was connected to SiteB over a new single-mode fiber path, users at SiteA report\nintermittent connectivity issues with applications hosted at SiteB. What is the cause of the intermittent\nconnectivity issue?",
+    "options": [
+      "Interface errors are incrementing",
+      "An incorrect SFP media type was used at SiteA",
+      "High usage is causing high latency",
+      "The sites were connected with the wrong cable type"
+    ],
+    "answer": 0,
+    "explanation": "The txload and rxload on both sites are 1/255 so the interfaces are not busy in transmitting and receiving\ntraffic. But the reliability on SiteA is only 166/255 which indicates input and output errors increase. Reliability\nis calculated by this formula: reliability = number of packets / number of total frames."
+  },
+  {
+    "legacyIndex": 386,
+    "legacyNumber": 19,
+    "prompt": "Refer to the exhibit.\n\nOnly four switches are participating in the VLAN spanning-tree process.\nBranch-1: priority 614440\nBranch-2: priority 39082416\nBranch-3: priority 0\nBranch-4: root primary\n\nWhich switch becomes the permanent root bridge for VLAN 5?",
+    "options": [
+      "Branch-1",
+      "Branch-2",
+      "Branch-3",
+      "Branch-4"
+    ],
+    "answer": 2,
+    "explanation": "Priority 0 is the lowest priority of a bridge so it will be elected the root bridge.\n\nNote: The command “root primary” only checks the current root bridge priority and tries to use a better\n(lower) priority value to become the new root bridge. But it does not ensure the local switch will become the\nroot bridge. If another switch has priority of 0 and we issue the “root primary” command then it will inform\nthat it cannot become root, as it cannot get a value lower than 0."
+  },
+  {
+    "legacyIndex": 387,
+    "legacyNumber": 20,
+    "prompt": "Refer to the exhibit.\n\nThe entire contents of the MAC address table are shown. Sales-4 sends a data frame to Sales-1. What does\nthe switch do as it receives the frame from Sales-4?",
+    "options": [
+      "Map the Layer 2 MAC address to the Layer 3 IP address and forward the frame",
+      "Insert the source MAC address and port into the forwarding table and forward the frame to Sales-1",
+      "Perform a lookup in the MAC address table and discard the frame due to a missing entry",
+      "Flood the frame out of all ports except on the port where Sales-1 is connected"
+    ],
+    "answer": 1,
+    "explanation": "The Sales-1 information was already learned by the switch so it just forwards the frames to Sales-1. The\nswitch also learns the information of Sales-4 because this is the first time this host communicates to other\nhosts."
+  },
+  {
+    "legacyIndex": 388,
+    "legacyNumber": 21,
+    "prompt": "Which technology allows for multiple operating systems to be run on a single host computer?",
+    "options": [
+      "virtual device contexts",
+      "network port ID visualization",
+      "virtual routing and forwarding",
+      "server virtualization"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 389,
+    "legacyNumber": 22,
+    "prompt": "Refer to the exhibit.\n\nAn administrator must turn off the Cisco Discovery Protocol on the port configured with last usable address in\nthe 10.0.0.0/30 subnet. Which command set meets the requirement?",
+    "options": [
+      "interface gi0/1\nno cdp enable",
+      "interface gi0/1\nclear cdp table",
+      "interface gi0/0\nno cdp run",
+      "interface gi0/0\nno cdp advertise-v2"
+    ],
+    "answer": 0,
+    "explanation": "In order to disable CDP on an interface, we have to use the “no cdp enable” under interface mode.\n\nNote: “no cdp run” is a global configuration command."
+  },
+  {
+    "legacyIndex": 390,
+    "legacyNumber": 23,
+    "prompt": "Which two QoS tools provides congestion management? (Choose two)",
+    "options": [
+      "FRTS",
+      "CAR",
+      "PQ",
+      "PBR",
+      "CBWFQ"
+    ],
+    "answer": [
+      2,
+      4
+    ],
+    "type": "multi",
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 391,
+    "legacyNumber": 24,
+    "prompt": "What occurs when overlapping Wi-Fi channels are implemented?",
+    "options": [
+      "The wireless network becomes vulnerable to unauthorized access",
+      "Wireless devices are unable to distinguish between different SSIDs",
+      "Network communications are open to eavesdropping",
+      "Users experience poor wireless network performance"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 392,
+    "legacyNumber": 25,
+    "prompt": "Which JSON data type is an unordered set of attribute-value pairs?",
+    "options": [
+      "array",
+      "string",
+      "object",
+      "Boolean"
+    ],
+    "answer": 2,
+    "explanation": "An object is an unordered collection of zero or more name/value pairs. For example {“name”:”John”}.\nObjects are denoted by curly brackets, which means that the order is not guaranteed. For example, if you\nsend a request {“name”:”9tut”,”preferredColor”:”Blue”}, it is not always guaranteed that the receiver\nreceives them in the same order.\n\nNote: In contrast to object, an array is an ordered sequence of zero or more values. For example\n[“a”,”b”,”c”]. Arrays use square brackets to denote arrays. Order is guaranteed in JSON arrays."
+  },
+  {
+    "legacyIndex": 393,
+    "legacyNumber": 26,
+    "prompt": "An engineer needs to add an old switch back into a network. To prevent the switch from corrupting the VLAN\ndatabase which action must be taken?",
+    "options": [
+      "Add the switch in the VTP domain with a lower revision number",
+      "Add the switch in the VTP domain with a higher revision number",
+      "Add the switch with DTP set to dynamic desirable",
+      "Add the switch with DTP set to desirable"
+    ],
+    "answer": 0,
+    "explanation": "If you add a higher revision number switch to the network then all other switches in the current network will\nlearn from the newly added one. And all current VLAN databases will be overwritten."
+  },
+  {
+    "legacyIndex": 394,
+    "legacyNumber": 27,
+    "prompt": "Which WLC port connects to a switch to pass normal access-point traffic?",
+    "options": [
+      "distribution system",
+      "service",
+      "redundancy",
+      "console"
+    ],
+    "answer": 0,
+    "explanation": "Redundancy Port is used for High-Availability (HA) deployment designs when there are two WLCs available.\nIn this setup, both WLCs are physically connected with each other through the Redundant Port using an\nEthernet cable. The redundancy port is used for configuration, operational data synchronization and role\nnegotiation between the primary and secondary controllers.\n\nThe service port is used for out-of-band management of the controller and system recovery and maintenance\nin the event of a network failure.\n\nThe distribution system ports are the most important ports on the WLC as they connect the internal logical\ninterfaces and wireless client traffic to the rest of our network. The SFP Ports are able to accept fiber optic or\nEthernet copper interfaces, with the use of the appropriate SFPs.\n\nThe service-port interface is used for out-of-band management of the controller."
+  },
+  {
+    "legacyIndex": 395,
+    "legacyNumber": 28,
+    "prompt": "An engineering team asks an implementer to configure syslog for warning conditions and error conditions.\nWhich command does the implementer configure to achieve the desired result?",
+    "options": [
+      "logging trap 2",
+      "logging trap 3",
+      "logging trap 4",
+      "logging trap 5"
+    ],
+    "answer": 2,
+    "explanation": "Syslog levels are listed below\n\n Le\n         Keyword         Description\n vel\n         emergencie\n 0                       System is unusable\n         s\n 1       alerts          Immediate action is needed\n 2       critical        Critical conditions exist\n 3       errors          Error conditions exist\n 4       warnings        Warning conditions exist\n                         Normal, but significant, conditions\n 5       notification\n                         exist\n\n          informatio\n 6                       Informational messages\n          nal\n 7        debugging      Debugging messages\nThe highest level is level 0 (emergencies). The lowest level is level 7. If we configure syslog level 4 then it\nwill send all the syslog messages from level 0 to 4."
+  },
+  {
+    "legacyIndex": 396,
+    "legacyNumber": 29,
+    "prompt": "Drag and drop the 802.11 wireless standards from the left onto the matching statements on the right.",
+    "type": "match",
+    "items": [
+      "802.11b",
+      "802.11a",
+      "802.11ac",
+      "802.11n",
+      "802.11g"
+    ],
+    "choices": [
+      "Supports a maximum data rate of 11 Mbps",
+      "Operates in the 5 GHz band only and supports a maximum data rate of 54 Mbps",
+      "Operates in the 5 GHz band only and supports a maximum data rate that can exceed 100 Mbps",
+      "Operates in the 2.4 GHz and 5 GHz bands",
+      "Operates in the 2.4 GHz band only and supports a maximum data rate of 54 Mbps"
+    ],
+    "answer": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "explanation": "Wireless Standards\n\n IEEE           Frequency/        Speed         Topology          Transmission Range                  Access\n Standard       Medium                                                                                Method\n\n 802.11         2.4GHz RF         1 to          Ad                20 feet indoors.                    CSMA/\n                                  2Mbps         hoc/infrastruc                                        CA\n                                                ture\n\n 802.11a        5GHz              Up to         Ad                25 to 75 feet indoors; range        CSMA/\n                                  54Mbps        hoc/infrastruc    can be affected by building         CA\n                                                ture              materials.\n\n 802.11b        2.4GHz            Up to         Ad                Up to 150 feet indoors;             CSMA/\n                                  11Mbps        hoc/infrastruc    range can be affected by            CA\n\n IEEE           Frequency/      Speed         Topology          Transmission Range                Access\n Standard       Medium                                                                            Method\n\n                                              ture              building materials.\n\n 802.11g        2.4GHz          Up to         Ad                Up to 150 feet indoors;           CSMA/\n                                54Mbps        hoc/infrastruc    range can be affected by          CA\n                                              ture              building materials.\n\n 802.11n        2.4GHz/         Up to         Ad                175+ feet indoors; range can      CSMA/\n                5GHz            600Mbp        hoc/infrastruc    be affected by building           CA\n                                s             ture              materials.\n802.11ac uses dual-band wireless technology, supporting simultaneous connections on both 2.4 GHz and 5\nGHz Wi-Fi devices. 802.11ac offers backward compatibility to 802.11a/b/g/n and bandwidth rated up to 1300\nMbps on the 5 GHz band plus up to 450 Mbps on 2.4 GHz."
+  },
+  {
+    "legacyIndex": 397,
+    "legacyNumber": 30,
+    "prompt": "Which two protocols are supported on service-port interfaces? (Choose two)",
+    "options": [
+      "RADIUS",
+      "TACACS+",
+      "Telnet",
+      "SCP",
+      "SSH"
+    ],
+    "answer": [
+      2,
+      4
+    ],
+    "type": "multi",
+    "explanation": "The service-port interface controls communications through and is statically mapped by the system to the\nservice port. The service port can be used for out-of-band management.\nThe service port can obtain an IPv4 address using DHCP, or it can be assigned a static IPv4 address, but a\ndefault gateway cannot be assigned to the service-port interface. Static IPv4 routes can be defined through\nthe controller for remote network access to the service port.\nIf the service port is in use, the management interface must be on a different supernet from the service-port\ninterface.\n\nThe service-port interface supports the following protocols:\n+ SSH and Telnet\n+ HTTP and HTTPS\n+ SNMP\n+ FTP, TFTP, and SFTP\n+ Syslog\n+ ICMP (ping)\n+ NTP\nNote: TACACS+ and RADIUS are not supported through the service port."
+  },
+  {
+    "legacyIndex": 398,
+    "legacyNumber": 31,
+    "prompt": "Refer to the exhibit.\n\nHow must router A be configured so that it only sends Cisco Discovery Protocol Information to router C?\n\n Option A                               Option B\n conf t                                 conf t\n RouterA(config)#no cdp run             RouterA(config)#cdp run\n RouterA(config)#interface              RouterA(config)#interface\n gi0/0/1                                gi0/0/1\n RouterA(config)#cdp enable             RouterA(config)#cdp enable\n\n Option C                               Option D\n conf t                                 conf t\n RouterA(config)#cdp run                RouterA(config)#cdp run\n RouterA(config)#interface              RouterA(config)#interface\n gi0/0/0                                gi0/0/0\n RouterA(config)#cdp enable             RouterA(config)#no cdp enable",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 3,
+    "explanation": "If CDP is disabled globally, you cannot enable it on each interface using the “cdp enable” interface\nconfiguration mode command.\n\nTherefore in order to enable CDP on a specific interface only, we must:\n1. Enable CDP globally\n2. Disable CDP on other interfaces."
+  },
+  {
+    "legacyIndex": 399,
+    "legacyNumber": 32,
+    "prompt": "What is the function of a hub-and-spoke WAN topology?",
+    "options": [
+      "supports application optimization",
+      "provides direct connections between subscribers",
+      "supports Layer 2 VPNs",
+      "allows access restrictions to be implemented between subscriber sites"
+    ],
+    "answer": 3,
+    "explanation": "If we want direct connections between subscribers then we can use traditional topologies (-> Answer B is not\ncorrect). With hub-and-spoke topology, we can allow access between Spoke1 & Spoke2 but not between\nSpoke2 & Spoke3, for example."
+  },
+  {
+    "legacyIndex": 400,
+    "legacyNumber": 33,
+    "prompt": "Which global command encrypts all passwords in the running configuration?",
+    "options": [
+      "enable secret",
+      "enable password-encryption",
+      "service password-encryption",
+      "password-encrypt"
+    ],
+    "answer": 2,
+    "explanation": "The service password-encryption command will encrypt all current and future passwords so any password\nexisted in the configuration will be encrypted."
+  },
+  {
+    "legacyIndex": 401,
+    "legacyNumber": 1,
+    "prompt": "Which level of severity must be set to get informational syslogs?",
+    "options": [
+      "alert",
+      "critical",
+      "notice",
+      "debug"
+    ],
+    "answer": 3,
+    "explanation": "The Syslog levels are:\n\n Le\n          Keyword        Description\n vel\n          emergencie\n 0                       System is unusable\n          s\n 1        alerts         Immediate action is needed\n 2        critical       Critical conditions exist\n\n 3       errors           Error conditions exist\n 4       warnings         Warning conditions exist\n                          Normal, but significant, conditions\n 5       notification\n                          exist\n         informatio\n 6                        Informational messages\n         nal\n 7       debugging        Debugging messages\nIf you specify a level, that level and all the higher levels will be displayed. Therefore in order to receive\ninformational syslog we must set to level 6 or level 7."
+  },
+  {
+    "legacyIndex": 402,
+    "legacyNumber": 2,
+    "prompt": "What is a characteristic of cloud-based network topology?",
+    "options": [
+      "physical workstations are configured to share resources",
+      "services are provided by a public, private, or hybrid deployment",
+      "onsite network services are provided with physical Layer 2 and Layer 3 components",
+      "wireless connections provide the sole access method to services"
+    ],
+    "answer": 1,
+    "explanation": "In private cloud, the resources are dedicated to an organization without sharing with anyone else -> Answer\nA is not correct.\n\nNowadays, onsite network services (network devices in a cloud) can be run in a virtualization environment ->\nAnswer C is not correct.\n\nWe can access the services via both cable or wireless connections -> Answer D is not correct.\n\nCloud computing can be categorized into three general types:\n+ Public cloud is cloud computing that’s delivered via the internet and shared across organizations.\n+ Private cloud is cloud computing that is dedicated solely to your organization.\n+ Hybrid cloud is any environment that uses both public and private clouds."
+  },
+  {
+    "legacyIndex": 403,
+    "legacyNumber": 3,
+    "prompt": "A network analyst is tasked with configured the date and time on a router using EXEC mode. The date must\nbe set to 12:00am. Which command should be used?",
+    "options": [
+      "Clock timezone",
+      "Clock summer-time-recurring",
+      "Clock summer-time date",
+      "Clock set"
+    ],
+    "answer": 3,
+    "explanation": "In this example, the clock time is set to 12:00 am with the clock date of January 1, 2020.\n\nR1#clock set 12:00:00 jan 1 2020"
+  },
+  {
+    "legacyIndex": 404,
+    "legacyNumber": 4,
+    "prompt": "Which HTTP status code is returned after a successful REST API request?",
+    "options": [
+      "200",
+      "301",
+      "404",
+      "500"
+    ],
+    "answer": 0,
+    "explanation": "HTTP defines these standard status codes that can be used to convey the results of a client’s request. The\nstatus codes are divided into the five categories.\n1xx: Informational – Communicates transfer protocol-level information.\n2xx: Success – Indicates that the client’s request was accepted successfully.\n3xx: Redirection – Indicates that the client must take some additional action in order to complete their\nrequest.\n4xx: Client Error – This category of error status codes points the finger at clients.\n5xx: Server Error – The server takes responsibility for these error status codes."
+  },
+  {
+    "legacyIndex": 405,
+    "legacyNumber": 5,
+    "prompt": "Refer to the exhibit.\n\nWhen PC-A sends traffic to PC-B, which network component is in charge of receiving the packet from PC-A\nverifying the IP addresses, and forwarding the packet to PC-B?",
+    "options": [
+      "Layer 2 switch",
+      "firewall",
+      "Load balancer",
+      "Router"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 406,
+    "legacyNumber": 6,
+    "prompt": "Refer to the exhibit.\n\n Router1#show ip route\n Gateway of last resort is not set\n\n            209.165.200.0/27 is subnetted, 1 subnets\n\n B            209.165.200.224 [20/0] via 10.10.12.2, 00:08:34\n\n            10.0.0.0/8 is variably subnetted, 4 subnets, 3 masks\n\n C            10.10.10.0/28 is directly connected, GigabitEthernet0/0\n C            10.10.11.0/30 is directly connected, FastEthernet2/0\n O            10.10.13.0/24 [110/2] via 10.10.10.1, 00:09:25, GigabitEthernet0/0\n C            10.10.12.0/30 is directly connected, GigabitEthernet0/1\n\nWhich action is taken by the router when a packet is sourced from 10.10.10.2 and destined for 10.10.10.16?",
+    "options": [
+      "It discards the packets",
+      "It uses a route that is similar to the destination address",
+      "It floods packets to all learned next hops",
+      "It queues the packets waiting for the route to be learned"
+    ],
+    "answer": 0,
+    "explanation": "The destination 10.10.10.16 does not belong to 10.10.10.0/28 subnet (range from 10.10.10.0 to\n10.10.10.15) and there are no default route in this routing table so it will discard the packets."
+  },
+  {
+    "legacyIndex": 407,
+    "legacyNumber": 7,
+    "prompt": "Drag and drop the functions of DHCP from the left onto any of the positions on the right. Not all functions are\nused.",
+    "type": "match",
+    "items": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "choices": [
+      "maintains an address pool",
+      "offers domain name server configuration",
+      "reduces the administrative burden for onboarding end users",
+      "assigns IP addresses to local hosts for a configurable lease time"
+    ],
+    "answer": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "explanation": "The following example shows how to configure a DHCP Server on a Cisco router:\n\n Configuration                     Description\n Router(config)#ip dhcp\n                                   Create a DHCP Pool named CLIENTS\n pool CLIENTS\n Router(dhcp-\n config)#network                   Specifies the subnet and mask of the DHCP address pool\n 10.1.1.0 /24\n Router(dhcp-\n config)#default-router            Set the default gateway of the DHCP Clients\n 10.1.1.1\n Router(dhcp-config)#dns-\n                                   Configure a Domain Name Server (DNS)\n server 10.1.1.1\n Router(dhcp-\n config)#domain-name               Configure a domain-name\n 9tut.com\n                                   Duration of the lease (the time during which a client computer can\n                                   use an assigned IP address). The syntax is “lease {days[hours]\n Router(dhcp-config)#lease         [minutes] | infinite}”. In this case the lease is 12 hours. The default is\n 0 12                              a one-day lease.\n                                   Before the lease expires, the client typically needs to renew its\n                                   address lease assignment with the server\n Router(dhcp-config)#exit\n Router(config)# ip dhcp\n                                   The IP range that a DHCP Server should not assign to DHCP Clients.\n excluded-address 10.1.1.1\n                                   Notice this command is configured under global configuration mode\n 10.1.1.10"
+  },
+  {
+    "legacyIndex": 408,
+    "legacyNumber": 8,
+    "prompt": "What is the function of a controller in controller-based networking?",
+    "options": [
+      "It is a pair of core routers that maintain all routing decisions for a campus",
+      "It centralizes the data plane for the network",
+      "It is the card on a core router that maintains all routing decisions for a campus",
+      "It serves as the centralized management point of an SDN architecture"
+    ],
+    "answer": 3,
+    "explanation": "In constrast to distributed architecture, centralized (or controller-based) architectures centralizes the control\nof networking devices into one device, called SDN controller."
+  },
+  {
+    "legacyIndex": 409,
+    "legacyNumber": 9,
+    "prompt": "When a switch receives a frame for a known destination MAC address, how is the frame handed?",
+    "options": [
+      "flooded to all ports except the one from which it originated",
+      "broadcast to all ports",
+      "forwarded to the first available port",
+      "sent to the port identified for the known MAC address"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 410,
+    "legacyNumber": 10,
+    "prompt": "Drag and drop the IPv6 address type characteristics from the left to the right.",
+    "type": "match",
+    "items": [
+      "attached to a single subnet",
+      "configured only once per interface",
+      "addresses with prefix FC00::/7",
+      "addressing for exclusive use internally without Internet routing"
+    ],
+    "choices": [
+      "Link-Local Address",
+      "Unique Local Address"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": "A IPv6 Unique Local Address is an IPv6 address in the block FC00::/7. It is the approximate IPv6 counterpart\nof the IPv4 private address. It is not routable on the global Internet.\n\nNote: In the past, Site-local addresses (FEC0::/10) are equivalent to private IP addresses in IPv4 but now\nthey are deprecated.\n\nLink-local addresses only used for communications within the local subnet. It is usually created dynamically\nusing a link-local prefix of FE80::/10 and a 64-bit interface identifier (based on 48-bit MAC address)."
+  },
+  {
+    "legacyIndex": 411,
+    "legacyNumber": 11,
+    "prompt": "Why was the RFC 1918 address space defined?",
+    "options": [
+      "preserve public IPv6 address space",
+      "support the NAT protocol",
+      "reduce instances of overlapping IP addresses",
+      "conserve public IPv4 addressing"
+    ],
+    "answer": 3,
+    "explanation": "The RFC 1918 is Address Allocation for Private Internets, which reserves IP addresses for private and internal\nuse. These addresses can be used for networks that do not need to connect to the Internet."
+  },
+  {
+    "legacyIndex": 412,
+    "legacyNumber": 12,
+    "prompt": "What is the purpose of using First Hop Redundancy Protocol in a specific subnet?",
+    "options": [
+      "forwards multicast hello messages between routers",
+      "sends the default route to the hosts on a network",
+      "filter traffic based on destination IP addressing",
+      "ensures a loop-free physical topology"
+    ],
+    "answer": 0,
+    "explanation": "In fact there is no correct answer for this question. But if we have to choose one, answer A is the best one as\nthe routers in a FHRP group do sent multicast hello messages among them. But “forwards multicast hello\nmessages” is surely not the purpose of FHRP. The main purpose of FHRP is to provide redundancy to the\ngateway router."
+  },
+  {
+    "legacyIndex": 413,
+    "legacyNumber": 13,
+    "prompt": "After installing a new Cisco ISE server, which task must the engineer perform on the Cisco WLC to connect\nwireless clients on a specific VLAN based on their credentials?",
+    "options": [
+      "Enable the Authorized MIC APs against auth-list or AAA.",
+      "Enable the allow AAA Override",
+      "Disable the LAG Mode or Next Reboot.",
+      "Enable the Event Driven RRM."
+    ],
+    "answer": 1,
+    "explanation": "Dynamic VLAN assignment is one such feature that places a wireless user into a specific VLAN based on the\ncredentials supplied by the user. This task of assigning users to a specific VLAN is handled by a RADIUS\nauthentication server, such as Cisco ISE. This can be used, for example, to allow the wireless host to remain\non the same VLAN as it moves within a campus network.\n\n…\nIn order to accomplish dynamic VLAN assignment with WLCs based on ISE to AD group mapping, these steps\nmust be performed:\n+ ISE to AD integration and configuration of authentication and authorization policies for users on ISE\n+ WLC configuration to support dot1x authentication and AAA override for SSID ‘office_hq’\n+ End client supplicant configuration"
+  },
+  {
+    "legacyIndex": 414,
+    "legacyNumber": 14,
+    "prompt": "An engineer is configuring an encrypted password for the enable command on a router where the local user\ndatabase has already been configured. Drag and drop the configuration commands from the left into the\ncorrect sequence on the right. Not all commands are used.",
+    "type": "match",
+    "items": [
+      "first",
+      "second",
+      "third",
+      "fourth"
+    ],
+    "choices": [
+      "enable",
+      "configure terminal",
+      "enable secret $fkg!@34i4",
+      "exit"
+    ],
+    "answer": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "explanation": "This question is not clear as it did not specify if it wanted an encrypted password for the enable command or\nit wanted to encrypted existed password. But"
+  },
+  {
+    "legacyIndex": 415,
+    "legacyNumber": 15,
+    "prompt": "Refer to the exhibit.\n\nRouter R4 is dynamically learning the path to the server. If R4 is connected to R1 via OSPF Area 20, to R2 via\nR2 BGP, and to R3 via EIGRP 777, which path is installed in the routing table of R4?",
+    "options": [
+      "the path through R2, because the EBGP administrative distance is 20",
+      "the path through R2, because the IBGP administrative distance is 200",
+      "the path through R1, because the OSPF administrative distance is 110",
+      "the path through R3, because the EIGRP administrative distance is lower than OSPF and BGP"
+    ],
+    "answer": 0,
+    "explanation": "The Administrative Distance of EBGP is 20 which is smallest (AD of EIGRP is 90 and AD of OSPF is 110) so R4\nwill choose the path via EBGP.\n\nAccording to the figure, we see R4 belongs to BGP AS 65513 while R2 belongs to BGP AS 65512 so surely\nthey are EBGP, not IBGP."
+  },
+  {
+    "legacyIndex": 416,
+    "legacyNumber": 16,
+    "prompt": "What is a function of the Cisco DNA Center Overall Health Dashboard?",
+    "options": [
+      "It summarizes daily and weekly CPU usage for servers and workstations in the network.",
+      "It provides detailed activity logging for the 10 devices and users on the network.",
+      "It summarizes the operational status of each wireless device on the network.",
+      "It provides a summary of the top 10 global issues."
+    ],
+    "answer": 3,
+    "explanation": "The bottom of Cisco DNA Center Overall Health Dashboard displays the top 10 issues, if any, that must be\naddressed."
+  },
+  {
+    "legacyIndex": 417,
+    "legacyNumber": 17,
+    "prompt": "Which protocol requires authentication to transfer a backup configuration file from a router to a remote\nserver?",
+    "options": [
+      "TFTP",
+      "FTP",
+      "DTP",
+      "SMTP"
+    ],
+    "answer": 1,
+    "explanation": "The FTP protocol requires a client to send a remote username and password on each FTP request to a\nserver.When you copy a configuration file from the router to a server using FTP, the Cisco IOS software sends\nthe first valid username it encounters in the following list:\n\n1. The username specified in the copy privileged EXEC command,if a username is specified.\n2. The username set by the ip ftp username global configuration command, if the command is configured.\n3. Anonymous."
+  },
+  {
+    "legacyIndex": 418,
+    "legacyNumber": 18,
+    "prompt": "Where is the interface between the control plane and data plane within the software-defined architecture?",
+    "options": [
+      "application layer and the management layer",
+      "application layer and the infrastructure layer",
+      "control layer and the application layer",
+      "control layer and the infrastructure layer"
+    ],
+    "answer": 3,
+    "explanation": "Maybe we should understand this question “What are the layers inside control plane and data plane within\nthe software-defined architecture?” However, this question is still not clear.\n\nThe Open Networking Foundation identifies three main parts of the Software-defined networking (SDN):\nApplication layer; Control layer and Infrastructure layer. SDN separates a router’s control plane from the data\n(forwarding) plane. The control plane makes routing decisions. The data plane forwards data (packets)\nthrough the router. With SDN routing, decisions are made remotely instead of on each individual router."
+  },
+  {
+    "legacyIndex": 419,
+    "legacyNumber": 19,
+    "prompt": "Which action does the router take as it forwards a packet through the network?",
+    "options": [
+      "The router replaces the source and destination labels with the sending router interface label as a source and the next hop router label as a destination",
+      "The router encapsulates the source and destination IP addresses with the sending router IP address as the source and the neighbor IP address as the destination",
+      "The router encapsulates the original packet and then includes a tag that identifies the source router MAC address and transmit transparently to the destination",
+      "The router replaces the original source and destination MAC addresses with the sending router MAC address as the source and neighbor MAC address as the destination"
+    ],
+    "answer": 3,
+    "explanation": "While transferring data through many different networks, the source and destination IP addresses are not\nchanged. Only the source and destination MAC addresses are changed."
+  },
+  {
+    "legacyIndex": 420,
+    "legacyNumber": 20,
+    "prompt": "When a site-to-site VPN is configured, which IPsec mode provides encapsulation and encryption of the entire\noriginal IP packet?",
+    "options": [
+      "IPsec tunnel mode with AH",
+      "IPsec transport mode with AH",
+      "IPsec tunnel mode with ESP",
+      "IPsec transport mode with ESP"
+    ],
+    "answer": 2,
+    "explanation": "IPSec can be configured to operate in two different modes, Tunnel (default) and Transport mode. Transport\nmode encapsulation retains the original IP header. With tunnel mode, the entire original IP packet is\nprotected by IPSec -> In this question we must choose tunnel mode.\n\nThe AH protocol provides a mechanism for authentication only. The ESP protocol provides data confidentiality\n(encryption) and authentication (data integrity, data origin authentication, and replay protection) -> We must\nuse ESP."
+  },
+  {
+    "legacyIndex": 421,
+    "legacyNumber": 21,
+    "prompt": "Refer to the exhibit.\n\nWhich two commands, when configured on router R1, fulfill these requirements? (Choose two)\n– Packets toward the entire network 2001:db8:23::/64 must be forwarded through router R2.\n– Packets toward host 2001:db8:23::14 preferably must be forwarded through R3.",
+    "options": [
+      "ipv6 route 2001:db8:23::/128 fd00:12::2",
+      "ipv6 route 2001:db8:23::14/128 fd00:13::3",
+      "ipv6 route 2001:db8:23::14/64 fd00:12::2",
+      "ipv6 route 2001:db8:23::14/64 fd00:12::2 200",
+      "ipv6 route 2001:db8:23::/64 fd00:12::2"
+    ],
+    "answer": [
+      1,
+      4
+    ],
+    "type": "multi",
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 422,
+    "legacyNumber": 22,
+    "prompt": "What is the role of a firewall in an enterprise network?",
+    "options": [
+      "determines which packets are allowed to cross from unsecured to secured networks",
+      "processes unauthorized packets and allows passage to less secure segments of the network",
+      "forwards packets based on stateless packet inspection",
+      "explicitly denies all packets from entering an administrative domain"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 423,
+    "legacyNumber": 23,
+    "prompt": "What is the benefit of configuring PortFast on an interface?",
+    "options": [
+      "After the cable is connected, the interface uses the fastest speed setting available for that cable type",
+      "The frames entering the interface are marked with higher priority and then processed faster by a switch",
+      "After the cable is connected, the interface is available faster to send and receive user data",
+      "Real-time voice and video frames entering the interface are processed faster"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 424,
+    "legacyNumber": 24,
+    "prompt": "How are VLAN hopping attacks mitigated?",
+    "options": [
+      "manually implement trunk ports and disable DTP",
+      "configure extended VLANs",
+      "activate all ports and place in the default VLAN",
+      "enable dynamic ARP inspection"
+    ],
+    "answer": 0,
+    "explanation": "VLAN Hopping: By altering the VLAN ID on packets encapsulated for trunking, an attacking device can send\nor receive packets on various VLANs, bypassing Layer 3 security measures. VLAN hopping can be\naccomplished by switch spoofing or double tagging.\n\na. Switch spoofing:\n\nThe attacker can connect an unauthorized Cisco switch to a Company switch port. The unauthorized switch\ncan send DTP frames and form a trunk with the Company Switch. If the attacker can establish a trunk link to\nthe Company switch, it receives traffic to all VLANs through the trunk because all VLANs are allowed on a\ntrunk by default.\n\n(Instead of using a Cisco Switch, the attacker can use a software to create and send DTP frames).\n\nTo mitigate this type of attack, we can disable DTP."
+  },
+  {
+    "legacyIndex": 425,
+    "legacyNumber": 25,
+    "prompt": "Drag and drop the statement about networking from the left into the corresponding networking types on the\nright. Not all statements are used.",
+    "type": "match",
+    "items": [
+      "This type deploys a consistent configuration across multiple devices",
+      "Southbound APIs are used to apply configurations",
+      "This type requires a distributed management plane",
+      "A distributed control plane is needed"
+    ],
+    "choices": [
+      "Controller-Based Networking",
+      "Traditional Networking"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 426,
+    "legacyNumber": 26,
+    "prompt": "Refer to the exhibit.\n\n R1#show ip route\n --output omitted--\n\n Gateway of last resort is 192.168.14.4 to network 0.0.0.0\n\n C      172.16.1.128/25 is directly connected, GigabitEthernet1/1/0\n C      192.168.12.0/24 is directly connected, FastEthernet0/0\n C      192.168.13.0/24 is directly connected, FastEthernet0/1\n C      192.168.14.0/24 is directly connected, FastEthernet1/0\n C      172.16.16.1 is directly connected, Loopback1\n\n     192.168.10.0/24 is variably subnetted, 3 subnets, 3 masks\n\n O      192.168.10.0/24 [110/2] via 192.168.14.4, 00:03:01, FastEthernet1/0\n O      192.168.10.32/27 [110/11] via 192.168.13.3, 00:00:11, FastEthernet0/1\n O      192.168.0.0/16 [110/2] via 192.168.15.5, 00:05:11, FastEthernet1/1\n D      192.168.10.1/32 [90/52778] via 192.168.12.2, 00:05:11, FastEthernet0/0\n O*E2   0.0.0.0/0 [110/1] via 192.168.14.4, 00:05:11, FastEthernet1/0\n\nIf R1 receives a packet destined to 172.16.1.1, to which IP address does it send the packet?",
+    "options": [
+      "192.168.12.2",
+      "192.168.13.3",
+      "192.168.14.4",
+      "192.168.15.5"
+    ],
+    "answer": 2,
+    "explanation": "The packet destined to 172.16.1.1 would match the default route (the last line) so it sends the packet to\n192.168.14.4."
+  },
+  {
+    "legacyIndex": 427,
+    "legacyNumber": 27,
+    "prompt": "Which two components are needed to create an Ansible script that configures a VLAN on a switch? (Choose\ntwo)",
+    "options": [
+      "task",
+      "cookbook",
+      "recipe",
+      "model",
+      "playbook"
+    ],
+    "answer": [
+      0,
+      4
+    ],
+    "type": "multi",
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 428,
+    "legacyNumber": 28,
+    "prompt": "How are the switches in a spine-and-leaf topology interconnected?",
+    "options": [
+      "Each leaf switch is connected to two spine switches, making a loop.",
+      "Each leaf switch is connected to a central leaf switch, then uplinked to a core spine switch.",
+      "Each leaf switch is connected to each spine switch.",
+      "Each leaf switch is connected to one of the spine switches."
+    ],
+    "answer": 2,
+    "explanation": "With Leaf-Spine, the network uses Layer 3 routing so STP is no longer required. Spine-leaf architectures rely\non protocols such as Equal-Cost Multipath (ECPM) routing to load balance traffic across all available paths\nwhile still preventing network loops. This allows all connections to be utilized at the same time while still\nremaining stable and avoiding loops within the network.\n\n-> Answer A is not correct because spine-and-leaf topology does not “make a loop” because it does not run\nSTP, it runs ECPM.\n\nEvery leaf switch connects to every spine switch in the fabric. The path is randomly chosen so that the traffic\nload is evenly distributed among the top-tier switches."
+  },
+  {
+    "legacyIndex": 429,
+    "legacyNumber": 29,
+    "prompt": "In software-defined architecture, which place handles switching for traffic through a Cisco router?",
+    "options": [
+      "Data",
+      "Control",
+      "Management",
+      "Application"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 430,
+    "legacyNumber": 30,
+    "prompt": "Which two protocols must be disabled to increase security for management connections to a Wireless LAN\nController? (Choose two)",
+    "options": [
+      "Telnet",
+      "SSH",
+      "HTTP",
+      "HTTPS",
+      "TFTP"
+    ],
+    "answer": [
+      0,
+      2
+    ],
+    "type": "multi",
+    "explanation": "We can connect to Cisco WLC via HTTP/HTTPS and SSH/Telnet so in order to increase security we must\ndisable HTTP and Telnet which are unsecured protocols."
+  },
+  {
+    "legacyIndex": 431,
+    "legacyNumber": 31,
+    "prompt": "When a client and server are not on the same physical network, which device is used to forward requests and\nreplies between client and server for DHCP?",
+    "options": [
+      "DHCP relay agent",
+      "DHCP server",
+      "DHCPDISCOVER",
+      "DHCPOFFER"
+    ],
+    "answer": 0,
+    "explanation": "If the DHCP Server is not on the same subnet with the DHCP Client, we need to configure the router on the\nDHCP client side to act as a DHCP Relay Agent so that it can forward DHCP messages between the DHCP\nClient & DHCP Server. To make a router a DHCP Relay Agent, simply put the “ip helper-address <IP-address-\nof-DHCP-Server>” command under the interface that receives the DHCP messages from the DHCP Client.\n\nAs we know, router does not forward broadcast packets (it drops them instead) so DHCP messages like\nDHCPDISCOVER message will be dropped. But with the “ip helper-address …” command, the router will\naccept that broadcast message and cover it into a unicast packet and forward it to the DHCP Server. The\ndestination IP address of the unicast packet is taken from the “ip helper-address …” command."
+  },
+  {
+    "legacyIndex": 432,
+    "legacyNumber": 32,
+    "prompt": "An implementer is preparing hardware for virtualization to create virtual machines on a host. What is needed\nto provide communication between hardware and virtual machines?",
+    "options": [
+      "straight cable",
+      "router",
+      "hypervisor",
+      "switch"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 433,
+    "legacyNumber": 33,
+    "prompt": "What are two characteristics of the distribution layer in a three-tier network architecture? (Choose two)",
+    "options": [
+      "provides a boundary between Layer 2 and Layer 3 communications",
+      "designed to meet continuous, redundant uptime requirements",
+      "serves as the network aggregation point",
+      "physical connection point for a LAN printer",
+      "is the backbone for the network topology"
+    ],
+    "answer": [
+      0,
+      2
+    ],
+    "type": "multi",
+    "explanation": "A typical enterprise hierarchical LAN campus network design includes the following three layers:\n+ Access layer: Provides workgroup/user access to the network\n+ Distribution layer: Provides policy-based connectivity and controls the boundary between the access and\ncore layers\n+ Core layer: Provides fast transport between distribution switches within the enterprise campus\n\nThe Distribution layer acts as an aggregation point for all the Access layer devices."
+  },
+  {
+    "legacyIndex": 434,
+    "legacyNumber": 34,
+    "prompt": "Which QoS tool can you use to optimize voice traffic on a network that is primarily intended for data traffic?",
+    "options": [
+      "WRED",
+      "FIFO",
+      "PQ",
+      "WFQ"
+    ],
+    "answer": 2,
+    "explanation": "With Priority Queueing (PQ), traffic is classified into high, medium, normal, and low priority queues. The high\npriority traffic is serviced first, then medium priority traffic, followed by normal and low priority traffic. ->\nTherefore we can assign higher priority for voice traffic.\n\nAlso with PQ, higher priority traffic can starve the lower priority queues of bandwidth. No bandwidth\nguarantees are possible -> It is still good because this network is mostly used for data traffic so voice traffic\namount is small.\n\nWith First In First Out (FIFO) or Weighted Fair Queueing (WFQ), there is no priority servicing so they are not\nsuitable here.\n\nWeighted Random Early Detection (WRED) is just a congestion avoidance mechanism. WRED measures the\nsize of the queues depending on the Precedence value and starts dropping packets when the queue is\nbetween the minimum threshold and the maximum threshold -> It does not have priority servicing either."
+  },
+  {
+    "legacyIndex": 435,
+    "legacyNumber": 35,
+    "prompt": "On workstations running Microsoft Windows, which protocol provides the default gateway for the device?",
+    "options": [
+      "STP",
+      "DNS",
+      "SNMP",
+      "DHCP"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 436,
+    "legacyNumber": 36,
+    "prompt": "Refer to the exhibit.\n\n R2#show ip route\n C 192.168.1.0/26 is directly connected,\n FastEthernet0/1\nWhich two prefixes are included in this routing table entry? (Choose two)",
+    "options": [
+      "192.168.1.17",
+      "192.168.1.61",
+      "192.168.1.64",
+      "192.168.1.127",
+      "192.168.1.254"
+    ],
+    "answer": [
+      0,
+      1
+    ],
+    "type": "multi",
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 437,
+    "legacyNumber": 37,
+    "prompt": "Which two primary drivers support the need for network automation? (Choose two)",
+    "options": [
+      "Increasing reliance on self-diagnostic and self-healing",
+      "Eliminating training needs",
+      "Policy-derived provisioning of resources",
+      "Reducing hardware footprint",
+      "Providing a single entry point for resource provisioning"
+    ],
+    "answer": [
+      2,
+      4
+    ],
+    "type": "multi",
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 438,
+    "legacyNumber": 38,
+    "prompt": "What is the difference in data transmission delivery and reliability between TCP and UDP?",
+    "options": [
+      "UDP sets up a connection between both devices before transmitting data. TCP uses the three-way handshake to transmit data with a reliable connection.",
+      "TCP transmits data at a higher rate and ensures packet delivery. UDP retransmits lost data to ensure\napplications receive the data on the remote end.",
+      "UDP is used for multicast and broadcast communication. TCP is used for unicast communication and transmits data at a higher rate with error checking.",
+      "TCP requires the connection to be established before transmitting data. UDP transmits data at a higher rate without ensuring packet delivery."
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 439,
+    "legacyNumber": 39,
+    "prompt": "What are network endpoints?",
+    "options": [
+      "a threat to the network if they are compromised",
+      "support inter-VLAN connectivity",
+      "act as routers to connect a user to the service prowler network",
+      "enforce policies for campus-wide traffic going to the internet"
+    ],
+    "answer": 0,
+    "explanation": "A network endpoint is any device that is physically an end point on a network. Laptops, desktops, mobile\nphones, tablets, servers, and virtual environments can all be considered endpoints. Network endpoints may\nbe a threat to our networks if they are compromised."
+  },
+  {
+    "legacyIndex": 440,
+    "legacyNumber": 40,
+    "prompt": "What does physical access control regulate?",
+    "options": [
+      "access to specific networks based on business function",
+      "access to servers to prevent malicious activity",
+      "access to computer networks and file systems",
+      "access to networking equipment and facilities"
+    ],
+    "answer": 3,
+    "explanation": "Cisco Physical Access Control is a comprehensive IP-based solution that uses the IP network as a platform for\nintegrated security operations."
+  },
+  {
+    "legacyIndex": 441,
+    "legacyNumber": 41,
+    "prompt": "Drag and drop the DNS lookup components from the left onto the functions on the right.",
+    "type": "match",
+    "items": [
+      "service that maps hostname to IP addresses",
+      "local database of address mappings that improves name resolution performance",
+      "in response to client requests, queries a name server for IP address information",
+      "component of a URL that indicates the location or organization type",
+      "disables DNS services on a Cisco device"
+    ],
+    "choices": [
+      "DNS",
+      "cache",
+      "name resolver",
+      "domain",
+      "no ip domain-lookup"
+    ],
+    "answer": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 442,
+    "legacyNumber": 42,
+    "prompt": "What must be considered when using 802.11a?",
+    "options": [
+      "It is compatible with 802.11g and 802.11-compliant wireless devices",
+      "It is chosen over 802.11b/g when a lower-cost solution is necessary",
+      "It is susceptible to interference from 2.4 GHz devices such as microwave ovens.",
+      "It is used in place of 802.11b/g when many nonoverlapping channels are required"
+    ],
+    "answer": 3,
+    "explanation": "802.11a offers as many as 12 non-overlapping channels. With more channels, larger number of users can be\naccommodated with no performance degradation."
+  },
+  {
+    "legacyIndex": 444,
+    "legacyNumber": 44,
+    "prompt": "An engineer configures interface Gi1/0 on the company PE router to connect to an ISP.\n\nNeighbor discovery is disabled.\n\n interface Gi1/0\n\n  description HQ_DC3392-9383\n\n  duplex full\n\n  speed 100\n\n  negotiation auto\n\n  lldp transmit\n\n  lldp receive\n\nWhich action is necessary to complete the configuration if the ISP uses third-party network devices?",
+    "options": [
+      "Enable LLDP globally",
+      "Disable autonegotiation",
+      "Disable Cisco Discovery Protocol on the interface",
+      "Enable LLDP-MED on the ISP device"
+    ],
+    "answer": 0,
+    "explanation": "From the output we see LLDP has been enabled on Gi1/0 interface but this questions said “neighbor\ndiscovery is disabled”. Therefore we must turn on LLDP globally with the “lldp run” under global configuration\nmode: Router(config)# lldp run\n\nNote: LLDP for Media Endpoint Devices (LLDP-MED) is an extension to LLDP that operates between endpoint\ndevices such as IP phones and network devices such as switches. It specifically provides support for voice\nover IP (VoIP) applications and provides additional TLVs for capabilities discovery, network policy, Power over\nEthernet, inventory management, and location information"
+  },
+  {
+    "legacyIndex": 445,
+    "legacyNumber": 45,
+    "prompt": "How does QoS optimize voice traffic?",
+    "options": [
+      "reducing bandwidth usage",
+      "by reducing packet loss",
+      "by differentiating voice and video traffic",
+      "by increasing jitter"
+    ],
+    "answer": 2,
+    "explanation": "With Priority Queueing (PQ) in QoS, traffic is classified into high, medium, normal, and low priority queues.\nThe high priority traffic is serviced first, then medium priority traffic, followed by normal and low priority\ntraffic. -> Therefore we can assign higher priority for voice traffic."
+  },
+  {
+    "legacyIndex": 446,
+    "legacyNumber": 46,
+    "prompt": "Which two events occur automatically when a device is added to Cisco DNA Center? (Choose two)",
+    "options": [
+      "The device is assigned to the Global site.",
+      "The device is placed into the Unmanaged state.",
+      "The device is placed into the Provisioned state.",
+      "The device is placed into the Managed state.",
+      "The device is assigned to the Local site."
+    ],
+    "answer": [
+      0,
+      3
+    ],
+    "type": "multi",
+    "explanation": "Device in Global Site: When you successfully add, import, or discover a device, Cisco DNA Center places the\ndevice in the Managed state and assigns it to the Global site by default. Even if you have defined SNMP\nserver, Syslog server, and NetFlow collector settings for the Global site, Cisco DNA Center does not change\nthese settings on the device."
+  },
+  {
+    "legacyIndex": 447,
+    "legacyNumber": 47,
+    "prompt": "What are two benefits of using the PortFast feature? (Choose two)",
+    "options": [
+      "Enabled interfaces are automatically placed in listening state",
+      "Enabled interfaces wait 50 seconds before they move to the forwarding state",
+      "Enabled interfaces never generate topology change notifications.",
+      "Enabled interfaces that move to the learning state generate switch topology change notifications",
+      "Enabled interfaces come up and move to the forwarding state immediately"
+    ],
+    "answer": [
+      2,
+      4
+    ],
+    "type": "multi",
+    "explanation": "Portfast does two things for us:\n+ Interfaces with portfast enabled that come up will go to forwarding mode immediately, the interface will\nskip the listening and learning state.\n+ A switch will never generate a topology change notification for an interface that has portfast enabled."
+  },
+  {
+    "legacyIndex": 448,
+    "legacyNumber": 48,
+    "prompt": "A network administrator is asked to configure VLANs 2, 3 and 4 for a new implementation. Some ports must\nbe assigned to the new VLANs with unused remaining. Which action should be taken for the unused ports?",
+    "options": [
+      "configure port in the native VLAN",
+      "configure ports in a black hole VLAN",
+      "configure in a nondefault native VLAN",
+      "configure ports as access ports"
+    ],
+    "answer": 1,
+    "explanation": "Black hole VLAN is a VLAN that is unused where you put unused ports in or hosts that you don’t want to be\non the network."
+  },
+  {
+    "legacyIndex": 449,
+    "legacyNumber": 49,
+    "prompt": "Which function is performed by DHCP snooping?",
+    "options": [
+      "rate-limits certain traffic",
+      "listens to multicast traffic for packet forwarding",
+      "provides DDoS mitigation",
+      "propagates VLAN information between switches"
+    ],
+    "answer": 0,
+    "explanation": "We can use the command “ip dhcp snooping limit rate” to set the number of DHCP request that can be\nreceived in a second."
+  },
+  {
+    "legacyIndex": 450,
+    "legacyNumber": 50,
+    "prompt": "Which plane is centralized by an SDN controller?",
+    "options": [
+      "data plane",
+      "management plane",
+      "control plane",
+      "services plane"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 451,
+    "legacyNumber": 51,
+    "prompt": "What are two similarities between UTP Cat 5e and Cat 6a cabling? (Choose two)",
+    "options": [
+      "Both support runs of up to 100 meters.",
+      "Both support runs of up to 55 meters.",
+      "Both operate at a frequency of 500 MHz.",
+      "Both support speeds of at least 1 Gigabit.",
+      "Both support speeds up to 10 Gigabit."
+    ],
+    "answer": [
+      0,
+      3
+    ],
+    "type": "multi",
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 452,
+    "legacyNumber": 52,
+    "prompt": "Refer to the exhibit.\n\n R3#show ip ospf neighbor\n\n Neighbor ID     Pri    State             Dead Time   Address        Interface\n 1.1.1.1            1   2WAY/DROTHER      00:00:35    172.16.10.1    GigabitEthernet0/0\n\n 2.2.2.2            1   2WAY/DROTHER     00:00:35     172.16.10.2       GigabitEthernet0/0\n 4.4.4.4            1   FULL/BDR         00:00:35     172.16.10.4       GigabitEthernet0/0\n 5.5.5.5            1   FULL/DR          00:00:35     172.16.10.5       GigabitEthernet0/0\n\nR5 is the current DR on the network, and R4 is the BDR. Their interfaces are flapping, so a network engineer\nwants the OSPF network to elect a different DR and BDR. Which set of configurations must the engineer\nimplement?\n\n Option A                              Option B\n R4(config)#interface gi0/0            R2(config)#interface gi0/0\n R4(config-if)#ip ospf priority        R2(config-if)#ip ospf priority\n 20                                    259\n R5(config)#interface gi0/0            R3(config)#interface gi0/0\n R5(config-if)#ip ospf priority        R3(config-if)#ip ospf priority\n 10                                    256\n\n Option C                              Option D\n R3(config)#interface gi0/0            R5(config)#interface gi0/0\n R3(config-if)#ip ospf priority        R5(config-if)#ip ospf priority\n 255                                   120\n R2(config)#interface gi0/0            R4(config)#interface gi0/0\n R2(config-if)#ip ospf priority        R4(config-if)#ip ospf priority\n 240                                   110",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 2,
+    "explanation": "We need to increase the priority of R1, R2 or R3 router so that they would win the DR/BDR election. The\npriority determines which routers are selected as the area’s DR and BDR, and can range from 0 to 255 ->\nOption B is not correct while Option C is correct."
+  },
+  {
+    "legacyIndex": 453,
+    "legacyNumber": 53,
+    "prompt": "Refer to the exhibit.\n\n R1#show ip route\n Codes: C - connected, S - static, R - RIP, M - mobile, B - BGP\n\n           D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area\n\n           N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2\n\n           E1 - OSPF external type 1, E2 - OSPF external type 2\n\n           i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2\n\n           ia - IS-IS inter area, * - candidate default, U - per-user static route\n\n           o - ODR, P - periodic downloaded static route\n\n Gateway of last resort is 192.168.30.10 to network 0.0.0.0\n\n         192.168.30.0/29 is subnetted, 2 subnets\n\n C         192.168.30.0 is directly connected, FastEthernet0/0\n C         192.168.30.8 is directly connected, Serial0/0.1\n\n         192.168.10.0/24 is variably subnetted, 2 subnets, 2 masks\n\n O IA      192.168.10.32/28 [110/193] via 192.168.30.10, 00:11:34, Serial0/0.1\n O IA      192.168.10.0/27 [110/192] via 192.168.30.10, 00:11:34, Serial0/0.1\n\n         192.168.20.0/30 is subnetted, 1 subnets\n\n O IA      192.168.20.0 [110/128] via 192.168.30.10, 00:11:34, Serial0/0.1\n\n         192.168.50.0/32 is subnetted, 1 subnets\n\n C         192.168.50.1 is directly connected, Loopback0\n O*IA 0.0.0.0/0 [110/84] via 192.168.30.10, 00:11:21, Serial0/0.1\n\nWhat is the metric of the route to the 192.168.10.33/28 subnet?",
+    "options": [
+      "84",
+      "110",
+      "128",
+      "192",
+      "193"
+    ],
+    "answer": 4,
+    "explanation": "From the line “O IA 192.168.10.32/28 [110/193] via 192.168.30.10, 00:11:34, Serial0/0.1″, the metric is\nthe second parameter in square bracket."
+  },
+  {
+    "legacyIndex": 454,
+    "legacyNumber": 54,
+    "prompt": "Drag and drop the AAA terms from the left onto the description on the right.",
+    "type": "match",
+    "items": [
+      "tracks activity",
+      "verifies access rights",
+      "updates session attributes",
+      "verifies identity"
+    ],
+    "choices": [
+      "accounting",
+      "authorization",
+      "CoA",
+      "authentication"
+    ],
+    "answer": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "explanation": "AAA stands for Authentication, Authorization and Accounting.\n\n+ Authentication: Specify who you are (usually via login username & password)\n+ Authorization: Specify what actions you can do, what resource you can access\n+ Accounting: Monitor what you do, how long you do it (can be used for billing and auditing)\n\nRADIUS CoA (Change of Authorization) is a feature that allows a RADIUS server to adjust an active client\nsession."
+  },
+  {
+    "legacyIndex": 455,
+    "legacyNumber": 55,
+    "prompt": "Which access layer threat-mitigation technique provides security based on identity?",
+    "options": [
+      "using a non-default native VLAN",
+      "Dynamic ARP Inspection",
+      "DHCP snooping",
+      "802.1x"
+    ],
+    "answer": 3,
+    "explanation": "802.1X is a network authentication protocol that opens ports for network access when an organization\nauthenticates a user’s identity and authorizes them for access to the network. The user’s identity is\ndetermined based on their credentials or certificate, which is confirmed by the RADIUS server."
+  },
+  {
+    "legacyIndex": 456,
+    "legacyNumber": 1,
+    "prompt": "Which communication interaction takes place when a southbound API is used?",
+    "options": [
+      "between the SDN controller and PCs on the network",
+      "between the SDN controller and switches and routers on the network",
+      "between the SDN controller and services and applications on the network",
+      "between network applications and switches and routers on the network"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 457,
+    "legacyNumber": 2,
+    "prompt": "What is a similarly between 1000BASE-LX and 1000BASE-T standards?",
+    "options": [
+      "Both use the same data-link header and trailer formats",
+      "Both cable types support LP connectors",
+      "Both cable types support RJ-45 connectors",
+      "Both support up to 550 meters between nodes"
+    ],
+    "answer": 0,
+    "explanation": "1000BASE-T standard only supports up to 100 meters while 1000BASE-LX is a standard which uses a 1,270-\n1,355 nm laser for longer wavelength. It has a distance capability of up to 5 kilometers over a Single-mode\nfiber -> Answer D is not correct.\n\n1000BASE-LX is an optical fiber Gigabit Ethernet standard so it does not support RJ-45 connectors directly ->\nAnswer C is not correct.\n\n1000BASE-LX only support LC connectors so answer B is not correct."
+  },
+  {
+    "legacyIndex": 458,
+    "legacyNumber": 3,
+    "prompt": "How does WPA3 improve security?",
+    "options": [
+      "It uses SAE for authentication.",
+      "It uses a 4-way handshake for authentication.",
+      "It uses RC4 for encryption.",
+      "It uses TKIP for encryption."
+    ],
+    "answer": 0,
+    "explanation": "WPA3 incorporates Simultaneous Authentication of Equals (SAE), a secure key establishment protocol\nbetween devices. By using a stronger ‘handshaking’ protocol, users should be protected from password\nguessing attempts. For home networks, that equates to password-based authentication that’s more resilient,\neven if users choose unsophisticated passwords."
+  },
+  {
+    "legacyIndex": 459,
+    "legacyNumber": 4,
+    "prompt": "Which mode must be set for APs to communicate to a Wireless LAN Controller using the Control and\nProvisioning of Wireless Access Points (CAPWAP) protocol?",
+    "options": [
+      "bridge",
+      "route",
+      "autonomous",
+      "lightweight"
+    ],
+    "answer": 3,
+    "explanation": "Cisco Access Points (APs) can operate in one of two modes: autonomous or lightweight\n+ Autonomous: self-sufficient and standalone. Used for small wireless networks.\n+ Lightweight: A Cisco lightweight AP (LAP) has to join a Wireless LAN Controller (WLC) to function. LAP and\nWLC communicate with each other via a logical pair of CAPWAP tunnels."
+  },
+  {
+    "legacyIndex": 460,
+    "legacyNumber": 5,
+    "prompt": "Refer to the exhibit.\n\nWhich change to the configuration on Switch2 allows the two switches to establish an EtherChannel?",
+    "options": [
+      "Change the protocol to EtherChannel mode on",
+      "Change the LACP mode to active",
+      "Change the LACP mode to desirable",
+      "Change the protocol to PAgP and use auto mode"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 461,
+    "legacyNumber": 6,
+    "prompt": "Where does wireless authentication happen?",
+    "options": [
+      "SSID",
+      "radio",
+      "band",
+      "Layer 2"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 462,
+    "legacyNumber": 7,
+    "prompt": "What is the path for traffic sent from one user workstation to another workstation on a separate switch in a\nthree-layer architecture model?",
+    "options": [
+      "access – core – distribution – access",
+      "access – distribution – distribution – access",
+      "access – core – access",
+      "access -distribution – core – distribution – access"
+    ],
+    "answer": 1,
+    "explanation": "The Distribution Layer is located between the access and core layers. The purpose of this layer is to provide\nboundary definition by implementing access lists and other filters. Therefore the Distribution Layer defines\npolicy for the network. Distribution Layer include high-end layer 3 switches. Distribution Layer ensures that\npackets are properly routed between subnets and VLANs in your enterprise."
+  },
+  {
+    "legacyIndex": 463,
+    "legacyNumber": 8,
+    "prompt": "What are two benefits of FHRPs? (Choose two)",
+    "options": [
+      "They prevent loops in the Layer 2 network.",
+      "They allow encrypted traffic.",
+      "They are able to bundle multiple ports to increase bandwidth",
+      "They enable automatic failover of the default gateway.",
+      "They allow multiple devices to serve as a single virtual gateway for clients in the network"
+    ],
+    "answer": [
+      3,
+      4
+    ],
+    "type": "multi",
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 464,
+    "legacyNumber": 9,
+    "prompt": "What is the purpose of an SSID?",
+    "options": [
+      "It provides network security",
+      "It differentiates traffic entering access points",
+      "It identities an individual access point on a WLAN",
+      "It identifies a WLAN"
+    ],
+    "answer": 3,
+    "explanation": "The SSID is a unique identifier that wireless networking devices use to establish and maintain wireless\nconnectivity. Multiple access point/bridges on a network or sub-network can use the same SSID (->\nTherefore answer C is not correct). SSIDs are case sensitive and can contain up to 32 alphanumeric\ncharacters.\n\nThe SSID is a unique token that identifies an 802.11 wireless network. It is used by wireless devices to\nidentify a network and to establish and maintain wireless connectivity."
+  },
+  {
+    "legacyIndex": 465,
+    "legacyNumber": 10,
+    "prompt": "What are two characteristics of an SSID? (Choose two)",
+    "options": [
+      "It can be hidden or broadcast in a WLAN",
+      "It uniquely identifies an access point in a WLAN",
+      "It uniquely identifies a client in a WLAN",
+      "It is at most 32 characters long",
+      "It provides secured access to a WLAN"
+    ],
+    "answer": [
+      0,
+      3
+    ],
+    "type": "multi",
+    "explanation": "The SSID is a unique identifier that wireless networking devices use to establish and maintain wireless\nconnectivity. The SSID can consist of up to 32 alphanumeric, case-sensitive, characters.\n\nWe can hide a SSID by choosing “Disabled” in the Basic Wireless Settings/Wireless/SSID Broadcast section."
+  },
+  {
+    "legacyIndex": 466,
+    "legacyNumber": 11,
+    "prompt": "In QoS, which prioritization method is appropriate for interactive voice and video?",
+    "options": [
+      "expedited forwarding",
+      "traffic policing",
+      "round-robin scheduling",
+      "low-latency queuing"
+    ],
+    "answer": 3,
+    "explanation": "Low Latency Queuing (LLQ) adds strict priority to the CBWFQ and allows delay sensitive data (Voice and\nVideo) to be dequeued and sent before lower priority packets. This practice gives delay sensitive data\npreferential treatment over other traffic.\n\nNote: The Expedited Forwarding (EF) model is used to provide resources to latency (delay) sensitive real-\ntime, interactive traffic and it is suitable to use with voice and video traffic but it is not considered a\n“prioritization method”."
+  },
+  {
+    "legacyIndex": 467,
+    "legacyNumber": 12,
+    "prompt": "An engineer is configuring data and voice services to pass through the same port. The designated switch\ninterface fastethernet0/1 must transmit packets using the same priority for data when they are received from\nthe access port of the IP phone. Which configuration must be used?",
+    "options": [
+      "interface fastethernet0/1\nswitchport priority extend cos 7",
+      "interface fastethernet0/1\nswitchport voice vlan untagged",
+      "interface fastethernet0/1\nswitchport voice vlan dot1p",
+      "interface fastethernet0/1\nswitchport priority extend trust"
+    ],
+    "answer": 3,
+    "explanation": "The command “switchport priority extend cos 7” sets the IP phone port to override the priority received from\nthe PC or the attached device (7 is the highest priority).\n\nThe command “switchport priority extend trust” tells the Cisco IP Phone to trust the CoS value of the\nconnected PC without remark all packets sent form PC to CoS 0, by default."
+  },
+  {
+    "legacyIndex": 468,
+    "legacyNumber": 13,
+    "prompt": "Which port type supports the spanning-tree portfast command without additional configuration?",
+    "options": [
+      "access ports",
+      "Layer 3 main interfaces",
+      "Layer 3 subinterfaces",
+      "trunk ports"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 469,
+    "legacyNumber": 14,
+    "prompt": "What is a syslog facility?",
+    "options": [
+      "host that is configured for the system to send log messages",
+      "password that authenticates a Network Management System to receive log messages",
+      "group of log messages associated with the configured severity level",
+      "set of values that represent the processes that can generate a log message"
+    ],
+    "answer": 3,
+    "explanation": "System logs are the product of a communications protocol (RFC 5424) for transmitting event messages and\nalerts across an IP network. Facility is defined by the syslog protocol, and provides a rough clue of where in a\nsystem the message originated."
+  },
+  {
+    "legacyIndex": 470,
+    "legacyNumber": 15,
+    "prompt": "What are two characteristics of a public cloud implementation? (Choose two)",
+    "options": [
+      "It is owned and maintained by one party, but it is shared among multiple organizations",
+      "It enables an organization to fully customize how it deploys network resources",
+      "It provides services that are accessed over the Internet",
+      "It is a data center on the public Internet that maintains cloud services for only one company",
+      "It supports network resources from a centralized third-party provider and privately-owned virtual resources"
+    ],
+    "answer": [
+      0,
+      2
+    ],
+    "type": "multi",
+    "explanation": "Public clouds are managed by a third-party cloud provider. Public cloud computing resources are shared\namong multiple customers, unlike private clouds."
+  },
+  {
+    "legacyIndex": 471,
+    "legacyNumber": 16,
+    "prompt": "Which type of traffic is sent with pure IPsec?",
+    "options": [
+      "broadcast packets from a switch that is attempting to locate a MAC address at one of several remote sites",
+      "multicast traffic from a server at one site to hosts at another location",
+      "spanning-tree updates between switches that are at two different sites",
+      "unicast messages from a host at a remote site to a server at headquarters"
+    ],
+    "answer": 3,
+    "explanation": "Pure IPSec configuration (no GRE tunnel) does not support multicast or broadcast traffic. Spanning-tree\nupdates use multicast too. -> Answer A, answer B and answer C are not correct."
+  },
+  {
+    "legacyIndex": 472,
+    "legacyNumber": 17,
+    "prompt": "What prevents a workstation from receiving a DHCP address?",
+    "options": [
+      "DTP",
+      "STP",
+      "VTP",
+      "802.10"
+    ],
+    "answer": 1,
+    "explanation": "STP can prevent DHCP clients from getting an IP address because the port doesn’t start forwarding traffic\nuntil STP goes into the forwarding state."
+  },
+  {
+    "legacyIndex": 473,
+    "legacyNumber": 18,
+    "prompt": "What is a capability of FTP in network management operations?",
+    "options": [
+      "uses separate control and data connections to move files between server and client",
+      "devices are directly connected and use UDP to pass file information",
+      "encrypts data before sending between data resources",
+      "offers proprietary support at the session layer when transferring data"
+    ],
+    "answer": 0,
+    "explanation": "There are actually two ports associated with FTP: TCP 20 and 21. FTP creates a virtual connection over TCP\nport 21 for control information, and then it creates a separate TCP connection on port 20 for data transfers."
+  },
+  {
+    "legacyIndex": 474,
+    "legacyNumber": 19,
+    "prompt": "Refer to the exhibit.\n\nA network engineer is in the process of establishing IP connectivity between two sites. Routers R1 and R2 are\npartially configured with IP addressing. Both routers have the ability to access devices on their respective\nLANs. Which command set configures the IP connectivity between devices located on both LANs in each site?",
+    "options": [
+      "R1\nip route 0.0.0.0 0.0.0.0 209.165.200.225\nR2\nip route 0.0.0.0 0.0.0.0 209.165.200.226",
+      "R1\nip route 0.0.0.0 0.0.0.0 209.165.200.226\nR2\nip route 0.0.0.0 0.0.0.0 209.165.200.225",
+      "R1\nip route 192.168.1.0 255.255.255.0 GigabitEthernet0/0\nR2\nip route 10.1.1.1 255.255.255.0 GigabitEthernet0/0",
+      "R1\nip route 192.168.1.1 255.255.255.0 GigabitEthernet0/1\nR2\nip route 10.1.1.1 255.255.255.0 GigabitEthernet0/1"
+    ],
+    "answer": 1,
+    "explanation": "On R1, by using the default route (“ip route 0.0.0.0 0.0.0.0 209.165.200.226”), we tell R1 to send all\nunknown destination packets to R2 so all packets with destination to 10.1.1.0/24 will be forwarded to R2.\nThe same thing is configured on R2 so this configuration works well in this question.\n\nWe cannot type the command “ip route 10.1.1.1 255.255.255.0 …” which causes an “inconsistent mask and\naddress” error as shown in the figure below (while the command “ip route 10.1.1.0 255.255.255.0 …” is\naccepted):"
+  },
+  {
+    "legacyIndex": 475,
+    "legacyNumber": 20,
+    "prompt": "Which type of organization should use a collapsed-core architecture?",
+    "options": [
+      "large and requires a flexible, scalable network design",
+      "small and needs to reduce networking costs currently",
+      "large and must minimize downtime when hardware fails",
+      "small but is expected to grow dramatically in the near future"
+    ],
+    "answer": 1,
+    "explanation": "The three-tier hierarchical design maximizes performance, network availability, and the ability to scale the\nnetwork design. Most small enterprise campus’ do not grow significantly larger over time, and most small\nenterprise campus are small enough to be well served by a two-tier hierarchical design, where the core and\ndistribution layers are collapsed into one layer. The primary motivation for the collapsed core design is\nreducing network cost, while maintaining most of the benefits of the three-tier hierarchical model."
+  },
+  {
+    "legacyIndex": 476,
+    "legacyNumber": 21,
+    "prompt": "Refer to the exhibit.\n\nWhich IPv6 configuration is required for R17 to successfully ping the WAN interface on R18?\n\n Option A                                          Option B\n R17#                                              R17#\n !                                                 !\n no ip domain lookup                               no ip domain lookup\n ip cef                                            ip cef\n ipv6 unicast-routing                              ipv6 unicast-routing\n !                                                 !\n interface FastEthernet0/0                         interface FastEthernet0/0\n no ip address                                     no ip address\n duplex auto                                       duplex auto\n speed auto                                        speed auto\n ipv6 address 2001:DB8:2::201/64                   ipv6 address 2001:DB8:2::201/64\n !                                                 !\n interface FastEthernet1/0                         interface FastEthernet1/0\n no ip address                                     no ip address\n duplex auto                                       duplex auto\n speed auto                                        speed auto\n ipv6 address 2001:DB8:3::201/64                   ipv6 address 2001:DB8:3::201/64\n !                                                 !\n\n no cdp log mismatch duplex                        no cdp log mismatch duplex\n ipv6 route 2001:DB8:4::/64                        ipv6 route 2001:DB8:4::/64\n 2001:DB8:3::301                                   2001:DB8:2::201\n\n                                                   Option D\n Option C\n                                                   R17#\n R17#\n                                                   !\n !\n                                                   no ip domain lookup\n no ip domain lookup\n                                                   ip cef\n ip cef\n                                                   ipv6 cef\n !\n                                                   !\n interface FastEthernet0/0\n                                                   interface FastEthernet0/0\n no ip address\n                                                   no ip address\n duplex auto\n                                                   duplex auto\n speed auto\n                                                   speed auto\n ipv6 address 2001:DB8:3::201/64\n                                                   ipv6 address 2001:DB8:2::201/64\n !\n                                                   !\n interface FastEthernet1/0\n                                                   interface FastEthernet1/0\n no ip address\n                                                   no ip address\n duplex auto\n                                                   duplex auto\n speed auto\n                                                   speed auto\n ipv6 address 2001:DB8:2::201/64\n                                                   ipv6 address 2001:DB8:3::201/64\n !\n                                                   !\n no cdp log mismatch duplex\n                                                   no cdp log mismatch duplex\n ipv6 route 2001:DB8:4::/64\n                                                   ipv6 route 2001:DB8:4::/64\n 2001:DB8:5::101\n                                                   2001:DB8:4::302",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 0,
+    "explanation": "First of all we have to enable IPv6 routing on a Cisco router using the ipv6 unicast-routing global\nconfiguration command. This command globally enables IPv6 and must be the first command executed on\nthe router -> Only option A and B are correct.\n\nThe difference between option A and B is the ipv6 route … command. To send packets from R17 to R18, we\nhave to specify the next-hop-ipv6-address in this command. In this case the next-hop-ipv6-address is the\nIPv6 on R18 (which is 2001:DB8:4::/64 2001:DB8:3::301), not R17 so only answer A is correct."
+  },
+  {
+    "legacyIndex": 477,
+    "legacyNumber": 22,
+    "prompt": "Drag and drop the lightweight access point operation modes from the left onto the descriptions on the right.",
+    "type": "match",
+    "items": [
+      "allows for packet captures of wireless traffic",
+      "allows the access point to communicate with the WLC over a WAN link",
+      "receive only mode which acts as a dedicated sensor for RFID and IDS",
+      "preferred for connecting access points in a mesh environment",
+      "transmits normally on one channel and monitors other channels for noise and interference",
+      "monitor for rogue APs, does not handle data at all"
+    ],
+    "choices": [
+      "sniffer mode",
+      "Flexconnect mode",
+      "monitor mode",
+      "bridge mode",
+      "local mode",
+      "rogue detector mode"
+    ],
+    "answer": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "explanation": "You can have the WLCs across the WAN from the APs. LWAPP/CAPWAP works over a WAN when the LAPs are\nconfigured in Remote Edge AP (REAP) or Hybrid Remote Edge AP(H-REAP) mode. Either of these modes\nallows the control of an AP by a remote controller that is connected via a WAN link. Traffic is bridged onto the\nLAN link locally, which avoids the need to unnecessarily send local traffic over the WAN link.\n\nNote: FlexConnect, formerly known as Hybrid Remote Edge AP (H-REAP).\n\nWhen you configure the Bridge mode, the AP by default reboots as a Mesh AP (MAP) and tries to register to\nthe WLC via the radio backhaul or the wired backhaul.\n\nLocal mode (default mode): measures noise floor and interference, and scans for intrusion detection (IDS)\nevents every 180 seconds on unused channels\n\nSniffer mode: run as a sniffer and captures and forwards all the packets on a particular channel to a remote\nmachine where you can use protocol analysis tool (Wireshark, Airopeek, etc) to review the packets and\ndiagnose issues.\n\nMonitor mode: does not transmit or serve clients at all. It acts like a dedicated sensor for location-based\nservices (LBS), rogue AP detection, and Checks Intrusion Detection System (IDS). In this mode, AP will not\nbroadcast an SSID so clients are unable to connect to it.\n\nRogue detector mode: monitor for rogue APs. It does not handle data at all."
+  },
+  {
+    "legacyIndex": 478,
+    "legacyNumber": 23,
+    "prompt": "Refer to the exhibit.\n\nBetween which zones do wireless users expect to experience intermittent connectivity?",
+    "options": [
+      "between zones 1 and 2",
+      "between zones 2 and 5",
+      "between zones 3 and 4",
+      "between zones 3 and 6"
+    ],
+    "answer": 2,
+    "explanation": "The 2.4 GHz band is subdivided into multiple channels each allotted 22 MHz bandwidth and separated from\nthe next channel by 5 MHz.\n-> A best practice for 802.11b/g/n WLANs requiring multiple APs is to use non-overlapping channels such as\n1, 6, and 11.\n\nIf you use channels that overlap, RF interference can occur.\n\nIf other Wi-Fi sources such as neighboring wireless access points are using the same wireless channel, this\nmay cause intermittent connectivity issues.\n\nIn this question, both Zone 3 & Zone 4 use Channel 11 so interference can occur."
+  },
+  {
+    "legacyIndex": 479,
+    "legacyNumber": 24,
+    "prompt": "Which device permits or denies network traffic based on a set of rules?",
+    "options": [
+      "access point",
+      "switch",
+      "wireless controller",
+      "firewall"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 480,
+    "legacyNumber": 25,
+    "prompt": "Drag the descriptions of device management from the left onto the types of device management on the right.",
+    "type": "match",
+    "items": [
+      "uses machine learning to identify and resolve issues",
+      "uses an inventory function to store device details in the database",
+      "collects statistics and telemetry data from multiple network devices and provides a single view of network health and issues",
+      "requires manual troubleshooting",
+      "requires configuration on a device-by-device basis",
+      "networking functions are implemented primarily on dedicated devices"
+    ],
+    "choices": [
+      "Cisco DNA Center Device Management",
+      "Traditional Device Management"
+    ],
+    "answer": [
+      0,
+      0,
+      0,
+      1,
+      1,
+      1
+    ],
+    "explanation": "Unlike SDN, traditional networking has two main characteristics. First, traditional networking functions are\nmainly implemented in dedicated devices. In this case, “dedicated devices” refer to one or more switches\n(e.g. 10gb switch), routers, and application delivery controllers. Second, most of the functionality in\ntraditional networking devices is implemented in dedicated hardware. ASIC (Application Specific Integrated\nCircuit) is commonly used for this purpose. However, this traditional hardware-centric networking is\naccompanied by many limitations.\n\nThe Inventory function retrieves and saves details, such as host IP addresses, MAC addresses, and network\nattachment points about devices in its database.\nThe Inventory feature can also work with the Device Controllability feature to configure the required network\nsettings on devices, if these settings are not already present on the device.\n\nAfter the initial discovery, Cisco DNA Center maintains the inventory by polling the devices at regular\nintervals."
+  },
+  {
+    "legacyIndex": 481,
+    "legacyNumber": 26,
+    "prompt": "What is a function of a Layer 3 switch?",
+    "options": [
+      "move frames between endpoints limited to IP addresses",
+      "transmit broadcast traffic when operating in Layer 3 mode exclusively",
+      "forward Ethernet frames between VLANs using only MAC addresses",
+      "flood broadcast traffic within a VLAN"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 482,
+    "legacyNumber": 27,
+    "prompt": "An engineer must configure the IPv6 address 2001:0db8:0000:0000:0700:0003:400F:572B on the serial0/0\ninterface of the HQ router and wants to compress it for easier configuration. Which command must be issued\non the router interface?",
+    "options": [
+      "ipv6 address 2001:db8::700:3:400F:572B",
+      "ipv6 address 2001:db8:0::700:3:4F:572B",
+      "ipv6 address 2001:Odb8::7:3:4F:572B",
+      "ipv6 address 2001::db8:0000::700:3:400F:572B"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 483,
+    "legacyNumber": 28,
+    "prompt": "What is an appropriate use for private IPv4 addressing?",
+    "options": [
+      "on the public-facing interface of a firewall",
+      "to allow hosts inside to communicate in both directions with hosts outside the organization",
+      "on internal hosts that stream data solely to external resources",
+      "on hosts that communicates only with other internal hosts"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 484,
+    "legacyNumber": 29,
+    "prompt": "Which 802.11 frame type is indicated by a probe response after a client sends a probe request?",
+    "options": [
+      "action",
+      "management",
+      "control",
+      "data"
+    ],
+    "answer": 1,
+    "explanation": "There are three main types of 802.11 frames: the Data Frame, the Management Frame and the Control\nFrame. Association Response belongs to Management Frame. Association response is sent in response to an\nassociation request."
+  },
+  {
+    "legacyIndex": 485,
+    "legacyNumber": 30,
+    "prompt": "What is recommended for the wireless infrastructure design of an organization?",
+    "options": [
+      "group access points together to increase throughput on a given channel",
+      "configure the first three access points are configured to use channels 1, 6, and 11",
+      "include a least two access points on nonoverlapping channels to support load balancing",
+      "assign physically adjacent access points to the same Wi-Fi channel"
+    ],
+    "answer": 1,
+    "explanation": "The 2.4 GHz band is subdivided into multiple channels each allotted 22 MHz bandwidth and separated from\nthe next channel by 5 MHz.\n-> A best practice for 802.11b/g/n WLANs requiring multiple APs is to use non-overlapping channels such as\n1, 6, and 11.\n\nIf you use channels that overlap, RF interference can occur."
+  },
+  {
+    "legacyIndex": 486,
+    "legacyNumber": 31,
+    "prompt": "Refer to the exhibit.\n\nFor security reasons, automatic neighbor discovery must be disabled on the R5 Gi0/1 interface.\n\nThese tasks must be completed:\n* Disable all neighbor discovery methods on R5 interface Gi0/1.\n* Permit neighbor discovery on R5 interface Gi0/2.\n* Verify there are no dynamically learned neighbors on R5 interface Gi0/1.\n* Display the IP address of R6’s interface Gi0/2.\n\nWhich configuration must be used?\n\n Option A\n                                 Option B\n R5(config)#int Gi0/1\n                                 R5(config)#int Gi0/1\n R5(config-if)#no cdp\n                                 R5(config-if)#no cdp run\n enable\n                                 R5(config-if)#exit\n R5(config-if)#exit\n                                 R5(config)#lldp run\n R5(config)#lldp run\n                                 R5(config)#cdp enable\n R5(config)#no cdp run\n                                 R5#sh cdp neighbor\n R5#sh cdp neighbor detail\n                                 R5#sh lldp neighbor\n R5#sh lldp neighbor\n\n Option C                        Option D\n R5(config)#int Gi0/1            R5(config)#int Gi0/1\n R5(config-if)#no cdp            R5(config-if)#no cdp\n enable                          enable\n R5(config-if)#exit              R5(config-if)#exit\n R5(config)#no lldp run          R5(config)#no lldp run\n R5(config)#cdp run              R5(config)#cdp run\n R5#sh cdp neighbor detail       R5#sh cdp neighbor\n R5#sh lldp neighbor             R5#sh lldp neighbor",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 2,
+    "explanation": "Although CDP is a Layer 2 protocol but we can check the neighbor IP address with the “show cdp neighbor\ndetail” command.\n\nOne of the task in this question is “display the IP address of R6’s interface Gi0/2” so we must use “show cdp\nneighbor detail” command -> Only Option A and Option C are correct.\n\nIf we want to disable LLDP on an interface we can use two commands under interface mode:\nno lldp transmit: Disallows sending LLDP packets on the interface.\nno lldp receive: Disallows receiving LLDP packets on the interface.\n\nBut these two commands are not used in this question so we have to disable LLDP globally (with command\n“no lldp run”) so that only CDP is enabled on R5 interface Gi0/2 -> Only Option C is correct."
+  },
+  {
+    "legacyIndex": 487,
+    "legacyNumber": 32,
+    "prompt": "Which type of API allows SDN controllers to dynamically make changes to the network?",
+    "options": [
+      "northbound API",
+      "southbound API",
+      "SOAP API",
+      "REST API"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 488,
+    "legacyNumber": 33,
+    "prompt": "What is a DNS lookup operation?",
+    "options": [
+      "serves requests over destination port 53",
+      "DNS server pings the destination to verify that it is available",
+      "DNS server forwards the client to an alternate IP address when the primary IP is down",
+      "responds to a request for IP address to domain name resolution to the DNS server"
+    ],
+    "answer": 0,
+    "explanation": "A DNS lookup, or DNS record lookup, is the process through which human-readable domain names\n(www.9tut.com) are translated into a computer-readable IP address (108.167.172.112).\n\nA full example of DNS is described below:\nWhen you attempt to go to a domain name such as 9tut.com, your browser will instruct your computer to do\na DNS lookup on that domain name. This DNS lookup will query a DNS resolver (for example Google at\n8.8.8.8). Once the resolver responds, the computer will usually choose the first IP in the response and use\nthat for the connection.\n\nThe most frequently used port for DNS is UDP 53 but as time progresses, DNS will reply on TCP Port 53 more\nheavily.\n\nNote: Answer D is not correct as “it responds to a request for domain name to IP address resolution”, not\nvice versa."
+  },
+  {
+    "legacyIndex": 489,
+    "legacyNumber": 34,
+    "prompt": "Refer to the exhibit.\n\nRefer to the exhibit. The access list denies Telnet access from PC-1 to RTR-1 and should allow it from other\nhosts. PC-2 gets “% Connection refused by remote host” when trying to Telnet. Without permitting Telnet\nfrom PC-1, what must be done to allow the traffic?",
+    "options": [
+      "Add the access-list 10 permit any command to the configuration",
+      "Remove the access-class 10 in command from line vty 0 4.",
+      "Add the ip access-group 10 out command to interface g0/0.",
+      "Remove the password command from line vty 0 4."
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 490,
+    "legacyNumber": 35,
+    "prompt": "Drag and drop the TCP/IP protocols from the left onto their primary transmission protocols on the right.",
+    "type": "match",
+    "items": [
+      "SMTP",
+      "HTTP",
+      "Telnet",
+      "DNS",
+      "SNMP",
+      "RTP"
+    ],
+    "choices": [
+      "TCP",
+      "UDP"
+    ],
+    "answer": [
+      0,
+      0,
+      0,
+      1,
+      1,
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 491,
+    "legacyNumber": 36,
+    "prompt": "Refer to the exhibit.\n\nThe DHCP server and clients are connected to the same switch. What is the next step to complete the DHCP\nconfiguration to allow clients on VLAN 1 to receive addresses from the DHCP server?",
+    "options": [
+      "Configure the ip dhcp snooping trust command on the interface that is connected to the DHCP server",
+      "Configure the ip dhcp relay information option command on the interface that is connected to the DHCP server",
+      "Configure the ip dhcp relay information option command on the interface that is connected to the DHCP client",
+      "Configure the ip dhcp snooping trust command on the interface that is connected to the DHCP client"
+    ],
+    "answer": 0,
+    "explanation": "We see from the output of the “show ip dhcp snooping statistics detail” command the packets “received on\nuntrusted ports = 32” so maybe the interface connected to DHCP Server is configured untrusted port.\nTherefore we have to configure the “ip dhcp snooping trust” command on this interface."
+  },
+  {
+    "legacyIndex": 492,
+    "legacyNumber": 37,
+    "prompt": "Which two components comprise part of a PKI? (Choose two)",
+    "options": [
+      "RSA token",
+      "clear-text password that authenticates connections",
+      "one of more CRLs",
+      "preshared key that authenticates connections",
+      "CA that grants certificates"
+    ],
+    "answer": [
+      2,
+      4
+    ],
+    "type": "multi",
+    "explanation": "PKI (or Public Key Infrastructure) is the framework of encryption and cybersecurity that protects\ncommunications between the server (your website) and the client (the users). Think about all the\ninformation, people, and services that your team communicates and works with. PKI is essential in building a\ntrusted and secure business environment by being able to verify and exchange data between various servers\nand users.\n\nThe components of a PKI include:\n+ public key\n+ private key\n+ Certificate Authority (CA)\n+ Certificate Store\n+ Certificate Revocation List (CRL)\n+ Hardware Security Module\n\nCertificate Authority (CA)\nThe CA generally handles all aspects of the certificate management for a PKI, including the phases of\ncertificate lifecycle management.\nA CA issues certificates to be used to confirm that the subject imprinted on the certificate is the owner of the\npublic key. In a PKI system, the client generates a public-private key pair. The public key and information to\nbe imprinted on the certificate are sent to the CA. The CA then creates a digital certificate consisting of the\nuser’s public key and certificate attributes. The certificate is signed by the CA with its private key.\n\nCertificate Revocation List (CRL)\nA CRL is a list of certificates that have been revoked by the CA that issued them before they were set to\nexpire. This is a helpful security feature if a device is stolen that contains a certificate. A RADIUS server only\nrejects a connection request from a device if the device’s certificate serial number is contained in the CRL.\nThe Certificate Authority is the one that maintains this list, and the RADIUS server periodically downloads\nthis list by sending a query to the CA. There are two types of CRLs: A Delta CRL and a Base CRL."
+  },
+  {
+    "legacyIndex": 493,
+    "legacyNumber": 38,
+    "prompt": "A network administrator is setting up a new IPv6 network using the 64-bit address\n2001:0EB8:00C1:2200:0001:0000:0000:0331/64. To simplify the configuration, the administrator has\ndecided to compress the address. Which IP address must the administrator configure?",
+    "options": [
+      "ipv6 address 2001:EB8:C1:2200:1:0000:331/64",
+      "ipv6 address 21:EB8:C1:2200:1::331/64",
+      "ipv6 address 2001:EB8:C1:22:1::331/64",
+      "ipv6 address 2001:EB8:C1:2200:1::331/64"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 494,
+    "legacyNumber": 39,
+    "prompt": "Refer to the exhibit.\n\nWhich command must be issued to enable a floating static default route on router A?",
+    "options": [
+      "ip route 0.0.0.0 0.0.0.0 192.168.2.1 10",
+      "ip route 0.0.0.0 0.0.0.0 192.168.1.2",
+      "ip route 0.0.0.0 0.0.0.0 192.168.1.2 10",
+      "ip default-gateway 192.168.2.1"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 495,
+    "legacyNumber": 40,
+    "prompt": "Refer to the exhibit.\n\nRouter R1 currently is configured to use R3 as the primary route to the Internet, and the route uses the\ndefault administrative distance settings. A network engineer must configure R1 so that it uses R2 as a\nbackup, but only if R3 goes down. Which command must the engineer configure on R1 so that it correctly\nuses R2 as a backup route, without changing the administrative distance configuration on the link to R3?",
+    "options": [
+      "ip route 0.0.0.0 0.0.0.0 g0/1 6",
+      "ip route 0.0.0.0 0.0.0.0 g0/1 1",
+      "ip route 0.0.0.0 0.0.0.0 209.165.201.5 10",
+      "ip route 0.0.0.0 0.0.0.0 209.165.200.226 1"
+    ],
+    "answer": 0,
+    "explanation": "R1 uses R3 as the primary route to the Internet so it may use either of these commands:\n\nR1(config)#ip route 0.0.0.0 0.0.0.0 209.165.201.5\nOR\nR1(config)#ip route 0.0.0.0 0.0.0.0 g0/2\n\nThe administrative distance (AD) of the first command is 1 while that of the second command is 0. Therefore\nwe have to choose a higher AD for our backup route. And the exit interface of the backup route is g0/1 or the\nnext-hop is 209.165.200.230."
+  },
+  {
+    "legacyIndex": 496,
+    "legacyNumber": 41,
+    "prompt": "Refer to the exhibit.\n\nAn engineer is updating the R1 configuration to connect a new server to the management network. The PCs\non the management network must be blocked from pinging the default gateway of the new server. Which\ncommand must be configured on R1 to complete the task?",
+    "options": [
+      "R1(config)#ip route 172.16.2.0 255.255.255.0 192.168.1.15",
+      "R1(config)#ip route 172.16.2.2 255.255.255.255 gi0/0",
+      "R1(config)#ip route 172.16.2.0 255.255.255.0 192.168.1.5",
+      "R1(config)#ip route 172.16.2.2 255.255.255.248 gi0/1"
+    ],
+    "answer": 1,
+    "explanation": "By only configuring static route to the host New Server, we also don’t allow PC1 & PC2 ping to R2 Gi0/0\n(default gateway of New Server)."
+  },
+  {
+    "legacyIndex": 497,
+    "legacyNumber": 42,
+    "prompt": "Refer to the exhibit.\n\nWhich plan must be implemented to ensure optimal QoS marking practices on this network?",
+    "options": [
+      "As traffic enters from the access layer on SW1 and SW2, trust all traffic markings",
+      "Trust the IP phone markings on SW1 and mark traffic entering SW2 at SW2",
+      "As traffic traverses MLS1 remark the traffic, but trust all markings at the access layer",
+      "Remark traffic as it traverses R1 and trust all markings at the access layer"
+    ],
+    "answer": 1,
+    "explanation": "“Classify, mark, and police as close to the traffic-sources as possible.” -> Answer C is not correct.\n\nAs a rule, it is not recommended to trust markings set by end users leveraging PCs or other endpoint\ndevices. End users can intentionally or unintentionally abuse QoS policies that trust markings of end devices.\nIf users and unclassified applications take advantage of the configured QoS policy as a result of trusting end\ndevices, this can result in easily starving priority queues with nonpriority traffic, ruining quality of service for\nreal-time applications.\n\n-> Answer A and answer D are not correct."
+  },
+  {
+    "legacyIndex": 498,
+    "legacyNumber": 43,
+    "prompt": "Drag and drop the Rapid PVST+ forwarding state actions from the left to the right. Not all actions are used.",
+    "type": "match",
+    "items": [
+      "BPDUs received are forwarded to the system module",
+      "The port in the forwarding state responds to network management messages",
+      "Switched frames received from other ports are advanced",
+      "Frames received from the attached segment are processed"
+    ],
+    "choices": [
+      "Correct position"
+    ],
+    "answer": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "explanation": "Forwarding State\nA LAN port in the forwarding state forwards frames. The LAN port enters the forwarding state from the\nlearning state. A LAN port in the forwarding state performs as follows:\nForwards frames received from the attached segment.\nForwards frames switched from another port for forwarding.\nIncorporates the end station location information into its address database.\nReceives BPDUs and directs them to the system module.\nProcesses BPDUs received from the system module.\nReceives and responds to network management messages.\n\nThe statement “BPDUs received from the system module are processed and transmitted” is not correct as\nRapid PVST+ does not “transmit”, only PVST does."
+  },
+  {
+    "legacyIndex": 499,
+    "legacyNumber": 44,
+    "prompt": "Refer to the exhibit.\n\n interface FastEthernet0/10\n description WAN_INTERFACE\n ip address 10.0.1.2 255.255.255.252\n ip access-group 100 in\n !\n interface FastEthernet0/1\n description LAN INTERFACE\n ip address 10.148.2.1 255.255.255.0\n duplex auto\n speed auto\n !\n ip forward-protocol nd\n !\n access-list 100 permit eigrp any any\n access-list 100 permit icmp any any\n access-list 100 permit tcp 10.149.3.0 0.0.0.255 host 10.0.1.2 eq\n 22\n access-list 100 permit tcp any any eq 80\n access-list 100 permit tcp any any eq 443\n access-list 100 deny ip any any log\nWhich configuration enables DHCP addressing for hosts connected to interface FastEthernet0/1 on router R4?",
+    "options": [
+      "interface FastEthernet0/1\nip helper-address 10.0.1.1\n!\naccess-list 100 permit tcp host 10.0.1.1 eq 67 host 10.148.2.1",
+      "interface FastEthernet0/0\nip helper-address 10.0.1.1\n!\naccess-list 100 permit host 10.0.1.1 host 10.148.2.1 eq bootps",
+      "interface FastEthernet0/0\nip helper-address 10.0.1.1\n!\naccess-list 100 permit udp host 10.0.1.1 eq bootps host 10.148.2.1",
+      "interface FastEthernet0/1\nip helper-address 10.0.1.1\n!\naccess-list 100 permit udp host 10.0.1.1 eq bootps host 10.148.2.1"
+    ],
+    "answer": 3,
+    "explanation": "The “ip helper-address” must be applied under the interface that receives the DHCP messages from the DHCP\nClient (LAN interface)\n\nAll DHCP packets are UDP so the ACL must allow UDP, not TCP so the ACL must be “access-list 100 permit\nudp …”."
+  },
+  {
+    "legacyIndex": 500,
+    "legacyNumber": 45,
+    "prompt": "Refer to the exhibit.\n\nWhich configuration allows routers R14 and R86 to form an OSPFv2 adjacency while acting as a central point\nfor exchanging OSPF information between routers?\n\n Option A                                   Option B\n R14#                                       R14#\n interface FastEthernet0/0                  interface FastEthernet0/0\n ip address 10.73.65.65                     ip address 10.73.65.65\n 255.255.255.252                            255.255.255.252\n ip ospf network broadcast                  ip ospf network broadcast\n ip ospf priority 0                         ip ospf priority 255\n ip mtu 1400                                ip mtu 1500\n\nrouter ospf 10\nrouter-id 10.10.1.14\nnetwork 10.10.1.14 0.0.0.0 area 0    router ospf 10\nnetwork 10.73.65.64 0.0.0.3 area 0   router-id 10.10.1.14\n                                     network 10.10.1.14 0.0.0.0 area 0\nR86#                                 network 10.73.65.64 0.0.0.3 area 0\ninterface Loopback0\nip address 10.10.1.86                R86#\n255.255.255.255                      interface FastEthernet0/0\n                                     ip address 10.73.65.66\ninterface FastEthernet0/0            255.255.255.252\nip address 10.73.65.66               ip ospf network broadcast\n255.255.255.252                      ip mtu 1500\nip ospf network broadcast\nip mtu 1500                          router ospf 10\n                                     router-id 10.10.1.86\nrouter ospf 10                       network 10.10.1.86 0.0.0.0 area 0\nrouter-id 10.10.1.86                 network 10.73.65.64 0.0.0.3 area 0\nnetwork 10.10.1.86 0.0.0.0 area 0\nnetwork 10.73.65.64 0.0.0.3 area 0\n\nOption C\nR14#                                 Option D\ninterface Loopback0\nip ospf 10 area 0                    R14#\n                                     interface FastEthernet0/0\ninterface FastEthernet0/0            ip address 10.73.65.65\nip address 10.73.65.65               255.255.255.252\n255.255.255.252                      ip ospf network broadcast\nip ospf network broadcast            ip ospf priority 255\nip ospf 10 area 0                    ip mtu 1500\nip mtu 1500\n                                     router ospf 10\nrouter ospf 10                       router-id 10.10.1.14\nip ospf priority 255                 network 10.10.1.14 0.0.0.0 area 0\nrouter-id 10.10.1.14                 network 10.73.65.64 0.0.0.3 area 0\nR86#                                 R86#\ninterface Loopback0                  interface FastEthernet0/0\nip ospf 10 area 0                    ip address 10.73.65.66\n                                     255.255.255.252\ninterface FastEthernet0/0            ip ospf network broadcast\nip address 10.73.65.66               ip mtu 1400\n255.255.255.252\nip ospf network broadcast            router ospf 10\nip ospf 10 area 0                    router-id 10.10.1.86\nip mtu 1500                          network 10.10.1.86 0.0.0.0 area 0\n                                     network 10.73.65.64 0.0.0.3 area 0\nrouter ospf 10\nrouter-id 10.10.1.86",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 1,
+    "explanation": "In Option A and Option D, the MTUs of two Fa0/0 interfaces are mismatched so they cannot form OSPF\nadjacency -> Option A and Option D are not correct.\n\nDR and BDR serve as the central point for exchanging OSPF routing information so we must configure Fa0/0\ninterfaces in broadcast mode. In Option B, R14 Fa0/0 interface is configured with OSPF priority 255 so surely\nit would become DR -> This is the best answer.\n\nNote: An OSPF priority of 0 does not prevent the router from establishing OSPF adjacencies."
+  },
+  {
+    "legacyIndex": 501,
+    "legacyNumber": 46,
+    "prompt": "Which wireless security protocol relies on Perfect Forward Secrecy?",
+    "options": [
+      "WPA",
+      "WPA3",
+      "WPA2",
+      "WEP"
+    ],
+    "answer": 1,
+    "explanation": "WPA3 (Wi-Fi Protected Access 3) is the newest wireless security protocol designed to encrypt data using a\nfrequent and automatic encryption type called Perfect Forward Secrecy. It’s more secure than its predecessor,\nWPA2, but it hasn’t been widely adopted yet. Not all hardware supports WPA3 automatically, and using this\nprotocol often requires costly upgrades."
+  },
+  {
+    "legacyIndex": 502,
+    "legacyNumber": 47,
+    "prompt": "Refer to the exhibit.\n\nA network engineer must provide configured IP addressing details to investigate a firewall rule issue. Which\nsubnet and mask identify what is configured on the en0 interface?",
+    "options": [
+      "10.8.0.0/16",
+      "10.8.64.0/18",
+      "10.8.128.0/19",
+      "10.8.138.0/24"
+    ],
+    "answer": 2,
+    "explanation": "netmask 0xffffe000 means 255.255.224.0 or /19 (convert from hex to decimal) -> Answer C is correct. We\nalso notice the broadcast address is 10.8.159.255."
+  },
+  {
+    "legacyIndex": 503,
+    "legacyNumber": 48,
+    "prompt": "A network engineer must configure two new subnets using the address block 10.70.128.0/19 to meet these\nrequirements:\n* The first subnet must support 24 hosts.\n* The second subnet must support 472 hosts\n* Both subnets must use the longest subnet mask possible from the address block\n\nWhich two configurations must be used to configure the new subnets and meet a requirement to use the first\navailable address in each subnet for the router interfaces? (Choose two)",
+    "options": [
+      "interface vlan 4722\nip address 10.70.133.17 255.255.255.192",
+      "interface vlan 3002\nip address 10.70.147.17 255.255.255.224",
+      "interface vlan 1148\nip address 10.70.148.1 255.255.254.0",
+      "interface vlan 1234\nip address 10.70.159.1 255.255.254.0",
+      "interface vlan 155\nip address 10.70.155.65 255.255.255.224"
+    ],
+    "answer": [
+      2,
+      4
+    ],
+    "type": "multi",
+    "explanation": "In order to support 24 (<25) hosts we need 5 bits 0 in the subnet mask so the last octet of the subnet mask\nmust be 1110 0000 -> 255.255.255.224. In the answer above there are two IP address with subnet mask\n255.255.255.224. They are:\n+ 10.70.147.17 255.255.255.224: This IP address belongs to subnet 10.70.147.0/27 but 10.70.147.17 is\nnot the first available address in this subnet (the first available address in this subnet is 10.70.147.1)\n+ 10.70.155.65 255.255.255.224: This IP address belongs to subnet 10.70.155.64/27 and 10.70.155.65 is\nthe first available address in this subnet -> Answer E is correct.\n\nIn order to support 472 (<512 = 29) hosts we need 9 bits 0 in the subnet mask -> 255.255.254.0. In the\nanswer above there are two IP address with subnet mask 255.255.254.0. They are:\n+ 10.70.148.1 255.255.254.0: This IP address belongs to subnet 10.70.148.0/23 and it is the first available\nIP address in this subnet\n+ 10.70.159.1 255.255.254.0: This IP address belongs to subnet 10.70.158.0/23. It is not the first available\nIP address in this subnet (the first available IP address is 10.70.158.1).\n\n-> Answer C is correct."
+  },
+  {
+    "legacyIndex": 504,
+    "legacyNumber": 49,
+    "prompt": "Refer to the exhibit.\n\nAn administrator must connect SW_1 and the printer to the network. SW_2 requires DTP to be used for the\nconnection to SW_1. The printer is configured as an access port with VLAN 5. Which set of commands\ncompletes the connectivity?",
+    "options": [
+      "switchport mode trunk\nswitchport trunk pruning vlan add 5",
+      "switchport mode dynamic desirable\nswitchport trunk allowed vlan add 5",
+      "switchport mode dynamic auto\nswitchport private-vlan association host 5",
+      "switchport mode dynamic auto\nswitchport trunk encapsulation negotiate"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 505,
+    "legacyNumber": 50,
+    "prompt": "Refer to the exhibit.\n\nTraffic sourced from the loopback0 interface is trying to connect via ssh to the host at 10.0.1.15. What is the\nnext hop to the destination address?",
+    "options": [
+      "192.168.0.7",
+      "192.168.0.4",
+      "192.168.0.40",
+      "192.168.3.5"
+    ],
+    "answer": 0,
+    "explanation": "10.0.1.0/28 is always preferred over 10.0.1.0/24 because of longest prefix match. 10.0.0.15 belongs to\n10.0.1.0/28 subnet so the next hop is 192.168.0.7 (learned via EIGRP).\n\nNote: Although our destination IP is 10.0.0.1.15 which is the broadcast address of subnet 10.0.1.0/28 in the\nrouting table and we may think that the local router would not use this route but in fact the router still uses\nthis route.\n\nYou can find a good discussion at: https://community.cisco.com/t5/switching/weird-routing-subnet-\nquestion/td-p/2362830\n\n“The broadcast is really a concept that is relevant only to a router directly connected to the network whose\nbroadcast address you are referring to. Other routers do not care at all. As long as the destination IP address\nof a packet AND the netmask produces the network address in the respective row of the routing table, the\npacket is destined for that network so let’s forward it there.”"
+  },
+  {
+    "legacyIndex": 506,
+    "legacyNumber": 51,
+    "prompt": "Refer to the exhibit.\n\n SiteA#show interface TenGigabitEthernet0/1/0\n TenGigabitEthernet0/1/0 is up, line protocol is up\n\n    Hardware is BUILT-IN-EPA-8x10G, address is aabb.cc00.0100 (bia aabb.cc00.0100)\n\n    Description: Connection to SiteB\n\n    Internet address is 10.10.10.1/30\n\n    MTU 8146 bytes, BW 10000000 Kbit/sec, DLY 10 usec,\n\n        reliability 255/255, txload 1/255, rxload 1/255\n\n    Full Duplex, 10000Mbps, link type is force-up, media type is SFP-SR\n\n    5 minute input rate 264797000 bits/sec, 26672 packets/sec\n\n    5 minute output rate 122464000 bits/sec, 15724 packets/sec\n\n SiteB#show interface TenGigabitEthernet0/1/0\n TenGigabitEthernet0/1/0 is up, line protocol is up\n\n    Hardware is BUILT-IN-EPA-8x10G, address is 0000.0c00.750c (bia 0000.0c00.750c)\n\n    Description: Connection to SiteA\n\n    Internet address is 10.10.10.2/30\n\n    MTU 8146 bytes, BW 10000000 Kbit/sec, DLY 10 usec,\n\n        reliability 255/255, txload 1/255, rxload 1/255\n\n    Full Duplex, 10000Mbps, link type is force-up, media type is SFP-LR\n\n    5 minute input rate 123245000 bits/sec, 15343 packets/sec\n\n    5 minute output rate 265746000 bits/sec, 12453 packets/sec\n\nShortly after SiteA was connected to SiteB over a new single-mode fiber path, users at SiteA report\nintermittent connectivity issues with applications hosted at SiteB. What is the cause of the intermittent\nconnectivity issue?",
+    "options": [
+      "An incorrect type of transceiver has been inserted into a device on the link.",
+      "The wrong cable type was used to make the connection.",
+      "Heavy usage is causing high latency.",
+      "Physical network errors are being transmitted between the two sites."
+    ],
+    "answer": 0,
+    "explanation": "SR stands for Short Reach, and LR stands for Long Reach. SR supports 400metres while LR supports 10\nkilometers. In this question, SiteA is using SFP-SR so it is not suitable for 7KM distance."
+  },
+  {
+    "legacyIndex": 507,
+    "legacyNumber": 52,
+    "prompt": "Refer to the exhibit.\n\nWhich action must be taken to ensure that router A is elected as the DR for OSPF area 0?",
+    "options": [
+      "Configure the OSPF priority on router A with the lowest value between the three routers",
+      "Configure the router A interfaces with the highest OSPF priority value within the area.",
+      "Configure router A with a fixed OSPF router ID.",
+      "Configure router B and router C as OSPF neighbors of router A."
+    ],
+    "answer": 1,
+    "explanation": "The router with the highest OSPF priority on a segment will become the DR for that segment"
+  },
+  {
+    "legacyIndex": 508,
+    "legacyNumber": 53,
+    "prompt": "Refer to the exhibit.\n\nHost A sent a data frame destined for host D.\n\nWhat does the switch do when it receives the frame from host A?",
+    "options": [
+      "It shuts down the port Fa0/1 and places it in err-disable mode.",
+      "It experiences a broadcast storm,",
+      "It floods the frame out of all ports except port Fa0/1.",
+      "It drops the frame from the switch CAM table."
+    ],
+    "answer": 2,
+    "explanation": "When the switch receives a frame for a MAC destination address not listed in its address table, it floods the\nframe to all LAN ports of the same VLAN except the port that received the frame.\n\nIn this question, switch has not learned about host D yet so it floods the frame to all LAN ports of the same\nVLAN except Fa0/1 which it received frame from host A."
+  },
+  {
+    "legacyIndex": 509,
+    "legacyNumber": 54,
+    "prompt": "Refer to the exhibit.\n\nAn engineer has started to configure replacement switch SW1. To verify part of the configuration, the\nengineer issued the commands as shown and noticed that the entry for PC2 is missing. Which change must\nbe applied to SW1 so that PC1 and PC2 communicate normally?",
+    "options": [
+      "SW1(config)#interface fa0/2\nSW1(config-if)#no switchport access vlan 2\nSW1(config-if)#no switchport trunk allowed vlan 3\nSW1 (config-if)#switchport trunk allowed vlan 2",
+      "SW1(config)#interface fa0/1\nSW1(config-if)#no switchport access vlan 2\nSW1(config-if)#switchport trunk native vlan 2\nSW1(config-if)#switchport trunk allowed vlan 3",
+      "SW1(config-if)#interface fa0/2\nSW1(config-if)#no switchport mode trunk\nSW1(config-if)#no switchport trunk allowed vlan 3\nSW1(config-if)#switchport mode access",
+      "SW1(config)#interface fa0/1\nSW1(config-if)#no switchport access vlan 2\nSW1(config-if)#switchport access vlan 3\nSW1(config-if)#switchport trunk allowed vlan 2"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 510,
+    "legacyNumber": 55,
+    "prompt": "Refer to the exhibit.\n\nWhich two commands must be configured on router R1 to enable the router to accept secure remote-access\nconnections? (Choose two)",
+    "options": [
+      "transport input telnet",
+      "username cisco password 0 cisco",
+      "login console",
+      "ip ssh pubkey-chain",
+      "crypto key generate rsa"
+    ],
+    "answer": [
+      1,
+      4
+    ],
+    "type": "multi",
+    "explanation": "Steps to configure SSH:\n1. Configure the router hostname using command “hostname”.\n2. Configure the domain name using command “ip domain-name”.\n3. Generate public and private keys using command “crypto key generate rsa”.\n4. Create a user in the local database using command “username…secret”.\n5. Allow only SSH access on VTY lines using command “transport input ssh”.\n\nNote: We only use the “ip ssh pubkey-chain” to perform RSA-Based Authentication."
+  },
+  {
+    "legacyIndex": 511,
+    "legacyNumber": 56,
+    "prompt": "Which two spanning-tree states are bypassed on an interface running PortFast? (Choose two)",
+    "options": [
+      "forwarding",
+      "blocking",
+      "disabled",
+      "learning",
+      "listening"
+    ],
+    "answer": [
+      3,
+      4
+    ],
+    "type": "multi",
+    "explanation": "Enabling the PortFast feature causes a switch or a trunk port to enter the STP forwarding-state immediately\nor upon a linkup event, thus bypassing the listening and learning states."
+  },
+  {
+    "legacyIndex": 512,
+    "legacyNumber": 57,
+    "prompt": "What is a requirement when configuring or removing LAG on a WLC?",
+    "options": [
+      "The incoming and outgoing ports for traffic flow must be specified if LAG is enabled.",
+      "The controller must be rebooted after enabling or reconfiguring LAG.",
+      "The management interface must be reassigned if LAG is disabled.",
+      "Multiple untagged interfaces on the same port must be supported."
+    ],
+    "answer": 1,
+    "explanation": "When you enable LAG or make any changes to the LAG configuration, you must immediately reboot the\ncontroller."
+  },
+  {
+    "legacyIndex": 513,
+    "legacyNumber": 58,
+    "prompt": "What is a requirement for nonoverlapping WI-FI channels?",
+    "options": [
+      "different security settings",
+      "different transmission speeds",
+      "discontinuous frequency ranges",
+      "unique SSIDs"
+    ],
+    "answer": 2,
+    "explanation": "Each channel on the 2.4 GHz spectrum is 20 MHz wide. The channel centers are separated by 5 MHz, and the\nentire spectrum is only 100 MHz wide. This means the 11 channels have to squeeze into the 100 MHz\navailable, and in the end, overlap. Channels 1, 6, and 11, however, are far enough from each other on the\n2.4GHz band that they have sufficient space between their channel centers and do not overlap."
+  },
+  {
+    "legacyIndex": 514,
+    "legacyNumber": 59,
+    "prompt": "An engineer must configure R1 for a new user account. The account must meet these requirements:\n* It must be configured in the local database.\n* The username is engineer2\n* It must use the strongest password configurable.\n\nWhich command must the engineer configure on the router?",
+    "options": [
+      "R1(config)# username engineer2 algorithm-type scrypt secret test2021",
+      "R1(config)# username engineer2 secret 5 password $1$bUu$kZbBS1Pyh4QzwXyZ",
+      "R1(config)# username engineer2 privilege 1 password 7 test2021",
+      "R1(config)# username engineer2 secret 4 $1Sb1Ju$kZbBSlFyh4QxwXyZ"
+    ],
+    "answer": 0,
+    "explanation": "Secret type 4 was determined to have a flaw and was removed in later versions of iOS. Type 4 Passwords\nshould never be used!\nSecret type 5 uses MD5 which is not secured.\n\nSecret type 9 – Scrypt and PBKDF2 (which can be used with “algorithm-type sha256”, but it is just a small\npart of a much larger crypto algorithm) are much slower to compute and take longer to brute force.\nCurrently it is the strongest password configurable in Cisco devices."
+  },
+  {
+    "legacyIndex": 515,
+    "legacyNumber": 60,
+    "prompt": "Refer to the exhibit.\n\nWhich configuration enables an EtherChannel to form dynamically between SW1 and SW2 by using an\nindustry-standard protocol, and to support full IP connectivity between all PCs?\n\n Option A\n                                Option B\n SW1#\n                                SW1#\n interface Gi0/1\n                                interface Gi0/1\n switchport\n                                switchport\n switchport mode trunk\n                                switchport mode trunk\n channel-group 1 mode on\n                                channel-group 1 mode auto\n !\n                                !\n interface Gi0/2\n                                interface Gi0/2\n switchport\n                                switchport\n switchport mode trunk\n                                switchport mode access\n channel-group 1 mode auto\n                                channel-group 1 mode active\n SW2#\n                                SW2#\n interface Gi0/1\n                                interface gi0/1\n switchport\n                                switchport\n switchport mode trunk\n                                switchport mode access\n channel-group 1 mode auto\n                                channel-group 1 mode\n !\n                                desirable\n interface Gi0/2\n                                !\n switchport\n                                interface Gi0/2\n switchport mode trunk\n                                switchport\n channel-group 1 mode on\n                                switchport mode access\n interface port-channel 1\n                                channel-group 1 mode\n switchport\n                                desirable\n switchport mode trunk\n\n Option C                       Option D\n SW1#                           SW1#\n interface Gi0/1                interface Gi0/1\n switchport                     switchport\n\n switchport mode trunk\n channel-group 1 mode              switchport mode access\n active                            channel-group 1 mode active\n !                                 !\n interface Gi0/2                   interface Gi0/2\n switchport                        switchport\n switchport mode trunk             switchport mode access\n channel-group 1 mode              channel-group 1 mode active\n active\n                                   SW2#\n SW2#                              interface Gi0/1\n interface Gi0/1                   switchport\n switchport                        switchport mode access\n switchport mode trunk             channel-group 1 mode\n channel-group 1 mode              desirable\n passive                           !\n !                                 interface Gi0/2\n interface Gi0/2                   switchport\n switchport                        switchport mode access\n switchport mode trunk             channel-group 1 mode\n channel-group 1 mode              desirable\n passive",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 2,
+    "explanation": "LACP is the IEEE Standard (IEEE 802.3ad) and is the most common dynamic ether-channel protocol, whereas\nPAgP is a Cisco proprietary protocol."
+  },
+  {
+    "legacyIndex": 516,
+    "legacyNumber": 61,
+    "prompt": "Drag and drop the descriptions or AAA services from the left onto the corresponding services on the right.",
+    "type": "match",
+    "items": [
+      "records user commands",
+      "logs session statistics",
+      "secures access to routers",
+      "validates user credentials",
+      "limits the user’s access permissions",
+      "allows the user to change to enable mode"
+    ],
+    "choices": [
+      "Accounting",
+      "Authentication",
+      "Authorization"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1,
+      2,
+      2
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 517,
+    "legacyNumber": 62,
+    "prompt": "Drag and drop the TCP or UDP details from the left onto their corresponding protocols on the right.",
+    "type": "match",
+    "items": [
+      "used to reliably share files between devices",
+      "requires the client and the server to establish a connection before sending the packet",
+      "transmitted based on data contained in the packet without the need for a data channel",
+      "appropriate for streaming operations with minimal latency"
+    ],
+    "choices": [
+      "TCP",
+      "UDP"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 518,
+    "legacyNumber": 63,
+    "prompt": "What is the function of the controller in a software-defined network?",
+    "options": [
+      "forwarding packets",
+      "making routing decisions",
+      "multicast replication at the hardware level",
+      "fragmenting and reassembling packets"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 519,
+    "legacyNumber": 64,
+    "prompt": "Refer to the exhibit.\n\nAn IP subnet must be configured on each router that provides enough addresses for the number of assigned\nhosts and anticipates no more than 10% growth for new hosts. Which configuration script must be used?\n\n Option A                              Option B\n\n R7#                                   R7#\n configure terminal                    configure terminal\n interface Fa1/0                       interface Fa1/0\n ip address 10.1.56.1                  ip address 10.1.56.1\n 255.255.240.0                         255.255.248.0\n no shutdown                           no shutdown\n\n R8#                                   R8#\n configure terminal                    configure terminal\n interface Fa0/0                       interface Fa0/0\n ip address 10.9.32.1                  ip address 10.9.32.1\n 255.255.224.0                         255.255.254.0\n no shutdown                           no shutdown\n R9#                                   R9#\n configure terminal                    configure terminal\n interface Fa1/1                       interface Fa1/1\n ip address 10.23.96.1                 ip address 10.23.96.1\n 255.255.192.0                         255.255.248.0\n no shutdown                           no shutdown\n\n Option C                              Option D\n R7#                                   R7#\n configure terminal                    configure terminal\n interface Fa1/0                       interface Fa1/0\n ip address 10.1.56.1                  ip address 10.1.56.1\n 255.255.252.0                         255.255.192.0\n no shutdown                           no shutdown\n\n R8#                                     R8#\n configure terminal                      configure terminal\n interface Fa0/0                         interface Fa0/0\n ip address 10.9.32.1                    ip address 10.9.32.1\n 255.255.255.0                           255.255.224.0\n no shutdown                             no shutdown\n R9#                                     R9#\n configure terminal                      configure terminal\n interface Fa1/1                         interface Fa1/1\n ip address 10.23.96.1                   ip address 10.23.96.1\n 255.255.240.0                           255.255.128.0\n no shutdown                             no shutdown",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 2,
+    "explanation": "R7 Fa1/0: 923 hosts + 10% * 923 = 1015 < 1024 = 210 hosts. The best subnet mask is /22 =\n255.255.252.0\nR8 Fa0/0: 225 hosts + 10% * 225 = 247 < 256 = 28 hosts. The best subnet mask is /24 = 255.255.255.0\nR9 Fa1/1: 3641 hosts + 10% * 3641 = 4005 < 4096 = 212 hosts. The best subnet mask is /20 =\n255.255.240.0\n\n-> Option C is correct.\n\nIn fact we don’t have to calculate subnet for R9 Fa1/1 because only Option C is suitable for R7 & R8\ninterfaces."
+  },
+  {
+    "legacyIndex": 520,
+    "legacyNumber": 65,
+    "prompt": "Refer to the exhibit.\n\nWhich network prefix was learned via EIGRP?",
+    "options": [
+      "172.16.0.0/16",
+      "207.165.200.0/24",
+      "192.168.2.0/24",
+      "192.168.1.0/24"
+    ],
+    "answer": 2,
+    "explanation": "Prefixes learned via EIGRP is started with letter “D”."
+  },
+  {
+    "legacyIndex": 521,
+    "legacyNumber": 66,
+    "prompt": "Refer to the exhibit.\n\nAn engineer built a new L2 LACP EtherChannel between SW1 and SW2 and executed these show commands\nto verify the work. Which additional task allows the two switches to establish an LACP port channel?",
+    "options": [
+      "Change the channel-group mode on SW1 to desirable.",
+      "Change the channel-group mode on SW1 to active or passive.",
+      "Change the channel-group mode on SW2 to auto.",
+      "Configure the interface port-channel 1 command on both switches."
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 522,
+    "legacyNumber": 67,
+    "prompt": "Refer to the exhibit.\n\nA network engineer must update the configuration on Switch2 so that it sends LLDP packets every minute\nand the information sent via LLDP is refreshed every 3 minutes. Which configuration must the engineer\napply?",
+    "options": [
+      "Switch2(config)#lldp timer 60\nSwitch2(config)# lldp tlv-select 180",
+      "Switch2(config)#lldp timer 60\nSwitch2(config)#lldp holdtime 180",
+      "Switch2(config)#lldp timer 1\nSwitch2(config)#lldp tlv-select 3",
+      "Switch2(config)#lldp timer 1\nSwitch2(config)#lldp holdtime 3"
+    ],
+    "answer": 1,
+    "explanation": "+ lldp holdtime seconds: Specify the amount of time a receiving device should hold the information from\nyour device before discarding it\n+ lldp timer rate: Set the sending frequency of LLDP updates in seconds\n+ lldp tlv-select command. This will specify the LLDP TLVs to send or receive."
+  },
+  {
+    "legacyIndex": 523,
+    "legacyNumber": 68,
+    "prompt": "Refer to the exhibit.\n\n R1#show run\n !\n router ospf 1\n auto-cost reference-bandwidth\n 100000\n !\n interface GigabitEthernet0/0\n bandwidth 10000000\n !\n interface GigabitEthernet0/1\n bandwidth 100000000\n !\n interface GigabitEthernet0/2\n ip ospf cost 100\n !\n interface GigabitEthernet0/3\n ip ospf cost 1000\nRouter R1 resides in OSPF Area 0. After updating the R1 configuration to influence the paths that it will use\nto direct traffic, an engineer verified that each of the four Gigabit interfaces has the same route to\n10.10.0.0/16. Which interface will R1 choose to send traffic to reach the route?",
+    "options": [
+      "GigabitEthernet0/0",
+      "GigabitEthernet0/1",
+      "GigabitEthernet0/2",
+      "GigabitEthernet0/3"
+    ],
+    "answer": 1,
+    "explanation": "The reference bandwidth in terms of Mbits per second so “auto-cost reference-bandwidth 100000” means\n100Gbps or 1011bps. The “bandwidth” under interface mode is configured in in kilobits. Therefore:\n\n+ Interface G0/0 (bandwidth 1010 bps): Cost = 1011 / 1010 = 10\n+ Interface G0/1 (bandwidth 1011 bps): Cost = 1011 / 1011 = 1\n+ Interface G0/2″ Cost = 100\n+ Interface G0/3″ Cost = 1000\n\n-> R1 will choose the lowest cost path which is interface G0/1"
+  },
+  {
+    "legacyIndex": 524,
+    "legacyNumber": 69,
+    "prompt": "An engineer is configuring remote access to a router from IP subnet 10.139.58.0/28. The domain name,\ncrypto keys, and SSH have been configured. Which configuration enables the traffic on the destination\nrouter?",
+    "options": [
+      "interface FastEthernet0/0\nip address 10.122.49.1 255.255.255.252\nip access-group 10 in\n!\nip access-list standard 10\npermit udp 10.139.58.0 0.0.0.7 host 10.122.49.1 eq 22",
+      "line vty 0 15\naccess-class 120 in\n!\nip access-list extended 120\npermit tcp 10.139.58.0 0.0.0.15 any eq 22",
+      "line vty 0 15\naccess-group 120 in\n!\nip access-list extended 120\npermit tcp 10.139.58.0 0.0.0.15 any eq 22",
+      "interface FastEthernet0/0\nip address 10.122.49.1 255.255.255.252\nip access-group 110 in\n!\nip access-list standard 110\npermit tcp 10.139.58.0 0.0.0.15 eq 22 host 10.122.49.1"
+    ],
+    "answer": 1,
+    "explanation": "When applying access-list to line vty we must use “access-class”, not “access-group”. Subnet 10.139.58.0/28\nconverts to wildcard mask is 10.139.58.0 0.0.0.15. And we have to use port 22 as the destination port."
+  },
+  {
+    "legacyIndex": 525,
+    "legacyNumber": 70,
+    "prompt": "Which protocol is used for secure remote CLI access?",
+    "options": [
+      "HTTP",
+      "Telnet",
+      "SSH",
+      "HTTPS"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 526,
+    "legacyNumber": 71,
+    "prompt": "What is a characteristic or private IPv4 addressing?",
+    "options": [
+      "composed of up to 65,536 available addresses",
+      "issued by IANA in conjunction with an autonomous system number",
+      "used without tracking or registration",
+      "traverse the Internet when an outbound ACL is applied"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 527,
+    "legacyNumber": 72,
+    "prompt": "What provides centralized control of authentication and roaming in an enterprise network?",
+    "options": [
+      "a LAN switch",
+      "a firewall",
+      "a lightweight access point",
+      "a wireless LAN controller"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 528,
+    "legacyNumber": 73,
+    "prompt": "A network engineer must implement an IPv6 configuration on the vlan 2000 interface to create a routable\nlocally-unique unicast address that is blocked from being advertised to the internet. Which configuration\nmust the engineer apply?",
+    "options": [
+      "interface vlan 2000\nipv6 address ff00:0000:aaaa::1234:2343/64",
+      "interlace vlan 2000\nipv6 address fd00::1234:2343/64",
+      "interface vlan 2000\nipv6 address fc00:0000:aaaa:a15d:1234:2343:8aca/64",
+      "interface vlan 2000\nipv6 address fe80:0000:aaaa::1234:2343/64"
+    ],
+    "answer": 1,
+    "explanation": "A unique local address (ULA) is an Internet Protocol version 6 (IPv6) address in the address range fc00::/7\n-> The first octet can be FC or FD. However when you implement this you have to set the L-bit (the right-\nmost bit of the first octet) to 1 which means that the first two digits will be FD -> The IPv6 address\n“fd00::1234:2343/64” is correct.\n\nIts purpose in IPv6 is analogous to IPv4 private network addressing. Unique local addresses may be used\nfreely, without centralized registration, inside a single site or organization or spanning a limited number of\nsites or organizations. They are routable only within the scope of such private networks, but not in the global\nIPv6 Internet.\n\nNote: Answer C is not correct as the IPv6 address only has 7 groups instead of 8."
+  },
+  {
+    "legacyIndex": 529,
+    "legacyNumber": 74,
+    "prompt": "Refer to the exhibit.\n\nHow should the configuration be updated to allow PC1 and PC2 access to the Internet?",
+    "options": [
+      "Modify the configured number of the second access list",
+      "Remove the overload keyword from the ip nat inside source command",
+      "Add either the ip nat {inside|outside} command under both interfaces",
+      "Change the ip nat inside source command to use interface GtgabitEthernet0/0"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 530,
+    "legacyNumber": 75,
+    "prompt": "OSPF must be configured between routers R1 and R2. Which OSPF configuration must be applied to router\nR1 to avoid a DR/BDR election?",
+    "options": [
+      "router ospf 1\nnetwork 192.168.1.1 0.0.0.0 area 0\ninterface e1/1\nip address 192.160.1.1 255.255.255.252\nip ospf network broadcast",
+      "router ospf 1\nnetwork 192.168.1.1 0.0.0.0 area 0\ninterface e1/1\nip address 192.168.1.1 255.255.255.252\nip ospf cost 0",
+      "router ospf 1\nnetwork 192.168.1.1 0.0.0.0 area 0\nhello interval 15\ninterface e1/1\nip address 192.168.1.1 255.255.255.252",
+      "router ospf 1\nnetwork 192.168.1.1 0.0.0.0 area 0\ninterface e1/1\nip address 192.168.1.1 255.55.255.252\nip ospf network point-to-point"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 531,
+    "legacyNumber": 76,
+    "prompt": "Refer to the exhibit.\n\nAll VLANs are present in the VLAN database. Which command sequence must be applied to complete the\nconfiguration?",
+    "options": [
+      "interface FastEthernet0/1\nswitchport trunk native vlan 10\nswitchport trunk allowed vlan 10,15",
+      "interface FastEthernet0/1\nswitchport mode trunk\nswitchport trunk allowed vlan 10,15",
+      "interface FastEthernet0/1\nswitchport trunk allowed vlan add 10\nvlan 10\nprivate-vlan isolated",
+      "interface FastEthernet0/1\nswitchport mode access\nswitchport voice vlan 10"
+    ],
+    "answer": 3,
+    "explanation": "The voice VLAN feature enables access ports to carry IP voice traffic from an IP phone. You can configure a\nvoice VLAN with the “switchport voice vlan …” command under interface mode. The full configuration is\nshown below:\n\n Switch(config)#interface fastethernet0/1\n Switch(config-if)#switchport mode access\n Switch(config-if)#switchport access vlan\n 15\n Switch(config-if)#switchport voice vlan\n 10"
+  },
+  {
+    "legacyIndex": 532,
+    "legacyNumber": 77,
+    "prompt": "A Cisco engineer is configuring a factory-default router with these three passwords:\n* The user EXEC password for console access is p4ssw0rd1.\n* The user EXEC password for Telnet access is s3cr3t2.\n* The password for privileged EXEC mode is priv4t3p4ss.\nWhich command sequence must the engineer configure?\n\n Option A                      Option B\n enable secret                 enable secret privilege 15\n priv4t3p4ss                   priv4t3p4ss\n !                             !\n line con 0                    line con 0\n password p4ssw0rd1            password p4ssw0rdi\n login                         login\n !                             !\n line vty 0 15                 line vty 0 15\n password s3cr3t2              password s3cr3t2\n login                         login\n\n Option C\n enable secret                 Option D\n priv413p4ss\n                               enable secret priv4t3p4ss\n !\n                               !\n line con 0\n                               line con 0\n password login\n                               password p4ssw0rd1\n p4ssw0rd1\n                               !\n !\n                               line vty 0 15\n line vty 0 15\n                               password s3cr3t2\n password login s3cr3t2\n login",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 0,
+    "explanation": "There is no “enable secret privilege 15 …” command.\n\nIf we enter the “enable secret privilege 15 priv4t3p4ss” command then the text “privilege 15 priv4t3p4ss”\nwill be used as password. In both console and vty line we should use the “login” command to enable\npassword checking."
+  },
+  {
+    "legacyIndex": 533,
+    "legacyNumber": 78,
+    "prompt": "Refer to the exhibit.\n\n EIGRP 10.10.10.0/24[90/1441] via\n F0/10\n EIGRP 10.10.10.0/24[90/144] via\n F0/11\n EIGRP 10.10.10.0/24[90/1441] via\n F0/12\n OSPF 10.10.10.0/24[110/20] via F0/13\n OSPF 10.10.10.0/24[110/30] via F0/14\nPackets received by the router from BGP enter via a serial interface at 209.165.201.10. Each route is present\nwithin the routing table. Which interface is used to forward traffic with a destination IP of 10.10.10.24?",
+    "options": [
+      "F0/10",
+      "F0/11",
+      "F0/12",
+      "F0/13"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 534,
+    "legacyNumber": 79,
+    "prompt": "What is the purpose of the ip address dhcp command?",
+    "options": [
+      "to configure an interface as a DHCP server",
+      "to configure an interface as a DHCP relay",
+      "to configure an interface as a DHCP helper",
+      "to configure an interface as a DHCP client"
+    ],
+    "answer": 3,
+    "explanation": "Use the ip address dhcp command to obtain IP address information for the configured interface."
+  },
+  {
+    "legacyIndex": 535,
+    "legacyNumber": 80,
+    "prompt": "What is a function of an endpoint on a network?",
+    "options": [
+      "allows users to record data and transmit to a file server",
+      "connects server and client devices to a network",
+      "provides wireless services to users in a building",
+      "forwards traffic between VLANs on a network"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 536,
+    "legacyNumber": 81,
+    "prompt": "Drag and drop the statements about networking from the left onto the corresponding networking types on\nthe right.",
+    "type": "match",
+    "items": [
+      "New devices are configured using the physical infrastructure",
+      "This type requires a distributed control plane",
+      "This type provisions resources from a centralized location",
+      "This type allows better control over how networks work and how networks are configured",
+      "This type enables networks to integrate with applications through APIs."
+    ],
+    "choices": [
+      "Traditional Networking",
+      "Controller-Based Networking"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1,
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 537,
+    "legacyNumber": 82,
+    "prompt": "A network engineer is installing an IPv6-only capable device. The client has requested that the device IP\naddress be reachable only from the internal network. Which type of IPv6 address must the engineer assign?",
+    "options": [
+      "unique local address",
+      "link-local address",
+      "IPv4-compatibie IPv6 address",
+      "aggregatable global address"
+    ],
+    "answer": 0,
+    "explanation": "A unique local address is an IPv6 unicast address that is globally unique and is intended for local\ncommunications. It is not expected to be routable on the global Internet and is routable inside of a limited\narea, such as a site. It may also be routed between a limited set of sites.\n\nNote: link-local address is not the correct answer. Link-local addresses can be used to reach the neighboring\nnodes attached to the same link. Routers will not forward datagram using link-local addresses."
+  },
+  {
+    "legacyIndex": 538,
+    "legacyNumber": 1,
+    "prompt": "Refer to the exhibit.\n\nSwitch#show etherchannel summary\n\n[output omitted]\n\nGroup Port-channel Protocol Ports\n\n-------+--------------+---------+---------------------\n\n10     Po10(SU)         LACP       Gi0/0(P) Gi0/1(P)\n\n20     Po20(SU)         LACP       Gi0/2(P) Gi0/3(P)\n\nWhich two commands when used together create port channel 10? (Choose two)",
+    "options": [
+      "int range g0/0-1\nchannel-group 10 mode active",
+      "int range g0/0-1\nchannel-group 10 mode desirable",
+      "int range g0/0-1\nchannel-group 10 mode passive",
+      "int range g0/0-1\nchannel-group 10 mode auto",
+      "int range g0/0-1\nchannel-group 10 mode on"
+    ],
+    "answer": [
+      0,
+      2
+    ],
+    "type": "multi",
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 539,
+    "legacyNumber": 2,
+    "prompt": "Which type of IPv6 address is similar to a unicast address but is assigned to multiple devices on the same\nnetwork at the same time?",
+    "options": [
+      "global unicast address",
+      "anycast address",
+      "multicast address",
+      "link-local address"
+    ],
+    "answer": 1,
+    "explanation": "The anycast address is very similar to the multicast address, but packets will be delivered to only one\nrandom host, instead of the entire group. Anycast address don’t have a specific range, as they are exactly\n\nthe same as regular unicast addresses. This means that a host has no way to distinguish a unicast from\nan anycast address when it sends a packet."
+  },
+  {
+    "legacyIndex": 540,
+    "legacyNumber": 3,
+    "prompt": "Which field within the access-request packet is encrypted by RADIUS?",
+    "options": [
+      "authorized services",
+      "authenticator",
+      "username",
+      "password"
+    ],
+    "answer": 3,
+    "explanation": "RADIUS encrypts only the password in the access-request packet, from the client to the server. The\nremainder of the packet is unencrypted. Other information, such as username, authorized services, and\naccounting, can be captured by a third party."
+  },
+  {
+    "legacyIndex": 541,
+    "legacyNumber": 4,
+    "prompt": "Refer to the exhibit.\n\nWhich two configurations must the engineer apply on this network so that R1 becomes the DR? (Choose\ntwo)",
+    "options": [
+      "R1(config)#interface fastethernet0/0\nR1(config-if)#ip ospf priority 200",
+      "R1(config)#router ospf 1\nR1(config-router)#router-id 192.168.100.1",
+      "R3(config)#interface fastethernet0/0\nR3(config-if)#ip ospf priority 0",
+      "R1(config)#interface fastethernet0/0\nR1(config-if)#ip ospf priority 0",
+      "R3(config)#interface fastethernet0/0\nR3(config-if)#ip ospf priority 200"
+    ],
+    "answer": [
+      0,
+      2
+    ],
+    "type": "multi",
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 542,
+    "legacyNumber": 5,
+    "prompt": "Refer to the exhibit.\n\nThe router has been configured with a supernet to accommodate the requirement for 380 users on a\nsubnet. The requirement already considers 30% future growth. Which configuration verifies the IP\nsubnet on router R4?",
+    "options": [
+      "Subnet: 10.7.54.0\nSubnet mask: 255.255.254.0\nBroadcast address: 10.7.54.255\nUsable IP address range: 10.7.54.1 – 10.7.55.254",
+      "Subnet: 10.7.54.0\nSubnet mask: 255.255.254.0\nBroadcast address: 10.7.55.255\nUsable IP address range: 10.7.54.1 – 10.7.55.254",
+      "Subnet: 10.7.54.0\nSubnet mask: 255.255.128.0\nBroadcast address: 10.7.55.255\nUsable IP address range: 10.7.54.1 – 10.7.55.254",
+      "Subnet: 10.7.54.0\nSubnet mask: 255.255.255.0\nBroadcast address: 10.7.54.255\nUsable IP address range: 10.7.54.1 – 10.7.55.254"
+    ],
+    "answer": 1,
+    "explanation": "380 users in a subnet < 512 = 29. Therefore we need 9 bits 0 in the subnet mask -> 255.255.254.0. The\nincrement is 2 (in the third octet) so the broadcast address is 10.7.55.255."
+  },
+  {
+    "legacyIndex": 543,
+    "legacyNumber": 6,
+    "prompt": "What is a function of a Next-Generation IPS?",
+    "options": [
+      "makes forwarding decisions based on learned MAC addresses",
+      "serves as a controller within a controller-based network",
+      "integrates with a RADIUS server to enforce Layer 2 device authentication rules",
+      "correlates user activity with network events"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 544,
+    "legacyNumber": 7,
+    "prompt": "What is the difference between IPv6 unicast and anycast addressing?",
+    "options": [
+      "An individual IPv6 unicast address is supported on a single interface on one node but an IPv6 anycast address is assigned to a group of interfaces on multiple nodes.",
+      "IPv6 unicast nodes must be explicitly configured to recognize the unicast address, but IPv6 anycast nodes require no special configuration",
+      "IPv6 anycast nodes must be explicitly configured to recognize the anycast address, but IPv6 unicast nodes require no special configuration",
+      "Unlike an IPv6 anycast address, an IPv6 unicast address is assigned to a group of interfaces on multiple nodes"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 545,
+    "legacyNumber": 8,
+    "prompt": "Refer to the exhibit.\n\nWhich two commands must be added to update the configuration of router R1 so that it accepts only\nencrypted connections? (Choose two)",
+    "options": [
+      "username CNAC secret R!41!4319115@",
+      "crypto key generate rsa 1024",
+      "ip ssh version 2",
+      "line vty 0 4",
+      "transport input ssh"
+    ],
+    "answer": [
+      1,
+      4
+    ],
+    "type": "multi",
+    "explanation": "“Encrypted connections” here imply SSH, not Telnet so this question wants to ask to only accept SSH\nconnections.\n\nFrom the output of “show crypto key mypubkey rsa” command, we learn that current there is no RSA key\ngenerated so answer B is surely correct. This command is necessary to generate the RSA key. Although\nthis answer is missing the “modulus” keyword (the full command should be “crypto key generate rsa\nmodulus 1024″) but maybe it is just a typo.\n\nAlthough answer A is also necessary but we are not sure if any username has been configured or not so\nit is not totally correct."
+  },
+  {
+    "legacyIndex": 546,
+    "legacyNumber": 9,
+    "prompt": "Which action is taken by the data plane within a network device?",
+    "options": [
+      "looks up an egress interface in the forwarding information base",
+      "constructs a routing table based on a routing protocol",
+      "provides CLI access to the network device",
+      "forwards traffic to the next hop"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 547,
+    "legacyNumber": 10,
+    "prompt": "R1 as an NTP server must have:\n* NTP authentication enabled\n* NTP packets sourced from Interface loopback 0\n* NTP stratum 2\n* NTP packets only permitted to client IP 209.165.200.225\n\nHow should R1 be configured?\n\n Option A                                            Option B\n\n ntp authenticate                                    ntp authenticate\n ntp authentication-key 2 sha1 CISCO123              ntp authentication-key 2 md5 CISCO123\n ntp source Loopback0                                ntp source Loopback0\n ntp access-group server-only 10                     ntp access-group server-only 10\n ntp master 2                                        ntp stratum 2\n !                                                   !\n access-list 10 permit udp host 209.165.200.225      access-list 10 permit udp host 209.165.200.225\n any eq 123                                          any eq 123\n\n Option C                                            Option D\n\n ntp authenticate                                    ntp authenticate\n ntp authentication-key 2 md5 CISCO123               ntp authentication-key 2 md5 CISCO123\n ntp interface Loopback0                             ntp source Loopback0\n ntp access-group server-only 10                     ntp access-group server-only 10\n ntp stratum 2                                       ntp master 2\n !                                                   !\n access-list 10 permit 209.165.200.225               access-list 10 permit 209.165.200.225",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 3,
+    "explanation": "To configure a Cisco device as an Authoritative NTP Server, use the ntp master [stratum] command ->\nOnly Option A and Option D are correct.\nACL 10 is a standard ACL so we cannot configure protocol (UDP in this case) for the ACL. We can only\nconfigure source IP address -> Option D is correct."
+  },
+  {
+    "legacyIndex": 548,
+    "legacyNumber": 11,
+    "prompt": "Refer to the exhibit.\n\nWhich route must be configured on R1 so that OSPF routing is used when OSPF is up. But the server is\nstill reachable when OSPF goes down?",
+    "options": [
+      "ip route 10.1.1.10 255.255.255.255 172.16.2.2 100",
+      "ip route 10.1.1.0 255.255.255.0 gi0/1 125",
+      "ip route 10.1.1.0 255.255.255.0 172.16.2.2 100",
+      "ip route 10.1.1.10 255.255.255.255 gi0/0 125"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 549,
+    "legacyNumber": 12,
+    "prompt": "How does Rapid PVST+ create a fast loop-free network topology?",
+    "options": [
+      "It requires multiple links between core switches",
+      "It maps multiple VLANs into the same spanning-tree instance",
+      "It generates one spanning-tree instance for each VLAN",
+      "It uses multiple active paths between end stations"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 550,
+    "legacyNumber": 13,
+    "prompt": "Which WLC management connection type is vulnerable to man-in-the-middle attacks?",
+    "options": [
+      "SSH",
+      "HTTPS",
+      "Telnet",
+      "console"
+    ],
+    "answer": 2,
+    "explanation": "As you know, telnet is insecure. By default, telnet is disabled on Cisco WLCs. So, if you want to use telnet,\nyou must enable it."
+  },
+  {
+    "legacyIndex": 551,
+    "legacyNumber": 14,
+    "prompt": "Refer to the exhibit.\n\nWhich command configures OSPF on the point-to-point link between routers R1 and R2?",
+    "options": [
+      "network 10.0.0.0 0.0.0.255 area 0",
+      "neighbor 10.1.2.0 cost 180",
+      "ip ospf priority 100",
+      "router-id 10.0.0.15"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 552,
+    "legacyNumber": 15,
+    "prompt": "Which characteristic differentiates the concept of authentication from authorization and accounting?",
+    "options": [
+      "user-activity logging",
+      "service limitations",
+      "consumption-based billing",
+      "identity verification"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 554,
+    "legacyNumber": 17,
+    "prompt": "Refer to the exhibit.\n\nTraffic that is flowing over interface TenGigabitEthernet0/0 experiences slow transfer speeds. What is the\nreason for the issue?",
+    "options": [
+      "heavy traffic congestion",
+      "queuing drops",
+      "a speed conflict",
+      "a duplex incompatibility"
+    ],
+    "answer": 3,
+    "explanation": "We see the collisions are very high compared to the packets output. The is usually the result of duplex\nmismatch (one is half-duplex, one end is full-duplex for example)"
+  },
+  {
+    "legacyIndex": 555,
+    "legacyNumber": 18,
+    "prompt": "Which type of network attack overwhelms the target server by sending multiple packets to a port until\nthe half-open TCP resources of the target are exhausted?",
+    "options": [
+      "SYN flood",
+      "reflection",
+      "teardrop",
+      "amplification"
+    ],
+    "answer": 0,
+    "explanation": "A SYN flood (half-open attack) is a type of denial-of-service (DDoS) attack which aims to make a server\nunavailable to legitimate traffic by consuming all available server resources. By repeatedly sending initial\nconnection request (SYN) packets, the attacker is able to overwhelm all available ports on a targeted\nserver machine, causing the targeted device to respond to legitimate traffic sluggishly or not at all."
+  },
+  {
+    "legacyIndex": 556,
+    "legacyNumber": 19,
+    "prompt": "Which interface mode must be configured to connect the lightweight APs in a centralized architecture?",
+    "options": [
+      "WLAN dynamic",
+      "management",
+      "trunk",
+      "access"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 557,
+    "legacyNumber": 20,
+    "prompt": "Which two network actions occur within the data plane? (Choose two)",
+    "options": [
+      "Add or remove an 802.1Q trunking header.",
+      "Make a configuration change from an incoming NETCONF RPC.",
+      "Run routing protocols.",
+      "Reply to an incoming ICMP echo request.",
+      "Match the destination MAC address to the MAC address table."
+    ],
+    "answer": [
+      0,
+      4
+    ],
+    "type": "multi",
+    "explanation": "For perspective, the following list details some of the more common actions that a networking device\ndoes that fit into the data plane:\n+ De-encapsulating and re-encapsulating a packet in a data-link frame (routers, Layer 3 switches)\n+ Adding or removing an 802.1Q trunking header (routers and switches)\n+ Matching an Ethernet frame’s destination Media Access Control (MAC) address to the MAC address\ntable (Layer 2 switches)\n+ Matching an IP packet’s destination IP address to the IP routing table (routers, Layer 3 switches)\n+ Encrypting the data and adding a new IP header (for virtual private network [VPN] processing)\n+ Changing the source or destination IP address (for Network Address Translation [NAT] processing)\n+ Discarding a message due to a filter (access control lists [ACLs], port security)"
+  },
+  {
+    "legacyIndex": 558,
+    "legacyNumber": 21,
+    "prompt": "Refer to the exhibit.\n\nA#show ip ospf neighbor\n\nNeighbor ID Pri State     Dead Time Address        Interface\n\n172.1.1.1 1     EXCHANGE/- 00:00:36 172.16.32.1 Serial0.1\n\nAn engineer assumes a configuration task from a peer. Router A must establish an OSPF neighbor\nrelationship with neighbor 172.1.1.1. The output displays the status of the adjacency after 2 hours. What\nis the next step in the configuration process for the routers to establish an adjacency?",
+    "options": [
+      "Set the router B OSPF ID to the same value as its IP address",
+      "Set the router B OSPF ID to a nonhost address",
+      "Configure a point-to-point link between router A and router B",
+      "Configure router A to use the same MTU size as router B"
+    ],
+    "answer": 3,
+    "explanation": "The problem occurs most frequently when attempting to run OSPF between a Cisco router and another\nvendor’s router. The problem occurs when the maximum transmission unit (MTU) settings for\nneighboring router interfaces don’t match."
+  },
+  {
+    "legacyIndex": 559,
+    "legacyNumber": 22,
+    "prompt": "Refer to the exhibit.\n\nCPE#show ip route\n\n  192.168.1.0/24 is variably subnetted, 3 subnets, 3 masks\n\nB 192.168.1.0/24 [20/1] via 192.168.12.2, 00:00:06\n\nR 192.168.1.128/25 [120/5] via 192.168.13.3, 00:02:22, Ethernet0/1\n\nO 192.168.1.192/26 [110/11] via 192.168.14.4, 00:02:22, Ethernet0/2\n\nD 192.168.1.224/27 [90/1024640] via 192.168.15.5, 00:01:33, Ethernet0/3\n\nAll traffic enters the CPE router from interface Serial0/3 with an IP address of 192.168.50.1. Web traffic\nfrom the WAN is destined for a LAN network where servers are load-balanced. An IP packet with a\ndestination address of the HTTP virtual IP of 192.168.1.250 must be forwarded. Which routing table\nentry does the router use?",
+    "options": [
+      "192.168.1.0/24 via 192.168.12.2",
+      "192.168.1.128/25 via 192.168.13.3",
+      "192.168.1.192/26 via 192.168.14.4",
+      "192.168.1.224/27 via 192.168.15.5"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 560,
+    "legacyNumber": 23,
+    "prompt": "Refer to the exhibit.\n\nThe link between PC1 and the switch is up, but it is performing poorly. Which interface condition is\ncausing the performance problem?",
+    "options": [
+      "There is a duplex mismatch on the interface",
+      "There is an issue with the fiber on the switch interface",
+      "There is a speed mismatch on the interface",
+      "There is an interface type mismatch"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 562,
+    "legacyNumber": 25,
+    "prompt": "Refer to the exhibit.\n\nAn engineer is configuring the HO router. Which IPv6 address configuration must be applied to the router\nfa0/1 interface for the router to assign a unique 64-bit IPv6 address to itself?",
+    "options": [
+      "ipv6 address 2001:DB8:0:1:C601:42FF:FE0F:7/64",
+      "ipv6 address 2001:DB8:0:1:C601:42FE:800F:7/64",
+      "ipv6 address 2001:DB8:0:1:FFFF:C601:420F:7/64",
+      "ipv6 address 2001:DB8:0:1:FE80:C601:420F:7/64"
+    ],
+    "answer": 0,
+    "explanation": "We must use IPv6 EUI-64 so that the router can assign a unique 64-bit IPv6 address to itself. Therefore\nwe get the MAC address of C601.420F.0007 and:\n\n1. Split the MAC address in two halves (6 hex digits each) (so we have C601:42 for the first halves and\n0F:0007 for the second halves)\n2. Insert FFFE in between the two, making the interface ID.\n3. Invert the seventh bit (to 1) of the interface ID if it is 0 (in this question this step is ignored as C6 =\n11000110 -> the seventh bit is already 1)\n\n-> We get the interface ID of C601:42FF:FE0F:0007 or C601:42FF:FE0F:7 in short. We prepend the\nnetwork prefix (64 bits) and get 2001:DB8:0:1:C601:42FF:FE0F:7"
+  },
+  {
+    "legacyIndex": 563,
+    "legacyNumber": 26,
+    "prompt": "Refer to the exhibit.\n\nAn engineer is configuring a new router on the network and applied this configuration. Which additional\nconfiguration allows the PC to obtain its IP address from a DHCP server?",
+    "options": [
+      "Configure the ip dhcp relay information command under interface Gi0/1",
+      "Configure the ip dhcp smart-relay command globally on the router",
+      "Configure the ip helper-address 172.16.2.2 command under interface Gi0/0",
+      "Configure the ip address dhcp command under interface Gi0/0"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 564,
+    "legacyNumber": 27,
+    "prompt": "Refer to the exhibit.\n\nA static route must be configured on R14 to forward traffic for the 172.21.34.0/25 network that resides\non R86. Which command must be used to fulfill the request?",
+    "options": [
+      "ip route 172.21.34.0 255.255.255.192 10.73.65.65",
+      "ip route 172.21.34.0 255.255.255.0 10.73.65.65",
+      "ip route 172.21.34.0 255.255.128.0 10.73.65.64",
+      "ip route 172.21.34.0 255.255.255.128 10.73.65.66"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 565,
+    "legacyNumber": 28,
+    "prompt": "What is a function of Opportunistic Wireless Encryption in an environment?",
+    "options": [
+      "offer compression",
+      "increase security by using a WEP connection",
+      "provide authentication",
+      "protect traffic on open networks"
+    ],
+    "answer": 3,
+    "explanation": "Opportunistic Wireless Encryption (OWE) is an extension to IEEE 802.11 that provides encryption of the\nwireless medium. The purpose of OWE based authentication is avoid open unsecured wireless\nconnectivity between the AP’s and clients. The OWE uses the Diffie-Hellman algorithms based\nCryptography to setup the wireless encryption."
+  },
+  {
+    "legacyIndex": 566,
+    "legacyNumber": 29,
+    "prompt": "Refer to the exhibit.\n\nA company is configuring a failover plan and must implement the default routes in such a way that a\nfloating static route will assume traffic forwarding when the primary link goes down. Which primary\nroute configuration must be used?",
+    "options": [
+      "ip route 0.0.0.0 0.0.0.0 192.168.0.2 GigabitEthernet1/0",
+      "ip route 0.0.0.0 0.0.0.0 192.168.0.2 tracked",
+      "ip route 0.0.0.0 0.0.0.0 192.168.0.2 floating",
+      "ip route 0.0.0.0 0.0.0.0 192.168.0.2"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 567,
+    "legacyNumber": 30,
+    "prompt": "Which action implements physical access control as part of the security program of an organization?",
+    "options": [
+      "setting up IP cameras to monitor key infrastructure",
+      "backing up syslogs at a remote location",
+      "configuring enable passwords on network devices",
+      "configuring a password for the console port"
+    ],
+    "answer": 0,
+    "explanation": "Physical access control can take a number of forms, but the basic idea is to create barriers to prevent\nunauthorized people from entering a physical space.\n\nAlso “camera” is also listed as a physical access control in this Cisco link:"
+  },
+  {
+    "legacyIndex": 568,
+    "legacyNumber": 31,
+    "prompt": "Refer to the exhibit.\n\nAn engineer is asked to insert the new VLAN into the existing trunk without modifying anything\npreviously configured Which command accomplishes this task?",
+    "options": [
+      "switchport trunk allowed vlan 100-104",
+      "switchport trunk allowed vlan all",
+      "switchport trunk allowed vlan add 104",
+      "switchport trunk allowed vlan 104"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 569,
+    "legacyNumber": 32,
+    "prompt": "Refer to the exhibit.\n\nWhat is a reason for poor performance on the network interface?",
+    "options": [
+      "The interface is receiving excessive broadcast traffic.",
+      "The cable connection between the two devices is faulty.",
+      "The interface is operating at a different speed than the connected device.",
+      "The bandwidth setting of the interface is misconfigured"
+    ],
+    "answer": 1,
+    "explanation": "A working interface (in an up/up state) can still suffer from issues related to the physical cabling as well.\nThe cabling problems might not be bad enough to cause a complete failure, but the transmission failures\nresult in some frames failing to pass successfully over the cable. For example, excessive interference on\nthe cable can cause the various input error counters to keep growing larger, especially the CRC counter.\nIn particular, if the CRC errors grow, but the collisions counters do not, the problem might simply be\ninterference on the cable. (The switch counts each collided frame as one form of input error as well.)\n\nIn this question, only the input errors and CRC errors grow -> “The cable connected between two devices\nis faulty” is the best choice.\n\nNote: One problem, called late collisions, points to the classic duplex mismatch problem. But there is no\nlate collision errors so duplex mismatch is not an in this question."
+  },
+  {
+    "legacyIndex": 570,
+    "legacyNumber": 33,
+    "prompt": "Refer to the exhibit.\n\nRouters R1 and R3 have the default configuration. The router R2 priority is set to 99. Which commands\non R3 configure it as the DR in the 10.0.4.0/24 network?",
+    "options": [
+      "R3(config)#interface Gig0/1\nR3(config-if)#ip ospf priority 100",
+      "R3(config)#interface Gig0/0\nR3(config-if)#ip ospf priority 100",
+      "R3(config)#interface Gig0/0\nR3(config-if)#ip ospf priority 1",
+      "R3(config)#interface Gig0/1\nR3(config-if)#ip ospf priority 0"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 571,
+    "legacyNumber": 34,
+    "prompt": "Which QoS per-hop behavior changes the value of the ToS field in the IPv4 packet header?",
+    "options": [
+      "shaping",
+      "marking",
+      "policing",
+      "classification"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 572,
+    "legacyNumber": 35,
+    "prompt": "Refer to the exhibit.\n\nRouter1#show ip route\n\nGateway of last resort is 10.10.11.2 to network 0.0.0.0\n\n    209.165.200.0/27 is subnetted, 1 subnets\n\nB    209.165.200.224 [20/0] via 10.10.12.2,03:32:14\n\n    209.165.201.0/27 is subnetted, 1 subnets\n\nB    209.165.201.0 [20/0] via 10.10.12.2,02:26:53\n\n    209.165.202.0/27 is subnetted, 1 subnets\n\nB    209.165.202.128 [20/0] via 10.10.12.2,02:46:03\n\n    10.0.0.0/8 is variably subnetted, 10 subnets, 4 masks\n\nO     10.10.13.0/25 [110/2] via 10.10.10.1,00:00:04, GigabitEthernet0/0\n\nO     10.10.13.128/28 [110/2] via 10.10.10.5,00:00:12, GigabitEthernet0/1\n\nO     10.10.13.144/28 [110/2] via 10.10.10.9,00:01:57, GigabitEthernet0/2\n\nO     10.10.13.160/29 [110/2] via 10.10.10.5,00:00:12, GigabitEthernet0/1\n\nO     10.10.13.208/29 [110/2] via 10.10.10.13,00:01:57, GigabitEthernet0/3\n\nS* 0.0.0.0/0 [1/0] via 10.10.11.2\n\nWhich next-hop IP address does Router1 use for packets destined to host 10.10.13.158?",
+    "options": [
+      "10.10.10.5",
+      "10.10.11.2",
+      "10.10.12.2",
+      "10.10.10.9"
+    ],
+    "answer": 3,
+    "explanation": "10.10.13.158 belongs to prefix 10.10.13.144/28 so the next-hop 10.10.10.9 will be chosen to forward\npacket for this destination."
+  },
+  {
+    "legacyIndex": 573,
+    "legacyNumber": 36,
+    "prompt": "What is one reason to implement LAG on a Cisco WLC?",
+    "options": [
+      "to increase security and encrypt management frames",
+      "to provide link redundancy and load balancing",
+      "to allow for stateful and link-state failover",
+      "to enable connected switch ports to failover and use different VLANs"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 574,
+    "legacyNumber": 37,
+    "prompt": "Refer to the exhibit.\n\nWeb traffic is coming in from the WAN interface. Which route takes precedence when the router is\nprocessing traffic destined for the LAN network at 10.0.10.0/24?",
+    "options": [
+      "via next-hop 10.0.1.5",
+      "via next-hop 10.0.1.4",
+      "via next-hop 10.0.1.50",
+      "via next-hop 10.0.1.100"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 575,
+    "legacyNumber": 38,
+    "prompt": "Which PoE mode enables powered-device detection and guarantees power when the device is detected?",
+    "options": [
+      "dynamic",
+      "static",
+      "active",
+      "auto"
+    ],
+    "answer": 1,
+    "explanation": "static—Enables powered-device detection. Pre-allocate (reserve) power for a port before the switch\ndiscovers the powered device. The switch reserves power for this port even when no device is connected\nand guarantees that power will be provided upon device detection.\n\nNote: “auto” – Enables powered-device detection; if enough power is available, automatically allocates\npower to the PoE port after device detection (default setting).” The answer “auto” is not correct as\n“auto” only allocates power “if enough power is available”."
+  },
+  {
+    "legacyIndex": 576,
+    "legacyNumber": 39,
+    "prompt": "A Cisco engineer must configure a single switch interface to meet these requirements\n* accept untagged frames and place them in VLAN 20\n* accept tagged frames in VLAN 30 when CDP detects a Cisco IP phone\n\nWhich command set must the engineer apply?",
+    "options": [
+      "switchport mode access\nswitchport access vlan 20\nswitchport voice vlan 30",
+      "switchport mode trunk\nswitchport access vlan 20\nswitchport voice vlan 30",
+      "switchport mode dynamic auto\nswitchport trunk native vlan 20\nswitchport trunk allowed vlan 30\nswitchport voice vlan 30",
+      "switchport mode dynamic desirable\nswitchport access vlan 20\nswitchport trunk allowed vlan 30\nswitchport voice vlan 30"
+    ],
+    "answer": 0,
+    "explanation": "With the configuration in answer:\n\n“switchport mode access\nswitchport access vlan 20\nswitchport voice vlan 30″\n\nThis configuration is typically used when connecting a Cisco IP phone and a PC to the same switch port.\n\n+ The PC sends untagged traffic -> assigned to VLAN 20.\n+ The IP Phone sends 802.1Q-tagged voice traffic -> placed in VLAN 30.\n+ CDP helps the switch identify the IP phone and treat its traffic appropriately.\n\nNote:\n\n+ Trunks are used between switches or for special cases, not typical for connecting end devices like\nphones and PCs simultaneously -> Other answers with “trunk” mode are not correct."
+  },
+  {
+    "legacyIndex": 577,
+    "legacyNumber": 40,
+    "prompt": "Refer to the exhibit.\n\nWhich minimum configuration items are needed to enable Secure Shell version 2 access to R15?",
+    "options": [
+      "Router(config)#hostname R15\nR15(config)#crypto key generate rsa general-keys modulus 1024\nR15(config-line)#line vty 0 15\nR15(config-line)# transport input ssh\nR15(config)#ip ssh source-interface Fa0/0\nR15(config)#ip ssh stricthostkeycheck",
+      "Router(config)#ip domain-name cisco.com\nRouter(config)#crypto key generate rsa general-keys modulus 1024\nRouter(config)#ip ssh version 2\nRouter(config-line)#line vty 0 15\nRouter(config-line)# transport input all\nRouter(config)#ip ssh logging events",
+      "Router(config)#hostname R15\nR15(config)#ip domain-name cisco.com\nR15(config)#crypto key generate rsa general-keys modulus 1024\nR15(config)#ip ssh version 2\nR15(config-line)#line vty 0 15\nR15(config-line)# transport input ssh",
+      "Router(config)#crypto key generate rsa general-keys modulus 1024\nRouter(config)#ip ssh version 2\nRouter(config-line)#line vty 0 15\nRouter(config-line)# transport input ssh\nRouter(config)#ip ssh logging events\nR15(config)#ip ssh stricthostkeycheck"
+    ],
+    "answer": 2,
+    "explanation": "Steps to configure SSH:\n1. Configure the router hostname using command “hostname”.\n2. Configure the domain name using command “ip domain-name”.\n3. Generate public and private keys using command “crypto key generate rsa”.\n4. Create a user in the local database using command “username…secret”.\n5. Allow only SSH access on VTY lines using command “transport input ssh”."
+  },
+  {
+    "legacyIndex": 578,
+    "legacyNumber": 41,
+    "prompt": "Refer to the exhibit.\n\nUsers need to connect to the wireless network with IEEE 802.11r-compatible devices. The connection\nmust be maintained as users travel between floors or to other areas in the building. What must be the\nconfiguration of the connection?",
+    "options": [
+      "Select the WPA Policy option with the CCKM option",
+      "Disable AES encryption",
+      "Enable Fast Transition and select the FT 802.1x option",
+      "Enable Fast Transition and select the FT PSK option"
+    ],
+    "answer": 2,
+    "explanation": "802.11r, which is the IEEE standard for fast roaming, introduces a new concept of roaming where the\ninitial handshake with the new AP is done even before the client roams to the target AP, which is called\nFast Transition (FT). The initial handshake allows the client and APs to do the Pairwise Transient Key (PTK)\ncalculation in advance. These PTK keys are applied to the client and AP after the client does the\nreassociation request or response exchange with new target AP.\n\nFT works with both preshared key (PSK) and 802.1X authentication methods. If you check the FT PSK\ncheck box, from the PSK Format drop-down list, choose ASCII or Hex and enter the key value -> This\nquestion does not mention about “enter the key value” so maybe answer C is the best choice."
+  },
+  {
+    "legacyIndex": 579,
+    "legacyNumber": 42,
+    "prompt": "Refer to the exhibit.\n\nAn engineer is configuring an EtherChannel using LACP between Switches 1 and 2. Which configuration\nmust be applied so that only Switch 1 sends LACP initiation packets?",
+    "options": [
+      "Switch1(config-if)#channel-group 1 mode on\nSwitch2(config-if)#channel-group 1 mode passive",
+      "Switch1(config-if)#channel-group 1 mode passive\nSwitch2(config-if)#channel-group 1 mode active",
+      "Switch1(config-if)#channel-group 1 mode active\nSwitch2(config-if)#channel-group 1 mode passive",
+      "Switch1(config-if)#channel-group 1 mode on\nSwitch2(config-if)#channel-group 1 mode active"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 580,
+    "legacyNumber": 43,
+    "prompt": "Refer to the exhibit.\n\n SW1 = 24596 0018.184e.3c00\n SW2 = 28692 004a.14e5.4077\n\n SW3 = 32788 0022.55cf.dd00\n SW4 = 64000 0041.454d.407f\n\nWhich switch becomes the root of a spanning tree for VLAN 20 if all links are of equal speed?",
+    "options": [
+      "SW1",
+      "SW2",
+      "SW3",
+      "SW4"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 581,
+    "legacyNumber": 44,
+    "prompt": "Refer to the exhibit.\n\n Router1(config)#interface GigabitEthernet0/0\n Router1(config-if)#ip address 209.165.200.225 255.255.255.224\n Router1(config-if)#ip nat outside\n Router1(config)#interface GigabitEthernet0/1\n Router1(config-if)#ip nat inside\n Router1(config)#interface GigabitEthernet\n Router1(config-if)#encapsulation dot1Q 100\n Router1(config-if)#ip address 10.10.10.1 255.255.255.0\n Router1(config)#interface GigabitEthernet0/1.200\n Router1(config-if)#encapsulation dot1Q 200\n Router1(config-if)#ip address 10.10.20.1 255.255.255.0\n Router1(config)#ip access-list standard NAT_INSIDE_RANGES\n Router1(config-std-nacl)#permit 10.10.10.0 0.0.0.255\n Router1(config)#ip nat inside source list NAT_INSIDE_RANGES interface GigabitEthernet0/0 overload\n\nUsers on existing VLAN 100 can reach sites on the Internet. Which action must the administrator take to\nestablish connectivity to the Internet for users in VLAN 200?",
+    "options": [
+      "Define a NAT pool on the router.",
+      "Update the NAT_INSIDE_RANGES ACL",
+      "Configure the ip nat outside command on another interface for VLAN 200",
+      "Configure static NAT translations for VLAN 200"
+    ],
+    "answer": 1,
+    "explanation": "We need to add the “permit 10.10.20.0 0.0.0.255” command to the ACL."
+  },
+  {
+    "legacyIndex": 582,
+    "legacyNumber": 45,
+    "prompt": "Which protocol uses the SSL?",
+    "options": [
+      "HTTP",
+      "HTTPS",
+      "SSH",
+      "Telnet"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 583,
+    "legacyNumber": 46,
+    "prompt": "Drag and drop the facts about wireless architectures from the left onto the types of access point on the\nright. Not all options are used.",
+    "type": "match",
+    "items": [
+      "requires a management IP address",
+      "accessible for management via Telnet, SSH, or a web GUI",
+      "managed from a web-based dashboard",
+      "supports automatic deployment"
+    ],
+    "choices": [
+      "Autonomous Access Point",
+      "Cloud-Based Access Point"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": "An autonomous AP is a self-contained device with both wired and wireless hardware so that it can\nbridge to the wired VLAN infrastructure wireless clients that belong to SSIDs. Each autonomous AP must\nbe configured with a management IP address so that it can be remotely accessed using Telnet, SSH, or a\nweb interface. Each AP must be individually managed and maintained unless you use a management\nplatform such as Cisco DNA Center.\n\nCloud-based AP management is an alternative to purchasing a management platform. The AP\nmanagement function is pushed into the Internet cloud. For example, Cisco Meraki is a cloud-based AP\nmanagement service that allows you to automatically deploy Cisco Meraki APs. These APs can then be\nmanaged from the Meraki cloud web interface (dashboard).\n\nFrom the above paragraph, we can see autonomous AP is not managed by a WLC."
+  },
+  {
+    "legacyIndex": 584,
+    "legacyNumber": 47,
+    "prompt": "Which value is the unique identifier that an access point uses to establish and maintain wireless\nconnectivity to wireless network devices?",
+    "options": [
+      "VLANID",
+      "SSID",
+      "RFID",
+      "WLANID"
+    ],
+    "answer": 1,
+    "explanation": "The SSID is a unique identifier that wireless networking devices use to establish and maintain wireless\nconnectivity. Multiple access points on a network or subnetwork can use the same SSIDs. SSIDs are case\nsensitive and can contain up to 32 alphanumeric characters."
+  },
+  {
+    "legacyIndex": 585,
+    "legacyNumber": 48,
+    "prompt": "A network engineer is configuring a switch so that it is remotely reachable via SSH. The engineer has\nalready configured the host name on the router. Which additional command must the engineer\nconfigure before entering the command to generate the RSA key?",
+    "options": [
+      "password password",
+      "crypto key generate rsa modulus 1024",
+      "ip domain-name domain",
+      "ip ssh authentication-retries 2"
+    ],
+    "answer": 2,
+    "explanation": "The command “crypto key generate rsa modulus 1024” is used to generate the RSA key but this question\nasks about the command which is typed before entering the command to generate the RSA key so\nanswer C is the best choice."
+  },
+  {
+    "legacyIndex": 586,
+    "legacyNumber": 49,
+    "prompt": "Refer to the exhibit.\n\nSwitch A is newly configured. All VLANs are present in the VLAN database. The IP phone and PC A on\nGi0/1 must be configured for the appropriate VLANs to establish connectivity between the PCs. Which\ncommand set fulfills the requirement?",
+    "options": [
+      "SwitchA(config-if)#switchport mode access\nSwitchA(config-if)#switchport access vlan 50\nSwitchA(config-if)#switchport voice vlan 51",
+      "SwitchA(config-if)#switchport mode access\nSwitchA(config-if)#switchport access vlan 50\nSwitchA(config-if)#switchport voice vlan untagged",
+      "SwitchA(config-if)#switchport mode trunk\nSwitchA(config-if)#switchport trunk allowed vlan add 50, 51\nSwitchA(config-if)#switchport voice vlan dot1p",
+      "SwitchA(config-if)#switchport mode trunk\nSwitchA(config-if)#switchport trunk allowed vlan 50, 51\nSwitchA(config-if)#switchport qos trust cos"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 587,
+    "legacyNumber": 50,
+    "prompt": "Which QoS traffic handling technique retains excess packets in a queue and reschedules these packets\nfor later transmission when the configured maximum bandwidth has been surpassed?",
+    "options": [
+      "traffic shaping",
+      "traffic policing",
+      "weighted random early detection",
+      "traffic prioritization"
+    ],
+    "answer": 0,
+    "explanation": "+ Shaping: retains excess packets in a queue and then schedules the excess for later transmission over\nincrements of time. When traffic reaches the maximum configured rate, additional packets are queued\ninstead of being dropped to proceed later. Traffic shaping is applicable only on outbound interfaces as\nbuffering and queuing happens only on outbound interfaces. Shaping is configured in bits per second."
+  },
+  {
+    "legacyIndex": 588,
+    "legacyNumber": 51,
+    "prompt": "Refer to the exhibit.\n\nR1 learns all routes via OSPF. Which command configures a backup static route on R1 to reach the\n192.168.20.0/24 network via R3?",
+    "options": [
+      "R1(config)#ip route 192.168.20.0 255.255.255.0 192.168.30.2 111",
+      "R1(config)#ip route 192.168.20.0 255.255.255.0 192.168.30.2 90",
+      "R1(config)#ip route 192.168.20.0 255.255.0.0 192.168.30.2",
+      "R1(config)#ip route 192.168.20.0 255.255.255.0 192.168.30.2"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 589,
+    "legacyNumber": 52,
+    "prompt": "Which Layer 2 switch function encapsulates packets for different VLANs so that the packets traverse the\nsame port and maintain traffic separation between the VLANs?",
+    "options": [
+      "VLAN numbering",
+      "VLAN DSCP",
+      "VLAN tagging",
+      "VLAN marking"
+    ],
+    "answer": 2,
+    "explanation": "VLAN tagging is a method through which more than one VLAN is handled on a port. VLAN tagging is used\nto tell which packet belongs to which VLAN on the other side. To make recognition easier, a packet is\ntagged with a VLAN tag in the Ethernet frame."
+  },
+  {
+    "legacyIndex": 590,
+    "legacyNumber": 53,
+    "prompt": "What is an expected outcome when network management automation is deployed?",
+    "options": [
+      "A distributed management plane must be used.",
+      "Software upgrades are performed from a central controller",
+      "Complexity increases when new device configurations are added",
+      "Custom applications are needed to configure network devices"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 591,
+    "legacyNumber": 54,
+    "prompt": "Refer to the exhibit.\n\nThe primary route across Gi0/0 is configured on both routers. A secondary route must be configured to\nestablish connectivity between the workstation networks. Which command set must be configured to\ncomplete this task?",
+    "options": [
+      "R1\nip route 172.16.2.0 255.255.255.240 172.16.0.2 113\nR2\nip route 172.16.1.0 255.255.255.0 172.16.0.1 114",
+      "R1\nip route 172.16.2.0 255.255.255.240 172.16.0.5 89\nR2\nip route 172.16.1.0 255.255.255.0 172.16.0.6 89",
+      "R1\nip route 172.16.2.0 255.255.255.248 172.16.0.5 110\nR2\nip route 172.16.1.0 255.255.255.0 172.16.0.6 110",
+      "R1\nip route 172.16.2.0 255.255.255.224 172.16.0.6 111\nR2\nip route 172.16.1.0 255.255.255.0 172.16.0.5 112"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 592,
+    "legacyNumber": 55,
+    "prompt": "Refer to the exhibit.\n\nWhich action must be taken so that neighboring devices rapidly discover switch Cat9300?",
+    "options": [
+      "Enable portfast on the ports that connect to neighboring devices",
+      "Configure the cdp holdtime 10 command on switch Cat9300",
+      "Configure the cdp timer 10 command on the neighbors of switch Cat9300",
+      "Configure the cdp timer 10 command on switch Cat9300"
+    ],
+    "answer": 3,
+    "explanation": "The “cdp timer seconds” command sets the transmission frequency of CDP updates in seconds so we\nshould reduce it so that CDP updates are sent more often."
+  },
+  {
+    "legacyIndex": 593,
+    "legacyNumber": 56,
+    "prompt": "Refer to the exhibit.\n\nSW2 is replaced due to a hardware failure. A network engineer starts to configure SW2 by copying the\nFa0/1 interface configuration from SW1. Which command must be configured on the Fa0/1 interface of\nSW2 to enable PC1 to connect to PC2?",
+    "options": [
+      "switchport mode trunk",
+      "switchport trunk native vlan 10",
+      "switchport trunk allowed remove 10",
+      "switchport mode access"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 594,
+    "legacyNumber": 57,
+    "prompt": "How do UTP and STP cables compare?",
+    "options": [
+      "STP cables are cheaper to produre and easier to install and UTP cables are more expensive and harder to install.",
+      "UTP cables are less prone to crosstalk and interference and STP cables are more prone to crosstalk and interference.",
+      "UTP cables provide faster and more reliable data transfer rates and STP cables are slower and less reliable.",
+      "STP cables are shielded and protect against electromagnetic interference and UTP lacks the same protection against electromagnetic interference."
+    ],
+    "answer": 3,
+    "explanation": "UTP (Unshielded twisted pair) and STP (Shielded twisted pair) are the types of twisted pair cables which\nact as a transmission medium and imparts reliable connectivity of electronic equipment. Although the\ndesign and manufacture are different but both serve the same purpose.\nThe basic difference between UTP and STP is UTP (Unshielded twisted pair) is a cable with wires that are\ntwisted together to reduce noise and crosstalk. On the contrary, STP (Shielded twisted pair) is a twisted\npair cable confined in foil or mesh shield that guards the cable against electromagnetic interference."
+  },
+  {
+    "legacyIndex": 595,
+    "legacyNumber": 58,
+    "prompt": "Drag and drop the statements about device management from the left onto the corresponding device-\nmanagement types on the right.",
+    "type": "match",
+    "items": [
+      "It provides a single interface for network security and analytics",
+      "It supports CLI templates to apply a consistent configuration to multiple devices",
+      "It uses NetFlow to analyze potential security threats and take appropriate action on that traffic",
+      "It uses multiple tools and applications to analyze and troubleshoot different types of data",
+      "It manages device configurations on a per-device basis",
+      "Security is managed near the perimeter of the network with firewalls, VPNs, and IPS"
+    ],
+    "choices": [
+      "Cisco DNA Center Device Management",
+      "Traditional Device Management"
+    ],
+    "answer": [
+      0,
+      0,
+      0,
+      1,
+      1,
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 596,
+    "legacyNumber": 59,
+    "prompt": "Which port type does a lightweight AP use to connect to the wired network when configured in\nFlexConnect mode with local switching and VLAN tagging?",
+    "options": [
+      "EtherChannel",
+      "access",
+      "LAG",
+      "trunk"
+    ],
+    "answer": 3,
+    "explanation": "Local Switched: Locally-switched WLAN’s (the SSID you are connected to) will map their wireless user\ntraffic to a VLAN via 802.1Q trunking to a local switch adjacent to the access point."
+  },
+  {
+    "legacyIndex": 597,
+    "legacyNumber": 60,
+    "prompt": "An engineer is installing a new wireless printer with a static IP address on the Wi-Fi network. Which\nfeature must be enabled and configured to prevent connection issues with the printer?",
+    "options": [
+      "passive client",
+      "static IP tunneling",
+      "DHCP address assignment",
+      "client exclusion"
+    ],
+    "answer": 0,
+    "explanation": "Passive clients are wireless devices, such as scales and printers that are configured with a static IP\naddress. These clients do not transmit any IP information such as IP address, subnet mask, and gateway\ninformation when they associate with an access point. As a result, when passive clients are used, the\ncontroller never knows the IP address unless they use the DHCP.\n\nSince the wireless controller does not have any IP related information about passive clients, it cannot\nrespond to any ARP requests. The current behavior does not allow the transfer of ARP requests to\npassive clients. Any application that tries to access a passive client will fail.\n\nThe passive client feature enables the ARP requests and responses to be exchanged between wired\nand wireless clients. This feature when enabled, allows the controller to pass ARP requests from wired\nto wireless clients until the desired wireless client gets to the RUN state."
+  },
+  {
+    "legacyIndex": 598,
+    "legacyNumber": 61,
+    "prompt": "An engineer is configuring router R1 with an IPv6 static route for prefix 2019:C15C:0CAF:E001::/64. The\nnext hop must be 2019:C15C:0CAF:E002::1 The route must be reachable via the R1 Gigabit 0/0 interface.\nWhich command configures the designated route?",
+    "options": [
+      "R1(config)#ipv6 route 2019:C15C:0CAF:E001::/64 2019:C15C:0CAF:E002::1",
+      "R1(config-if)#ipv6 route 2019:C15C:0CAF:E001::/64 2019:C15C:0CAF:E002::1",
+      "R1(config-if)#ip route 2019:C15C:0CAF:E001::/64 GigabitEthernet0/0",
+      "R1(config)#ip route 2019:C15C:0CAF:E001::/64 GigabitEthernet0/0"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 599,
+    "legacyNumber": 62,
+    "prompt": "Refer to the exhibit. What must be configured to enable 802.11w on the WLAN?",
+    "options": [
+      "Set PMF to Required",
+      "Enable MAC Filtering",
+      "Enable WPA Policy",
+      "Set Fast Transition to Enabled"
+    ],
+    "answer": 0,
+    "explanation": "Configuring 802.11w (GUI)\nProcedure\nStep 1 Choose WLANs > WLAN ID to open the WLANs > Edit page.\nStep 2 In the Security tab, choose the Layer 2 security tab.\nStep 3 From the Layer 2 Security drop-down list, choose WPA+WPA2.\nThe 802.11w IGTK Key is derived using the 4-way handshake, which means that it can only be used on\n\nWLANs that are configured for WPA2 security at Layer 2.\nNote: WPA2 is mandatory and encryption type must be AES. TKIP is not valid.\nStep 4 Choose the PMF state from the drop-down list\nThe following options are available:\nDisabled—Disables 802.11w MFP protection on a WLAN\nOptional—To be used if the client supports 802.11w.\nRequired—Ensures that the clients that do not support 802.11w cannot associate with the WLAN.\n\nNote: When you create a MAC address filter on WLCs, users are granted or denied access to the WLAN\nnetwork based on the MAC address of the client they use\n\nFast Transition is 802.11r, not 802.11w.\n\nTherefore “Set PMF to Required” is the best choice."
+  },
+  {
+    "legacyIndex": 600,
+    "legacyNumber": 63,
+    "prompt": "Drag and drop the IPv6 address details from the left onto the corresponding types on the right.",
+    "type": "match",
+    "items": [
+      "used exclusively by a non-host device",
+      "assigned to more than one interface",
+      "derived from the FF00::/8 address range",
+      "provides one-to-many communications",
+      "includes link-local and loopback addresses",
+      "identifies an interface on an IPv6 device"
+    ],
+    "choices": [
+      "Anycast",
+      "Multicast",
+      "Unicast"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1,
+      2,
+      2
+    ],
+    "explanation": "An anycast address must be assigned to a router not a host and cannot be used as a source address."
+  },
+  {
+    "legacyIndex": 601,
+    "legacyNumber": 64,
+    "prompt": "Drag and drop the elements of a security program from the left onto the corresponding descriptions on\nthe right.",
+    "type": "match",
+    "items": [
+      "awareness",
+      "education",
+      "security policy",
+      "security standard",
+      "training"
+    ],
+    "choices": [
+      "user-awareness learning level that focuses on security practice that all employees must understand and enforce",
+      "user-awareness learning level that focuses on learning about topics and practices beyond what is typically required by the user’s job",
+      "document that outlines an organization’s security goals and practices and the roles and responsibilities of the organization’s personnel",
+      "tactical document that sets out specific tasks and methods to maintain security",
+      "user-awareness learning level that focuses on teaching employees how to perform tasks specifically required by their jobs"
+    ],
+    "answer": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "explanation": "As per Cisco, an effective security program has three basic elements. First, user awareness. Second, user\ntraining. And last, physical access control.\n\nUser awareness: All users should be made aware of the need for data confidentiality to protect\ncorporate information, as well as their own credentials and personal information.\nUser training: All users should be required to participate in periodic formal training so that they become\nfamiliar with all corporate security policies.\n\nSecurity Policy: Policies are the top tier of formalized security documents. These high-level documents\noffer a general statement about the organization’s assets and what level of protection they should have.\n\nStandards are much more specific than policies. Standards are tactical documents because they lay out\nspecific steps or processes required to meet a certain requirement."
+  },
+  {
+    "legacyIndex": 602,
+    "legacyNumber": 65,
+    "prompt": "Refer to the exhibit.\n\nWhich configuration establishes a Layer 2 LACP EtherChannel when applied to both switches?",
+    "options": [
+      "interface range G1/1 -1/3\nswitchport mode access\nchannel-group 1 mode passive\nno shutdown",
+      "interface range G1/1 -1/3\nswitchport mode trunk\nchannel-group 1 mode desirable\nno shutdown",
+      "interface range G1/1 -1/3\nswitchport mode trunk\nchannel-group 1 mode active\nno shutdown",
+      "interface range G1/1 -1/3\nswitchport mode access\nchannel-group 1 mode on\nno shutdown"
+    ],
+    "answer": 2,
+    "explanation": "The question clear stated that we use LACP so we must use mode “active” on both interfaces."
+  },
+  {
+    "legacyIndex": 603,
+    "legacyNumber": 66,
+    "prompt": "Refer to the exhibit.\n\nA network engineer configures the Cisco WLC to authenticate local wireless clients against a RADIUS\nserver. Which task must be performed to complete the process?",
+    "options": [
+      "Disable the Server Status option",
+      "Enable the Management option",
+      "Enable the Network User option",
+      "Enable the Support for CoA option"
+    ],
+    "answer": 2,
+    "explanation": "If you are configuring a RADIUS authentication server, check the Management check box to enable\nmanagement authentication (authenticate users who login to the the WLC). If you enable this feature,\nthis entry is considered the RADIUS authentication server for management users, and authentication\nrequests go to the RADIUS server.\n\nThe Network User check box to enable network user authentication. So the best answer here should be\nenable “Network User” as it also authenticates local users.\n\nNote:\n+ Support for CoA (change of authorization) is an extension to the RADIUS protocol that allows dynamic\nchanges to a user session.\n+ The Server Status checkbox is used to enable/disable this RADIUS server."
+  },
+  {
+    "legacyIndex": 604,
+    "legacyNumber": 67,
+    "prompt": "Which QoS queuing method discards or marks packets that exceed the desired bit rate of traffic flow?",
+    "options": [
+      "shaping",
+      "policing",
+      "CBWFQ",
+      "LLQ"
+    ],
+    "answer": 1,
+    "explanation": "Policing: is used to control the rate of traffic flowing across an interface. During a bandwidth exceed\n(crossed the maximum configured rate), the excess traffic is generally dropped or remarked."
+  },
+  {
+    "legacyIndex": 605,
+    "legacyNumber": 68,
+    "prompt": "What is the role of disaggregation in controller-based networking?",
+    "options": [
+      "It divides the control-plane and data-plane functions.",
+      "It summarizes the routes between the core and distribution layers of the network topology.",
+      "It enables a network topology to quickly adjust from a ring network to a star network",
+      "It streamlines traffic handling by assigning individual devices to perform either Layer 2 or Layer 3 functions."
+    ],
+    "answer": 0,
+    "explanation": "Taken literally, “network disaggregation” means to separate the network into its component parts."
+  },
+  {
+    "legacyIndex": 606,
+    "legacyNumber": 69,
+    "prompt": "Which REST method updates an object in the Cisco DNA Center Intent API?",
+    "options": [
+      "CHANGE",
+      "UPDATE",
+      "POST",
+      "PUT"
+    ],
+    "answer": 3,
+    "explanation": "The RESTful Cisco DNA Center Intent API uses HTTPS verbs (GET, POST, PUT, and DELETE) with JSON\nstructures to discover and control the network."
+  },
+  {
+    "legacyIndex": 607,
+    "legacyNumber": 70,
+    "prompt": "Drag and drop the QoS terms from the left onto the descriptions on the right.",
+    "type": "match",
+    "items": [
+      "Class-based weighted fair queuing",
+      "Classification",
+      "Congestion",
+      "Policing",
+      "Shaping"
+    ],
+    "choices": [
+      "Guarantees minimum bandwidth to specific traffic classes when an interface is congested",
+      "Categorizes packets based on the value of traffic descriptor",
+      "Outcome of overutilization",
+      "Uses defined criteria to limit the transmission of one or more classes of traffic",
+      "Prevents congestion by reducing the flow of the outbound traffic"
+    ],
+    "answer": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 608,
+    "legacyNumber": 71,
+    "prompt": "What is the function of Cisco Advanced Malware protection for next-generation IPS?",
+    "options": [
+      "authorizing potentially compromised wireless traffic",
+      "URL filtering",
+      "authenticating end users",
+      "inspecting specific files and files types for malware"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 609,
+    "legacyNumber": 72,
+    "prompt": "An administrator must use the password complexity not manufacturer-name command to prevent\nusers from adding “cisco” as a password. Which command must be issued before this command?",
+    "options": [
+      "Password complexity enable",
+      "confreg 0x2142",
+      "login authentication my-auth-list",
+      "service password-encryption"
+    ],
+    "answer": 0,
+    "explanation": "Step 3. (Optional) To enable the password complexity settings on the switch, enter the following:\nSG350X(config)#passwords complexity enable"
+  },
+  {
+    "legacyIndex": 610,
+    "legacyNumber": 73,
+    "prompt": "What is the function of “off-the-shelf” switches in a controller-based network?",
+    "options": [
+      "Forwarding packets",
+      "Making routing decision",
+      "Providing a central view of the deployed network",
+      "Setting packet-handling policies"
+    ],
+    "answer": 0,
+    "explanation": "In SDN’s purest form, the controller has all the intelligence: Switches are dumb, commercial off-the-shelf\n(COTS) devices that are managed by the controllers.\n\nTherefore we can deduce “off-the-shelf” switches are only used to forward packets."
+  },
+  {
+    "legacyIndex": 611,
+    "legacyNumber": 74,
+    "prompt": "Which two practices are recommended for an acceptable security posture in a network? (Choose two)",
+    "options": [
+      "Maintain network equipment in a secure location",
+      "Backup device configurations to encrypted USB drives for secure retrieval",
+      "Use a cryptographic keychain to authenticate to network devices",
+      "Place internal email and file servers in a designated DMZ",
+      "Disable unused or unnecessary ports, interfaces and services"
+    ],
+    "answer": [
+      0,
+      4
+    ],
+    "type": "multi",
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 612,
+    "legacyNumber": 75,
+    "prompt": "Refer to the exhibit.\n\nWhat are the two steps an engineer must take to provide the highest encryption and authentication\nusing domain credentials from LDAP? (Choose two)",
+    "options": [
+      "Select WPA policy with TKIP Encryption",
+      "Select WPA + WPA2 on layer 2 security",
+      "Select PSK under authentication key management",
+      "Select Static-WEP + 802.1x on Layer 2 security",
+      "Select 802.1x from under authentication key management"
+    ],
+    "answer": [
+      1,
+      4
+    ],
+    "type": "multi",
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 613,
+    "legacyNumber": 76,
+    "prompt": "Refer to the exhibit.\n\nCat9K-1#show lldp entry Cat9K-2\n\nLocal Intf: Gi1/0/21\n\nChassis ID: 308b.b2b3.2880\n\nPort id: Gi1/0/21\n\nPort Description: GigabitEthernet1/0/21\n\nSystem Name: Cat9K-2\n\nManagement Addresses:\n\n IP: 10.6.110.2\n\nThe network administrator must prevent the switch Cat9K-2 IP address from being visible in LLDP\nwithout disabling the protocol. Which action must be taken must be taken to complete the task?",
+    "options": [
+      "Configure the no lldp tlv-select-management-address command globally on Cat9K-2",
+      "Configure the no lldp transmit command on interface G1/0/21 in Cat9K-1",
+      "Configure the no lldp receive command on interface G1/0/21 on Cat9K-1",
+      "Configure the no lldp mac-phy-cfg command globally on Cat9K-2"
+    ],
+    "answer": 0,
+    "explanation": "LLDP stands for Link Layer Discovery Protocol and runs over data link layer. It is used for network devices\nto send information about themselves to other directly connected devices on the network. By using\nLLDP, two devices running different network layer protocols can learn information about each other. A\nset of attributes are used to discover neighbor devices. These attributes contains type, length, and value\n\ndescriptions and are referred to TLVs. Details such as port description, system name, system description,\nsystem capabilities, and management address can be sent and received on this Managed Switch.\n\nThe command no lldp tlv-select-management-address disables the Management Address attribute to be\nsent."
+  },
+  {
+    "legacyIndex": 614,
+    "legacyNumber": 77,
+    "prompt": "Which WAN topology has the highest degree of reliability?",
+    "options": [
+      "router-on-a-stick",
+      "Point-to-point",
+      "hub-and-spoke",
+      "full mesh"
+    ],
+    "answer": 3,
+    "explanation": "Full-mesh is a network topology in which there is a direct link between all pairs of nodes. Below is an\nexample of full-mesh topology."
+  },
+  {
+    "legacyIndex": 615,
+    "legacyNumber": 78,
+    "prompt": "What is a feature of WPA?",
+    "options": [
+      "802.1x authentication",
+      "preshared key",
+      "TKIP/MIC encryption",
+      "small Wi-Fi application"
+    ],
+    "answer": 2,
+    "explanation": "WPA uses Michael, a special MIC designed to help with TKIP without requiring excessive computation.\n\nWPA supports two authentication modes:\n– Personal\n– Enterprise\n\nWith personal mode, we use a pre-shared key. The pre-shared key is not used directly over the air.\nInstead, wireless clients and the AP use a four-way handshake that uses the pre-shared key as input to\ngenerate encryption keys.\n\nEnterprise mode uses 802.1X and an authentication server, usually a RADIUS server.\n\nTherefore in this question, TKIP/MIC encryption is the best choice."
+  },
+  {
+    "legacyIndex": 616,
+    "legacyNumber": 79,
+    "prompt": "Refer to the exhibit.\n\nR1 has taken the DROTHER role in the OSPF DR/BDR election process. Which configuration must an\nengineer implement so that R1 is elected as the DR?",
+    "options": [
+      "R1(config)#interface FastEthernet0/0\nR1(config-if)#ip ospf priority 1\nR1#clear ip ospf process",
+      "R1(config)#interface FastEthernet0/0\nR1(config-if)#ip ospf priority 200\nR1#clear ip ospf process",
+      "R3(config)#interface FastEthernet0/1\nR3(config-if)#ip ospf priority 200\nR3#clear ip ospf process",
+      "R2(config)#interface FastEthernet0/2\nR2(config-if)#ip ospf priority 1\nR2#clear ip ospf process"
+    ],
+    "answer": 1,
+    "explanation": "From the exhibit we learned that both the priorities of R2 and R3 are 1 so if we set a higher value for R1\non this segment (interface f0/0) and reset the OSPF process than R1 will take the DR role."
+  },
+  {
+    "legacyIndex": 617,
+    "legacyNumber": 80,
+    "prompt": "Refer to the exhibit.\n\nThe IP address configurations must be completed on the DC-1 and HQ-1 routers based on these\nrequirements.\n\nDC-1 Gi1/0 must be the last usable address on a /30\nDC-1 Gi1/1 must be the first usable address on a /29\n\nDC-1 Gi1/2 must be the last usable address on a /28\nHQ-1 Gi1/3 must be the last usable address on a /29\n\nDrag and drop the commands from the left onto the destination interfaces on the right. Not all\ncommands are used.",
+    "type": "match",
+    "items": [
+      "ip address 209.165.202.130 255.255.255.252",
+      "ip address 192.168.4.9 255.255.255.248",
+      "ip address 192.168.3.14 255.255.255.240",
+      "ip address 192.168.3.14 255.255.255.248"
+    ],
+    "choices": [
+      "DC-1",
+      "HQ-1"
+    ],
+    "answer": [
+      0,
+      0,
+      0,
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 618,
+    "legacyNumber": 81,
+    "prompt": "Refer to the exhibit.\n\nWhich type of configuration is represented in the output?",
+    "options": [
+      "Chef",
+      "JSON",
+      "Ansible",
+      "Puppet"
+    ],
+    "answer": 3,
+    "explanation": "Puppet resource declarations have the following syntax:\n\nWhere:\n<TYPE>: is one of the numerous resource types, e.g., file\n<TITLE>: A arbitrary unique resource identifier across all resources of the same type (across all resources\napplied to a particular system)\n<ATTRIBUTE>: Resource type-specific parameters"
+  },
+  {
+    "legacyIndex": 619,
+    "legacyNumber": 82,
+    "prompt": "How does TFTP operate in a network?",
+    "options": [
+      "relies on the well-known TCP port 20 to transmit data",
+      "requires two separate connections for control and data traffic",
+      "uses block numbers to identify and mitigate data-transfer errors",
+      "provides secure data transfer"
+    ],
+    "answer": 2,
+    "explanation": "TFTP is a simple protocol for transferring files, implemented on top of the UDP/IP protocols using well-\nknown port number 69.\n\nEach file block has an identification number so that ACK messages from target devices can correctly\nreport back to sending devices if a block is received successfully."
+  },
+  {
+    "legacyIndex": 620,
+    "legacyNumber": 83,
+    "prompt": "Drag and drop the statements about networking from the left onto the corresponding networking types\non the right.",
+    "type": "match",
+    "items": [
+      "This type implements changes individually at each device.",
+      "Maintenance costs are higher than with other networking options.",
+      "This type provides a centralized view of the network.",
+      "This type leverages controllers to handle network management."
+    ],
+    "choices": [
+      "Traditional Networking",
+      "Controller-Based Networking"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 621,
+    "legacyNumber": 84,
+    "prompt": "Refer to the exhibit.\n\nWhat is represented by “R1” and “SW1” within the JSON output?",
+    "options": [
+      "array",
+      "object",
+      "value",
+      "key"
+    ],
+    "answer": 2,
+    "explanation": "In this JSON output, “Routers” and “Switches” are keys while “R1”, “R2”, “R3”, “SW1”, “SW2”, “SW3” are\nvalues."
+  },
+  {
+    "legacyIndex": 622,
+    "legacyNumber": 85,
+    "prompt": "Refer to the exhibit.\n\nThe following must be considered\n\n+ SW1 is fully configured for all traffic\n+ The SW4 and SW9 links to SW1 have been configured\n+ The SW4 interface Gi0/1 and Gi0/0 on SW9 have been configured\n+ The remaining switches have had all VLANs added to their VLAN database\n\nWhich configuration establishes a successful ping from PC2 to PC7 without interruption to traffic flow\nbetween other PCs?\n\n Option A                              Option B\n\n SW4#                                  SW4\n interface Gi0/2                       interface Gi0/7\n switchport mode trunk                 switchport mode trunk\n switchport trunk allowed vlan         switchport trunk allowed vlan 108\n 14,108                                !\n                                       interface Gi0/2\n SW11#\n                                       switchport mode access\n interface Gi0/2\n                                       switchport access vlan 14\n switchport mode trunk\n switchport trunk allowed vlan         SW11#\n 14,108                                interface Gi0/2\n !                                     switchport mode trunk\n interface Gi0/1                       switchport trunk allowed vlan\n switchport mode trunk                 14,108\n\n switchport trunk allowed vlan       !\n 14,108                              interface Gi0/1\n                                     switchport mode trunk\n SW9#\n                                     switchport trunk allowed vlan\n interface Gi0/2\n                                     14,108\n switchport mode trunk\n switchport trunk allowed vlan 14    SW9#\n                                     interface Gi0/2\n                                     switchport mode access\n                                     switchport access vlan 14\n\n Option C                            Option D\n\n SW4                                 SW4\n interface Gi0/2                     interface Gi0/2\n switchport mode trunk               switchport mode access\n switchport trunk allowed vlan 14    switchport access vlan 14\n\n SW11#                               SW11#\n interface Gi0/1                     interface Gi0/2\n switchport mode trunk               switchport mode access\n switchport trunk allowed vlan 14    switchport access vlan 14\n                                     !\n SW9#\n                                     interface Gi0/0\n interface Gi0/2\n                                     switchport mode access\n switchport mode trunk\n                                     switchport access vlan 14\n switchport trunk allowed vlan 108\n                                     !\n                                     interface Gi0/1\n                                     switchport mode trunk\n\n                                     SW9#\n                                     interface Gi0/2\n                                     switchport mode access\n                                     switchport access vlan 14",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 0,
+    "explanation": "Option B is not correct as either the link between SW4 & SW11 or the link between SW9 & SW11 must\nallow VLAN 108. But Gi0/2 of SW4 and Gi0/2 of SW9 only allow VLAN 14 -> PC3 cannot reach PC9 in\nVLAN 108.\n\nOption C is not correct as Gi0/2 of SW4 and Gi0/1 of SW11 only allows VLAN 14 -> PC3 cannot reach PC9\nin VLAN 108.\n\nOption D has configured Gi0/0 of SW11 but there is no such interface in the topology. Also with option D\ninterface Gi0/2 of SW4 and Gi0/2 of SW9 only allow VLAN 14 -> PC3 cannot reach PC9 in VLAN 108."
+  },
+  {
+    "legacyIndex": 623,
+    "legacyNumber": 86,
+    "prompt": "An engineer is configuring switch SW1 to act as an NTP server when all upstream NTP server connectivity\nfails. Which configuration must be used?",
+    "options": [
+      "SW1# config t\nSW1(config)#ntp server 192.168.1.1\nSW1(config)#ntp access-group server accesslist1",
+      "SW1# config t\nSW1(config)3 ntp peer 192.168.1.1\nSW1(config)#ntp access-group peer accesslist1",
+      "SW1# config t\nSW1(config)#ntp backup\nSW1(config)#ntp server 192.168.1.1",
+      "SW1# config t\nSW1(config)#ntp master\nSW1(config)#ntp server 192.168.1.1"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 624,
+    "legacyNumber": 87,
+    "prompt": "Refer to the exhibit.\n\nAn OSPF neighbor relationship must be configured using these guidelines:\n– R1 is only permitted to establish a neighbor with R2.\n– R1 will never participate in DR elections.\n– R1 will use a router-id of 10.1.1.1.\n\nWhich configuration must be used?\n\n Option A                                            Option B\n\n Option C                                               Option D",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 1,
+    "explanation": "R1 will never participate in DR elections -> Set the OSPF priority to 0 (“ip ospf priority 0”) can prevent R1\nfrom participate in DR elections -> Only Option B & Option C are correct.\n\nOSPF is protocol 89 so we must permit it from 10.100.1.2 while blocking from others -> Only Option B is\ncorrect."
+  },
+  {
+    "legacyIndex": 625,
+    "legacyNumber": 88,
+    "prompt": "How does authentication differ from authorization?",
+    "options": [
+      "Authentication verifies the identity of a person accessing a network, and authorization determines what resource a user can access.",
+      "Authentication is used to determine what resources a user is allowed to access, and authorization is used to track what equipment is allowed access to the network",
+      "Authentication is used to verify a person’s identity, and authorization is used to create syslog messages for logins",
+      "Authentication is used to record what resource a user accesses, and authorization is used to determine what resources a user can access"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 626,
+    "legacyNumber": 89,
+    "prompt": "A user configured OSPF and advertised the Gigabit Ethernet interface in OSPF. By default, to which type\nof OSPF network does this interface belong?",
+    "options": [
+      "point-to-multipoint",
+      "point-to-point",
+      "nonbroadcast",
+      "broadcast"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 627,
+    "legacyNumber": 90,
+    "prompt": "Refer to the exhibit.\n\nip arp inspection vlan 5-10\n\ninterface fastethernet0/1\n\nswitchport mode access\n\nswitchport access vlan 5\n\nWhat is the effect of this configuration?",
+    "options": [
+      "Egress traffic is passed only if the destination is a DHCP server.",
+      "All ingress and egress traffic is dropped because the interface is untrusted.",
+      "All ARP packets are dropped by the switch.",
+      "The switch discards all ingress ARP traffic with invalid MAC-to-IP address bindings."
+    ],
+    "answer": 3,
+    "explanation": "Dynamic ARP inspection is an ingress security feature; it does not perform any egress checking."
+  },
+  {
+    "legacyIndex": 628,
+    "legacyNumber": 91,
+    "prompt": "Refer to the exhibit.\n\nWhich prefix did router R1 learn from internal EIGRP?",
+    "options": [
+      "192.168.2.0/24",
+      "192.168.1.0/24",
+      "192.168.3.0/24",
+      "172.16.1.0/24"
+    ],
+    "answer": 0,
+    "explanation": "Internal EIGRP is symbolized by letter “D”. “EX” means external routes redistributed into EIGRP.\n\nNote: “E1” and “E2” are external OSPF routes."
+  },
+  {
+    "legacyIndex": 629,
+    "legacyNumber": 92,
+    "prompt": "Refer to the exhibit.\n\nRouter R1 must be configured to reach the 10.0.3.0 network from the 10.0.1.0/24 segment. Which\ncommand must be used to configure the route?",
+    "options": [
+      "route add 10.0.3.0 0.255.255.255 10.0.4.2",
+      "route add 10.0.3.0 mask 255.255.255.0 10.0.4.3",
+      "ip route 10.0.3.0 0.255.255.255 10.0.4.2",
+      "ip route 10.0.3.0 255.255.255.0 10.0.4.3"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 630,
+    "legacyNumber": 93,
+    "prompt": "What is a benefit for external users who consume public cloud resources?",
+    "options": [
+      "implemented over a dedicated WAN",
+      "located in the same data center as the users",
+      "all hosted on physical servers",
+      "accessed over the Internet"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 631,
+    "legacyNumber": 94,
+    "prompt": "In an SDN architecture, which function of a network node is centralized on a controller?",
+    "options": [
+      "provides protocol access for remote access devices",
+      "discards a message due filtering",
+      "creates the IP routing table",
+      "makes a routing decision"
+    ],
+    "answer": 3,
+    "explanation": "The Open Networking Foundation identifies three main parts of the Software-defined networking (SDN):\nApplication layer; Control layer and Infrastructure layer. SDN separates a router’s control plane from the\ndata (forwarding) plane. The control plane makes routing decisions. The data plane forwards data\n(packets) through the router. With SDN routing, decisions are made remotely instead of on each\nindividual router."
+  },
+  {
+    "legacyIndex": 632,
+    "legacyNumber": 95,
+    "prompt": "An engineer must configure neighbor discovery between the company router and an ISP.\n\n interface gigabitethernet0/0\n description Circuit-ATT4202-\n 89930\n duplex full\n speed 1000\n media-type gbic\n negotiation auto\n lldp transmit\n lldp receive\n\nWhat is the next step to complete the configuration if the ISP uses a third-party router?",
+    "options": [
+      "Disable CDP on gi0/0.",
+      "Disable auto-negotiation.",
+      "Enable LLDP TLVs on the ISP router.",
+      "Enable LLDP globally."
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 633,
+    "legacyNumber": 96,
+    "prompt": "Which SDN plane forwards user-generated traffic?",
+    "options": [
+      "policy plane",
+      "management plane",
+      "data plane",
+      "control plane"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 634,
+    "legacyNumber": 97,
+    "prompt": "When should an engineer implement a collapsed-core architecture?",
+    "options": [
+      "for large networks that are connected to multiple remote sites",
+      "the access and distribution layers must be on the same device",
+      "only when using VSS technology",
+      "for small networks with minimal need for growth"
+    ],
+    "answer": 3,
+    "explanation": "The three-tier hierarchical design maximizes performance, network availability, and the ability to scale\nthe network design. Most small enterprise campus’ do not grow significantly larger over time, and most\nsmall enterprise campus are small enough to be well served by a two-tier hierarchical design, where the\ncore and distribution layers are collapsed into one layer. The primary motivation for the collapsed core\ndesign is reducing network cost, while maintaining most of the benefits of the three-tier hierarchical\nmodel."
+  },
+  {
+    "legacyIndex": 635,
+    "legacyNumber": 98,
+    "prompt": "Refer to the exhibit.\n\nRouters R1 and R2 have been configured with their respective LAN interfaces. The two circuits are\noperational and reachable across WAN. Which command set establishes failover redundancy if the\nprimary circuit goes down?",
+    "options": [
+      "R1(config)#ip route 0.0.0.0 0.0.0.0 10.10.10.6 2\nR2(config)#ip route 0.0.0.0 0.0.0.0 10.10.10.5 2",
+      "R1(config)#ip route 10.10.13.10 255.255.255.255 10.10.10.6\nR2(config)#ip route 192.166.0.100 255.255.255.255 10.10.10.5",
+      "R1(config)#ip route 10.10.13.10 255.255.255.255 10.10.10.2\nR2(config)#ip route 192.168.0.100 255.255.255.255 10.10.10.1",
+      "R1(config)#ip route 0.0.0.0 0.0.0.0 10.10.10.6\nR2(config)#ip route 0.0.0.0 0.0.0.0 10.10.10.5"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 636,
+    "legacyNumber": 99,
+    "prompt": "Drag and drop the traffic types from the left onto the QoS delivery mechanisms on the right.",
+    "type": "match",
+    "items": [
+      "best effort",
+      "priority queue",
+      "policing",
+      "shaping"
+    ],
+    "choices": [
+      "standard Web browsing traffic",
+      "VoIP traffic",
+      "video traffic",
+      "database synchronization traffic"
+    ],
+    "answer": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "explanation": "+ best effort: standard Web browsing traffic (Regular Web traffic is considered a low priority, TCP or UDP)\n+ priority queue: VoIP traffic (VoIP is time sensitive and it uses UDP to speed up the delivery of packets.\nBut it should have priority to guarantee quality)\n+ policing: video traffic (Video stream is time sensitive and it uses UDP to speed up the delivery of\npackets. But the bandwidth for video is much higher than voice so we can drop some packets if there is\nnot enough bandwidth. The quality is still acceptable for most viewers)\n+ shaping: database synchronization traffic (DB communications use TCP to warranties the delivery of the\npackets, queuing the packets don’t affect the transmission)"
+  },
+  {
+    "legacyIndex": 637,
+    "legacyNumber": 100,
+    "prompt": "What is a function performed by a web server?",
+    "options": [
+      "provide an application that is transmitted over HTTP",
+      "send and retrieve email from client devices",
+      "securely store files for FTP access",
+      "authenticate and authorize a user’s identity"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 638,
+    "legacyNumber": 101,
+    "prompt": "Drag and drop the functions of AAA supporting protocols from the left onto the protocols on the right.",
+    "type": "match",
+    "items": [
+      "encrypts only the password when it sends an access request",
+      "combines authentication and authorization",
+      "uses UDP",
+      "separates all three AAA operations",
+      "encrypts the entire body of the access-request packet",
+      "uses TCP"
+    ],
+    "choices": [
+      "RADIUS",
+      "TACACS+"
+    ],
+    "answer": [
+      0,
+      0,
+      0,
+      1,
+      1,
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 639,
+    "legacyNumber": 102,
+    "prompt": "Which two wireless security standards use Counter Mode Cipher Block Chaining Message Authentication\nCode Protocol for encryption and data integrity? (Choose two)",
+    "options": [
+      "WPA2",
+      "WPA3",
+      "WEP",
+      "WPA",
+      "Wi-Fi 6"
+    ],
+    "answer": [
+      0,
+      1
+    ],
+    "type": "multi",
+    "explanation": "WPA2 mandates the use of a new protocol, counter mode with cipher-block chaining message\nauthentication protocol (CCMP). CCMP uses the AES block cipher, replacing the RC4 cipher used in wired\nequivalent privacy (WEP) and temporal key integrity protocol (TKIP).\n\nCCMP is a security protocol. It follows carefully designed steps that include the use of the AES specified\nalgorithm to encrypt sensitive data.\n\nCCMP-128 (AES-128 in CCM mode) is used as the minimum encryption algorithm in WPA3-Personal\nmode."
+  },
+  {
+    "legacyIndex": 640,
+    "legacyNumber": 103,
+    "prompt": "What is a practice that protects a network from VLAN hopping attacks?",
+    "options": [
+      "Implement port security on internet-facing VLANs.",
+      "Configure an ACL to prevent traffic from changing VLANs.",
+      "Assign all access ports to VLANs other than the native VLAN.",
+      "Enable dynamic ARP inspection."
+    ],
+    "answer": 2,
+    "explanation": "VLAN Hopping: By altering the VLAN ID on packets encapsulated for trunking, an attacking device can\nsend or receive packets on various VLANs, bypassing Layer 3 security measures. VLAN hopping can be\naccomplished by switch spoofing or double tagging. One of a popular type of VLAN Hopping is\n\nDouble-Tagging attack:\n\nIn this attack, the attacking computer generates frames with two 802.1Q tags. The first tag matches the\nnative VLAN of the trunk port (VLAN 10 in this case), and the second matches the VLAN of a host it wants\nto attack (VLAN 20).\n\nWhen the packet from the attacker reaches Switch A, Switch A only sees the first VLAN 10 and it matches\nwith its native VLAN 10 so this VLAN tag is removed. Switch A forwards the frame out all links with the\nsame native VLAN 10. Switch B receives the frame with an tag of VLAN 20 so it removes this tag and\nforwards out to the Victim computer.\n\nNote: This attack only works if the trunk (between two switches) has the same native VLAN as the\nattacker. In other words, this attack is only successful if the attacker belongs to the native VLAN of the\ntrunk link. Another important point is, this attack is strictly one way as it is impossible to encapsulate the\nreturn packet.\n\nTo mitigate this type of attack, we can use VLAN access control lists (VACLs, which applies to all traffic\nwithin a VLAN. We can use VACL to drop attacker traffic to specific victims/servers); or implement Private\nVLANs; or keep the native VLAN of all trunk ports different from user VLANs."
+  },
+  {
+    "legacyIndex": 641,
+    "legacyNumber": 104,
+    "prompt": "Refer to the exhibit.\n\nR1#show ip route\n\nCodes: C - connected, S - static, R - RIP, M - mobile, B - BGP\n\n    D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area\n\n    N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2\n\n    E1 - OSPF external type 1, E2 - OSPF external type 2\n\n    i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2\n\n    ia - IS-IS inter area, * - candidate default, U - per-user static route\n\n    o - ODR, P - periodic downloaded static route, H - NHRP, l - LISP\n\n    + - replicated route, % - next hop override\n\nGateway of last resort is 10.56.0.1 to network 0.0.0.0\n\nS*      0.0.0.0/0 [1/0] via 10.56.0.1\n\n        10.0.0.0/8 is variably subnetted, 2 subnets, 2 masks\n\nC        10.56.0.0/17 is directly connected, Vlan56\n\nL        10.56.0.19/32 is directly connected, Vlan56\n\nC        10.56.128.0/18 is directly connected, Vlan57\n\nL        10.56.128.19/32 is directly connected, Vlan57\n\nWhen router R1 is sending traffic to IP address 10.56.192.1, which interface or next hop address does it\nuse to route the packet?",
+    "options": [
+      "0.0.0.0/0",
+      "Vlan57",
+      "10.56.0.1",
+      "10.56.128.19"
+    ],
+    "answer": 2,
+    "explanation": "First we check to see if 10.56.192.1 falls into 10.56.128.0/18 or 10.56.0.0/17 subnets:\n\n10.56.128.0/18 (Increment: 64)\nNetwork address: 10.56.128.0\nBroadcast address: 10.56.191.255\n\n10.56.0.0/17 (Increment: 128)\nNetwork address: 10.56.0.0\nBroadcast address: 10.56.127.255\n\nAs we can see 10.56.192.1 does not belong to above subnets or any other subnets in R1 routing table so\nR1 will use the default route to forward the packets. This question asks “which interface or next hop\naddress” so the answer is the default route uses the next hop of 10.56.0.1."
+  },
+  {
+    "legacyIndex": 642,
+    "legacyNumber": 105,
+    "prompt": "What is a function of MAC learning on a switch?",
+    "options": [
+      "A static MAC address is manually added to the MAC table.",
+      "MAC address learning is disabled by default on all VLANs.",
+      "Frames received for a destination MAC address not listed in the address table are dropped.",
+      "The MAC address table is used to populate the ARP table."
+    ],
+    "answer": 0,
+    "explanation": "MAC address learning is enabled by default on all VLANs -> Answer B is not correct.\n\nIf a destination MAC address is unknown then the switch will broadcast the frame out all ports except\nthe port where the frame is received -> Answer C is not correct.\n\nThe ARP table is built from the replies to the ARP requests, recorded before a packet is sent on the\nnetwork ->Answer D is not correct.\n\nWe can use the “mac address-table static 001d.a18b.36d0 vlan 5 interface fastEthernet 0/2” for example\nto manually add a MAC address into the MAC table."
+  },
+  {
+    "legacyIndex": 643,
+    "legacyNumber": 106,
+    "prompt": "What is the difference between 1000BASE-LX/LH and 1000BASE-ZX interfaces?",
+    "options": [
+      "1000BASE-LX/LH interoperates with multimode and single-mode fiber, and 1000BASE-ZX needs a conditioning patch cable with a multimode.",
+      "1000BASE-ZX is supported on links up to 1000km, and 1000BASE-LX/LH operates over links up to 70 km.",
+      "1000BASE-ZX interoperates with dual-rate 100M/1G 10Km SFP over multimode fiber, and 1000BASE- LX/LH supports only single-rate.",
+      "1000BASE-LX/LH is supported on links up to 10km, and 1000BASE-ZX operates over links up to 70 km."
+    ],
+    "answer": 3,
+    "explanation": "Below lists the cabling standards mentioned above\n\n Standard         Cabling                               Maximum length\n\n 1000BASE-        Twinaxial cabling                     25 meters\n CX\n\n 100BASE-FX       Two strands, multimode                400 m\n\n 1000BASE-        Long-wavelength laser, MM or          10 km (SM) 3 km (MM)\n LX               SM fiber\n\n 1000BASE-        Short-wavelength laser, MM fiber      220 m with 62.5-micron fiber; 550 m with 50-\n SX                                                     micron fiber\n\n 1000BASE-        Extended wavelength, SM fiber         100 km\n ZX\n\nNote:\n\n+ MM: Multimode\n+ SM: Single-mode\n\nAlthough above list says the maximum length of 1000BASE-ZX is 100km but in practical it is usually from\n70 to 80 km depending on link loss."
+  },
+  {
+    "legacyIndex": 644,
+    "legacyNumber": 107,
+    "prompt": "What is the effect when loopback interfaces and the configured router ID are absent during the OSPF\nProcess configuration?",
+    "options": [
+      "The router ID 0.0.0.0 is selected and placed in the OSPF process.",
+      "No router ID is set, and the OSPF protocol does not run.",
+      "The highest up/up physical interface IP address is selected as the router ID.",
+      "The lowest IP address is incremented by 1 and selected as the router ID."
+    ],
+    "answer": 2,
+    "explanation": "OSPF uses the following criteria to select the router ID:\n1. Manual configuration of the router ID (via the “router-id x.x.x.x” command under OSPF router\nconfiguration mode).\n2. Highest IP address on a loopback interface.\n3. Highest IP address on a non-loopback and active (no shutdown) interface."
+  },
+  {
+    "legacyIndex": 645,
+    "legacyNumber": 108,
+    "prompt": "Refer to the exhibit.\n\nWhat is expected when PC_A sends data to PC_B after their initial communication?",
+    "options": [
+      "The source and destination MAC addresses remain the same",
+      "The switch rewrites the source and destination MAC addresses with its own",
+      "The source MAC address is changed",
+      "The destination MAC address is replaced with ffff.ffff.ffff"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 646,
+    "legacyNumber": 1,
+    "prompt": "Refer to the exhibit.\n\nAn engineer is asked to configure router R1 so that it forms an OSPF single-area neighbor relationship with R2. Which command sequence must\nbe implemented to configure the router?",
+    "options": [
+      "router ospf 10\nnetwork 10.0.0.0 0.0.0.3 area 0\nnetwork 10.0.2.0 0.0.0.255 area 0",
+      "router ospf 10\nnetwork 10.0.0.0 0.0.0.3 area 0\nnetwork 10.0.1.0 0.0.0.255 area 0",
+      "router ospf 10\nnetwork 10.0.0.0 0.0.0.3 area 0\nnetwork 10.0.2.0 255.255.255.0 area 0",
+      "router ospf 10\nnetwork 10.0.0.0 0.0.0.252 area 0\nnetwork 10.0.1.0 0.0.0.255 area 0"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 647,
+    "legacyNumber": 2,
+    "prompt": "Drag and drop the HTTP methods used with REST-Based APIs from the left onto the descriptions on the right.",
+    "type": "match",
+    "items": [
+      "creates a resource and returns to URI in the response header",
+      "creates or replaces a previously modified resource using information in the request body",
+      "removes a resource",
+      "retrieves a list of a resource’s URIs",
+      "updates a resource using instructions included in the request body"
+    ],
+    "choices": [
+      "POST",
+      "PUT",
+      "DELETE",
+      "GET",
+      "PATCH"
+    ],
+    "answer": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "explanation": "GET: retrieve data\nPOST: create data\nPUT: fully update (i.e. replace) an existing record\nPATCH: update part of an existing record\nDELETE: delete records\n\nPUT is similar to POST in that it can create resources, but it does so when there is a defined URL wherein PUT replaces the entire resource if it\nexists or creates new if it does not exist.\n\nUnlike PUT Request, PATCH does partial update. Fields that need to be updated by the client, only that field is updated without modifying the\nother field."
+  },
+  {
+    "legacyIndex": 648,
+    "legacyNumber": 3,
+    "prompt": "What is the collapsed layer in collapsed core architectures?",
+    "options": [
+      "core and WAN",
+      "access and WAN",
+      "distribution and access",
+      "core and distribution"
+    ],
+    "answer": 3,
+    "explanation": "Collapsed core networks can save the company money by reducing the amount of hardware needed to build and run the network. By combining\nthe core and distribution layers, this model eliminates the need for separate devices. This offers companies the chance to utilize most of the\nbenefits offered by the three-tiered model in a budget-friendly option."
+  },
+  {
+    "legacyIndex": 649,
+    "legacyNumber": 4,
+    "prompt": "What is the MAC address used with VRRP as a virtual address?",
+    "options": [
+      "00-00-0C-07-AD-89",
+      "00-00-5E-00-01-0a",
+      "00-07-C0-70-AB-01",
+      "00-C6-41-93-90-91"
+    ],
+    "answer": 1,
+    "explanation": "With VRRP, the virtual router’s MAC address is 0000.5E00.01xx , in which xx is the VRRP group.\n\nNote: We are not sure why there is a VRRP question here as it is not in the syllabus of the exam."
+  },
+  {
+    "legacyIndex": 650,
+    "legacyNumber": 5,
+    "prompt": "Drag and drop the IPv6 addresses from the left onto the corresponding address types on the right.",
+    "type": "match",
+    "items": [
+      "Global unicast",
+      "Link-Local unicast",
+      "Multicast",
+      "Unique Local"
+    ],
+    "choices": [
+      "2001:db8:600d:cafe::123",
+      "fe80:a00:27ff:feeb:8eaa",
+      "ff05::1:3",
+      "fcba:926a:e8e:7a25:b1:c6d2:1a76:8fdc"
+    ],
+    "answer": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "explanation": "Link-local addresses are allocated with the FE80::/64 prefix -> can be easily recognized by the prefix FE80\nAll IPv6 multicast addresses share the prefix of FF00::/8 -> The first octet is FF (1111 1111). This way you can tell at a glance if an IPv6 address is\nintended for multicast or not.\nUnique local IPv6 addresses have the similar function as IPv4 private addresses. They are not allocated by an address registry and are not meant\nto be routed outside their domain. Unique local IPv6 addresses start with FC00::/7 -> The first octet can be FC or FD. However when you\nimplement this you have to set the L-bit (the right-most bit of the first octet) to 1 which means that the first two digits will be FD."
+  },
+  {
+    "legacyIndex": 651,
+    "legacyNumber": 6,
+    "prompt": "Refer to the exhibit.\n\nAll routers in the network are configured. R2 must be the DR. After the engineer connected the devices, R1 was elected as the DR. Which\ncommand sequence must be configure on R2 to be elected as the DR in the network?",
+    "options": [
+      "R2(config)#interface gi0/0\nR2(config-if)#ip ospf priority 1",
+      "R2(config)#interface gi0/0\nR2(config-if)#ip ospf priority 100",
+      "R2(config)#router ospf 1\nR2(config-router)#router-id 10.100.100.100",
+      "R2(config)#router ospf 1\nR2(config-router)#router-id 192.168.2.7"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 652,
+    "legacyNumber": 7,
+    "prompt": "Which set of 2.4 GHz nonoverlapping wireless channels is standard in the United States?",
+    "options": [
+      "channels 2, 7, 9, and 11",
+      "channels 1, 6, 11, and 14",
+      "channels 2, 7, and 11",
+      "channels 1, 6, and 11"
+    ],
+    "answer": 3,
+    "explanation": "The 2.4 GHz band is subdivided into multiple channels each allotted 22 MHz bandwidth and separated from the next channel by 5 MHz.\n-> A best practice for 802.11b/g/n WLANs requiring multiple APs is to use non-overlapping channels such as 1, 6, and 11."
+  },
+  {
+    "legacyIndex": 653,
+    "legacyNumber": 8,
+    "prompt": "Which command entered on a switch configured with Rapid-PVST+ listens and learns for a specific time period?",
+    "options": [
+      "switch(config)#spanning-tree vlan 1 max-age 6",
+      "switch(config)#spanning-tree vlan 1 hello-time 10",
+      "switch(config)#spanning-tree vlan 1 priority 4096",
+      "switch(config)#spanning-tree vlan 1 forward-time 20"
+    ],
+    "answer": 3,
+    "explanation": "The command spanning-tree vlan 1 forward-time …” controls how fast a port changes its spanning tree state from blocking to forwarding."
+  },
+  {
+    "legacyIndex": 654,
+    "legacyNumber": 9,
+    "prompt": "Drag and drop the Wi-Fi terms from the left onto the descriptions on the right.",
+    "type": "match",
+    "items": [
+      "Wi-Fi option based around one or more access points",
+      "Wi-Fi option in which cells from different access points are linked together",
+      "alphanumeric text string that identifies a wireless network",
+      "Wi-Fi option that enables two or more clients to communicate directly without a central access point",
+      "entire wireless cell of an access point and the linkage to the wired network"
+    ],
+    "choices": [
+      "distribution system",
+      "extended service set",
+      "SSID",
+      "independent basic service set",
+      "infrastructure mode"
+    ],
+    "answer": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "explanation": "A Wireless Distribution System (WDS) lets you connect multiple access points together. WDS allows the connected access points to\ncommunicate with each other via wireless connection. This feature enables clients who roam to have a seamless experience. This makes it\neasier to manage multiple wireless networks as well as reduces the amount of cables required to connect the networks.\n\nAccess Points are limited devices. They can cover a Basic Service Area (BSA) and it is called a Cell. But in many companies network area is very\nlarge that only one Access Point can not cover all the area. So, additional Access Points are used to cover all the area. This Access Points are\nconnected through an Ethernet Switch and they become a single continuous and seamless connection from the client perspective. User can go\nfrom one cell to another without connection interrupt. So, combining one more Access Point in a switched network is called Extended Service\nSet (ESS).\n\nIndependent Basic Service Set (IBSS), as the name suggests, is a service set that allows wireless devices or stations to communicate with each\nother without any medium or central device. It does not contain or include any AP (Access Point). That’s why it is also known as an ad hoc mode\nor peer to peer network.\n\nExtended Service Set (ESS): uses more than one AP to create a WLAN, allows roaming in a larger area than a single AP.\n\nInfrastructure mode is an 802.11 networking framework in which devices communicate with each other by first going through an Access Point\n(AP). In infrastructure mode, wireless devices can communicate with each other or can communicate with a wired network."
+  },
+  {
+    "legacyIndex": 655,
+    "legacyNumber": 10,
+    "prompt": "Refer to the exhibit.\n\ninterface g2/0/0\n\nchannel-group 1 mode active\n\ninterface g4/0/0\n\nchannel-group 1 mode active\n\ninterface Port-channel1\n\nip address 203.0.113.65 255.255.255.252\n\n%LINEPROTO-5-UPDOWN: Line protocol on Interface Port-channel1, changed state to down\n\nAn engineer is configuring a Layer 3 port-channel interface with LACP. The configuration on the first device is complete, and it is verified that\nboth interfaces have registered the neighbor device in the CDP table. Which task on the neighbor device enables the new port channel to come\nup without negotiating the channel?",
+    "options": [
+      "Bring up the neighboring interfaces using the no shutdown command.",
+      "Change the EtherChannel mode on the neighboring interfaces to auto",
+      "Modify the static EtherChannel configuration of the device to passive mode",
+      "Configure the IP address of the neighboring device"
+    ],
+    "answer": 2,
+    "explanation": "Our switch can see neighbor switch in the CDP table which means the interfaces of both ends have been turned on (with no shutdown\ncommand) -> Answer A is not correct.\n\nOur switch is using LACP (active/passive mode) so we cannot use PAgP (auto/desirable mode) on the neighboring interface -> Answer B is not\ncorrect.\n\nThe error is at Layer 2 (“changed state to down”) so it is not about “configuring the IP address” of the neighboring device which is at Layer 3 ->\nAnswer D is not correct.\n\nTherefore only answer C is left. We have to change the Etherchannel mode of neighboring device from static to passive for LACP."
+  },
+  {
+    "legacyIndex": 656,
+    "legacyNumber": 11,
+    "prompt": "Refer to the exhibit.\n\nWhat is the next hop for traffic entering R1 with a destination of 10.1.2.126?",
+    "options": [
+      "10.165.20.126",
+      "10.165.20.146",
+      "10.165.20.166",
+      "10.165.20.226"
+    ],
+    "answer": 2,
+    "explanation": "The static route destined to subnet 10.1.2.112/28 which ranges from 10.1.2.112 to 10.1.2.127 (increment: 16) so it also covers the destination\nof 10.1.2.126. The static route also has the lowest AD (of 1) so the router will choose this path."
+  },
+  {
+    "legacyIndex": 657,
+    "legacyNumber": 12,
+    "prompt": "Refer to the exhibit.\n\nA network engineer must configure R1 so that it sends all packets destined to the 10.0.0.0/24 network to R3, and all packets destined to PC1 to\nR2. Which configuration must the engineer implement?",
+    "options": [
+      "R1(config)#ip route 10.0.0.0 255.255.0.0 172.16.0.2\nR1(config)#ip route 10.0.0.5 255.255.255.255 192.168.0.2",
+      "R1(config)#ip route 10.0.0.0 255.255.255.0 172.16.0.2\nR1(config)#ip route 10.0.0.5 255.255.255.255 192.168.0.2",
+      "R1(config)#ip route 10.0.0.0 255.255.0.0 192.168.0.2\nR1(config)#ip route 10.0.0.0 255.255.255.0 172.16.0.2",
+      "R1(config)#ip route 10.0.0.0 255.255.255.0 192.168.0.2\nR1(config)#ip route 10.0.0.5 255.255.255.255 172.16.0.2"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 658,
+    "legacyNumber": 13,
+    "prompt": "Drag and drop the facts about wireless architectures from the left onto the types of access point on the right. Not all options are used.",
+    "type": "match",
+    "items": [
+      "acccessible for management via Tenet SSH, or a Web GUI",
+      "requires a management IP address",
+      "configured and managed by a WLC",
+      "supports different operational modes"
+    ],
+    "choices": [
+      "Autonomous Access Point",
+      "Lightweight Access Point"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": "An autonomous AP is a self-contained device with both wired and wireless hardware so that it can bridge to the wired VLAN infrastructure\nwireless clients that belong to SSIDs. Each autonomous AP must be configured with a management IP address so that it can be remotely\naccessed using Telnet, SSH, or a web interface. Each AP must be individually managed and maintained unless you use a management platform\nsuch as Cisco DNA Center."
+  },
+  {
+    "legacyIndex": 659,
+    "legacyNumber": 14,
+    "prompt": "Drag and drop the functions of SNMP fault-management from the left onto the definitions on the right.",
+    "type": "match",
+    "items": [
+      "The network management system launches a preconfigured script to restore functionality",
+      "The administrator can manually intervene at the source of the fault",
+      "The system identifies performance degradation or service interruption",
+      "The system groups alarms from related issues",
+      "The system reports on the source of the issue"
+    ],
+    "choices": [
+      "restoration of service",
+      "problem resolution",
+      "fault detection",
+      "event correlation and aggregation",
+      "fault diagnosis and isolation"
+    ],
+    "answer": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "explanation": "Fault management is the component of network management concerned with detecting, isolating and resolving problems. Properly\nimplemented, network fault management can keep connectivity, applications and services running at an optimum level, provide fault tolerance\nand minimize downtime. Platforms or tools designed specifically for this purpose are called fault management systems.\n\n+ Fault detection: The system discovers that service delivery has been interrupted or its performance has degraded.\n+ Fault diagnosis and isolation: The source of the fault, such as a component failure or power outage, and its location in the network topology\nare identified.\n+ Event correlation and aggregation: A single fault can cause multiple alarms, fault management systems often group related events for\nadministrators and provide a root cause analysis.\n+ Restoration of service: The network management system automatically executes any preconfigured scripts or programs to get services up and\nrunning as soon as possible.\n+ Problem resolution: The source of the fault is corrected, repaired or replaced. Depending on the cause, manual intervention may be required."
+  },
+  {
+    "legacyIndex": 660,
+    "legacyNumber": 15,
+    "prompt": "What is the purpose of the Cisco DNA Center controller?",
+    "options": [
+      "to securely manage and deploy network devices",
+      "to scan a network and generate a layer 2 network diagram",
+      "to provide Layer 3 services to autonomous access points",
+      "to secure physical access to a data center"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 661,
+    "legacyNumber": 16,
+    "prompt": "Refer to the exhibit.\n\nAn engineer must configure router R2 so it is elected as the DR on the WAN subnet. Which command sequence must be configured?",
+    "options": [
+      "interface gigabitethernet0/0\nip address 10.0.1.1 255.255.255.224\nip ospf priority 98",
+      "interface gigabitethernet0/0\nip address 10.0.1.1 255.255.255.0\nip ospf priority 255",
+      "interface gigabitethernet0/0\nip address 10.0.0.34 255.255.255.248\nip ospf priority 0",
+      "interface gigabitethernet0/0\nip address 10.0.0.34 255.255.255.224\nip ospf priority 100"
+    ],
+    "answer": 3,
+    "explanation": "The OSPF priority of R1 is 99 so we have to set the OSPF priority to a higher value. Also the IP address must be 10.0.0.34/27."
+  },
+  {
+    "legacyIndex": 662,
+    "legacyNumber": 17,
+    "prompt": "Refer to the exhibit.\n\nR1 has just received a packet from host A that is destined to host B. Which route in the routing table is used by R1 to reach host B?",
+    "options": [
+      "10.10.13.0/25[1/0] via 10.10.10.2",
+      "10.10.13.0/25[110/2] via 10.10.10.6",
+      "10.10.13.0/25[110/2] via 10.10.10.2",
+      "10.10.13.0/25[108/0] via 10.10.10.10"
+    ],
+    "answer": 3,
+    "explanation": "The “10.10.13.0/25[1/0] via 10.10.10.2” entry is from default route (ip route 0.0.0.0 0.0.0.0 10.10.10.2) so it is only used when no other routes\nto 10.10.13.0/25 is found.\n\nIn three static routes, the best match for host B should be “ip route 10.10.13.0 255.255.255.128 10.10.10.10 108” with lowest AD of 108 so R1\nwould choose this path. This AD is also lower than the AD of OSPF so it is preferred over OSPF learned routes."
+  },
+  {
+    "legacyIndex": 663,
+    "legacyNumber": 18,
+    "prompt": "Refer to the exhibit.\n\nThe given Windows PC is requesting the IP address of the host at www.cisco.com. To which IP address is the request sent?",
+    "options": [
+      "192.168.1.226",
+      "192.168.1.253",
+      "192.168.1.100",
+      "192.168.1.254"
+    ],
+    "answer": 1,
+    "explanation": "In this question, the Windows PC is trying to resolve the domain name www.cisco.com to an IP address so it will need a DNS server.\n\nFrom the output we see the line “DNS Servers …: 192.168.1.253” so this is the IP address the request is sent. Notice that the “Default Gateway”\nIP address is in the same subnet of DNS Server so the PC can directly send request to the DNS Server."
+  },
+  {
+    "legacyIndex": 664,
+    "legacyNumber": 19,
+    "prompt": "What is a feature of TFTP?",
+    "options": [
+      "provides secure data transfer",
+      "relies on the well-known TCP port 20 to transmit data",
+      "uses two separate connections for control and data traffic",
+      "offers anonymous user login ability"
+    ],
+    "answer": 3,
+    "explanation": "TFTP is a simple protocol for transferring files, implemented on top of the UDP/IP protocols using well-known port number 69 -> Answer A and\nanswer B are not correct.\n\nTFTP has no session control -> Answer C is not correct."
+  },
+  {
+    "legacyIndex": 665,
+    "legacyNumber": 20,
+    "prompt": "Which access point mode relies on a centralized controller for management, roaming, and SSID configuration?",
+    "options": [
+      "repeater mode",
+      "bridge mode",
+      "lightweight mode",
+      "autonomous mode"
+    ],
+    "answer": 2,
+    "explanation": "Lightweight: The term ‘lightweight’ refers to the fact that these devices cannot work independently. A Cisco lightweight AP (LAP) has to join a\nWireless LAN Controller (WLC) to function."
+  },
+  {
+    "legacyIndex": 666,
+    "legacyNumber": 21,
+    "prompt": "Which command creates a static NAT binding for a PC address of 10.1.1.1 to the public routable address 209.165.200.225 assigned to the PC?",
+    "options": [
+      "R1(config)#ip nat outside source static 209.165.200.225 10.1.1.1",
+      "R1(config)#ip nat inside source static 209.165.200.225 10.1.1.1",
+      "R1(config)#ip nat outside source static 10.1.1.1 209.165.200.225",
+      "R1(config)#ip nat inside source static 10.1.1.1 209.165.200.225"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 667,
+    "legacyNumber": 22,
+    "prompt": "Refer to the exhibit.\n\nRIP 10.1.1.16/28[120/5] via F0/0\n\nOSPF 10.1.1.0/24[110/30] via F0/1\n\nOSPF 10.1.1.0/24[110/40] via F0/2\n\nEIGRP 10.1.0.0/26[90/20] via F0/3\n\nEIGRP 10.0.0.0/8[90/133] via F0/4\n\nPackets received by the router from BGP enter via a serial interface at 209.165.201.1. Each route is present within the routing table. Which\ninterface is used to forward traffic with a destination IP of 10.1.1.19?",
+    "options": [
+      "F0/0",
+      "F0/1",
+      "F0/3",
+      "F0/4"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 668,
+    "legacyNumber": 23,
+    "prompt": "Which two REST API status-code classes represent errors? (Choose two)",
+    "options": [
+      "1XX",
+      "2XX",
+      "3XX",
+      "4XX",
+      "5XX"
+    ],
+    "answer": [
+      3,
+      4
+    ],
+    "type": "multi",
+    "explanation": "HTTP defines these standard status codes that can be used to convey the results of a client’s request. The status codes are divided into five\ncategories.\n1xx: Informational – Communicates transfer protocol-level information.\n2xx: Success – Indicates that the client’s request was accepted successfully.\n3xx: Redirection – Indicates that the client must take some additional action in order to complete their request.\n4xx: Client Error – This category of error status codes points the finger at clients.\n5xx: Server Error – The server takes responsibility for these error status codes."
+  },
+  {
+    "legacyIndex": 669,
+    "legacyNumber": 24,
+    "prompt": "An engineer has configured the domain name, user name, and password on the local router. What is the next step to complete the configuration\nfor a Secure Shell access RSA key?",
+    "options": [
+      "crypto key generate rsa",
+      "crypto key pubkey-chain rsa",
+      "crypto key import rsa pem",
+      "crypto key zeroize rsa"
+    ],
+    "answer": 0,
+    "explanation": "Steps to configure SSH:\n1. Configure the router hostname using command “hostname”.\n2. Configure the domain name using command “ip domain-name”.\n3. Generate public and private keys using command “crypto key generate rsa”.\n4. Create a user in the local database using command “username…secret”.\n5. Allow only SSH access on VTY lines using command “transport input ssh”."
+  },
+  {
+    "legacyIndex": 670,
+    "legacyNumber": 25,
+    "prompt": "Which encryption method is used by WPA3?",
+    "options": [
+      "TKIP",
+      "SAE",
+      "PSK",
+      "AES"
+    ],
+    "answer": 3,
+    "explanation": "From the below figure, we can see that SAE is only the authentication method. WPA3 uses AES for encryption method both for WPA3-Personal:\n\nand WPA3-Enterprise:"
+  },
+  {
+    "legacyIndex": 671,
+    "legacyNumber": 26,
+    "prompt": "An engineer is configuring remote access to a router from IP subnet 10.139.58.0/28. The domain name, crypto keys, and SSH have been\nconfigured. Which configuration enables the traffic on the destination router?",
+    "options": [
+      "interface FastEthernet0/0\nip address 10.122.49.1 255.255.255.248\nip access-group 10 in\nip access-list standard 10\npermit udp 10.139.58.0 0.0.0.7 host 10.122.49.1 eq 22",
+      "interface FastEthernet0/0\nip address 10.122.49.1 255.255.255.252\nip access-group 105 in\nip access-list standard 105\npermit tcp 10.139.58.0 0.0.0.7 eq 22 host 10.122.49.1",
+      "interface FastEthernet0/0\nip address 10.122.49.1 255.255.255.252\nip access-group 110 in\nip access-list extended 110\npermit tcp 10.139.58.0 0.0.0.15 host 10.122.49.1 eq 22",
+      "interface FastEthernet0/0\nip address 10.122.49.1 255.255.255.240\naccess-group 120 in\nip access-list extended 120\npermit tcp 10.139.58.0 255.255.255.248 any eq 22"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 672,
+    "legacyNumber": 27,
+    "prompt": "What is a function of spine-and-leaf architecture?",
+    "options": [
+      "mitigates oversubscription by adding a layer of leaf switches",
+      "limits payload size of traffic within the leaf layer",
+      "offers predictable latency of the traffic path between end devices",
+      "exclusively sends multicast traffic between servers that are directly connected to the spine"
+    ],
+    "answer": 2,
+    "explanation": "A spine-leaf architecture aids this by ensuring traffic is always the same number of hops from its next destination, so latency is lower and\npredictable."
+  },
+  {
+    "legacyIndex": 673,
+    "legacyNumber": 28,
+    "prompt": "What differentiates device management enabled by Cisco DNA Center from traditional campus device management?",
+    "options": [
+      "CLI-oriented device",
+      "centralized",
+      "per-device",
+      "device-by-device hands-on"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 674,
+    "legacyNumber": 29,
+    "prompt": "Refer to the exhibit.\n\nRouter R1 is added to the network and configured with the 10.0.0.64/26 and 10.0.20.0/24 subnets. However, traffic destined for the LAN on R3\nis not accessible. Which command when executed on R1 defines a static route to reach the R3 LAN?",
+    "options": [
+      "ip route 10.0.15.0 255.255.255.0 10.0.20.1",
+      "ip route 10.0.15.0 255.255.255.192 10.0.20.1",
+      "ip route 10.0.0.64 255.255.255.192 10.0.20.3",
+      "ip route 10.0.15.0 255.255.255.0 10.0.20.3"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 675,
+    "legacyNumber": 30,
+    "prompt": "Refer to the exhibit.\n\nRouter1#show ip route\n\nGateway of last resort is 10.10.11.2 to network 0.0.0.0\n\n 209.165.200.0/27 is subnetted, 1 subnets\n\nB 209.165.200.224 [20/0] via 10.10.12.2, 03:03:03\n\n 209.165.201.0/27 is subnetted, 1 subnets\n\nB 209.165.201.0 [20/0] via 10.10.12.2, 03:03:03\n\n 209.165.202.0/27 is subnetted, 1 subnets\n\nB 209.165.202.128 [20/0] via 10.10.12.2, 03:03:03\n\n 10.0.0.0/8 is variably subnetted, 8 subnets, 4 masks\n\nC 10.10.10.0/28 is directly connected, GigabitEthernet0/0\n\nC 10.10.11.0/30 is directly connected, FastEthernet2/0\n\nC 10.10.12.0/30 is directly connected, GigabitEthernet0/1\n\nO 10.10.13.0/25 [110/2] via 10.10.10.1, 00:00:03, GigabitEthernet0/0\n\nO 10.10.13.128/28 [110/2] via 10.10.10.1, 00:00:03, GigabitEthernet0/0\n\nO 10.10.13.144/28 [110/2] via 10.10.10.1, 00:00:03, GigabitEthernet0/0\n\nO 10.10.13.160/29 [110/2] via 10.10.10.1, 00:00:03, GigabitEthernet0/0\n\nO 10.10.13.208/29 [110/2] via 10.10.10.1, 00:00:03, GigabitEthernet0/0\n\nS* 0.0.0.0/0 [1/0] via 10.10.11.2\n\nDrag and drop the prefix lengths from the left onto the corresponding prefixes on the right. Not all prefixes are used.",
+    "type": "match",
+    "items": [
+      "10.10.13.0",
+      "10.10.13.144",
+      "10.10.13.160",
+      "209.165.202.128"
+    ],
+    "choices": [
+      "255.255.255.128",
+      "255.255.255.240",
+      "255.255.255.248",
+      "255.255.255.224"
+    ],
+    "answer": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 676,
+    "legacyNumber": 31,
+    "prompt": "What is a zero-day exploit?",
+    "options": [
+      "It is when an attacker inserts malicious code into a SQL server.",
+      "It is when a new network vulnerability is discovered before a fix is available.",
+      "It is when the perpetrator inserts itself in a conversation between two parties and captures or alters data.",
+      "It is when the network is saturated with malicious traffic that overloads resources and bandwidth."
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 677,
+    "legacyNumber": 32,
+    "prompt": "After a recent security breach and a RADIUS failure, an engineer must secure the console port of each enterprise router with a local username\nand password. Which configuration must the engineer apply to accomplish this task?\n\n  Option A                                                        Option B\n\n  aaa new-model                                                   username localuser secret plaintextpassword\n  aaa authorization exec default local                            line con 0\n  aaa authentication login default radius                         login authentication default\n  username localuser privilege 15 secret plaintextpassword        privilege level 15\n\n  Option C                                                        Option D\n\n  username localuser secret plaintextpassword                     aaa new-model\n  line con 0                                                      line con 0\n  no login local                                                  password plaintextpassword\n  privilege level 15                                              privilege level 15",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 1,
+    "explanation": "Option A is not correct as in fact the command “aaa authentication login default” should be “aaa authentication login default group radius”\nwhich will authenticate only via RADIUS server.\n\nOption C is not correct as the command “no login local” removes the requirement for local authentication on the console line.\n\nOption D is not correct as with the command “password plaintextpassword”, the device only asks for the password, not username.\n\nOption B is not correct as the command “login authentication default” specifies the default login authentication method but we need to define\nthat “default” method is to use local username and password with two additional commands “aaa new-model” and “aaa authentication login\ndefault local”. -> This is the best choice although it is not totally correct."
+  },
+  {
+    "legacyIndex": 678,
+    "legacyNumber": 33,
+    "prompt": "Which command implies the use of SNMPv3?",
+    "options": [
+      "snmp-server community",
+      "snmp-server host",
+      "snmp-server enable traps",
+      "snmp-server user"
+    ],
+    "answer": 3,
+    "explanation": "Only SNMPv3 requires to add a SNMP user to a group to work.\n\nNote: “community” string is the password which is used in SNMPv1 & v2. “snmp-server host” command can be used by both SNMPv2 & v3."
+  },
+  {
+    "legacyIndex": 679,
+    "legacyNumber": 34,
+    "prompt": "Refer to the exhibit.\n\nClients on the WLAN are required to use 802.11r. What action must be taken to meet the requirement?",
+    "options": [
+      "Enable CCKM under Authentication Key Management",
+      "Under Protected Management Frames, set the PMF option to Required",
+      "Set the Fast Transition option to Enable and enable FT 802.1X under Authentication Key Management",
+      "Set the Fast Transition option and the WPA gtk-randomize State to disable"
+    ],
+    "answer": 2,
+    "explanation": "Configuring 802.11r Fast Transition (GUI)\nProcedure\nStep 1 Choose WLANs to open the WLANs window.\n\nStep 2 Click a WLAN ID to open the WLANs > Edit window.\n\nStep 3 Choose Security > Layer 2 tab.\n\nStep 4 From the Layer 2 Security drop-down list, choose WPA+WPA2.\nThe Authentication Key Management parameters for Fast Transition are displayed.\n\nStep 5 From the Fast Transition drop-down list, choose Fast Transition on the WLAN.\n\nStep 6 Check or uncheck the Over the DS check box to enable or disable Fast Transition over a distributed system.\nThis option is available only if you enable Fast Transition or if Fast Transition is adaptive.\nTo use 802.11r Fast Transition over-the-air and over-the-ds must be disabled.\n\nStep 7 In the Reassociation Timeout field, enter the number of seconds after which the reassociation attempt of a client to an AP should time\nout. The valid range is 1 to 100 seconds.\nNote: This option is available only if you enable Fast Transition.\n\nStep 8 Under Authentication Key Management, choose FT 802.1X or FT PSK.\n\nFast BSS Transition (802.11r, often abbreviated to Fast Transition or FT) describes mechanisms by which a mobile device can reestablish existing\nsecurity and/or QoS parameters prior to reassociating to a new AP. These mechanisms are referred to as “fast” because they seek to significantly\nreduce the length of time that connectivity is interrupted between a mobile device and Wi-Fi infrastructure when that mobile device is\nconnecting to a new AP. Please note that the process of disconnecting from one AP and connecting to another AP is formally designated as a\n“BSS transition”. Therefore, the protocols established by FT apply to mobile device transitions between APs only within the same mobility\ndomain and within the same ESS (ESS transition is out of scope for FT)"
+  },
+  {
+    "legacyIndex": 680,
+    "legacyNumber": 35,
+    "prompt": "When a switch receives a frame for an unknown destination MAC address, how is the frame handled?",
+    "options": [
+      "broadcast to all ports on the switch",
+      "flooded to all ports except the origination port",
+      "forwarded to the first available port",
+      "inspected and dropped by the switch"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 681,
+    "legacyNumber": 36,
+    "prompt": "What is the default port-security behavior on a trunk link?",
+    "options": [
+      "It causes a network loop when a violation occurs.",
+      "It disables the native VLAN configuration as soon as port security is enabled.",
+      "It places the port in the err-disabled state if it learns more than one MAC address.",
+      "It places the port in the err-disabled state after 10 MAC addresses are statically configured."
+    ],
+    "answer": 2,
+    "explanation": "We tested it with IOS v15.2 and this is the result:\n\nWe can see the “Maximum MAC Addresses” is 1 so this port will be put in the err-disabled state if it learns more than one MAC address."
+  },
+  {
+    "legacyIndex": 682,
+    "legacyNumber": 37,
+    "prompt": "Refer to the exhibit.\n\nHow many objects are present in the given JSON-encoded data?",
+    "options": [
+      "one",
+      "four",
+      "seven",
+      "nine"
+    ],
+    "answer": 3,
+    "explanation": "Objects are enclosed in braces “{}” so we only need to count the number of “}” to specify how many objects in the JSON-encoded data. And\nthere are 9 closing brackets “{” so there are 9 objects."
+  },
+  {
+    "legacyIndex": 683,
+    "legacyNumber": 38,
+    "prompt": "What are two examples of multifactor authentication? (Choose two)",
+    "options": [
+      "single sign-on",
+      "unique user knowledge",
+      "passwords that expire",
+      "soft tokens",
+      "shared password responsibility"
+    ],
+    "answer": [
+      1,
+      3
+    ],
+    "type": "multi",
+    "explanation": "A multi-factor authentication example of something the user knows could include: Passwords. PIN (or personal identification numbers). Answers\nto supposedly secret questions (such as “Where were you born?” or “The name of your first-grade teacher.”)"
+  },
+  {
+    "legacyIndex": 684,
+    "legacyNumber": 39,
+    "prompt": "Refer to the exhibit.\n\nRouter1#show ip route\n\nGateway of last resort is 10.10.11.2 to network 0.0.0 0\n\n    209.165.200.0/27 is subnetted, 1 subnets\n\nB     209.165.200.224 [20/0] via 10 10.12.2,03:22:14\n\n    209.165.201.0/27 is subnetted, 1 subnets\n\nB     209.165.201.0 [20/0] via 10.10.12.2, 02:26:33\n\n    209.165.202.0/27 is subnetted, 1 subnets\n\nB     209.165.202.128 [20/0] via 10.10.12.2,02:26:03\n\n    10.0.0.0/8 is variably subnetted, 8 subnets, 4 masks\n\nC     10.10.10.0/28 is directly connected, GigabitEthernet0/0\n\nC     10.10.11.0/30 is directly connected, FastEthernet2/0\n\nC     10.10.12.0/30 is directly connected, GigabitEthernet0/1\n\nO     10.10.13.0/25 [110/2] via 10.10.10.1, 00:00:04, GigabitEthernet0/0\n\nO     10.10.13.128/28 [110/2] via 10.10.10.1, 00:00:04, GigabitEthernet0/0\n\nO     10.10.13.144/28 [110/2] via 10.10.10.1, 00:00:04, GigabitEthernet0/0\n\nO     10.10.13.160/29 [110/2] via 10.10.10.1, 00:00:04, GigabitEthernet0/0\n\nO     10.10.13.208/29 [110/2] via 10.10.10.1, 00:00:04, GigabitEthernet0/0\n\nS* 0.0.0 0/0 [1/0] via 10.10.11.2\n\nWhat is the subnet mask of the route to the 10.10.13.160 prefix?",
+    "options": [
+      "255.255.255.240",
+      "255.255.255.128",
+      "255.255.248.0",
+      "255.255.255.248"
+    ],
+    "answer": 3,
+    "explanation": "The 10.10.13.160 prefix has subnet mask of /29 which is 255.255.255.248."
+  },
+  {
+    "legacyIndex": 685,
+    "legacyNumber": 40,
+    "prompt": "Refer to the exhibit.\n\nRouters R1, R2, and R3 use a protocol to identify their neighbors’ IP addresses, hardware platforms, and software versions. A network engineer\nmust configure R2 to avoid sharing any neighbor information with R3, and maintain its relationship with R1. What action meets this\nrequirement?",
+    "options": [
+      "Configure the no lldp run command globally",
+      "Configure the no lldp receive command on g0/1",
+      "Configure the no cdp run command globally",
+      "Configure the no cdp enable command on g0/2"
+    ],
+    "answer": 3,
+    "explanation": "In order to disable CDP on an interface, we have to use the “no cdp enable” under interface mode.\n\nIf we want to disable sending LLDP on g0/2 only then we have to use the command “no lldp transmit”."
+  },
+  {
+    "legacyIndex": 686,
+    "legacyNumber": 41,
+    "prompt": "What is a function of an endpoint?",
+    "options": [
+      "It passes unicast communication between hosts in a network",
+      "It is used directly by an individual user to access network services",
+      "It provides security between trusted and untrusted sections of the network",
+      "It transmits broadcast traffic between devices in the same VLAN"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 687,
+    "legacyNumber": 42,
+    "prompt": "Refer to the exhibit.\n\nA network engineer started to configure port security on a new switch. These requirements must be met:\n– MAC addresses must be learned dynamically.\n– Log messages must be generated without disabling the interface when unwanted traffic is seen.\n\nWhich two commands must be configured to complete this task? (Choose two)",
+    "options": [
+      "SW(config-if)#switchport port-security mac-address 0010.7B84.45E6",
+      "SW(config-if)#switchport port-security maximum 2",
+      "SW(config-if)#switchport port-security mac-address sticky",
+      "SW(config-if)#switchport port-security violation shutdown",
+      "SW(config-if)#switchport port-security violation restrict"
+    ],
+    "answer": [
+      1,
+      4
+    ],
+    "type": "multi",
+    "explanation": "The requirement said MAC addresses must be learned dynamically so we cannot assign a specific MAC address or use the “sticky” keyword ->\nAnswer A and answer C are not correct. Also the requirement said “MAC addresses” in plural so we set the maximum to 2 -> Answer B is\ncorrect.\n\n“Log messages must be generated without disabling the interface” -> use “restrict” keyword for violation, not “shutdown” keyword -> Answer E\nis correct.\n\nThe “sticky” keyword does not mean the MAC addresses will be learned dynamically. It means the learned MAC addresses would be put into the\nrunning-config only.\nThe question asks “MAC addresses must be learned dynamically” means we don’t configure static MAC learning only.\n\nNote:\n\nYou can configure the interface for one of these violation modes, based on the action to be taken if a violation occurs:\n+ Restrict – A port security violation restricts data, causes the SecurityViolation counter to increment, and causes an SNMP Notification to be\ngenerated.\n+ Shutdown – A port security violation causes the interface to shut down immediately. When a secure port is in the error-disabled state, you can\nbring it out of this state by entering the errdisable recovery cause psecure_violation global configuration command or you can manually\nreenable it by entering the shutdown and no shut down interface configuration commands. This is the default mode."
+  },
+  {
+    "legacyIndex": 688,
+    "legacyNumber": 43,
+    "prompt": "What are two features of the DHCP relay agent? (Choose two)",
+    "options": [
+      "minimizes the necessary number of DHCP servers",
+      "assigns DNS locally and then forwards request to DHCP server",
+      "is configured under the Layer 3 interface of a router on the client subnet",
+      "allows only MAC-to-IP reservations to determine the local subnet of a client",
+      "permits one IP helper command under an individual Layer 3 interface"
+    ],
+    "answer": [
+      0,
+      2
+    ],
+    "type": "multi",
+    "explanation": "With the DHCP relay agent, we can configure DHCP servers in different subnet of the DHCP client. Otherwise we have to place one DHCP server\nin the same subnet of DHCP clients -> Answer A is correct.\n\nNote: We can configure more than one ip helper command under one Layer 3 interface:\n\nTo make a router a DHCP Relay Agent, simply put the “ip helper-address <IP-address-of-DHCP-Server>” command under the interface that\nreceives the DHCP messages from the DHCP Client -> Answer C is correct."
+  },
+  {
+    "legacyIndex": 689,
+    "legacyNumber": 44,
+    "prompt": "Refer to the exhibit.\n\nA network engineer must configure router R1 with a host route to the server. Which command must the engineer configure?",
+    "options": [
+      "R1(config)#ip route 10.10.10.10 255.255.255.255 192.168.0.2",
+      "R1(config)#ip route 10.10.10.0 255.255.255.0 192.168.0.2",
+      "R1(config)#ip route 0.0.0.0 0.0.0.0 192.168.0.2",
+      "R1(config)#ip route 192.168.0.2 255.255.255.255 10.10.10.10"
+    ],
+    "answer": 0,
+    "explanation": "A host route is an IPv4 address with a 32-bit mask (255.255.255.255)."
+  },
+  {
+    "legacyIndex": 690,
+    "legacyNumber": 45,
+    "prompt": "In a cloud-computing environment, what is rapid elasticity?",
+    "options": [
+      "automatic adjustment of capacity based on need",
+      "control and monitoring of resource consumption by the tenant",
+      "pooling resources in a multitenant model based on need",
+      "self-service of computing resources by the tenant"
+    ],
+    "answer": 0,
+    "explanation": "Rapid elasticity allows users to automatically request additional space in the cloud or other types of services. Because of the setup of cloud\ncomputing services, provisioning can be seamless for the client or user. The fact that providers still need to allocate and de-allocate resources is\noften irrelevant on the client or user’s side. This is a very essential aspect of cloud technology. In a sense, cloud computing resources appear to\nbe infinite or automatically available. That’s much different from older systems, where the limits of storage or memory were immediately visible\nto a user."
+  },
+  {
+    "legacyIndex": 691,
+    "legacyNumber": 46,
+    "prompt": "Drag and drop the steps in a standard DNS lookup operation from the left into the order on the right.",
+    "type": "match",
+    "items": [
+      "Step 1",
+      "Step 2",
+      "Step 3",
+      "Step 4",
+      "Step 5"
+    ],
+    "choices": [
+      "An endpoint submits a request for the IP address of a domain name",
+      "The DNS submits a request to a root DNS server",
+      "The DNS submits a request to the domain DNS server",
+      "The DNS receives a reply from the domain DNS server",
+      "The DNS responds to the endpoint"
+    ],
+    "answer": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "explanation": "Maybe the author of this question wanted to hide the word “local” from the DNS so we should understand “The DNS” means “The local DNS\nServer”.\n\nA DNS lookup is the process by which a host queries a domain name and a DNS server returns an IP address.\n\nThe eight steps in a DNS lookup:\n1. A user enters a domain name (e.g., 9tut.com) into their browser, and the browser sends the query via their internet service provider ISP to a\nDNS recursive resolver.\n2. The DNS recursive resolver, in turn, sends a query to the root DNS nameserver.\n3. The root server returns to the resolver the address of the top-level domain (i.e., “TLD”) DNS root server, which has the needed information\nfor the 9tut.com domain. (Examples of a top- level domain tld include “.com”, “.net”, and “.org,” which each TLD having it’s own root DNS\nserver.)\n4. In turn, the resolver then sends the information request to the Top-Level Domain server (In this case, the “.com” TLD nameserver).\n5. The TLD name server responds to the resolver with the targeted IP address of the domain’s nameserver. (In this case, the DNS server for\n“9tut.com”.)\n6. Next, the DNS recursive resolver sends the query to the domain’s DNS server.\n7. The domain’s DNS server then returns the IP address to the DNS resolver for the requested domain (e.g., “9tut.com”.\n8. Finally, the DNS resolver returns the IP address of the requested domain to the requesting web browser. The browser sends the HTTPS\nrequest to the targeted IP address, and the server with that address returns the webpage, which renders in the user’s browser."
+  },
+  {
+    "legacyIndex": 692,
+    "legacyNumber": 47,
+    "prompt": "What must be considered for a locally switched FlexConnect AP if the VLANs that are used by the AP and client access are different?",
+    "options": [
+      "The APs must be connected to the switch with multiple links in LAG mode.",
+      "The native VLAN must match the management VLAN of the AP.",
+      "The switch port mode must be set to trunk.",
+      "IEEE 802.1Q trunking must be disabled on the switch port."
+    ],
+    "answer": 2,
+    "explanation": "FlexConnect VLANs and ACLs\nYou can configure the LAN uplink interface of a FlexConnect AP as either an access port or as a trunk. If you configure the interface as an access\nport, then the AP’s management traffic and all client traffic, whether centrally or locally switched, will be in the same VLAN. For security and\nreliability reasons, we recommend that you segregate the client traffic from the management VLAN, and so to configure the AP’s switchport as a\ntrunk, with separately tagged VLANs for locally switched client traffic.\n\nAnswer B is not correct as it should be “The native VLAN must match the native VLAN of the AP” (not the management VLAN)."
+  },
+  {
+    "legacyIndex": 693,
+    "legacyNumber": 48,
+    "prompt": "Which command configures the Cisco WLC to prevent a serial session with the WLC CLI from being automatically logged out?",
+    "options": [
+      "config sessions maxsessions 0",
+      "config serial timeout 9600",
+      "config serial timeout 0",
+      "config sessions timeout 0"
+    ],
+    "answer": 2,
+    "explanation": "The CLI automatically logs you out without saving any changes after 5 minutes of inactivity. You can set the automatic logout from 0 (never log\nout) to 160 minutes using the config serial timeout command.\n\nTo prevent SSH or Telnet sessions from timing out, run the config sessions timeout 0 command.\n\nThis question asks about the serial session so the first command is the correct answer."
+  },
+  {
+    "legacyIndex": 694,
+    "legacyNumber": 49,
+    "prompt": "Which two IPv6 addresses are used to provide connectivity between two routers on a shared link? (Choose two)",
+    "options": [
+      "2002::512:1204b:1111::1/64",
+      "ff06:bb43:cc13:dd16:1bb:ff14:7545:234d",
+      "FF02::0001:FF00:0000/104",
+      "2001:701:104b:1111::1/64",
+      "::ffff:10.14.101.1/96"
+    ],
+    "answer": [
+      3,
+      4
+    ],
+    "type": "multi",
+    "explanation": "To provide connectivity between two routers on a shared link, global unicast addresses or link-local addresses are typically used. Answer D is\ncorrect as this is a global unicast address, valid for router-to-router communication on a shared link.\n\nAnswer A is not correct as it has two double colons “::”. This answer also has another error in “1204b” which has 5 hexadecimal numbers in an\noctet (an IPv6 octet only has a maximum of 4 hexadecimal numbers). But in the exam please check this answer carefully. If its syntax is correct\nthen this is the correct answer.\n\nFF02::0001:FF00:0000 is an IPv6 multicast address that is part of the solicited-node multicast group (starts with FF02::1:FF/104). This group is\nautomatically created for each configured IPv6 address on an interface. When a device needs to send an IPv6 packet to a specific device, it first\nsends a Neighbor Solicitation message to the solicited-node multicast address for the destination IPv6 address. The router receiving this\nmessage responds with a Neighbor Advertisement message containing its MAC address.\n\nThe address ff06:bb43:cc13:dd16:1bb:ff14:7545:234d is a site-local IPv6 multicast address.\n\nMulticast addresses are used for group communication, not direct connectivity between two routers so answer B and answer C are not correct.\n\nNote: An IPv6 Multicast address is always started with FF (in hex).\n\nNote about ::ffff IPv6 address:\n\nIPv4-mapped IPv6 address uses this alternative format. This type of address is used to represent IPv4 nodes as IPv6 addresses. It allows IPv6\napplications to communicate directly with IPv4 applications. For example, 0:0:0:0:0:ffff:192.1.56.10 and ::ffff:192.1.56.10/96 (shortened format)."
+  },
+  {
+    "legacyIndex": 695,
+    "legacyNumber": 50,
+    "prompt": "Refer to the exhibit.\n\nAn architect is managing a wireless network with APs from several branch offices connecting to the WLC in the data center. There is a new\nrequirement for a single WLAN to process the client data traffic without sending it to the WLC. Which action must be taken to complete the\nrequest?",
+    "options": [
+      "Enable local HTTP profiling",
+      "Enable FlexConnect Local Switching",
+      "Enable local DHCP Profiling",
+      "Enable Disassociation Imminent"
+    ],
+    "answer": 1,
+    "explanation": "FlexConnect AP can perform standalone client authentication and switch VLAN traffic locally even when it’s disconnected to the WLC (Local\nSwitching)"
+  },
+  {
+    "legacyIndex": 696,
+    "legacyNumber": 51,
+    "prompt": "What is a function of MAC address learning?",
+    "options": [
+      "It is disabled by default on all interfaces connected to trunks",
+      "It increases security on the management VLAN",
+      "It is enabled by default on all VLANs and interfaces",
+      "It increases the potential for MAC address flooding"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 697,
+    "legacyNumber": 52,
+    "prompt": "A Cisco engineer at a new branch office is configuring a wireless network with access points that connect to a controller that is based at\ncorporate headquarters. Wireless client traffic must terminate at the branch office and access-point survivability is required in the event of a\nWAN outage. Which access point mode must be selected?",
+    "options": [
+      "Lightweight with local switching disabled",
+      "Local with AP fallback enabled",
+      "OfficeExtend with high availability disabled",
+      "FlexConnect with local switching enabled"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 698,
+    "legacyNumber": 53,
+    "prompt": "What is an advantage of using auto mode versus static mode for power allocation when an access point is connected to a PoE switch port?",
+    "options": [
+      "The default level is used for the access point",
+      "It detects the device is a powered device",
+      "All four pairs of the cable are used",
+      "Power policing is enabled at the same time"
+    ],
+    "answer": 1,
+    "explanation": "The switch supports these PoE modes:\nauto – The switch automatically detects if the connected device requires power. If the switch discovers a powered device connected to the port\nand if the switch has enough power, it grants power, updates the power budget, turns on power to the port on a first-come, first-served basis,\nand updates the LEDs…\n\nstatic – The switch pre-allocates power to the port (even when no powered device is connected) and guarantees that power will be available for\nthe port."
+  },
+  {
+    "legacyIndex": 699,
+    "legacyNumber": 54,
+    "prompt": "Refer to the exhibit.\n\nR1# show ip route | begin gateway\n\nGateway of last resort is not set\n\n  172.16.0.0/16 is variably subnetted, 5 subnets, 5 masks\n\nO 172.16.2.128/25 [110/3184437] via 207.165.200.250, 00:00:24, Serial0/0/0\n\nO 172.16.3.64/27 [110/3184437] via 207.165.200.250, 00:00:24, Serial0/0/0\n\nO 172.16.3.128/28 [110/3184437] via 207.165.200.250, 00:00:24, Serial0/0/0\n\nO 172.16.3.192/29 [110/3184437] via 207.165.200.250, 00:00:24, Serial0/0/0\n\nO 172.16.4.0/23 [110/3184437] via 207.165.200.250, 00:00:24, Serial0/0/0\n\n  207.165.200.0/24 is variably subnetted, 4 subnets, 2 masks\n\nC 207.165.200.248/30 is directly connected, Serial0/0/0\n\nL 207.165.200.249/32 is directly connected, Serial0/0/0\n\nC 207.165.200.252/30 is directly connected, Serial0/0/1\n\nL 207.165.200.253/32 is directly connected, Serial0/0/1\n\nDrag and drop the learned prefixes from the left onto the subnet masks on the right.",
+    "type": "match",
+    "items": [
+      "172.16.4.0",
+      "172.16.2.128",
+      "172.16.3.64",
+      "172.16.3.128",
+      "172.16.3.192"
+    ],
+    "choices": [
+      "255.255.254.0",
+      "255.255.255.128",
+      "255.255.255.224",
+      "255.255.255.240",
+      "255.255.255.248"
+    ],
+    "answer": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 700,
+    "legacyNumber": 55,
+    "prompt": "Drag and drop the Ansible features from the left to the right. Not all features are used.",
+    "type": "match",
+    "items": [
+      "uses the YAML language",
+      "executes modules via SSH by default",
+      "pushes configurations to the client",
+      "operates without agents"
+    ],
+    "choices": [
+      "Correct position"
+    ],
+    "answer": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "explanation": "A comparison list of Ansible, Puppet and Chef automation tool:"
+  },
+  {
+    "legacyIndex": 701,
+    "legacyNumber": 56,
+    "prompt": "Refer to the exhibit.\n\n--Some output missing--\n\nRouting Descriptor Blocks:\n\n* directly connected, via Ethernet0/1\n\n    Route metric is 0, traffic share count is 1\n\nCPE# ping 203.0.113.1\n\nType escape sequence to abort.\n\nSending 5, 100-byte ICMP Echos to 203.0.113.1, timeout is 2 seconds:\n\n!!!!!\n\nSuccess rate is 100 percent (5/5), round-trip min/avg/oax = 1/1/1 ms\n\nCPE# show ip route\n\nGateway of last resort is 198.51.100.1 to network 0.0.0.0\n\nB* 0.0.0.0/0 [20/0] via 198.51.100.1, 00:02:07\n\n    198.51.100.0/24 is variably subnetted, 2 subnets, 2 masks\n\nC             198.51.100.0/30 is directly connected, Ethernet0/0\n\nL             198.51.100.2/32 is directly connected, Ethernet0/0\n\n    203.0.113.0/24 is variably subnetted, 2 subnets, 2 masks\n\nC             203.0.113.0/30 is directly connected, Ethernet0/1\n\nL             203.0.113.2/32 is directly connected, Etheraet0/1\n\nAfter configuring a new static route on the CPE, the engineer entered this series of commands to verify that the new configuration is operating\nnormally. When is the static default route installed into the routing table?",
+    "options": [
+      "when the default route learned over external BGP becomes invalid",
+      "when 203.0.113.1 is no longer reachable as a next hop",
+      "when the default route learned over external BGP changes its next hop",
+      "when a route to 203.0.113.1 is learned via BGP"
+    ],
+    "answer": 0,
+    "explanation": "Maybe in the missing output at the top of the exhibit is about configuring a static default route (with command “ip route 0.0.0.0 0.0.0.0 …”. But\nin the routing table of CPE router we only see a default route learned via BGP. We did not see the static default route because it was configured\nwith a higher AD than that of the default route learned via BGP. Therefore only when the current default route becomes invalid then the default\nstatic route would be installed into the routing table."
+  },
+  {
+    "legacyIndex": 702,
+    "legacyNumber": 57,
+    "prompt": "Refer to the exhibit.\n\nWireless LAN access must be set up to force all clients from the NA WLAN to authenticate against the local database. The WLAN is configured for\nlocal EAP authentication. The time that users access the network must not be limited. Which action completes this configuration?",
+    "options": [
+      "Check the Guest User Role check box",
+      "Clear the Lifetime (seconds) value",
+      "Set the Lifetime (seconds) value to 0",
+      "Uncheck the Guest User check box"
+    ],
+    "answer": 3,
+    "explanation": "The users created in the “Local Net Users” are stored in the local database. With the “Guest User” check box enabled, we have to set the time\nfor that user. The “Lifetime” is the amount of time that the guest user account is to remain active. The valid range is 60 to 2,592,000 seconds (30\ndays) inclusive, and the default setting is 86,400 seconds.\n\nIf we don’t want to limit the time for that user, uncheck the “Guest User” check box."
+  },
+  {
+    "legacyIndex": 703,
+    "legacyNumber": 58,
+    "prompt": "Which remote access protocol provides unsecured remote CLI access?",
+    "options": [
+      "Telnet",
+      "SSH",
+      "console",
+      "Bash"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 704,
+    "legacyNumber": 59,
+    "prompt": "Refer to the exhibit.\n\nAn engineer must configure the interface that connects to PC1 and secure it in a way that only PC1 is allowed to use the port. No VLAN tagging\ncan be used except for a voice VLAN. Which command sequence must be entered to configure the switch?",
+    "options": [
+      "SW1(config-if)#switchport mode nonegotiate\nSW1(config-if)#switchport port-security\nSW1(config-if)#switchport port-security maximum 1",
+      "SW1(config-if)#switchport mode access\nSW1(config-if)#switchport port-security\nSW1(config-if)#switchport port-security mac-address 0050.7966.6800",
+      "SW1(config-if)#switchport mode dynamic desirable\nSW1(config-if)#switchport port-security mac-address 0050.7966.6800\nSW1 (config-if)#switchport port-security mac-address sticky",
+      "SW1(config-if)#switchport mode dynamic auto\nSW1(config-if)#switchport port-security\nSW1(config-if)#switchport port-security violation restrict"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 705,
+    "legacyNumber": 60,
+    "prompt": "Refer to the exhibit.\n\nA public IPv6 address must be configured for internet access. Which command must be configured on the R2 WAN interface to the service\nprovider?",
+    "options": [
+      "ipv6 address fe80::260:3EFF:FE11:6770 link-local",
+      "ipv6 address fe80: :/10",
+      "ipv6 address 2001:db8:433:47:4620:ffff:ffff:ffff/64 anycast",
+      "ipv6 address 2001:db8:123:45::4/64"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 706,
+    "legacyNumber": 61,
+    "prompt": "Drag and drop the device behaviors from the left onto the matching HSRP state on the right.",
+    "type": "match",
+    "items": [
+      "is waiting to hear from the neighbor device",
+      "is forwarding packets",
+      "has heard from the neighbor device and is receiving hello packets",
+      "is transmitting and receiving hello packets",
+      "is ready to forward packets if the device that is currently forwarding packets fails"
+    ],
+    "choices": [
+      "Learn",
+      "Active",
+      "Listen",
+      "Speak",
+      "Standby"
+    ],
+    "answer": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "explanation": "When in operation, HSRP devices are configured into one of many states:\nActive – This is the state of the device that is actively forwarding traffic.\nInit or Disabled – This is the state of a device that is not yet ready or able to participate in HSRP.\nLearn – This is the state of a device that has not yet determined the virtual IP address and has not yet seen a hello message from an active\ndevice.\nListen – This is the state of a device that is receiving hello messages.\nSpeak – This is the state of a device that is sending and receiving hello messages.\nStandby – This is the state of a device that is prepared to take over the traffic forwarding duties from the active device."
+  },
+  {
+    "legacyIndex": 707,
+    "legacyNumber": 62,
+    "prompt": "Which two functions does a WLC perform in the lightweight access-point architecture that an AP performs independently in an autonomous\narchitecture? (Choose two)",
+    "options": [
+      "handling the association, authentication, and roaming of wireless clients",
+      "encrypting and decrypting traffic that uses the WAP protocol family",
+      "preventing collisions between wireless clients on the same RF channel",
+      "managing RF channels, including transmission power",
+      "sending and processing beacon frames"
+    ],
+    "answer": [
+      0,
+      3
+    ],
+    "type": "multi",
+    "explanation": "This question asks what the WLC can do for the AP or which functions are moved from AP to WLC in lightweight access-point architecture.\n\nThe wireless clients encrypt and decrypt the traffic, not the AP -> Answer B is not correct.\n\nThe wireless clients also run CSMA/CA to prevent collisions between them, not the AP -> Answer C is not correct.\n\nWith wireless networking, we have real-time and management functions. The AP should handle real-time functions, but everything that is not\ndelay-sensitive can do from a central location. We separate the following management and real-time functions of the AP:\n\n+ Management functions:\n++ Client authentication (-> Answer A is correct)\n++ Security management\n++ Association and reassociation (roaming)\n++ Quality of Service (QoS)\n\n+ Real-time functions:\n++ Transmission of 802.11 frames\n++ MAC management\n++ Encryption\n\nSince these functions are not real-time, we can move them to a central point, the WLC. We take away some of the intelligence of the AP, which\nis why we call them lightweight APs (LAP). We move this intelligence to the WLC.\n\nRadio Resource Management (RRM) allows the controller to dynamically control power and channel assignment of APs -> Answer D is correct."
+  },
+  {
+    "legacyIndex": 708,
+    "legacyNumber": 63,
+    "prompt": "Refer to the exhibit.\n\nCurrent Neighbor Relationship\n\nNeighbor ID Pri State             Dead Time Address Interface\n\n192.168.1.1 1 FULL/DR             00:00:33    192.168.1.1 GigabitEthernet0/0\n\nDesired Neighbor Relationship\n\nNeighbor ID Pri State             Dead Time Address Interface\n\n192.168.1.1 0 FULL/ -             00:00:31    192.168.1.1 GigabitEthernet0/0\n\nHow must OSPF be configured on the GigabitEthernet0/0 interface of the neighbor device to achieve the desired neighbor relationship?",
+    "options": [
+      "Router(config)#interface GigabitEthernet 0/0\nRouter(config-if)#ip ospf cost 5",
+      "Router(config)#interface GigabitEthernet 0/0\nRouter(config-if)#ip ospf 1 area 2",
+      "Router(config)#interface GigabitEthernet 0/0\nRouter(config-if)#ip ospf network point-to-point",
+      "Router(config)#interface GigabitEthernet 0/0\nRouter(config-if)#ip ospf priority 1"
+    ],
+    "answer": 2,
+    "explanation": "We see the desired neighbor relationship does not have DR/BDR so we have to set the network type to “point-to-point”."
+  },
+  {
+    "legacyIndex": 709,
+    "legacyNumber": 64,
+    "prompt": "What causes a port to be placed in the err-disabled state?",
+    "options": [
+      "latency",
+      "nothing plugged into the port",
+      "shutdown command issued on the port",
+      "link flapping"
+    ],
+    "answer": 3,
+    "explanation": "Link flap means that the interface continually goes up and down in a Cisco Switch. The interface is put into the errdisabled state if it flaps more\nthan five times in 10 seconds. The common cause of link flap is a Layer 1 issue such as a bad cable, duplex mismatch, or bad Gigabit Interface\nConverter (GBIC) card. Look at the console messages or the messages that were sent to the syslog server that state the reason for the port\nshutdown.\n\n13w0d: %PM-4-ERR_DISABLE: link-flap error detected on Fa0/28, putting Fa0/28 in err-disable state"
+  },
+  {
+    "legacyIndex": 710,
+    "legacyNumber": 65,
+    "prompt": "Which function forwards frames to ports that have a matching destination MAC address?",
+    "options": [
+      "frame pushing",
+      "frame filtering",
+      "frame flooding",
+      "frame switching"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 711,
+    "legacyNumber": 66,
+    "prompt": "Refer to the exhibit.\n\nThe SW1 and SW2 Gi0/0 ports have been preconfigured. An engineer is given these requirements:\n\n+ Allow all PCs to communicate with each other at Layer 3.\n+ Configure untagged traffic to use VLAN 5.\n+ Disable VLAN 1 from being used.\n\nWhich configuration set meets these requirements?\n\n  Option A                                               Option B\n\n  SW1#                                                   SW1#\n  interface Gi0/1                                        interface Gi0/1\n  switchport mode trunk                                  switchport mode trunk\n  switchport trunk allowed vlan 5,7,9,108                switchport trunk allowed vlan 5,7,9,108\n                                                         switchport trunk native vlan 5\n  interface Gi0/2\n  switchport mode trunk                                  interface Gi0/2\n  switchport trunk allowed vlan 7,9,108                  switchport mode access\n                                                         switchport trunk allowed vlan 7,9,108\n  SW2#\n  interface Gi0/1                                        SW2#\n  switchport mode trunk                                  interface Gi0/1\n  switchport trunk allowed vlan 7                        switchport mode access\n                                                         no switchport access vlan 1\n  interface Gi0/7                                        switchport access vlan 7\n  switchport mode trunk\n  switchport trunk allowed vlan 5,7,9,108                interface Gi0/7\n                                                         switchport mode trunk\n                                                         switchport trunk allowed vlan 7,9,108\n                                                         switchport trunk native vlan 5\n\n  Option C                                               Option D\n\n  SW1#                                                   SW1#\n  interface Gi0/1                                        interface Gi0/1\n  switchport mode trunk                                  switchport mode trunk\n  switchport trunk allowed vlan 5,7,9,108                switchport trunk allowed vlan 5,7,9,108\n  switchport trunk native vlan 5                         switchport trunk native vlan 5\n\n  interface Gi0/2                                           interface Gi0/2\n  switchport mode trunk                                     switchport mode trunk\n  switchport trunk allowed vlan 5,7,9,108                   switchport trunk allowed vlan 5,7,9,108\n\n  SW2#                                                      SW2#\n  interface Gi0/1                                           interface Gi0/1\n  switchport mode access                                    switchport mode access\n  switchport access vlan 7                                  switchport access vlan 7\n\n  interface Gi0/7                                           interface Gi0/7\n  switchport mode trunk                                     switchport mode trunk\n  switchport trunk allowed vlan 7,9,108                     switchport trunk allowed vlan 5,7,9,108\n                                                            switchport trunk native vlan 5",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 3,
+    "explanation": "This question requires “Configure untagged traffic to use VLAN 5” so we must use the command “switchport trunk native vlan 5” on both Gi0/1\nof Sw1 and Gi0/7 of Sw2 -> Only Option B and Option D are correct.\n\nIn order to allow all PCs to communicate with each other at Layer 3, interface Gi0/2 of SW1 must be configured as trunk, not access mode ->\nOnly Option D is correct."
+  },
+  {
+    "legacyIndex": 712,
+    "legacyNumber": 67,
+    "prompt": "Refer to the exhibit.\n\nSW1#show ip interface brief\n\nInterface     IP-Address OK? Method Status Protocol\n\nFastEthernet0/1 unassigned YES manual down down\n\nSW1#show interface fa0/1 status\n\nPort    Name Status     Vlan Duplex Speed Type\n\nFa0/1       notconnect 1      a-full a-100 10/100BaseTX\n\nWhat is the cause of the issue?",
+    "options": [
+      "STP",
+      "shutdown command",
+      "port security",
+      "wrong cable type"
+    ],
+    "answer": 3,
+    "explanation": "The “Status” of fa0/1 is “notconnect” so port security is not the issue or it would show the status of “err-disabled”.\n\n“Shutdown” command is also not the issue as it would show “Administratively down” in the “Status” field of the “show ip interface brief”\ncommand.\n\nWith STP, even if the port is in “Block” (BLK) status but it is still in “up/up” state with the “show ip interface brief” command.\n\nWith wrong cable type, the port is in “down/down” state, same as there is no connected cable to the port."
+  },
+  {
+    "legacyIndex": 713,
+    "legacyNumber": 68,
+    "prompt": "Refer to the exhibit.\n\nRouter1#show ip route\n\nGateway of last resort is 10.10.11.2 to network 0.0.0.0\n\n    209.165.200.0/27 is subnetted, 1 subnets\n\nB    209.165.200.224 [20/0] via 10.10.12.2,03:32:14\n\n    209.165.201.0/27 is subnetted, 1 subnets\n\nB    209.165.201.0 [20/0] via 10.10.12.2,02:26:53\n\n    209.165.202.0/27 is subnetted, 1 subnets\n\nB    209.165.202.128 [20/0] via 10.10.12.2,02:46:03\n\n    10.0.0.0/8 is variably subnetted, 10 subnets, 4 masks\n\nC    10.10.10.0/28 is directly connected, GigabitEthernet0/0\n\nC    10.10.11.0/30 is directly connected, FastEthernet2/0\n\nC    10.10.12.0/30 is directly connected, GigabitEthernet0/1\n\nO     10.10.13.0/25 [110/2] via 10.10.10.1, 00:00:04, GigabitEthernet0/0\n\nO     10.10.13.128/28 [110/2] via 10.10.10.1, 00:00:12, GigabitEthernet0/0\n\nO     10.10.13.144/28 [110/2] via 10.10.10.1, 00:01:57, GigabitEthernet0/0\n\nO     10.10.13.160/29 [110/2] via 10.10.10.1, 00:00:12, GigabitEthernet0/0\n\nO     10.10.13.208/29 [110/2] via 10.10.10.1, 00:01:57, GigabitEthernet0/0\n\nO     10.10.13.252/30 [110/2] via 10.10.10.1, 00:01:57, GigabitEthernet0/0\n\nS* 0.0.0.0/0 [1/0] via 10.10.11.2\n\nDrag and drop the subnet masks from the left onto the corresponding subnets on the right. Not all subnet masks are used.",
+    "type": "match",
+    "items": [
+      "10.10.13.0",
+      "10.10.13.128",
+      "10.10.13.160",
+      "10.10.13.252"
+    ],
+    "choices": [
+      "255.255.255.128",
+      "255.255.255.240",
+      "255.255.255.248",
+      "255.255.255.252"
+    ],
+    "answer": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 714,
+    "legacyNumber": 69,
+    "prompt": "Refer to the exhibit.\n\nA network engineer must configure the link with these requirements:\n• Consume as few IP addresses as possible.\n• Leave at least two additional useable IP addresses for future growth.\n\nWhich set of configurations must be applied?",
+    "options": [
+      "R1(config-if)#ip address 10.10.10.1 255.255.255.248\nR2(config-if)#ip address 10.10.10.4 255.255.255.248",
+      "R1(config-if)#ip address 10.10.10.1 255.255.255.240\nR2(config-if)#ip address 10.10.10.12 255.255.255.240",
+      "R1 (config-if)#ip address 10.10.10.1 255.255.255.252\nR2(config-if)#ip address 10.10.10.2 255.255.255.252",
+      "R1 (config-if)#ip address 10.10.10.1 255.255.255.0\nR2(config-if)#ip address 10.10.10.5 255.255.255.0"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 715,
+    "legacyNumber": 70,
+    "prompt": "What is a function of Layer 3 switches?",
+    "options": [
+      "They route traffic between devices in different VLANs.",
+      "They transmit broadcast traffic when operating in Layer 3 mode exclusively.",
+      "They forward Ethernet frames between VLANs using only MAC addresses.",
+      "They move frames between endpoints limited to IP addresses."
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 716,
+    "legacyNumber": 71,
+    "prompt": "Refer to the exhibit.\n\nIPv6 is being implemented within the enterprise. The command ipv6 unicast-routing is configured. Interface Gig0/0 on R1 must be configured to\nprovide a dynamic assignment using the assigned IPv6 block. Which command accomplishes this task?",
+    "options": [
+      "ipv6 address 2001:DB8:FFFF:FCF3::/64 eui-64",
+      "ipv6 address 2001:DB8:FFFF:FCF3::/64 link-local",
+      "ipv6 address 2001:0B8:FFFF:FCF3::1/64",
+      "ipv6 address autoconfig 2001:DB8:FFFF:FCF2::/64"
+    ],
+    "answer": 0,
+    "explanation": "Configure the IPv6 global unicast address on an interface using the ipv6 address address/prefix-length [eui-64] command."
+  },
+  {
+    "legacyIndex": 717,
+    "legacyNumber": 72,
+    "prompt": "Refer to the exhibit.\n\nWhich router or router group are NTP clients?",
+    "options": [
+      "R1, R2, and R3",
+      "R1",
+      "R2 and R3\nD R1, R3, and R4"
+    ],
+    "answer": 0,
+    "explanation": "To configure the NTP client on a Cisco device we use the ntp server {ip-address} command in global configuration."
+  },
+  {
+    "legacyIndex": 718,
+    "legacyNumber": 73,
+    "prompt": "A network engineer is replacing the switches that belong to a managed-services client with new Cisco Catalyst switches. The new switches will\nbe configured for updated security standards, including replacing Telnet services with encrypted connections and doubling the modulus size\nfrom 1024. Which two commands must the engineer configure on the new switches? (Choose two)",
+    "options": [
+      "transport input ssh",
+      "transport input all",
+      "crypto key generate rsa general-keys modulus 1024",
+      "crypto key generate rsa usage-keys",
+      "crypto key generate rsa modulus 2048"
+    ],
+    "answer": [
+      0,
+      4
+    ],
+    "type": "multi",
+    "explanation": "The command “crypto key generate rsa modulus 2048” generate a 2048 bit RSA key pair (doubling the modulus size from 1024)."
+  },
+  {
+    "legacyIndex": 719,
+    "legacyNumber": 74,
+    "prompt": "Refer to the exhibit.\n\nGateway of last resort is not set\n\n    10.0.0.0/8 is variably subnetted, 2 subnets, 2 masks\n\nC      10.1.1.0/30 is directly connected, GigabitEthernet0/0\n\nL     10.1.1.2/32 is directly connected, GigabitEthernet0/0\n\nS 192.168.0.0/20 [1/0] via 10.1.1.1\n\n    192.168.1.0/30 is subnetted, 1 subnets\n\nS     192.168.1.0/30 [1/0] via 10.1.1.1\n\n    192.168.2.0/24 is variably subnetted, 2 subnets, 2 masks\n\nS     192.168.2.0/28 [1/0] via 10.1.1.1\n\nS     192.168.2.0/29 [1/0] via 10.1.1.1\n\nAn engineer is checking the routing table in the main router to identify the path to a server on the network. Which route does the router use to\nreach the server at 192.168.2.2?",
+    "options": [
+      "S 192.168.2.0/28 [1/0] via 10.1.1.1",
+      "S 192.168.1.0/30 [1/0] via 10.1.1.1",
+      "S 192.168.0.0/20 [1/0] via 10.1.1.1",
+      "S 192.168.2.0/29 [1/0] via 10.1.1.1"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 720,
+    "legacyNumber": 75,
+    "prompt": "Refer to the exhibit.\n\n{\n\n    \"myCar\": {\n\n         \"name\": \"thunder\",\n\n                                    \"wheels\": [\"good\", \"good\", \"pressureLow\", \"warning\"],\n\n                                    \"gasLight\": false\n\n                                    },\n\n    \"oldCar\": {\n\n         \"name\": \"sleepy\",\n\n                                    \"wheels\": [\"pressureLow\", \"pressureLow\", \"pressureLow\", \"pressureLow\"],\n\n                                    \"color\": \"rust\"\n\n                                    \"gasLight\": true\n\n                                    },\n\n    \"newCar\": {\n\n         \"name\": \"lightning\",\n\n                                  \"wheels\": [\"pressureLow\", \"good\", \"pressureLow\", \"good\"],\n\n                                  \"color\": \"blue\"\n\n                                  \"gasLight\": true\n\n                                  }\n\n}\n\nIn which structure does the word “warning” directly reside?",
+    "options": [
+      "array",
+      "object",
+      "Boolean",
+      "string"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 721,
+    "legacyNumber": 76,
+    "prompt": "Refer to the exhibit.\n\nAfter applying this configuration to router R1, a network engineer is verifying the implementation. If all links are operating normally, and the\nengineer sends a series of packets from PC1 to PC3, how are the packets routed?",
+    "options": [
+      "They are routed to 172.16.20.2.",
+      "They are distributed sent round robin to interfaces S0/0/0 and S0/0/1.",
+      "They are routed to 192.168.100.2.",
+      "They are routed to 10.0.0.2."
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 722,
+    "legacyNumber": 77,
+    "prompt": "A network administrator plans an update to the Wi-Fi networks in multiple branch offices. Each location is configured with an SSID called\n“Office”. The administrator wants every user who connects to the SSID at any location to have the same access level. What must be set the same\non each network to meet the requirement?",
+    "options": [
+      "radio policy",
+      "security policies",
+      "NAS-ID configuration",
+      "profile name"
+    ],
+    "answer": 1,
+    "explanation": "Two identically named SSIDs with the same password will allow your device to connect to either, without having to add any extra networks on\nyour devices. But make sure to configure them with the same security policies.\n\nNote: Four WLAN security policies are available: Wired Equivalent Privacy (WEP), Wi-Fi Protected Access (WPA), WPA2, WLAN Authentication\nand Privacy Infrastructure (WAPI)"
+  },
+  {
+    "legacyIndex": 723,
+    "legacyNumber": 78,
+    "prompt": "Refer to the exhibit.\n\nWhich command set configures ROUTER-1 to allow Internet access for users on the 192.168.1.0/24 subnet while using 209.165.202.129 for Port\nAddress Translation?",
+    "options": [
+      "ip nat pool CCNA 192.168.0.0 192.168.1.255 netmask 255.255.255.0\naccess-list 10 permit 192.168.0.0 0.0.0.255\nip nat inside source list 10 pool CCNA overload",
+      "ip nat pool CCNA 209.165.202.129 209.165.202.129 netmask 255.255.255.255\naccess-list 10 permit 192.168.1.0 255.255.255.0\nip nat inside source list 10 pool CCNA overload",
+      "ip nat pool CCNA 192.168.0.0 192.168.1.255 netmask 255.255.255.0\naccess-list 10 permit 192.168.0.0 255.255.255.0\nip nat inside source list 10 pool CCNA overload",
+      "ip nat pool CCNA 209.165.202.129 209.165.202.129 netmask 255.255.255.255\naccess-list 10 permit 192.168.1.0 0.0.0.255\nip nat inside source list 10 pool CCNA overload"
+    ],
+    "answer": 3,
+    "explanation": "By providing only one IP address in the pool CCNA, we are sure that IP address will be used for Internet with PAT."
+  },
+  {
+    "legacyIndex": 724,
+    "legacyNumber": 79,
+    "prompt": "Refer to the exhibit.\n\nA multivendor network exists and the company is implementing VoIP over the network for the first time. Which configuration is needed to\nimplement the neighbor discovery protocol on the interface and allow it to remain off for the remaining interfaces?",
+    "options": [
+      "SW1(config)#no cdp enable\nSW1 (config)#interface gigabitethernet1/0/1\nSW1(config-if)#cdp run",
+      "SW1(config)#lldp enable\nSW1(config)#interface gigabitethernet1/0/1\nSW1(config-if)#lldp run",
+      "SW1(config)#lldp run\nSW1 (config)#interface gigabitethernet1/0/1\nSW1(config-if)#lldp enable",
+      "SW1(config)#no cdp run\nSW1(config)#interface gigabitethernet1/0/1\nSW1(config-if)#lldp transmit\nSW1(config-if)#lldp receive"
+    ],
+    "answer": 3,
+    "explanation": "There is no totally correct answer. LLDP is disabled by default so in fact we need one additional command to enable LLDP:\n\nSW1(config)# lldp run\n\nBut this answer is still the best choice as we have to disable neighbor discovery protocol for the remaining interfaces with the “no cdp run”\ncommand (not “no cdp enable”)."
+  },
+  {
+    "legacyIndex": 725,
+    "legacyNumber": 80,
+    "prompt": "A network architect is considering whether to implement Cisco DNA Center to deploy devices on a new network. The organization is focused on\nreducing the time it currently takes to deploy devices in a traditional campus design. For which reason would Cisco DNA Center be more\nappropriate than traditional management options?",
+    "options": [
+      "Cisco DNA Center provides zero-touch provisioning to third-party devices.",
+      "Cisco DNA Center supports deployment with a single pane of glass.",
+      "Cisco DNA Center minimizes the level of syslog output when reporting on Cisco devices.",
+      "Cisco DNA Center reduces the need for analytics on third-party access points and devices."
+    ],
+    "answer": 1,
+    "explanation": "DNA Center can be the “controller” or single pane of glass for deploying and managing on-premises Cisco networks including routing, switching,\nSoftware Defined Wireless Area Network (SD-WAN), and security devices like Cisco Identity Services Engine (ISE) and Firepower."
+  },
+  {
+    "legacyIndex": 726,
+    "legacyNumber": 81,
+    "prompt": "How do TCP and UDP fit into a query-response model?",
+    "options": [
+      "TCP avoids using sequencing, and UDP avoids using acknowledgments.",
+      "TCP uses error detection for packets, and UDP uses error recovery.",
+      "TCP establishes a connection prior to sending data, and UDP sends immediately.",
+      "TCP encourages out-of-order packet delivery, and UDP prevents re-ordering."
+    ],
+    "answer": 2,
+    "explanation": "TCP uses sequencing -> Answer A is not correct.\n\nTCP uses error recovery while UDP uses error detection -> Answer B is not correct.\n\nTCP does not encourage out-of-order packet delivery. When TCP packets are received out of order, they are buffered for later delivery to the\napplication program rather than being discarded -> Answer D is not correct."
+  },
+  {
+    "legacyIndex": 727,
+    "legacyNumber": 82,
+    "prompt": "Drag and drop the RF terms from the left onto the corresponding statements on the right.",
+    "type": "match",
+    "items": [
+      "measure of the minimum power required to decode a radio signal without excessive errors",
+      "deviation from the propagation path that occurs when a signal encounters an obstacle",
+      "reduction of energy in a signal as it travels away from the access point and encounters free space or obstacles",
+      "measure of the total unwanted signals at the receiver",
+      "relative power of the desired radio signal to unwanted signals at the receiver"
+    ],
+    "choices": [
+      "receiver sensitivity",
+      "reflection",
+      "absorption",
+      "noise floor",
+      "signal-to-noise ratio"
+    ],
+    "answer": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "explanation": "The noise floor defines the amplitude of the sum of all noise sources and other unwanted signals within a system.\n\nSound absorption is the measure of the amount of energy removed from the sound wave as the wave passes through a given thickness of\nmaterial."
+  },
+  {
+    "legacyIndex": 728,
+    "legacyNumber": 83,
+    "prompt": "Which interface type enables an application running on a client to send data over an IP network to a server?",
+    "options": [
+      "southbound interface",
+      "application programming interface",
+      "northbound interface",
+      "Representational State Transfer application programming interface"
+    ],
+    "answer": 1,
+    "explanation": "In this question the answer “application programming interface” is better than the choice “Representational State Transfer application\nprogramming interface” as the latter is used for web services (HTTP/HTTPS) only.\n\nNote: REpresentational State Transfer (REST) requires that a client make a request to the server in order to retrieve or modify data on the server.\nA request generally consists of:\n+ an HTTP verb, which defines what kind of operation to perform\n+ a header, which allows the client to pass along information about the request\n+ a path to a resource\n+ an optional message body containing data"
+  },
+  {
+    "legacyIndex": 729,
+    "legacyNumber": 84,
+    "prompt": "Refer to the exhibit.\n\n    access-list 10 permit 10.0.0.0 0.0.0.255\n    interface Serial0\n    ip access-list 10 in\n\nA network administrator must permit traffic from the 10.10.0.0/24 subnet to the WAN on interface Serial0. What is the effect of the\nconfiguration as the administrator applies the command?",
+    "options": [
+      "The sourced traffic from IP range 10.0.0.0 – 10.0.0.255 is allowed on Serial0.",
+      "The permit command fails and returns an error code.",
+      "The router fails to apply the access list to the interface.",
+      "The router accepts all incoming traffic to Serial0 with the last octet of the source IP set to 0."
+    ],
+    "answer": 2,
+    "explanation": "The last command is not correct. We must use the “ip access-group 10 in” command to apply this ACL to the interface."
+  },
+  {
+    "legacyIndex": 730,
+    "legacyNumber": 85,
+    "prompt": "Refer to the exhibit.\n\nGateway of last resort is 172.16.2.2 to network 0.0.0.0\n\n    10.0.0.0/8 is variably subnetted, 2 subnets, 2 masks\n\nC     10.10.8.0/28 is directly connected, GigabitEthernet0/0/2\n\nC     10.10.10.0/24 is directly connected, GigabitEthernet0/0/0\n\nL     10.10.10.3/32 is directly connected, GigabitEthernet0/0/0\n\n    172.16.0.0/16 is variably subnetted, 3 subnets, 2 masks\n\nS     172.16.1.33/32 is directly connected, GigabitEthernet0/0/1\n\nC     172.16.2.0/23 is directly connected, GigabitEthernet0/0/1\n\nL     172.16.2.1/32 is directly connected, GigabitEthernet0/0/1\n\nS* 0.0.0.0/0 [1/0] via 172.16.2.2\n\nA packet sourced from 10.10.10.1 is destined for 10.10.8.14. What is the subnet mask of the destination route?",
+    "options": [
+      "255.255.254.0",
+      "255.255.255.240",
+      "255.255.255.248",
+      "255.255.255.252"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 731,
+    "legacyNumber": 86,
+    "prompt": "What are two reasons to implement IPv4 private addressing on a network? (Choose two)",
+    "options": [
+      "to expand the routing table on the router",
+      "to facilitate renumbering when merging networks",
+      "to enable internal applications to treat the private IPv4 addresses as unique",
+      "to conserve global unique IPv4 addresses",
+      "to provide protection from external denial-of-service attacks"
+    ],
+    "answer": [
+      3,
+      4
+    ],
+    "type": "multi",
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 732,
+    "legacyNumber": 87,
+    "prompt": "Refer to the exhibit.\n\nA guest WLAN must be created that prompts the client for a username and password on the local web page of the WLC. Which two actions must\nbe performed on the Layer 2 tab before enabling the Authentication option on the Layer 3 tab? (Choose two)",
+    "options": [
+      "Uncheck the MAC Filtering option check box.",
+      "Set the Security Type option to Personal.",
+      "Change the WPA Encryption option from TKIP to CCMP128(AES).",
+      "Set the Layer 2 Security option to None.",
+      "Uncheck the WPA Policy option check box, and check the WPA2 Policy option check box."
+    ],
+    "answer": [
+      0,
+      3
+    ],
+    "type": "multi",
+    "explanation": "We want to use Layer 3 authentication so we should disable Layer 2 authentication (by setting it to “None”).\n\nAlso disable “MAC Filtering” as it is not supported with FlexConnect Local Authentication."
+  },
+  {
+    "legacyIndex": 733,
+    "legacyNumber": 88,
+    "prompt": "Which script paradigm does Puppet use?",
+    "options": [
+      "manifests and modules",
+      "strings and marionettes",
+      "recipes and cookbooks",
+      "playbooks and roles"
+    ],
+    "answer": 0,
+    "explanation": "Puppet Master Components\n\nManifests\n\nManifest is the most important component in a Puppet Master so we will mention about it first. Manifest is just the file where the all Puppet\nscripts for configuring Puppet clients are written (in Ruby code). Manifest filenames use “.pp” (means Puppet policy) extension.\n\nBased on the Facts received from Factor, Master compiles manifests into catalogs (which will be discussed later), then sends them to the client.\n\nModule\n\nModule also plays an important part in a Puppet Master. Module is a collection of manifests and other related data files organized in a\npredefined way to facilitate sharing and reusing. Modules tie manifests, templates, and files into a single unit.\n\n  Module = Manifests + Data (Templates, Files)\n\nModules have a specific directory path which is usually “/etc/puppet/manifests/”. They are useful for organizing our Puppet code, because they\nallow to split code into multiple manifests. It is considered best practice to use modules to organize all of our Puppet manifests.\n\nFor more information about Puppet, please read our Puppet tutorial."
+  },
+  {
+    "legacyIndex": 734,
+    "legacyNumber": 89,
+    "prompt": "Which IPsec transport mode encrypts the IP header and the payload?",
+    "options": [
+      "pipe",
+      "tunnel",
+      "control",
+      "transport"
+    ],
+    "answer": 1,
+    "explanation": "In tunnel mode, the entire original IP packet is encapsulated to become the payload of a new IP packet. Additionally, a new IP header is added\non top of the original IP packet.\n\nThe main difference in transport mode is that it retains the original IP header. In other words, payload data transmitted within the original IP\npacket is protected, but not the IP header."
+  },
+  {
+    "legacyIndex": 735,
+    "legacyNumber": 90,
+    "prompt": "What does WPA3 provide in wireless networking?",
+    "options": [
+      "increased security and requirement of a complex configuration",
+      "backward compatibility with WPA and WPA2",
+      "optional Protected Management Frame negotiation",
+      "safeguards against brute force attacks with SAE"
+    ],
+    "answer": 3,
+    "explanation": "WPA3 only backwards compatible with WPA2 but not WPA -> Answer B is not correct.\n\nWPA3 increases security but not require a complex configuration -> Answer A is not correct.\n\nSimultaneous Authentication of Equals (SAE): SAE provides a more secure, password-based authentication and key agreement mechanism even\nwhen passwords are not following complexity requirements. It protects from brute-force attacks and makes unwanted decrypting of sessions\n(during or after the session) a lot harder – just knowing the passphrase isn’t enough to decrypt the session -> Answer D is correct."
+  },
+  {
+    "legacyIndex": 736,
+    "legacyNumber": 91,
+    "prompt": "Refer to the exhibit. With which metric does router R1 learn the route to host 172.16.0.202?\n\nR1#show ip route | begin gateway\n\nGateway of last resort is 209.165.200.246 to network 0.0.0.0\n\nS* 0.0.0.0/0 [1/0] via 209.165.200.246, Serial0/1/0\n\nis directly connected, Serial0/1/0\n\n  172.16.0.0/16 is variably subnetted, 3 subnets, 3 masks\n\nS 172.16.0.0/24 [1/0] via 207.165.200.250, Serial0/0/0\n\nO 172.16.0.128/25 [110/32445] via 207.165.200.254, 00:00:33, Serial0/0/1\n\nD 172.16.0.192/29 [90/3184439] via 207.165.200.254, 00:00:33, Serial0/0/1\n\n  207.165.200.0/24 is variably subnetted, 4 subnets, 2 masks\n\nC 207.165.200.248/30 is directly connected, Serial0/0/0\n\nL 207.165.200.249/32 is directly connected, Serial0/0/0\n\nC 207.165.200.252/30 is directly connected, Serial0/0/1\n\nL 207.165.200.253/32 is directly connected, Serial0/0/1",
+    "options": [
+      "0",
+      "110",
+      "32445",
+      "3184439"
+    ],
+    "answer": 2,
+    "explanation": "Both the line “O 172.16.0.128/25” and “S 172.16.0.0/24” cover the host 172.16.0.202 but with the “longest (prefix) match” rule the router will\nchoose the first route.\n\nNote: Network 172.16.0.192/29 does not cover host 172.16.0.202. For network 172.16.0.192/29:\n\nIncrement: 8\nNetwork address: 172.16.0.192\nBroadcast address: 172.16.0.199"
+  },
+  {
+    "legacyIndex": 737,
+    "legacyNumber": 92,
+    "prompt": "Which two actions are taken as the result of traffic policing? (Choose two)",
+    "options": [
+      "bursting",
+      "fragmentation",
+      "dropping",
+      "remarking",
+      "buffering"
+    ],
+    "answer": [
+      2,
+      3
+    ],
+    "type": "multi",
+    "explanation": "Policing: is used to control the rate of traffic flowing across an interface. During a bandwidth exceed (crossed the maximum configured rate), the\nexcess traffic is generally dropped or remarked. The result of traffic policing is an output rate that appears as a saw-tooth with crests and\ntroughs. Traffic policing can be applied to inbound and outbound interfaces. Unlike traffic shaping, QoS policing avoids delays due to queuing.\nPolicing is configured in bytes.\n\nQoS Traffic Shaping do not support Marking or Remarking again. This is done only with Traffic Policing.\n\nNote: In policing, remarking the packets that exceed the CIR is an alternative to simply dropping them."
+  },
+  {
+    "legacyIndex": 738,
+    "legacyNumber": 93,
+    "prompt": "Refer to the exhibit.\n\nGateway of last resort is 0.0.0.0 to network 0.0.0.0\n\n10.0.0.0/8 is variably subnetted, 6 subnets, 5 masks\n\nS    10.0.0.0/8 is directly connected, GigabitEthernet0/0\n\nC    10.1.1.0/24 is directly connected, GigabitEthernet0/0\n\nL    10.1.1.1/32 is directly connected, GigabitEthernet0/0\n\nS    10.10.0.0/22 is directly connected, GigabitEthernet0/0\n\nS    10.10.10.0/28 is directly connected, GigabitEthernet0/0\n\nS    10.10.10.1/32 is directly connected, GigabitEthernet0/0\n\nS* 0.0.0.0/0 is directly connected, GigabitEthernet0/0\n\nWhich IP route command created the best path for a packet destined for 10.10.10.3?",
+    "options": [
+      "ip route 10.0.0.0 255.0.0.0 g0/0",
+      "ip route 10.10.10.1 255.255.255.255 g0/0",
+      "ip route 10.10.10.0 255.255.255.240 g0/0",
+      "ip route 10.10.0.0 255.255.252.0 g0/0"
+    ],
+    "answer": 2,
+    "explanation": "The static routes here were configured as “directly connected static routes” (only exit interfaces were configured, not the next-hop IP address)\nso we see the line “is directly connected”.\n\nAll four answers of this question were configured and generated the output as shown in the exhibit. This question asks which command created\nthe best path for packet destined to 10.10.10.3 so the correct one is answer C."
+  },
+  {
+    "legacyIndex": 739,
+    "legacyNumber": 94,
+    "prompt": "A WLC sends alarms about a rogue AP, and the network administrator verifies that the alarms are caused by a legitimate autonomous AP. How\nmust the alarms be stopped for the MAC address of the AP?",
+    "options": [
+      "Place the AP into manual containment.",
+      "Remove the AP from WLC management.",
+      "Manually remove the AP from Pending state.",
+      "Set the AP Class Type to Friendly."
+    ],
+    "answer": 3,
+    "explanation": "If a rogue AP is classified as friendly, it means that the rogue AP exists in the vicinity, is a known AP, and need not be tracked. Therefore, all the\nrogue clients are either deleted or not tracked if they are associated with the friendly rogue AP."
+  },
+  {
+    "legacyIndex": 740,
+    "legacyNumber": 95,
+    "prompt": "Which security method is used to prevent man-in-the-middle attack?",
+    "options": [
+      "authorization",
+      "authentication",
+      "anti-replay",
+      "accounting"
+    ],
+    "answer": 2,
+    "explanation": "The anti-replay protocol provides Internet Protocol (IP) packet-level security by making it impossible for a hacker to intercept message packets\nand insert changed packets into the data stream between a source computer and a destination computer.\n\nHow does the anti-replay protocol work?\nThe answer to preventing replay attacks is encrypting messages and including a key. IPsec provides anti-replay protection against attackers who\ncould potentially intercept, duplicate or resend encrypted packets.\nThe mechanism uses a unidirectional security association to establish a secure connection between the source and destination nodes in the\nnetwork and check whether a received message is a replayed message. It works by assigning a monotonically increasing sequence number to\neach encrypted packet and then keeping track of the sequence numbers as packets arrive at the destination."
+  },
+  {
+    "legacyIndex": 741,
+    "legacyNumber": 1,
+    "prompt": "What is the function of a northbound API in a network architecture that separates the control and application layers?",
+    "options": [
+      "It upgrades software and restores files.",
+      "It relies on global provisioning and configuration.",
+      "It supports distributed processing for configuration.",
+      "It provides a path between an SDN controller and network applications."
+    ],
+    "answer": 3,
+    "explanation": "Now, in turn, the networking administrators and SDN applications want to control the controller! So the controller need a northbound interface\n(NBI) to communicate with us. The NBI applications included various network services, including network virtualization, dynamic virtual network\nprovisioning, firewall monitoring, user identity management and access policy control."
+  },
+  {
+    "legacyIndex": 742,
+    "legacyNumber": 2,
+    "prompt": "Drag and drop the wireless architecture benefits from the left onto the architecture types on the right.",
+    "type": "match",
+    "items": [
+      "Work is divided between the access point and the controller",
+      "The access points transmit beacon frames",
+      "Uses the CAPWAP tunneling protocol",
+      "Appropriate for a small-business environment",
+      "Supports per device configuration and management"
+    ],
+    "choices": [
+      "Split-MAC",
+      "Autonomous"
+    ],
+    "answer": [
+      0,
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": "An autonomous AP is a self-contained device with both wired and wireless hardware so that it can bridge to the wired VLAN infrastructure\nwireless clients that belong to SSIDs. Each autonomous AP must be configured with a management IP address so that it can be remotely\naccessed using Telnet, SSH, or a web interface. Each AP must be individually managed and maintained unless you use a management platform\nsuch as Cisco DNA Center.\n\nThe division of labor between the WLC and LAPs is known as split-MAC architecture. The LAP must interact with wireless clients on some low\nlevel, known as the Media Access Control (MAC) layer. These functions must stay with the LAP hardware, closest to the clients. The management\nfunctions are not integral to handling frames but are things that should be centrally administered. Therefore, those functions can be moved to a\ncentrally located platform away from the AP."
+  },
+  {
+    "legacyIndex": 743,
+    "legacyNumber": 3,
+    "prompt": "Drag and drop the Ansible terms from the left onto the right.",
+    "type": "match",
+    "items": [
+      "collection of actions to perform on target devices, expressed in YAML format",
+      "device with Ansible installed that manages target devices",
+      "network device, without Ansible installed, upon which commands can be executed",
+      "specific action to be performed on one or more target devices",
+      "unit of Python code to be executed",
+      "Ansible file that defines the target devices upon which commands and tasks can be executed"
+    ],
+    "choices": [
+      "playbook",
+      "control node",
+      "managed node",
+      "task",
+      "module",
+      "inventory"
+    ],
+    "answer": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "explanation": "Once Ansible is installed, it creates several text files:\n\n+ Playbooks: These files provide actions and logic about what Ansible should do. Ansible playbooks are files that contain tasks to configure\nhosts. Ansible playbooks are written in YAML format. Inside Playbooks, we have:\n++ Modules (also referred to as “task plugins” or “library plugins”) are discrete units of code that can be used from the command line or in a\nplaybook task. Ansible executes each module, usually on the remote managed node, and collects return values.\n++ Tasks: Tasks are Ansible’s smallest unit of work. They are a series of actions on the target hosts, using modules to provide functionalities.\n\nA task defines an action that needs to be performed, while a module executes the action on a managed host.\n\n+ Inventory: a file contains a list of the hosts (usually their IP addresses, ports) which you want to configure or manage. Hosts in an inventory\ncan be divided into smaller groups for easier management and configuration. Each group can run different tasks. An example of a task is to ping\nall hosts in group [routers].\n…\n\nThe control node is a computer that runs Ansible. A managed node is any device being managed by the control node."
+  },
+  {
+    "legacyIndex": 744,
+    "legacyNumber": 4,
+    "prompt": "What is a purpose of traffic shaping?",
+    "options": [
+      "It enables dynamic flow identification.",
+      "It enables policy-based routing.",
+      "It provides best-effort service.",
+      "It limits bandwidth usage."
+    ],
+    "answer": 3,
+    "explanation": "+ Shaping: retains excess packets in a queue and then schedules the excess for later transmission over increments of time. When traffic reaches\nthe maximum configured rate, additional packets are queued instead of being dropped to proceed later. Traffic shaping is applicable only on\noutbound interfaces as buffering and queuing happens only on outbound interfaces. Shaping is configured in bits per second.\n\nBest Effort Service means a service on a shared network in which the network does not provide any guarantee that data is delivered or that\ndelivery meets any quality of service, meaning that the services obtain unspecified variable bit rate, latency and packet loss, depending on the\ncurrent traffic load -> Traffic shaping does not drop packets so it does not offer best effort service -> Answer C is not correct.\n\nThe primary reasons you would use traffic shaping are to control access to available bandwidth, to ensure that traffic conforms to the policies\nestablished for it, and to regulate the flow of traffic in order to avoid congestion that can occur when the sent traffic exceeds the access speed of\nits remote, target interface -> Answer D is correct."
+  },
+  {
+    "legacyIndex": 745,
+    "legacyNumber": 5,
+    "prompt": "Drag and drop the characteristics of device-management technologies from the left onto the corresponding deployment types on the right.",
+    "type": "match",
+    "items": [
+      "orchestrates background device configuration",
+      "supports centralized software management",
+      "supports open APIs",
+      "relies on per-device management",
+      "provides greater flexibility for custom and non-standard configurations",
+      "uses individual software management"
+    ],
+    "choices": [
+      "Cisco DNA Center",
+      "Traditional"
+    ],
+    "answer": [
+      0,
+      0,
+      0,
+      1,
+      1,
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 746,
+    "legacyNumber": 6,
+    "prompt": "Which type of port is used to connect to the wired network when an autonomous AP maps two VLANs to its WLANs?",
+    "options": [
+      "LAG",
+      "EtherChannel",
+      "trunk",
+      "access"
+    ],
+    "answer": 2,
+    "explanation": "In this example, we will configure the switch in our Autonomous AP deployment. First, we need to create Vlan 21, which is assigned to\nCorporate users, and Vlan 22, which is assigned to Guess users. Then we will configure the trunk interface between the AP and the switch to\nallow multiple Vlans to traverse the link."
+  },
+  {
+    "legacyIndex": 747,
+    "legacyNumber": 7,
+    "prompt": "Refer to the exhibit.\n\nR1#show ip ospf interface g0/0/0\n\nGigabitEthernet0/0/0 is up, line protocol is up\n\n Internet address is 192.168.1.2/24, Area 0\n\n Process ID 1, Router ID 192.168.1.2, Network Type POINT-TO-POINT, Cost: 1\n\n Transmit Delay is 1 sec, State POINT-TO-POINT,\n\n Timer intervals configured, Hello 15, Dead 20, Wait 20, Retransmit 5\n\n  Hello due in 00:00:08\n\n Index 1/1, flood queue length 0\n\n Next 0x0(0) /0x0(0)\n\n Last flood scan length is 1, maximum is 1\n\n Last flood scan time is 0 msec, maximum is 0 msec\n\n Suppress hello for 0 neighbor(s)\n\nR2#show ip ospf interface g0/0/0\n\nGigabitEthernet0/0/0 is up, line protocol is up\n\n Internet address is 192.168.1.1/24, Area 0\n\n Process ID 1, Router ID 10.1.1.1, Network Type POINT-TO-POINT, Cost: 1\n\n Transmit Delay is 1 sec, State POINT-TO-POINT,\n\n Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5\n\n  Hello due in 00:00:11\n\n Index 1/1, flood queue length 0\n\n Next 0x0(0)/0x0(0)\n\n Last flood scan length is 1, maximum is 1\n\n Last flood scan time is 0 msec, maximum is 0 msec\n\n Suppress hello for 0 neighbor(s)\n\nThe network engineer is configuring router R2 as a replacement router on the network. After the initial configuration is applied it is determined\nthat R2 failed to show R1 as a neighbor. Which configuration must be applied to R2 to complete the OSPF configuration and enable it to\nestablish the neighbor relationship with R1?\n\n  Option A                                                          Option B\n\n  R2(config)#interface g0/0/0                                       R2(config)#router ospf 1\n  R2(config-if)#ip ospf hello-interval 15                           R2(config-router)#router-id 192.168.1.2\n  R2(config-if)#ip ospf dead-interval 20\n\n  Option C                                                          Option D\n\n  R2(config)#router ospf 1                                            R2(config)#interface g0/0/0\n  R2(config-router)#network 192.168.1.0 255.255.255.0 area 2          R2(config-if)#ip ospf dead-interval 20\n  R2(config-router)#network 10.1.1.0 255.255.255.255 area 2",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 0,
+    "explanation": "In order to become OSPF neighbor, the following values must be matched on both routers:\n\n+ Area ID\n+ Authentication\n+ Hello and Dead Intervals\n+ Stub area Flag\n+ MTU Size"
+  },
+  {
+    "legacyIndex": 748,
+    "legacyNumber": 8,
+    "prompt": "What is a characteristics of a collapsed-core network topology?",
+    "options": [
+      "It allows the core and distribution layers to run as a single combined layer.",
+      "It enables the core and access layers to connect to one logical distribution device over an EtherChannel.",
+      "It enables all workstations in a SOHO environment to connect on a single switch with internet access.",
+      "It allows wireless devices to connect directly to the core layer, which enables faster data transmission."
+    ],
+    "answer": 0,
+    "explanation": "The three-tier hierarchical design maximizes performance, network availability, and the ability to scale the network design. Most small\nenterprise campus’ do not grow significantly larger over time, and most small enterprise campus are small enough to be well served by a two-\ntier hierarchical design, where the core and distribution layers are collapsed into one layer. The primary motivation for the collapsed core design\nis reducing network cost, while maintaining most of the benefits of the three-tier hierarchical model."
+  },
+  {
+    "legacyIndex": 749,
+    "legacyNumber": 9,
+    "prompt": "What is the purpose of configuring different levels of syslog for different devices on the network?",
+    "options": [
+      "to rate-limit messages for different severity levels from each device",
+      "to set the severity of syslog messages from each device",
+      "to identify the source from which each syslog message originated",
+      "to control the number of syslog messages from different devices that are stored locally"
+    ],
+    "answer": 1,
+    "explanation": "This question is a bit unclear to understand. But this question wanted to ask about the severity (levels) of syslog messages. Level = severity level.\n\nTo rate-limit messages (limit the number of syslog packets sent to the syslog server), we use the command “logging rate-limit …” instead so\nanswer A is not the best answer for this question (although it is not totally wrong)."
+  },
+  {
+    "legacyIndex": 750,
+    "legacyNumber": 10,
+    "prompt": "Which interface enables communication between a program on the controller and a program on the networking devices?",
+    "options": [
+      "northbound interface",
+      "software virtual interface",
+      "southbound interface",
+      "tunnel interface"
+    ],
+    "answer": 2,
+    "explanation": "We use Southbound API to communicate between the Controllers and Network Elements."
+  },
+  {
+    "legacyIndex": 751,
+    "legacyNumber": 11,
+    "prompt": "Drag and drop the REST API call method for HTTP from the left onto the action they perform on the right.",
+    "type": "match",
+    "items": [
+      "creates a resource on the server",
+      "reads data from the server",
+      "removes a resource from the server",
+      "updates an entry in the database"
+    ],
+    "choices": [
+      "POST",
+      "GET",
+      "DELETE",
+      "PUT"
+    ],
+    "answer": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "explanation": "GET: retrieve data\nPOST: create data\nPUT: fully update (i.e. replace) an existing record\nPATCH: update part of an existing record\nDELETE: delete records\n\nPUT is similar to POST in that it can create resources, but it does so when there is a defined URL wherein PUT replaces the entire resource if it\nexists or creates new if it does not exist.\n\nUnlike PUT Request, PATCH does partial update. Fields that need to be updated by the client, only that field is updated without modifying the\nother field."
+  },
+  {
+    "legacyIndex": 752,
+    "legacyNumber": 12,
+    "prompt": "What is the primary purpose of private address space?",
+    "options": [
+      "conserve globally unique address space",
+      "simplify the addressing in the network",
+      "limit the number of nodes reachable via the Internet",
+      "reduce network complexity"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 753,
+    "legacyNumber": 13,
+    "prompt": "What is a reason to configure a trunk port that connects to a WLC distribution port?",
+    "options": [
+      "Eliminate redundancy with a link failure in the data path.",
+      "Allow multiple VLAN to be used in the data path.",
+      "Provide redundancy if there is a link failure for out-of-band management.",
+      "Permit multiple VLANs to provide out-of-band management."
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 754,
+    "legacyNumber": 14,
+    "prompt": "Refer to the exhibit.\n\nTraffic from R1 to the 10.10.2.0/24 subnet uses 192.168.1.2 as its next hop. An network engineer wants to update the R1 configuration so that\ntraffic with destination 10.10.2.1 passes through router R3, and all other traffic to the 10.10.2.0/24 subnet passes through R2. Which command\nmust be used?",
+    "options": [
+      "ip route 10.10.2.1 255.255.255.255 192.168.1.4 115",
+      "ip route 10.10.2.0 255.255.255.0 192.168.1.4 100",
+      "ip route 10.10.2.0 255.255.255.0 192.168.1.4 115",
+      "ip route 10.10.2.1 255.255.255.255 192.168.1.4 100"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 755,
+    "legacyNumber": 15,
+    "prompt": "Which cipher is supported for wireless encryption only with the WPA2 standard?",
+    "options": [
+      "AES256",
+      "AES",
+      "RC4",
+      "SHA"
+    ],
+    "answer": 1,
+    "explanation": "Unlike WEP and WPA, WPA2 uses the AES standard instead of the Rivest Cipher 4 (RC4) stream cipher.\n\nWPA3-Enterprice mode uses AES-256 in GCM mode.\n\nSHA stands for Secure Hash Algorithm while AES stands for Advanced Encryption Standard. So SHA is a suite of hashing algorithms. It is not a\ncipher which is used to encrypt."
+  },
+  {
+    "legacyIndex": 756,
+    "legacyNumber": 16,
+    "prompt": "Refer to the exhibit.\n\nEntry #\n\n1      192.168.10.0 255.255.254.0\n\n2      192.168.10.0 255.255.255.192\n\n3      192.168.10.0 255.255.0.0\n\n4      192.168.10.0 255.255.224.0\n\nWhich entry is the longest prefix match for host IP address 192.168.10.5?",
+    "options": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 757,
+    "legacyNumber": 17,
+    "prompt": "Which two features introduced in SNMPv2 provide the ability to retrieve large amounts of data in one request? (Choose two)",
+    "options": [
+      "Get",
+      "GetNext",
+      "Set",
+      "GetBulk",
+      "Inform"
+    ],
+    "answer": [
+      3,
+      4
+    ],
+    "type": "multi",
+    "explanation": "The two additional messages are added in SNMP2 (compared to SNMPv1)\n\nGetBulkRequest The GetBulkRequest message enables an SNMP manager to access large chunks of data. GetBulkRequest allows an agent to\nrespond with as much information as will fit in the response PDU. Agents that cannot provide values for all variables in a list will send partial\ninformation.\n\nInformRequest The InformRequest message allows NMS stations to share trap information. (Traps are issued by SNMP agents when a device\nchange occurs.) InformRequest messages are generally used between NMS stations, not between NMS stations and agents."
+  },
+  {
+    "legacyIndex": 758,
+    "legacyNumber": 18,
+    "prompt": "Refer to the exhibit.\n\nrouter# show ip route\n\n...\n\nD 172.18.32.0/26 [90/25789217] via 10.1.1.1\n\nR 172.18.32.0/24 [120/4] via 10.1.1.2\n\nO 172.18.32.0/19 [110/229840] via 10.1.1.3\n\nC 172.18.32.32/32 is directly connected, Loopback0\n\nC 172.18.32.36/30 directly connected, GigabitEthernet0/0\n\nL 172.18.32.37/32 is directly connected, GigabitEthernet0/0\n\nA packet sourced from 172.18.33.2 is destined for 172.18.32.38. Where does the router forward the packet?",
+    "options": [
+      "GigabitEthernet0/0",
+      "Loopback0",
+      "10.1.1.1",
+      "10.1.1.3"
+    ],
+    "answer": 0,
+    "explanation": "The best entry for destination 172.18.32.38 is “C 172.18.32.36/30 …, GigabitEthernet0/0” so the router will forward the packet to Gi0/0\ninterface."
+  },
+  {
+    "legacyIndex": 759,
+    "legacyNumber": 19,
+    "prompt": "Refer to the exhibit.\n\nThe Router1 routing table has multiple methods to reach 10.10.10.0/24 as shown. The default Administrative Distance is used. Drag and drop\nthe network conditions from the left onto the routing methods that Router1 uses on the right.",
+    "type": "match",
+    "items": [
+      "The static route and EIGRP are down",
+      "The static route and OSPF are down",
+      "The static route and eBGP are down",
+      "All protocols are up",
+      "OSPF and eBGP are down"
+    ],
+    "choices": [
+      "eBGP",
+      "EIGRP",
+      "Static"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      2,
+      2
+    ],
+    "explanation": "The Administrative Distance (AD) of popular routing protocols is shown below. You should learn them by heart:\n\nNote: The AD of eBGP is 20 and iBGP is 200.\n\nThe smaller the AD is, the better it is. The router will choose the routing protocol with smallest AD.\n\nIn this case the router will choose in this order: Static (1) -> eBGP (20) -> EIGRP (90) -> OSPF (110) -> iBGP (200)."
+  },
+  {
+    "legacyIndex": 760,
+    "legacyNumber": 20,
+    "prompt": "Refer to the exhibit.\n\nA newly configured PC fails to connect to the internet using TCP port 80 to www.cisco.com. Which setting must be modified for the connection\nto work?",
+    "options": [
+      "Subnet Mask",
+      "DNS Servers",
+      "Default Gateway",
+      "DHCP Server"
+    ],
+    "answer": 0,
+    "explanation": "We see this PC has been assigned an IP address 10.2.2.2, Default Gateway 10.2.2.1, DNS Server 8.8.8.8 but its subnet mask is 255.255.255.192\n(or /26) which is different from the subnet mask of its default gateway so this is the issue."
+  },
+  {
+    "legacyIndex": 761,
+    "legacyNumber": 21,
+    "prompt": "What does a switch do when it receives a frame whose destination MAC address is missing from the MAC address table?",
+    "options": [
+      "It floods the frame unchanged across all remaining ports in the incoming VLAN.",
+      "It appends the table with a static entry for the MAC and shuts down the port.",
+      "It updates the CAM table with the destination MAC address of the frame.",
+      "It changes the checksum of the frame to a value that indicates an invalid frame."
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 762,
+    "legacyNumber": 22,
+    "prompt": "Which enhancement is implemented in WPA3?",
+    "options": [
+      "applies 802.1x authentication",
+      "uses TKIP",
+      "employs PKI to identify access points",
+      "protects against brute force attacks"
+    ],
+    "answer": 3,
+    "explanation": "Another security enhancement that has been made in WP3 reduces potential for password cracking attacks such as the WPA2 KRACK Attack.\nWPA2 is vulnerable to brute force and dictionary-based attacks. That is because security relies on the AP provider setting a secure password and\nmany establishments don’t. With WPA3, the Pre-Shared Key (PSK) exchange protocol is replaced with Simultaneous Authentication of Equals\n(SAE) or the Dragonfly Key Exchange, which improves security of the initial key exchange and offers better protection against offline dictionary-\nbased attacks."
+  },
+  {
+    "legacyIndex": 763,
+    "legacyNumber": 23,
+    "prompt": "Which type of address is shared by routers in a HSRP implementation and used by hosts on the subnet as their default gateway address?",
+    "options": [
+      "multicast address",
+      "loopback IP address",
+      "virtual IP address",
+      "broadcast address"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 764,
+    "legacyNumber": 24,
+    "prompt": "What are two reasons a switch experiences frame flooding? (Choose two)",
+    "options": [
+      "A defective patch cable is connected to the switch port",
+      "Topology changes are occurring within spanning-tree",
+      "An aged MAC table entry is causing excessive updates",
+      "Port-security is configured globally",
+      "The forwarding table has overflowed"
+    ],
+    "answer": [
+      1,
+      4
+    ],
+    "type": "multi",
+    "explanation": "However, other events in the network might cause the switch MAC address table to be flushed more frequently than the configured aging time.\nOne such event is due to spanning-tree topology changes in the network.\n\nTopology changes reduce the MAC address table aging time from the default time of 300 seconds to 15 seconds in the case of 802.1D Spanning\nTree Protocol (STP) to freshen stale MAC address table entries -> Answer B is correct.\n\nIf the Layer 2 forwarding table or the MAC address table is full and it can not save any more MAC address, its enters into a fail-open mode and\nstart behaving like a network Hub. Frames are flooded to all ports, similar to broadcast type of communication. The MAC flooding attack uses\nthis feature of the switch to steal information -> Answer E is correct."
+  },
+  {
+    "legacyIndex": 765,
+    "legacyNumber": 25,
+    "prompt": "Why is TCP desired over UDP for application that require extensive error checking, such as HTTPS?",
+    "options": [
+      "UDP operates without acknowledgments, and TCP sends an acknowledgment for every packet received.",
+      "UDP reliably guarantees delivery of all packets, and TCP drops packets under heavy load.",
+      "UDP uses flow control mechanisms for the delivery of packets, and TCP uses congestion control for efficient packet delivery.",
+      "UDP uses sequencing data for packets to arrive in order, and TCP offers the capability to receive packets in random order."
+    ],
+    "answer": 0,
+    "explanation": "Note: The flow control mechanism tells the sender the maximum speed at which the data can be sent to the receiver device. One of the popular\nflow control mechanisms in TCP is the sliding window protocol -> Answer C is not correct."
+  },
+  {
+    "legacyIndex": 766,
+    "legacyNumber": 26,
+    "prompt": "To improve corporate security, an organization is planning to implement badge authentication to limit access to the data center. Which element\nof a security program is being deployed?",
+    "options": [
+      "user training",
+      "user awareness",
+      "vulnerability verification",
+      "physical access control"
+    ],
+    "answer": 3,
+    "explanation": "Physical access control: Infrastructure locations, such as network closets and data centers, should remain securely locked. Badge access to\nsensitive locations is a scalable solution, offering an audit trail of identities and timestamps when access is granted. Administrators can control\naccess on a granular basis and quickly remove access when an employee is dismissed."
+  },
+  {
+    "legacyIndex": 767,
+    "legacyNumber": 27,
+    "prompt": "Drag and drop the statement about AAA services from the left to the corresponding AAA services on the right.",
+    "type": "match",
+    "items": [
+      "It records the duration of each connection",
+      "It supports User Access Reporting",
+      "It grants access to network assets, such as FTP servers",
+      "It restricts the CLI commands that a user is able to perform"
+    ],
+    "choices": [
+      "Accounting",
+      "Authorization"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 768,
+    "legacyNumber": 28,
+    "prompt": "The address block 192.168.32.0/24 must be subnetted into smaller networks. The engineer must meet these requirements:\n* Create 8 new subnets\n* Each subnet must accommodate 30 hosts\n* Interface VLAN 10 must use the last usable IP in the first new subnet\n* A Layer 3 interface is used\n\nWhich configuration must be applied to the interface?",
+    "options": [
+      "no switchport mode access\nip address 192.168.32.62 255.255.255.240",
+      "switchport\nip address 192.168.32.65 255.255.255.240",
+      "no switchport mode trunk\nip address 192.168.32.97 255.255.255.224",
+      "no switchport\nip address 192.168.32.30 255.255.255.224"
+    ],
+    "answer": 3,
+    "explanation": "8 new subnets -> 8 = 23. Therefore the subnet mask is 255.255.255.224 (224 in decimal = 1110 0000 in binary) and each new subnet consists of\n25 – 2 = 30 hosts.\n\n“Interface VLAN 10 must use the last usable IP in the first new subnet” -> The first new subnet is 192.168.32.0/27 ( increment: 32) so it ranges\nfrom 192.168.32.0 to 192.168.32.31) so the last usable IP is 192.168.32.30. Therefore we must assign IP address 192.168.32.30/27 to interface\nVLAN 10."
+  },
+  {
+    "legacyIndex": 769,
+    "legacyNumber": 29,
+    "prompt": "Refer to the exhibit.\n\nHow many JSON objects are presented?",
+    "options": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "answer": 0,
+    "explanation": "A JSON object contains zero, one, or more key-value pairs, also called properties. The object is surrounded by curly braces {} so there is only one\nobject in this question."
+  },
+  {
+    "legacyIndex": 770,
+    "legacyNumber": 30,
+    "prompt": "Refer to the exhibit.\n\nPC1 regularly sends 1800 Mbps of traffic to the server. A network engineer needs to configure the EtherChannel to disable Port Channel 1\nbetween SW1 and SW2 when the Ge0/0 and Ge0/1 ports on SW2 go down. Which configuration must the engineer apply to the switch?",
+    "options": [
+      "SW2#configure terminal\nSW2(config)# interface port-channel 1\nSW2(config-if)#lacp port-priority 32000",
+      "SW2#configure terminal\nSW2(config)#interface port-channel 1\nSW2(config-if)#lacp max-bundle 2",
+      "SW2#configure terminal\nSW2(config)#lacp system-priority 32000",
+      "SW2#configure terminal\nSW2(config)#interface port-channel 1\nSW2(config-if)#port-channel min-links 2"
+    ],
+    "answer": 3,
+    "explanation": "The port-channel min-links command specifies the minimum number of interfaces that the configuration mode LAG requires to be active. If\nthere are fewer ports than specified by this command, the port channel interface does not become active."
+  },
+  {
+    "legacyIndex": 771,
+    "legacyNumber": 31,
+    "prompt": "Which IPv6 address range is suitable for anycast addresses for distributed services such DHCP or DNS?",
+    "options": [
+      "FF00:1/12",
+      "2001:db8:0234:ca3e::1/128",
+      "2002:db84:3f37:ca98:be05:8/64",
+      "FE80::1/10"
+    ],
+    "answer": 1,
+    "explanation": "FF00::/8 range is used for IPv6 multicast -> The first octet is FF (1111 1111) -> Answer A is not correct.\n\nFE80::/10 is link-local address -> Answer D is not correct.\n\nThe 2002::/16 prefix is used for 6to4, which requires the next 32 bits (after the 16 bit prefix) to be a global unicast IPv4 address -> Answer C is\nnot correct.\n\nNote: Anycast addresses are syntactically indistinguishable from unicast addresses, because anycast addresses are allocated from the unicast\naddress space. Assigning a unicast address to more than one interface makes a unicast address an anycast address. Nodes to which the anycast\naddress is assigned must be explicitly configured to recognize that the address is an anycast address."
+  },
+  {
+    "legacyIndex": 772,
+    "legacyNumber": 32,
+    "prompt": "Refer the exhibit.\n\nR19#show int fa0/0\n\nFastEthernet0/0 is up, line protocol is up\n\nHardware is DEC21140, address is ca02.7788.0000 (bia ca02.7788.0000)\n\nDescription: SALES_SUBNET\n\nInternet address is 10.32.102.2/30\n\nMTU 1500 bytes, BW 100000 Kbit/sec, DLY 100 usec,\n\nreliability 255/255, txload 1/255, rxload 1/255\n\nEncapsulation ARPA, loopback not set\n\nKeepalive set (60 sec)\n\nFull-duplex, 100Mb/s, 100BaseTX/FX\n\nARP type: ARPA, ARP Timeout 04:00:00\n\nLast input 00:00:01, output 00:00:00, output hang never\n\nLast clearing of \"show interface\" counters never\n\nInput queue: 0/300/0/0 (size/max/drops/flushes); Total output drops:\n\n135298429\n\nQueueing strategy: fifo\n\nOutput queue: 0/300 (size/max)\n\n30 second input rate 0 bits/sec, 0 packets/sec\n\n30 second output rate 0 bits/sec, 0 packets/sec\n\n73310 packets input, 7101162 bytes\n\nReceived 73115 broadcasts (0 IP multicasts)\n\n0 runts, 0 giants, 0 throttles\n\n0 input errors, 4 CRC, 0 frame, 0 overrun, 0 ignored\n\n0 watchdog\n\n0 input packets with dribble condition detected\n\n3927513096455 packets output, 14404034810952 bytes, 0 underruns\n\n0 output errors, 11 collisions, 0 interface resets\n\n0 unknown protocol drops\n\n0 babbles, 0 late collision, 0 deferred\n\n0 lost carrier, 0 no carrier\n\n0 output buffer failures, 0 output buffers swapped out\n\nWhat is the cause of poor performance on router R19?",
+    "options": [
+      "excessive collisions",
+      "speed and duplex mismatch",
+      "port oversubscription",
+      "excessive CRC errors"
+    ],
+    "answer": 2,
+    "explanation": "We see the “Total output drops: 135298429” is high.\n\nTypically, the output drops can occur if QoS is configured and does not provide enough bandwidth to certain class of packets. It also occurs\nwhen the hardware hits an oversubscription.\n\nNote: Total output drops: The number of packets dropped because the output queue is full. A common cause of this might be traffic from a high\nbandwidth link being switched to a lower bandwidth link or traffic from multiple inbound links being switched to a single outbound link."
+  },
+  {
+    "legacyIndex": 773,
+    "legacyNumber": 33,
+    "prompt": "An engineer is configuring a switch port that is connected to a VoIP handset. Which command must the engineer configure to enable port\nsecurity with a manually assigned MAC address of abcd.abcd.abcd on voice VLAN 4?",
+    "options": [
+      "switchport port-security mac-address abcd.abcd.abcd",
+      "switchport port-security mac-address abcd.abcd.abcd vlan 4",
+      "switchport port-security mac-address sticky abcd.abcd.abcd vlan 4",
+      "switchport port-security mac-address abcd.abcd.abcd vlan voice"
+    ],
+    "answer": 3,
+    "explanation": "We tested the port-security configuration under Web-IOU with IOSv15.2 but there is no “vlan voice” keyword:\n\nBut in this Cisco link, we can find such command:\n\nDevice(config-if)# switchport port-security mac-address 0000.0000.0004 vlan voice\n\nSo we believe answer D is the best choice."
+  },
+  {
+    "legacyIndex": 774,
+    "legacyNumber": 34,
+    "prompt": "Drag and drop the DNS commands from the left onto their effects on the right.",
+    "type": "match",
+    "items": [
+      "enables host-to-IP-address translation",
+      "adds an entry to the host table",
+      "displays address-mapping information",
+      "specifies the IP address of the DNS server",
+      "completes the FQDN of the DNS server"
+    ],
+    "choices": [
+      "ip domain-lookup",
+      "ip host switch_1 192.168.0.1",
+      "show hosts",
+      "ip name-server",
+      "ip domain-name"
+    ],
+    "answer": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 775,
+    "legacyNumber": 35,
+    "prompt": "How does encryption protect the wireless network?",
+    "options": [
+      "via integrity checks to identify wireless forgery attacks in the frame",
+      "via specific ciphers to detect and prevent zero-day network attacks",
+      "via an algorithm to change wireless data so that only the access point and client understand it",
+      "via a policy to prevent unauthorized users from communicating on the wireless network"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 776,
+    "legacyNumber": 36,
+    "prompt": "Which device segregates a network into separate zones that have their own security policies?",
+    "options": [
+      "IPS",
+      "firewall",
+      "access point",
+      "switch"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 777,
+    "legacyNumber": 37,
+    "prompt": "What is a specification for SSIDS?",
+    "options": [
+      "They are a Cisco proprietary security feature.",
+      "They must include one number and one letter.",
+      "They define the VLAN on a switch.",
+      "They are case sensitive."
+    ],
+    "answer": 3,
+    "explanation": "The SSID is limited to a maximum length of 32 bytes. When represented in ASCII form, the characters of the SSID are case-sensitive. This means\nthat “9tut” is a different network than “9TUT”."
+  },
+  {
+    "legacyIndex": 778,
+    "legacyNumber": 38,
+    "prompt": "Refer to the exhibit.\n\nAn engineer is configuring a new Cisco switch NewSW, to replace SW2. The details have been provided:\n* Switches SW1 and SW2 are third-party devices without support for trunk ports\n* The existing connections must be maintained between PC1 PC2 and PC3\n* Allow the switch to pass traffic from future VLAN 10. Which configuration must be applied?\n\n  Option A                                                 Option B\n\n  NewSW(config)#interface f0/0                             NewSW(config)#interface f0/0\n  NewSW(config-if)#switchport mode trunk                   NewSW(config-if)#switchport mode trunk\n  NewSW(config-if)#switchport trunk allowed vlan 2,10      NewSW(config-if)#switchport trunk allowed vlan 10\n  NewSW(config-if)#switchport trunk native vlan 2          NewSW(config-if)#switchport trunk native vlan 10\n\n  Option C                                                 Option D\n\n  NewSW(config)#interface f0/0                             NewSW(config)#interface f0/0\n  NewSW(config-if)#switchport mode access                  NewSW(config-if)#switchport mode access\n  NewSW(config-if)#switchport trunk allowed vlan 2,10      NewSW(config-if)#switchport trunk allowed vlan 2,10\n  NewSW(config-if)#switchport trunk native vlan 10         NewSW(config-if)#switchport trunk native vlan 2",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 0,
+    "explanation": "We can configure trunking on the NewSW and set the native VLAN to the access VLAN 2 of SW1 so that untagged frames received from SW1 will\nbe placed into VLAN 2."
+  },
+  {
+    "legacyIndex": 779,
+    "legacyNumber": 39,
+    "prompt": "What is a reason to implement IPv4 private addressing?",
+    "options": [
+      "Reduce the risk of a network security breach",
+      "Comply with PCI regulations",
+      "Comply with local law",
+      "Reduce the size of the forwarding table on network routers"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 780,
+    "legacyNumber": 40,
+    "prompt": "Which is a fact related to FTP?",
+    "options": [
+      "It uses block numbers to identify and mitigate data-transfer errors",
+      "It always operates without user authentication",
+      "It relies on the well-known UDP port 69.",
+      "It uses two separate connections for control and data traffic"
+    ],
+    "answer": 3,
+    "explanation": "FTP communicates using two TCP connections. Control traffic is exchanged over TCP/21, and data transmission is performed over TCP/20."
+  },
+  {
+    "legacyIndex": 781,
+    "legacyNumber": 41,
+    "prompt": "Which two protocols are used by an administrator for authentication and configuration on access points? (Choose two)",
+    "options": [
+      "Kerberos",
+      "802.1Q",
+      "802.1x",
+      "TACACS+",
+      "RADIUS"
+    ],
+    "answer": [
+      2,
+      4
+    ],
+    "type": "multi",
+    "explanation": "You can configure 802.1X authentication between a lightweight access point and a Cisco switch."
+  },
+  {
+    "legacyIndex": 782,
+    "legacyNumber": 42,
+    "prompt": "Refer to the exhibit.\n\nCPE1# show protocols e0/1\n\nEthernet0/1 is up, line protocol is up\n\n Internet address is 10.0.12.2/24\n\nCPE1#show ip access-list LAN\n\nStandard IF access list LAN\n\n10 permit 10.0.12.0, wildcard bits 0.0.0.255\n\nCPE1# show ip nat translations\n\nCPE1# show ip net statistics\n\nTotal active translations: 0 (0 static, 0 dynamic, 0 extended)\n\nPeak translations: 0\n\nOutside interfaces:\n\nInside interfaces:\n\nEthernet0/1\n\nHits: 0 Misses: 0\n\nCEF Translated packets: 0, CEF Funted packets: 0\n\nExpired translations: 0\n\nDynamic mappings:\n\n-- Inside Source\n\n[Id: 1] access-list LAN pool NATPOOL refcount 0\n\n pool NATPOOL: netmask 255.255.255.0\n\n start 198.51.100.11 end 198.51.100.20\n\n type generic, total addresses 10, allocated 0 (0%), misses 0\n\nTotal doors: 0\n\nAppl doors: 0\n\nNormal doors: 0\n\nQueued Packets: 0\n\nWhat is the next step to complete the implementation for the partial NAT configuration shown?",
+    "options": [
+      "Reconfigure the static NAT entries that overlap the NAT pool",
+      "Configure the NAT outside interface",
+      "Modify the access list for the internal network on e0/1",
+      "Apply the ACL to the pool configuration"
+    ],
+    "answer": 1,
+    "explanation": "We see the line “Outside interfaces: ” is still empty which means we have not configured an outside interface yet."
+  },
+  {
+    "legacyIndex": 783,
+    "legacyNumber": 43,
+    "prompt": "Which type of IPv4 address type helps to conserve the globally unique address classes?",
+    "options": [
+      "multicast",
+      "private",
+      "loopback",
+      "public"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 784,
+    "legacyNumber": 44,
+    "prompt": "Drag and drop the IPv6 address types from the left onto their description on the right.",
+    "type": "match",
+    "items": [
+      "multicast address used only locally within the site",
+      "address that is automatically created on a link when IPv6 is enabled on an interface",
+      "address that is prohibited from routing to the Internet",
+      "address that is unique and reserved for documentation purposes"
+    ],
+    "choices": [
+      "FF05::23:becf:22:1111",
+      "FE80::abcf:ffff:12de:3992",
+      "FD00:0000:0000:1a2d:a153:3992:a19d:ccca",
+      "2001:DB8::bced:1234:456d:aacc"
+    ],
+    "answer": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "explanation": "FF00::/8 range is used for IPv6 multicast -> The first octet is FF which indicates a multicast address.\n\nAddress that is automatically created on a link when IPv6 is enabled on an interface -> Link-local address in the range of FE80::/10\n\nAddress that is prohibited from routing to the Internet -> Site-local address (or Unique local address). They are analogous to IPv4’s private\naddress classes. They start with FC00::/7 (for used in private networks) -> The first octet can be FC or FD. However when you implement this you\nhave to set the L-bit (the right-most bit of the first octet) to 1 which means that the first two digits will be FD."
+  },
+  {
+    "legacyIndex": 785,
+    "legacyNumber": 45,
+    "prompt": "Drag and drop the wireless standards from the left onto the number of nonoverlapping channels they support on the right.",
+    "type": "match",
+    "items": [
+      "802.11b",
+      "802.11g",
+      "802.11n 2.4 GHz",
+      "802.11a",
+      "802.11n 5 GHz"
+    ],
+    "choices": [
+      "3 Non-Overlapping Channels",
+      "23 Non-Overlapping Channels"
+    ],
+    "answer": [
+      0,
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": "For 802.11n, in the 2.4 GHz band, there are three non-overlapping 20 MHz channels or one 40 MHz channel. In the 5 GHz band, twenty four\nnon-overlapping 20 MHz or up to twelve 40 MHz channels exist.\n\nAlso in the table “Comparison of 802.11 LAN Standards” of the reference below, we can see the “Maximum Non-Overlapping Channels\n(Americas)” of 802.11b & 802.11g are 3."
+  },
+  {
+    "legacyIndex": 786,
+    "legacyNumber": 46,
+    "prompt": "Drag and drop the statements about AAA from the left onto the corresponding AAA services on the right. Not all options are used.",
+    "type": "match",
+    "items": [
+      "It permits and denies login attempts",
+      "It supports local, PPP, RADIUS, and TACACS+ options",
+      "It assigns per-user attributes",
+      "It restricts the CLI commands that a user is able to perform"
+    ],
+    "choices": [
+      "Authentication",
+      "Authorization"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 787,
+    "legacyNumber": 47,
+    "prompt": "Drag and drop the cloud-computing components from the left onto the correct descriptions on the right.",
+    "type": "match",
+    "items": [
+      "The resource pool can expand quickly to meet demand",
+      "The consumer can choose when to start or stop using the service",
+      "The provider allocates CPU, memory, and disk from its shared compute resources to multiple customers",
+      "The provider can bill the consumer in accordance with the level of usage",
+      "The service is available from many types of devices and networks"
+    ],
+    "choices": [
+      "rapid elasticity",
+      "on-demand self-service",
+      "resource pooling",
+      "measured service",
+      "broad network access"
+    ],
+    "answer": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "explanation": "On-demand self-service: A consumer can unilaterally provision computing capabilities, such as server time and network storage, as needed\nautomatically without requiring human interaction with each service provider.\n\nBroad network access: Capabilities are available over the network and accessed through standard mechanisms that promote use by\nheterogeneous thin or thick client platforms (e.g., mobile phones, tablets, laptops, and workstations).\n\nResource pooling: The provider’s computing resources are pooled to serve multiple consumers using a multi-tenant model, with different\nphysical and virtual resources dynamically assigned and reassigned according to consumer demand. There is a sense of location independence\nin that the customer generally has no control or knowledge over the exact location of the provided resources but may be able to specify location\nat a higher level of abstraction (e.g., country, state, or datacenter). Examples of resources include storage, processing, memory, and network\nbandwidth.\n\nRapid elasticity: Capabilities can be elastically provisioned and released, in some cases automatically, to scale rapidly outward and inward\ncommensurate with demand. To the consumer, the capabilities available for provisioning often appear to be unlimited and can be appropriated\nin any quantity at any time.\n\nMeasured service: Cloud systems automatically control and optimize resource use by leveraging a metering capability at some level of\nabstraction appropriate to the type of service (e.g., storage, processing, bandwidth, and active user accounts). Resource usage can be\nmonitored, controlled, and reported, providing transparency for both the provider and consumer of the utilized service."
+  },
+  {
+    "legacyIndex": 788,
+    "legacyNumber": 48,
+    "prompt": "Refer to the exhibit.\n\n  EIGRP: 192.168.12.0/24\n  RIP: 192.168.12.0/27\n  OSPF: 192.168.12.0/28\n\nHow does the router manage traffic to 192.168.12.16?",
+    "options": [
+      "It selects the RIP route because it has the longest prefix inclusive of the destination address.",
+      "It load-balances traffic between all three routes.",
+      "It chooses the OSPF route because it has the longest prefix inclusive of the destination address.",
+      "It chooses the EIGRP route because it has the lowest administrative distance."
+    ],
+    "answer": 0,
+    "explanation": "The IP address 192.168.12.16 does not belong to OSPF subnet 192.168.12.0/28 (this subnet only ranges from 192.168.12.0 to 192.168.12.15) so\nRIP route will be selected as the longest prefix match."
+  },
+  {
+    "legacyIndex": 789,
+    "legacyNumber": 49,
+    "prompt": "Drag and drop the VLAN port modes from the left onto the descriptions on the right.",
+    "type": "match",
+    "items": [
+      "allows the port to belong to one VLAN when manually configured",
+      "allows the port to be assigned automatically to one VLAN",
+      "allows the port to belong to one or more VLANs",
+      "allows the port to support a single VLAN across a service-provider network",
+      "allows the port to communicate with others within the same community VLAN"
+    ],
+    "choices": [
+      "static access",
+      "dynamic access",
+      "trunk",
+      "tunnel",
+      "private"
+    ],
+    "answer": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 790,
+    "legacyNumber": 50,
+    "prompt": "Refer to the exhibit.\n\nCPE# show ipv6 route\n\nIPv6 Routing Table - default - 6 entries\n\nCodes: C - Connected, L - Local, S - Static, U - Per-user Static route\n\n    B - BGP, R - RIP, H - NHRP, II - ISIS L1\n\n    I2 - ISIS L2, IA - ISIS interarea, IS - ISIS summary, D - EIGRP\n\n    EX - EIGRP external, ND - ND Default, NDp - ND Prefix, DCE - Destination\n\n    NDr - Redirect, O - OSPF Intra, OI - OSPF Inter, OE1 - OSPF ext 1\n\n    OE2 - OSPF ext 2, ON1 - OSPF NSSA ext 1, ON2 - OSPF NSSA ext 2\n\n    la - LISP alt, lr - LISP site-registrations, ld - LISP dyn-eid\n\n    lA - LISP away, le - LISP extranet-policy, lp - LISP publications\n\nND ::/0 [2/0]\n\n  via FE80::A8BB:CCFF:FE00:200, Ethernet0/0\n\nNDp 2001:DB8:1234:1::/64 [2/0]\n\n  via Ethernet0/0, directly connected\n\nL 2001:DB8:1234:1:A8BB:CCFF:FE00:100/128 [0/0]\n\n  via Ethernet0/0, receive\n\nC 2001:DB8:1234:2::/64 [0/0]\n\n  via Ethernet0/1, directly connected\n\nL 2001:DB8:1234:2:A8BB:CCFF:FE00:110/128 [0/0]\n\n  via Ethernet0/1, receive\n\nL FF00::/8 [0/0]\n\nvia Null0, receive\n\nThe administrator must configure a floating static default route that points to 2001:db8:1234:2::1 and replaces the current default route only if\nit fails. Which command must the engineer configure on the CPE?",
+    "options": [
+      "ipv6 route ::/0 2001:db8:1234:2::1 2",
+      "ipv6 route ::/0 2001:db8:1234:2::1 3",
+      "ipv6 route ::/128 2001:db8:1234:2::1 3",
+      "ipv6 route ::/0 2001:db8:1234:2::1 1"
+    ],
+    "answer": 1,
+    "explanation": "From the output line “ND ::/0 [2/0]” we learn that the current static default route has the AD of 2 so we have to configure the floating static\ndefault route with AD of 3 or greater so that it acts as a backup route."
+  },
+  {
+    "legacyIndex": 791,
+    "legacyNumber": 51,
+    "prompt": "What is the benefit of using private IPv4 addressing?",
+    "options": [
+      "to provide reliable connectivity between like devices",
+      "to enable secure connectivity over the Internet",
+      "to shield internal network devices from external access",
+      "to be routable over an external network"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 792,
+    "legacyNumber": 52,
+    "prompt": "Which QoS feature drops traffic that exceeds the committed access rate?",
+    "options": [
+      "weighted fair queuing",
+      "FIFO",
+      "shaping",
+      "policing"
+    ],
+    "answer": 3,
+    "explanation": "Policing: is used to control the rate of traffic flowing across an interface. During a bandwidth exceed (crossed the maximum configured rate), the\nexcess traffic is generally dropped or remarked."
+  },
+  {
+    "legacyIndex": 793,
+    "legacyNumber": 53,
+    "prompt": "Two switches have been implemented and all interfaces are at the default configuration level. A trunk link must be implemented between two\nswitches with these requirements:\n+ using an industry-standard trunking protocol\n+ permitting VLANs 1-10 and denying other VLANs\n\nHow must the interconnecting ports be configured?",
+    "options": [
+      "switchport mode trunk\nswitchport trunk allowed vlans 1-10\nswitchport trunk native vlan 11",
+      "switchport mode trunk\nswitchport trunk encapsulation dot1q\nswitchport trunk allowed vlans 1-10",
+      "switchport mode dynamic desirable\nchannel-group 1 mode desirable\nswitchport trunk encapsulation isl\nswitchport trunk allowed vlan except 11-4094",
+      "switchport mode dynamic\nchannel-protocol lacp\nswitchport trunk allowed vlans 1-10"
+    ],
+    "answer": 1,
+    "explanation": "“Using an industry-standard trunking protocol” so we have to use 802.1Q, not ISL."
+  },
+  {
+    "legacyIndex": 794,
+    "legacyNumber": 54,
+    "prompt": "Refer to the exhibit.\n\nA network engineer is configuring a WLAN to connect with the 172.16.10.0/24 network on VLAN 20. The engineer wants to limit the number of\ndevices that connect to the WLAN on the USERWL SSID to 125. Which configuration must the engineer perform on the WLC?",
+    "options": [
+      "In the WLAN configuration, set the Maximum Allowed Clients value to 125.",
+      "In the Advanced configuration, set the DTIM value to 125.",
+      "In the Controller IPv6 configuration, set the Throttle value to 125.",
+      "In the Management Software activation configuration, set the Clients value to 125."
+    ],
+    "answer": 0,
+    "explanation": "In the example below, we can limit the number of clients that can access in a WLAN to 50 with the “Maximum Allowed Clients” field:\n\nNote: DTIM stands for Delivery traffic indication map or message. It is basically an additional message added after the normal beacon broadcast\nby your router or access point."
+  },
+  {
+    "legacyIndex": 795,
+    "legacyNumber": 55,
+    "prompt": "Why would a network administrator choose to implement automation in a network environment?",
+    "options": [
+      "to centralize device information storage",
+      "to simplify the process of maintaining a consistent configuration state across all devices",
+      "to deploy the management plane separately from the rest of the network",
+      "to implement centralized user account management"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 796,
+    "legacyNumber": 56,
+    "prompt": "When deploying a new network that includes both Cisco and third-party network devices, which redundancy protocol avoids the interruption of\nnetwork traffic if the default gateway router fails?",
+    "options": [
+      "FHRP",
+      "VRRP",
+      "HSRP",
+      "GLBP"
+    ],
+    "answer": 1,
+    "explanation": "Only VRRP is an open standard protocol."
+  },
+  {
+    "legacyIndex": 797,
+    "legacyNumber": 57,
+    "prompt": "Refer to the exhibit.\n\nA network administrator configures the CPE to provide internet access to the company headquarters. Traffic must be load-balanced via ISP1 and\nISP2 to ensure redundancy. Which two command sets must be configured on the CPE router? (Choose two)",
+    "options": [
+      "ip route 0.0.0.0 0.0.0.0 198.51.100.1\nip route 0.0.0.0 0.0.0.0 203.0.113.1 2",
+      "ip route 0.0.0.0 128.0.0.0 198.51.100.1\nip route 128.0.0.0 128.0.0.0 203.0.113.1\nip route 0.0.0.0 0.0.0.0 198.51.100.1\nip route 0.0.0.0 0.0.0.0 203.0.113.1",
+      "ip route 0.0.0.0 128.0.0.0 198.51.100.1\nip route 128.0.0.0 128.0.0.0 203.0.113.1",
+      "ip route 0.0.0.0 0.0.0.0 198.51.100.1 255\nip route 0.0.0.0 0.0.0.0 203.0.113.1 255\nip route 128.0.0.0 128.0.0.0 203.0.113.1",
+      "ip route 0.0.0.0 0.0.0.0 198.51.100.1\nip route 0.0.0.0 0.0.0.0 203.0.113.1"
+    ],
+    "answer": [
+      1,
+      4
+    ],
+    "type": "multi",
+    "explanation": "Answer A is not correct as it uses floating static route with an AD of 2 for the second static route so traffic cannot be load-balancing.\n\nAn administrative distance of 255 is considered unreachable, and static routes with an administrative distance of 255 are never entered into the\nrouting table -> Answer D is not correct.\n\nNow let’s explain more detail about the command “ip route 128.0.0.0 128.0.0.0 …”. It is same as “ip route 0.0.0.0 128.0.0.0 …” command or we\ncan call it “0.0.0.0/1” route. Because of the “longest-prefix match” rule, it is preferred to the default static “0.0.0.0/0” route. So 0.0.0.0/0 route\nwould not be used.\n\nNow we can why answer C is not correct as the route “ip route 128.0.0.0 128.0.0.0 203.0.113.1” is always preferred to “ip route 0.0.0.0\n128.0.0.0 198.51.100.1”.\n\nAnswer B is correct as we have two “0.0.0.0/1” routes (“0.0.0.0 128.0.0.0” and “128.0.0.0 128.0.0.0” are totally the same)"
+  },
+  {
+    "legacyIndex": 798,
+    "legacyNumber": 58,
+    "prompt": "Refer to the exhibit.\n\nRouter#conf t\n\nEnter configuration commands, one per line. End with CNTL/Z.\n\nRouter(config)#hostname R1\n\nR1(config)#ip domain-name CC-Net.com\n\nR1(config)#enable secret Passfornewuser\n\nR1(config)#line vty 0 15\n\nR1(config-line)#transport input ssh\n\nR1(config-line)#login local\n\nA network administrator is configuring a router for user access via SSH. The service-password encryption command has been issued. The\nconfiguration must meet these requirements:\n\n– Create the username as CCUser.\n– Create the password as NA!2$cc.\n– Encrypt the user password.\n\nWhat must be configured to meet the requirements?",
+    "options": [
+      "username CCUser password NA!2$cc\nenable password level 5 NA!2$cc",
+      "username CCUser privilege 15 password NA!2$cc\nenable secret 0 NA!2$cc",
+      "username CCUser secret NA!2$cc",
+      "username CCUser privilege 10 password NA!2$cc"
+    ],
+    "answer": 2,
+    "explanation": "In fact all other answers look good too, but answer C is the best choice as the password of the username is encrypted with highest security level."
+  },
+  {
+    "legacyIndex": 799,
+    "legacyNumber": 59,
+    "prompt": "Refer to the exhibit.\n\nAn engineer must configure a static network route between two networks so that host A communicates with host B. Drag and drop the\ncommands from the left onto the routers where they must be configured on the right. Not all commands are used.",
+    "type": "match",
+    "items": [
+      "ip route 10.10.13.0 255.255.255.128 10.10.10.1",
+      "ip route 10.10.13.0 255.255.255.128 10.10.10.5",
+      "ip route 10.10.14.0 255.255.255.0 10.10.10.2",
+      "ip route 10.10.14.0 255.255.255.0 10.10.10.6"
+    ],
+    "choices": [
+      "R1",
+      "R2",
+      "R3"
+    ],
+    "answer": [
+      0,
+      1,
+      1,
+      2
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 800,
+    "legacyNumber": 60,
+    "prompt": "Refer to the exhibit.\n\nR1# show ip route | begin Gateway\n\nGateway of last resort is 0.0.0.0 to network 0.0.0.0\n\nS* 0.0.0.0/0 is directly connected, Serial0/0/1\n\n    172.16.0.0/16 is variably subnetted, 4 subnets, 2 masks\n\nC     172.16.2.0/24 is directly connected, GigabitKthernet0/0\n\nL     172.16.2.2/32 is directly connected, GigabitEthernet0/0\n\nC     172.16.4.0/21 is directly connected, Serial0/0/1\n\nL     172.16.8.2/26 is directly connected, Serial0/0/1\n\nWhat is the subnet mask for route 172.16.4.0?",
+    "options": [
+      "255.255.255.192",
+      "255.255.248.0",
+      "255.255.254.0",
+      "255.255.240.0"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 801,
+    "legacyNumber": 61,
+    "prompt": "Which interface or port on the WLC is the default for in-band device administration and communications between the controller and access\npoints?",
+    "options": [
+      "virtual interface",
+      "management interface",
+      "console port",
+      "service port"
+    ],
+    "answer": 1,
+    "explanation": "The management interface is the default interface for in-band management of the controller and connectivity to enterprise services such as\nAAA servers. It is also used for communications between the controller and access points, for all CAPWAP or intercontroller mobility messaging\nand tunneling traffic."
+  },
+  {
+    "legacyIndex": 802,
+    "legacyNumber": 62,
+    "prompt": "Refer to the exhibit.\n\nThe IPv6 address for the LAN segment on router R2 must be configured using the EUI-64 format. Which address must be used?",
+    "options": [
+      "ipv6 address 2001:DB8:D8D2:1009:10A0:ABFF:FECC:1 eui-64",
+      "ipv6 address 2001:DB8:D8D2:1009:12A0:AB34:FFCC:1 eui-64",
+      "ipv6 address 2001:DB8:D8D2:1009:1230:ABFF:FECC:1 eui-64",
+      "ipv6 address 2001:DB8:D8D2:1009:4345:80FF:FF16:7 eui-64"
+    ],
+    "answer": 0,
+    "explanation": "On R2 LAN interface we use the command “ipv6 address 2001:db8:d8d2:1009::/64 eui-64” to tell the router to assign an IPv6 address for this\ninterface automatically. R2 takes the MAC address of LAN interface 12A0.ABDD.0002 and insert FFFE between these two halves to form a 64-bit\naddress 2001:DB8:D8D2:1009:12A0.ABFF:FEdd:0002 by insert .\n\nWe have to invert the universal/local (U/L) flag (bit 7) in the OUI portion of the address so 12 (in hex) = 0001 0010 (in binary) so after flipping\nthe 7th bit we have 0001 0000 = 10 (in hex). Therefore the EUI-64 IPv6 would be 2001:DB8:D8D2:1009:10A0:ABFF:FECC:1.\n\nNote: There are some document saying that we have to flip bit 7th while some others say we have to change the 7th bit to 1. So we tested with\nIOSv15.4:\n\nWe see the MAC address of E0/0 is “aabb……..” (“a” in hex = “1010″) so the 7th bit is 1. When we enable IPv6 on this interface the link-local\naddress changed to “FE80::A8BB……..”. So “a” changed to 8 (“8” in hex = 1000″) and we are sure bit 1 changed to 0. But this is just the link-local\naddress so we will try to assign a global unique address:\n\nThe global unique address assigned is “2001::A8BB……..” so bit 1 changed to 0 too."
+  },
+  {
+    "legacyIndex": 803,
+    "legacyNumber": 63,
+    "prompt": "A company has each office using wireless access with multiple SSIDs while limiting roaming capabilities, covering different locations on the\ninternal office LAN, guest networks, and BYOD access for employees. Which change must be enabled to improve the customer experience\nduring SSID changes?",
+    "options": [
+      "Assisted Roaming Prediction Optimization",
+      "Fast Transition",
+      "Neighbor List Dual Band",
+      "Fast SSID Change"
+    ],
+    "answer": 3,
+    "explanation": "“When you enable Fast SSID Change, the controller allows clients to move between SSIDs. When the client sends a new association request for a\ndifferent SSID, the client entry in the controller connection table is cleared before the client is added to the new SSID."
+  },
+  {
+    "legacyIndex": 804,
+    "legacyNumber": 64,
+    "prompt": "Refer to the exhibit.\n\nThe EtherChannel is configured with a speed of 1000 and duplex as full on both ends of channel group 1. What is the next step to configure the\nchannel on switch A to respond to but not initiate LACP communication?",
+    "options": [
+      "interface range gigabitethernet0/0/0 -15\nchannel-group 1 mode desirable",
+      "interface range gigabitethernet0/0/0 -15\nchannel-group 1 mode on",
+      "interface port-channel 1\nchannel-group 1 mode auto",
+      "interface port-channel 1\nchannel-group 1 mode passive"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 805,
+    "legacyNumber": 65,
+    "prompt": "Which two VPN technologies are recommended by Cisco for multiple branch offices and large-scale deployments? (Choose two)",
+    "options": [
+      "IPsec remote access",
+      "site-to-site VPN",
+      "clientless VPN",
+      "GETVPN",
+      "DMVPN"
+    ],
+    "answer": [
+      3,
+      4
+    ],
+    "type": "multi",
+    "explanation": "Cisco DMVPN can be deployed in conjunction with Cisco IOS Firewall and Cisco IOS IPS, as well as quality of service (QoS), IP Multicast, split\ntunneling, and routing-based failover mechanisms. Large-scale, highly available Cisco DMVPN deployments are made possible by load balancing\nmultiple Cisco DMVPN hubs.\n\nGet VPNs provide large scale, connectionless, tunnel free transmission protection taking advantage of existing routing infrastructure and can be\nused with MPLS, IP, Frame relay and ATM networks.\n\nNote:\n\nSite-to-Site VPN is a simple VPN that connects a central site and a remote site, or a hub and spoke VPN that connects a central site with multiple\nremote sites -> It is not suitable for large-scale deployments.\n\nWith clientless VPN, a tunnel is established from a web browser on the remote user’s device to the outside interface of the VPN gateway’s SSL\ncomponent -> It is not suitable for large-scale deployments.\n\nIPSec remote access is used to connect remote-access clients, such as a PC or small office, home office (SOHO) device."
+  },
+  {
+    "legacyIndex": 806,
+    "legacyNumber": 66,
+    "prompt": "Refer to the exhibit.\n\n{\n\n    \"Test_Questions\" : [\n\n         \"Automation\",\n\n         \"Configuration\",\n\n    ],\n\n    \"Test_Exam_Level\" : [\n\n         \"CCNA\",\n\n         \"CCNP\",\n\n    ],\n\n    \"Test_Response\" : [\n\n         \"Correct\",\n\n         \"Incorrect\",\n\n    ]\n\n}\n\nHow many arrays are present in the JSON data?",
+    "options": [
+      "one",
+      "three",
+      "six",
+      "nine"
+    ],
+    "answer": 1,
+    "explanation": "The JSON array is surrounded by square brackets [ ]. In this question there are three square brackets in total."
+  },
+  {
+    "legacyIndex": 807,
+    "legacyNumber": 67,
+    "prompt": "Refer to the exhibit.\n\nRouter1#show interface ethernet 1\n\nEthernet1 is up, line protocol is up\n\nHardware is Lance, address is 0010.7b36.Ibe8 (bia 0010.7b36.Ibe8)\n\nInternet address is 10.100.48.240/24\n\nMTU 1500 bytes, BW 10000 Kbit, DLY 1000 usec,\n\nreliability 255/255, txload 1/255, rxload 1/255 Encapsulation ARPA, loopback not set\n\nKeepalive set (10 sec)\n\nARP type: ARPA, ARP Timeout 04:00:00\n\nLast input 00:00:00, output 00:00:06, output hang never\n\nLast clearing of \"show interface\" counters never\n\nInput queue: 1/75/1/0 (size/max/drops/flushes); Total output drops: 0\n\nQueueing strategy: random early detection(RED)\n\nOutput queue :0/40 (size/max)\n\n5 minute input rate 1000 bits/sec, 2 packets/sec\n\n5 minute output rate 0 bits/sec, 0 packets/sec\n\n7558065 packets input, 783768942 bytes, 1 no buffer\n\nReceived 8280963 broadcasts, 0 runts, 0 giants, 1 throttles\n\n15 input errors, 14278 GRC, 0 frame, 0 overrun, 3 ignored\n\n0 input packets with dribble condition detected\n\n798092 packets output, 50280266 bytes, 0 underruns\n\n0 output errors, 15000 collisions, 0 interface resets\n\n0 babbles, 0 late collision, 179 deferred\n\n0 lost carrier, 0 no carrier\n\n0 output buffer failures, 0 output buffers swapped out\n\nAn administrator received a call from a branch office regarding poor application performance hosted at the headquarters. Ethernet 1 is\nconnected between Router1 and the LAN switch. What identifies the issue?",
+    "options": [
+      "There is a duplex mismatch.",
+      "The MTU is not set to the default value.",
+      "The link is over utilized.",
+      "The QoS policy is dropping traffic."
+    ],
+    "answer": 0,
+    "explanation": "This interface gets high collision (15000 collisions) so one end may be set to “Half-duplex”."
+  },
+  {
+    "legacyIndex": 808,
+    "legacyNumber": 68,
+    "prompt": "Refer to the exhibit.\n\nSW1#show etherchannel\n\n           Channel-group listing:\n\n           ----------------------\n\nGroup: 2\n\n--------\n\nGroup state = L2\n\nPorts: 1 Maxports = 8\n\nPort-channels: 1 Max Portchannels = 1\n\nProtocol: PAGP\n\nA network engineer updates the existing configuration on interface fastethernet1/1 switch SW1. It must establish an EtherChannel by using the\nsame group designation with another vendor switch. Which configuration must be performed to complete the process?",
+    "options": [
+      "interface port-channel 2\nchannel-group 2 mode desirable",
+      "interface fastethernet 1/1\nchannel-group 2 mode on",
+      "interface port-channel 2\nchannel-group 2 mode auto",
+      "interface fastethernet 1/1\nchannel-group 2 mode active"
+    ],
+    "answer": 3,
+    "explanation": "PaGP is Cisco proprietary protocol so we must change to LACP which is an open standard."
+  },
+  {
+    "legacyIndex": 809,
+    "legacyNumber": 69,
+    "prompt": "Refer to the exhibit.\n\nLocal access for R4 must be established and these requirements must be met:\n– Only Telnet access is allowed.\n– The enable password must be stored securely.\n– The enable password must be applied in plain text\n– Full access to R4 must be permitted upon successful login\n\nWhich configuration script meets the requirements?\n\n  Option A                                           Option B\n\n  !                                                  conf t\n  conf t                                             !\n  !                                                  username test1 password testpass1\n  username test1 password testpass1                  enable secret level 15 0 Test123\n  enable password level 1 7 Test123                  !\n  !                                                  line vty 0 15\n  line vty 0 15                                      login local\n  accounting exec default                            transport input telnet\n  transport input all\n\n  Option C                                           Option D\n\n  !                                                  !\n  config t                                           config t\n  !                                                  !\n  username test1 password testpass1                  username test1 password testpass1\n  enable secret level 1 0 Test123                    enable password level 15 0 Test123\n  !                                                  !\n  line vty 0 15                                      line vty 0 15\n  login authentication                               password Test123\n  password Test123                                   transport input all\n  transport input telnet",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 1,
+    "explanation": "“Only Telnet access is allowed” -> Only Option B and Option C are correct.\n\nIn fact the “login authentication” command in Option C can only be used when AAA is enabled (with the command “aaa new-model”). And we\ncannot use the “login authentication” without specifying an authentication list:\n\nTherefore only option B is left. But in fact option B is not totally correct as “Full access to R4 must be permitted upon successful login” but in\noption B we have to type the secret password to have full access to R4 after logging in (with username “test1” and password “testpass1”)."
+  },
+  {
+    "legacyIndex": 810,
+    "legacyNumber": 70,
+    "prompt": "A packet from a company’s branch office is destined to host 172.31.0.1 at headquarters. The sending router has three possible matches in its\nrouting table for the packet: prefixes 172.31.0.0/16, 172.31.0.0/24, and 172.31.0.0/25. How does the router handle the packet?",
+    "options": [
+      "It sends the traffic via the default gateway 0.0.0.0/0.",
+      "It sends the traffic via prefix 172.31.0.0/16.",
+      "It sends the traffic via prefix 172.31.0.0/25.",
+      "It sends the traffic via prefix 172.31.0.0/24."
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 811,
+    "legacyNumber": 71,
+    "prompt": "Which action must be taken when password protection is implemented?",
+    "options": [
+      "Store passwords as contacts on a mobile device with single-factor authentication.",
+      "Share passwords with senior IT management to ensure proper oversight.",
+      "Include special characters and make passwords as long as allowed.",
+      "Use less than eight characters in length when passwords are complex."
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 812,
+    "legacyNumber": 72,
+    "prompt": "When an access point is seeking to join a wireless LAN controller, which message is sent to the AP-Manager interface?",
+    "options": [
+      "DHCP request",
+      "DHCP discover",
+      "discovery response",
+      "discovery request"
+    ],
+    "answer": 3,
+    "explanation": "The LAPs always connect to the management interface address of the controller first with a discovery request. The controller then tells the LAP\nthe Layer 3 AP-manager interface (which can also be the management by default) IP address so the LAP can send a join request to the AP-\nmanager interface next."
+  },
+  {
+    "legacyIndex": 813,
+    "legacyNumber": 73,
+    "prompt": "What is a reason why an administrator would choose to implement an automated network management approach?",
+    "options": [
+      "Reduce inconsistencies in the network configuration.",
+      "Increase recurrent management costs.",
+      "Enable “box by box” configuration and deployment.",
+      "Decipher simple password policies."
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 814,
+    "legacyNumber": 74,
+    "prompt": "Which device separates networks by security domains?",
+    "options": [
+      "access point",
+      "firewall",
+      "intrusion protection system",
+      "wireless controller"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 815,
+    "legacyNumber": 75,
+    "prompt": "Which two characteristics are representative of virtual machines (VMs)? (Choose two)",
+    "options": [
+      "A VM on a hypervisor is automatically interconnected to other VMs.",
+      "A VM on an individual hypervisor shares resources equally.",
+      "Each VMs operating system depends on its hypervisor.",
+      "Each VM runs independently of any other VM in the same hypervisor.",
+      "multiple VMs operate on the same underlying hardware."
+    ],
+    "answer": [
+      3,
+      4
+    ],
+    "type": "multi",
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 816,
+    "legacyNumber": 76,
+    "prompt": "Refer to the exhibit.\n\nR7#\n\n172.22.0.0/24 is subnetted, 1 subnets\n\nD 172.22.49.0 [90/284160] via 10.81.22.2, 04:55:53, FastEthernet0/0\n\n10.0.0.0/8 is variably subnetted, 26 subnets, 5 masks\n\nD EX 10.10.10.10/32 [170/35840] via 10.3.5.1, 04:55:55, FastEthernet0/1\n\nD 10.9.1.0/30 [90/33280] via 10.3.5.1, 04:55:56, FastEthernet0/1\n\nB 10.111.99.0/24 [20/0] via 10.6.25.2, 03:58:52\n\nD 10.14.3.0/30 [90/30720] via 10.3.5.1, 04:55:58, FastEthernet0/1\n\nC 10.9.4.0/30 is directly connected, FastEthernet1/0\n\nB 10.100.100.0/24 [20/0] via 10.6.25.2, 03:58:53\n\nD 10.0.1.0/30 [90/30720] via 10.3.5.1, 04:55:58, FastEthernet0/1\n\nD EX 10.10.10.70/32 [170/1612801 via 10.3.5.1, 04:55:57, FastEthernet0/1\n\nB 10.90.0.0/16 [200/0] via 0.0.0.0, 03:57:59, Null0\n\nD EX 10.90.1.0/24 [170/158720] via 10.3.5.1, 04:55:57, FastEthernet0/1\n\nD EX 10.90.2.0/24 [170/158720] via 10.3.5.1, 04:55:57, FastEthernet0/1\n\nD 10.90.3.0/29 [90/161280] via 10.3.5.1, 02:46:03, FastEthernet0/1\n\nD EX 10.90.3.0/24 [170/158720] via 10.3.5.1, 02:46:04, FastEthernet0/1\n\nD EX 10.90.4.0/24 [170/158720] via 10.3.5.1, 04:55:59, FastEthernet0/1\n\nD EX 10.90.5.0/24 [170/158720] via 10.3.5.1, 04:55:59, FastEthernet0/1\n\nB* 0.0.0.0/0 [20/0] via 10.6.25.2, 02:22:38\n\nAccording to the output, which parameter set is validated using the routing table of R7?",
+    "options": [
+      "R7 is missing a gateway of last resort.\nR7 is receiving routes that were redistributed from BGP\nR7 will forward traffic destined to 10.90.8.0/24.",
+      "R7 is missing a gateway of last resort.\nR7 is receiving routes that were redistributed in EIGRP\nR7 will forward traffic destined to 10.90.8.0/24.",
+      "R7 has a gateway of last resort available.\nR7 is receiving routes that were redistributed from BGP\nR7 will drop traffic destined to 10.90.8.0/24",
+      "R7 has a gateway of last resort available.\nR7 is receiving routes that were redistributed in EIGRP\nR7 will drop traffic destined to 10.90.8.0/24."
+    ],
+    "answer": 3,
+    "explanation": "Traffic destined to 10.90.8.0/24 matches the output line “10.90.0.0/16 [200/0] via 0.0.0.0, 03:57:59, Null0” so it will be forwarded to Null0\ninterface, which means it will be dropped.\n\nFrom “D EX” letter, we learn that R7 is receiving routes that were redistributed in EIGRP (another routing protocol was redistributed into EIGRP)."
+  },
+  {
+    "legacyIndex": 817,
+    "legacyNumber": 77,
+    "prompt": "Refer to the exhibit.\n\nGateway of last resort is 172.16.2.2 to network 0.0.0.0\n\n    10.0.0.0/8 is variably subnetted, 2 subnets, 2 masks\n\nC     10.10.10.0/24 is directly connected, GigabitEthernet0/0/0\n\nL     10.10.10.3/32 is directly connected, GigabitEthernet0/0/0\n\n    172.16.0.0/16 is variably subnetted, 3 subnets, 2 masks\n\nS     172.16.1.33/32 is directly connected, GigabitEthernet0/0/1\n\nC     172.16.2.0/23 is directly connected, GigabitEthernet0/0/1\n\nL   172.16.2.1/32 is directly connected, GigabitEthernet0/0/1\n\nS* 0.0.0.0/0 [1/0] via 172.16.2.2\n\nA packet sourced from 10.10.10.1 is destined for 172.16.3.254. What is the subnet mask of the destination route?",
+    "options": [
+      "0.0.0.0",
+      "255.255.254.0",
+      "255.255.255.0",
+      "255.255.255.255"
+    ],
+    "answer": 1,
+    "explanation": "The packet destined for 172.16.3.254 will be routed via the entry “C 172.16.2.0/23 …” as this subnet ranges from 172.16.2.0 to 172.16.3.255."
+  },
+  {
+    "legacyIndex": 818,
+    "legacyNumber": 78,
+    "prompt": "What is the operating mode and role of a backup port on a shared LAN segment in Rapid PVST+?",
+    "options": [
+      "blocking mode and provides an alternate path toward the designated bridge",
+      "listening mode and provides an alternate path toward the root bridge",
+      "forwarding mode and provides the lowest-cost path to the root bridge for each VLAN",
+      "learning mode and provides the shortest path toward the root bridge handling traffic away from the LAN"
+    ],
+    "answer": 0,
+    "explanation": "An alternate port and a backup port are in a blocking state (or discarding state) to prevent loops."
+  },
+  {
+    "legacyIndex": 819,
+    "legacyNumber": 79,
+    "prompt": "Which DSCP per-hop forwarding behavior is divided into subclasses based on drop probability?",
+    "options": [
+      "class-selector",
+      "assured",
+      "expedited",
+      "default"
+    ],
+    "answer": 1,
+    "explanation": "The term Per-Hop Behaviour (PHB) refers to how a node will treat traffic having the same Differentiated Services Code Point (DSCP) values.\n\nAssured Forwarding has four standard classes from AF1 to AF4. It is important to note that the class number does not determine priority. Each\nclass is treated independently and placed into different queues.\n\nEach AF class has its own IP Precedence with three drop probabilities, low, medium, and high."
+  },
+  {
+    "legacyIndex": 820,
+    "legacyNumber": 80,
+    "prompt": "What occurs when a switch receives a frame that has a destination that is an unknown MAC address?",
+    "options": [
+      "The frame is flooded to all interfaces in the VLAN to which the frame belongs.",
+      "The frame is flooded to all interfaces in the switch.",
+      "The frame is discarded",
+      "The MAC address table of the switch is flushed"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 821,
+    "legacyNumber": 81,
+    "prompt": "Drag and drop the facts about wireless architectures from the left onto the types of access point on the right. Not all options are used.",
+    "type": "match",
+    "items": [
+      "managed from a Web-based dashboard",
+      "supports automatic deployment",
+      "configured and managed by a WLC",
+      "supports different operational modes"
+    ],
+    "choices": [
+      "Cloud-Based Access Point",
+      "Lightweight Access Point"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 822,
+    "legacyNumber": 82,
+    "prompt": "SIP-based Call Admission Control must be configured in the Cisco WLC GUI. SIP call-snooping ports are configured. Which two actions must be\ncompleted next? (Choose two)",
+    "options": [
+      "Set the QoS level to silver or greater for voice traffic",
+      "Enable Media Session Snooping on the WLAN",
+      "Configure two different QoS roles for data and voice traffic",
+      "Set the QoS level to platinum for voice traffic",
+      "Enable traffic shaping for the LAN interface of the WLC"
+    ],
+    "answer": [
+      1,
+      3
+    ],
+    "type": "multi",
+    "explanation": "Configuring SIP-Based CAC (CLI)\nProcedure\nStep 1 Set the voice to the platinum QoS level\nStep 2 Enable the call-snooping feature for a particular WLAN\n…"
+  },
+  {
+    "legacyIndex": 823,
+    "legacyNumber": 1,
+    "prompt": "Drag and drop the SNMP components from the left onto the descriptions on the right.",
+    "type": "match",
+    "items": [
+      "network node controlled by SNMP",
+      "collection of uniquely identifiable objects whose state can be interrogated over SNMP",
+      "system that runs monitoring applications and controls network nodes",
+      "SNMP component that captures and translates device and network data"
+    ],
+    "choices": [
+      "managed device",
+      "MIB",
+      "NMS",
+      "agent"
+    ],
+    "answer": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "explanation": "The SNMP agent is the software component within the managed device that maintains the data for the device and reports these data, as\nneeded, to managing systems. The agent and MIB reside on the routing device (router, access server, or switch). To enable the SNMP agent on a\nCisco routing device, you must define the relationship between the manager and the agent."
+  },
+  {
+    "legacyIndex": 824,
+    "legacyNumber": 2,
+    "prompt": "Refer to the exhibit.\n\nAn engineer must configure a floating static route on an external EIGRP network. The destination subnet is the /29 on the LAN interface of R86.\nWhich command must be executed on R14?",
+    "options": [
+      "ip route 10.80.65.0 255.255.248.0 10.73.65.66 1",
+      "ip route 10.80.65.0 255.255.255.240 fa0/1 89",
+      "ip route 10.80.65.0 255.255.255.248 10.73.65.66 171",
+      "ip route 10.73.65.66 0.0.0.224 10.80.65.0 255"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 825,
+    "legacyNumber": 3,
+    "prompt": "Drag and drop the statements about device management from the left onto the corresponding types on the right.",
+    "type": "match",
+    "items": [
+      "requires manual configuration of complex protocols",
+      "leverages Cisco Prime Infrastructure",
+      "lacks support for SDA",
+      "reduces the workload for enterprise customers",
+      "uses algorithms to detect security threats",
+      "uses northbound APIs"
+    ],
+    "choices": [
+      "Traditional Campus Device Management",
+      "Cisco DNA Center"
+    ],
+    "answer": [
+      0,
+      0,
+      0,
+      1,
+      1,
+      1
+    ],
+    "explanation": "One of the example of traditional network management, Cisco Prime Infrastructure (PI) Management has been used to manage enterprise\nnetworks."
+  },
+  {
+    "legacyIndex": 826,
+    "legacyNumber": 4,
+    "prompt": "A network engineer is implementing a corporate SSID for WPA3-Personal security with a PSK. Which encryption cipher must be configured?",
+    "options": [
+      "GCMP128",
+      "GCMP256",
+      "CCMP256",
+      "CCMP128"
+    ],
+    "answer": 3,
+    "explanation": "WPA3 mandates the adoption of Protected Management Frames, which help guard against eavesdropping and forging. It also standardizes the\n128-bit cryptographic suite and disallows obsolete security protocols. WPA3-Enterprise has optional 192-bit security encryption and a 48-bit IV\nfor heightened protection of sensitive corporate, financial and governmental data. WPA3-Personal uses CCMP-128 and AES-128.\n\nConfiguring WPA3 (GUI)\n\n…\n\nStep 8 – In the WPA2+WPA3 Parameters section, choose WPA3 as the Policy.\nIf you choose Personal, Encryption Cipher is limited to CCMP128(AES) and Authentication Key Management is in the PSK format.\n\nStep 9\n\nChose the Encryption Cipher from the following options:\nCCMP128(AES)\nCCMP256 (not available for Personal security type)\nGCMP128 (not available for Personal security type)\nGCMP256 (not available for Personal security type)"
+  },
+  {
+    "legacyIndex": 827,
+    "legacyNumber": 5,
+    "prompt": "What is the functionality of the Cisco DNA Center?",
+    "options": [
+      "data center network policy controller",
+      "software-defined controller for automation of devices and services",
+      "console server that permits secure access to all network devices",
+      "IP address pool distribution scheduler"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 828,
+    "legacyNumber": 6,
+    "prompt": "Which IP header field is changed by a Cisco device when QoS marking is enabled?",
+    "options": [
+      "Header Checksum",
+      "Type of Service",
+      "DSCP",
+      "ECN"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 829,
+    "legacyNumber": 7,
+    "prompt": "Refer to the exhibit.\n\nAn IPv6 address must be obtained automatically on the LAN interface on R1. Which command must be implemented to accomplish the task?",
+    "options": [
+      "ipv6 address 2001:db8:d8d2:1008:4358:23:1390::/64",
+      "ipv6 address fe80::/10",
+      "ipv6 address dhcp",
+      "ipv6 address autoconfig"
+    ],
+    "answer": 2,
+    "explanation": "In fact there are two correct answers for this question, which are “ipv6 address autoconfig” and “ipv6 address dhcp”. The first command can\nwork with or without a DHCPv6 server. The second command “ipv6 address dhcp” is correct too as we can see there is a DHCPv6 on the same\nLAN so this command works well in this question. As the author of this question put a DHCPv6 server in the topology so maybe answer “ipv6\naddress dhcp” is the better choice!\n\nNote: The “ipv6 address autoconfig” command causes the device to perform IPv6 stateless address auto-configuration to discover prefixes on\nthe link and then to add the EUI-64 based addresses to the interface."
+  },
+  {
+    "legacyIndex": 830,
+    "legacyNumber": 8,
+    "prompt": "Refer to the exhibit.\n\nRouter-Y#show ip route\n\nCodes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP\n\n    D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area\n\n    N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2\n\n    E1 - OSPF external type 1, E2 - OSPF external type 2\n\n    i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2\n\n    ia - IS-IS inter area, * - candidate default, U - per-user static route\n\n    o - ODR, P - periodic downloaded static route, H - NHRP, l - LISP\n\n    + - replicated route, % - next hop override, p - overrides from PfR\n\nGateway of last resort is not set\n\n10.0.0.0/8 is variably subnetted\n\nB    10.0.0.0/8 [1/0] via 10.224.1.2\n\nB    10.27.150.224/27 [20/0] via 10.224.1.3, 1w6d\n\nS    10.128.0.0/9 [1/0] via 10.224.1.3\n\nB    10.224.0.0/11 [20/0] via 10.224.1.5, 5d18h\n\nB    10.224.0.0/15 [20/0] via 10.224.1.4, 5d18h\n\nC    10.223.0.0/24 is directly connected, GigabitEthernet0/1\n\nC    10.224.0.0/24 is directly connected, GigabitEthernet0/0\n\nB    10.226.34.0/24 [20/0] via 10.224.1.5, 5d18h\n\nPC A is communicating with another device at IP address 10.227.225.255. Through which router does router Y route the traffic?",
+    "options": [
+      "router A",
+      "router B",
+      "router C",
+      "router D"
+    ],
+    "answer": 3,
+    "explanation": "The destination IP address 10.227.225.255 belongs to 10.224.0.0/11 subnet and this is the longest prefix subnet so router Y will send traffic\nfrom PC A to 10.224.1.5, which is router D."
+  },
+  {
+    "legacyIndex": 831,
+    "legacyNumber": 9,
+    "prompt": "What are two protocols within the IPsec suite? (Choose two)",
+    "options": [
+      "3DES",
+      "AH",
+      "ESP",
+      "TLS",
+      "AES"
+    ],
+    "answer": [
+      1,
+      2
+    ],
+    "type": "multi",
+    "explanation": "IPsec is a suite of protocols widely used to secure connections over the internet. The three main protocols comprising IPsec are: Authentication\nHeader (AH), Encapsulating Security Payload (ESP), and Internet Key Exchange (IKE)."
+  },
+  {
+    "legacyIndex": 832,
+    "legacyNumber": 10,
+    "prompt": "Drag and drop the IPv6 address type characteristics from the left to the right.",
+    "type": "match",
+    "items": [
+      "routable and reachable via the Internet",
+      "equivalent to public IPv4 addresses",
+      "addresses with prefix FC00::/7",
+      "addressing for exclusive use internally without Internet routing"
+    ],
+    "choices": [
+      "Global Unicast Address",
+      "Unique Local Address"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": "A IPv6 Unique Local Address is an IPv6 address in the block FC00::/7. It is the approximate IPv6 counterpart of the IPv4 private address. It is not\nroutable on the global Internet.\n\nNote: In the past, Site-local addresses (FEC0::/10) are equivalent to private IP addresses in IPv4 but now they are deprecated."
+  },
+  {
+    "legacyIndex": 833,
+    "legacyNumber": 11,
+    "prompt": "What are two benefits of private IPv4 addressing? (Choose two)",
+    "options": [
+      "reuses addresses at multiple sites",
+      "provides external internet network connectivity",
+      "conserves globally unique address space",
+      "propagates routing information to WAN links",
+      "provides unlimited address ranges"
+    ],
+    "answer": [
+      0,
+      2
+    ],
+    "type": "multi",
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 834,
+    "legacyNumber": 12,
+    "prompt": "Refer to the exhibit.\n\nRouter R14 is in the process of being configured. Which configuration must be used to establish a host route to PC 10?",
+    "options": [
+      "ip route 10.80.65.10 255.255.255.254 10.80.65.1",
+      "ip route 10.73.65.66 0.0.0.255 10.80.65.10",
+      "ip route 10.80.65.10 255.255.255.255 10.73.65.66",
+      "ip route 10.73.65.65 255.0.0.0 10.80.65.10"
+    ],
+    "answer": 2,
+    "explanation": "A host route is an IPv4 address with a 32-bit mask (255.255.255.255)."
+  },
+  {
+    "legacyIndex": 835,
+    "legacyNumber": 13,
+    "prompt": "Refer to the exhibit.\n\nA static route must be configured on R86 to forward traffic for the 172.16.34.0/29 network, which resides on R14. Which command must be\nused to fulfill the request?",
+    "options": [
+      "ip route 172.16.34.0 255.255.255.248 10.73.65.65",
+      "ip route 172.16.34.0 255.255.255.224 10.73.65.66",
+      "ip route 10.73.65.65 255.255.255.248 172.16.34.0",
+      "ip route 172.16.34.0 0.0.0.7 10.73.65.64"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 836,
+    "legacyNumber": 14,
+    "prompt": "Refer to the exhibit.\n\nThe network engineer is configuring a new WLAN and is told to use a setup password for authentication instead of the RADIUS servers. Which\nadditional set of tasks must the engineer perform to complete the configuration?",
+    "options": [
+      "Disable PMF\nEnable PSK\nEnable 802.1x",
+      "Select WPA Policy\nSelect WPA2 Policy\nEnable FT PSK",
+      "Select WPA2 Policy\nDisable PMF\nEnable PSK",
+      "Select WPA Policy\nEnable CCKM\nEnable PSK"
+    ],
+    "answer": 2,
+    "explanation": "Answer A is not correct as we can not enable “PSK” and “802.1x” at the same time.\n\nAnswer B is not correct as we can only choose either “WPA Policy” or WPA2 Policy”.\n\nAnswer D is not correct as we can not enable “CCKM” and “PSK” at the same time.\n\nWe tested answer C successfully and we can configure a password for authentication with either “WPA Policy” or “WPA2 Policy”:"
+  },
+  {
+    "legacyIndex": 837,
+    "legacyNumber": 15,
+    "prompt": "Refer to the exhibit.\n\nSW1#show run\n\nBuilding configuration...\n\n!\n\nhostname SW1\n\n!\n\nip domain-name test\n\n!\n\nusername CCNA privilege 1 password 0 ciscol23\n\n!\n\ninterface FastEthernet0/1\n\nswitchport access vlan 10\n\n!\n\ninterface Vlan10\n\nip address 192.168.1.2 255.255.255.0\n\n!\n\nline vty 0 4\n\nlogin local\n\ntransport input telnet\n\nline vty 5 15\n\nlogin local\n\ntransport input telnet\n\nSW1#show crypto key mypubkey rsa\n\n% Key pair was generated at: 0:1:23 UTC Mar 1 2021\n\nKey name: SW1.test\n\nAn engineer is updating the management access configuration of switch SW1 to allow secured, encrypted remote configuration. Which two\ncommands or command sequences must the engineer apply to the switch? (Choose two)",
+    "options": [
+      "SW1(config)#line vty 0 15\nSW1(config-line)#transport input ssh",
+      "SW1(config)# crypto key generate rsa",
+      "SW1(config)# interface f0/1\nSW1(config-if)# switch port mode trunk",
+      "SW1(config)#enable secret ccnaTest123",
+      "SW1(config)# username NEW secret R3mote123"
+    ],
+    "answer": [
+      0,
+      3
+    ],
+    "type": "multi",
+    "explanation": "“encrypted remote configuration” -> configure SSH.\n\nOn VTY lines we configured “login local” command which means that authentication uses locally configured credentials using the “username …\nsecret …” command or “username … password …” command. In this question we already had the latter so we don’t need to configure the\nformer -> Answer E is not correct.\n\nFrom the “show crypto key mypubkey rsa”, “Key pair was generated” we learned that the command “crypto key generate rsa” has been issued\nto create the key -> Answer B is not correct.\n\nOne interesting of SSH is we need to configure an “enable secret” password or we cannot login to the device. We tested it with IOU Web\nIOSv15.4 with the configuration above and see this result:\n\nWe also created the “NEW” username with command “username NEW secret R3mote123” and received the same result:\n\n-> Answer D is correct."
+  },
+  {
+    "legacyIndex": 838,
+    "legacyNumber": 16,
+    "prompt": "Refer to the exhibit.\n\nWhich two values does router R1 use to identify valid routes for the R3 loopback address 1.1.1.3/32? (Choose two)",
+    "options": [
+      "lowest cost to reach the next hop",
+      "lowest administrative distance",
+      "lowest metric",
+      "highest metric",
+      "highest administrative distance"
+    ],
+    "answer": [
+      1,
+      2
+    ],
+    "type": "multi",
+    "explanation": "It seems there are two versions of this question. If this question has the answer “longest prefix match” then please choose it (instead of “lowest\nmetric” answer)."
+  },
+  {
+    "legacyIndex": 839,
+    "legacyNumber": 17,
+    "prompt": "Refer to the exhibit.\n\n[\n\n    {\"switch\": \"3750\", \"port\": e2},\n\n    {\"router\": \"2951\", \"port\": e20},\n\n    {\"switch\": \"3750\", \"port\": e23}\n\n]\n\nWhat is represented by the word “switch” in line 2 of the JSON schema?",
+    "options": [
+      "object",
+      "key",
+      "value",
+      "array"
+    ],
+    "answer": 1,
+    "explanation": "JSON uses curly braces {} to hold objects and square brackets [] to hold arrays."
+  },
+  {
+    "legacyIndex": 840,
+    "legacyNumber": 18,
+    "prompt": "Refer to the exhibit.\n\nUser traffic originating within site B is failing to reach an application hosted on IP address 192.168.0.10, which is located within site A. What is\ndetermined by the routing table?",
+    "options": [
+      "The traffic to 192.168.0.10 requires a static route to be configured in router1",
+      "The lack of a default route prevents delivery of the traffic",
+      "The default gateway for site B is configured incorrectly.",
+      "The traffic is blocked by an implicit deny in an ACL on router2."
+    ],
+    "answer": 1,
+    "explanation": "There is no route destined to network 192.168.0.0 so we need this route or the default route."
+  },
+  {
+    "legacyIndex": 841,
+    "legacyNumber": 19,
+    "prompt": "Which cable type must be used to interconnect one switch using 1000 BASE-SX GBIC modules and another switch using 1000 BASE-SX SFP\nmodules?",
+    "options": [
+      "LC to LC",
+      "LC to SC",
+      "SC to SC",
+      "SC to ST"
+    ],
+    "answer": 1,
+    "explanation": "GBIC and SFP are both hot-swappable input/output devices that plug into a physical port or a slot. GBIC is commonly used with Gigabit Ethernet\nand Fibre Channel. But its applications are not limited to these two types. There is also Fast Ethernet (FE) GBIC, BIDI GBIC, CWDM GBIC, DWDM\nGBIC, etc. Generally, GBIC is with the SC connector.\n\nSFP came into existence later than GBIC. SFP transceivers are designed to support SONET (Synchronous Optical Network), Gigabit Ethernet, Fibre\nChannel, and other communications standards. It is usually with LC connector. SFP is also known as mini-GBIC because it has the same\nfunctionality as GBIC but in a smaller form factor.\n\n-> In summary, GBIC uses SC connector while SFP uses LC connector. Therefore in this question, to connect GBIC to SFP we need LC to SC cable\ntype."
+  },
+  {
+    "legacyIndex": 842,
+    "legacyNumber": 20,
+    "prompt": "Drag and drop the virtualization concepts from the left onto the matching statements on the right.",
+    "type": "match",
+    "items": [
+      "An operating system instance that is decoupled from the server hardware",
+      "Each core can run more than one process simultaneously",
+      "Runs on a physical server, manages, and allocates the physical resources",
+      "The software that manages the basic functions of the physical hardware",
+      "The software that manages the basic functions of the virtual machine"
+    ],
+    "choices": [
+      "virtual machine",
+      "multithreading",
+      "hypervisor",
+      "host operating system",
+      "guest operating system"
+    ],
+    "answer": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "explanation": "Surely answer 2 (Each core can run more than one process simultaneously: multithreading) and answer 3 (Runs on a physical server, manages,\nand allocates the physical resources: hypervisor) are correct so we only have three matches left.\n\nA virtual machine (VM) is an operating system (OS) or application environment installed on software that imitates dedicated hardware.\n\nThe definition of “Operating system” is:\n“An operating system (OS) is a software that manages computer hardware and software resources …”\n\nAnd in our question there are two options “the software that manages …” so they should be matched for two types of OS.\n\nThere are only 2 matches of “guest operating system” and “host operating system” so let’s find out the differences between them. The\ncomparison below is taken from this link (https://www.sangfor.com/glossary/cloud-and-infrastructure/what-is-host-operating-system):\n\nHost Operating Systems vs Guest Operating Systems\nWhile both host operating systems and guest operating use the same resources, they function independently from one another. Guest operating\nsystems differ from the host operating system in several ways:\n\n+ The host operating system is software installed on a computer system that communicates with the underlying hardware. While a guest OS is\nsoftware that is installed in a virtual machine.\n+ The host operating system executes directly on the hardware while a guest operating system executes on a virtual machine.\n\nTherefore the best matches should be “The software that manages the basic functions of the virtual machine: guest operating system” and “An\noperating system instance that is decoupled from the server hardware: host operating system“."
+  },
+  {
+    "legacyIndex": 843,
+    "legacyNumber": 21,
+    "prompt": "Which channel-group mode must be configured when multiple distribution switch interfaces connected to a WLC are bundled?",
+    "options": [
+      "channel-group mode active",
+      "channel-group mode on",
+      "channel-group mode desirable",
+      "channel-group mode passive"
+    ],
+    "answer": 1,
+    "explanation": "Cisco Wireless LAN Controller Configuration Guide, Release 7.4\n\nLink aggregation (LAG) is a partial implementation of the 802.3ad port aggregation standard. It bundles all of the controller’s distribution system\nports into a single 802.3ad port channel. This reduces the number of IP addresses required to configure the ports on your controller. When LAG\nis enabled, the system dynamically manages port redundancy and load balances access points transparently to the user.\n\nLAG requires the EtherChannel to be configured for ‘mode on’ on both the controller and the Catalyst switch."
+  },
+  {
+    "legacyIndex": 844,
+    "legacyNumber": 22,
+    "prompt": "Refer to the exhibit.\n\nR1#\n\n!\n\ninterface Loopback0\n\nip address 10.1.1.1 255.255.255.255\n\n!\n\ninterface FastEthernet0/0\n\nip address 10.139.91.1 255.255.255.252\n\nip virtual—reassembly in\n\n!\n\ninterface FastEthernet1/0\n\nip address 172.16.29.1 255.255.255.0\n\nip virtual-reassembly in\n\n!\n\nrouter eigrp 100\n\nnetwork 10.1.1.1 0.0.0.0\n\nnetwork 10.139.91.0 0.0.0.3\n\n!\n\n--output suppressed--\n\nAn engineer must translate the PC1 IP address to 10.199.77.100 and permit PC1 to ping the loopback 0 interface on router R2. Which\nconfiguration must be used?\n\n  Option A                                                                 Option B\n\n  R1#                                                                      R1#\n  !                                                                        !\n  interface FastEthernet0/0                                                interface FastEthernet0/0\n  ip nat outside                                                           ip nat inside\n  !                                                                        !\n  interface FastEthernet1/0                                                interface FastEthernet1/0\n  ip nat inside                                                            ip nat outside\n  !                                                                        !\n  ip nat inside source static 172.16.29.78 10.199.77.100                   ip nat inside source static 10.199.77.100 172.16.29.78\n\n  R2                                                                       R2\n  ip route 10.199.77.100 255.255.255.255 10.139.91.1                       ip route 10.199.77.100 255.255.255.255 10.139.91.1\n\n  Option C                                                                 Option D\n\n  R1#                                                                      R1#\n  !                                                                        !\n  interface FastEthernet0/0                                                interface FastEthernet0/0\n  ip nat outside                                                           ip nat outside\n  !                                                                        !\n  interface FastEthernet1/0                                                interface FastEthernet1/0\n  ip nat inside                                                            ip nat inside\n  !                                                                        !\n  ip nat inside source static 172.16.29.78 10.199.77.100                   ip nat inside source static 172.16.29.78 10.199.77.100\n\n  R2                                                                       R2\n  ip route 172.16.29.78 255.255.255.255 10.139.91.1                        ip route 172.16.29.78 255.255.255.255 10.139.91.1",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 0,
+    "explanation": "PC1 can ping the loopback 0 interface on R2 so R2 must know how to route to 10.199.77.100. In this question R2 uses a static route so it should\nbe:\n\nR2:\nip route 10.199.77.100 255.255.255.255 10.139.91.1 -> Only Option A and Option B are correct.\nInterface F1/0 on R1 must be “ip nat inside” and F0/0 must be “ip nat outside” -> Only Option A is correct."
+  },
+  {
+    "legacyIndex": 845,
+    "legacyNumber": 23,
+    "prompt": "Drag and drop the TCP or UDP details from the left onto their corresponding protocols on the right.",
+    "type": "match",
+    "items": [
+      "used to reliably share files between devices",
+      "supports reliable data transmission",
+      "provides best-effort service",
+      "appropriate for streaming operations with minimal latency"
+    ],
+    "choices": [
+      "TCP",
+      "UDP"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 846,
+    "legacyNumber": 24,
+    "prompt": "A network engineer must configure an interface with IP address 10.10.10.145 and a subnet mask equivalent to\n11111111.11111111.11111111.11111000. Which subnet mask must the engineer use?",
+    "options": [
+      "/27",
+      "/28",
+      "/29",
+      "/30"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 847,
+    "legacyNumber": 25,
+    "prompt": "Which two server types support domain name to IP address resolution? (Choose two)",
+    "options": [
+      "ESX host",
+      "web",
+      "resolver",
+      "authoritative",
+      "file transfer"
+    ],
+    "answer": [
+      2,
+      3
+    ],
+    "type": "multi",
+    "explanation": "All DNS servers fall into one of four categories: Recursive resolvers, root nameservers, TLD nameservers, and authoritative nameservers."
+  },
+  {
+    "legacyIndex": 848,
+    "legacyNumber": 26,
+    "prompt": "Refer to the exhibit.\n\nThe router R1 is in the process of being configured. Routers R2 and R3 are configured correctly for the new environment. Which two commands\nmust be configured on R1 for PC1 to communicate to all PCs on the 10.10.10.0/24 network? (Choose two)",
+    "options": [
+      "ip route 10.10.10.8 255.255.255.248 g0/1",
+      "ip route 10.10.10.10 255.255.255.255 g0/1",
+      "ip route 10.10.10.0 255.255.255.248 192.168.2.2",
+      "ip route 10.10.10.0 255.255.255.0 192.168.2.3",
+      "ip route 10.10.10.10 255.255.255.255 192.168.2.2"
+    ],
+    "answer": [
+      3,
+      4
+    ],
+    "type": "multi",
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 849,
+    "legacyNumber": 27,
+    "prompt": "Which switching feature removes unused MAC addresses from the MAC address table, which allows new MAC addresses to be added?",
+    "options": [
+      "MAC move",
+      "MAC address aging",
+      "dynamic MAC address learning",
+      "MAC address auto purge"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 850,
+    "legacyNumber": 28,
+    "prompt": "Which two northbound APIs are found in a software-defined network? (Choose two)",
+    "options": [
+      "SOAP",
+      "OpFlex",
+      "REST",
+      "NETCONF",
+      "OpenFlow"
+    ],
+    "answer": [
+      0,
+      2
+    ],
+    "type": "multi",
+    "explanation": "SDN northbound APIs are usually RESTful APIs used to communicate between the SDN Controller and the services and applications running over\nthe network. Another northbound API is Simple Object Access Protocol (SOAP)."
+  },
+  {
+    "legacyIndex": 851,
+    "legacyNumber": 29,
+    "prompt": "What uses HTTP messages to transfer data to applications residing on different hosts?",
+    "options": [
+      "REST",
+      "OpenStack",
+      "OpFlex",
+      "OpenFlow"
+    ],
+    "answer": 0,
+    "explanation": "REST (Representational State Transfer) describes a type of API that allows applications to sit on different hosts, using HTTP messages to transfer\ndata over the API."
+  },
+  {
+    "legacyIndex": 852,
+    "legacyNumber": 30,
+    "prompt": "Refer to the exhibit.\n\nWhat is the next-hop IP address for R2 so that PC2 reaches the application server via EIGRP?",
+    "options": [
+      "10.10.10.5",
+      "192.168.20.1",
+      "10.10.10.6",
+      "192.168.30.1"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 853,
+    "legacyNumber": 31,
+    "prompt": "Drag and drop the configuration management terms from the left onto the descriptions on the right. Not all terms are used.",
+    "type": "match",
+    "items": [
+      "easy-to-manage deployment option that may lack scalability",
+      "device hardware that runs without embedded management features",
+      "to automatically install or deploy a configuration or update",
+      "daemon that determines when the central authority has updates available",
+      "model in which the central server sends updates to nodes on an as-needed basis"
+    ],
+    "choices": [
+      "agent",
+      "agentless",
+      "pull",
+      "provision",
+      "push"
+    ],
+    "answer": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 854,
+    "legacyNumber": 32,
+    "prompt": "A switch is forwarding a frame out of all interfaces except the interface that received the frame. What is the technical term for this process?",
+    "options": [
+      "CDP",
+      "multicast",
+      "flooding",
+      "ARP"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 855,
+    "legacyNumber": 33,
+    "prompt": "What is a characteristic of RSA?",
+    "options": [
+      "It uses preshared keys for encryption",
+      "It is an asymmetric encryption algorithm",
+      "It requires both sides to have identical keys for encryption",
+      "It is a symmetric decryption algorithm."
+    ],
+    "answer": 1,
+    "explanation": "RSA is a public-key encryption algorithm that uses an asymmetric encryption algorithm to encrypt data. Asymmetric encryption uses a key pair\nthat is mathematically linked to encrypt and decrypt data. A private and public key are created, with the public key being accessible to anyone\nand the private key being a secret known only by the key pair creator. With RSA, either the private or public key can encrypt the data, while the\nother key decrypts it. This is one of the reasons RSA is the most used asymmetric encryption algorithm."
+  },
+  {
+    "legacyIndex": 856,
+    "legacyNumber": 34,
+    "prompt": "Refer to the exhibit.\n\nAll interfaces are in the same VLAN. All switches are configured with the default STP priorities. During the STP elections, which switch becomes\nthe root bridge?",
+    "options": [
+      "MDF-DC-3: 08:0E:18:1A:3C:9D",
+      "MDF-DC-4: 08:E0:19:A1:B3:19",
+      "MDF-DC-2: 08:0E:18:22:05:97",
+      "MDF-DC-1: 08:E0:43:78:24:50"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 857,
+    "legacyNumber": 35,
+    "prompt": "Which advantage does the network assurance capability of Cisco DNA Center provide over traditional campus management?",
+    "options": [
+      "Cisco DNA Center leverages YANG and NETCONF to assess the status of fabric and nonfabric devices, and traditional campus management uses CLI exclusively",
+      "Cisco DNA Center correlates information from different management protocols to obtain insights, and traditional campus management requires manual analysis",
+      "Cisco DNA Center automatically compares security postures among network devices, and traditional campus management needs manual comparisons",
+      "Cisco DNA Center handles management tasks at the controller to reduce the load on infrastructure devices, and traditional campus management uses the data backbone."
+    ],
+    "answer": 1,
+    "explanation": "DNA Center uses many management protocols to provide a single pane of glass for all devices."
+  },
+  {
+    "legacyIndex": 858,
+    "legacyNumber": 36,
+    "prompt": "Which signal frequency appears 60 times per minute?",
+    "options": [
+      "1 Hz signal",
+      "1 GHz signal",
+      "60 Hz signal",
+      "60 GHz signal"
+    ],
+    "answer": 0,
+    "explanation": "“60 times per minutes” means “60 times per 60 seconds”.\n\nFrequency of 1 Hz implies to 1 complete vibration per second. This means, 60 complete vibrations in 60 second, or, in 1 minute."
+  },
+  {
+    "legacyIndex": 859,
+    "legacyNumber": 37,
+    "prompt": "Which port type does a lightweight AP use to connect to the wired network when it is configured in local mode?",
+    "options": [
+      "access",
+      "trunk",
+      "EtherChannel",
+      "LAG"
+    ],
+    "answer": 0,
+    "explanation": "Trunk mode is only required when using FlexConnect mode or when using an autonomous AP that has multiple SSIDs assigned to multiple\nVLANs."
+  },
+  {
+    "legacyIndex": 860,
+    "legacyNumber": 38,
+    "prompt": "Refer to the exhibit.\n\nCat9300-1# show interface g1/0/1 switchport\n\nName: Gi1/0/1\n\nSwitchport: Enabled\n\nAdministrative Mode: trunk\n\nOperational Mode: trunk\n\nAdministrative Trunking Encapsulation: dot1q\n\nOperational Trunking Encapsulation: dot1q\n\nNegotiation of Trunking: On\n\nAccess Mode VLAN: 1 (default)\n\nTrunking Native Mode VLAN: 321 (VLAN0321)\n\nAdministrative Native VLAN tagging: enabled\n\nTrunking VLANs Enabled: 100,200,300\n\nPruning VLANs Enabled: 2-1001\n\nA network administrator configures an interface on a new switch so that it connects to interface Gi1/0/1 on switch Cat9300-1. Which\nconfiguration must be applied to the new interface?",
+    "options": [
+      "switchport trunk encapsulation dot1q\nswitchport trunk native vlan 321\nswitchport trunk allowed vlan 100-300",
+      "switchport mode dynamic desirable\nswitchport trunk native vlan 321\nswitchport trunk allowed vlan 100,200,300",
+      "switchport nonegotiate\nswitchport access vlan 321\nswitchport trunk allowed vlan except 2-1001",
+      "switchport mode trunk\nswitchport trunk native vlan 321\nswitchport trunk allowed vlan 100,200,300"
+    ],
+    "answer": 3,
+    "explanation": "“Administrative mode” is what’s configured on the switch port (via the “switchport mode access/trunk/dynamic auto/dynamic desirable”\ncommand) while “Operational mode” is the actual status (result of interaction with the device connected to the port), like trunk with ISL or\n802.1Q encapsulation.\n\nIn this question, the “Administrative mode” is “trunk” so it was configured with the “switchport mode trunk” command. And “Trunking VLANs\nEnabled: 100,200,300” means it only allows three VLANs 100, 200 and 300 so we have to use the “switchport trunk allowed vlan 100,200,300”\non the new switch interface."
+  },
+  {
+    "legacyIndex": 861,
+    "legacyNumber": 39,
+    "prompt": "What is the function of a controller in a software-defined network?",
+    "options": [
+      "multicast replication at the hardware level",
+      "setting packet-handling policies",
+      "forwarding packets",
+      "fragmenting and reassembling packets"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 862,
+    "legacyNumber": 40,
+    "prompt": "A client experiences slow throughput from a server that is directly connected to the core switch in a data center. A network engineer finds\nminimal latency on connections to the server, but data transfers are unreliable, and the output of the show interfaces counters errors command\nshows a high FCS-Err count on the interface that is connected to the server. What is the cause of the throughput issue?",
+    "options": [
+      "high bandwidth usage",
+      "a physical cable fault",
+      "a speed mismatch",
+      "a cable that is too long"
+    ],
+    "answer": 1,
+    "explanation": "Frame Check Sequence Errors: The number of frame check sequence errors during the latest collection interval. Frame check sequence (FCS)\nerrors indicate that frames of data are being corrupted during transmission. FCS error count is the number of frames that were transmitted or\nreceived with a bad checksum (CRC value) in the Ethernet frame.\n\nFCS is a checksum error, this is highly likely to be a physical layer issue.\n\nAnswer D is not correct as the latency on long cable is high."
+  },
+  {
+    "legacyIndex": 863,
+    "legacyNumber": 41,
+    "prompt": "Which component controls and distributes physical resources for each virtual machine?",
+    "options": [
+      "physical enclosure",
+      "OS",
+      "hypervisor",
+      "CPU"
+    ],
+    "answer": 2,
+    "explanation": "The hypervisor abstracts and isolates the VMs and their programs from the underlying server hardware, enabling a more efficient use of physical\nresources, simpler maintenance and operations, and reduced costs."
+  },
+  {
+    "legacyIndex": 864,
+    "legacyNumber": 42,
+    "prompt": "Which command enables HTTP access to the Cisco WLC?",
+    "options": [
+      "config network secureweb enable",
+      "config certificate generate webadmin",
+      "config network webmode enable",
+      "config network telnet enable"
+    ],
+    "answer": 2,
+    "explanation": "Enable or disable web mode by entering this command:\n\nconfig network webmode {enable | disable}\n\nThis command allows users to access the controller GUI using “http://ip-address.” The default value is disabled. Web mode is not a secure\nconnection.\n\nNote: The command “config network secureweb enable” enables HTTPS access to the WLC."
+  },
+  {
+    "legacyIndex": 865,
+    "legacyNumber": 43,
+    "prompt": "A network engineer must migrate a router loopback interface to the IPv6 address space. If the current IPv4 address of the interface is\n10.54.73.1/32, and the engineer configures IPv6 address 0:0:0:0:0:ffff:a36:4901, which prefix length must be used?",
+    "options": [
+      "/64",
+      "/96",
+      "/124",
+      "/128"
+    ],
+    "answer": 3,
+    "explanation": "IPv4 Mapped Address – 0:0:0:0:0:FFFF::/96\n\nThe format for IPv4 Mapped address has the first 80 bits set to zeros, followed by the next 16 bits set to all ones and finally, the last 32 bits\nwritten in dotted decimal appended to then end forming 128 bit IPv6 address.\n\nAn example of an IPv4 Class A address of 12.155.166.101 would look like this in IPv4 Mapped address\n0000:0000:0000:0000:0000:FFFF:12.155.166.101 or ::FFFF:12.155.166.101 in IPv6’s short form.\n\nBut in this question we are migrate a /32 IP address to IPv6 so the IPv6 address should be /128.\n\nWe can see a similar conversion at this link: https://docs.aws.amazon.com/waf/latest/developerguide/classic-web-acl-ip-conditions.html\n\n– To specify the IPv4 address 192.0.2.44, enter 192.0.2.44/32.\n– To specify the IPv6 address 0:0:0:0:0:ffff:c000:22c, enter 0:0:0:0:0:ffff:c000:22c/128."
+  },
+  {
+    "legacyIndex": 866,
+    "legacyNumber": 44,
+    "prompt": "What is the primary purpose of a console port on a Cisco WLC?",
+    "options": [
+      "out-of-band management via an IP transport",
+      "out-of-band management via an asynchronous transport",
+      "in-band management via an asynchronous transport",
+      "in-band management via an IP transport"
+    ],
+    "answer": 1,
+    "explanation": "The console port is used for out-of-band management, system recovery, and early boot operations.\n\nConsole port does not use IP. It is an asynchronous transport."
+  },
+  {
+    "legacyIndex": 867,
+    "legacyNumber": 45,
+    "prompt": "Drag and drop the AAA features from the left onto the corresponding AAA security services on the right. Not all options are used",
+    "type": "match",
+    "items": [
+      "It leverages a RADIUS server to grant user access to a reverse Telnet session",
+      "It verifies the user before granting access to the device",
+      "It enables the device to allow user- or group-based access",
+      "It restricts the CLI commands that a user is able to perform"
+    ],
+    "choices": [
+      "Authentication",
+      "Authorization"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": "The two unused options “It records the amount of time for which a user accesses the network on a remote server” and “It uses TACACS+ to log\nthe configuration commands entered by a network administrator” are Accounting features.\n\nTo use RADIUS server to allow a reverse Telnet session we have to use such command “aaa authentication login reverse-access group radius”.\nTherefore the option “It leverages a RADIUS server to grant user access to a reverse Telnet session” should belong to Authentication, not\nAuthorization.\n\nNote: Reverse telnet allows you to telnet to a device then from that device connect to the console of another device."
+  },
+  {
+    "legacyIndex": 868,
+    "legacyNumber": 46,
+    "prompt": "What does the implementation of a first-hop redundancy protocol protect against on a network?",
+    "options": [
+      "BGP neighbor flapping",
+      "default gateway failure",
+      "root-bridge loss",
+      "spanning-tree loops"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 869,
+    "legacyNumber": 47,
+    "prompt": "Refer to the exhibit.\n\nCodes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP\n\n     D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area\n\n     N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2\n\n     E1 - OSPF external type 1, E2 - OSPF external type 2\n\n     i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2\n\n     ia - IS-IS inter area, * - candidate default, U - per-user static route\n\n     o - ODR, P - periodic downloaded static route, H - NHRP, l - LISP\n\n     + - replicated route, % - next hop override, p - overrides from PfR\n\nGateway of last resort is 0.0.0.0 to network 0.0.0.0\n\nS*           0.0.0.0/0 is directly connected, Null0\n\n     10.0.0.0/8 is variably subnetted, 6 subnets, 2 masks\n\nC            10.0.12.0/24 is directly connected, GigabitEthernet0/1\n\nL            10.0.12.1/32 is directly connected, GigabitEthernet0/1\n\nC            10.0.13.0/24 is directly connected, GigabitEthernet0/2\n\nL            10.0.13.1/32 is directly connected, GigabitEthernet0/2\n\nC            10.0.14.0/24 is directly connected, GigabitEthernet0/3\n\nL            10.0.14.1/32 is directly connected, GigabitEthernet0/3\n\nD            192.168.0.0/16 [90/130816] via 10.0.13.3, 00:10:09, GigabitEthernet0/2\n\nO            192.168.0.0/23 [110/2] via 10.0.14.4, 00:00:46, GigabitEthernet0/3\n\nS            192.168.0.0/24 [100/0] via 10.0.12.2\n\nWhich interface is chosen to forward traffic to the host at 192.168.0.55?",
+    "options": [
+      "GigabitEthernet0/1",
+      "Null0",
+      "GigabitEthernet0/3",
+      "GigabitEthernet0/2"
+    ],
+    "answer": 0,
+    "explanation": "The best match for the destination host 192.168.0.55 is the last statement in the output. But the exit interface of this entry has been hidden so\nwe have to figure it out. We only know the next hop IP address is 10.0.12.2.\n\nWe see only Gi0/1 belongs to this subnet from the entry “C 10.0.12.0/24 is directly connected, GigabitEthernet0/1″ so the best answer is Gi0/1."
+  },
+  {
+    "legacyIndex": 870,
+    "legacyNumber": 48,
+    "prompt": "Refer to the exhibit.\n\nSW_1 and SW_12 represent two companies that are merging. They use separate network vendors. The VLANs on both sides have been migrated\nto share IP subnets. Which command sequence must be issued on both sides to join the two companies and pass all VLANs between the\ncompanies?",
+    "options": [
+      "switchport mode trunk\nswitchport trunk encapsulation dot1q",
+      "switchport mode trunk\nswitchport trunk allowed vlan all\nswitchport dot1q ethertype 0800",
+      "switchport mode dynamic desirable\nswitchport trunk allowed vlan all\nswitchport trunk native vlan 7",
+      "switchport dynamic auto\nswitchport nonegotiate"
+    ],
+    "answer": 0,
+    "explanation": "From the output above, we learn that one of the switch is using ISL trunking protocol which is Cisco proprietary so we must change it to 802.1Q\ntrunking protocol to match with the other switch via the command “switchport trunk encapsulation dot1q”."
+  },
+  {
+    "legacyIndex": 871,
+    "legacyNumber": 49,
+    "prompt": "A Cisco engineer notices that two OSPF neighbors are connected using a crossover Ethernet cable. The neighbors are taking too long to become\nfully adjacent. Which command must be issued under the interface configuration on each router to reduce the time required for the adjacency\nto reach the FULL state?",
+    "options": [
+      "ip ospf priority 0",
+      "ip ospf network broadcast",
+      "ip ospf dead-interval 40",
+      "ip ospf network point-to-point"
+    ],
+    "answer": 3,
+    "explanation": "OSPF detects neighbors by means of Hello packets. Maybe the reason for “The neighbors are taking too long to become fully adjacent” is hello\npackets are not sent frequently.\n\nWith OSPF priority of 0, the OSPF router becomes ineligible for being the DR/BDR on that segment so they cannot reach the FULL state. They\nwill be in DROTHER state -> Answer A is not correct.\n\nThe default network type of two OSPF neighbors connected using an Ethernet cable is broadcast already -> Answer B is not correct.\n\nChanging the Dead Interval does not automatically change the Hello Interval -> Answer C is not correct.\n\nSet the network type to “point-to-point”, the OSPF routers will not elect DR/BDR and the routers directly transition to the FULL state once they\nestablish adjacency. If we use the “show ip ospf neighbor” command for point-to-point network, we will see something like this:\n\nRouter#sh ip ospf neighbor\n\nNeighbor ID     Pri State          Dead Time Address      Interface\n\n2.2.2.2       0 FULL/-          00:00:37 10.1.1.2      GigabitEthernet0/0\n\n-> Answer D is correct."
+  },
+  {
+    "legacyIndex": 872,
+    "legacyNumber": 50,
+    "prompt": "Refer to the exhibit.\n\n{\n\n    \"Test_Questions\" : [\n\n          \"Automation\",\n\n                           \"Configuration\",\n\n    ],\n\n    \"Test__Exam_Level\" : [\n\n          \"CCNA\",\n\n          \"CCNP\",\n\n    ],\n\n    \"Test_Response\" : [\n\n          \"Correct\",\n\n                          \"Incorrect\",\n\n            ],\n\n}\n\nHow many objects, keys, and JSON list values are present?",
+    "options": [
+      "three objects, three keys, and two JSON list values",
+      "one object, three keys, and two JSON list values",
+      "three objects, two keys, and three JSON list values",
+      "one object, three keys, and three JSON list values"
+    ],
+    "answer": 3,
+    "explanation": "JSON uses curly braces {} to hold objects and square brackets [] to hold arrays. Therefore in this question there is only one object.\n\nWe are not sure what is a “list” value. But if “list” is “array” then there are three of them in this questions."
+  },
+  {
+    "legacyIndex": 873,
+    "legacyNumber": 51,
+    "prompt": "What is a benefit of a point-to-point leased line?",
+    "options": [
+      "full-mesh capability",
+      "flexibility of design",
+      "low cost",
+      "simplicity of configuration"
+    ],
+    "answer": 3,
+    "explanation": "Point-to-point lines are usually leased from a service provider and are called leased lines…\n\nThe advantages of leased lines include\n\nSimplicity: Point-to-point communication links require minimal expertise to install and maintain."
+  },
+  {
+    "legacyIndex": 874,
+    "legacyNumber": 52,
+    "prompt": "What are two differences between WPA2 and WPA3 wireless security? (Choose two)",
+    "options": [
+      "WPA3 uses SAE for stronger protection than WPA2, which uses AES",
+      "WPA2 uses 128-bit key encryption, and WPA3 supports 128-bit and 192-bit key encryption",
+      "WPA3 uses AES for stronger protection than WPA2, which uses SAE",
+      "WPA3 uses AES for stronger protection than WPA2, which uses TKIP",
+      "WPA2 uses 192-bit key encryption, and WPA3 requires 256-bit key encryption"
+    ],
+    "answer": [
+      0,
+      1
+    ],
+    "type": "multi",
+    "explanation": "WPA3 provides improvements to the general Wi-Fi encryption, thanks to Simultaneous Authentication of Equals (SAE) replacing the Pre-Shared\nKey (PSK) authentication method used in prior WPA versions -> Answer C and answer D are not correct.\n\nMost WPA2 implementations use 128-bit AES encryption keys. In WPA3, longer key sizes – the equivalent of 192-bit security – are mandated\nonly for WPA3-Enterprise -> Answer E is not correct.\n\nWPA3-Enterprise supports 128-bit Advanced Encryption Standard Counter Mode with Cipher Block Chaining Message Authentication (AES-\nCCMP 128) as the minimum requirement. It also offers an optional mode using 192-bit encryption."
+  },
+  {
+    "legacyIndex": 875,
+    "legacyNumber": 53,
+    "prompt": "Refer to the exhibit.\n\nEach router must be configured with the last usable IP address in the subnet. Which configuration fulfills this requirement?\n\n  Option A                                      Option B\n\n  R7#                                           R7#\n  interface FastEthernet1/0                     interface FastEthernet1/0\n  ip address 10.88.31.126 255.255.255.192       ip address 10.88.31.126 255.255.255.240\n\n  R8#                                           R8#\n  interface FastEthernet0/0                     interface FastEthernet0/0\n  ip address 10.19.63.95 255.255.255.192        ip address 10.19.63.94 255.255.255.192\n\n  R9#                                           R9#\n  interface FastEthernet1/1                     interface FastEthernet1/1\n  ip address 10.23.98.159 255.255.255.248       ip address 10.23.98.158 255.255.255.248\n\n  Option C                                      Option D\n\n  R7#                                           R7#\n  interface FastEthernet1/0                     interface FastEthernet1/0\n  ip address 10.88.31.127 255.255.255.240       ip address 10.88.31.127 255.255.255.192\n\n  R8#                                           R8#\n  interface FastEthernet0/0                     interface FastEthernet0/0\n  ip address 10.19.63.95 255.255.255.192        ip address 10.19.63.95 255.255.255.240\n\n  R9#                                           R9#\n  interface FastEthernet1/1                     interface FastEthernet1/1\n  ip address 10.23.98.159 255.255.255.248       ip address 10.23.98.159 255.255.255.224",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 1,
+    "explanation": "On R7 subnet 10.88.31.64/26\nIncrement: 64\nNetwork address: 10.88.31.64\nBroadcast address: 10.88.31.127\n-> Last usable IP address: 10.88.31.126\n\nOn R8 subnet 10.19.63.80/28\nIncrement: 16\nNetwork address: 10.19.63.80\nBroadcast address: 10.19.63.95\n-> Last usable IP address: 10.19.63.94\n\nOn R9 subnet 10.23.98.128/27\nIncrement: 32\nNetwork address: 10.23.98.128\nBroadcast address: 10.23.98.159\n-> Last usable IP address: 10.23.98.158\n\nIn this question only Option B has correct last usable IP addresses but their subnet masks are not correct. For example on R7 the subnet mask\nshould be /26 = 255.255.255.192 (not 255.255.255.240 like in Option B). Maybe they are typos but it is still the best choice."
+  },
+  {
+    "legacyIndex": 876,
+    "legacyNumber": 54,
+    "prompt": "Refer to the exhibit.\n\nA network engineer is updating the configuration on router R1 to connect a new branch office to the company network. R2 has been configured\ncorrectly. Which command must the engineer configure so that devices at the new site communicate with the main office?",
+    "options": [
+      "ip route 172.25.25.1 255.255.255.255 g0/2",
+      "ip route 172.25.25.0 255.255.255.0 192.168.2.1",
+      "ip route 172.25.25.1 255.255.255.255 g0/1",
+      "ip route 172.25.25.0 255.255.255.0 192.168.2.2"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 877,
+    "legacyNumber": 55,
+    "prompt": "Which two transport layer protocols carry syslog messages? (Choose two)",
+    "options": [
+      "TCP",
+      "UDP",
+      "ARP",
+      "RTP",
+      "IP"
+    ],
+    "answer": [
+      0,
+      1
+    ],
+    "type": "multi",
+    "explanation": "In case of logging significant events, the syslog messages needs to be transported over a reliable channel for it to be stored safely in a server.\nUsually syslog messages are transported using UDP protocol to the server which is not reliable. This calls for the need for a reliable transport\nprotocol like TCP to transfer the messages to the syslog server."
+  },
+  {
+    "legacyIndex": 878,
+    "legacyNumber": 56,
+    "prompt": "Refer to the exhibit.\n\nGateway of last resort is 172.16.2.2 to network 0.0.0.0\n\n    10.0.0.0/8 is variably subnetted, 3 subnets, 3 masks\n\n     10.10.100.0/26 is directly connected, GigabitEthernet0/0/6\n\nC     10.10.10.0/24 is directly connected, GigabitEthernet0/0/0\n\nL     10.10.10.3/32 is directly connected, GigabitEthernet0/0/0\n\n    172.16.0.0/16 is variably subnetted, 3 subnets, 2 masks\n\nS     172.16.1.33/32 is directly connected, GigabitEthernet0/0/1\n\nC     172.16.2.0/23 is directly connected, GigabitEthernet0/0/1\n\nL     172.16.2.1/32 is directly connected, GigabitEthernet0/0/1\n\nS* 0.0.0.0/0 [1/0] via 172.16.2.2\n\nA packet sourced from 10.10.10.32 is destined for the Internet. What is the administrative distance for the destination route?",
+    "options": [
+      "0",
+      "1",
+      "2",
+      "32"
+    ],
+    "answer": 1,
+    "explanation": "There is a trick in this question. It says the “source”, not the destination of the packet is 10.10.10.32 but this information is not useful for finding\nthe destination route. This packet is destined for the Internet (with unknown destination) so it will match the default static route, which is the\nlast entry “S* 0.0.0.0/0 [1/0] via 172.16.2.2”. This entry has the Administrative Distance of 1."
+  },
+  {
+    "legacyIndex": 879,
+    "legacyNumber": 57,
+    "prompt": "When is the PUT method used within HTTP?",
+    "options": [
+      "to update a DNS server",
+      "when a read-only operation is required",
+      "to display a web site",
+      "when a nonidempotent operation is needed"
+    ],
+    "answer": 0,
+    "explanation": "PUT is similar to POST in that it can create resources, but it does so when there is a defined URL wherein PUT replaces the entire resource if it\nexists or creates new if it does not exist."
+  },
+  {
+    "legacyIndex": 880,
+    "legacyNumber": 58,
+    "prompt": "What describes a northbound REST API for SDN?",
+    "options": [
+      "network-element-facing interface for the control and data planes",
+      "application-facing interface for GET, POST, PUT, and DELETE methods",
+      "network-element-facing interface for GET, POST, PUT, and DELETE methods",
+      "application-facing interface for SNMP GET requests"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 881,
+    "legacyNumber": 59,
+    "prompt": "Refer to the exhibit.\n\nSW1 supports connectivity for a lobby conference room and must be secured. The engineer must limit the connectivity from PC1 to the SW1\nand SW2 network. The MAC addresses allowed must be limited to two. Which configuration secures the conference room connectivity?",
+    "options": [
+      "interface gi1/0/15\nswitchport port-security\nswitchport port-security mac-address 0000.abcd.0004 vlan 100",
+      "interface gi1/0/15\nswitchport port-security mac-address 0000.abcd.0004 vlan 100",
+      "interface gi1/0/15\nswitchport port-security mac-address 0000.abcd.0004 vlan 100\ninterface switchport secure-mac limit 2",
+      "interface gi1/0/15\nswitchport port-security\nswitchport port-security maximum 2"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 882,
+    "legacyNumber": 60,
+    "prompt": "Refer to the exhibit.\n\nR1# show ip route\n\nCodes: C — connected, S — static, I — IGRP, R - RIP, M - mobile, B — BGP\n\n     D — EIGRP, EX - EIGRP external, O — OSPF, IA — OSPF inter area\n\n              N1 — OSPF NSSA external type 1, N2 - OSPF NSSA external type 2\n\n              E1 - OSPF external type 1, E2 — OSPF external type 2, E — EGP\n\n              i — IS-IS, L1 - IS-IS level-1, L2 — IS-IS level-2, * — candidate default\n\n              U - per-user static route, o — ODR\n\nGateway of last resort is not set\n\nC 172.16.0.0/16 is directly connected, Loopback0\n\n    172.16.0/16 is variably subnetted, 4 subnets, 2 masks\n\nO            172.16.1.3/3 [110/100] via 192.168.7.40, 00:39:08, Serial0\n\nC            172.16.1.0/24 is directly connected, Serial0\n\nO            172.16.1.184/29 [110/5] via 192.168.7.35, 00:39:08, Serial0\n\nO            172.16.3.0/24 [110/10] via 192.168.7.4, 00:39:08, GigabitEthernet 0/0\n\nD            172.16.1.0/28 [90/10] via 192.168.7.7, 00:39:08, GigabitEthernet 0/0\n\nLoad-balanced traffic is coming in from the WAN destined to a host at 172.16.1.190. Which next-hop is used by the router to forward the\nrequest?",
+    "options": [
+      "192.168.7.4",
+      "192.168.7.7",
+      "192.168.7.35",
+      "192.168.7.40"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 883,
+    "legacyNumber": 61,
+    "prompt": "Refer to the exhibit.\n\nR1#show ip ospf interface g0/0/0\n\nGigabitEthernet0/0/0 is up, line protocol is up\n\n Internet address is 192.168.1.2/24, Area 0\n\n Process ID 1, Router ID 192.168.1.2, Network Type POINT-TO-POINT, Cost: 1\n\n Transmit Delay is 1 sec, State POINT-TO-POINT,\n\n Timer intervals configured, Hello 15, Dead 40, Wait 40, Retransmit 5\n\n  Hello due in 00:00:08\n\n Index 1/1, flood queue length 0\n\n Next 0x0(0) /0x0(0)\n\n Last flood scan length is 1, maximum is 1\n\n Last flood scan time is 0 msec, maximum is 0 msec\n\n Suppress hello for 0 neighbor(s)\n\nR2#show ip ospf interface g0/0/0\n\nGigabitEthernet0/0/0 is up, line protocol is up\n\n Internet address is 192.168.1.1/24, Area 0\n\n Process ID 1, Router ID 10.1.1.1, Network Type POINT-TO-POINT, Cost: 1\n\n Transmit Delay is 1 sec, State POINT-TO-POINT,\n\n Timer intervals configured, Hello 15, Dead 45, Wait 15, Retransmit 5\n\n  Hello due in 00:00:11\n\n Index 1/1, flood queue length 0\n\n Next 0x0(0)/0x0(0)\n\n Last flood scan length is 1, maximum is 1\n\n Last flood scan time is 0 msec, maximum is 0 msec\n\n Suppress hello for 0 neighbor(s)\n\nThe network engineer is configuring router R2 as a replacement router on the network. After the initial configuration is applied it is determined\nthat R2 failed to show R1 as a neighbor. Which configuration must be applied to R2 to complete the OSPF configuration and enable it to\nestablish the neighbor relationship with R1?\n\n  Option A                                                          Option B\n\n  R2(config)#interface g0/0/0                                       R2(config)#router ospf 1\n  R2(config-if)#ip ospf hello-interval 10                           R2(config-router)#router-id 192.168.1.2\n\n  Option C                                                          Option D\n\n  R2(config)#router ospf 1                                          R2(config)#interface g0/0/0\n  R2(config-router)#network 192.168.1.0 255.255.255.0 area 2        R2(config-if)#ip ospf dead-interval 40",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 3,
+    "explanation": "In order to become OSPF neighbor, the following values must be matched on both routers:\n\n+ Area ID\n+ Authentication\n+ Hello and Dead Intervals\n+ Stub area Flag\n+ MTU Size\n\nIn this question we see the Dead intervals are mismatched so we must correct it on one end."
+  },
+  {
+    "legacyIndex": 884,
+    "legacyNumber": 62,
+    "prompt": "Refer to the exhibit.\n\nThe DHCP server is configured with a DHCP pool for each of the subnets represented. Which command must be configured on switch SW1 to\nallow DHCP clients on VLAN 10 to receive dynamic IP addresses from the DHCP server?",
+    "options": [
+      "SW1(config-if)#ip helper-address 192.168.10.2",
+      "SW1(config-if)#ip helper-address 192.168.20.1",
+      "SW1(config-if)#ip helper-address 192.168.20.2",
+      "SW1(config-if)#ip helper-address 192.168.10.1"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 885,
+    "legacyNumber": 63,
+    "prompt": "Drag and drop the DNS lookup commands from the left onto the functions on the right.",
+    "type": "match",
+    "items": [
+      "enables DNS lookup on an individual interface",
+      "enables the DNS server on the device",
+      "identifies a DNS server to provide lookup services",
+      "specifies a sequence of domain names",
+      "specifies the default domain to append to unqualified host names",
+      "statically maps an IP address to a hostname"
+    ],
+    "choices": [
+      "ip domain lookup source-interface",
+      "ip dns server",
+      "ip name-server",
+      "ip domain list",
+      "ip domain name",
+      "ip host"
+    ],
+    "answer": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "explanation": "The command “ip domain-lookup” enables DNS-based host name-to-address translation. This command is enabled by default.\n\nThe ip domain name defines a list of default domain names to complete unqualified hostnames. The ip domain list command is similar to the ip\ndomain name command, except that with the ip domain list command you can define a list of domains, each to be tried in turn until the system\nfinds a match.\n\nThe ip host defines a static hostname-to-address mapping in the hostname cache. For example: Device(config)# ip host cisco-rtp 192.168.0.148"
+  },
+  {
+    "legacyIndex": 886,
+    "legacyNumber": 64,
+    "prompt": "Drag and drop the TCP or UDP details from the left onto their corresponding protocols on the right.",
+    "type": "match",
+    "items": [
+      "requires the client and the server to establish a connection before sending the packet",
+      "supports reliable data transmission",
+      "provides best-effort service",
+      "transmitted based on data contained in the packet without the need for a data channel"
+    ],
+    "choices": [
+      "TCP",
+      "UDP"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 887,
+    "legacyNumber": 65,
+    "prompt": "Refer to the exhibit.\n\nhostname CPE\n\nservice password-encryption\n\nip domain name ccna.cisco.com\n\nip name-server 198.51.100.210\n\ncrypto key generate rsa modulus 1024\n\nusername admin privilege 15 secret S0m3s3cr3t\n\nline vty 0 4\n\ntransport input ssh\n\nlogin local\n\nAn engineer executed the script and added commands that were not necessary for SSH and now must remove the commands. Which two\ncommands must be executed to correct the configuration? (Choose two)",
+    "options": [
+      "no ip domain name ccna.cisco.com",
+      "no login local",
+      "no ip name-server 198.51.100.210",
+      "no service password-encryption",
+      "no hostname CPE"
+    ],
+    "answer": [
+      2,
+      3
+    ],
+    "type": "multi",
+    "explanation": "In order to configure SSH we need to configure ip domain name first. Then allow SSH with the “transport input ssh” and ask the device to use\nthe local username and password with “login local” command.\n\nWe don’t need the “service password-encryption” as “secret” password is always encrypted.\n\nNote: The “login local” command means that authentication uses locally configured credentials using the “username … secret …” command."
+  },
+  {
+    "legacyIndex": 888,
+    "legacyNumber": 66,
+    "prompt": "Refer to the exhibit.\n\nOSPF is running between site A and site B. Drag and drop the destination IPs from the left onto the network segments used to reach the\ndestination on the right.",
+    "type": "match",
+    "items": [
+      "10.10.10.16",
+      "10.10.13.129",
+      "10.10.100.128",
+      "10.10.13.1",
+      "10.10.13.150"
+    ],
+    "choices": [
+      "Internet",
+      "Router1"
+    ],
+    "answer": [
+      0,
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 889,
+    "legacyNumber": 67,
+    "prompt": "What is a reason to implement LAG on a Cisco WLC?",
+    "options": [
+      "Enable the connected switch ports to use different Layer 2 configurations.",
+      "Increase the available throughput on the link.",
+      "Allow for stateful failover between WLCs.",
+      "Increase security by encrypting management frames."
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 890,
+    "legacyNumber": 68,
+    "prompt": "What are two port types used by a Cisco WLC for out-of-band management? (Choose two)",
+    "options": [
+      "redundant",
+      "distribution system",
+      "service",
+      "management",
+      "console"
+    ],
+    "answer": [
+      2,
+      4
+    ],
+    "type": "multi",
+    "explanation": "The service port is used for out-of-band management of the controller and system recovery and maintenance in the event of a network failure.\n\nThe console port is used for out-of-band management, system recovery, and early boot operations."
+  },
+  {
+    "legacyIndex": 891,
+    "legacyNumber": 69,
+    "prompt": "Drag and drop the statement about AAA services from the left to the corresponding AAA services on the right.",
+    "type": "match",
+    "items": [
+      "It records the duration of each connection.",
+      "It supports User Access Reporting.",
+      "It performs user validation via TACACS+.",
+      "It verifies “who you are”."
+    ],
+    "choices": [
+      "Accounting",
+      "Authentication"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 892,
+    "legacyNumber": 70,
+    "prompt": "Refer to the exhibit.\n\nRouters R1 and R2 are configured with RIP as the dynamic routing protocol. A network engineer must configure R1 with floating static route to\nserve as a backup route to network 192.168.23.0. Which command must the engineer configure on R1?",
+    "options": [
+      "ip route 192.168.23.0 255.255.255.255 192.168.13.3 121",
+      "ip route 192.168.23.0 255.255.255.0 192.168.13.3 100",
+      "ip route 192.168.23.0 255.255.255.0 192.168.13.3",
+      "ip route 192.168.23.0 255.255.255.0 192.168.13.3 121"
+    ],
+    "answer": 3,
+    "explanation": "The Administrative Distance (AD) of RIP is 120 so we have to configure a higher AD value (121, for example) for the floating static route to serve\nas the backup route. Also the subnet mask to this network must be /24 (255.255.255.0)."
+  },
+  {
+    "legacyIndex": 893,
+    "legacyNumber": 71,
+    "prompt": "What are two facts that differentiate optical-fiber cabling from copper cabling? (Choose two)",
+    "options": [
+      "It carries signals for longer distances.",
+      "It provides greater throughput options.",
+      "It carries electrical current further distances for PoE devices.",
+      "It is less expensive when purchasing patch cables.",
+      "It has a greater sensitivity to changes in temperature and moisture"
+    ],
+    "answer": [
+      0,
+      1
+    ],
+    "type": "multi",
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 894,
+    "legacyNumber": 72,
+    "prompt": "Why would VRRP be implemented when configuring a new subnet in a multivendor environment?",
+    "options": [
+      "to ensure that the spanning-tree forwarding path to the gateway is loop-free",
+      "when a gateway protocol is required that supports more than two Cisco devices for redundancy",
+      "to interoperate normally with all vendors and provide additional security features for Cisco devices",
+      "to enable normal operations to continue after a member failure without requiring a change in a host ARP cache"
+    ],
+    "answer": 3,
+    "explanation": "VRRP is an open standard protocol so it is a must when using along with another vendor.\n\nThe first part of answer C is correct but VRRP does not provide additional security features so this answer is not correct.\n\nAll VRRP routers share the MAC address of the virtual IP address (in the form 0000.5E00.01xx, where xx is the VRRP group number) so even\nwhen a member fails, the hosts do not need to change its ARP cache by sending an ARP request again -> Answer D is correct."
+  },
+  {
+    "legacyIndex": 895,
+    "legacyNumber": 73,
+    "prompt": "What must a network administrator consider when deciding whether to configure a new wireless network with APs in autonomous mode or APs\nrunning in cloud-based mode?",
+    "options": [
+      "Autonomous mode APs are less dependent on an underlay but more complex to maintain than APs in cloud-based mode",
+      "Autonomous mode APs are easy to deploy and automate than APs in cloud-based mode",
+      "Cloud-based mode APs are easy to deploy but harder to automate than APs in autonomous mode",
+      "Cloud-based mode APs rely on underlays and are more complex to maintain than APs in autonomous mode"
+    ],
+    "answer": 0,
+    "explanation": "Autonomous AP can work on it’s own. Cloud-based AP management is an alternative to purchasing a management platform. The AP\nmanagement function is pushed into the Internet cloud -> The Cloud-based AP is easier to manage than “traditional” autonomous mode APs as\nwe have to configure autonomous APs one by one."
+  },
+  {
+    "legacyIndex": 896,
+    "legacyNumber": 74,
+    "prompt": "Under the CRUD model, which two HTTP methods support the UPDATE operation? (Choose two)",
+    "options": [
+      "PUT",
+      "PATCH",
+      "DELETE",
+      "POST",
+      "GET"
+    ],
+    "answer": [
+      0,
+      1
+    ],
+    "type": "multi",
+    "explanation": "CRUD is short for CREATE, READ, UPDATE and DELETE operations. Only UPDATE operation modifies an existing table or view so it is equivalent to\nPUT and PATCH in HTTP methods.\n\nPUT: fully update (i.e. replace) an existing record\nPATCH: update part of an existing record\n\nPUT is similar to POST in that it can create resources, but it does so when there is a defined URL wherein PUT replaces the entire resource if it\nexists or creates new if it does not exist.\n\nUnlike PUT Request, PATCH does partial update. Fields that need to be updated by the client, only that field is updated without modifying the\nother field."
+  },
+  {
+    "legacyIndex": 897,
+    "legacyNumber": 75,
+    "prompt": "What are two advantages of implementing a controller-based architecture instead of a traditional network architecture? (Choose two)",
+    "options": [
+      "It supports complex and high-scale IP addressing schemes.",
+      "It provides increased scalability and management options.",
+      "It allows for seamless connectivity to virtual machines.",
+      "It enables configuration task automation.",
+      "It increases security against denial-of-service attacks."
+    ],
+    "answer": [
+      1,
+      3
+    ],
+    "type": "multi",
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 898,
+    "legacyNumber": 76,
+    "prompt": "Refer to the exhibit.\n\nThe switches are connected via a Cat5 Ethernet cable that was successfully tested. The interfaces are configured as access ports and are both in\na “down” status. What is the cause of this issue?",
+    "options": [
+      "The switches are configured with incompatible duplex settings.",
+      "The speed settings on the switches are mismatched.",
+      "The distance between the two switches is not supported by Cat5.",
+      "The portfast command is missing from the configuration."
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 899,
+    "legacyNumber": 77,
+    "prompt": "A technician receives a report of network slowness and the issue has been isolated to the interface FastEthernet0/13. What is the root cause of\nthe issue?\n\nFastEthernet0/13 is up, line protocol is up\n\nHardware is Fast Ethernet, address is 0001.4d27.66cd (bia 0001.4d27.66cd)\n\nMTU 1500 bytes, BW 100000 Kbit, DLY 100 usec,\n\nreliability 250/255, txload 1/255, ndoad 1/255\n\nEncapsulation ARPA, loopback not set\n\nKeepalive not set\n\nAuto-duplex (Full), Auto Speed (100), 100BaseTX/FX\n\nARP type: ARPA, ARP Timeout 04:00:00\n\nLast input 18:52:43, output 00:00:01, output hang never\n\nLast clearing of \"show interface\" counters never\n\nQueueing strategy: fifo\n\nOutput queue 0/40,0 drops; input queue 0/75, 0 drops\n\n5 minute input rate 12000 bits/sec, 6 packets/sec\n\n5 minute output rate 24000 bits/sec, 6 packets/sec\n\n14488019 packets input, 2441805322 bytes\n\nReceived 345346 broadcasts, 0 runts, 0 giants, 0 throttles\n\n261028 input errors, 259429 CRC, 1599 frame, 0 overrun, 0 ignored\n\n0 watchdog, 84207 multicast 0 input packets with dribble condition detected\n\n19658279 packets output, 3529106068 bytes, 0 underruns\n\n0 output errors, 0 collisions, 1 interface resets\n\n0 babbles, 0 late collision, 0 deferred\n\n0 lost carrier, 0 no carrier\n\n0 output buffer failures, 0 output buffers swapped out",
+    "options": [
+      "physical errors",
+      "local buffer overload",
+      "duplicate IP addressing",
+      "err-disabled port on the far end"
+    ],
+    "answer": 0,
+    "explanation": "In this question, the input errors and CRC errors grow so the most likely cause of this problem is cable connected between two devices is faulty\n(physical errors)."
+  },
+  {
+    "legacyIndex": 900,
+    "legacyNumber": 78,
+    "prompt": "A router received three destination prefixes: 10.0.0.0/8, 10.0.0.0/16, and 10.0.0.0/24. When the show ip route command is executed, which\noutput does it return?",
+    "options": [
+      "Gateway of last resort is 172.16.1.1 to network 0.0.0.0\nO E2 10.0.0.0/24[110/5] via 192.168.3.1, 0:01:00, Ethernet2",
+      "Gateway of last resort is 172.16.1.1 to network 0.0.0.0\nO E2 10.0.0.0/16[110/5] via 192.168.2.1, 0:01:00, Ethernet1\nO E2 10.0.0.0/24[110/5] via 192.168.3.1, 0:01:00, Ethernet2",
+      "Gateway of last resort is 172.16.1.1 to network 0.0.0.0\nO E2 10.0.0.0/8 [110/5] via 192.168.1.1, 0:01:00, Ethernet0",
+      "Gateway of last resort is 172.16.1.1 to network 0.0.0.0\nO E2 10.0.0.0/8 [110/5] via 192.168.1.1, 0:01:00, Ethernet0\nO E2 10.0.0.0/16[110/5] via 192.168.2.1, 0:01:00, Ethernet1\nO E2 10.0.0.0/24[110/5] via 192.168.3.1, 0:01:00, Ethernet2"
+    ],
+    "answer": 3,
+    "explanation": "For the purpose of installing routes in the routing table, the router considers different prefix lengths as different destinations. That is why\nmultiple routes from the same and/or different routing protocols are installed in the routing table. Tie breaker is longest match rule,\nthat selects the route with the longest subnet mask (prefix length) from among routes already in the routing table."
+  },
+  {
+    "legacyIndex": 901,
+    "legacyNumber": 79,
+    "prompt": "Refer to the exhibit.\n\nA network engineer configures the CCNA WLAN so that clients must reauthenticate hourly and to limit the number of simultaneous connections\nto the WLAN to 10. Which two actions complete this configuration? (Choose two)",
+    "options": [
+      "Set the Maximum Allowed Clients value to 10.",
+      "Enable the Client Exclusion option and set the value to 3600.",
+      "Set the Maximum Allowed Clients Per AP Radio value to 10.",
+      "Enable the Wi-Fi Direct Clients Policy option.",
+      "Enable the Enable Session Timeout option and set the value to 3600."
+    ],
+    "answer": [
+      0,
+      4
+    ],
+    "type": "multi",
+    "explanation": "By default, client sessions with the WLAN are limited to 1800 seconds (30 minutes). Once that session time expires, a client will be required to\nre-authenticate. This setting is controlled by the Enable Session Timeout check box and the Timeout field."
+  },
+  {
+    "legacyIndex": 902,
+    "legacyNumber": 80,
+    "prompt": "Which state is bypassed in Rapid PVST+ when PortFast is enabled on a port?",
+    "options": [
+      "discarding",
+      "learning",
+      "blocking",
+      "forwarding"
+    ],
+    "answer": 1,
+    "explanation": "PortFast causes a switch or trunk port to enter the spanning tree forwarding state immediately, bypassing the listening and learning states."
+  },
+  {
+    "legacyIndex": 903,
+    "legacyNumber": 81,
+    "prompt": "When a switch receives a frame from an unknown source MAC address, which action does the switch take with the frame?",
+    "options": [
+      "It floods the frame out all interfaces, including the interface it was received on.",
+      "It attempts to send the frame back to the source to ensure that the source MAC address is still available for transmissions.",
+      "It sends the frame to ports within the CAM table identified with an unknown source MAC address.",
+      "It associate the source MAC address with the LAN port on which it was received and saves it to the MAC address table."
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 904,
+    "legacyNumber": 82,
+    "prompt": "What is a function of a southbound API?",
+    "options": [
+      "Automate configuration changes between a server and a switching fabric.",
+      "Manage flow control between an SDN controller and a switching fabric.",
+      "Use orchestration to provision a virtual server configuration from a web server.",
+      "Facilitate the information exchange between an SDN controller and application."
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 905,
+    "legacyNumber": 83,
+    "prompt": "Which interface condition is occurring in this output?\n\nR25# show interface fa0/0\n\nFastEthernet0/0 is up, line protocol is up\n\nHardware is DEC21140, address is ca02.7788.0000 (bia ca02.7788.0000)\n\nDescription: atlanta_subnet\n\nInternet address is 10.32.102.2/30\n\nMTU 1500 bytes, BW 100000 Kbit/sec, DLY 100 usec,\n\nreliability 255/255, txload 1/255, rxload 1/255\n\nEncapsulation ARPA, loopback not set\n\nKeepalive set (60 sec)\n\nFull-duplex, 100 Mb/s, 100BaseTX/FX\n\nARP type: ARPA, ARP Timeout 04:00:00\n\nLast input 00:00:01, output 00:00:00, output hang never\n\nLast clearing of \"show interface\" counters never\n\nInput queue: 0/300/0/0 (size/max/drops/flushes); Total output drops: 0\n\nQueueing strategy: fifo\n\nOutput queue: 0/300 (size/max)\n\n30 second input rate 0 bits/sec, 0 packets/sec\n\n30 second output rate 0 bits/sec, 0 packets/sec\n\n7331 packets input, 7101162 bytes\n\nReceived 267 broadcasts (0 IP multicasts)\n\n1876 runts, 0 giants, 0 throttles\n\n0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored\n\n0 watchdog\n\n0 input packets with dribble condition detected\n\n3927 packets output, 1440403 bytes, 0 underruns\n\n0 output errors, 0 collisions, 0 interface resets\n\n0 unknown protocol drops\n\n0 babbles, 0 late collision, 0 deferred\n\n0 lost carrier, 0 no carrier\n\n0 output buffer failures, 0 output buffers swapped out",
+    "options": [
+      "bad NIC",
+      "duplex mismatch",
+      "collisions",
+      "high throughput"
+    ],
+    "answer": 0,
+    "explanation": "In the output we see a high number of runts (“1876 runts”). Runts are frames which do not meet the minimum frame size of 64 bytes. Although\nrunts are usually created by collisions but it is not the reason for this question because the collision in the output above is 0.\n\nThere is another usual cause of excessive runt frames, which is malfunctioning (bad) NICs."
+  },
+  {
+    "legacyIndex": 906,
+    "legacyNumber": 84,
+    "prompt": "Which interface condition is occurring in this output?\n\nR25# show interface fa0/0\n\nFastEthernet0/0 is up, line protocol is up\n\nHardware is DEC21140, address is ca02.7788.0000 (bia ca02.7788.0000)\n\nDescription: singapore_subnet\n\nInternet address is 10.32.102.2/30\n\nMTU 1500 bytes, BW 100000 Kbit/sec, DLY 100 usec,\n\nreliability 255/255, txload 255/255, rxload 255/255\n\nEncapsulation ARPA, loopback not set\n\nKeepalive set (60 sec)\n\nFull-duplex, 100 Mb/s, 100BaseTX/FX\n\nARP type: ARPA, ARP Timeout 04:00:00\n\nLast input 00:00:01, output 00:00:00, output hang never\n\nLast clearing of \"show interface\" counters never\n\nInput queue: 0/300/0/0 (size/max/drops/flushes); Total output drops: 0\n\nQueueing strategy: fifo\n\nOutput queue: 0/300 (size/max)\n\n30 second input rate 225953751 bits/sec, 0 packets/sec\n\n30 second output rate 232423817 bits/sec, 0 packets/sec\n\n7331 packets input, 7101162 bytes\n\nReceived 267 broadcasts (0 IP multicasts)\n\n0 runts, 0 giants, 0 throttles\n\n0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored\n\n0 watchdog\n\n0 input packets with dribble condition detected\n\n3927 packets output, 1440403 bytes, 0 underruns\n\n0 output errors, 0 collisions, 0 interface resets\n\n0 unknown protocol drops\n\n0 babbles, 0 late collision, 0 deferred\n\n0 lost carrier, 0 no carrier\n\n0 output buffer failures, 0 output buffers swapped out",
+    "options": [
+      "bad NIC",
+      "duplex mismatch",
+      "collisions",
+      "high throughput"
+    ],
+    "answer": 3,
+    "explanation": "Both txload and rxload on this interface are “255/255” so this interface is busy in transmitting and receiving traffic."
+  },
+  {
+    "legacyIndex": 907,
+    "legacyNumber": 85,
+    "prompt": "The clients and DHCP server reside on different subnets. Which command must be used to forward requests and replies between clients on the\n10.10.0.1/24 subnet and the DHCP server at 192.168.10.1?",
+    "options": [
+      "ip route 192.168.10.1",
+      "ip helper-address 192.168.10.1",
+      "ip dhcp address 192.168.10.1",
+      "ip default-gateway 192.168.10.1"
+    ],
+    "answer": 1,
+    "explanation": "To make a router a DHCP Relay Agent, simply put the “ip helper-address <IP-address-of-DHCP-Server>” command under the interface that\nreceives the DHCP messages from the DHCP Client."
+  },
+  {
+    "legacyIndex": 908,
+    "legacyNumber": 86,
+    "prompt": "What is the PUT method within HTTP?",
+    "options": [
+      "It replaces data at the destination.",
+      "It displays a web site.",
+      "It is a read-only operation.",
+      "It is a nonidempotent operation."
+    ],
+    "answer": 0,
+    "explanation": "The HTTP PUT request method creates a new resource or replaces a representation of the target resource with the request payload -> Answer A\nis correct.\n\nThe difference between PUT and POST is that PUT is idempotent: calling it once or several times successively has the same effect (that is no side\neffect), whereas successive identical POST requests may have additional effects, akin to placing an order several times -> Answer D is not\ncorrect."
+  },
+  {
+    "legacyIndex": 909,
+    "legacyNumber": 87,
+    "prompt": "Refer to the exhibit.\n\nR1\n\ninterface GigabitEthernet0/1\n\nip address 192.168.12.1 255.255.255.128\n\nno shutdown\n\nrouter ospf 1\n\nnetwork 192.168.12.1 0.0.0.0 area 1\n\nR2\n\ninterface GigabitEthernet0/1\n\nip address 192.168.12.2 255.255.255.128\n\nno shutdown\n\nA network engineer started to configure two directly-connected routers as shown. Which command sequence must the engineer configure on\nR2 so that the two routers become OSPF neighbors?",
+    "options": [
+      "interface GigabitEthernet0/1\nip ospf 1 area 0",
+      "interface GigabitEthernet0/1\nip ospf 1 area 1",
+      "router ospf 1\nnetwork 192.168.12.0 0.0.0.127 area 0",
+      "router ospf 1\nnetwork 192.168.12.1 0.0.0.0 area 1"
+    ],
+    "answer": 1,
+    "explanation": "To establish OSPF neighbor between R1 & R2, interface Gi0/1 of R2 must belong to the same area of interface Gi0/1 of R1 (area 1) and OSPF\nmust be turned on on this interface via “ip ospf 1 area 1” command or “network 192.168.12.2 0.0.0.0 area 1″ command or “network\n192.168.12.0 0.0.0.127 area 1” command…"
+  },
+  {
+    "legacyIndex": 910,
+    "legacyNumber": 88,
+    "prompt": "Refer to the exhibit.\n\nR1# show ip route\n\nCodes: C - connected, S - static, I - IGRP, R - rip, M - mobile, B - BGP\n\n     D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area\n\n     N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2\n\n     E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP\n\n     i - IS-IS, L1 - IS-IS level-1, L2 - IS-IS level-2, * - candidate\n\ndefault\n\n     U - per-user static route, o - ODR\n\nGateway of last resort is not set\n\nC 10.0.0.0/8 is directly connected, Loopback0\n\n    10.0.0.0/8 is variably subnetted, 4 subnets, 2 masks\n\nO            10.0.1.3/32 [110/100] via 10.0.1.100, 00:39:08, Serial0\n\nC            10.0.1.0/24 is directly connected, Serial0\n\nO            10.0.1.5/32 [110/5] via 10.0.1.50, 00:39:08, Gigabit Ethernet 0/0\n\nD            10.0.1.4/32 [110/10] via 10.0.1.4, 00:39:08, Gigabit Ethernet 0/0\n\nWhat does route 10.0.1.3/32 represent in the routing table?",
+    "options": [
+      "all hosts in the 10.0.1.0 subnet",
+      "the source 10.0.1.100",
+      "a single destination address",
+      "the 10.0.0.0 network"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 911,
+    "legacyNumber": 89,
+    "prompt": "Refer to the exhibit.\n\nA Cisco engineer creates a new WLAN called lantest. Which two actions must be performed so that only high-speed 2.4-Ghz clients connect?\n(Choose two)",
+    "options": [
+      "Enable the Status option.",
+      "Set the Interface/Interface Group(G) to an interface other than guest.",
+      "Set the Radio Policy option to 802.11g only.",
+      "Set the Radio Policy option to 802.11a only.",
+      "Enable the Broadcast SSID option."
+    ],
+    "answer": [
+      0,
+      2
+    ],
+    "type": "multi",
+    "explanation": "First we need to enable this WLAN -> Answer A is correct.\n\n+ 802.11a: Operates in the 5 GHz band only and supports a maximum data rate of 54 Mbps -> Answer D is not correct.\n+ 802.11g: Operates in the 2.4 GHz band only and supports a maximum data rate of 54 Mbps"
+  },
+  {
+    "legacyIndex": 912,
+    "legacyNumber": 90,
+    "prompt": "Refer to the exhibit.\n\nWhich two values does router R1 use to determine the best path to reach destinations in network 1.0.0.0/8? (Choose two)",
+    "options": [
+      "longest prefix match",
+      "lowest cost to reach the next hop",
+      "highest administrative distance",
+      "highest metric",
+      "lowest metric"
+    ],
+    "answer": [
+      0,
+      4
+    ],
+    "type": "multi",
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 913,
+    "legacyNumber": 91,
+    "prompt": "An engineer is configuring SSH version 2 exclusively on the R1 router. What is the minimum configuration required to permit remote\nmanagement using the cryptographic protocol?\n\n  Option A                                                                                                                           Option B\n\n  hostname R1                                                                                                                        hostname R1\n\n  ip domain name cisco                                                                                                               crypto key generate rsa genera\n\n  crypto key generate rsa general-keys modulus 1024                                                                                  username cisco privilege 15 pa\n\n  username cisco privilege 15 password 0 cisco123                                                                                    ip ssh version 2\n\n  ip ssh version 2                                                                                                                   line vty 0 15\n\n  line vty 0 15                                                                                                                         transport input all\n\n   transport input all                                                                                                                  login local\n\n   login local\n\n  Option C                                                                                                                              Option D\n\n  hostname R1                                                                                                                           hostname R1\n\n  service password-encryption                                                                                                           ip domain name cisco\n\n  crypto key generate rsa general-keys modulus 1024                                                                                     crypto key generate rsa genera\n\n  username cisco privilege 15 password 0 cisco123                                                                                       username cisco privilege 15 pa\n\n  ip ssh version 2                                                                                                                      ip ssh version 2\n\n  line vty 0 15                                                                                                                         line vty 0 15\n\n   transport input ssh                                                                                                                  transport input ssh\n\n   login local                                                                                                                          login local",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 3,
+    "explanation": "This question said “configuring SSH version 2 exclusively” so only SSHv2 should be configured to remote access to this router -> We must use the\ncommand “transport input ssh”, not “transport input all” (which includes Telnet) -> Only Option C and Option D are correct.\n\nWe must create a domain-name too for SSH to work with the command “ip domain-name …” -> Only Option D is correct.\n\nNote: There is a typo in this question in the command “ip domain name …”. It should be “ip domain-name …” instead."
+  },
+  {
+    "legacyIndex": 914,
+    "legacyNumber": 92,
+    "prompt": "Refer to the exhibit.\n\nConfigured routers IPv6 addresses:\n\n  Atlanta:                                      New York:                                     Washington:\n  S0/0/0: 2012::1/126                           S0/0/0: 2012::2/126                           S0/0/0: 2023::3/126\n\n  S0/0/1: 2013::1/126                              S0/0/1: 2023::2/126                          S0/0/1: 2013::3/126\n  Loopback1: 2000::1/128                           Loopback2:2000::2/128                        Loopback3: 2000::3/128\n\nThe New York router must be configured so that traffic to 2000::1 is sent primarily via the Atlanta site, with a secondary path via Washington\nthat has an administrative distance of 2. Which two commands must be configured on the New York router? (Choose two)",
+    "options": [
+      "ipv6 route 2000::1/128 2012::1 5",
+      "ipv6 route 2000::1/128 2023::2 5",
+      "ipv6 route 2000::1/128 2012::1",
+      "ipv6 route 2000::1/128 2023::3 2",
+      "ipv6 route 2000::1/128 2012::2"
+    ],
+    "answer": [
+      2,
+      3
+    ],
+    "type": "multi",
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 915,
+    "legacyNumber": 93,
+    "prompt": "Which interface condition is occurring in this output?\n\nR19# show interface fa0/0\n\nFastEthernet0/0 is up, line protocol is up\n\nHardware is DEC21140, address is ca02.7788.0000 (bia ca02.7788.0000)\n\nDescription: portland_subnet\n\nInternet address is 10.32.102.2/30\n\nMTU 1500 bytes, BW 100000 Kbit/sec, DLY 100 usec,\n\nreliability 255/255, txload 1/255, rxload 1/255\n\nEncapsulation ARPA, loopback not set\n\nKeepalive set (60 sec)\n\nFull-duplex, 100 Mb/s, 100BaseTX/FX\n\nARP type: ARPA, ARP Timeout 04:00:00\n\nLast input 00:00:01, output 00:00:00, output hang never\n\nLast clearing of \"show interface\" counters never\n\nInput queue: 0/300/0/0 (size/max/drops/flushes); Total output drops: 0\n\nQueueing strategy: fifo\n\nOutput queue: 0/300 (size/max)\n\n30 second input rate 0 bits/sec, 0 packets/sec\n\n30 second output rate 0 bits/sec, 0 packets/sec\n\n7331 packets input, 7101162 bytes\n\nReceived 267 broadcasts (0 IP multicasts)\n\n0 runts, 0 giants, 0 throttles\n\n0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored\n\n0 watchdog\n\n0 input packets with dribble condition detected\n\n3927 packets output, 1440403 bytes, 0 underruns\n\n0 output errors, 139 collisions, 0 interface resets\n\n0 unknown protocol drops\n\n0 babbles, 0 late collision, 0 deferred\n\n0 lost carrier, 0 no carrier\n\n0 output buffer failures, 0 output buffers swapped out",
+    "options": [
+      "queueing",
+      "duplex mismatch",
+      "collisions",
+      "high throughput"
+    ],
+    "answer": 1,
+    "explanation": "This interface gets high collision (139 collisions) so one end may be set to “Half-duplex”."
+  },
+  {
+    "legacyIndex": 916,
+    "legacyNumber": 94,
+    "prompt": "A router has two static routes to the same destination network under the same OSPF process. How does the router forward packets to the\ndestination if the next-hop devices are different?",
+    "options": [
+      "The router chooses the next hop with the lowest IP address.",
+      "The router load-balances traffic over all routes to the destination.",
+      "The router chooses the next hop with the lowest MAC address.",
+      "The router chooses the route with the oldest age."
+    ],
+    "answer": 1,
+    "explanation": "You can add multiple static routes for the same destination network to provide one or more of the following benefits:\n+ IP load balancing – When you add multiple IP static routes for the same destination to different next-hop gateways, and the routes each have\nthe same metric and administrative distance, the Layer 3 switch can load balance traffic to the routes’ destination.\n+ Path redundancy – When you add multiple static IP routes for the same destination, but give the routes different metrics or administrative\ndistances, the Layer 3 switch uses the route with the lowest administrative distance by default, but uses another route to the same destination if\nthe first route becomes unavailable."
+  },
+  {
+    "legacyIndex": 917,
+    "legacyNumber": 95,
+    "prompt": "Which interface condition is occurring in this output?\n\nR17# show interface fa0/0\n\nFastEthernet0/0 is up, line protocol is up\n\nHardware is DEC21140, address is ca02.7788.0000 (bia ca02.7788.0000)\n\nDescription: chicago_subnet\n\nInternet address is 10.32.102.2/30\n\nMTU 1500 bytes, BW 100000 Kbit/sec, DLY 100 usec,\n\nreliability 255/255, txload 255/255, rxload 255/255\n\nEncapsulation ARPA, loopback not set\n\nKeepalive set (60 sec)\n\nFull-duplex, 100 Mb/s, 100BaseTX/FX\n\nARP type: ARPA, ARP Timeout 04:00:00\n\nLast input 00:00:01, output 00:00:00, output hang never\n\nLast clearing of \"show interface\" counters never\n\nInput queue: 0/300/0/0 (size/max/drops/flushes); Total output drops: 0\n\nQueueing strategy: fifo\n\nOutput queue: 0/300 (size/max)\n\n30 second input rate 201240151 bits/sec, 0 packets/sec\n\n30 second output rate 228594263 bits/sec, 0 packets/sec\n\n7331 packets input, 7101162 bytes\n\nReceived 267 broadcasts (0 IP multicasts)\n\n1876 runts, 0 giants, 0 throttles\n\n0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored\n\n0 watchdog\n\n0 input packets with dribble condition detected\n\n3927 packets output, 1440403 bytes, 0 underruns\n\n0 output errors, 0 collisions, 0 interface resets\n\n0 unknown protocol drops\n\n0 babbles, 0 late collision, 0 deferred\n\n0 lost carrier, 0 no carrier\n\n0 output buffer failures, 0 output buffers swapped out",
+    "options": [
+      "high throughput",
+      "queueing",
+      "bad NIC",
+      "broadcast storm"
+    ],
+    "answer": 0,
+    "explanation": "We see the line “txload 255/255, rxload 255/255” which means this interface is busy in transmitting and receiving traffic so there are two\nanswers: “high throughput” and “broadcast storm”. But the number of broadcast messages are not big (“Received 267 broadcasts”) while we\nhave “7331 packets input” and “3927 packets output” so we don’t have a broadcast storm here.\n\nNote: There are no errors (0 input errors, 0 CRC) so “bad NIC” is not a good answer.\n\n+ input errors: This counter will increase when the interface receives a frame with any kind of error, this includes runts, giants, no buffer\navailable, CRC errors, etc.\n+ CRC: The number of packets received with CRC (Cyclic Redundancy Checksum) errors. This means that the checksum that was generated by\nthe sender does not match the checksum that the receiver calculated. On a LAN this typically occurs when you have issues with cabling or\ndefective network cards."
+  },
+  {
+    "legacyIndex": 918,
+    "legacyNumber": 96,
+    "prompt": "Which property is shared by 10GBase-SR and 10GBase-LR interfaces?",
+    "options": [
+      "Both use the multimode fiber type.",
+      "Both require UTP cable media for transmission.",
+      "Both use the single-mode fiber type.",
+      "Both require fiber cable media for transmission."
+    ],
+    "answer": 3,
+    "explanation": "10GBASE-SR (“short range”) is a port type for multi-mode fiber and uses 850 nm lasers.\n\n10GBASE-LR is a 10 Gigabit Ethernet standard specified to transmit data over long distance (the letters “LR” refers to “long reach”) through\nsingle mode fiber."
+  },
+  {
+    "legacyIndex": 919,
+    "legacyNumber": 97,
+    "prompt": "A network engineer is upgrading a small data center to host several new applications, including server backups that are expected to account for\nup to 90% of the bandwidth during peak times. The data center connects to the MPLS network provider via a primary circuit and a secondary\ncircuit. How does the engineer inexpensively update the data center to avoid saturation of the primary circuit by traffic associated with the\nbackups?",
+    "options": [
+      "Place the backup servers in a dedicated VLAN.",
+      "Configure a dedicated circuit for the backup traffic.",
+      "Assign traffic from the backup servers to a dedicated switch.",
+      "Advertise a more specific route for the backup traffic via the secondary circuit."
+    ],
+    "answer": 3,
+    "explanation": "Answer A is not correct as a dedicated VLAN does not affect how the traffic goes. It only helps separate Layer 2 traffic at the data center side.\n\nAnswer B and answer C are not correct as using a dedicated circuit and dedicated switch are expensive.\n\nOnly answer D is left and this solution is “inexpensive”. By routing a group of customer to use the secondary circuit we can avoid saturation of\nthe primary circuit during the peak times."
+  },
+  {
+    "legacyIndex": 920,
+    "legacyNumber": 98,
+    "prompt": "Refer to the exhibit.\n\nR1#show ip ospf interface g0/0/0\n\nGigabitEthernet0/0/0 is up, line protocol is up\n\n Internet address is 192.168.1.2/24, Area 0\n\n Process ID 1, Router ID 192.168.1.2, Network Type POINT-TO-POINT, Cost: 1\n\n Transmit Delay is 1 sec, State POINT-TO-POINT,\n\n Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5\n\n  Hello due in 00:00:08\n\n Index 1/1, flood queue length 0\n\n Next 0x0(0) /0x0(0)\n\n Last flood scan length is 1, maximum is 1\n\n Last flood scan time is 0 msec, maximum is 0 msec\n\n Suppress hello for 0 neighbor(s)\n\nR2#show ip ospf interface g0/0/0\n\nGigabitEthernet0/0/0 is up, line protocol is up\n\n Internet address is 192.168.1.1/24, Area 0\n\n Process ID 1, Router ID 10.1.1.1, Network Type POINT-TO-POINT, Cost: 1\n\n Transmit Delay is 1 sec, State POINT-TO-POINT,\n\n Timer intervals configured, Hello 15, Dead 40, Wait 40, Retransmit 5\n\n  Hello due in 00:00:11\n\n Index 1/1, flood queue length 0\n\n Next 0x0(0)/0x0(0)\n\n Last flood scan length is 1, maximum is 1\n\n Last flood scan time is 0 msec, maximum is 0 msec\n\n Suppress hello for 0 neighbor(s)\n\nThe network engineer is configuring router R2 as a replacement router on the network. After the initial configuration is applied it is determined\nthat R2 failed to show R1 as a neighbor. Which configuration must be applied to R2 to complete the OSPF configuration and enable it to\nestablish the neighbor relationship with R1?\n\n  Option A                                                          Option B\n\n  R2(config)#interface g0/0/0                                       R2(config)#router ospf 1\n  R2(config-if)#ip ospf hello-interval 10                           R2(config-router)#router-id 192.168.1.1\n\n  Option C                                                          Option D\n\n  R2(config)#router ospf 1                                          R2(config)#interface g0/0/0\n  R2(config-router)#network 192.168.1.0 255.255.255.0 area 2        R2(config-if)#ip ospf dead-interval 45",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 0,
+    "explanation": "In order to become OSPF neighbor, the following values must be matched on both routers:\n\n+ Area ID\n+ Authentication\n+ Hello and Dead Intervals\n+ Stub area Flag\n+ MTU Size\n\nIn this question we see the Hello intervals are mismatched (“10” seconds on R1 and “15” seconds on R2) so we must correct it on one end."
+  },
+  {
+    "legacyIndex": 921,
+    "legacyNumber": 99,
+    "prompt": "What are two characteristics of a small office / home office connection environment? (Choose two)",
+    "options": [
+      "It supports between 1 and 50 users.",
+      "It requires a core, distribution, and access layer architecture.",
+      "It supports between 50 and 100 users.",
+      "A router port connects to a broadband connection.",
+      "It requires 10Gb ports on all uplinks."
+    ],
+    "answer": [
+      0,
+      3
+    ],
+    "type": "multi",
+    "explanation": "SOHO networks are small LANs (Local Area Networks). Typically, SOHO networks consists of less than 10 computers.\n\nA SOHO network connected to a router permits all connected PCs to share high-speed Internet access."
+  },
+  {
+    "legacyIndex": 922,
+    "legacyNumber": 100,
+    "prompt": "Which syslog severity level is considered the most severe and results in the system being considered unusable?",
+    "options": [
+      "Critical",
+      "Emergency",
+      "Alert",
+      "Error"
+    ],
+    "answer": 1,
+    "explanation": "The Syslog levels are:\n\n  Level       Keyword           Description\n\n  0           emergencies       System is unusable\n\n  1           alerts            Immediate action is needed\n\n  2           critical          Critical conditions exist\n\n  3           errors            Error conditions exist\n\n  4           warnings          Warning conditions exist\n\n  5           notification      Normal, but significant, conditions exist\n\n  6           informational     Informational messages\n\n  7           debugging         Debugging messages"
+  },
+  {
+    "legacyIndex": 923,
+    "legacyNumber": 101,
+    "prompt": "Drag and drop the statements about AAA from the left onto the corresponding AAA services on the right. Not all options are used.",
+    "type": "match",
+    "items": [
+      "It records the amount of network resources consumed by the user",
+      "It tracks the services that a user is using",
+      "It permits and denies login attempts",
+      "It supports local, PPP, RADIUS, and TACACS+ options"
+    ],
+    "choices": [
+      "Accounting",
+      "Authentication"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": "Accounting tracks the services that a user is using. For example, it can log what commands were issued by a user.\n\nAuthentication also supports PPP via the “aaa authentication ppp …” command.\n\nAuthorization assigns per-user attributes."
+  },
+  {
+    "legacyIndex": 924,
+    "legacyNumber": 102,
+    "prompt": "Which benefit does Cisco DNA Center provide over traditional campus management?",
+    "options": [
+      "Cisco DNA Center leverages SNMPv3 for encrypted management, and traditional campus management uses SNMPv2.",
+      "Cisco DNA Center leverages APIs, and traditional campus management requires manual data gathering.",
+      "Cisco DNA Center automates SSH access for encrypted entry, and SSH is absent from traditional campus management.",
+      "Cisco DNA Center automates HTTPS for secure web access, and traditional campus management uses HTTP."
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 925,
+    "legacyNumber": 103,
+    "prompt": "Which interface condition is occurring in this output?\n\nR25# show interface fa0/0\n\nFastEthernet0/0 is up, line protocol is up\n\nHardware is DEC21140, address is ca02.7788.0000 (bia ca02.7788.0000)\n\nDescription: tokyo_subnet\n\nInternet address is 10.32.102.2/30\n\nMTU 1500 bytes, BW 100000 Kbit/sec, DLY 100 usec,\n\nreliability 255/255, txload 1/255, rxload 1/255\n\nEncapsulation ARPA, loopback not set\n\nKeepalive set (60 sec)\n\nFull-duplex, 100 Mb/s, 100BaseTX/FX\n\nARP type: ARPA, ARP Timeout 04:00:00\n\nLast input 00:00:01, output 00:00:00, output hang never\n\nLast clearing of \"show interface\" counters never\n\nInput queue: 0/300/0/0 (size/max/drops/flushes); Total output drops: 0\n\nQueueing strategy: fifo\n\nOutput queue: 185/300 (size/max)\n\n30 second input rate 0 bits/sec, 0 packets/sec\n\n30 second output rate 0 bits/sec, 0 packets/sec\n\n7331 packets input, 7101162 bytes\n\nReceived 267 broadcasts (0 IP multicasts)\n\n1876 runts, 0 giants, 0 throttles\n\n0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored\n\n0 watchdog\n\n0 input packets with dribble condition detected\n\n3927 packets output, 1440403 bytes, 0 underruns\n\n0 output errors, 0 collisions, 0 interface resets\n\n0 unknown protocol drops\n\n0 babbles, 0 late collision, 0 deferred\n\n0 lost carrier, 0 no carrier\n\n0 output buffer failures, 0 output buffers swapped out",
+    "options": [
+      "bad NIC",
+      "broadcast storm",
+      "queueing",
+      "duplex mismatch"
+    ],
+    "answer": 2,
+    "explanation": "We see the line “Output queue: 185/300” so this interface has many packets held in the output queue."
+  },
+  {
+    "legacyIndex": 926,
+    "legacyNumber": 104,
+    "prompt": "Drag and drop the characteristics of northbound APIs from the left onto any position on the right. Not all characteristics are used.",
+    "type": "match",
+    "items": [
+      "supports automation",
+      "communicates between the SDN controller and the application plane",
+      "supports network virtualization protocols",
+      "supports REST-based requirements"
+    ],
+    "choices": [
+      "Correct position"
+    ],
+    "answer": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "explanation": "SDN northbound APIs are usually RESTful APIs used to communicate between the SDN Controller and the services and applications running over\nthe network.\n\nThe networking administrators and SDN applications want to control the controller. So the controller need a northbound interface (NBI) to\ncommunicate with us. The NBI applications included various network services, including network virtualization, dynamic virtual network\nprovisioning, firewall monitoring, user identity management and access policy control."
+  },
+  {
+    "legacyIndex": 927,
+    "legacyNumber": 105,
+    "prompt": "What is the role of community strings in SNMP operations?",
+    "options": [
+      "It serves as a sequence tag on SNMP traffic messages.",
+      "It serves as a password to protect access to MIB objects.",
+      "It passes the Active Directory username and password that are required for device access.",
+      "It translates alphanumeric MIB output values to numeric values."
+    ],
+    "answer": 1,
+    "explanation": "SNMP community strings authenticate access to MIB objects and function as embedded passwords."
+  },
+  {
+    "legacyIndex": 928,
+    "legacyNumber": 106,
+    "prompt": "Drag and drop the statements about access-point modes from the left onto the corresponding modes on the right.",
+    "type": "match",
+    "items": [
+      "It enables enhanced RFID-tag location tracking.",
+      "It provides air-quality data and interference detection across all enabled channels",
+      "It supports real-time Wi-Fi client troubleshooting when network engineers are offsite",
+      "It supports analytics for wireless performance testing",
+      "It captures and forwards packets on a specific wireless channel",
+      "It supports software that analyzes wireless frames on a remote device"
+    ],
+    "choices": [
+      "Monitor",
+      "Sensor",
+      "Sniffer"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1,
+      2,
+      2
+    ],
+    "explanation": "+ Monitor mode: does not transmit at all. It acts like a dedicated sensor for location-based services (LBS), rogue AP detection, and Checks\nIntrusion Detection System (IDS). In this mode, AP will not broadcast an SSID so clients are unable to connect to it.\n+ Sniffer mode: run as a sniffer and captures and forwards all the packets on a particular channel to a remote machine where you can use\nprotocol analysis tool (Wireshark, Airopeek, etc) to review the packets and diagnose issues. Strictly used for troubleshooting purposes.\n+ Sensor mode: this is a special mode which is not listed in the books but you need to know. In this mode, the device can actually function much\nlike a WLAN client would associating and identifying client connectivity issues within the network in real time without requiring an IT or\ntechnician to be on site.\n\nFrom https://www.cisco.com/c/en/us/td/docs/wireless/controller/9800/config-guide/b_wl_16_10_cg/monitor-mode.pdf:\n\nIntroduction to Monitor Mode\n\nTo optimize the monitoring and location calculation of RFID tags, you can enable tracking optimization on\nup to four channels within the 2.4-GHz band of an 802.11b/g/x access point radio.\n\nFrom https://www.cisco.com/c/en/us/td/docs/wireless/controller/9800/17-8/config-\nguide/b_wl_17_8_cg/m_environmental_sensors_on_aps.pdf:\n\nThe Environmental Sensors in Access Points feature helps you collect real-time environmental data, such as,\nair quality, temperature, and humidity, from the environmental sensors. The advantage of sensor mode is to allow the AP to use its own radio\n(as a client) to test the quality and performance of the network at any time.\n\nMonitor – When Cisco CleanAir is enabled in monitor mode, the access point provides air quality and interference detection reports for all\nmonitored channels."
+  },
+  {
+    "legacyIndex": 929,
+    "legacyNumber": 107,
+    "prompt": "Refer to the exhibit.\n\nRouter1#show ip route\n\nGateway of last resort is 10.10.11.2 to network 0.0.0.0\n\n    209.165.200.0/27 is subnetted, 1 subnets\n\nB    209.165.200.224 [20/0] via 10.10.12.2, 03:32:14\n\n    209.165.201.0/27 is subnetted, 1 subnets\n\nB    209.165.201.0 [20/0] via 10.10.12.2, 02:26:53\n\n    209.165.202.0/27 is subnetted, 1 subnets\n\nB    209.165.202.128 [20/0] via 10.10.12.2, 02:46:03\n\n    10.0.0.0/8 is variably subnetted, 10 subnets, 4 masks\n\nO     10.10.13.0/25 [110/2] via 10.10.10.1, 00:00:04, GigabitEthernet0/0\n\nO     10.10.13.128/28 [110/2] via 10.10.10.5, 00:00:12, GigabitEthernet0/1\n\nO     10.10.13.144/28 [110/2] via 10.10.10.9, 00:01:57, GigabitEthernet0/2\n\nO     10.10.13.160/29 [110/2] via 10.10.10.5, 00:00:12, GigabitEthernet0/1\n\nO     10.10.13.208/29 [110/2] via 10.10.10.13, 00:01:57, GigabitEthernet0/3\n\nS* 0.0.0.0/0 [1/0] via 10.10.11.2\n\nDrag and drop the destination IPs from the left onto the paths to reach those destinations on the right.",
+    "type": "match",
+    "items": [
+      "Router 2",
+      "Router 3",
+      "Router 4",
+      "Router 5",
+      "Internet cloud",
+      "MPLS cloud"
+    ],
+    "choices": [
+      "10.10.13.126",
+      "10.10.13.129",
+      "10.10.13.150",
+      "10.10.13.209",
+      "1.1.1.1",
+      "209.165.200.30"
+    ],
+    "answer": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "explanation": "Maybe there was a typo for this question for the match “MPLS cloud: 209.165.200.30”. The output is not correct as 209.165.200.0/27 does not\ninclude 209.165.200.224/27. But we still choose the best answer for this choice and it is 209.165.200.224/27 for destination IP 209.165.200.30."
+  },
+  {
+    "legacyIndex": 930,
+    "legacyNumber": 108,
+    "prompt": "Drag and drop the IPv6 address descriptions from the left onto the IPv6 address types on the right. Not all options are used.",
+    "type": "match",
+    "items": [
+      "IPv6 addresses that begin with FD",
+      "may be used by multiple organizations at the same time",
+      "private IPv6 addresses",
+      "serve as next-hop addresses",
+      "unable to serve as destination addresses"
+    ],
+    "choices": [
+      "Unique Local Addresses",
+      "Link-Local Addresses"
+    ],
+    "answer": [
+      0,
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": "Unique local address (or Site-local address) are analogous to IPv4’s private address classes. They start with FC00::/7 (for used in private\nnetworks) -> The first octet can be FC or FD. However when you implement this you have to set the L-bit (the right-most bit of the first octet) to\n1 which means that the first two digits will be FD.\n\nFF02::5 is a multicast address (not a link-local address). It only has a link-local scope (an IPv6 router never forwards this type of traffic beyond\nthe local link) so this IPv6 address does not belong to “link-local addresses”.\n\nYou can use either Global Unicast IPv6 address or Link-Local IPv6 address as the next hop address. However, if you provide the Link-Local IPv6\naddress as the next hop address, you need to provide the interface number also.\n\nRefefence: https://www.omnisecu.com/cisco-certified-network-associate-ccna/how-to-configure-ipv6-static-routes-in-cisco-routers.php\n\nQuestion 109 (similar to an old question)\n\nHow will Link Aggregation be implemented on a Cisco Wireless LAN Controller?\n\nA. To pass client traffic, two or more ports must be configured\nB. The EtherChannel must be configured in “mode active”\nC. When enabled, the WLC bandwidth drops to 500 Mbps\nD. One functional physical port is needed to pass client traffic\n\nAnswer: D\n\nExplanation\n\nLink aggregation (LAG) is a partial implementation of the 802.3ad port aggregation standard. It bundles all of the controller’s distribution system\nports into a single 802.3ad port channel.\n\nRestriction for Link aggregation:\n\n+ LAG requires the EtherChannel to be configured for ‘mode on’ on both the controller and the Catalyst switch -> Answer B is not correct.\n+ If the recommended load-balancing method cannot be configured on the Catalyst switch, then configure the LAG connection as a single\nmember link or disable LAG on the controller -> Answer A is not correct while answer D is correct.\n\nQuestion 110 (similar to an old question)\n\nRefer to the exhibit.\n\n  Switch(config)#hostname R1\n  R1(config)#interface FastEthernet0/1\n  R1(config-if)#no switchport\n  R1(config-if)#ip address 10.100.20.42 255.255.255.0\n  R1(config-if)#line vty 0 4\n  R1(config-line)#login\n\nAn engineer booted a new switch and applied this configuration via the console port. Which additional configuration must be applied to allow\nadministrators to authenticate directly to global configuration mode via Telnet using a local username and password?\n\nA.\nR1(config)#username admin\nR1(config-if)#line vty 0 4\nR1(config-line)#password p@ss1234\n\nB.\nR1(config)#username admin\nR1(config-if)#line vty 0 4\nR1(config-line)#password p@ss1234\nR1(config-line)#transport input telnet\n\nC.\nR1(config)#username admin secret p@ss1234\nR1(config-if)#line vty 0 4\nR1(config-line)#login local\nR1(config)#enable secret p@ss1234\n\nD.\nR1(config)#username admin privilege 15 secret p@ss1234\nR1(config-if)#line vty 0 4\nR1(config-line)#login local\n\nAnswer: D"
+  },
+  {
+    "legacyIndex": 931,
+    "legacyNumber": 111,
+    "prompt": "What is the definition of backdoor malware?",
+    "options": [
+      "malicious program that is used to launch other malicious programs",
+      "malicious code that infects a user machine and then uses that machine to send spam",
+      "malicious code with the main purpose of downloading other malicious code",
+      "malicious code that is installed onto a computer to allow access by an unauthorized user"
+    ],
+    "answer": 3,
+    "explanation": "A backdoor is a malware type that negates normal authentication procedures to access a system."
+  },
+  {
+    "legacyIndex": 932,
+    "legacyNumber": 112,
+    "prompt": "Refer to the exhibit.\n\nHost A switch interface is configured in VLAN 2. Host D sends a unicast packet destined for the IP address of host A.\n\nSw1#show mac-address table\n\n    Mac Address Table\n\n-----------------------------\n\nVlan Mac Address            Type Ports\n\n---- -----------    ------- ----\n\n2     000c.859c.bb7b DYNAMIC e0/1\n\n3     000c.85dc.bb7b DYNAMIC e0/1\n\n2     0010.11dc.3e91 DYNAMIC e0/2\n\n3     0010.11dC.3e91 DYNAMIC e0/2\n\n2     0044.42d9.c693 DYNAMIC e0/3\n\nSw1#\n\nWhat does the switch do when it receives the frame from host D?",
+    "options": [
+      "It floods the frame out of every port except the source port.",
+      "It shuts down the source port and places It in err-disable mode.",
+      "It drops the frame from the MAC table of the switch.",
+      "It creates a broadcast storm."
+    ],
+    "answer": 0,
+    "explanation": "HostA MAC address and port have not been learned in the switch MAC address table so the switch will flood the frame out of all ports except\nthe source port where it received the frame."
+  },
+  {
+    "legacyIndex": 933,
+    "legacyNumber": 113,
+    "prompt": "Which functionality is provided by the console connection on a Cisco WLC?",
+    "options": [
+      "secure In-band connectivity for device administration",
+      "out-of-band management",
+      "HTTP-based GUI connectivity",
+      "unencrypted in-band connectivity for file transfers"
+    ],
+    "answer": 1,
+    "explanation": "The console port is used for out-of-band management, system recovery, and early boot operations."
+  },
+  {
+    "legacyIndex": 934,
+    "legacyNumber": 114,
+    "prompt": "Refer to the exhibit.\n\nR1# show ip route\n\nC 1.0.0.0/8 is directly connected, Loopback0\n\n    10.0.0.0/8 is variably subnetted, 4 subnets, 2 masks\n\nO           10.10.10.3/32 [110/100] via 10.10.10.3, 00:39:08, Gigabitethernet0/3\n\nC           10.10.10.0/24 is directly connected, Gigabitethernet0/0\n\nO           10.10.10.2/32 [110/5] via 10.10.10.2, 00:39:08, Gigabitethernet0/2\n\nR           10.10.10.4/32 [120/10] via 10.10.10.4, 00:39:08, Gigabitethernet0/4\n\nWhich next-hop IP address has the least desirable metric when sourced from R1?",
+    "options": [
+      "10.10.10.4",
+      "10.10.10.2",
+      "10.10.10.5",
+      "10.10.10.3"
+    ],
+    "answer": 3,
+    "explanation": "This question asks about “metric”, not Administrative Distance so we have to compare the second parameter in the square brackets. In this case\n“100” is the “least desirable metric” and it belongs to 10.10.10.3 (R3)."
+  },
+  {
+    "legacyIndex": 935,
+    "legacyNumber": 1,
+    "prompt": "Refer to the exhibit.\n\nA new VLAN and switch are added to the network. A remote engineer configures OldSwitch and must ensure\nthat the configuration meets these requirements:\n* accommodates current configured VLANs\n* expands the range to include VLAN 20\n* allows for IEEE standard support for virtual LANs\n\nWhich configuration on the NewSwitch side of the link meets these requirements?",
+    "options": [
+      "no switchport trunk encapsulation isl\nswitchport trunk encapsulation dot1q\nswitchport trunk allowed vlan add 20",
+      "switchport nonnegotiate\nno switchport trunk allowed vlan 5,10\nswitchport trunk allowed vlan 5,10,15,20",
+      "no switchport mode trunk\nswitchport trunk encapsulation isl\nswitchport mode access vlan 20",
+      "switchport mode dynamic\nchannel-group 1 mode active\nswitchport trunk allowed vlan 5,10,15,20"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 936,
+    "legacyNumber": 2,
+    "prompt": "Drag and drop the characteristic from the left onto the IPv6 address type on the right.",
+    "type": "match",
+    "items": [
+      "sends packets to a group address rather than a single address",
+      "has a unicast source sent to a group",
+      "is used exclusively by a non-host device",
+      "is routed to the nearest interface that has the address"
+    ],
+    "choices": [
+      "Multicast",
+      "Anycast"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": "An anycast address is an address that is assigned to a set of interfaces that typically belong to different\nnodes. A packet sent to an anycast address is delivered to the closest interface (as defined by the routing\nprotocols in use) identified by the anycast address.\n\nAnycast addresses can be used only by a device, not a host, and anycast addresses must not be used as the\nsource address of an IPv6 packet."
+  },
+  {
+    "legacyIndex": 937,
+    "legacyNumber": 3,
+    "prompt": "Drag and drop the characteristic from the left onto the IPv6 address type on the right.",
+    "type": "match",
+    "items": [
+      "enables aggregation of routing prefixes",
+      "is routable and reachable via the Internet",
+      "provides one-to-many communications",
+      "has a unicast source sent to a group"
+    ],
+    "choices": [
+      "Global Unicast Address",
+      "Multicast"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 938,
+    "legacyNumber": 4,
+    "prompt": "How does frame switching function on a switch?",
+    "options": [
+      "forwards frames to a neighbor port using CDP",
+      "modifies frames that contain a known source VLAN",
+      "inspects and drops frames from unknown destinations",
+      "forwards known destinations to the destination port"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 939,
+    "legacyNumber": 5,
+    "prompt": "What is used as a solution for protecting an individual network endpoint from attack?",
+    "options": [
+      "Router",
+      "Wireless controller",
+      "Antivirus software",
+      "Cisco DNA Center"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 940,
+    "legacyNumber": 6,
+    "prompt": "Refer to Exhibit.\n\nAn engineer is building a new Layer 2 LACP EtherChannel between SW1 and SW2. and they executed the\ngiven show commands to verify the work. Which additional task must be performed so that the switches\nsuccessfully bundle the second member in the LACP port-channel?",
+    "options": [
+      "Configure the switchport trunk allowed vlan 300 command on SW1 port-channel 1",
+      "Configure the switchport trunk allowed vlan 300 command on interface Fa0/2 on SW1",
+      "Configure the switchport trunk allowed vlan add 300 command on interface Fa0/2 on SW2",
+      "Configure the switchport trunk allowed vlan add 300 command on SW1 port-channel 1"
+    ],
+    "answer": 3,
+    "explanation": "All of the member interfaces of an Etherchannel port must have the same configuration or the Etherchannel\ninterface would not be formed. Therefore we must add VLAN 300 to the interface Fa0/2 on SW1 to match the\nconfiguration on interface Fa0/1 by the command “switchport trunk allowed vlan add 300″ on interface Fa0/2\nof SW1. But this command does not exist in the four choices so the best alternative command should be\nanswer D. After using this command, two physical interfaces will have the same configuration."
+  },
+  {
+    "legacyIndex": 941,
+    "legacyNumber": 7,
+    "prompt": "Which two HTTP methods are suitable for actions performed by REST-based APIs? (Choose two)",
+    "options": [
+      "REMOVE",
+      "REDIRECT",
+      "POST",
+      "GET",
+      "POP"
+    ],
+    "answer": [
+      2,
+      3
+    ],
+    "type": "multi",
+    "explanation": "GET: retrieve data\nPOST: create data\nPUT: fully update (i.e. replace) an existing record\nPATCH: update part of an existing record\nDELETE: delete records"
+  },
+  {
+    "legacyIndex": 942,
+    "legacyNumber": 8,
+    "prompt": "What provides connection redundancy increased bandwidth and load sharing between a wireless LAN\ncontroller and a Layer 2 switch?",
+    "options": [
+      "VLAN trunking",
+      "tunneling",
+      "first hop redundancy",
+      "link aggregation"
+    ],
+    "answer": 3,
+    "explanation": "Cisco Wireless LAN Controller Configuration Guide, Release 7.4\n…\n\nWhen using Link aggregation (LAG) make sure all ports of the controller have the same Layer 2 configuration\non the switch side."
+  },
+  {
+    "legacyIndex": 943,
+    "legacyNumber": 9,
+    "prompt": "Drag and drop the characteristic from the left onto the IPv6 address type on the right.",
+    "type": "match",
+    "items": [
+      "provides for one-to-one communication",
+      "is publicly routable in the same way as IPv4 addresses",
+      "allows sites to be combined without address conflicts",
+      "is a counterpart of private IPv4 addresses"
+    ],
+    "choices": [
+      "Global Unicast Address",
+      "Unique Local"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": "A IPv6 Unique Local Address is an IPv6 address in the block FC00::/7. It is the approximate IPv6 counterpart\nof the IPv4 private address. It is not routable on the global Internet."
+  },
+  {
+    "legacyIndex": 944,
+    "legacyNumber": 10,
+    "prompt": "When the LAG configuration is updated on a Cisco WLC, which additional task must be performed when\nchanges are complete?",
+    "options": [
+      "Flush all MAC addresses from the WLC",
+      "Re-associate the WLC with the access point.",
+      "Re-enable the WLC interfaces",
+      "Reboot the WLC"
+    ],
+    "answer": 3,
+    "explanation": "When you enable LAG or make any changes to the LAG configuration, you must immediately reboot the\ncontroller."
+  },
+  {
+    "legacyIndex": 945,
+    "legacyNumber": 11,
+    "prompt": "Which Cisco proprietary protocol ensures traffic recovers immediately, transparently, and automatically when\nedge devices or access circuits fail?",
+    "options": [
+      "SLB",
+      "FHRP",
+      "VRRP",
+      "HSRP"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 946,
+    "legacyNumber": 12,
+    "prompt": "Drag and drop the characteristic from the left onto the IPv6 address type on the right.",
+    "type": "match",
+    "items": [
+      "is publicly routable in the same way as IPv4 addresses",
+      "provides for one-to-one communication",
+      "serves as the next-hop addresses",
+      "required on all IPv6 devices"
+    ],
+    "choices": [
+      "Global Unicast Address",
+      "Link-Local Address"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": "To be an IPv6-enabled device, a device must have an IPv6 link-local address. The device doesn’t have to\nhave an IPv6 global unicast address, but it must have a link-local address."
+  },
+  {
+    "legacyIndex": 947,
+    "legacyNumber": 13,
+    "prompt": "What is an enhancement implemented in WPA3?",
+    "options": [
+      "employs PKI and RADIUS to identify access points",
+      "applies 802.1x authentication and AES-128 encryption",
+      "uses TKIP and per-packet keying",
+      "defends against deauthentication and disassociation attacks"
+    ],
+    "answer": 3,
+    "explanation": "WPA3 security overcomes this limitation and does not allows TKIP and WEP. Additionally, WPA3 personal and\nenterprise connections requires PMF (Protected Management Frame) negotiation mandatorily. PMF provides\nan additional layer of protection from de-authentication and disassociation attacks."
+  },
+  {
+    "legacyIndex": 948,
+    "legacyNumber": 14,
+    "prompt": "What is a link-local all-nodes IPv6 multicast address?",
+    "options": [
+      "ff02:0:0:0:0:0:0:1",
+      "2004:31c:73d9:683e:255::",
+      "fffe:034:0dd:45d6:789e::",
+      "fe80:4433:034:0dd::2"
+    ],
+    "answer": 0,
+    "explanation": "FF02::1 – the link-local scope address to reach all nodes."
+  },
+  {
+    "legacyIndex": 949,
+    "legacyNumber": 15,
+    "prompt": "Refer to the exhibit.\n\n GigabitEthernet1 it up, line protocol is up\n Hardware it CSR vNIC, address it 5000.0004.0000 (bia 5000.0004.0000)\n Internet address is 192.168.1.1/24\n MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,\n\n    reliability 255/255, txload 1/255, rxload 1/255\n\n Encapsulation ARPA, loopback not set\n Keepalive set (10 sec)\n Full Duplex, 1000MBps, link type is auto, media type it RJ45\n\nWhich format matches the Modified EUI-64 IPv6 interface address for the network 2001:db8::/64?",
+    "options": [
+      "2001:db8::5000:0004:5678:0090/64",
+      "2001:db8:4425:5400:77ff:fe07:/64",
+      "2001:db8::5000:00ff:fe04:0000/64",
+      "2001:db8::5200:00ff:fe04:0000/64"
+    ],
+    "answer": 3,
+    "explanation": "Converting 48-Bit MAC Addresses to IPv6 Modified EUI-64 Identifiers\nOf course, most devices still use the older 48-bit MAC address format. These can be converted to EUI-64 and\nthen to modified EUI-64 form for creating an IPv6 interface ID. The process is as follows:\n1. We take the 24-bit OUI portion, the left-most 24 bits of the Ethernet address, and put them into the left-\nmost 24 bits of the interface ID. We take the 24-bit local portion (the right-most 24 bits of the Ethernet\naddress) and put it into the right-most 24 bits of the interface ID.\n2. In the remaining 16 bits in the middle of the interface ID we put the value “11111111 11111110” (“FFFE”\nin hexadecimal).\n3. The address is now in EUI-64 form. We change the “universal/local” bit (bit 7 from the left) from a zero to\na one. This gives us the modified EUI-64 interface ID.\n\nNote: By flipping the 7th bit from the left from 0 to 1, we will have “52” instead of “50” (50 = 01010000)"
+  },
+  {
+    "legacyIndex": 950,
+    "legacyNumber": 16,
+    "prompt": "What are two disadvantages of a full-mesh topology? (Choose two)",
+    "options": [
+      "It needs a high MTU between sites.",
+      "It has a high implementation cost.",
+      "It must have point-to-point communication.",
+      "It requires complex configuration.",
+      "It works only with BGP between sites."
+    ],
+    "answer": [
+      1,
+      3
+    ],
+    "type": "multi",
+    "explanation": "We don’t need to set high MTU between sites -> Answer A is not correct.\n\nWe can use any connection types (broadcast, point-to-point…) between two devices -> Answer C is not\ncorrect.\n\nWe can use full-mesh topology with all routing protocols, not only BGP -> Answer E is not correct."
+  },
+  {
+    "legacyIndex": 951,
+    "legacyNumber": 17,
+    "prompt": "Drag and drop the characteristic from the left onto the IPv6 address type on the right.",
+    "type": "match",
+    "items": [
+      "provides for one-to-one communication",
+      "is routable and reachable via the Internet",
+      "confined to a single link",
+      "serves as the next-hop addresses"
+    ],
+    "choices": [
+      "Global Unicast Address",
+      "Link-Local Address"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 952,
+    "legacyNumber": 18,
+    "prompt": "How does MAC learning function on a switch?",
+    "options": [
+      "broadcasts frames to all ports without queueing",
+      "adds unknown source MAC addresses to the address table",
+      "sends a retransmission request when a new frame is received",
+      "sends frames with unknown destinations to a multicast group"
+    ],
+    "answer": 1,
+    "explanation": "If the source MAC address does not exist, the switch adds the source MAC address to the MAC address table\nalong with the incoming port number."
+  },
+  {
+    "legacyIndex": 953,
+    "legacyNumber": 19,
+    "prompt": "What is the purpose of classifying network traffic in QoS?",
+    "options": [
+      "services traffic according to its class",
+      "identifies the type of traffic that will receive a particular treatment",
+      "writes the class identifier of a packet to a dedicated field in the packet header",
+      "configures traffic-matching rules on network devices"
+    ],
+    "answer": 1,
+    "explanation": "The goal of network traffic classification is to group traffic based on user-defined criteria so that the resulting\ngroups of network traffic can then be subjected to specific QoS treatments."
+  },
+  {
+    "legacyIndex": 954,
+    "legacyNumber": 20,
+    "prompt": "What is a benefit of using private IPv4 addressing?",
+    "options": [
+      "Multiple companies can use the same addresses without conflicts.",
+      "Direct connectivity is provided to internal hosts from outside an enterprise network.",
+      "Communication to the internet is reachable without the use of NAT.",
+      "All external hosts are provided with secure communication to the Internet."
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 955,
+    "legacyNumber": 21,
+    "prompt": "What is the advantage of separating the control plane from the data plane within an SDN network?",
+    "options": [
+      "decreases overall network complexity",
+      "limits data queries to the control plane",
+      "reduces cost",
+      "offloads the creation of virtual machines to the data plane"
+    ],
+    "answer": 0,
+    "explanation": "Software Defined Networking (SDN) has redefined the way data center networks are deployed and function.\nThe ability to separate the control plane and data plane has lead to simpler design and easy management."
+  },
+  {
+    "legacyIndex": 956,
+    "legacyNumber": 22,
+    "prompt": "Drag and drop the use cases for device-management technologies from the left onto the corresponding.",
+    "type": "match",
+    "items": [
+      "overlay and underlay configuration",
+      "routed access deployment",
+      "VXLAN and LISP configuration",
+      "STP deployment",
+      "VLAN and HSRP configuration",
+      "configuration via console"
+    ],
+    "choices": [
+      "Cisco DNA Center",
+      "Traditional"
+    ],
+    "answer": [
+      0,
+      0,
+      0,
+      1,
+      1,
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 957,
+    "legacyNumber": 23,
+    "prompt": "Why is a first-hop redundancy protocol implemented?",
+    "options": [
+      "to protect against default gateway failures",
+      "to prevent loops in a network",
+      "to enable multiple switches to operate as a single unit",
+      "to provide load-sharing for a multilink segment"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 958,
+    "legacyNumber": 24,
+    "prompt": "Which WPA mode uses PSK authentication?",
+    "options": [
+      "Local",
+      "Client",
+      "Enterprise",
+      "Personal"
+    ],
+    "answer": 3,
+    "explanation": "Both versions of Wi-Fi Protected Access (WPA/WPA2) can be implemented in either of two modes:\n+ Personal or Pre-Shared Key (PSK) Mode: This mode is appropriate for most home networks—but not\nbusiness networks. You define an encryption passphrase on the wireless router and any other access points\n(APs). Then the passphrase must be entered by users when connecting to the Wi-Fi network.\n\nThough this mode seems very easy to implement, it actually makes properly securing a business network\nnearly impossible. Unlike with the Enterprise mode, wireless access can’t be individually or centrally\nmanaged. One passphrase applies to all users. If the global passphrase should need to be changed, it must\nbe manually changed on all the APs and computers. This would be a big headache when you need to change\nit; for instance, when an employee leaves the company or when any computers are stolen or compromised.\nUnlike with the Enterprise mode, the encryption passphrase is stored on the computers. Therefore, anyone\non the computer—whether it be employees or thieves—can connect to the network and also recover the\nencryption passphrase."
+  },
+  {
+    "legacyIndex": 959,
+    "legacyNumber": 25,
+    "prompt": "Drag and drop the AAA features from the left onto the corresponding AAA security services on the right. Not\nall options are used.",
+    "type": "match",
+    "items": [
+      "It records the amount of time for which a user accesses the network on a remote server",
+      "It uses TACACS+ to log the configuration commands entered by a network administrator",
+      "It enables the device to allow user- or group-based access",
+      "It restricts the CLI commands that a user is able to perform"
+    ],
+    "choices": [
+      "Accounting",
+      "Authorization"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": "To use RADIUS server to allow a reverse Telnet session we have to use such command “aaa authentication\nlogin reverse-access group radius”. Therefore the option “It leverages a RADIUS server to grant user access\nto a reverse Telnet session” should belong to Authentication, not Authorization.\n\nNote: Reverse telnet allows you to telnet to a device then from that device connect to the console of another\ndevice."
+  },
+  {
+    "legacyIndex": 960,
+    "legacyNumber": 26,
+    "prompt": "What is a function of the core and distribution layers in a collapsed-core architecture?",
+    "options": [
+      "The router must use IPv4 and IPv6 addresses at Layer 3.",
+      "The core and distribution layers are deployed on two different devices to enable failover.",
+      "The router can support HSRP for Layer 2 redundancy in an IPv6 network.",
+      "The router operates on a single device or a redundant pair."
+    ],
+    "answer": 3,
+    "explanation": "A “collapsed core” is when the distribution layer and core layer functions are implemented by a single device.\n\nBut in reality, we often use redundant pair to increase reliability."
+  },
+  {
+    "legacyIndex": 961,
+    "legacyNumber": 27,
+    "prompt": "Drag and drop the IPv6 addresses from the left onto the corresponding address types on the right.",
+    "type": "match",
+    "items": [
+      "Global unicast",
+      "Link-Local unicast",
+      "Multicast",
+      "Unique Local"
+    ],
+    "choices": [
+      "3ffe:e54d:620:a87a::f00d",
+      "fe80::a00:23ff:feeb:89aa",
+      "ff05::1:3",
+      "fd6d:c83b:5cef:b6b2::1"
+    ],
+    "answer": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 962,
+    "legacyNumber": 28,
+    "prompt": "Refer to the exhibit.\n\nWhich switch becomes the root bridge?",
+    "options": [
+      "SW 1\nBridge Priority – 32768\nmac-address 0f:d7:9e:13:ab:82",
+      "SW 4\nBridge Priority – 40960\nmac-address 05:d8:33:09:8f:89",
+      "SW3\nBridge Priority – 32768\nmac-address 01:1c:6c:66:b7:70",
+      "SW2\nBridge Priority – 40960\nmac-address 04:44:97:51:63:17"
+    ],
+    "answer": 2,
+    "explanation": "The switch with lowest bridge priority will be chosen the root bridge. If many switches have the same bridge\npriority then the lowest MAC address would be chosen."
+  },
+  {
+    "legacyIndex": 963,
+    "legacyNumber": 29,
+    "prompt": "Refer to the exhibit.\n\nA newly configured PC fails to connect to the internet using TCP port 80 to www.cisco.com. Which setting\nmust be modified for the connection to work?",
+    "options": [
+      "Subnet Mask",
+      "DNS Servers",
+      "Default Gateway",
+      "DHCP Server"
+    ],
+    "answer": 2,
+    "explanation": "We see the Subnet Mask of the PC is 255.255.255.248 so it belongs to 10.2.2.0/29 (ranges from 10.2.2.0 to\n10.2.2.7). But its default gateway is 10.2.2.10 and it is outside of the PC subnet. This question says only\nnewly configured PC fails to connect to internet so maybe its default gateway was configured wrongly. The IP\naddress of the Default Gateway configured on this new PC must be in 10.2.2.0/29 subnet."
+  },
+  {
+    "legacyIndex": 964,
+    "legacyNumber": 30,
+    "prompt": "Refer to the exhibit.\n\nAll interfaces are configured with duplex auto and ip ospf network broadcast. Which configuration allows\nrouters R14 and R86 to form an OSPFv2 adjacency and act as a central point for exchanging OSPF\ninformation between routers?\n\n Option A                                    Option B\n R14#                                        R14#\n interface FastEthernet0/0                   interface Loopback0\n ip address 10.73.65.65                      ip ospf 10 area 0\n 255.255.255.252\n ip ospf priority 0                          interface FastEthernet0/0\n ip mtu 1500                                 ip address 10.73.65.65\n\n                                      255.255.255.252\n                                      ip ospf priority 255\n router ospf 10                       ip ospf 10 area 0\n router-id 10.10.1.14                 ip mtu 1500\n network 10.10.1.14 0.0.0.0 area 0\n                                      router ospf 10\n network 10.73.65.64 0.0.0.3 area 0\n                                      router-id 10.10.1.14\n R86#\n                                      R86#\n interface FastEthernet0/0\n                                      interface Loopback0\n ip address 10.73.65.66\n                                      ip ospf 10 area 0\n 255.255.255.252\n ip mtu 1500                          interface FastEthernet0/0\n                                      ip address 10.73.65.66\n router ospf 10\n                                      255.255.255.252\n router-id 10.10.1.86\n                                      ip ospf 10 area 0\n network 10.10.1.86 0.0.0.0 area 0\n                                      ip mtu 1500\n network 10.73.65.64 0.0.0.3 area 0\n                                      router ospf 10\n                                      router-id 10.10.1.86\n\n                                      Option D\n Option C                             R14#\n R14#                                 interface Loopback0\n interface FastEthernet0/0            ip ospf 10 area 0\n ip address 10.73.65.65               interface FastEthernet0/0\n 255.255.255.252                      ip address 10.73.65.65\n ip ospf priority 255                 255.255.255.252\n ip mtu 1500                          ip ospf 10 area 0\n router ospf 10                       ip mtu 1500\n router-id 10.10.1.14                 router ospf 10\n network 10.10.1.14 0.0.0.0 area 0    router-id 10.10.1.14\n network 10.73.65.64 0.0.0.3 area 0   network 10.10.1.14 0.0.0.0 area 0\n R86#                                 network 10.73.65.64 0.0.0.3 area 0\n interface FastEthernet0/0            R86#\n ip address 10.73.65.66               interface FastEthernet0/0\n 255.255.255.252                      ip address 10.73.65.66\n ip mtu 1400                          255.255.255.252\n router ospf 10                       ip mtu 1400\n router-id 10.10.1.86                 router ospf 10\n network 10.10.1.86 0.0.0.0 area 0    router-id 10.10.1.86\n network 10.73.65.64 0.0.0.3 area 0   network 10.10.1.86 0.0.0.0 area 0\n                                      network 10.73.65.64 0.0.0.3 area 0",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 1,
+    "explanation": "In Option C and Option D, the MTUs of two Fa0/0 interfaces are mismatched so they cannot form OSPF\nadjacency -> Option C and Option D are not correct.\n\nIn Option B, R14 Fa0/0 interface is configured with OSPF priority 255 so surely it would become DR -> This is\nthe best answer."
+  },
+  {
+    "legacyIndex": 965,
+    "legacyNumber": 31,
+    "prompt": "Drag and drop the characteristic from the left onto the cable type on the right.",
+    "type": "match",
+    "items": [
+      "uses multiple wavelengths of light",
+      "has increased attenuation over long distances",
+      "has a core diameter of 9 microns",
+      "uses a single wavelength of light"
+    ],
+    "choices": [
+      "multimode fiber",
+      "single-mode fiber"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": "Single-mode fiber allows only one mode of light to propagate. Because of this, the number of light reflections\ncreated as the light passes through the core decreases, lowering attenuation and creating the ability for the\nsignal to travel further. This application is typically used in long distance, higher bandwidth.\n\nBecause of the high dispersion and attenuation rate with multimode fiber cable, the quality of the signal is\nreduced over long distances."
+  },
+  {
+    "legacyIndex": 966,
+    "legacyNumber": 32,
+    "prompt": "An engineer must configure a core router with a floating static default route to the backup router at\n10.200.0.2. Which command meets the requirements?",
+    "options": [
+      "ip route 0.0.0.0 0.0.0.0 10.200.0.2 floating",
+      "ip route 0.0.0.0 0.0.0.0 10.200.0.2",
+      "ip route 0.0.0.0 0.0.0.0 10.200.0.2 10",
+      "ip route 0.0.0.0 0.0.0.0 10.200.0.2 1"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 967,
+    "legacyNumber": 33,
+    "prompt": "Which interface is used to send traffic to the destination network?\n\n D 10.87.161.30/27 [90/10331] via\n G0/17\n D 10.87.161.30/27 [90/44594] via\n G0/8\n O 10.87.161.30/27 [110/7820] via\n G0/24\n O 10.87 161.30/27 [110/7879] via\n G0/1",
+    "options": [
+      "G0/1",
+      "G0/8",
+      "G0/24",
+      "G0/17"
+    ],
+    "answer": 3,
+    "explanation": "The first entry has lowest AD so it will be installed into the routing table and it has the lowest metric so it is\nthe best route."
+  },
+  {
+    "legacyIndex": 968,
+    "legacyNumber": 34,
+    "prompt": "Refer to the exhibit.\n\n R1# show ip route\n Codes: C - connected, S — static, I — IGRP, R — RIP, M — mobile, B - BGP\n D - EIGRP, EX - EIGRP external, O - OSPF, XA - OSPF inter area\n N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2\n E1 - OSPF external type 1, E2 - OSPF external type 2, E — EGP\n i - IS-IS, LI - IS-IS level-1, L2 — IS-IS level-2, * — candidate default\n U - per-user static route, o - ODR\n Gateway of last resort is not set\n C    172.16.0.0/16 is directly connected, Loopback0\n\n       172.16.0.0/16 is variably subnetted, 4 subnets, 2 masks\n\n O         172.16.1.3/32 [110/100] via 10.0.1.100, 00:39:08, Serial0\n O         172.16.1.9/32 [110/5] via 172.16.1.50, 00:43:01, Gigabit Ethernet 0/0\n\n D        172.16.1.4/30 [90/7445] via 172.16.9.5, 00:39:08, Gigabit Ethernet 0/0\n\n                             [90/7445] via 172.16.4.4, 00:39:08, Gigabit Ethernet 0/4\n\nHow does router R1 handle traffic to the 172.16.1.4/30 subnet?",
+    "options": [
+      "It sends all traffic over the path via 172.16.4.4",
+      "It sends all traffic over the path via 10.0.1 100",
+      "It sends all traffic over the path via 172.16.9.5 using 172.16.4.4 as a backup",
+      "It load-balances traffic over 172.16.9.5 and 172.16.4.4"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 969,
+    "legacyNumber": 35,
+    "prompt": "Drag and drop the characteristic from the left onto the IPv6 address type on the right.",
+    "type": "match",
+    "items": [
+      "is assigned to multiple devices on the same network simultaneously",
+      "is routed to the nearest interface that has the address",
+      "cannot be used as a source address",
+      "provides one-to-many communications"
+    ],
+    "choices": [
+      "Anycast",
+      "Multicast"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": "An anycast address is an address that is assigned to a set of interfaces that typically belong to different\nnodes. A packet sent to an anycast address is delivered to the closest interface (as defined by the routing\nprotocols in use) identified by the anycast address.\n\nFor the option “cannot be used as a source address”, it is correct for both Anycast and Multicast so we have\nto assign it to Multicast as other options are only suitable for Anycast."
+  },
+  {
+    "legacyIndex": 970,
+    "legacyNumber": 36,
+    "prompt": "What is a characteristic of an SSID in wireless networks?",
+    "options": [
+      "uses policies to prevent unauthorized users",
+      "identifies an access point on a WLAN",
+      "prompts a user for a login ID",
+      "associates a name to a WLAN"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 971,
+    "legacyNumber": 37,
+    "prompt": "What is represented by the word “port” within this JSON schema?\n\n 1    [\n 2    {\"IDS\": \"IPS_pittsburgh\", \"port\":\"te8/30\"},\n 3    {\"router\": \"R20\", \"port\":\"ge9/23\"},\n 4    {\"firewall\": \"FW42\", \"port\":\"fe3/24\"},\n 5    ]",
+    "options": [
+      "value",
+      "array",
+      "key",
+      "object"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 972,
+    "legacyNumber": 38,
+    "prompt": "Drag and drop the IPv6 address from the left onto the type on the right.",
+    "type": "match",
+    "items": [
+      "Global Unicast",
+      "Link-Local Unicast",
+      "Multicast",
+      "Unique Local"
+    ],
+    "choices": [
+      "2000:1092 :a1e8:827d:527c:3ce7:9816:1",
+      "fe80:cc72:4b9e:445c:8179:0420:5988:7",
+      "ff00:ec6c:dbb1:3e8b:6d46:bd27:a236:12",
+      "fc00:9860:653f:5146:8cb2:a27c:cb6f:3"
+    ],
+    "answer": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 973,
+    "legacyNumber": 39,
+    "prompt": "Drag and drop the characteristic from the left onto the cable type on the right.",
+    "type": "match",
+    "items": [
+      "contains a conductor, bedding, and sheathing",
+      "is typically used in small office applications",
+      "is ideal over longer distances with little loss of integrity",
+      "uses a single wavelength of light"
+    ],
+    "choices": [
+      "copper",
+      "single mode fiber"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 974,
+    "legacyNumber": 40,
+    "prompt": "What is represented by the word “ge3/36” within this JSON schema?\n\n 1 [\n 2 {\"VPN concentrator\": \"VPN36\", \"interface\":\"ge3/36\"},\n 3 {\"load balancer\": \"LB33\", \"interface\":\"te7/10\"},\n 4 {\"switch\": \"SW31\", \"interface\":\"fe2/25\"},\n 5 ]",
+    "options": [
+      "value",
+      "array",
+      "key",
+      "object"
+    ],
+    "answer": 0,
+    "explanation": "JSON syntax structure:\n\n+ A key/value pair consists of a key (must be a string in double quotation marks \"\"), followed by a colon :,\nfollowed by a value. For example: “name”:”John”\n\nTherefore in this question, “interface” is the key while “ge3/36” is the value."
+  },
+  {
+    "legacyIndex": 975,
+    "legacyNumber": 41,
+    "prompt": "Drag and drop the characteristic from the left onto the IPv6 address type on the right.",
+    "type": "match",
+    "items": [
+      "is unable to route on the internet",
+      "allows sites to be combined without address conflicts",
+      "has a unicast source sent to a group",
+      "sends packets to a group address rather than a single address"
+    ],
+    "choices": [
+      "Unique Local",
+      "Multicast"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 976,
+    "legacyNumber": 42,
+    "prompt": "What is a characteristic of encryption in wireless networks?",
+    "options": [
+      "uses policies to prevent unauthorized users",
+      "prevents the interception of data as it transits a network",
+      "provides increased protection against spyware",
+      "converts electrical current to radio waves"
+    ],
+    "answer": 1,
+    "explanation": "Data encryption protects the vulnerable wireless link between client devices and access points by encrypting\nall data in the transmission."
+  },
+  {
+    "legacyIndex": 977,
+    "legacyNumber": 43,
+    "prompt": "What is a characteristic of private IPv4 addressing?",
+    "options": [
+      "complies with PCI regulations",
+      "is used on internal hosts that stream data solely to external resources",
+      "provides an added level of protection against internet threats",
+      "enables secure connectivity over the internet"
+    ],
+    "answer": 2,
+    "explanation": "By using private IPv4 addressing, an Internet threats cannot reach the internal hosts directly, thus it provides\nan additional level of protection against Internet threats."
+  },
+  {
+    "legacyIndex": 978,
+    "legacyNumber": 44,
+    "prompt": "Which interface is used to send traffic to the destination network?\n\n D 10.214.247.237/28 [90/2170] via\n G0/12\n D 10.214.247.237/28 [90/46985] via\n G0/19\n O 10.214.247.237/28 [110/665] via G0/9\n O 10.214.247.237/28 [110/3399] via\n G0/1",
+    "options": [
+      "G0/12",
+      "G0/1",
+      "G0/9",
+      "G0/19"
+    ],
+    "answer": 0,
+    "explanation": "The first entry has lowest AD (90) so it will be installed into the routing table and it has the lowest metric\n(2170) so it is the best route."
+  },
+  {
+    "legacyIndex": 979,
+    "legacyNumber": 45,
+    "prompt": "Which interface is used to send traffic to the destination network?\n\n O 10.139.120.253/29 [110/9443] via\n G0/20\n O 10.139.120.253/29 [110/29560] via\n G0/16\n R 10.139.120.253/29 [120/12] via G0/11\n R 10.139120 253/29 [120/6] via G0/9",
+    "options": [
+      "G0/11",
+      "G0/20",
+      "G0/9",
+      "G0/16"
+    ],
+    "answer": 1,
+    "explanation": "The first entry has lowest AD (110) and lowest metric (9443) so it is the best route and will be installed into\nthe routing table."
+  },
+  {
+    "legacyIndex": 980,
+    "legacyNumber": 46,
+    "prompt": "Drag and drop the characteristic from the left onto the cable type on the right.",
+    "type": "match",
+    "items": [
+      "becomes distorted at longer lengths",
+      "is typically used for internal datacenter connectivity",
+      "has minimal light reflection as it travels down the core",
+      "uses a single wavelength of light"
+    ],
+    "choices": [
+      "multimode fiber",
+      "single mode fiber"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 981,
+    "legacyNumber": 47,
+    "prompt": "What is a characteristic of an SSID in wireless networks?",
+    "options": [
+      "broadcasts a beacon signal to announce its presence by default",
+      "uses policies to prevent unauthorized users",
+      "converts electrical current to radio waves",
+      "prompts a user for a login ID"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 982,
+    "legacyNumber": 48,
+    "prompt": "Refer to the exhibit.\n\nThe P2P Blocking Action option is disabled on the WLC. The security team has a new requirement for each\nclient to retain their assigned IP addressing as the clients move between locations in the campus network.\nWhich action completes this configuration?",
+    "options": [
+      "Set the P2P Blocking Action option to Forward-UpStream.",
+      "Enable the Static IP Tunneling option.",
+      "Check the DHCP Addr. Assignment check box.",
+      "Disable the Coverage Hole Detection option."
+    ],
+    "answer": 1,
+    "explanation": "Dynamic Anchoring for Clients with Static IP\n\nAt times you may want to configure static IP addresses for wireless clients. When these wireless clients move\nabout in a network, they could try associating with other controllers. If the clients try to associate with a\ncontroller that does not support the same subnet as the static IP, the clients fail to connect to the network.\nYou can now enable dynamic tunneling of clients with static IP addresses.\nDynamic anchoring of static IP clients with static IP addresses can be associated with other controllers where\nthe client’s subnet is supported by tunneling the traffic to another controller in the same mobility group. This\nfeature enables you to configure your WLAN so that the network is serviced even though the clients use\nstatic IP addresses."
+  },
+  {
+    "legacyIndex": 983,
+    "legacyNumber": 49,
+    "prompt": "Drag and drop the characteristics of transport layer protocols from the left onto the corresponding protocols\non the right.",
+    "type": "match",
+    "items": [
+      "guarantees packet delivery",
+      "uses a 32-bit sequence number",
+      "provides support for retransmission of lost packets",
+      "ideal for voice traffic",
+      "offers minimal overhead within a packet",
+      "requires less computer resources"
+    ],
+    "choices": [
+      "TCP",
+      "UDP"
+    ],
+    "answer": [
+      0,
+      0,
+      0,
+      1,
+      1,
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 984,
+    "legacyNumber": 50,
+    "prompt": "What is a reason why a company would choose to use network automation in an enterprise?",
+    "options": [
+      "Provide data services faster.",
+      "Enable network segmentation.",
+      "Mitigate spanning-tree loop avoidance.",
+      "Implement granular QoS."
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 985,
+    "legacyNumber": 51,
+    "prompt": "Refer to the exhibit.\n\n router# show ip route\n ...\n\n D         172.16.32.0/26 [90/25789217] via 10.0.0.1\n R         172.16.32.0/24 [120/4] via 10.0.0.2\n O         172.16.32.0/19 [110/229840] via 10.0.0.3\n C         172.16.32.32/32 is directly connected, Loopback0\n C         172.16.32.4/30 is directly connected, GigabitEthernet0/0\n\nA packet sourced from 172.16.32.254 is destined for 172.16.32.8. What is the subnet mask of the preferred\ndestination route?",
+    "options": [
+      "255.255.224.0",
+      "255.255.255.0",
+      "255.255.255.192",
+      "255.255.255.252"
+    ],
+    "answer": 2,
+    "explanation": "The destination of 172.16.32.8 does not belong to 172.16.32.4/30 (which ranges from 172.16.32.4 to\n172.16.32.7) or 172.16.32.32 so the best subnet is 172.16.32.0/26."
+  },
+  {
+    "legacyIndex": 986,
+    "legacyNumber": 52,
+    "prompt": "Which WLC interface provides out-of-band management in the Cisco Unified Wireless Network Architecture?",
+    "options": [
+      "dynamic",
+      "AP-Manager",
+      "virtual",
+      "service port"
+    ],
+    "answer": 3,
+    "explanation": "The service-port interface is used for out-of-band management of the controller."
+  },
+  {
+    "legacyIndex": 987,
+    "legacyNumber": 53,
+    "prompt": "Refer to the exhibit.\n\nThe IPv6 address for the LAN segment on router R1 must be configured using the EUI-64 format. When\nconfigured which ipv6 address is produced by the router?",
+    "options": [
+      "2001:db8:1006:1968:4564:877F:FE99:1",
+      "2001:db8:1006:1968:1119:BEFF:FE67:1",
+      "2001:db8:1006:1968:1130:ABFF:FECC:1",
+      "2001:db8:1006:1968:12D8:BAFE:FF01:1"
+    ],
+    "answer": 1,
+    "explanation": "The EUI-64 format must have “FF:FE” in the middle of the MAC address of E0/1 interface of R1 -> Only\nanswer B and answer C are correct.\n\nOnly answer B has correct IPv6 of the MAC address of E0/1 interface of R1 (end with “67:1”) -> This is the\ncorrect answer."
+  },
+  {
+    "legacyIndex": 988,
+    "legacyNumber": 54,
+    "prompt": "Which IPsec encryption mode is appropriate when the destination of a packet differs from the security\ntermination point?",
+    "options": [
+      "tunnel",
+      "main",
+      "aggressive",
+      "transport"
+    ],
+    "answer": 0,
+    "explanation": "Encryption Technologies\n\nThere are two encryption modes available for IPsec. Both modes have their own uses and should be used\nwith caution depending upon the solution.\n\nTunnel Mode\nThis encrypts both the payload and the header. IPsec in tunnel mode is used when the destination of the\npacket is different than the security termination point. The most common use of this mode is between\ngateways or from end station to gateway. The gateway serves as a proxy for the hosts. So when the origin of\nthe packets differs from the device that is providing security, tunnel mode is used."
+  },
+  {
+    "legacyIndex": 989,
+    "legacyNumber": 55,
+    "prompt": "Why is UDP more suitable than TCP for applications that require low latency, such as VoIP?",
+    "options": [
+      "UDP reliably guarantees delivery of all packets, and TCP drops packets under heavy load.",
+      "TCP uses congestion control for efficient packet delivery, and UDP uses flow control mechanisms for the delivery of packets.",
+      "UDP uses sequencing data for packets to arrive in order, and TCP offers the capability to receive packets in random order.",
+      "TCP sends an acknowledgment for every packet that is received, and UDP operates without acknowledgments."
+    ],
+    "answer": 3,
+    "explanation": "Both flow control and congestion control are traffic controlling methods in TCP. And only TCP uses sequencing\ndata for packets to arrive in order."
+  },
+  {
+    "legacyIndex": 990,
+    "legacyNumber": 56,
+    "prompt": "Refer to the exhibit.\n\n Router# show interface FastEthernet0/0\n FastEthernet0/0 is up, line protocol is up\n\n   Hardware is Gt96k FE, address is 0017.59b2.7fb2 (bia 0017.59b2.7fb2) Internet address\n is 10.0.0.2/30\n\n    MTU 1500 bytes, BW 100000 Kbit/sec, DLY 100 usec,\n\n      reliability 255/255, txload 1/255, rxload 1/255\n\n    Encapsulation ARPA, loopback not set\n\n    Keepalive set (10 sec)\n\n    Half-duplex, 100Mb/s, 100BaseTX/FX\n\n    ARP type: ARPA, ARP Timeout 04:00:00\n\n    Last input 00:00:04, output 00:00:04, output hang sever\n\n    Last clearing of \"show interface\" counters never\n\n   Input queue: 0/75/0/0 (size/max/drops/flushes); Total output drops: 1 Queueing\n strategy: fifo\n\n    Output queue: 0/40 (size/max)\n\n    5 minute input rate 516000 bits/sec, 45 packets/sec\n\n    5 minute output rate 516000 bits/sec, 46 packets/sec\n\n      13282 packets input, 20075670 bytes\n\n      Received 25 broadcasts, 0 runts, 0 giants, 0 throttles\n\n      383 input errors, 383 CRC, 0 frame, 0 overrun, 0 ignored\n\n      0 watchdog\n\n      0 input packets with dribble condition detected\n\n      13438 packets output, 20084258 bytes, 0 underruns\n\n      0 output errors, 831 collision, 5 interface resets\n\n      11 unknown protocol drops\n\n      0 babbles, 0 late collision, 0 deferred\n\n      0 lost carrier, 0 no carrier\n\n      0 output buffer failures, 0 output buffers swapped out\n\nUsers at a branch office are experiencing application performance issues, poor VoIP audio quality, and slow\ndownloads. What is the cause of the issues?",
+    "options": [
+      "QoS queuing",
+      "interface configuration",
+      "broadcast storm",
+      "overutilization"
+    ],
+    "answer": 1,
+    "explanation": "TXLoad is the amount of traffic being transmitted from your interface and the RXLoad is the amount of traffic\nreceived on the interface. Both of them are 1 in this question so answer D is not the problem.\n\nThis interface received “25 broadcasts” so answer C is not the problem.\n\nAnswer A is not the problem as “Input queue: 0/75/0/0 (size/max/drops/flushes); Total output drops: 1\nQueueing strategy: fifo Output queue: 0/40 (size/max)”\n\nTherefore only answer B is left. Also this interface was configured in “half-duplex” and has high “input errors”\n(383) and high “collision” (831) so the most likely cause of this problem is “interface configuration” and\nmaybe the other end was configured in full-duplex, which creates a duplex mismatched problem."
+  },
+  {
+    "legacyIndex": 991,
+    "legacyNumber": 57,
+    "prompt": "Refer to the exhibit.\n\n 0ldR#show ip ospf interface\n GigabitEthernet0/0/0 is up, line protocol is up\n\n    Internet address is 192.168.1.2/24, Area 0\n\n   Process ID 1, Router ID 192.168.1.1, Network Type BROADCAST, Cost: 1 Transmit Delay is\n 1 sec, State DROTHER, Priority 1\n\n    Designated Router (ID) 192.168.1.1, Interface address 192.168.1.1\n\n    Backup Designated Router (ID) 192.168.1.1, Interface address 192.168.1.1\n\n    Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5\n\n      Hello due in 00:00:01\n\n    Index 1/1, flood queue length 0\n\n    Neighbor Count is 1, Adjacent neighbor count is 2\n\n R2#show ip ospf interface\n GigabitEthernet0/0/0 is up, line protocol is up\n\n    Internet address is 192.168.1.1/24, Area 0\n\n    Process ID 1, Router ID 192.168.1.1, Network Type BROADCAST, Cost: 1\n\n    Transmit Delay is 1 sec, State DROTHER, Priority 1\n\n    Designated Router (ID) 192.168.1.1, Interface address 192.168.1.2\n\n    Backup Designated Router (ID) 192.168.1.1, Interface address 192.168.1.2\n\n    Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5\n\n      Hello due in 00:00:02\n\n    Index 2/2, flood queue length 0\n\n      Neighbor Count is 1, Adjacent neighbor count is 2\n\nRouter OldR is replacing another router on the network with the intention of having OldR and R2 exchange\nroutes. After the engineer applied the initial OSPF configuration, the routes were still missing on both\ndevices. Which command sequence must be issued before the clear IP ospf process command is entered to\nenable the neighbor relationship?",
+    "options": [
+      "OldR(config)#router ospf 1\nOldR(config-router)#no router-id 192.168.1.1",
+      "OldR(config)#interface g0/0/0\nOldR(config-if)#ip ospf dead-interval 15",
+      "OldR(config)#interface g0/0/0\nOldR(config-if)#ip ospf hello-interval 15",
+      "OldR(config)#router ospf 1\nOldR(config-router)# network 192.168.1.0 255.255.255.0 area 2"
+    ],
+    "answer": 0,
+    "explanation": "Two routers in the exhibit have the same router-id of 192.168.1.1 so they cannot form neighbor relationship.\nTherefore we need to clear the router-id of one of the router. Hopefully the OldR will choose another router-id\n(maybe 192.168.1.2) automatically after resetting."
+  },
+  {
+    "legacyIndex": 992,
+    "legacyNumber": 58,
+    "prompt": "Refer to the exhibit.\n\n Router-Y#show ip route\n\n Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP\n\n           D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area\n\n           N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2\n\n           E1 - OSPF external type 1, E2 - OSPF external type 2\n\n           i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2\n\n           ia - IS-IS inter area, * - candidate default, U - per-user static route\n\n           o - ODR, P - periodic downloaded static route, H - NHRP, l - LISP\n\n           + - replicated route, % - next hop override, p - overrides from PfR\n\n Gateway of last resort is not set\n\n 10.0.0.0/8 is variably subnetted\n B         10.0.0.0/8 [1/0] via 10.224.1.2\n B         10.27.150.224/27 [20/0] via 10.224.1.3, 1w6d\n\n S         10.128.0.0/9 [1/0] via 10.224.1.3\n B         10.224.0.0/11 [20/0] via 10.224.1.5, 5d18h\n B         10.224.0.0/15 [20/0] via 10.224.1.4, 5d18h\n C         10.223.0.0/24 is directly connected, GigabitEthernet0/1\n C         10.224.0.0/24 is directly connected, GigabitEthernet0/0\n B         10.226.34.0/24 [20/0] via 10.224.1.5, 5d18h\n\nPC A is communicating with another device at IP address 10.225.34.225. Through which router does router Y\nroute the traffic?",
+    "options": [
+      "router A",
+      "router B",
+      "router C",
+      "router D"
+    ],
+    "answer": 2,
+    "explanation": "The destination IP address 10.225.34.225 belongs to 10.224.0.0/15 subnet (which ranges from 10.224.0.0\nto 10.225.255.255) and this is the longest prefix subnet so router Y will send traffic from PC A to 10.224.1.4,\nwhich is router C."
+  },
+  {
+    "legacyIndex": 993,
+    "legacyNumber": 59,
+    "prompt": "An engineer needs to configure an access point to forward all client traffic through a wireless controller.\nWhich mode must be enabled to accomplish this task?",
+    "options": [
+      "local",
+      "monitor",
+      "autonomous",
+      "rogue detector"
+    ],
+    "answer": 0,
+    "explanation": "Local mode (default mode): An AP configured in Local mode tunnels all the client traffic for WLANs is\nforwarded via the CAPWAP (Control and Provisioning of Wireless Access Points) tunnel to the WLC (Wireless\nController) -> Answer A is correct.\n\nNote:\n\nAutonomous: self-sufficient and standalone. Used for small wireless networks. Each autonomous AP must be\nconfigured with a management IP address so that it can be remotely accessed using Telnet, SSH, or a web\ninterface. Each AP must be individually managed and maintained unless you use a management platform\nsuch as Cisco DNA Center.\n\nMonitor mode: does not transmit at all. It acts like a dedicated sensor for location-based services (LBS),\nrogue AP detection, and Checks Intrusion Detection System (IDS). In this mode, AP will not broadcast an\nSSID so clients are unable to connect to it.\n\nRogue detector mode: monitor for rogue APs. It does not handle data at all."
+  },
+  {
+    "legacyIndex": 994,
+    "legacyNumber": 60,
+    "prompt": "What is the root port in STP?",
+    "options": [
+      "It is the port with the highest priority toward the root bridge.",
+      "It is the port that is elected only when the root bridge has precisely one port on a single LAN segment.",
+      "It is the port on a switch with the lowest cost to reach the root bridge.",
+      "It is the port on the root switch that leads to the designated port on another switch."
+    ],
+    "answer": 2,
+    "explanation": "The root port is always the link connected to the root bridge, or the shortest path to the root bridge."
+  },
+  {
+    "legacyIndex": 995,
+    "legacyNumber": 61,
+    "prompt": "An Ethernet frame arrived at switch interface G0/1, but the destination MAC address is missing from the MAC\naddress table. How does the switch process the frame?",
+    "options": [
+      "It sends an ARP request to attempt to locate the destination.",
+      "It updates the destination to FFFF.FFFF.FFFF.",
+      "It drops the frame and notifies the sending host.",
+      "It floods the frame out of the remaining switch interfaces."
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 996,
+    "legacyNumber": 62,
+    "prompt": "In which circumstance would a network architect decide to implement a global unicast subnet instead of a\nunique local unicast subnet?",
+    "options": [
+      "when the subnet must be available only within an organization",
+      "when the subnet does not need to be routable",
+      "when the addresses on the subnet must be equivalent to private IPv4 addresses",
+      "when the subnet must be routable over the internet"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 997,
+    "legacyNumber": 63,
+    "prompt": "Which Windows command is used instead of the route print command to display the contents of the IP\nrouting table?",
+    "options": [
+      "netstat-n",
+      "ipconfig",
+      "ifconfig",
+      "netstat-r"
+    ],
+    "answer": 3,
+    "explanation": "The “route print” and netstat -r” commands are very similar. This is the output of the “route print” command:\n\nAnd “netstat -r” command:\n\nNote: “-r” means “displays the routing table”"
+  },
+  {
+    "legacyIndex": 998,
+    "legacyNumber": 64,
+    "prompt": "What differentiates the Cisco OfficeExtend AP mode from FlexConnect AP mode?",
+    "options": [
+      "FlexConnect allows a personal SSID to be configured on the AP, and personal SSIDs are not supported with OfficeExtend.",
+      "OfficeExtend does not support DTLS tunneling of traffic to the WLC, and FlexConnect tunnels traffic to the WLC with DTLS.",
+      "OfficeExtend tunnels all traffic through the WLC, and FlexConnect terminates client traffic at the AP switch port.",
+      "FlexConnect must be deployed behind a router that NATs the client traffic, and OfficeExtend uses public IP sources."
+    ],
+    "answer": 2,
+    "explanation": "A controller with OfficeExtend access points in an access point group publishes only up to 15 WLANs to each\nconnected OfficeExtend access point because it reserves one WLAN for the personal SSID -> OfficeExtend\nsupport personal SSID -> Answer A is not correct.\n\nA Cisco OfficeExtend access point (Cisco OEAP) provides secure communications from a controller to a Cisco\nAP at a remote location, seamlessly extending the corporate WLAN over the Internet to an employee’s\nresidence. The user’s experience at the home office is exactly the same as it would be at the corporate office.\n\nDatagram Transport Layer Security (DTLS) encryption between the access point and the controller (->\nAnswer B is not correct) ensures that all communications have the highest level of security.\n\nCisco OEAPs are designed to work behind a router or other gateway device that is using network address\ntranslation (NAT) -> Answer D is not correct.\n\nOEAP tunnels back to a Cisco WLC with an IPsec VPN tunnel.\n\nWith FlexConnect, AP simply terminates user traffic in a VLAN & destined to gateway defined on a local\nswitch."
+  },
+  {
+    "legacyIndex": 999,
+    "legacyNumber": 65,
+    "prompt": "Which type of IPv4 address must be assigned to a server to protect it from external access and allow only\ninternal users access while restricting internet access?",
+    "options": [
+      "global unicast",
+      "public",
+      "private",
+      "multicast"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1000,
+    "legacyNumber": 66,
+    "prompt": "Which function generally performed by a traditional network device is replaced by a software-defined\ncontroller?",
+    "options": [
+      "encryption and decryption for VPN link processing",
+      "building route tables and updating the forwarding table",
+      "changing the source or destination address during NAT operations",
+      "encapsulation and decapsulation of packets in a data-link frame"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1001,
+    "legacyNumber": 67,
+    "prompt": "Refer to the exhibit.\n\n R1# show ip route | begin gateway\n Gateway of last resort is not set\n\n     172.16.0.0/16 is variably subnetted, 3 subnets, 2 masks\n\n     172.16.1.0/24 is directly connected, FastEthernet0/0\n\n     172.16.1.1/32 is directly connected, FastEthernet0/0\n\n     172.16.2.0/24 [120/2] via 207.165.200.250, 00:00:25, Serial0/0/0\n\n     192.168.1.0/24 [110/84437] via 207.165.200.254, 00:00:17, Serial0/0/1\n\n     192.168.2.0/24 [90/3164437] via 207.165.200.254, 00:00:15, Serial0/0/1\n\n     207.165.200.0/24 is variably subnetted, 5 subnets, 2 masks\n\n     207.165.200.244/30 [1/1] via 207.169.200.254, Serial0/0/1\n\n     207.165.200.248/30 is directly connected, Serial0/0/0\n\n     207.165.200.249/32 is directly connected, Serial0/0/0\n\n     207.165.200.252/30 is directly connected, Serial0/0/1\n\n     207.165.200.253/32 is directly connected, Serial0/0/1\n\nDrag and drop the learned prefixes from the left onto the preferred route methods from which they were\nlearned on the right.",
+    "type": "match",
+    "items": [
+      "static",
+      "EIGRP",
+      "OSPF",
+      "RIP"
+    ],
+    "choices": [
+      "207.165.200.244/30",
+      "192.168.2.0/24",
+      "192.168.1.0/24",
+      "172.16.2.0/24"
+    ],
+    "answer": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "explanation": "The output in this question removed the symbols which represent for the routing protocols used so we have\nto remember the Administrative Distances (AD) of popular routing protocols to figure out which routing\nprotocols were used.\n\nThe AD is the first parameter in the square bracket. For example from the line “172.16.2.0/24 [120/2] via …”\nwe learn that the AD of this routing protocol is 120, which is RIP."
+  },
+  {
+    "legacyIndex": 1002,
+    "legacyNumber": 68,
+    "prompt": "What describes the functionality of southbound APIs?",
+    "options": [
+      "They use HTTP messages to communicate.",
+      "They enable communication between the controller and the network device.",
+      "They convey information from the controller to the SDN applications.",
+      "They communicate with the management plane."
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1003,
+    "legacyNumber": 69,
+    "prompt": "What are two purposes of HSRP? (Choose two)",
+    "options": [
+      "It groups two or more routers to operate as one virtual router.",
+      "It improves network availability by providing redundant gateways.",
+      "It passes configuration information to hosts in a TCP/IP network.",
+      "It helps hosts on the network to reach remote subnets without a default gateway.",
+      "It provides a mechanism for diskless clients to autoconfigure their IP parameters during boot."
+    ],
+    "answer": [
+      0,
+      1
+    ],
+    "type": "multi",
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1004,
+    "legacyNumber": 70,
+    "prompt": "A network engineer must configure an access list on a new Cisco IOS router. The access list must deny HTTP\ntraffic to network 10.125.128.32/27 from the 192.168.240.0/20 network, but it must allow the\n192.168.240.0/20 network to reach the rest of the 10.0.0.0/8 network. Which configuration must the\nengineer apply?\n\n Option A\n\n   ip access-list extended deny_outbound\n    10 deny tcp 10.125.128.32 255.255.255.224 192.168.240.0 255.255.240.0 eq\n   443\n    20 deny tcp 192.168.240.0 255.255.240.0 10.125.128.32 255.255.255.224 eq\n   443\n    30 permit ip 192.168.240.0 255.255.240.0 10.0.0.0 255.0.0.0\n\n Option B\n\n   ip access-list extended deny_outbound\n     10 permit ip 192.168.240.0 255.255.240.0 10.0.0.0 255.0.0.0\n     20 deny tcp 192.168.240.0 255.255.240.0 10.125.128.32 255.255.255.224 eq\n   443\n     30 permit ip any any\n\n Option C\n\n   ip access-list extended deny_outbound\n\n     10 deny tcp 192.168.240.0 0.0.15.255 10.125.128.32 0.0.0.31 eq 80\n     20 permit ip 192.168.240.0 0.0.15.255 10.0.0.0 0.255.255.255\n     30 deny ip any any log\n\n Option D\n\n  ip access-list extended deny_outbound\n     10 deny tcp 192.168.240.0 0.0.15.255 any eq 80\n     20 deny tcp 192.168.240.0 0.0.15.255 10.125.128.32 0.0.0.31 eq 80\n     30 permit ip 192.168.240.0 0.0.15.255 10.0.0.0 0.255.255.255",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 2,
+    "explanation": "This question only asks to deny HTTP traffic so the port must be “eq 80”, not 443 (for HTTPS) -> Only Option\nC and Option D are correct. But Option D denies all HTTP traffic from 192.168.24.0/20 with the first\nstatement “10 deny tcp 192.168.240.0 0.0.15.255 any eq 80 ” so it is not correct."
+  },
+  {
+    "legacyIndex": 1005,
+    "legacyNumber": 71,
+    "prompt": "A DHCP pool has been created with the name NOCC. The pool is using 192.168.20.0/24 and must use the\nnext to last usable IP address as the default gateway for the DHCP clients. What is the next step in the\nprocess?",
+    "options": [
+      "default-router 192.168.20.253",
+      "network 192.168.20.254 255.255.255.0 secondary",
+      "ip default-gateway 0.0.0.0 0.0.0.0 192.168.20.253",
+      "next-server 192.168.20.254"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1006,
+    "legacyNumber": 72,
+    "prompt": "What is the role of SNMP in the network?",
+    "options": [
+      "to monitor network devices and functions using a TCP underlay that operates on the presentation layer",
+      "to collect data directly from network devices using an SSL underlay that operates on the transport layer",
+      "to monitor and manage network devices using a UDP underlay that operates on the application layer",
+      "to collect telemetry and critical information from network devices using an SSH underlay that operates on the network layer"
+    ],
+    "answer": 2,
+    "explanation": "SNMP uses UDP as its transport protocol because it has no need for the overhead of TCP. “Reliability” is not\nrequired because each request generates a response. If the SNMP application does not receive a response, it\nsimply re-issues the request."
+  },
+  {
+    "legacyIndex": 1007,
+    "legacyNumber": 73,
+    "prompt": "Refer to the exhibit.\n\n 1 [\n 2     {\"switch\": \"3750\", \"port\": e2},\n 3     {\"router\": \"2951\", \"port\": e20},\n 4     {\"switch\": \"3750\", \"port\": e23}\n 5 ]\n\nWhat is represented beginning with line 1 and ending with line 5?",
+    "options": [
+      "object",
+      "key",
+      "value",
+      "array"
+    ],
+    "answer": 3,
+    "explanation": "JSON uses curly braces {} to hold objects and square brackets [] to hold arrays."
+  },
+  {
+    "legacyIndex": 1008,
+    "legacyNumber": 74,
+    "prompt": "What is the difference between an IPv6 link-local address and a unique local address?",
+    "options": [
+      "The scope of an IPv6 link-local address is limited to a directly attached interface, but an IPv6 unique local address is used throughout a company site or network",
+      "The scope of an IPv6 link-local address is limited to a loopback address, and an IPv6 unique local address is limited to a directly attached interface.",
+      "The scope of an IPv6 link-local address is global, but the scope of an IPv6 unique local address is limited to a loopback address",
+      "The scope of an IPv6 link-local address can be used throughout a company site or network, but an IPv6 unique local address is limited to a loopback address."
+    ],
+    "answer": 0,
+    "explanation": "A IPv6 Unique Local Address is an IPv6 address in the block FC00::/7. It is the approximate IPv6 counterpart\nof the IPv4 private address. It is not routable on the global Internet.\n\nA link-local address is an address that is valid only for communications within the network segment (link) or\nthe broadcast domain that the device is connected to."
+  },
+  {
+    "legacyIndex": 1009,
+    "legacyNumber": 75,
+    "prompt": "What are two reasons to implement DHCP in a network? (Choose two)",
+    "options": [
+      "manually control and configure IP addresses on network devices",
+      "reduce administration time in managing IP address ranges for clients",
+      "control the length of time an IP address is used by a network device",
+      "dynamic control over the best path to reach an IP address",
+      "access a website by name instead of by IP address"
+    ],
+    "answer": [
+      1,
+      2
+    ],
+    "type": "multi",
+    "explanation": "DHCP automatically issue IP address in configured ranges for clients -> Answer B is correct.\n\nWith DHCP, we can control the length of time an IP address issued by DHCP lease time. This feature\ndetermines how long a device can keep an IP address before renewing or releasing it -> Answer C is correct."
+  },
+  {
+    "legacyIndex": 1010,
+    "legacyNumber": 76,
+    "prompt": "What does traffic shaping do?",
+    "options": [
+      "It modifies the QoS attributes of a packet",
+      "It sets QoS attributes within a packet",
+      "It queues excess traffic",
+      "It organizes traffic into classes"
+    ],
+    "answer": 2,
+    "explanation": "Traffic Shaping: retains excess packets in a queue and then schedules the excess for later transmission over\nincrements of time. When traffic reaches the maximum configured rate, additional packets are queued\ninstead of being dropped to proceed later. Traffic shaping is applicable only on outbound interfaces as\nbuffering and queuing happens only on outbound interfaces. Shaping is configured in bits per second."
+  },
+  {
+    "legacyIndex": 1011,
+    "legacyNumber": 77,
+    "prompt": "What is a difference between an IPv6 multicast address and an IPv6 anycast address?",
+    "options": [
+      "An IPv6 multicast address uses the prefix 2002:/15 and forwards to one destination, and an IPv6 anycast address uses the prefix ff00::/8 and forwards to any destination in a group",
+      "IPv6 multicast addresses are used to transition from IPv4 to IPv6, and IPv6 anycast addresses are used for address aggregation in an IPv6-only environment",
+      "An IPv6 multicast address is assigned to numerous interfaces within a subnet, but an IPv6 anycast address is used for a predefined group of nodes in an all-IPv6 routers group",
+      "A packet sent to an IPv6 multicast address is delivered to one or more destinations at once, but a packet sent to an IPv6 anycast address is routed to the closest interface with that address"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1012,
+    "legacyNumber": 78,
+    "prompt": "Which enhancements were implemented as part of WPA3?",
+    "options": [
+      "TKIP encryption improving WEP and per-packet keying",
+      "forward secrecy and SAE in personal mode for secure initial key exchange",
+      "802.1x authentication and AES-128 encryption",
+      "AES-64 in personal mode and AES-128 in enterprise mode"
+    ],
+    "answer": 1,
+    "explanation": "WPA3-Personal uses AES-128 -> Answer D is not correct.\n\nWPA3 networks include perfect forward secrecy. With this protection, even if an adversary successfully\nguesses the correct network password, they cannot observe a user’s earlier interactions on the network,\ndetermine the session keys for that interaction, or decrypt wireless traffic from other users on the network\n-> Answer B is correct.\n\nWPA3 provides improvements to the general Wi-Fi encryption, thanks to Simultaneous Authentication of\nEquals (SAE) replacing the Pre-Shared Key (PSK) authentication method used in prior WPA versions. SAE\nenables individuals or home users to set Wi-Fi passwords that are easier to remember and provide the same\nsecurity protection even if the passwords are not complex enough."
+  },
+  {
+    "legacyIndex": 1013,
+    "legacyNumber": 79,
+    "prompt": "How is a configuration change made to a wireless AP in lightweight mode?",
+    "options": [
+      "SSH connection to the management IP of the AP",
+      "HTTPS connection directly to the out-of-band address of the AP",
+      "CAPWAP/LWAPP connection via the parent WLC",
+      "EoIP connection via the parent WLC"
+    ],
+    "answer": 2,
+    "explanation": "Lightweight: The term ‘lightweight’ refers to the fact that these devices cannot work independently. A Cisco\nlightweight AP (LAP) has to join a Wireless LAN Controller (WLC) to function. LAP and WLC communicate with\neach other via a logical pair of CAPWAP tunnels."
+  },
+  {
+    "legacyIndex": 1014,
+    "legacyNumber": 80,
+    "prompt": "Which Rapid PVST+ feature should be configured on a switch port to immediately send traffic to a connected\nserver as soon as it is active?",
+    "options": [
+      "loop guard",
+      "BPDU guard",
+      "uplinkfast",
+      "portfast"
+    ],
+    "answer": 3,
+    "explanation": "Note:\n\nPortfast is often configured on switch ports that connect to hosts. Interfaces with Portfast enabled will go to\nforwarding state immediately without passing the listening and learning state. Therefore it can save about 30\nto 45 seconds to transition through these states.\n\nWith BPDU Guard, when a PortFast receives a BPDU, it will be shut down to prevent a loop.\n\nUplinkFast is a Cisco specific feature that improves the convergence time of the Spanning-Tree Protocol (STP)\nin the event of the failure of an uplink."
+  },
+  {
+    "legacyIndex": 1015,
+    "legacyNumber": 81,
+    "prompt": "How is noise defined in Wi-Fi?",
+    "options": [
+      "signals from other Wi-Fi networks that interfere with the local signal",
+      "measured difference between the desired Wi-Fi signal and an interfering Wi-Fi signal",
+      "ratio of signal-to-noise rating supplied by the wireless device",
+      "any interference that is not Wi-Fi traffic that degrades the desired signal"
+    ],
+    "answer": 3,
+    "explanation": "Noise is any signal (interference) that is not WiFi traffic such as cordless phones, microwaves, radar, etc."
+  },
+  {
+    "legacyIndex": 1016,
+    "legacyNumber": 82,
+    "prompt": "Refer to the exhibit.\n\nWhich set of commands must be applied to the two switches to configure an LACP Layer 2 EtherChannel?\n\n Option A                                                  Option B\n SW1(config)#interface range f0/13 -14                     SW1(config)#interface range f0/13 -14\n SW1(config-if-range)#channel-group 1 mode                 SW1(config-if-range)#channel-group 1 mode\n desirable                                                 on\n SW2(config)#interface range f0/13 -14                     SW2(config)#interface range f0/13 -14\n SW2(config-if-range)#channel-group 1 mode                 SW2(config-if-range)#channel-group 1 mode\n passive                                                   passive\n\n Option C                                                  Option D\n SW1(config)#interface range f0/13 -14                     SW1(config)#interface range f0/13 -14\n SW1(config-if-range)#channel-group 1 mode                 SW1(config-if-range)#channel-group 1 mode\n active                                                    auto\n SW2(config)#interface range f0/13 -14                     SW2(config)#interface range f0/13 -14\n SW2(config-if-range)#channel-group 1 mode                 SW2(config-if-range)#channel-group 1 mode\n passive                                                   passive",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1017,
+    "legacyNumber": 83,
+    "prompt": "An administrator is configuring a Cisco Catalyst switch so that it will accept management connections only\nfrom hosts in the 203.0.113.0/24 network. Other traffic passing through the switch must transit without\ninterruption. Which two configurations must the engineer apply to the router? (Choose two)",
+    "options": [
+      "ip access-list extended Management\npermit tcp any range 22 23 203.0.113.0 0.0.0.255",
+      "line vty 0 15\naccess-class Management in",
+      "ip access-list standard Management\npermit 203.0.113.0 255.255.255.0",
+      "interface range vlan 1 – 4094\nip access-group Management out",
+      "ip access-list standard Management\npermit 203.0.113.0 0.0.0.255"
+    ],
+    "answer": [
+      1,
+      4
+    ],
+    "type": "multi",
+    "explanation": "When applying access-list to line vty we must use “access-class”, not “access-group”.\n\nThe access-list command “permit tcp any range 22 23 203.0.113.0 0.0.0.255” means permit TCP traffic from\nany source with range 22 (SSH) and 23 (Telnet) to the destination 203.0.113.0/24 (not from source\n203.0.113.0/24) so answer A is not correct.\n\nAnswer C is not correct as it used wrong wildcard mask 255.255.255.0. It should be 0.0.0.255.\n\nAnswer D is not correct as other traffic will be dropped but the questions asks “Other traffic passing through\nthe switch must transit without interruption”."
+  },
+  {
+    "legacyIndex": 1018,
+    "legacyNumber": 84,
+    "prompt": "Which interface on the WLC is limited to one when LAG is in use?",
+    "options": [
+      "AP-manager",
+      "virtual",
+      "trunk",
+      "service"
+    ],
+    "answer": 0,
+    "explanation": "If link aggregation (LAG) is enabled, there can be only one AP-manager interface."
+  },
+  {
+    "legacyIndex": 1019,
+    "legacyNumber": 85,
+    "prompt": "Refer to the exhibit.\n\nConnections must be blocked from PC2 to the file server while still allowing PC2 to connect to other network\nhosts and devices. Which configuration must be used to complete the task?\n\n Option A                                              Option B\n R1(config)#access-list 1 permit 192.168.2.10          R2(config)#access-list 1 deny 192.168.2.10\n R1(config)#access-list 1 deny any                     R2(config)#access-list 1 permit any\n R1(config)#interface g0/1                             R2(config)#interface g0/1\n R1(config-if)#ip access-group 1 out                   R2(config-if)#ip access-group 1 out\n\n Option C                                              Option D\n R2(config)#access-list 1 permit 192.168.2.10          R1(config)#access-list 1 deny 192.168.2.10\n R2(config)#access-list 1 deny 192.168.2.0             R1(config)#access-list 1 permit 192.168.2.0\n 0.0.0.255                                             0.0.0.255\n R2(config)#interface g0/1                             R1(config)#interface g0/0\n R2(config)#ip access-group 1 in                       R1(config-if)#ip access-group 1 in",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 1,
+    "explanation": "Block connection from R2 to Server -> “deny 192.168.2.10” and we should apply to R2 which is closest to\nthe Server so that it does not affect other devices."
+  },
+  {
+    "legacyIndex": 1020,
+    "legacyNumber": 86,
+    "prompt": "Which protocol does a REST API use to communicate?",
+    "options": [
+      "HTTP",
+      "STP",
+      "SNMP",
+      "SSH"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1021,
+    "legacyNumber": 87,
+    "prompt": "What is a function of a firewall on an enterprise network?",
+    "options": [
+      "It acts as the intermediary device between the enterprise and its ISP",
+      "It serves as a default gateway to hosts on the internet",
+      "It processes traffic based on stateless inspection",
+      "It allows and denies ingress and egress traffic"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1022,
+    "legacyNumber": 88,
+    "prompt": "Which encryption mode is used when a packet is sent from a site-to-site VPN connection where the source\nand destination IP address portion of a packet is unencrypted?",
+    "options": [
+      "PPTP",
+      "Secure Shell",
+      "Transport",
+      "PPPoE"
+    ],
+    "answer": 2,
+    "explanation": "Site-to-site VPN uses IPsec for encryption. IPsec has two modes: Tunnel and Transport mode.\n\nTransport Mode: The main difference in transport mode is that it retains the original IP header. In other\nwords, payload data transmitted within the original IP packet is protected, but not the IP header."
+  },
+  {
+    "legacyIndex": 1023,
+    "legacyNumber": 89,
+    "prompt": "Refer to the exhibit.\n\nAn engineer just installed network 10.120.10.0/24. Which configuration must be applied to the R14 router to\nadd the new network to its OSPF routing table?",
+    "options": [
+      "router ospf 100\nnetwork 10.120.10.0 0.0.0.255 area 0",
+      "router ospf 100 area 0\nnetwork 10.120.10.0 0.0.0.255",
+      "router ospf 120\nnetwork 10.120.10.0 255.255.255.0 area 0\nip route 10.120.10.0 255.255.255.0 fa0/1",
+      "router ospf 100\nnetwork 10.120.10.0 255.255.255.0 area 0"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1024,
+    "legacyNumber": 90,
+    "prompt": "Which key function is provided by the data plane?",
+    "options": [
+      "making routing decisions",
+      "exchanging routing table data",
+      "forwarding traffic to the next hop",
+      "originating packets"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1025,
+    "legacyNumber": 91,
+    "prompt": "Refer to the exhibit.\n\nAn engineer configures interface fa0/1 on SW1 and SW2 to pass traffic from two different VLANs. For security\nreasons, company policy requires the native VLAN to be set to a nondefault value. Which configuration meets\nthis requirement?\n\n                                                       Option B\n Option A\n                                                       Switch(config-if)#switchport mode access\n Switch(config-if)#switchport mode dynamic             Switch(config-if)#switchport trunk\n Switch(config-if}#switchport access vlan              encapsulation dot1q\n 100,105                                               Switch(config-if)#switchport access vlan\n Switch(config-if)#switchport trunk native vlan 1      100.105\n                                                       Switch(config-if)#switchport trunk native vlan 3\n\n Option C\n                                                       Option D\n Switch(config-if)#switchport mode trunk\n                                                       Switch(config-if)#switchport mode trunk\n Switch(config-if)# switch port trunk\n                                                       Switch(config-if)#switchport trunk\n encapsulation isl\n                                                       encapsulation dot1q\n Switch(config-if)#switchport trunk allowed vlan\n                                                       Switch(config-if)#switchport trunk allowed vlan\n 100,105\n                                                       100,105\n Switch(config-if)#s witch port trunk native vlan\n                                                       Switch(config if)#switchport trunk native vlan 3\n 1",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 3,
+    "explanation": "The default value of native VLAN is 1 so we have to use another number for non-default value. Also there are\ntwo different VLANs so we have to set both ends to mode trunk."
+  },
+  {
+    "legacyIndex": 1026,
+    "legacyNumber": 92,
+    "prompt": "Which fact must the engineer consider when implementing syslog on a new network?",
+    "options": [
+      "Syslog defines the software or hardware component that triggered the message",
+      "By default, all message levels are sent to the syslog server",
+      "The logging level defines the severity of a particular message",
+      "There are 16 different logging levels (0-15)"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1027,
+    "legacyNumber": 93,
+    "prompt": "Which cable type must be used when connecting a router and switch together using these criteria?\n\n– Pins 1 and 2 are receivers and pins 3 and 6 are transmitters\n– Auto detection MDI-X is unavailable",
+    "options": [
+      "crossover",
+      "rollover",
+      "console",
+      "straight-through"
+    ],
+    "answer": 3,
+    "explanation": "When auto-MDIX is enabled, the interface automatically detects the required cable connection type (straight-\nthrough or crossover) and configures the connection appropriately. When connecting to switches without the\nauto-MDIX feature, straight-through cables must be used to connect to devices such as servers,\nworkstations, or routers and crossover cables must be used to connect to other switches or repeaters.\n\n(Without MDI-X) To specify when we use crossover cable or straight-through cable, we should remember:\nGroup 1: Router, Host, Server\nGroup 2: Hub, Switch\nOne device in Group 1 + One device in Group 2: use straight-through cable\nTwo devices in the same group: use crossover cable"
+  },
+  {
+    "legacyIndex": 1028,
+    "legacyNumber": 94,
+    "prompt": "Refer to the exhibit.\n\nAn administrator is configuring a new WLAN for a wireless network that has these requirements\n– Dual-band clients that connect to the WLAN must be directed to the 5-GHz spectrum\n– Wireless clients on this WLAN must be able to apply VLAN settings on the returned RADIUS attributes\n\nWhich two actions meet these requirements? (Choose two)",
+    "options": [
+      "Enable the Client Band Select option.",
+      "Enable the Coverage Hole Detection option",
+      "Enable the Allow AAA Override option",
+      "Set the MFP Client Protection option to Required",
+      "Enable the Aironet IE option"
+    ],
+    "answer": [
+      0,
+      2
+    ],
+    "type": "multi",
+    "explanation": "Client Band Select is a new feature that encourages dual band clients to connect to 5 G-Hz networks. Band\nselect is disabled by default. The Band Select function provides a better wireless experience for users.\n\nThe AAA Override option of a WLAN enables you to configure the WLAN for identity networking. It enables\nyou to apply VLAN tagging, Quality of Service (QoS), and Access Control Lists (ACLs) to individual clients\nbased on the returned RADIUS attributes from the AAA server."
+  },
+  {
+    "legacyIndex": 1029,
+    "legacyNumber": 95,
+    "prompt": "What is a similarity between global and unique local IPv6 addresses?",
+    "options": [
+      "They are part of the multicast IPv6 group type",
+      "They are routable on the global internet",
+      "They are allocated by the same organization",
+      "They use the same process for subnetting"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1030,
+    "legacyNumber": 96,
+    "prompt": "What is the purpose of the service-set identifier?",
+    "options": [
+      "It identifies a wireless network for a mobile device to connect",
+      "It identifies the wired network to which a network device is connected",
+      "It identifies the wireless network to which an application must connect",
+      "It identifies the wired network to which a user device is connected"
+    ],
+    "answer": 0,
+    "explanation": "The service-set identifier (SSID) is a unique identifier that wireless networking devices use to establish and\nmaintain wireless connectivity."
+  },
+  {
+    "legacyIndex": 1031,
+    "legacyNumber": 97,
+    "prompt": "In what way does a network supervisor reduce maintenance costs while maintaining network integrity on a\ntraditionally managed network?",
+    "options": [
+      "They install an automated network-monitoring system to provide early warning of network issues",
+      "They employ additional network administrators to proactively manage the network",
+      "They use automation to centralize network-management tasks",
+      "They automate change-management processes that verify issue resolution"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1032,
+    "legacyNumber": 98,
+    "prompt": "How does a network administrator securely manage an AP in lightweight mode?",
+    "options": [
+      "using the WLC GUI via HTTPS",
+      "using the CLI via an out-of-band connection",
+      "using the CLI via a virtual interface with SSH",
+      "using the AP GUI via an in-band SSH connection"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1033,
+    "legacyNumber": 99,
+    "prompt": "Which protocol is implemented when an organization must verify network performance, troubleshoot issues\nand use an agent to communicate between monitoring tools and end devices?",
+    "options": [
+      "FTP",
+      "NTP",
+      "NFS",
+      "SNMP"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1034,
+    "legacyNumber": 100,
+    "prompt": "What is the difference between AAA authentication and authorization?",
+    "options": [
+      "Authentication controls the system processes a user accesses, and authorization logs the activities the user initiates.",
+      "Authentication identifies a user who is attempting to access a system, and authorization validates the user s password",
+      "Authentication identifies and verifies a user who is attempting to access a system, and authorization controls the tasks the user performs",
+      "Authentication verifies a username and password, and authorization handles the communication between the authentication agent and the user database"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1035,
+    "legacyNumber": 101,
+    "prompt": "Which syslog message logging level displays interface line protocol up/down events?",
+    "options": [
+      "informational",
+      "alerts",
+      "debugging",
+      "notifications"
+    ],
+    "answer": 3,
+    "explanation": "An example of interface line protocol down is shown below:\n\n %LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/1, changed state to\n down\nNumber 5 in the above message represents for the Notification Level (Normal, but significant, conditions\nexist).\n\nThe Syslog levels are:\n\n Le\n          Keyword        Description\n vel\n          emergencie\n 0                       System is unusable\n          s\n 1        alerts         Immediate action is needed\n 2        critical       Critical conditions exist\n 3        errors         Error conditions exist\n\n 4       warnings        Warning conditions exist\n                         Normal, but significant, conditions\n 5       notification\n                         exist\n         informatio\n 6                       Informational messages\n         nal\n 7       debugging       Debugging messages\nIn fact there are two correct answers in this question: Notification and informational but the first answer is\nenough."
+  },
+  {
+    "legacyIndex": 1037,
+    "legacyNumber": 1,
+    "prompt": "A network administrator wants the syslog server to filter incoming messages into different files based on\ntheir importance. Which filtering criteria must be used?",
+    "options": [
+      "message body",
+      "process ID",
+      "level",
+      "facility"
+    ],
+    "answer": 2,
+    "explanation": "Syslog levels indicate the severity or importance of log messages. According to this figure then the best\nanswer should be “level”:\n\nA syslog message has the following format:\n\n seq no:timestamp%FACILTY-SEVERITY-MNEMONIC: message\n text\nEach portion of a syslog message has a specific meaning:\n+ Seq no: a sequence number only if the service sequence-numbers global configuration command is\nconfigured\n+ Timestamp: Date and time of the message or event. This information appears only if the service\ntimestamps global configuration command is configured.\n+ FACILITY: This tells the protocol, module, or process that generated the message. Some examples are SYS\nfor the operating system, IF for an interface…\n+ SEVERITY: A number from 0 to 7 designating the importance of the action reported.\n\nNote: The facility value is used to determine which process of the machine created the message. Since the\nSyslog protocol was originally written on BSD Unix, the Facilities reflect the names of UNIX processes and\ndaemons -> Answer D is not correct."
+  },
+  {
+    "legacyIndex": 1038,
+    "legacyNumber": 2,
+    "prompt": "What is a characteristic of frame switching?",
+    "options": [
+      "populates the ARP table with the egress port",
+      "drops received MAC addresses not listed in the address table",
+      "stores and forwards frames in a buffer and uses error checking",
+      "rewrites the source and destination MAC address"
+    ],
+    "answer": 2,
+    "explanation": "Frame switching is one of a few important switching concepts that describe how a switch operates.\n\n2.1.b Frame switching\nLAN switches are characterized by the forwarding method that they support, such as a store-and-forward\nswitch, cut-through switch, or fragment-free switch.\nStore-and-forward switches store the entire frame in internal memory and check the frame for errors before\nforwarding the frame to its destination.\n…"
+  },
+  {
+    "legacyIndex": 1039,
+    "legacyNumber": 3,
+    "prompt": "What is represented by the word “R20” within this JSON schema?\n\n 1    [\n 2    {\"firewall\": \"FW12\", \"port\":\"e0/23\"},\n 3    {\"router\": \"R20\", \"port\":\"te5/5\"},\n 4    {\"switch\": \"SW25\", \"port\":\"ge1/36\"},\n 5    ]",
+    "options": [
+      "value",
+      "array",
+      "key",
+      "object"
+    ],
+    "answer": 0,
+    "explanation": "JSON syntax structure:\n\n+ A key/value pair consists of a key (must be a string in double quotation marks \"\"), followed by a colon :,\nfollowed by a value. For example: “name”:”John”\n\nTherefore in this question, “router” is the key while “R20” is the value."
+  },
+  {
+    "legacyIndex": 1040,
+    "legacyNumber": 4,
+    "prompt": "Refer to the exhibit.\n\nRouter R1 receives static routing updates from routers A, B, C. and D. The network engineer wants R1 to\nadvertise static routes in OSPF area 1. Which summary address must be advertised in OSPF?",
+    "options": [
+      "10.1.40.0/25",
+      "10.1.40.0/24",
+      "10.1.41.0/25",
+      "10.1.40.0/23"
+    ],
+    "answer": 3,
+    "explanation": "Maybe there is a typo in this question for the subnet of router C as 10.1.40.176/28 belongs to\n10.1.40.128/25 subnet of router B. Therefore we guess in fact the subnet of router C is 10.1.41.176/28.\n\nIn four options only the subnet mask of /23 can cover all of these subnets so answer D is the best choice."
+  },
+  {
+    "legacyIndex": 1041,
+    "legacyNumber": 5,
+    "prompt": "Refer to the exhibit.\n\nWhich switch becomes the root bridge?",
+    "options": [
+      "SW 1\nBridge Priority – 28672\nmac-address 00:10:a1:51:57:51",
+      "SW 2\nBridge Priority – 28672\nmac-address 00:10:a1:82:03:94",
+      "SW3\nBridge Priority – 12288\nmac-address 00:10:a1:95:2b:77",
+      "SW4\nBridge Priority – 12288\nmac-address 00:10:a1:03:42:e8"
+    ],
+    "answer": 3,
+    "explanation": "The switch with lowest bridge priority will be chosen the root bridge. If many switches have the same bridge\npriority then the lowest MAC address would be chosen."
+  },
+  {
+    "legacyIndex": 1043,
+    "legacyNumber": 7,
+    "prompt": "Drag and drop the characteristic from the left onto the IPv6 address type on the right.",
+    "type": "match",
+    "items": [
+      "never used as a source address",
+      "provides one-to-many communications",
+      "unable to route on the internet",
+      "allows sites to be combined without address conflicts"
+    ],
+    "choices": [
+      "Multicast",
+      "Unique Local"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1044,
+    "legacyNumber": 8,
+    "prompt": "Refer to the exhibit.\n\nThe IPv6 address for the LAN segment on router R2 must be configured using the EUI-64 format. When\nconfigured which ipv6 address is produced by the router?",
+    "options": [
+      "2001:db8:9bb6:6bb9:C801:B6FF:FEB4:1",
+      "2001:db8:9bb6:6bb9:C001:6BFE:FF01:1",
+      "2001:db8:9bb6:6bb9:C081:B6FF:FF4B:1",
+      "2001:db8:9bb6:6bb9:4626:109F:FE56:1"
+    ],
+    "answer": 0,
+    "explanation": "The EUI-64 format must have “FF:FE” in the middle of the MAC address of E0/1 interface of R1 -> Only\nanswer A is correct."
+  },
+  {
+    "legacyIndex": 1045,
+    "legacyNumber": 9,
+    "prompt": "Drag and drop the management connection types from the left onto the definitions on the right.",
+    "type": "match",
+    "items": [
+      "supports clear-text connections to the controller CLI",
+      "supports physical connections over a serial cable",
+      "supports secure web access for management of the device",
+      "supports encrypted access to CLI and a secure channel for data transfer"
+    ],
+    "choices": [
+      "Telnet",
+      "console",
+      "HTTPS",
+      "SSH"
+    ],
+    "answer": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1046,
+    "legacyNumber": 10,
+    "prompt": "What must be considered before deploying virtual machines?",
+    "options": [
+      "location of the virtual machines within the data center environment",
+      "whether to leverage VSM to map multiple virtual processors to two or more virtual machines",
+      "resource limitations, such as the number of CPU cores and the amount of memory",
+      "support for physical peripherals, such as monitors, keyboards, and mice"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1047,
+    "legacyNumber": 11,
+    "prompt": "What is the role of the root port in a switched network?",
+    "options": [
+      "It replaces the designated port when the designated port fails",
+      "It is the best path to the root from a nonroot switch",
+      "It replaces the designated port when the root port fails",
+      "It is administratively disabled until a failover occurs"
+    ],
+    "answer": 1,
+    "explanation": "Root port is the port that is closest to the root bridge, which means it is the port that receiving the lowest-\ncost BPDU from the root. Every non-root bridge must have a root port. All root ports are placed in forwarding\nstate."
+  },
+  {
+    "legacyIndex": 1048,
+    "legacyNumber": 12,
+    "prompt": "Which type of encryption does WPA1 use for data protection?",
+    "options": [
+      "AES",
+      "TKIP",
+      "PEAP",
+      "EAP"
+    ],
+    "answer": 1,
+    "explanation": "By default, WPA1 uses Temporal Key Integrity Protocol (TKIP) and message integrity check (MIC) for data\nprotection."
+  },
+  {
+    "legacyIndex": 1049,
+    "legacyNumber": 13,
+    "prompt": "Refer to the exhibit.\n\n R_1# show ip route\n\n               .....\n\n D         192.168.20.0/26 [90/24513456] via 10.10.10.1\n R         192.168.20.0/24 [120/5] via 10.10.10.2\n 0         192.168.0.0/19 [110/219414] via 10.10.10.13\n B         192.168.0.0/16 is variably subnetted, 4 subnets,4 masks\n D         192.168.20.0/27 [90/4123710] via 10.10.10.12\n D         192.168.20.0/25 [90/14464211] via 10.10.10.11\n S*        0.0.0.0/0 [1/0] via 10.10.10.14\n\nPackets are flowing from 192.168.10.1 to the destination at IP address 192.168.20.75. Which next hop will\nthe router select for the packet?",
+    "options": [
+      "10.10.10.1",
+      "10.10.10.11",
+      "10.10.10.12",
+      "10.10.10.14"
+    ],
+    "answer": 1,
+    "explanation": "The destination at IP address 192.168.20.75 does not belong to 192.168.20.0/26 or 192.168.20.0/27. It\nonly belongs to 192.168.20.0/25 (increment: 128) so the next hop router will be 10.10.10.11."
+  },
+  {
+    "legacyIndex": 1050,
+    "legacyNumber": 14,
+    "prompt": "What happens when a switch receives a frame with a destination MAC address that recently aged out?",
+    "options": [
+      "The switch references the MAC address aging table for historical addresses on the port that received the frame",
+      "The switch floods the frame to all ports in all VLANs except the port that received the frame",
+      "The switch drops the frame and learns the destination MAC address again from the port that received the frame",
+      "The switch floods the frame to all ports in the VLAN except the port that received the frame"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1051,
+    "legacyNumber": 15,
+    "prompt": "What is used to identify spurious DHCP servers?",
+    "options": [
+      "DHCPREQUEST",
+      "DHCPDISCOVER",
+      "DHCPACK",
+      "DHCPOFFER"
+    ],
+    "answer": 1,
+    "explanation": "You can detect spurious DHCP servers by sending dummy DHCPDISCOVER packets out to all of the DHCP\nservers so that a response is sent back to the switch. We can also prevent spurious DHCP servers by using\nDHCP Snooping feature on switches."
+  },
+  {
+    "legacyIndex": 1052,
+    "legacyNumber": 16,
+    "prompt": "Refer to the exhibit.\n\nWhich per-hop QoS behavior is R1 applying to incoming packets?",
+    "options": [
+      "queuing",
+      "marking",
+      "shaping",
+      "policing"
+    ],
+    "answer": 0,
+    "explanation": "Forwarding Per-Hop Behavior (PHB) is a mechanism used in Quality of Service (QoS) to control the behavior\nof packets as they traverse a network. The following are some of the key components of PHB:\n\n1. Classification: This is the process of categorizing network traffic into different groups based on specific\ncriteria such as IP address, protocol, port, or application type.\n\n2. Marking: This is the process of setting a marking or tag on a packet, indicating its priority level or class.\nMarking is typically done at the edge of the network and is used by the network devices to make QoS\ndecisions.\n\n3. Queuing: This is the process of holding packets in a queue and scheduling their transmission based on\ntheir priority. Queuing algorithms, such as Weighted Fair Queuing (WFQ), ensure that high-priority packets\nare transmitted before low-priority packets.\n\n4. Congestion: This occurs when the network becomes congested and there is not enough bandwidth to\nhandle all the traffic. PHB includes mechanisms, such as Random Early Detection (RED), to help manage\ncongestion by discarding low-priority packets before high-priority packets.\n\n5. Policing: This is the process of monitoring network traffic and enforcing specified traffic rate limits. If a\npacket exceeds the specified rate limit, it can be discarded or marked with a lower priority.\n\n6. Shaping: This is the process of controlling the rate at which packets are transmitted into the network. This\nhelps to ensure that the network does not become congested and that all packets are transmitted in a timely\nmanner.\n\nIn this question, answer “marking” is not correct as the packets have been classified into different forwarding\nclasses already. Answers “shaping” and “policing” seems to be incorrect. Only answer “queuing” is the best\nchoice left."
+  },
+  {
+    "legacyIndex": 1053,
+    "legacyNumber": 17,
+    "prompt": "What is the temporary state that switch ports always enter immediately after the boot process when Rapid\nPVST+ is used?",
+    "options": [
+      "discarding",
+      "listening",
+      "forwarding",
+      "learning"
+    ],
+    "answer": 0,
+    "explanation": "At first, a switch port starts in a discarding state, a discarding port does not forward any frames nor does it\nlearn MAC addresses, and it also listens for BPDUs. Backup and alternate ports remain discarding.\n\nIn RSTP if a port is elected as a Root port or Designated port, the transition will directly take place from a\ndiscarding state to a learning state. Hence, RSTP doesn’t need a listening state. A learning port adds MAC\naddresses into the Content addressable memory table; However, it can not forward frames.\n\nIn the next phase, a learning port transitions into a forwarding state. A forwarding port is completely\nfunctional i.e., it learns MAC addresses, sends and listens for BPDUs, and forwards frames."
+  },
+  {
+    "legacyIndex": 1054,
+    "legacyNumber": 18,
+    "prompt": "A wireless access point is needed and must meet these requirements:\n* “zero-touch” deployed and managed by a WLC\n* process only real-time MAC functionality\n* used in a split-MAC architecture.\n\nWhich access point type must be used?",
+    "options": [
+      "autonomous",
+      "lightweight",
+      "mesh",
+      "cloud-based"
+    ],
+    "answer": 1,
+    "explanation": "+ Lightweight: The term ‘lightweight’ refers to the fact that these devices cannot work independently. A\nCisco lightweight AP (LAP) has to join a Wireless LAN Controller (WLC) to function. LAP and WLC\ncommunicate with each other via a logical pair of CAPWAP tunnels.\n\nNote: The LAP-WLC division of labor is known as a split-MAC architecture, where the normal MAC operations\nare pulled apart into two distinct locations. This occurs for every LAP in the network; each one must boot and\nbind itself to a WLC to support wireless clients. The WLC becomes the central hub that supports a number of\nLAPs scattered about in the network."
+  },
+  {
+    "legacyIndex": 1055,
+    "legacyNumber": 19,
+    "prompt": "Which components are contained within a virtual machine?",
+    "options": [
+      "physical resources, including the NIC, RAM, disk, and CPU",
+      "configuration files backed by physical resources from the Hypervisor",
+      "applications running on the Hypervisor",
+      "processes running on the Hypervisor and a guest OS"
+    ],
+    "answer": 1,
+    "explanation": "A Virtual Machine (VM) is a compute resource that uses software instead of a physical computer to run\nprograms and deploy apps.\n\nA virtual machine needs four core resources: CPU, memory, network, and storage (disk). These resources are\ngranted to the virtual machine through the configuration of the virtual hardware.\n\nNote: Answer A is not correct as a VM does not contain physical resources. A VM only uses a virtual NIC, a\nportion of physical RAM and virtual CPU (vCPU)."
+  },
+  {
+    "legacyIndex": 1056,
+    "legacyNumber": 20,
+    "prompt": "Refer to the exhibit.\n\nAn engineer assigns IP addressing to the current VLAN with three PCs. The configuration must also account\nfor the expansion of 30 additional VLANs using the same Class C subnet for subnetting and host count. Which\ncommand set fulfills the request while reserving address space for the expected growth?",
+    "options": [
+      "Switch(config)#interface vlan 10\nSwitch(config-if)#ip address 192.168.0.1 255.255.255.252",
+      "Switch(config)#interface vlan 10\nSwitch(config-if)#ip address 192.168.0.1 255.255.255.248",
+      "Switch(config)#interface vlan 10\nSwitch(config-if)#ip address 192.168.0.1 255.255.255.0",
+      "Switch(config)#interface vlan 10\nSwitch(config-if)#ip address 192.168.0.1 255.255.255.128"
+    ],
+    "answer": 1,
+    "explanation": "We need 30 additional VLANs so we need 30 subnets. Therefore we need to borrow 5 bits (2 5 = 32 > 30)\nfrom 192.168.0.0/24 -> The new subnet masks should be /29 (/24 + 5) or 255.255.255.248."
+  },
+  {
+    "legacyIndex": 1057,
+    "legacyNumber": 21,
+    "prompt": "Which interface IP address serves as the tunnel source for CAPWAP packets from the WLC to an AP?",
+    "options": [
+      "service",
+      "trunk",
+      "AP-manager",
+      "virtual AP connection"
+    ],
+    "answer": 2,
+    "explanation": "The AP-manager IP address is used as the tunnel source for CAPWAP packets from the controller to the\naccess point and as the destination for CAPWAP packets from the access point to the controller."
+  },
+  {
+    "legacyIndex": 1058,
+    "legacyNumber": 22,
+    "prompt": "What does a switch search for in the CAM table when forwarding a frame?",
+    "options": [
+      "source MAC address and aging time",
+      "destination MAC address and flush time",
+      "source MAC address and source port",
+      "destination MAC address and destination port"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1059,
+    "legacyNumber": 23,
+    "prompt": "Which type of hypervisor operates without an underlying OS to host virtual machines?",
+    "options": [
+      "Type 1",
+      "Type 2",
+      "Type 3",
+      "Type 12"
+    ],
+    "answer": 0,
+    "explanation": "There are two types of hypervisors: type 1 and type 2 hypervisor.\n\nIn type 1 hypervisor (or native hypervisor), the hypervisor is installed directly on the physical server. Then\ninstances of an operating system (OS) are installed on the hypervisor. Type 1 hypervisor has direct access to\nthe hardware resources. Therefore they are more efficient than hosted architectures. Some examples of type\n1 hypervisor are VMware vSphere/ESXi, Oracle VM Server, KVM and Microsoft Hyper-V.\n\nIn contrast to type 1 hypervisor, a type 2 hypervisor (or hosted hypervisor) runs on top of an operating\nsystem and not the physical hardware directly. A big advantage of Type 2 hypervisors is that management\nconsole software is not required. Examples of type 2 hypervisor are VMware Workstation (which can run on\nWindows, Mac and Linux) or Microsoft Virtual PC (only runs on Windows)."
+  },
+  {
+    "legacyIndex": 1060,
+    "legacyNumber": 24,
+    "prompt": "Refer to the exhibit.\n\n Connection-specific DNS Suffix . :\n\n    Description .................: Intel(R) Ethernet Connection (2) I218-V\n\n    Physical Address.............: D0-50-99-47-A9-7F\n\n    DHCP Enabled.................: Yes\n\n    Autoconfiguration Enabled....: Yes\n\n    Link-local IPv6 Address .....: fe80::8809:9772:c583:6bl8%15(Preferred)\n\n    IPv4 Address.................: 192.168.69.132(Preferred)\n\n    Subnet Mask .................: 255.255.255.0\n\n    Lease Obtained...............: Thursday, January 21, 2021 11:10:46 PM\n\n    Lease Expires ...............: Wednesday, February 3, 2021 11:27:29 AM\n\n    Default Gateway..............: 192.168.69.1\n\n    DHCP Server .................: 192.168.69.1\n\n    DHCPv6 IAID .................: 231755929\n\n    DHCPv6 Client DUID...........: 00-01-00-01-26-D7-BB-3F-D0-50-99-47-A9-7F\n\n    DNS Servers .................: 192.168.69.1\n\n    NetBIOS over Tcpip...........: Enabled\n\nWhat does the host do when using the IPv4 Preferred function?",
+    "options": [
+      "It continues to use a statically assigned IPv4 address",
+      "It forces the DNS server to provide the same IPv4 address at each renewal",
+      "It requests the same IPv4 address when it renews its lease with the DHCP server",
+      "It prefers a pool of addresses when renewing the IPv4 host IP address"
+    ],
+    "answer": 2,
+    "explanation": "“Preferred” is what your client will ask the DHCP server for when it gets/renews the lease."
+  },
+  {
+    "legacyIndex": 1061,
+    "legacyNumber": 25,
+    "prompt": "Drag and drop the characteristic from the left onto the IPv6 address type on the right.",
+    "type": "match",
+    "items": [
+      "counterpart of private IPv4 addresses",
+      "may be used by multiple organizations at the same time",
+      "publicly routable in the same way as IPv4 addresses",
+      "provides for one-to-one communication"
+    ],
+    "choices": [
+      "Unique Local",
+      "Global Unicast Address"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1062,
+    "legacyNumber": 26,
+    "prompt": "How does MAC learning function?",
+    "options": [
+      "restricts ports to a maximum of 10 dynamically-learned addresses",
+      "increases security on the management VLAN",
+      "associates the MAC address with the port on which it is received",
+      "drops received MAC addresses not listed in the address table"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1063,
+    "legacyNumber": 27,
+    "prompt": "What are two capabilities provided by VRRP within a LAN network? (Choose two)",
+    "options": [
+      "load sharing",
+      "bandwidth optimization",
+      "dynamic routing updates",
+      "redundancy",
+      "granular QoS"
+    ],
+    "answer": [
+      0,
+      3
+    ],
+    "type": "multi",
+    "explanation": "Virtual Router Redundancy Protocol (VRRP) is an open standard protocol, which is used to provide\nredundancy in a network -> Answer D is correct.\n\nIn load balancing mode, a VRRP group maps its virtual IP address to multiple virtual MAC addresses: one\nvirtual MAC address for each group member. The master uses these virtual MAC addresses of the member\nrouters to respond to IPv4 ARP requests or IPv6 ND requests from hosts. Therefore, every router in this\nVRRP group can forward traffic and traffic from hosts is distributed across the VRRP group members ->\nAnswer A is correct."
+  },
+  {
+    "legacyIndex": 1064,
+    "legacyNumber": 28,
+    "prompt": "Drag and drop the characteristic from the left onto the device type on the right. Not all characteristics are\nused.",
+    "type": "match",
+    "items": [
+      "formats an Ethernet frame and forwards to a destination",
+      "supports both IEEE 802.11 and Ethernet standards",
+      "provides centralized management and security",
+      "makes forwarding decisions when in LWAPP mode"
+    ],
+    "choices": [
+      "Access Point",
+      "Wireless LAN Controller"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": "Lightweight (LWAPP) Mode: Centrally managed by a Wireless LAN Controller or WLC. The WLC can be a\nphysical appliance for large networks or it can be a virtual machine. Sometimes it is embedded into ISR\nrouter or a switch such as Cat3850. Cisco calls it “Converged Access”. The “brain” is at the controller level.\n\nThink of the AP is simply an Ethernet extension transmitting data frames between wire and wireless. The\ncontroller tells the AP who to transmit to and what to transmit and all added on security, OoS and so on.\n\nAn access point connects to a wired router, switch, or hub via an Ethernet cable, and projects a WiFi signal to\na designated area so it supports Ethernet standards too."
+  },
+  {
+    "legacyIndex": 1065,
+    "legacyNumber": 29,
+    "prompt": "Refer to the exhibit.\n\nA network engineer executes the show ip route command on router D. What is the next hop to network\n192.168.1.0/24 and why?",
+    "options": [
+      "The next hop is 10.0.2.1 because it is a link-state routing protocol",
+      "The next hop is 10.0.0.1 because it has a better administrative distance",
+      "The next hop is 10.0.2.1 because it uses distance vector routing",
+      "The next hop is 10.0.0.1 because it has a higher metric"
+    ],
+    "answer": 1,
+    "explanation": "We don’t care about metric in this question as Administrative Distances (AD) are compared first.\n\nRouter D receives two paths for networks 192.168.1.0/24:\n+ From Router C: OSPF External route with AD of 110\n+ From Router B: EIGRP route with AD of 90\n\n-> Route from Router B wins with lower AD."
+  },
+  {
+    "legacyIndex": 1066,
+    "legacyNumber": 30,
+    "prompt": "Drag and drop the statement about AAA services from the left to the corresponding AAA services on the\nright.",
+    "type": "match",
+    "items": [
+      "It performs user validation via TACACS+",
+      "It verifies “who you are”",
+      "It grants access to network assets, such as FTP servers",
+      "It restricts the CLI commands that a user is able to perform"
+    ],
+    "choices": [
+      "Authentication",
+      "Authorization"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1067,
+    "legacyNumber": 31,
+    "prompt": "Refer to the exhibit.\n\nThe IPv6 address for the LAN segment on router R2 must be configured using the EUI-64 format. When\nconfigured which ipv6 address is produced by the router?",
+    "options": [
+      "2001:db8:d955:1008:1030:ABFF:FECC:1",
+      "2001:db8:d955:1008:12D8:BAFE:FF01:1",
+      "2001:db8:d955:1008:10D8:BAFF:FEC2:1",
+      "2001:db8:d955:1008:4635:278F:FE95:1"
+    ],
+    "answer": 2,
+    "explanation": "The EUI-64 format must have “FF:FE” in the middle of the MAC address of E0/1 interface of R2 and “C2:1”\n(means “C2:0001”) at the end -> Only answer C is correct."
+  },
+  {
+    "legacyIndex": 1068,
+    "legacyNumber": 32,
+    "prompt": "Which interface is used to send traffic to the destination network?\n\n O 10.18.75.113/27 [110/6906] via\n G0/6\n O 10.18.75.113/27 [110/23018] via\n G0/3\n R 10.18.75.113/27 [120/16] via G0/16\n R 10.18.75.113/27 [120/14] via G0/23",
+    "options": [
+      "G0/6",
+      "G0/3",
+      "G0/16",
+      "G0/23"
+    ],
+    "answer": 0,
+    "explanation": "The first entry has lowest AD (110) and lowest metric (6906) so it is the best route and will be installed into\nthe routing table."
+  },
+  {
+    "legacyIndex": 1069,
+    "legacyNumber": 33,
+    "prompt": "Which AP mode is used for capturing wireless traffic and forwarding that traffic to a PC that is running a\npacket analyzer?",
+    "options": [
+      "monitor",
+      "sniffer",
+      "bridge",
+      "rouge detector"
+    ],
+    "answer": 1,
+    "explanation": "+ Sniffer mode: run as a sniffer and captures and forwards all the packets on a particular channel to a\nremote machine where you can use protocol analysis tool (Wireshark, Airopeek, etc) to review the packets\nand diagnose issues. Strictly used for troubleshooting purposes.\n\nNote: Rogue detector mode: monitor for rogue APs. It does not handle data at all."
+  },
+  {
+    "legacyIndex": 1070,
+    "legacyNumber": 34,
+    "prompt": "What is a characteristic of a Layer 2 switch?",
+    "options": [
+      "provides a single broadcast domain for all connected devices",
+      "tracks the number of active TCP connections",
+      "offers one collision domain for all connected devices",
+      "makes forwarding decisions based on MAC addresses"
+    ],
+    "answer": 3,
+    "explanation": "In this question there are two correct answers which are answer A and answer D. But answer D is better as it\nis an important characteristic of a Layer 2 switch."
+  },
+  {
+    "legacyIndex": 1071,
+    "legacyNumber": 35,
+    "prompt": "What is a characteristic of frame switching?",
+    "options": [
+      "inspects and drops frames from unknown destinations",
+      "floods unknown destinations to all ports except the receiving port",
+      "forwards frames to a neighbor port using CDP",
+      "protects against denial of service attacks"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1072,
+    "legacyNumber": 36,
+    "prompt": "Which interface is used for out-of-band management on a WLC?",
+    "options": [
+      "dynamic",
+      "management",
+      "service port",
+      "virtual"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1073,
+    "legacyNumber": 37,
+    "prompt": "Which interface condition is occurring in this output?\n\n R30# show interface fa0/0\n FastEthernet0/0 is up, line protocol is up\n Hardware is DEC21140, address is ca02.7788.0000 (bia ca02.7788.0000)\n Description: madrid_subnet\n Internet address is 10.32.102.2/30\n MTU 1500 bytes, BW 100000 Kbit/sec, DLY 100 usec,\n reliability 255/255, txload 1/255, rxload 1/255\n Encapsulation ARPA, loopback not set\n Keepalive set (60 sec)\n Half-duplex, 100 Mb/s, 100BaseTX/FX\n ARP type: ARPA, ARP Timeout 04:00:00\n Last input 00:00:01, output 00:00:00, output hang never\n Last clearing of \"show interface\" counters 00:00:18\n Input queue: 0/300/0/0 (size/max/drops/flushes); Total output drops: 0\n Queueing strategy: fifo\n Output queue: 0/300 (size/max)\n 30 second input rate 0 bits/sec, 0 packets/sec\n 30 second output rate 0 bits/sec, 0 packets/sec\n 7331 packets input, 7101162 bytes\n Received 267 broadcasts (0 IP multicasts)\n 35 runts, 0 giants, 0 throttles\n 0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored\n 0 watchdog\n\n 0 input packets with dribble condition detected\n 3927 packets output, 1440403 bytes, 0 underruns\n 0 output errors, 480 collisions, 0 interface resets\n 0 unknown protocol drops\n 0 babbles, 0 late collision, 0 deferred\n 0 lost carrier, 0 no carrier\n 0 output buffer failures, 0 output buffers swapped out",
+    "options": [
+      "bad NIC",
+      "broadcast storm",
+      "queueing",
+      "duplex mismatch"
+    ],
+    "answer": 3,
+    "explanation": "This interface gets high collision (480 collisions) so one end may be set to “Half-duplex”."
+  },
+  {
+    "legacyIndex": 1074,
+    "legacyNumber": 38,
+    "prompt": "Which interface is used to send traffic to the destination network?\n\n D 10.47.114.119/29 [90/6451] via F0/2\n D 10.47.114.119/29 [90/52201] via F0/20\n R 10.47.114.119/29 [120/9] via F0/12\n R 10.47.114.119/29 [120/10] via F0/10",
+    "options": [
+      "F0/2",
+      "F0/20",
+      "F0/12",
+      "F0/10"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1075,
+    "legacyNumber": 39,
+    "prompt": "Why would an administrator choose to implement an automated network management solution?",
+    "options": [
+      "to enable ‘box by box” configuration and deployment",
+      "to limit recurrent management costs",
+      "to reduce operational costs",
+      "to support simpler password policies"
+    ],
+    "answer": 2,
+    "explanation": "Why automate your network?\nOne of the biggest issues for network managers is the growth of IT costs for network operations. The growth\nof data and devices is starting to outpace IT capabilities, making manual approaches nearly impossible. Yet\nup to 95 percent of network changes are performed manually, resulting in operational costs 2 to 3 times\nhigher than the cost of the network. Increased IT automation, centrally and remotely managed, is essential\nfor businesses to keep pace in the digital world.\n\n-> Automated network management solution helps reduce the operational costs."
+  },
+  {
+    "legacyIndex": 1076,
+    "legacyNumber": 40,
+    "prompt": "Refer to the exhibit.\n\nA Cisco WLC administrator is creating a new wireless network with enhanced SSID security. The new network\nmust operate at 2.4 GHz with 54 Mbps of throughput. Which set of tasks must the administrator perform to\ncomplete the configuration?",
+    "options": [
+      "Check the Broadcast SSID check box and set the Radio Policy to 802.11a only.",
+      "Uncheck the Broadcast SSID check box and set the Radio Policy to 802.11a/g only.",
+      "Check the Broadcast SSID check box and set the Radio Policy to 802.11g only.",
+      "Uncheck the Broadcast SSID check box and set the Radio Policy to 802.11g only."
+    ],
+    "answer": 3,
+    "explanation": "“operate at 2.4 GHz with 54 Mbps of throughput” -> Only 804.11g is suitable.\n“enhanced SSID security” so we should not broadcast SSID so that no one can see the SSID.\nWireless Standards\n\n IEEE               Frequency/        Speed          Transmission Range\n Standard           Medium\n\n 802.11             2.4GHz RF         1 to 2Mbps     20 feet indoors.\n\n 802.11a            5GHz              Up to          25 to 75 feet indoors; range can be affected by\n                                      54Mbps         building materials.\n\n 802.11b            2.4GHz            Up to          Up to 150 feet indoors; range can be affected by\n                                      11Mbps         building materials.\n\n 802.11g            2.4GHz            Up to          Up to 150 feet indoors; range can be affected by\n                                      54Mbps         building materials.\n\n 802.11n            2.4GHz/5GHz       Up to          175+ feet indoors; range can be affected by\n                                      600Mbps        building materials."
+  },
+  {
+    "legacyIndex": 1077,
+    "legacyNumber": 41,
+    "prompt": "Under which condition is TCP preferred over UDP?",
+    "options": [
+      "TCP is used when data reliability is critical, and UDP is used when missing packets are acceptable",
+      "UDP is used when low latency is optimal, and TCP is used when latency is tolerable",
+      "UDP is used when data is highly interactive, and TCP is used when data is time-sensitive",
+      "TCP is used when dropped data is more acceptable, and UDP is used when data is accepted out-of-order"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1078,
+    "legacyNumber": 42,
+    "prompt": "Which device protects an internal network from the Internet?",
+    "options": [
+      "firewall",
+      "Layer 2 switch",
+      "router",
+      "access point"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1079,
+    "legacyNumber": 43,
+    "prompt": "An engineer must update the configuration on two PCs in two different subnets to communicate locally with\neach other. One PC is configured with IP address 192.168.25.128/25 and the other with 192.168.25.100/25.\nWhich network mask must the engineer configure on both PCs to enable the communication?",
+    "options": [
+      "255.255.255.248",
+      "255.255.255.0",
+      "255.255.255.252",
+      "255.255.255.224"
+    ],
+    "answer": 1,
+    "explanation": "This question wants to merge two above IP addresses into one subnet so that two PCs can communicate\nlocally so only answer B can do it. With other subnet masks, IP address 192.168.25.128 becomes network\naddress so it cannot be assigned to a host."
+  },
+  {
+    "legacyIndex": 1080,
+    "legacyNumber": 44,
+    "prompt": "Which type of protocol is VRRP?",
+    "options": [
+      "uses dynamic IP address assignment",
+      "uses a destination IP address 224.0.0.102 for router-to-router communication",
+      "uses Cisco-proprietary First Hop Redundancy Protocol",
+      "allows two or more routers to act as a default gateway"
+    ],
+    "answer": 3,
+    "explanation": "VRRP uses multicast address 224.0.0.18 for router-to-router communication -> Answer B is not correct.\n\nVRRP is IETF RFC 3768 standard -> Answer C is not correct.\n\nVRRP does not use dynamic IP address assignment. We can configure any virtual IP address -> Answer A is\nnot correct."
+  },
+  {
+    "legacyIndex": 1081,
+    "legacyNumber": 45,
+    "prompt": "How are RFC 1918 IP addresses used in a network?",
+    "options": [
+      "They are used instead of public addresses for increased security.",
+      "They are used by internet service providers to route over the internet.",
+      "They are used to access the internet from the internal network without conversion.",
+      "They are used with NAT to preserve public IPv4 addresses."
+    ],
+    "answer": 3,
+    "explanation": "The RFC 1918 is Address Allocation for Private Internets, which reserves IP addresses for private and internal\nuse. These addresses can be used for networks that do not need to connect to the Internet.\n\nRFC 1918 addresses are used to conserve IPv4 addresses from depletion by reserving ranges of IPv4\naddresses for the devices which are inside a private network so answer D is the best choice (and it is better\nthan answer A)."
+  },
+  {
+    "legacyIndex": 1082,
+    "legacyNumber": 46,
+    "prompt": "A network architect is deciding whether to implement Cisco autonomous access points or lightweight access\npoints. Which fact about firmware updates must the architect consider?",
+    "options": [
+      "Unlike autonomous access points, lightweight access points require a WLC to implement remote firmware updates.",
+      "Unlike lightweight access points, autonomous access points can recover automatically from a corrupt firmware update",
+      "Unlike lightweight access points, which require redundant WLCs to support firmware upgrades, autonomous access points require only one WLC.",
+      "Unlike autonomous access points, lightweight access points store a complete copy of the current firmware for backup."
+    ],
+    "answer": 0,
+    "explanation": "Cisco Access Points (APs) can operate in one of two modes: autonomous or lightweight\n+ Autonomous: self-sufficient and standalone. Used for small wireless networks. Each autonomous AP must\nbe configured with a management IP address so that it can be remotely accessed using Telnet, SSH, or a\nweb interface. Each AP must be individually managed and maintained unless you use a management\nplatform such as Cisco DNA Center.\n+ Lightweight: The term ‘lightweight’ refers to the fact that these devices cannot work independently. A\nCisco lightweight AP (LAP) has to join a Wireless LAN Controller (WLC) to function. LAP and WLC\ncommunicate with each other via a logical pair of CAPWAP tunnels."
+  },
+  {
+    "legacyIndex": 1083,
+    "legacyNumber": 47,
+    "prompt": "A DHCP pool has been created with the name CONTROL. The pool uses the next to last usable IP address as\nthe default gateway for the DHCP clients. The server is located at 172.16.32.15. What is the next step in the\nprocess for clients on the 192.168.52.0/24 subnet to reach the DHCP server?",
+    "options": [
+      "ip forward-protocol udp 137",
+      "ip default-network 192.168.52.253",
+      "ip default-gateway 192.168.52.253",
+      "ip helper-address 172.16.32.15"
+    ],
+    "answer": 3,
+    "explanation": "We see the server is located in a different subnet from the clients so we need to configure the “ip helper-\naddress 172.16.32.15” on the router so that DHCP messages can reach the server."
+  },
+  {
+    "legacyIndex": 1084,
+    "legacyNumber": 48,
+    "prompt": "Refer to the exhibit.\n\n R1#\n\n Gateway of last resort is 10.56.0.1 to network 0.0.0.0\n\n S*    0.0.0.0/0 [1/0] via 10.56.0.1\n\n        10.0.0.0/8 is variably subnetted, 2 subnets, 2 masks\n\n C        10.56.0.0/16 is directly connected, Null0\n C        10.56.0.0/26 is directly connected, Vlan58\n C        10.56.0.0/17 is directly connected, Vlan59\n C        10.56.0.0/24 is directly connected, Vlan60\n\nWhen router R1 receives a packet with destination IP address 10.56.0.62, through which interface does it\nroute the packet?",
+    "options": [
+      "Vlan59",
+      "Vlan60",
+      "Null0",
+      "Vlan58"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1085,
+    "legacyNumber": 49,
+    "prompt": "Refer to the exhibit.\n\nA network engineer is verifying the settings on a new OSPF network. All OSPF configurations use the default\nvalues unless otherwise indicated. Which router does the engineer expect will be elected as the DR when all\ndevices boot up simultaneously?",
+    "options": [
+      "R1",
+      "R2",
+      "R3",
+      "R4"
+    ],
+    "answer": 3,
+    "explanation": "The router with highest OSPF priority will be elected as the DR when all devices boot up simultaneously."
+  },
+  {
+    "legacyIndex": 1086,
+    "legacyNumber": 50,
+    "prompt": "Refer to the exhibit.\n\n Output from R1\n GigabitEthernet0/0/1 is up, line protocol is down\n Hardware is SPA—10X1GE-V2, address is 0023.33ee.7o00 (bia 0023.33ee.7c00)\n MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,\n reliability 255/255, txload 1/255, rxload 1/255\n Encapsulation ARPA, loopback not set\n Keepalive not supported\n Half Duplex, 1000Mbps, link type is auto, media type is LX\n output flow-control is off, input flow-control is off\n ARP type: ARPA, ARP Timeout 04:00:00\n Last input 00:00:01, output 00:02:31, output hang never\n 10 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored\n 0 watchdog, 314 multicast, 0 pause input\n 1 packets output, 77 bytes, 0 underruns\n 0 output errors, 50 collisions, 6 interface resets\n 17 unknown protocol drops\n 0 babbles, 0 late collision, 0 deferred\n\nWhat is the issue with the interface GigabitEthernet0/0/1 ?",
+    "options": [
+      "cable disconnect",
+      "duplex mismatch",
+      "port security",
+      "high throughput"
+    ],
+    "answer": 1,
+    "explanation": "From the output, we learn that “line protocol is down” which means a Layer 2 issue. Moreover we have “50\ncollisions” and this interface was set to “half duplex” so we can think about “duplex mismatch” issue.\n\nIf the issue is “cable disconnect” we will see “down/down (disable)” state instead."
+  },
+  {
+    "legacyIndex": 1087,
+    "legacyNumber": 51,
+    "prompt": "Refer to the exhibit.\n\n {\n \"interfaces\":[\"ethernet0/3\", \"ethernet0/4\", \"ethernet0/5\"]\n }\n\nWhich type of JSON data is shown?",
+    "options": [
+      "string",
+      "sequence",
+      "object",
+      "Boolean"
+    ],
+    "answer": 2,
+    "explanation": "JSON syntax structure:\n+ uses curly braces {} to hold objects"
+  },
+  {
+    "legacyIndex": 1088,
+    "legacyNumber": 52,
+    "prompt": "By default, how long will the switch continue to know a workstation MAC address after the workstation stops\nsending traffic?",
+    "options": [
+      "200 seconds",
+      "300 seconds",
+      "600 seconds",
+      "900 seconds"
+    ],
+    "answer": 1,
+    "explanation": "The default MAC address age timeout is 300 seconds."
+  },
+  {
+    "legacyIndex": 1089,
+    "legacyNumber": 53,
+    "prompt": "Refer to the exhibit.\n\nRapid PVST+ mode is on the same VLAN on each switch. Which switch becomes the root bridge and why?",
+    "options": [
+      "SW3, because its priority is the highest",
+      "SW2, because its MAC address is the highest",
+      "SW4, because its priority is highest and its MAC address is lower",
+      "SW1, because its priority is the lowest and its MAC address is higher"
+    ],
+    "answer": 2,
+    "explanation": "“its priority is highest” means lowest value."
+  },
+  {
+    "legacyIndex": 1090,
+    "legacyNumber": 54,
+    "prompt": "Drag and drop the commands from the left onto the destination interfaces on the right. Not all commands\nare used.",
+    "type": "match",
+    "items": [
+      "ability to boost a wi-fi signal",
+      "configurable as a workgroup bridge",
+      "uses templates to implement QOS configuration",
+      "supplies user connection data within a device group"
+    ],
+    "choices": [
+      "Access Point",
+      "Wireless LAN Controller"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": "An access point in workgroup bridge mode can introduce a bridge loop if you connect its Ethernet port to\nyour wired LAN.\n\nWLC can use templates to implement QoS configuration:"
+  },
+  {
+    "legacyIndex": 1091,
+    "legacyNumber": 55,
+    "prompt": "Which selections must be used on the WLC when implementing a RADIUS server for wireless authentication?",
+    "options": [
+      "Client Exclusion and SSH",
+      "Network Access Control State and SSH",
+      "802.1x and the MAC address of the server",
+      "AAA Override and the IP address of the server"
+    ],
+    "answer": 3,
+    "explanation": "The AAA Override feature on a Wireless LAN Controller (WLC) is used to override the default authentication,\nauthorization, and accounting (AAA) settings for specific WLANs (Wireless LANs).\n\nTypically, WLANs are configured with default AAA settings on the WLC. These settings define how clients are\nauthenticated, authorized, and accounted for when they connect to the WLAN. With the AAA Override\nfeature, you can override these default settings for specific WLANs. This allows you to tailor the\nauthentication, authorization, and accounting behavior for each WLAN independently. By using AAA Override,\nyou can apply customized AAA policies to specific WLANs based on their requirements. For example, you\nmight want to enforce stricter authentication methods or assign different authorization roles for users\nconnecting to a guest WLAN compared to an employee WLAN.\n\nNote: The WLC also needs the IP address of the AAA server so that it can communicate with AAA server."
+  },
+  {
+    "legacyIndex": 1092,
+    "legacyNumber": 56,
+    "prompt": "How does a hub handle a frame traveling to a known destination MAC address differently than a switch?",
+    "options": [
+      "The hub forwards the frame to all ports in the FIB table, and a switch forwards the frame the destination MAC is known.",
+      "The hub forwards the frame to all ports, and a switch forwards the frame to the known destination.",
+      "The hub forwards the frame using the information in the MAC table, and a switch uses data in its routing table.",
+      "The hub forwards the frame only to the port connected to the known MAC address,and a switch forwards the frame to all ports."
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1093,
+    "legacyNumber": 57,
+    "prompt": "What is the purpose of an ESSID?",
+    "options": [
+      "It provides greater security than a standard SSID.",
+      "It supports fast roaming features such as 802.11 r, 802.11k, and 802.11v.",
+      "It serves as the wireless MAC address of the access point.",
+      "It allows multiple access points to provide a common network for client connections."
+    ],
+    "answer": 3,
+    "explanation": "A group of access points connected to the same WLAN are known as an Extended Service Set (ESS). Within\nan ESS, a client can associate with any one of many access points that use the same Extended service set\nidentifier (ESSID). It allows users to roam about an office without losing wireless connection."
+  },
+  {
+    "legacyIndex": 1094,
+    "legacyNumber": 58,
+    "prompt": "Which port-security violation mode drops traffic from unknown MAC addresses and forwards an SNMP trap?",
+    "options": [
+      "restrict",
+      "protect",
+      "shutdown VLAN",
+      "shutdown"
+    ],
+    "answer": 0,
+    "explanation": "For your information, the port security violation modes are described below:\n\nProtect – This mode permits traffic from known MAC addresses to continue to be forwarded while dropping\ntraffic from unknown MAC addresses when over the allowed MAC address limit. When configured with this\nmode, no notification action is taken when traffic is dropped.\n\nRestrict – This mode permits traffic from known MAC addresses to continue to be forwarded while dropping\ntraffic from unknown MAC addresses when over the allowed MAC address limit. When configured with this\nmode, a syslog message is logged, a Simple Network Management Protocol (SNMP) trap is sent, and a\nviolation counter is incremented when traffic is dropped.\n\nShutdown – This mode is the default violation mode; when in this mode, the switch will automatically force\nthe switchport into an error disabled (err-disable) state when a violation occurs. While in this state, the\nswitchport forwards no traffic. The switchport can be brought out of this error disabled state by issuing the\nerrdisable recovery cause CLI command or by disabling and reenabling the switchport.\n\nShutdown VLAN -This mode mimics the behavior of the shutdown mode but limits the error disabled state the\nspecific violating VLAN."
+  },
+  {
+    "legacyIndex": 1095,
+    "legacyNumber": 59,
+    "prompt": "Which physical component is distributed among multiple virtual machines running on the same hypervisor?",
+    "options": [
+      "hardware resources",
+      "network interfaces",
+      "backplane network",
+      "external storage"
+    ],
+    "answer": 0,
+    "explanation": "Although the VM is still dependent on the host’s physical resources, those resources are virtualized and\ndistributed across the VMs and can be reassigned as necessary."
+  },
+  {
+    "legacyIndex": 1096,
+    "legacyNumber": 60,
+    "prompt": "Which cable type must be used when connecting two like devices together using these criteria?\n– Pins 1 to 3 and 2 to 6 are required.\n– Auto detection MDI-X is unavailable.",
+    "options": [
+      "straight-through",
+      "console",
+      "crossover",
+      "rollover"
+    ],
+    "answer": 2,
+    "explanation": "Without the MDI-X auto detection feature, we have to use correct cable type to connect two devices. Two\ndevices of the same type (like router to router, switch to switch) always use the crossover cable."
+  },
+  {
+    "legacyIndex": 1097,
+    "legacyNumber": 61,
+    "prompt": "PC1 tries to send traffic to newly installed PC2. The PC2 MAC address is not listed in the MAC address table of\nthe switch, so the switch sends the packet to all ports in the same VLAN. Which switching concept does this\ndescribe?",
+    "options": [
+      "MAC address aging",
+      "MAC address table",
+      "spanning-tree protocol",
+      "frame flooding"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1098,
+    "legacyNumber": 62,
+    "prompt": "Drag and drop the characteristic from the left onto the cable type on the right.",
+    "type": "match",
+    "items": [
+      "supplies conduit for PoE implementations",
+      "easy to tap into and obtain secure information",
+      "used for DWDM optical systems spanning long distances",
+      "has a core diameter of 9 microns"
+    ],
+    "choices": [
+      "copper",
+      "single-mode fiber"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1099,
+    "legacyNumber": 63,
+    "prompt": "Drag and drop the characteristic from the left onto the cable type on the right.",
+    "type": "match",
+    "items": [
+      "is easy to tap into and obtain secure information",
+      "is comprised of shielded and unshielded twisted pairs",
+      "attenuation increases over long distances",
+      "vulnerable to damage when handled"
+    ],
+    "choices": [
+      "copper",
+      "multi-mode fiber"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1100,
+    "legacyNumber": 64,
+    "prompt": "Which two tasks support the physical access control element of a security program? (Choose two)",
+    "options": [
+      "Deploy a video surveillance system",
+      "Run a workshop on corporate security policies",
+      "Implement badge access to critical locations",
+      "Develop slideshows about new security regulations",
+      "Disperse information about how to protect the organization’s confidential data"
+    ],
+    "answer": [
+      0,
+      2
+    ],
+    "type": "multi",
+    "explanation": "Physical access control: Infrastructure locations, such as network closets and data centers, should remain\nsecurely locked. Badge access to sensitive locations is a scalable solution, offering an audit trail of identities\nand timestamps when access is granted. Administrators can control access on a granular basis and quickly\nremove access when an employee is dismissed.\n\nPhysical access control can take a number of forms, but the basic idea is to create barriers to prevent\nunauthorized people from entering a physical space."
+  },
+  {
+    "legacyIndex": 1101,
+    "legacyNumber": 65,
+    "prompt": "Drag and drop the characteristic from the left onto the cable type on the right.",
+    "type": "match",
+    "items": [
+      "transmits data in the form of electronic signals",
+      "is easy to tap into and obtain secure information",
+      "transmits signals using pulses of light",
+      "contains a core, cladding, and coating"
+    ],
+    "choices": [
+      "copper",
+      "multi-mode fiber"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": "The two main elements of an optical fiber are its core and cladding. The “core”, or the axial part of the optical\nfiber made of silica glass, is the light transmission area of the fiber. It may sometimes be treated with a\n“doping” element to change its refractive index and therefore the velocity of light down the fiber.\n\nThe “cladding” is the layer completely surrounding the core."
+  },
+  {
+    "legacyIndex": 1102,
+    "legacyNumber": 66,
+    "prompt": "Which interface condition is occurring in this output?\n\n R9# show interface fa0/0\n FastEthernet0/0 is up, line protocol is up\n Hardware is DEC21140, address is ca02.7788.0000 (bia ca02.7788.0000)\n Description: atlanta_subnet\n Internet address is 10.32.102.2/30\n MTU 1500 bytes, BW 100000 Kbit/sec, DLY 100 usec,\n reliability 255/255, txload 1/255, rxload 1/255\n Encapsulation ARPA, loopback not set\n Keepalive set (60 sec)\n full-duplex, 100 Mb/s, 100BaseTX/FX\n ARP type: ARPA, ARP Timeout 04:00:00\n Last input 00:00:01, output 00:00:00, output hang never\n Last clearing of \"show interface\" counters 00:00:18\n Input queue: 175/300/0/0 (size/max/drops/flushes); Total output drops: 100\n Queueing strategy: fifo\n Output queue: 50/300 (size/max)\n 30 second input rate 0 bits/sec, 0 packets/sec\n 30 second output rate 0 bits/sec, 0 packets/sec\n 7331 packets input, 7101162 bytes\n\n Received 267 broadcasts (0 IP multicasts)\n 0 runts, 0 giants, 0 throttles\n 0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored\n 0 watchdog\n 0 input packets with dribble condition detected\n 3927 packets output, 1440403 bytes, 0 underruns\n 0 output errors, 0 collisions, 0 interface resets\n 0 unknown protocol drops\n 0 babbles, 0 late collision, 0 deferred\n 0 lost carrier, 0 no carrier\n 0 output buffer failures, 0 output buffers swapped out",
+    "options": [
+      "broadcast storm",
+      "bad NIC",
+      "queueing",
+      "duplex mismatch"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1103,
+    "legacyNumber": 67,
+    "prompt": "Network security team noticed that an increasing number of employees are becoming victims of phishing\nattacks. Which security program should be implemented to mitigate the problem?",
+    "options": [
+      "user awareness training",
+      "email system patches",
+      "software firewall enabled on all PCs",
+      "physical access control"
+    ],
+    "answer": 0,
+    "explanation": "User awareness programs are designed to make employees aware of potential security threats and risks so it\nis the best answer for this question. Most of phishing attacks are done online so we cannot use physical\naccess control."
+  },
+  {
+    "legacyIndex": 1104,
+    "legacyNumber": 68,
+    "prompt": "How does IPsec provide secure networking for applications within an organization?",
+    "options": [
+      "It leverages TFTP providing secure file transfers among peers on the network.",
+      "It provides GRE tunnels to transmit traffic securely between network nodes.",
+      "It enables sets of security associations between peers.",
+      "It takes advantage of FTP to secure file transfers between nodes on the network."
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1105,
+    "legacyNumber": 69,
+    "prompt": "Company has decided to require multifactor authentication for all systems. Which set of parameters meets\nthe requirement?",
+    "options": [
+      "personal 10-digit PIN and RSA certificate",
+      "complex password and personal 10-digit PIN",
+      "password of 8 to 15 characters and personal 12-digit PIN",
+      "fingerprint scanning and facial recognition"
+    ],
+    "answer": 0,
+    "explanation": "Multi-factor authentication, or MFA, protects your applications by using a second source of validation before\ngranting access to users. Common examples of multi-factor authentication include personal devices, such as\na phone or token, or geographic or network locations.\n\nMFA compose of 2 identification\n\n*Something you have\n*Something you are\n*Something you know\n\nAnswer A is correct because this will give you 2 factor authentication which is something you have and\nsomething you know\nAnswer B is incorrect because this fall within something you know only.\nAnswer C is incorrect because this fall within something you know only.\nAnswer D is incorrect because this fall within something you have only."
+  },
+  {
+    "legacyIndex": 1106,
+    "legacyNumber": 70,
+    "prompt": "What should a network administrator consider when deciding to implement automation?",
+    "options": [
+      "Manual changes frequently lead to configuration errors and inconsistencies.",
+      "Network automation typically is limited to the configuration and management of virtual devices within a network.",
+      "Network automation typically increases enterprise management operating costs.",
+      "Automated systems may have difficulty expanding network changes at scale."
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1107,
+    "legacyNumber": 71,
+    "prompt": "Which capability does TFTP provide?",
+    "options": [
+      "loads configuration files on systems without data storage devices",
+      "provides secure file access within the LAN",
+      "provides encryption mechanisms for file transfer across a WAN",
+      "provides authentication for data communications over a private data network"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1108,
+    "legacyNumber": 72,
+    "prompt": "Refer to the exhibit.\n\n cat9k-acc-1# show interfaces gigabitethernet 1/0/1\n\n    gigabitethernet 1/0/1 is up, line protocol is up\n\n    Hardware is gigabitethernet, address is aa00.0400.0134 (via 0000.0c00.4369)\n\n    MTU 1500 bytes, BW 1000 Kbit, DLY 1000 usec, rely 255/255, load 1/255\n\n    Encapsulation ARPA, loopback not set, keepalive set (10 sec)\n\n    ARP type: ARPA, PROBE, ARP Timeout 4:00:00\n\n    Last input 0:00:00, output 0:00:00, output hang never\n\n    Output queue 1/1, 1 drops; input queue 0/0, 0 drops\n\n    Five minute input rate 61000 bits/sec, 200 packets/sec\n\n    Five minute output rate 1000 bits/sec, 200 packets/sec\n\n    2295197 packets input, 305539992 bytes, 0 no buffer\n\n    Received 1925500 broadcasts, 0 runts, 0 giants\n\n    0 input errors, 1790 CRC, 1790 frame, 0 overrun, 0 ignored, 0 abort\n\n    0 input packets with dribble condition detected\n\n    3594664 packets output, 436549843 bytes, 1 underruns\n\n    0 output errors, 1 collisions, 1 interface resets, 0 restarts\n\nThe switch cat9k-acc-1 connects users to the campus LAN. Printing services are inaccessible through the\nnetwork. Which interface issue is causing the connectivity problems?",
+    "options": [
+      "A bad checksum is causing Ethernet frames to drop.",
+      "Excessive collisions are causing dropped frames.",
+      "A large number of broadcast packets are resulting in a port reset.",
+      "The interface output queue cannot process the Ethernet frames."
+    ],
+    "answer": 0,
+    "explanation": "There are large number of CRC errors (1790 CRC) so answer A is the best choice.\n\nNote: CRC field in the “show interfaces …” command is the number of packets received with CRC (Cyclic\nRedundancy Checksum) errors. This means that the checksum that was generated by the sender does not\nmatch the checksum that the receiver calculated. On a LAN this typically occurs when you have issues with\ncabling or defective network cards."
+  },
+  {
+    "legacyIndex": 1109,
+    "legacyNumber": 73,
+    "prompt": "Which connection type is used when an engineer connects to an AP without a configured IP address or dial-\nup number to manage the device?",
+    "options": [
+      "VIY",
+      "console",
+      "AUX",
+      "Ethernet"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1110,
+    "legacyNumber": 74,
+    "prompt": "Refer to the exhibit.\n\nA network engineer must configure the WLC to allow only DHCP and DNS packets for User1 and User2. Which\nconfiguration must be used?",
+    "options": [
+      "Enable Web Authentication for 802.1X standard in the Layer 2 Security configuration",
+      "Enable Fallback Policy with MAC filtering under the Layer 3 Security configuration",
+      "Enable Web policy and Authentication in the Layer 3 Security configuration",
+      "Enable Web Authentication under the AAA Server configuration on the WLAN"
+    ],
+    "answer": 2,
+    "explanation": "Web Authentication or Web Auth is a layer 3 security method that allow client to pass DHCP & DNS traffic\nonly until they have passed some form of authentication.\n\nWhen you enable Authentication option (as shown in the above screen capture), a guest client has to enter a\nusername & password to gain access to the guest network."
+  },
+  {
+    "legacyIndex": 1111,
+    "legacyNumber": 75,
+    "prompt": "Which type of wired port is required when an AP offers one unique SSID, passes client data and management\ntraffic, and is in autonomous mode?",
+    "options": [
+      "default",
+      "trunk",
+      "access",
+      "LAG"
+    ],
+    "answer": 2,
+    "explanation": "Each SSID is mapped to one VLAN so in this question we only need one VLAN so we can assign the wired\nport in access mode."
+  },
+  {
+    "legacyIndex": 1112,
+    "legacyNumber": 76,
+    "prompt": "Refer to the exhibit.\n\n SW_1#show vlan\n VLAN   Name                   Status           Ports\n\n 1      default                 active           Et0/2,Et1/0,Et1/0,Et1/3\n 5      MGMT Vlan               active           Et1/1\n 6      Server Vlan             active\n 72     Data Vlan               active           Et0/0\n 1002   fddi-default            act/unsup\n 1003   token-ring-default      act/unsup\n 1004   fddinet-default         act/unsup\n 1005   trnet-default           act/unsup\n\nVoIP is being implemented in the network using VLAN ID 73 and named “VoIP”. Each user needs a Cisco IP\nphone at their desk. Switchport e0/0 has been configured as an access port in the data VLAN. Cisco\nDiscovery Protocol is enabled globally. Which command sequence completed the configuration?\n\n Option A                                Option B\n vlan 73                                 vlan 73\n name VoIP                               name VoIP\n e0/0                                    e0/0\n switchport trunk allowed vlan           switchport mode trunk\n 72,73                                   channel-group 73 mode\n switchport voice vlan 73                active\n\n Option C                                Option D\n vlan 73                                 vlan73\n name VoIP                               name VoIP\n e0/0                                    e0/0\n switchport voice vlan 73                switchport voice vlan dot1p",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 2,
+    "explanation": "The voice VLAN feature enables access ports to carry IP voice traffic from an IP phone."
+  },
+  {
+    "legacyIndex": 1113,
+    "legacyNumber": 77,
+    "prompt": "Refer to the exhibit.\n\n Router-Y#show ip route\n Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP\n D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area\n N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2\n E1 - OSPF external type 1, E2 - OSPF external type 2\n i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2\n ia - IS-IS inter area, * - candidate default, U - per-user static route\n o - ODR, P - periodic downloaded static route, H - NHRP, l - LISP\n + - replicated route, % - next hop override, p - overrides from PfR\n\n Gateway of last resort is not set\n\n     10.0.0.0/8 is variably subnetted\n\n S    10.0.0.0/8 [1/0] via 10.224.4.2\n B    10.127.151.192/27 [20/0] via 10.224.4.3, 1w6d\n S    10.128.0.0/9 [1/0] via 10.224.4.3\n B    10.224.0.0/11 [20/0] via 10.224.4.5, 5d18h\n B    10.224.0.0/15 [20/0] via 10.224.4.4, 5d18h\n C    10.223.4.0/24 is directly connected, GigabitEthernet0/1\n C    10.224.4.0/24 is directly connected, GigabitEthernet0/0\n B    10.226.34.0/24 [20/0] via 10.224.4.5, 5d18h\n\nPC A is communicating with another device at IP address 10.227.151.255.Through which router does router\nY route the traffic?",
+    "options": [
+      "router A",
+      "router B",
+      "router C",
+      "router D"
+    ],
+    "answer": 3,
+    "explanation": "The destination IP address 10.227.151.255 belongs to 10.224.0.0/11 (increment: 32) and it is the longest\nprefix match so it will be routed via 10.224.4.5 which is router D."
+  },
+  {
+    "legacyIndex": 1114,
+    "legacyNumber": 78,
+    "prompt": "Refer to the exhibit.\n\nWhat is preventing host A from reaching the internet?",
+    "options": [
+      "LAN and WAN network segments are different.",
+      "IP address assignment is incorrect.",
+      "The default gateway should be the first usable IP address.",
+      "The domain name server is unreachable."
+    ],
+    "answer": 3,
+    "explanation": "From the dialog in the exhibit, we see the both IP address and default gateway were configured correctly for\nhost A. But the IP addresses of “Preferred DNS server” and “Alternate DNS server” were wrongly configured.\nThe correct DNS server should be 196.1.38.132 (not 192.168.1.254 or 196.1.38.254)."
+  },
+  {
+    "legacyIndex": 1115,
+    "legacyNumber": 79,
+    "prompt": "Refer to the exhibit.\n\nIPv6 must be implemented on R1 to the ISP. The uplink between R1 and the ISP must be configured with a\nmanual assignment, and the LAN interface must be self-provisioned. Both connections must use the\napplicable IPv6 networks. Which two configurations must be applied to R1? (Choose two)",
+    "options": [
+      "interface Gi0/0\nipv6 address 2001:db8:0F1B:FCCB:ACCE:FCED:ABCD:FA03:/127",
+      "interface Gi0/0\nipv6 address 2001:db8:0:AFFF::/64 eui-64",
+      "interface Gi0/0\nipv6 address 2001:db8:1:AFFF::/64 eui-64",
+      "interface Gi0/1\nipv6 address 2001:db8:0F1B:FCCB:ACCE:FCED:ABCD:FA02:/127",
+      "interface Gi0/1\nipv6 address 2001:db8:0F1B:FCCB:ACCE:FCED:ABCD:FA00:/127"
+    ],
+    "answer": [
+      1,
+      4
+    ],
+    "type": "multi",
+    "explanation": "We need to assign the LAN interface (gi0/0) with “eui-64” keyword and and correct IPv6 network\n(2001:db8:0:AFFF::/64) -> Answer B is correct.\n\nIPv6 addresses are 128 bits long, but in this question we have /127 subnet mask. So there are only two\naddresses:\n\n2001:db8:0F1B:FCCB:ACCE:FCED:ABCD:FA00 (Network Address)\n2001:db8:0F1B:FCCB:ACCE:FCED:ABCD:FA01 (Usable Host Address)\n\n-> Therefore surely answer D is not correct as it is out-of-range of this network. Some devices may\nsupport /127 subnet mask and we can assign both above addresses for (point-to-point) devices.\n\nNote: In IPv6, there is no concept of a broadcast address as in IPv4. Instead, IPv6 uses multicast addresses\nfor similar purposes."
+  },
+  {
+    "legacyIndex": 1116,
+    "legacyNumber": 80,
+    "prompt": "Refer to the exhibit.\n\n configure terminal\n interface range GigabitEthernet 0/1-2\n\n    switchport mode trunk\n\n    channel-group 1 mode active\n\n SW2\n configure terminal\n interface range GigabitEthernet 0/1-2\n\n    switchport mode trunk\n\n interface Port-channel1\n\n    switchport mode trunk\n\nAn LACP EtherChannel between two directly connected switches is in the configuration process. Which\ncommand must be configured on switch SW2s Gi0/1-2 interfaces to establish the channel to SW1?",
+    "options": [
+      "channel-group 1 mode desirable",
+      "channel-group 1 mode on",
+      "channel-group 1 mode active",
+      "channel-group 1 mode auto"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1117,
+    "legacyNumber": 81,
+    "prompt": "An on-site service desk technician must verify the IP address and DNS server information on a user’s\nWindows computer. Which command must the technician enter at the command prompt on the user’s\ncomputer?",
+    "options": [
+      "ipconfig /all",
+      "show interface",
+      "netstat -r",
+      "ifconfig -a"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1118,
+    "legacyNumber": 82,
+    "prompt": "What are two functions of DHCP servers? (Choose two)",
+    "options": [
+      "support centralized IP management",
+      "issue DHCPDISCOVER messages when added to the network",
+      "respond to client DHCPOFFER requests by Issuing an IP address",
+      "prevent users from assigning their own IP addresses to hosts",
+      "assign dynamic IP configurations to hosts in a network"
+    ],
+    "answer": [
+      0,
+      4
+    ],
+    "type": "multi",
+    "explanation": "Benefits of DHCP\n\nCentralized IP Address Management: DHCP centralizes the management of IP address allocation and\nconfiguration parameters for switches. Administrators can configure and control IP address assignment\npolicies, lease durations, and other network parameters from a central DHCP server, ensuring consistency\nand simplifying network administration for switches."
+  },
+  {
+    "legacyIndex": 1119,
+    "legacyNumber": 83,
+    "prompt": "Which SNMP message type is reliable and precedes an acknowledgment response from the SNMP manager?",
+    "options": [
+      "Inform",
+      "Get",
+      "Traps",
+      "Set"
+    ],
+    "answer": 0,
+    "explanation": "From SNMPv2c, two new messages were added: INFORM and GETBULK.\n\nINFORM: An disadvantage of TRAP message is unreliable. SNMP communicates via UDP so it is unreliable\nbecause when the SNMP Agents send TRAP message to the SNMP Manager it cannot know if its messages\narrive to the SNMP Manager. To amend this problem, a new type of message, called INFORM, was introduced\nfrom SNMPv2. With INFORM message, the SNMP Manager can now acknowledge that the message has been\nreceived at its end with an SNMP response protocol data unit (PDU). If the sender never receives a response,\nthe INFORM can be sent again. Thus, INFORMs are more likely to reach their intended destination."
+  },
+  {
+    "legacyIndex": 1120,
+    "legacyNumber": 84,
+    "prompt": "When more than one AP-Manager interface is provisioned on a wireless LAN controller, how is the request\nhandled by the AP?",
+    "options": [
+      "The discovery response from the AP to the AP-Manager interface disables the WLAN port",
+      "The AP join request fails and must be configured statically on the AP-Manager interface",
+      "The first AP-Manager interface to respond is chosen by the AP",
+      "The AP-Manager with the fewest number of APs is used by the AP to join"
+    ],
+    "answer": 3,
+    "explanation": "Before an access point joins a controller, it sends out a discovery request. From the discovery response that\nit receives, the access point can tell the number of AP-manager interfaces on the controller and the number\nof access points on each AP-manager interface. The access point generally joins the AP-manager with the\n\nleast number of access points. In this way, the access point load is dynamically distributed across the\nmultiple AP-manager interfaces."
+  },
+  {
+    "legacyIndex": 1121,
+    "legacyNumber": 85,
+    "prompt": "What is a service that is provided by a wireless controller?",
+    "options": [
+      "It issues IP addresses to wired devices.",
+      "It manages interference in a dense network.",
+      "It provides Layer 3 routing between wired and wireless devices.",
+      "It mitigates threats from the internet."
+    ],
+    "answer": 1,
+    "explanation": "Answer A is not correct as it is the function of a DHCP server.\n\nAnswer C is not correct as wireless devices usually do not need Layer 3 routing and this is not a function of a\nWLC.\n\nWLC can mitigate threats from rogue APs but not from the Internet -> Answer D is not correct.\n\nAnswer B is correct as WLC can manage interference via RRM:\n\n“The Radio Resource Management (RRM) software embedded in the Cisco Wireless Controller acts as a built-\nin RF engineer to consistently provide real-time RF management of your wireless network. RRM enables\ncontrollers to continually monitor their associated lightweight access points for the following information:\nTraffic load: The total bandwidth used for transmitting and receiving traffic. It enables wireless LAN managers\nto track and plan network growth ahead of client demand.\nInterference: The amount of traffic coming from other 802.11 sources.\n…\n\nUsing this information, RRM can periodically reconfigure the 802.11 RF network for best efficiency.”"
+  },
+  {
+    "legacyIndex": 1122,
+    "legacyNumber": 86,
+    "prompt": "Drag and drop the HTTP verbs from the left onto the API operations on the right.",
+    "type": "match",
+    "items": [
+      "DELETE",
+      "GET",
+      "PATCH",
+      "POST",
+      "PUT"
+    ],
+    "choices": [
+      "erases a specific resource",
+      "requests specific information about a resource",
+      "partially modifies a specific resource",
+      "creates a subordinate resource under the specified URI",
+      "fully replaces the current version of a specific resource with new content from the payload"
+    ],
+    "answer": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "explanation": "GET: retrieve data\nPOST: create data\nPUT: fully update (i.e. replace) an existing record\nPATCH: update part of an existing record\nDELETE: delete records\n\nPUT is similar to POST in that it can create resources, but it does so when there is a defined URL wherein PUT\nreplaces the entire resource if it exists or creates new if it does not exist.\n\nUnlike PUT Request, PATCH does partial update. Fields that need to be updated by the client, only that field is\nupdated without modifying the other field."
+  },
+  {
+    "legacyIndex": 1123,
+    "legacyNumber": 87,
+    "prompt": "Refer to the exhibit.\n\n wireless LAN adapter Wi-Fi\n\n Connection-specific DNS Suffix\n Description ..........                : Intel(R) dual Band wireless-AC 7265\n Physical Address........              : C8-21-5B-B4-D3-E0\n DHCP Enabled..........                : YES\n Autoconfiguration Enabled . . .: YES\n Link-local IPv6 Address . . . .: fe80::45a1:b3fa:2f37:bf37%2(Preferred)\n IPv4 Address..........                : 192.168.25.103((Preferred)\n\n Subnet Mask..........                 : 255.255.255.0\n Lease Obtained.........               : June 11, 2019 10:21:31 AM\n Lease Expires .........               : June 12, 2019 10:21:36 AM\n Default Gateway ........              : 192.168.25.1\n DHCP Server ..........                : 192.168.25.100\n DHCPV6 IAID..........                 : 46670168\n DHCPv6 Client DUID.......             : 00-01-00-20-FF-05-55-3C-52-82-33-D3-84\n DNS Servers ..........                : 192.168.25.254\n\n                                              192.168.25.254\n\nWhich address will the client contact to renew their IP address when the current lease expires?",
+    "options": [
+      "192.168.25.103",
+      "192.168.25.100",
+      "192.168.25.1",
+      "192.168.25.254"
+    ],
+    "answer": 1,
+    "explanation": "The client will contact DHCP server again to renew their expired IP address."
+  },
+  {
+    "legacyIndex": 1124,
+    "legacyNumber": 88,
+    "prompt": "Refer to the exhibit.\n\nA secondary route is required on router R1 to pass traffic to the LAN network on R2 if the primary link fails.\nWhich command must be entered to configure the router?",
+    "options": [
+      "ip route 10.0.2.0 256.255.255.248 null0 93",
+      "ip route 10.0.2.0 255.255.255.240 10.0.0.6 91",
+      "ip route 10.0.2.0 255.255.255.240 10.0.0.7 92",
+      "ip route 10.0.2.0 255.255.255.248 10.0.0.6 91"
+    ],
+    "answer": 3,
+    "explanation": "We need to add a floating static route in this case so this route must have the AD greater than the AD of\nEIGRP (90) to the next-hop of 10.0.0.6 (R2) for 10.0.2.0/29 (with subnet mask of 255.255.255.248)."
+  },
+  {
+    "legacyIndex": 1125,
+    "legacyNumber": 89,
+    "prompt": "Drag and drop the IPv6 address type characteristics from the left to the right.",
+    "type": "match",
+    "items": [
+      "equivalent to public IPv4 addresses",
+      "routable and reachable via the Internet",
+      "configured only once per interface",
+      "attached to a single subnet"
+    ],
+    "choices": [
+      "Global Unicast Address",
+      "Link-Local Address"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1126,
+    "legacyNumber": 90,
+    "prompt": "Refer to the exhibit .\n\n {\n \"Cisco Devices\": [\n {\n \"name\": \"ASA - Security Device\",\n \"name\": \"Cisco 1100 ASR Router\",\n \"name\": \"Cisco 6800 Switch\"\n }\n ]\n\nWhat is missing from this output for it to be executed?",
+    "options": [
+      "square bracket ( [ ) at the beginning",
+      "curly brace ( } ) at the end",
+      "double quotes (” “) around the “Cisco Devices” string",
+      "exclamation point (!) at the beginning of each line"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1127,
+    "legacyNumber": 91,
+    "prompt": "Refer to the exhibit.\n\nThe LACP EtherChannel is configured, and the last change is to modify the interfaces on SwitchA to respond\nto packets received, but not to initiate negotiation. The interface range gigabitethernet0/0/0-15 command is\nentered. What must be configured next?",
+    "options": [
+      "SwitchA(config-if-range)#channel-group 1 mode desirable",
+      "SwitchA(config-if-range)#channel-group 1 mode passive",
+      "SwitchA(config-if-range)#channel-group 1 mode auto",
+      "SwitchA(config-if-range)#channel-group 1 mode active"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1128,
+    "legacyNumber": 92,
+    "prompt": "What are two benefits for using private IPv4 addressing? (Choose two)",
+    "options": [
+      "They supply redundancy in the case of failure",
+      "They alleviate the shortage of public IPv4 addresses.",
+      "They provide a layer of security from Internet threats.",
+      "They offer Internet connectivity to endpoints on private networks",
+      "They allow for Internet access from IoT devices"
+    ],
+    "answer": [
+      1,
+      2
+    ],
+    "type": "multi",
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1129,
+    "legacyNumber": 93,
+    "prompt": "Which EtherChannel mode must be configured when using LAG on a WLC?",
+    "options": [
+      "On",
+      "active",
+      "auto",
+      "passive"
+    ],
+    "answer": 0,
+    "explanation": "Link aggregation (LAG) is a partial implementation of the 802.3ad port aggregation standard. It bundles all\nof the controller’s distribution system ports into a single 802.3ad port channel.\n\nRestriction for Link aggregation:\n\n+ LAG requires the EtherChannel to be configured for ‘mode on’ on both the controller and the Catalyst\nswitch.\n…"
+  },
+  {
+    "legacyIndex": 1130,
+    "legacyNumber": 94,
+    "prompt": "Refer to the exhibit.\n\nThe engineer configured the VLANs on the new AccSw2 switch. A router on-a-stick is connected to both\nswitches. How must the ports be configured on AccSw2 to establish full connectivity between the two\nswitches and for Server1?\n\n Option A\n                                        Option B\n interface GigabitEthernet1/3\n switchport mode access                 interface GigabitEthernet1/3\n switchport access vlan 10              switchport mode access\n !                                      switchport access vlan 10\n interface GigabitEthernet1/24          !\n switchport mode trunk                  interface GigabitEthernet1/24\n switchport trunk allowed vlan          switchport mode trunk\n 2,10\n\n                                        Option D\n Option C\n                                        interface GigabitEthernet1/1\n interface GigabitEthernet1/1\n                                        switchport access vlan 11\n switchport mode access\n                                        !\n switchport access vlan 11\n                                        interface GigabitEthernet1/24\n !\n                                        switchport mode trunk\n interface GigabitEthernet1/24\n                                        switchport trunk allowed vlan\n switchport mode trunk\n                                        10,11",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1131,
+    "legacyNumber": 95,
+    "prompt": "A network administrator is evaluating network security in the aftermath of an attempted ARP spoofing attack.\nIf Port-channel1 is the uplink interface of the access-layer switch toward the distribution-layer switch, which\ntwo configurations must the administrator configure on the access-layer switch to provide adequate\nprotection? (Choose two)\n\n Option A\n                                          Option B\n ip dhcp snooping\n                                          ip dhcp snooping vlan 1-4094\n !\n                                          ip dhcp snooping\n interface Port-channel1\n                                          !\n switchport port-security maximum\n                                          interface Port-channel1\n 1\n                                          ip dhcp snooping trust\n switchport port-security\n\n Option C                                 Option D\n ip dhcp snooping vlan 1-4094             ip arp inspection trust\n !                                        !\n interface Port-channel1                  interface Port-channel1\n switchport protected                     switchport port-security maximum\n switchport port-security maximum         4094\n 1                                        switchport port-security\n\n                                          ip verify source mac-check\n\n Option E\n ip arp inspection vlan 1-4094\n !\n interface Port-channel1\n ip arp inspection trust",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D",
+      "Option E"
+    ],
+    "answer": [
+      1,
+      4
+    ],
+    "type": "multi",
+    "explanation": "We need to configure the uplink (Po1) to the distribution switch in “trust” state."
+  },
+  {
+    "legacyIndex": 1132,
+    "legacyNumber": 96,
+    "prompt": "What is the maximum number of concurrent Telnet sessions that a Cisco WLC supports?",
+    "options": [
+      "3",
+      "5",
+      "6",
+      "15"
+    ],
+    "answer": 1,
+    "explanation": "From the Maximum Number of Sessions drop-down list, choose the number of simultaneous Telnet or SSH\nsessions allowed. The valid range is 0 to 5 sessions (inclusive), and the default value is 5 sessions."
+  },
+  {
+    "legacyIndex": 1133,
+    "legacyNumber": 97,
+    "prompt": "What are two functions of a firewall within an enterprise? (Choose two)",
+    "options": [
+      "It serves as an endpoint for a site-to-site VPN in standalone mode.",
+      "It enables traffic filtering based on URLs.",
+      "It provides support as an endpoint for a remote access VPN in multiple context mode.",
+      "It offers Layer 2 services between hosts.",
+      "It enables wireless devices to connect to the network."
+    ],
+    "answer": [
+      0,
+      1
+    ],
+    "type": "multi",
+    "explanation": "Firewall can provide a site-to-site VPN in standalone mode. In fact, it is the most common use case for\nsecuring connections between branch offices and headquarters, functioning as the endpoint to encrypt and\nsecurely route traffic between the locations without relying on a centralized management platform -> Answer\nA is correct.\n\nNext-Generation Firewalls (NGFWs) can filter traffic based on specific URLs or URL categories (e.g., “Social\nMedia”, “Gambling”, “Malware”) rather than just IP addresses -> Answer B is correct.\n\n“Multiple context mode does not support the following: remote access VPN, OSPFv3, Multicast, QoS, and\nUnified Communications” -> Answer C is not correct.\n\nNote: multiple context mode means divide a single physical hardware appliance into multiple virtual devices.\nEach virtual device (context), functions as an independent firewall with its own unique interfaces, security\npolicies, routing tables, and administrators."
+  },
+  {
+    "legacyIndex": 1134,
+    "legacyNumber": 98,
+    "prompt": "How does Chef configuration management enforce a required device configuration?",
+    "options": [
+      "The installed agent on the device connects to the Chef Infra Server and pulls its required configuration from the cookbook.",
+      "The Chef Infra Server uses its configured cookbook to push the required configuration to the remote device requesting updates.",
+      "The Chef Infra Server uses its configured cookbook to alert each remote device when it is time for the device to pull a new configuration.",
+      "The installed agent on the device queries the Chef Infra Server and the server responds by pushing the configuration from the cookbook."
+    ],
+    "answer": 0,
+    "explanation": "Any changes made to your infrastructure code must pass through the Chef server in order to be applied to\nnodes. Prior to accepting or pushing changes, the Chef server authenticates all communication via its REST\nAPI using public key encryption.\n\nChef client periodically pulls Chef server to see if there are any changes in cookbooks or settings. If there are\nchanges then Chef server sends the latest configuration information to Chef client. Chef client applies these\nchanges to nodes."
+  },
+  {
+    "legacyIndex": 1135,
+    "legacyNumber": 99,
+    "prompt": "What is an Ansible inventory?",
+    "options": [
+      "collection of actions to perform on target devices, expressed in YAML format",
+      "unit of Python code to be executed within Ansible",
+      "device with Ansible installed that manages target devices",
+      "file that defines the target devices upon which commands and tasks are executed"
+    ],
+    "answer": 3,
+    "explanation": "Once Ansible is installed, it creates several text files:\n\n+ Playbooks: These files provide actions and logic about what Ansible should do. Ansible playbooks are files\nthat contain tasks to configure hosts. Ansible playbooks are written in YAML format.\n+ Inventory: a file contains a list of the hosts (usually their IP addresses, ports) which you want to configure\nor manage. Hosts in an inventory can be divided into smaller groups for easier management and\nconfiguration. Each group can run different tasks. An example of a task is to ping all hosts in group [routers].\n+ Templates: Using Jinja2 language, the templates represent a device’s configuration but with variables.\n+ Variables: Using YAML, a file can list variables that Ansible will substitute into templates."
+  },
+  {
+    "legacyIndex": 1136,
+    "legacyNumber": 100,
+    "prompt": "Which two host addresses are reserved for private use within an enterprise network? (Choose two)",
+    "options": [
+      "10.172.76.200",
+      "12.17.1.20",
+      "172.15.2.250",
+      "192.169.32.10",
+      "172.31.255.100"
+    ],
+    "answer": [
+      0,
+      4
+    ],
+    "type": "multi",
+    "explanation": "The following IPv4 address ranges are reserved by the IANA for private internets, and are not publicly\nroutable on the global internet:\n+ 10.0.0.0/8 IP addresses: 10.0.0.0 – 10.255.255.255 -> Answer A is correct.\n\n+ 172.16.0.0/12 IP addresses: 172.16.0.0 – 172.31.255.255 -> Answer E is correct.\n+ 192.168.0.0/16 IP addresses: 192.168.0.0 – 192.168.255.255"
+  },
+  {
+    "legacyIndex": 1137,
+    "legacyNumber": 101,
+    "prompt": "What is the recommended switch load-balancing mode for Cisco WLCs?",
+    "options": [
+      "source-destination MAC address",
+      "destination IP address",
+      "destination MAC address",
+      "source-destination IP address"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1138,
+    "legacyNumber": 102,
+    "prompt": "Refer to the exhibit.\n\nWhich configuration enables SW2 to establish an LACP EtherChannel?\n\n                                                   Option B\n Option A\n                                                   SW2(config)#interface gigabitEthernet0/1\n SW2(config)#interface gigabitEthernet0/1\n                                                   SW2(config-if)#channel-group 1 mode\n SW2(config-if)#channel-group 2 mode\n                                                   active\n desirable\n                                                   SW2(config-if)#interface\n SW2(config-if)#interface gigabitEthernet0/2\n                                                   gigabitEthernet0/2\n SW2(config-if)#channel-group 2 mode\n                                                   SW2(config-if)#channel-group 1 mode\n desirable\n                                                   active\n\n                                                   Option D\n Option C\n                                                   SW2(config interface gigabitEthernet0/1\n SW2(config)#interface gigabitEthernet0/1\n                                                   SW2(config-if)#channel-group 2 mode auto\n SW2(config-if)#channel-group 1 mode on\n                                                   SW2(config-if)#interface\n SW2(config-if)#interface glgabitEthernet0/2\n                                                   gigabitEthernet0/2\n SW2(config-if)#channel-group 1 mode on\n                                                   SW2(config-if)#channel-group 2 mode auto",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 1,
+    "explanation": "The Etherchannel group numbers are only locally significant and can be different on two ends."
+  },
+  {
+    "legacyIndex": 1139,
+    "legacyNumber": 103,
+    "prompt": "What is a function of FTP?",
+    "options": [
+      "relies on the well-known UDP port 69 for data transfer",
+      "uses block numbers to identify and mitigate data-transfer errors",
+      "uses two separate connections for control and data traffic",
+      "always operates without user connection validation"
+    ],
+    "answer": 2,
+    "explanation": "FTP communicates using two TCP connections. Control traffic is exchanged over TCP port 21, and data\ntransmission is performed over TCP port 20."
+  },
+  {
+    "legacyIndex": 1140,
+    "legacyNumber": 104,
+    "prompt": "Refer to the exhibit.\n\n R1#show ip route\n Codes: C - connected, S - static, R - RIP, M - mobile, B - BGP\n\n           D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area\n\n           N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2\n\n           E1 - OSPF external type 1, E2 - OSPF external type 2\n\n           i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2\n\n           ia - IS-IS inter area, * - candidate default, U - per-user static route\n\n           o - ODR, P - periodic downloaded static route\n\n Gateway of last resort is 192.168.30.10 to network 0.0.0.0\n\n              192.168.30.0/29 is subnetted, 2 subnets\n\n C             192.168.30.0 is directly connected, FastEthernet0/0\n C             192.168.30.8 is directly connected, Serial0/0.1\n\n              192.168.10.0/24 is variably subnetted, 2 subnets, 2 masks\n\n O IA          192.168.10.32/28 [110/193] via 192.168.30.10, 00:18:49, Serial0/0.1\n O IA          192.168.10.0/27 [110/192] via 192.168.30.10, 00:18:49, Serial0/0.1\n\n            192.168.20.0/30 is subnetted, 1 subnets\n\n O IA         192.168.20.0 [110/128] via 192.168.30.10, 00:18:49, Serial0/0.1\n\n            192.168.50.0/32 is subnetted, 1 subnets\n\n C            192.168.50.1 is directly connected, Loopback0\n O*IA 0.0.0.0/0 [110/84] via 192.168.30.10, 00:10:36, Serial0/0.1\n\nWhat is the metric for the route to the 192.168.10.33 host?",
+    "options": [
+      "84",
+      "110",
+      "192",
+      "193"
+    ],
+    "answer": 3,
+    "explanation": "Traffic destined to host 192.168.10.33 will match the entry “O IA 192.168.10.32/28 [110/193] via\n192.168.30.10, 00:18:49, Serial0/0.1″ so the metric is the second parameter in the square bracket."
+  },
+  {
+    "legacyIndex": 1141,
+    "legacyNumber": 105,
+    "prompt": "Which two statements distinguish authentication from accounting? (Choose two)",
+    "options": [
+      "Only authentication challenges users for their credentials and returns a response.",
+      "Only authentication supports user-activity audits.",
+      "Only authentication validates “who you are.”",
+      "Only authentication records the duration of a user’s connection.",
+      "Only authentication provides supporting information for billing users."
+    ],
+    "answer": [
+      0,
+      2
+    ],
+    "type": "multi",
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1142,
+    "legacyNumber": 106,
+    "prompt": "Which set of methods is supported with the REST API?",
+    "options": [
+      "GET, PUT, ERASE, CHANGE",
+      "GET, POST, ERASE, CHANGE",
+      "GET, POST, MOD, ERASE",
+      "GET, PUT, POST, DELETE"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1143,
+    "legacyNumber": 1,
+    "prompt": "Refer to the exhibit.\n\nA network engineer is configuring a WLAN to use a WPA2 PSK and allow only specific clients to join. Which\ntwo actions must be taken to complete the process? (Choose two)",
+    "options": [
+      "Enable the CCKM option for Authentication Key Management",
+      "Enable the 802.1X option for Authentication Key Management",
+      "Enable the WPA2 Policy option",
+      "Enable the OSEN Policy option",
+      "Enable the MAC Filtering option"
+    ],
+    "answer": [
+      2,
+      4
+    ],
+    "type": "multi",
+    "explanation": "We need to choose “Layer 2 Mac Filtering” so that only clients with specific MAC addresses are allowed to\njoin. And the “WPA2 Policy” option to instruct WLC to use WPA2 only with one of WPA2 Encryption (AES or\nTKIP)."
+  },
+  {
+    "legacyIndex": 1144,
+    "legacyNumber": 2,
+    "prompt": "What is the RFC 4627 default encoding for JSON text?",
+    "options": [
+      "UTF-8",
+      "GB18030",
+      "UCS-2",
+      "Hex"
+    ],
+    "answer": 0,
+    "explanation": "Data is encoded as defined by JSON in RFC4627. The default encoding for APIs is UTF-8."
+  },
+  {
+    "legacyIndex": 1145,
+    "legacyNumber": 3,
+    "prompt": "Refer to the exhibit.\n\n [\"red\", \"one\"]\n\nWhich type of JSON data is represented?",
+    "options": [
+      "number",
+      "array",
+      "object",
+      "string"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1146,
+    "legacyNumber": 4,
+    "prompt": "A network engineer is configuring a new router at a branch office. The router is connected to an upstream\nWAN network that allows the branch to communicate with the head office. The central time server with IP\naddress 172.24.54.8 is located behind a firewall at the head office. Which command must the engineer\nconfigure so that the software clock of the new router synchronizes with the time server?",
+    "options": [
+      "ntp client 172.24.54.8",
+      "ntp master 172.24.54.8",
+      "ntp peer 172.24.54.8",
+      "ntp server 172.24.54.8"
+    ],
+    "answer": 3,
+    "explanation": "To configure the local device as a NTP client and use a remote NTP clock source, use the command ntp server\n{IP address}"
+  },
+  {
+    "legacyIndex": 1147,
+    "legacyNumber": 5,
+    "prompt": "Refer to the exhibit.\n\n Router-WAN1#show interface g0/0\n GigabitEthernet0/0 is up, line protocol is up\n\n    Hardware is CSR NIC, address is 5000.0001.0000 (bia 5000.0001.0000)\n\n    Internet address is 192.168.0.0/31\n\n    MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,\n\n      reliability 255/255, txload 1/255, rxload 1/255\n\n    Encapsulation ARPA, loopback not set\n\n    Keepalive set (10 sec)\n\n    Full Duplex, 1000Mbps, link type is auto, media type is NIC\n\n    output flow-control is unsupported, input flow-control is unsupported\n\n    ARP type: ARPA, ARP Timeout 04:00:00\n\n    Last input never, output 00:00:03, output hang never\n\n    Last clearing of \"show interface\" counters never\n\n    Input queue: 0/375/0/0 (size/max/drops/flushes); Total output drops: 0\n\n    Queueing strategy: fifo\n\n    Output queue: 0/40 (size /max)\n\n    5 minute input rate 1000 bits/sec, 0 packets/sec\n\n    5 minute output rate 2000 bits/sec, 1 packets/sec\n\n      0 packets input, 0 bytes, 0 no buffer\n\n      Received 110 broadcasts (0 IP multicasts)\n\n      0 runts, 0 giants, 0 throttles\n\n      100 input errors, 100 CRC, 100 frame, 0 overrun, 0 ignored\n\n      0 watchdog, 0 multicast, 0 pause input\n\n      260 packets output, 89070 bytes, 0 underruns\n\n      Output 0 broadcasts (0 IP multicasts)\n\n      0 output errors, 100 collisions, 0 interface resets\n\n      0 unknown protocol drops\n\n      0 babbles, 0 late collision, 0 deferred\n\n      1 lost carrier, 0 no carrier, 0 pause output\n\nRouter-WAN1 has a new connection via Gi0/0 to the ISP. Users running the web applications indicate that\nconnectivity is unstable to the internet. What is causing the interface issue?",
+    "options": [
+      "Broadcast packets are rejected because ARP timeout is enabled",
+      "The receive buffer is full due to a broadcast storm",
+      "Frames are discarded due to a half-duplex negotiation",
+      "Small frames less than 64 bytes are rejected due to size"
+    ],
+    "answer": 2,
+    "explanation": "This interface has “input errors” (100) and high “collision” (100) so the most likely cause of this problem is\nthe other end was configured in half-duplex, which creates a duplex mismatched problem."
+  },
+  {
+    "legacyIndex": 1148,
+    "legacyNumber": 6,
+    "prompt": "Refer to the exhibit.\n\nAll routers in the network are configured correctly, and the expected routes are being exchanged among the\nrouters. Which set of routes are learned from neighbors and installed on router 2?\n\n Option A          Option B\n 10.40.1.0/30      10.129.9.0/2\n 10.139.2.0/3      3\n 0                 10.139.2.0/3\n 10.12.191.0/      0\n 30                10.129.9.0/2\n 10.129.9.0/2      5\n 5                 10.22.1.0/24\n\n                   Option D\n Option C\n                   10.129.9.0/2\n 10.129.9.0/2\n                   3\n 3\n                   10.139.2.0/3\n 10.40.1.0/30\n                   0\n 10.12.191.0/\n                   10.12.191.0/\n 30\n                   30\n 10.129.9.0/2\n                   10.129.9.0/2\n 5\n                   5",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 3,
+    "explanation": "This question asks “Which set of routes are learned from neighbors” so only EIGRP routes are advertised and\nlearned from the neighbors. Routes 10.40.1.0/30 and 10.22.1.0/24 are learned from local so they are not\ncorrect."
+  },
+  {
+    "legacyIndex": 1149,
+    "legacyNumber": 7,
+    "prompt": "Refer to the exhibit.\n\nWhich switch in this configuration will be elected as the root bridge?",
+    "options": [
+      "SW1: 0C:4A:82.:65:62:72",
+      "SW2: 0C:0A:A8:1A:3C:9D",
+      "SW3: 0C:0A:18:81:B3:19",
+      "SW4: 0C:0A:05:22:05:97"
+    ],
+    "answer": 3,
+    "explanation": "The switch with lowest bridge priority will be chosen the root bridge. If many switches have the same bridge\npriority then the lowest MAC address would be chosen.\n\nIn this question, SW3 and SW4 have lowest (and same) bridge priority. But SW4 has lower MAC address so it\nwould be elected root bridge."
+  },
+  {
+    "legacyIndex": 1150,
+    "legacyNumber": 8,
+    "prompt": "Refer to the exhibit.\n\n 100.0.0.0/8 is variably subnetted, 4 subnets, 4 masks\n R     100.0.0.0/8 [120/2] via 192.168.3.1, 00:00:13, Ethernet0/3\n S     100.100.0.0/16 [1/0] via 192.168.4.1\n D     100.100.100.0/24 [90/435200] via 192.168.2.1, 00:00:13, Ethernet0/2\n O     100.100.100.100/32 [110/21] via 192.168.1.1, 00:05:57, Ethernet0/1\n\nHow will the device handle a packet destined to IP address 100.100.100.100?",
+    "options": [
+      "It will always prefer the static route over dynamic routes and choose the route\nS 100.100.0.0/16 [1/0] via 192.168.4.1",
+      "It will choose the route with the lowest metric\nR 100.0.0.0/8 [120/2] via 192.168.3.1, 00:00:13, Ethernet0/3",
+      "It will choose the route with the highest metric\nD 100.100.100.0/24 [90/435200] via 192.168.2.1, 00:00:13, Ethernet0/2",
+      "It will choose the route with the longest match\nO 100.100.100.100/32 [110/21] via 192.168.1.1, 00:05:57, Ethernet0/1"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1151,
+    "legacyNumber": 9,
+    "prompt": "Refer to the exhibit.\n\nNetwork services must be enabled on interface Gi1/0/34. Which configuration meets the needs for this\nimplementation?\n\n Option A                                     Option B\n interface Gi1/0/34                           interface Gi1/0/34\n switchport mode trunk                        switchport mode access\n switchport trunk allowed vlan 400,           switchport access vlan\n 4041                                         4041\n switchport voice vlan 4041                   switchport voice vlan 400\n\n                                              Option D\n Option C\n                                              interface Gi1/0/34\n interface Gi1/0/34\n                                              switchport mode access\n switchport mode trunk\n                                              switchport access vlan\n switchport trunk allowed native vlan\n                                              400\n 400\n                                              switchport voice vlan\n switchport voice vlan 4041\n                                              4041",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 3,
+    "explanation": "The voice VLAN feature enables access ports to carry IP voice traffic from an IP phone. You can configure a\nvoice VLAN with the “switchport voice vlan …” command under interface mode."
+  },
+  {
+    "legacyIndex": 1152,
+    "legacyNumber": 10,
+    "prompt": "Refer to the exhibit.\n\nWhich configuration parameter is preventing host С from reaching the internet?",
+    "options": [
+      "IP address assignment",
+      "default gateway",
+      "IP network mask",
+      "automatic DNS"
+    ],
+    "answer": 1,
+    "explanation": "From the topology we see the IP address of interface Gi0/0/0 of Router A is 192.168.1.254 and this is also\nthe default gateway of our hosts. But in the IPv4 Properties box, the default gateway of host C is set to\n192.168.1.1 which is not correct."
+  },
+  {
+    "legacyIndex": 1153,
+    "legacyNumber": 11,
+    "prompt": "Refer to the exhibit.\n\nWhich switch in this configuration will be elected as the root bridge?\n\nSW1 0С:0A:05:22:05:97\nSW2 0С:4A:82:07:57:58\nSW3 0C:0A:A8:1A:3C:9D\nSW4 0С:0A:18:A1:B3:19",
+    "options": [
+      "SW1",
+      "SW2",
+      "SW3",
+      "SW4"
+    ],
+    "answer": 3,
+    "explanation": "SW3 & SW4 have the bridge priority of 8192 which is better than SW1 & SW2. Between SW3 & SW4, SW4\nhas lower MAC address so it will be chosen the root bridge."
+  },
+  {
+    "legacyIndex": 1154,
+    "legacyNumber": 12,
+    "prompt": "Refer to the exhibit.\n\nAn engineer is creating a secure preshared key based SSID using WPA2 for a wireless network running on\n2.4 GHz and 5 GHz. Which two tasks must the engineer perform to complete the process? (Choose two)",
+    "options": [
+      "Select the 802.1x option for Auth Key Management",
+      "Select the AES (CCMP128) option for WPA2 WPA3 Encryption",
+      "Select the AES option for Auth Key Management",
+      "Select the PSK option for Auth Key Management",
+      "Select the WPA Policy option."
+    ],
+    "answer": [
+      1,
+      3
+    ],
+    "type": "multi",
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1155,
+    "legacyNumber": 13,
+    "prompt": "Which Rapid PVST+ port state does a port operate in without receiving BPDUs from neighbors or updating\nthe address database?",
+    "options": [
+      "listening",
+      "forwarding",
+      "disabled",
+      "blocking"
+    ],
+    "answer": 2,
+    "explanation": "There are only three port states left in RSTP that correspond to the three possible operational states. The\n802.1D disabled, blocking, and listening states are merged into the 802.1w discarding state.\n\n* Discarding (Blocking)- the port does not forward frames, process received frames, or learn MAC addresses\n– but it does listen for BPDUs (like the STP blocking state)\n* Learning – receives and transmits BPDUs and learns MAC addresses but does not yet forward frames (same\nas STP).\n* Forwarding – receives and sends data, normal operation, learns MAC address, receives and transmits\nBPDUs (same as STP).\n\nIn fact, there is another state which is Disabled state.\n\nDisabled State\nA LAN port in the disabled state does not participate in frame forwarding or STP. A LAN port in the disabled\nstate is virtually nonoperational.\nA disabled LAN port performs as follows:\n+ Discards frames received from the attached segment.\n+ Discards frames switched from another port for forwarding.\n+ Does not incorporate the end station location into its address database. (There is no learning, so there is\nno address database update.)\n+ Does not receive BPDUs from neighbors.\n+ Does not receive BPDUs for transmission from the system module."
+  },
+  {
+    "legacyIndex": 1156,
+    "legacyNumber": 14,
+    "prompt": "Which protocol should be used to transfer large files on a company intranet that allows TCP 20 and 21\nthrough the firewall?",
+    "options": [
+      "FTP",
+      "REST API",
+      "TFTP",
+      "SMTP"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1157,
+    "legacyNumber": 15,
+    "prompt": "Which alternative to password authentication is implemented to allow enterprise devices to log in to the\ncorporate network?",
+    "options": [
+      "digital certificates",
+      "magic links",
+      "one-time passwords",
+      "90-day renewal policies"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1158,
+    "legacyNumber": 16,
+    "prompt": "Which guideline helps to create a secure password policy?",
+    "options": [
+      "forbidding users from storing passwords in a password manager",
+      "allowing passwords used by service accounts to never expire",
+      "requiring complex, lengthy passwords instead of simple, short ones",
+      "restricting password sharing to a very small group"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1159,
+    "legacyNumber": 17,
+    "prompt": "Refer to the exhibit.\n\n SW1#conf t\n Enter configuration commands, one per line. End with CNTL/Z.\n SW1(config)#enable password test!2E\n SW1(config)#line con 0\n SW1(config-line)#password Labtest32!\n SH1(config-line)#exit\n SW1(config)#\n\nA network engineer started to change default settings on SW1 to allow remote access and has entered the\nfollowing in the configuration mode:\n\n SW1#(config)#line vty 0 15\n SW1#(config-line)#password\n Labtest32!\nWhich set of commands are needed to allow only SSH access and hide passwords in the running\nconfiguration?\n\n Option A                              Option B\n SW1(config-line)#login local          SW1(config-line)#transport input ssh\n SW1(config-line)#exit                 SW1(config-line)#exit\n SW1(config)#enable secret test!       SW1(config)#service password-\n 2E                                    encryption\n\n Option C                              Option D\n SW1(config-line)#login local          SW1(config-line)#exit\n SW1(config-line)#exit                 SW1(config)#aaa new-model",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1160,
+    "legacyNumber": 18,
+    "prompt": "How does machine learning contribute to the effectiveness of intrusion detection systems?",
+    "options": [
+      "It assigns security clearance levels.",
+      "It dictates security policy updates.",
+      "It monitors for outdated software.",
+      "It identifies patterns indicating intrusions."
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1161,
+    "legacyNumber": 19,
+    "prompt": "Refer to the exhibit.\n\n Router-Y#show ip route\n Gateway of last resort is not set\n\n 10.0.0.0/8 is variably subnetted\n B 10.220.100.96/27 [20/0] via 10.224.1.3, 1w6d\n\nThe route for 10.220.100.96/27 has been very unstable. The same route has four backups to routers A, B, C,\nand D via the respective methods. The routing protocol defaults for router Y have not been changed. When\nthe current route for 10.220.100.96/27 becomes unavailable, which router will router Y use to route traffic to\n10.220.100.96/27?",
+    "options": [
+      "router A",
+      "router B",
+      "router C",
+      "router D"
+    ],
+    "answer": 1,
+    "explanation": "The current route is learned via BGP (Router D). Among three routing protocols left, the “static route with AD\nof 105” has the best AD (OSPF AD is 110 and External EIGRP AD is 170)."
+  },
+  {
+    "legacyIndex": 1162,
+    "legacyNumber": 20,
+    "prompt": "What must be considered when planning an IPsec VPN deployment?",
+    "options": [
+      "IPsec transport mode allows intermediate devices to see the final destination of the packet",
+      "In IPsec tunnel mode, only the IP payload is encrypted",
+      "IPsec transport mode increases GRE tunnel security over tunnel mode.",
+      "IPsec transport mode does not encrypt the Layer 4 header, which allow full examination of the packet"
+    ],
+    "answer": 0,
+    "explanation": "In tunnel mode, the entire original IP packet is encapsulated to become the payload of a new IP packet.\nAdditionally, a new IP header is added on top of the original IP packet. -> Answer B and answer C are not\ncorrect.\n\nIn IPsec Transport mode, the original IP header is retained (-> answer A is correct) and just the Layer 4\npayload carried by the IP packet is encrypted -> Answer D is not correct."
+  },
+  {
+    "legacyIndex": 1163,
+    "legacyNumber": 21,
+    "prompt": "Where are the real-time control functions processed in a split MAC architecture?",
+    "options": [
+      "central WLC",
+      "individual AP",
+      "centralized cloud management platform",
+      "client device"
+    ],
+    "answer": 1,
+    "explanation": "In a split MAC architecture, the control and data plane functions are divided between the access points (APs)\nand a central controller, typically a Wireless LAN Controller (WLC).\n\n+ Real-time control functions, such as beacon generation, frame acknowledgment, and packet queuing, are\nprocessed locally at the individual AP.\n+ The central WLC (Wireless LAN Controller) handles non-real-time functions like security policies,\nconfiguration management, and mobility management."
+  },
+  {
+    "legacyIndex": 1164,
+    "legacyNumber": 22,
+    "prompt": "Which group of channels in the 802.11b/g/n/ac/ax 2.4 GHz frequency bands are nonoverlapping channels?",
+    "options": [
+      "channels 1,6, and 10",
+      "channels 1,5, and 11",
+      "channels 1,6, and 11",
+      "channels 1,5, and 10"
+    ],
+    "answer": 2,
+    "explanation": "The 2.4 GHz band is subdivided into multiple channels each allotted 22 MHz bandwidth and separated from\nthe next channel by 5 MHz.\n-> A best practice for 802.11b/g/n WLANs requiring multiple APs is to use non-overlapping channels such as\n1, 6, and 11."
+  },
+  {
+    "legacyIndex": 1165,
+    "legacyNumber": 23,
+    "prompt": "Which IPsec mode encapsulates the entire IP packet?",
+    "options": [
+      "tunnel",
+      "transport",
+      "SSL VPN",
+      "Q-in-Q"
+    ],
+    "answer": 0,
+    "explanation": "In tunnel mode, the entire original IP packet is encapsulated to become the payload of a new IP packet.\nAdditionally, a new IP header is added on top of the original IP packet."
+  },
+  {
+    "legacyIndex": 1166,
+    "legacyNumber": 24,
+    "prompt": "Which mechanism allows WPA3 to provide a higher degree of security than its predecessors?",
+    "options": [
+      "automatic device pairing",
+      "special-character support in preshared keys",
+      "certificate-based authentication",
+      "SAE password-based key exchange"
+    ],
+    "answer": 3,
+    "explanation": "WPA3 provides improvements to the general Wi-Fi encryption, thanks to Simultaneous Authentication of\nEquals (SAE) replacing the Pre-Shared Key (PSK) authentication method used in prior WPA versions. SAE\nenables individuals or home users to set Wi-Fi passwords that are easier to remember and provide the same\nsecurity protection even if the passwords are not complex enough."
+  },
+  {
+    "legacyIndex": 1167,
+    "legacyNumber": 25,
+    "prompt": "Refer to the exhibit.\n\nWhich switch in this configuration will be elected as the root bridge?\n\nSW1 0С:B4:86:22:42:37\nSW2 0С:0B:15:22:05:97\nSW3 0C:0B:15:1A:3C:9D\nSW4 0С:B0:18:A1:B3:19",
+    "options": [
+      "SW1",
+      "SW2",
+      "SW3",
+      "SW4"
+    ],
+    "answer": 2,
+    "explanation": "The switch with lowest bridge priority will be chosen the root bridge. If many switches have the same bridge\npriority then the lowest MAC address would be chosen.\n\nIn this question, SW3 and SW4 have lowest (and same) bridge priority of 4096. But SW3 has lower MAC\naddress so it would be elected root bridge."
+  },
+  {
+    "legacyIndex": 1168,
+    "legacyNumber": 26,
+    "prompt": "Refer to the exhibit.\n\nWhich switch in this configuration will be elected as the root bridge?\n\nSW1 0С:E4:85:71:03:80\nSW2 0С:0E:1A:22:05:97\nSW3 0C:E0:A1:1A:3C:9D\nSW4 0С:00:18:A1:B3:19",
+    "options": [
+      "SW1",
+      "SW2",
+      "SW3",
+      "SW4"
+    ],
+    "answer": 1,
+    "explanation": "SW2 has lowest bridge priority (4096) so surely it will be elected as the root bridge regardless of its MAC\naddress."
+  },
+  {
+    "legacyIndex": 1169,
+    "legacyNumber": 27,
+    "prompt": "Which authentication method requires the user to provide a physical attribute to authenticate successfully?",
+    "options": [
+      "certificate",
+      "password",
+      "multifactor",
+      "biometric"
+    ],
+    "answer": 3,
+    "explanation": "Biometric authentication requires the user to provide a physical attribute, such as a fingerprint, facial\nrecognition, or iris scan, to authenticate successfully. This method relies on unique biological characteristics\nto verify identity."
+  },
+  {
+    "legacyIndex": 1170,
+    "legacyNumber": 28,
+    "prompt": "Refer to the exhibit.\n\nAn engineer is using the Cisco WLC GUI to configure a WLAN for WPA2 encryption with AES and preshared\nkey Cisc0123456. After the engineer selects the WPA + WPA2 option from the Layer 2 Security drop-down\nlist, which two tasks must they perform to complete the process? (Choose two)",
+    "options": [
+      "Select PSK from the Auth Key Mgmt drop-down list, set the PSK Format to ASCII, and enter the key",
+      "Select CCKM from the Auth Key Mgmt drop-down list, set the PSK Format to Hex, and enter the key",
+      "Select ASCII from the PSK Format drop-down list, enter the key, and leave the Auth Key Mgmt setting blank",
+      "Select the WPA2 Policy, AES, and TKIP check boxes",
+      "Select the WPA2 Policy and AES check boxes."
+    ],
+    "answer": [
+      0,
+      4
+    ],
+    "type": "multi",
+    "explanation": "We need to choose “PSK” from Auth Key Mgmt:\n\nNext choose “ASCII” from PSK Format and type the password:"
+  },
+  {
+    "legacyIndex": 1171,
+    "legacyNumber": 29,
+    "prompt": "Which protocol does Ansible use to push modules to nodes in a network?",
+    "options": [
+      "SSH",
+      "Kerberos",
+      "SNMP",
+      "Telnet"
+    ],
+    "answer": 0,
+    "explanation": "Ansible uses an agentless architecture to manage network devices. Agentless means that the managed\ndevice does not need any code (agent) to be installed on it. Therefore Ansible uses SSH (NETCONF over SSH\nin particular) to “push” changes and extract information to managed devices."
+  },
+  {
+    "legacyIndex": 1172,
+    "legacyNumber": 30,
+    "prompt": "Which function does an iterative DNS query serve in the domain name resolution process?",
+    "options": [
+      "Encrypt communication automatically between DNS clients and servers.",
+      "Allow a DNS client to contact several DNS servers until the correct information is found.",
+      "Obtain information directly from all root DNS servers configured within the scope.",
+      "Update records dynamically across multiple DNS servers at the same time."
+    ],
+    "answer": 1,
+    "explanation": "An iterative DNS query is a request for a website name or URL. However, with this query type, the DNS\nserver does not fetch the complete answer for the query. Rather, it provides a referral to other DNS servers\nthat might have the answer. Thus, if the queries server does not have the IP address requested, it forwards it\nto another DNS server until the answer is found."
+  },
+  {
+    "legacyIndex": 1173,
+    "legacyNumber": 31,
+    "prompt": "What is the difference between controller-based networks and traditional networks as they relate to control-\nplane and/or data-plane functions?",
+    "options": [
+      "Controller-based networks centralize all important control-plane functions, and traditional networks distribute control-plane functions.",
+      "Traditional networks centralize all important control-plane functions, and controller-based networks distribute control-plane functions.",
+      "Traditional networks centralize all important data-plane functions, and controller-based networks distribute data-plane functions.",
+      "Controller-based networks centralize all important data-plane functions, and traditional networks distribute data-plane functions."
+    ],
+    "answer": 0,
+    "explanation": "In controller-based networks, the control-plane functions (such as routing decisions) are centralized in a\ncontroller, which can manage and configure the entire network. In contrast, traditional networks distribute\ncontrol-plane functions across individual network devices, where each device makes its own decisions about\nrouting and forwarding."
+  },
+  {
+    "legacyIndex": 1174,
+    "legacyNumber": 32,
+    "prompt": "Which factor must be considered during the implementation of an IPsec VPN?",
+    "options": [
+      "IPsec transport mode leaves the Layer 4 header unencrypted for inspection.",
+      "IPsec transport mode increases GRE tunnel security over tunnel mode.",
+      "In IPsec tunnel mode, only the IP payload is encrypted.",
+      "In IPsec tunnel mode, the entire original IP datagram is encrypted."
+    ],
+    "answer": 3,
+    "explanation": "In tunnel mode, the entire original IP packet is encapsulated to become the payload of a new IP packet.\nAdditionally, a new IP header is added on top of the original IP packet. -> Answer D is correct.\n\nNote: In IPsec Transport mode, the original IP header is retained and just the Layer 4 payload carried by the\nIP packet is encrypted."
+  },
+  {
+    "legacyIndex": 1175,
+    "legacyNumber": 33,
+    "prompt": "What is the default interface for in-band wireless network management on a WLC?",
+    "options": [
+      "wireless management",
+      "redundant port",
+      "service port",
+      "out-of-band"
+    ],
+    "answer": 0,
+    "explanation": "Wireless Management Interface (WMI) is also the default interface for in-band management and connectivity\nto enterprise services, such as, AAA, syslog, SNMP, and so on. You can use the WMI IP address to remotely\nconnect to the device using SSH or Telnet (or) access the Graphical User Interface (GUI) using HTTP or\nHTTPs by entering the wireless\nmanagement interface IP address of the controller in the address field of your browser."
+  },
+  {
+    "legacyIndex": 1176,
+    "legacyNumber": 34,
+    "prompt": "Why choose Cisco DNA Center for automated lifecycle management?",
+    "options": [
+      "to perform upgrades without service interruption",
+      "to provide software redundancy in the network",
+      "to provide fast and accurate deployment of patches and updates",
+      "to allow SSH access to all nodes in the network"
+    ],
+    "answer": 2,
+    "explanation": "Cisco DNA Center is used for automating lifecycle management, including the fast and accurate deployment\nof patches, updates, and configuration changes across the network. It helps streamline network management\ntasks, reducing errors and improving operational efficiency."
+  },
+  {
+    "legacyIndex": 1177,
+    "legacyNumber": 35,
+    "prompt": "What are the two main capabilities of tunnel mode in IPsec site-to-site VPNs ? (Choose two.)",
+    "options": [
+      "It authenticates the data field in original packet.",
+      "It encrypts the complete IP packet with the data field.",
+      "It secures only the data field in the packet.",
+      "It transmits with the original packet header visible.",
+      "It inserts a new IPsec header with new IP address."
+    ],
+    "answer": [
+      1,
+      4
+    ],
+    "type": "multi",
+    "explanation": "In tunnel mode, IPsec encrypts the entire original IP packet, including the header and data. It then adds a\nnew IP header so the packet can be routed through the network to its destination, providing a higher level of\nsecurity and privacy."
+  },
+  {
+    "legacyIndex": 1178,
+    "legacyNumber": 36,
+    "prompt": "How does AI contribute to network traffic analysis?",
+    "options": [
+      "It simplifies traffic route mapping.",
+      "It enhances data packet delivery speeds.",
+      "It analyzes patterns for anomaly detection.",
+      "It eliminates network threats."
+    ],
+    "answer": 2,
+    "explanation": "AI contributes to network traffic analysis by examining patterns in network data to identify anomalies, which\ncould indicate security threats, unusual activity, or performance issues. Machine learning algorithms can\nlearn from historical network data to detect deviations from normal behavior, enabling proactive threat\ndetection and response."
+  },
+  {
+    "legacyIndex": 1180,
+    "legacyNumber": 38,
+    "prompt": "Refer to the exhibit.\n\nWith a reference bandwidth of 100 Gb on all routers, which path does router Y use to get to network\n192.168.1.0/24?",
+    "options": [
+      "router C > D > A > F",
+      "router E > B > F",
+      "router E > F",
+      "router C > D > A > B > F"
+    ],
+    "answer": 3,
+    "explanation": "This question did not say what routing protocol it is using but maybe it is using OSPF. For OSPF, the cost is\ncalculated as follows:\n\n Cost = Reference Bandwidth / Interface Bandwidth\n\nTherefore with a reference bandwidth of 100Gb then:\n+ The cost of 100Gig link: cost = 100 / 100 = 1\n+ The cost of 10Gig link: cost = 100 / 10 = 10\n\nThe cost of the path C > D > A > B > F is 10 + 1 + 1 + 1 + 1 = 14 which is lowest so this path will be\nchosen."
+  },
+  {
+    "legacyIndex": 1181,
+    "legacyNumber": 39,
+    "prompt": "What is a characteristic of RSA?",
+    "options": [
+      "It requires both sides to have identical keys.",
+      "it is a private-key gencryption algorithm.",
+      "It uses preshared keys for encryption.",
+      "it is a public-key cryptosystem."
+    ],
+    "answer": 3,
+    "explanation": "RSA (Rivest-Shamir-Adleman) is a public-key cryptosystem that uses a pair of keys: a public key for\nencryption and a private key for decryption. This key pair allows secure data transmission without requiring\nboth parties to have identical keys. Public-key cryptography like RSA enables one party to encrypt data using\nthe recipient’s public key, which only the recipient can decrypt with their private key."
+  },
+  {
+    "legacyIndex": 1182,
+    "legacyNumber": 40,
+    "prompt": "What is a functionality of the control plane in the network?",
+    "options": [
+      "It provides CLI access to the network device.",
+      "It exchanges topology information with other routers.",
+      "It looks up an egress interface in the forwarding information base.",
+      "It forwards traffic to the next hop."
+    ],
+    "answer": 1,
+    "explanation": "The control plane is responsible for managing and exchanging routing and topology information within the\nnetwork. This information allows routers to make decisions about the best paths across the network. The\ncontrol plane handles functions like routing protocols (OSPF, EIGRP, BGP…), which are essential for building\nand maintaining routers’ routing table."
+  },
+  {
+    "legacyIndex": 1183,
+    "legacyNumber": 41,
+    "prompt": "What is the purpose of the URI string in a REST request?",
+    "options": [
+      "to specify the way in which a remote resource is modified",
+      "to identify a resource on a target server",
+      "to respond with the data content encoding for a request",
+      "to transport data or payload to a remote resource"
+    ],
+    "answer": 1,
+    "explanation": "In a RESTful request, the URI (Uniform Resource Identifier) is used primarily to identify the specific resource\non a server that the client wants to interact with. The URI typically includes information about the path to the\nresource and any query parameters needed to locate it. For example, this is the URI of an online library\nsystem:\n\nIn this URI:\n\n•https://api.library.com: This part is the base URL, which points to the library’s API server.\n•/books: This path identifies the collection of resources, in this case, “books.”\n•/12345: This is the unique identifier (ID) for a specific book. By adding this ID to the end of the URI, we’re\nidentifying a single resource within the “books” collection."
+  },
+  {
+    "legacyIndex": 1184,
+    "legacyNumber": 42,
+    "prompt": "Refer to the exhibit.\n\n Router1#show ip route\n Gateway of last resort is 10.10.11.2 to network 0.0.0.0\n\n     209.165.200.0/27 is subnetted, 1 subnets\n\n B     209.165.200.224 [20/0] via 10.10.12.2, 03:03:03\n\n      209.165.201.0/27 is subnetted, 1 subnets\n\n B       209.165.201.0 [20/0] via 10.10.12.2, 03:03:03\n\n      209.165.202.0/27 is subnetted, 1 subnets\n\n B       209.165.202.128 [20/0] via 10.10.12.2, 03:03:03\n\n      10.0.0.0/8 is variably subnetted, 8 subnets, 4 masks\n\n C       10.10.10.0/28 is directly connected, GigabitEthernet0/0\n C       10.10.11.0/30 is directly connected, FastEthernet2/0\n C       10.10.12.0/30 is directly connected, GigabitEthernet0/1\n O       10.10.13.0/25 [110/2] via 10.10.10.1, 00:00:03, GigabitEthernet0/0\n O       10.10.13.128/28 [110/2] via 10.10.10.1, 00:00:03, GigabitEthernet0/0\n O       10.10.13.144/28 [110/2] via 10.10.10.1, 00:00:03, GigabitEthernet0/0\n O       10.10.13.160/29 [110/2] via 10.10.10.1, 00:00:03, GigabitEthernet0/0\n O       10.10.13.208/29 [110/2] via 10.10.10.1, 00:00:03, GigabitEthernet0/0\n S*   0.0.0.0/0 [1/0] via 10.10.11.2\n\nWhat is the prefix length for the route that router1 will use to reach host A?",
+    "options": [
+      "/25",
+      "/27",
+      "/28",
+      "/29"
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1185,
+    "legacyNumber": 43,
+    "prompt": "Under what condition would a FlexConnect wireless architecture be preferable over other architectural\nchoices?",
+    "options": [
+      "when the connection latency to several remote offices is anticipated to surpass 300 milliseconds",
+      "when there is a need for high-precision location-based services at various remote offices",
+      "when centralized management is needed for several remote offices that lack individual WLCs",
+      "when each remote office necessitates its own local WLC for network management"
+    ],
+    "answer": 2,
+    "explanation": "FlexConnect is designed for environments where remote sites (such as branch offices) do not have a local\nWLC but require centralized management. It allows access points to function in “FlexConnect mode,” enabling\nthem to switch traffic locally at the remote site while still being managed by a centralized WLC at the main\noffice."
+  },
+  {
+    "legacyIndex": 1186,
+    "legacyNumber": 44,
+    "prompt": "Refer to the exhibit.\n\nInter-VLAN routing is configured on SW1. Client A is running Linux as an OS in VLAN 10 with a default\ngateway IP 10.0.0.1 but cannot ping client B in VLAN 20 running Windows. What action must be taken to\nverify that client A has the correct IP settings?",
+    "options": [
+      "Run the ifconfig command on client A to confirm that its IP and subnet mask fall within 255.254.0.0.",
+      "Run the ipconfig command on client A and ensure that the IP address is within the host range of 10.0.0.1 – 10.0.255.254.",
+      "Run the ipconfig command on client A to confirm that the correct 10.0.0.1 default gateway is used.",
+      "Run the ifconfig command on client A to confirm that the subnet mask is set to 255.255.128.0"
+    ],
+    "answer": 0,
+    "explanation": "We need to use the “ifconfig” on Linux to find out the IP address and subnet mask of an interface. For\nexample:"
+  },
+  {
+    "legacyIndex": 1187,
+    "legacyNumber": 45,
+    "prompt": "Refer to the exhibit.\n\n CPE# show ip access-list Services\n Extended IP access list Services\n\n     10 permit tcp 10.0.0.0 0.255.255.255 any eq www\n\n     20 permit tcp 10.0.0.0 0.255.255.255 any eq 443\n\n     30 permit udp 10.0.0.0 0.255.255.255 host 198.51.100.11 eq domain\n\n     40 deny ip any any log\n\nThis ACL is configured to allow client access only to HTTP, HTTPS, and DNS services via UDP. The new\nadministrator wants to add TCP access to the DNS service. Which configuration updates the ACL efficiently?\n\n                                                                                     Option B\n Option A\n                                                                                      no ip access-list extended\n   ip access-list extended Services\n                                                                                      ip access-list extended Ser\n    permit tcp 10.0.0.0 0.255.255.255 host 198.51.100.11 eq\n   domain                                                                              30 permit tcp 10.0.0.0 0.2\n                                                                                      domain\n\n Option C\n\n   no ip access-list extended Services                                               Option D\n   ip access-list extended Services\n                                                                                      ip access-list extended Ser\n    permit udp 10.0.0.0 0.255.255.255 any eq 53\n                                                                                       35 permit tcp 10.0.0.0 0.2\n    permit tcp 10.0.0.0 0.255.255.255 host 198.51.100.11 eq                           domain\n   domain\n    deny ip any any log",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 3,
+    "explanation": "If we remove the ACL with “no ip access-list extended Services”, all configs will be lost. We should use a\nhigher sequence number (mean smaller value) than 40 to write the new rule above the “40 deny ip any any\nlog” statement."
+  },
+  {
+    "legacyIndex": 1188,
+    "legacyNumber": 46,
+    "prompt": "Refer to the exhibit.\n\nThe Wi-Fi SSID “Office_WLan” has Layer 2 Security configured with MAC filtering enabled. What additional\nsecurity is provided by this specific feature?",
+    "options": [
+      "There is Galois cache algorithm configured that provides strong encryption and authentication.",
+      "There is a strong mutual authentication used between NAC and the network devices using x.509 standard.",
+      "There is an extra layer of security that ensures only authorized devices with known MAC addresses connect to the network.",
+      "There is a robust security mechanism configured to protect against various Layer 2 and Layer 3 attacks."
+    ],
+    "answer": 2,
+    "explanation": "From the exhibit, we see “MAC Filtering” is being chosen. This option allows to control access to a network\nbased on the MAC address of a device -> Answer C is correct.\n\nAnswer A is not correct as Galois/Counter Mode Protocol (GCMP) is an encryption, not authentication\nmethod.\n\nAnswer B is not correct as x.509 cert is not related to this config.\n\nAnswer D is not correct as we only see “Layer 2” tab, not “Layer 3” tab so we cannot say anything about\nLayer 3 protection."
+  },
+  {
+    "legacyIndex": 1189,
+    "legacyNumber": 47,
+    "prompt": "What are two reasons to configure PortFast on a switch port attached to an end host? (Choose two)",
+    "options": [
+      "to enable the number of MAC addresses learned on the port to 1",
+      "to protect the operation of the port from topology change processes",
+      "to enable the pod to enter the forwarding state immediately when the host boots up",
+      "to prevent the port from participating in Spanning Tree Protocol operations",
+      "to block another switch or host from communicating through the port"
+    ],
+    "answer": [
+      1,
+      2
+    ],
+    "type": "multi",
+    "explanation": "PortFast is a feature of the Spanning Tree Protocol (STP) that allows ports to quickly transition to the\nforwarding state. This reduces the time it takes for devices to connect to a network and communicate.\n\nAnswer A is not correct as limiting MAC addresses is related to security features like port security, not\nPortFast.\n\nAnswer B is correct as a switch will never generate a topology change notification for an interface that has\nPortFast enabled.\n\nAnswer D is not correct as the port which runs PortFast still participate into STP process.\n\nAnswer E is not correct as it is not the function of PortFast."
+  },
+  {
+    "legacyIndex": 1190,
+    "legacyNumber": 48,
+    "prompt": "Refer to the exhibit.\n\n C:\\Users\\ADMIN>ipconfig\n\n Windows IP Configuration\n\n Ethernet adapter Ethernet:\n\n <...>\n\n     Physical Address . . . . . . . . . . . : 04-42-1A-EE-AA-5E\n\n     DHCP Enabled . . . . . . . . . . . . . : Yes\n\n     Autoconfiguration Enabled. . . . . . . : Yes\n\n     Link-local IPv6 Address. . . . . . . . :\n\n fe80::8a79:bcde:34dc:c11e35%(Preferred)\n\n     Ipv4 Address . . . . . . . . . . . . . : 192.168.3.20(Preferred)\n\n     Subnet Mask. . . . . . . . . . . . . . : 255.255.255.0\n\n     Lease Obtained . . . . . . . . . . . . : Thursday, 16 March 2023\n\n 6:25:01 AM\n\n     Lease Expires. . . . . . . . . . . . . : Sunday, 26 March 2023\n\n 4:17:26 PM\n\n     Default Gateway. . . . . . . . . . . . : 192.168.3.1\n\n     DHCP Server. . . . . . . . . . . . . . : 192.168.3.1\n\n     DHCPv6 IAID. . . . . . . . . . . . . . : 201605658\n\n     DHCPv6 Client DUID . . . . . . . . . . : 00-01-00-01-2A-3F-45-34-03-\n\n 13-23-EE-AD-5E\n\n     DNS Servers. . . . . . . . . . . . . . : 10.10.1.254\n\n     NetBIOS over Tcpip . . . . . . . . . . : Enabled\n\nThe user has connectivity to devices on network 192.168.3.0/24 but cannot reach users on the network\n10.10.1.0/24. What is the first step to verify connectivity?",
+    "options": [
+      "Is the internet reachable?",
+      "Is the default gateway reachable?",
+      "Is the DNS server reachable?"
+    ],
+    "answer": 1,
+    "explanation": "If the local host can access local network but cannot reach outside then we must check the default gateway\nfirst as it is always the first hop between our host and outside network.\n\nNote: We cannot conclude that the default gateway is reachable right now just because the PC received a\ncorrect DHCP address (from the output we learned that the Default Gateway is also the DHCP server at\n192.168.3.1). The gateway might have been working when it issued the IP address, but it may be down at\nthe moment."
+  },
+  {
+    "legacyIndex": 1191,
+    "legacyNumber": 49,
+    "prompt": "Which solution is appropriate when mitigating password attacks where the attacker was able to sniff the\nclear-text password of the system administrator?",
+    "options": [
+      "next-generation firewall to keep stateful packet inspection",
+      "multifactor authentication using two separate authentication sources",
+      "ACL to restrict incoming Telnet sessions “admin” accounts",
+      "IPS with a block list of known attack vectors"
+    ],
+    "answer": 1,
+    "explanation": "If an attacker is able to sniff a clear-text password, it suggests the authentication process is not secure\nenough. Multifactor authentication (MFA) enhances security by requiring an additional authentication factor,\nsuch as:\n\n+ Something you know (password or PIN…).\n+ Something you have (a hardware token or mobile app…).\n+ Something you are (biometric authentication like a fingerprint…).\n\nEven if the attacker captures the password, they would still need the second factor to gain access, effectively\nmitigating the risk."
+  },
+  {
+    "legacyIndex": 1192,
+    "legacyNumber": 50,
+    "prompt": "A network engineer starts to implement a new wireless LAN by configuring the authentication server and\ncreating the dynamic interface. What must be performed next to complete the basic configuration?",
+    "options": [
+      "Install the management interface and add the management IP.",
+      "Configure high availability and redundancy for the access points.",
+      "Enable Telnet and RADIUS access on the management interface.",
+      "Create the new WLAN and bind the dynamic interface to it."
+    ],
+    "answer": 3,
+    "explanation": "A dynamic interface is simply an interface that maps a WLAN to a wired vlan or subnet. To create a new\ninterface, Choose Controller > Interfaces > New to open the Interfaces page:\n\nNext, enter the IP address, subnet mask, and gateway address… for the interface.\n\nNext, while creating a new WLAN, we assign above interface to it:"
+  },
+  {
+    "legacyIndex": 1193,
+    "legacyNumber": 51,
+    "prompt": "Drag and drop the TCP and UDP characteristics from the left onto the supporting protocols on the right. Not\nall options are used.",
+    "type": "match",
+    "items": [
+      "uses sequence numbers",
+      "relies on acknowledgement packets",
+      "ensures data integrity",
+      "supports real-time applications",
+      "connectionless at transport layer",
+      "minimal error checking"
+    ],
+    "choices": [
+      "TCP",
+      "UDP"
+    ],
+    "answer": [
+      0,
+      0,
+      0,
+      1,
+      1,
+      1
+    ],
+    "explanation": "TCP (Transmission Control Protocol) ensures data integrity by utilizing a checksum field within its header,\nwhich allows for error detection during transmission, and by implementing mechanisms like sequence\nnumbers and retransmission of lost data to guarantee that data arrives at the destination in the correct order\nand without corruption; this makes TCP a reliable protocol for data transfer where data integrity is crucial.\n\nUser Datagram Protocol (UDP) uses checksums to detect errors in data packets. However, UDP doesn’t\ncorrect errors or resend lost packets. This makes UDP sometimes known as the Unreliable Data Protocol."
+  },
+  {
+    "legacyIndex": 1194,
+    "legacyNumber": 52,
+    "prompt": "Which advantage does machine learning offer for network security?",
+    "options": [
+      "It improves real-time threat detection.",
+      "It manages firewall rule sets.",
+      "It enforces password complexity requirements.",
+      "It controls VPN access permissions."
+    ],
+    "answer": 0,
+    "explanation": "Machine learning detects threats by constantly monitoring the behavior of the network for anomalies.\nMachine learning engines process massive amounts of data in near real time to discover critical incidents.\nThese techniques allow for the detection of insider threats, unknown malware, and policy violations."
+  },
+  {
+    "legacyIndex": 1195,
+    "legacyNumber": 53,
+    "prompt": "Which AP feature provides a captive portal for users to authenticate register and accept terms before\naccessing the internet?",
+    "options": [
+      "One-Click",
+      "Hotspot",
+      "Enhanced Bluetooth",
+      "Whole Home"
+    ],
+    "answer": 1,
+    "explanation": "Hotspot (captive portal) – uses web-proxy and it is capable of using only the default routing table.\n\nHotspot feature in an Access Point provides a captive portal, which forces users to authenticate, register, or\naccept terms before accessing the internet. It is commonly used in public Wi-Fi networks, such as those in\nhotels, cafes, and airports."
+  },
+  {
+    "legacyIndex": 1196,
+    "legacyNumber": 54,
+    "prompt": "What does the term “split MAC” refer to in a wireless architecture?",
+    "options": [
+      "divides data link layer functions between the AP and WLC",
+      "combines the management and control functions from the data-forwarding functions",
+      "uses different MAC addresses for 2.4 GHz and 5 GHz bands on the same AP",
+      "leverages two APs to handle control and data traffic"
+    ],
+    "answer": 0,
+    "explanation": "With Split MAC , the 802.11 protocol functionality is divided between AP & WLC. General rule is all real-time\ntasks are handled by AP (such as Probe Response, Packet buffering, Fragmentation, Queuing) & non real-\ntime tasks handled by WLC (Such as Association / Di-association, Classifying, 802.1x/EAP authentication,\netc)"
+  },
+  {
+    "legacyIndex": 1197,
+    "legacyNumber": 55,
+    "prompt": "Which plane is centralized in software-defined networking?",
+    "options": [
+      "application",
+      "services",
+      "control",
+      "data"
+    ],
+    "answer": 2,
+    "explanation": "Software-Defined Networking (SDN) is an approach to networking that centralizes the control plane into an\napplication called a controller. Therefore a big advantage of SDN is we do not have to manually configure\neach device or each interface. We just plan a policy framework, and the SDN controller configures all related\nunderlying devices. This approach is faster, more reliable and reduces errors."
+  },
+  {
+    "legacyIndex": 1198,
+    "legacyNumber": 56,
+    "prompt": "How does machine learning improve the detection of unauthorized network access?",
+    "options": [
+      "It monitors for outdated software.",
+      "It dictates security policy updates.",
+      "It identifies patterns indicating intrusions.",
+      "It assigns security clearance levels."
+    ],
+    "answer": 2,
+    "explanation": "In security, machine learning continuously learns by analyzing data to find patterns so we can better detect\nmalware in encrypted traffic, find insider threats, predict where “bad neighborhoods” are online to keep\npeople safe when browsing, or protect data in the cloud by uncovering suspicious user behavior."
+  },
+  {
+    "legacyIndex": 1199,
+    "legacyNumber": 57,
+    "prompt": "Refer to the exhibit.\n\nThe My_WLAN wireless LAN was configured with WPA2 Layer 2 PSK security. Which additional configuration\nmust the administrator perform to allow users to connect to this WLAN on a different subnet called Data?",
+    "options": [
+      "Enable Broadcast SSID and select data from the Interface/Interface Group drop-down list.",
+      "Enable Status and select data from the Interface/Interface Group drop-down list.",
+      "Enable Status and set the NAS-ID to data.",
+      "Enable Status and enable Broadcast SSID."
+    ],
+    "answer": 1,
+    "explanation": "Answer A and answer D are not correct as “Enable Broadcast SSID” just makes the SSID visible to clients\nscanning for networks, but doesn’t place clients into a specific subnet.\n\nAnswer C is not correct as NAS-ID is used for RADIUS identification in AAA, not for assigning subnets.\n\nThe Interface or Interface Group assigned to the WLAN determines the subnet or VLAN that the clients will\nbe placed into upon connecting.\n\nIn this case, the subnet is called “Data”, so the administrator must assign the “Data” interface (or interface\ngroup) to the WLAN."
+  },
+  {
+    "legacyIndex": 1200,
+    "legacyNumber": 58,
+    "prompt": "Refer to the exhibit.\n\nCompany A wants to use a RADIUS server to service all user and device authentication attempts with a more\nsecure and granular authentication approach. Not all client devices support dot1x authentication. Which two\nconfiguration changes must be made to accomplish the task? (Choose two)",
+    "options": [
+      "Enable AutoConfig iPSK under the Layer 2 tab.",
+      "Select Authentication server under the AAA servers tab.",
+      "Configure Enterprise Security type under the Layer 2 tab.",
+      "Set Authentication under the Layer 3 tab.",
+      "Enable WPA2 Policy under the Layer 2 tab."
+    ],
+    "answer": [
+      0,
+      1
+    ],
+    "type": "multi",
+    "explanation": "Answer A is correct as it enables Identity PSK (iPSK), allowing the WLC to assign different pre-shared keys to\ndifferent users or devices based on RADIUS responses. iPSK also supports devices that do not support\n802.1X\n\nAnswer B is correct as it is required to specify the RADIUS server that will handle the authentication process\nfor both 802.1X and iPSK clients."
+  },
+  {
+    "legacyIndex": 1201,
+    "legacyNumber": 59,
+    "prompt": "A network architect planning a new Wi-Fi network must decide between autonomous, cloud-based, and split\nMAC architectures. Which two facts should the architect consider? (Choose two)",
+    "options": [
+      "Lightweight access points are solely used by split MAC architectures.",
+      "Cloud-based architectures uniquely use the CAPWAP protocol to communicate between access points and clients.",
+      "Each of the three architectures must use WLCs to manage their access points.",
+      "All three architectures use access points to manage the wireless devices connected to the wired infrastructure.",
+      "Autonomous architectures exclusively use tunneling protocols to manage access points remotely."
+    ],
+    "answer": [
+      0,
+      3
+    ],
+    "type": "multi",
+    "explanation": "The three architectures are summarized as follows:\n\n+ Autonomous – Access points are standalone and make their own decisions.\n\n+ Cloud-based – Management and control are handled in the cloud; APs are usually lightweight and cloud-\nmanaged.\n\n+ Split MAC – APs split the MAC-layer processing: some tasks are done on the AP, others on a WLC (used in\ncentralized deployments with lightweight APs and WLCs).\n\nAnswer A is correct as Split MAC architecture specifically uses lightweight APs which rely on a WLC to\nperform control functions like authentication, roaming…\n\nAnswer D is correct as regardless of architecture, all APs provide wireless access to client devices and bridge\nthem to the wired network.\n\nAnswer B is not correct as CAPWAP is used in split MAC architectures (between AP and WLC), not uniquely in\ncloud-based ones.\n\nAnswer C is not correct as Autonomous APs and cloud-based APs don’t require traditional WLCs.\n\nAnswer E is not correct as Autonomous APs are managed individually and do not require tunneling protocols\nfor remote management. They use standard management protocols like SSH or HTTPS."
+  },
+  {
+    "legacyIndex": 1202,
+    "legacyNumber": 60,
+    "prompt": "Which AP mode serves as the primary hub in a point-to-multipoint network topology?",
+    "options": [
+      "bridge",
+      "SE-Connect",
+      "FlexConnect",
+      "local"
+    ],
+    "answer": 0,
+    "explanation": "An AP in bridge mode becomes a dedicated point-to-point or point-to-multipoint bridge between networks.\nTwo bridge mode wireless access points can be used to link two remote locations."
+  },
+  {
+    "legacyIndex": 1203,
+    "legacyNumber": 61,
+    "prompt": "How does network automation help reduce network downtime?",
+    "options": [
+      "Emails can be generated based on when a network admin performs a network change, which increases visibility.",
+      "Configuration templates and testing can be built into implementation, which increases the success rate of a network change.",
+      "Changes can be implemented in parallel across multiple devices at once, which increases the speed of the change rate.",
+      "By using automation platforms with intent-based configuration, all changes are checked for possible outages before being implemented."
+    ],
+    "answer": 1,
+    "explanation": "Using standardized templates reduces human error in configuration, and incorporating testing into the\nimplementation process allows for identifying and fixing potential issues before they impact the live network.\nThis directly contributes to reducing downtime by preventing failed or faulty changes.\n\nAn example of using templates in DNA Center:\n\nNote: Although answer D is also correct but we believe answer B is clearer and better."
+  },
+  {
+    "legacyIndex": 1204,
+    "legacyNumber": 62,
+    "prompt": "Drag and drop the network topology architecture types from the left onto the corresponding function on the\nright. Not all architecture types are used.",
+    "type": "match",
+    "items": [
+      "end user connectivity",
+      "top-of-rack",
+      "provide routing, filtering, and WAN access",
+      "switch packets as fast as possible"
+    ],
+    "choices": [
+      "access",
+      "spine-leaf",
+      "distribution",
+      "core"
+    ],
+    "answer": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "explanation": "In today’s leaf-spine topology, the Top-of-Rack (ToR) switches are the leaf switches and they are attached to\nthe spine switches."
+  },
+  {
+    "legacyIndex": 1205,
+    "legacyNumber": 63,
+    "prompt": "What is the difference between SNMP traps and SNMP polling?",
+    "options": [
+      "SNMP traps are initiated using a push model at the network device, and SNMP polling is initiated at the server.",
+      "SNMP traps are used for proactive monitoring, and SNMP polling is used for reactive monitoring.",
+      "SNMP traps are initiated by the network management system, and network devices initiate SNMP polling.",
+      "SNMP traps send periodic updates via the MIB, and SNMP polling sends data on demand."
+    ],
+    "answer": 0,
+    "explanation": "In SNMP Polling, the SNMP manager initiates the conversation asking the network devices for information:\n\nSNMP traps are the opposite where the network devices are sending information to the SNMP Manager right\naway when something happens:"
+  },
+  {
+    "legacyIndex": 1206,
+    "legacyNumber": 64,
+    "prompt": "Refer to the exhibit.\n\nWhich functionalities will this SSID have while being used by wireless clients?",
+    "options": [
+      "decreases network security against air sniffing attacks and discourages the use of complex passwords",
+      "increases network security against offline dictionary attacks and discourages time-consuming brute force\nattacks",
+      "increases network security against man in the middle attacks and discourages denial of service attacks",
+      "decreases network security against offline dictionary attacks and encourages easy access to the network"
+    ],
+    "answer": 1,
+    "explanation": "In the exhibit, we see that the option “FT + SAE” in “Auth key Mgmt” tab was chosen.\n\nWPA3 provides improvements to the general Wi-Fi encryption, thanks to Simultaneous Authentication of\nEquals (SAE) replacing the Pre-Shared Key (PSK) authentication method used in prior WPA versions. With\nSAE, the user experience is the same (choose a passphrase to connect), but SAE automatically adds a step\nto the handshake, which makes brute force attacks ineffective. SAE enables individuals or home users to set\nWi-Fi passwords that are easier to remember and provide the same security protection even if the passwords\nare not complex enough."
+  },
+  {
+    "legacyIndex": 1207,
+    "legacyNumber": 65,
+    "prompt": "What is the role of syslog level 7 in network device health monitoring?",
+    "options": [
+      "It provides information about error conditions visible on the network device.",
+      "It shares normal operational messages from the network equipment.",
+      "It sends outputs from various debug commands on the device.",
+      "It warns about emergency conditions on the network appliance."
+    ],
+    "answer": 2,
+    "explanation": "Syslog level 7 corresponds to the “Debugging” severity level. If you specify a level, that level and all the\nhigher levels will be displayed. Therefore in this case, all levels (from 0 to 7) will be displayed."
+  },
+  {
+    "legacyIndex": 1208,
+    "legacyNumber": 66,
+    "prompt": "Which architecture is best for small offices with minimal wireless needs and no central management?",
+    "options": [
+      "cloud-based AP",
+      "split MAC",
+      "autonomous AP",
+      "mesh network"
+    ],
+    "answer": 2,
+    "explanation": "Autonomous AP: self-sufficient and standalone. Used for small wireless networks. Each autonomous AP must\nbe configured with a management IP address so that it can be remotely accessed using Telnet, SSH, or a\nweb interface. Each AP must be individually managed and maintained unless you use a management\nplatform such as Cisco DNA Center.\n\nNote: Split-MAC (architecture) refers to Lightweight AP, which requires a Wireless LAN Controller (WLC) to\ncontrol."
+  },
+  {
+    "legacyIndex": 1209,
+    "legacyNumber": 67,
+    "prompt": "Drag and drop the TCP and UDP characteristics from the lett onto the corresponding protocols on the right.",
+    "type": "match",
+    "items": [
+      "Sends data in a specific order",
+      "Requires an established connection",
+      "Supports web browsing",
+      "Suited for live streaming",
+      "Retransmission is unsupported",
+      "Tolerates packet loss"
+    ],
+    "choices": [
+      "TCP",
+      "UDP"
+    ],
+    "answer": [
+      0,
+      0,
+      0,
+      1,
+      1,
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1210,
+    "legacyNumber": 68,
+    "prompt": "What is a valid IPv6 address record in DNS?",
+    "options": [
+      "A",
+      "MX",
+      "AAAA",
+      "CNAME"
+    ],
+    "answer": 2,
+    "explanation": "An AAAA record type is a foundational DNS record when IPv6 addresses are used. AAAA records are assigned\nthe IPv6 address for a destination which makes communication between the source and destination possible.\nThe purpose of this record type is to map a hostname (e.g., www.example.com) to its corresponding IPv6\naddress (e.g., 2001:db8::1)."
+  },
+  {
+    "legacyIndex": 1211,
+    "legacyNumber": 69,
+    "prompt": "Refer to the exhibit.\n\nThe routers R1-LAB and R2-LAB are configured with link-local addresses. What command must be applied to\ninterface Gi0/0 on R1-LAB for an automated address self-assignment on the IPv6 network?",
+    "options": [
+      "ipv6 address 2001:db8:0:0FFA::/64 eui-64",
+      "ipv6 address 2001:db8:0:0FFA::1/64",
+      "ipv6 address 2001:db8:1:0FFA:0::/64",
+      "ipv6 address 2001:db8:0:0FFA::/64 anycast"
+    ],
+    "answer": 0,
+    "explanation": "Cisco devices use the EUI-64 (Extended Unique Identifier) process to automatically generate the interface\nidentifier portion of an IPv6 address. This process takes the device’s 48-bit MAC address, inserts the\nhexadecimal value “FFFE” in the middle, and then flips the 7th bit (the universal/local bit) of the resulting 64-\nbit value to create the interface identifier. This identifier is then combined with a network prefix to form a\ncomplete IPv6 address."
+  },
+  {
+    "legacyIndex": 1212,
+    "legacyNumber": 70,
+    "prompt": "Which header must be included in a REST request from an application that requires JSON- formatted\ncontent?",
+    "options": [
+      "Content-Type: application/json",
+      "Accept-Encoding: application/json",
+      "Accept: application/json",
+      "Accept-Language: application/json"
+    ],
+    "answer": 0,
+    "explanation": "When making a REST request with JSON-formatted content in the request body, the Content-Type HTTP\nheader must be set to application/json. This header informs the server that the data being sent in the\nrequest body is in JSON format, allowing the server to correctly parse and process the payload."
+  },
+  {
+    "legacyIndex": 1213,
+    "legacyNumber": 71,
+    "prompt": "Why would a network administrator choose to implement RFC 1918 address space?",
+    "options": [
+      "to route traffic on the internet",
+      "to limit the number of hosts on the network",
+      "to provide overlapping address space with another network",
+      "to provide flexibility in the IP network design"
+    ],
+    "answer": 3,
+    "explanation": "RFC 1918 defines private IP address ranges (e.g., 10.0.0.0/8, 172.16.0.0/16, 192.168.0.0/24) which are not\nroutable on the public internet. These are used within private networks. There are several advantages to\nusing the RFC 1918 addresses on your private network:\n\n+ Administrators can assign IP addresses freely without coordinating with IANA or an ISP.\n+ It allows for efficient subnetting, reuse of addresses, and isolation of internal networks.\n\n-> Answer D is correct."
+  },
+  {
+    "legacyIndex": 1214,
+    "legacyNumber": 72,
+    "prompt": "What is the total number of users permitted to simultaneously browse the controller management pages\nwhen using the AireOS GUI?",
+    "options": [
+      "2",
+      "5",
+      "8",
+      "9"
+    ],
+    "answer": 1,
+    "explanation": "Using the Controller GUI\nA browser-based GUI is built into each controller.\nIt allows up to five users to simultaneously browse into the controller HTTP or HTTPS (HTTP + SSL)\nmanagement pages to configure parameters and monitor the operational status for the controller and its\nassociated access points.\n\nNote: The Cisco AireOS GUI refers to the web-based interface used to manage and configure Cisco Wireless\nLAN Controllers (WLCs) running the AireOS operating system."
+  },
+  {
+    "legacyIndex": 1215,
+    "legacyNumber": 73,
+    "prompt": "What is the main purpose of SSH management access?",
+    "options": [
+      "To validate management access with username and domain name only",
+      "To allow passwords protected with HTTPS encryption to be sent",
+      "To support DES 56-bit and 3DES (168-bit) ciphers",
+      "To enable secured access to the inbound management interface"
+    ],
+    "answer": 3,
+    "explanation": "Answer A is not correct as SSH (Secure Shell) authentication using a domain name, username, and password\ninvolves connecting to a remote server using its domain name instead of its IP address, and then\nauthenticating with a username and password.\n\nAnswer B is not correct as SSH is different from HTTPS. HTTPS secures web traffic, while SSH secures\nterminal/CLI access.\n\nAnswer C is not correct as this is not the main purpose of SSH.\n\nAnswer D is correct as the main purpose of SSH is secure management."
+  },
+  {
+    "legacyIndex": 1216,
+    "legacyNumber": 74,
+    "prompt": "How does automation leverage data models to reduce the operational complexity of a managed network?",
+    "options": [
+      "Reduces the response time for specific requests to devices with many interfaces",
+      "Allows the controller to be vendor-agnostic",
+      "Categorizes traffic and provides insights",
+      "Streamlines monitoring using SNMP and other polling tools"
+    ],
+    "answer": 1,
+    "explanation": "Network automation uses the logical network model to define network policies, configurations and topologies\nin a vendor-agnostic manner. Network engineers can use automation libraries, such as NAPALM (Network\nAutomation and Programmability Abstraction Layer with Multivendor support), to work in multivendor\nenvironments without worrying about proper command syntax for each vendor. Python scripts and\norchestration workflows can use this logical model to deploy consistent network configurations, manage\nvirtualized network functions, and ensure network scalability and agility."
+  },
+  {
+    "legacyIndex": 1217,
+    "legacyNumber": 75,
+    "prompt": "What is the function of generative AI in network operations?",
+    "options": [
+      "It creates synthetic network configurations.",
+      "It deploys network firmware updates.",
+      "It disables unused services.",
+      "It computes optimal data storage solutions."
+    ],
+    "answer": 0,
+    "explanation": "Generative AI refers to algorithms capable of generating new content or solutions by learning patterns from\nexisting data. Unlike traditional AI that focuses on classification or prediction, generative AI can create new\nconfigurations, automate processes, and simulate various scenarios in network environments."
+  },
+  {
+    "legacyIndex": 1218,
+    "legacyNumber": 76,
+    "prompt": "An organization developed new security policies and decided to print the policies and distribute them to all\npersonnel so that employees review and apply the policies. Which element of a security program is the\norganization implementing?",
+    "options": [
+      "Asset identification",
+      "User training",
+      "Physical access control",
+      "Vulnerability control"
+    ],
+    "answer": 1,
+    "explanation": "User training: All users should be required to participate in periodic formal training so that they become\nfamiliar with all corporate security policies -> Answer B is the best choice for this question.\n\nNote:\n\nIn CCNA, security program only includes user awareness, user training and physical access control.\n\nPhysical access control: Infrastructure locations, such as network closets and data centers, should remain\nsecurely locked.\n\nAsset identification is the systematic process of discovering, mapping, and documenting every single IT asset\nwithin an organization’s ecosystem."
+  },
+  {
+    "legacyIndex": 1219,
+    "legacyNumber": 77,
+    "prompt": "Which feature, when used on a WLC, allows it to bundle its distribution system ports into one 802.3ad group?",
+    "options": [
+      "QinQ",
+      "ISL",
+      "PAgP",
+      "LAG"
+    ],
+    "answer": 3,
+    "explanation": "Link aggregation (LAG) is a partial implementation of the 802.3ad port aggregation standard. It bundles all\nof the controller’s distribution system ports into a single 802.3ad port channel."
+  },
+  {
+    "legacyIndex": 1220,
+    "legacyNumber": 78,
+    "prompt": "What is represented by the word “switch” within this JSON schema?\n\n 1      [\n 2      {\"IDS\": \"IPS22\", \"port\":\"te3/46\"},\n 3      {\"load balancer\": \"LB12\", \"port\":\"te6/38\"},\n 4      {\"switch\": \"SW18\", \"port\":\"ge2/41\"},\n 5      ]",
+    "options": [
+      "array",
+      "value",
+      "key",
+      "object"
+    ],
+    "answer": 2,
+    "explanation": "JSON syntax structure:\n\n+ A key/value pair consists of a key (must be a string in double quotation marks \"\"), followed by a colon :,\nfollowed by a value. For example: “name”:”John”\n\nTherefore in this question, “switch” is the key while “SW18” is the value."
+  },
+  {
+    "legacyIndex": 1221,
+    "legacyNumber": 79,
+    "prompt": "What is the maximum length of characters used in an SSID?",
+    "options": [
+      "16",
+      "32",
+      "48",
+      "64"
+    ],
+    "answer": 1,
+    "explanation": "The WLAN name and SSID can have up to 32 characters."
+  },
+  {
+    "legacyIndex": 1222,
+    "legacyNumber": 80,
+    "prompt": "Which statement describes virtualization on containers?",
+    "options": [
+      "It is a type of operating system virtualization that allows the host operating system to control the different CPU memory processes.",
+      "It emulates a physical computer and enables multiple machines to run with many operating systems on a physical machine.",
+      "It separates virtual machines from each other and allocates memory, processors, and storage to compute.",
+      "It contains a guest operating system and virtual partition of hardware for OS and requires application libraries."
+    ],
+    "answer": 0,
+    "explanation": "Each VM requires different Operating Systems (OS) while containers share a single host OS:\n\nIn a container, the host OS manages CPU, memory, and process isolation using container engines like Docker\nor container runtimes like containerd -> Answer A is correct."
+  },
+  {
+    "legacyIndex": 1223,
+    "legacyNumber": 81,
+    "prompt": "Why would a network administrator implement the HSRP protocol?",
+    "options": [
+      "To provide network redundancy in the case of a router failure",
+      "To use an open standard protocol that is configured on Cisco and third-party routers",
+      "To allow hosts in a network to use the same default gateway virtual IP when load-balancing traffic",
+      "To allow clients to be configured with multiple default gateway IPs"
+    ],
+    "answer": 0,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1224,
+    "legacyNumber": 82,
+    "prompt": "Refer to the exhibit.\n\n SW1#show etherchannel summary\n Flags:     D - down             P - in port-channel\n\n              I - stand-alone    s - suspended\n\n              H - Hot-standby (LACP only)\n\n              R - Layer3         S - Layer2\n\n              U - in use         f - failed to allocate aggregator\n\n              u - unsuitable for bundling\n\n              w - waiting to be aggregated\n\n              d - default port\n\n              A - formed by auto LAG\n\n Number of channel-groups in use: 1\n Number of aggregators: 2\n\n Group    Port-channel     Protocol      Ports\n ------+-------------+-----------+-----------------------------------------------\n 1        Po1 (RU)           LACP         Et0/0(P)       Et0/1(P)\n\nA network engineer is adding another physical interface as a new member to the existing Port-Channel1\nbundle. Which command set must be configured on the new interface to complete the process?",
+    "options": [
+      "switchport mode trunk\nchannel-group 1 mode active",
+      "no switchport\nchannel-group 1 mode active",
+      "no switchport\nchannel-group 1 mode on",
+      "switchport\nswitchport mode trunk"
+    ],
+    "answer": 1,
+    "explanation": "From the last line of the output “Po1 (RU)”, we learn that this is a Layer 3 port (with letter “R”) so we need\nthe command “no switchport” to make the new interface a Layer 3 interface.\n\nThe protocol in used is LACP so we use mode “active” or “passive” -> Only answer B is correct."
+  },
+  {
+    "legacyIndex": 1225,
+    "legacyNumber": 83,
+    "prompt": "Refer to the exhibit.\n\nConfigurations for the switch and PCs are complete. Which configuration must be applied so that VLANs 2\nand 3 communicate back and forth?",
+    "options": [
+      "interface GigabitEthernet0/0\nip address 10.10.2.10 255.255.252.0",
+      "interface GigabitEthernet0/0.3\nencapsulation dot1Q 10\nip address 10.10.2.10 255.255.255.252",
+      "interface GigabitEthernet0/0.10\nencapsulation dot1Q 3\nip address 10.10.2.10 255.255.254.0",
+      "interface GigabitEthernet0/0.3\nencapsulation dot1Q 3 native\nip address 10.10.2.10 255.255.252.0"
+    ],
+    "answer": 2,
+    "explanation": "We had a tutorial of how to configure interVLAN routing at https://www.9tut.com/intervlan-routing-tutorial\nso please check it."
+  },
+  {
+    "legacyIndex": 1226,
+    "legacyNumber": 84,
+    "prompt": "Refer to the exhibit.\n\n Wireless LAN adapter Wi-Fi:\n\n  Connection-specific DNS Suffix        . :\n\n  Description . . . . . . . . . . . : Intel(R) Wi-Fi 6 AX201 160MHz\n\n  Physical Address. . . . . . . . . : AC-63-DA-AC-B4-AD\n\n  DHCP Enabled. . . . . . . . . . . : No\n\n  Autoconfiguration Enabled . . . . : Yes\n\n  IPv6 Address. . . . . . . . . . . : ::70D6:5432:6D8A:90B2(Preferred)\n\n  Temporary IPv6 Address. . . . . . : ::dc3f:a66c:f996:bdb9(Preferred)\n\n  Link-local IPv6 Address . . . . . : fe80::7096:5693:6d8a:90ba%8(Preferred)\n\n  IPv4 Address. . . . . . . . . . . : 172.16.1.8(Preferred)\n\n  Subnet Mask . . . . . . . . . . . : 255.255.255.240\n\n  Default Gateway . . . . . . . . . : 172.16.1.1\n\n  DHCPv6 IAID . . . . . . . . . . . : 116155351\n\n  DHCPv6 Client DUID. . . . . . . . : 00-01-00-01-2B-BE-0A-47-3C-15-AB-80-12-F6\n\n  DNS Servers . . . . . . . . . . . : 172.16.1.3\n\n                                                 172.16.1.4\n\n  NetBIOS over Tcpip. . . . . . . . : Enabled\n\nDuring initial configuration testing, the Windows workstation PC1 cannot connect with the 172.16.2.0/24\nnetwork. Which set of actions corrects the configuration?",
+    "options": [
+      "Change the IP address to 172.16.1.9 and change the DNS server to 172.16.1.12 only.",
+      "Change the IP address to 172.16.1.6 and change the DNS servers to 172.16.1.12 and 172.16.1.13.",
+      "Change the IP address to 172.16.1.9 and change the default gateway to 172.16.1.7.",
+      "Change the IP address to 172.16.1.6 and change the subnet mask to 255.255.255.248."
+    ],
+    "answer": 3,
+    "explanation": "The IPv4 address of PC1 should be in the subnet 172.16.1.0/29 (usable IPs range from 172.16.1.1 to\n172.16.1.6) -> Answer D is correct."
+  },
+  {
+    "legacyIndex": 1227,
+    "legacyNumber": 85,
+    "prompt": "Refer to the exhibit.\n\nWhich configuration is needed to configure a WLAN with WPA2 only and with a password that is 63 characters\nlong?",
+    "options": [
+      "Disable WPA Encryption and then enable FT PSK.",
+      "Enable PSK using Hex format and then disable WPA Policy.",
+      "Disable WPA Policy and WPA Encryption and then enable PSK using ASCII.",
+      "Enable PSK and FT PSK and then disable WPA Policy."
+    ],
+    "answer": 2,
+    "explanation": "Enter the Pre-Shared Key in hexadecimal characters.\n+ If you selected the PSK format as HEX, the key length must be exactly 64 characters.\n+ If you selected the PSK format as ASCII, the key length must be in the range of 8-63 characters.\n\nTherefore we need to choose PSK using ASCII so that the password can be 53 characters long."
+  },
+  {
+    "legacyIndex": 1228,
+    "legacyNumber": 86,
+    "prompt": "Refer to the exhibit.\n\n AA#show ip route\n\n     10.0.0.0/8 is variably subnetted, 6 subnets, 2 masks\n\n C     10.0.0.0/30 is directly connected, GigabitEthernet0/0\n L     10.0.0.1/32 is directly connected, GigabitEthernet0/0\n C     10.10.0.0/30 is directly connected, GigabitEthernet0/1\n L     10.10.0.1/32 is directly connected, GigabitEthernet0/1\n O     10.20.0.0/30 [110/2] via 10.0.0.2, 00:00:40, GigabitEthernet0/0\n O     10.30.0.0/30 [110/2] via 10.0.0.2, 00:00:40, GigabitEthernet0/0\n\n     172.16.0.0/24 is subnetted, 1 subnets\n\n S     172.16.10.0 [1/0] via 10.0.0.2\n\n     192.168.10.0/24 is variably subnetted, 2 subnets, 2 masks\n\n C     192.168.10.0/24 is directly connected, GigabitEthernet0/2\n L     192.168.10.1/32 is directly connected, GigabitEthernet0/2\n S     192.168.20.0/24 [1/0] via 192.168.10.2\n\nWhat is the administrative distance for the advertised prefix that includes the host IP address 10.30.0.1?",
+    "options": [
+      "10.0.0.2",
+      "110",
+      "30",
+      "2"
+    ],
+    "answer": 1,
+    "explanation": "From the line “O 10.30.0.0/30 [110/2] via 10.0.0.2, 00:00:40, GigabitEthernet0/0”, the first parameter is\nthe AD (110) while the second one is the metric (2)."
+  },
+  {
+    "legacyIndex": 1229,
+    "legacyNumber": 87,
+    "prompt": "What is the term used to describe a method of connecting multiple switches in a network to allow traffic to\nflow between them, typically used for larger networks to increase bandwidth?",
+    "options": [
+      "LAG",
+      "trunk",
+      "EtherChannel",
+      "access"
+    ],
+    "answer": 1,
+    "explanation": "This question is a bit unclear but maybe it does not mention about LAG or EtherChannel or we will have two\ncorrect answers. Therefore answer B is the best choice here."
+  },
+  {
+    "legacyIndex": 1230,
+    "legacyNumber": 88,
+    "prompt": "What is an advantage of using SDN versus traditional networking when it comes to security?",
+    "options": [
+      "It creates a unified control point making security policies consistent across all devices",
+      "It exposes an API to configure locally per device for security policies",
+      "Security is managed near the perimeter of the network with firewalls, VPNs, and IPS",
+      "Devices communicate with each other to establish a security policy"
+    ],
+    "answer": 0,
+    "explanation": "Software-Defined Networking (SDN) is an approach to networking that centralizes the control plane into an\napplication called a controller. Therefore a big advantage of SDN is we do not have to manually configure\neach device or each interface. We just plan a policy framework, and the SDN controller configures all related\nunderlying devices. This approach is faster, more reliable and reduces errors.\n\nQuestion 89 (repeated)\n\nWhat is a difference between RADIUS and TACACS+?\n\nA. RADIUS is most appropriate for dial authentication, but TACACS+ can be used for multiple types of\nauthentication\nB. TACACS+ encrypts only password information and RADIUS encrypts the entire payload\nC. TACACS+ separates authentication and authorization, and RADIUS merges them\nD. RADIUS logs all commands that are entered by the administrator, but TACACS+ logs only start, stop, and\ninterim commands\n\nAnswer: C\n\nQuestion 90 (repeated)\n\nAn engineer is tasked with verifying network configuration parameters on a client workstation to report back\nto the team lead. Drag and drop the node identifiers from the left onto the network parameters on the right.\n\nAnswer:\n\n+ broadcast address: 192.168.1.255\n+ default gateway: 192.168.1.1\n+ host IP address: 192.168.1.20\n+ MAC address: B8-76-3F-7C-57-DF\n+ last assignable IP address in the subnet: 192.168.1.254\n\nExplanation\n\nIn the output above, three lines under “Link-local IPv6 Address” line have been blacked out so we have to\nfigure out what they are. They are the IP address of the Wireless card and the Default gateway of this\ncomputer."
+  },
+  {
+    "legacyIndex": 1231,
+    "legacyNumber": 91,
+    "prompt": "Refer to the exhibit.\n\n R1#show ip route\n Gateway of last resort is 10.0.0.2 to network 0.0.0.0\n 10.0.0.0/8 is variably subnetted, 10 subnets, 3 masks\n C 10.0.0.0/24 is directly connected, FastEthernet0/0\n L 10.0.0.1/32 is directly connected, FastEthernet0/0\n C 10.0.1.0/24 is directly connected, FastEthernet0/1\n L 10.0.1.1/32 is directly connected, FastEthernet0/1\n C 10.0.2.0/24 is directly connected, FastEthernet1/0\n L 10.0.2.1/32 is directly connected, FastEthernet1/0\n C 10.0.3.0/24 is directly connected, FastEthernet1/1\n L 10.0.3.1/32 is directly connected, GigabitEthernet1/l\n O 10.0.4.0/29 [110/2] via 10.0.4.2 00:00:03, GigabitEthernet1/1\n S 10.1.0.0/16 [1/0] via 10.0.3.2\n S 10.1.3.0/24 [1/0] via 10.0.3.2\n S* 0.0.0.0/0 [1/0] via 10.0.0.2\n\nHow does router R1 forward packets destined to 10.0.4.10?",
+    "options": [
+      "via 10.0.4.2",
+      "via FastEthernet1/1",
+      "via FastEthernet0/1",
+      "via 10.0.0.2"
+    ],
+    "answer": 3,
+    "explanation": "For 10.0.4.10 destination, we only have to check if this destination falls into the range of the entry “O\n10.0.4.0/29 [110/2] via 10.0.4.2 00:00:03, GigabitEthernet1/1″.\n\nSubnet 10.0.4.0/29\n-> Increment: 8 -> This subnet ranges from 10.0.4.0 to 10.0.4.7 only. Therefore 10.0.4.10 does not belong\nto this subnet. R1 will use the default route (S* 0.0.0.0/0 [1/0] via 10.0.0.2) for this destination -> R1 will\nforward packets to the next-hop 10.0.0.2.\n\nQuestion 92 (repeated)\n\nWhich configuration management mechanism uses TCP port 22 by default when communicating with\nmanaged nodes?\n\nA. Ansible\nB. Python\n\nC. Puppet\nD. Chef\n\nAnswer: A\n\nExplanation\n\nTCP port 22 is SSH, which is used by Ansible when communicating with the managed nodes.\n\nQuestion 93 (repeated)\n\nHow do AAA operations compare regarding user identification, user services and access control?\n\nA. Authorization provides access control and authentication tracks user services\nB. Authentication identifies users and accounting tracks user services\nC. Accounting tracks user services, and authentication provides access control\nD. Authorization identifies users and authentication provides access control\n\nAnswer: B\n\nQuestion 94 (repeated)\n\nRefer to the exhibit.\n\nWhat are two conclusions about this configuration? (Choose two)\n\nA. The designated port is FastEthernet 2/1\nB. This is a root bridge\nC. The spanning-tree mode is Rapid PVST+\nD. The spanning-tree mode is PVST+\nE. The root port is FastEthernet 2/1\n\nAnswer: C E\n\nExplanation\n\nThis bridge is not the root bridge because it does not have the statement “This bridge is the root”. When the\nlocal switch is not the root bridge, the port it shows would be the root port to the root bridge. Therefore in\nthis case FastEthernet2/1 is the root port that is connected to the root bridge.\n\nQuestion 95 (repeated)\n\nRefer to the exhibit. An extended ACL has been configured and applied to router R2. The configuration failed\nto work as intended. Which two changes stop outbound traffic on TCP ports 25 and 80 to 10.0.20.0/26 from\nthe 10.0.10.0/26 subnet while still allowing all other traffic? (Choose two)\n\n R2#config t\n R2(config)#access-list 101 deny tcp 10.0.20.0 0.0.0.63 10.0.10.0 0.0.0.63 eq\n smtp\n R2(config)#access-list 101 deny tcp 10.0.20.0 0.0.0.63 10.0.10.0 0.0.0.63 eq\n www\n R2(config)#int gi0/2\n R2(config-if)#ip access-group 101 in\nA. Add a “permit ip any any” statement to the beginning of ACL 101 for allowed traffic\nB. Add a “permit ip any any” statement at the end of ACL 101 for allowed traffic\nC. The source and destination IPs must be swapped in ACL 101\nD. The ACL must be configured the Gi0/2 interface inbound on R1\nE. The ACL must be moved to the Gi0/1 interface outbound on R2\n\nAnswer: B C\n\nQuestion 96 (repeated)\n\nR1 has learned route 10.10.10.0/24 via numerous routing protocols. Which route is installed?\n\nA. route with the lowest cost\nB. route with the next hop that has the highest IP\nC. route with the shortest prefix length\nD. route with the lowest administrative distance\n\nAnswer: D\n\nQuestion 97 (repeated)\n\nWhich command must be entered to configure a DHCP relay?\n\nA. ip helper-address\nB. ip address dhcp\nC. ip dhcp relay\nD. ip dhcp pool\n\nAnswer: A\n\nExplanation\n\nIf the DHCP Server is not on the same subnet with the DHCP Client, we need to configure the router on the\nDHCP client side to act as a DHCP Relay Agent so that it can forward DHCP messages between the DHCP\nClient & DHCP Server. To make a router a DHCP Relay Agent, simply put the “ip helper-address <IP-address-\nof-DHCP-Server>” command under the interface that receives the DHCP messages from the DHCP Client.\n\nAs we know, router does not forward broadcast packets (it drops them instead) so DHCP messages like\nDHCPDISCOVER message will be dropped. But with the “ip helper-address …” command, the router will\naccept that broadcast message and cover it into a unicast packet and forward it to the DHCP Server. The\ndestination IP address of the unicast packet is taken from the “ip helper-address …” command."
+  },
+  {
+    "legacyIndex": 1232,
+    "legacyNumber": 98,
+    "prompt": "Refer to the exhibit.\n\nWhich settings must be verified on workstation 1 to establish IP connectivity to server 1 using the server’s\nfully qualified domain name?\n\n Option A                           Option B\n IP address: 10.0.63.80             IP address: 10.0.71.16\n Subnet mask:                       Subnet mask:\n 255.255.255.224                    255.255.255.224\n Default gateway: 10.0.71.0         Default gateway: 10.0.71.1\n DHCP server: 10.0.63.8             DNS server: 10.0.63.5\n\n Option C                           Option D\n IP address: 10.0.63.80             IP address: 10.0.71.16\n Subnet mask: 255.255.255.0         Subnet mask: 255.255.255.0\n Default gateway: 10.0.71.1         Default gateway: 10.0.71.0\n DNS server: 10.0.63.5              DHCP server: 10.0.63.8",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 1,
+    "explanation": "Workstation1 belongs to VLAN 71 so its IP address should be 10.0.71.x and the subnet mask should be /27\n(255.255.255.224). Moreover, if Workstation 1 wants to connect to server 1 using the server’s fully qualified\ndomain name then its DNS server must be correctly set to 10.0.63.5 as shown in the exhibit.\n\nQuestion 99 (repeated)\n\nRefer to the exhibit. Which path is used by the router for Internet traffic?\n\n R1#show ip route\n Gateway of last resort is 10.10.11.2 to network 0.0.0.0\n 209.165.200.0/27 is subnetted, 1 subnets\n B         209.165.200.224 [20/0] via 10.10.12.2, 00:10:34\n\n            10.0.0.0/8 is variably subnetted, 4 subnets, 3 masks\n\n C                   10.10.10.0/28 is directly connected, GigabitEthernet0/0\n C                   10.10.11.0/30 is directly connected, FastEthernet2/0\n C                   10.10.13.0/30 [110/2] via 10.10.10.1, 00:03:34, GigabitEthernet0/0\n C                   10.10.12.0/30 is directly connected, GigabitEthernet0/1\n S*        0.0.0.0/0 [1/0] via 10.10.11.2\n\n Switch1#show ip route\n Gateway of last resort is not set\n\n            10.0.0.0/8 is variably subnetted, 2 subnets, 2 masks\n\n C                   10.10.10.0/28 is directly connected, FastEthernet0/1\n C                   10.10.13.0/24 is directly connected, VLAN20\n\nA. 209.165.200.0/27\nB. 10.10.10.0/28\nC. 0.0.0.0/0\nD. 10.10.13.0/24\n\nAnswer: C\n\nQuestion 100 (repeated)\n\nRefer to the exhibit. If the network environment is operating normally, which type of device must be\nconnected to interface FastEthernet 0/1?\n\n ip arp inspection vlan 2-\n 10\n interface fastethernet 0/1\n ip arp inspection trust\nA. DHCP client\nB. access point\nC. router\nD. PC\n\nAnswer: C\n\nExplanation\n\nTo configure DHCP snooping feature, at least three steps must be done:\n\n Sequence and Description                          Command\n 1. Configure global DHCP snooping                 Switch(config)# ip dhcp snooping\n 2. Configure trusted ports (as least on 1\n port).                                            Switch(config-if)# ip dhcp snooping trust\n By default, all ports are untrusted\n 3. Configure DHCP snooping for the                Switch(config)# ip dhcp snooping vlan {VLAN-ID |\n selected VLANs                                    VLAN range}\nNote: To configure DHCP snooping with Dynamic ARP Inspection we need to add the command “ip arp\ninspection vlan vlan-id” in global configuration mode and “ip arp inspection trust” in interface mode.\n\nIn a normal network environment, we should trust interfaces that are connected to routers, not end points.\n\nQuestion 101 (repeated)\n\nRefer to the exhibit. To which device does Router1 send packets that are destined to host 10.10.13.165?\n\n Router1#show ip route\n Gateway of last resort is 10.10.11.2 to network 0.0.0.0\n\n      209.165.200.0/27 is subnetted, 1 subnets\n\n B      209.165.200.224 [20/0] via 10.10.12.2,03:32:14\n\n      209.165.201.0/27 is subnetted, 1 subnets\n\n B      209.165.201.0 [20/0] via 10.10.12.2,02:26:53\n\n      209.165.202.0/27 is subnetted, 1 subnets\n\n B      209.165.202.128 [20/0] via 10.10.12.2,02:46:03\n\n      10.0.0.0/8 is variably subneted, 10 subnets, 4 masks\n\n O      10.10.13.0/25 [110/2] via 10.10.10.1,00:00:04, GigabitEthernet0/0\n O      10.10.13.128/28 [110/2] via 10.10.10.5,00:00:12, GigabitEthernet0/1\n O      10.10.13.144/28 [110/2] via 10.10.10.9,00:01:57, GigabitEthernet0/2\n O      10.10.13.160/29 [110/2] via 10.10.10.5,00:00:12, GigabitEthernet0/1\n O      10.10.13.208/29 [110/2] via 10.10.10.13,00:01:57, GigabitEthernet0/3\n S*   0.0.0.0/0 [1/0] via 10.10.11.2\n\nA. Router2\nB. Router3\nC. Router4\nD. Router5\n\nAnswer: B\n\nExplanation\n\nThe destination of 10.10.13.165 matches the entry “O 10.10.13.160/29 [110/2]…” because of the longest\nprefix length rule so the packet will be forwarded to 10.10.10.5, which is Router3.\n\nQuestion 102 (repeated)\n\nRefer to the exhibit. Router R1 is running three different routing protocols. Which route characteristic is used\nby the router to forward the packet that it receives for destination IP 172.16.32.1?\n\nA. longest prefix\nB. metric\nC. cost\nD. administrative distance\n\nAnswer: A\n\nExplanation\n\nA router evaluates routes in the following order.\n1. Prefix Length – The longest-matching route is preferred first. Prefix length trumps all other route\nattributes.\n2. Administrative Distance – In the event there are multiple routes to a destination with the same prefix\nlength, the route learned by the protocol with the lowest administrative distance is preferred.\n3. Metric – In the event there are multiple routes learned by the same protocol with same prefix length, the\n\nroute with the lowest metric is preferred. (If two or more of these routes have equal metrics, load balancing\nacross them may occur.)\n\nQuestion 103 (repeated)\n\nDrag and drop the attack-mitigation techniques from the left onto the types of attack that they mitigate on\nthe right.\n\nAnswer:\n\n+ 802.1q double-tagging VLAN-hopping attack: configure the native VLAN with a nondefault VLAN ID\n+ MAC flooding attack: configure 802.1x authenticate\n+ man-in-the-middle spoofing attack: configure DHCP snooping\n+ switch-spoofing VLAN-hopping attack: disable DTP\n\nExplanation\n\nVLAN Hopping: By altering the VLAN ID on packets encapsulated for trunking, an attacking device can send\nor receive packets on various VLANs, bypassing Layer 3 security measures. VLAN hopping can be\naccomplished by switch spoofing or double tagging.\n\na. Switch spoofing:\n\nThe attacker can connect an unauthorized Cisco switch to a Company switch port. The unauthorized switch\ncan send DTP frames and form a trunk with the Company Switch. If the attacker can establish a trunk link to\nthe Company switch, it receives traffic to all VLANs through the trunk because all VLANs are allowed on a\ntrunk by default.\n\n(Instead of using a Cisco Switch, the attacker can use a software to create and send DTP frames).\n\nTo mitigate this type of attack, we can disable DTP.\n\nb. Double-Tagging attack:\n\nIn this attack, the attacking computer generates frames with two 802.1Q tags. The first tag matches the\nnative VLAN of the trunk port (VLAN 10 in this case), and the second matches the VLAN of a host it wants to\nattack (VLAN 20).\n\nWhen the packet from the attacker reaches Switch A, Switch A only sees the first VLAN 10 and it matches\nwith its native VLAN 10 so this VLAN tag is removed. Switch A forwards the frame out all links with the same\nnative VLAN 10. Switch B receives the frame with an tag of VLAN 20 so it removes this tag and forwards out\nto the Victim computer.\n\nNote: This attack only works if the trunk (between two switches) has the same native VLAN as the attacker.\n\nTo mitigate this type of attack, we can use VLAN access control lists (VACLs, which applies to all traffic within\na VLAN. We can use VACL to drop attacker traffic to specific victims/servers) or implement Private VLANs.\n\nQuestion 104 (repeated)\n\nWhen a WPA2-PSK WLAN is configured in the Wireless LAN Controller, what is the minimum number of\ncharacters that is required for the passphrase?\n\nA. 6\nB. 8\nC. 12\nD. 18\n\nAnswer: B\n\nExplanation\n\nWPA/WPA2 preshared keys must contain 8 to 63 ASCII text characters or 64 hexadecimal characters.\n\nQuestion 105 (repeated)\n\nWhich purpose does a northbound API serve in a controller-based networking architecture?\n\nA. communicates between the controller and the physical network hardware\nB. reports device errors to a controller\nC. generates statistics for network hardware and traffic\nD. facilitates communication between the controller and the applications\n\nAnswer: D"
+  },
+  {
+    "legacyIndex": 1233,
+    "legacyNumber": 106,
+    "prompt": "Drag and drop the IPv6 addresses from the left onto the corresponding address types on the right.",
+    "type": "match",
+    "items": [
+      "2001:db8:600d:cafe::123",
+      "3ffe:e54d:620:a87a::f00d",
+      "fd6d:c83b:5cef:b6b2::1",
+      "fcba:926a:e8e:7a25:b1:c6d2:1a76:8fdc"
+    ],
+    "choices": [
+      "Global Unicast",
+      "Unique Local"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": "Note:\n\nUnique Local is the counterpart of private IPv4 addresses so it is not routable on the global Internet. A\nUnique Local is an IPv6 address in the block FC00::/7. They start with FC00::/7 (for used in private\nnetworks) -> The first octet can be FC or FD.\n\nQuestion 107 (repeated)\n\nRefer to the exhibit. A packet is being sent across router R1 to host 172.16.3.14. To which destination does\nthe router send the packet?\n\nA. 207.165.200.246 via Serial0/1/0\nB. 207.165.200.254 via Serial0/0/0\n\nC. 207.165.200.254 via Serial0/0/1\nD. 207.165.200.250 via Serial0/0/0\n\nAnswer: C\n\nQuestion 108 (repeated)\n\nRefer to the exhibit. An engineer must add a subnet for a new office that will add 20 users to the network.\nWhich IPv4 network and subnet mask combination does the engineer assign to minimize wasting addresses?\n\nA. 10.10.225.48 255.255.255.240\nB. 10.10.225.32 255.255.255.240\nC. 10.10.225.48 255.255.255.224\nD. 10.10.225.32 255.255.255.224\n\nAnswer: D\n\nExplanation\n\nWe need a subnet with 20 users so we need 5 bits 0 in the subnet mask as 2 5 – 2 = 30 > 20. Therefore the\nsubnet mask should be /27 (with last octet is 1110 0000 in binary). The increment is 32 so the valid network\naddress is 10.10.225.32.\n\nQuestion 109 (repeated)\n\nWhat are two recommendations for protecting network ports from being exploited when located in an office\nspace outside of an IT closet? (Choose two)\n\nA. shut down unused ports\nB. enable the PortFast feature on ports\nC. implement port-based authentication\nD. configure ports to a fixed speed\nE. configure static ARP entries\n\nAnswer: A C\n\nQuestion 110 (repeated)\n\nWhich technology must be implemented to configure network device monitoring with the highest security?\n\nA. SNMPv3\nB. IP SLA\nC. NetFlow\nD. syslog\n\nAnswer: A\n\nExplanation\n\nSNMPv3—The most up-to-date protocol focuses on security. SNMPv3 defines a security model, user-based\nsecurity model (USM), and a view-based access control model (VACM). SNMPv3 USM provides data integrity,\ndata origin authentication, message replay protection, and protection against disclosure of the message\npayload.\n\nQuestion 111 (repeated)\n\nWhich API is used in controller-based architectures to interact with edge devices?\n\nA. overlay\nB. northbound\nC. underlay\nD. southbound\n\nAnswer: D\n\nExplanation\n\nThe Southbound API is used to communicate with network devices.\n\nQuestion 112 (repeated)\n\nWhich IPv6 address block forwards packets to a multicast address rather than a unicast address?\n\nA. 2000::/3\nB. FC00::/7\nC. FE80::/10\nD. FF00::/12\n\nAnswer: D\n\nExplanation\n\nWell-known multicast addresses have the prefix ff00::/12.\n\nFE80::/10 range is used for link-local addresses. Link-local addresses only used for communications within\nthe local subnetwork (automatic address configuration, neighbor discovery, router discovery, and by many\nrouting protocols). It is only valid on the current subnet. It is usually created dynamically using a link-local\nprefix of FE80::/10 and a 64-bit interface identifier (based on 48-bit MAC address).\n\nQuestion 113 (repeated)\n\nR1 has learned route 192.168.12.0/24 via IS-IS, OSPF, RIP and Internal EIGRP. Under normal operating\nconditions, which routing protocol is installed in the routing table?\n\nA. IS-IS\nB. RIP\nC. Internal EIGRP\nD. OSPF\n\nAnswer: C\n\nExplanation\n\nWith the same route (prefix), the router will choose the routing protocol with lowest Administrative Distance\n(AD) to install into the routing table. The AD of Internal EIGRP (90) is lowest so it would be chosen. The\ntable below lists the ADs of popular routing protocols.\n\nNote: The AD of IS-IS is 115. The “EIGRP” in the table above is “Internal EIGRP”. The AD of “External EIGRP”\nis 170. An EIGRP external route is a route that was redistributed into EIGRP."
+  },
+  {
+    "legacyIndex": 1235,
+    "legacyNumber": 115,
+    "prompt": "Refer to the exhibit.\n\n R1# show ip route | begin gateway\n Gateway of last resort is not set\n\n        172.16.0.0/16 is variably subnetted, 3 subnets, 2 masks\n\n C         172.16.1.0/24 is directly connected, FastEthernet0/0\n L         172.16.1.3/32 is directly connected, FastEthernet0/0\n EX        172.16.2.0/24 [170/2] via 207.165.200.250, 00:00:25, Serial0/0/0\n O         192.168.1.0/24 [110/84437] via 207.165.200.254, 00:00:17, Serial0/0/1\n D         192.168.2.0/24 [90/184437] via 207.165.200.254, 00:00:15, Serial0/0/1\n E1        192.168.3.0/24 [110/1851437] via 207.165.200.254, 00:00:19, Serial0/0/1\n\n        207.165.200.0/24 is variably subnetted, 4 subnets, 2 masks\n\n C         207.165.200.248/30 is directly connected, Serial0/0/0\n L         207.165.200.249/32 is directly connected, Serial0/0/0\n C         207.165.200.252/30 is directly connected, Serial0/0/1\n L         207.165.200.253/32 is directly connected, Serial0/0/1\n\nWhich prefix did router R1 learn from internal EIGRP?",
+    "options": [
+      "192.168.1.0/24",
+      "192.168.3.0/24",
+      "192.168.2.0/24",
+      "172.16.1.0/24"
+    ],
+    "answer": 2,
+    "explanation": "Interal EIGRP learned routes are symbolized by letter “D” and there is only one entry with this letter in the\noutput above: “D 192.168.2.0/24 [90/184437] via 207.165.200.254, 00:00:15, Serial0/0/1″. Therefore\nanswer C is correct.\n\nQuestion 116 (repeated)\n\nAn engineer is configuring NAT to translate the source subnet of 10.10.0.0/24 to any one of three addresses:\n192.168.3.1, 192.168.3.2, or 192.168.3.3. Which configuration should be used?\n\n Option A                                                 Option B\n enable                                                   enable\n configure terminal                                       configure terminal\n ip nat pool mypool 192.168.3.1 192.168.3.3               ip nat pool mypool 192.168.3.1 192.168.3.3\n\n prefix-length 30                                         prefix-length 30\n route-map permit 10.10.0.0 255.255.255.0                 access-list 1 permit 10.10.0.0 0.0.0.255\n ip nat outside destination list 1 pool mypool            ip nat outside destination list 1 pool mypool\n interface g1/1                                           interface g1/1\n ip nat inside                                            ip nat inside\n interface g1/2                                           interface g1/2\n ip nat outside                                           ip nat outside\n Option C                                                 Option D\n enable                                                   enable\n configure terminal                                       configure terminal\n ip nat pool mypool 192.168.3.1 192.168.3.3               ip nat pool mypool 192.168.3.1 192.168.3.3\n prefix-length 30                                         prefix-length 30\n access-list 1 permit 10.10.0.0 0.0.0.255                 access-list 1 permit 10.10.0.0 0.0.0.254\n ip nat inside source list 1 pool mypool                  ip nat inside source list 1 pool mypool\n interface g1/1                                           interface g1/1\n ip nat inside                                            ip nat inside\n interface g1/2                                           interface g1/2\n ip nat outside                                           ip nat outside\nA. Option A\nB. Option B\nC. Option C\nD. Option D\n\nAnswer: C\n\nExplanation\n\nThe command “ip nat inside source list 1 pool mypool” (notice the keyword “inside”, not “outside”).\n\nThis command translates all source addresses that pass access list 1, which means a source address from\n10.10.0.0/24, into an address from the pool named mypool (the pool contains addresses from 192.168.3.1\nto 192.168.3.3).\n\nQuestion 117 (repeated)\n\nDrag the characteristics of network architectures from the left onto the type of architecture on the right.\n\nAnswer:\n\nCollapsed Core\n+ most appropriate for small network designs\n+ single device handles the core and the distribution layer\n+ more cost-effective than other options\n\nThree-Tier\n+ separate devices handle the core and the distribution layer\n+ enhances network availability\n\nExplanation\n\nThe three-tier hierarchical design maximizes performance, network availability, and the ability to scale the\nnetwork design.\nHowever, many small enterprise networks do not grow significantly larger over time. Therefore, a two-tier\nhierarchical design where the core and distribution layers are collapsed into one layer is often more practical.\nA “collapsed core” is when the distribution layer and core layer functions are implemented by a single device.\nThe primary motivation for the collapsed core design is reducing network cost, while maintaining most of the\nbenefits of the three-tier hierarchical model.\n\nA collapsed core network is shown below. The collapsed core network may be deployed with redundant\ncore/distribution router, or consolidated core/distribution router.\n\nQuestion 118 (repeated)\n\nHow does HSRP provide first hop redundancy?\n\nA. It load-balances traffic by assigning the same metric value to more than one route to the same destination\nin the IP routing table\nB. It load-balances Layer 2 traffic along the path by flooding traffic out all interfaces configured with the\nsame VLAN\nC. It forwards multiple packets to the same destination over different routed links and data path\nD. It uses a shared virtual MAC and a virtual IP address to a group of routers that serve as the default\ngateway for hosts on a LAN\n\nAnswer: D\n\nQuestion 119 (repeated)\n\nWhat is a function of TFTP in network operations?\n\nA. transfers a configuration files from a server to a router on a congested link\nB. transfers IOS images from a server to a router for firmware upgrades\nC. transfers a backup configuration file from a server to a switch using a username and password\nD. transfers files between file systems on a router\n\nAnswer: B"
+  },
+  {
+    "legacyIndex": 1236,
+    "legacyNumber": 120,
+    "prompt": "Drag and drop the protocol characteristics from the left onto the corresponding types on the right. Not all\ncharacteristics are used.",
+    "type": "match",
+    "items": [
+      "acknowledgement mechanism",
+      "guaranteed transmission",
+      "low overhead",
+      "connectionless"
+    ],
+    "choices": [
+      "TCP",
+      "UDP"
+    ],
+    "answer": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "explanation": "Note: UDP has error checking through a checksum. But it doesn’t recover from errors. It only detects them."
+  },
+  {
+    "legacyIndex": 1237,
+    "legacyNumber": 121,
+    "prompt": "Refer to the exhibit.\n\n Router#show ip route\n\n Gateway of last resort is 172.17.0.2 to network 0.0.0.0\n\n S* 0.0.0.0/0 [1/0] via 172.17.0.2\n 10.0.0.0/8 is variably subnetted, 412 subnets, 10 masks\n O E2 10.0.0.0/16 [110/10] via 10.2.24.1, 7w0d, Vlan82\n O 10.2.17.0/24 [110/6] via 10.2.24.1, 6w4d, vlan82\n\n O 10.2.17.0/24 [110/6] via 10.2.24.1, 6w4d, vlan82\n O 10.2.23.0/24 [110/6] via 10.2.24.1, 7w0d, vlan82\n --output suppressed--\n C 10.173.5.0/24 is directly connected, vlan283\n L 10.173.5.2/32 is directly connected, vlan283\n\nWhat is the value of the administrative distance for the default gateway?",
+    "options": [
+      "110",
+      "0",
+      "1",
+      "10"
+    ],
+    "answer": 2,
+    "explanation": "From the line “Gateway of last resort is 172.17.0.2”, we learn that 172.17.0.2 is the default gateway of this\nrouter. And from the line “S* 0.0.0.0/0 [1/0] via 172.17.0.2”, we learn the AD of this route is 1 (the first\nparameter)."
+  },
+  {
+    "legacyIndex": 1238,
+    "legacyNumber": 1,
+    "prompt": "Refer to the exhibit.\n\n SW1#\n Name: Et0/0\n Switchport: Enabled\n Administrative Node: trunk\n Operational Mode: trunk\n Administrative Trunking Encapsulation: dot1q\n Operational Trunking Encapsulation: dot1q\n Negotiation of Trunking: On\n Access Mode VLAN: 1 (default)\n Trunking Native Mode VLAN: 1 (default)\n Administrative Native VLAN tagging: enabled\n Voice VLAN: none\n Administrative private-vlan host-association: none\n Administrative private-vlan mapping: none\n Administrative private-vlan trunk native VLAN: none\n Administrative private-vlan trunk Native VLAN tagging: enabled\n Administrative private-vlan trunk encapsulation: dot1q\n Administrative private-vlan trunk normal VLANs: none\n Administrative private—vlan trunk associations: none\n\n Administrative private-vlan trunk mappings: none\n Operational private-vlan: none\n Trunking VLANs Enabled: 1,22\n Pruning VLANs Enabled: 2-1001\n Capture Mode Disabled\n Capture VLANs Allowed: ALL\n\nVLAN 23 is being implemented between SW1 and SW2. The command show interface ethernet0/0 switchport\nhas been issued on SW1. Ethernet0/0 on SW1 is the uplink to SW2. Which command when entered on the\nuplink interface allows PC 1 and PC 2 to communicate without impact to the communication between PC 11\nand PC 12?",
+    "options": [
+      "switchport trunk allowed vlan 2-1001",
+      "switchport trunk allowed vlan add 23",
+      "switchport trunk allowed vlan 23",
+      "switchport trunk allowed vlan 22-23"
+    ],
+    "answer": 1,
+    "explanation": "From the line “Trunking VLANs Enabled: 1,22” of the output of the above command, we learn that currently\nonly VLAN 1 and 22 is being allowed to communicate. The best command to add vlan 23 to the allowed list is\nusing command “switchport trunk allowed vlan add 23”.\n\nAnswer A is not correct as it still works but it is not secure.\n\nAnswer C is not correct as it will remove VLAN 22 from the allowed list and communication between PC 11\nand PC 12 would fail.\n\nAnswer D is also correct but it is not the best choice."
+  },
+  {
+    "legacyIndex": 1239,
+    "legacyNumber": 2,
+    "prompt": "Which default condition must be considered when an encrypted mobility tunnel is used between two Cisco\nWLCs?",
+    "options": [
+      "The tunnel uses the EoIP protocol to transmit data traffic.",
+      "TCP port 443 and UDP 21 are used.",
+      "The tunnel uses the IPsec protocol for encapsulation.",
+      "Control and data traffic encryption are enabled."
+    ],
+    "answer": 3,
+    "explanation": "A secure link in which data is encrypted using CAPWAP DTLS protocol (-> Answer C is not correct) can be\nestablished between two controllers. This secured link is called Encrypted Mobility Tunnel.\n\nIf encrypted mobility tunnel is in enabled state, the data traffic is encrypted and the controller uses UDP port\n16667 (-> Answer B is not correct), instead of EoIP (-> Answer A is not correct), to send the data traffic.\n\nIn Release 8.5.164.0, when encryption is enabled on a controller, by default both control and data traffic is\nencrypted (-> Answer D is correct). However, based on your network requirements you can disable or enable\ndata traffic encryption on the controller."
+  },
+  {
+    "legacyIndex": 1240,
+    "legacyNumber": 3,
+    "prompt": "Why are API keys used to enforce rate limiting?",
+    "options": [
+      "to uniquely identify clients to monitor their usage patterns",
+      "to encrypt data to prevent excessive usage",
+      "to contain embedded permissions that automatically expire",
+      "to track the geographical location of each request"
+    ],
+    "answer": 0,
+    "explanation": "API keys allow the server to distinguish between different clients. By uniquely identifying each client, the\nsystem can monitor how many requests each one makes and enforce rate limiting (e.g., 100 requests per\nminute)."
+  },
+  {
+    "legacyIndex": 1241,
+    "legacyNumber": 4,
+    "prompt": "What are two behaviors of a point-to-point WAN topology? (Choose two)",
+    "options": [
+      "It uses a single router to route traffic between sites.",
+      "It leverages a dedicated connection.",
+      "It connects remote networks through a single line.",
+      "t delivers redundancy between the central office and branch offices.",
+      "It provides direct connections between each router in the topology."
+    ],
+    "answer": [
+      1,
+      2
+    ],
+    "type": "multi",
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1242,
+    "legacyNumber": 5,
+    "prompt": "Refer to the exhibit.\n\n AMDP2_FE-5-COLL: AMDP2/FE 0/0/ [DEC] , Excessive collisions, TDR=[DEC] , TRC=[DEC]\n %DEC21140-5-COLL: [chars] excessive collisions\n %ILACC-5-COLL: Unit [DEC], excessive collisions. TDR=[DEC]\n %LANCE—5-COLL: Unit [DEC], excessive collisions. TDR=[DEC]\n %PQUICC-5-COLL: Unit [DEC], excessive collisions. Retry limit [DEC] exceeded\n %PQUICC_ETHER-5-COLL: Unit [DEC], excessive collisions. Retry limit [DEC] exceeded\n\nWhat is occurring on this switch?",
+    "options": [
+      "A high number of frames smaller than 64 bytes are received.",
+      "Frames are dropped after 16 failed transmission attempts.",
+      "The internal transmit buffer is overloaded.",
+      "An excessive number of frames greater than 1518 bytes are received."
+    ],
+    "answer": 1,
+    "explanation": "The maximum amount of retransmissions for the same frame in the collision mechanism is 16. If it fails 16\nconsecutive times, it is counted as an excessive collision."
+  },
+  {
+    "legacyIndex": 1243,
+    "legacyNumber": 6,
+    "prompt": "Which technology allows multiple operating systems to run a single physical server?",
+    "options": [
+      "cloud computing",
+      "virtualization",
+      "application hosting",
+      "containers"
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1244,
+    "legacyNumber": 7,
+    "prompt": "Which security element uses a combination of one-time passwords, a login name, and a personal\nsmartphone?",
+    "options": [
+      "software-defined segmentation",
+      "multifactor authentication",
+      "attribute-based access control",
+      "rule-based access control"
+    ],
+    "answer": 1,
+    "explanation": "Multifactor authentication (MFA) enhances security by requiring an additional authentication factor, such as:\n\n+ Something you know (password or PIN…).\n+ Something you have (a hardware token or mobile app…).\n+ Something you are (biometric authentication like a fingerprint…)."
+  },
+  {
+    "legacyIndex": 1245,
+    "legacyNumber": 8,
+    "prompt": "Refer to the exhibit.\n\nWhich tasks must be performed on the Download File tab to install new software using TCP port 22?",
+    "options": [
+      "Set the File Type to Code, set the Transfer Mode to SFTP, and specify the IP address of the WLC.",
+      "Set the File Type to Configuration, set the Transfer Mode to FTP, and specify the IP address of the file server.",
+      "Set the File Type to Code, set the Transfer Mode to SFTP, and specify the IP address of the file server.",
+      "Set the File Type to Configuration, set the Transfer Mode to SFTP, and specify the IP address of the WLC."
+    ],
+    "answer": 2,
+    "explanation": "SFTP uses port number 22 by default so we need to change “Transfer Mode” to SFTP.\n\nFrom the reference below: Step 5. In the IP Address field, enter the IP address of the server. -> Answer C is\ncorrect."
+  },
+  {
+    "legacyIndex": 1246,
+    "legacyNumber": 9,
+    "prompt": "Which role do predictive AI models play in network load balancing?",
+    "options": [
+      "They anticipate future traffic spikes.",
+      "They assign IP addresses to devices.",
+      "They select correct cabling types for deployment.",
+      "They solely monitor historical traffic volumes."
+    ],
+    "answer": 0,
+    "explanation": "Predictive AI aims to forecast future events or trends. It does this by analyzing historical data and identifying\npatterns -> Answer A is the best choice."
+  },
+  {
+    "legacyIndex": 1247,
+    "legacyNumber": 10,
+    "prompt": "Which AP mode wirelessly connects two separate network segments each set up within a different campus\nbuilding?",
+    "options": [
+      "mesh",
+      "local",
+      "bridge",
+      "point-to-point"
+    ],
+    "answer": 2,
+    "explanation": "Bridge mode: bridge together the WLAN and the wired infrastructure together -> Answer C is not correct.\n\nIn Bridge Mode, Access Points are used to connect two networks. There are two sub modes coming with\nBridge mode:\n+ Point-to-Point: connect the LAN of a router to a remote access-point.\n+ Point-to-Multipoint: connect two LANs with one wireless link\n\nTherefore maybe this question implies about the Point-to-multipoint Bridge mode. But this option is not\navailable so the best choice should be “bridge” mode."
+  },
+  {
+    "legacyIndex": 1248,
+    "legacyNumber": 11,
+    "prompt": "Which technology allows for logical Layer 3 separation on physical network equipment?",
+    "options": [
+      "Virtual Switch System",
+      "Virtual Route Forwarding",
+      "IPsec Transport Mode",
+      "Time Division Multiplexer"
+    ],
+    "answer": 1,
+    "explanation": "Virtual Routing and Forwarding (VRF) is a technology that logically partitions a single physical router into\nmultiple virtual Layer 3 routers, each with its own independent routing table and forwarding instance."
+  },
+  {
+    "legacyIndex": 1249,
+    "legacyNumber": 12,
+    "prompt": "Which action prevents debug messages from being sent via syslog while allowing other messages when an\nabnormally high number of syslog messages are generated by a device with the debug process turned on?",
+    "options": [
+      "Use an access list to filter out the syslog messages.",
+      "Turn off the logging monitor in global configuration mode.",
+      "Disable logging to the console.",
+      "Set the logging trap severity level to informational."
+    ],
+    "answer": 3,
+    "explanation": "The Syslog levels are:\n\n Le\n         Keyword         Description\n vel\n         emergencie\n 0                       System is unusable\n         s\n 1       alerts          Immediate action is needed\n 2       critical        Critical conditions exist\n 3       errors          Error conditions exist\n 4       warnings        Warning conditions exist\n                         Normal, but significant, conditions\n 5       notification\n                         exist\n         informatio\n 6                       Informational messages\n         nal\n 7       debugging       Debugging messages\nNote: You can remember the order above with the sentence: “Eventually All Critical Errors Will Not Involve\nDamage”.\n\nIf you specify a level, that level and all the higher levels will be displayed. To change the minimum severity\nlevel that is sent to syslog, use the logging trap level configuration command."
+  },
+  {
+    "legacyIndex": 1250,
+    "legacyNumber": 13,
+    "prompt": "Which interface on the WLC is used exclusively as a DHCP relay?",
+    "options": [
+      "distribution",
+      "service",
+      "AP-manager",
+      "virtual"
+    ],
+    "answer": 3,
+    "explanation": "The virtual interface is used to manage and support wireless clients by providing DHCP relay functionality,\nguest web authentication, VPN termination and other services."
+  },
+  {
+    "legacyIndex": 1251,
+    "legacyNumber": 14,
+    "prompt": "How is AI used to identify issues within network traffic?",
+    "options": [
+      "It exclusively predicts device malfunctions.",
+      "It enhances data packet delivery speeds.",
+      "It simplifies traffic route mapping.",
+      "It analyzes patterns for anomaly detection."
+    ],
+    "answer": 3,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1252,
+    "legacyNumber": 15,
+    "prompt": "Why does an administrator choose to implement a remote access IPsec VPN?",
+    "options": [
+      "to establish an encrypted tunnel between a remote user and a private network over the internet",
+      "to allow access to an enterprise network using any internet-enabled location via a web browser using SSL",
+      "to provide a secure link between an HTTPS server, authentication subsystem, and an end-user",
+      "to use cryptography for authentication between a device and user over a negotiated VPN gateway"
+    ],
+    "answer": 0,
+    "explanation": "Remote access IPsec VPNs are used to provide secure, encrypted connections for individual users to a\ncorporate network over the internet. They enable remote employees to access internal resources, such as\nservers, databases, and applications, from any location, extending the reach of the private network. This is\nachieved by establishing a secure IPsec tunnel, which uses encryption to protect data and authentication to\nverify the identity of users and devices."
+  },
+  {
+    "legacyIndex": 1253,
+    "legacyNumber": 16,
+    "prompt": "Which IP address is used when an administrator must open a web-based management session with a\nlightweight AP?",
+    "options": [
+      "WLC IP",
+      "gateway IP",
+      "autonomous AP IP",
+      "ACS IP"
+    ],
+    "answer": 0,
+    "explanation": "A lightweight access point (LAP) does not hold its own full management interface. Instead, it is managed\ncentrally by the WLC. When an administrator wants to perform web-based management of a LAP, the\nconnection must be made to the WLC’s IP address, not the AP itself."
+  },
+  {
+    "legacyIndex": 1254,
+    "legacyNumber": 17,
+    "prompt": "Which two principles must be considered when using per-hop behavior in QoS? (Choose two)",
+    "options": [
+      "Policing is not supported on subinterfaces.",
+      "Shaping and rate limiting have the same effect.",
+      "Shaping drops excessive traffic without adding traffic delay.",
+      "Shaping levels out traffic bursts by delaying excess traffic.",
+      "Policing is performed in the inbound and outbound directions."
+    ],
+    "answer": [
+      3,
+      4
+    ],
+    "type": "multi",
+    "explanation": "+ Policing: is used to control the rate of traffic flowing across an interface. During a bandwidth exceed\n(crossed the maximum configured rate), the excess traffic is generally dropped or remarked. The result of\ntraffic policing is an output rate that appears as a saw-tooth with crests and troughs. Traffic policing can be\napplied to inbound and outbound interfaces. Unlike traffic shaping, QoS policing avoids delays due to\nqueuing. Policing is configured in bytes.\n\n+ Shaping: retains excess packets in a queue and then schedules the excess for later transmission over\nincrements of time. When traffic reaches the maximum configured rate, additional packets are queued\ninstead of being dropped to proceed later. Traffic shaping is applicable only on outbound interfaces as\nbuffering and queuing happens only on outbound interfaces. Shaping is configured in bits per second."
+  },
+  {
+    "legacyIndex": 1255,
+    "legacyNumber": 18,
+    "prompt": "What differentiates the TCP and UDP protocols?",
+    "options": [
+      "TCP tracks segments being transmitted or received by assigning segment numbers, and UDP adjusts data flow according to network conditions.",
+      "TCP establishes a connection with the device on the other end before transferring, and UDP transfers without establishing a connection.",
+      "TCP sends data at a constant rate with error checking on upper protocol layers, and UDP provides error- checking and sequencing.",
+      "TCP immediately transmits data without waiting for a handshake, and UDP awaits a response from the receiver before sending additional data."
+    ],
+    "answer": 1,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1256,
+    "legacyNumber": 19,
+    "prompt": "What is a characteristic of an SSID in wireless networks?",
+    "options": [
+      "provides protection against spyware",
+      "used to identify a Wireless LAN Controller",
+      "enables wireless clients to connect to a specific network",
+      "the password used to connect to an access point"
+    ],
+    "answer": 2,
+    "explanation": "An SSID (Service Set Identifier) is the name of a wireless network that allows wireless clients to identify and\nconnect to a specific WLAN. It’s broadcast by the access point so devices can see available networks. For\nexample, when you open your phone’s Wi-Fi list and see names like “Home_WiFi” or\n“CoffeeShop_Free_WiFi”; those are SSIDs.\n\nAnswer B is not correct as the SSID identifies a wireless network, not a controller.\n\nAnswer D is not correct as SSID is the name, not the password of a wireless network."
+  },
+  {
+    "legacyIndex": 1257,
+    "legacyNumber": 20,
+    "prompt": "In which way does generative AI aid network simulations?",
+    "options": [
+      "It computes optimal data storage solutions.",
+      "It creates synthetic network configurations.",
+      "It deploys network firmware updates.",
+      "It produce a greenfield network design."
+    ],
+    "answer": 1,
+    "explanation": "Generative AI for Network Configuration Generation\nIt’s not just monitoring, we need to deploy our changes as we need them and Generative AI models can be\nused to automatically generate network configurations based on specified requirements or our templates."
+  },
+  {
+    "legacyIndex": 1258,
+    "legacyNumber": 21,
+    "prompt": "Refer to the exhibit.\n\n R1# show ip route\n Codes: L - local, C - connected, S - static, R - RIP, O - OSPF, B - BGP\n\n           D - EIGRP, EX - EIGRP external, IA - OSPF inter area\n\n           N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2\n\n           E1 - OSPF external type 1, E2 - OSPF external type 2\n\n           i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2\n\n           ia - IS-IS inter area, * - candidate default, U - per-user static route\n\n           o - ODR, P - periodic downloaded static route\n\n Gateway of last resort is not set\n\n     192.168.20.64/27 is variably subnetted, 1 subnet, 1 mask\n\n O     192.168.20.64/27 [110/20] via 10.0.0.3, 00:00:01, Gig0/1\n D     192.168.20.64/27 [90/25] via 10.0.0.4, 00:00:01, Gig0/2\n\n     192.168.20.96/28 is variably subnetted, 1 subnet, 1 mask\n\n O     192.168.20.96/28 [110/30] via 10.0.0.3, 00:00:01, Gig0/1\n D     192.168.20.96/28 [90/30] via 10.0.0.4, 00:00:01, Gig0/2\n\n     192.168.20.104/29 is variably subnetted, 1 subnet, 1 mask\n\n O     192.168.20.104/29 [110/40] via 10.0.0.5, 00:00:01, Gig0/1\n D     192.168.20.104/29 [90/40] via 10.0.0.6, 00:00:01, Gig0/2\n\nA packet is destined for 192.168.20.108. Drag and drop the parameters of the destination route from the left\nonto the routing table components they represent on the right. Not all parameters are used.",
+    "type": "match",
+    "items": [
+      "/29",
+      "90",
+      "40"
+    ],
+    "choices": [
+      "Subnet Prefix",
+      "Administrative Distance",
+      "Metric/Cost"
+    ],
+    "answer": [
+      0,
+      1,
+      2
+    ],
+    "explanation": "For destination 192.168.20.108, the local router will choose the last entry (D 192.168.20.104/29 [90/40] via\n10.0.0.6, 00:00:01, Gig0/2) to match. Therefore /29 is the subnet prefix; 90 is the AD while 40 is the\nmetric/cost of this route.\n\nQuestion 22 (repeated)\n\nRefer to the exhibit. What commands are needed to add a subinterface to Ethernet0/0 on R1 to allow for\nVLAN 20, with IP address 10.20.20.1/24?\n\n                         SW1:\n                         interface Ethernet0/0                    SW2:\n                         switchport trunk encapsulation           interface Ethernet0/1\n                         dot1q                                    switchport trunk encapsulation\n R1\n                         switchport mode trunk                    dot1q\n interface\n                         !                                        switchport mode trunk\n Ethernet0/0\n                         interface Ethernet0/1                    !\n no ip address\n                         switchport trunk allowed vlan 10         interface Ethernet0/2\n                         switchport trunk encapsulation           switchport access vlan 20\n                         dot1q                                    switchport mode access\n                         switchport mode trunk\nA. R1 (config)#interface ethernet0/0\nR1 (config)#encapsulation dot1q 20\nR1(config)#ip address 10.20.20.1 255.255.255.0\n\nB. R1 (config)#interface ethernet0/0.20\nR1 (config)#encapsulation dot1q 20\nR1(config)#ip address 10.20.20.1 255.255.255.0\n\nC. R1 (config)#interface ethernet0/0.20\nR1(config)#ip address 10.20.20.1 255.255.255.0\n\nD. R1 (config)#interface ethernet0/0\nR1(config)#ip address 10.20.20.1 255.255.255.0\n\nAnswer: B"
+  },
+  {
+    "legacyIndex": 1259,
+    "legacyNumber": 23,
+    "prompt": "What is a functionality of HSRP?",
+    "options": [
+      "It provides router redundancy and route reconvergence when a router fails.",
+      "It enlists gratuitous ARP to update a client’s ARP cache when the active router switches over.",
+      "It requires active and standby routes to provide failover in the case of a router failure.",
+      "It uses virtual MAC addressing to provide gateway redundancy on a LAN."
+    ],
+    "answer": 3,
+    "explanation": "Answer A is not correct as HSRP provides gateway redundancy, not route reconvergence, which is a routing\nprotocol function.\n\nAnswer B is not correct as gratuitous ARP is sent periodically, not when the active router switches over.\n\nAnswer C is not correct as HSRP does not have standby routes, only standby routers.\n\nAnswer D is correct as with HSRP, multiple routers share a virtual IP address and virtual MAC address.\n\nNote: HSRP gratuitous ARP is a feature that configures a HSRP active router to periodically send gratuitous\nARP packets. This ensures that switches and end hosts update their ARP and MAC address tables correctly\nwhen an HSRP failover occurs, allowing for a smoother transition of traffic."
+  },
+  {
+    "legacyIndex": 1260,
+    "legacyNumber": 24,
+    "prompt": "Refer to the exhibit.\n\n MacOs$ ifconfig\n\n en0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500\n\n            options=400<CHANNEL_IO>\n\n            ether f0:18:98:64:60:32\n\n            inet6 fe80::492:c09f:57cf:8c36%en0 prefixlen 64 secured scopeid 0x6\n\n            inet 10.8.138.14 netmask 0xffffe000 broadcast 10.8.159.255\n\n            nd6 options=201<PERFORMNUD,DAD>\n\n            media: autoselect\n\n            status: active\n\nIf the default gateway is the first usable IP address in the subnet, what is the default gateway?",
+    "options": [
+      "10.8.128.1",
+      "10.8.132.1",
+      "10.8.138.1",
+      "10.8.144.1"
+    ],
+    "answer": 0,
+    "explanation": "From the netmask 0xffffe000 (hexadecimal), we deduce the subnet mask is 255.255.224.0 as f (hexa) =\n1111 (binary) while e (hexa) = 1110 (binary). Therefore for the 3rd octet it is e0 = 1110 0000 = 224 ->\nIncrement: 32\n\nThe PC IP address is 10.8.138.14 so we can find the 3rd octect of this subnet is: 138 / 32 = 4 (only get the\ninteger). And 32 * 4 = 128. Therefore the subnet is 10.8.128.0/19 -> The first usable IP address is\n10.8.128.1."
+  },
+  {
+    "legacyIndex": 1261,
+    "legacyNumber": 25,
+    "prompt": "Refer to the exhibit.\n\n R3#show ip route\n Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP, D - EIGRP, EX\n - EIGRP external, O - OSPF, IA - OSPF inter area,\n\n         N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2,\n\n         E1 - OSPF external type 1, E2 - OSPF external type 2, i - IS-IS,\n\n         su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2, ia - IS-IS\n\n         inter area, * - candidate default, I - per-user static route, o - ODR,\n\n         P - periodic download static route, H - NHRP, I - LISP,\n\n         a - application route, + - replicated route, % - next hop override,\n\n         p - overrides from PfR\n\n Gateway of last resort is not set\n\n        10.0.0.0/8 is variably subnetted, 8 subnets, 4 masks\n\n C     10.10.10.16/28 is directly connected, FastEthernet 0/0\n L     10.10.10.17/32 is directly connected, FastEthernet 0/0\n C     10.10.10.8/29 is directly connected, FastEthernet 0/1\n L     10.10.10.9/32 is directly connected, FastEthernet 0/1\n C     10.10.10.4/30 is directly connected, FastEthernet 0/2\n L     10.10.10.5/32 is directly connected, FastEthernet 0/2\n C     10.10.10.0/30 is directly connected, Serial 0/0\n L     10.10.10.1/32 is directly connected, Serial 0/0\n\nWhich interface does a packet take to reach the destination address of 10.10.10.14?",
+    "options": [
+      "Serial 0/0",
+      "FastEthernet 0/1",
+      "FastEthernet 0/0",
+      "FastEthernet 0/2"
+    ],
+    "answer": 1,
+    "explanation": "The destination address of 10.10.10.14 matches entry “C 10.10.10.8/29 is directly connected, FastEthernet\n0/1” so Fa0/1 is the exit-interface."
+  },
+  {
+    "legacyIndex": 1262,
+    "legacyNumber": 26,
+    "prompt": "Refer to the exhibit.\n\nA network engineer is configuring a wireless LAN with Web Passthrough Layer 3 Web Policy. Which action\nmust the engineer take to complete the configuration?",
+    "options": [
+      "Enable the WPA Policy.",
+      "Set the Layer 2 Security to 802.1X.",
+      "Enable TKIP and CCMP256 WPA2 Encryption.",
+      "Set the Layer 2 Security to None."
+    ],
+    "answer": 3,
+    "explanation": "Cisco WLC’s Web Passthrough Layer 3 Web Policy is a guest access feature that redirects users to a policy\npage upon first connection, without requiring them to log in with credentials. Once the user accepts the\npolicy, the WLC grants them full internet access."
+  },
+  {
+    "legacyIndex": 1263,
+    "legacyNumber": 27,
+    "prompt": "Drag and drop the characteristics from the left onto the corresponding protocol types on the right. Not all\ncharacteristics are used.",
+    "type": "match",
+    "items": [
+      "uses a three-way handshake",
+      "preferred for web browsing",
+      "provides a reliable connection",
+      "faster data transmission",
+      "used for streaming and VoIP",
+      "connectionless protocol"
+    ],
+    "choices": [
+      "TCP",
+      "UDP"
+    ],
+    "answer": [
+      0,
+      0,
+      0,
+      1,
+      1,
+      1
+    ],
+    "explanation": "Both UDP & TCP belong to layer 4 (Transportation), not Layer 3."
+  },
+  {
+    "legacyIndex": 1264,
+    "legacyNumber": 28,
+    "prompt": "What is a characteristic of a Layer 2 switch?",
+    "options": [
+      "transfers all frames received to every connected device",
+      "maintains stateful transaction information",
+      "offers link bundling to servers",
+      "transmits exclusively at half duplex"
+    ],
+    "answer": 2,
+    "explanation": "Etherchannel can connect a switch to a host, as long as the host supports NIC teaming or link aggregation\n(LACP/static)."
+  },
+  {
+    "legacyIndex": 1265,
+    "legacyNumber": 29,
+    "prompt": "What is represented in line 2 within this JSON schema?\n\n 1    [\n 2    {\"switch\": \"SW_admin\", \"interface\":\"ge7/41\"},\n 3    {\"VPN concentrator\": \"VPN_finance\", \"interface\":\"fe9/5\"},\n 4    {\"IDS\": \"IPS_admin\", \"interface\":\"te2/10\"},\n 5    ]",
+    "options": [
+      "array",
+      "value",
+      "key",
+      "object"
+    ],
+    "answer": 3,
+    "explanation": "Line 2 {\"switch\": \"SW_admin\", \"interface\":\"ge7/41\"} represents a JSON object, because it is enclosed in\ncurly braces {} and contains key-value pairs."
+  },
+  {
+    "legacyIndex": 1266,
+    "legacyNumber": 30,
+    "prompt": "Drag and drop the IPv6 address from the left onto the type on the right.",
+    "type": "match",
+    "items": [
+      "Global unicast",
+      "Link-Local unicast",
+      "Multicast",
+      "Unique Local"
+    ],
+    "choices": [
+      "2000:93f3:caf1:ec6e:d653:68b7:0fd1:1",
+      "fe80:8ce3:4cd2:27ff:5cdb:77f8:72fb:7",
+      "ff00:04cd:fa3e:a298:a1a3:0047:aad2:12",
+      "fc00:c7cb:1f00:1c32:39bf:a19b:48cc:3"
+    ],
+    "answer": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "explanation": "Link-local addresses are allocated with the FE80::/64 prefix -> can be easily recognized by the prefix FE80\n\nAll IPv6 multicast addresses share the prefix of FF00::/8 -> The first octet is FF (1111 1111). This way you\ncan tell at a glance if an IPv6 address is intended for multicast or not.\n\nUnique local IPv6 addresses have the similar function as IPv4 private addresses. They are not allocated by an\naddress registry and are not meant to be routed outside their domain. Unique local IPv6 addresses start with\nFC00::/7 -> The first octet can be FC or FD."
+  },
+  {
+    "legacyIndex": 1267,
+    "legacyNumber": 31,
+    "prompt": "What is a characteristic of private IPv4 addressing?",
+    "options": [
+      "reduces the forwarding table on network routers",
+      "traverses the internet when an outbound ACL is applied",
+      "address space which is isolated from the internet",
+      "eliminates the need for routing between devices"
+    ],
+    "answer": 2,
+    "explanation": "Private IPv4 addressing refers to IP addresses that are not routable on the public internet. These addresses\nare intended for use within internal networks; for example, in homes, offices, or enterprise LANs…\n\nThe Internet Assigned Numbers Authority (IANA) reserved specific ranges for private use:\n\n+ 10.0.0.0 – 10.255.255.255 (10.0.0.0/8)\n+ 172.16.0.0 – 172.31.255.255 (172.16.0.0/12)\n+ 192.168.0.0 – 192.168.255.255 (192.168.0.0/16)\n\nBecause these addresses are isolated from the internet, they cannot be reached directly from public\nnetworks. To communicate externally, devices using private IPs typically rely on Network Address Translation\n(NAT), which converts private addresses to a public one for internet access."
+  },
+  {
+    "legacyIndex": 1268,
+    "legacyNumber": 32,
+    "prompt": "Which two HTTP verbs does a REST-based API call to create a resource? (Choose two)",
+    "options": [
+      "GET",
+      "DELETE",
+      "POST",
+      "PUT",
+      "PATCH"
+    ],
+    "answer": [
+      2,
+      3
+    ],
+    "type": "multi",
+    "explanation": "In RESTful APIs, both POST and PUT can be used to create resources, depending on the situation:\n\n– POST: Create a new resource under a collection\n– Create or replace a specific resource at a known URI (client provides the ID). For example: PUT\n/users/123 creates user 123 if it doesn’t exist"
+  },
+  {
+    "legacyIndex": 1269,
+    "legacyNumber": 33,
+    "prompt": "Refer to the exhibit.\n\n R4#show ip route\n Gateway of last resort is not set\n\n     10.0.0.0/8 is variably subnetted, 14 subnets, 2 masks\n\n     10.0.12.0/24 [100/2] via 10.0.24.2, 00:02:27, GigabitEthernet0/1\n\n     10.0.13.0/24 [90/3072] via 10.0.34.3, 00:00:19, GigabitEthernet0/0\n\n     10.0.24.0/24 is directly connected, GigabitEthernet0/1\n\n     10.0.24.4/32 is directly connected, GigabitEthernet0/1\n\n     10.0.34.0/24 is directly connected, GigabitEthernet0/0\n\n     10.0.34.4/32 is directly connected, GigabitEthernet0/0\n\n     10.0.45.0/24 is directly connected, GigabitEthernet0/2\n\n     10.0.45.4/32 is directly connected, GigabitEthernet0/2\n\n     10.2.0.0/24 [90/1] via 10.0.45.5, 00:00:08, GigabitEthernet0/2\n\n     10.255.1.1/32 [100/3] via 10.0.34.3, 00:02:27, GigabitEthernet0/0\n\n                        [100/3] via 10.0.24.2, 00:02:27, GigabitEthernet0/1\n\n     10.255.2.2/32 [90/130816] via 10.0.24.2, 00:14:46, GigabitEthernet0/1\n\n     10.255.3.3/32 [100/2] via 10.0.34.3, 00:02:27, GigabitEthernet0/0\n\n     10.255.4.4/32 is directly connected, Loopback0\n\n     10.255.5.5/32 [90/1] via 10.0.45.5, 00:00:08, GigabitEthernet0/2\n\nConsidering default routing protocol configurations were used, which routing protocol is used to learn the\n10.255.2.2/32 route?",
+    "options": [
+      "EIGRP",
+      "BGP",
+      "RIP",
+      "OSPF"
+    ],
+    "answer": 0,
+    "explanation": "The learned route “10.255.2.2/32 [90/130816] via 10.0.24.2, 00:14:46, GigabitEthernet0/1” has\nAdministrative Distance of 90, which means EIGRP (default value)."
+  },
+  {
+    "legacyIndex": 1270,
+    "legacyNumber": 34,
+    "prompt": "An application in the network is being scaled up from 300 servers to 600. Each server requires 3 network\nconnections to support production, backup, and management traffic. Each connection resides on a different\nsubnet. The router configuration for the production network must be configured first using a subnet in the\n10.0.0.0/8 network. Which command must be configured on the interface of the router to accommodate the\nrequirements and limit wasted IP address space?",
+    "options": [
+      "ip address 10.10.10.1 255.255.255.240",
+      "ip address 10.10.10.1 255.255.240.0",
+      "ip address 10.10.10.1 255.255.254.0",
+      "ip address 10.10.10.1 255.255.252.0"
+    ],
+    "answer": 3,
+    "explanation": "600 servers -> 600 connections for production (we don’t care about backup and management connections as\n“each connection resides on a different subnet”)-> 600 IP addresses in the same subnet. Therefore we need\nat least 210 = 1024 hosts/subnet (>600) -> We need 10 bit 0 in the subnet mask ->\n11111111.11111111.1111 1100.0000 0000 -> 255.255.252.0 -> Answer D is correct.\n\nNote: In fact, we need to subtract 2 from 210 for the host’s calculation but we ignored it because it does not\naffect the result."
+  },
+  {
+    "legacyIndex": 1271,
+    "legacyNumber": 35,
+    "prompt": "Which interface is used by an administrator to access the WLC GUI to update configuration settings?",
+    "options": [
+      "management",
+      "service",
+      "dynamic",
+      "virtual"
+    ],
+    "answer": 0,
+    "explanation": "The WLC uses the management interface to communicate with the access points, and we can use the\nmanagement interface to configure the WLC through SSH or the GUI."
+  },
+  {
+    "legacyIndex": 1272,
+    "legacyNumber": 36,
+    "prompt": "A switch receives a frame with the destination MAC address 3C:5D:7E:9F:1A:2B.\n\n Switch# show ethernet-frame-and-mac-address-table\n\n Ethernet Frame:\n +----------------------------------------------------+\n | Destination MAC Address: 3C:5D:7E:9F:1A:2B                    |\n | Source MAC Address: D3:F4:47:57:67:46                         |\n | EtherType/Length: 0x0800 (IPv4)                               |\n | Payload: [Data]                                               |\n | Frame Check Sequence: [CRC]                                   |\n +----------------------------------------------------+\n MAC Address Table:\n VLAN    MAC Address              Type        Ports\n ----    -----------------        --------    ----------\n\n 12      D3:F4:47:57:67:46       Dynamic      Gi1/0/1\n 16      20:31:42:53:64:DE       Static       Gi1/0/2\n 24      A0:B3:C4:D3:B4:48       Secure       Gi1/0/3\n 31      B5:16:32:12:6B:68       Dynamic      Gi1/0/4\n 44      8F:A0:B3:C4:34:50       Static       Gi1/0/5\n\nHow does the switch handle the frame?",
+    "options": [
+      "It floods the frame to all ports except the incoming port.",
+      "It switches the frame to a predetermined port based on settings.",
+      "It ages out the frame until the MAC address becomes known.",
+      "It drops the frame to avoid unnecessary network congestion."
+    ],
+    "answer": 0,
+    "explanation": "We only care about the destination MAC address “3C:5D:7E:9F:1A:2B” and see that it has not been installed\ninto the MAC address table. Therefore the switch will floods the frame to all ports except the incoming port."
+  },
+  {
+    "legacyIndex": 1273,
+    "legacyNumber": 37,
+    "prompt": "Which statement describes virtual machines?",
+    "options": [
+      "They include a guest OS and the service.",
+      "They facilitate local management of infrastructure devices.",
+      "They use a supervisor to provide management for services.",
+      "They enable the network to become agile and hardware-centric."
+    ],
+    "answer": 0,
+    "explanation": "A virtual machine is a software-based emulation of a physical computer. It runs an operating system (guest\nOS) and applications (services) on top of a hypervisor, which manages multiple VMs on a single physical\nhost."
+  },
+  {
+    "legacyIndex": 1274,
+    "legacyNumber": 38,
+    "prompt": "Which combination of methods satisfies the minimum security requirements when a new multifactor\nauthentication solution is deployed?",
+    "options": [
+      "password of 8 to 15 characters and personal 12-digit PIN",
+      "authorized USB dongle and mobile phone",
+      "complex password and time-based one-time password",
+      "fingerprint scanning and facial recognition"
+    ],
+    "answer": 2,
+    "explanation": "Multifactor authentication (MFA) enhances security by requiring an additional authentication factor, such as:\n\n+ Something you know (password or PIN…).\n+ Something you have (a hardware token or mobile app…).\n+ Something you are (biometric authentication like a fingerprint…).\n\nTherefore the correct answer must have at least two different factors mentioned above.\n\nAnswer A is not correct as both of them are “something you know”\n\nAnswer B is not correct as both are “something you have”\n\nAnswer D is not correct as both are “something you are”\n\nAnswer C is correct as complex password is “something you know” and time-based one-time password\nmeans you have a mobile phone, which is “something you have”."
+  },
+  {
+    "legacyIndex": 1275,
+    "legacyNumber": 39,
+    "prompt": "Refer to the exhibit.\n\n R4#show ip route\n Gateway of last resort is not set\n\n     10.0.0.0/8 is variably subnetted, 14 subnets, 2 masks\n\n O     10.0.12.0/24 [100/2] via 10.0.24.2, 00:02:27, GigabitEthernet0/1\n D     10.0.13.0/24 [90/3072] via 10.0.34.3, 00:00:19, GigabitEthernet0/0\n C     10.0.24.0/24 is directly connected, GigabitEthernet0/1\n L     10.0.24.4/32 is directly connected, GigabitEthernet0/1\n C     10.0.34.0/24 is directly connected, GigabitEthernet0/0\n L     10.0.34.4/32 is directly connected, GigabitEthernet0/0\n C     10.0.45.0/24 is directly connected, GigabitEthernet0/2\n L     10.0.45.4/32 is directly connected, GigabitEthernet0/2\n R     10.2.0.0/24 [120/1] via 10.0.45.5, 00:00:08, GigabitEthernet0/2\n O     10.255.1.1/32 [100/3] via 10.0.34.3, 00:02:27, GigabitEthernet0/0\n\n                          [100/3] via 10.0.24.2, 00:02:27, GigabitEthernet0/1\n\n D     10.255.2.2/32 [90/130816] via 10.0.24.2, 00:01:46, GigabitEthernet0/1\n O     10.255.3.3/32 [100/2] via 10.0.34.3, 00:02:27, GigabitEthernet0/0\n C     10.255.4.4/32 is directly connected, Loopback0\n R     10.255.5.5/32 [120/1] via 10.0.45.5, 00:00:08, GigabitEthernet0/2\n\nOf the routes learned with dynamic routing protocols, which has the least preferred metric?",
+    "options": [
+      "Local",
+      "EIGRP",
+      "OSPF",
+      "RIP"
+    ],
+    "answer": 3,
+    "explanation": "The “metric” here is in fact the Administrative Distance (AD) of each dynamic routing protocol. RIP has an AD\nof 120, which is the least preferred metric of all above dynamic routing protocols."
+  },
+  {
+    "legacyIndex": 1276,
+    "legacyNumber": 40,
+    "prompt": "Refer to the exhibit.\n\n R1#show ip route\n Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP,\n\n           D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area,\n\n           N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2,\n\n           E1 - OSPF external type 1, E2 - OSPF external type 2, i - IS-IS,\n\n           su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2,\n\n           ia - IS-IS inter area, * - candidate default, I - per-user static route,\n\n           o - ODR, P - periodic downloaded static route, H - NHRP, I - LISP, a -\n\n           application route, + - replicated route, % - next hop override,\n\n           p - overrides from PFR\n\n Gateway of last resort is not set\n\n            10.0.0.0/8 is variably subnetted, 6 subnets, 2 masks\n\n C         10.10.10.0/24 is directly connected, GigabitEthernet0/0\n L         10.10.10.1/32 is directly connected, GigabitEthernet0/0\n C         10.10.20.0/24 is directly connected, GigabitEthernet1/0\n L         10.10.20.1/32 is directly connected, GigabitEthernet1/0\n C         10.10.30.0/24 is directly connected, GigabitEthernet2/0\n L         10.10.30.1/32 is directly connected, GigabitEthernet2/0\n\n            192.168.18.0/24 is variably subnetted, 3 subnets, 3 masks\n\n D         192.168.18.0/24 [90/3072] via 10.10.10.10, 00:13:10, GigabitEthernet0/0\n R         192.168.18.0/27 [120/1] via 10.10.20.10, 00:09:15, GigabitEthernet1/0\n O         192.168.18.0/28 [110/2] via 10.10.30.10, 00:12:56, GigabitEthernet2/0\n\nWhich interface does a packet take to reach the host address of 192.168.18.16?",
+    "options": [
+      "GigabitEthernet1/0",
+      "GigabitEthernet0/0",
+      "GigabitEthernet2/0",
+      "Null0"
+    ],
+    "answer": 0,
+    "explanation": "For this question, surely 192.168.18.16 belongs to 192.168.18.0/24 prefix so we only need to check if it also\nbelongs to another better prefix 192.168.18.0/27 or 192.168.18.0/28:\n+ 192.168.18.0/28 – increment: 16 -> this prefix ranges from 192.168.18.0 to 192.168.18.15 so\n192.168.18.16 does not belong to this prefix\n+ 192.168.18.0/27 – increment: 32 -> this prefix ranges from 192.168.18.0 to 192.168.18.31 so\n192.168.18.16 belongs to this prefix -> The exit interface for this prefix is GigabitEthernet1/0."
+  },
+  {
+    "legacyIndex": 1277,
+    "legacyNumber": 41,
+    "prompt": "Refer to the exhibit.\n\n Prefix                   Interface     Next-hop\n 152.168.32.0/22          f0/0          10.10.1.2\n 152.168.32.0/24          f1/0          10.10.2.2\n 152.168.32.0/26          f2/0          10.10.3.2\n 152.168.32.0/23          f3/0          10.10.4.2\n\nWhich next hop is used to route packets to the application server at 152.168.32.85?",
+    "options": [
+      "10.10.1.2",
+      "10.10.2.2",
+      "10.10.3.2",
+      "10.10.4.2"
+    ],
+    "answer": 1,
+    "explanation": "152.168.32.85 does not belong to 152.168.32.0/26 (increment: 64) and it belongs to 152.168.32.0/24 ->\nNext hop 10.10.2.2.\n\nNote: If you are not sure how to find out the increment number, please read our Subnetting Tutorial –\nSubnetting Made Easy Tutorial (part 3)"
+  },
+  {
+    "legacyIndex": 1278,
+    "legacyNumber": 42,
+    "prompt": "Refer to the exhibit.\n\n R1#show ip route static\n\n     10.0.0.0/8 is variably subnetted, 3 subnets, 3 masks\n\n S     10.20.1.0/26 [1/0] via 172.16.1.4\n S     10.20.1.0/24 [1/0] via 172.16.1.2\n S     10.20.1.32/27 [1/0] via 172.16.1.3\n\n     192.168.2.0/24 is variably subnetted, 3 subnets, 3 masks\n\n S     192.168.2.0/24 [1/0] via 172.16.1.4\n S     192.168.2.64/27 [1/0] via 172.16.1.2\n\n S     192.168.2.80/29 [1/0] via 172.16.1.3\n\nWhat is the correct next hop for router R1 to reach IP addresses 192.168.2.86 and 10.20.1.50?",
+    "options": [
+      "172.16.1.4",
+      "172.16.1.1",
+      "172.16.1.2",
+      "172.16.1.3"
+    ],
+    "answer": 2,
+    "explanation": "The next-hops in the routing table and the topology are different so there is a typo in this question. The\nexplanation below is based on the topology:\n\nAmong subnets 192.168.2.0/24, 192.168.2.64/27 and 192.168.2.80/29, packets destined to 192.168.2.86\nwill choose 192.168.2.80/29 (increment: 8) as it has longest prefix length and covers this destination.\n\nIn fact, above calculation is enough to find out the correct answer so we don’t need to calculate 10.20.1.50.\nJust for your information, 10.20.1.32/27 has increment of 32 so it also covers 10.20.1.50 destination.\n\nNote: If we use the routing table and ignore the topology, answer D is the best choice."
+  },
+  {
+    "legacyIndex": 1279,
+    "legacyNumber": 43,
+    "prompt": "A default route must be configured to use the IP address of 192.168.1.1 until a WAN circuit is installed. The\nWAN circuit will use a dynamic routing protocol with an Administrative Distance of 20. Which configuration\nmust be applied to allow the dynamic route to take precedence when it is in place?",
+    "options": [
+      "ip route 0.0.0.0 0.0.0.0 192.168.1.1",
+      "ip route 0.0.0.0 0.0.0.0 192.168.1.1 25",
+      "ip route 0.0.0.0 0.0.0.0 192.168.1.1 track 1",
+      "ip route 0.0.0.0 0.0.0.0 192.168.1.1 20"
+    ],
+    "answer": 1,
+    "explanation": "We must configure the default route with lower priority (higher value) than 20 so that BGP will be used when\nit is in place -> Answer B is correct with AD of 25."
+  },
+  {
+    "legacyIndex": 1280,
+    "legacyNumber": 44,
+    "prompt": "What is the main capability of multifactor authentication?",
+    "options": [
+      "Identifying permissions for end users using three authentication factors",
+      "Authenticating and authorizing end users using two authentication factors",
+      "Confirming end-user identity using two or more authentication factors",
+      "Verifying end-user access permissions using two authentication factors"
+    ],
+    "answer": 2,
+    "explanation": "MFA compose of 2 or more identifications\n\n*Something you have\n*Something you are\n*Something you know"
+  },
+  {
+    "legacyIndex": 1281,
+    "legacyNumber": 45,
+    "prompt": "Refer to the exhibit.\n\nAfter a recent internal security audit, the network administrator decided to block all P2P-capable devices\nfrom the selected SSID. Which configuration setting must the administrator apply?",
+    "options": [
+      "Set the P2P Block Action to Drop.",
+      "Select a correctly configured Layer 2 ACL.",
+      "Set the Wi-Fi Direct Client Policy to Not-Allow.",
+      "Set the MFP Client Protection to Required."
+    ],
+    "answer": 2,
+    "explanation": "Features          Purpose\n P2P               Controls client-to-client communication within the same SSID through the AP\n Blocking          (intra-BSS traffic). But it does not stop Wi-Fi Direct functionality specifically. It\n Action            only stops communication through the AP, not direct device-to-device links.\n Wi-Fi\n Direct            Controls Wi-Fi Direct-capable devices (P2P devices) – that is, clients that can form a\n Client            direct connection (device-to-device) without going through the access point.\n Policy\n-> Answer C is the best choice as it does not allow P2P-capable devices connect to the AP from the\nbeginning."
+  },
+  {
+    "legacyIndex": 1282,
+    "legacyNumber": 46,
+    "prompt": "Which switch port configuration must be configured when connected to an AP running in FlexConnect mode,\nand the WLANs use flex local switching?",
+    "options": [
+      "access port with one VLAN",
+      "trunk port with pruned VLANs",
+      "Layer 3 port with an IP address",
+      "tagged port with MAC Filtering enabled"
+    ],
+    "answer": 1,
+    "explanation": "Prune VLANs for Flexconnect mode AP Switch Ports\n\nFor APs in Flexconnect mode, when using locally switched WLANs mapped to different VLANs (AP switch port\nis on trunk mode), prune or limit the VLANs present on the port to match the AP configured VLANs.\n\nWhen an AP is running in FlexConnect mode, it can locally switch traffic at the remote site without tunneling\nall user data back to the WLC.\n\nNote:\n\nFlexConnect Local Switching means:\n+ The AP locally bridges traffic onto the local VLAN at the branch site.\n+ Each WLAN (SSID) can be mapped to a different VLAN on the local network -> The AP needs to support\nmultiple VLANs for different SSIDs. Therefore, the switch port connected to the AP must be configured as a\ntrunk port."
+  },
+  {
+    "legacyIndex": 1283,
+    "legacyNumber": 47,
+    "prompt": "What is a reason to implement HSRP on a network?",
+    "options": [
+      "to ensure that user traffic in a LAN rapidly recovers from the failure of an edge routing device",
+      "to provide load balancing over multiple gateways in a LAN network",
+      "to optimally route traffic based on the forwarding capacity of the edge routing devices in the LAN network",
+      "to identify the closest hop to the default gateway in a LAN network"
+    ],
+    "answer": 0,
+    "explanation": "Answer B is not correct as HSRP provides redundancy, not load balancing (though load sharing can be\nachieved by configuring multiple HSRP groups).\n\nAnswer C is not correct as it is a routing protocol function (like OSPF or EIGRP…), not HSRP.\n\nAnswer D is not correct as HSRP does not determine “closest” hops; it only provides a consistent default\ngateway via a virtual IP.\n\nAnswer A is correct as this is the primary purpose of HSRP: providing high availability and failover for the\ndefault gateway."
+  },
+  {
+    "legacyIndex": 1284,
+    "legacyNumber": 48,
+    "prompt": "Which feature is mandatory when configuring a new SSID for a wireless network running WPA3-Personal\nmode?",
+    "options": [
+      "Opportunistic Wireless Encryption",
+      "Protected Management Frame",
+      "Enhanced Open",
+      "Fast Transition"
+    ],
+    "answer": 1,
+    "explanation": "WPA3 Personal uses the Simultaneous Authentication of Equals (SAE) protocol with PMF required, replacing\nWPA2 Personal with Pre-shared Key (PSK).\n\nIn the figure below, we can see PMF is always “required” and cannot be changed.\n\nNote: Protected Management Frame (PMF) protects unicast and broadcast management frames and encrypts\nunicast management frames. This means wireless intrusion detection and wireless intrusion prevention\nsystemsnow have fewer brute-force ways to enforce client policies."
+  },
+  {
+    "legacyIndex": 1285,
+    "legacyNumber": 49,
+    "prompt": "Refer to the exhibit.\n\nThe loopback IP of R3 has been learned via the two interfaces on R1. R1 is configured with a reference\nbandwidth of 10 Gbps. Based on the metric calculations, which next hop IP would be used for outgoing\nrouting?",
+    "options": [
+      "10.12.0.5",
+      "10.12.0.2",
+      "10.12.0.1",
+      "10.12.0.6"
+    ],
+    "answer": 3,
+    "explanation": "OSPF cost is calculated using the formula: Cost = Reference Bandwidth [Mpbs] / Interface Bandwidth\n[Mpbs].\n\n“R1 is configured with a reference bandwidth of 10 Gbps”. Therefore the cost on each interface is calculated\nas follows:\n\n+ Upper link: Cost = 10 / 1 = 10\n+ Lower link: Cost = 10 / 10 = 1\n\n-> The lower link has lower cost which is better -> R1 will choose the lower link for outgoing routing ->\nAnswer D is correct.\n\nNote: As both Reference Bandwidth & Interface Bandwidth use Gpbs, we don’t need to change from Gpbs to\nMpbs in the calculation."
+  },
+  {
+    "legacyIndex": 1286,
+    "legacyNumber": 50,
+    "prompt": "Which feature of Digest Authentication prevents credentials from being sent in plaintext?",
+    "options": [
+      "SSL/TLS encryption",
+      "Challenge-response mechanism",
+      "Token-based authorization",
+      "Public key infrastructure"
+    ],
+    "answer": 1,
+    "explanation": "Digest authentication is a secure method for web servers to verify a user’s identity by using a challenge-\nresponse system to avoid sending plain-text passwords.\n\nHere’s how it works:\n\n1. The server sends a nonce (a random value) as a challenge to the client.\n2. The client uses this nonce, along with the username, password, and other details, to generate a hash\n(typically MD5).\n3. The client sends this hash to the server (not the plaintext password).\n4. The server performs the same hash operation on its side and compares the results to authenticate the\nuser."
+  },
+  {
+    "legacyIndex": 1287,
+    "legacyNumber": 51,
+    "prompt": "Which type of port configuration is used to carry traffic for multiple VLANs?",
+    "options": [
+      "LAG",
+      "EtherChannel",
+      "trunk",
+      "access"
+    ],
+    "answer": 2,
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1288,
+    "legacyNumber": 52,
+    "prompt": "Refer to the exhibit.\n\n R1#show ip route\n\n     S   192.168.64.0/18 [1/0] via 10.1.1.1\n\n     O   192.168.64.0/18 [110/236855] via 10.1.1.2\n\n     O   192.168.64.0/18 [110/229840] via 10.1.1.3\n\n     S   192.168.64.0/19 [1/0] via Null0\n\nHow will router R1 handle packets destined to 192.168.64.22?",
+    "options": [
+      "It will use the static route to 10.1.1.1.",
+      "It will use the route with the highest AD and highest destination IP.",
+      "It will route the packets to 10.1.1.2.",
+      "It will drop the packets."
+    ],
+    "answer": 3,
+    "explanation": "192.168.64.0/19 subnet has increment of 32 so it ranges from 192.168.64.0 to 192.168.64.31 which covers\ndestination of 192.168.64.22. Therefore traffic destined to 192.168.64.22 matches the output line “S\n192.168.64.0/19 [1/0] via Null0” so it will be forwarded to Null0 interface, which means it will be dropped.\n\nNote: A Null0 interface is a virtual “black hole” interface in a router that discards any traffic sent to it, and it’s\nprimarily used to prevent routing loops, often when route summarization is configured. We can create above\nNull0 entry in the routing table with command “ip route 19.268.64.0 255.255.224.0 null0”."
+  },
+  {
+    "legacyIndex": 1289,
+    "legacyNumber": 53,
+    "prompt": "Which option in the port configuration of an Ethernet switch allows traffic from multiple VLANs to travel over\nthe same physical link?",
+    "options": [
+      "LAG",
+      "EtherChannel",
+      "trunk",
+      "access"
+    ],
+    "answer": 2,
+    "explanation": "A “trunk” on a Cisco device is a point-to-point link between network devices, like switches, that carries traffic\nfor multiple VLANs over a single physical connection. It uses the IEEE 802.1Q standard to tag frames with\nVLAN information, allowing them to be separated and routed correctly across the network."
+  },
+  {
+    "legacyIndex": 1290,
+    "legacyNumber": 54,
+    "prompt": "Refer to the exhibit.\n\nOSPF neighbors routers A, B, C, and D are sending a route for 10.227.150.160/27. When the current route\nfor 10.227.150.160/27 becomes unavailable, which cost will router Y use to route traffic to\n10.227.150.160/27?",
+    "options": [
+      "Cost 20",
+      "Cost 30",
+      "Cost 40",
+      "Cost 50"
+    ],
+    "answer": 1,
+    "explanation": "When a router learns multiple paths to a destination, it uses the cost to choose the most efficient route. The\n“cost” is the “price” of the path to reach the destination and the lower is the better. In this question the\ncurrent (best) route has a cost of 20 so when it is unavailable, the path with cost 30 will be used instead."
+  },
+  {
+    "legacyIndex": 1291,
+    "legacyNumber": 55,
+    "prompt": "Refer to the exhibit.\n\n AA#show ip route\n\n     10.0.0.0/8 is variably subnetted, 6 subnets, 2 masks\n\n C     10.0.0.0/30 is directly connected, GigabitEthernet0/0\n L     10.0.0.1/32 is directly connected, GigabitEthernet0/0\n C     10.10.0.0/30 is directly connected, GigabitEthernet0/1\n L     10.10.0.1/32 is directly connected, GigabitEthernet0/1\n O     10.20.0.0/30 [110/2] via 10.0.0.2, 00:00:40, GigabitEthernet0/0\n O     10.30.0.0/30 [110/2] via 10.0.0.2, 00:00:40, GigabitEthernet0/0\n\n     172.16.0.0/24 is subnetted, 1 subnets\n\n S     172.16.10.0 [1/0] via 10.0.0.2\n\n     192.168.10.0/24 is variably subnetted, 2 subnets, 2 masks\n\n C     192.168.10.0/24 is directly connected, GigabitEthernet0/2\n L     192.168.10.1/32 is directly connected, GigabitEthernet0/2\n S     192.168.20.0/24 [1/0] via 192.168.10.2\n\nWhat is the administrative distance for the advertised prefix that includes the host IP address 192.168.20.1?",
+    "options": [
+      "0",
+      "192.168.10.2",
+      "24",
+      "1"
+    ],
+    "answer": 3,
+    "explanation": "The host IP address 192.168.20.1 is included in the last entry “S 192.168.20.0/24 [1/0] via 192.168.10.2”.\nThis is a static route with AD of 1."
+  },
+  {
+    "legacyIndex": 1292,
+    "legacyNumber": 56,
+    "prompt": "Refer to the exhibit.\n\nHQC needs to use a configuration that:\n\n* Handles up to 150,000 concurrent connections\n* Minimizes consumption of public IP addresses\n\nWhich configuration meets the requirements?",
+    "options": [
+      "ip nat pool NATPOOL 209.165.201.1 209.165.201.5 netmask 255.255.255.248\nip nat inside source list HQC interface gigabitEthernet0/0 overload",
+      "ip nat pool NATPOOL 209.165.200.225 209.165.200.226 netmask 255.255.255.252\nip nat outside source list HQC pool NATPOOL overload",
+      "ip nat pool NATPOOL 209.165.201.1 209.165.201.3 netmask 255.255.255.248\nip nat inside source list HQC pool NATPOOL overload",
+      "ip nat pool NATPOOL 209.165.201.1 209.165.201.248 netmask 255.255.255.248\nip nat outside source list HQC pool NATPOOL overload"
+    ],
+    "answer": 2,
+    "explanation": "A Cisco router using PAT can theoretically handle up to 64,511 ports per public IP address. These ports are\ngenerally in the 1024 to 65535 range to avoid conflicts with well-known ports (0-1023).\n\nTherefore in order to “handles up to 150,000 concurrent connections”, we need 150,000/64,511 = 2.3. Also\nto “minimizes consumption of public IP addresses” -> We need a minimum of 3 public IP addresses -> The\nrange “209.165.201.1 209.165.201.3” is the best choice."
+  },
+  {
+    "legacyIndex": 1293,
+    "legacyNumber": 57,
+    "prompt": "How are API keys used to enforce rate limiting?",
+    "options": [
+      "To encrypt data sent in the API request",
+      "To define the network path the API request should take",
+      "To specify the type of data format the client prefers to receive",
+      "To uniquely identify each client application"
+    ],
+    "answer": 3,
+    "explanation": "Rate limiting works by tracking how many requests each client makes. API keys uniquely identify each client,\nallowing the server to count their requests and enforce limits, such as 1,000 requests per day."
+  },
+  {
+    "legacyIndex": 1294,
+    "legacyNumber": 58,
+    "prompt": "Refer to the exhibit.\n\n     10.0.0.0/8 is variably subnetted, 15 subnets, 2 masks\n\n O     10.0.12.0/24 [110/2] via 10.0.14.1, 00:17:46, GigabitEthernet0/2\n C     10.0.14.0/24 is directly connected, GigabitEthernet0/2\n L     10.0.14.4/32 is directly connected, GigabitEthernet0/2\n O     10.0.23.0/24 [110/2] via 10.0.34.3, 00:17:46, GigabitEthernet0/0\n C     10.0.34.0/24 is directly connected, GigabitEthernet0/0\n L     10.0.34.4/32 is directly connected, GigabitEthernet0/0\n C     10.0.45.0/24 is directly connected, GigabitEthernet0/1\n L     10.0.45.4/32 is directly connected, GigabitEthernet0/1\n O     10.0.254.1/32 [110/2] via 10.0.14.1, 00:17:46, GigabitEthernet0/2\n R     10.255.2.4/24 [90/1] via 10.0.45.5, 00:00:13, GigabitEthernet0/1\n O     10.255.1.1/32 [110/2] via 10.0.14.1, 00:17:46, GigabitEthernet0/0\n O     10.255.2.2/32 [110/3] via 10.0.34.3, 00:17:46, GigabitEthernet0/0\n\n                        [110/3] via 10.0.14.1, 00:17:46, GigabitEthernet0/2\n\n O     10.255.3.3/32 [110/2] via 10.0.34.3, 00:17:46, GigabitEthernet0/0\n C     10.255.3.4/32 is directly connected, Loopback0\n R     10.255.5.5/32 [90/1] via 10.0.45.5, 00:00:13, GigabitEthernet0/1\n\nWhich routes are configured with their default administrative distances?",
+    "options": [
+      "EIGRP",
+      "OSPF",
+      "RIP",
+      "Local"
+    ],
+    "answer": 1,
+    "explanation": "The Administrative Distance (AD) of popular routing protocols is shown below. You should learn them by\nheart:\n\nNote: The AD of iBGP is 200\n\nFrom the table above, we see only OSPF is using its default AD of 110."
+  },
+  {
+    "legacyIndex": 1295,
+    "legacyNumber": 59,
+    "prompt": "Which security protocol is appropriate for a WPA3 implementation?",
+    "options": [
+      "TKIP",
+      "GCMP",
+      "MD5",
+      "CCMP"
+    ],
+    "answer": 1,
+    "explanation": "WPA3 uses GCMP (Galois/Counter Mode Protocol), typically GCMP-256, as its encryption and integrity\nprotocol.\n\nNote:\n\n+ TKIP is legacy (WPA/WPA2) and not allowed in WPA3.\n+ MD5 is a hashing algorithm, not an encryption protocol.\n+ CCMP (AES-CCMP) is used in WPA2; WPA3 moves to stronger GCMP."
+  },
+  {
+    "legacyIndex": 1296,
+    "legacyNumber": 60,
+    "prompt": "Refer to the exhibit.\n\n AccessSw1> show ntp associations\n\n     address               ref clock        st      when   poll   reach   delay    offset   disp\n\n     *~2001:DB8:12::1      127.127.1.1          3    39     64     377    23.903   -5.581   2.077\n\n     * sys.peer, # selected, + candidate, - outlyer, x falseticker, ~ configured\n\nA network engineer must replicate the AccessSw1 NTP configuration on a new switch. The engineer could not\naccess privileged mode on AccessSw1 to view its configuration. Which command must be applied to the new\nswitch to replicate the configuration?",
+    "options": [
+      "ntp server 2001:db8:12::1",
+      "ntp master 3",
+      "ntp master",
+      "ntp server 127.127.1.1"
+    ],
+    "answer": 0,
+    "explanation": "– The address column shows the NTP server AccessSw1 is using: 2001:DB8:12::1.\n– The ~ symbol indicates it is a configured server.\n– The ref clock 127.127.1.1 shows the server’s own reference clock, not what AccessSw1 configured\n(127.127.1.1 = local clock on the NTP server)\n\nTherefore, to replicate the same configuration on the new switch, you must configure the same NTP server\nthat AccessSw1 is using, which is 2001:DB8:12::1."
+  },
+  {
+    "legacyIndex": 1297,
+    "legacyNumber": 61,
+    "prompt": "Which role does AI play in monitoring network data now?",
+    "options": [
+      "It exclusively predicts device malfunctions.",
+      "It simplifies traffic route mapping.",
+      "It analyzes patterns anomaly detection.",
+      "It enhances data packet delivery speeds."
+    ],
+    "answer": 2,
+    "explanation": "AI contributes to network traffic analysis by examining patterns in network data to identify anomalies, which\ncould indicate security threats, unusual activity, or performance issues. Machine learning algorithms can\nlearn from historical network data to detect deviations from normal behavior, enabling proactive threat\ndetection and response."
+  },
+  {
+    "legacyIndex": 1298,
+    "legacyNumber": 62,
+    "prompt": "What is a characteristic of a Layer 2 switch?",
+    "options": [
+      "maintains stateful transaction information",
+      "prioritizes traffic using deep packet inspection",
+      "uses the data link layer for communications",
+      "provides a-single broadcast domain for all connected devices"
+    ],
+    "answer": 2,
+    "explanation": "Pure Layer 2 switch (not Layer 3 switch) only communicates via the data link layer (Layer 2 of the OSI\nmodel) -> Answer C is correct.\n\nAnswer D is not correct as a switch can create VLANs which separate broadcast domains for connected\ndevices."
+  },
+  {
+    "legacyIndex": 1299,
+    "legacyNumber": 63,
+    "prompt": "Which file transfer protocol omits a username or password requirement and acknowledges all data sent?",
+    "options": [
+      "FTP",
+      "TFTP",
+      "SCP",
+      "SFTP"
+    ],
+    "answer": 1,
+    "explanation": "TFTP (Trivial File Transfer Protocol) does not require a username or password and uses simple ACK\n(acknowledgment) messages for each block of data sent. It is designed to be lightweight and is commonly\nused for tasks like booting network devices or transferring configuration files.\n\nNote for other protocols:\n+ FTP: Requires username/password.\n+ SCP & SFTP: Use SSH, require authentication."
+  },
+  {
+    "legacyIndex": 1300,
+    "legacyNumber": 64,
+    "prompt": "Refer to the exhibit.\n\nA network engineer must configure the CPE router to allow computers in the 172.20.1.0/24 network to\nobtain their IP configurations from the central DHCP server. Which configuration must the engineer apply to\nthe CPE?",
+    "options": [
+      "interface GigabitEthernet0/1\nip helper-address 172.20.255.11",
+      "interface GigabitEthernet0/0\nip helper-address 172.20.255.1",
+      "interface GigabitEthernet0/0\nip helper-address 172.20.1.1",
+      "interface GigabitEthernet0/1\nip helper-address 172.20.254.1"
+    ],
+    "answer": 0,
+    "explanation": "If the DHCP Server is not on the same subnet with the DHCP Client, we need to configure the router on the\nDHCP client side to act as a DHCP Relay Agent so that it can forward DHCP messages between the DHCP\nClient & DHCP Server. To make a router a DHCP Relay Agent, simply put the “ip helper-address <IP-address-\nof-DHCP-Server>” command under the interface that receives the DHCP messages from the DHCP Client.\n\nAs we know, router does not forward broadcast packets (it drops them instead) so DHCP messages like\nDHCPDISCOVER message will be dropped. But with the “ip helper-address …” command, the router will\naccept that broadcast message and cover it into a unicast packet and forward it to the DHCP Server. The\ndestination IP address of the unicast packet is taken from the “ip helper-address …” command."
+  },
+  {
+    "legacyIndex": 1301,
+    "legacyNumber": 65,
+    "prompt": "Refer to the exhibit.\n\nAn engineer was asked to update a wireless LAN controller configuration on a newly deployed SSID “Office”.\nHowever, the configuration was not well documented or commented. What can the engineer determine about\nthis configuration?",
+    "options": [
+      "There is an additional protection level that helps secure the data frames exchanged between wireless clients and the access points for all wireless devices.",
+      "There is an extended delay that helps minimizing the time it takes for client devices to stay connected after roaming activity for Apple and Android devices.",
+      "There is an advanced secure algorithm put into the service to add an extra level of quality assurance for wireless delivery networks.",
+      "There is a seamless transition mechanism used to expedite roaming for compatible devices by authenticating them before potential roaming occurs."
+    ],
+    "answer": 3,
+    "explanation": "Protected Management Frame (PMF) protects unicast and broadcast management frames and encrypts\nunicast management frames. This means wireless intrusion detection and wireless intrusion prevention\nsystems now have fewer brute-force ways to enforce client policies. PMF provides an additional layer of\nprotection from de-authentication and disassociation attacks -> In the exhibit we see the “PMF” box was set\nto “Required” -> Answer A is not correct as PMF only protects management frames, not data frames.\n\nFast Transition (FT) is a new concept of roaming where the initial handshake with the new AP is done even\nbefore the client roams to the target AP. The initial handshake allows the client and APs to do the Pairwise\nTransient Key (PTK) calculation in advance. These PTK keys are applied to the client and AP after the client\ndoes the reassociation request or response exchange with new target AP -> Answer D is the best choice.\n\nNote:\n\n+ The comeback timer specifies the time that an associated client must wait before the association can be\ntried again when first denied with a status code 30.\n+ SA query timeout specifies the amount of time the WLC waits for a response from the client for the query\nprocess. If there is no response from the client, its association is deleted from the controller."
+  },
+  {
+    "legacyIndex": 1302,
+    "legacyNumber": 66,
+    "prompt": "What is the difference between the TCP and UDP protocols?",
+    "options": [
+      "TCP ensures ordered, reliable data delivery, and UDP offers low latency and high throughput.",
+      "TCP manages multicast and broadcast data transfers, and UDP only handles unicast communications.",
+      "TCP discovers neighboring devices on a local network segment, and UDP prevents Layer 2 switching loops.",
+      "TCP identities devices by their MAC addresses, and UDP identities devices by their IP addresses."
+    ],
+    "answer": 0,
+    "explanation": "In general, UDP offers higher potential throughput than TCP because its lack of overhead, flow control, and\nretransmission mechanisms allows it to “flood” available bandwidth, especially in the presence of latency or\npacket loss -> Answer A is correct.\n\nAnswer B is not correct as UDP also supports multicast & broadcast.\n\nAnswer C and answer D are not correct as they are not related to TCP & UDP."
+  },
+  {
+    "legacyIndex": 1303,
+    "legacyNumber": 67,
+    "prompt": "Refer to the exhibit.\n\nA packet is being sent across router R1 to host 172.16.0.14. To which destination does the router send the\npacket?",
+    "options": [
+      "209.165.200.246 via Serial0/1/0",
+      "209.165.200.254 via Serial0/0/0",
+      "209.165.200.254 via Serial0/0/1",
+      "209.165.200.250 via Serial0/0/0"
+    ],
+    "answer": 0,
+    "explanation": "IP 172.16.0.14 does not belong to 172.16.3.0/24 or 172.16.3.0/28 subnets so it will be routed via the\ndefault route."
+  },
+  {
+    "legacyIndex": 1304,
+    "legacyNumber": 68,
+    "prompt": "Refer to the exhibit.\n\nUsers will be using a preconfigured secret key and SSID and must have a secured key hashing algorithm\nconfigured. The AAA server must not be used for the user authentication method. Which action completes\nthe task?",
+    "options": [
+      "Configure PSK-SHA2.",
+      "Configure PSK Format HEX with key string.",
+      "Set CCMP128(AES).",
+      "Enable AutoConfig iPSK."
+    ],
+    "answer": 0,
+    "explanation": "“must have a secured key hashing algorithm” -> choose SHA2 -> Answer A is correct.\nNote: AES (Advanced Encryption Standard) is a symmetric encryption algorithm for confidentiality\n(encrypting/decrypting data to keep it secret), while SHA-2 (Secure Hash Algorithm 2) is a cryptographic\nhash function for integrity."
+  },
+  {
+    "legacyIndex": 1305,
+    "legacyNumber": 69,
+    "prompt": "Which two features are provided by Ansible in network automation? (Choose two)",
+    "options": [
+      "supplies network credentials",
+      "pushes configurations to client",
+      "launches job templates using version control",
+      "uses YAML language",
+      "offers agentless deployment"
+    ],
+    "answer": [
+      3,
+      4
+    ],
+    "type": "multi",
+    "explanation": "Ansible uses an agentless architecture to manage network devices. Agentless means that the managed\ndevice does not need any code (agent) to be installed on it. Therefore Ansible uses SSH (NETCONF over SSH\nin particular) to “push” changes and extract information to managed devices -> Answer B and answer E are\ncorrect.\n\nAnsible playbooks are written in YAML, making them human-readable and easy to maintain -> Answer D is\ncorrect.\n\nTherefore in fact we have three correct answers. But answer D and answer E are the most obvious ones so\nwe should choose them."
+  },
+  {
+    "legacyIndex": 1306,
+    "legacyNumber": 70,
+    "prompt": "Which type of VPN connection is used when an employee accesses a secure server from a public Wi-Fi?",
+    "options": [
+      "site-to-site",
+      "router-to-router",
+      "remote",
+      "open"
+    ],
+    "answer": 2,
+    "explanation": "Remote-access VPN is used when an individual user (such as an employee) connects securely to a private\nnetwork or server over an untrusted network like public Wi-Fi.\n\nRemote access VPNs are often used by Internet Protocol security (IPSec) teams. Over less secure networks,\nsuch as public Wi-Fi, a VPN establishes a secure and encrypted connection. A VPN application both encrypts\nand decrypts the data you send and receive. It also encrypts the network IP addresses from which data is\nsent and received."
+  },
+  {
+    "legacyIndex": 1307,
+    "legacyNumber": 71,
+    "prompt": "What is the role of nonoverlapping channels in a wireless environment?",
+    "options": [
+      "to reduce interference",
+      "to allow for channel bonding",
+      "to enable faster roaming",
+      "to increase bandwidth"
+    ],
+    "answer": 0,
+    "explanation": "The goal of using different non-overlapping channels is to avoid the affects caused by channel utilization and\ninterference.\n\nThe 2.4 GHz band is subdivided into multiple channels each allotted 22 MHz bandwidth and separated from\nthe next channel by 5 MHz.\n-> A best practice for 802.11b/g/n WLANs requiring multiple APs is to use non-overlapping channels such as\n1, 6, and 11.\n\nWhen two wireless devices transmit at the same time, their radio signals will collide and become garbled.\n802.11 devices on the same channel use a CCA check to avoid these collisions. However, the CCA check may\nnot detect a transmission occurring on a different channel that also has some frequency overlap on the\nchannel the check is being performed on. In this case, two 802.11 devices on different channels that overlap\nmay transmit at the same time causing a collision and possible data corruption or frame loss. This is called\ninterference because one device’s transmission interferes with another device’s transmission."
+  },
+  {
+    "legacyIndex": 1308,
+    "legacyNumber": 72,
+    "prompt": "What is represented in line 3 within this JSON schema?\n\n 1    [\n 2    {\"switch\": \"SW_dallas\", \"port\":\"ge16\"},\n 3    {\"load balancer\": \"LB_munich\", \"port\":\"te8/26\"},\n 4    {\"VPN concentrator\": \"VPN_toronto\", \"port\":\"te8/15\"},\n 5    ]",
+    "options": [
+      "array",
+      "value",
+      "key",
+      "object"
+    ],
+    "answer": 3,
+    "explanation": "Line 2 {\"load balancer\": \"LB_munich\", \"port\":\"te8/26\"} represents a JSON object, because it is enclosed in\ncurly braces {} and contains key-value pairs."
+  },
+  {
+    "legacyIndex": 1309,
+    "legacyNumber": 73,
+    "prompt": "Which security program element helps protect against employees unintentionally leaking sensitive\ninformation via email?",
+    "options": [
+      "workstation screen recordings",
+      "user awareness campaigns",
+      "controlled internet access",
+      "physical access controls"
+    ],
+    "answer": 1,
+    "explanation": "User awareness campaigns train employees to recognize sensitive information, understand data handling\npolicies, and avoid mistakes such as sending confidential data to the wrong recipient or falling for phishing\nemails."
+  },
+  {
+    "legacyIndex": 1310,
+    "legacyNumber": 74,
+    "prompt": "What is the purpose of the logging facility?",
+    "options": [
+      "It indicates the program or process that generated the syslog event.",
+      "It contains the text message that describes the syslog event.",
+      "It defines the severity of the syslog event.",
+      "It represents the timestamp of the syslog event."
+    ],
+    "answer": 0,
+    "explanation": "A syslog message has the following format:\n\n seq no:timestamp%FACILTY-SEVERITY-MNEMONIC: message text\n Example: Jul 10 14:32:18.456: %LINK-3-UPDOWN: Interface GigabitEthernet0/1, changed state to\n down\nEach portion of a syslog message has a specific meaning. In which the FACILITY tells the protocol, module,\nor process that generated the message. Some examples are SYS for the operating system, IF for an\ninterface…\n\nAll syslog messages have a logging facility and a level. The logging facility can be thought of as where and\nthe level can be thought of as what.\n\nIn the example above, the Facility: LINK means interface/link-related events on Cisco devices."
+  },
+  {
+    "legacyIndex": 1311,
+    "legacyNumber": 75,
+    "prompt": "Which AP mode provides a wireless connection between two network segments?",
+    "options": [
+      "root",
+      "local",
+      "FlexConnect",
+      "bridge"
+    ],
+    "answer": 3,
+    "explanation": "Bridge mode: Access Points are used to connect two networks. There are two sub modes coming with Bridge\nmode:\n+ Point-to-Point: connect the LAN of a router to a remote access-point.\n+ Point-to-Multipoint: connect two LANs with one wireless link."
+  },
+  {
+    "legacyIndex": 1312,
+    "legacyNumber": 76,
+    "prompt": "What is the purpose of a CNAME record?",
+    "options": [
+      "to associate an alias to a canonical domain name",
+      "to map a domain name to an IP address",
+      "to identify the authoritative name server for a domain",
+      "to direct email to a mail server"
+    ],
+    "answer": 0,
+    "explanation": "A CNAME (Canonical Name) record is used to create an alias that points to the true (canonical) domain\nname. This allows multiple domain names to refer to the same host. For example:\n\nexample.com (apex domain) -> has an A record pointing directly to your server’s IP address (e.g.,\n192.0.2.1).\nwww.example.com (subdomain) -> has a CNAME record pointing to example.com.\nWhen someone visits www.example.com:\n1. DNS looks up the CNAME record and sees that www.example.com points to example.com.\n2. It checks the records for example.com.\n3. The A record for example.com provides the IP address of the server.\n4. The user is connected to the same destination as if they had typed example.com."
+  },
+  {
+    "legacyIndex": 1313,
+    "legacyNumber": 77,
+    "prompt": "Refer to the exhibit.\n\n ip route 172.0.0.0 255.0.0.0 10.12.13.14\n ip route 172.16.0.0 255.255.0.0 10.56.22.23\n ip route 122.16.153.0 255.255.255.0 10.35.47.17\n ip route 172.16.153.153 255.255.255.255 10.65.34.19\n ip route 0.0.0.0 0.0.0.0 10.17.44.36\n\nThe static routes were implemented on the border router. What is the next hop IP address for a ping sent to\n172.16.153.154 from the border router?",
+    "options": [
+      "10.35.47.17",
+      "10.65.34.19",
+      "10.12.13.14",
+      "10.56.22.23"
+    ],
+    "answer": 3,
+    "explanation": "The best match for the destination 172.16.153.154 is “ip route 172.16.0.0 255.255.0.0 10.56.22.23” so\nanswer D is correct. If we don’t look each statement carefully, we may choose “ip route 122.16.153.0\n255.255.255.0 …” by mistake (here is 122, not 172)."
+  },
+  {
+    "legacyIndex": 1314,
+    "legacyNumber": 78,
+    "prompt": "Which cable type must be used when connecting a router and switch together?",
+    "options": [
+      "console",
+      "rollover",
+      "straight-through",
+      "crossover"
+    ],
+    "answer": 2,
+    "explanation": "To remember which type of cable you should use, follow these tips:\n\n– To connect two serial interfaces of 2 routers we use serial cable\n– To specify when we use crossover cable or straight-through cable, we should remember:\nGroup 1: Router, Host, Server\nGroup 2: Hub, Switch\nOne device in group 1 + One device in group 2: use straight-through cable\nTwo devices in the same group: use crossover cable\n\nFor example: we use straight-through cable to connect switch to router, switch to host, hub to host, hub to\nserver… and we use crossover cable to connect switch to switch, switch to hub, router to router, host to\nhost… )"
+  },
+  {
+    "legacyIndex": 1315,
+    "legacyNumber": 79,
+    "prompt": "Which feature can validate address requests and filter out invalid messages?",
+    "options": [
+      "dynamic ARP inspection",
+      "port security",
+      "IP Source Guard",
+      "DHCP snooping"
+    ],
+    "answer": 3,
+    "explanation": "DHCP Snooping validates DHCP messages and filters out invalid (untrusted) DHCP messages -> Answer D is\ncorrect. Although this question asks about “validate address requests” and DHCP Snooping cannot validate\nDHCP requests but this is still the best choice.\n\nAnswer A is not correct as Dynamic ARP Inspection (DAI) prevents ARP spoofing by validating ARP packets\nagainst the DHCP Snooping binding table.\n\nAnswer B is not correct as Port Security restricts MAC addresses allowed on a switch port.\n\nAnswer C is not correct as IP Source Guard prevents IP address spoofing by filtering traffic based on the\nDHCP Snooping binding table."
+  },
+  {
+    "legacyIndex": 1316,
+    "legacyNumber": 80,
+    "prompt": "Which two command can you enter to display the current time sources statistics on devices ? (Choose two)",
+    "options": [
+      "show ntp associations",
+      "show clock details",
+      "show clock",
+      "show time",
+      "show ntp status"
+    ],
+    "answer": [
+      0,
+      4
+    ],
+    "type": "multi",
+    "explanation": "– Two most popular commands to display time sources statistics: show ntp status and show ntp associations\nExample:\n\n Router#show ntp associations\n\n    address           ref clock        st   when   poll reach    delay      offset    disp\n\n *~10.1.2.65         10.1.2.33        11      36     64   377        27.9   25.17     30.0\n\n  * master (synced), # master (unsynced), + selected, - candidate, ~ configured\n\nThe ref clock column defines the remote server time source.\n\nAn example of the “show ntp status” is shown below:\n\n R1# show ntp status\n Clock is synchronized, stratum 2, reference is 10.246.122.25\n nominal freq is 250.0000 Hz, actual freq is 249.9998 Hz, precision is 2**32\n reference time is D13A115F.B0388F52 (11:40:19.688 EDT Sun Mar 27 2023)\n clock offset is 0.0356 msec, root delay is 0.01 msec\n root dispersion is 0.21 msec, peer dispersion is 0.00 msec\n loopfilter state is 'CTRL' (Normal Controlled Loop), drift is 0.000000516 s/s\n system poll interval is 64, last update was 184 sec ago.\n\nThe “reference is ..” shows the remote server time source."
+  },
+  {
+    "legacyIndex": 1317,
+    "legacyNumber": 81,
+    "prompt": "In which situation would the use of a static route be appropriate?",
+    "options": [
+      "To configure a route to the first Layer 3 device on the network segment.",
+      "To configure a route from an ISP router into a corporate network.",
+      "To configure a route when the administrative distance of the current routing protocol is too low.",
+      "To reach a network is more than 15 hops away.",
+      "To provide access to the Internet for enterprise hosts."
+    ],
+    "answer": 1,
+    "explanation": "We cannot request ISP to run the routing protocols we want so we can only use a static route to point to the\nISP for exit route."
+  },
+  {
+    "legacyIndex": 1318,
+    "legacyNumber": 82,
+    "prompt": "Drag and drop the characteristics of a cloud environment from the left onto the correct examples on the\nright.",
+    "type": "match",
+    "items": [
+      "Multitenancy",
+      "On-demand",
+      "Resiliency",
+      "Scalability",
+      "Workload movement"
+    ],
+    "choices": [
+      "One or more clients can be hosted with the same physical or virtual infrastructure",
+      "Resources are dedicated only when necessary instead of on a permanent",
+      "Tasks and data residing on a failed server can be seamlessly migrated to other physical resources",
+      "Resources can be added and removed as needed to support current workload and tasks",
+      "Tasks can be migrated to different physical locations to increase efficiency or reduce cost"
+    ],
+    "answer": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "explanation": "Multitenancy is when several different cloud customers are accessing the same computing resources, such as\nwhen several different companies are storing data on the same physical server.\n\nCloud computing on-demand allows businesses and engineers to access computing resources as needed,\npaying only for what they use.\n\nResiliency in cloud computing is your organization’s ability to handle failure while remaining functional. The\ngoal is not to avoid failure but to accept it as inevitable and construct your cloud services to respond to it.\n\nCloud scalability in cloud computing refers to the ability to increase or decrease IT resources as needed to\nmeet changing demand."
+  },
+  {
+    "legacyIndex": 1319,
+    "legacyNumber": 83,
+    "prompt": "Refer to the exhibit.\n\n Port Security : Enabled\n Port Status : Secure-up\n Violation Mode : Protect\n Aging Time : 0 mins\n Aging Type : Absolute\n SecureStatic Address Aging : Disabled\n Maximum MAC Addresses : 4\n Total MAC Addresses : 3\n Configured MAC Addresses: 1\n Sticky MAC Addresses : 2\n Last Source Address: Vlan : 0001:0fAA:33BB:1\n Security Violation Count : 0\n\nWhich two events occur on the interface, if packets from an unknown source address arrive after the\ninterface learns the maximum number of secure MAC address? (Choose two)",
+    "options": [
+      "The security violation counter dose not increment",
+      "The port LED turns off",
+      "The interface is error-disabled",
+      "A syslog message is generated",
+      "The interface drops traffic from unknown MAC address"
+    ],
+    "answer": [
+      0,
+      4
+    ],
+    "type": "multi",
+    "explanation": "When port security is configured with protect mode and an unknown MAC address arrives after the maximum\nnumber of secure MAC addresses has been learned, the security violation counter does not increment and\nviolating packets are silently dropped. Frames from unknown source MAC addresses are simply dropped."
+  },
+  {
+    "legacyIndex": 1320,
+    "legacyNumber": 84,
+    "prompt": "Which two benefits of implementing a full-mesh WAN topology are true? (Choose two)",
+    "options": [
+      "increased latency",
+      "redundancy",
+      "reduced jitter",
+      "reliability",
+      "improved scalability"
+    ],
+    "answer": [
+      1,
+      3
+    ],
+    "type": "multi",
+    "explanation": ""
+  },
+  {
+    "legacyIndex": 1321,
+    "legacyNumber": 85,
+    "prompt": "How are the query parameters for a GET request passed to the REST API?",
+    "options": [
+      "in the HTTP header",
+      "in the URI",
+      "in the authorization",
+      "in the request body"
+    ],
+    "answer": 1,
+    "explanation": "In a GET request, query parameters are appended to the end of the Uniform Resource Identifier (URI)\nfollowing a question mark (?) and separated by ampersands (&). For example:\n\n+ status=active: First parameter key-value pair\n+ limit=10: Second parameter key-value pair"
+  },
+  {
+    "legacyIndex": 1322,
+    "legacyNumber": 86,
+    "prompt": "How do predictive models enhance network resource allocation?",
+    "options": [
+      "They solely monitor historical traffic volumes.",
+      "They assign IP addresses to devices.",
+      "They anticipate future traffic spikes.",
+      "They select correct cabling types for deployment."
+    ],
+    "answer": 2,
+    "explanation": "Predictive models use historical traffic patterns, current network conditions, and other data to forecast future\nnetwork demand. This allows network administrators or automation systems to:\n\n+ Predict upcoming traffic spikes\n+ Allocate bandwidth and resources before congestion occurs\n+ Optimize capacity and performance\n+ Reduce network congestion and service disruption"
+  },
+  {
+    "legacyIndex": 1323,
+    "legacyNumber": 87,
+    "prompt": "A network administrator creates a layer 3 EtherChannel, bundling four interfaces into channel group 1. On\nwhat interface is the IP address configured?",
+    "options": [
+      "the port-channel 1 interface",
+      "the highest number member interface",
+      "all member interfaces",
+      "the lowest number member interface"
+    ],
+    "answer": 0,
+    "explanation": "After grouping four interfaces into channel group 1 (via command “channel-group 1 mode …” under each\ninterface), we have to assign IP address to the port-channel 1 interface. For example:\n\n interface port-channel 1\n\n  no switchport\n\n  ip address 172.16.0.1 255.255.255.0"
+  },
+  {
+    "legacyIndex": 1324,
+    "legacyNumber": 88,
+    "prompt": "Which command must you use to test DNS connectivity?",
+    "options": [
+      "telnet",
+      "show hosts",
+      "ipconfig",
+      "show interfaces"
+    ],
+    "answer": 0,
+    "explanation": "Diagnosing DNS Issues: Telnet may also be used to connect to port 53 on a DNS server and confirm DNS\nresolution:\n\n telnet {dns-server} 53\n\nThis test aids in determining whether the DNS server can be reached and is answering inquiries.\n\nThe “show interfaces” command only displays interface status and statistics.\n\nThe “show hosts” only displays the host name-to-address mapping cache (via “ip host …” command) and\nDNS configured. It does not test DNS connectivity. An output of this command is shown below:\n\n Router# show hosts\n Default domain is not set\n Name/address lookup uses domain service\n Name servers are 8.8.8.8\n\n Codes: UN – unknown, EX – expired, OK – OK, ?? – revalidate\n temp – temporary, perm – permanent\n NA – Not Applicable None – Not defined\n\n Host Port Flags Age Type Address(es)\n Arwen None (perm, OK) 0 IP 172.16.1.1\n Legolas None (perm, OK) 0 IP 172.16.1.2"
+  },
+  {
+    "legacyIndex": 1325,
+    "legacyNumber": 89,
+    "prompt": "Which benefit does network automation provide for IT administrators?",
+    "options": [
+      "It provides a set of tools that simplify endpoint virtualization.",
+      "It reduces network management overhead by avoiding the need for network segmentation.",
+      "It simplifies network management by generating a logical view of the network.",
+      "It defines a framework for user authentication, authorization, and accounting on the network."
+    ],
+    "answer": 2,
+    "explanation": "Network automation can provide administrators with a centralized, logical view of the network, allowing them\nto automate configuration, monitoring, and troubleshooting instead of managing individual devices manually."
+  },
+  {
+    "legacyIndex": 1326,
+    "legacyNumber": 90,
+    "prompt": "Which HTTP header is used by a client to tell a web server what type of data format it can accept in the\nserver’s response?",
+    "options": [
+      "User-Agent",
+      "Authorization",
+      "Accept",
+      "Content-Type"
+    ],
+    "answer": 2,
+    "explanation": "The Accept HTTP header tells the web server which data formats (media types) the client is willing to receive\nin the response. For example:\n\n GET /api/users HTTP/1.1\n Host: example.com\n Accept: application/json\n\nNote: Content-Type tells the format of the request/response body being sent while User-Agent identifies the\nclient browser."
   }
 ];
