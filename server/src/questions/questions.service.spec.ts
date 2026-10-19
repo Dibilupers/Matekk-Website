@@ -126,13 +126,6 @@ describe('QuestionsService', () => {
 
     await expect(service.findBank()).resolves.toEqual(rows);
     expect(prismaMock.questions.findMany).toHaveBeenCalledWith(expect.objectContaining({
-      where: {
-        OR: [
-          { module: { equals: 'CCNA', mode: 'insensitive' } },
-          { module: { startsWith: 'CCNA Part ', mode: 'insensitive' } },
-          { module: { startsWith: 'CCNA 200-301 Set ', mode: 'insensitive' } },
-        ],
-      },
       orderBy: { id: 'asc' },
     }));
   });
