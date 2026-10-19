@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { BookOpen, CheckCircle2, ChevronLeft, ChevronRight, Moon, Sun, X } from "lucide-react";
+import { createPortal } from "react-dom";
+import { BookOpen, CheckCircle2, ChevronLeft, ChevronRight, Moon, RotateCcw, Sun, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../../../../context/auth-context";
 import TrainingLogo from "../../../../../assets/MATEKK_training_logo.png";
@@ -42,6 +43,7 @@ export default function CCNAAllQuestionsExam() {
 	const [score, setScore] = useState(0);
 	const [storageError, setStorageError] = useState(null);
 	const [questionNumberInput, setQuestionNumberInput] = useState("1");
+	const [isRetakeConfirmationOpen, setIsRetakeConfirmationOpen] = useState(false);
 	// Results page: show only correct / incorrect / unanswered questions when stepping through the review
 	const [reviewFilter, setReviewFilter] = useState("all");
 	const questionCardRef = useRef(null);
@@ -216,6 +218,17 @@ export default function CCNAAllQuestionsExam() {
 		setScore(finalScore);
 		setIsSubmitted(true);
 		goToQuestion(0);
+	}
+
+	function restartExam() {
+		setAnswers({});
+		setCurrentIndex(0);
+		setFurthestOpenedIndex(0);
+		setIsSubmitted(false);
+		setScore(0);
+		setReviewFilter("all");
+		setQuestionNumberInput("1");
+		setIsRetakeConfirmationOpen(false);
 	}
 
 	if (loadState.status !== "ready") {
@@ -402,17 +415,26 @@ export default function CCNAAllQuestionsExam() {
 					</>
 				) : (
 					<>
-						<section className="mb-6 rounded-[24px] border border-[#d6e5e7] bg-white px-6 py-8 shadow-sm sm:px-10">
-							<p className="inline-flex items-center gap-2 rounded-full bg-[#e8f3f4] px-3 py-1.5 text-xs font-bold tracking-wide text-[#005b6b]">
-								<CheckCircle2 size={15} /> Exam complete
-							</p>
-							<h1 className="mt-4 text-3xl font-extrabold tracking-tight text-[#17233d] sm:text-4xl">Your score</h1>
-							<p className="mt-3 text-lg font-semibold text-[#005b6b]">
-								{score.toLocaleString()} / {questions.length.toLocaleString()} · {percentage}%
-							</p>
-							<p className="mt-2 text-sm text-[#64748b]">
-								{answeredCount.toLocaleString()} answered · {questions.length - answeredCount} unanswered. Browse the numbered questions below to review your answers.
-							</p>
+						<section className="mb-6 flex flex-wrap items-end justify-between gap-5 rounded-[24px] border border-[#d6e5e7] bg-white px-6 py-8 shadow-sm sm:px-10">
+							<div>
+								<p className="inline-flex items-center gap-2 rounded-full bg-[#e8f3f4] px-3 py-1.5 text-xs font-bold tracking-wide text-[#005b6b]">
+									<CheckCircle2 size={15} /> Exam complete
+								</p>
+								<h1 className="mt-4 text-3xl font-extrabold tracking-tight text-[#17233d] sm:text-4xl">Your score</h1>
+								<p className="mt-3 text-lg font-semibold text-[#005b6b]">
+									{score.toLocaleString()} / {questions.length.toLocaleString()} · {percentage}%
+								</p>
+								<p className="mt-2 text-sm text-[#64748b]">
+									{answeredCount.toLocaleString()} answered · {questions.length - answeredCount} unanswered. Browse the numbered questions below to review your answers.
+								</p>
+							</div>
+							<button
+								type="button"
+								onClick={() => setIsRetakeConfirmationOpen(true)}
+								className="inline-flex items-center gap-2 rounded-full bg-[#005b6b] px-6 py-3 font-semibold text-white transition hover:bg-[#004653]"
+							>
+								<RotateCcw size={16} /> Retake exam
+							</button>
 						</section>
 						<section aria-label="Find a question" className="mb-5 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[#d6e5e7] bg-white p-4 shadow-sm sm:p-5">
 							<div role="group" aria-label="Show questions" className="flex flex-wrap gap-2">
@@ -519,6 +541,42 @@ export default function CCNAAllQuestionsExam() {
 					</>
 				)}
 			</div>
+			{isRetakeConfirmationOpen && createPortal(
+				<div data-theme="light" className="fixed inset-0 z-[120] grid place-items-center bg-[#071126]/60 p-4 backdrop-blur-sm">
+					<section
+						role="alertdialog"
+						aria-modal="true"
+						aria-labelledby="ccna-all-retake-title"
+						aria-describedby="ccna-all-retake-description"
+						className="w-full max-w-md rounded-2xl border border-[#d6e5e7] bg-white p-5 text-[#17233d] shadow-2xl sm:p-8"
+					>
+						<p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#005b6b]">New exam attempt</p>
+						<h2 id="ccna-all-retake-title" className="mt-2 text-xl font-bold sm:text-2xl">
+							Are you sure you want to retake the all-questions exam?
+						</h2>
+						<p id="ccna-all-retake-description" className="mt-3 text-sm leading-6 text-[#64748b]">
+							This will clear your answers and review state and restart from question 1.
+						</p>
+						<div className="mt-6 flex flex-wrap justify-end gap-3">
+							<button
+								type="button"
+								onClick={() => setIsRetakeConfirmationOpen(false)}
+								className="rounded-full border border-[#c9dfe2] px-5 py-2.5 text-sm font-semibold text-[#42516b] transition hover:bg-[#f5f9f9]"
+							>
+								Cancel
+							</button>
+							<button
+								type="button"
+								onClick={restartExam}
+								className="rounded-full bg-[#005b6b] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#004653]"
+							>
+								Yes, retake exam
+							</button>
+						</div>
+					</section>
+				</div>,
+				document.body,
+			)}
 		</main>
 	);
 }
