@@ -3,7 +3,7 @@ import { ArrowRight, BookOpen, CircleSlash, CircleUserRound, LayoutGrid, List, S
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/auth-context";
 import API_URL from "../config/api";
-import { TRAINING_COURSES } from "../components/training/courses";
+import { FLAT_COURSES, TRAINING_COURSES } from "../components/training/courses";
 import CCNALogo from "../assets/CCNA.png";
 import APlusLogo from "../assets/aplus.webp";
 import NetworkPlusLogo from "../assets/network+.webp";
@@ -65,6 +65,13 @@ const PROGRAM_INTROS = [
 	"Explore technology courses that turn your curiosity into practical, career-ready skills.",
 ];
 const PROGRAM_CACHE_KEY = "matekk-training-programs";
+const COURSE_ALIASES = {
+	"A+ (Core 1 & 2)": ["A+"],
+	"CCNA Cybersecurity": ["CCNA Security"],
+	"CCNP Enterprise": ["CCNP Enterprise Core"],
+	FortiOS: ["FortiGate Administrator"],
+	"Secure Networking": ["FortiGate Security"],
+};
 
 const categoryLogos = {
 	Cisco: CCNALogo,
@@ -172,22 +179,42 @@ const PROGRAM_DESCRIPTIONS = {
 	"Project Management Professional": "Build project leadership skills across planning, delivery, risk, and stakeholder management.",
 };
 
-function getCoursesForEnrollment(enrollment) {
-	if (!enrollment) return [];
+function normalizeProgramName(name) {
+	return name.trim().toLowerCase().replace(/[^a-z0-9]+/g, "");
+}
 
+function matchesEnrolledProgram(name, enrolledNames) {
+	return [name, ...(COURSE_ALIASES[name] ?? [])]
+		.some((candidate) => enrolledNames.has(normalizeProgramName(candidate)));
+}
+
+function getCoursesForEnrollment(enrollment, enrollmentRecords, catalogPrograms) {
 	const enrolledNames = new Set((Array.isArray(enrollment) ? enrollment : [enrollment])
 		.flatMap((item) => String(item).split(","))
-		.map((item) => item.trim().toLowerCase())
+		.map(normalizeProgramName)
 		.filter(Boolean));
+	const expandedEnrollments = enrollmentRecords.flatMap((record) => {
+		const program = record.program;
+		if (!program) return [];
+		if (program.parentId !== null) return [{ ...program, training: program.training ?? program.parent?.training }];
+		const catalogProgram = catalogPrograms.find((item) => item.id === program.id);
+		const modules = catalogProgram?.modules ?? [];
+		return modules.length
+			? modules.map((module) => ({ ...module, training: catalogProgram.training }))
+			: [program];
+	});
+	for (const program of expandedEnrollments) {
+		if (program.name) enrolledNames.add(normalizeProgramName(program.name));
+	}
 
 	const collectEnrolledCourses = (items, parentIsEnrolled) => items.flatMap((item) => {
-		const isEnrolled = parentIsEnrolled || enrolledNames.has(item.name.trim().toLowerCase());
+		const isEnrolled = parentIsEnrolled || matchesEnrolledProgram(item.name, enrolledNames);
 		if (item.path) return isEnrolled ? [{ name: item.name, path: item.path }] : [];
 		return collectEnrolledCourses(item.subcourses || [], isEnrolled);
 	});
 
-	return TRAINING_COURSES.flatMap((category) => {
-		const categoryIsEnrolled = enrolledNames.has(category.name.trim().toLowerCase());
+	const catalogCourses = TRAINING_COURSES.flatMap((category) => {
+		const categoryIsEnrolled = matchesEnrolledProgram(category.name, enrolledNames);
 		return collectEnrolledCourses(category.subcourses || [], categoryIsEnrolled)
 			.map((course) => ({
 				...course,
@@ -197,6 +224,26 @@ function getCoursesForEnrollment(enrollment) {
 					?? `Study ${course.name} through focused lessons, practical activities, and certification preparation.`,
 			}));
 	});
+	const fallbackCourses = expandedEnrollments
+		.filter((program) => !FLAT_COURSES.some((course) =>
+			matchesEnrolledProgram(course.label, new Set([normalizeProgramName(program.name)])),
+		))
+		.map((program) => {
+			const category = program.training?.name ?? "Enrolled programs";
+			return {
+				key: `enrollment-${program.id}`,
+				name: program.name,
+				path: null,
+				category,
+				image: categoryLogos[category] ?? CiscoLogo,
+				description: PROGRAM_DESCRIPTIONS[program.name]
+					?? `Study ${program.name} through focused lessons, practical activities, and certification preparation.`,
+			};
+		});
+	return [
+		...catalogCourses.map((course) => ({ ...course, key: course.path })),
+		...fallbackCourses,
+	];
 }
 
 function getProgramPath(course) {
@@ -226,6 +273,8 @@ export default function Blank() {
 	const [programLayout, setProgramLayout] = useState("grid");
 	const [programSearch, setProgramSearch] = useState("");
 	const [databasePrograms, setDatabasePrograms] = useState(readCachedPrograms);
+	const [enrollmentRecords, setEnrollmentRecords] = useState([]);
+	const [enrollmentsError, setEnrollmentsError] = useState("");
 	const [programsError, setProgramsError] = useState("");
 	const [isDpPreviewOpen, setIsDpPreviewOpen] = useState(false);
 	const profile = sessionProfile;
@@ -234,8 +283,12 @@ export default function Blank() {
 	const [typedUsername, setTypedUsername] = useState("");
 	const [typedIntro, setTypedIntro] = useState("");
 	const enrolledCourses = useMemo(
-		() => getCoursesForEnrollment([profile?.module_enrolled, profile?.course_enrolled]),
-		[profile?.module_enrolled, profile?.course_enrolled],
+		() => getCoursesForEnrollment(
+			[profile?.module_enrolled, profile?.course_enrolled],
+			enrollmentRecords,
+			databasePrograms ?? [],
+		),
+		[databasePrograms, enrollmentRecords, profile?.course_enrolled, profile?.module_enrolled],
 	);
 	const categories = ["All Programs", ...new Set(enrolledCourses.map((course) => course.category))];
 	const visibleCourses = useMemo(() => {
@@ -246,13 +299,6 @@ export default function Blank() {
 				...(program.modules ?? []).map((module) => module.name),
 			]).map((name) => name.trim().toLowerCase().replace(/[^a-z0-9]+/g, "")),
 		);
-		const courseAliases = {
-			"A+ (Core 1 & 2)": ["A+"],
-			"CCNA Cybersecurity": ["CCNA Security"],
-			"CCNP Enterprise": ["CCNP Enterprise Core"],
-			FortiOS: ["FortiGate Administrator"],
-			"Secure Networking": ["FortiGate Security"],
-		};
 		return enrolledCourses
 			.filter((course) => {
 			const matchesCategory = activeCategory === "All Programs" || course.category === activeCategory;
@@ -262,8 +308,8 @@ export default function Blank() {
 				return matchesCategory && matchesSearch;
 			})
 			.map((course) => {
-				const courseNames = [course.name, ...(courseAliases[course.name] ?? [])]
-					.map((name) => name.trim().toLowerCase().replace(/[^a-z0-9]+/g, ""));
+				const courseNames = [course.name, ...(COURSE_ALIASES[course.name] ?? [])]
+					.map(normalizeProgramName);
 				return {
 					...course,
 					isInDatabase: databaseNames.size > 0 && courseNames.some((name) => databaseNames.has(name)),
@@ -371,6 +417,31 @@ export default function Blank() {
 				if (error.name === "AbortError") return;
 				console.error("Unable to load the program catalog from the database.", error);
 				setProgramsError("Program availability could not be checked. Please refresh to try again.");
+			});
+		return () => controller.abort();
+	}, []);
+
+	useEffect(() => {
+		const controller = new AbortController();
+		fetch(`${API_URL}/auth/learning-history`, {
+			credentials: "include",
+			signal: controller.signal,
+		})
+			.then(async (response) => {
+				if (!response.ok) {
+					throw new Error(`Enrollment history request failed with status ${response.status}.`);
+				}
+				const enrollments = await response.json();
+				if (!Array.isArray(enrollments)) {
+					throw new Error("Enrollment history response was not a list.");
+				}
+				setEnrollmentRecords(enrollments);
+				setEnrollmentsError("");
+			})
+			.catch((error) => {
+				if (error.name === "AbortError") return;
+				console.error("Unable to load enrolled programs for the course page.", error);
+				setEnrollmentsError("Your enrollment list could not be refreshed. Showing available saved course details.");
 			});
 		return () => controller.abort();
 	}, []);
@@ -487,13 +558,13 @@ export default function Blank() {
 							</div>
 						</div>
 						<div className={programLayout === "grid" ? "grid min-w-0 gap-7 sm:grid-cols-2" : "flex min-w-0 flex-col gap-4"}>
-							{programsError && (
+							{(programsError || enrollmentsError) && (
 								<p role="alert" className="col-span-full rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-medium text-amber-900">
-									{programsError}
+									{enrollmentsError || programsError}
 								</p>
 							)}
 							{visibleCourses.map((course, index) => (
-								<article key={course.path} className={`fade-in-up-stagger group flex min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:border-[#1775EE] hover:shadow-xl ${programLayout === "grid" ? "min-h-[25rem] flex-col hover:-translate-y-1" : "flex-row"}`} style={{ "--fade-delay": 150 + index * 75 }}>
+								<article key={course.key} className={`fade-in-up-stagger group flex min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:border-[#1775EE] hover:shadow-xl ${programLayout === "grid" ? "min-h-[25rem] flex-col hover:-translate-y-1" : "flex-row"}`} style={{ "--fade-delay": 150 + index * 75 }}>
 									<div className={`flex shrink-0 items-center justify-center overflow-hidden bg-slate-50 ${programLayout === "grid" ? "h-44 p-7" : "w-24 p-3 sm:h-auto sm:w-52 sm:p-7"}`}>
 										<img src={course.image} alt={`${course.name} certification`} className={`object-contain transition duration-300 group-hover:scale-105 ${programLayout === "grid" ? "h-full max-w-[13rem]" : "h-16 w-16 sm:h-28 sm:w-40"}`} />
 									</div>
@@ -503,7 +574,7 @@ export default function Blank() {
 										<h3 className="break-words text-xl font-bold text-slate-950">{course.name}</h3>
 										<p className="mt-3 text-sm leading-6 text-slate-600">{course.description}</p>
 										</div>
-										{course.isInDatabase && getProgramPath(course) ? (
+										{course.isInDatabase && course.path && getProgramPath(course) ? (
 											<Link to={getProgramPath(course)} className={`mt-5 flex items-center justify-center gap-2 rounded-lg bg-[#1775EE] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#1262c9] ${programLayout === "list" ? "sm:mt-0 sm:w-48 sm:shrink-0" : ""}`}>
 												View Program <ArrowRight size={16} />
 											</Link>
@@ -512,15 +583,15 @@ export default function Blank() {
 												<button
 													type="button"
 													disabled
-													title={programsError ? "Program availability unknown" : "Coming soon"}
-													aria-label={`${course.name} ${programsError ? "availability could not be checked" : "program coming soon"}`}
+													title={programsError ? "Program availability unknown" : course.path ? "Coming soon" : "Course page unavailable"}
+													aria-label={`${course.name} ${programsError ? "availability could not be checked" : course.path ? "program coming soon" : "course page unavailable"}`}
 													className="flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-lg bg-[#1775EE] px-4 py-2.5 text-sm font-semibold text-white opacity-45"
 												>
 													<CircleSlash size={16} />
 													View Program <ArrowRight size={16} />
 												</button>
 												<span role="tooltip" className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2 whitespace-nowrap rounded-md bg-slate-900 px-3 py-1.5 text-xs font-semibold text-white opacity-0 shadow-lg transition-opacity group-hover/program:opacity-100 group-focus-within/program:opacity-100">
-													{programsError ? "Availability unavailable" : !databasePrograms ? "Checking availability..." : "Coming soon"}
+													{programsError ? "Availability unavailable" : !course.path ? "Course page unavailable" : !databasePrograms ? "Checking availability..." : "Coming soon"}
 												</span>
 											</div>
 										)}

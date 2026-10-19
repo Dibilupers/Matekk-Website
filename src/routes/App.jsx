@@ -148,6 +148,7 @@ if ("scrollRestoration" in history) {
 
 export default function App() {
   const location = useLocation();
+  const { isOnline } = useAuth();
   const isFullScreenAssessment = location.pathname.startsWith("/modules/programs/ccna/quiz/")
     || location.pathname.startsWith("/modules/programs/ccna/exam/")
     || location.pathname.startsWith("/modules/programs/ccna-automation/quiz/")
@@ -163,7 +164,7 @@ export default function App() {
   return (
     <>
       <CCNAExamTimeNotification />
-      {!isFullScreenAssessment && !isAccountPendingPage && <NavBar />}
+      {isOnline && !isFullScreenAssessment && !isAccountPendingPage && <NavBar />}
       <ScrollToTop />
 
       {/* Keyed by path so every page change replays the fade-in (navbar stays outside, so it never flickers) */}
@@ -669,7 +670,7 @@ export default function App() {
         <Route path="*" element={<NotFound />} />
       </Routes>
 
-      {!isFullScreenAssessment && !isAdminPage && !isAccountPendingPage && <Footer />}
+      {isOnline && !isFullScreenAssessment && !isAdminPage && !isAccountPendingPage && <Footer />}
       </div>
     </>
   );
@@ -849,14 +850,6 @@ function ProtectedRoute({ children }) {
   const isExamRoute = /(?:^|\/)exam(?:\/|$)/.test(pathname);
   const canAccessOfflineModule = isModuleRoute && !isExamRoute && !isOnline;
 
-  if (isLoading) {
-    return (
-      <main className="flex min-h-screen items-center justify-center bg-white text-sm text-slate-500">
-        Checking your session...
-      </main>
-    );
-  }
-
   if (!isOnline && isModuleRoute && isExamRoute) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6 text-center text-white">
@@ -868,14 +861,23 @@ function ProtectedRoute({ children }) {
     );
   }
 
+  if (canAccessOfflineModule) {
+    return <OfflineModuleAccess isOnline={false}>{children}</OfflineModuleAccess>;
+  }
+
+  if (isLoading) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-white text-sm text-slate-500">
+        Checking your session...
+      </main>
+    );
+  }
+
   if (!isAuthenticated && !canAccessOfflineModule) {
     return <Navigate to="/login" replace />;
   }
   if (isAuthenticated && profile.active_status === false) {
     return <Navigate to="/account-pending" replace />;
-  }
-  if (canAccessOfflineModule) {
-    return <OfflineModuleAccess isOnline={false}>{children}</OfflineModuleAccess>;
   }
   if (!isAuthenticated) return children;
   return isModuleRoute && !isExamRoute

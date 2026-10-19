@@ -137,7 +137,7 @@ export default function OfflineModuleAccess({ children, isOnline }) {
 					</>
 				) : (
 					<p className="mt-2 text-sm leading-6 text-slate-600">
-						This device has not been set up for offline access yet. Reconnect to the internet, sign in, and verify the shared PIN once before going offline.
+						This device has not been set up for offline access yet. Connect while online and have an administrator set up the shared PIN once. After setup, the PIN alone unlocks cached modules offline.
 					</p>
 				)}
 			</section>

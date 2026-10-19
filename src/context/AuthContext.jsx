@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import API_URL from "../config/api";
 import {
-	clearOfflineModulePin,
 	hasOfflineModulePin,
 	saveOfflineModulePin,
 	verifyOfflineModulePin,
@@ -11,10 +10,9 @@ import { AuthContext } from "./auth-context";
 const PROFILE_CACHE_KEY = "matekk-session-profile";
 const OFFLINE_PROFILE_KEY = "matekkOfflineProfile";
 
-function clearAuthCaches() {
+function clearProfileCaches() {
   sessionStorage.removeItem(PROFILE_CACHE_KEY);
   localStorage.removeItem(OFFLINE_PROFILE_KEY);
-  clearOfflineModulePin();
 }
 
 function readOfflineProfile() {
@@ -73,9 +71,8 @@ export function AuthProvider({ children }) {
     });
     if (!response.ok) {
       if (response.status === 401 || response.status === 403) {
-        clearAuthCaches();
+        clearProfileCaches();
         setProfile(null);
-        setHasOfflinePin(false);
         setIsOfflinePinUnlocked(false);
       }
       throw new Error("Unable to refresh account approval status.");
@@ -89,6 +86,12 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     let mounted = true;
+    if (!navigator.onLine) {
+      setIsLoading(false);
+      return () => {
+        mounted = false;
+      };
+    }
     const cachedProfile = readOfflineProfile();
     fetch(`${API_URL}/auth/profile`, {
       credentials: "include",
@@ -101,10 +104,8 @@ export function AuthProvider({ children }) {
           }
           sessionStorage.removeItem(PROFILE_CACHE_KEY);
           localStorage.removeItem(OFFLINE_PROFILE_KEY);
-          clearOfflineModulePin();
           if (mounted) setProfile(null);
           if (mounted) {
-            setHasOfflinePin(false);
             setIsOfflinePinUnlocked(false);
           }
           return;
@@ -144,7 +145,7 @@ export function AuthProvider({ children }) {
       }).catch((logoutError) =>
         console.error("Unable to clear a session after profile loading failed.", logoutError),
       );
-      clearAuthCaches();
+      clearProfileCaches();
       throw error;
     }
     setProfile(signedInProfile);
@@ -186,9 +187,8 @@ export function AuthProvider({ children }) {
   }, [completeLogin]);
 
   const logout = useCallback(() => {
-    clearAuthCaches();
+    clearProfileCaches();
     setProfile(null);
-    setHasOfflinePin(false);
     setIsOfflinePinUnlocked(false);
     void fetch(`${API_URL}/auth/logout`, {
       method: "POST",

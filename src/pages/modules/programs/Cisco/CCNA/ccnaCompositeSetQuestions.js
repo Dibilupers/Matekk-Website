@@ -1,21 +1,10 @@
 // CCNA composite question set (85 questions) used in the Medium Exam.
-// Exhibits are shown as a picture (pic) where we have one, otherwise written out as text.
+// Topology-only exhibits are rendered natively; mixed CLI and GUI exhibits stay as pictures.
 // Answer keys were worked out from the question content (not supplied in the source).
 
-import ipv6BlockImg from "../../../../../assets/ccna-exam/ipv6-block-r1-r2.webp";
-import salesVlan10Img from "../../../../../assets/ccna-exam/sales-vlan10-mac-table.webp";
-import etherchannelImg from "../../../../../assets/ccna-exam/etherchannel-group1.webp";
-import r4SupernetImg from "../../../../../assets/ccna-exam/r4-supernet.webp";
-import lobbyPortSecurityImg from "../../../../../assets/ccna-exam/lobby-port-security.webp";
-import routersAbcOspfImg from "../../../../../assets/ccna-exam/routers-abc-ospf-dr.webp";
-import router1HostAImg from "../../../../../assets/ccna-exam/router1-host-a.webp";
 import wlcMyWlanImg from "../../../../../assets/ccna-exam/wlc-my-wlan-layer2.webp";
 import wlcPskImg from "../../../../../assets/ccna-exam/wlc-psk-layer2.webp";
-import ospfPriorityImg from "../../../../../assets/ccna-exam/ospf-r1-r2-r3-priority.webp";
-import ospfDrotherImg from "../../../../../assets/ccna-exam/ospf-drother-r1.webp";
 import wlcAdvancedImg from "../../../../../assets/ccna-exam/wlc-advanced-tab.webp";
-import oldNewSwitchImg from "../../../../../assets/ccna-exam/oldswitch-newswitch-trunk.webp";
-import routersAbcFloatingImg from "../../../../../assets/ccna-exam/routers-abc-floating-route.webp";
 
 // pic(image, text?) = picture exhibit, optionally with device output shown below it
 const pic = (image, text) => ({ image, text });
@@ -56,7 +45,7 @@ export const CCNA_COMPOSITE_SET_QUESTIONS = [
 		"ipv6 address 2001:0B8:FFFF:FCF3::1/64",
 		"ipv6 address autoconfig 2001:DB8:FFFF:FCF2::/64",
 	], 0, "EUI-64 builds the interface ID automatically from the MAC address within the assigned 2001:db8:ffff:fcf3::/64 block. Option C has a typo in the prefix (0B8) and D uses the wrong block.",
-	pic(ipv6BlockImg)),
+	siteExhibit("ipv6-block-r1-r2")),
 
 	one("The entire contents of the MAC address table are shown. Sales-4 sends a data frame to Sales-1. What does the switch do as it receives the frame from Sales-4?", [
 		"Map the Layer 2 MAC address to the Layer 3 IP address and forward the frame",
@@ -64,7 +53,11 @@ export const CCNA_COMPOSITE_SET_QUESTIONS = [
 		"Perform a lookup in the MAC address table and discard the frame due to a missing entry",
 		"Flood the frame out of all ports except on the port where Sales-1 is connected",
 	], 1, "Sales-4's MAC is not in the table, so the switch learns it (source MAC + port Gi1/0/4). Sales-1's MAC is already known on Gi1/0/1, so the frame is forwarded only there.",
-	pic(salesVlan10Img)),
+	siteExhibit("sales-vlan10", `Sales-SW#show mac-address-table
+VLAN  MAC Address       Type     Port
+10    000c.8590.bb7d    DYNAMIC  Gi1/0/1
+10    3190.3456.9d3d    DYNAMIC  Gi1/0/2
+10    00d0.d323.d343    DYNAMIC  Gi1/0/3`)),
 
 	one("A network engineer started to configure two directly-connected routers as shown. Which command sequence must the engineer configure on R2 so that the two routers become OSPF neighbors?", [
 		"interface GigabitEthernet0/1\n ip ospf 1 area 1",
@@ -109,7 +102,7 @@ interface GigabitEthernet0/1
 		"interface port-channel 1\n channel-group 1 mode passive",
 		"interface port-channel 1\n channel-group 1 mode auto",
 	], 2, "LACP passive mode responds to LACP packets but never starts negotiation. Desirable and auto are PAgP modes; on uses no protocol.",
-	pic(etherchannelImg)),
+	siteExhibit("etherchannel-group1")),
 
 	one("What is the purpose of the show ip ospf interface command?", [
 		"displaying OSPF neighbor information on a per-interface-type basis",
@@ -124,7 +117,7 @@ interface GigabitEthernet0/1
 		"Subnet: 10.7.54.0\nSubnet mask: 255.255.254.0\nBroadcast address: 10.7.54.255\nUsable IP address range: 10.7.54.1 – 10.7.55.254",
 		"Subnet: 10.7.54.0\nSubnet mask: 255.255.254.0\nBroadcast address: 10.7.55.255\nUsable IP address range: 10.7.54.1 – 10.7.55.254",
 	], 3, "380 hosts need 9 host bits (510 usable), so /23 = 255.255.254.0. 10.7.54.0/23 runs to 10.7.55.255 (broadcast).",
-	pic(r4SupernetImg)),
+	siteExhibit("r4-supernet")),
 
 	one("What is a function of an endpoint on a network?", [
 		"provides wireless services to users in a building",
@@ -246,7 +239,7 @@ Atlanta(config)#end`),
 		"interface gi1/0/15\n switchport port-security\n switchport port-security mac-address 0000.abcd.0004 vlan 100",
 		"interface gi1/0/15\n switchport port-security mac-address 0000.abcd.0004 vlan 100",
 	], 1, "Port security must be enabled ('switchport port-security') and 'maximum 2' limits the port to two MAC addresses.",
-	pic(lobbyPortSecurityImg)),
+	siteExhibit("lobby-port-security")),
 
 	one("What is the function of a hub-and-spoke WAN topology?", [
 		"supports application optimization", "allows access restrictions to be implemented between subscriber sites",
@@ -259,7 +252,7 @@ Atlanta(config)#end`),
 		"Configure router B and router C as OSPF neighbors of router A.",
 		"Configure router A with a fixed OSPF router ID.",
 	], 1, "The router with the highest OSPF interface priority becomes the DR.",
-	pic(routersAbcOspfImg)),
+	siteExhibit("routers-abc-ospf-dr")),
 
 	one("How many objects are present in the given JSON-encoded data?", ["nine", "one", "four", "seven"], 0,
 		"Count every { } pair: the outer object, aaaUser, its attributes, the children list item, aaaUserRole, its attributes, the nested list item, the nested aaaUserRole and its attributes = 9.",
@@ -321,7 +314,7 @@ L    10.10.10.1/32 is directly connected, Serial 0/0`),
 
 	one("Which prefix does Router 1 use for traffic to Host A?", ["10.10.13.144/28", "10.10.10.0/28", "10.10.13.0/25", "10.10.13.208/29"], 3,
 		"Host A is 10.10.13.214, which falls in 10.10.13.208/29 (10.10.13.208 to 10.10.13.215), the longest matching prefix.",
-	pic(router1HostAImg, `Router1#show ip route
+	siteExhibit("router1-host-a", `Router1#show ip route
 Gateway of last resort is 10.10.11.2 to network 0.0.0.0
 B    209.165.200.224 [20/0] via 10.10.12.2, 03:03:03
 B    209.165.201.0 [20/0] via 10.10.12.2, 03:03:03
@@ -558,7 +551,7 @@ interface fastethernet0/1
 		"R3(config)#interface Gig0/1\nR3(config-if)#ip ospf priority 100",
 		"R3(config)#interface Gig0/0\nR3(config-if)#ip ospf priority 100",
 	], 2, "R3 connects to 10.0.4.0/24 on Gig0/1. A priority of 100 (higher than R2's 99) makes R3 the DR.",
-	pic(ospfPriorityImg)),
+	siteExhibit("ospf-r1-r2-r3-priority")),
 
 	one("A packet is being sent across router R1 to host 172.16.3.14. To which destination does the router send the packet?", [
 		"207.165.200.254 via Serial0/0/0", "207.165.200.246 via Serial0/1/0", "207.165.200.254 via Serial0/0/1", "207.165.200.250 via Serial0/0/0",
@@ -618,7 +611,10 @@ R 10.18.75.113/27 [120/14] via G0/23`),
 		"R1(config)#interface FastEthernet0/0\nR1(config-if)#ip ospf priority 200\nR1#clear ip ospf process",
 		"R2(config)#interface FastEthernet0/2\nR2(config-if)#ip ospf priority 1\nR2#clear ip ospf process",
 	], 2, "All routers have the default priority 1. Raising R1's priority to 200 and resetting OSPF makes R1 win the DR election.",
-	pic(ospfDrotherImg)),
+	siteExhibit("ospf-drother-r1", `R1#show ip ospf neighbor
+Neighbor ID  Pri  State    Dead Time  Address       Interface
+192.168.100.2  1  FULL/BDR 00:00:35   192.168.100.2 FastEthernet0/0
+192.168.100.3  1  FULL/DR  00:00:34   192.168.100.3 FastEthernet0/0`)),
 
 	two("A network engineer configures the CCNA WLAN so that clients must reauthenticate hourly and to limit the number of simultaneous connections to the WLAN to 10. Which two actions complete this configuration? (Choose two)", [
 		"Enable the Client Exclusion option and set the value to 3600.", "Enable the Wi-Fi Direct Clients Policy option.",
@@ -653,7 +649,16 @@ R 10.18.75.113/27 [120/14] via G0/23`),
 		"switchport nonnegotiate\nno switchport trunk allowed vlan 5,10\nswitchport trunk allowed vlan 5,10,15,20",
 		"no switchport trunk encapsulation isl\nswitchport trunk encapsulation dot1q\nswitchport trunk allowed vlan add 20",
 	], 3, "Switch from ISL to IEEE 802.1Q (dot1q) and use 'allowed vlan add 20' to keep VLANs 5 and 10 while adding VLAN 20.",
-	pic(oldNewSwitchImg)),
+	siteExhibit("oldswitch-newswitch-trunk", `OldSwitch(config)#interface fastEthernet0/1
+OldSwitch(config-if)#switchport mode trunk
+OldSwitch(config-if)#switchport trunk allowed vlan 5,10
+OldSwitch(config-if)#switchport trunk native vlan 15
+
+NewSwitch(config)#interface fastEthernet0/1
+NewSwitch(config-if)#switchport mode trunk
+NewSwitch(config-if)#switchport trunk encapsulation isl
+NewSwitch(config-if)#switchport trunk allowed vlan 5,10
+NewSwitch(config-if)#switchport trunk native vlan 15`)),
 
 	one("What is the effect when loopback interfaces and the configured router ID are absent during the OSPF Process configuration?", [
 		"The lowest IP address is incremented by 1 and selected as the router ID.", "No router ID is set, and the OSPF protocol does not run.",
@@ -673,7 +678,7 @@ export const CCNA_COMPOSITE_SET2_QUESTIONS = [
 		"ip route 0.0.0.0 0.0.0.0 192.168.2.1 10", "ip route 0.0.0.0 0.0.0.0 192.168.1.2",
 		"ip default-gateway 192.168.2.1", "ip route 0.0.0.0 0.0.0.0 192.168.1.2 10",
 	], 3, "The primary default route goes to Router B (192.168.2.2). The backup must point to the other neighbor, Router C (192.168.1.2), with a higher administrative distance (10) so it is only used if the primary fails.",
-	pic(routersAbcFloatingImg)),
+	siteExhibit("routers-abc-floating-route", `RouterA(config)#ip route 0.0.0.0 0.0.0.0 192.168.2.2`)),
 
 	one("The administrator must configure a floating static default route that points to 2001:db8:1234:2::1 and replaces the current default route only if it fails. Which command must the engineer configure on the CPE?", [
 		"ipv6 route ::/0 2001:db8:1234:2::1 1", "ipv6 route ::/128 2001:db8:1234:2::1 3",
@@ -785,3 +790,1070 @@ Device ID  Local Intrfce  Holdtme  Capability  Platform  Port ID
 10.1.1.2   Ten4/2        174      RI          CPT 600   Ten3/2`),
 
 ];
+
+const normalizePrompt = (prompt) => prompt
+	.replace(/^\s*refer to (?:the )?exhibit[\s:.,-]*/i, "")
+	.replace(/[^a-z0-9]+/gi, " ")
+	.trim()
+	.toLowerCase();
+const BUILT_IN_QUESTION_BY_PROMPT = new Map(
+	[...CCNA_COMPOSITE_SET_QUESTIONS, ...CCNA_COMPOSITE_SET2_QUESTIONS]
+		.map((question) => [normalizePrompt(question.prompt), question]),
+);
+
+const DATABASE_NATIVE_EXHIBITS = new Map([
+	[23, "stp-hq-four-switch"],
+	[65, "sw1-sw2-dtp-trunk"],
+	[70, "stp-branch-four-switch"],
+	[99, "r4-mixed-routing"],
+	[177, "routers-abc-floating-route"],
+	[506, "r14-r86-eigrp-floating-route"],
+	[534, {
+		diagram: "eigrp-three-router-pc-server",
+		exhibit: `R2#show ip route
+10.0.0.0/30 is subnetted, 2 subnets
+C 10.10.10.0 is directly connected, Serial0/0/0
+C 10.10.10.4 is directly connected, Serial0/0/1
+D 192.168.10.0/24 [90/2172416] via 10.10.10.1, Serial0/0/0
+C 192.168.20.0/24 is directly connected, FastEthernet0/0
+D 192.168.30.0/24 [90/30720] via 10.10.10.6, FastEthernet0/1`,
+	}],
+	[187, {
+		diagram: "printer-switch-dtp",
+		exhibit: `SW2#show interfaces Ethernet0/2 switchport
+Name: Ethernet0/2
+Switchport: Enabled
+Administrative Mode: dynamic auto
+Operational Mode: trunk
+Administrative Trunking Encapsulation: negotiate
+Operational Trunking Encapsulation: dot1q
+Negotiation of Trunking: On
+Access Mode VLAN: 1 (default)
+Trunking Native Mode VLAN: 1 (default)
+Administrative Native VLAN tagging: enabled
+Voice VLAN: none
+Operational private-vlan: none
+Trunking VLANs Enabled: all
+Pruning VLANs Enabled: 2-1001
+Capture Mode: Disabled`,
+	}],
+	[190, "ospf-dr-three-router"],
+	[191, {
+		diagram: "host-switch-mac-table",
+		exhibit: `SwitchA#show mac-address-table
+VLAN  MAC Address       Type     Ports
+2     000c.65dc.bb7b    DYNAMIC  Fa0/1
+2     0010.11dc.3e91    DYNAMIC  Fa0/2
+2     0041.48d7.c782    DYNAMIC  Fa0/3`,
+	}],
+	[214, {
+		diagram: "phone-pc-access-vlan",
+		exhibit: `SW#show running-config
+interface FastEthernet0/1
+ switchport access vlan 15
+end`,
+	}],
+	[234, "ospf-point-to-point-r1-r2"],
+	[250, "new-vlan-trunk"],
+	[268, "voice-vlan-two-switch"],
+	[270, "backup-route-r1-r2-r3"],
+	[328, "ospf-two-site-workstations"],
+	[333, "ospf-four-router-election"],
+	[386, {
+		diagram: "two-router-four-pc-macs",
+		exhibit: `Workstation  MAC address
+PC1          00:50:79:66:68:00
+PC2          28:39:26:34:52:51
+PC3          00:50:79:66:68:78
+PC4          00:50:79:66:68:44`,
+	}],
+	[452, "etherchannel-three-switch"],
+	[476, "wlan-ap-wlc-network"],
+	[486, "etherchannel-two-switch-hosts"],
+	[538, "stp-four-switch-square"],
+	[580, "switch-link-speed-mismatch"],
+	[707, "ospf-r14-pc10"],
+	[724, "static-route-summary"],
+	[740, "vlan10-three-pc-subnet"],
+	[769, "ospf-three-router-priorities"],
+	[773, "stp-four-switch-mesh"],
+	[811, "etherchannel-two-switch-hosts"],
+	[870, "inter-vlan-routing-sw1"],
+	[1001, "ospf-four-router-costs"],
+	[1081, "two-switch-two-pc-trunk"],
+	[1089, "pc-file-server-two-switch"],
+	[1121, "redundant-switch-network"],
+	[1128, "static-route-two-site"],
+	[15, "two-switch-four-workstations"],
+	[38, "r1-r2-ntp-link"],
+	[73, "isp-wan-r1"],
+	[89, "router-two-branch-hosts"],
+	[105, "ipv6-three-router-policy"],
+	[157, "two-site-r1-r2-wan"],
+	[172, {
+		diagram: "rtr1-access-list-lan",
+		exhibit: `RTR-1
+interface GigabitEthernet0/0
+ ip address 10.10.1.254 255.255.255.0
+ duplex auto
+ speed auto
+access-list 10 deny host 10.10.1.1
+line con 0
+ password 7 02050D480809
+ login
+line vty 0 4
+ access-class 10 in
+ password 7 02050D480809
+ login
+end`,
+	}],
+	[178, "r1-primary-backup-internet"],
+	[179, "management-server-filter"],
+	[180, "mpls-qos-branches"],
+	[192, {
+		diagram: "switch-vlan2-mac-table",
+		exhibit: `SW1#show running-config
+interface FastEthernet0/1
+ switchport access vlan 2
+ switchport mode access
+interface FastEthernet0/2
+ switchport access vlan 2
+ switchport trunk allowed vlan 3
+ switchport mode trunk
+
+SW1#show mac-address-table
+VLAN  MAC Address       Type     Ports
+2     0007.ec53.4289    DYNAMIC  Fa0/1`,
+	}],
+	[193, "r1-pc-internet"],
+	[212, "nat-router-two-pcs"],
+	[224, "ospf-r1-r2-r3-broadcast"],
+	[231, {
+		diagram: "ospf-two-site-server",
+		exhibit: `R1#show ip ospf neighbor
+Neighbor ID     Pri   State           Dead Time   Address       Interface
+192.168.100.2     1   FULL/DR         00:00:34    192.168.100.2 FastEthernet0/0
+192.168.100.3     1   FULL/BDR        00:00:34    192.168.100.3 FastEthernet0/0`,
+	}],
+	[242, "pc-switch-link-status"],
+	[244, "ipv6-ho-isp-cloud"],
+	[245, "dhcp-client-router-server"],
+	[246, "r14-r86-static-route-172"],
+	[248, "lan-primary-backup-isps"],
+	[261, {
+		diagram: "lacp-switch1-switch2-config",
+		exhibit: `Switch 1
+interface Port-channel1
+ switchport
+ switchport mode access
+ switchport access vlan 2
+interface range Ethernet1/1-2
+ channel-group 1 mode active
+ switchport mode access
+ switchport access vlan 2
+
+Switch 2
+interface Port-channel1
+ switchport
+ switchport mode access
+ switchport access vlan 2
+interface range Ethernet1/1-2
+ channel-group 1 mode passive
+ switchport mode access
+ switchport access vlan 2`,
+	}],
+	[273, "dual-wan-site-routing"],
+	[275, "vlan5-vlan100-four-hosts"],
+	[284, "lacp-three-parallel-switches"],
+	[311, "r1-r2-r3-network"],
+	[317, {
+		diagram: "dual-circuit-r1-r2-hosts",
+		exhibit: `R1#show ip route
+Gateway of last resort is 10.10.10.2 to network 0.0.0.0
+S* 0.0.0.0/0 [1/0] via 10.10.10.2
+
+R2#show ip route
+Gateway of last resort is 10.10.10.1 to network 0.0.0.0
+S* 0.0.0.0/0 [1/0] via 10.10.10.1`,
+	}],
+	[327, "switch-vlan200-two-pcs"],
+	[339, "three-routers-vlan-switch-pcs"],
+	[343, {
+		diagram: "ospf-two-site-election",
+		exhibit: `Router R1 configuration
+interface GigabitEthernet0/0
+ ip ospf priority 99
+router ospf 100
+ network 10.0.0.0 0.0.0.31 area 0
+ network 10.0.0.0 0.0.0.255 area 0`,
+	}],
+	[344, "four-router-host-route"],
+	[356, "r1-r2-r3-shared-lan"],
+	[367, "r1-r2-r3-neighbor-discovery"],
+	[371, "two-site-serial-file-server"],
+	[387, "ipv6-r1-r2-access-lans"],
+	[396, "r1-r2-point-to-point"],
+	[399, {
+		diagram: "ntp-router-mesh",
+		exhibit: `Router1(config)#ntp master 7
+Router1(config)#ntp server 209.165.200.226
+Router2(config)#ntp server 209.165.200.225
+Router2(config)#ntp master 7`,
+	}],
+	[403, "four-router-pc-routing"],
+	[405, "nat-router-lans-internet"],
+	[406, {
+		diagram: "switch-voice-vlan-phone",
+		exhibit: `interface GigabitEthernet1/0/1
+ switchport access vlan 11
+ switchport mode access
+ switchport voice vlan 10
+ cdp run
+end`,
+	}],
+	[436, "three-router-specific-host-route"],
+	[442, {
+		diagram: "internet-router-pc-ipconfig",
+		exhibit: `Ethernet adapter Ethernet:
+IPv4 Address: 10.2.2.2
+Subnet Mask: 255.255.255.248
+Default Gateway: 10.2.2.1
+DNS Servers: 8.8.8.8`,
+	}],
+	[479, "cpe-dual-isp"],
+	[484, "ipv6-r1-r2-access-lans"],
+	[516, "r14-r86-pc10-static-routes"],
+	[517, "r14-r86-pc10-static-routes"],
+	[520, {
+		diagram: "ospf-four-router-two-area",
+		exhibit: `R1#show ip route
+O 1.1.1.3/32 [110/2] via 14.1.1.2, FastEthernet0/0
+O IA 1.1.1.3/32 [110/3] via 14.1.1.4, FastEthernet0/1`,
+	}],
+	[522, "site-a-site-b-routing"],
+	[530, "r1-r2-r3-multi-lan"],
+	[552, "vendor-switch-trunk"],
+	[558, "branch-r1-r2-wan"],
+	[566, {
+		diagram: "dhcp-multi-vlan-topology",
+		exhibit: `The DHCP pools serve the VLAN 10 and VLAN 20 subnets. VLAN 10 clients connect to SW1 Fa0/1; relay their DHCP broadcasts to the server at 192.168.202.30 using the VLAN 10 gateway interface.`,
+	}],
+	[574, "rip-three-router-triangle"],
+	[594, "ospf-four-router-two-area"],
+	[646, "stp-four-switch-five-link"],
+	[647, {
+		diagram: "internet-router-pc-ipconfig",
+		exhibit: `Ethernet adapter Ethernet:
+IPv4 Address: 10.2.2.2
+Subnet Mask: 255.255.255.248
+Default Gateway: 10.2.2.1
+DNS Servers: 8.8.8.8`,
+	}],
+	[671, "ipv6-city-lan-r1"],
+	[725, "stp-four-switch-five-link"],
+	[728, "ipv6-city-lan-r1"],
+	[736, "qos-ingress-packet-classification"],
+	[749, "four-router-protocol-mesh"],
+	[751, "ipv6-city-lan-r1"],
+	[799, "ipv6-isp-r1-lan"],
+	[808, "r1-r2-primary-backup-lans"],
+	[833, {
+		diagram: "stp-four-switch-user-dns",
+		exhibit: `SW1 bridge priority: 32768
+SW2 bridge priority: 4096
+SW3 bridge priority: 8192
+SW4 bridge priority: 12288`,
+	}],
+	[837, {
+		diagram: "stp-four-switch-user-dns",
+		exhibit: `SW1 · priority 32768 · MAC 0C:0A:05:22:05:97
+SW2 · priority 8192 · MAC 0C:4A:82:07:57:58
+SW3 · priority 32768 · MAC 0C:0A:A8:1A:3C:9D
+SW4 · priority 8192 · MAC 0C:0A:18:A1:B3:19`,
+	}],
+	[851, {
+		diagram: "stp-four-switch-user-dns",
+		exhibit: `SW1 · priority 8192 · MAC 0C:B4:86:22:42:37
+SW2 · priority 8192 · MAC 0C:0B:15:22:05:97
+SW3 · priority 4096 · MAC 0C:0B:15:1A:3C:9D
+SW4 · priority 4096 · MAC 0C:B0:18:A1:B3:19`,
+	}],
+	[852, {
+		diagram: "stp-four-switch-user-dns",
+		exhibit: `SW1 · priority 32768 · MAC 0C:E4:85:71:03:80
+SW2 · priority 4096 · MAC 0C:0E:1A:22:05:97
+SW3 · priority 8192 · MAC 0C:E0:A1:1A:3C:9D
+SW4 · priority 12288 · MAC 0C:00:18:A1:B3:19`,
+	}],
+	[864, "ospf-seven-router-bandwidth"],
+	[895, "r1-r2-link-local-lans"],
+	[909, "router-on-a-stick-vlan2-vlan3"],
+	[934, "four-router-subnet-growth"],
+	[996, "ospf-multipath-reference-bandwidth"],
+	[1011, "cpe-dhcp-central-server"],
+	[1084, {
+		diagram: "lacp-fastethernet-two-switch",
+		exhibit: `SW1
+interface FastEthernet0/1
+ channel-group 1 mode auto
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+interface FastEthernet0/2
+ channel-group 1 mode auto
+ switchport trunk encapsulation dot1q
+ switchport mode trunk`,
+	}],
+	[1088, "switch-vlan200-two-pcs"],
+	[1099, {
+		diagram: "stp-three-switch-triangle",
+		exhibit: `S1 · priority 32768 · MAC DDDD.DD…DDDD
+S2 · priority 32768 · MAC AAAA.AA…AAAA
+S3 · priority 30000 · MAC CCCC.CC…CCCC`,
+	}],
+	[1119, "four-router-subnet-growth"],
+	[1125, "three-router-pc-routing"],
+	[1167, "ospf-four-router-broadcast"],
+	[1194, "vlan-switch-web-server"],
+	[1199, "r1-r2-database-security"],
+	[1321, {
+		diagram: "static-nat-router-webserver",
+		exhibit: `Webserver: 172.16.1.2
+interface Ethernet0
+ A
+ B
+interface Serial0
+ C
+ D
+ E
+ F
+access-list 1 permit 172.16.1.0 0.0.0.255`,
+	}],
+	[13, {
+		exhibit: `access-list 101 permit ospf any any
+access-list 101 permit tcp any any eq 179
+access-list 101 permit tcp any any eq 179 any
+access-list 101 permit gre any any
+access-list 101 permit esp any any
+
+access-list 101 deny ospf any any
+access-list 101 permit tcp 10.1.1.0 0.0.0.255 172.16.1.0 0.0.0.255 eq telnet
+access-list 101 permit udp 10.1.1.0 0.0.0.255 172.16.1.0 0.0.0.255 eq 500
+access-list 101 permit udp 10.1.1.0 0.0.0.255 172.16.1.0 0.0.0.255 eq 4500
+access-list 101 permit ip any any
+
+interface Ethernet0/0
+ ip address 10.1.1.25 255.255.255.0
+ ip access-group 101 in`,
+	}],
+	[34, {
+		exhibit: `import ncclient
+
+with manager.connect(host='192.168.1.1', port=830,
+    username='root', password='test123', allow_agent=False) as m:
+    print(m.get_config('running').data_xml)`,
+	}],
+	[39, {
+		exhibit: `Switch A
+Vlan 10,11,12,13
+
+interface GigabitEthernet0/1
+ switchport mode trunk
+ switchport trunk allowed vlan 10-12
+!
+interface GigabitEthernet0/4
+ switchport access vlan 13
+ switchport mode access
+
+Switch B
+Vlan 10,11,12,13
+
+interface GigabitEthernet0/1
+ switchport mode trunk
+!
+interface GigabitEthernet0/3
+ switchport access vlan 13
+ switchport mode access`,
+	}],
+	[143, {
+		exhibit: `Switch1#show etherchannel summary
+Flags: D - down     P - bundled in port-channel
+       I - stand-alone s - suspended
+       H - Hot-standby (LACP only)
+       R - Layer3     S - Layer2
+       U - in use     f - failed to allocate aggregator
+       u - unsuitable for bundling
+       w - waiting to be aggregated
+       d - default port
+
+Number of channel-groups in use: 1
+Number of aggregators: 1
+Group  Port-channel  Protocol  Ports
+1      Po1(SD)       LACP      Fa0/2(I) Fa0/1(I)
+
+Switch1#show run
+Building configuration...
+interface Port-channel1
+!
+interface FastEthernet0/1
+ channel-group 1 mode passive
+!
+interface FastEthernet0/2
+ channel-group 1 mode passive
+
+Switch2#show run
+Building configuration...
+interface Port-channel1
+!
+interface FastEthernet0/1
+ channel-group 1 mode passive
+!
+interface FastEthernet0/2
+ channel-group 1 mode passive`,
+	}],
+	[174, {
+		exhibit: `Switch#show ip dhcp snooping
+Switch DHCP snooping is enabled
+Switch DHCP gleaning is disabled
+DHCP snooping is configured on following VLANs:
+1
+DHCP snooping is operational on following VLANs:
+1
+DHCP snooping is configured on the following L3 Interfaces:
+Insertion of option 82 is disabled
+circuit-id default format: vlan-mod-port
+remote-id: aabb.cc00.6500 (MAC)
+Option 82 on untrusted port is not allowed
+Verification of hwaddr field is enabled
+Verification of giaddr field is enabled
+DHCP snooping trust/rate is configured on the following interfaces:
+Interface  Trusted  Allow option  Rate limit (pps)
+
+Switch#show ip dhcp snooping statistics detail
+Packets Processed by DHCP Snooping = 34
+Packets Dropped Because of DHCP = 1
+IDB not known = 0
+Queue full = 0
+Interface is in errdisabled = 0
+Rate limit exceeded = 0
+Received on untrusted ports = 32
+Nonzero giaddr = 0
+Source mac not equal to chaddr = 0
+No binding entry = 0
+Insertion of opt82 fail = 0
+Unknown packet = 0
+Interface Down = 0
+Unknown output interface = 0
+Misdirected Packets = 0
+Packets with Invalid Size = 0
+Packets with Invalid Option = 0`,
+	}],
+	[185, {
+		exhibit: `MacOS# ifconfig
+en0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
+ options=400<CHANNEL_IO>
+ ether f0:18:34:34:34
+ inet6 fe80::492:c9f7:57cc:3343%en0 prefixlen 64 secured scopeid 0x6
+ inet 10.8.138.14 netmask 0xffffff00 broadcast 10.8.159.255
+ nd6 options=201<PERFORMNUD,DAD>
+ media: autoselect
+ status: active`,
+	}],
+	[188, {
+		exhibit: `R1#show ip route
+Codes: C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2
+       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, * - candidate default, U - per-user static route
+       o - ODR, P - periodic downloaded static route
+
+Gateway of last resort is not set
+C 192.168.5.3 is directly connected, Loopback0
+10.0.0.0/8 is variably subnetted, 4 subnets, 2 masks
+O 10.0.1.3/32 [110/100] via 192.168.0.40, 00:33:32, Serial0
+C 10.0.1.0/24 is directly connected, Serial0
+O 10.0.1.190/32 [110/5] via 192.168.0.35, 00:33:32, Serial0
+O 10.0.1.0/24 [110/10] via 192.168.0.4, 00:33:32, GigabitEthernet0/0
+D 10.0.1.0/29 [90/10] via 192.168.0.7, 00:33:32, GigabitEthernet0/0`,
+	}],
+	[203, {
+		exhibit: `R1#show ip route | begin gateway
+Gateway of last resort is 209.165.200.254 to network 0.0.0.0
+S* 0.0.0.0/0 [1/0] via 209.165.200.254, Serial0/0/1
+172.16.0.0/16 is variably subnetted, 3 subnets, 2 masks
+C 172.16.1.0/24 is directly connected, FastEthernet0/0
+L 172.16.1.1/32 is directly connected, FastEthernet0/0
+EX 172.16.2.0/24 [170/2] via 207.165.200.250, 00:00:13, Serial0/0/0
+O 192.168.1.0/24 [110/84437] via 207.165.200.254, 00:00:17, Serial0/0/1
+D 192.168.2.0/24 [90/184437] via 207.165.200.254, 00:00:15, Serial0/0/1
+E1 192.168.3.0/24 [110/1851437] via 207.165.200.254, 00:00:19, Serial0/0/1
+207.165.200.0/24 is variably subnetted, 4 subnets, 2 masks
+C 207.165.200.248/30 is directly connected, Serial0/0/0
+L 207.165.200.249/32 is directly connected, Serial0/0/0
+C 207.165.200.252/30 is directly connected, Serial0/0/1
+L 207.165.200.253/32 is directly connected, Serial0/0/1`,
+	}],
+	[204, {
+		diagram: "lacp-fastethernet-two-switch",
+		exhibit: `SW1#show run interface fastEthernet0/1
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk allowed vlan 100,200,300
+ channel-group 1 mode on
+
+SW1#show run interface fastEthernet0/2
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk allowed vlan 100,200,300
+ channel-group 1 mode on
+
+SW2#show run interface fastEthernet0/1
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk allowed vlan 100,200,300
+ channel-group 1 mode active
+
+SW2#show run interface fastEthernet0/2
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk allowed vlan 100,200,300
+ channel-group 1 mode active`,
+	}],
+	[624, {
+		diagram: "lacp-fastethernet-two-switch",
+		exhibit: `SW1#show run interface fastEthernet0/1
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk allowed vlan 100,200,300
+ channel-group 1 mode active
+
+SW1#show run interface fastEthernet0/2
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk allowed vlan 100,200
+ channel-group 1 mode active
+
+SW2#show run interface fastEthernet0/1
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk allowed vlan 100,200,300
+ channel-group 1 mode active
+
+SW2#show run interface fastEthernet0/2
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk allowed vlan 100,200,300
+ channel-group 1 mode active`,
+	}],
+	[205, {
+		exhibit: `Switch2#show lldp
+Global LLDP Information
+Status: ACTIVE
+LLDP advertisements are sent every 30 seconds
+LLDP hold time advertised is 120 seconds
+LLDP interface reinitialization delay is 2 seconds`,
+	}],
+	[228, {
+		exhibit: `ip domain-name CNAC.com
+!
+interface GigabitEthernet0/0/0
+ ip address 192.168.1.10 255.255.255.0
+ duplex auto
+ speed auto
+!
+line vty 0 15
+ login local
+!
+R1#show crypto key mypubkey rsa
+R1#show ssh
+%No SSHv2 server connections running.
+%No SSHv1 server connections running.`,
+	}],
+	[236, {
+		exhibit: `TenGigabitEthernet0/0 is up, line protocol is up
+Hardware is BUILT-IN-2T+6X1GE, address is 74a0.2f7a.0123 (bia 74a0.2f7a.0123)
+Description: Uplink
+Internet address is 10.1.1.1/24
+MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+ reliability 255/255, txload 1/255, rxload 1/255
+Encapsulation ARPA, loopback not set
+Keepalive not supported
+Full Duplex, 10000Mbps, link type is force-up, media type is unknown media type
+output flow-control is on, input flow-control is on
+ART type: ARPA, ARP Timeout 04:00:00
+Last input 00:00:00, output 00:05:40, output hang never
+Last clearing of "show interface" counters never
+Input queue: 0/375/0/0 (size/max/drops/flushes); Total output drops: 0
+Queueing strategy: fifo
+Output queue: 0/40 (size/max)
+5 minute input rate 616000 bits/sec, 1113 packets/sec
+5 minute output rate 11213000 bits/sec, 1553 packets/sec
+ 12662416065 packets input, 12607032232894 bytes, 0 no buffer
+Received 14117163 broadcasts (0 IP multicasts)
+0 runts, 0 giants, 0 throttles
+0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+0 watchdog, 26271385 multicast, 0 pause input
+7907770090 packets output, 507279042092 bytes, 0 underruns
+0 output errors, 8662414049 collisions, 1 interface resets
+0 unknown protocol drops
+0 babbles, 0 late collision, 0 deferred
+0 lost carrier, 0 no carrier, 0 pause output
+0 output buffer failures, 0 output buffers swapped out
+1 carrier transitions`,
+	}],
+	[251, {
+		exhibit: `Hardware is ISR4331-3x1GE, address is 5486.bc25.1f70 (bia 5486.bc25.1f70)
+Description: << WAN Link >>
+Internet address is 192.0.2.2/30
+MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec.
+reliability 255/255, txload 1/255, rxload 1/255
+Encapsulation ARPA, loopback not set
+Keepalive not supported
+Full Duplex, 1000Mbps, link type is auto, media type is RJ45
+output flow control is off, input flow-control is off
+ART type: ARPA, ARP Timeout 04:00:00
+Last input 00:00:00, output 00:00:11, output hang never
+Last clearing of "show interface" counters never
+Input queue: 0/375/0/0 (size/max/drops/flushes); Total output drops: 0
+Queueing strategy: fifo
+Output queue: 0/40 (size/max)
+5 minute input rate 7000 bits/sec, 4 packets/sec
+5 minute output rate 4000 bits/sec, 4 packets/sec
+ 22579370 packets input, 8825545968 bytes, 0 no buffer
+Received 67 broadcasts (0 IP multicasts)
+0 runts, 0 giants, 0 throttles
+3612699 input errors, 3612699 CRC, 0 frame, 0 overrun, 0 ignored
+0 watchdog, 10747057 multicast, 0 pause input
+12072167 packets output, 1697953637 bytes, 0 underruns
+0 output errors, 0 collisions, 1 interface resets
+6 unknown protocol drops
+0 babbles, 0 late collision, 0 deferred
+5 lost carrier, 0 no carrier, 0 pause output
+0 output buffer failures, 0 output buffers swapped out`,
+	}],
+	[256, {
+		exhibit: `R1# show ip route
+Codes:
+ C - connected, S - static, I - IGRP, R - RIP, M - mobile, B - BGP, D -
+ EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area, N1 - OSPF NSSA
+ external type 1, N2 - OSPF NSSA external type 2, E1 - OSPF external type 1,
+ E2 - OSPF external type 2, E - EGP
+ i - IS-IS, L1 - IS-IS level-1, L2 - IS-IS level-2, * - candidate default,
+ U - per-user static route, o - ODR
+
+Gateway of last resort is not set
+C 10.0.0.0/8 is directly connected, Loopback0
+10.0.0.0/8 is variably subnetted, 4 subnets, 2 masks
+O 10.0.1.3/32 [110/100] via 10.0.1.100, 00:39:08, Serial0
+C 10.0.1.0/24 is directly connected, Serial0
+O 10.0.1.5/32 [110/5] via 10.0.1.50, 00:39:08, Serial0
+O 10.0.10.0/24 [110/10] via 10.0.1.4, 00:39:08, GigabitEthernet0/0
+D 10.0.10.0/24 [90/10] via 10.0.1.5, 00:39:08, GigabitEthernet0/1`,
+	}],
+	[259, {
+		exhibit: `Router#show run
+Building configuration...
+Current configuration : 1530 bytes
+!
+Last configuration change at 11:32:53 UTC Thu Feb 10 2020
+upgrade fpd auto
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname Router
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+no ip icmp rate-limit unreachable
+!
+!
+--More--`,
+	}],
+	[274, {
+		exhibit: `Cat9300#show cdp
+Global CDP information
+Sending CDP packets every 60 seconds
+Sending CDP advertisements is enabled
+Holdtime is 180 seconds
+CDP version 2 advertisements are enabled`,
+	}],
+	[300, {
+		exhibit: `cisco_ospf_vrf {"R1 default":
+  ensure => 'present',
+  auto_cost => '100',
+}`,
+	}],
+	[310, {
+		exhibit: `R1# show ip route | begin gateway
+Gateway of last resort is not set
+
+172.16.0.0/16 is variably subnetted, 3 subnets, 2 masks
+C 172.16.1.0/24 is directly connected, FastEthernet0/0
+L 172.16.1.3/32 is directly connected, FastEthernet0/0
+EX 172.16.2.0/24 [170/2] via 207.165.200.250, 00:00:25, Serial0/0/0
+O 192.168.1.0/24 [110/84437] via 207.165.200.254, 00:00:17, Serial0/0/1
+D 192.168.2.0/24 [90/184437] via 207.165.200.254, 00:00:13, Serial0/0/1
+E1 192.168.3.0/24 [110/1851437] via 207.165.200.254, 00:00:19, Serial0/0/1
+
+207.165.200.0/24 is variably subnetted, 4 subnets, 2 masks
+C 207.165.200.248/30 is directly connected, Serial0/0/0
+L 207.165.200.249/32 is directly connected, Serial0/0/0
+C 207.165.200.252/30 is directly connected, Serial0/0/1
+L 207.165.200.253/32 is directly connected, Serial0/0/1`,
+	}],
+	[338, {
+		exhibit: `R1#show ip route
+Codes: C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2
+       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, * - candidate default, U - per-user static route
+       o - ODR, P - periodic downloaded static route
+
+Gateway of last resort is not set
+10.0.0.0/24 is subnetted, 5 subnets
+D 10.1.2.0/24 [90/2170112] via 10.145.20.226, 00:01:33, Serial0/0/0
+D 10.1.3.0/24 [90/2170112] via 10.145.20.226, 00:01:33, Serial0/0/0
+D 10.1.2.0/25 [90/2170112] via 10.145.20.126, 00:01:33, Serial0/0/0
+D 10.1.2.0/25 [90/2170112] via 10.145.20.146, 00:01:33, Serial0/0/0
+D 10.1.4.0/25 [90/2170112] via 10.145.20.156, 00:01:33, Serial0/0/0
+192.168.1.0/24 is variably subnetted, 2 subnets, 2 masks
+C 192.168.10.0/24 is directly connected, GigabitEthernet0/0
+C 192.168.21.0/24 is directly connected, GigabitEthernet0/1
+10.165.20.0/24 is variably subnetted, 2 subnets, 2 masks
+C 10.165.20.224/28 is directly connected, Serial0/0/0
+S 10.1.2.112/28 [1/0] via 10.165.20.166`,
+	}],
+	[345, {
+		exhibit: `C:\\Users\\ccnaadmin>ipconfig/all
+Windows IP Configuration
+
+   Host Name . . . . . . . . . . . . : DESKTOP-480JBBT
+   Primary Dns Suffix  . . . . . . . :
+   Node Type . . . . . . . . . . . . : Hybrid
+   IP Routing Enabled. . . . . . . . : No
+   WINS Proxy Enabled. . . . . . . . : No
+   DNS Suffix Search List. . . . . . : arcap.se
+
+Ethernet adapter Ethernet:
+   Media State . . . . . . . . . . . : Media disconnected
+   Connection-specific DNS Suffix  . :
+   Description . . . . . . . . . . . : Realtek PCIe GBE Family Controller
+   Physical Address. . . . . . . . . : 3C-52-82-33-F3-8F
+   DHCP Enabled. . . . . . . . . . . : Yes
+   Autoconfiguration Enabled . . . . . : Yes
+
+Wireless LAN adapter Wi-Fi:
+   Connection-specific DNS Suffix  . : arcap.se
+   Description . . . . . . . . . . . : Intel(R) Dual Band Wireless-AC 7265
+   Physical Address. . . . . . . . . : C8-21-5B-84-F3-EF
+   DHCP Enabled. . . . . . . . . . . : Yes
+   Autoconfiguration Enabled . . . . : Yes
+   Link-local IPv6 Address . . . . . : fe80::45a1:b3fa:2f37:b37f%2(Preferred)
+   IPv4 Address. . . . . . . . . . . : 192.168.1.226(Preferred)
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Lease Obtained. . . . . . . . . . : 3 October 2019 12:28:08 PM
+   Lease Expires . . . . . . . . . . : 3 October 2019 7:10:38 PM
+   Default Gateway . . . . . . . . . : 192.168.1.100
+   DHCP Server . . . . . . . . . . . : 192.168.1.254
+   DHCPv6 IAID . . . . . . . . . . . : 466701686
+   DHCPv6 Client DUID. . . . . . . . : 00-01-00-01-20-FF-05-55-3C-F3-34-29-20-DF
+   DNS Servers . . . . . . . . . . . : 192.168.1.253
+                                       192.168.1.254
+   NetBIOS over Tcpip. . . . . . . . : Enabled
+   Connection-specific DNS Suffix Search List:
+                                       arcap.se`,
+	}],
+	[369, {
+		diagram: "pc-switch-link-status",
+		exhibit: `SW# conf t
+SW(config)#interface gigabitEthernet0/1
+SW(config-if)#switchport mode access
+SW(config-if)#switchport port-security
+SW(config-if)#`,
+	}],
+	[920, {
+		exhibit: `SW1#show spanning-tree vlan 30
+
+VLAN0030
+Spanning tree enabled protocol rstp
+Root ID    Priority    32798
+           Address     0018.7363.4300
+           Cost        2
+           Port        13 (FastEthernet2/1)
+           Hello Time  2 sec
+           Max Age     20 sec
+           Forward Delay 20 sec
+
+<output omitted>`,
+	}],
+	[928, {
+		exhibit: `R1#show ip route
+D 172.16.32.0/27 [90/2938474831] via 20.1.1.1
+O 172.16.32.0/19 [110/22847] via 20.1.1.10
+R 172.16.32.0/24 [120/2] via 20.1.1.3`,
+	}],
+	[933, {
+		exhibit: `R1#show ip route | begin gateway
+Gateway of last resort is 209.165.200.246 to network 0.0.0.0
+S*   0.0.0.0/0 [1/0] via 209.165.200.246, Serial0/1/0
+          is directly connected, Serial0/1/0
+     172.16.0.0/16 is variably subnetted, 2 subnets, 2 masks
+S    172.16.3.0/24 [1/0] via 207.165.200.250, Serial0/0/0
+O    172.16.3.0/28 [110/84437] via 207.165.200.254, 00:00:30, Serial0/0/1
+     207.165.200.0/24 is variably subnetted, 6 subnets, 2 masks
+C    207.165.200.244/30 is directly connected, Serial0/1/0
+L    207.165.200.245/32 is directly connected, Serial0/1/0
+C    207.165.200.248/30 is directly connected, Serial0/0/0
+L    207.165.200.249/32 is directly connected, Serial0/0/0
+C    207.165.200.252/30 is directly connected, Serial0/0/1
+L    207.165.200.253/32 is directly connected, Serial0/0/1`,
+	}],
+	[1014, {
+		exhibit: `R1#show ip route | begin gateway
+Gateway of last resort is 209.165.200.246 to network 0.0.0.0
+S* 0.0.0.0/0 [1/0] via 209.165.200.246
+  is directly connected, Serial0/0/1
+
+172.16.0.0/16 is variably subnetted, 2 subnets, 2 masks
+O 172.16.0.0/24 [110/2] via 207.165.200.250, Serial0/0/0
+O 172.16.0.0/28 [110/84437] via 207.165.200.250, Serial0/0/1
+O 172.16.0.0/28 [110/84437] via 207.165.200.252, Serial0/0/1
+
+209.165.200.0/24 is variably subnetted, 6 subnets, 2 masks
+C 209.165.200.244/30 is directly connected, Serial0/0/0
+L 209.165.200.245/32 is directly connected, Serial0/0/0
+C 209.165.200.248/30 is directly connected, Serial0/0/0
+L 209.165.200.249/32 is directly connected, Serial0/0/0
+C 209.165.200.252/30 is directly connected, Serial0/0/1
+L 209.165.200.253/32 is directly connected, Serial0/0/1`,
+	}],
+	[1082, {
+		exhibit: `S1#show interface trunk
+Port    Mode  Encapsulation  Status    Native vlan
+Fa0/1   on    802.1q         Trunking  1
+
+Port    Vlans allowed on trunk
+Fa0/1   1,100,5
+
+Port    Vlans allowed and active in management domain
+Fa0/1   1,2
+
+S2#show interface trunk
+Port    Mode  Encapsulation  Status    Native vlan
+Fa0/1   on    802.1q         Trunking  2
+
+Port    Vlans allowed on trunk
+Fa0/1   1,100,5
+
+Port    Vlans allowed and active in management domain
+Fa0/1   1,2`,
+	}],
+	[1097, {
+		exhibit: `SW1#show spanning-tree vlan 30
+
+VLAN0030
+Spanning tree enabled protocol rstp
+Root ID    Priority    32798
+           Address     0018.7363.4300
+           Cost        2
+           Port        13 (FastEthernet2/1)
+           Hello Time  2 sec
+           Max Age     20 sec
+           Forward Delay 20 sec
+
+<output omitted>`,
+	}],
+	[1108, {
+		exhibit: `SW1#show lacp neighbor
+Flags: S - Device is sending Slow LACPDUs
+       F - Device is sending Fast LACPDUs
+       A - Device is in Active mode
+       P - Device is in Passive mode
+
+Channel group 31 neighbors
+Partner's information:
+                     LACP port
+Port  Flags  Priority  Dev ID          Age  Key  Key  Number  State
+Et1/1 SP     32768    aabb.cc40.4000  6s   0x0  0x23 0x101   0x3C
+Et1/2 SP     32768    aabb.cc40.4000  6s   0x0  0x23 0x102   0x3C`,
+	}],
+	[1109, {
+		exhibit: `Switch#show etherchannel summary
+<output omitted>
+Group  Port-channel  Protocol  Ports
+10     Po10(SU)      LACP      Gi0/0(P) Gi0/1(P)
+20     Po20(SU)      LACP      Gi0/2(P) Gi0/3(P)`,
+	}],
+	[1127, {
+		exhibit: `R1#show ip route | begin gateway
+Gateway of last resort is 209.165.200.246 to network 0.0.0.0
+S* 0.0.0.0/0 [1/0] via 209.165.200.246, Serial0/0/1
+      172.16.0.0/16 is variably subnetted, 3 subnets, 3 masks
+O    172.16.0.0/24 [110/38443] via 209.165.200.254, 00:00:33, Serial0/0/0
+O    172.16.0.128/25 [110/38443] via 209.165.200.254, 00:00:33, Serial0/0/1
+O    172.16.0.192/29 [110/38443] via 209.165.200.254, 00:00:33, Serial0/0/1
+      209.165.200.0/24 is variably subnetted, 6 subnets, 2 masks
+C    209.165.200.244/30 is directly connected, Serial0/0/0
+L    209.165.200.245/32 is directly connected, Serial0/0/0
+C    209.165.200.248/30 is directly connected, Serial0/0/0
+L    209.165.200.249/32 is directly connected, Serial0/0/0
+C    209.165.200.252/30 is directly connected, Serial0/0/1
+L    209.165.200.253/32 is directly connected, Serial0/0/1`,
+	}],
+	[1141, {
+		exhibit: `R1#show ip route
+D 172.16.32.0/27 [90/2938474831] via 20.1.1.1
+O 172.16.32.0/19 [110/22847] via 20.1.1.10
+R 172.16.32.0/24 [120/2] via 20.1.1.3`,
+	}],
+	[1146, {
+		exhibit: `R1#show ip route | begin gateway
+Gateway of last resort is 209.165.200.246 to network 0.0.0.0
+S* 0.0.0.0/0 [1/0] via 209.165.200.246
+  is directly connected, Serial0/0/1
+
+172.16.0.0/16 is variably subnetted, 2 subnets, 2 masks
+O 172.16.3.0/24 [110/2] via 207.165.200.250, Serial0/0/0
+O 172.16.3.0/28 [110/84437] via 207.165.200.250, Serial0/0/1
+O 172.16.3.0/28 [110/84437] via 207.165.200.252, Serial0/0/1
+
+207.165.200.0/24 is variably subnetted, 6 subnets, 2 masks
+C 207.165.200.244/30 is directly connected, Serial0/0/0
+L 207.165.200.245/32 is directly connected, Serial0/0/0
+C 207.165.200.248/30 is directly connected, Serial0/0/0
+L 207.165.200.249/32 is directly connected, Serial0/0/0
+C 207.165.200.252/30 is directly connected, Serial0/0/1
+L 207.165.200.253/32 is directly connected, Serial0/0/1`,
+	}],
+	[1148, {
+		exhibit: `R1(config)#router eigrp 1
+R1(config)#network 10.1.1.0 0.0.0.255
+R1(config)#network 192.168.0.1 0.0.0.0
+
+R2(config)#interface gi1/1
+R2(config-if)#ip address 192.168.0.2 255.255.255.0
+R2(config)#router bgp 65001
+R2(config-router)#neighbor 192.168.0.1 remote-as 65000
+R2(config)#router ospf 1
+R2(config-router)#router-id 2.2.2.2
+R2(config-router)#network 192.168.1.2 0.0.0.0 area 0
+R2(config)#router eigrp 1
+R2(config-router)#eigrp router-id 1.1.1.1
+R2(config-router)#network 192.168.0.1 0.0.0.0
+R2(config)#ip route 10.1.1.0 255.255.255.0 192.168.0.1`,
+	}],
+	[1149, {
+		exhibit: `R1#show ip route
+Codes: C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2
+       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, * - candidate default, U - per-user static route
+       o - ODR, P - periodic downloaded static route
+
+Gateway of last resort is 209.165.202.131 to network 0.0.0.0
+S* 0.0.0.0/0 [1/0] via 209.165.202.131
+S 209.165.200.0/27 is subnetted, 1 subnets
+  209.165.200.224 [254/0] via 209.165.202.129
+S 209.165.201.0/27 is subnetted, 1 subnets
+  209.165.201.0 [1/0] via 209.165.202.130`,
+	}],
+	[1157, {
+		exhibit: `R1#show ip interface brief
+Interface              IP-Address      OK? Method Status                Protocol
+FastEthernet0/0        unassigned      YES administratively down down
+GigabitEthernet0/1     192.168.0.1     YES NVRAM  up                    up
+GigabitEthernet0/2     192.168.0.2     YES NVRAM  up                    up
+GigabitEthernet0/3     10.10.10.20    YES NVRAM  up                    up
+GigabitEthernet0/4     unassigned      YES NVRAM  administratively down down
+Loopback0              172.16.15.10    YES manual up                    up`,
+	}],
+	[1168, {
+		exhibit: `R1#show ip ospf int gi0/0
+Gi0/0 is up, line protocol is up
+Internet Address 10.201.24.8/28, Area 1, Attached via Network Statement
+Process ID 100, Router ID 192.168.1.1, Network Type BROADCAST, Cost: 1
+Topology-MTID Cost Disabled Shutdown Topology
+0 1 no no Base
+Transmit Delay is 1 sec, State DR, Priority 1
+Designated Router (ID) 192.168.1.1, Interface address 10.201.24.8
+No backup designated router on this network
+Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+oob-resync timeout 40
+Hello due in 00:00:05
+
+R2#show ip ospf int gi0/0
+Gi0/0 is up, line protocol is up
+Internet Address 10.201.24.1/28, Area 1
+Process ID 100, Router ID 172.16.1.1, Network Type BROADCAST, Cost: 1
+Transmit Delay is 1 sec, State DR, Priority 1
+Designated Router (ID) 172.16.1.1, Interface address 10.201.24.1
+No backup designated router on this network
+Timer intervals configured, Hello 20, Dead 80, Wait 80, Retransmit 5`,
+	}],
+	[1169, {
+		exhibit: `R1#show ip route
+Codes: C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2
+       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, * - candidate default, U - per-user static route
+       o - ODR, P - periodic downloaded static route
+
+Gateway of last resort is not set
+C 10.0.0.0/8 is directly connected, Loopback0
+10.0.0.0/8 is variably subnetted, 4 subnets, 2 masks
+O 10.0.1.3/32 [110/100] via 10.0.1.3, 00:40:07, Serial0
+C 10.0.1.0/24 is directly connected, Serial0
+O 10.0.1.4/32 [110/5] via 10.0.1.50, 00:40:07, Serial0
+O 10.0.1.5/32 [110/5] via 10.0.1.50, 00:40:07, Serial0
+O 10.0.1.4/32 [110/10] via 10.0.1.4, 00:40:07, Serial0`,
+	}],
+	[1174, {
+		exhibit: `C 10.0.0.0/24 is subnetted, 1 subnets
+O 10.0.0.0 is directly connected, FastEthernet0/1
+D 172.16.0.0/16 is directly connected, FastEthernet0/0
+D 192.168.0.0/24 [90/201728] via 172.16.0.2, 00:00:04, FastEthernet0/0`,
+	}],
+	[1329, "dhcp-relay-r1-r2-server"],
+]);
+
+export function getBuiltInQuestionByPrompt(prompt) {
+	if (typeof prompt !== "string") return null;
+	const builtInQuestion = BUILT_IN_QUESTION_BY_PROMPT.get(normalizePrompt(prompt));
+	if (builtInQuestion) return builtInQuestion;
+
+	if (/an ipv6 address must be obtained automatically on the lan interface on r1/i.test(prompt)) {
+		return { exhibitDiagram: "ipv6-dhcpv6-lan" };
+	}
+	return null;
+}
+
+export function applyNativeExhibit(question) {
+	const builtInQuestion = getBuiltInQuestionByPrompt(question?.prompt);
+	const databaseExhibit = DATABASE_NATIVE_EXHIBITS.get(question?.bankId);
+	const exhibitDiagram = (typeof databaseExhibit === "string" ? databaseExhibit : databaseExhibit?.diagram) ??
+		builtInQuestion?.exhibitDiagram;
+	const hasNativeTextExhibit = typeof databaseExhibit === "object" &&
+		typeof databaseExhibit.exhibit === "string";
+	if (!exhibitDiagram && !hasNativeTextExhibit) return question;
+
+	return {
+		...question,
+		exhibitImage: undefined,
+		...(exhibitDiagram ? { exhibitDiagram } : {}),
+		...(hasNativeTextExhibit ? { exhibit: databaseExhibit.exhibit, nativeExhibitText: true } : {}),
+		...(builtInQuestion?.exhibit ? { exhibit: builtInQuestion.exhibit } : {}),
+	};
+}

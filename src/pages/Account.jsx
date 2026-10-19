@@ -168,7 +168,7 @@ function ProfileForm({ profile, refreshProfile }) {
         reader.readAsDataURL(file);
       });
       const response = await cookieFetch(`${API_URL}/auth/profile/photo`, {
-        method: "POST",
+        method: "PUT",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
@@ -219,7 +219,7 @@ function ProfileForm({ profile, refreshProfile }) {
     }
 
     try {
-      const response = await cookieFetch(`${API_URL}/auth/password`, {
+      const response = await cookieFetch(`${API_URL}/auth/change-password`, {
         method: "PATCH",
         credentials: "include",
         headers: {
