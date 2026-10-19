@@ -269,6 +269,7 @@ function AssessmentTable({ title, rows, filter, sort }) {
 export default function ProgramModuleGradebook({ programKey, programName, modules, dashboardPath }) {
 	const { profile } = useAuth();
 	const isCompTIAProgram = ["comptia-network-plus", "comptia-security-plus"].includes(programKey);
+	const isFortinetProgram = programKey === "fortinet-fortios";
 	const userId = profile?.userId;
 	const welcomeText = `Welcome, ${profile?.username ?? "Student"}!`;
 	const [prefersReducedMotion] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
@@ -345,7 +346,7 @@ export default function ProgramModuleGradebook({ programKey, programName, module
 	}, [prefersReducedMotion, welcomeText]);
 
 	return (
-		<main className={`ccna-page-enter min-h-screen bg-[#f5f7f8] pb-12 text-[#152536] ${isCompTIAProgram ? "comptia-gradebook" : ""}`}>
+		<main className={`ccna-page-enter min-h-screen bg-[#f5f7f8] pb-12 text-[#152536] ${isCompTIAProgram ? "comptia-gradebook" : ""} ${isFortinetProgram ? "fortinet-gradebook" : ""}`}>
 			<div className="mx-auto max-w-[1680px] px-4 py-6 sm:px-8 lg:px-10 2xl:px-12">
 				{backendGradebook.error && backendGradebook.userId === userId && (
 					<p role="alert" className="mb-4 rounded-md border border-[#f2c6c3] bg-white px-4 py-3 text-sm font-medium text-[#b42318]">

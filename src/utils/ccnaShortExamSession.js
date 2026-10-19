@@ -29,7 +29,7 @@ export function readCcnaExamProgress(baseKey, userId) {
 			!Array.isArray(session.questions) ||
 			!session.answers ||
 			typeof session.answers !== "object" ||
-			!Number.isFinite(session.deadline) ||
+			(session.deadline !== null && !Number.isFinite(session.deadline)) ||
 			typeof session.isSubmitted !== "boolean"
 		) {
 			throw new TypeError("Saved CCNA exam progress has an invalid structure.");
@@ -40,7 +40,7 @@ export function readCcnaExamProgress(baseKey, userId) {
 				(total, question, index) => total + Number(isAnswerCorrect(question, session.answers[index])),
 				0,
 			);
-		const isExpired = !session.isSubmitted && session.deadline <= Date.now();
+		const isExpired = !session.isSubmitted && session.deadline !== null && session.deadline <= Date.now();
 		return {
 			status: session.isSubmitted ? "completed" : isExpired ? "expired" : "in-progress",
 			deadline: session.isSubmitted || isExpired ? null : session.deadline,
