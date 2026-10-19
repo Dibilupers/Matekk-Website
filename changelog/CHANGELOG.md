@@ -2,6 +2,15 @@
 
 Tracking begins 2026-10-17.
 
+## 2026-10-19 — `main`
+
+Merged `emman` into the latest `main` as `99d8b21`, including:
+
+- `96da371` — Added a Fortinet → FortiOS shortcut to the My Gradebook program chooser.
+- `99d8b21` — Merged the FortiOS gradebook shortcut into `main`.
+
+Validation before push: targeted ESLint, frontend production build, and Git whitespace checks passed.
+
 ## 2026-10-19 — Backend deployment compatibility
 
 - Load Helmet through Node's CommonJS bridge with its declared middleware type to avoid Vercel's incorrect default-import typing.
@@ -72,3 +81,7 @@ Documentation-only changes; no build or test run was needed.
 - Converted 150 valid CCNA "Choose two/three" rows with stored multi-letter answer keys into graded multi-select questions.
 - Converted CCNA Part 9, question 70 (database ID 289) from flattened QoS term definitions into the existing drag-and-drop matching interaction. The configured database contains 1,367 CCNA rows, and the current loader returns all 1,367 as usable.
 - Added a confirmation step and a fresh-start retry option to the completed CCNA all-questions exam.
+
+## 2026-10-19 — `main`
+
+- Reverted the changes introduced by merge commit `1701c01` while preserving other mainline commits and subsequent independent changes. Retained four CCNA images required by the later offline exam bank.

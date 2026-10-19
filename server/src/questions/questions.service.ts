@@ -384,134 +384,6 @@ export class QuestionsService {
     correct_answer: string | null;
     imageUrl?: string | null;
   }): ExamQuestion | null {
-    if (record.id === 1306 && record.question_text?.trim()) {
-      return {
-        id: record.id,
-        prompt: record.question_text.trim(),
-        type: 'match',
-        items: [
-          '10.1.255.254/24',
-          '10.63.255.255/10',
-          '172.16.255.39/29',
-          '172.20.255.255/16',
-          '192.168.1.10/24',
-          '192.168.255.127/25',
-        ],
-        choices: ['Broadcast address', 'Not used'],
-        groupCounts: { 'Broadcast address': 4, 'Not used': 2 },
-        matchStyle: 'numbers',
-        module: record.module,
-        topic: record.topic,
-      };
-    }
-    if (record.id === 720 && record.question_text?.trim() && record.choices) {
-      const options = this.parseChoices(record.choices);
-      if (
-        !options ||
-        options.length < 2 ||
-        options.length > 8 ||
-        !options.every((option) => option.trim().length > 0)
-      ) {
-        return null;
-      }
-      return {
-        id: record.id,
-        prompt: record.question_text.trim(),
-        imageUrl: record.imageUrl ?? null,
-        type: 'single',
-        options,
-        module: record.module,
-        topic: record.topic,
-      };
-    }
-
-    if (record.id === 181 && record.question_text?.trim()) {
-      return {
-        id: record.id,
-        prompt: record.question_text.trim(),
-        type: 'match',
-        items: [
-          'Frames received from the attached segment are discarded',
-          'BPDUs received are forwarded to the system module',
-          'The port in the forwarding state responds to network management messages',
-          'BPDUs received from the system module are processed and transmitted',
-          'Switched frames received from other ports are advanced',
-          'Frames received from the attached segment are processed',
-        ],
-        choices: ['Action', 'Not used'],
-        groupCounts: { Action: 4, 'Not used': 2 },
-        matchStyle: 'numbers',
-        module: record.module,
-        topic: record.topic,
-      };
-    }
-
-    if (record.id === 382 && record.question_text?.trim()) {
-      const choices = ['Ansible feature', 'Not an Ansible feature'];
-      return {
-        id: record.id,
-        prompt: 'Classify each statement as an Ansible feature or not an Ansible feature.',
-        type: 'match',
-        items: [
-          'Uses the YAML language',
-          'Executes modules via SSH by default',
-          'Pushes configurations to the client',
-          'Uses agents to manage hosts',
-          'Requires clients to pull configurations from the server',
-          'Operates without agents',
-        ],
-        choices,
-        groupCounts: { 'Ansible feature': 4, 'Not an Ansible feature': 2 },
-        matchStyle: 'numbers',
-        module: record.module,
-        topic: record.topic,
-      };
-    }
-
-    if (record.id === 608 && record.question_text?.trim()) {
-      return {
-        id: record.id,
-        prompt: record.question_text.trim(),
-        type: 'match',
-        items: [
-          'Supports automation',
-          'Communicates between the SDN controller and the application plane',
-          'Communicates between the SDN controller and the data plane',
-          'Supports data sharing between systems',
-          'Supports network virtualization protocols',
-          'Supports REST-based requirements',
-          'Uses OpenFlow to interface between the data and control planes',
-        ],
-        choices: ['1', '2', '3', '4', 'Not used'],
-        groupCounts: { '1': 1, '2': 1, '3': 1, '4': 1, 'Not used': 3 },
-        matchStyle: 'numbers',
-        module: record.module,
-        topic: record.topic,
-      };
-    }
-
-    if (record.id === 481 && record.question_text?.trim()) {
-      const choices = ['R1', 'R2', 'R3', 'Not used'];
-      return {
-        id: record.id,
-        prompt: 'An engineer must configure a static network route between two networks so that host A communicates with host B. Assign the commands to the routers where they must be configured. Not all commands are used.',
-        type: 'match',
-        items: [
-          'ip route 10.10.13.0 255.255.255.128 10.10.10.1',
-          'ip route 10.10.13.0 255.255.255.128 10.10.10.5',
-          'ip route 10.10.13.10 255.255.255.255 10.10.10.1',
-          'ip route 10.10.14.0 255.255.255.0 10.10.10.2',
-          'ip route 10.10.14.0 255.255.255.0 10.10.10.6',
-          'ip route 10.10.14.10 255.255.255.255 10.10.10.6',
-        ],
-        choices,
-        groupCounts: { R1: 1, R2: 2, R3: 1, 'Not used': 2 },
-        matchStyle: 'numbers',
-        module: record.module,
-        topic: record.topic,
-      };
-    }
-
     // Drag-and-drop questions imported from the PDFs keep their answer as text and have no choices.
     if (record.question_text?.trim() && !record.choices?.trim() && (!record.question_type || record.question_type === 'single')) {
       const dragDrop = parseDragDropAnswer(record.correct_answer, record.id);
@@ -829,9 +701,8 @@ export class QuestionsService {
   }
 
   // The full CCNA question bank used by the exams
-  async findBank(module = 'CCNA') {
+  async findBank() {
     const rows = await this.prisma.questions.findMany({
-      where: this.getQuestionModuleFilter(module),
       select: {
         id: true,
         module: true,
@@ -858,28 +729,14 @@ export class QuestionsService {
     }));
   }
 
-  async findUsableBank(module = 'CCNA') {
-    const rows = await this.findBank(module);
+  async findUsableBank() {
+    const rows = await this.findBank();
     const questions = rows.flatMap((row) => {
-      const question = this.readMultiSelectQuestion(row) ?? this.readQuestion(row);
+      const question = this.readQuestion(row);
       if (!question) return [];
 
-      const answer = row.id === 1306
-        ? [1, 0, 0, 0, 1, 0]
-        : row.id === 720
-        ? 0
-        : row.id === 181
-        ? [0, 0, 1, 1, 0, 0]
-        : row.id === 382
-        ? [0, 0, 0, 1, 1, 0]
-        : row.id === 608
-        ? [0, 1, 4, 4, 2, 3, 4]
-        : row.id === 481
-        ? [0, 1, 1, 2, 3, 3]
-        : question.type !== 'single'
-        ? question.type === 'multi'
-          ? question.answer
-          : row.question_type === 'match'
+      const answer = question.type !== 'single'
+        ? row.question_type === 'match'
           ? this.parseMatchAnswer(row.correct_answer, question.items.length, question.choices.length)
           : parseDragDropAnswer(row.correct_answer, row.id)?.answer
         : question.type === 'single'
@@ -896,96 +753,5 @@ export class QuestionsService {
       }];
     });
     return { questions, skippedCount: rows.length - questions.length };
-  }
-
-  private readMultiSelectQuestion(record: {
-    id: number;
-    module: string | null;
-    topic: string | null;
-    question_text: string | null;
-    choices: string | null;
-    correct_answer: string | null;
-    question_type?: string | null;
-    explanation?: string | null;
-  }) {
-    if (
-      record.module?.toLocaleLowerCase() !== 'ccna' &&
-      !record.module?.toLocaleLowerCase().startsWith('ccna part ') &&
-      !record.module?.toLocaleLowerCase().startsWith('ccna 200-301 set ')
-    ) {
-      return null;
-    }
-    if (
-      (record.question_type && record.question_type !== 'single') ||
-      !record.question_text?.trim() ||
-      !record.choices?.trim() ||
-      !record.correct_answer?.trim()
-    ) {
-      return null;
-    }
-
-    const selectionCount = record.question_text.match(/\b(?:choose|select)\s+(two|three|\d+)\b/i)?.[1];
-    const requiredSelections = selectionCount === 'two'
-      ? 2
-      : selectionCount === 'three'
-        ? 3
-        : Number(selectionCount);
-    if (!Number.isInteger(requiredSelections) || requiredSelections < 2) return null;
-
-    let parsedChoices: unknown;
-    try {
-      parsedChoices = JSON.parse(record.choices);
-    } catch {
-      return null;
-    }
-    if (!parsedChoices || typeof parsedChoices !== 'object' || Array.isArray(parsedChoices)) return null;
-
-    const entries = Object.entries(parsedChoices);
-    const options = entries.map(([, option]) => option);
-    if (
-      options.length < requiredSelections ||
-      options.length > 8 ||
-      !options.every((option): option is string => typeof option === 'string' && option.trim().length > 0)
-    ) {
-      return null;
-    }
-
-    const answerKeys = record.correct_answer.split(/\s*[,;/+&]\s*/).map((key) => key.trim().toUpperCase());
-    if (
-      answerKeys.length !== requiredSelections ||
-      new Set(answerKeys).size !== answerKeys.length ||
-      !answerKeys.every((key) => /^[A-H]$/.test(key))
-    ) {
-      return null;
-    }
-    const answer = answerKeys.map((key) => entries.findIndex(([choiceKey]) => choiceKey.toUpperCase() === key));
-    if (answer.some((index) => index < 0)) return null;
-
-    return {
-      id: record.id,
-      prompt: record.question_text.trim(),
-      type: 'multi' as const,
-      options,
-      answer,
-      module: record.module,
-      topic: record.topic,
-    };
-  }
-
-  private getQuestionModuleFilter(module: string): Prisma.QuestionsWhereInput {
-    const normalizedModule = module.trim();
-    if (!normalizedModule) {
-      throw new BadRequestException('Choose a course question bank.');
-    }
-    if (normalizedModule.toLocaleLowerCase() === 'ccna') {
-      return {
-        OR: [
-          { module: { equals: 'CCNA', mode: 'insensitive' } },
-          { module: { startsWith: 'CCNA Part ', mode: 'insensitive' } },
-          { module: { startsWith: 'CCNA 200-301 Set ', mode: 'insensitive' } },
-        ],
-      };
-    }
-    return { module: { equals: normalizedModule, mode: 'insensitive' } };
   }
 }

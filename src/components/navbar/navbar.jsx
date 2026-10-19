@@ -89,6 +89,12 @@ function NavBar() {
         { name: "Security+", path: "/modules/programs/comptia-security-plus/gradebook" },
       ],
     },
+    {
+      name: "Fortinet",
+      programs: [
+        { name: "FortiOS", path: "/modules/programs/fortinet-fortios/gradebook" },
+      ],
+    },
   ];
 
   const profileLink = (label, icon, onClick) => (
