@@ -8,6 +8,7 @@ import { loadCcnaAllQuestionsBank } from "../../../../../utils/ccnaQuestionBankA
 import { ExhibitDiagram, ExhibitImage, ExhibitText } from "./ccnaExhibit";
 import { QuestionInput, QuestionPrompt, QuestionReview } from "./ccnaExamQuestionViews";
 import { applyNativeExhibit } from "./ccnaCompositeSetQuestions";
+import { getOfflineLegacyQuestionBank } from "./ccnaOfflineExamQuestions";
 
 function isValidSavedAnswer(question, answer) {
 	if (["match", "drag_drop", "click_boxes", "image"].includes(question.type)) {
@@ -27,7 +28,7 @@ function isValidSavedAnswer(question, answer) {
 }
 
 export default function CCNAAllQuestionsExam() {
-	const { profile } = useAuth();
+	const { profile, isOnline } = useAuth();
 	const storageKey = profile?.userId === null || profile?.userId === undefined
 		? null
 		: `matekk-ccna-all-questions:${encodeURIComponent(String(profile.userId))}`;
@@ -77,8 +78,14 @@ export default function CCNAAllQuestionsExam() {
 	useEffect(() => {
 		let isActive = true;
 		setLoadState({ status: "loading", error: null });
-		loadCcnaAllQuestionsBank()
-			.then(({ questions: validQuestions }) => {
+		const bankRequest = isOnline
+			? loadCcnaAllQuestionsBank()
+			: Promise.resolve({
+				questions: getOfflineLegacyQuestionBank(),
+				skippedCount: 0,
+			});
+		bankRequest
+			.then(({ questions: validQuestions, skippedCount }) => {
 				const orderedQuestions = [...validQuestions]
 					.map(applyNativeExhibit)
 					.sort((left, right) => left.bankId - right.bankId);
@@ -144,7 +151,7 @@ export default function CCNAAllQuestionsExam() {
 		return () => {
 			isActive = false;
 		};
-	}, [loadAttempt, storageKey]);
+	}, [isOnline, loadAttempt, storageKey]);
 
 	useEffect(() => {
 		if (loadState.status !== "ready" || !storageKey || questions.length === 0) return;

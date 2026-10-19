@@ -880,14 +880,15 @@ function ProtectedRoute({ children }) {
   const { pathname } = useLocation();
   const isModuleRoute = /^\/modules\/programs(?:\/|$)/.test(pathname);
   const isExamRoute = /(?:^|\/)exam(?:\/|$)/.test(pathname);
-  const canAccessOfflineModule = isModuleRoute && !isExamRoute && !isOnline;
+  const isOfflineCcnaExamRoute = /^\/modules\/programs\/ccna\/exam\/(?:short|medium|long|all)$/.test(pathname);
+  const canAccessOfflineModule = isModuleRoute && (!isExamRoute || isOfflineCcnaExamRoute) && !isOnline;
 
-  if (!isOnline && isModuleRoute && isExamRoute) {
+  if (!isOnline && isModuleRoute && isExamRoute && !isOfflineCcnaExamRoute) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6 text-center text-white">
         <section className="max-w-lg space-y-3">
           <h1 className="text-2xl font-semibold">Internet connection required</h1>
-          <p className="text-slate-300">Exams are not available offline. Reconnect to the internet to continue.</p>
+          <p className="text-slate-300">Only CCNA exams with built-in questions are available offline. Reconnect to take this exam.</p>
         </section>
       </main>
     );
