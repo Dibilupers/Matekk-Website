@@ -14,6 +14,13 @@ Also added the shared Program Overview, Learning Focus, course-outline navigatio
 
 Validation before push: targeted ESLint, frontend production build, and Git whitespace checks passed.
 
+## 2026-10-19 — `main` (follow-up sync)
+
+- `36da77c` — Marked the FortiOS merge entry as pushed.
+- `44b4772` — Merged the latest `origin/main` updates into local `main`, including the CCNA offline exam changes, without conflicts.
+
+Validation before push: frontend production build and Git whitespace checks passed. Targeted ESLint passed for FortiOS and dashboard files; the newly synced upstream `ccnaAllQuestionsExam.jsx` reports an unused `skippedCount` variable.
+
 ## 2026-10-17 — `main`
 
 Pushed merge commit `7a82e8e` (`Merge origin/main into main`), including merge commit `851d5d5` (`Merge jhonard into main`) and branch commits `31c0189` and `f012548`.
