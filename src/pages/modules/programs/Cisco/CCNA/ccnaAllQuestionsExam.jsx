@@ -390,14 +390,16 @@ export default function CCNAAllQuestionsExam() {
 								onChange={(value) => setAnswers((previous) => ({ ...previous, [currentIndex]: value }))}
 							/>
 							<div className="mt-7 flex flex-wrap items-center justify-between gap-3">
-								<button
-									type="button"
-									onClick={() => goToQuestion(currentIndex - 1)}
-									disabled={currentIndex === 0}
-									className="inline-flex items-center gap-2 rounded-full border border-[#9fc8ce] px-5 py-3 font-semibold text-[#005b6b] transition hover:bg-[#e8f3f4] disabled:cursor-not-allowed disabled:opacity-40"
-								>
-									<ChevronLeft size={18} /> Previous
-								</button>
+								{isOnline && (
+									<button
+										type="button"
+										onClick={() => goToQuestion(currentIndex - 1)}
+										disabled={currentIndex === 0}
+										className="inline-flex items-center gap-2 rounded-full border border-[#9fc8ce] px-5 py-3 font-semibold text-[#005b6b] transition hover:bg-[#e8f3f4] disabled:cursor-not-allowed disabled:opacity-40"
+									>
+										<ChevronLeft size={18} /> Previous
+									</button>
+								)}
 								{currentIndex === questions.length - 1 ? (
 									<button type="button" onClick={submitExam} className="rounded-full bg-[#005b6b] px-6 py-3 font-semibold text-white transition hover:bg-[#004653]">
 										Finish and review
@@ -527,14 +529,16 @@ export default function CCNAAllQuestionsExam() {
 							<QuestionReview question={question} value={answers[currentIndex]} />
 							{question.explanation && <p className="mt-5 rounded-xl bg-[#f5f9f9] px-4 py-3 text-sm leading-6 text-[#596983]"><strong className="text-[#005b6b]">Explanation: </strong>{question.explanation}</p>}
 							<div className="mt-7 flex flex-wrap items-center justify-between gap-3">
-								<button
-									type="button"
-									onClick={() => goToQuestion(previousReviewIndex)}
-									disabled={previousReviewIndex < 0}
-									className="inline-flex items-center gap-2 rounded-full border border-[#9fc8ce] px-5 py-3 font-semibold text-[#005b6b] transition hover:bg-[#e8f3f4] disabled:cursor-not-allowed disabled:opacity-40"
-								>
-									<ChevronLeft size={18} /> Previous
-								</button>
+								{isOnline && (
+									<button
+										type="button"
+										onClick={() => goToQuestion(previousReviewIndex)}
+										disabled={previousReviewIndex < 0}
+										className="inline-flex items-center gap-2 rounded-full border border-[#9fc8ce] px-5 py-3 font-semibold text-[#005b6b] transition hover:bg-[#e8f3f4] disabled:cursor-not-allowed disabled:opacity-40"
+									>
+										<ChevronLeft size={18} /> Previous
+									</button>
+								)}
 								<button
 									type="button"
 									onClick={() => goToQuestion(nextReviewIndex)}

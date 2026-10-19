@@ -50,12 +50,19 @@ function moduleOfflineSupport() {
         .filter((id) => !/(?:quiz|exam)/i.test(basename(id)) || /[\\/]ccnaOfflineExamQuestions\.js$/i.test(id))
         .forEach(visitModule)
 
+      const offlineExhibitFiles = Object.values(bundle)
+        .filter((output) => output.type === 'asset')
+        .filter((output) => (output.originalFileNames || []).some((sourceName) => (
+          /[\\/]assets[\\/](?:ccna-offline-exams-images|ccna-exam)[\\/]/i.test(sourceName)
+        )))
+        .map((output) => output.fileName)
       const precacheFiles = [
         ...Object.keys(bundle).filter((fileName) => (
           fileName === 'index.html'
           || /\.(?:js|css|woff2?|ttf|otf|eot)$/i.test(fileName)
           || moduleAssetFiles.has(fileName)
         )),
+        ...offlineExhibitFiles,
         'manifest.webmanifest',
         'icons/matekk-icon.svg',
       ]

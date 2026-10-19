@@ -19,7 +19,7 @@ import { ExhibitDiagram, ExhibitImage, ExhibitText } from "./ccnaExhibit";
 import { loadCcnaQuestionBank } from "../../../../../utils/ccnaQuestionBankApi";
 import { getDatabaseQuestionById, setDatabaseQuestions } from "./ccnaQuestionBank";
 import { applyNativeExhibit } from "./ccnaCompositeSetQuestions";
-import { createOfflineLegacyExamQuestions } from "./ccnaOfflineExamQuestions";
+import { createOfflineLegacyExamQuestions, getOfflineLegacyQuestionBank } from "./ccnaOfflineExamQuestions";
 import { resumeCcnaExam, startCcnaExam, submitCcnaExam } from "../../../../../utils/ccnaExamApi";
 const EXAM_PASS_PERCENTAGE = 80;
 const RECREATED_MATCH_EXHIBIT_QUESTION_IDS = new Set([570]);
@@ -206,8 +206,28 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 						savedSession.questions.every(isValidQuestion)
 						? savedSession
 						: null;
+					const currentOfflineQuestionsById = new Map(
+						getOfflineLegacyQuestionBank().map((question) => [question.id, question]),
+					);
 					const offlineQuestions = savedOfflineSession
-						? savedOfflineSession.questions.map((question) => ({ ...question, offlineLegacy: true }))
+						? savedOfflineSession.questions.map((question) => {
+							const currentQuestion = currentOfflineQuestionsById.get(question.id ?? question.bankId);
+							const restoredQuestion = {
+								...(currentQuestion ?? {}),
+								...question,
+								offlineLegacy: true,
+							};
+							if (currentQuestion) {
+								restoredQuestion.type = currentQuestion.type;
+								restoredQuestion.prompt = currentQuestion.prompt;
+								if (currentQuestion.exhibitImage) {
+									restoredQuestion.exhibitImage = currentQuestion.exhibitImage;
+								} else {
+									delete restoredQuestion.exhibitImage;
+								}
+							}
+							return restoredQuestion;
+						})
 						: createOfflineLegacyExamQuestions(exam.questionCount);
 					const offlineDeadline = Number.isFinite(savedOfflineSession?.deadline)
 						? savedOfflineSession.deadline

@@ -77,29 +77,23 @@ self.addEventListener('fetch', (event) => {
     event.respondWith((async () => {
       const client = event.clientId ? await self.clients.get(event.clientId) : null;
       const clientPath = client ? new URL(client.url).pathname : '';
-      if (!MODULE_ROUTE.test(clientPath)) {
+      if (!MODULE_ROUTE.test(clientPath) && !PRECACHE_URLS.has(request.url)) {
         return fetch(request);
       }
 
       const cache = await caches.open(CACHE_NAME);
-      try {
-        const response = await fetch(request);
-        if ((response.ok && (response.type === 'basic' || response.type === 'cors')) || response.type === 'opaque') {
-          try {
-            await cache.put(request, response.clone());
-          } catch (error) {
-            console.error('Unable to cache a module image for offline use.', error);
-          }
-        } else {
-          const cachedImage = await cache.match(request);
-          if (cachedImage) return cachedImage;
+      const cachedImage = await cache.match(request);
+      if (cachedImage) return cachedImage;
+
+      const response = await fetch(request);
+      if ((response.ok && (response.type === 'basic' || response.type === 'cors')) || response.type === 'opaque') {
+        try {
+          await cache.put(request, response.clone());
+        } catch (error) {
+          console.error('Unable to cache a module image for offline use.', error);
         }
-        return response;
-      } catch (error) {
-        const cachedImage = await cache.match(request);
-        if (cachedImage) return cachedImage;
-        throw error;
       }
+      return response;
     })());
     return;
   }

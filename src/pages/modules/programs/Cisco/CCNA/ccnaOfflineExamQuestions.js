@@ -10,6 +10,8 @@ import { findCcnaQuestionExplanation } from "../../../../../utils/ccnaQuestionEx
 import { isValidQuestion } from "../../../../../utils/ccnaExamGrading";
 import { splitPromptExhibit } from "../../../../../utils/splitPromptExhibit";
 
+const CONNECT_DOTS_LEGACY_QUESTION_INDEX = 654;
+
 const NUMBERED_QUESTION_EXHIBIT_IMAGES = import.meta.glob(
   "../../../../../assets/ccna-offline-exams-images/ccna-question-*.png",
   { eager: true, import: "default", query: "?url" },
@@ -39,6 +41,7 @@ const LEGACY_QUESTION_EXHIBITS = new Map([
 
 const OFFLINE_LEGACY_QUESTIONS = CCNA_LEGACY_QUESTIONS
   .map((question) => {
+    const isConnectDotsQuestion = question.legacyIndex === CONNECT_DOTS_LEGACY_QUESTION_INDEX;
     const numberedExhibit = /\bexhibit\b/i.test(question.prompt)
       ? NUMBERED_QUESTION_EXHIBITS.get(question.legacyIndex)
       : undefined;
@@ -47,12 +50,21 @@ const OFFLINE_LEGACY_QUESTIONS = CCNA_LEGACY_QUESTIONS
     return {
       ...question,
       ...(!question.exhibit ? splitPromptExhibit(question.prompt) : {}),
+      ...(isConnectDotsQuestion
+        ? { prompt: "Connect each Wi-Fi term on the left to its matching description on the right." }
+        : {}),
       ...(exhibitImage ? { exhibitImage } : {}),
       ...(question.type === "match" &&
       question.items?.length === question.choices?.length &&
       question.answer?.length === question.items.length &&
       new Set(question.answer).size === question.answer.length
-        ? { type: /\bdrag\b/i.test(question.prompt) ? "drag_drop" : "click_boxes" }
+        ? {
+            type: isConnectDotsQuestion
+              ? "match"
+              : /\bdrag\b/i.test(question.prompt)
+                ? "drag_drop"
+                : "click_boxes",
+          }
         : {}),
       id: question.legacyIndex,
       bankId: question.legacyIndex,
@@ -81,9 +93,14 @@ export function createOfflineLegacyExamQuestions(count) {
   const blockCount = Math.ceil(count / 50);
   const dragDropCount = Math.min(blockCount * 3, count - 1, questions.filter((question) => question.type === "drag_drop").length);
   const clickBoxesCount = Math.min(blockCount, count - dragDropCount, questions.filter((question) => question.type === "click_boxes").length);
-  const imageExhibitCount = Math.min(
+  const connectDotsCount = Math.min(
     blockCount,
     count - dragDropCount - clickBoxesCount,
+    questions.filter((question) => question.type === "match").length,
+  );
+  const imageExhibitCount = Math.min(
+    blockCount,
+    count - dragDropCount - clickBoxesCount - connectDotsCount,
     questions.filter((question) => question.exhibitImage).length,
   );
   const shuffle = (items) => {
@@ -98,11 +115,13 @@ export function createOfflineLegacyExamQuestions(count) {
     .slice(0, dragDropCount);
   const clickBoxesQuestions = shuffle(questions.filter((question) => question.type === "click_boxes"))
     .slice(0, clickBoxesCount);
+  const connectDotsQuestions = shuffle(questions.filter((question) => question.type === "match"))
+    .slice(0, connectDotsCount);
   const imageExhibitQuestions = shuffle(questions.filter((question) => question.exhibitImage))
     .slice(0, imageExhibitCount);
-  const selectedIds = new Set([...dragDropQuestions, ...clickBoxesQuestions, ...imageExhibitQuestions].map((question) => question.id));
+  const selectedIds = new Set([...dragDropQuestions, ...clickBoxesQuestions, ...connectDotsQuestions, ...imageExhibitQuestions].map((question) => question.id));
   const remainingQuestions = shuffle(questions.filter((question) => !selectedIds.has(question.id)))
     .slice(0, count - selectedIds.size);
 
-  return shuffle([...dragDropQuestions, ...clickBoxesQuestions, ...imageExhibitQuestions, ...remainingQuestions]);
+  return shuffle([...dragDropQuestions, ...clickBoxesQuestions, ...connectDotsQuestions, ...imageExhibitQuestions, ...remainingQuestions]);
 }
