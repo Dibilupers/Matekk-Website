@@ -29,6 +29,8 @@ h1 {
   font-size: 1.25rem;
   font-weight: 600;
   line-height: 1.375;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .ccna-exam-review-question {

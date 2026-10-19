@@ -11,7 +11,7 @@ import { CCNA_EXAMS } from "./ccnaExamFormats";
 import { createCcnaMockExamAttemptId, saveCcnaMockExamResult } from "../../../../../utils/ccnaGradebook";
 import { getCcnaExamSessionKey } from "../../../../../utils/ccnaShortExamSession";
 import { isAnswerCorrect, isQuestionAnswered, isValidQuestion } from "../../../../../utils/ccnaExamGrading";
-import { QuestionInput, QuestionReview } from "./ccnaExamQuestionViews";
+import { QuestionInput, QuestionPrompt, QuestionReview } from "./ccnaExamQuestionViews";
 import { saveGradebookAssessment } from "../../../../../utils/gradebookApi";
 import { splitPromptExhibit } from "../../../../../utils/splitPromptExhibit";
 import { ExhibitImage, ExhibitText } from "./ccnaExhibit";
@@ -540,11 +540,12 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 									Question {currentIndex + 1} of {questions.length}
 									{question.moduleNumber && ` · Module ${question.moduleNumber}: ${question.moduleTitle}`}
 								</p>
-								<h1 className="ccna-exam-question-prompt mb-4 leading-snug tracking-tight sm:mb-6">{question.prompt}</h1>
-								{/* Exhibit: a picture and/or device output shown above the choices */}
-								{question.exhibitImage && (
-									<ExhibitImage src={question.exhibitImage} className="mb-6" imageClassName="max-h-[32rem]" />
-								)}
+								<QuestionPrompt
+									prompt={question.prompt}
+									imageUrl={question.exhibitImage}
+									hasSeparateExhibit={Boolean(question.exhibit || question.exhibitImage)}
+								/>
+								{/* Device output extracted from the question stays separate from its prompt. */}
 								{question.exhibit && (
 									<ExhibitText text={question.exhibit} className="mb-6" />
 								)}
