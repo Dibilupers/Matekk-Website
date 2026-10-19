@@ -2,6 +2,7 @@ import API_URL from "../../../../../config/api";
 import { isValidQuestion } from "../../../../../utils/ccnaExamGrading";
 
 const FORTIOS_MODULE_LABELS = new Set(["fortios", "fortinet fortios", "fortigate administrator"]);
+const FORTIOS_MODULE_NAME = "Fortinet FortiOS";
 
 function isSingleChoiceQuestion(question) {
 	const type = String(question?.type ?? question?.question_type ?? "")
@@ -44,7 +45,8 @@ function normalizeQuestion(question) {
 }
 
 export async function loadFortiOSExamQuestions() {
-	const response = await fetch(`${API_URL}/questions/bank/all-usable`, { credentials: "include" });
+	const query = new URLSearchParams({ module: FORTIOS_MODULE_NAME });
+	const response = await fetch(`${API_URL}/questions/bank/all-usable?${query}`, { credentials: "include" });
 	if (!response.ok) {
 		throw new Error(`FortiOS question bank request failed (${response.status}).`);
 	}
