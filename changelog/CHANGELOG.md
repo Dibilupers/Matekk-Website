@@ -2,6 +2,13 @@
 
 Tracking begins 2026-10-17.
 
+## 2026-10-19 — CCNA question-bank filtering
+
+- Scoped CCNA question-bank endpoints to `CCNA`, `CCNA Part …`, and `CCNA 200-301 Set …` module labels, and made the all-questions exam explicitly request the CCNA bank.
+- Preserved the existing `/api` routing and backend destination.
+
+Validation before push: frontend production build, backend Nest build, 19 focused question-service tests, and `git diff --check` passed.
+
 ## 2026-10-19 — `main`
 
 Merged `emman` into the latest `main` as `99d8b21`, including:
