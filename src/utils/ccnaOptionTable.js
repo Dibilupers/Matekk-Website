@@ -1,4 +1,4 @@
-export function parseOptionTable(prompt) {
+export function parseOptionTable(prompt, { offlineColumns = false } = {}) {
 	const text = String(prompt ?? "").replace(/\r\n/g, "\n");
 	const lines = text.split("\n");
 	const headings = [];
@@ -66,19 +66,35 @@ export function parseOptionTable(prompt) {
 			const nextHeading = standaloneHeadings.find(({ index }) => index > second.index);
 			const contentEnd = nextHeading?.index ?? lines.length;
 			const contentLines = lines.slice(second.index + 1, contentEnd);
-			const boundaries = contentLines.flatMap((line) =>
-				[...line.matchAll(/\s{3,}(?=\S)/g)]
-					.filter((match) => match.index >= 16 && match.index < 100)
-					.map((match) => match.index + match[0].length),
-			).sort((left, right) => left - right);
-			if (boundaries.length === 0) continue;
+			let leftHeading = first;
+			let rightHeading = second;
+			let rightColumnStart;
+			if (offlineColumns) {
+				const firstColumnStart = lines[first.index].indexOf(`Option ${first.letter}`);
+				const secondColumnStart = lines[second.index].indexOf(`Option ${second.letter}`);
+				leftHeading = firstColumnStart <= secondColumnStart ? first : second;
+				rightHeading = leftHeading === first ? second : first;
+				rightColumnStart = Math.max(firstColumnStart, secondColumnStart);
+			}
+			if (!offlineColumns || rightColumnStart < 16) {
+				const boundaries = contentLines.flatMap((line) =>
+					[...line.matchAll(/\s{3,}(?=\S)/g)]
+						.filter((match) => match.index >= 16 && match.index < 100)
+						.map((match) => match.index + match[0].length),
+				).sort((left, right) => left - right);
+				if (!offlineColumns) {
+					rightColumnStart = boundaries[Math.floor(boundaries.length / 2)] ?? -1;
+				} else if (rightColumnStart < 16) {
+					rightColumnStart = boundaries[Math.floor(boundaries.length / 2)] ?? -1;
+				}
+			}
+			if (rightColumnStart < 16) continue;
 
-			const boundary = boundaries[Math.floor(boundaries.length / 2)];
 			for (const line of contentLines) {
-				const left = line.slice(0, boundary).trim();
-				const right = line.slice(boundary).trim();
-				if (left) options[first.letter] = options[first.letter] ? `${options[first.letter]}\n${left}` : left;
-				if (right) options[second.letter] = options[second.letter] ? `${options[second.letter]}\n${right}` : right;
+				const left = line.slice(0, rightColumnStart).trim();
+				const right = line.slice(rightColumnStart).trim();
+				if (left) options[leftHeading.letter] = options[leftHeading.letter] ? `${options[leftHeading.letter]}\n${left}` : left;
+				if (right) options[rightHeading.letter] = options[rightHeading.letter] ? `${options[rightHeading.letter]}\n${right}` : right;
 			}
 		}
 
