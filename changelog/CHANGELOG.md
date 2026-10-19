@@ -56,3 +56,4 @@ Documentation-only changes; no build or test run was needed.
 - Removed the skipped-question count warning from the student-facing CCNA all-questions exam; unsupported rows remain excluded from scoring and display.
 - Converted 150 valid CCNA "Choose two/three" rows with stored multi-letter answer keys into graded multi-select questions.
 - Converted CCNA Part 9, question 70 (database ID 289) from flattened QoS term definitions into the existing drag-and-drop matching interaction. The configured database contains 1,367 CCNA rows, and the current loader returns all 1,367 as usable.
+- Added a confirmation step and a fresh-start retry option to the completed CCNA all-questions exam.
