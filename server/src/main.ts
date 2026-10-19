@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { json, urlencoded } from 'express';
 import { AppModule, isObserveEnabled, ObserveInstrument } from './app.module.js';
-import * as helmet from 'helmet';
+import { default as helmet } from 'helmet';
 import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
@@ -47,7 +47,7 @@ async function bootstrap() {
     },
   });
   app.use(
-    helmet.default({
+    helmet({
       contentSecurityPolicy: {
         directives: {
           defaultSrc: [`'self'`],
