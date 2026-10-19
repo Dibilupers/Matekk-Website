@@ -2,6 +2,12 @@
 
 Tracking begins 2026-10-17.
 
+## 2026-10-19 — Backend deployment fix
+
+- Updated the Helmet import in the server bootstrap to an explicit module namespace default, fixing Vercel's TypeScript build error.
+
+Validation: backend TypeScript check, NestJS build, focused environment configuration tests, and Git whitespace checks passed.
+
 ## 2026-10-19 — `main`
 
 Merged `emman` into `main` as `3cf8955`, including:
