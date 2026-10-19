@@ -109,7 +109,7 @@ describe('QuestionsService', () => {
     expect(service).toBeDefined();
   });
 
-  it('returns every question from the Questions table in database order', async () => {
+  it('returns CCNA questions from all CCNA module labels in database order', async () => {
     const rows = Array.from({ length: 3 }, (_, index) => ({
       id: index + 1,
       module: 'CCNA',
@@ -126,8 +126,42 @@ describe('QuestionsService', () => {
 
     await expect(service.findBank()).resolves.toEqual(rows);
     expect(prismaMock.questions.findMany).toHaveBeenCalledWith(expect.objectContaining({
+      where: {
+        OR: [
+          { module: { equals: 'CCNA', mode: 'insensitive' } },
+          { module: { startsWith: 'CCNA Part ', mode: 'insensitive' } },
+          { module: { startsWith: 'CCNA 200-301 Set ', mode: 'insensitive' } },
+        ],
+      },
       orderBy: { id: 'asc' },
     }));
+  });
+
+  it('filters a CompTIA all-questions bank to its requested certification', async () => {
+    await service.findUsableBank('CompTIA Network+');
+
+    expect(prismaMock.questions.findMany).toHaveBeenCalledWith(expect.objectContaining({
+      where: { module: { equals: 'CompTIA Network+', mode: 'insensitive' } },
+    }));
+  });
+
+  it('includes FortiOS course aliases in the FortiOS all-questions bank', async () => {
+    await service.findUsableBank('Fortinet FortiOS');
+
+    expect(prismaMock.questions.findMany).toHaveBeenCalledWith(expect.objectContaining({
+      where: {
+        OR: [
+          { module: { equals: 'FortiOS', mode: 'insensitive' } },
+          { module: { equals: 'Fortinet FortiOS', mode: 'insensitive' } },
+          { module: { equals: 'FortiGate Administrator', mode: 'insensitive' } },
+        ],
+      },
+    }));
+  });
+
+  it('rejects an all-questions request without a course module', async () => {
+    await expect(service.findUsableBank()).rejects.toThrow('Choose a course question bank.');
+    expect(prismaMock.questions.findMany).not.toHaveBeenCalled();
   });
 
   it('returns only renderable Questions table rows with normalized answer keys', async () => {
@@ -170,7 +204,7 @@ describe('QuestionsService', () => {
       },
     ]);
 
-    const { questions, skippedCount } = await service.findUsableBank();
+    const { questions, skippedCount } = await service.findUsableBank('CCNA');
 
     expect(questions).toHaveLength(2);
     expect(skippedCount).toBe(1);

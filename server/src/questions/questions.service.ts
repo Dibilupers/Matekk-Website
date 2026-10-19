@@ -701,8 +701,9 @@ export class QuestionsService {
   }
 
   // The full CCNA question bank used by the exams
-  async findBank() {
+  async findBank(module = 'CCNA') {
     const rows = await this.prisma.questions.findMany({
+      where: this.getQuestionModuleFilter(module),
       select: {
         id: true,
         module: true,
@@ -729,8 +730,11 @@ export class QuestionsService {
     }));
   }
 
-  async findUsableBank() {
-    const rows = await this.findBank();
+  async findUsableBank(module?: string) {
+    if (!module?.trim()) {
+      throw new BadRequestException('Choose a course question bank.');
+    }
+    const rows = await this.findBank(module);
     const questions = rows.flatMap((row) => {
       const question = this.readQuestion(row);
       if (!question) return [];
@@ -753,5 +757,33 @@ export class QuestionsService {
       }];
     });
     return { questions, skippedCount: rows.length - questions.length };
+  }
+
+  private getQuestionModuleFilter(module: string): Prisma.QuestionsWhereInput {
+    const normalizedModule = module.trim();
+    if (!normalizedModule) {
+      throw new BadRequestException('Choose a course question bank.');
+    }
+
+    if (normalizedModule.toLocaleLowerCase() === 'ccna') {
+      return {
+        OR: [
+          { module: { equals: 'CCNA', mode: 'insensitive' } },
+          { module: { startsWith: 'CCNA Part ', mode: 'insensitive' } },
+          { module: { startsWith: 'CCNA 200-301 Set ', mode: 'insensitive' } },
+        ],
+      };
+    }
+
+    const fortiOsLabels = ['FortiOS', 'Fortinet FortiOS', 'FortiGate Administrator'];
+    if (fortiOsLabels.some((label) => label.toLocaleLowerCase() === normalizedModule.toLocaleLowerCase())) {
+      return {
+        OR: fortiOsLabels.map((label) => ({
+          module: { equals: label, mode: 'insensitive' as const },
+        })),
+      };
+    }
+
+    return { module: { equals: normalizedModule, mode: 'insensitive' } };
   }
 }
