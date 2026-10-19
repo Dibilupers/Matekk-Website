@@ -4,6 +4,15 @@ Tracking begins 2026-10-17.
 
 ## 2026-10-19 — `main`
 
+Merged `emman` into `main` as `3cf8955`, including:
+
+- `22b044f` — Updated CompTIA mobile layouts and FortiOS dashboards, exam formats, timeout notices, and gradebook handling.
+- `3cf8955` — Merged the `emman` branch into the latest `origin/main`.
+
+Validation before push: targeted ESLint, frontend production build, and Git whitespace checks passed.
+
+## 2026-10-19 — `main`
+
 Merged `emman` as `5839b45`, including:
 
 - `2ca9c8d` — Added the FortiOS learning dashboard, gradebook support, and FortiOS exam routes and formats.
