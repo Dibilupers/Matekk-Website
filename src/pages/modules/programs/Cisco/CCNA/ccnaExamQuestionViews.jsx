@@ -606,6 +606,10 @@ export function QuestionReview({ question, value }) {
 		return <MatchingQuestionReview question={question} value={value} />;
 	}
 
+	if (type === "match") {
+		return <MatchingQuestionReview question={question} value={value} />;
+	}
+
 	if (isMatching) {
 		const current = Array.isArray(value) ? value : [];
 		return (

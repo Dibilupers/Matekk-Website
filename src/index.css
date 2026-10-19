@@ -163,6 +163,24 @@ h6 {
   animation: ccna-match-row-feedback 680ms ease-out both;
 }
 
+.score-rotation-value,
+.score-rotation-label,
+.score-rotation-stars {
+  animation: score-rotation-enter 360ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@keyframes score-rotation-enter {
+  from {
+    opacity: 0;
+    transform: translateY(0.35rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .program-stat-item {
   position: relative;
   isolation: isolate;
@@ -522,15 +540,166 @@ h6 {
   clip-path: inset(0);
 }
 
+.comptia-program-page .program-background-particle {
+  background: radial-gradient(
+    circle,
+    rgb(200 16 46 / 95%) 0 var(--particle-size),
+    rgb(200 16 46 / 16%) calc(var(--particle-size) + 1px),
+    transparent 13px
+  );
+  filter: drop-shadow(0 0 5px rgb(200 16 46 / 42%));
+}
+
+.comptia-program-page .program-stat-item::before {
+  background: linear-gradient(145deg, #ed536a, #c8102e 65%, #9f0b25);
+}
+
+.comptia-program-page.program-faceted-page {
+  background-image:
+    linear-gradient(132deg, transparent 0 13%, rgb(200 16 46 / 2.2%) 13.1% 22%, transparent 22.1% 100%),
+    linear-gradient(48deg, transparent 0 57%, rgb(200 16 46 / 3%) 57.1% 70%, transparent 70.1% 100%),
+    linear-gradient(135deg, transparent 0 34%, rgb(200 16 46 / 1.8%) 34.1% 45%, transparent 45.1% 100%),
+    linear-gradient(315deg, transparent 0 76%, rgb(255 255 255 / 85%) 76.1% 86%, transparent 86.1% 100%),
+    radial-gradient(ellipse at 50% 45%, rgb(200 16 46 / 3%) , transparent 70%);
+}
+
+.comptia-logo-circle {
+  border: 3px solid #c8102e;
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 85%),
+    0 0 16px rgb(200 16 46 / 22%),
+    inset 0 0 12px rgb(200 16 46 / 9%);
+  transition:
+    scale 260ms ease-out,
+    box-shadow 260ms ease-out;
+}
+
+.comptia-logo-circle::before {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  transform: translateY(-8%);
+  border-radius: inherit;
+  background:
+    linear-gradient(
+      115deg,
+      transparent 15%,
+      rgb(200 16 46 / 12%) 35%,
+      rgb(255 255 255 / 55%) 50%,
+      rgb(200 16 46 / 10%) 65%,
+      transparent 85%
+    );
+  background-size: 220% 220%;
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 260ms ease-out,
+    transform 500ms ease-out,
+    background-position 700ms ease-out;
+}
+
+.comptia-logo-circle:hover,
+.comptia-logo-circle:has(+ img:hover) {
+  scale: 1.05;
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 85%),
+    0 0 28px rgb(200 16 46 / 36%),
+    inset 0 0 16px rgb(200 16 46 / 12%);
+}
+
+.comptia-logo-circle:hover::before,
+.comptia-logo-circle:has(+ img:hover)::before {
+  transform: translateY(0);
+  background-position: 100% 100%;
+  opacity: 0.9;
+}
+
+.comptia-logo-circle::after {
+  position: absolute;
+  inset: -3px;
+  border-radius: inherit;
+  padding: 3px;
+  background: conic-gradient(
+    from 0deg,
+    #9f0b25 0deg,
+    #ed536a 45deg,
+    #fff0f2 68deg,
+    #c8102e 92deg,
+    #9f0b25 160deg,
+    #dc4058 235deg,
+    #fff7f8 258deg,
+    #c8102e 282deg,
+    #9f0b25 360deg
+  );
+  content: "";
+  pointer-events: none;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  animation: comptia-logo-ring-shine 6s linear infinite;
+}
+
+@keyframes comptia-logo-ring-shine {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.score-rotation-card {
+  animation: score-card-float 4.2s ease-in-out infinite;
+}
+
+@keyframes score-card-float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+
+  50% {
+    translate: 0 -8px;
+  }
+}
+
+[data-theme="dark"] .comptia-program-page {
+  background-color: #0b1024 !important;
+  color: #e0e5f3;
+}
+
 [data-theme="dark"].ccna-page-enter {
   background-color: #0b1024 !important;
   color: #e0e5f3;
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .score-rotation-value,
+  .score-rotation-label,
+  .score-rotation-stars {
+    animation: none;
+  }
+
   .course-module-fold,
   .course-module-fold-inner {
     transition-duration: 1ms;
+  }
+
+  .score-rotation-card {
+    animation: none;
+  }
+
+  .comptia-logo-circle::after {
+    animation: none;
+  }
+
+  .comptia-logo-circle,
+  .comptia-logo-circle::before {
+    transition-duration: 1ms;
+  }
+
+  .comptia-logo-circle:hover,
+  .comptia-logo-circle:has(+ img:hover) {
+    scale: 1;
   }
 }
 
@@ -565,6 +734,37 @@ h6 {
   background-color: #ffffff;
   box-shadow: 0 1px 2px rgb(15 23 42 / 10%);
   content: "";
+}
+
+.comptia-gradebook .ccna-gradebook-banner::before {
+  background-color: #c8102e;
+}
+
+.comptia-gradebook .gradebook-stat-card::before {
+  background: linear-gradient(145deg, #c8102e, #a80e27 65%, #76091c);
+}
+
+.comptia-gradebook .gradebook-stat-card:hover {
+  border-color: #a80e27;
+  box-shadow: 0 12px 24px rgb(200 16 46 / 16%);
+}
+
+.comptia-gradebook .gradebook-section-toggle {
+  background-color: #c8102e;
+}
+
+.comptia-gradebook .gradebook-section-toggle:hover {
+  background-color: #a80e27;
+}
+
+.comptia-gradebook .gradebook-format-badge {
+  background-color: #fff1f3;
+  color: #a80e27;
+}
+
+.comptia-gradebook .gradebook-filter:focus-visible,
+.comptia-gradebook .gradebook-sort:focus-visible {
+  outline-color: #c8102e;
 }
 
 [data-theme="dark"] .bg-white {
@@ -814,14 +1014,14 @@ h6 {
     background-color: var(--ccna-match-row-feedback-start);
   }
 
-  @keyframes ccna-logo-ring-shine {
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
   to {
     background-color: var(--ccna-match-row-feedback-color);
+  }
+}
+
+@keyframes ccna-logo-ring-shine {
+  to {
+    transform: rotate(360deg);
   }
 }
 
@@ -1372,3 +1572,156 @@ h6 {
 [data-theme="dark"] .ccna-term-screen,
 [data-theme="dark"].ccna-term-screen { background: #0b1220; }
 [data-theme="dark"] .ccna-term-hint { color: rgba(255, 255, 255, 0.55); }
+.comptia-exam-page {
+  background-color: #fff9fa !important;
+}
+
+.comptia-exam-page [class~="bg-[#005b6b]"],
+.comptia-exam-dialog [class~="bg-[#005b6b]"] {
+  background-color: #c8102e !important;
+}
+
+.comptia-exam-page [class~="text-[#005b6b]"],
+.comptia-exam-dialog [class~="text-[#005b6b]"] {
+  color: #c8102e !important;
+}
+
+.comptia-exam-page [class~="border-[#005b6b]"],
+.comptia-exam-page [class~="hover:border-[#005b6b]"]:hover,
+.comptia-exam-page [class~="focus:border-[#005b6b]"]:focus,
+.comptia-exam-dialog [class~="border-[#005b6b]"] {
+  border-color: #c8102e !important;
+}
+
+.comptia-exam-page [class~="hover:bg-[#004653]"]:hover,
+.comptia-exam-dialog [class~="hover:bg-[#004653]"]:hover {
+  background-color: #a80e27 !important;
+}
+
+.comptia-exam-page [class~="hover:bg-[#e8f3f4]"]:hover,
+.comptia-exam-page [class~="bg-[#e8f3f4]"],
+.comptia-exam-page [class~="bg-[#e1f5ef]"] {
+  background-color: #fff1f3 !important;
+}
+
+.comptia-exam-page [class~="text-[#075b4a]"] {
+  color: #a80e27 !important;
+}
+
+.comptia-exam-page [class~="bg-[#159b73]"] {
+  background-color: #c8102e !important;
+}
+
+.comptia-exam-page [class~="border-[#c9dfe2]"],
+.comptia-exam-page [class~="border-[#d6e5e7]"],
+.comptia-exam-dialog [class~="border-[#c9dfe2]"],
+.comptia-exam-dialog [class~="border-[#d6e5e7]"] {
+  border-color: #f1cbd2 !important;
+}
+
+.comptia-exam-page [class~="hover:bg-[#f0f7f7]"]:hover,
+.comptia-exam-page [class~="hover:bg-[#f2f8f8]"]:hover {
+  background-color: #fff5f6 !important;
+}
+
+.comptia-exam-page [class~="bg-[#f6f4ff]"] {
+  background-color: #fff1f3 !important;
+}
+
+.comptia-exam-page [class~="bg-[#eaf3f4]"] {
+  background-color: #fff1f3 !important;
+}
+
+.comptia-exam-page [class~="focus:ring-[#cfe7ea]"]:focus {
+  --tw-ring-color: #f1cbd2 !important;
+}
+
+.comptia-exam-page .ccna-dark-hover:not(:disabled):hover,
+.comptia-exam-dialog .ccna-modal-stay:hover {
+  background-color: #a80e27 !important;
+  border-color: #a80e27 !important;
+  color: #ffffff !important;
+}
+
+.comptia-exam-page .ccna-answer-choice[aria-pressed="true"] {
+  background-color: #fff1f3 !important;
+  border-color: #c8102e !important;
+}
+
+.comptia-exam-page .ccna-answer-choice[aria-pressed="true"] > span:first-child {
+  background-color: #c8102e !important;
+  color: #ffffff !important;
+}
+
+.comptia-exam-page [class~="bg-[#5746bd]"] {
+  background-color: #c8102e !important;
+}
+
+.comptia-exam-page [class~="border-[#5746bd]"] {
+  border-color: #c8102e !important;
+}
+
+.comptia-exam-page [class~="focus-visible:outline-[#5746bd]"]:focus-visible {
+  outline-color: #c8102e !important;
+}
+
+.comptia-exam-page .group:hover [class~="group-hover:border-[#5746bd]"] {
+  border-color: #c8102e !important;
+}
+
+.comptia-exam-page svg line[stroke="#5746bd"] {
+  stroke: #c8102e !important;
+}
+
+[data-theme="dark"].comptia-exam-page {
+  background-color: #0b1024 !important;
+  color: #e0e5f3;
+}
+
+[data-theme="dark"].comptia-exam-page [class~="text-[#005b6b]"],
+[data-theme="dark"].comptia-exam-page [class~="text-[#075b4a]"] {
+  color: #ff8395 !important;
+}
+
+[data-theme="dark"].comptia-exam-page [class~="bg-[#e8f3f4]"],
+[data-theme="dark"].comptia-exam-page [class~="bg-[#e1f5ef]"],
+[data-theme="dark"].comptia-exam-page [class~="bg-[#eaf3f4]"],
+[data-theme="dark"].comptia-exam-page [class~="bg-[#f6f4ff]"],
+[data-theme="dark"].comptia-exam-page .ccna-answer-choice[aria-pressed="true"] {
+  background-color: #3b1c27 !important;
+}
+
+[data-theme="dark"].comptia-exam-page [class~="bg-[#005b6b]"],
+[data-theme="dark"].comptia-exam-page [class~="bg-[#159b73]"],
+[data-theme="dark"].comptia-exam-page [class~="bg-[#5746bd]"] {
+  background-color: #c8102e !important;
+}
+
+[data-theme="dark"].comptia-exam-page [class~="border-[#005b6b]"],
+[data-theme="dark"].comptia-exam-page [class~="border-[#5746bd]"],
+[data-theme="dark"].comptia-exam-page .ccna-answer-choice[aria-pressed="true"] {
+  border-color: #ff8395 !important;
+}
+
+[data-theme="dark"].comptia-exam-page pre[class~="bg-[#f1f5f9]"],
+[data-theme="dark"].comptia-exam-page code[class~="bg-[#f1f5f9]"] {
+  background-color: #10172f !important;
+  border-color: #303a60 !important;
+  color: #e0e5f3 !important;
+}
+
+[data-theme="dark"].comptia-exam-page .ccna-dark-hover:not(:disabled):hover {
+  background-color: #a80e27 !important;
+  border-color: #a80e27 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"].comptia-exam-page .ccna-answer-choice[aria-pressed="true"] > span:first-child {
+  background-color: #c8102e !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"].comptia-exam-page .ccna-answer-choice[aria-pressed="false"]:not(:disabled):hover > span:first-child {
+  background-color: #c8102e !important;
+  color: #ffffff !important;
+}

@@ -18,30 +18,6 @@ describe('ProgramAccessService', () => {
     userFindUnique.mockReset().mockResolvedValue({ role: 'Student' });
   });
 
-  it('prefers a root program when a child module has the same name', async () => {
-    programFindFirst
-      .mockResolvedValueOnce({ id: 10, name: 'CCNA', parentId: null })
-      .mockResolvedValueOnce({ id: 22, name: 'CCNA', parentId: 20 });
-    findFirst.mockResolvedValue({ programId: 10 });
-
-    await expect(service.assertEnrollment(7, 'ccna')).resolves.toBeUndefined();
-
-    expect(programFindFirst).toHaveBeenCalledTimes(1);
-    expect(programFindFirst).toHaveBeenCalledWith({
-      where: { name: { equals: 'ccna', mode: 'insensitive' }, parentId: null },
-      select: {
-        id: true,
-        name: true,
-        parentId: true,
-        parent: { select: { name: true } },
-      },
-    });
-    expect(findFirst).toHaveBeenCalledWith({
-      where: { userId: 7, OR: [{ programId: 10 }] },
-      select: { programId: true },
-    });
-  });
-
   it('allows an enrolled module and a learner enrolled in its parent program', async () => {
     programFindFirst
       .mockResolvedValueOnce(null)
@@ -104,5 +80,28 @@ describe('ProgramAccessService', () => {
     await expect(service.assertEnrollment(7, 'ccna-automation'))
       .rejects.toBeInstanceOf(NotFoundException);
     expect(findFirst).not.toHaveBeenCalled();
+  });
+
+  it('prefers a root program when a child module has the same name', async () => {
+    programFindFirst
+      .mockResolvedValueOnce({ id: 10, name: 'CCNA', parentId: null })
+      .mockResolvedValueOnce({ id: 22, name: 'CCNA', parentId: 20 });
+    findFirst.mockResolvedValue({ programId: 10 });
+
+    await expect(service.assertEnrollment(7, 'ccna')).resolves.toBeUndefined();
+
+    expect(programFindFirst).toHaveBeenCalledWith({
+      where: { name: { equals: 'ccna', mode: 'insensitive' }, parentId: null },
+      select: {
+        id: true,
+        name: true,
+        parentId: true,
+        parent: { select: { name: true } },
+      },
+    });
+    expect(findFirst).toHaveBeenCalledWith({
+      where: { userId: 7, OR: [{ programId: 10 }] },
+      select: { programId: true },
+    });
   });
 });

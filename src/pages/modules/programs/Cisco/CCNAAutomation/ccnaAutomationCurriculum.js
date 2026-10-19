@@ -1,6 +1,9 @@
 import { CCNA_AUTOMATION_MODULES } from "../../../../training/cisco/ccna/automationModules.js";
 import { CCNA_CURRICULUM } from "../CCNA/ccnaCurriculum.js";
-import { CCNA_AUTOMATION_STUDY_CONTENT } from "./ccnaAutomationStudyContent.js";
+import {
+	CCNA_AUTOMATION_OBJECTIVE_CONTENT,
+	CCNA_AUTOMATION_STUDY_CONTENT,
+} from "./ccnaAutomationStudyContent.js";
 
 const ccnaAutomationModule = CCNA_CURRICULUM.find((module) => module.number === "6.0");
 if (!ccnaAutomationModule) {
@@ -67,6 +70,7 @@ function estimateReadDuration(lessonText, studyContent) {
 			section.title,
 			section.body,
 			...section.points,
+			section.code,
 			section.example,
 		]),
 	].join(" ");
@@ -77,21 +81,25 @@ function estimateReadDuration(lessonText, studyContent) {
 function createObjectiveLessons(module, studyGuide, studyPoints, studyContent) {
 	return module.items.map((item, index) => {
 		const objective = parseObjective(typeof item === "string" ? item : item.subTitle);
+		const lessonNumber = objective.number || `${module.number.replace(".0", "")}.${index + 1}`;
 		const details = typeof item === "string"
 			? []
 			: item.items.map((subItem) => parseObjective(subItem).title);
 		return {
-			number: objective.number || `${module.number.replace(".0", "")}.${index + 1}`,
+			number: lessonNumber,
 			title: simplifyObjectiveTitle(objective.title),
 			summary: typeof item === "string"
 				? `${objective.title}. This objective is part of ${parseObjective(module.title).title} and should be understood in the context of the module study guide.`
 				: `${objective.title}. This objective includes ${details.join("; ")}.`,
 			details,
-			duration: estimateReadDuration(`${objective.title} ${details.join(" ")}`, studyContent),
+			duration: estimateReadDuration(
+				`${objective.title} ${details.join(" ")}`,
+				CCNA_AUTOMATION_OBJECTIVE_CONTENT[lessonNumber] ?? studyContent,
+			),
 			slug: slugifyAutomationLesson(objective.title),
 			studyGuide,
 			studyPoints,
-			studyContent,
+			studyContent: CCNA_AUTOMATION_OBJECTIVE_CONTENT[lessonNumber] ?? studyContent,
 		};
 	});
 }

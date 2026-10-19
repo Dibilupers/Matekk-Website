@@ -5,9 +5,10 @@ import {
 } from "./ccnaModuleQuizProgress";
 
 const PROGRAM_QUIZ_PROGRESS_KEY = "matekk-program-module-quiz-progress";
+const CCNA_CYBERSECURITY_MODULE_2_QUIZ_VERSION = CCNA_MODULE_QUIZ_VERSION + 1;
 
 function getProgressKey(programKey, userId) {
-	if (!["ccna-automation", "ccna-cybersecurity"].includes(programKey)) {
+	if (!["ccna-automation", "ccna-cybersecurity", "comptia-network-plus", "comptia-security-plus"].includes(programKey)) {
 		throw new TypeError(`Unsupported program quiz key: ${programKey}`);
 	}
 	if ((typeof userId !== "string" && typeof userId !== "number") || String(userId).trim() === "") {
@@ -20,8 +21,14 @@ function createEmptyProgress() {
 	return { activeModule: null, modules: {} };
 }
 
-export function isCurrentProgramModuleQuizAttempt(attempt) {
-	return attempt?.quizVersion === CCNA_MODULE_QUIZ_VERSION;
+export function getProgramModuleQuizVersion(programKey, moduleNumber) {
+	return programKey === "ccna-cybersecurity" && moduleNumber === "2.0"
+		? CCNA_CYBERSECURITY_MODULE_2_QUIZ_VERSION
+		: CCNA_MODULE_QUIZ_VERSION;
+}
+
+export function isCurrentProgramModuleQuizAttempt(attempt, programKey, moduleNumber) {
+	return attempt?.quizVersion === getProgramModuleQuizVersion(programKey, moduleNumber);
 }
 
 export function readProgramModuleQuizProgress(programKey, userId) {
@@ -49,8 +56,9 @@ export function saveProgramModuleQuizProgress(programKey, userId, progress) {
 export function beginProgramModuleQuiz(programKey, userId, moduleNumber, durationSeconds) {
 	const progress = readProgramModuleQuizProgress(programKey, userId);
 	const previousAttempt = progress.modules[moduleNumber];
+	const quizVersion = getProgramModuleQuizVersion(programKey, moduleNumber);
 	if (
-		isCurrentProgramModuleQuizAttempt(previousAttempt) &&
+		isCurrentProgramModuleQuizAttempt(previousAttempt, programKey, moduleNumber) &&
 		previousAttempt.status === "in-progress" &&
 		(!Number.isFinite(previousAttempt.deadline) || previousAttempt.deadline > Date.now())
 	) {
@@ -65,12 +73,10 @@ export function beginProgramModuleQuiz(programKey, userId, moduleNumber, duratio
 		lockedQuestions: {},
 		checked: false,
 		deadline: Date.now() + durationSeconds * 1000,
-		quizVersion: CCNA_MODULE_QUIZ_VERSION,
+		quizVersion,
 		attempts: (previousAttempt?.attempts ?? 0) + 1,
-		bestScore: isCurrentProgramModuleQuizAttempt(previousAttempt) ? previousAttempt.bestScore ?? null : null,
-		attemptHistory: isCurrentProgramModuleQuizAttempt(previousAttempt)
-			? getCcnaModuleQuizAttemptHistory(previousAttempt, previousAttempt.maxScore)
-			: [],
+		bestScore: isCurrentProgramModuleQuizAttempt(previousAttempt, programKey, moduleNumber) ? previousAttempt.bestScore ?? null : null,
+		attemptHistory: getCcnaModuleQuizAttemptHistory(previousAttempt, previousAttempt?.maxScore),
 	};
 	saveProgramModuleQuizProgress(programKey, userId, {
 		...progress,
@@ -84,7 +90,7 @@ export function expireProgramModuleQuizAttempt(programKey, userId, moduleNumber,
 	const progress = readProgramModuleQuizProgress(programKey, userId);
 	const attempt = progress.modules[moduleNumber];
 	if (
-		!isCurrentProgramModuleQuizAttempt(attempt) ||
+		!isCurrentProgramModuleQuizAttempt(attempt, programKey, moduleNumber) ||
 		attempt.status !== "in-progress" ||
 		!Number.isFinite(attempt.deadline) ||
 		attempt.deadline > Date.now()

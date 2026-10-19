@@ -130,14 +130,14 @@ export default function CCNACybersecurityDashboard() {
 	const quizScore = getProgramModuleQuizAverage(PROGRAM_KEY, userId);
 	const attemptedQuizzes = CCNA_CYBERSECURITY_CURRICULUM.filter((module) => {
 		const attempt = quizProgress.modules[module.number];
-		return isCurrentProgramModuleQuizAttempt(attempt) && (
+		return isCurrentProgramModuleQuizAttempt(attempt, PROGRAM_KEY, module.number) && (
 			["completed", "expired"].includes(attempt.status) ||
 			Object.keys(attempt.answers ?? {}).length > 0
 		);
 	}).length;
 	const completedQuizzes = CCNA_CYBERSECURITY_CURRICULUM.filter((module) => {
 		const attempt = quizProgress.modules[module.number];
-		return isCurrentProgramModuleQuizAttempt(attempt) &&
+		return isCurrentProgramModuleQuizAttempt(attempt, PROGRAM_KEY, module.number) &&
 			["completed", "expired"].includes(attempt.status);
 	}).length;
 	const examFormats = getProgramExamFormats(PROGRAM_KEY) ?? {};
@@ -178,6 +178,7 @@ export default function CCNACybersecurityDashboard() {
 			modulesLeft={modulesLeft}
 			modulesSummary={`${gradebookQuizStats.completedQuizzes} of ${CCNA_CYBERSECURITY_CURRICULUM.length} quizzes completed`}
 			quizScore={gradebookQuizStats.average}
+			examScore={gradebookQuizStats.examAverage}
 			gradebookStatsError={gradebookStatsError}
 			retryGradebookStats={retryGradebookStats}
 			gradebookPath={`${PROGRAM_PATH}/gradebook`}
@@ -209,7 +210,7 @@ export default function CCNACybersecurityDashboard() {
 							index={index}
 							isOpen={openModuleIndex === index}
 							progress={progress}
-							quizAttempt={isCurrentProgramModuleQuizAttempt(quizProgress.modules[module.number]) ? quizProgress.modules[module.number] : null}
+							quizAttempt={isCurrentProgramModuleQuizAttempt(quizProgress.modules[module.number], PROGRAM_KEY, module.number) ? quizProgress.modules[module.number] : null}
 							onToggle={() => toggleModule(index)}
 						/>
 					))}

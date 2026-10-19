@@ -31,4 +31,26 @@ describe('production environment validation', () => {
 
     expect(error?.details[0]?.path).toEqual(['CORS_ORIGINS']);
   });
+
+  it('accepts an optional shared offline module PIN containing four to six digits', () => {
+    const { error } = envValidationSchema.validate({
+      NODE_ENV: 'production',
+      JWT_SECRET: 'a'.repeat(32),
+      CORS_ORIGINS: 'https://academy.example.com',
+      OFFLINE_MODULE_PIN: '246810',
+    });
+
+    expect(error).toBeUndefined();
+  });
+
+  it('rejects an invalid shared offline module PIN', () => {
+    const { error } = envValidationSchema.validate({
+      NODE_ENV: 'production',
+      JWT_SECRET: 'a'.repeat(32),
+      CORS_ORIGINS: 'https://academy.example.com',
+      OFFLINE_MODULE_PIN: 'pin123',
+    });
+
+    expect(error?.details[0]?.path).toEqual(['OFFLINE_MODULE_PIN']);
+  });
 });

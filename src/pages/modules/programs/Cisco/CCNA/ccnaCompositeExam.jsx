@@ -568,12 +568,8 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 				)}
 				<header className="mb-7 flex flex-wrap items-center justify-between gap-4 border-b border-[#d6e5e7] pb-5">
 					<div className="flex min-w-0 items-center gap-4">
-						<Link to="/modules/programs/ccna" aria-label="Back to CCNA course" className="group shrink-0 rounded-full bg-white/80 p-2 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 motion-reduce:transition-none">
-							<div className="relative flex h-20 w-20 items-center justify-center rounded-full border border-[#cfe4ea] bg-white shadow-[0_10px_20px_rgba(15,23,42,0.12)]">
-								<div className="flex h-14 w-14 items-center justify-center rounded-full bg-white">
-									<img src={TrainingLogo} alt="MATEKK Cybercore Academy" className="h-10 w-auto object-contain" />
-								</div>
-							</div>
+						<Link to="/modules/programs/ccna" aria-label="Back to CCNA course" className="ccna-training-logo shrink-0 rounded-lg bg-white px-3 py-2 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 motion-reduce:transition-none">
+							<img src={TrainingLogo} alt="MATEKK Cybercore Academy" className="h-auto w-32 sm:w-36" />
 						</Link>
 						<div className="hidden min-w-0 border-l border-[#cbd5e1] pl-4 sm:block">
 							<p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#70809a]">CCNA composite exam</p>
@@ -605,12 +601,9 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 								<div
 									role="timer"
 									aria-label={`${formatTime(secondsRemaining)} remaining`}
-									className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm tabular-nums ${secondsRemaining <= 300
-										? "bg-[#fff5ee] text-[#a44b13]"
-										: "bg-[#f7f9fc] text-[#526584]"
-										}`}
+									className={`shrink-0 rounded-full border px-3 py-2 text-xs font-semibold tabular-nums sm:px-4 sm:text-sm ${secondsRemaining <= 300 ? "border-[#edbd9b] bg-[#fff5ee] text-[#a44b13]" : "border-[#c9dfe2] bg-white text-[#005b6b]"}`}
 								>
-									<Clock3 size={17} /> {formatTime(secondsRemaining)}
+									{formatTime(secondsRemaining)}
 								</div>
 							</div>
 

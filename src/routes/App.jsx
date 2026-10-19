@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 import NavBar from "../components/navbar/navbar";
 import Footer from "../components/footer/footer";
 import ScrollToTop from "../components/scroll/ScrollToTop";
+import OfflineModuleAccess from "../components/OfflineModuleAccess";
 import useHeadingTypeIn from "../utils/useHeadingTypeIn";
 
 /* Pages */
@@ -127,6 +128,12 @@ import ProgramCompositeExam from "../pages/modules/programs/Cisco/CCNA/programCo
 import CCNAModuleQuiz from "../pages/modules/programs/Cisco/CCNA/ccnaModuleQuiz";
 import CCNAGradebook from "../pages/modules/programs/Cisco/CCNA/ccnaGradebook";
 import AplusDashboard from "../pages/modules/programs/CompTIA/A+ (Core 1 & 2)/aplusDashboard";
+import NetworkPlusDashboard from "../pages/modules/programs/CompTIA/Network+/networkPlusDashboard";
+import SecurityPlusDashboard from "../pages/modules/programs/CompTIA/Security+/securityPlusDashboard";
+import NetworkPlusExam from "../pages/modules/programs/CompTIA/Network+/networkPlusExam";
+import SecurityPlusExam from "../pages/modules/programs/CompTIA/Security+/securityPlusExam";
+import NETWORK_PLUS_PROGRAM from "../pages/modules/programs/CompTIA/Network+/networkPlusProgram";
+import SECURITY_PLUS_PROGRAM from "../pages/modules/programs/CompTIA/Security+/securityPlusProgram";
 import { useAuth } from "../context/auth-context";
 import {
   readCcnaModuleQuizProgress,
@@ -141,12 +148,15 @@ if ("scrollRestoration" in history) {
 
 export default function App() {
   const location = useLocation();
+  const { isOnline } = useAuth();
   const isFullScreenAssessment = location.pathname.startsWith("/modules/programs/ccna/quiz/")
     || location.pathname.startsWith("/modules/programs/ccna/exam/")
     || location.pathname.startsWith("/modules/programs/ccna-automation/quiz/")
     || location.pathname.startsWith("/modules/programs/ccna-automation/exam/")
     || location.pathname.startsWith("/modules/programs/ccna-cybersecurity/quiz/")
-    || location.pathname.startsWith("/modules/programs/ccna-cybersecurity/exam/");
+    || location.pathname.startsWith("/modules/programs/ccna-cybersecurity/exam/")
+    || location.pathname.startsWith("/modules/programs/comptia-network-plus/exam/")
+    || location.pathname.startsWith("/modules/programs/comptia-security-plus/exam/");
   const isAdminPage = location.pathname === "/admin";
   const isAccountPendingPage = location.pathname === "/account-pending";
   useHeadingTypeIn(location.pathname);
@@ -154,7 +164,7 @@ export default function App() {
   return (
     <>
       <CCNAExamTimeNotification />
-      {!isFullScreenAssessment && !isAccountPendingPage && <NavBar />}
+      {isOnline && !isFullScreenAssessment && !isAccountPendingPage && <NavBar />}
       <ScrollToTop />
 
       {/* Keyed by path so every page change replays the fade-in (navbar stays outside, so it never flickers) */}
@@ -413,6 +423,64 @@ export default function App() {
           }
         />
         <Route
+          path="/modules/programs/comptia-network-plus"
+          element={
+            <ProtectedRoute>
+              <NetworkPlusDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/comptia-security-plus"
+          element={
+            <ProtectedRoute>
+              <SecurityPlusDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/comptia-network-plus/exam/:examKey"
+          element={
+            <ProtectedRoute>
+              <NetworkPlusExam />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/comptia-security-plus/exam/:examKey"
+          element={
+            <ProtectedRoute>
+              <SecurityPlusExam />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/comptia-network-plus/gradebook"
+          element={
+            <ProtectedRoute>
+              <ProgramModuleGradebook
+                programKey="comptia-network-plus"
+                programName="CompTIA Network+"
+                modules={NETWORK_PLUS_PROGRAM.modules}
+                dashboardPath="/modules/programs/comptia-network-plus"
+              />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/comptia-security-plus/gradebook"
+          element={
+            <ProtectedRoute>
+              <ProgramModuleGradebook
+                programKey="comptia-security-plus"
+                programName="CompTIA Security+"
+                modules={SECURITY_PLUS_PROGRAM.modules}
+                dashboardPath="/modules/programs/comptia-security-plus"
+              />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/modules/programs/ccna/practice-lab"
           element={
             <ProtectedRoute>
@@ -602,7 +670,7 @@ export default function App() {
         <Route path="*" element={<NotFound />} />
       </Routes>
 
-      {!isFullScreenAssessment && !isAdminPage && !isAccountPendingPage && <Footer />}
+      {isOnline && !isFullScreenAssessment && !isAdminPage && !isAccountPendingPage && <Footer />}
       </div>
     </>
   );
@@ -782,14 +850,6 @@ function ProtectedRoute({ children }) {
   const isExamRoute = /(?:^|\/)exam(?:\/|$)/.test(pathname);
   const canAccessOfflineModule = isModuleRoute && !isExamRoute && !isOnline;
 
-  if (isLoading) {
-    return (
-      <main className="flex min-h-screen items-center justify-center bg-white text-sm text-slate-500">
-        Checking your session...
-      </main>
-    );
-  }
-
   if (!isOnline && isModuleRoute && isExamRoute) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6 text-center text-white">
@@ -801,12 +861,27 @@ function ProtectedRoute({ children }) {
     );
   }
 
+  if (canAccessOfflineModule) {
+    return <OfflineModuleAccess isOnline={false}>{children}</OfflineModuleAccess>;
+  }
+
+  if (isLoading) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-white text-sm text-slate-500">
+        Checking your session...
+      </main>
+    );
+  }
+
   if (!isAuthenticated && !canAccessOfflineModule) {
     return <Navigate to="/login" replace />;
   }
+  if (isAuthenticated && profile.active_status === false) {
+    return <Navigate to="/account-pending" replace />;
+  }
   if (!isAuthenticated) return children;
-  return profile.active_status === false
-    ? <Navigate to="/account-pending" replace />
+  return isModuleRoute && !isExamRoute
+    ? <OfflineModuleAccess isOnline>{children}</OfflineModuleAccess>
     : children;
 }
 

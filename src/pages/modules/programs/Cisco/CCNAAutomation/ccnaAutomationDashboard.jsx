@@ -198,6 +198,7 @@ export default function CCNAAutomationDashboard() {
 			modulesLeft={modulesLeft}
 			modulesSummary={`${gradebookQuizStats.completedQuizzes} of ${CCNA_AUTOMATION_CURRICULUM.length} quizzes completed`}
 			quizScore={gradebookQuizStats.average}
+			examScore={gradebookQuizStats.examAverage}
 			gradebookStatsError={gradebookStatsError}
 			retryGradebookStats={retryGradebookStats}
 			gradebookPath={`${PROGRAM_PATH}/gradebook`}

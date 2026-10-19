@@ -1,6 +1,11 @@
 import { CCNA_CYBERSECURITY_MODULES } from "../../../../training/cisco/ccna/cybersecurityModules.js";
 import { CCNA_CURRICULUM } from "../CCNA/ccnaCurriculum.js";
 import { CCNA_CYBERSECURITY_STUDY_CONTENT } from "./ccnaCybersecurityStudyContent.js";
+import { CCNA_CYBERSECURITY_MODULE_2_LESSONS } from "./ccnaCybersecurityModule2Content.js";
+import { CCNA_CYBERSECURITY_MODULE_3_LESSONS } from "./ccnaCybersecurityModule3Content.js";
+import { CCNA_CYBERSECURITY_MODULE_4_LESSONS } from "./ccnaCybersecurityModule4Content.js";
+import { CCNA_CYBERSECURITY_MODULE_5_LESSONS } from "./ccnaCybersecurityModule5Content.js";
+import { CCNA_CYBERSECURITY_MODULE_6_LESSONS } from "./ccnaCybersecurityModule6Content.js";
 
 const ccnaSecurityModule = CCNA_CURRICULUM.find((module) => module.number === "5.0");
 if (!ccnaSecurityModule) {
@@ -123,7 +128,8 @@ export const CCNA_CYBERSECURITY_CURRICULUM = [
 		});
 		const studyGuide = CYBERSECURITY_MODULE_GUIDES[index];
 		const studyPoints = CYBERSECURITY_MODULE_STUDY_POINTS[index];
-		const studyContent = CCNA_CYBERSECURITY_STUDY_CONTENT[module.number];
+		const studyContentKey = ["1.0", "2.0", "3.0", "4.0", "6.0"][index] ?? module.number;
+		const studyContent = CCNA_CYBERSECURITY_STUDY_CONTENT[studyContentKey];
 		if (!studyGuide || !studyPoints?.length || !studyContent) {
 			throw new Error(`Missing study content for CCNA Cybersecurity module ${module.number}.`);
 		}
@@ -134,7 +140,17 @@ export const CCNA_CYBERSECURITY_CURRICULUM = [
 			studyGuide,
 			studyPoints,
 			studyContent,
-			lessons: createObjectiveLessons(module, studyGuide, studyPoints, studyContent),
+			lessons: index === 0
+				? CCNA_CYBERSECURITY_MODULE_2_LESSONS
+				: index === 1
+					? CCNA_CYBERSECURITY_MODULE_3_LESSONS
+					: index === 2
+						? CCNA_CYBERSECURITY_MODULE_4_LESSONS
+						: index === 3
+							? CCNA_CYBERSECURITY_MODULE_5_LESSONS
+							: index === 4
+								? CCNA_CYBERSECURITY_MODULE_6_LESSONS
+				: createObjectiveLessons(module, studyGuide, studyPoints, studyContent),
 		};
 	}),
 ];
