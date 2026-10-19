@@ -38,29 +38,30 @@ const LEGACY_QUESTION_EXHIBITS = new Map([
 ]);
 
 const OFFLINE_LEGACY_QUESTIONS = CCNA_LEGACY_QUESTIONS
-  .map((question) => ({
-    ...question,
-    ...(!question.exhibit ? splitPromptExhibit(question.prompt) : {}),
-    ...(NUMBERED_QUESTION_EXHIBITS.has(question.legacyIndex) ||
-    LEGACY_QUESTION_EXHIBITS.has(question.legacyIndex)
-      ? {
-          exhibitImage: NUMBERED_QUESTION_EXHIBITS.get(question.legacyIndex)
-            || LEGACY_QUESTION_EXHIBITS.get(question.legacyIndex),
-        }
-      : {}),
-    ...(question.type === "match" &&
-    question.items?.length === question.choices?.length &&
-    question.answer?.length === question.items.length &&
-    new Set(question.answer).size === question.answer.length
-      ? { type: /\bdrag\b/i.test(question.prompt) ? "drag_drop" : "click_boxes" }
-      : {}),
-    id: question.legacyIndex,
-    bankId: question.legacyIndex,
-    source: "legacy-ccna-200-301",
-    moduleNumber: null,
-    moduleTitle: "Legacy CCNA 200-301",
-    explanation: question.explanation?.trim() || findCcnaQuestionExplanation(question.prompt),
-  }))
+  .map((question) => {
+    const numberedExhibit = /\bexhibit\b/i.test(question.prompt)
+      ? NUMBERED_QUESTION_EXHIBITS.get(question.legacyIndex)
+      : undefined;
+    const exhibitImage = numberedExhibit || LEGACY_QUESTION_EXHIBITS.get(question.legacyIndex);
+
+    return {
+      ...question,
+      ...(!question.exhibit ? splitPromptExhibit(question.prompt) : {}),
+      ...(exhibitImage ? { exhibitImage } : {}),
+      ...(question.type === "match" &&
+      question.items?.length === question.choices?.length &&
+      question.answer?.length === question.items.length &&
+      new Set(question.answer).size === question.answer.length
+        ? { type: /\bdrag\b/i.test(question.prompt) ? "drag_drop" : "click_boxes" }
+        : {}),
+      id: question.legacyIndex,
+      bankId: question.legacyIndex,
+      source: "legacy-ccna-200-301",
+      moduleNumber: null,
+      moduleTitle: "Legacy CCNA 200-301",
+      explanation: question.explanation?.trim() || findCcnaQuestionExplanation(question.prompt),
+    };
+  })
   .filter((question) =>
     isValidQuestion(question) &&
     (!/\bexhibit\b/i.test(question.prompt) || question.exhibit || question.exhibitImage),
