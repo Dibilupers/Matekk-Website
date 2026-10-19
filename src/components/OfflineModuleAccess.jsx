@@ -121,7 +121,7 @@ export default function OfflineModuleAccess({ children, isOnline }) {
 	}
 
 	return (
-		<main className="flex min-h-screen items-center justify-center bg-[#020617] px-5 py-12 text-white">
+		<main className="fixed inset-0 z-50 flex min-h-screen items-center justify-center overflow-y-auto bg-[#020617] px-5 py-12 text-white">
 			<section className="w-full max-w-md rounded-2xl border border-white/10 bg-white p-7 text-slate-900 shadow-2xl">
 				<p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-800">Offline learning</p>
 				<h1 className="mt-2 text-2xl font-bold">Unlock your modules</h1>
