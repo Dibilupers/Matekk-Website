@@ -56,6 +56,7 @@ const OFFLINE_LEGACY_QUESTIONS = CCNA_LEGACY_QUESTIONS
         : {}),
       id: question.legacyIndex,
       bankId: question.legacyIndex,
+      offlineLegacy: true,
       source: "legacy-ccna-200-301",
       moduleNumber: null,
       moduleTitle: "Legacy CCNA 200-301",
@@ -80,6 +81,11 @@ export function createOfflineLegacyExamQuestions(count) {
   const blockCount = Math.ceil(count / 50);
   const dragDropCount = Math.min(blockCount * 3, count - 1, questions.filter((question) => question.type === "drag_drop").length);
   const clickBoxesCount = Math.min(blockCount, count - dragDropCount, questions.filter((question) => question.type === "click_boxes").length);
+  const imageExhibitCount = Math.min(
+    blockCount,
+    count - dragDropCount - clickBoxesCount,
+    questions.filter((question) => question.exhibitImage).length,
+  );
   const shuffle = (items) => {
     const shuffled = [...items];
     for (let index = shuffled.length - 1; index > 0; index -= 1) {
@@ -92,9 +98,11 @@ export function createOfflineLegacyExamQuestions(count) {
     .slice(0, dragDropCount);
   const clickBoxesQuestions = shuffle(questions.filter((question) => question.type === "click_boxes"))
     .slice(0, clickBoxesCount);
-  const selectedIds = new Set([...dragDropQuestions, ...clickBoxesQuestions].map((question) => question.id));
+  const imageExhibitQuestions = shuffle(questions.filter((question) => question.exhibitImage))
+    .slice(0, imageExhibitCount);
+  const selectedIds = new Set([...dragDropQuestions, ...clickBoxesQuestions, ...imageExhibitQuestions].map((question) => question.id));
   const remainingQuestions = shuffle(questions.filter((question) => !selectedIds.has(question.id)))
     .slice(0, count - selectedIds.size);
 
-  return shuffle([...dragDropQuestions, ...clickBoxesQuestions, ...remainingQuestions]);
+  return shuffle([...dragDropQuestions, ...clickBoxesQuestions, ...imageExhibitQuestions, ...remainingQuestions]);
 }

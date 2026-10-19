@@ -207,7 +207,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 						? savedSession
 						: null;
 					const offlineQuestions = savedOfflineSession
-						? savedOfflineSession.questions
+						? savedOfflineSession.questions.map((question) => ({ ...question, offlineLegacy: true }))
 						: createOfflineLegacyExamQuestions(exam.questionCount);
 					const offlineDeadline = Number.isFinite(savedOfflineSession?.deadline)
 						? savedOfflineSession.deadline
@@ -765,6 +765,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 								{!question.hidePrompt && (
 									<QuestionPrompt
 										prompt={question.prompt}
+										offline={isOfflineExam && question.offlineLegacy === true}
 										hasSeparateExhibit={Boolean(question.exhibit || question.exhibitImage || question.exhibitDiagram)}
 									/>
 								)}
@@ -926,6 +927,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 												{!item.hidePrompt && (
 													<QuestionPrompt
 														prompt={item.prompt}
+														offline={isOfflineExam && item.offlineLegacy === true}
 														hasSeparateExhibit={Boolean(item.exhibit || item.exhibitImage || item.exhibitDiagram)}
 													/>
 												)}
