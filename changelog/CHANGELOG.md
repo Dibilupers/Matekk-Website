@@ -2,6 +2,18 @@
 
 Tracking begins 2026-10-17.
 
+## 2026-10-19 — `main` (pending push)
+
+Merged `emman` as `5839b45`, including:
+
+- `2ca9c8d` — Added the FortiOS learning dashboard, gradebook support, and FortiOS exam routes and formats.
+- `b5c274e` — Scoped the FortiOS question-bank request to the `Fortinet FortiOS` module.
+- `5839b45` — Merged the FortiOS program and exam updates into `main`.
+
+Also added the shared Program Overview, Learning Focus, course-outline navigation, and certification badge cards to CCNA, CCNA Automation, CCNA Cybersecurity, and FortiOS.
+
+Validation before push: targeted ESLint, frontend production build, and Git whitespace checks passed.
+
 ## 2026-10-17 — `main`
 
 Pushed merge commit `7a82e8e` (`Merge origin/main into main`), including merge commit `851d5d5` (`Merge jhonard into main`) and branch commits `31c0189` and `f012548`.
