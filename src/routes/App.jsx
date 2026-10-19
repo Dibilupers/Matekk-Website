@@ -130,6 +130,8 @@ import CCNAGradebook from "../pages/modules/programs/Cisco/CCNA/ccnaGradebook";
 import AplusDashboard from "../pages/modules/programs/CompTIA/A+ (Core 1 & 2)/aplusDashboard";
 import NetworkPlusDashboard from "../pages/modules/programs/CompTIA/Network+/networkPlusDashboard";
 import SecurityPlusDashboard from "../pages/modules/programs/CompTIA/Security+/securityPlusDashboard";
+import FortiOSDashboard, { FORTIOS_MODULES } from "../pages/modules/programs/Fortinet/FortiOS/fortiosDashboard";
+import FortiOSExam from "../pages/modules/programs/Fortinet/FortiOS/fortiosExam";
 import NetworkPlusExam from "../pages/modules/programs/CompTIA/Network+/networkPlusExam";
 import SecurityPlusExam from "../pages/modules/programs/CompTIA/Security+/securityPlusExam";
 import NETWORK_PLUS_PROGRAM from "../pages/modules/programs/CompTIA/Network+/networkPlusProgram";
@@ -156,7 +158,8 @@ export default function App() {
     || location.pathname.startsWith("/modules/programs/ccna-cybersecurity/quiz/")
     || location.pathname.startsWith("/modules/programs/ccna-cybersecurity/exam/")
     || location.pathname.startsWith("/modules/programs/comptia-network-plus/exam/")
-    || location.pathname.startsWith("/modules/programs/comptia-security-plus/exam/");
+    || location.pathname.startsWith("/modules/programs/comptia-security-plus/exam/")
+    || location.pathname.startsWith("/modules/programs/fortinet-fortios/exam/");
   const isAdminPage = location.pathname === "/admin";
   const isAccountPendingPage = location.pathname === "/account-pending";
   useHeadingTypeIn(location.pathname);
@@ -435,6 +438,35 @@ export default function App() {
           element={
             <ProtectedRoute>
               <SecurityPlusDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/fortinet-fortios"
+          element={
+            <ProtectedRoute>
+              <FortiOSDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/fortinet-fortios/gradebook"
+          element={
+            <ProtectedRoute>
+              <ProgramModuleGradebook
+                programKey="fortinet-fortios"
+                programName="Fortinet FortiOS"
+                modules={FORTIOS_MODULES}
+                dashboardPath="/modules/programs/fortinet-fortios"
+              />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/fortinet-fortios/exam/:examKey"
+          element={
+            <ProtectedRoute>
+              <FortiOSExam />
             </ProtectedRoute>
           }
         />
@@ -848,14 +880,15 @@ function ProtectedRoute({ children }) {
   const { pathname } = useLocation();
   const isModuleRoute = /^\/modules\/programs(?:\/|$)/.test(pathname);
   const isExamRoute = /(?:^|\/)exam(?:\/|$)/.test(pathname);
-  const canAccessOfflineModule = isModuleRoute && !isExamRoute && !isOnline;
+  const isOfflineCcnaExamRoute = /^\/modules\/programs\/ccna\/exam\/(?:short|medium|long|all)$/.test(pathname);
+  const canAccessOfflineModule = isModuleRoute && (!isExamRoute || isOfflineCcnaExamRoute) && !isOnline;
 
-  if (!isOnline && isModuleRoute && isExamRoute) {
+  if (!isOnline && isModuleRoute && isExamRoute && !isOfflineCcnaExamRoute) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6 text-center text-white">
         <section className="max-w-lg space-y-3">
           <h1 className="text-2xl font-semibold">Internet connection required</h1>
-          <p className="text-slate-300">Exams are not available offline. Reconnect to the internet to continue.</p>
+          <p className="text-slate-300">Only CCNA exams with built-in questions are available offline. Reconnect to take this exam.</p>
         </section>
       </main>
     );

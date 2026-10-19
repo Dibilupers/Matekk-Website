@@ -99,6 +99,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 	if (!exam) throw new Error(`No exam is configured for ${programKey ?? "CCNA"} format "${examKey}".`);
 	const programName = exam.programName ?? "CCNA";
 	const isCompTIAExam = theme === "comptia";
+	const isFortinetExam = theme === "fortinet";
 	const dashboardPath = `/modules/programs/${programKey ?? "ccna"}`;
 	const location = useLocation();
 	const navigate = useNavigate();
@@ -420,7 +421,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 	if (!question) return null;
 
 	return (
-		<main data-theme={isDark ? "dark" : "light"} className={`ccna-page-enter min-h-screen bg-[#f5f9f9] px-4 py-6 text-[#17233d] sm:px-8 sm:py-8 ${isCompTIAExam ? "comptia-exam-page" : ""}`}>
+		<main data-theme={isDark ? "dark" : "light"} className={`ccna-page-enter min-h-screen bg-[#f5f9f9] px-4 py-6 text-[#17233d] sm:px-8 sm:py-8 ${isCompTIAExam ? "comptia-exam-page" : ""} ${isFortinetExam ? "fortinet-exam-page" : ""}`}>
 						<div className="mx-auto max-w-[1125px]">
 				{gradebookSaveError && isResultView && (
 					<p role="alert" className="mb-4 rounded-xl border border-[#f2c6c3] bg-white px-4 py-3 text-sm font-medium text-[#b42318]">
@@ -729,7 +730,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 				)}
 			</div>
 			{isRetakeConfirmationOpen && createPortal(
-				<div data-theme="light" className={`fixed inset-0 z-[120] grid place-items-center bg-[#071126]/60 p-4 backdrop-blur-sm ${isCompTIAExam ? "comptia-exam-dialog" : ""}`}>
+				<div data-theme="light" className={`fixed inset-0 z-[120] grid place-items-center bg-[#071126]/60 p-4 backdrop-blur-sm ${isCompTIAExam ? "comptia-exam-dialog" : ""} ${isFortinetExam ? "fortinet-exam-dialog" : ""}`}>
 					<section
 						role="alertdialog"
 						aria-modal="true"
@@ -770,7 +771,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 				document.body,
 			)}
 			{blocker.state === "blocked" && createPortal(
-				<div data-theme="light" className={`fixed inset-0 z-[120] grid place-items-center overflow-y-auto bg-[#071126]/55 p-4 backdrop-blur-[2px] sm:p-6 ${isCompTIAExam ? "comptia-exam-dialog" : ""}`}>
+				<div data-theme="light" className={`fixed inset-0 z-[120] grid place-items-center overflow-y-auto bg-[#071126]/55 p-4 backdrop-blur-[2px] sm:p-6 ${isCompTIAExam ? "comptia-exam-dialog" : ""} ${isFortinetExam ? "fortinet-exam-dialog" : ""}`}>
 					<section
 						role="alertdialog"
 						aria-modal="true"

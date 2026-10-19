@@ -7,7 +7,7 @@ import TrainingLogo from "../../../../../assets/MATEKK_training_logo.png";
 import { CCNA_EXAMS } from "./ccnaExamFormats";
 import { saveCcnaMockExamResult } from "../../../../../utils/ccnaGradebook";
 import { getCcnaExamSessionKey } from "../../../../../utils/ccnaShortExamSession";
-import { isQuestionAnswered } from "../../../../../utils/ccnaExamGrading";
+import { isAnswerCorrect, isQuestionAnswered, isValidQuestion } from "../../../../../utils/ccnaExamGrading";
 import { QuestionInput, QuestionPrompt, QuestionReview } from "./ccnaExamQuestionViews";
 import {
 	removeDuplicateExhibitLeadIn,
@@ -19,6 +19,7 @@ import { ExhibitDiagram, ExhibitImage, ExhibitText } from "./ccnaExhibit";
 import { loadCcnaQuestionBank } from "../../../../../utils/ccnaQuestionBankApi";
 import { getDatabaseQuestionById, setDatabaseQuestions } from "./ccnaQuestionBank";
 import { applyNativeExhibit } from "./ccnaCompositeSetQuestions";
+import { createOfflineLegacyExamQuestions } from "./ccnaOfflineExamQuestions";
 import { resumeCcnaExam, startCcnaExam, submitCcnaExam } from "../../../../../utils/ccnaExamApi";
 const EXAM_PASS_PERCENTAGE = 80;
 const RECREATED_MATCH_EXHIBIT_QUESTION_IDS = new Set([570]);
@@ -26,6 +27,23 @@ const isMatchingQuestion = (question) => ["match", "drag_drop", "click_boxes", "
 const isRoutingProtocolComparisonQuestion = (question) =>
 	question?.prompt?.includes("three different routing protocols") &&
 	question.prompt.includes("172.16.32.1");
+
+function gradeOfflineExam(questions, answers) {
+	const review = questions.map((question, index) => {
+		const selected = answers[index];
+		return {
+			correctAnswer: question.answer,
+			selectedAnswer: selected ?? null,
+			isCorrect: isAnswerCorrect(question, selected),
+			explanation: question.explanation ?? "",
+		};
+	});
+	return {
+		score: review.filter((item) => item.isCorrect).length,
+		maxScore: questions.length,
+		review,
+	};
+}
 
 function formatTime(totalSeconds) {
 	const hours = Math.floor(totalSeconds / 3600);
@@ -41,7 +59,8 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 	const shouldShowExamResult = location.state?.showExamResult === true;
 	const linkedExamResult = location.state?.examResult;
 	const shouldStartNewAttempt = location.state?.retakeExam === true;
-	const { profile } = useAuth();
+	const { profile, isOnline } = useAuth();
+	const [isOfflineExam] = useState(() => !isOnline);
 	const userId = profile?.userId;
 	// Each student's exam progress is saved separately (per signed-in user)
 	const sessionStorageKey = userId === null || userId === undefined
@@ -114,13 +133,23 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 		.map((item, index) => {
 			const question = questions[index];
 			const isMatch = isMatchingQuestion(question);
+			const optionIndexes = (value) => (Array.isArray(value) ? value : [value])
+				.map((option) => Number.isInteger(option)
+					? option
+					: question?.options.indexOf(typeof option === "string" ? cleanText(option) : option));
 			return {
 				...question,
 				index,
-				answer: isMatch ? item.correctAnswer : question?.options.indexOf(typeof item.correctAnswer === "string" ? cleanText(item.correctAnswer) : item.correctAnswer),
+				answer: isMatch
+					? item.correctAnswer
+					: question?.type === "multi"
+						? optionIndexes(item.correctAnswer)
+						: optionIndexes(item.correctAnswer)[0],
 				selectedAnswer: isMatch
 					? item.selectedAnswer
-					: question?.options.indexOf(typeof item.selectedAnswer === "string" ? cleanText(item.selectedAnswer) : item.selectedAnswer),
+					: question?.type === "multi"
+						? optionIndexes(item.selectedAnswer)
+						: optionIndexes(item.selectedAnswer)[0],
 				isCorrect: item.isCorrect,
 				explanation: item.explanation,
 			};
@@ -138,7 +167,9 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 		async function loadExamAttempt() {
 			setExamLoadState({ status: "loading", error: null });
 			// The question bank supplies each question's picture / printout; load it alongside the exam questions
-			const bankReady = loadCcnaQuestionBank()
+			const bankReady = isOfflineExam
+				? Promise.resolve()
+				: loadCcnaQuestionBank()
 				.then(({ questions: bankQuestions }) => setDatabaseQuestions(bankQuestions))
 				.catch((error) => console.error("Unable to load the CCNA question bank; exam pictures may be missing.", error));
 			try {
@@ -167,6 +198,53 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 							window.sessionStorage.removeItem(sessionStorageKey);
 						}
 					}
+				}
+
+				if (isOfflineExam) {
+					const savedOfflineSession = savedSession?.isOfflineLegacyExam === true &&
+						savedSession.questions.length === exam.questionCount &&
+						savedSession.questions.every(isValidQuestion)
+						? savedSession
+						: null;
+					const offlineQuestions = savedOfflineSession
+						? savedOfflineSession.questions
+						: createOfflineLegacyExamQuestions(exam.questionCount);
+					const offlineDeadline = Number.isFinite(savedOfflineSession?.deadline)
+						? savedOfflineSession.deadline
+						: Date.now() + exam.durationSeconds * 1000;
+					const offlineAttemptId = savedOfflineSession?.attemptId ??
+						`offline-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+					const offlineAnswers = savedOfflineSession?.answers &&
+						typeof savedOfflineSession.answers === "object" &&
+						!Array.isArray(savedOfflineSession.answers)
+						? savedOfflineSession.answers
+						: {};
+					const offlineSubmitted = savedOfflineSession?.isSubmitted === true;
+					const offlineResult = offlineSubmitted
+						? savedOfflineSession.serverResult ?? gradeOfflineExam(offlineQuestions, offlineAnswers)
+						: null;
+
+					if (!offlineQuestions.length || !offlineQuestions.every(isValidQuestion)) {
+						throw new TypeError("The built-in offline CCNA question bank contains invalid questions.");
+					}
+					if (!isActive) return;
+					setAttemptId(offlineAttemptId);
+					setQuestions(offlineQuestions);
+					setAnswers(offlineAnswers);
+					setLockedQuestions(savedOfflineSession?.lockedQuestions ?? {});
+					setFlaggedQuestions(savedOfflineSession?.flaggedQuestions ?? {});
+					setCurrentIndex(Number.isInteger(savedOfflineSession?.currentIndex)
+						? Math.max(0, Math.min(savedOfflineSession.currentIndex, offlineQuestions.length - 1))
+						: 0);
+					setDeadline(offlineDeadline);
+					setSecondsRemaining(Math.max(0, Math.ceil((offlineDeadline - Date.now()) / 1000)));
+					setSubmittedAt(savedOfflineSession?.submittedAt ?? null);
+					setServerResult(offlineResult);
+					setIsSubmitted(offlineSubmitted);
+					setExamLoadState({ status: "ready", error: null });
+					shouldStartNewAttemptRef.current = false;
+					if (isRetake) navigate(location.pathname, { replace: true, state: null });
+					return;
 				}
 
 				let apiAttempt;
@@ -304,12 +382,13 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 		return () => {
 			isActive = false;
 		};
-	}, [exam.durationSeconds, exam.name, exam.questionCount, examKey, loadAttempt, location.pathname, navigate, sessionStorageKey]);
+	}, [exam.durationSeconds, exam.name, exam.questionCount, examKey, isOfflineExam, loadAttempt, location.pathname, navigate, sessionStorageKey]);
 
 	useEffect(() => {
 		if (!attemptId || examLoadState.status !== "ready" || isViewingSavedResult || !sessionStorageKey) return;
 		window.sessionStorage.setItem(sessionStorageKey, JSON.stringify({
 			attemptId,
+			isOfflineLegacyExam: isOfflineExam,
 			submittedAt,
 			questions,
 			answers,
@@ -321,7 +400,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 			serverResult,
 			score: serverResult?.score ?? null,
 		}));
-	}, [answers, attemptId, currentIndex, deadline, examLoadState.status, flaggedQuestions, isSubmitted, isViewingSavedResult, lockedQuestions, questions, serverResult, sessionStorageKey, submittedAt]);
+	}, [answers, attemptId, currentIndex, deadline, examLoadState.status, flaggedQuestions, isOfflineExam, isSubmitted, isViewingSavedResult, lockedQuestions, questions, serverResult, sessionStorageKey, submittedAt]);
 
 	useEffect(() => {
 		if (!isSubmitted || isViewingSavedResult || !userId || !Number.isFinite(submittedAt)) return;
@@ -340,6 +419,12 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 		setIsSubmitting(true);
 		setSubmitError(null);
 		try {
+			if (isOfflineExam) {
+				setServerResult(gradeOfflineExam(questions, answers));
+				setSubmittedAt(Date.now());
+				setIsSubmitted(true);
+				return;
+			}
 			const submittedAnswers = questions.map((item, index) => ({
 				questionId: item.id,
 				...(isMatchingQuestion(item)
@@ -467,6 +552,35 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 	function restartExam() {
 		setExamLoadState({ status: "loading", error: null });
 		shouldStartNewAttemptRef.current = true;
+		if (isOfflineExam) {
+			try {
+				const offlineQuestions = createOfflineLegacyExamQuestions(exam.questionCount);
+				const nextDeadline = Date.now() + exam.durationSeconds * 1000;
+				setAttemptId(`offline-${Date.now()}-${Math.random().toString(36).slice(2)}`);
+				setQuestions(offlineQuestions);
+				setAnswers({});
+				setLockedQuestions({});
+				setFlaggedQuestions({});
+				setCurrentIndex(0);
+				setDeadline(nextDeadline);
+				setSubmittedAt(null);
+				setSecondsRemaining(exam.durationSeconds);
+				setServerResult(null);
+				setIsSubmitted(false);
+				setExamAttempt((attempt) => attempt + 1);
+				setAnswerFilter("all");
+				setIsAnswerReviewVisible(false);
+				shouldStartNewAttemptRef.current = false;
+				setExamLoadState({ status: "ready", error: null });
+			} catch (error) {
+				console.error(`Unable to start a new offline ${exam.name}.`, error);
+				setExamLoadState({
+					status: "error",
+					error: error instanceof Error ? error.message : "A new offline exam could not be started.",
+				});
+			}
+			return;
+		}
 		startCcnaExam(examKey).then((newAttempt) => {
 			if (newAttempt.questions.length !== exam.questionCount) {
 				throw new TypeError(`The backend did not return ${exam.questionCount} questions for this exam.`);
