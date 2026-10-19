@@ -11,8 +11,7 @@ let pendingAllQuestions = null;
 
 export function loadCcnaQuestionBank() {
   if (cached) return Promise.resolve(cached);
-  const query = new URLSearchParams({ module: "CCNA" });
-  pending ??= fetch(`${API_URL}/questions/bank?${query}`, { credentials: "include" })
+  pending ??= fetch(`${API_URL}/questions/bank`, { credentials: "include" })
     .then(async (response) => {
       if (!response.ok) throw new Error(`Question bank request failed (${response.status}).`);
       const rows = await response.json();
@@ -28,8 +27,7 @@ export function loadCcnaQuestionBank() {
 
 export function loadCcnaAllQuestionsBank() {
   if (cachedAllQuestions) return Promise.resolve(cachedAllQuestions);
-  const query = new URLSearchParams({ module: "CCNA" });
-  pendingAllQuestions ??= fetch(`${API_URL}/questions/bank/all-usable?${query}`, { credentials: "include" })
+  pendingAllQuestions ??= fetch(`${API_URL}/questions/bank/all-usable`, { credentials: "include" })
     .then(async (response) => {
       if (!response.ok) throw new Error(`Question bank request failed (${response.status}).`);
       const payload = await response.json();

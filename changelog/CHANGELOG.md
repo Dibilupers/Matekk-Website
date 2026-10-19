@@ -2,13 +2,6 @@
 
 Tracking begins 2026-10-17.
 
-## 2026-10-19 — Dedicated all-questions course banks
-
-- Scoped all-usable question-bank requests to the requested course module, including CCNA legacy labels, CompTIA certifications, and FortiOS aliases.
-- Made both CCNA bank requests explicitly select the CCNA module.
-
-Validation: frontend production build, backend Nest build, 22 focused question-service tests, and `git diff --check` passed.
-
 ## 2026-10-19 — `main`
 
 - Reverted commit `6366191` (`Fix CCNA question-bank filtering`) at the user's request.

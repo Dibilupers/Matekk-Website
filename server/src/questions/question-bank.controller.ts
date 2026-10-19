@@ -1,7 +1,7 @@
-import { Controller, Get, Header, Query } from '@nestjs/common';
+import { Controller, Get, Header } from '@nestjs/common';
 import { QuestionsService } from './questions.service.js';
 
-// Course-scoped question banks from the "Questions" table for student exams.
+// The CCNA question bank (the "Questions" table) for students taking the exams.
 // No AdminGuard here: the app-wide guards already require a signed-in, approved account.
 @Controller('questions/bank')
 export class QuestionBankController {
@@ -9,13 +9,13 @@ export class QuestionBankController {
 
   @Get()
   @Header('Cache-Control', 'private, max-age=300')
-  findBank(@Query('module') module?: string) {
-    return this.questionsService.findBank(module ?? 'CCNA');
+  findBank() {
+    return this.questionsService.findBank();
   }
 
   @Get('all-usable')
   @Header('Cache-Control', 'private, max-age=300')
-  findUsableBank(@Query('module') module?: string) {
-    return this.questionsService.findUsableBank(module);
+  findUsableBank() {
+    return this.questionsService.findUsableBank();
   }
 }
