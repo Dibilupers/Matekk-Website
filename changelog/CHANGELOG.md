@@ -7,6 +7,7 @@ Tracking begins 2026-10-17.
 Commits included in this push:
 
 - `0c1c976` — Added a separate FortiOS offline exam route with a bundled 90-question bank and a FortiOS-specific signed-image cache flow. No backend code or CCNA source files were changed by this commit.
+- `74dbb3f` — Merged the latest `origin/main` into `jhonard` before integrating the FortiOS offline route.
 
 Validation before push: frontend production build, targeted ESLint for the changed route/cache files, and Git whitespace checks passed. Browser validation against the deployed API and offline image loading remains pending.
 
