@@ -40,6 +40,39 @@ type MatchExamQuestion = Omit<ExamQuestionBase, 'options'> & {
   dragDropMode?: 'items-to-choices';
 };
 type ExamQuestion = SingleExamQuestion | MatchExamQuestion;
+type ParsedChoice = { id: string | null; text: string };
+type UsableBankQuestion =
+  | (SingleExamQuestion & {
+      bankId: number;
+      answer: number;
+      explanation: string;
+      source: 'question-bank';
+    })
+  | (MatchExamQuestion & {
+      bankId: number;
+      answer: number[];
+      explanation: string;
+      source: 'question-bank';
+    })
+  | {
+      id: number;
+      bankId: number;
+      prompt: string;
+      imageUrl?: string | null;
+      type: 'multi';
+      options: string[];
+      answer: number[];
+      module: string | null;
+      topic: string | null;
+      explanation: string;
+      source: 'question-bank';
+    };
+
+function isSingleChoiceQuestionType(questionType: string | null | undefined) {
+  const normalizedType = questionType?.trim().toLocaleLowerCase().replace(/[\s-]+/g, '_');
+  return !normalizedType ||
+    ['single', 'single_choice', 'multiple_choice', 'mcq', 'radio'].includes(normalizedType);
+}
 
 @Injectable()
 export class QuestionsService {
@@ -312,7 +345,11 @@ export class QuestionsService {
 
       const correctAnswer = question.id === 720
         ? this.findCorrectOption(question.options, 'A')
-        : this.findCorrectOption(question.options, source.correct_answer ?? '');
+        : this.findCorrectOption(
+          question.options,
+          source.correct_answer ?? '',
+          this.parseChoiceData(source.choices)?.map(({ id }) => id),
+        );
       if (!correctAnswer) {
         throw new InternalServerErrorException('A question in this exam is no longer available for grading.');
       }
@@ -621,13 +658,17 @@ export class QuestionsService {
         topic: record.topic,
       };
     }
-    if (record.question_type && record.question_type !== 'single') return null;
+    if (!isSingleChoiceQuestionType(record.question_type)) return null;
     if (
       !Array.isArray(options) ||
       options.length < 2 ||
       options.length > 8 ||
       !options.every((option): option is string => typeof option === 'string' && option.trim().length > 0) ||
-      !this.findCorrectOption(options, record.correct_answer)
+      !this.findCorrectOption(
+        options,
+        record.correct_answer,
+        this.parseChoiceData(record.choices)?.map(({ id }) => id),
+      )
     ) {
       return null;
     }
@@ -644,18 +685,31 @@ export class QuestionsService {
   }
 
   private parseChoices(value: string | null): string[] | null {
+    return this.parseChoiceData(value)?.map(({ text }) => text) ?? null;
+  }
+
+  private parseChoiceData(value: string | null): ParsedChoice[] | null {
     if (!value) return null;
     try {
       const parsed: unknown = JSON.parse(value);
-      const choices = Array.isArray(parsed)
-        ? parsed
-        : parsed && typeof parsed === 'object'
-          ? Object.values(parsed)
-          : null;
-      return Array.isArray(choices) &&
-        choices.every((choice): choice is string => typeof choice === 'string')
-        ? choices
-        : null;
+      if (Array.isArray(parsed)) {
+        const choices = parsed.map((choice): ParsedChoice | null => {
+          if (typeof choice === 'string') return { id: null, text: choice };
+          if (!choice || typeof choice !== 'object' || Array.isArray(choice)) return null;
+
+          const id = 'id' in choice ? choice.id : null;
+          const text = 'text' in choice ? choice.text : null;
+          if (typeof text !== 'string' || !(typeof id === 'string' || typeof id === 'number')) return null;
+          return { id: String(id), text };
+        });
+        return choices.every((choice): choice is ParsedChoice => choice !== null) ? choices : null;
+      }
+
+      if (!parsed || typeof parsed !== 'object') return null;
+      const choices = Object.entries(parsed).map(([id, text]): ParsedChoice | null =>
+        typeof text === 'string' ? { id, text } : null,
+      );
+      return choices.every((choice): choice is ParsedChoice => choice !== null) ? choices : null;
     } catch {
       return null;
     }
@@ -678,8 +732,13 @@ export class QuestionsService {
     return parsed;
   }
 
-  private findCorrectOption(options: string[], answer: string): string | null {
+  private findCorrectOption(options: string[], answer: string, choiceIds: (string | null)[] = []): string | null {
     const normalizedAnswer = answer.trim();
+    const idIndex = choiceIds.findIndex((id) =>
+      id?.trim().toLocaleLowerCase() === normalizedAnswer.toLocaleLowerCase(),
+    );
+    if (idIndex >= 0) return options[idIndex] ?? null;
+
     const exactMatch = options.find((option) => option.trim().toLocaleLowerCase() === normalizedAnswer.toLocaleLowerCase());
     if (exactMatch) return exactMatch;
 
@@ -871,8 +930,9 @@ export class QuestionsService {
   }
 
   // The full CCNA question bank used by the exams
-  async findBank() {
+  async findBank(module?: string) {
     const rows = await this.prisma.questions.findMany({
+      ...(module !== undefined ? { where: this.getQuestionModuleFilter(module) } : {}),
       select: {
         id: true,
         module: true,
@@ -899,52 +959,101 @@ export class QuestionsService {
     }));
   }
 
-  async findUsableBank() {
-    const rows = await this.findBank();
-    const questions = rows.flatMap((row) => {
-      const question = this.readMultiSelectQuestion(row) ?? this.readQuestion(row);
+  async findUsableBank(module?: string) {
+    const rows = await this.findBank(module);
+    const questions = rows.flatMap<UsableBankQuestion>((row) => {
+      const question = this.readFortiOSMultiSelectQuestion(row) ??
+        this.readMultiSelectQuestion(row) ??
+        this.readQuestion(row);
       if (!question) return [];
 
+      const questionMetadata = {
+        bankId: row.id,
+        explanation: row.explanation,
+        source: 'question-bank' as const,
+      };
+
+      if (question.type === 'single') {
+        const answer = row.id === 720
+          ? 0
+          : question.options.indexOf(this.findCorrectOption(
+            question.options,
+            row.correct_answer ?? '',
+            this.parseChoiceData(row.choices)?.map(({ id }) => id),
+          ) ?? '');
+        return answer < 0 ? [] : [{ ...question, ...questionMetadata, answer }];
+      }
+
+      if (question.type === 'multi') {
+        return [{ ...question, ...questionMetadata, answer: question.answer }];
+      }
+
+      const bankQuestion = row.id === 481
+        ? { ...question, dragDropMode: 'items-to-choices' as const }
+        : question;
       const answer = row.id === 1306
         ? [1, 2, 3, 5]
         : row.id === 289
-        ? [0, 1, 2, 3, 4]
-        : row.id === 720
-        ? 0
-        : row.id === 181
-        ? [0, 0, 1, 1, 0, 0]
-        : row.id === 382
-        ? [0, 1, 2, 5]
-        : row.id === 608
-        ? [0, 1, 4, 5]
-        : row.id === 481
-        ? [0, 1, 1, 2, 3, 3]
-        : question.type !== 'single'
-          ? question.type === 'multi'
-            ? question.answer
-            : row.question_type === 'match'
-              ? this.parseMatchAnswer(row.correct_answer, question.items.length, question.choices.length)
-              : parseDragDropAnswer(row.correct_answer, row.id)?.answer
-        : question.type === 'single'
-          ? question.options.indexOf(this.findCorrectOption(question.options, row.correct_answer) ?? '')
-          : -1;
-      if (answer === undefined || answer === -1 || (Array.isArray(answer) && answer.length === 0)) return [];
+          ? [0, 1, 2, 3, 4]
+          : row.id === 181
+            ? [0, 0, 1, 1, 0, 0]
+            : row.id === 382
+              ? [0, 1, 2, 5]
+              : row.id === 608
+                ? [0, 1, 4, 5]
+                : row.id === 481
+                  ? [0, 1, 1, 2, 3, 3]
+                  : row.question_type === 'match'
+                    ? this.parseMatchAnswer(row.correct_answer, question.items.length, question.choices.length)
+                    : parseDragDropAnswer(row.correct_answer, row.id)?.answer;
+      if (!answer?.length) return [];
 
-      const bankQuestion = row.id === 481
-        ? {
-            ...question,
-            dragDropMode: 'items-to-choices' as const,
-          }
-        : question;
-      return [{
-        ...bankQuestion,
-        bankId: row.id,
-        answer,
-        explanation: row.explanation,
-        source: 'question-bank',
-      }];
+      return [{ ...bankQuestion, ...questionMetadata, answer }];
     });
     return { questions, skippedCount: rows.length - questions.length };
+  }
+
+  private readFortiOSMultiSelectQuestion(record: {
+    id: number;
+    module: string | null;
+    topic: string | null;
+    question_text: string | null;
+    choices: string | null;
+    correct_answer: string | null;
+    question_type?: string | null;
+    imageUrl?: string | null;
+  }) {
+    if (record.question_type?.trim().toLocaleLowerCase().replace(/[\s-]+/g, '_') !== 'multiple_select') {
+      return null;
+    }
+    const choices = this.parseChoiceData(record.choices);
+    const answerIds = record.correct_answer?.split(',').map((answer) => answer.trim().toLocaleLowerCase());
+    if (
+      !record.question_text?.trim() ||
+      !choices ||
+      choices.length < 2 ||
+      choices.length > 8 ||
+      !choices.every((choice) => choice.text.trim()) ||
+      !answerIds ||
+      answerIds.length < 2 ||
+      answerIds.some((answer) => !answer)
+    ) return null;
+
+    const answer = answerIds.map((answerId) =>
+      choices.findIndex(({ id }) => id?.trim().toLocaleLowerCase() === answerId),
+    );
+    if (answer.some((index) => index < 0) || new Set(answer).size !== answer.length) return null;
+
+    return {
+      id: record.id,
+      prompt: record.question_text.trim(),
+      imageUrl: record.imageUrl ?? null,
+      type: 'multi' as const,
+      options: choices.map(({ text }) => text),
+      answer,
+      module: record.module,
+      topic: record.topic,
+    };
   }
 
   private readMultiSelectQuestion(record: {
@@ -1019,5 +1128,22 @@ export class QuestionsService {
       module: record.module,
       topic: record.topic,
     };
+  }
+
+  private getQuestionModuleFilter(module: string): Prisma.QuestionsWhereInput {
+    const normalizedModule = module.trim();
+    if (!normalizedModule) {
+      throw new BadRequestException('Choose a course question bank.');
+    }
+    if (['fortios', 'fortinet fortios', 'fortigate administrator'].includes(normalizedModule.toLocaleLowerCase())) {
+      return {
+        OR: [
+          { module: { equals: 'Fortinet FortiOS', mode: 'insensitive' } },
+          { module: { equals: 'FortiOS', mode: 'insensitive' } },
+          { module: { equals: 'FortiGate Administrator', mode: 'insensitive' } },
+        ],
+      };
+    }
+    return { module: { equals: normalizedModule, mode: 'insensitive' } };
   }
 }
