@@ -130,11 +130,14 @@ import CCNAGradebook from "../pages/modules/programs/Cisco/CCNA/ccnaGradebook";
 import AplusDashboard from "../pages/modules/programs/CompTIA/A+ (Core 1 & 2)/aplusDashboard";
 import NetworkPlusDashboard from "../pages/modules/programs/CompTIA/Network+/networkPlusDashboard";
 import SecurityPlusDashboard from "../pages/modules/programs/CompTIA/Security+/securityPlusDashboard";
+import FortiOSDashboard, { FORTIOS_MODULES } from "../pages/modules/programs/Fortinet/FortiOS/fortiosDashboard";
+import FortiOSExam from "../pages/modules/programs/Fortinet/FortiOS/fortiosExam";
+import FortiOSExamRoute from "../pages/modules/programs/Fortinet/FortiOS/FortiOSExamRoute";
 import NetworkPlusExam from "../pages/modules/programs/CompTIA/Network+/networkPlusExam";
 import SecurityPlusExam from "../pages/modules/programs/CompTIA/Security+/securityPlusExam";
 import NETWORK_PLUS_PROGRAM from "../pages/modules/programs/CompTIA/Network+/networkPlusProgram";
 import SECURITY_PLUS_PROGRAM from "../pages/modules/programs/CompTIA/Security+/securityPlusProgram";
-import FortiOSOfflineExam from "../pages/modules/programs/Fortinet/FortiOS/offline/fortiosOfflineExam";
+import FortiOSBundledOfflineExam from "../pages/modules/programs/Fortinet/FortiOS/offline/FortiOSBundledOfflineExam";
 import { useAuth } from "../context/auth-context";
 import {
   readCcnaModuleQuizProgress,
@@ -149,6 +152,7 @@ if ("scrollRestoration" in history) {
 
 export default function App() {
   const location = useLocation();
+  const { isOnline } = useAuth();
   const isFullScreenAssessment = location.pathname.startsWith("/modules/programs/ccna/quiz/")
     || location.pathname.startsWith("/modules/programs/ccna/exam/")
     || location.pathname.startsWith("/modules/programs/ccna-automation/quiz/")
@@ -157,7 +161,8 @@ export default function App() {
     || location.pathname.startsWith("/modules/programs/ccna-cybersecurity/exam/")
     || location.pathname.startsWith("/modules/programs/comptia-network-plus/exam/")
     || location.pathname.startsWith("/modules/programs/comptia-security-plus/exam/")
-    || location.pathname === "/modules/programs/fortios/exam/all";
+    || location.pathname === "/modules/programs/fortios/exam/all"
+    || location.pathname.startsWith("/modules/programs/fortinet-fortios/exam/");
   const isAdminPage = location.pathname === "/admin";
   const isAccountPendingPage = location.pathname === "/account-pending";
   useHeadingTypeIn(location.pathname);
@@ -165,7 +170,7 @@ export default function App() {
   return (
     <>
       <CCNAExamTimeNotification />
-      {!isFullScreenAssessment && !isAccountPendingPage && <NavBar />}
+      {isOnline && !isFullScreenAssessment && !isAccountPendingPage && <NavBar />}
       <ScrollToTop />
 
       {/* Keyed by path so every page change replays the fade-in (navbar stays outside, so it never flickers) */}
@@ -440,6 +445,35 @@ export default function App() {
           }
         />
         <Route
+          path="/modules/programs/fortinet-fortios"
+          element={
+            <ProtectedRoute>
+              <FortiOSDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/fortinet-fortios/gradebook"
+          element={
+            <ProtectedRoute>
+              <ProgramModuleGradebook
+                programKey="fortinet-fortios"
+                programName="Fortinet FortiOS"
+                modules={FORTIOS_MODULES}
+                dashboardPath="/modules/programs/fortinet-fortios"
+              />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/fortinet-fortios/exam/:examKey"
+          element={
+            <ProtectedRoute>
+              <FortiOSExamRoute onlineExam={<FortiOSExam />} />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/modules/programs/comptia-network-plus/exam/:examKey"
           element={
             <ProtectedRoute>
@@ -623,7 +657,7 @@ export default function App() {
           path="/modules/programs/fortios/exam/all"
           element={
             <ProtectedRoute>
-              <FortiOSOfflineExam />
+              <FortiOSBundledOfflineExam />
             </ProtectedRoute>
           }
         />
@@ -679,7 +713,7 @@ export default function App() {
         <Route path="*" element={<NotFound />} />
       </Routes>
 
-      {!isFullScreenAssessment && !isAdminPage && !isAccountPendingPage && <Footer />}
+      {isOnline && !isFullScreenAssessment && !isAdminPage && !isAccountPendingPage && <Footer />}
       </div>
     </>
   );
@@ -858,8 +892,28 @@ function ProtectedRoute({ children }) {
   const { pathname } = useLocation();
   const isModuleRoute = /^\/modules\/programs(?:\/|$)/.test(pathname);
   const isExamRoute = /(?:^|\/)exam(?:\/|$)/.test(pathname);
-  const canAccessOfflineExam = pathname === "/modules/programs/fortios/exam/all" && !isOnline;
-  const canAccessOfflineModule = isModuleRoute && !isExamRoute && !isOnline;
+  const isOfflineCcnaExamRoute = /^\/modules\/programs\/ccna\/exam\/(?:short|medium|long|all)$/.test(pathname);
+  const isOfflineFortiOSExamRoute = /^\/modules\/programs\/fortinet-fortios\/exam\/(?:short|medium|long|all_questions)\/?$/.test(pathname);
+  const isStandaloneOfflineFortiOSExamRoute = pathname === "/modules/programs/fortios/exam/all";
+  const canAccessBuiltInOfflineExam = isOfflineCcnaExamRoute
+    || isOfflineFortiOSExamRoute
+    || isStandaloneOfflineFortiOSExamRoute;
+  const canAccessOfflineModule = isModuleRoute && (!isExamRoute || canAccessBuiltInOfflineExam) && !isOnline;
+
+  if (!isOnline && isModuleRoute && isExamRoute && !canAccessBuiltInOfflineExam) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6 text-center text-white">
+        <section className="max-w-lg space-y-3">
+          <h1 className="text-2xl font-semibold">Internet connection required</h1>
+          <p className="text-slate-300">Only CCNA and FortiOS exams with cached questions are available offline. Reconnect to take this exam.</p>
+        </section>
+      </main>
+    );
+  }
+
+  if (canAccessOfflineModule) {
+    return <OfflineModuleAccess isOnline={false}>{children}</OfflineModuleAccess>;
+  }
 
   if (isLoading) {
     return (
@@ -869,27 +923,12 @@ function ProtectedRoute({ children }) {
     );
   }
 
-  if (!isOnline && isModuleRoute && isExamRoute && !canAccessOfflineExam) {
-    return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6 text-center text-white">
-        <section className="max-w-lg space-y-3">
-          <h1 className="text-2xl font-semibold">Internet connection required</h1>
-          <p className="text-slate-300">Exams are not available offline. Reconnect to the internet to continue.</p>
-        </section>
-      </main>
-    );
-  }
-
-  if (!isAuthenticated && !canAccessOfflineModule && !canAccessOfflineExam) {
+  if (!isAuthenticated && !canAccessOfflineModule) {
     return <Navigate to="/login" replace />;
   }
   if (isAuthenticated && profile.active_status === false) {
     return <Navigate to="/account-pending" replace />;
   }
-  if (canAccessOfflineModule) {
-    return <OfflineModuleAccess isOnline={false}>{children}</OfflineModuleAccess>;
-  }
-  if (canAccessOfflineExam) return children;
   if (!isAuthenticated) return children;
   return isModuleRoute && !isExamRoute
     ? <OfflineModuleAccess isOnline>{children}</OfflineModuleAccess>

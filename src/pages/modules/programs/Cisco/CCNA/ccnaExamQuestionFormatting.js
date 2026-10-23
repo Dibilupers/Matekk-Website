@@ -3,8 +3,8 @@ import { parseOptionTable } from "../../../../../utils/ccnaOptionTable";
 // Some option tables came out of the PDFs scrambled (columns run together, a heading inside another
 // option's text). Only use a split when every option was found and none swallowed another option's heading;
 // otherwise the question shows the whole table as one exhibit instead.
-export function parseFormattedOptions(prompt) {
-	const parsed = parseOptionTable(prompt);
+export function parseFormattedOptions(prompt, { offline = false } = {}) {
+	const parsed = parseOptionTable(prompt, { offlineColumns: offline });
 	if (!parsed) return null;
 	const text = String(prompt ?? "");
 	const letters = [...new Set([...text.matchAll(/\bOption ([A-H])\b/gi)].map((match) => match[1].toUpperCase()))];
@@ -21,15 +21,15 @@ export function parseFormattedOptions(prompt) {
 }
 
 /** The table of options as plain text, for showing it as one exhibit when it can't be split safely. */
-export function getOptionTableExhibit(prompt) {
+export function getOptionTableExhibit(prompt, { offline = false } = {}) {
 	const text = String(prompt ?? "").replace(/\r\n/g, "\n");
 	const match = /^[ \t]*Option [A-H]\b.*$/im.exec(text);
-	if (!match || parseFormattedOptions(text)) return null;
+	if (!match || parseFormattedOptions(text, { offline })) return null;
 	return { prompt: text.slice(0, match.index).trim(), exhibit: text.slice(match.index).replace(/\s+$/, "") };
 }
 
 export function getDisplayedOption(question, option) {
 	const match = String(option ?? "").match(/^Option ([A-H])$/i);
 	if (!match) return option;
-	return parseFormattedOptions(question.prompt)?.options[match[1].toUpperCase()] ?? option;
+	return parseFormattedOptions(question.prompt, { offline: question.offlineLegacy === true })?.options[match[1].toUpperCase()] ?? option;
 }

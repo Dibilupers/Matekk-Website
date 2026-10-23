@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
-import { ArrowLeft, ArrowRight, BookOpen, Check, ChevronDown, ChevronRight, ClipboardList, Clock3, FileQuestion, LockKeyhole, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, Check, ChevronDown, ChevronRight, CircleAlert, ClipboardList, Clock3, FileQuestion, LockKeyhole, X } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/auth-context";
 import { readCcnaExamProgress } from "../../../utils/ccnaShortExamSession";
 import { readGradebookAssessments } from "../../../utils/gradebookApi";
-import { getProgramExamFormats } from "./programExamFormats";
+import { getProgramExamFormats, LEGACY_PROGRAM_EXAM_NAMES } from "./programExamFormats";
 import ProgramBackgroundParticles from "./ProgramBackgroundParticles";
 import ScoreRotationCard from "./ScoreRotationCard";
 
@@ -66,7 +66,12 @@ function ProgramExamNotification({ programKey, basePath }) {
 		const result = assessments
 			.filter((assessment) =>
 				assessment.type === "exam" &&
-				(assessment.title === `${exam.name} · ${exam.programName}` || assessment.title === exam.name),
+				(assessment.examFormat === examKey ||
+					assessment.title === `${exam.name} · ${exam.programName}` ||
+					assessment.title === exam.name ||
+					(LEGACY_PROGRAM_EXAM_NAMES[examKey] ?? []).some((name) =>
+						assessment.title === `${name} · ${exam.programName}` || assessment.title === name,
+					)),
 			)
 			.sort((first, second) => second.submittedAt - first.submittedAt)[0];
 		const hasResult = progress.status !== "in-progress" && (
@@ -130,13 +135,20 @@ function ProgramExamNotification({ programKey, basePath }) {
 							<span className="text-xs font-semibold text-[#7c89a1]">{safeIndex + 1}/{examCards.length}</span>
 						</div>
 						<p className="mt-0.5 text-sm leading-snug text-[#64708a]">
-							{examCard.hasResult
+							{examCard.progress.status === "expired"
+								? `Time expired for the ${examCard.exam.displayName.toLowerCase()}.`
+								: examCard.hasResult
 								? passedExam
 									? `You just passed the ${examCard.exam.displayName.toLowerCase()}!`
 									: `You didn't pass the ${examCard.exam.displayName.toLowerCase()}!`
 								: examCard.progress.status === "in-progress"
 									? `You're taking the ${examCard.exam.displayName.toLowerCase()}!`
 									: `You haven't taken the ${examCard.exam.displayName.toLowerCase()} yet.`}
+							{examCard.progress.status === "expired" && (
+								<span role="status" className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-[#fff0ed] px-2.5 py-1 text-xs font-bold text-[#b42318]">
+									<CircleAlert size={14} /> Time expired
+								</span>
+							)}
 							{examCard.hasResult && <span className="mt-1 block">{passedExam ? "Good job! :)" : "Better luck next time! :("}</span>}
 							{examCard.hasResult && <span className="mt-1 block">Score: {examCard.result.score}/{examCard.result.maxScore}</span>}
 							<span className="mt-1 block text-xs text-[#7c89a1]">Click to see the next exam update</span>
@@ -239,6 +251,8 @@ export default function CCNAProgramDashboard({
 	retryGradebookStats,
 	heroIntros = NO_HERO_INTROS,
 	overviewDescription,
+	learningFocusAreas = [],
+	courseOutlinePath,
 	programKey,
 	programPath,
 }) {
@@ -296,14 +310,12 @@ export default function CCNAProgramDashboard({
 
 	return (
 		<main className="program-faceted-page ccna-page-enter relative min-h-screen bg-white text-[#071126]">
-			{/* Phones/tablets: Back button pinned to the screen (outside the page's slide-in animation),
-			    so it stays still while the page moves; a white pill appears behind it once you scroll */}
 			{createPortal(
 				<Link
 					to="/pages/blank"
-					className={`fixed left-4 top-20 z-[60] flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-base font-bold text-[#005b6b] transition hover:text-[#004653] active:scale-95 lg:hidden ${hasScrolled ? "bg-white/90 shadow-md backdrop-blur-sm" : ""}`}
+					className={`fixed left-4 top-24 z-40 flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-bold text-[#005b6b] transition hover:text-[#004653] active:scale-95 ${hasScrolled ? "bg-white/90 shadow-md backdrop-blur-sm" : "bg-white/80"}`}
 				>
-					<ArrowLeft size={24} strokeWidth={2.5} /> Back
+					<ArrowLeft size={20} strokeWidth={2.5} /> Back to Courses
 				</Link>,
 				document.body,
 			)}
@@ -441,24 +453,38 @@ export default function CCNAProgramDashboard({
 						{practiceQuizzes ?? <ComingSoonCard title="Practice quizzes" description="Interactive quizzes are not available yet for this learning path." icon={<Check size={21} />} />}
 						{!practiceQuizzes && <ComingSoonCard title="Exams" description="Timed exams are not available yet for this learning path." icon={<Clock3 size={21} />} />}
 						<div className="rounded-[18px] border border-[#d6e5e7] bg-white p-6">
-							<div className="mb-4 flex items-center justify-between gap-3">
-								<div>
-									<h2 className="text-xl font-bold">Program Overview</h2>
-									<p className="mt-1 text-sm leading-6 text-[#7c89a1]">{overviewDescription ?? focusAreas}</p>
-								</div>
-								<BookOpen size={20} className="shrink-0 text-[#005b6b]" aria-hidden="true" />
+							<div className="mb-4 flex items-center gap-3">
+								<BookOpen className="text-[#005b6b]" size={21} />
+								<h2 className="text-xl font-bold">Program Overview</h2>
 							</div>
-							<h3 className="mb-3 text-xs font-bold uppercase tracking-wide text-[#7c89a1]">Course roadmap</h3>
-							<ol className="space-y-2.5">
-								{modules.map((module, index) => (
-									<li key={module.number ?? module.title} className="flex items-center gap-3 text-sm font-medium text-[#334454]">
-										<span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#e8f3f4] text-xs font-bold text-[#005b6b]">
-											{index + 1}
+							<p className="text-sm leading-6 text-[#7c89a1]">{overviewDescription ?? focusAreas}</p>
+							<h3 className="mb-3 mt-5 text-xs font-bold uppercase tracking-wide text-[#7c89a1]">Learning focus</h3>
+							<ul className="space-y-3">
+								{learningFocusAreas.map((area) => (
+									<li key={area} className="flex items-center gap-3 text-sm font-medium text-[#334454]">
+										<span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#e8f3f4] text-[#005b6b]">
+											<Check size={17} />
 										</span>
-										<span className="min-w-0">{module.title}</span>
+										{area}
 									</li>
 								))}
-							</ol>
+							</ul>
+							<p className="mt-5 flex items-center gap-2 border-t border-[#e2ecec] pt-4 text-xs text-[#7c89a1]">
+								<Clock3 size={15} className="text-[#005b6b]" />
+								{modules.length} modules · Self-paced study
+							</p>
+							<Link
+								to={courseOutlinePath}
+								className="mt-5 flex h-12 items-center justify-center gap-2 rounded-full bg-[#005b6b] px-5 text-sm font-bold text-white shadow-[0_10px_20px_rgba(0,91,107,0.16)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-[#004653] hover:shadow-[0_14px_26px_rgba(0,91,107,0.24)] active:translate-y-0 motion-reduce:transition-none"
+							>
+								View Course Outline <ArrowRight size={17} />
+							</Link>
+						</div>
+						<div className="overflow-hidden rounded-[18px] border border-[#d6e5e7] bg-white p-3">
+							<img src={badge} alt={`${programName} certification badge`} className="mx-auto h-44 w-full object-contain" />
+							<p className="pb-2 text-center text-xs font-semibold uppercase tracking-[0.16em] text-[#7c89a1]">
+								Official Cisco certification
+							</p>
 						</div>
 					</aside>
 				</div>

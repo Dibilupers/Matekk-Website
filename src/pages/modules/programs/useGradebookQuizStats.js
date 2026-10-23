@@ -31,6 +31,7 @@ function getLatestQuizStats(assessments, modules) {
 			const examFormat = assessment.examFormat ??
 				title.match(/\b(short|medium|long|quick|standard|comprehensive|all[_ ]questions)\s+exam\b/)?.[1] ??
 				title;
+			if (examFormat.replaceAll(" ", "_") === "all_questions") continue;
 			const previous = latestExamsByFormat.get(examFormat);
 			if (!previous || (assessment.submittedAt ?? 0) > (previous.submittedAt ?? 0)) {
 				latestExamsByFormat.set(examFormat, assessment);
@@ -58,8 +59,9 @@ function getLocalExamAverage(programKey, userId) {
 	const examFormats = getProgramExamFormats(programKey);
 	if (!examFormats || !userId) return null;
 
-	const completedExams = Object.values(examFormats)
-		.map((exam) => readCcnaExamProgress(exam.sessionKey, userId))
+	const completedExams = Object.entries(examFormats)
+		.filter(([examKey]) => examKey !== "all_questions")
+		.map(([, exam]) => readCcnaExamProgress(exam.sessionKey, userId))
 		.filter((progress) =>
 			["completed", "expired"].includes(progress.status) &&
 			Number.isFinite(progress.score) &&

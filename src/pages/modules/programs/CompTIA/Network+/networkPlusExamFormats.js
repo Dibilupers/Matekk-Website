@@ -14,13 +14,16 @@ function shuffle(items) {
 }
 
 function shuffleQuestionChoices(question) {
-	if (question.type === "match") {
+	if (["match", "drag_drop", "click_boxes", "image"].includes(question.type)) {
 		const order = shuffle(question.choices.map((_, index) => index));
 		const newIndexByOldIndex = new Map(order.map((oldIndex, newIndex) => [oldIndex, newIndex]));
 		return {
 			...question,
 			choices: order.map((index) => question.choices[index]),
 			answer: question.answer.map((index) => newIndexByOldIndex.get(index)),
+			...(Array.isArray(question.groupSizes)
+				? { groupSizes: order.map((index) => question.groupSizes[index]) }
+				: {}),
 		};
 	}
 
@@ -37,11 +40,19 @@ function shuffleQuestionChoices(question) {
 
 export function createCompTIAExamFormats(
 	questionBank,
-	{ programKey = "comptia-network-plus", programName = "CompTIA Network+", includeAllQuestions = false } = {},
+	{
+		programKey = "comptia-network-plus",
+		programName = "CompTIA Network+",
+		includeAllQuestions = false,
+		examFormatDefinitions = EXAM_FORMATS,
+		deduplicateQuestions = true,
+	} = {},
 ) {
-	const uniqueQuestions = [...new Map(questionBank.map((question) => [question.prompt.trim().toLowerCase(), question])).values()];
+	const uniqueQuestions = deduplicateQuestions
+		? [...new Map(questionBank.map((question) => [question.prompt.trim().toLowerCase(), question])).values()]
+		: [...questionBank];
 
-	const timedFormats = Object.fromEntries(Object.entries(EXAM_FORMATS).map(([examKey, format]) => [
+	const timedFormats = Object.fromEntries(Object.entries(examFormatDefinitions).map(([examKey, format]) => [
 		examKey,
 		{
 			...format,

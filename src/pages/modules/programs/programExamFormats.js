@@ -2,6 +2,7 @@ import {
 	CCNA_AUTOMATION_MODULE_QUIZZES,
 	CCNA_CYBERSECURITY_MODULE_QUIZZES,
 } from "./programModuleQuizData";
+import { FORTIOS_EXAM_PROGRESS_FORMATS } from "./Fortinet/FortiOS/fortiosExamFormats";
 
 const QUESTION_COUNTS = {
 	short: 20,
@@ -10,9 +11,15 @@ const QUESTION_COUNTS = {
 };
 
 const EXAM_DETAILS = {
-	short: { name: "Quick Exam", subtitle: "20 questions", durationSeconds: 20 * 60 },
-	medium: { name: "Standard Exam", subtitle: "50 questions", durationSeconds: 50 * 60 },
-	long: { name: "Comprehensive Exam", subtitle: "100 questions", durationSeconds: 100 * 60 },
+	short: { name: "Short Exam", subtitle: "20 questions", durationSeconds: 20 * 60 },
+	medium: { name: "Medium Exam", subtitle: "50 questions", durationSeconds: 50 * 60 },
+	long: { name: "Long Exam", subtitle: "100 questions", durationSeconds: 100 * 60 },
+};
+
+export const LEGACY_PROGRAM_EXAM_NAMES = {
+	short: ["Quick Exam"],
+	medium: ["Standard Exam"],
+	long: ["Comprehensive Exam"],
 };
 
 const PROGRAM_QUIZZES = {
@@ -35,6 +42,8 @@ function shuffle(items) {
 }
 
 export function getProgramExamFormats(programKey) {
+	if (programKey === "fortinet-fortios") return FORTIOS_EXAM_PROGRESS_FORMATS;
+
 	const moduleQuizzes = PROGRAM_QUIZZES[programKey];
 	const programName = PROGRAM_NAMES[programKey];
 	if (!moduleQuizzes || !programName) return null;

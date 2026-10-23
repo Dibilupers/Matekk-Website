@@ -1,10 +1,10 @@
 import API_URL from "../../../../../config/api";
 import { isValidQuestion } from "../../../../../utils/ccnaExamGrading";
 
-function hasCompTIACertificationLabel(value, programName) {
-	if (typeof value !== "string") return false;
-	const certificationName = programName.replace(/\+$/, "").replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-	return new RegExp(`comptia\\s+${certificationName}\\s*(?:\\+|plus)`, "i").test(value);
+function hasCompTIAModule(question, programName) {
+	const moduleName = question?.module;
+	return typeof moduleName === "string" &&
+		moduleName.trim().toLocaleLowerCase() === `comptia ${programName}`.toLocaleLowerCase();
 }
 
 function isSingleChoiceQuestion(question) {
@@ -49,7 +49,8 @@ function normalizeMultipleChoiceQuestion(question, programName) {
 
 export async function loadCompTIAExamQuestions(programName) {
 	const certificationName = `CompTIA ${programName}`;
-	const response = await fetch(`${API_URL}/questions/bank/all-usable`, { credentials: "include" });
+	const query = new URLSearchParams({ module: certificationName });
+	const response = await fetch(`${API_URL}/questions/bank/all-usable?${query}`, { credentials: "include" });
 	if (!response.ok) {
 		throw new Error(`${certificationName} question bank request failed (${response.status}).`);
 	}
@@ -59,10 +60,7 @@ export async function loadCompTIAExamQuestions(programName) {
 		throw new TypeError(`${certificationName} question bank response must contain a questions list.`);
 	}
 
-	const certificationQuestions = bank.questions.filter((question) =>
-		hasCompTIACertificationLabel(question.module, programName) ||
-		hasCompTIACertificationLabel(question.topic, programName),
-	);
+	const certificationQuestions = bank.questions.filter((question) => hasCompTIAModule(question, programName));
 	if (certificationQuestions.length === 0) {
 		throw new Error(`No questions labeled "${certificationName}" were found in the usable question bank.`);
 	}

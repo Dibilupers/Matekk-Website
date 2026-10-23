@@ -1,6 +1,10 @@
 ﻿import { CCNA_MODULE_QUIZZES } from "./ccnaModuleQuizData";
 import { CCNA_MEDIUM_EXAM_QUESTIONS } from "./ccnaMediumExamData";
-import { CCNA_COMPOSITE_SET_QUESTIONS, CCNA_COMPOSITE_SET2_QUESTIONS } from "./ccnaCompositeSetQuestions";
+import {
+  CCNA_COMPOSITE_SET_QUESTIONS,
+  CCNA_COMPOSITE_SET2_QUESTIONS,
+  applyNativeExhibit,
+} from "./ccnaCompositeSetQuestions";
 import { CCNA_LEGACY_QUESTIONS } from "./ccnaLegacyQuestions";
 import { CCNA_LEGACY_200_301_QUESTIONS } from "./ccnaLegacyQuestionBank";
 import { splitPromptExhibit } from "../../../../../utils/splitPromptExhibit";
@@ -183,12 +187,15 @@ function createExamQuestions(sourceQuestions, count) {
 // until then, or if it can't be reached, they use the questions built into the site.
 let databaseQuestions = null;
 export function setDatabaseQuestions(questions) {
-  databaseQuestions = Array.isArray(questions) && questions.length ? questions : null;
+  databaseQuestions = Array.isArray(questions) && questions.length
+    ? questions.map(applyNativeExhibit)
+    : null;
 }
 
 export function getDatabaseQuestionById(id) {
   return databaseQuestions?.find((question) => question.bankId === id) ?? null;
 }
+
 
 export function createShortExamQuestions() {
   if (databaseQuestions) return createExamQuestions(databaseQuestions, 50);

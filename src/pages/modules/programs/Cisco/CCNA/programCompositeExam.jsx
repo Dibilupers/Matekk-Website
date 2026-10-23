@@ -11,7 +11,7 @@ import { CCNA_EXAMS } from "./ccnaExamFormats";
 import { createCcnaMockExamAttemptId, saveCcnaMockExamResult } from "../../../../../utils/ccnaGradebook";
 import { getCcnaExamSessionKey } from "../../../../../utils/ccnaShortExamSession";
 import { isAnswerCorrect, isQuestionAnswered, isValidQuestion } from "../../../../../utils/ccnaExamGrading";
-import { QuestionInput, QuestionReview } from "./ccnaExamQuestionViews";
+import { QuestionInput, QuestionPrompt, QuestionReview } from "./ccnaExamQuestionViews";
 import { saveGradebookAssessment } from "../../../../../utils/gradebookApi";
 import { splitPromptExhibit } from "../../../../../utils/splitPromptExhibit";
 import { ExhibitImage, ExhibitText } from "./ccnaExhibit";
@@ -69,12 +69,29 @@ function restoreExamSession(exam, sessionStorageKey) {
 		if (!isValid) throw new TypeError(`Saved ${exam.name} session has an invalid structure.`);
 		const isSubmitted = session.isSubmitted ||
 			(exam.durationSeconds !== null && session.deadline <= Date.now());
+		const questionBankById = new Map((exam.questionBank ?? []).map((question) => [question.id, question]));
+		let answers = session.answers;
+		const questions = session.questions.map((question, index) => {
+			const currentBankQuestion = questionBankById.get(question.id);
+			const questionTypeChanged = currentBankQuestion && currentBankQuestion.type !== question.type;
+			const refreshedQuestion = questionTypeChanged
+				? currentBankQuestion
+				: currentBankQuestion?.exhibitImage
+					? { ...question, imageUrl: currentBankQuestion.imageUrl, exhibitImage: currentBankQuestion.exhibitImage }
+					: question;
+			if (questionTypeChanged) {
+				if (answers === session.answers) answers = { ...session.answers };
+				delete answers[index];
+			}
+			return refreshedQuestion.exhibit || refreshedQuestion.exhibitImage
+				? refreshedQuestion
+				: { ...refreshedQuestion, ...splitPromptExhibit(refreshedQuestion.prompt) };
+		});
 		return {
 			...session,
 			// Attempts saved before router output was split out of the question text get the same clean-up
-			questions: session.questions.map((question) => (question.exhibit || question.exhibitImage
-				? question
-				: { ...question, ...splitPromptExhibit(question.prompt) })),
+			questions,
+			answers,
 			attemptId: typeof session.attemptId === "string" ? session.attemptId : createCcnaMockExamAttemptId(),
 			submittedAt: Number.isFinite(session.submittedAt)
 				? session.submittedAt
@@ -99,6 +116,8 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 	if (!exam) throw new Error(`No exam is configured for ${programKey ?? "CCNA"} format "${examKey}".`);
 	const programName = exam.programName ?? "CCNA";
 	const isCompTIAExam = theme === "comptia";
+	const isFortinetExam = theme === "fortinet";
+	const isPracticeOnlyExam = isFortinetExam && examKey === "all_questions";
 	const dashboardPath = `/modules/programs/${programKey ?? "ccna"}`;
 	const location = useLocation();
 	const navigate = useNavigate();
@@ -224,7 +243,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 	}, [attemptId, exam.name, isSubmitted, isViewingSavedResult, programKey, questions.length, score, submittedAt, userId]);
 
 	useEffect(() => {
-		if (isAuthLoading || !isSubmitted || isViewingSavedResult || !userId || !Number.isFinite(submittedAt)) return undefined;
+		if (isAuthLoading || !isSubmitted || isViewingSavedResult || isPracticeOnlyExam || !userId || !Number.isFinite(submittedAt)) return undefined;
 
 		let isActive = true;
 		const assessmentProgramKey = programKey ?? "ccna";
@@ -254,7 +273,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 		return () => {
 			isActive = false;
 		};
-	}, [attemptId, exam.name, examKey, gradebookSaveAttempt, isAuthLoading, isSubmitted, isViewingSavedResult, programKey, programName, questions.length, score, submittedAt, userId]);
+	}, [attemptId, exam.name, examKey, gradebookSaveAttempt, isAuthLoading, isPracticeOnlyExam, isSubmitted, isViewingSavedResult, programKey, programName, questions.length, score, submittedAt, userId]);
 
 	function submitExam(finishedAt = Date.now()) {
 		setSubmittedAt((previousSubmittedAt) => previousSubmittedAt ?? finishedAt);
@@ -420,9 +439,9 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 	if (!question) return null;
 
 	return (
-		<main data-theme={isDark ? "dark" : "light"} className={`ccna-page-enter min-h-screen bg-[#f5f9f9] px-4 py-6 text-[#17233d] sm:px-8 sm:py-8 ${isCompTIAExam ? "comptia-exam-page" : ""}`}>
+		<main data-theme={isDark ? "dark" : "light"} className={`ccna-page-enter min-h-screen bg-[#f5f9f9] px-4 py-6 text-[#17233d] sm:px-8 sm:py-8 ${isCompTIAExam ? "comptia-exam-page" : ""} ${isFortinetExam ? "fortinet-exam-page" : ""}`}>
 						<div className="mx-auto max-w-[1125px]">
-				{gradebookSaveError && isResultView && (
+				{!isPracticeOnlyExam && gradebookSaveError && isResultView && (
 					<p role="alert" className="mb-4 rounded-xl border border-[#f2c6c3] bg-white px-4 py-3 text-sm font-medium text-[#b42318]">
 						Your exam result could not be saved to the backend gradebook. {gradebookSaveError}{" "}
 						<button
@@ -437,12 +456,12 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 						</button>
 					</p>
 				)}
-				{isSubmitted && !isViewingSavedResult && !gradebookSaveError && !gradebookSaved && (
+				{!isPracticeOnlyExam && isSubmitted && !isViewingSavedResult && !gradebookSaveError && !gradebookSaved && (
 					<p role="status" className="mb-4 rounded-xl border border-[#d6e5e7] bg-white px-4 py-3 text-sm font-medium text-[#005b6b]">
 						Saving your exam result to the backend gradebook…
 					</p>
 				)}
-				{isSubmitted && !isViewingSavedResult && gradebookSaved && (
+				{!isPracticeOnlyExam && isSubmitted && !isViewingSavedResult && gradebookSaved && (
 					<p role="status" className="mb-4 rounded-xl border border-[#b8dfce] bg-white px-4 py-3 text-sm font-medium text-[#16724e]">
 						Your exam result was saved to the backend gradebook.
 					</p>
@@ -539,11 +558,12 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 									Question {currentIndex + 1} of {questions.length}
 									{question.moduleNumber && ` · Module ${question.moduleNumber}: ${question.moduleTitle}`}
 								</p>
-								<h1 className="ccna-exam-question-prompt mb-4 leading-snug tracking-tight sm:mb-6">{question.prompt}</h1>
-								{/* Exhibit: a picture and/or device output shown above the choices */}
-								{question.exhibitImage && (
-									<ExhibitImage src={question.exhibitImage} className="mb-6" imageClassName="max-h-[32rem]" />
-								)}
+								<QuestionPrompt
+									prompt={question.prompt}
+									imageUrl={question.exhibitImage}
+									hasSeparateExhibit={Boolean(question.exhibit || question.exhibitImage)}
+								/>
+								{/* Device output extracted from the question stays separate from its prompt. */}
 								{question.exhibit && (
 									<ExhibitText text={question.exhibit} className="mb-6" />
 								)}
@@ -729,7 +749,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 				)}
 			</div>
 			{isRetakeConfirmationOpen && createPortal(
-				<div data-theme="light" className={`fixed inset-0 z-[120] grid place-items-center bg-[#071126]/60 p-4 backdrop-blur-sm ${isCompTIAExam ? "comptia-exam-dialog" : ""}`}>
+				<div data-theme="light" className={`fixed inset-0 z-[120] grid place-items-center bg-[#071126]/60 p-4 backdrop-blur-sm ${isCompTIAExam ? "comptia-exam-dialog" : ""} ${isFortinetExam ? "fortinet-exam-dialog" : ""}`}>
 					<section
 						role="alertdialog"
 						aria-modal="true"
@@ -770,7 +790,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 				document.body,
 			)}
 			{blocker.state === "blocked" && createPortal(
-				<div data-theme="light" className={`fixed inset-0 z-[120] grid place-items-center overflow-y-auto bg-[#071126]/55 p-4 backdrop-blur-[2px] sm:p-6 ${isCompTIAExam ? "comptia-exam-dialog" : ""}`}>
+				<div data-theme="light" className={`fixed inset-0 z-[120] grid place-items-center overflow-y-auto bg-[#071126]/55 p-4 backdrop-blur-[2px] sm:p-6 ${isCompTIAExam ? "comptia-exam-dialog" : ""} ${isFortinetExam ? "fortinet-exam-dialog" : ""}`}>
 					<section
 						role="alertdialog"
 						aria-modal="true"

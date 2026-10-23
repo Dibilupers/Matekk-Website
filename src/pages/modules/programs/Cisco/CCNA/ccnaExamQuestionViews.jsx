@@ -391,13 +391,25 @@ function InvalidQuestionMessage() {
 }
 
 // imageUrl: the question's picture, for pages that don't show it themselves (the exam page shows it separately)
-export function QuestionPrompt({ prompt, imageUrl, hasSeparateExhibit = Boolean(imageUrl) }) {
+export function QuestionPrompt({ prompt, imageUrl, hasSeparateExhibit = Boolean(imageUrl), offline = false }) {
+	const rawPrompt = String(prompt ?? "");
+	const readablePrompt = offline ? rawPrompt
+		.replace(/\r\n/g, "\n")
+		.split(/\n\s*\n/)
+		.map((paragraph) => {
+			const lines = paragraph.split("\n").map((line) => line.trim()).filter(Boolean);
+			const containsOptionTable = lines.some((line) => /^Option [A-H]\b/i.test(line));
+			if (!lines.length || looksLikeCode(paragraph) || containsOptionTable) return lines.join("\n");
+			const isList = lines.every((line) => /^(?:[-*•+]\s|\d+[.)]\s|[A-Z][.)]\s)/.test(line));
+			return isList ? lines.join("\n") : lines.join(" ");
+		})
+		.join("\n\n") : rawPrompt;
 	const normalizedPrompt = removeDuplicateExhibitLeadIn(
-		hasSeparateExhibit ? removeTrailingOptionExhibitLabel(prompt) : prompt,
+		hasSeparateExhibit ? removeTrailingOptionExhibitLabel(readablePrompt) : readablePrompt,
 	);
-	const formattedOptions = parseFormattedOptions(normalizedPrompt);
+	const formattedOptions = parseFormattedOptions(normalizedPrompt, { offline });
 	// A scrambled "Option A / Option B" table: show the question, then the whole table as it appears in the source
-	const optionTable = formattedOptions ? null : getOptionTableExhibit(normalizedPrompt);
+	const optionTable = formattedOptions ? null : getOptionTableExhibit(normalizedPrompt, { offline });
 	if (optionTable) {
 		return (
 			<div className="mb-5 space-y-4 sm:mb-6">
