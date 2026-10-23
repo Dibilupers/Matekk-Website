@@ -37,6 +37,7 @@ type MatchExamQuestion = Omit<ExamQuestionBase, 'options'> & {
   groupCounts?: Record<string, number>;
   // 'lines': shown as "connect the circles" instead of click-to-place boxes (see pickLineMatchIds)
   matchStyle?: 'lines' | 'numbers';
+  dragDropMode?: 'items-to-choices';
 };
 type ExamQuestion = SingleExamQuestion | MatchExamQuestion;
 
@@ -246,20 +247,35 @@ export class QuestionsService {
     const review = questionSet.map((question) => {
       const source = sourceById.get(question.id);
       const selectedAnswer = answerById.get(question.id) ?? null;
-      if (!source || !source.correct_answer) {
+      if (!source || (!source.correct_answer && source.id !== 720)) {
         throw new InternalServerErrorException('A question in this exam is no longer available for grading.');
       }
 
       if (question.type !== 'single') {
         // PDF drag-and-drop rows: the choices and answer come from the answer text itself
-        const dragDrop = source.choices?.trim() ? null : parseDragDropAnswer(source.correct_answer, source.id);
-        const originalChoices = dragDrop ? dragDrop.choices : this.parseChoices(source.choices);
+        const customAnswer = [289, 382, 481, 608, 1306].includes(source.id);
+        const dragDrop = customAnswer || source.choices?.trim()
+          ? null
+          : parseDragDropAnswer(source.correct_answer, source.id);
+        const originalChoices = customAnswer
+          ? question.choices
+          : dragDrop ? dragDrop.choices : this.parseChoices(source.choices);
         if (!originalChoices) {
           throw new InternalServerErrorException('A matching question has invalid choices.');
         }
-        const correctIndexes = dragDrop
-          ? dragDrop.answer
-          : this.parseMatchAnswer(source.correct_answer, question.items.length, originalChoices.length);
+        const correctIndexes = source.id === 289
+          ? [0, 1, 2, 3, 4]
+          : source.id === 382
+            ? [0, 1, 2, 5]
+            : source.id === 481
+              ? [0, 1, 1, 2, 3, 3]
+              : source.id === 608
+                ? [0, 1, 4, 5]
+                : source.id === 1306
+                  ? [1, 2, 3, 5]
+                  : dragDrop
+                    ? dragDrop.answer
+                    : this.parseMatchAnswer(source.correct_answer ?? '', question.items.length, originalChoices.length);
         const correctAnswer = correctIndexes.map((index) => question.choices.indexOf(originalChoices[index]));
         if (correctAnswer.some((index) => index < 0)) {
           throw new InternalServerErrorException('A matching answer is no longer available for grading.');
@@ -294,7 +310,9 @@ export class QuestionsService {
         };
       }
 
-      const correctAnswer = this.findCorrectOption(question.options, source.correct_answer);
+      const correctAnswer = question.id === 720
+        ? this.findCorrectOption(question.options, 'A')
+        : this.findCorrectOption(question.options, source.correct_answer ?? '');
       if (!correctAnswer) {
         throw new InternalServerErrorException('A question in this exam is no longer available for grading.');
       }
@@ -388,8 +406,9 @@ export class QuestionsService {
       return {
         id: record.id,
         prompt: record.question_text.trim(),
-        type: 'match',
-        items: [
+        type: 'drag_drop',
+        items: Array.from({ length: 4 }, () => 'Broadcast address'),
+        choices: [
           '10.1.255.254/24',
           '10.63.255.255/10',
           '172.16.255.39/29',
@@ -397,9 +416,35 @@ export class QuestionsService {
           '192.168.1.10/24',
           '192.168.255.127/25',
         ],
-        choices: ['Broadcast address', 'Not used'],
-        groupCounts: { 'Broadcast address': 4, 'Not used': 2 },
-        matchStyle: 'numbers',
+        module: record.module,
+        topic: record.topic,
+      };
+    }
+    if (record.id === 289 && record.question_text?.trim()) {
+      const answerText = record.correct_answer ?? '';
+      const pairPattern = /(?:^|\s)(Class-based weighted fair queuing|Classification|Congestion|Policing|Shaping):\s*/g;
+      const pairs = [...answerText.matchAll(pairPattern)];
+      const choices = [
+        'Class-based weighted fair queuing',
+        'Classification',
+        'Congestion',
+        'Policing',
+        'Shaping',
+      ];
+      if (pairs.length !== choices.length || pairs.some((pair, index) => pair[1] !== choices[index])) {
+        return null;
+      }
+      const items = pairs.map((pair, index) =>
+        answerText.slice(pair.index! + pair[0].length, pairs[index + 1]?.index ?? answerText.length).trim(),
+      );
+      if (items.some((item) => !item)) return null;
+      return {
+        id: record.id,
+        prompt: record.question_text.trim(),
+        imageUrl: record.imageUrl ?? null,
+        type: 'drag_drop',
+        items,
+        choices,
         module: record.module,
         topic: record.topic,
       };
@@ -447,12 +492,12 @@ export class QuestionsService {
     }
 
     if (record.id === 382 && record.question_text?.trim()) {
-      const choices = ['Ansible feature', 'Not an Ansible feature'];
       return {
         id: record.id,
-        prompt: 'Classify each statement as an Ansible feature or not an Ansible feature.',
-        type: 'match',
-        items: [
+        prompt: record.question_text.trim(),
+        type: 'drag_drop',
+        items: Array.from({ length: 4 }, () => 'Feature'),
+        choices: [
           'Uses the YAML language',
           'Executes modules via SSH by default',
           'Pushes configurations to the client',
@@ -460,9 +505,6 @@ export class QuestionsService {
           'Requires clients to pull configurations from the server',
           'Operates without agents',
         ],
-        choices,
-        groupCounts: { 'Ansible feature': 4, 'Not an Ansible feature': 2 },
-        matchStyle: 'numbers',
         module: record.module,
         topic: record.topic,
       };
@@ -472,8 +514,14 @@ export class QuestionsService {
       return {
         id: record.id,
         prompt: record.question_text.trim(),
-        type: 'match',
+        type: 'drag_drop',
         items: [
+          '1',
+          '2',
+          '3',
+          '4',
+        ],
+        choices: [
           'Supports automation',
           'Communicates between the SDN controller and the application plane',
           'Communicates between the SDN controller and the data plane',
@@ -482,20 +530,16 @@ export class QuestionsService {
           'Supports REST-based requirements',
           'Uses OpenFlow to interface between the data and control planes',
         ],
-        choices: ['1', '2', '3', '4', 'Not used'],
-        groupCounts: { '1': 1, '2': 1, '3': 1, '4': 1, 'Not used': 3 },
-        matchStyle: 'numbers',
         module: record.module,
         topic: record.topic,
       };
     }
 
     if (record.id === 481 && record.question_text?.trim()) {
-      const choices = ['R1', 'R2', 'R3', 'Not used'];
       return {
         id: record.id,
         prompt: 'An engineer must configure a static network route between two networks so that host A communicates with host B. Assign the commands to the routers where they must be configured. Not all commands are used.',
-        type: 'match',
+        type: 'drag_drop',
         items: [
           'ip route 10.10.13.0 255.255.255.128 10.10.10.1',
           'ip route 10.10.13.0 255.255.255.128 10.10.10.5',
@@ -504,9 +548,8 @@ export class QuestionsService {
           'ip route 10.10.14.0 255.255.255.0 10.10.10.6',
           'ip route 10.10.14.10 255.255.255.255 10.10.10.6',
         ],
-        choices,
-        groupCounts: { R1: 1, R2: 2, R3: 1, 'Not used': 2 },
-        matchStyle: 'numbers',
+        choices: ['R1', 'R2', 'R3', 'Not used'],
+        dragDropMode: 'items-to-choices',
         module: record.module,
         topic: record.topic,
       };
@@ -865,15 +908,17 @@ export class QuestionsService {
       if (!question) return [];
 
       const answer = row.id === 1306
-        ? [1, 0, 0, 0, 1, 0]
+        ? [1, 2, 3, 5]
+        : row.id === 289
+        ? [0, 1, 2, 3, 4]
         : row.id === 720
         ? 0
         : row.id === 181
         ? [0, 0, 1, 1, 0, 0]
         : row.id === 382
-        ? [0, 0, 0, 1, 1, 0]
+        ? [0, 1, 2, 5]
         : row.id === 608
-        ? [0, 1, 4, 4, 2, 3, 4]
+        ? [0, 1, 4, 5]
         : row.id === 481
         ? [0, 1, 1, 2, 3, 3]
         : question.type !== 'single'
@@ -887,8 +932,14 @@ export class QuestionsService {
           : -1;
       if (answer === undefined || answer === -1 || (Array.isArray(answer) && answer.length === 0)) return [];
 
+      const bankQuestion = row.id === 481
+        ? {
+            ...question,
+            dragDropMode: 'items-to-choices' as const,
+          }
+        : question;
       return [{
-        ...question,
+        ...bankQuestion,
         bankId: row.id,
         answer,
         explanation: row.explanation,

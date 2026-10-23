@@ -236,7 +236,7 @@ describe('QuestionsService', () => {
     ]));
   });
 
-  it('converts question 481 into a native numbered static-route matching question', async () => {
+  it('converts question 481 into router-target drag-and-drop with a native topology', async () => {
     prismaMock.questions.findMany.mockResolvedValue([
       {
         id: 481,
@@ -258,8 +258,8 @@ describe('QuestionsService', () => {
     expect(questions).toHaveLength(1);
     expect(questions[0]).toEqual(expect.objectContaining({
       bankId: 481,
-      type: 'match',
-      matchStyle: 'numbers',
+      type: 'drag_drop',
+      dragDropMode: 'items-to-choices',
       prompt: expect.stringContaining('Assign the commands to the routers'),
       items: [
         'ip route 10.10.13.0 255.255.255.128 10.10.10.1',
@@ -270,13 +270,11 @@ describe('QuestionsService', () => {
         'ip route 10.10.14.10 255.255.255.255 10.10.10.6',
       ],
       choices: ['R1', 'R2', 'R3', 'Not used'],
-      groupCounts: { R1: 1, R2: 2, R3: 1, 'Not used': 2 },
       answer: [0, 1, 1, 2, 3, 3],
     }));
-    expect(questions[0]).not.toHaveProperty('imageUrl');
   });
 
-  it('converts question 382 into a numbered Ansible feature-matching question', async () => {
+  it('converts question 382 into the original Ansible feature drag-and-drop layout', async () => {
     prismaMock.questions.findMany.mockResolvedValue([
       {
         id: 382,
@@ -298,10 +296,10 @@ describe('QuestionsService', () => {
     expect(questions).toHaveLength(1);
     expect(questions[0]).toEqual(expect.objectContaining({
       bankId: 382,
-      type: 'match',
-      matchStyle: 'numbers',
-      prompt: 'Classify each statement as an Ansible feature or not an Ansible feature.',
-      items: [
+      type: 'drag_drop',
+      prompt: 'Drag and drop the Ansible features from the left to the right. Not all features are used.',
+      items: ['Feature', 'Feature', 'Feature', 'Feature'],
+      choices: [
         'Uses the YAML language',
         'Executes modules via SSH by default',
         'Pushes configurations to the client',
@@ -309,9 +307,7 @@ describe('QuestionsService', () => {
         'Requires clients to pull configurations from the server',
         'Operates without agents',
       ],
-      choices: ['Ansible feature', 'Not an Ansible feature'],
-      groupCounts: { 'Ansible feature': 4, 'Not an Ansible feature': 2 },
-      answer: [0, 0, 0, 1, 1, 0],
+      answer: [0, 1, 2, 5],
     }));
   });
 
@@ -406,7 +402,7 @@ describe('QuestionsService', () => {
     }));
   });
 
-  it('converts question 608 into a numbered northbound API answer-slot question', async () => {
+  it('converts question 608 into four-target northbound API drag-and-drop', async () => {
     prismaMock.questions.findMany.mockResolvedValue([
       {
         id: 608,
@@ -433,12 +429,9 @@ describe('QuestionsService', () => {
     expect(questions).toHaveLength(1);
     expect(questions[0]).toEqual(expect.objectContaining({
       bankId: 608,
-      type: 'match',
-      matchStyle: 'numbers',
-      choices: ['1', '2', '3', '4', 'Not used'],
-      groupCounts: { '1': 1, '2': 1, '3': 1, '4': 1, 'Not used': 3 },
-      answer: [0, 1, 4, 4, 2, 3, 4],
-      items: [
+      type: 'drag_drop',
+      items: ['1', '2', '3', '4'],
+      choices: [
         'Supports automation',
         'Communicates between the SDN controller and the application plane',
         'Communicates between the SDN controller and the data plane',
@@ -447,6 +440,7 @@ describe('QuestionsService', () => {
         'Supports REST-based requirements',
         'Uses OpenFlow to interface between the data and control planes',
       ],
+      answer: [0, 1, 4, 5],
     }));
   });
 
@@ -484,7 +478,7 @@ describe('QuestionsService', () => {
     ]);
   });
 
-  it('converts question 1306 into numbered broadcast-address matching', async () => {
+  it('converts question 1306 into four drag-and-drop broadcast-address boxes', async () => {
     prismaMock.questions.findMany.mockResolvedValue([
       {
         id: 1306,
@@ -511,12 +505,8 @@ describe('QuestionsService', () => {
     expect(questions).toHaveLength(1);
     expect(questions[0]).toEqual(expect.objectContaining({
       bankId: 1306,
-      type: 'match',
-      matchStyle: 'numbers',
-      choices: ['Broadcast address', 'Not used'],
-      groupCounts: { 'Broadcast address': 4, 'Not used': 2 },
-      answer: [1, 0, 0, 0, 1, 0],
-      items: [
+      type: 'drag_drop',
+      choices: [
         '10.1.255.254/24',
         '10.63.255.255/10',
         '172.16.255.39/29',
@@ -524,6 +514,8 @@ describe('QuestionsService', () => {
         '192.168.1.10/24',
         '192.168.255.127/25',
       ],
+      items: ['Broadcast address', 'Broadcast address', 'Broadcast address', 'Broadcast address'],
+      answer: [1, 2, 3, 5],
     }));
   });
 
@@ -883,6 +875,104 @@ describe('QuestionsService', () => {
       type: 'match',
       selectedAnswer: [1, 0],
       correctAnswer: [1, 0],
+      isCorrect: true,
+    });
+  });
+
+  it.each([
+    [289, 5, [0, 1, 2, 3, 4]],
+    [382, 4, [0, 1, 2, 5]],
+    [481, 6, [0, 1, 1, 2, 3, 3]],
+    [608, 4, [0, 1, 4, 5]],
+    [1306, 4, [1, 2, 3, 5]],
+  ] as const)('grades CCNA drag-and-drop question %s against its restored answer mapping', async (id, itemCount, mapping) => {
+    const choices = ['Choice 0', 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', 'Choice 5'];
+    const question = {
+      id,
+      prompt: `Question ${id}`,
+      type: 'drag_drop',
+      items: Array.from({ length: itemCount }, (_, index) => `Target ${index + 1}`),
+      choices,
+      module: 'CCNA',
+      topic: 'Routing',
+    };
+    prismaMock.examAttempt.findUnique.mockResolvedValue({
+      id: 'attempt-id',
+      userId: 7,
+      examKey: 'short',
+      questionSet: [question],
+      durationSeconds: 2700,
+      deadline: new Date(Date.now() + 2700000),
+      score: null,
+      review: null,
+      submittedAt: null,
+    });
+    prismaMock.questions.findMany.mockResolvedValue([{
+      id,
+      module: 'CCNA',
+      topic: 'Routing',
+      difficulty: 'Easy',
+      question_text: question.prompt,
+      choices: null,
+      correct_answer: 'Restored drag-and-drop answer',
+      explanation: '',
+      question_type: 'single',
+      match_items: null,
+    }]);
+
+    const result = await service.submitExam('short', 'attempt-id', 7, [
+      { questionId: id, selectedMatches: [...mapping] },
+    ]);
+
+    expect(result.score).toBe(1);
+    expect(result.review[0]).toMatchObject({
+      id,
+      selectedAnswer: [...mapping],
+      correctAnswer: [...mapping],
+      isCorrect: true,
+    });
+  });
+
+  it('grades question 720 using the confirmed 802.3ad answer when the database key is empty', async () => {
+    const options = ['A. 802.3ad', 'B. 802.1q', 'C. 802.1d', 'D. 802.1af'];
+    prismaMock.examAttempt.findUnique.mockResolvedValue({
+      id: 'attempt-id',
+      userId: 7,
+      examKey: 'short',
+      questionSet: [{
+        id: 720,
+        prompt: 'Which standard is required?',
+        options,
+        module: 'CCNA',
+        topic: 'Wireless',
+      }],
+      durationSeconds: 2700,
+      deadline: new Date(Date.now() + 2700000),
+      score: null,
+      review: null,
+      submittedAt: null,
+    });
+    prismaMock.questions.findMany.mockResolvedValue([{
+      id: 720,
+      module: 'CCNA',
+      topic: 'Wireless',
+      difficulty: 'Easy',
+      question_text: 'Which standard is required?',
+      choices: JSON.stringify(options),
+      correct_answer: null,
+      explanation: '',
+      question_type: 'single',
+      match_items: null,
+    }]);
+
+    const result = await service.submitExam('short', 'attempt-id', 7, [
+      { questionId: 720, selectedAnswer: 'A. 802.3ad' },
+    ]);
+
+    expect(result.score).toBe(1);
+    expect(result.review[0]).toMatchObject({
+      id: 720,
+      correctAnswer: 'A. 802.3ad',
       isCorrect: true,
     });
   });
