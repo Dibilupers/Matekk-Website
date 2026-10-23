@@ -365,6 +365,11 @@ export default function CCNAAllQuestionsExam() {
 							{question.exhibitDiagram && <ExhibitDiagram type={question.exhibitDiagram} className="mb-6" />}
 							{question.exhibitImage && !question.hideExhibitImage && <ExhibitImage src={question.exhibitImage} className="mb-6" imageClassName="max-h-[32rem]" cropTop={question.exhibitImageCropTop} />}
 							{question.exhibit && <ExhibitText text={question.exhibit} className="mb-6" />}
+							{question.exhibitUnavailable && !question.exhibit && !question.exhibitImage && !question.exhibitDiagram && (
+								<p className="mb-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+									The source question refers to an exhibit that is not available.
+								</p>
+							)}
 							<QuestionInput
 								key={currentIndex}
 								question={question}
