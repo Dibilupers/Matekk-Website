@@ -134,6 +134,7 @@ import NetworkPlusExam from "../pages/modules/programs/CompTIA/Network+/networkP
 import SecurityPlusExam from "../pages/modules/programs/CompTIA/Security+/securityPlusExam";
 import NETWORK_PLUS_PROGRAM from "../pages/modules/programs/CompTIA/Network+/networkPlusProgram";
 import SECURITY_PLUS_PROGRAM from "../pages/modules/programs/CompTIA/Security+/securityPlusProgram";
+import FortiOSOfflineExam from "../pages/modules/programs/Fortinet/FortiOS/offline/fortiosOfflineExam";
 import { useAuth } from "../context/auth-context";
 import {
   readCcnaModuleQuizProgress,
@@ -155,7 +156,8 @@ export default function App() {
     || location.pathname.startsWith("/modules/programs/ccna-cybersecurity/quiz/")
     || location.pathname.startsWith("/modules/programs/ccna-cybersecurity/exam/")
     || location.pathname.startsWith("/modules/programs/comptia-network-plus/exam/")
-    || location.pathname.startsWith("/modules/programs/comptia-security-plus/exam/");
+    || location.pathname.startsWith("/modules/programs/comptia-security-plus/exam/")
+    || location.pathname === "/modules/programs/fortios/exam/all";
   const isAdminPage = location.pathname === "/admin";
   const isAccountPendingPage = location.pathname === "/account-pending";
   useHeadingTypeIn(location.pathname);
@@ -618,6 +620,14 @@ export default function App() {
           }
         />
         <Route
+          path="/modules/programs/fortios/exam/all"
+          element={
+            <ProtectedRoute>
+              <FortiOSOfflineExam />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/modules/programs/ccna-automation/exam/:examKey"
           element={
             <ProtectedRoute>
@@ -815,6 +825,7 @@ function OfflineEntryRoute({ children }) {
 function OfflineModulesPage() {
   const programs = [
     { name: "CCNA", path: "/modules/programs/ccna" },
+    { name: "FortiOS", path: "/modules/programs/fortios/exam/all" },
     { name: "CompTIA A+", path: "/modules/programs/comptia-aplus" },
     { name: "CCNA Automation", path: "/modules/programs/ccna-automation" },
     { name: "CCNA Cybersecurity", path: "/modules/programs/ccna-cybersecurity" },
@@ -847,6 +858,7 @@ function ProtectedRoute({ children }) {
   const { pathname } = useLocation();
   const isModuleRoute = /^\/modules\/programs(?:\/|$)/.test(pathname);
   const isExamRoute = /(?:^|\/)exam(?:\/|$)/.test(pathname);
+  const canAccessOfflineExam = pathname === "/modules/programs/fortios/exam/all" && !isOnline;
   const canAccessOfflineModule = isModuleRoute && !isExamRoute && !isOnline;
 
   if (isLoading) {
@@ -857,7 +869,7 @@ function ProtectedRoute({ children }) {
     );
   }
 
-  if (!isOnline && isModuleRoute && isExamRoute) {
+  if (!isOnline && isModuleRoute && isExamRoute && !canAccessOfflineExam) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6 text-center text-white">
         <section className="max-w-lg space-y-3">
@@ -868,7 +880,7 @@ function ProtectedRoute({ children }) {
     );
   }
 
-  if (!isAuthenticated && !canAccessOfflineModule) {
+  if (!isAuthenticated && !canAccessOfflineModule && !canAccessOfflineExam) {
     return <Navigate to="/login" replace />;
   }
   if (isAuthenticated && profile.active_status === false) {
@@ -877,6 +889,7 @@ function ProtectedRoute({ children }) {
   if (canAccessOfflineModule) {
     return <OfflineModuleAccess isOnline={false}>{children}</OfflineModuleAccess>;
   }
+  if (canAccessOfflineExam) return children;
   if (!isAuthenticated) return children;
   return isModuleRoute && !isExamRoute
     ? <OfflineModuleAccess isOnline>{children}</OfflineModuleAccess>

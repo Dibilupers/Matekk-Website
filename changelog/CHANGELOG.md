@@ -23,3 +23,12 @@ Validation before push: frontend production build, server build, 19 focused serv
 - Added the `changelog/` folder and initialized this push log.
 
 Documentation-only changes; no build or test run was needed.
+
+## 2026-10-23 — FortiOS offline exam (uncommitted)
+
+- Added a FortiOS offline exam route and offline entry with a bundled bank of 90 questions, including matching questions and exhibit references.
+- Added a FortiOS-only exhibit URL loader and service-worker image cache flow. When online, the exam requests signed exhibit URLs from the existing `GET /questions/bank` endpoint, then caches the images for offline use.
+- Updated frontend routing and offline access gating for the FortiOS exam. Existing CCNA source files and CCNA-specific image caching behavior were not changed.
+- No backend code, schema, or API behavior was changed; the existing question-bank endpoint is consumed as-is.
+
+Validation: targeted ESLint, production build, and `git diff --check` passed. Browser validation against the deployed API and offline image loading remains pending. These changes are not committed or pushed.
