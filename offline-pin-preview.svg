@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1225" height="905" viewBox="0 0 1225 905">
+  <rect width="1225" height="905" fill="#020617"/>
+  <rect x="334" y="357" width="560" height="191" rx="20" fill="#fff"/>
+  <text x="370" y="412" fill="#00647c" font-family="Arial, sans-serif" font-size="18" font-weight="700" letter-spacing="3">OFFLINE LEARNING</text>
+  <text x="370" y="460" fill="#0f172a" font-family="Arial, sans-serif" font-size="36" font-weight="700">Unlock your modules</text>
+  <text x="370" y="497" fill="#475569" font-family="Arial, sans-serif" font-size="19">Enter the admin’s shared 4–6 digit PIN to continue.</text>
+  <rect x="370" y="516" width="272" height="55" rx="10" fill="#fff" stroke="#cbd5e1"/>
+  <text x="390" y="550" fill="#94a3b8" font-family="Arial, sans-serif" font-size="18">Enter 4–6 digit PIN</text>
+  <rect x="656" y="516" width="202" height="55" rx="10" fill="#7eafbb"/>
+  <text x="680" y="550" fill="#fff" font-family="Arial, sans-serif" font-size="18" font-weight="700">Unlock modules</text>
+</svg>

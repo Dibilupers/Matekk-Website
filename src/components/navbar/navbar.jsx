@@ -16,6 +16,7 @@ import {
   LayoutDashboard,
   LogOut,
   MessageCircle,
+  ShieldCheck,
   User,
   X,
 } from "lucide-react";
@@ -67,6 +68,7 @@ function NavBar() {
 
   const profileName = profile?.username || "My Profile";
   const profileRole = profile?.role || "Learner";
+  const isAdmin = profile?.role?.trim().toLowerCase() === "admin";
   const closeProfile = () => {
     setIsProfileOpen(false);
     setIsOpen(false);
@@ -147,6 +149,7 @@ function NavBar() {
       <div className="min-h-0 flex-1 divide-y divide-slate-200 overflow-y-auto">
         <div>
           <h3 className="flex items-center gap-3 px-5 pb-1 pt-4 text-sm font-bold"><LayoutDashboard size={19} className="text-[#1775ee]" /> Dashboard</h3>
+          {isAdmin && profileLink("Admin", <ShieldCheck size={19} className="text-[#1775ee]" />, () => { closeProfile(); navigate("/admin"); })}
           {profileLink("My Learning", <BookOpen size={19} className="text-[#1775ee]" />, () => { closeProfile(); navigate("../pages/blank"); })}
           {profileLink("My Gradebook", <ClipboardList size={19} className="text-[#1775ee]" />, () => setIsGradebookChooserOpen(true))}
           <button
