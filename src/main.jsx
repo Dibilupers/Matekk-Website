@@ -5,9 +5,7 @@ import App from "./routes/App";
 import "./index.css";
 import { AuthProvider } from "./context/AuthContext";
 import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/react";
-
-const enableVercelInsights = import.meta.env.VITE_ENABLE_VERCEL_INSIGHTS === "true";
+import { SpeedInsights } from "@vercel/speed-insights/react"
 
 if (import.meta.env.PROD && "serviceWorker" in navigator) {
   window.addEventListener("load", () => {
@@ -28,11 +26,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <AuthProvider>
       <RouterProvider router={router} />
     </AuthProvider>
-    {enableVercelInsights && (
-      <>
-        <Analytics />
-        <SpeedInsights />
-      </>
-    )}
+    <Analytics />
+    <SpeedInsights />
   </React.StrictMode>,
 );

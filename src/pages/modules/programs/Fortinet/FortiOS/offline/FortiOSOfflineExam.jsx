@@ -7,6 +7,12 @@ import { ExhibitImage, ExhibitText } from "../../../Cisco/CCNA/ccnaExhibit";
 import { QuestionInput, QuestionPrompt, QuestionReview } from "../../../Cisco/CCNA/ccnaExamQuestionViews";
 import { createFortiOSOfflineExam, FORTIOS_OFFLINE_EXAM_FORMATS } from "./fortiosOfflineExamFormats";
 import { loadCachedFortiOSQuestionBank } from "./fortiosOfflineQuestionBank";
+import FORTIOS_OFFLINE_QUESTIONS from "./fortiosOfflineQuestions.json";
+import { getFortiOSBundledImageUrl } from "./fortiosOfflineImages";
+
+const FORTIOS_BUNDLED_IMAGE_URLS = new Map(FORTIOS_OFFLINE_QUESTIONS
+	.map((question) => [question.id, getFortiOSBundledImageUrl(question.imagePath)])
+	.filter(([, url]) => url));
 
 function shuffle(items) {
 	const shuffled = [...items];
@@ -64,21 +70,31 @@ export default function FortiOSOfflineExam() {
 		loadCachedFortiOSQuestionBank()
 			.then((bank) => {
 				if (!active) return;
-				setBankState({ status: "ready", bank, error: null });
+				const offlineBank = bank.map((item) => ({
+					...item,
+					exhibitImage: FORTIOS_BUNDLED_IMAGE_URLS.get(Number(item.id)) || item.exhibitImage,
+				}));
+				setBankState({ status: "ready", bank: offlineBank, error: null });
 				let restoredSession = null;
 				try {
 					const saved = window.localStorage.getItem(sessionKey);
 					if (saved) {
 						const parsed = JSON.parse(saved);
-						if (isValidSession(parsed, examKey) && parsed.questions.every((item) => bank.some((candidate) => candidate.id === item.id))) {
-							restoredSession = parsed;
+						if (isValidSession(parsed, examKey) && parsed.questions.every((item) => offlineBank.some((candidate) => candidate.id === item.id))) {
+							restoredSession = {
+								...parsed,
+								questions: parsed.questions.map((item) => ({
+									...item,
+									exhibitImage: FORTIOS_BUNDLED_IMAGE_URLS.get(Number(item.id)) || item.exhibitImage,
+								})),
+							};
 						}
 					}
 				} catch (error) {
 					console.error("Unable to restore the offline FortiOS exam session.", error);
 				}
 				try {
-					const nextSession = restoredSession ?? createSession(bank, examKey);
+					const nextSession = restoredSession ?? createSession(offlineBank, examKey);
 					setSession(nextSession);
 					setSecondsRemaining(nextSession.deadline === null ? 0 : Math.max(0, Math.ceil((nextSession.deadline - Date.now()) / 1000)));
 				} catch (error) {
