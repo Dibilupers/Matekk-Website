@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../../../../../context/auth-context";
 import { isAnswerCorrect, isQuestionAnswered } from "../../../../../../utils/ccnaExamGrading";
 import { QuestionInput, QuestionPrompt, QuestionReview } from "../../../Cisco/CCNA/ccnaExamQuestionViews";
-import { loadFortiOSImageUrls, precacheFortiOSImages, readFortiOSImageUrls } from "./fortiosOfflineImages";
+import { getFortiOSImageUrls, precacheFortiOSImages } from "./fortiosOfflineImages";
 import FORTIOS_OFFLINE_QUESTIONS from "./fortiosOfflineQuestions.json";
 
 const IMAGE_CACHE_MESSAGES = {
@@ -32,26 +32,15 @@ function attachImages(imageUrls) {
 }
 
 function restoreExamState(storageKey, isOnline) {
-  let imageUrls = {};
+	const imageUrls = getFortiOSImageUrls(FORTIOS_OFFLINE_QUESTIONS);
   let imageCacheState = isOnline
     ? { status: "loading", message: IMAGE_CACHE_MESSAGES.loading }
-    : {
+		: Object.keys(imageUrls).length === EXPECTED_IMAGE_COUNT
+			? { status: "ready", message: IMAGE_CACHE_MESSAGES.ready }
+			: {
         status: "error",
-        message: "No FortiOS exhibit images are saved on this device yet. Connect to the internet and open this exam once to cache them.",
+				message: "Some bundled FortiOS exhibit images are missing from this app build.",
       };
-
-  try {
-    imageUrls = readFortiOSImageUrls();
-    if (Object.keys(imageUrls).length) {
-      imageCacheState = { status: "ready", message: IMAGE_CACHE_MESSAGES.ready };
-    }
-  } catch (error) {
-    console.error("Unable to restore cached FortiOS image URLs.", error);
-    imageCacheState = {
-      status: "error",
-      message: "Saved FortiOS image information could not be restored. Reconnect to download the exhibits again.",
-    };
-  }
 
   const state = {
     questions: attachImages(imageUrls),
@@ -115,7 +104,7 @@ export default function FortiOSOfflineExam() {
       if (!isActive) return;
       setImageCacheState({ status: "loading", message: IMAGE_CACHE_MESSAGES.loading });
       try {
-        const imageUrls = await loadFortiOSImageUrls(FORTIOS_OFFLINE_QUESTIONS);
+			const imageUrls = getFortiOSImageUrls(FORTIOS_OFFLINE_QUESTIONS);
         if (!isActive) return;
         setQuestions(attachImages(imageUrls));
         const { cachedCount, failedCount } = await precacheFortiOSImages(imageUrls);
