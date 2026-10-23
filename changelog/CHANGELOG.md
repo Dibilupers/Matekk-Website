@@ -4,6 +4,12 @@ Tracking begins 2026-10-17.
 
 ## 2026-10-23 — `main`
 
+- `74ff021` — Restricted FortiOS multiple-select parsing to FortiOS-filtered bank requests so other course banks remain unchanged.
+
+Validation before push: 36 targeted question-service tests, backend build, targeted Oxlint, and Git whitespace checks passed.
+
+## 2026-10-23 — `main`
+
 Commits included in this push:
 
 - `2a1b948` — Added more Fortinet FortiOS exam questions.
