@@ -14,13 +14,16 @@ function shuffle(items) {
 }
 
 function shuffleQuestionChoices(question) {
-	if (question.type === "match") {
+	if (["match", "drag_drop", "click_boxes", "image"].includes(question.type)) {
 		const order = shuffle(question.choices.map((_, index) => index));
 		const newIndexByOldIndex = new Map(order.map((oldIndex, newIndex) => [oldIndex, newIndex]));
 		return {
 			...question,
 			choices: order.map((index) => question.choices[index]),
 			answer: question.answer.map((index) => newIndexByOldIndex.get(index)),
+			...(Array.isArray(question.groupSizes)
+				? { groupSizes: order.map((index) => question.groupSizes[index]) }
+				: {}),
 		};
 	}
 

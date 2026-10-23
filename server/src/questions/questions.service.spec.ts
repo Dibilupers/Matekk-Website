@@ -206,6 +206,92 @@ describe('QuestionsService', () => {
     ]));
   });
 
+  it('parses FortiOS choice objects and returns single- and multiple-select questions', async () => {
+    prismaMock.questions.findMany.mockResolvedValue([
+      {
+        id: 1,
+        module: 'Fortinet FortiOS',
+        topic: 'SASE',
+        question_text: 'What is the primary goal of Fortinet SASE?',
+        choices: JSON.stringify([
+          { id: 'A', text: 'Replace on-premises firewalls.' },
+          { id: 'B', text: 'Provide cloud security for remote users.' },
+        ]),
+        correct_answer: 'B',
+        explanation: '',
+        question_type: 'multiple_choice',
+        match_items: null,
+        imageUrl: 'questions/q1.png',
+      },
+      {
+        id: 2,
+        module: 'Fortinet FortiOS',
+        topic: 'ECMP',
+        question_text: 'Which two statements are true?',
+        choices: JSON.stringify([
+          { id: 'A', text: 'First correct choice.' },
+          { id: 'B', text: 'Incorrect choice.' },
+          { id: 'C', text: 'Second correct choice.' },
+        ]),
+        correct_answer: 'A,C',
+        explanation: '',
+        question_type: 'multiple_select',
+        match_items: null,
+        imageUrl: null,
+      },
+      {
+        id: 3,
+        module: 'Fortinet FortiOS',
+        topic: 'High availability',
+        question_text: 'Arrange the FGCP election criteria in order.',
+        choices: JSON.stringify([
+          { id: 'A', text: 'FortiGate serial number' },
+          { id: 'B', text: 'HA uptime' },
+          { id: 'C', text: 'System uptime' },
+          { id: 'D', text: 'Connected monitored ports' },
+          { id: 'E', text: 'Priority' },
+        ]),
+        correct_answer: '[3,4,1,0]',
+        explanation: '',
+        question_type: 'match',
+        match_items: ['1', '2', '3', '4'],
+        imageUrl: null,
+      },
+    ]);
+
+    const result = await service.findUsableBank();
+
+    expect(result.skippedCount).toBe(0);
+    expect(result.questions).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        bankId: 1,
+        type: 'single',
+        options: ['Replace on-premises firewalls.', 'Provide cloud security for remote users.'],
+        answer: 1,
+        imageUrl: 'questions/q1.png',
+      }),
+      expect.objectContaining({
+        bankId: 2,
+        type: 'multi',
+        options: ['First correct choice.', 'Incorrect choice.', 'Second correct choice.'],
+        answer: [0, 2],
+      }),
+      expect.objectContaining({
+        bankId: 3,
+        type: 'match',
+        items: ['1', '2', '3', '4'],
+        choices: [
+          'FortiGate serial number',
+          'HA uptime',
+          'System uptime',
+          'Connected monitored ports',
+          'Priority',
+        ],
+        answer: [3, 4, 1, 0],
+      }),
+    ]));
+  });
+
   it('rejects a correct answer that is not one of the available choices', () => {
     expect(() => service.create({
       module: 'CCNA',

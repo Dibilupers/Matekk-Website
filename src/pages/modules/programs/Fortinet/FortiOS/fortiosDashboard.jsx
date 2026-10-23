@@ -768,6 +768,10 @@ export default function FortiOSDashboard() {
 								const durationLabel = format.durationSeconds === null
 									? "No time limit"
 									: `${Math.round(format.durationSeconds / 60)} minutes`;
+								const progress = examRuns.find((run) => run.examKey === examKey)?.progress;
+								const remainingSeconds = progress?.deadline
+									? Math.max(0, Math.ceil((progress.deadline - examClockNow) / 1000))
+									: null;
 								return (
 									<button
 										key={examKey}
@@ -778,8 +782,11 @@ export default function FortiOSDashboard() {
 									>
 										<span className="flex items-start justify-between gap-2">
 											<span className="text-lg font-bold">{format.name}</span>
-											{examRuns.find((run) => run.examKey === examKey)?.progress.status === "in-progress" && (
-												<span className="shrink-0 rounded-full bg-[#fff0ef] px-2.5 py-1 text-[11px] font-bold text-[#bd2119]">In progress</span>
+											{progress?.status === "in-progress" && (
+												<span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-[#fff0ef] px-2.5 py-1 text-[11px] font-bold tabular-nums text-[#bd2119]">
+													<Clock3 size={12} />
+													{remainingSeconds === null ? "No timer" : formatExamTime(remainingSeconds)}
+												</span>
 											)}
 										</span>
 										<span className="mt-3 block text-3xl font-extrabold">{questionLabel}</span>

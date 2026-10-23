@@ -39,6 +39,39 @@ type MatchExamQuestion = Omit<ExamQuestionBase, 'options'> & {
   matchStyle?: 'lines' | 'numbers';
 };
 type ExamQuestion = SingleExamQuestion | MatchExamQuestion;
+type UsableBankQuestion =
+  | (SingleExamQuestion & {
+      bankId: number;
+      answer: number;
+      explanation: string;
+      source: 'question-bank';
+    })
+  | (MatchExamQuestion & {
+      bankId: number;
+      answer: number[];
+      explanation: string;
+      source: 'question-bank';
+    })
+  | {
+      id: number;
+      bankId: number;
+      prompt: string;
+      imageUrl: string | null;
+      type: 'multi';
+      options: string[];
+      answer: number[];
+      module: string | null;
+      topic: string | null;
+      explanation: string;
+      source: 'question-bank';
+    };
+type ParsedChoice = { id: string | null; text: string };
+
+function isSingleChoiceQuestionType(questionType: string | null | undefined) {
+  const normalizedType = questionType?.trim().toLocaleLowerCase().replace(/[\s-]+/g, '_');
+  return !normalizedType ||
+    ['single', 'single_choice', 'multiple_choice', 'mcq', 'radio'].includes(normalizedType);
+}
 
 @Injectable()
 export class QuestionsService {
@@ -294,7 +327,11 @@ export class QuestionsService {
         };
       }
 
-      const correctAnswer = this.findCorrectOption(question.options, source.correct_answer);
+      const correctAnswer = this.findCorrectOption(
+        question.options,
+        source.correct_answer,
+        this.parseChoiceData(source.choices)?.map(({ id }) => id),
+      );
       if (!correctAnswer) {
         throw new InternalServerErrorException('A question in this exam is no longer available for grading.');
       }
@@ -451,13 +488,14 @@ export class QuestionsService {
         topic: record.topic,
       };
     }
-    if (record.question_type && record.question_type !== 'single') return null;
+    if (!isSingleChoiceQuestionType(record.question_type)) return null;
+    const choiceIds = this.parseChoiceData(record.choices)?.map(({ id }) => id);
     if (
       !Array.isArray(options) ||
       options.length < 2 ||
       options.length > 8 ||
       !options.every((option): option is string => typeof option === 'string' && option.trim().length > 0) ||
-      !this.findCorrectOption(options, record.correct_answer)
+      !this.findCorrectOption(options, record.correct_answer, choiceIds)
     ) {
       return null;
     }
@@ -474,16 +512,36 @@ export class QuestionsService {
   }
 
   private parseChoices(value: string | null): string[] | null {
+    return this.parseChoiceData(value)?.map(({ text }) => text) ?? null;
+  }
+
+  private parseChoiceData(value: string | null): ParsedChoice[] | null {
     if (!value) return null;
     try {
       const parsed: unknown = JSON.parse(value);
-      const choices = Array.isArray(parsed)
-        ? parsed
-        : parsed && typeof parsed === 'object'
-          ? Object.values(parsed)
+      if (Array.isArray(parsed)) {
+        const choices = parsed.map((choice): ParsedChoice | null => {
+          if (typeof choice === 'string') return { id: null, text: choice };
+          if (!choice || typeof choice !== 'object' || Array.isArray(choice)) return null;
+
+          const id = 'id' in choice ? choice.id : null;
+          const text = 'text' in choice ? choice.text : null;
+          if (
+            typeof text !== 'string' ||
+            !(typeof id === 'string' || typeof id === 'number')
+          ) return null;
+          return { id: String(id), text };
+        });
+        return choices.every((choice): choice is ParsedChoice => choice !== null)
+          ? choices
           : null;
-      return Array.isArray(choices) &&
-        choices.every((choice): choice is string => typeof choice === 'string')
+      }
+
+      if (!parsed || typeof parsed !== 'object') return null;
+      const choices = Object.entries(parsed).map(([id, text]): ParsedChoice | null =>
+        typeof text === 'string' ? { id, text } : null,
+      );
+      return choices.every((choice): choice is ParsedChoice => choice !== null)
         ? choices
         : null;
     } catch {
@@ -508,8 +566,17 @@ export class QuestionsService {
     return parsed;
   }
 
-  private findCorrectOption(options: string[], answer: string): string | null {
+  private findCorrectOption(
+    options: string[],
+    answer: string,
+    choiceIds: (string | null)[] = [],
+  ): string | null {
     const normalizedAnswer = answer.trim();
+    const idIndex = choiceIds.findIndex((id) =>
+      id?.trim().toLocaleLowerCase() === normalizedAnswer.toLocaleLowerCase(),
+    );
+    if (idIndex >= 0) return options[idIndex] ?? null;
+
     const exactMatch = options.find((option) => option.trim().toLocaleLowerCase() === normalizedAnswer.toLocaleLowerCase());
     if (exactMatch) return exactMatch;
 
@@ -732,25 +799,74 @@ export class QuestionsService {
 
   async findUsableBank(module?: string) {
     const rows = await this.findBank(module);
-    const questions = rows.flatMap((row) => {
+    const questions = rows.flatMap<UsableBankQuestion>((row) => {
+      if (row.question_type?.trim().toLocaleLowerCase().replace(/[\s-]+/g, '_') === 'multiple_select') {
+        const options = this.parseChoices(row.choices);
+        const correctChoiceIds = this.parseChoiceData(row.choices)?.map(({ id }) => id);
+        const answerIds = row.correct_answer?.split(',').map((answer) => answer.trim().toLocaleLowerCase());
+        if (
+          !row.question_text?.trim() ||
+          !options ||
+          options.length < 2 ||
+          options.length > 8 ||
+          !options.every((option) => option.trim()) ||
+          !correctChoiceIds ||
+          !answerIds ||
+          answerIds.length < 2 ||
+          answerIds.some((answer) => !answer)
+        ) return [];
+
+        const answer = answerIds.map((answer) =>
+          correctChoiceIds.findIndex((id) => id?.trim().toLocaleLowerCase() === answer),
+        );
+        if (answer.some((index) => index < 0) || new Set(answer).size !== answer.length) return [];
+
+        return [{
+          id: row.id,
+          bankId: row.id,
+          prompt: row.question_text.trim(),
+          imageUrl: row.imageUrl ?? null,
+          type: 'multi' as const,
+          options,
+          answer,
+          module: row.module,
+          topic: row.topic,
+          explanation: row.explanation,
+          source: 'question-bank',
+        }];
+      }
+
       const question = this.readQuestion(row);
       if (!question) return [];
 
-      const answer = question.type !== 'single'
-        ? row.question_type === 'match'
-          ? this.parseMatchAnswer(row.correct_answer, question.items.length, question.choices.length)
-          : parseDragDropAnswer(row.correct_answer, row.id)?.answer
-        : question.type === 'single'
-          ? question.options.indexOf(this.findCorrectOption(question.options, row.correct_answer) ?? '')
-          : -1;
-      if (answer === undefined || answer === -1 || (Array.isArray(answer) && answer.length === 0)) return [];
+      if (question.type === 'single') {
+        const answer = question.options.indexOf(this.findCorrectOption(
+          question.options,
+          row.correct_answer,
+          this.parseChoiceData(row.choices)?.map(({ id }) => id),
+        ) ?? '');
+        if (answer < 0) return [];
+
+        return [{
+          ...question,
+          bankId: row.id,
+          answer,
+          explanation: row.explanation,
+          source: 'question-bank' as const,
+        }];
+      }
+
+      const answer = row.question_type === 'match'
+        ? this.parseMatchAnswer(row.correct_answer, question.items.length, question.choices.length)
+        : parseDragDropAnswer(row.correct_answer, row.id)?.answer;
+      if (!answer?.length) return [];
 
       return [{
         ...question,
         bankId: row.id,
         answer,
         explanation: row.explanation,
-        source: 'question-bank',
+        source: 'question-bank' as const,
       }];
     });
     return { questions, skippedCount: rows.length - questions.length };
