@@ -270,6 +270,11 @@ describe('QuestionsService', () => {
       },
     ]);
 
+    const unfiltered = await service.findUsableBank();
+    expect(unfiltered.questions).not.toEqual(expect.arrayContaining([
+      expect.objectContaining({ bankId: 3403 }),
+    ]));
+
     const result = await service.findUsableBank('Fortinet FortiOS');
 
     expect(result.skippedCount).toBe(0);

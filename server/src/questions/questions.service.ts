@@ -74,6 +74,13 @@ function isSingleChoiceQuestionType(questionType: string | null | undefined) {
     ['single', 'single_choice', 'multiple_choice', 'mcq', 'radio'].includes(normalizedType);
 }
 
+function isFortiOSModule(module: string | null | undefined) {
+  const normalizedModule = module?.trim().toLocaleLowerCase();
+  return normalizedModule === 'fortios' ||
+    normalizedModule === 'fortinet fortios' ||
+    normalizedModule === 'fortigate administrator';
+}
+
 @Injectable()
 export class QuestionsService {
   constructor(
@@ -962,7 +969,9 @@ export class QuestionsService {
   async findUsableBank(module?: string) {
     const rows = await this.findBank(module);
     const questions = rows.flatMap<UsableBankQuestion>((row) => {
-      const question = this.readFortiOSMultiSelectQuestion(row) ??
+      const question = (isFortiOSModule(module) && isFortiOSModule(row.module)
+        ? this.readFortiOSMultiSelectQuestion(row)
+        : null) ??
         this.readMultiSelectQuestion(row) ??
         this.readQuestion(row);
       if (!question) return [];
