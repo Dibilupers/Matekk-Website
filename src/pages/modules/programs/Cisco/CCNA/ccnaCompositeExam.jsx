@@ -794,8 +794,9 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 									<ExhibitImage
 										src={question.exhibitImage}
 										className="mb-6"
-										imageClassName={`max-h-[32rem] ${enlargeRouteExhibit ? "!w-[min(30rem,calc(100vw_-_3rem))]" : ""}`}
+										imageClassName={`max-h-[32rem] ${!isOfflineExam && enlargeRouteExhibit ? "!w-[min(30rem,calc(100vw_-_3rem))]" : ""}`}
 										cropTop={question.exhibitImageCropTop}
+										offlineLayout={isOfflineExam && question.offlineLegacy === true}
 									/>
 								)}
 								{question.exhibit && (
@@ -957,8 +958,9 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 														src={item.exhibitImage}
 														lazy
 														className="mt-4"
-														imageClassName={`max-h-[26rem] ${isRoutingProtocolComparisonQuestion(item) ? "!w-[min(30rem,calc(100vw_-_3rem))]" : ""}`}
+														imageClassName={`max-h-[26rem] ${!isOfflineExam && isRoutingProtocolComparisonQuestion(item) ? "!w-[min(30rem,calc(100vw_-_3rem))]" : ""}`}
 														cropTop={item.exhibitImageCropTop}
+														offlineLayout={isOfflineExam && item.offlineLegacy === true}
 													/>
 												)}
 												{item.exhibit && (

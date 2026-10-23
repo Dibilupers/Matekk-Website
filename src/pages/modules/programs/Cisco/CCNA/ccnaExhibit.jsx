@@ -2196,10 +2196,12 @@ export function ExhibitDiagram({ type, className = "" }) {
 }
 
 /* Picture exhibit: always expandable, since diagrams shrink a lot on phones. */
-export function ExhibitImage({ src, className = "", imageClassName = "", lazy = false, cropTop = false }) {
+export function ExhibitImage({ src, className = "", imageClassName = "", lazy = false, cropTop = false, offlineLayout = false }) {
 	const [openTheme, setOpenTheme] = useState(null);
 	const wrapRef = useRef(null);
-	const image = cropTop
+	const image = offlineLayout
+		? <img key={src} src={src} alt="Exhibit diagram" loading={lazy ? "lazy" : undefined} className={`block h-auto max-h-[75vh] w-auto max-w-full rounded-xl border border-[#d6e5e7] bg-white object-contain !max-h-[75vh] ${imageClassName}`} />
+		: cropTop
 		? (
 			<div className="aspect-[578/260] w-full overflow-hidden rounded-xl border border-[#d6e5e7] bg-white">
 				<img key={src} src={src} alt="Exhibit" loading={lazy ? "lazy" : undefined} className={`h-full w-full object-cover object-top ${imageClassName}`} />
@@ -2207,18 +2209,20 @@ export function ExhibitImage({ src, className = "", imageClassName = "", lazy = 
 		)
 		: <img key={src} src={src} alt="Exhibit" loading={lazy ? "lazy" : undefined} className={`w-auto max-w-full rounded-xl border border-[#d6e5e7] bg-white ${imageClassName}`} />;
 	return (
-		<div ref={wrapRef} className={`relative mx-auto ${cropTop ? "w-full max-w-[36rem]" : "w-fit max-w-full"} ${className}`}>
+		<div ref={wrapRef} className={`relative mx-auto ${offlineLayout ? "flex w-full max-w-full flex-col items-center gap-3 rounded-xl border border-[#d6e5e7] bg-[#f8fafb] p-3 sm:p-4" : cropTop ? "w-full max-w-[36rem]" : "w-fit max-w-full"} ${className}`}>
 			{image}
 			<button
 				type="button"
 				onClick={() => setOpenTheme(pageTheme(wrapRef.current))}
-				className="absolute right-2 top-2 flex items-center gap-1.5 rounded-full border border-white/25 bg-[#1e2b44]/90 px-3 py-1.5 text-xs font-bold text-white shadow backdrop-blur transition hover:bg-[#28395a]"
+				className={offlineLayout
+					? "inline-flex min-h-10 items-center gap-1.5 self-end rounded-full border border-[#cbd5e1] bg-white px-4 py-2 text-sm font-semibold text-[#1e2b44] shadow-sm transition hover:bg-[#eef3f5]"
+					: "absolute right-2 top-2 flex items-center gap-1.5 rounded-full border border-white/25 bg-[#1e2b44]/90 px-3 py-1.5 text-xs font-bold text-white shadow backdrop-blur transition hover:bg-[#28395a]"}
 			>
 				<Maximize2 size={13} /> Expand
 			</button>
 			{openTheme && (
 				<ZoomViewer title="Exhibit" theme={openTheme} onClose={() => setOpenTheme(null)}>
-					{cropTop
+					{cropTop && !offlineLayout
 						? (
 							<div className="aspect-[578/260] w-[36rem] max-w-[90vw] overflow-hidden rounded-lg bg-white">
 								<img src={src} alt="Exhibit (full screen)" className="h-full w-full object-cover object-top" />
