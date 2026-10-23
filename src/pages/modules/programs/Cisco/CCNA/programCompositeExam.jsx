@@ -69,12 +69,29 @@ function restoreExamSession(exam, sessionStorageKey) {
 		if (!isValid) throw new TypeError(`Saved ${exam.name} session has an invalid structure.`);
 		const isSubmitted = session.isSubmitted ||
 			(exam.durationSeconds !== null && session.deadline <= Date.now());
+		const questionBankById = new Map((exam.questionBank ?? []).map((question) => [question.id, question]));
+		let answers = session.answers;
+		const questions = session.questions.map((question, index) => {
+			const currentBankQuestion = questionBankById.get(question.id);
+			const questionTypeChanged = currentBankQuestion && currentBankQuestion.type !== question.type;
+			const refreshedQuestion = questionTypeChanged
+				? currentBankQuestion
+				: currentBankQuestion?.exhibitImage
+					? { ...question, imageUrl: currentBankQuestion.imageUrl, exhibitImage: currentBankQuestion.exhibitImage }
+					: question;
+			if (questionTypeChanged) {
+				if (answers === session.answers) answers = { ...session.answers };
+				delete answers[index];
+			}
+			return refreshedQuestion.exhibit || refreshedQuestion.exhibitImage
+				? refreshedQuestion
+				: { ...refreshedQuestion, ...splitPromptExhibit(refreshedQuestion.prompt) };
+		});
 		return {
 			...session,
 			// Attempts saved before router output was split out of the question text get the same clean-up
-			questions: session.questions.map((question) => (question.exhibit || question.exhibitImage
-				? question
-				: { ...question, ...splitPromptExhibit(question.prompt) })),
+			questions,
+			answers,
 			attemptId: typeof session.attemptId === "string" ? session.attemptId : createCcnaMockExamAttemptId(),
 			submittedAt: Number.isFinite(session.submittedAt)
 				? session.submittedAt
