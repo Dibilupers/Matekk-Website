@@ -6,6 +6,14 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `fb9edf0` — Load all usable CCNA questions from the existing unfiltered question-bank endpoint, convert and filter them in the frontend, and retain questions that reference unavailable exhibits. No API or backend changes.
+
+Validation before push: 12 focused CCNA conversion/module tests, frontend production build, targeted ESLint, and Git whitespace checks passed.
+
+## 2026-10-23 — `main`
+
+Commits included in this push:
+
 - `0c1c976` — Added a separate FortiOS offline exam route with a bundled 90-question bank and a FortiOS-specific signed-image cache flow. No backend code or CCNA source files were changed by this commit.
 - `74dbb3f` — Merged the latest `origin/main` into `jhonard` before integrating the FortiOS offline route.
 
