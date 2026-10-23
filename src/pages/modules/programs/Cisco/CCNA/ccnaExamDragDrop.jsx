@@ -17,6 +17,120 @@ export function DragDropQuestionInput({ question, value, onChange, disabled }) {
 	const assignments = Array.isArray(value) ? value : question.items.map(() => null);
 	const usedChoices = new Set(assignments.filter(Number.isInteger));
 
+	if (question.dragDropMode === "items-to-choices") {
+		function assignItem(itemIndex, choiceIndex) {
+			if (disabled || !Number.isInteger(itemIndex) || !Number.isInteger(choiceIndex)) return;
+			if (itemIndex < 0 || itemIndex >= question.items.length ||
+				choiceIndex < 0 || choiceIndex >= question.choices.length) return;
+			const next = Array.from({ length: question.items.length }, (_, index) => assignments[index] ?? null);
+			next[itemIndex] = choiceIndex;
+			onChange(next);
+			setActiveChoice(null);
+		}
+
+		return (
+			<div className="space-y-4">
+				<p className="text-sm text-[#70809a]">
+					Drag each command onto the router where it belongs. Multiple commands may go to the same router; unused commands stay unassigned.
+				</p>
+				<div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
+					<section aria-label="Draggable commands" className="space-y-2 rounded-2xl border border-[#d9e1ef] bg-[#f7f9fc] p-3">
+						<h3 className="text-xs font-bold uppercase tracking-wide text-[#64748b]">Commands</h3>
+						{question.items.map((item, itemIndex) => (
+							<button
+								key={itemIndex}
+								type="button"
+								draggable={!disabled}
+								disabled={disabled}
+								onClick={() => setActiveChoice((current) => current === itemIndex ? null : itemIndex)}
+								onDragStart={(event) => {
+									event.dataTransfer.setData("text/plain", String(itemIndex));
+									event.dataTransfer.effectAllowed = "move";
+									setActiveChoice(itemIndex);
+								}}
+								onDragEnd={() => setActiveChoice(null)}
+								aria-pressed={activeChoice === itemIndex}
+								className={`w-full cursor-grab rounded-xl border px-3 py-2.5 text-left font-mono text-xs transition active:cursor-grabbing disabled:cursor-default sm:text-sm ${
+									activeChoice === itemIndex
+										? "border-[#005b6b] bg-[#e8f3f4] text-[#005b6b]"
+										: Number.isInteger(assignments[itemIndex])
+											? "border-[#c7d5e5] bg-[#edf2f8] text-[#64748b]"
+											: "border-dashed border-[#9aa8bc] bg-white text-[#263654] hover:border-[#005b6b]"
+								}`}
+							>
+								{item}
+							</button>
+						))}
+					</section>
+					<section aria-label="Router drop targets" className="space-y-2">
+						<h3 className="text-xs font-bold uppercase tracking-wide text-[#64748b]">Routers</h3>
+						{question.choices.map((choice, choiceIndex) => {
+							const assignedItems = assignments.flatMap((target, itemIndex) =>
+								target === choiceIndex ? [itemIndex] : [],
+							);
+							return (
+								<div
+									key={choiceIndex}
+									onDragOver={(event) => {
+										if (!disabled) event.preventDefault();
+									}}
+									onDrop={(event) => {
+										event.preventDefault();
+										assignItem(Number(event.dataTransfer.getData("text/plain")), choiceIndex);
+									}}
+									onClick={() => {
+										if (activeChoice !== null) assignItem(activeChoice, choiceIndex);
+									}}
+									onKeyDown={(event) => {
+										if (activeChoice !== null && (event.key === "Enter" || event.key === " ")) {
+											event.preventDefault();
+											assignItem(activeChoice, choiceIndex);
+										}
+									}}
+									role="button"
+									tabIndex={disabled ? -1 : 0}
+									aria-label={`Drop commands for ${choice}`}
+									className={`min-h-20 rounded-xl border p-3 text-left transition ${
+										activeChoice !== null && !disabled
+											? "cursor-pointer border-dashed border-[#005b6b] bg-[#f0f7f7]"
+											: "border-[#d9e1ef] bg-white"
+									}`}
+								>
+									<span className="block text-sm font-bold text-[#263654]">{choice}</span>
+									<div className="mt-2 space-y-1.5">
+										{assignedItems.length ? assignedItems.map((itemIndex) => (
+											<div key={itemIndex} className="flex items-start justify-between gap-2 rounded-lg border border-[#8bb8bf] bg-[#e8f3f4] px-2 py-1 text-xs text-[#005b6b]">
+												<span className="font-mono">{question.items[itemIndex]}</span>
+												{!disabled && (
+													<button
+														type="button"
+														onClick={(event) => {
+															event.stopPropagation();
+															const next = [...assignments];
+															next[itemIndex] = null;
+															onChange(next);
+														}}
+														className="shrink-0 text-xs font-semibold underline"
+													>
+														Remove
+													</button>
+												)}
+											</div>
+										)) : (
+											<div className="rounded-lg border border-dashed border-[#cbd5e1] px-2 py-2 text-sm text-[#94a3b8]">
+												Drop commands here
+											</div>
+										)}
+									</div>
+								</div>
+							);
+						})}
+					</section>
+				</div>
+			</div>
+		);
+	}
+
 	function assign(choiceIndex, itemIndex) {
 		if (disabled) return;
 		onChange(assignChoice(question, assignments, choiceIndex, itemIndex));

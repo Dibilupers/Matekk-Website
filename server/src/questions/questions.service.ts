@@ -37,6 +37,7 @@ type MatchExamQuestion = Omit<ExamQuestionBase, 'options'> & {
   groupCounts?: Record<string, number>;
   // 'lines': shown as "connect the circles" instead of click-to-place boxes (see pickLineMatchIds)
   matchStyle?: 'lines' | 'numbers';
+  dragDropMode?: 'items-to-choices';
 };
 type ExamQuestion = SingleExamQuestion | MatchExamQuestion;
 
@@ -246,20 +247,35 @@ export class QuestionsService {
     const review = questionSet.map((question) => {
       const source = sourceById.get(question.id);
       const selectedAnswer = answerById.get(question.id) ?? null;
-      if (!source || !source.correct_answer) {
+      if (!source || (!source.correct_answer && source.id !== 720)) {
         throw new InternalServerErrorException('A question in this exam is no longer available for grading.');
       }
 
       if (question.type !== 'single') {
         // PDF drag-and-drop rows: the choices and answer come from the answer text itself
-        const dragDrop = source.choices?.trim() ? null : parseDragDropAnswer(source.correct_answer, source.id);
-        const originalChoices = dragDrop ? dragDrop.choices : this.parseChoices(source.choices);
+        const customAnswer = [289, 382, 481, 608, 1306].includes(source.id);
+        const dragDrop = customAnswer || source.choices?.trim()
+          ? null
+          : parseDragDropAnswer(source.correct_answer, source.id);
+        const originalChoices = customAnswer
+          ? question.choices
+          : dragDrop ? dragDrop.choices : this.parseChoices(source.choices);
         if (!originalChoices) {
           throw new InternalServerErrorException('A matching question has invalid choices.');
         }
-        const correctIndexes = dragDrop
-          ? dragDrop.answer
-          : this.parseMatchAnswer(source.correct_answer, question.items.length, originalChoices.length);
+        const correctIndexes = source.id === 289
+          ? [0, 1, 2, 3, 4]
+          : source.id === 382
+            ? [0, 1, 2, 5]
+            : source.id === 481
+              ? [0, 1, 1, 2, 3, 3]
+              : source.id === 608
+                ? [0, 1, 4, 5]
+                : source.id === 1306
+                  ? [1, 2, 3, 5]
+                  : dragDrop
+                    ? dragDrop.answer
+                    : this.parseMatchAnswer(source.correct_answer ?? '', question.items.length, originalChoices.length);
         const correctAnswer = correctIndexes.map((index) => question.choices.indexOf(originalChoices[index]));
         if (correctAnswer.some((index) => index < 0)) {
           throw new InternalServerErrorException('A matching answer is no longer available for grading.');
@@ -294,7 +310,9 @@ export class QuestionsService {
         };
       }
 
-      const correctAnswer = this.findCorrectOption(question.options, source.correct_answer);
+      const correctAnswer = question.id === 720
+        ? this.findCorrectOption(question.options, 'A')
+        : this.findCorrectOption(question.options, source.correct_answer ?? '');
       if (!correctAnswer) {
         throw new InternalServerErrorException('A question in this exam is no longer available for grading.');
       }
@@ -384,6 +402,158 @@ export class QuestionsService {
     correct_answer: string | null;
     imageUrl?: string | null;
   }): ExamQuestion | null {
+    if (record.id === 1306 && record.question_text?.trim()) {
+      return {
+        id: record.id,
+        prompt: record.question_text.trim(),
+        type: 'drag_drop',
+        items: Array.from({ length: 4 }, () => 'Broadcast address'),
+        choices: [
+          '10.1.255.254/24',
+          '10.63.255.255/10',
+          '172.16.255.39/29',
+          '172.20.255.255/16',
+          '192.168.1.10/24',
+          '192.168.255.127/25',
+        ],
+        module: record.module,
+        topic: record.topic,
+      };
+    }
+    if (record.id === 289 && record.question_text?.trim()) {
+      const answerText = record.correct_answer ?? '';
+      const pairPattern = /(?:^|\s)(Class-based weighted fair queuing|Classification|Congestion|Policing|Shaping):\s*/g;
+      const pairs = [...answerText.matchAll(pairPattern)];
+      const choices = [
+        'Class-based weighted fair queuing',
+        'Classification',
+        'Congestion',
+        'Policing',
+        'Shaping',
+      ];
+      if (pairs.length !== choices.length || pairs.some((pair, index) => pair[1] !== choices[index])) {
+        return null;
+      }
+      const items = pairs.map((pair, index) =>
+        answerText.slice(pair.index! + pair[0].length, pairs[index + 1]?.index ?? answerText.length).trim(),
+      );
+      if (items.some((item) => !item)) return null;
+      return {
+        id: record.id,
+        prompt: record.question_text.trim(),
+        imageUrl: record.imageUrl ?? null,
+        type: 'drag_drop',
+        items,
+        choices,
+        module: record.module,
+        topic: record.topic,
+      };
+    }
+    if (record.id === 720 && record.question_text?.trim() && record.choices) {
+      const options = this.parseChoices(record.choices);
+      if (
+        !options ||
+        options.length < 2 ||
+        options.length > 8 ||
+        !options.every((option) => option.trim().length > 0)
+      ) {
+        return null;
+      }
+      return {
+        id: record.id,
+        prompt: record.question_text.trim(),
+        imageUrl: record.imageUrl ?? null,
+        type: 'single',
+        options,
+        module: record.module,
+        topic: record.topic,
+      };
+    }
+
+    if (record.id === 181 && record.question_text?.trim()) {
+      return {
+        id: record.id,
+        prompt: record.question_text.trim(),
+        type: 'match',
+        items: [
+          'Frames received from the attached segment are discarded',
+          'BPDUs received are forwarded to the system module',
+          'The port in the forwarding state responds to network management messages',
+          'BPDUs received from the system module are processed and transmitted',
+          'Switched frames received from other ports are advanced',
+          'Frames received from the attached segment are processed',
+        ],
+        choices: ['Action', 'Not used'],
+        groupCounts: { Action: 4, 'Not used': 2 },
+        matchStyle: 'numbers',
+        module: record.module,
+        topic: record.topic,
+      };
+    }
+
+    if (record.id === 382 && record.question_text?.trim()) {
+      return {
+        id: record.id,
+        prompt: record.question_text.trim(),
+        type: 'drag_drop',
+        items: Array.from({ length: 4 }, () => 'Feature'),
+        choices: [
+          'Uses the YAML language',
+          'Executes modules via SSH by default',
+          'Pushes configurations to the client',
+          'Uses agents to manage hosts',
+          'Requires clients to pull configurations from the server',
+          'Operates without agents',
+        ],
+        module: record.module,
+        topic: record.topic,
+      };
+    }
+
+    if (record.id === 608 && record.question_text?.trim()) {
+      return {
+        id: record.id,
+        prompt: record.question_text.trim(),
+        type: 'drag_drop',
+        items: [
+          '1',
+          '2',
+          '3',
+          '4',
+        ],
+        choices: [
+          'Supports automation',
+          'Communicates between the SDN controller and the application plane',
+          'Communicates between the SDN controller and the data plane',
+          'Supports data sharing between systems',
+          'Supports network virtualization protocols',
+          'Supports REST-based requirements',
+          'Uses OpenFlow to interface between the data and control planes',
+        ],
+        module: record.module,
+        topic: record.topic,
+      };
+    }
+
+    if (record.id === 481 && record.question_text?.trim()) {
+      return {
+        id: record.id,
+        prompt: 'An engineer must configure a static network route between two networks so that host A communicates with host B. Assign the commands to the routers where they must be configured. Not all commands are used.',
+        type: 'drag_drop',
+        items: [
+          'ip route 10.10.13.0 255.255.255.128 10.10.10.1',
+          'ip route 10.10.13.0 255.255.255.128 10.10.10.5',
+          'ip route 10.10.13.10 255.255.255.255 10.10.10.1',
+          'ip route 10.10.14.0 255.255.255.0 10.10.10.2',
+          'ip route 10.10.14.0 255.255.255.0 10.10.10.6',
+          'ip route 10.10.14.10 255.255.255.255 10.10.10.6',
+        ],
+        choices: ['R1', 'R2', 'R3', 'Not used'],
+        dragDropMode: 'items-to-choices',
+        module: record.module,
+        topic: record.topic,
+      };
+    }
     // Drag-and-drop questions imported from the PDFs keep their answer as text and have no choices.
     if (record.question_text?.trim() && !record.choices?.trim() && (!record.question_type || record.question_type === 'single')) {
       const dragDrop = parseDragDropAnswer(record.correct_answer, record.id);
@@ -732,20 +902,42 @@ export class QuestionsService {
   async findUsableBank() {
     const rows = await this.findBank();
     const questions = rows.flatMap((row) => {
-      const question = this.readQuestion(row);
+      const question = this.readMultiSelectQuestion(row) ?? this.readQuestion(row);
       if (!question) return [];
 
-      const answer = question.type !== 'single'
-        ? row.question_type === 'match'
-          ? this.parseMatchAnswer(row.correct_answer, question.items.length, question.choices.length)
-          : parseDragDropAnswer(row.correct_answer, row.id)?.answer
+      const answer = row.id === 1306
+        ? [1, 2, 3, 5]
+        : row.id === 289
+        ? [0, 1, 2, 3, 4]
+        : row.id === 720
+        ? 0
+        : row.id === 181
+        ? [0, 0, 1, 1, 0, 0]
+        : row.id === 382
+        ? [0, 1, 2, 5]
+        : row.id === 608
+        ? [0, 1, 4, 5]
+        : row.id === 481
+        ? [0, 1, 1, 2, 3, 3]
+        : question.type !== 'single'
+          ? question.type === 'multi'
+            ? question.answer
+            : row.question_type === 'match'
+              ? this.parseMatchAnswer(row.correct_answer, question.items.length, question.choices.length)
+              : parseDragDropAnswer(row.correct_answer, row.id)?.answer
         : question.type === 'single'
           ? question.options.indexOf(this.findCorrectOption(question.options, row.correct_answer) ?? '')
           : -1;
       if (answer === undefined || answer === -1 || (Array.isArray(answer) && answer.length === 0)) return [];
 
+      const bankQuestion = row.id === 481
+        ? {
+            ...question,
+            dragDropMode: 'items-to-choices' as const,
+          }
+        : question;
       return [{
-        ...question,
+        ...bankQuestion,
         bankId: row.id,
         answer,
         explanation: row.explanation,
@@ -753,5 +945,79 @@ export class QuestionsService {
       }];
     });
     return { questions, skippedCount: rows.length - questions.length };
+  }
+
+  private readMultiSelectQuestion(record: {
+    id: number;
+    module: string | null;
+    topic: string | null;
+    question_text: string | null;
+    choices: string | null;
+    correct_answer: string | null;
+    question_type?: string | null;
+    explanation?: string | null;
+  }) {
+    if (
+      record.module?.toLocaleLowerCase() !== 'ccna' &&
+      !record.module?.toLocaleLowerCase().startsWith('ccna part ') &&
+      !record.module?.toLocaleLowerCase().startsWith('ccna 200-301 set ')
+    ) {
+      return null;
+    }
+    if (
+      (record.question_type && record.question_type !== 'single') ||
+      !record.question_text?.trim() ||
+      !record.choices?.trim() ||
+      !record.correct_answer?.trim()
+    ) {
+      return null;
+    }
+
+    const selectionCount = record.question_text.match(/\b(?:choose|select)\s+(two|three|\d+)\b/i)?.[1];
+    const requiredSelections = selectionCount === 'two'
+      ? 2
+      : selectionCount === 'three'
+        ? 3
+        : Number(selectionCount);
+    if (!Number.isInteger(requiredSelections) || requiredSelections < 2) return null;
+
+    let parsedChoices: unknown;
+    try {
+      parsedChoices = JSON.parse(record.choices);
+    } catch {
+      return null;
+    }
+    if (!parsedChoices || typeof parsedChoices !== 'object' || Array.isArray(parsedChoices)) return null;
+
+    const entries = Object.entries(parsedChoices);
+    const options = entries.map(([, option]) => option);
+    if (
+      options.length < requiredSelections ||
+      options.length > 8 ||
+      !options.every((option): option is string => typeof option === 'string' && option.trim().length > 0)
+    ) {
+      return null;
+    }
+
+    const answerKeys = record.correct_answer.split(/\s*[,;/+&]\s*/).map((key) => key.trim().toUpperCase());
+    if (
+      answerKeys.length !== requiredSelections ||
+      new Set(answerKeys).size !== answerKeys.length ||
+      !answerKeys.every((key) => /^[A-H]$/.test(key))
+    ) {
+      return null;
+    }
+    const answer = answerKeys.map((key) => entries.findIndex(([choiceKey]) => choiceKey.toUpperCase() === key));
+    if (answer.some((index) => index < 0)) return null;
+
+    return {
+      id: record.id,
+      prompt: record.question_text.trim(),
+      type: 'multi' as const,
+      options,
+      answer,
+      module: record.module,
+      topic: record.topic,
+    };
   }
 }
