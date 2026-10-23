@@ -42,14 +42,36 @@ function parseChoices(raw) {
   if (!raw) return null;
   try {
     const parsed = JSON.parse(raw);
-    if (Array.isArray(parsed)) return parsed;
     if (!parsed || typeof parsed !== "object") return null;
-
-    const entries = Object.entries(parsed);
+    if (Array.isArray(parsed)) {
+      const entries = parsed.map((choice, index) => {
+        const letter = String.fromCharCode(65 + index);
+        if (typeof choice === "string") return [letter, choice];
+        if (
+          !choice ||
+          typeof choice !== "object" ||
+          Array.isArray(choice) ||
+          typeof choice.text !== "string"
+        ) return null;
+        const id = typeof choice.id === "string" || typeof choice.id === "number"
+          ? String(choice.id)
+          : letter;
+        return [id, choice.text];
+      });
+      return entries.every(Boolean) ? Object.fromEntries(entries) : null;
+    }
+    const entries = Object.entries(parsed).map(([key, choice]) => {
+      if (typeof choice === "string") return [key, choice];
+      if (choice && typeof choice === "object" && !Array.isArray(choice) && typeof choice.text === "string") {
+        return [key, choice.text];
+      }
+      return null;
+    });
+    if (!entries.every(Boolean)) return null;
     const keys = new Set(entries.map(([key]) => key.toUpperCase()));
     const repaired = {};
     for (const [key, rawValue] of entries) {
-      if (typeof rawValue !== "string" || !/^[A-H]$/i.test(key)) {
+      if (!/^[A-H]$/i.test(key)) {
         repaired[key] = rawValue;
         continue;
       }
@@ -83,14 +105,14 @@ function multipleChoice(row, choices) {
 
   function findOptionIndex(answer) {
     const normalizedAnswer = answer.trim().toLocaleLowerCase();
+    const keyedIndex = entries.findIndex(([key]) => String(key).trim().toLocaleLowerCase() === normalizedAnswer);
+    if (keyedIndex >= 0) return keyedIndex;
     const exactMatch = options.findIndex((option) => option.trim().toLocaleLowerCase() === normalizedAnswer);
     if (exactMatch >= 0) return exactMatch;
 
     const letterMatch = normalizedAnswer.match(/^(?:(?:option)\s+)?\(?([a-h])\)?(?:[.)]|\s*:\s*|\s+-\s+|\s+.+)?$/i);
     if (letterMatch) {
       const letter = letterMatch[1].toUpperCase();
-      const keyedIndex = entries.findIndex(([key]) => String(key).toUpperCase() === letter);
-      if (keyedIndex >= 0) return keyedIndex;
       const labeledIndex = options.findIndex((option) => new RegExp(`^\\s*\\(?${letter}\\)?[.)\\s:-]+`, "i").test(option));
       if (labeledIndex >= 0) return labeledIndex;
       const index = letter.charCodeAt(0) - 65;
