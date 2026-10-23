@@ -2,6 +2,12 @@
 
 Tracking begins 2026-10-17.
 
+## 2026-10-23 — `Noah`
+
+- `9b41ea5` — Filtered the all-questions exam to CCNA modules only without changing the live API path.
+
+Validation before push: 9 targeted filter tests, ESLint on changed files, frontend production build, and Git whitespace checks passed.
+
 ## 2026-10-19 — `main`
 
 Merged `emman` as `5839b45`, including:
