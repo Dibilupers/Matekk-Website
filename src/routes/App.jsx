@@ -132,6 +132,7 @@ import NetworkPlusDashboard from "../pages/modules/programs/CompTIA/Network+/net
 import SecurityPlusDashboard from "../pages/modules/programs/CompTIA/Security+/securityPlusDashboard";
 import FortiOSDashboard, { FORTIOS_MODULES } from "../pages/modules/programs/Fortinet/FortiOS/fortiosDashboard";
 import FortiOSExam from "../pages/modules/programs/Fortinet/FortiOS/fortiosExam";
+import FortiOSExamRoute from "../pages/modules/programs/Fortinet/FortiOS/FortiOSExamRoute";
 import NetworkPlusExam from "../pages/modules/programs/CompTIA/Network+/networkPlusExam";
 import SecurityPlusExam from "../pages/modules/programs/CompTIA/Security+/securityPlusExam";
 import NETWORK_PLUS_PROGRAM from "../pages/modules/programs/CompTIA/Network+/networkPlusProgram";
@@ -466,7 +467,7 @@ export default function App() {
           path="/modules/programs/fortinet-fortios/exam/:examKey"
           element={
             <ProtectedRoute>
-              <FortiOSExam />
+              <FortiOSExamRoute onlineExam={<FortiOSExam />} />
             </ProtectedRoute>
           }
         />
@@ -881,14 +882,16 @@ function ProtectedRoute({ children }) {
   const isModuleRoute = /^\/modules\/programs(?:\/|$)/.test(pathname);
   const isExamRoute = /(?:^|\/)exam(?:\/|$)/.test(pathname);
   const isOfflineCcnaExamRoute = /^\/modules\/programs\/ccna\/exam\/(?:short|medium|long|all)$/.test(pathname);
-  const canAccessOfflineModule = isModuleRoute && (!isExamRoute || isOfflineCcnaExamRoute) && !isOnline;
+  const isOfflineFortiOSExamRoute = /^\/modules\/programs\/fortinet-fortios\/exam\/(?:short|medium|long|all_questions)\/?$/.test(pathname);
+  const canAccessBuiltInOfflineExam = isOfflineCcnaExamRoute || isOfflineFortiOSExamRoute;
+  const canAccessOfflineModule = isModuleRoute && (!isExamRoute || canAccessBuiltInOfflineExam) && !isOnline;
 
-  if (!isOnline && isModuleRoute && isExamRoute && !isOfflineCcnaExamRoute) {
+  if (!isOnline && isModuleRoute && isExamRoute && !canAccessBuiltInOfflineExam) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6 text-center text-white">
         <section className="max-w-lg space-y-3">
           <h1 className="text-2xl font-semibold">Internet connection required</h1>
-          <p className="text-slate-300">Only CCNA exams with built-in questions are available offline. Reconnect to take this exam.</p>
+          <p className="text-slate-300">Only CCNA and FortiOS exams with cached questions are available offline. Reconnect to take this exam.</p>
         </section>
       </main>
     );

@@ -369,7 +369,7 @@ export default function CCNAAllQuestionsExam() {
 								value={answers[currentIndex]}
 								onChange={(value) => setAnswers((previous) => ({ ...previous, [currentIndex]: value }))}
 							/>
-							<div className="mt-7 flex flex-wrap items-center justify-between gap-3">
+							<div className={`mt-7 flex flex-wrap gap-3 ${isOnline ? "justify-between" : "justify-end"}`}>
 								{isOnline && (
 									<button
 										type="button"
@@ -481,7 +481,7 @@ export default function CCNAAllQuestionsExam() {
 							{question.exhibit && <ExhibitText text={question.exhibit} className="mb-6" />}
 							<QuestionReview question={question} value={answers[currentIndex]} />
 							{question.explanation && <p className="mt-5 rounded-xl bg-[#f5f9f9] px-4 py-3 text-sm leading-6 text-[#596983]"><strong className="text-[#005b6b]">Explanation: </strong>{question.explanation}</p>}
-							<div className="mt-7 flex flex-wrap items-center justify-between gap-3">
+							<div className={`mt-7 flex flex-wrap gap-3 ${isOnline ? "justify-between" : "justify-end"}`}>
 								{isOnline && (
 									<button
 										type="button"
