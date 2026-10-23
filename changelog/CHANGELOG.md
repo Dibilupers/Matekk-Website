@@ -4,6 +4,15 @@ Tracking begins 2026-10-17.
 
 ## 2026-10-23 — `main`
 
+Commits included in this push:
+
+- `800c22f` — Normalize CCNA database choices stored as records with IDs and text, and resolve correct answers by choice ID.
+- `71c42fb` — Restore the frontend all-questions bank loading path and retain usable CCNA rows, including questions with unavailable exhibits. No API or backend changes.
+
+Validation before push: 14 focused CCNA conversion/module tests, frontend production build, targeted ESLint, and CRLF-aware Git whitespace checks passed. Production question-count verification remains pending.
+
+## 2026-10-23 — `main`
+
 - `4a56bf4` — Reverted the frontend CCNA all-questions conversion after production returned only 6 questions and reported 1,361 skipped. Restored the previous all-usable question-bank path; no API or backend changes.
 
 Validation before push: frontend production build, targeted ESLint, and Git whitespace checks passed.
