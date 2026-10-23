@@ -2,6 +2,17 @@
 
 Tracking begins 2026-10-17.
 
+## 2026-10-23 — `main`
+
+Commits included in this push:
+
+- `9b41ea5` — Filtered the all-questions exam to CCNA modules only without changing the live API path.
+- `59f31e0` — Documented the CCNA filter push to `Noah`.
+- `18cb9c1` — Merged the reviewed CCNA filter changes from `Noah` into the latest `main`.
+- `79fc536` — Preserved the existing skipped-question count notice in the CCNA all-questions exam.
+
+Validation before push: 9 targeted filter tests, ESLint on changed files, frontend production build, and Git whitespace checks passed.
+
 ## 2026-10-23 — `Noah`
 
 - `9b41ea5` — Filtered the all-questions exam to CCNA modules only without changing the live API path.
