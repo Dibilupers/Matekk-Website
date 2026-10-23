@@ -3,7 +3,7 @@ import { linkUp } from "./labEngine";
 /* Packet Tracer-style network diagram. Links are green when both ends are up,
    red/dashed when down. Router labels follow the live hostname. */
 
-export function RouterIcon({ x, y, label, sub, details, active }) {
+export function RouterIcon({ x, y, label, sub, details, active, labelBackdrop = false }) {
 	return (
 		<g transform={`translate(${x} ${y})`}>
 			{active && <ellipse cx="0" cy="3" rx="44" ry="25" fill="none" stroke="#1775EE" strokeWidth="2" strokeDasharray="4 3" />}
@@ -14,6 +14,7 @@ export function RouterIcon({ x, y, label, sub, details, active }) {
 				<path d="M-6 -9 L-18 -3 M-18 -3 L-12 -3 M-18 -3 L-15 -8" />
 				<path d="M6 -3 L18 -9 M18 -9 L12 -9 M18 -9 L15 -4" />
 			</g>
+			{labelBackdrop && <rect x={-Math.max(24, label.length * 3.6 + 8)} y="25" width={Math.max(48, label.length * 7.2 + 16)} height="20" rx="7" fill="#fff" stroke="#dbe4ee" strokeWidth="1" />}
 			<text x="0" y="40" textAnchor="middle" fontSize="13" fontWeight="700" fill="#17233d">{label}</text>
 			{(details ?? (sub ? [sub] : [])).map((detail, index) => (
 				<text key={detail} x="0" y={54 + index * 12} textAnchor="middle" fontSize="9.5" fill="#4b5b78">{detail}</text>
@@ -22,7 +23,7 @@ export function RouterIcon({ x, y, label, sub, details, active }) {
 	);
 }
 
-export function SwitchIcon({ x, y, label, sub, details }) {
+export function SwitchIcon({ x, y, label, sub, details, labelBackdrop = false }) {
 	return (
 		<g transform={`translate(${x} ${y})`}>
 			<path d="M-34 -7 L-22 -20 H34 L23 -7 Z" fill="#4a9bda" stroke="#0f4c81" strokeWidth="1.5" />
@@ -31,6 +32,7 @@ export function SwitchIcon({ x, y, label, sub, details }) {
 			<g stroke="#fff" strokeWidth="1.5" strokeLinecap="round">
 				<path d="M-22 -12h5M-10 -12h5M2 -12h5M14 -12h5" />
 			</g>
+			{labelBackdrop && <rect x={-Math.max(24, label.length * 3.6 + 8)} y="25" width={Math.max(48, label.length * 7.2 + 16)} height="20" rx="7" fill="#fff" stroke="#dbe4ee" strokeWidth="1" />}
 			<text x="0" y="40" textAnchor="middle" fontSize="13" fontWeight="700" fill="#17233d">{label}</text>
 			{(details ?? (sub ? [sub] : [])).map((detail, index) => (
 				<text key={detail} x="0" y={54 + index * 12} textAnchor="middle" fontSize="9.5" fill="#4b5b78">{detail}</text>
@@ -39,7 +41,7 @@ export function SwitchIcon({ x, y, label, sub, details }) {
 	);
 }
 
-export function PcIcon({ x, y, label, sub, details, server }) {
+export function PcIcon({ x, y, label, sub, details, server, labelBackdrop = false }) {
 	return (
 		<g transform={`translate(${x} ${y})`}>
 			{server ? (
@@ -55,6 +57,7 @@ export function PcIcon({ x, y, label, sub, details, server }) {
 					<rect x="-16" y="19" width="32" height="4" rx="2" fill="#374151" />
 				</>
 			)}
+			{labelBackdrop && <rect x={-Math.max(24, label.length * 3.6 + 8)} y="25" width={Math.max(48, label.length * 7.2 + 16)} height="20" rx="7" fill="#fff" stroke="#dbe4ee" strokeWidth="1" />}
 			<text x="0" y="40" textAnchor="middle" fontSize="13" fontWeight="700" fill="#17233d">{label}</text>
 			{(details ?? (sub ? [sub] : [])).map((detail, index) => (
 				<text key={detail} x="0" y={54 + index * 12} textAnchor="middle" fontSize="9.5" fill="#4b5b78">{detail}</text>

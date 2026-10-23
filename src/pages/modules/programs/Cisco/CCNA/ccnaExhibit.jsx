@@ -2113,12 +2113,12 @@ function TopologyLink({ link, nodes }) {
 	);
 }
 
-function TopologyDevice({ node }) {
-	if (node.kind === "router") return <RouterIcon x={node.x} y={node.y} label={node.name} details={node.details} />;
-	if (node.kind === "switch") return <SwitchIcon x={node.x} y={node.y} label={node.name} details={node.details} />;
+function TopologyDevice({ node, offlineLayout = false }) {
+	if (node.kind === "router") return <RouterIcon x={node.x} y={node.y} label={node.name} details={node.details} labelBackdrop={offlineLayout} />;
+	if (node.kind === "switch") return <SwitchIcon x={node.x} y={node.y} label={node.name} details={node.details} labelBackdrop={offlineLayout} />;
 	if (node.kind === "host") {
 		const server = /server/i.test(node.name);
-		return <PcIcon x={node.x} y={node.y} label={node.name} details={node.details} server={server} />;
+		return <PcIcon x={node.x} y={node.y} label={node.name} details={node.details} server={server} labelBackdrop={offlineLayout} />;
 	}
 
 	return (
@@ -2132,7 +2132,7 @@ function TopologyDevice({ node }) {
 	);
 }
 
-export function ExhibitDiagram({ type, className = "" }) {
+export function ExhibitDiagram({ type, className = "", offlineLayout = false }) {
 	const [openTheme, setOpenTheme] = useState(null);
 	const wrapRef = useRef(null);
 	const isRouterOnAStick = type === "router-on-a-stick-vlan20";
@@ -2154,7 +2154,7 @@ export function ExhibitDiagram({ type, className = "" }) {
 			{topology.links.map((link, index) => (
 				<TopologyLink key={`${link.from}-${link.to}-${index}`} link={link} nodes={nodes} />
 			))}
-			{topology.nodes.map((node) => <TopologyDevice key={node.id} node={node} />)}
+			{topology.nodes.map((node) => <TopologyDevice key={node.id} node={node} offlineLayout={offlineLayout} />)}
 		</svg>
 	) : (
 		<div className={expanded ? "w-[1000px]" : ""}>
