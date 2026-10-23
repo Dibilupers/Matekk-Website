@@ -6,6 +6,14 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `dfad973` — Reverted the raw-row CCNA frontend conversion, restoring the existing all-usable question-bank behavior (1,211 CCNA questions). No API or backend changes.
+
+Validation before push: authenticated production check confirmed the existing all-usable route returns 1,211 CCNA questions; targeted CCNA module tests and ESLint passed.
+
+## 2026-10-23 — `main`
+
+Commits included in this push:
+
 - `800c22f` — Normalize CCNA database choices stored as records with IDs and text, and resolve correct answers by choice ID.
 - `71c42fb` — Restore the frontend all-questions bank loading path and retain usable CCNA rows, including questions with unavailable exhibits. No API or backend changes.
 
