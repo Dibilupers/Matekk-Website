@@ -4,6 +4,12 @@ Tracking begins 2026-10-17.
 
 ## 2026-10-23 — `Noah`
 
+- `2854c95` — Fixed the Vercel backend build by loading Helmet through Node's CommonJS bridge, matching the verified fix on `main`. This does not change API routing or deploy to `main`.
+
+Validation: backend build, focused multi-answer question test, and Git whitespace checks passed. Backend Oxlint completed with existing warnings; the full question-service suite has one existing course-filter assertion failure.
+
+## 2026-10-23 — `Noah`
+
 - `4a9f4ce` — Restored graded CCNA drag-and-drop formats for questions 289, 382, 481, 608, and 1306, and grading for question 720. Added a router-target drag-and-drop interaction for question 481 without changing the live API integration or routing.
 
 Validation before push: 36 focused server tests, backend build, frontend production build, targeted frontend ESLint, backend Oxlint, and Git whitespace checks passed.
