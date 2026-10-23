@@ -1,6 +1,7 @@
 const BUILD_ID = '__BUILD_ID__';
 const PRECACHE_FILES = JSON.parse('[]');
 const CACHE_NAME = `matekk-module-offline-${BUILD_ID}`;
+const FORTIOS_IMAGE_CACHE_NAME = 'matekk-fortios-offline-images-v1';
 const MODULE_ROUTE = /^\/modules\/programs(?:\/|$)/;
 const EXAM_ROUTE = /^\/modules\/programs\/[^/]+\/exam(?:\/|$)/;
 const OFFLINE_CCNA_EXAM_ROUTE = /^\/modules\/programs\/ccna\/exam\/(?:short|medium|long|all)\/?$/;
@@ -34,6 +35,44 @@ self.addEventListener('activate', (event) => {
       .map((cacheName) => caches.delete(cacheName)));
     await self.clients.claim();
   })());
+});
+
+self.addEventListener('message', (event) => {
+  if (event.data?.type !== 'CACHE_FORTIOS_IMAGES' || !Array.isArray(event.data.urls)) return;
+  const replyPort = event.ports?.[0];
+  event.waitUntil((async () => {
+    const cache = await caches.open(FORTIOS_IMAGE_CACHE_NAME);
+    const urls = [...new Set(event.data.urls.filter((value) => typeof value === 'string'))];
+    let cachedCount = 0;
+    let failedCount = 0;
+    const batchSize = 5;
+    for (let index = 0; index < urls.length; index += batchSize) {
+      const results = await Promise.allSettled(urls.slice(index, index + batchSize).map(async (value) => {
+        const imageUrl = new URL(value);
+        if (!['http:', 'https:'].includes(imageUrl.protocol)) {
+          throw new TypeError('FortiOS exhibit image URL must use HTTP or HTTPS.');
+        }
+        if (await cache.match(imageUrl.href, { ignoreVary: true })) return true;
+        const request = new Request(imageUrl.href, { mode: 'no-cors', credentials: 'omit' });
+        const response = await fetch(request);
+        if (!response.ok && response.type !== 'opaque') {
+          throw new Error(`FortiOS exhibit image request failed (${response.status}).`);
+        }
+        await cache.put(request, response.clone());
+        return true;
+      }));
+      for (const result of results) {
+        if (result.status === 'fulfilled') cachedCount += 1;
+        else {
+          failedCount += 1;
+          console.error('Unable to precache a FortiOS exhibit image.', result.reason);
+        }
+      }
+    }
+    replyPort?.postMessage({ cachedCount, failedCount, total: urls.length });
+  })().catch((error) => {
+    replyPort?.postMessage({ error: error instanceof Error ? error.message : 'Unable to cache FortiOS exhibit images.' });
+  }));
 });
 
 self.addEventListener('fetch', (event) => {
@@ -106,6 +145,9 @@ self.addEventListener('fetch', (event) => {
       }
 
       const cache = await caches.open(CACHE_NAME);
+      const fortiosImageCache = await caches.open(FORTIOS_IMAGE_CACHE_NAME);
+      const cachedFortiosImage = await fortiosImageCache.match(request, { ignoreVary: true });
+      if (cachedFortiosImage) return cachedFortiosImage;
       const cachedImage = await cache.match(request);
       if (cachedImage) return cachedImage;
 

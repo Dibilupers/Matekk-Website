@@ -1,6 +1,6 @@
 import API_URL from "../../../../../config/api";
 import { isValidQuestion } from "../../../../../utils/ccnaExamGrading";
-import { cacheFortiOSQuestionBankForOffline } from "./offline/fortiosOfflineQuestionBank";
+import { cacheFortiOSImagesForOffline, cacheFortiOSQuestionBankForOffline } from "./offline/fortiosOfflineQuestionBank";
 
 const FORTIOS_MODULE_LABELS = new Set(["fortios", "fortinet fortios", "fortigate administrator"]);
 const FORTIOS_MODULE_NAME = "Fortinet FortiOS";
@@ -59,6 +59,11 @@ export async function loadFortiOSExamQuestions() {
 		await cacheFortiOSQuestionBankForOffline(bank);
 	} catch (error) {
 		console.error("Unable to save the FortiOS question bank for offline exams.", error);
+	}
+	try {
+		await cacheFortiOSImagesForOffline(bank);
+	} catch (error) {
+		console.error("Unable to save FortiOS exhibit images for offline exams.", error);
 	}
 
 	const fortiOSQuestions = bank.questions.filter((question) =>

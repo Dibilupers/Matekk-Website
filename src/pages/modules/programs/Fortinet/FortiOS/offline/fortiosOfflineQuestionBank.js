@@ -33,6 +33,7 @@ function normalizeQuestion(question) {
 		type: "single",
 		prompt: question.prompt.trim(),
 		options: question.options.map((option) => option.trim()),
+		exhibitImage: question.exhibitImage || question.imageUrl || undefined,
 	};
 	return isValidQuestion(normalized) ? normalized : null;
 }
@@ -51,6 +52,36 @@ export async function cacheFortiOSQuestionBankForOffline(bank) {
 		headers: { "Content-Type": "application/json; charset=utf-8" },
 	});
 	await cache.put(createQuestionBankRequest(), response);
+}
+
+export async function cacheFortiOSImagesForOffline(bank) {
+	const urls = [...new Set((Array.isArray(bank?.questions) ? bank.questions : [])
+		.map((question) => question?.imageUrl || question?.exhibitImage)
+		.filter((url) => typeof url === "string" && /^https?:\/\//i.test(url)))];
+	if (!urls.length) return { cachedCount: 0, failedCount: 0, total: 0 };
+	if (typeof navigator === "undefined" || !navigator.serviceWorker) {
+		throw new Error("The service worker is not available to cache FortiOS images.");
+	}
+	const existingRegistration = await navigator.serviceWorker.getRegistration();
+	if (!existingRegistration) throw new Error("The FortiOS offline service worker is not installed on this device yet.");
+	const registration = existingRegistration.active ? existingRegistration : await navigator.serviceWorker.ready;
+	const worker = navigator.serviceWorker.controller ?? registration.active;
+	if (!worker) throw new Error("The FortiOS offline image cache is not ready yet.");
+
+	return new Promise((resolve, reject) => {
+		const channel = new MessageChannel();
+		const timeout = window.setTimeout(() => {
+			channel.port1.close();
+			reject(new Error("Timed out while saving FortiOS images for offline use."));
+		}, 120000);
+		channel.port1.onmessage = (event) => {
+			window.clearTimeout(timeout);
+			channel.port1.close();
+			if (event.data?.error) reject(new Error(event.data.error));
+			else resolve(event.data);
+		};
+		worker.postMessage({ type: "CACHE_FORTIOS_IMAGES", urls }, [channel.port2]);
+	});
 }
 
 export async function loadCachedFortiOSQuestionBank() {
