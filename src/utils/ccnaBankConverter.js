@@ -294,152 +294,10 @@ function dragAndDrop(row) {
   return parseGroups(answerText, String(row.id)) ?? parsePairs(answerText);
 }
 
-function convertKnownQuestion(row, prompt) {
-  const imageUrl = row.imageUrl ?? null;
-  if (row.id === 1306) {
-    return {
-      prompt,
-      imageUrl,
-      type: "drag_drop",
-      items: Array.from({ length: 4 }, () => "Broadcast address"),
-      choices: [
-        "10.1.255.254/24",
-        "10.63.255.255/10",
-        "172.16.255.39/29",
-        "172.20.255.255/16",
-        "192.168.1.10/24",
-        "192.168.255.127/25",
-      ],
-      answer: [1, 2, 3, 5],
-    };
-  }
-  if (row.id === 289) {
-    const choices = [
-      "Class-based weighted fair queuing",
-      "Classification",
-      "Congestion",
-      "Policing",
-      "Shaping",
-    ];
-    const pairs = [...cleanText(row.correct_answer).matchAll(
-      /(?:^|\s)(Class-based weighted fair queuing|Classification|Congestion|Policing|Shaping):\s*/gi,
-    )];
-    if (
-      pairs.length !== choices.length ||
-      pairs.some((pair, index) => pair[1].toLocaleLowerCase() !== choices[index].toLocaleLowerCase())
-    ) return null;
-    const items = pairs.map((pair, index) =>
-      cleanText(row.correct_answer).slice(
-        pair.index + pair[0].length,
-        pairs[index + 1]?.index ?? cleanText(row.correct_answer).length,
-      ).trim(),
-    );
-    if (items.some((item) => !item)) return null;
-    return { prompt, imageUrl, type: "drag_drop", items, choices, answer: choices.map((_, index) => index) };
-  }
-  if (row.id === 720) {
-    const choices = parseChoices(row.choices);
-    const options = Array.isArray(choices) ? choices : choices && Object.values(choices);
-    if (!options || options.length < 2 || options.length > 8 || !options.every((option) => typeof option === "string" && option.trim())) {
-      return null;
-    }
-    return { prompt, imageUrl, type: "single", options, answer: 0 };
-  }
-  if (row.id === 181) {
-    const choices = ["Action", "Not used"];
-    return {
-      prompt,
-      imageUrl,
-      type: "match",
-      items: [
-        "Frames received from the attached segment are discarded",
-        "BPDUs received are forwarded to the system module",
-        "The port in the forwarding state responds to network management messages",
-        "BPDUs received from the system module are processed and transmitted",
-        "Switched frames received from other ports are advanced",
-        "Frames received from the attached segment are processed",
-      ],
-      choices,
-      answer: [0, 0, 1, 1, 0, 0],
-      groupCounts: { Action: 4, "Not used": 2 },
-      matchStyle: "numbers",
-    };
-  }
-  if (row.id === 382) {
-    return {
-      prompt,
-      imageUrl,
-      type: "drag_drop",
-      items: Array.from({ length: 4 }, () => "Feature"),
-      choices: [
-        "Uses the YAML language",
-        "Executes modules via SSH by default",
-        "Pushes configurations to the client",
-        "Uses agents to manage hosts",
-        "Requires clients to pull configurations from the server",
-        "Operates without agents",
-      ],
-      answer: [0, 1, 2, 5],
-    };
-  }
-  if (row.id === 608) {
-    return {
-      prompt,
-      imageUrl,
-      type: "drag_drop",
-      items: ["1", "2", "3", "4"],
-      choices: [
-        "Supports automation",
-        "Communicates between the SDN controller and the application plane",
-        "Communicates between the SDN controller and the data plane",
-        "Supports data sharing between systems",
-        "Supports network virtualization protocols",
-        "Supports REST-based requirements",
-        "Uses OpenFlow to interface between the data and control planes",
-      ],
-      answer: [0, 1, 4, 5],
-    };
-  }
-  if (row.id === 481) {
-    return {
-      prompt: "An engineer must configure a static network route between two networks so that host A communicates with host B. Assign the commands to the routers where they must be configured. Not all commands are used.",
-      imageUrl,
-      type: "drag_drop",
-      items: [
-        "ip route 10.10.13.0 255.255.255.128 10.10.10.1",
-        "ip route 10.10.13.0 255.255.255.128 10.10.10.5",
-        "ip route 10.10.13.10 255.255.255.255 10.10.10.1",
-        "ip route 10.10.14.0 255.255.255.0 10.10.10.2",
-        "ip route 10.10.14.0 255.255.255.0 10.10.10.6",
-        "ip route 10.10.14.10 255.255.255.255 10.10.10.6",
-      ],
-      choices: ["R1", "R2", "R3", "Not used"],
-      answer: [0, 1, 1, 2, 3, 3],
-      dragDropMode: "items-to-choices",
-    };
-  }
-  return null;
-}
-
 /** Converts one bank row. Returns { question } or { problem } (why it couldn't be converted). */
 export function convertBankRow(row) {
   const rawText = cleanText(row.question_text);
   if (!rawText) return { problem: "question text is empty" };
-  const knownQuestion = convertKnownQuestion(row, rawText);
-  if (knownQuestion) {
-    return {
-      question: {
-        ...knownQuestion,
-        explanation: cleanText(row.explanation) || findCcnaQuestionExplanation(rawText),
-        bankId: row.id,
-        module: row.module,
-        moduleNumber: null,
-        moduleTitle: row.module,
-        topic: row.topic,
-        source: "question-bank",
-      },
-    };
-  }
   const questionType = row.question_type || "single";
   const parsedOptionTable = questionType === "single" ? parseOptionTable(rawText) : null;
   const choices = parseChoices(row.choices);
@@ -474,7 +332,9 @@ export function convertBankRow(row) {
   let questionPrompt = cleanedPrompt;
   const hasSeparateExhibit = Boolean(exhibitImage || (exhibit && !/^Option [A-H]$/i.test(exhibit.trim())));
   questionPrompt = hasSeparateExhibit ? removeTrailingOptionExhibitLabel(questionPrompt) : questionPrompt;
-  const exhibitUnavailable = mentionsExhibit(rawText) && !exhibit && !exhibitImage && !hasCompleteOptionTable;
+  if (mentionsExhibit(rawText) && !exhibit && !exhibitImage && !hasCompleteOptionTable) {
+    return { problem: "referenced exhibit has no available text or image" };
+  }
 
   if (!["single", "match", "drag_drop", "click_boxes", "image"].includes(questionType)) {
     return { problem: `unsupported question type: ${questionType}` };
@@ -553,12 +413,10 @@ export function convertBankRow(row) {
       ...body,
       explanation: cleanText(row.explanation) || findCcnaQuestionExplanation(prompt),
       bankId: row.id,
-      module: row.module,
       moduleNumber: null,
       moduleTitle: row.module,
       topic: row.topic,
       source: "question-bank",
-      ...(exhibitUnavailable ? { exhibitUnavailable: true } : {}),
     },
   };
 }
