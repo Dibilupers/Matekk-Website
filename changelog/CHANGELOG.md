@@ -4,6 +4,12 @@ Tracking begins 2026-10-17.
 
 ## 2026-10-23 — `main`
 
+- `cec88b2` — Restored graded CCNA multi-answer questions and special question formats, including drag-and-drop questions 289, 382, 481, 608, and 1306, plus the confirmed answer for 720. The all-usable endpoint, API client, proxy, routing, and course filtering were left unchanged; the remaining 25 image exhibits are not included.
+
+Validation before push: 14 targeted question-service tests, backend build, frontend production build, targeted ESLint/Oxlint, and Git whitespace checks passed. The full service spec still has one pre-existing failure: a module-filter test expects an argument not accepted by the current endpoint method.
+
+## 2026-10-23 — `main`
+
 Commits included in this push:
 
 - `9b41ea5` — Filtered the all-questions exam to CCNA modules only without changing the live API path.
