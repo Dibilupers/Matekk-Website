@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../../../../context/auth-context";
 import TrainingLogo from "../../../../../assets/MATEKK_training_logo.png";
 import { isAnswerCorrect, isQuestionAnswered } from "../../../../../utils/ccnaExamGrading";
+import { isCcnaQuestionModule } from "../../../../../utils/ccnaQuestionModule";
 import { loadCcnaAllQuestionsBank } from "../../../../../utils/ccnaQuestionBankApi";
 import { ExhibitDiagram, ExhibitImage, ExhibitText } from "./ccnaExhibit";
 import { QuestionInput, QuestionPrompt, QuestionReview } from "./ccnaExamQuestionViews";
@@ -90,6 +91,7 @@ export default function CCNAAllQuestionsExam() {
 		bankRequest
 			.then(({ questions: validQuestions, skippedCount }) => {
 				const orderedQuestions = [...validQuestions]
+					.filter((item) => !isOnline || isCcnaQuestionModule(item.module))
 					.map(applyNativeExhibit)
 					.sort((left, right) => left.bankId - right.bankId);
 				if (!orderedQuestions.length) {
