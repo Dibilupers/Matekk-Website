@@ -86,9 +86,10 @@ export default function CCNAAllQuestionsExam() {
 			? loadCcnaAllQuestionsBank()
 			: Promise.resolve({
 				questions: getOfflineLegacyQuestionBank(),
+				skippedCount: 0,
 			});
 		bankRequest
-			.then(({ questions: validQuestions }) => {
+			.then(({ questions: validQuestions, skippedCount }) => {
 				const orderedQuestions = [...validQuestions]
 					.filter((item) => !isOnline || isCcnaQuestionModule(item.module))
 					.map(applyNativeExhibit)
