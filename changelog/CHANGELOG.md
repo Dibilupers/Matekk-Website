@@ -4,6 +4,12 @@ Tracking begins 2026-10-17.
 
 ## 2026-10-23 — `Noah`
 
+- `f959f9a` — Loaded the existing unfiltered question-bank endpoint and converted all usable CCNA rows in the frontend, keeping other course banks out of the CCNA exam. Added native conversion for supported CCNA matching questions and kept questions with missing exhibits visible with a notice. No backend API changes.
+
+Validation before push: 12 focused frontend tests, frontend production build, targeted ESLint, local 1,367-question browser check, and Git whitespace checks passed.
+
+## 2026-10-23 — `Noah`
+
 - `2854c95` — Fixed the Vercel backend build by loading Helmet through Node's CommonJS bridge, matching the verified fix on `main`. This does not change API routing or deploy to `main`.
 
 Validation: backend build, focused multi-answer question test, and Git whitespace checks passed. Backend Oxlint completed with existing warnings; the full question-service suite has one existing course-filter assertion failure.
