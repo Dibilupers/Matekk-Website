@@ -2,6 +2,7 @@ import API_URL from "../../../../../../config/api";
 import { isValidQuestion } from "../../../../../../utils/ccnaExamGrading";
 
 const FORTIOS_MODULE_LABELS = new Set(["fortios", "fortinet fortios", "fortigate administrator"]);
+const FORTIOS_OFFLINE_CACHE_NAME = "matekk-fortios-offline-question-bank-v1";
 
 function isSingleChoiceQuestion(question) {
 	const type = String(question?.type ?? question?.question_type ?? "")
@@ -42,12 +43,24 @@ function createQuestionBankRequest() {
 	return new Request(url.href, { credentials: "include" });
 }
 
+export async function cacheFortiOSQuestionBankForOffline(bank) {
+	if (typeof caches === "undefined") return;
+	if (!bank || typeof bank !== "object" || !Array.isArray(bank.questions)) return;
+	const cache = await caches.open(FORTIOS_OFFLINE_CACHE_NAME);
+	const response = new Response(JSON.stringify(bank), {
+		headers: { "Content-Type": "application/json; charset=utf-8" },
+	});
+	await cache.put(createQuestionBankRequest(), response);
+}
+
 export async function loadCachedFortiOSQuestionBank() {
 	if (typeof caches === "undefined") {
 		throw new Error("This browser does not support saved FortiOS offline questions.");
 	}
 	const request = createQuestionBankRequest();
-	const cachedResponse = await caches.match(request, { ignoreVary: true });
+	const offlineCache = await caches.open(FORTIOS_OFFLINE_CACHE_NAME);
+	const cachedResponse = await offlineCache.match(request, { ignoreVary: true }) ??
+		await caches.match(request, { ignoreVary: true });
 	if (!cachedResponse) {
 		throw new Error("No FortiOS questions are saved on this device yet. Connect to the internet, open a FortiOS exam once, then try offline again.");
 	}
