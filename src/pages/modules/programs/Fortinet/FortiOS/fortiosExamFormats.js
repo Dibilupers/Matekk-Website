@@ -26,16 +26,21 @@ export function createFortiOSExamFormats(questionBank) {
 		programKey: "fortinet-fortios",
 		programName: "FortiOS",
 		includeAllQuestions: true,
+		deduplicateQuestions: false,
 		examFormatDefinitions: Object.fromEntries(
 			Object.entries(FORTIOS_EXAM_FORMAT_DEFINITIONS)
 				.filter(([examKey]) => examKey !== "all_questions"),
 		),
 	});
-	return {
+	const allFormats = {
 		...formats,
 		all_questions: {
 			...formats.all_questions,
 			name: FORTIOS_EXAM_FORMAT_DEFINITIONS.all_questions.name,
 		},
 	};
+	return Object.fromEntries(Object.entries(allFormats).map(([examKey, format]) => [
+		examKey,
+		{ ...format, questionBank },
+	]));
 }

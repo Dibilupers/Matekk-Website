@@ -6,6 +6,39 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `0c1c976` — Added a separate FortiOS offline exam route with a bundled 90-question bank and a FortiOS-specific signed-image cache flow. No backend code or CCNA source files were changed by this commit.
+- `74dbb3f` — Merged the latest `origin/main` into `jhonard` before integrating the FortiOS offline route.
+
+Validation before push: frontend production build, targeted ESLint for the changed route/cache files, and Git whitespace checks passed. Browser validation against the deployed API and offline image loading remains pending.
+
+## 2026-10-23 — `main`
+
+- `74ff021` — Restricted FortiOS multiple-select parsing to FortiOS-filtered bank requests so other course banks remain unchanged.
+
+Validation before push: 36 targeted question-service tests, backend build, targeted Oxlint, and Git whitespace checks passed.
+
+## 2026-10-23 — `main`
+
+Commits included in this push:
+
+- `2a1b948` — Added more Fortinet FortiOS exam questions.
+- `7e9c697` — Merged the latest remote `main` changes into `emman`.
+- `a2baf4e` — Fixed FortiOS question formats and the exam timer.
+- `a952276` — Merged the exam UI updates into `main`, keeping the backend unchanged in the merge.
+- `8439b41` — Added FortiOS choice-ID parsing, multiple-select/order support, and course-specific question-bank filtering while preserving CCNA grading.
+
+Validation before push: 36 targeted question-service tests, backend build, targeted Oxlint, frontend production build, targeted ESLint, and Git whitespace checks passed.
+
+## 2026-10-23 — `main`
+
+- `cec88b2` — Restored graded CCNA multi-answer questions and special question formats, including drag-and-drop questions 289, 382, 481, 608, and 1306, plus the confirmed answer for 720. Only backend conversion/grading changed; endpoint wiring, API client, proxy, routing, and course filtering were left unchanged. The remaining 25 image exhibits are not included.
+
+Validation before push: 14 targeted question-service tests, backend build, frontend production build, targeted ESLint/Oxlint, and Git whitespace checks passed. The full service spec still has one pre-existing failure: a module-filter test expects an argument not accepted by the current endpoint method.
+
+## 2026-10-23 — `main`
+
+Commits included in this push:
+
 - `9b41ea5` — Filtered the all-questions exam to CCNA modules only without changing the live API path.
 - `59f31e0` — Documented the CCNA filter push to `Noah`.
 - `18cb9c1` — Merged the reviewed CCNA filter changes from `Noah` into the latest `main`.

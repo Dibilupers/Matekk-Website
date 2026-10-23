@@ -137,6 +137,7 @@ import NetworkPlusExam from "../pages/modules/programs/CompTIA/Network+/networkP
 import SecurityPlusExam from "../pages/modules/programs/CompTIA/Security+/securityPlusExam";
 import NETWORK_PLUS_PROGRAM from "../pages/modules/programs/CompTIA/Network+/networkPlusProgram";
 import SECURITY_PLUS_PROGRAM from "../pages/modules/programs/CompTIA/Security+/securityPlusProgram";
+import FortiOSBundledOfflineExam from "../pages/modules/programs/Fortinet/FortiOS/offline/FortiOSBundledOfflineExam";
 import { useAuth } from "../context/auth-context";
 import {
   readCcnaModuleQuizProgress,
@@ -160,6 +161,7 @@ export default function App() {
     || location.pathname.startsWith("/modules/programs/ccna-cybersecurity/exam/")
     || location.pathname.startsWith("/modules/programs/comptia-network-plus/exam/")
     || location.pathname.startsWith("/modules/programs/comptia-security-plus/exam/")
+    || location.pathname === "/modules/programs/fortios/exam/all"
     || location.pathname.startsWith("/modules/programs/fortinet-fortios/exam/");
   const isAdminPage = location.pathname === "/admin";
   const isAccountPendingPage = location.pathname === "/account-pending";
@@ -652,6 +654,14 @@ export default function App() {
           }
         />
         <Route
+          path="/modules/programs/fortios/exam/all"
+          element={
+            <ProtectedRoute>
+              <FortiOSBundledOfflineExam />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/modules/programs/ccna-automation/exam/:examKey"
           element={
             <ProtectedRoute>
@@ -849,6 +859,7 @@ function OfflineEntryRoute({ children }) {
 function OfflineModulesPage() {
   const programs = [
     { name: "CCNA", path: "/modules/programs/ccna" },
+    { name: "FortiOS", path: "/modules/programs/fortios/exam/all" },
     { name: "CompTIA A+", path: "/modules/programs/comptia-aplus" },
     { name: "CCNA Automation", path: "/modules/programs/ccna-automation" },
     { name: "CCNA Cybersecurity", path: "/modules/programs/ccna-cybersecurity" },
@@ -883,7 +894,10 @@ function ProtectedRoute({ children }) {
   const isExamRoute = /(?:^|\/)exam(?:\/|$)/.test(pathname);
   const isOfflineCcnaExamRoute = /^\/modules\/programs\/ccna\/exam\/(?:short|medium|long|all)$/.test(pathname);
   const isOfflineFortiOSExamRoute = /^\/modules\/programs\/fortinet-fortios\/exam\/(?:short|medium|long|all_questions)\/?$/.test(pathname);
-  const canAccessBuiltInOfflineExam = isOfflineCcnaExamRoute || isOfflineFortiOSExamRoute;
+  const isStandaloneOfflineFortiOSExamRoute = pathname === "/modules/programs/fortios/exam/all";
+  const canAccessBuiltInOfflineExam = isOfflineCcnaExamRoute
+    || isOfflineFortiOSExamRoute
+    || isStandaloneOfflineFortiOSExamRoute;
   const canAccessOfflineModule = isModuleRoute && (!isExamRoute || canAccessBuiltInOfflineExam) && !isOnline;
 
   if (!isOnline && isModuleRoute && isExamRoute && !canAccessBuiltInOfflineExam) {

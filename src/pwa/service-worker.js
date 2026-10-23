@@ -6,8 +6,10 @@ const MODULE_ROUTE = /^\/modules\/programs(?:\/|$)/;
 const EXAM_ROUTE = /^\/modules\/programs\/[^/]+\/exam(?:\/|$)/;
 const OFFLINE_CCNA_EXAM_ROUTE = /^\/modules\/programs\/ccna\/exam\/(?:short|medium|long|all)\/?$/;
 const OFFLINE_FORTIOS_EXAM_ROUTE = /^\/modules\/programs\/fortinet-fortios\/exam\/(?:short|medium|long|all_questions)\/?$/;
+const OFFLINE_STANDALONE_FORTIOS_EXAM_ROUTE = /^\/modules\/programs\/fortios\/exam\/all\/?$/;
 const FORTIOS_QUESTION_BANK_ROUTE = /\/questions\/bank\/all-usable$/;
 const OFFLINE_ENTRY_ROUTE = /^\/(?:login)?\/?$/;
+const FORTIOS_IMAGE_CACHE_MESSAGE = 'PRECACHE_FORTIOS_EXHIBIT_IMAGES';
 const SCOPE_URL = self.registration.scope;
 const APP_SHELL_URL = new URL('index.html', SCOPE_URL).href;
 const PRECACHE_URLS = new Set(
@@ -38,40 +40,55 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('message', (event) => {
-  if (event.data?.type !== 'CACHE_FORTIOS_IMAGES' || !Array.isArray(event.data.urls)) return;
+  const messageType = event.data?.type;
+  if (messageType !== FORTIOS_IMAGE_CACHE_MESSAGE && messageType !== 'CACHE_FORTIOS_IMAGES') return;
+
   const replyPort = event.ports?.[0];
   event.waitUntil((async () => {
+    const inputUrls = event.data.urls;
+    if (!Array.isArray(inputUrls)) {
+      throw new TypeError('FortiOS exhibit image URLs must be provided as a list.');
+    }
+
+    const urls = [...new Set(inputUrls.filter((url) => typeof url === 'string'))];
     const cache = await caches.open(FORTIOS_IMAGE_CACHE_NAME);
-    const urls = [...new Set(event.data.urls.filter((value) => typeof value === 'string'))];
     let cachedCount = 0;
     let failedCount = 0;
-    const batchSize = 5;
+    const batchSize = 6;
+
     for (let index = 0; index < urls.length; index += batchSize) {
-      const results = await Promise.allSettled(urls.slice(index, index + batchSize).map(async (value) => {
-        const imageUrl = new URL(value);
+      const batch = urls.slice(index, index + batchSize);
+      const results = await Promise.allSettled(batch.map(async (url) => {
+        const imageUrl = new URL(url);
         if (!['http:', 'https:'].includes(imageUrl.protocol)) {
           throw new TypeError('FortiOS exhibit image URL must use HTTP or HTTPS.');
         }
-        if (await cache.match(imageUrl.href, { ignoreVary: true })) return true;
+        if (await cache.match(imageUrl.href, { ignoreVary: true })) return;
+
         const request = new Request(imageUrl.href, { mode: 'no-cors', credentials: 'omit' });
         const response = await fetch(request);
         if (!response.ok && response.type !== 'opaque') {
           throw new Error(`FortiOS exhibit image request failed (${response.status}).`);
         }
         await cache.put(request, response.clone());
-        return true;
       }));
-      for (const result of results) {
-        if (result.status === 'fulfilled') cachedCount += 1;
-        else {
+
+      results.forEach((result) => {
+        if (result.status === 'fulfilled') {
+          cachedCount += 1;
+        } else {
           failedCount += 1;
           console.error('Unable to precache a FortiOS exhibit image.', result.reason);
         }
-      }
+      });
     }
+
     replyPort?.postMessage({ cachedCount, failedCount, total: urls.length });
   })().catch((error) => {
-    replyPort?.postMessage({ error: error instanceof Error ? error.message : 'Unable to cache FortiOS exhibit images.' });
+    console.error('Unable to precache FortiOS exhibit images.', error);
+    replyPort?.postMessage({
+      error: error instanceof Error ? error.message : 'Unable to cache FortiOS exhibit images.',
+    });
   }));
 });
 
@@ -105,7 +122,10 @@ self.addEventListener('fetch', (event) => {
   }
 
   if (request.mode === 'navigate' && MODULE_ROUTE.test(url.pathname)) {
-    if (EXAM_ROUTE.test(url.pathname) && !OFFLINE_CCNA_EXAM_ROUTE.test(url.pathname) && !OFFLINE_FORTIOS_EXAM_ROUTE.test(url.pathname)) {
+    const canOpenOfflineExam = OFFLINE_CCNA_EXAM_ROUTE.test(url.pathname)
+      || OFFLINE_FORTIOS_EXAM_ROUTE.test(url.pathname)
+      || OFFLINE_STANDALONE_FORTIOS_EXAM_ROUTE.test(url.pathname);
+    if (EXAM_ROUTE.test(url.pathname) && !canOpenOfflineExam) {
       event.respondWith(fetch(request).catch(() => new Response(
         '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Online required</title><body style="font:16px system-ui;background:#070D1F;color:#EAF0FB;padding:3rem;max-width:42rem;margin:auto"><h1>Internet connection required</h1><p>Exams are not available offline. Reconnect to the internet and try again.</p><a style="color:#38BDF8" href="/modules/programs/ccna">Return to your modules</a></body></html>',
         { status: 503, headers: { 'Content-Type': 'text/html; charset=utf-8' } },

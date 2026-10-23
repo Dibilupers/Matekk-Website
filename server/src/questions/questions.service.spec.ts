@@ -180,6 +180,457 @@ describe('QuestionsService', () => {
     ]));
   });
 
+  it('includes choose-two and choose-three CCNA questions as graded multi-select questions', async () => {
+    prismaMock.questions.findMany.mockResolvedValue([
+      {
+        id: 10,
+        module: 'CCNA Part 5',
+        topic: 'QoS',
+        question_text: 'Which two QoS tools guarantee minimum bandwidth? (Choose two)',
+        choices: JSON.stringify({ A: 'FIFO', B: 'CBWFQ', C: 'LLC', D: 'WFQ', E: 'RSVP' }),
+        correct_answer: 'B,D',
+        explanation: 'CBWFQ and WFQ provide bandwidth guarantees.',
+        question_type: 'single',
+        match_items: null,
+        imageUrl: null,
+      },
+      {
+        id: 11,
+        module: 'CCNA 200-301 Set 1',
+        topic: 'Routing',
+        question_text: 'Which three protocols are used here? (Select three)',
+        choices: JSON.stringify({ A: 'OSPF', B: 'RIP', C: 'EIGRP', D: 'FTP' }),
+        correct_answer: 'A,C,B',
+        explanation: 'The first three choices are routing protocols.',
+        question_type: 'single',
+        match_items: null,
+        imageUrl: null,
+      },
+    ]);
+
+    const { questions, skippedCount } = await service.findUsableBank();
+
+    expect(skippedCount).toBe(0);
+    expect(questions).toEqual(expect.arrayContaining([
+      expect.objectContaining({ bankId: 10, type: 'multi', answer: [1, 3] }),
+      expect.objectContaining({ bankId: 11, type: 'multi', answer: [0, 2, 1] }),
+    ]));
+  });
+
+  it('parses FortiOS choice objects and grades multiple-select and ordering questions', async () => {
+    prismaMock.questions.findMany.mockResolvedValue([
+      {
+        id: 3402,
+        module: 'Fortinet FortiOS',
+        topic: 'SASE',
+        question_text: 'What is the primary goal of Fortinet SASE?',
+        choices: JSON.stringify([
+          { id: 'A', text: 'Replace on-premises firewalls.' },
+          { id: 'B', text: 'Provide cloud security for remote users.' },
+        ]),
+        correct_answer: 'B',
+        explanation: '',
+        question_type: 'multiple_choice',
+        match_items: null,
+        imageUrl: 'questions/q1.png',
+      },
+      {
+        id: 3403,
+        module: 'Fortinet FortiOS',
+        topic: 'ECMP',
+        question_text: 'Which two statements are true?',
+        choices: JSON.stringify([
+          { id: 'A', text: 'First correct choice.' },
+          { id: 'B', text: 'Incorrect choice.' },
+          { id: 'C', text: 'Second correct choice.' },
+        ]),
+        correct_answer: 'A,C',
+        explanation: '',
+        question_type: 'multiple_select',
+        match_items: null,
+        imageUrl: null,
+      },
+      {
+        id: 3497,
+        module: 'Fortinet FortiOS',
+        topic: 'High availability',
+        question_text: 'Arrange the FGCP election criteria in order.',
+        choices: JSON.stringify([
+          { id: 'A', text: 'FortiGate serial number' },
+          { id: 'B', text: 'HA uptime' },
+          { id: 'C', text: 'System uptime' },
+          { id: 'D', text: 'Connected monitored ports' },
+          { id: 'E', text: 'Priority' },
+        ]),
+        correct_answer: '[3,4,1,0]',
+        explanation: '',
+        question_type: 'match',
+        match_items: ['1', '2', '3', '4'],
+        imageUrl: null,
+      },
+    ]);
+
+    const unfiltered = await service.findUsableBank();
+    expect(unfiltered.questions).not.toEqual(expect.arrayContaining([
+      expect.objectContaining({ bankId: 3403 }),
+    ]));
+
+    const result = await service.findUsableBank('Fortinet FortiOS');
+
+    expect(result.skippedCount).toBe(0);
+    expect(result.questions).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        bankId: 3402,
+        type: 'single',
+        options: ['Replace on-premises firewalls.', 'Provide cloud security for remote users.'],
+        answer: 1,
+        imageUrl: 'questions/q1.png',
+      }),
+      expect.objectContaining({
+        bankId: 3403,
+        type: 'multi',
+        options: ['First correct choice.', 'Incorrect choice.', 'Second correct choice.'],
+        answer: [0, 2],
+      }),
+      expect.objectContaining({
+        bankId: 3497,
+        type: 'match',
+        items: ['1', '2', '3', '4'],
+        choices: [
+          'FortiGate serial number',
+          'HA uptime',
+          'System uptime',
+          'Connected monitored ports',
+          'Priority',
+        ],
+        answer: [3, 4, 1, 0],
+      }),
+    ]));
+    expect(prismaMock.questions.findMany).toHaveBeenCalledWith(expect.objectContaining({
+      where: {
+        OR: [
+          { module: { equals: 'Fortinet FortiOS', mode: 'insensitive' } },
+          { module: { equals: 'FortiOS', mode: 'insensitive' } },
+          { module: { equals: 'FortiGate Administrator', mode: 'insensitive' } },
+        ],
+      },
+    }));
+  });
+
+  it('converts question 481 into router-target drag-and-drop with a native topology', async () => {
+    prismaMock.questions.findMany.mockResolvedValue([
+      {
+        id: 481,
+        module: 'CCNA',
+        topic: 'Routing',
+        question_text: 'Configure static routes so host A can communicate with host B.',
+        choices: null,
+        correct_answer: 'legacy drag-and-drop data',
+        explanation: '',
+        question_type: 'single',
+        match_items: null,
+        imageUrl: 'questions/ccna-question-481.png',
+      },
+    ]);
+
+    const { questions, skippedCount } = await service.findUsableBank();
+
+    expect(skippedCount).toBe(0);
+    expect(questions).toHaveLength(1);
+    expect(questions[0]).toEqual(expect.objectContaining({
+      bankId: 481,
+      type: 'drag_drop',
+      dragDropMode: 'items-to-choices',
+      prompt: expect.stringContaining('Assign the commands to the routers'),
+      items: [
+        'ip route 10.10.13.0 255.255.255.128 10.10.10.1',
+        'ip route 10.10.13.0 255.255.255.128 10.10.10.5',
+        'ip route 10.10.13.10 255.255.255.255 10.10.10.1',
+        'ip route 10.10.14.0 255.255.255.0 10.10.10.2',
+        'ip route 10.10.14.0 255.255.255.0 10.10.10.6',
+        'ip route 10.10.14.10 255.255.255.255 10.10.10.6',
+      ],
+      choices: ['R1', 'R2', 'R3', 'Not used'],
+      answer: [0, 1, 1, 2, 3, 3],
+    }));
+  });
+
+  it('converts question 382 into the original Ansible feature drag-and-drop layout', async () => {
+    prismaMock.questions.findMany.mockResolvedValue([
+      {
+        id: 382,
+        module: 'CCNA Part 10',
+        topic: 'REST API / Automation',
+        question_text: 'Drag and drop the Ansible features from the left to the right. Not all features are used.',
+        choices: null,
+        correct_answer: 'uses the YAML language\nexecutes modules via SSH by default\npushes configurations to the client\noperates without agents',
+        explanation: '',
+        question_type: 'single',
+        match_items: null,
+        imageUrl: null,
+      },
+    ]);
+
+    const { questions, skippedCount } = await service.findUsableBank();
+
+    expect(skippedCount).toBe(0);
+    expect(questions).toHaveLength(1);
+    expect(questions[0]).toEqual(expect.objectContaining({
+      bankId: 382,
+      type: 'drag_drop',
+      prompt: 'Drag and drop the Ansible features from the left to the right. Not all features are used.',
+      items: ['Feature', 'Feature', 'Feature', 'Feature'],
+      choices: [
+        'Uses the YAML language',
+        'Executes modules via SSH by default',
+        'Pushes configurations to the client',
+        'Uses agents to manage hosts',
+        'Requires clients to pull configurations from the server',
+        'Operates without agents',
+      ],
+      answer: [0, 1, 2, 5],
+    }));
+  });
+
+  it('converts question 289 into drag-and-drop QoS term matching', async () => {
+    prismaMock.questions.findMany.mockResolvedValue([
+      {
+        id: 289,
+        module: 'CCNA Part 9',
+        topic: 'QoS',
+        question_text: 'Drag and drop the QoS terms from the left onto the descriptions on the right.',
+        choices: '',
+        correct_answer: [
+          'Class-based weighted fair queuing: Guarantees minimum bandwidth to specific traffic classes when an interface is congested',
+          'Classification: Categorizes packets based on the value of traffic descriptor',
+          'Congestion: Outcome of overutilization',
+          'Policing: Uses defined criteria to limit the transmission of one or more classes of traffic',
+          'Shaping: Prevents congestion by reducing the flow of the outbound traffic',
+        ].join(' '),
+        explanation: '',
+        question_type: 'single',
+        match_items: null,
+        imageUrl: null,
+      },
+    ]);
+
+    const { questions, skippedCount } = await service.findUsableBank();
+
+    expect(skippedCount).toBe(0);
+    expect(questions).toEqual([
+      expect.objectContaining({
+        bankId: 289,
+        type: 'drag_drop',
+        items: [
+          'Guarantees minimum bandwidth to specific traffic classes when an interface is congested',
+          'Categorizes packets based on the value of traffic descriptor',
+          'Outcome of overutilization',
+          'Uses defined criteria to limit the transmission of one or more classes of traffic',
+          'Prevents congestion by reducing the flow of the outbound traffic',
+        ],
+        choices: [
+          'Class-based weighted fair queuing',
+          'Classification',
+          'Congestion',
+          'Policing',
+          'Shaping',
+        ],
+        answer: [0, 1, 2, 3, 4],
+      }),
+    ]);
+  });
+
+  it('converts question 181 into a numbered Rapid PVST+ action matching question', async () => {
+    prismaMock.questions.findMany.mockResolvedValue([
+      {
+        id: 181,
+        module: 'CCNA Part 8',
+        topic: 'General',
+        question_text: 'Drag and drop the Rapid PVST+ forwarding state actions from the left to the right. Not all actions are used.',
+        choices: null,
+        correct_answer: [
+          'BPDUs received are forwarded to the system module',
+          'The port in the forwarding state responds to network management messages',
+          'Switched frames received from other ports are advanced',
+          'Frames received from the attached segment are processed',
+        ].join('\n'),
+        explanation: '',
+        question_type: 'single',
+        match_items: null,
+        imageUrl: null,
+      },
+    ]);
+
+    const { questions, skippedCount } = await service.findUsableBank();
+
+    expect(skippedCount).toBe(0);
+    expect(questions).toHaveLength(1);
+    expect(questions[0]).toEqual(expect.objectContaining({
+      bankId: 181,
+      type: 'match',
+      matchStyle: 'numbers',
+      items: [
+        'Frames received from the attached segment are discarded',
+        'BPDUs received are forwarded to the system module',
+        'The port in the forwarding state responds to network management messages',
+        'BPDUs received from the system module are processed and transmitted',
+        'Switched frames received from other ports are advanced',
+        'Frames received from the attached segment are processed',
+      ],
+      choices: ['Action', 'Not used'],
+      groupCounts: { Action: 4, 'Not used': 2 },
+      answer: [0, 0, 1, 1, 0, 0],
+    }));
+  });
+
+  it('converts question 608 into four-target northbound API drag-and-drop', async () => {
+    prismaMock.questions.findMany.mockResolvedValue([
+      {
+        id: 608,
+        module: 'CCNA Part 12',
+        topic: 'REST API / Automation',
+        question_text: 'Drag and drop the characteristics of northbound APIs from the left onto any position on the right. Not all characteristics are used.',
+        choices: null,
+        correct_answer: [
+          'supports automation',
+          'communicates between the SDN controller and the application plane',
+          'supports network virtualization protocols',
+          'supports REST-based requirements',
+        ].join('\n'),
+        explanation: '',
+        question_type: 'single',
+        match_items: null,
+        imageUrl: null,
+      },
+    ]);
+
+    const { questions, skippedCount } = await service.findUsableBank();
+
+    expect(skippedCount).toBe(0);
+    expect(questions).toHaveLength(1);
+    expect(questions[0]).toEqual(expect.objectContaining({
+      bankId: 608,
+      type: 'drag_drop',
+      items: ['1', '2', '3', '4'],
+      choices: [
+        'Supports automation',
+        'Communicates between the SDN controller and the application plane',
+        'Communicates between the SDN controller and the data plane',
+        'Supports data sharing between systems',
+        'Supports network virtualization protocols',
+        'Supports REST-based requirements',
+        'Uses OpenFlow to interface between the data and control planes',
+      ],
+      answer: [0, 1, 4, 5],
+    }));
+  });
+
+  it('includes question 720 with the confirmed answer A', async () => {
+    prismaMock.questions.findMany.mockResolvedValue([
+      {
+        id: 720,
+        module: 'CCNA Part 13',
+        topic: 'Wireless',
+        question_text: 'Which standard is required when more than one distribution system port and only one IP address are configured for a Cisco WLC?',
+        choices: JSON.stringify([
+          'A. 802.3ad',
+          'B. 802.1q',
+          'C. 802.1d',
+          'D. 802.1af',
+        ]),
+        correct_answer: null,
+        explanation: '',
+        question_type: 'single',
+        match_items: null,
+        imageUrl: null,
+      },
+    ]);
+
+    const { questions, skippedCount } = await service.findUsableBank();
+
+    expect(skippedCount).toBe(0);
+    expect(questions).toEqual([
+      expect.objectContaining({
+        bankId: 720,
+        type: 'single',
+        options: ['A. 802.3ad', 'B. 802.1q', 'C. 802.1d', 'D. 802.1af'],
+        answer: 0,
+      }),
+    ]);
+  });
+
+  it('converts question 1306 into four drag-and-drop broadcast-address boxes', async () => {
+    prismaMock.questions.findMany.mockResolvedValue([
+      {
+        id: 1306,
+        module: 'CCNA 200-301 Set 35',
+        topic: 'IP Addressing / Subnetting',
+        question_text: 'Drag and drop each broadcast IP address on the left to the Broadcast Address column on the right. Not all options are used.',
+        choices: null,
+        correct_answer: [
+          '10.63.255.255/10',
+          '172.16.255.39/29',
+          '172.20.255.255/16',
+          '192.168.255.127/25',
+        ].join('\n'),
+        explanation: '',
+        question_type: 'single',
+        match_items: null,
+        imageUrl: null,
+      },
+    ]);
+
+    const { questions, skippedCount } = await service.findUsableBank();
+
+    expect(skippedCount).toBe(0);
+    expect(questions).toHaveLength(1);
+    expect(questions[0]).toEqual(expect.objectContaining({
+      bankId: 1306,
+      type: 'drag_drop',
+      choices: [
+        '10.1.255.254/24',
+        '10.63.255.255/10',
+        '172.16.255.39/29',
+        '172.20.255.255/16',
+        '192.168.1.10/24',
+        '192.168.255.127/25',
+      ],
+      items: ['Broadcast address', 'Broadcast address', 'Broadcast address', 'Broadcast address'],
+      answer: [1, 2, 3, 5],
+    }));
+  });
+
+  it('keeps inconsistent multi-select questions out of the usable bank', async () => {
+    prismaMock.questions.findMany.mockResolvedValue([
+      {
+        id: 12,
+        module: 'CCNA',
+        topic: 'Routing',
+        question_text: 'Which two protocols are used? (Choose two)',
+        choices: JSON.stringify({ A: 'OSPF', B: 'RIP', C: 'FTP' }),
+        correct_answer: 'A,A',
+        explanation: '',
+        question_type: 'single',
+        match_items: null,
+        imageUrl: null,
+      },
+    ]);
+
+    const { questions, skippedCount } = await service.findUsableBank();
+
+    expect(questions).toHaveLength(0);
+    expect(skippedCount).toBe(1);
+  });
+
+  it('filters usable questions by the requested dedicated course module', async () => {
+    await service.findUsableBank('CompTIA Network+');
+
+    expect(prismaMock.questions.findMany).toHaveBeenCalledWith(expect.objectContaining({
+      where: { module: { equals: 'CompTIA Network+', mode: 'insensitive' } },
+    }));
+  });
+
+
   it('rejects a correct answer that is not one of the available choices', () => {
     expect(() => service.create({
       module: 'CCNA',
@@ -506,6 +957,104 @@ describe('QuestionsService', () => {
       type: 'match',
       selectedAnswer: [1, 0],
       correctAnswer: [1, 0],
+      isCorrect: true,
+    });
+  });
+
+  it.each([
+    [289, 5, [0, 1, 2, 3, 4]],
+    [382, 4, [0, 1, 2, 5]],
+    [481, 6, [0, 1, 1, 2, 3, 3]],
+    [608, 4, [0, 1, 4, 5]],
+    [1306, 4, [1, 2, 3, 5]],
+  ] as const)('grades CCNA drag-and-drop question %s against its restored answer mapping', async (id, itemCount, mapping) => {
+    const choices = ['Choice 0', 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', 'Choice 5'];
+    const question = {
+      id,
+      prompt: `Question ${id}`,
+      type: 'drag_drop',
+      items: Array.from({ length: itemCount }, (_, index) => `Target ${index + 1}`),
+      choices,
+      module: 'CCNA',
+      topic: 'Routing',
+    };
+    prismaMock.examAttempt.findUnique.mockResolvedValue({
+      id: 'attempt-id',
+      userId: 7,
+      examKey: 'short',
+      questionSet: [question],
+      durationSeconds: 2700,
+      deadline: new Date(Date.now() + 2700000),
+      score: null,
+      review: null,
+      submittedAt: null,
+    });
+    prismaMock.questions.findMany.mockResolvedValue([{
+      id,
+      module: 'CCNA',
+      topic: 'Routing',
+      difficulty: 'Easy',
+      question_text: question.prompt,
+      choices: null,
+      correct_answer: 'Restored drag-and-drop answer',
+      explanation: '',
+      question_type: 'single',
+      match_items: null,
+    }]);
+
+    const result = await service.submitExam('short', 'attempt-id', 7, [
+      { questionId: id, selectedMatches: [...mapping] },
+    ]);
+
+    expect(result.score).toBe(1);
+    expect(result.review[0]).toMatchObject({
+      id,
+      selectedAnswer: [...mapping],
+      correctAnswer: [...mapping],
+      isCorrect: true,
+    });
+  });
+
+  it('grades question 720 using the confirmed 802.3ad answer when the database key is empty', async () => {
+    const options = ['A. 802.3ad', 'B. 802.1q', 'C. 802.1d', 'D. 802.1af'];
+    prismaMock.examAttempt.findUnique.mockResolvedValue({
+      id: 'attempt-id',
+      userId: 7,
+      examKey: 'short',
+      questionSet: [{
+        id: 720,
+        prompt: 'Which standard is required?',
+        options,
+        module: 'CCNA',
+        topic: 'Wireless',
+      }],
+      durationSeconds: 2700,
+      deadline: new Date(Date.now() + 2700000),
+      score: null,
+      review: null,
+      submittedAt: null,
+    });
+    prismaMock.questions.findMany.mockResolvedValue([{
+      id: 720,
+      module: 'CCNA',
+      topic: 'Wireless',
+      difficulty: 'Easy',
+      question_text: 'Which standard is required?',
+      choices: JSON.stringify(options),
+      correct_answer: null,
+      explanation: '',
+      question_type: 'single',
+      match_items: null,
+    }]);
+
+    const result = await service.submitExam('short', 'attempt-id', 7, [
+      { questionId: 720, selectedAnswer: 'A. 802.3ad' },
+    ]);
+
+    expect(result.score).toBe(1);
+    expect(result.review[0]).toMatchObject({
+      id: 720,
+      correctAnswer: 'A. 802.3ad',
       isCorrect: true,
     });
   });
