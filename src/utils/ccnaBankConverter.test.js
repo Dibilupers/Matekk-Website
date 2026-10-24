@@ -134,8 +134,17 @@ test("converts known CCNA matching rows that need their native answer mappings",
   const converted = rows.map((row) => convertBankRow(row));
   assert.ok(converted.every(({ question }) => isValidQuestion(question)));
   assert.deepEqual(converted.map(({ question }) => question.bankId), rows.map(({ id }) => id));
+  assert.equal(converted[0].question.type, "drag_drop");
+  assert.deepEqual(converted[0].question.items, Array.from({ length: 4 }, () => "Action"));
+  assert.deepEqual(converted[0].question.answer, [1, 2, 4, 5]);
+  assert.equal(converted[2].question.type, "drag_drop");
+  assert.deepEqual(converted[2].question.items, Array.from({ length: 4 }, () => "Feature"));
+  assert.deepEqual(converted[2].question.answer, [0, 1, 2, 5]);
+  assert.equal(converted[4].question.type, "drag_drop");
+  assert.deepEqual(converted[4].question.items, ["1", "2", "3", "4"]);
+  assert.deepEqual(converted[4].question.answer, [0, 1, 4, 5]);
   assert.deepEqual(converted.map(({ question }) => question.answer), [
-    [0, 0, 1, 1, 0, 0],
+    [1, 2, 4, 5],
     [0, 1, 2, 3, 4],
     [0, 1, 2, 5],
     [0, 1, 1, 2, 3, 3],

@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="650" viewBox="0 0 1200 650" role="img" aria-labelledby="title desc">
   <title id="title">Northbound API characteristics matching exercise</title>
-  <desc id="desc">Seven statements about northbound APIs on the left and four numbered matching targets on the right.</desc>
+  <desc id="desc">Six statements about northbound APIs on the left and four numbered drag-and-drop targets on the right.</desc>
   <rect width="1200" height="650" rx="20" fill="#f8fafc"/>
   <text x="60" y="58" fill="#1e293b" font-family="Arial,sans-serif" font-size="28" font-weight="700">Match each statement to a characteristic</text>
   <g font-family="Arial,sans-serif" font-size="20" fill="#24354a">

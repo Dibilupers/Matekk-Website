@@ -362,12 +362,12 @@ function convertKnownQuestion(row, prompt) {
     return { prompt, imageUrl, type: "single", options, answer: 0 };
   }
   if (row.id === 181) {
-    const choices = ["Action", "Not used"];
     return {
       prompt,
       imageUrl,
-      type: "match",
-      items: [
+      type: "drag_drop",
+      items: Array.from({ length: 4 }, () => "Action"),
+      choices: [
         "Frames received from the attached segment are discarded",
         "BPDUs received are forwarded to the system module",
         "The port in the forwarding state responds to network management messages",
@@ -375,10 +375,7 @@ function convertKnownQuestion(row, prompt) {
         "Switched frames received from other ports are advanced",
         "Frames received from the attached segment are processed",
       ],
-      choices,
-      answer: [0, 0, 1, 1, 0, 0],
-      groupCounts: { Action: 4, "Not used": 2 },
-      matchStyle: "numbers",
+      answer: [1, 2, 4, 5],
     };
   }
   if (row.id === 382) {
