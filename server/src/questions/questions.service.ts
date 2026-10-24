@@ -1073,6 +1073,7 @@ export class QuestionsService {
     choices: string | null;
     correct_answer: string | null;
     question_type?: string | null;
+    imageUrl?: string | null;
     explanation?: string | null;
   }) {
     if (
@@ -1131,6 +1132,7 @@ export class QuestionsService {
     return {
       id: record.id,
       prompt: record.question_text.trim(),
+      imageUrl: record.imageUrl ?? null,
       type: 'multi' as const,
       options,
       answer,
@@ -1144,7 +1146,17 @@ export class QuestionsService {
     if (!normalizedModule) {
       throw new BadRequestException('Choose a course question bank.');
     }
-    if (['fortios', 'fortinet fortios', 'fortigate administrator'].includes(normalizedModule.toLocaleLowerCase())) {
+    const normalizedModuleLowerCase = normalizedModule.toLocaleLowerCase();
+    if (normalizedModuleLowerCase === 'ccna') {
+      return {
+        OR: [
+          { module: { equals: 'CCNA', mode: 'insensitive' } },
+          { module: { startsWith: 'CCNA Part ', mode: 'insensitive' } },
+          { module: { startsWith: 'CCNA 200-301 Set ', mode: 'insensitive' } },
+        ],
+      };
+    }
+    if (['fortios', 'fortinet fortios', 'fortigate administrator'].includes(normalizedModuleLowerCase)) {
       return {
         OR: [
           { module: { equals: 'Fortinet FortiOS', mode: 'insensitive' } },
