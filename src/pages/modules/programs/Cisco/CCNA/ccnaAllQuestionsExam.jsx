@@ -44,7 +44,6 @@ export default function CCNAAllQuestionsExam() {
 	const [isDark, setIsDark] = useState(false);
 	const [score, setScore] = useState(0);
 	const [storageError, setStorageError] = useState(null);
-	const [skippedQuestionCount, setSkippedQuestionCount] = useState(0);
 	const [questionNumberInput, setQuestionNumberInput] = useState("1");
 	const [isRetakeConfirmationOpen, setIsRetakeConfirmationOpen] = useState(false);
 	// Results page: show only correct / incorrect / unanswered questions when stepping through the review
@@ -89,7 +88,7 @@ export default function CCNAAllQuestionsExam() {
 				skippedCount: 0,
 			});
 		bankRequest
-			.then(({ questions: validQuestions, skippedCount }) => {
+				.then(({ questions: validQuestions }) => {
 				const orderedQuestions = [...validQuestions]
 					.filter((item) => !isOnline || isCcnaQuestionModule(item.module))
 					.map(applyNativeExhibit)
@@ -99,7 +98,6 @@ export default function CCNAAllQuestionsExam() {
 				}
 				if (!isActive) return;
 
-				setSkippedQuestionCount(skippedCount);
 				setQuestions(orderedQuestions);
 				if (storageKey) {
 					try {
@@ -305,12 +303,6 @@ export default function CCNAAllQuestionsExam() {
 						{storageError}
 					</p>
 				)}
-				{skippedQuestionCount > 0 && (
-					<p role="status" className="mb-4 rounded-xl border border-[#f0d79e] bg-[#fffaf0] px-4 py-3 text-sm text-[#805b12]">
-						{skippedQuestionCount.toLocaleString()} invalid or unsupported database question{skippedQuestionCount === 1 ? " was" : "s were"} skipped.
-					</p>
-				)}
-
 				{!isSubmitted ? (
 					<>
 						<section aria-label="Exam progress" className="mb-5 rounded-2xl border border-[#d6e5e7] bg-white p-5 shadow-sm sm:mb-6 sm:p-8">
@@ -371,17 +363,7 @@ export default function CCNAAllQuestionsExam() {
 								value={answers[currentIndex]}
 								onChange={(value) => setAnswers((previous) => ({ ...previous, [currentIndex]: value }))}
 							/>
-							<div className={`mt-7 flex flex-wrap gap-3 ${isOnline ? "justify-between" : "justify-end"}`}>
-								{isOnline && (
-									<button
-										type="button"
-										onClick={() => goToQuestion(currentIndex - 1)}
-										disabled={currentIndex === 0}
-										className="inline-flex items-center gap-2 rounded-full border border-[#9fc8ce] px-5 py-3 font-semibold text-[#005b6b] transition hover:bg-[#e8f3f4] disabled:cursor-not-allowed disabled:opacity-40"
-									>
-										<ChevronLeft size={18} /> Previous
-									</button>
-								)}
+							<div className="mt-7 flex flex-wrap items-center justify-end gap-3">
 								{currentIndex === questions.length - 1 ? (
 									<button type="button" onClick={submitExam} className="rounded-full bg-[#005b6b] px-6 py-3 font-semibold text-white transition hover:bg-[#004653]">
 										Finish and review

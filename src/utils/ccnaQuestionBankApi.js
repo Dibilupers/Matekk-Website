@@ -27,7 +27,7 @@ export function loadCcnaQuestionBank() {
 
 export function loadCcnaAllQuestionsBank() {
   if (cachedAllQuestions) return Promise.resolve(cachedAllQuestions);
-  pendingAllQuestions ??= fetch(`${API_URL}/questions/bank/all-usable`, { credentials: "include" })
+  pendingAllQuestions ??= fetch(`${API_URL}/questions/bank/all-usable?module=CCNA`, { credentials: "include" })
     .then(async (response) => {
       if (!response.ok) throw new Error(`Question bank request failed (${response.status}).`);
       const payload = await response.json();

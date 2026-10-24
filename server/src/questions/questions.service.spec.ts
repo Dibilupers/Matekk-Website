@@ -192,7 +192,7 @@ describe('QuestionsService', () => {
         explanation: 'CBWFQ and WFQ provide bandwidth guarantees.',
         question_type: 'single',
         match_items: null,
-        imageUrl: null,
+        imageUrl: 'questions/ccna-q10.png',
       },
       {
         id: 11,
@@ -212,7 +212,12 @@ describe('QuestionsService', () => {
 
     expect(skippedCount).toBe(0);
     expect(questions).toEqual(expect.arrayContaining([
-      expect.objectContaining({ bankId: 10, type: 'multi', answer: [1, 3] }),
+      expect.objectContaining({
+        bankId: 10,
+        type: 'multi',
+        answer: [1, 3],
+        imageUrl: 'questions/ccna-q10.png',
+      }),
       expect.objectContaining({ bankId: 11, type: 'multi', answer: [0, 2, 1] }),
     ]));
   });
@@ -627,6 +632,22 @@ describe('QuestionsService', () => {
 
     expect(prismaMock.questions.findMany).toHaveBeenCalledWith(expect.objectContaining({
       where: { module: { equals: 'CompTIA Network+', mode: 'insensitive' } },
+    }));
+  });
+
+  it('limits the CCNA bank to CCNA, CCNA Part, and CCNA 200-301 Set modules', async () => {
+    prismaMock.questions.findMany.mockResolvedValue([]);
+
+    await service.findUsableBank('CCNA');
+
+    expect(prismaMock.questions.findMany).toHaveBeenCalledWith(expect.objectContaining({
+      where: {
+        OR: [
+          { module: { equals: 'CCNA', mode: 'insensitive' } },
+          { module: { startsWith: 'CCNA Part ', mode: 'insensitive' } },
+          { module: { startsWith: 'CCNA 200-301 Set ', mode: 'insensitive' } },
+        ],
+      },
     }));
   });
 
