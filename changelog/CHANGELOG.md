@@ -6,6 +6,14 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `9c20772` — Randomized questions in All Questions Exams and improved shared exam topology/image exhibits with clearer labels, spacing, and framing.
+
+Validation before push: targeted ESLint, frontend production build, focused all-question shuffle check, and Git whitespace checks passed.
+
+## 2026-10-24 — `main`
+
+Commits included in this push:
+
 - `35b68e3` — Removed the exact `module=CCNA` bank request filter so the all-questions exam can load CCNA submodule questions from backend deployments that only support exact module matching.
 
 Validation before push: frontend production build, targeted ESLint, and Git whitespace checks passed. No production API endpoint was called.
