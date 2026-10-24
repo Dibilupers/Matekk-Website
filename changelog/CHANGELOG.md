@@ -6,6 +6,15 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `3eca0e8` — Included all CompTIA Security+ and Network+ bank rows in their all-questions exams, with multiple-select and text-answer support and ungraded review handling for simulations or malformed items. Dimmed and disabled the unfinished Start Quiz and View All Modules buttons on CompTIA and FortiOS dashboards.
+- `ab9245f` — Merged the `emman` branch into the latest `main`.
+
+Validation before push: focused question-service tests, backend build and lint, frontend production build, targeted frontend ESLint, and Git whitespace checks passed.
+
+## 2026-10-24 — `main`
+
+Commits included in this push:
+
 - `0c65886` — Restored CCNA questions 181, 382, 608, and 1306 using guarded frontend answer mappings when the raw bank omits `correct_answer`. Verified the merged all-questions loader reaches 1,367 from 1,363 usable questions plus these four rows. No API/backend changes.
 
 Validation before push: nine focused CCNA converter/loader/exhibit tests (including a 1,367-question assertion), targeted ESLint, frontend production build, and Git whitespace checks passed.
