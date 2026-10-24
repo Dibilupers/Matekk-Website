@@ -1,8 +1,12 @@
 import API_URL from "../../../../../../config/api";
 import { isValidQuestion } from "../../../../../../utils/ccnaExamGrading";
+import FORTIOS_OFFLINE_QUESTIONS from "./fortiosOfflineQuestions.json";
 
 const FORTIOS_MODULE_LABELS = new Set(["fortios", "fortinet fortios", "fortigate administrator"]);
 const FORTIOS_OFFLINE_CACHE_NAME = "matekk-fortios-offline-question-bank-v1";
+const BUNDLED_EXPLANATIONS = new Map(
+	FORTIOS_OFFLINE_QUESTIONS.map((question) => [question.id, question.explanation]),
+);
 
 function isSingleChoiceQuestion(question) {
 	const type = String(question?.type ?? question?.question_type ?? "")
@@ -30,6 +34,7 @@ function normalizeQuestion(question) {
 
 	const normalized = {
 		...question,
+		explanation: question.explanation.trim() || BUNDLED_EXPLANATIONS.get(question.id) || "",
 		type: "single",
 		prompt: question.prompt.trim(),
 		options: question.options.map((option) => option.trim()),

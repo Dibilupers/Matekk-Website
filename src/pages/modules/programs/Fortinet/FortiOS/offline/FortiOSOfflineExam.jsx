@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { ArrowLeft, ChevronRight, Clock3, RotateCcw } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { useAuth } from "../../../../../../context/auth-context";
+import ExplanationWithLinks from "../../../../../../components/ExplanationWithLinks";
 import { isAnswerCorrect, isQuestionAnswered, isValidQuestion } from "../../../../../../utils/ccnaExamGrading";
 import { ExhibitImage, ExhibitText } from "../../../Cisco/CCNA/ccnaExhibit";
 import { QuestionInput, QuestionPrompt, QuestionReview } from "../../../Cisco/CCNA/ccnaExamQuestionViews";
@@ -207,7 +208,13 @@ export default function FortiOSOfflineExam() {
 							{question.exhibit && <ExhibitText text={question.exhibit} className="my-5" />}
 							<QuestionPrompt prompt={question.prompt} hasSeparateExhibit={Boolean(question.exhibit || question.exhibitImage)} />
 							<QuestionReview question={question} value={session.answers[session.currentIndex]} />
-							{question.explanation && <p className="mt-5 rounded-xl bg-[#fff3f2] px-4 py-3 text-sm leading-6 text-[#596983]"><strong className="text-[#b31d17]">Explanation: </strong>{question.explanation}</p>}
+							{question.explanation && (
+								<ExplanationWithLinks
+									explanation={question.explanation}
+									className="mt-5 rounded-xl bg-[#fff3f2] px-4 py-3 text-sm leading-6 text-[#596983]"
+									labelClassName="text-[#b31d17]"
+								/>
+							)}
 							<div className="mt-7 flex flex-wrap justify-between gap-3">
 								<button type="button" onClick={restartExam} className="inline-flex items-center gap-2 rounded-full border border-[#f1beba] px-5 py-3 font-semibold text-[#e2231a] transition hover:bg-[#fff0ef]"><RotateCcw size={17} /> Restart exam</button>
 								{session.currentIndex < session.questions.length - 1 && <button type="button" onClick={() => setSession((current) => ({ ...current, currentIndex: current.currentIndex + 1 }))} className="inline-flex items-center gap-2 rounded-full bg-[#e2231a] px-6 py-3 font-semibold text-white transition hover:bg-[#bd2119]">Next review <ChevronRight size={18} /></button>}
