@@ -30,6 +30,7 @@ function normalizeQuestion(question) {
 
 	const normalized = {
 		...question,
+		id: Number(question.id ?? question.bankId),
 		type: "single",
 		prompt: question.prompt.trim(),
 		options: question.options.map((option) => option.trim()),

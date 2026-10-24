@@ -22,6 +22,46 @@ function letter(index) {
 const MATCH_CHOICE_MOTION_MS = 900;
 const MATCH_CHOICE_STAGGER_MS = 40;
 
+function organizeFortiOSOfflinePrompt(text) {
+	if (looksLikeCode(text) || /(?:^|\n)\s*(?:[-*•+]|\d+[.)])\s/m.test(text)) {
+		return { paragraphs: [text], questionIndex: -1 };
+	}
+	const sentences = text.split(/(?<=[.!?])\s+(?=[A-Z0-9])/);
+	if (sentences.length < 2) return { paragraphs: [text], questionIndex: -1 };
+
+	const finalQuestionIndex = sentences.length - 1;
+	const finalSentence = sentences[finalQuestionIndex].trim();
+	const hasFinalQuestion = /^(?:if|which|what|why|how|when|where|who)\b/i.test(finalSentence) && /\?\s*$/.test(finalSentence);
+	if (!hasFinalQuestion && (sentences.length < 3 || text.length < 180)) {
+		return { paragraphs: [text], questionIndex: -1 };
+	}
+
+	const contextEnd = hasFinalQuestion ? finalQuestionIndex : sentences.length;
+	const paragraphs = [];
+	for (let index = 0; index < contextEnd; index += 2) {
+		paragraphs.push(sentences.slice(index, Math.min(index + 2, contextEnd)).join(" "));
+	}
+	const questionIndex = hasFinalQuestion ? paragraphs.length : -1;
+	if (hasFinalQuestion) paragraphs.push(finalSentence);
+	return { paragraphs, questionIndex };
+}
+
+function PromptText({ text, fortiosOffline = false }) {
+	if (!fortiosOffline) {
+		return <h2 className="whitespace-pre-wrap text-base font-semibold leading-relaxed tracking-tight text-[#17233d] sm:text-lg">{text}</h2>;
+	}
+	const { paragraphs, questionIndex } = organizeFortiOSOfflinePrompt(text);
+	return (
+		<div className="max-w-[72ch] space-y-3 text-[15px] leading-7 text-[#263654] sm:text-base sm:leading-7">
+			{paragraphs.map((paragraph, index) => (
+				<p key={`${index}-${paragraph.slice(0, 24)}`} className={index === questionIndex ? "font-semibold text-[#17233d]" : "font-medium"}>
+					{paragraph}
+				</p>
+			))}
+		</div>
+	);
+}
+
 // Answer choices that are router/switch commands (e.g. "R1(config)#ip route ...") are shown like a terminal:
 // monospace, one command per line (some imported questions had all commands squashed onto one line).
 const CLI_PROMPT = /(^|\s)[\w.-]+(\([\w-]+\))?[>#]/;
@@ -391,7 +431,7 @@ function InvalidQuestionMessage() {
 }
 
 // imageUrl: the question's picture, for pages that don't show it themselves (the exam page shows it separately)
-export function QuestionPrompt({ prompt, imageUrl, hasSeparateExhibit = Boolean(imageUrl), offline = false }) {
+export function QuestionPrompt({ prompt, imageUrl, hasSeparateExhibit = Boolean(imageUrl), offline = false, fortiosOffline = false }) {
 	const rawPrompt = String(prompt ?? "");
 	const readablePrompt = offline ? rawPrompt
 		.replace(/\r\n/g, "\n")
@@ -413,9 +453,7 @@ export function QuestionPrompt({ prompt, imageUrl, hasSeparateExhibit = Boolean(
 	if (optionTable) {
 		return (
 			<div className="mb-5 space-y-4 sm:mb-6">
-				<h2 className="whitespace-pre-wrap text-base font-semibold leading-relaxed tracking-tight text-[#17233d] sm:text-lg">
-					{optionTable.prompt}
-				</h2>
+				<PromptText text={optionTable.prompt} fortiosOffline={fortiosOffline} />
 				{imageUrl && <ExhibitImage src={imageUrl} lazy imageClassName="max-h-[32rem]" />}
 				<ExhibitText text={optionTable.exhibit} />
 			</div>
@@ -448,9 +486,7 @@ export function QuestionPrompt({ prompt, imageUrl, hasSeparateExhibit = Boolean(
 
 	return (
 		<div className="mb-5 space-y-4 sm:mb-6">
-			<h2 className="whitespace-pre-wrap text-base font-semibold leading-relaxed tracking-tight text-[#17233d] sm:text-lg">
-				{promptText}
-			</h2>
+			<PromptText text={promptText} fortiosOffline={fortiosOffline} />
 			{imageUrl && <ExhibitImage src={imageUrl} lazy imageClassName="max-h-[32rem]" />}
 			{exhibit && (
 				<section aria-label={exhibitTitle} className="overflow-hidden rounded-xl border border-[#d9e1ef] bg-[#f7f9fc]">

@@ -72,7 +72,8 @@ export default function FortiOSOfflineExam() {
 				if (!active) return;
 				const offlineBank = bank.map((item) => ({
 					...item,
-					exhibitImage: FORTIOS_BUNDLED_IMAGE_URLS.get(Number(item.id)) || item.exhibitImage,
+					id: Number(item.id ?? item.bankId),
+					exhibitImage: FORTIOS_BUNDLED_IMAGE_URLS.get(Number(item.id ?? item.bankId)) || item.exhibitImage,
 				}));
 				setBankState({ status: "ready", bank: offlineBank, error: null });
 				let restoredSession = null;
@@ -80,12 +81,13 @@ export default function FortiOSOfflineExam() {
 					const saved = window.localStorage.getItem(sessionKey);
 					if (saved) {
 						const parsed = JSON.parse(saved);
-						if (isValidSession(parsed, examKey) && parsed.questions.every((item) => offlineBank.some((candidate) => candidate.id === item.id))) {
+						if (isValidSession(parsed, examKey) && parsed.questions.every((item) => offlineBank.some((candidate) => candidate.id === Number(item.id ?? item.bankId)))) {
 							restoredSession = {
 								...parsed,
 								questions: parsed.questions.map((item) => ({
 									...item,
-									exhibitImage: FORTIOS_BUNDLED_IMAGE_URLS.get(Number(item.id)) || item.exhibitImage,
+									id: Number(item.id ?? item.bankId),
+									exhibitImage: FORTIOS_BUNDLED_IMAGE_URLS.get(Number(item.id ?? item.bankId)) || item.exhibitImage,
 								})),
 							};
 						}
@@ -180,7 +182,7 @@ export default function FortiOSOfflineExam() {
 						<>
 							{question.exhibitImage && <ExhibitImage src={question.exhibitImage} className="mb-5" imageClassName="max-h-[32rem]" />}
 							{question.exhibit && <ExhibitText text={question.exhibit} className="mb-5" />}
-							<QuestionPrompt prompt={question.prompt} hasSeparateExhibit={Boolean(question.exhibit || question.exhibitImage)} />
+							<QuestionPrompt prompt={question.prompt} hasSeparateExhibit={Boolean(question.exhibit || question.exhibitImage)} offline fortiosOffline />
 							<QuestionInput
 								key={session.currentIndex}
 								question={question}
@@ -205,7 +207,7 @@ export default function FortiOSOfflineExam() {
 							<h2 className="text-xl font-bold">Question {session.currentIndex + 1}</h2>
 							{question.exhibitImage && <ExhibitImage src={question.exhibitImage} className="my-5" imageClassName="max-h-[32rem]" />}
 							{question.exhibit && <ExhibitText text={question.exhibit} className="my-5" />}
-							<QuestionPrompt prompt={question.prompt} hasSeparateExhibit={Boolean(question.exhibit || question.exhibitImage)} />
+							<QuestionPrompt prompt={question.prompt} hasSeparateExhibit={Boolean(question.exhibit || question.exhibitImage)} offline fortiosOffline />
 							<QuestionReview question={question} value={session.answers[session.currentIndex]} />
 							{question.explanation && <p className="mt-5 rounded-xl bg-[#fff3f2] px-4 py-3 text-sm leading-6 text-[#596983]"><strong className="text-[#b31d17]">Explanation: </strong>{question.explanation}</p>}
 							<div className="mt-7 flex flex-wrap justify-between gap-3">
