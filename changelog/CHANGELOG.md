@@ -6,6 +6,14 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `8181753` — Restored the 157 skipped CCNA question rows by converting the raw question bank in the frontend and remaking its unsupported question formats. No API/backend changes.
+
+Validation before push: targeted ESLint, frontend production build, conversion and grading checks for all 157 report rows, and Git whitespace checks passed.
+
+## 2026-10-24 — `main`
+
+Commits included in this push:
+
 - `b8ae9e2` — Adjusted device-detail text baselines so labels no longer overlap their backplates in practice and exam topologies.
 
 Validation before push: targeted ESLint, frontend production build, browser verification of the practice topology label, and Git whitespace checks passed. The build reports the existing large-bundle warning.
