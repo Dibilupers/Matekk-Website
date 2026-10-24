@@ -99,7 +99,7 @@ export default function CCNAAllQuestionsExam() {
 		bankRequest
 			.then(({ questions: validQuestions }) => {
 				const bankQuestions = [...validQuestions]
-				.filter((item) => !isOnline || isCcnaQuestionModule(item.moduleTitle))
+					.filter((item) => !isOnline || isCcnaQuestionModule(item.moduleTitle ?? item.module))
 					.map(applyNativeExhibit)
 					.sort((left, right) => left.bankId - right.bankId);
 				if (!bankQuestions.length) {

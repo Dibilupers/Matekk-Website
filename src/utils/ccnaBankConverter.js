@@ -42,14 +42,36 @@ function parseChoices(raw) {
   if (!raw) return null;
   try {
     const parsed = JSON.parse(raw);
-    if (Array.isArray(parsed)) return parsed;
     if (!parsed || typeof parsed !== "object") return null;
-
-    const entries = Object.entries(parsed);
+    if (Array.isArray(parsed)) {
+      const entries = parsed.map((choice, index) => {
+        const letter = String.fromCharCode(65 + index);
+        if (typeof choice === "string") return [letter, choice];
+        if (
+          !choice ||
+          typeof choice !== "object" ||
+          Array.isArray(choice) ||
+          typeof choice.text !== "string"
+        ) return null;
+        const id = typeof choice.id === "string" || typeof choice.id === "number"
+          ? String(choice.id)
+          : letter;
+        return [id, choice.text];
+      });
+      return entries.every(Boolean) ? Object.fromEntries(entries) : null;
+    }
+    const entries = Object.entries(parsed).map(([key, choice]) => {
+      if (typeof choice === "string") return [key, choice];
+      if (choice && typeof choice === "object" && !Array.isArray(choice) && typeof choice.text === "string") {
+        return [key, choice.text];
+      }
+      return null;
+    });
+    if (!entries.every(Boolean)) return null;
     const keys = new Set(entries.map(([key]) => key.toUpperCase()));
     const repaired = {};
     for (const [key, rawValue] of entries) {
-      if (typeof rawValue !== "string" || !/^[A-H]$/i.test(key)) {
+      if (!/^[A-H]$/i.test(key)) {
         repaired[key] = rawValue;
         continue;
       }
@@ -69,6 +91,16 @@ function parseChoices(raw) {
   }
 }
 
+function normalizeQuestionType(questionType) {
+  const normalized = String(questionType ?? "single").trim().toLocaleLowerCase().replace(/[\s-]+/g, "_");
+  if (!normalized || ["single", "single_choice", "multiple_choice", "mcq", "radio"].includes(normalized)) {
+    return "single";
+  }
+  if (normalized === "drag_and_drop") return "drag_drop";
+  if (normalized === "click_the_boxes") return "click_boxes";
+  return normalized;
+}
+
 function multipleChoice(row, choices) {
   const entries = Array.isArray(choices)
     ? choices.map((option, index) => [String.fromCharCode(65 + index), option])
@@ -83,6 +115,10 @@ function multipleChoice(row, choices) {
 
   function findOptionIndex(answer) {
     const normalizedAnswer = answer.trim().toLocaleLowerCase();
+    const keyedIndex = entries.findIndex(([key]) =>
+      String(key).trim().toLocaleLowerCase() === normalizedAnswer,
+    );
+    if (keyedIndex >= 0) return keyedIndex;
     const exactMatch = options.findIndex((option) => option.trim().toLocaleLowerCase() === normalizedAnswer);
     if (exactMatch >= 0) return exactMatch;
 
@@ -428,7 +464,7 @@ function remakeSkippedQuestion(row, choices) {
 export function convertBankRow(row) {
   const rawText = cleanText(row.question_text);
   if (!rawText) return { problem: "question text is empty" };
-  const questionType = row.question_type || "single";
+  const questionType = normalizeQuestionType(row.question_type);
   const parsedOptionTable = questionType === "single" ? parseOptionTable(rawText) : null;
   const choices = parseChoices(row.choices);
   const choiceEntries = Array.isArray(choices)
