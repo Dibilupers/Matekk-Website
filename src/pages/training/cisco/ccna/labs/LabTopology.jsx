@@ -87,11 +87,96 @@ function CloudIcon({ x, y, label, sub }) {
 
 const SHORT = (ifName) => (ifName.startsWith("g") ? `G${ifName.slice(1)}` : ifName.startsWith("fa") ? "Fa0" : ifName);
 
+function TopologyLabel({ x, y, children, fontSize = 9.5, fontWeight = 500 }) {
+	const width = Math.max(24, String(children).length * fontSize * 0.58 + 10);
+	const height = fontSize + 8;
+	return (
+		<g>
+			<rect x={x - width / 2} y={y - height + 2} width={width} height={height} rx="4" fill="#fff" fillOpacity="0.97" stroke="#dbe4ee" strokeWidth="1" />
+			<text x={x} y={y} textAnchor="middle" dominantBaseline="auto" fontSize={fontSize} fontWeight={fontWeight} fill="#334155">
+				{children}
+			</text>
+		</g>
+	);
+}
+
+function topologyViewBox(lab, state) {
+	let minX = Infinity;
+	let minY = Infinity;
+	let maxX = -Infinity;
+	let maxY = -Infinity;
+	const include = (x, y, halfWidth = 0, halfHeight = 0) => {
+		minX = Math.min(minX, x - halfWidth);
+		minY = Math.min(minY, y - halfHeight);
+		maxX = Math.max(maxX, x + halfWidth);
+		maxY = Math.max(maxY, y + halfHeight);
+	};
+	const includeLabel = (x, y, label) => {
+		const width = Math.max(24, String(label).length * 9.5 * 0.58 + 10);
+		const height = 9.5 + 8;
+		include(x, y - height / 2 + 2, width / 2, height / 2);
+	};
+	const pos = (name) => lab.layout.nodes[name];
+
+	Object.entries(lab.layout.nodes).forEach(([name, node]) => {
+		const device = state.devices[name];
+		const label = device.kind === "router" ? device.hostname : name;
+		const details = node.sub ? [node.sub] : [];
+		const labelWidth = Math.max(48, label.length * 7.2 + 16);
+		const detailWidth = Math.max(48, ...details.map((detail) => detail.length * 5.2 + 12));
+		const iconHalfWidth = device.kind === "pc" ? 30 : 38;
+		const top = device.kind === "pc" ? -30 : -28;
+		const bottom = details.length ? 55 + details.length * 12 : 45;
+		include(node.x, node.y + (top + bottom) / 2, Math.max(iconHalfWidth, labelWidth / 2, details.length ? detailWidth / 2 : 0), (bottom - top) / 2);
+	});
+
+	lab.links.forEach((link) => {
+		const [aDevice, aInterface] = link.a.split(":");
+		const [bDevice, bInterface] = link.b.split(":");
+		const a = pos(aDevice);
+		const b = pos(bDevice);
+		const dx = b.x - a.x;
+		const dy = b.y - a.y;
+		const length = Math.hypot(dx, dy) || 1;
+		const ux = dx / length;
+		const uy = dy / length;
+		const nx = -uy * 11;
+		const ny = ux * 11;
+		const x1 = a.x + ux * 34;
+		const y1 = a.y + uy * 34;
+		const x2 = b.x - ux * 34;
+		const y2 = b.y - uy * 34;
+		includeLabel(x1 + ux * 16 + nx, y1 + uy * 16 + ny + 3, SHORT(aInterface));
+		includeLabel(x2 - ux * 16 + nx, y2 - uy * 16 + ny + 3, SHORT(bInterface));
+		includeLabel((x1 + x2) / 2 - nx, (y1 + y2) / 2 - ny + 3, link.net);
+	});
+
+	if (lab.layout.cloud) {
+		const cloud = lab.layout.cloud;
+		const attached = pos(cloud.attach);
+		include(cloud.x, cloud.y - 5, 40, 36);
+		include(cloud.x, cloud.y + 22, 0, 0);
+		include(attached.x, attached.y - 22, 0, 0);
+	}
+
+	if (!Number.isFinite(minX)) return { x: 0, y: 0, width: lab.layout.width, height: lab.layout.height };
+	const padding = 18;
+	const x = Math.floor(minX - padding);
+	const y = Math.floor(minY - padding);
+	return {
+		x,
+		y,
+		width: Math.ceil(maxX - minX + padding * 2),
+		height: Math.ceil(maxY - minY + padding * 2),
+	};
+}
+
 export default function LabTopology({ lab, state, activeDevice }) {
 	const { layout } = lab;
 	const pos = (name) => layout.nodes[name];
+	const viewBox = topologyViewBox(lab, state);
 	return (
-		<svg viewBox={`0 0 ${layout.width} ${layout.height}`} className="w-full h-auto" role="img" aria-label={`Lab topology: ${lab.title}`}>
+		<svg viewBox={`${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`} className="mx-auto h-auto w-full max-w-5xl" role="img" aria-label={`Lab topology: ${lab.title}`}>
 			{layout.cloud && (
 				<line x1={layout.cloud.x} y1={layout.cloud.y + 22} x2={pos(layout.cloud.attach).x} y2={pos(layout.cloud.attach).y - 22} stroke="#94a3b8" strokeWidth="2" strokeDasharray="4 4" />
 			)}
@@ -115,16 +200,17 @@ export default function LabTopology({ lab, state, activeDevice }) {
 						<line x1={x1} y1={y1} x2={x2} y2={y2} stroke={color} strokeWidth="3" strokeDasharray={up ? "0" : "6 5"} />
 						<circle cx={x1} cy={y1} r="4" fill={color} />
 						<circle cx={x2} cy={y2} r="4" fill={color} />
-						<text x={x1 + ux * 16 + nx} y={y1 + uy * 16 + ny + 3} textAnchor="middle" fontSize="9.5" fill="#4b5b78">{SHORT(ai)}</text>
-						<text x={x2 - ux * 16 + nx} y={y2 - uy * 16 + ny + 3} textAnchor="middle" fontSize="9.5" fill="#4b5b78">{SHORT(bi)}</text>
-						<text x={(x1 + x2) / 2 - nx} y={(y1 + y2) / 2 - ny + 3} textAnchor="middle" fontSize="9.5" fontWeight="600" fill="#334155">{l.net}</text>
+						<TopologyLabel x={x1 + ux * 16 + nx} y={y1 + uy * 16 + ny + 3}>{SHORT(ai)}</TopologyLabel>
+						<TopologyLabel x={x2 - ux * 16 + nx} y={y2 - uy * 16 + ny + 3}>{SHORT(bi)}</TopologyLabel>
+						<TopologyLabel x={(x1 + x2) / 2 - nx} y={(y1 + y2) / 2 - ny + 3} fontWeight={600}>{l.net}</TopologyLabel>
 					</g>
 				);
 			})}
 			{Object.entries(layout.nodes).map(([name, n]) => {
 				const d = state.devices[name];
-				if (d.kind === "pc") return <PcIcon key={name} x={n.x} y={n.y} label={name} sub={n.sub} server={name.startsWith("SRV")} />;
-				return <RouterIcon key={name} x={n.x} y={n.y} label={d.hostname} sub={n.sub} active={activeDevice === name} />;
+				if (d.kind === "pc") return <PcIcon key={name} x={n.x} y={n.y} label={name} sub={n.sub} server={name.startsWith("SRV")} labelBackdrop />;
+				if (d.kind === "switch") return <SwitchIcon key={name} x={n.x} y={n.y} label={name} sub={n.sub} labelBackdrop />;
+				return <RouterIcon key={name} x={n.x} y={n.y} label={d.hostname} sub={n.sub} active={activeDevice === name} labelBackdrop />;
 			})}
 			{layout.cloud && <CloudIcon x={layout.cloud.x} y={layout.cloud.y} label={layout.cloud.label} sub={layout.cloud.sub} />}
 		</svg>
