@@ -1,0 +1,602 @@
+{
+  "1": {
+    "signature": "f7af5b63",
+    "answer": "B,D"
+  },
+  "6": {
+    "signature": "6dedc6a4",
+    "answer": "C,D"
+  },
+  "35": {
+    "signature": "6c1bbf3b",
+    "answer": "A,D"
+  },
+  "52": {
+    "signature": "983bf14f",
+    "answer": "A,C"
+  },
+  "74": {
+    "signature": "41fdad34",
+    "answer": "C,E"
+  },
+  "81": {
+    "signature": "0e9d44da",
+    "answer": "C,E"
+  },
+  "105": {
+    "signature": "05de1abd",
+    "answer": "B,E"
+  },
+  "111": {
+    "signature": "2cc60885",
+    "answer": "A,E"
+  },
+  "114": {
+    "signature": "f000c44c",
+    "answer": "A,C"
+  },
+  "117": {
+    "signature": "53aa88ee",
+    "answer": "A,C"
+  },
+  "120": {
+    "signature": "a9fe9675",
+    "answer": "A,B"
+  },
+  "121": {
+    "signature": "766651e1",
+    "answer": "C,E"
+  },
+  "129": {
+    "signature": "a6d0a675",
+    "answer": "A,D"
+  },
+  "130": {
+    "signature": "eedc1928",
+    "answer": "C,E"
+  },
+  "134": {
+    "signature": "3cba345e",
+    "answer": "A,D"
+  },
+  "146": {
+    "signature": "975eaf01",
+    "answer": "D,E"
+  },
+  "148": {
+    "signature": "c8bfb90e",
+    "answer": "A,D"
+  },
+  "153": {
+    "signature": "251fb43c",
+    "answer": "A,C"
+  },
+  "175": {
+    "signature": "00ce11fe",
+    "answer": "C,E"
+  },
+  "186": {
+    "signature": "4123339f",
+    "answer": "C,E"
+  },
+  "193": {
+    "signature": "d646bda3",
+    "answer": "B,E"
+  },
+  "194": {
+    "signature": "56b7e3b3",
+    "answer": "D,E"
+  },
+  "221": {
+    "signature": "eeb11113",
+    "answer": "A,C"
+  },
+  "224": {
+    "signature": "26fbb1be",
+    "answer": "A,C"
+  },
+  "228": {
+    "signature": "36cb3cf9",
+    "answer": "B,E"
+  },
+  "239": {
+    "signature": "5a5c8cab",
+    "answer": "A,E"
+  },
+  "293": {
+    "signature": "c10545d9",
+    "answer": "A,E"
+  },
+  "294": {
+    "signature": "613a65e9",
+    "answer": "B,E"
+  },
+  "321": {
+    "signature": "9fd13f45",
+    "answer": "A,B"
+  },
+  "350": {
+    "signature": "a14df289",
+    "answer": "D,E"
+  },
+  "365": {
+    "signature": "501ece29",
+    "answer": "B,D"
+  },
+  "369": {
+    "signature": "263c8780",
+    "answer": "B,E"
+  },
+  "370": {
+    "signature": "bf6df1b7",
+    "answer": "A,C"
+  },
+  "376": {
+    "signature": "0c3cd6bc",
+    "answer": "D,E"
+  },
+  "389": {
+    "signature": "55b7ca2c",
+    "answer": "A,D"
+  },
+  "400": {
+    "signature": "ccda4d7d",
+    "answer": "A,E"
+  },
+  "413": {
+    "signature": "02593511",
+    "answer": "D,E"
+  },
+  "414": {
+    "signature": "2b786842",
+    "answer": "A,D"
+  },
+  "419": {
+    "signature": "caf09ce2",
+    "answer": "C,D"
+  },
+  "439": {
+    "signature": "bbee3354",
+    "answer": "D,E"
+  },
+  "446": {
+    "signature": "fd077dd4",
+    "answer": "B,E"
+  },
+  "463": {
+    "signature": "a9aaa4fe",
+    "answer": "C,E"
+  },
+  "479": {
+    "signature": "0f4732fd",
+    "answer": "B,E"
+  },
+  "487": {
+    "signature": "d73fe5b1",
+    "answer": "D,E"
+  },
+  "497": {
+    "signature": "e321b418",
+    "answer": "D,E"
+  },
+  "504": {
+    "signature": "a4b426d4",
+    "answer": "B,D"
+  },
+  "513": {
+    "signature": "1d15d52d",
+    "answer": "B,C"
+  },
+  "515": {
+    "signature": "376e826e",
+    "answer": "A,C"
+  },
+  "519": {
+    "signature": "887730be",
+    "answer": "A,D"
+  },
+  "520": {
+    "signature": "79e7ce27",
+    "answer": "B,C"
+  },
+  "529": {
+    "signature": "54a2af79",
+    "answer": "C,D"
+  },
+  "530": {
+    "signature": "f52564f2",
+    "answer": "D,E"
+  },
+  "532": {
+    "signature": "abfed568",
+    "answer": "A,C"
+  },
+  "556": {
+    "signature": "c4fa81ce",
+    "answer": "A,B"
+  },
+  "559": {
+    "signature": "037b655e",
+    "answer": "A,B"
+  },
+  "569": {
+    "signature": "14660922",
+    "answer": "C,D"
+  },
+  "572": {
+    "signature": "eac0f6a1",
+    "answer": "C,E"
+  },
+  "575": {
+    "signature": "d8cd2001",
+    "answer": "A,B"
+  },
+  "578": {
+    "signature": "63240cef",
+    "answer": "A,B"
+  },
+  "579": {
+    "signature": "38415f90",
+    "answer": "B,D"
+  },
+  "583": {
+    "signature": "419ec0d0",
+    "answer": "A,E"
+  },
+  "593": {
+    "signature": "90176b30",
+    "answer": "A,C"
+  },
+  "594": {
+    "signature": "e0f176f2",
+    "answer": "A,E"
+  },
+  "596": {
+    "signature": "6446071f",
+    "answer": "C,D"
+  },
+  "603": {
+    "signature": "1711c026",
+    "answer": "A,D"
+  },
+  "625": {
+    "signature": "cc32113d",
+    "answer": "C,D"
+  },
+  "634": {
+    "signature": "6c8aae66",
+    "answer": "B,D"
+  },
+  "687": {
+    "signature": "345214aa",
+    "answer": "A,B"
+  },
+  "693": {
+    "signature": "f0d61ffa",
+    "answer": "B,C"
+  },
+  "701": {
+    "signature": "c0d8b29f",
+    "answer": "B,E"
+  },
+  "712": {
+    "signature": "af470478",
+    "answer": "A,C"
+  },
+  "726": {
+    "signature": "04ad5088",
+    "answer": "D,E"
+  },
+  "747": {
+    "signature": "51a1fabc",
+    "answer": "A,D"
+  },
+  "784": {
+    "signature": "cd06ff17",
+    "answer": "A,C"
+  },
+  "799": {
+    "signature": "8b1bba44",
+    "answer": "B,E"
+  },
+  "802": {
+    "signature": "bef5c2a1",
+    "answer": "A,E"
+  },
+  "812": {
+    "signature": "2120d0f4",
+    "answer": "B,C"
+  },
+  "815": {
+    "signature": "0d7c52bf",
+    "answer": "B,E"
+  },
+  "817": {
+    "signature": "163d805b",
+    "answer": "A,B"
+  },
+  "820": {
+    "signature": "7277809d",
+    "answer": "A,E"
+  },
+  "825": {
+    "signature": "944846ad",
+    "answer": "A,C"
+  },
+  "827": {
+    "signature": "3c1ab504",
+    "answer": "C,E"
+  },
+  "838": {
+    "signature": "bdd6608e",
+    "answer": "B,D"
+  },
+  "854": {
+    "signature": "caabc5b1",
+    "answer": "A,E"
+  },
+  "861": {
+    "signature": "444cd1a5",
+    "answer": "B,E"
+  },
+  "873": {
+    "signature": "afd560a3",
+    "answer": "B,C"
+  },
+  "884": {
+    "signature": "2834e35d",
+    "answer": "A,B"
+  },
+  "885": {
+    "signature": "fd1e79fb",
+    "answer": "A,D"
+  },
+  "920": {
+    "signature": "ea647cc4",
+    "answer": "C,E"
+  },
+  "921": {
+    "signature": "b044a8c6",
+    "answer": "B,C"
+  },
+  "935": {
+    "signature": "044ab625",
+    "answer": "A,C"
+  },
+  "951": {
+    "signature": "7f9e7874",
+    "answer": "B,C"
+  },
+  "964": {
+    "signature": "1bfcd907",
+    "answer": "D,E"
+  },
+  "979": {
+    "signature": "c0b83f17",
+    "answer": "C,D"
+  },
+  "1016": {
+    "signature": "cae91f69",
+    "answer": "D,E"
+  },
+  "1027": {
+    "signature": "3014f5ac",
+    "answer": "A,E"
+  },
+  "1030": {
+    "signature": "2d147d15",
+    "answer": "A,E"
+  },
+  "1031": {
+    "signature": "5a694c60",
+    "answer": "B,D"
+  },
+  "1038": {
+    "signature": "d2b6c60b",
+    "answer": "A,B"
+  },
+  "1043": {
+    "signature": "98381adc",
+    "answer": "D,E"
+  },
+  "1044": {
+    "signature": "fb6fcf7b",
+    "answer": "B,C"
+  },
+  "1047": {
+    "signature": "0ac76a70",
+    "answer": "A,E"
+  },
+  "1051": {
+    "signature": "512ff8d5",
+    "answer": "C,E"
+  },
+  "1056": {
+    "signature": "010b2657",
+    "answer": "A,C"
+  },
+  "1058": {
+    "signature": "f363aed2",
+    "answer": "C,E"
+  },
+  "1063": {
+    "signature": "164815de",
+    "answer": "B,C"
+  },
+  "1074": {
+    "signature": "1005408d",
+    "answer": "A,D,E"
+  },
+  "1075": {
+    "signature": "b642bd39",
+    "answer": "B,E"
+  },
+  "1076": {
+    "signature": "7744184f",
+    "answer": "A,C"
+  },
+  "1097": {
+    "signature": "ce816931",
+    "answer": "C,E"
+  },
+  "1106": {
+    "signature": "32dfba5a",
+    "answer": "A,E"
+  },
+  "1109": {
+    "signature": "77f7ec93",
+    "answer": "A,C"
+  },
+  "1110": {
+    "signature": "ef24b36c",
+    "answer": "A,D"
+  },
+  "1126": {
+    "signature": "541af5d3",
+    "answer": "B,E"
+  },
+  "1138": {
+    "signature": "b131af25",
+    "answer": "C,D"
+  },
+  "1145": {
+    "signature": "bb07ccd9",
+    "answer": "A,C"
+  },
+  "1164": {
+    "signature": "8022e774",
+    "answer": "A,D"
+  },
+  "1170": {
+    "signature": "5444f258",
+    "answer": "D,E"
+  },
+  "1172": {
+    "signature": "2bb284e4",
+    "answer": "B,C"
+  },
+  "1182": {
+    "signature": "3fc4369f",
+    "answer": "B,D"
+  },
+  "1183": {
+    "signature": "e813d80b",
+    "answer": "A,D"
+  },
+  "1190": {
+    "signature": "b6b16540",
+    "answer": "A,B"
+  },
+  "1195": {
+    "signature": "b044a8c6",
+    "answer": "B,C"
+  },
+  "1196": {
+    "signature": "1ef487c1",
+    "answer": "B,D"
+  },
+  "1199": {
+    "signature": "2a5cadc9",
+    "answer": "A,D"
+  },
+  "1208": {
+    "signature": "c3323e9d",
+    "answer": "B,C"
+  },
+  "1210": {
+    "signature": "753f5303",
+    "answer": "A,B"
+  },
+  "1216": {
+    "signature": "727de6bb",
+    "answer": "C,E"
+  },
+  "1217": {
+    "signature": "9270d0ab",
+    "answer": "C,D"
+  },
+  "1223": {
+    "signature": "044ab625",
+    "answer": "A,C"
+  },
+  "1230": {
+    "signature": "d3cdb1e1",
+    "answer": "D,E"
+  },
+  "1231": {
+    "signature": "4ea964d6",
+    "answer": "A,E"
+  },
+  "1235": {
+    "signature": "90d403a7",
+    "answer": "D,E"
+  },
+  "1239": {
+    "signature": "5c7edef1",
+    "answer": "A,B"
+  },
+  "1242": {
+    "signature": "ad50485b",
+    "answer": "A,B"
+  },
+  "1247": {
+    "signature": "db71d983",
+    "answer": "A,D"
+  },
+  "1248": {
+    "signature": "24160489",
+    "answer": "A,D"
+  },
+  "1263": {
+    "signature": "04ad5088",
+    "answer": "D,E"
+  },
+  "1266": {
+    "signature": "9946a0a7",
+    "answer": "A,E"
+  },
+  "1268": {
+    "signature": "4577036a",
+    "answer": "A,C"
+  },
+  "1280": {
+    "signature": "1df55919",
+    "answer": "B,C"
+  },
+  "1281": {
+    "signature": "f663530d",
+    "answer": "B,C"
+  },
+  "1284": {
+    "signature": "bb535346",
+    "answer": "B,E"
+  },
+  "1286": {
+    "signature": "71d3a706",
+    "answer": "B,D"
+  },
+  "1328": {
+    "signature": "8a663a9d",
+    "answer": "A,D"
+  },
+  "1329": {
+    "signature": "6a91078d",
+    "answer": "B,C"
+  },
+  "1334": {
+    "signature": "043d37dd",
+    "answer": "C,E"
+  },
+  "1341": {
+    "signature": "fc3d5491",
+    "answer": "B,E"
+  },
+  "1342": {
+    "signature": "b9407f68",
+    "answer": "A,C"
+  },
+  "1352": {
+    "signature": "c8d00297",
+    "answer": "A,C"
+  }
+}
