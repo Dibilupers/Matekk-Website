@@ -11,7 +11,7 @@
     ],
     "answer": 3,
     "imagePath": null,
-    "explanation": "",
+    "explanation": "On Demand mode sends DPD probes when FortiGate has sent outbound traffic through the tunnel but has received nothing back (no inbound traffic). On Idle sends probes whenever the tunnel is idle, and Enabled/Disabled do not match the requirement.\n\nSource: Fortinet Community - Explanation of IPsec VPN DPD options and On-Idle tunnel flushing - https://community.fortinet.com/fortigate-3/technical-tip-explanation-of-ipsec-vpn-dpd-options-and-on-idle-tunnel-flushing-process-137398",
     "module": "Fortinet FortiOS"
   },
   {
@@ -29,7 +29,7 @@
       3
     ],
     "imagePath": null,
-    "explanation": "",
+    "explanation": "With SD-WAN enabled, the ECMP load-balancing algorithm is set with load-balance-mode under config system sdwan. With SD-WAN disabled, it is set in config system settings (v4-ecmp-mode). Routes in one ECMP group must have equal distance and priority, and volume-based is not a v4-ecmp-mode option.\n\nSource: FortiOS 7.6 Administration Guide - SD-WAN - https://docs.fortinet.com/document/fortigate/7.6.0/administration-guide/19246/sd-wan",
     "module": "Fortinet FortiOS"
   },
   {
@@ -44,7 +44,7 @@
     ],
     "answer": 1,
     "imagePath": null,
-    "explanation": "",
+    "explanation": "A web filter profile only appears in a firewall policy whose inspection mode matches the profile's feature set. A profile using proxy-based features such as a daily category usage quota is not offered in a flow-based policy.\n\nSource: FortiOS 7.6 Administration Guide - Web filter - https://docs.fortinet.com/document/fortigate/7.6.0/administration-guide/833698/web-filter",
     "module": "Fortinet FortiOS"
   },
   {
@@ -59,7 +59,7 @@
     ],
     "answer": 0,
     "imagePath": "questions/q4.png",
-    "explanation": "",
+    "explanation": "The IPS engine only runs when at least one firewall policy references an IPS profile. If no policy uses IPS, the engine count stays at 0, so the diagnose output shows no engine running. ipsmonitor 5 only toggles bypass mode and ipsmonitor 99 restarts the engines.\n\nSource: FortiOS 7.6 Administration Guide - Intrusion prevention - https://docs.fortinet.com/document/fortigate/7.6.0/administration-guide/565562/intrusion-prevention",
     "module": "Fortinet FortiOS"
   },
   {
@@ -77,7 +77,7 @@
       3
     ],
     "imagePath": "questions/q5.png",
-    "explanation": "",
+    "explanation": "The deep-inspection profiles exempt some web categories (such as Health and Wellness, Personal Privacy and Finance and Banking) because decrypting them raises legal and privacy concerns, and because sites that use HSTS or certificate pinning break when FortiGate re-signs their certificate with its own CA.\n\nSource: FortiOS 7.6 Administration Guide - SSL & SSH Inspection - https://docs.fortinet.com/document/fortigate/7.6.0/administration-guide/929997/ssl-ssh-inspection",
     "module": "Fortinet FortiOS"
   },
   {
@@ -92,7 +92,7 @@
     ],
     "answer": 1,
     "imagePath": "questions/q6.png",
-    "explanation": "",
+    "explanation": "Idle timeout for GUI sessions is controlled per admin profile by Override Idle Timeout. Raising its value in the NOC_Access profile lengthens the NOC team's sessions without affecting other admins. The order of profiles does not matter.\n\nSource: FortiOS Administration Guide - Setting the idle timeout time - https://docs.fortinet.com/document/fortigate/7.2.13/administration-guide/215451",
     "module": "Fortinet FortiOS"
   },
   {
@@ -110,7 +110,7 @@
       1
     ],
     "imagePath": "questions/q7.png",
-    "explanation": "",
+    "explanation": "In conserve mode FortiGate refuses configuration changes and skips resource-heavy actions such as quarantine. What happens to traffic that needs inspection depends on settings such as av-failopen and the IPS fail-open option.\n\nSource: Fortinet Community - How conserve mode is triggered - https://community.fortinet.com/fortigate-3/technical-tip-how-conserve-mode-is-triggered-99971",
     "module": "Fortinet FortiOS"
   },
   {
@@ -125,7 +125,7 @@
     ],
     "answer": 0,
     "imagePath": null,
-    "explanation": "",
+    "explanation": "With override enabled, the primary is elected in this order: connected monitored ports, then priority, then HA uptime, then serial number. With override disabled, HA uptime is compared before priority.\n\nSource: FortiOS 7.6.7 Administration Guide - HA primary unit selection criteria - https://docs.fortinet.com/document/fortigate/7.6.7/administration-guide/996846",
     "module": "Fortinet FortiOS"
   },
   {
@@ -140,7 +140,7 @@
     ],
     "answer": 3,
     "imagePath": null,
-    "explanation": "",
+    "explanation": "To block a signature after it triggers a set number of times in a time window, use IPS rate-based signature settings: set the rate count and duration and the rate-mode to periodical. A group of signatures or the packet logging option does not do this.\n\nSource: FortiOS 7.6 Administration Guide - Intrusion prevention - https://docs.fortinet.com/document/fortigate/7.6.0/administration-guide/565562/intrusion-prevention",
     "module": "Fortinet FortiOS"
   },
   {
@@ -155,7 +155,7 @@
     ],
     "answer": 3,
     "imagePath": null,
-    "explanation": "",
+    "explanation": "With active authentication the client must be able to resolve the captive-portal hostname, so DNS must be allowed in the policy even before the user authenticates.\n\nSource: FortiOS 7.6 Administration Guide - User & Authentication - https://docs.fortinet.com/document/fortigate/7.6.0/administration-guide/622284/user-authentication",
     "module": "Fortinet FortiOS"
   },
   {
@@ -170,7 +170,7 @@
     ],
     "answer": 0,
     "imagePath": "questions/q11.png",
-    "explanation": "",
+    "explanation": "The remote RADIUS server returns the Fortinet-Group-Name vendor-specific attribute (value Training). FortiGate matches that value to the remote group on its user group, so only users in Training match and authenticate.\n\nSource: FortiOS Administration Guide - Restricting RADIUS user groups to match selective users on the RADIUS server - https://docs.fortinet.com/document/fortigate/7.2.8/administration-guide/710485",
     "module": "Fortinet FortiOS"
   },
   {
@@ -185,7 +185,7 @@
     ],
     "answer": 1,
     "imagePath": "questions/q12.png",
-    "explanation": "",
+    "explanation": "In the SD-WAN zone list, the underlay zone has no member interfaces. The default zones (virtual-wan-link and overlay) cannot be deleted, and port2 and port3 are assigned to a zone.\n\nSource: FortiOS 7.6 Administration Guide - SD-WAN - https://docs.fortinet.com/document/fortigate/7.6.0/administration-guide/19246/sd-wan",
     "module": "Fortinet FortiOS"
   },
   {
@@ -205,7 +205,7 @@
       3
     ],
     "imagePath": null,
-    "explanation": "",
+    "explanation": "Flow-based AV buffers the file while it streams to the client, uses a hybrid of the scanning modes available in proxy-based inspection, and performs better than proxy-based inspection. It does not hold the last packet, and the IPS engine works with the AV engine, not alone.\n\nSource: FortiOS 7.6 Administration Guide - Antivirus - https://docs.fortinet.com/document/fortigate/7.6.0/administration-guide/836396/antivirus",
     "module": "Fortinet FortiOS"
   },
   {
@@ -220,7 +220,7 @@
     ],
     "answer": 2,
     "imagePath": "questions/q14.png",
-    "explanation": "",
+    "explanation": "An application override with the action Allow lets the traffic through and does not generate a security log entry. Use Monitor if you want the application logged.\n\nSource: FortiOS 7.6 Administration Guide - Application control - https://docs.fortinet.com/document/fortigate/7.6.0/administration-guide/302748/application-control",
     "module": "Fortinet FortiOS"
   },
   {
@@ -238,7 +238,7 @@
       3
     ],
     "imagePath": null,
-    "explanation": "",
+    "explanation": "A stitch can run several actions in parallel, and its trigger can come from external connectors. A stitch has a single trigger, and its actions are not limited to Security Fabric devices.\n\nSource: FortiOS 7.6.5 Administration Guide - Automation stitches - https://docs.fortinet.com/document/fortigate/7.6.5/administration-guide/139441",
     "module": "Fortinet FortiOS"
   },
   {
@@ -258,7 +258,7 @@
       4
     ],
     "imagePath": null,
-    "explanation": "",
+    "explanation": "SD-WAN performance SLAs can be measured actively or passively, they drive the lowest cost (SLA) strategy, and every SLA target (latency, jitter, packet loss) can be configured. They measure link quality, not the state of the FortiGate itself.\n\nSource: FortiOS 7.6 Administration Guide - SD-WAN - https://docs.fortinet.com/document/fortigate/7.6.0/administration-guide/19246/sd-wan",
     "module": "Fortinet FortiOS"
   },
   {
@@ -276,7 +276,7 @@
       3
     ],
     "imagePath": null,
-    "explanation": "",
+    "explanation": "In an FGCP HA cluster, setting a monitored interface down on the primary triggers a failover (link failover). Incremental synchronization also includes FIB entries and IPsec SAs.\n\nSource: FortiOS 7.6.7 Administration Guide - HA primary unit selection criteria - https://docs.fortinet.com/document/fortigate/7.6.7/administration-guide/996846",
     "module": "Fortinet FortiOS"
   },
   {
@@ -294,7 +294,7 @@
       1
     ],
     "imagePath": null,
-    "explanation": "",
+    "explanation": "HTTP is scanned in clear text, but HTTPS is only scanned if FortiGate decrypts it. With certificate inspection FortiGate sees only the certificate, not the payload, and a site exempted from SSL inspection is not decrypted either, so the EICAR file passes.\n\nSource: FortiOS 7.6 Administration Guide - SSL & SSH Inspection - https://docs.fortinet.com/document/fortigate/7.6.0/administration-guide/929997/ssl-ssh-inspection",
     "module": "Fortinet FortiOS"
   },
   {
@@ -309,7 +309,7 @@
     ],
     "answer": 1,
     "imagePath": null,
-    "explanation": "",
+    "explanation": "Per the exam material, the configuration enables strict RPF on all interfaces and exempts port1 from the RPF check. A global strict setting applies to every interface unless an interface is configured otherwise.\n\nSource: Fortinet Community - Details about FortiOS RPF (Reverse Path Forwarding) - https://community.fortinet.com/fortigate-3/technical-tip-details-about-fortios-rpf-reverse-path-forwarding-also-called-anti-spoofing-92809",
     "module": "Fortinet FortiOS"
   },
   {
@@ -324,7 +324,7 @@
     ],
     "answer": 2,
     "imagePath": "questions/q20.png",
-    "explanation": "",
+    "explanation": "Server certificate SNI check set to Strict makes FortiGate close the connection when the SNI in the client hello does not match the CN or a SAN in the server certificate.\n\nSource: FortiOS Administration Guide - Deep inspection - https://docs.fortinet.com/document/fortigate/7.6.5/administration-guide/122078",
     "module": "Fortinet FortiOS"
   },
   {
@@ -342,7 +342,7 @@
       3
     ],
     "imagePath": "questions/q32.png",
-    "explanation": "",
+    "explanation": "The one-to-one IP pool has only two external addresses, so a third PC has none left. Extend the pool range (set endip 100.65.0.112) or switch the pool type to overload so many hosts share addresses.\n\nSource: FortiOS 7.6.4 Administration Guide - Dynamic SNAT (IP pools) - https://docs.fortinet.com/document/fortigate/7.6.4/administration-guide/29961",
     "module": "Fortinet FortiOS"
   },
   {
@@ -357,7 +357,7 @@
     ],
     "answer": 0,
     "imagePath": "questions/q33.png",
-    "explanation": "",
+    "explanation": "Primary status moved to HQ-NGFW-2 because HQ-NGFW-1's memory stayed above the memory-failover-threshold for longer than the monitor period (observed 55 seconds), triggering memory-based failover.\n\nSource: FortiOS 7.6.7 Administration Guide - HA primary unit selection criteria - https://docs.fortinet.com/document/fortigate/7.6.7/administration-guide/996846",
     "module": "Fortinet FortiOS"
   },
   {
@@ -372,7 +372,7 @@
     ],
     "answer": 2,
     "imagePath": null,
-    "explanation": "",
+    "explanation": "In NetAPI polling, the collector agent calls NetSessionEnum on workstations to detect logouts. It is cheaper than WMI or event-log methods and does not read application event logs.\n\nSource: Fortinet Community - FSSO: choose between DC agent mode or polling mode - https://community.fortinet.com/fortigate-3/technical-tip-fsso-choose-between-dc-agent-mode-or-polling-mode-133279",
     "module": "Fortinet FortiOS"
   },
   {
@@ -387,7 +387,7 @@
     ],
     "answer": 2,
     "imagePath": null,
-    "explanation": "",
+    "explanation": "If the user is logged in to Windows but denied internet access, first check the FSSO active users list on FortiGate to see whether the user's IP address is listed.\n\nSource: Fortinet Community - General troubleshooting for FSSO - https://community.fortinet.com/fortigate-3/troubleshooting-tip-general-troubleshooting-for-fsso-105702",
     "module": "Fortinet FortiOS"
   },
   {
@@ -407,7 +407,7 @@
       4
     ],
     "imagePath": null,
-    "explanation": "",
+    "explanation": "SD-WAN rules are skipped when members have no valid route to the destination or when the best route is not an SD-WAN member. Regular policy routes take precedence over SD-WAN rules.\n\nSource: FortiOS 7.6 Administration Guide - SD-WAN - https://docs.fortinet.com/document/fortigate/7.6.0/administration-guide/19246/sd-wan",
     "module": "Fortinet FortiOS"
   },
   {
@@ -422,7 +422,7 @@
     ],
     "answer": 2,
     "imagePath": "questions/q37.png",
-    "explanation": "",
+    "explanation": "The Static URL Filter is evaluated before the category filter. An Allow entry still lets the category filter block Facebook, while Exempt bypasses the remaining web filter checks for that URL.\n\nSource: FortiOS 7.6 Administration Guide - Web filter - https://docs.fortinet.com/document/fortigate/7.6.0/administration-guide/833698/web-filter",
     "module": "Fortinet FortiOS"
   },
   {
@@ -437,7 +437,7 @@
     ],
     "answer": 2,
     "imagePath": "questions/q38.png",
-    "explanation": "",
+    "explanation": "FortiGate can only scan HTTPS downloads if it decrypts them, so the policy needs deep content inspection. With certificate inspection only HTTP and FTP downloads are scanned.\n\nSource: FortiOS 7.6 Administration Guide - SSL & SSH Inspection - https://docs.fortinet.com/document/fortigate/7.6.0/administration-guide/929997/ssl-ssh-inspection",
     "module": "Fortinet FortiOS"
   },
   {
@@ -452,7 +452,7 @@
     ],
     "answer": 2,
     "imagePath": "questions/q39.png",
-    "explanation": "",
+    "explanation": "The ping from HQ-PC-1 to BR-FGT matches the Ping-to-Remote policy, which uses the dynamic IP pool SNAT-Remote1, so the source address is that pool address, 100.65.0.99.\n\nSource: FortiOS 7.6.4 Administration Guide - Dynamic SNAT (IP pools) - https://docs.fortinet.com/document/fortigate/7.6.4/administration-guide/29961",
     "module": "Fortinet FortiOS"
   },
   {
@@ -467,7 +467,7 @@
     ],
     "answer": 2,
     "imagePath": "questions/q40.png",
-    "explanation": "",
+    "explanation": "A deny policy with destination all does not match traffic going to a virtual IP. The deny policy must have the Webserver address (or VIP) as destination to block Remote-User2.\n\nSource: FortiOS 7.6 Administration Guide - Destination NAT - https://docs.fortinet.com/document/fortigate/7.6.0/administration-guide/728694/destination-nat",
     "module": "Fortinet FortiOS"
   },
   {
@@ -485,7 +485,7 @@
       3
     ],
     "imagePath": "questions/q41.png",
-    "explanation": "",
+    "explanation": "Memory use of 90.4% is above the red threshold (88%), so FortiGate is in conserve mode and drops new sessions that need inspection.\n\nSource: Fortinet Community - How conserve mode is triggered - https://community.fortinet.com/fortigate-3/technical-tip-how-conserve-mode-is-triggered-99971",
     "module": "Fortinet FortiOS"
   },
   {
@@ -500,7 +500,7 @@
     ],
     "answer": 1,
     "imagePath": "questions/q42.png",
-    "explanation": "",
+    "explanation": "Override and priority are not synchronized between members. With override enabled and the higher priority on HQ-NGFW-2, it takes over as primary.\n\nSource: FortiOS 7.6.7 Administration Guide - HA primary unit selection criteria - https://docs.fortinet.com/document/fortigate/7.6.7/administration-guide/996846",
     "module": "Fortinet FortiOS"
   },
   {
@@ -518,7 +518,7 @@
       2
     ],
     "imagePath": "questions/q43.png",
-    "explanation": "",
+    "explanation": "The upstream FortiGate IP must point to the root FortiGate (10.0.11.254), and the new device must be authorized on the upstream FortiGate before the Pending status clears.\n\nSource: FortiOS 7.6.7 Administration Guide - Deploying the Security Fabric - https://docs.fortinet.com/document/fortigate/7.6.7/administration-guide/327890",
     "module": "Fortinet FortiOS"
   },
   {
@@ -536,7 +536,7 @@
       1
     ],
     "imagePath": "questions/q44.png",
-    "explanation": "",
+    "explanation": "To block one site in a category you allow: add a static URL filter entry for download.com (wildcard, Block), or give it a web rating override into a blocked category.\n\nSource: FortiOS 7.6 Administration Guide - Web filter - https://docs.fortinet.com/document/fortigate/7.6.0/administration-guide/833698/web-filter",
     "module": "Fortinet FortiOS"
   },
   {
@@ -554,7 +554,7 @@
       1
     ],
     "imagePath": null,
-    "explanation": "",
+    "explanation": "SSL VPN tunnel mode works when ESP or UDP 500/4500 is blocked, and enabling IKE fragmentation fixes large certificate exchanges.\n\nSource: FortiOS 7.6 Administration Guide - IPsec VPN - https://docs.fortinet.com/document/fortigate/7.6.0/administration-guide/520377/ipsec-vpn",
     "module": "Fortinet FortiOS"
   },
   {
@@ -573,7 +573,7 @@
       4
     ],
     "imagePath": "questions/q46.png",
-    "explanation": "",
+    "explanation": "Application detection of encrypted Google traffic needs deep inspection. With certificate inspection the traffic is classified as Unknown and blocked, so deep inspection (and the flow-based mode) are required.\n\nSource: FortiOS 7.6 Administration Guide - Application control - https://docs.fortinet.com/document/fortigate/7.6.0/administration-guide/302748/application-control",
     "module": "Fortinet FortiOS"
   },
   {
@@ -591,7 +591,7 @@
       2
     ],
     "imagePath": "questions/q47.png",
-    "explanation": "",
+    "explanation": "Google is allowed by the higher-priority Google override, and Facebook is blocked because the Social.Media category action is Block.\n\nSource: FortiOS 7.6 Administration Guide - Application control - https://docs.fortinet.com/document/fortigate/7.6.0/administration-guide/302748/application-control",
     "module": "Fortinet FortiOS"
   },
   {
@@ -606,7 +606,7 @@
     ],
     "answer": 0,
     "imagePath": "questions/q48.png",
-    "explanation": "",
+    "explanation": "Include in every user group adds the RADIUS server and all users who authenticate against it to every FortiGate user group.\n\nSource: FortiOS Administration Guide - Restricting RADIUS user groups to match selective users on the RADIUS server - https://docs.fortinet.com/document/fortigate/7.2.8/administration-guide/710485",
     "module": "Fortinet FortiOS"
   },
   {
@@ -621,7 +621,7 @@
     ],
     "answer": 2,
     "imagePath": "questions/q49.png",
-    "explanation": "",
+    "explanation": "Setting fabric-object-unification to default on the root FortiGate makes address objects created on the root synchronize to downstream devices.\n\nSource: FortiOS 7.6.7 Administration Guide - Deploying the Security Fabric - https://docs.fortinet.com/document/fortigate/7.6.7/administration-guide/327890",
     "module": "Fortinet FortiOS"
   },
   {
@@ -641,7 +641,7 @@
       3
     ],
     "imagePath": null,
-    "explanation": "",
+    "explanation": "Per the exam material, valid member-selection strategies include Lowest Cost (SLA) without load balancing, Manual with load balancing, and Lowest Cost (SLA) with load balancing.\n\nSource: FortiOS 7.6.4 Administration Guide - SD-WAN rule strategies (Manual strategy) - https://docs.fortinet.com/document/fortigate/7.6.4/administration-guide/723448",
     "module": "Fortinet FortiOS"
   },
   {
@@ -659,7 +659,7 @@
       3
     ],
     "imagePath": null,
-    "explanation": "",
+    "explanation": "Heartbeat IPs are assigned automatically (169.254.0.x) to tell cluster members apart. They change when a unit joins or leaves the cluster.\n\nSource: Fortinet Community - HA heartbeat interface IPs - https://community.fortinet.com/fortigate-3/technical-tip-ha-heartbeat-interface-ips-96324",
     "module": "Fortinet FortiOS"
   },
   {
@@ -677,7 +677,7 @@
       3
     ],
     "imagePath": "questions/q52.png",
-    "explanation": "",
+    "explanation": "The trace shows the default route via port2, and the packet is dropped by policy 2 (Denied by forward policy check). It is TCP (proto=6) and no RPF failure is shown.\n\nSource: Fortinet Community - Enable Policy Trace in Debug Flow - https://community.fortinet.com/fortigate-3/troubleshooting-tip-enable-policy-trace-in-debug-flow-93295",
     "module": "Fortinet FortiOS"
   },
   {
@@ -697,7 +697,7 @@
       3
     ],
     "imagePath": null,
-    "explanation": "",
+    "explanation": "When a server certificate is invalid, full SSL inspection can Allow it, Trust & Allow it, or Block it.\n\nSource: FortiOS Administration Guide - Deep inspection - https://docs.fortinet.com/document/fortigate/7.6.5/administration-guide/122078",
     "module": "Fortinet FortiOS"
   },
   {
@@ -712,7 +712,7 @@
     ],
     "answer": 0,
     "imagePath": "questions/q54.png",
-    "explanation": "",
+    "explanation": "Active authentication needs the client to resolve DNS before it is redirected to the login portal, so the DNS service must be in the policy.\n\nSource: FortiOS 7.6 Administration Guide - User & Authentication - https://docs.fortinet.com/document/fortigate/7.6.0/administration-guide/622284/user-authentication",
     "module": "Fortinet FortiOS"
   },
   {
@@ -727,7 +727,7 @@
     ],
     "answer": 0,
     "imagePath": "questions/q55.png",
-    "explanation": "",
+    "explanation": "Policy ID 0 is the implicit deny policy, so the packet was dropped because it matched no explicit policy.\n\nSource: Fortinet Community - Enable Policy Trace in Debug Flow - https://community.fortinet.com/fortigate-3/troubleshooting-tip-enable-policy-trace-in-debug-flow-93295",
     "module": "Fortinet FortiOS"
   },
   {
@@ -745,7 +745,7 @@
       1
     ],
     "imagePath": "questions/q56.png",
-    "explanation": "",
+    "explanation": "The route with the lower administrative distance is preferred. Setting the new route's distance to 9 or the existing port3 route's distance to 11 makes the port2 route win.\n\nSource: FortiOS 7.6 Administration Guide - Static routing - https://docs.fortinet.com/document/fortigate/7.6.0/administration-guide/804259/static-routing",
     "module": "Fortinet FortiOS"
   },
   {
@@ -760,7 +760,7 @@
     ],
     "answer": 0,
     "imagePath": "questions/q57.png",
-    "explanation": "",
+    "explanation": "The antivirus scan switch is grayed out when no inspected protocols (HTTP, FTP, etc.) are enabled in the profile.\n\nSource: FortiOS 7.6 Administration Guide - Antivirus - https://docs.fortinet.com/document/fortigate/7.6.0/administration-guide/836396/antivirus",
     "module": "Fortinet FortiOS"
   },
   {
@@ -778,7 +778,7 @@
       3
     ],
     "imagePath": null,
-    "explanation": "",
+    "explanation": "For add-route on a dialup tunnel, phase 2 must be up and the remote network must be defined in the phase 2 selectors. The route is added from them.\n\nSource: FortiOS 7.6 Administration Guide - IPsec VPN - https://docs.fortinet.com/document/fortigate/7.6.0/administration-guide/520377/ipsec-vpn",
     "module": "Fortinet FortiOS"
   },
   {
@@ -793,7 +793,7 @@
     ],
     "answer": 1,
     "imagePath": null,
-    "explanation": "",
+    "explanation": "In agentless polling mode, FortiGate retrieves AD group information through an LDAP server entry.\n\nSource: Fortinet Community - FSSO: choose between DC agent mode or polling mode - https://community.fortinet.com/fortigate-3/technical-tip-fsso-choose-between-dc-agent-mode-or-polling-mode-133279",
     "module": "Fortinet FortiOS"
   },
   {
@@ -811,7 +811,7 @@
       2
     ],
     "imagePath": null,
-    "explanation": "",
+    "explanation": "In agentless polling mode, FortiGate reads the DCs' event viewer logs over SMB, and it does not support workstation check.\n\nSource: Fortinet Community - FSSO: choose between DC agent mode or polling mode - https://community.fortinet.com/fortigate-3/technical-tip-fsso-choose-between-dc-agent-mode-or-polling-mode-133279",
     "module": "Fortinet FortiOS"
   },
   {
@@ -826,7 +826,7 @@
     ],
     "answer": 3,
     "imagePath": null,
-    "explanation": "",
+    "explanation": "The browser shows warnings because it does not trust the CA certificate FortiGate uses to re-sign HTTPS sites. Install the CA on clients or use a trusted CA certificate.\n\nSource: FortiOS Administration Guide - Deep inspection - https://docs.fortinet.com/document/fortigate/7.6.5/administration-guide/122078",
     "module": "Fortinet FortiOS"
   },
   {
@@ -844,7 +844,7 @@
       2
     ],
     "imagePath": null,
-    "explanation": "",
+    "explanation": "Use a lower distance on the primary tunnel's static route and a higher one on the secondary. Enable Dead Peer Detection to detect a dead tunnel.\n\nSource: FortiOS 7.6 Administration Guide - IPsec VPN - https://docs.fortinet.com/document/fortigate/7.6.0/administration-guide/520377/ipsec-vpn",
     "module": "Fortinet FortiOS"
   },
   {
@@ -862,7 +862,7 @@
       3
     ],
     "imagePath": null,
-    "explanation": "",
+    "explanation": "FGCP members must have the same HA group ID and the same hard drive configuration. Heartbeat interfaces don't need to be in one subnet and VDOM counts aren't required to match.\n\nSource: FortiOS 7.6.7 Administration Guide - HA primary unit selection criteria - https://docs.fortinet.com/document/fortigate/7.6.7/administration-guide/996846",
     "module": "Fortinet FortiOS"
   },
   {
@@ -877,7 +877,7 @@
     ],
     "answer": 2,
     "imagePath": null,
-    "explanation": "",
+    "explanation": "The universally unique identifier (UUID) in the firewall policy is what FortiAnalyzer and FortiManager use to track policy and logs.\n\nSource: FortiOS Administration Guide - UUID support - https://docs.fortinet.com/document/fortigate/6.0.0/handbook/79854/uuid-support",
     "module": "Fortinet FortiOS"
   },
   {
@@ -892,7 +892,7 @@
     ],
     "answer": 2,
     "imagePath": "questions/q65.png",
-    "explanation": "",
+    "explanation": "Implicit SD-WAN rule traffic is load-balanced, and the implicit rule name is not shown in SD-WAN Rule Name, so the field stays empty.\n\nSource: FortiOS 7.6 Administration Guide - SD-WAN - https://docs.fortinet.com/document/fortigate/7.6.0/administration-guide/19246/sd-wan",
     "module": "Fortinet FortiOS"
   },
   {
@@ -907,7 +907,7 @@
     ],
     "answer": 1,
     "imagePath": null,
-    "explanation": "",
+    "explanation": "In flow-based inspection, NTurbo creates a dedicated data path that redirects traffic between the IPS engine and the ingress and egress interfaces.\n\nSource: FortiOS 7.6 Administration Guide - Antivirus - https://docs.fortinet.com/document/fortigate/7.6.0/administration-guide/836396/antivirus",
     "module": "Fortinet FortiOS"
   },
   {
@@ -922,7 +922,7 @@
     ],
     "answer": 1,
     "imagePath": "questions/q67.png",
-    "explanation": "",
+    "explanation": "The signature action is Block and packet logging is enabled, so FortiGate stores a local copy of the matching packet.\n\nSource: FortiOS 7.6 Administration Guide - Intrusion prevention - https://docs.fortinet.com/document/fortigate/7.6.0/administration-guide/565562/intrusion-prevention",
     "module": "Fortinet FortiOS"
   },
   {
@@ -937,7 +937,7 @@
     ],
     "answer": 3,
     "imagePath": "questions/q68.png",
-    "explanation": "",
+    "explanation": "The VIP translates only the destination: 100.65.0.200:443 becomes 10.0.11.50:4443. Policy 2 has NAT disabled, so the source stays 100.65.1.111.\n\nSource: FortiOS 7.6 Administration Guide - Destination NAT - https://docs.fortinet.com/document/fortigate/7.6.0/administration-guide/728694/destination-nat",
     "module": "Fortinet FortiOS"
   },
   {
@@ -952,7 +952,7 @@
     ],
     "answer": 2,
     "imagePath": "questions/q69.png",
-    "explanation": "",
+    "explanation": "Outbound traffic from 10.0.11.50 matches policy 1, which has NAT enabled with the IP pool, so the source becomes the pool address 100.65.0.102.\n\nSource: FortiOS 7.6.4 Administration Guide - Dynamic SNAT (IP pools) - https://docs.fortinet.com/document/fortigate/7.6.4/administration-guide/29961",
     "module": "Fortinet FortiOS"
   },
   {
@@ -970,7 +970,7 @@
       2
     ],
     "imagePath": "questions/q70.png",
-    "explanation": "",
+    "explanation": "With strict RPF, a packet is accepted only on the interface FortiGate would use to reach the source. 10.100.110.10 via port2 (default route) is allowed, and with strict RPF disabled any packet with a route back to its source is allowed.\n\nSource: Fortinet Community - Details about FortiOS RPF (Reverse Path Forwarding) - https://community.fortinet.com/fortigate-3/technical-tip-details-about-fortios-rpf-reverse-path-forwarding-also-called-anti-spoofing-92809",
     "module": "Fortinet FortiOS"
   },
   {
@@ -985,7 +985,7 @@
     ],
     "answer": 0,
     "imagePath": null,
-    "explanation": "",
+    "explanation": "By default FortiGate connects to FortiGuard DNS servers using DNS over TLS.\n\nSource: FortiOS New Features - Use DNS over TLS for default FortiGuard DNS servers (7.0.4) - https://docs.fortinet.com/document/fortigate/7.0.0/new-features/92199/use-dns-over-tls-for-default-fortiguard-dns-servers-7-0-4",
     "module": "Fortinet FortiOS"
   },
   {
@@ -1003,7 +1003,7 @@
       2
     ],
     "imagePath": null,
-    "explanation": "",
+    "explanation": "Advanced mode supports nested and inherited groups, and FortiGate acts as an LDAP client with group filters configured on FortiGate.\n\nSource: Fortinet Community - FSSO: choose between DC agent mode or polling mode - https://community.fortinet.com/fortigate-3/technical-tip-fsso-choose-between-dc-agent-mode-or-polling-mode-133279",
     "module": "Fortinet FortiOS"
   },
   {
@@ -1018,7 +1018,7 @@
     ],
     "answer": 3,
     "imagePath": "questions/q73.png",
-    "explanation": "",
+    "explanation": "Monitored interfaces are compared first, so bringing port1 down on the primary forces a failover.\n\nSource: FortiOS 7.6.7 Administration Guide - HA primary unit selection criteria - https://docs.fortinet.com/document/fortigate/7.6.7/administration-guide/996846",
     "module": "Fortinet FortiOS"
   },
   {
@@ -1033,7 +1033,7 @@
     ],
     "answer": 1,
     "imagePath": "questions/q74.png",
-    "explanation": "",
+    "explanation": "The log shows the IPS socket buffer is full and the engine needs more memory to create new sessions.\n\nSource: FortiOS 7.6 Administration Guide - Intrusion prevention - https://docs.fortinet.com/document/fortigate/7.6.0/administration-guide/565562/intrusion-prevention",
     "module": "Fortinet FortiOS"
   },
   {
@@ -1048,7 +1048,7 @@
     ],
     "answer": 1,
     "imagePath": "questions/q75.png",
-    "explanation": "",
+    "explanation": "Application control cannot identify encrypted Google applications under certificate inspection, so they fall into blocked Unknown Applications. Setting SSL inspection to deep inspection lets FortiGate see the applications.\n\nSource: FortiOS Administration Guide - Deep inspection - https://docs.fortinet.com/document/fortigate/7.6.5/administration-guide/122078",
     "module": "Fortinet FortiOS"
   },
   {
@@ -1063,7 +1063,7 @@
     ],
     "answer": 1,
     "imagePath": "questions/q76.png",
-    "explanation": "",
+    "explanation": "The web rating override puts www.facebook.com into a blocked category, so it is redirected to the block page.\n\nSource: FortiOS 7.6 Administration Guide - Web filter - https://docs.fortinet.com/document/fortigate/7.6.0/administration-guide/833698/web-filter",
     "module": "Fortinet FortiOS"
   },
   {
@@ -1081,7 +1081,7 @@
       2
     ],
     "imagePath": null,
-    "explanation": "",
+    "explanation": "The root FortiGate provides executive summaries of all FortiGates in the Fabric, and the Security Posture category includes PCI compliance results.\n\nSource: FortiOS 7.6.7 Administration Guide - Deploying the Security Fabric - https://docs.fortinet.com/document/fortigate/7.6.7/administration-guide/327890",
     "module": "Fortinet FortiOS"
   },
   {
@@ -1099,7 +1099,7 @@
       3
     ],
     "imagePath": null,
-    "explanation": "",
+    "explanation": "ses-denied-traffic creates a session for denied traffic, and block-session-timer reduces the number of logs generated for denied traffic.\n\nSource: Fortinet Community - How to enable denied session to be added into the session table - https://community.fortinet.com/fortigate-3/technical-tip-how-to-enable-denied-session-to-be-added-into-the-session-table-97348",
     "module": "Fortinet FortiOS"
   },
   {
@@ -1117,7 +1117,7 @@
       3
     ],
     "imagePath": null,
-    "explanation": "",
+    "explanation": "The weight increases as failed packets rise, and unreliable protocols can be configured for FortiGuard communication.\n\nSource: FortiOS 7.6 Administration Guide - https://docs.fortinet.com/document/fortigate/7.6.0/administration-guide",
     "module": "Fortinet FortiOS"
   },
   {
@@ -1132,7 +1132,7 @@
     ],
     "answer": 1,
     "imagePath": "questions/q80.png",
-    "explanation": "",
+    "explanation": "The Excessive-Bandwidth filter override is higher priority and set to Block, so FaceTime is blocked regardless of the Apple Allow filter.\n\nSource: FortiOS 7.6 Administration Guide - Application control - https://docs.fortinet.com/document/fortigate/7.6.0/administration-guide/302748/application-control",
     "module": "Fortinet FortiOS"
   },
   {
@@ -1150,7 +1150,7 @@
       3
     ],
     "imagePath": "questions/q81.png",
-    "explanation": "",
+    "explanation": "You can find the log by filtering on Policy UUID and Application Name, or in the Security Events log.\n\nSource: FortiOS Administration Guide - UUID support - https://docs.fortinet.com/document/fortigate/6.0.0/handbook/79854/uuid-support",
     "module": "Fortinet FortiOS"
   },
   {
@@ -1165,7 +1165,7 @@
     ],
     "answer": 2,
     "imagePath": null,
-    "explanation": "",
+    "explanation": "Secure SaaS access (SSA) addresses shadow IT visibility and controls file sharing to SaaS applications.\n\nSource: FortiSASE Administration Guide - https://docs.fortinet.com/document/fortisase/7.4.0/administration-guide",
     "module": "Fortinet FortiOS"
   },
   {
@@ -1180,7 +1180,7 @@
     ],
     "answer": 1,
     "imagePath": null,
-    "explanation": "",
+    "explanation": "The FortiGate must be authorized on FortiAnalyzer before it can send logs.\n\nSource: FortiAnalyzer Administration Guide - Unauthorized devices - https://docs.fortinet.com/document/fortianalyzer/7.4.4/administration-guide/156962/unauthorized-devices",
     "module": "Fortinet FortiOS"
   },
   {
@@ -1195,7 +1195,7 @@
     ],
     "answer": 3,
     "imagePath": "questions/q84.png",
-    "explanation": "",
+    "explanation": "Traffic leaves the EC2 instance to the GWLB endpoint, goes to FortiGate CNF, returns through the endpoint and out the IGW.\n\nSource: FortiGate CNF Administration Guide - Deploying a FortiGate CNF instance - https://docs.fortinet.com/document/fortigate-cnf/latest/administration-guide/138880",
     "module": "Fortinet FortiOS"
   },
   {
@@ -1210,7 +1210,7 @@
     ],
     "answer": 0,
     "imagePath": null,
-    "explanation": "",
+    "explanation": "In agentless SWG mode only web traffic is sent to FortiSASE, so nonweb traffic bypasses it.\n\nSource: FortiSASE Administration Guide - https://docs.fortinet.com/document/fortisase/7.4.0/administration-guide",
     "module": "Fortinet FortiOS"
   },
   {
@@ -1228,7 +1228,7 @@
       3
     ],
     "imagePath": null,
-    "explanation": "",
+    "explanation": "IKEv1 supports XAuth to request a username and password and supports pre-shared key and certificate signature authentication.\n\nSource: FortiOS 7.6 Administration Guide - IPsec VPN - https://docs.fortinet.com/document/fortigate/7.6.0/administration-guide/520377/ipsec-vpn",
     "module": "Fortinet FortiOS"
   },
   {
@@ -1243,7 +1243,7 @@
     ],
     "answer": 3,
     "imagePath": null,
-    "explanation": "",
+    "explanation": "FortiExtender connects to FortiSASE with a VXLAN-over-IPsec tunnel.\n\nSource: FortiSASE Administration Guide - https://docs.fortinet.com/document/fortisase/7.4.0/administration-guide",
     "module": "Fortinet FortiOS"
   },
   {
@@ -1258,7 +1258,7 @@
     ],
     "answer": 0,
     "imagePath": "questions/q88.png",
-    "explanation": "",
+    "explanation": "The FortiGate CNF deployment creates the GWLB endpoint (GWLBe) in the customer VPC.\n\nSource: FortiGate CNF Administration Guide - Deploying a FortiGate CNF instance - https://docs.fortinet.com/document/fortigate-cnf/latest/administration-guide/138880",
     "module": "Fortinet FortiOS"
   },
   {
@@ -1276,7 +1276,7 @@
       3
     ],
     "imagePath": "questions/q89.png",
-    "explanation": "",
+    "explanation": "The log can be found in Forward Traffic, or by filtering on policy UUID and application name.\n\nSource: FortiOS Administration Guide - UUID support - https://docs.fortinet.com/document/fortigate/6.0.0/handbook/79854/uuid-support",
     "module": "Fortinet FortiOS"
   },
   {
@@ -1294,7 +1294,7 @@
       1
     ],
     "imagePath": null,
-    "explanation": "",
+    "explanation": "Agent-based SIA uses VPN policies and the FortiSASE Firewall-as-a-Service.\n\nSource: FortiSASE Administration Guide - https://docs.fortinet.com/document/fortisase/7.4.0/administration-guide",
     "module": "Fortinet FortiOS"
   },
   {
@@ -1309,7 +1309,7 @@
     ],
     "answer": 0,
     "imagePath": null,
-    "explanation": "",
+    "explanation": "Peer ID matches dial-up users to the correct aggressive-mode tunnel.\n\nSource: FortiOS 7.6 Administration Guide - IPsec VPN - https://docs.fortinet.com/document/fortigate/7.6.0/administration-guide/520377/ipsec-vpn",
     "module": "Fortinet FortiOS"
   },
   {
@@ -1324,7 +1324,7 @@
     ],
     "answer": 1,
     "imagePath": null,
-    "explanation": "",
+    "explanation": "Secure internet access uses FortiGuard threat intelligence to dynamically block malicious destinations.\n\nSource: FortiSASE Administration Guide - https://docs.fortinet.com/document/fortisase/7.4.0/administration-guide",
     "module": "Fortinet FortiOS"
   },
   {
@@ -1339,7 +1339,7 @@
     ],
     "answer": 1,
     "imagePath": null,
-    "explanation": "",
+    "explanation": "SASE provides secure connectivity and security services from the cloud for remote users.\n\nSource: FortiSASE Architecture Guide - https://docs.fortinet.com/document/fortisase/7.4.0/architecture-guide",
     "module": "Fortinet FortiOS"
   },
   {
@@ -1354,7 +1354,7 @@
     ],
     "answer": 2,
     "imagePath": null,
-    "explanation": "",
+    "explanation": "A padlock icon in the connection settings means reliable (TCP) logging is enabled.\n\nSource: Fortinet Community - How reliable logging reduces log volume and bandwidth consumption - https://community.fortinet.com/fortianalyzer-6/technical-tip-how-reliable-logging-reduces-log-volume-and-bandwidth-consumption-209647",
     "module": "Fortinet FortiOS"
   },
   {
@@ -1381,7 +1381,7 @@
       0
     ],
     "imagePath": null,
-    "explanation": "",
+    "explanation": "With override enabled the election order is: connected monitored ports, priority, HA uptime, FortiGate serial number.\n\nSource: FortiOS 7.6.7 Administration Guide - HA primary unit selection criteria - https://docs.fortinet.com/document/fortigate/7.6.7/administration-guide/996846",
     "module": "Fortinet FortiOS"
   },
   {
@@ -1396,7 +1396,7 @@
     ],
     "answer": 3,
     "imagePath": "questions/q96.png",
-    "explanation": "",
+    "explanation": "Image D shows a padlock icon next to the logging mode, which means reliable logging is enabled.\n\nSource: Fortinet Community - How reliable logging reduces log volume and bandwidth consumption - https://community.fortinet.com/fortianalyzer-6/technical-tip-how-reliable-logging-reduces-log-volume-and-bandwidth-consumption-209647",
     "module": "Fortinet FortiOS"
   },
   {
@@ -1416,7 +1416,7 @@
       2
     ],
     "imagePath": null,
-    "explanation": "",
+    "explanation": "The collector agent polls AD with NetAPI, WMI and WinSecLog.\n\nSource: Fortinet Community - FSSO: choose between DC agent mode or polling mode - https://community.fortinet.com/fortigate-3/technical-tip-fsso-choose-between-dc-agent-mode-or-polling-mode-133279",
     "module": "Fortinet FortiOS"
   },
   {
@@ -1431,7 +1431,7 @@
     ],
     "answer": 3,
     "imagePath": null,
-    "explanation": "",
+    "explanation": "The Remote Access template is for individual travelling users connecting to the FortiGate.\n\nSource: FortiOS 7.6 Administration Guide - IPsec VPN - https://docs.fortinet.com/document/fortigate/7.6.0/administration-guide/520377/ipsec-vpn",
     "module": "Fortinet FortiOS"
   },
   {
@@ -1446,7 +1446,7 @@
     ],
     "answer": 3,
     "imagePath": "questions/q99.png",
-    "explanation": "",
+    "explanation": "The policy does not use deep inspection, so FortiGate cannot decrypt and scan HTTPS, and the EICAR file passes.\n\nSource: FortiOS 7.6 Administration Guide - SSL & SSH Inspection - https://docs.fortinet.com/document/fortigate/7.6.0/administration-guide/929997/ssl-ssh-inspection",
     "module": "Fortinet FortiOS"
   },
   {
@@ -1461,7 +1461,7 @@
     ],
     "answer": 3,
     "imagePath": "questions/q100.png",
-    "explanation": "",
+    "explanation": "The Google override is currently set to Block, which stops all Google applications. Changing its action to Monitor lets the traffic through and still logs it, and the other options do not change that block.\n\nSource: FortiOS 7.6 Administration Guide - Application control - https://docs.fortinet.com/document/fortigate/7.6.0/administration-guide/302748/application-control",
     "module": "Fortinet FortiOS"
   },
   {
@@ -1479,7 +1479,7 @@
       2
     ],
     "imagePath": "questions/q101.png",
-    "explanation": "",
+    "explanation": "HQ-NGFW must use Main mode to match BR1-FGT, and BR1-FGT's tunnel must be bound to port2, the WAN interface.\n\nSource: FortiOS 7.6 Administration Guide - IPsec VPN - https://docs.fortinet.com/document/fortigate/7.6.0/administration-guide/520377/ipsec-vpn",
     "module": "Fortinet FortiOS"
   }
 ]

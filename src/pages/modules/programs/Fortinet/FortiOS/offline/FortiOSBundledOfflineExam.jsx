@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ArrowLeft, ArrowRight, CheckCircle2, RotateCcw } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../../../../../context/auth-context";
+import ExplanationWithLinks from "../../../../../../components/ExplanationWithLinks";
 import { isAnswerCorrect, isQuestionAnswered } from "../../../../../../utils/ccnaExamGrading";
 import { QuestionInput, QuestionPrompt, QuestionReview } from "../../../Cisco/CCNA/ccnaExamQuestionViews";
 import { getFortiOSImageUrls, precacheFortiOSImages } from "./fortiosOfflineImages";
@@ -277,9 +278,11 @@ export default function FortiOSOfflineExam() {
                 />
                 <QuestionReview question={item} value={answers[index]} fortiosOffline />
                 {item.explanation && (
-                  <p className="mt-5 rounded-xl bg-[#f5f9f9] px-4 py-3 text-sm leading-6 text-[#596983]">
-                    <strong className="text-[#005b6b]">Explanation: </strong>{item.explanation}
-                  </p>
+                  <ExplanationWithLinks
+                    explanation={item.explanation}
+                    className="mt-5 rounded-xl bg-[#f5f9f9] px-4 py-3 text-sm leading-6 text-[#596983]"
+                    labelClassName="text-[#005b6b]"
+                  />
                 )}
               </article>
             ))}

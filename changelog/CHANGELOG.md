@@ -6,6 +6,15 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `c79ca3c` — Added FortiOS explanation source links and populated the bundled offline questions with explanations.
+- `b1b41a4` — Merged `emman` into the latest `main`, preserving the main-branch FortiOS offline question normalization changes.
+
+Validation before push: frontend production build, targeted ESLint checks for the changed exam files, and Git whitespace checks passed. Full-repository lint still reports existing findings outside the merge changes.
+
+## 2026-10-24 — `main`
+
+Commits included in this push:
+
 - `9c20772` — Randomized questions in All Questions Exams and improved shared exam topology/image exhibits with clearer labels, spacing, and framing.
 - `2448a9f` — Added the changelog entry for this push.
 - `f04b84d` — Merged the latest `main` changes before publishing.
