@@ -29,6 +29,15 @@ function isValidSavedAnswer(question, answer) {
 	return Number.isInteger(answer) && answer >= 0 && answer < question.options.length;
 }
 
+function shuffleQuestions(items) {
+	const shuffled = [...items];
+	for (let index = shuffled.length - 1; index > 0; index -= 1) {
+		const randomIndex = Math.floor(Math.random() * (index + 1));
+		[shuffled[index], shuffled[randomIndex]] = [shuffled[randomIndex], shuffled[index]];
+	}
+	return shuffled;
+}
+
 export default function CCNAAllQuestionsExam() {
 	const { profile, isOnline } = useAuth();
 	const storageKey = profile?.userId === null || profile?.userId === undefined
@@ -89,26 +98,31 @@ export default function CCNAAllQuestionsExam() {
 			});
 		bankRequest
 			.then(({ questions: validQuestions }) => {
-				const orderedQuestions = [...validQuestions]
+				const bankQuestions = [...validQuestions]
 					.filter((item) => !isOnline || isCcnaQuestionModule(item.module))
 					.map(applyNativeExhibit)
 					.sort((left, right) => left.bankId - right.bankId);
-				if (!orderedQuestions.length) {
+				if (!bankQuestions.length) {
 					throw new TypeError("The Questions table has no questions that can be rendered and graded.");
 				}
 				if (!isActive) return;
 
-				setQuestions(orderedQuestions);
+				let orderedQuestions = shuffleQuestions(bankQuestions);
 				if (storageKey) {
 					try {
 						const saved = window.localStorage.getItem(storageKey);
 						if (saved) {
 							const parsed = JSON.parse(saved);
+							const questionById = new Map(bankQuestions.map((item) => [item.bankId, item]));
+							const savedQuestionIds = parsed?.version === 1 && Array.isArray(parsed.questionIds)
+								? parsed.questionIds
+								: [];
 							const matchesBank = parsed?.version === 1 &&
-								Array.isArray(parsed.questionIds) &&
-								parsed.questionIds.length === orderedQuestions.length &&
-								parsed.questionIds.every((id, index) => id === orderedQuestions[index].bankId);
+								savedQuestionIds.length === bankQuestions.length &&
+								new Set(savedQuestionIds).size === bankQuestions.length &&
+								savedQuestionIds.every((id) => questionById.has(id));
 							if (matchesBank) {
+								orderedQuestions = savedQuestionIds.map((id) => questionById.get(id));
 								const restoredAnswers = {};
 								if (parsed.answers && typeof parsed.answers === "object" && !Array.isArray(parsed.answers)) {
 									for (const [indexText, answer] of Object.entries(parsed.answers)) {
@@ -143,6 +157,7 @@ export default function CCNAAllQuestionsExam() {
 						setStorageError("Saved progress could not be restored. You can still continue this exam.");
 					}
 				}
+				setQuestions(orderedQuestions);
 				setLoadState({ status: "ready", error: null });
 			})
 			.catch((error) => {
@@ -230,6 +245,7 @@ export default function CCNAAllQuestionsExam() {
 	}
 
 	function restartExam() {
+		setQuestions((currentQuestions) => shuffleQuestions(currentQuestions));
 		setAnswers({});
 		setCurrentIndex(0);
 		setFurthestOpenedIndex(0);
@@ -249,7 +265,7 @@ export default function CCNAAllQuestionsExam() {
 					</h1>
 					<p role={loadState.status === "error" ? "alert" : undefined} className="mt-3 text-sm leading-6 text-[#64748b]">
 						{loadState.status === "loading"
-							? "Preparing every usable question in database order. This may take a moment."
+							? "Preparing every usable question in random order. This may take a moment."
 							: loadState.error}
 					</p>
 					{loadState.status === "error" && (
