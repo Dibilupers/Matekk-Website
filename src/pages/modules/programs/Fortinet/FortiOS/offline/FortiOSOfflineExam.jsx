@@ -188,6 +188,7 @@ export default function FortiOSOfflineExam() {
 								question={question}
 								value={session.answers[session.currentIndex]}
 								onChange={(value) => setSession((current) => ({ ...current, answers: { ...current.answers, [current.currentIndex]: value } }))}
+								fortiosOffline
 							/>
 							<div className="mt-7 flex justify-end">
 								{session.currentIndex === session.questions.length - 1 ? (
@@ -208,7 +209,7 @@ export default function FortiOSOfflineExam() {
 							{question.exhibitImage && <ExhibitImage src={question.exhibitImage} className="my-5" imageClassName="max-h-[32rem]" />}
 							{question.exhibit && <ExhibitText text={question.exhibit} className="my-5" />}
 							<QuestionPrompt prompt={question.prompt} hasSeparateExhibit={Boolean(question.exhibit || question.exhibitImage)} offline fortiosOffline />
-							<QuestionReview question={question} value={session.answers[session.currentIndex]} />
+							<QuestionReview question={question} value={session.answers[session.currentIndex]} fortiosOffline />
 							{question.explanation && <p className="mt-5 rounded-xl bg-[#fff3f2] px-4 py-3 text-sm leading-6 text-[#596983]"><strong className="text-[#b31d17]">Explanation: </strong>{question.explanation}</p>}
 							<div className="mt-7 flex flex-wrap justify-between gap-3">
 								<button type="button" onClick={restartExam} className="inline-flex items-center gap-2 rounded-full border border-[#f1beba] px-5 py-3 font-semibold text-[#e2231a] transition hover:bg-[#fff0ef]"><RotateCcw size={17} /> Restart exam</button>

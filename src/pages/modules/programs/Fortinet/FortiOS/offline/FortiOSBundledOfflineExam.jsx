@@ -218,6 +218,7 @@ export default function FortiOSOfflineExam() {
               question={question}
               value={answers[currentIndex]}
               onChange={(value) => setAnswers((previous) => ({ ...previous, [currentIndex]: value }))}
+              fortiosOffline
             />
             <div className="mt-7 flex flex-wrap items-center justify-between gap-3">
               <button
@@ -274,7 +275,7 @@ export default function FortiOSOfflineExam() {
                   offline
                   fortiosOffline
                 />
-                <QuestionReview question={item} value={answers[index]} />
+                <QuestionReview question={item} value={answers[index]} fortiosOffline />
                 {item.explanation && (
                   <p className="mt-5 rounded-xl bg-[#f5f9f9] px-4 py-3 text-sm leading-6 text-[#596983]">
                     <strong className="text-[#005b6b]">Explanation: </strong>{item.explanation}
