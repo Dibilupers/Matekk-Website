@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="650" viewBox="0 0 1200 650" role="img" aria-labelledby="title desc">
+  <title id="title">Northbound API characteristics matching exercise</title>
+  <desc id="desc">Seven statements about northbound APIs on the left and four numbered matching targets on the right.</desc>
+  <rect width="1200" height="650" rx="20" fill="#f8fafc"/>
+  <text x="60" y="58" fill="#1e293b" font-family="Arial,sans-serif" font-size="28" font-weight="700">Match each statement to a characteristic</text>
+  <g font-family="Arial,sans-serif" font-size="20" fill="#24354a">
+    <rect x="52" y="83" width="660" height="64" rx="10" fill="#d9efff" stroke="#9fc7df" stroke-width="2"/>
+    <text x="76" y="122">Supports automation</text>
+    <rect x="52" y="156" width="660" height="64" rx="10" fill="#d9efff" stroke="#9fc7df" stroke-width="2"/>
+    <text x="76" y="181">Communicates between the SDN controller</text><text x="76" y="205">and the application plane</text>
+    <rect x="52" y="229" width="660" height="64" rx="10" fill="#d9efff" stroke="#9fc7df" stroke-width="2"/>
+    <text x="76" y="254">Communicates between the SDN controller</text><text x="76" y="278">and the data plane</text>
+    <rect x="52" y="302" width="660" height="64" rx="10" fill="#d9efff" stroke="#9fc7df" stroke-width="2"/>
+    <text x="76" y="341">Supports data sharing between systems</text>
+    <rect x="52" y="375" width="660" height="64" rx="10" fill="#d9efff" stroke="#9fc7df" stroke-width="2"/>
+    <text x="76" y="414">Supports network virtualization protocols</text>
+    <rect x="52" y="448" width="660" height="64" rx="10" fill="#d9efff" stroke="#9fc7df" stroke-width="2"/>
+    <text x="76" y="487">Supports REST-based requirements</text>
+    <rect x="52" y="521" width="660" height="64" rx="10" fill="#d9efff" stroke="#9fc7df" stroke-width="2"/>
+    <text x="76" y="546">Uses OpenFlow to interface between the</text><text x="76" y="570">data and control planes</text>
+  </g>
+  <g fill="#f9dada" stroke="#e8b4b4" stroke-width="2">
+    <rect x="746" y="83" width="400" height="100" rx="10"/><rect x="746" y="193" width="400" height="100" rx="10"/>
+    <rect x="746" y="303" width="400" height="100" rx="10"/><rect x="746" y="413" width="400" height="100" rx="10"/>
+  </g>
+  <g fill="#344256" font-family="Arial,sans-serif" font-size="24" font-weight="700" text-anchor="middle">
+    <text x="946" y="143">1</text><text x="946" y="253">2</text><text x="946" y="363">3</text><text x="946" y="473">4</text>
+  </g>
+  <text x="746" y="626" fill="#64748b" font-family="Arial,sans-serif" font-size="17">Not all characteristics are used.</text>
+</svg>

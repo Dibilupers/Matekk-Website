@@ -2,13 +2,15 @@
 // Topology-only exhibits are rendered natively; mixed CLI and GUI exhibits stay as pictures.
 // Answer keys were worked out from the question content (not supplied in the source).
 
-import wlcMyWlanImg from "../../../../../assets/ccna-exam/wlc-my-wlan-layer2.webp";
-import wlcPskImg from "../../../../../assets/ccna-exam/wlc-psk-layer2.webp";
-import wlcAdvancedImg from "../../../../../assets/ccna-exam/wlc-advanced-tab.webp";
-import ccna181RapidPvstActionsImg from "../../../../../assets/ccna-exam/ccna-181-rapid-pvst-actions.png";
-import ccna382AnsibleFeaturesImg from "../../../../../assets/ccna-exam/ccna-382-ansible-features.png";
-import ccna608NorthboundApiImg from "../../../../../assets/ccna-exam/ccna-608-northbound-api.png";
-import ccna1306BroadcastAddressesImg from "../../../../../assets/ccna-exam/ccna-1306-broadcast-addresses.png";
+import wlcMyWlanImg from "../../../../../assets/ccna-exam/wlc-my-wlan-layer2.svg";
+import wlcPskImg from "../../../../../assets/ccna-exam/wlc-psk-layer2.svg";
+import wlcAdvancedImg from "../../../../../assets/ccna-exam/wlc-advanced-tab.svg";
+import ccna80211rFastTransitionImg from "../../../../../assets/ccna-exam/ccna-80211r-fast-transition.svg";
+import ccna181RapidPvstActionsImg from "../../../../../assets/ccna-exam/ccna-181-rapid-pvst-actions.svg";
+import ccna382AnsibleFeaturesImg from "../../../../../assets/ccna-exam/ccna-382-ansible-features.svg";
+import ccna608NorthboundApiImg from "../../../../../assets/ccna-exam/ccna-608-northbound-api.svg";
+import ccna1306BroadcastAddressesImg from "../../../../../assets/ccna-exam/ccna-1306-broadcast-addresses.svg";
+import ccna854Wpa2SetupImg from "../../../../../assets/ccna-exam/ccna-854-wpa2-setup.svg";
 
 // pic(image, text?) = picture exhibit, optionally with device output shown below it
 const pic = (image, text) => ({ image, text });
@@ -806,6 +808,9 @@ const BUILT_IN_QUESTION_BY_PROMPT = new Map(
 );
 
 const DATABASE_NATIVE_EXHIBITS = new Map([
+	[260, { exhibitImage: ccna80211rFastTransitionImg }],
+	[361, { exhibitImage: ccna80211rFastTransitionImg }],
+	[854, { exhibitImage: ccna854Wpa2SetupImg }],
 	[1306, { exhibitImage: ccna1306BroadcastAddressesImg }],
 	[181, { exhibitImage: ccna181RapidPvstActionsImg }],
 	[382, { exhibitImage: ccna382AnsibleFeaturesImg }],

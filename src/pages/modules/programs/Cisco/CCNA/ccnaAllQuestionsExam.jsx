@@ -45,6 +45,7 @@ export default function CCNAAllQuestionsExam() {
 	const [score, setScore] = useState(0);
 	const [storageError, setStorageError] = useState(null);
 	const [questionNumberInput, setQuestionNumberInput] = useState("1");
+	const [isFinishConfirmationOpen, setIsFinishConfirmationOpen] = useState(false);
 	const [isRetakeConfirmationOpen, setIsRetakeConfirmationOpen] = useState(false);
 	// Results page: show only correct / incorrect / unanswered questions when stepping through the review
 	const [reviewFilter, setReviewFilter] = useState("all");
@@ -405,7 +406,7 @@ export default function CCNAAllQuestionsExam() {
 									<ChevronLeft size={18} /> Previous
 								</button>
 								{currentIndex === questions.length - 1 ? (
-									<button type="button" onClick={submitExam} className="rounded-full bg-[#005b6b] px-6 py-3 font-semibold text-white transition hover:bg-[#004653]">
+									<button type="button" onClick={() => setIsFinishConfirmationOpen(true)} className="rounded-full bg-[#005b6b] px-6 py-3 font-semibold text-white transition hover:bg-[#004653]">
 										Finish and review
 									</button>
 								) : (
@@ -420,7 +421,7 @@ export default function CCNAAllQuestionsExam() {
 								)}
 							</div>
 							{currentIndex < questions.length - 1 && (
-								<button type="button" onClick={submitExam} className="mt-5 text-sm font-semibold text-[#71819b] underline decoration-[#c9dfe2] underline-offset-4 transition hover:text-[#005b6b]">
+								<button type="button" onClick={() => setIsFinishConfirmationOpen(true)} className="mt-5 text-sm font-semibold text-[#71819b] underline decoration-[#c9dfe2] underline-offset-4 transition hover:text-[#005b6b]">
 									Finish exam and see score
 								</button>
 							)}
@@ -554,6 +555,45 @@ export default function CCNAAllQuestionsExam() {
 					</>
 				)}
 			</div>
+			{isFinishConfirmationOpen && createPortal(
+				<div data-theme="light" className="fixed inset-0 z-[120] grid place-items-center bg-[#071126]/60 p-4 backdrop-blur-sm">
+					<section
+						role="alertdialog"
+						aria-modal="true"
+						aria-labelledby="ccna-all-finish-title"
+						aria-describedby="ccna-all-finish-description"
+						className="w-full max-w-md rounded-2xl border border-[#d6e5e7] bg-white p-5 text-[#17233d] shadow-2xl sm:p-8"
+					>
+						<p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#005b6b]">Finish exam</p>
+						<h2 id="ccna-all-finish-title" className="mt-2 text-xl font-bold sm:text-2xl">
+							Are you sure you want to finish the exam?
+						</h2>
+						<p id="ccna-all-finish-description" className="mt-3 text-sm leading-6 text-[#64748b]">
+							You have answered {answeredCount.toLocaleString()} of {questions.length.toLocaleString()} questions. Finishing now will show your score and let you review your answers.
+						</p>
+						<div className="mt-6 flex flex-wrap justify-end gap-3">
+							<button
+								type="button"
+								onClick={() => setIsFinishConfirmationOpen(false)}
+								className="rounded-full border border-[#c9dfe2] px-5 py-2.5 text-sm font-semibold text-[#42516b] transition hover:bg-[#f5f9f9]"
+							>
+								Keep going
+							</button>
+							<button
+								type="button"
+								onClick={() => {
+									setIsFinishConfirmationOpen(false);
+									submitExam();
+								}}
+								className="rounded-full bg-[#005b6b] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#004653]"
+							>
+								Yes, finish exam
+							</button>
+						</div>
+					</section>
+				</div>,
+				document.body,
+			)}
 			{isRetakeConfirmationOpen && createPortal(
 				<div data-theme="light" className="fixed inset-0 z-[120] grid place-items-center bg-[#071126]/60 p-4 backdrop-blur-sm">
 					<section

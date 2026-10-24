@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="850" viewBox="0 0 1200 850" role="img" aria-labelledby="title desc">
+  <title id="title">My WLAN layer two security settings</title>
+  <desc id="desc">Wireless controller security settings for a WLAN, including layer two security, MAC filtering, WPA and WPA2 parameters, and authentication options.</desc>
+  <rect width="1200" height="850" rx="18" fill="#f7f8fa"/>
+  <rect x="18" y="18" width="1164" height="814" rx="12" fill="#fff" stroke="#334155" stroke-width="4"/>
+  <rect x="22" y="22" width="1156" height="64" fill="#155d7d"/>
+  <g fill="#fff" font-family="Arial,sans-serif" font-size="20" font-weight="700">
+    <text x="42" y="61">MONITOR</text><text x="180" y="61">WLANs</text><text x="304" y="61">CONTROLLER</text>
+    <text x="488" y="61">WIRELESS</text><text x="625" y="61">SECURITY</text><text x="780" y="61">MANAGEMENT</text>
+  </g>
+  <text x="54" y="127" fill="#36465a" font-family="Arial,sans-serif" font-size="25">WLANs &gt; Edit &quot;my_WLAN&quot;</text>
+  <rect x="190" y="145" width="124" height="44" rx="6" fill="#d7e4ef"/>
+  <g font-family="Arial,sans-serif" font-size="22" fill="#42536a">
+    <text x="63" y="178">General</text><text x="211" y="178" font-weight="700">Security</text>
+    <text x="350" y="178">QoS</text><text x="447" y="178">Policy-Mapping</text><text x="656" y="178">Advanced</text>
+  </g>
+  <rect x="45" y="211" width="1090" height="585" rx="12" fill="#f0f2f5" stroke="#ccd3dc" stroke-width="2"/>
+  <rect x="63" y="232" width="153" height="45" rx="6" fill="#d4e2ef"/>
+  <text x="85" y="262" fill="#293b51" font-family="Arial,sans-serif" font-size="21" font-weight="700">Layer 2</text>
+  <text x="245" y="262" fill="#42536a" font-family="Arial,sans-serif" font-size="21">Layer 3</text>
+  <text x="372" y="262" fill="#42536a" font-family="Arial,sans-serif" font-size="21">AAA Servers</text>
+  <text x="100" y="329" fill="#344256" font-family="Arial,sans-serif" font-size="20">Layer 2 Security</text>
+  <rect x="349" y="295" width="430" height="45" rx="5" fill="#fff" stroke="#aab5c2" stroke-width="2"/>
+  <text x="370" y="325" fill="#344256" font-family="Arial,sans-serif" font-size="20">WPA+WPA2</text>
+  <path d="m742 309 11 11 11-11" fill="none" stroke="#526174" stroke-width="3"/>
+  <text x="100" y="380" fill="#344256" font-family="Arial,sans-serif" font-size="20">MAC Filtering</text>
+  <rect x="349" y="351" width="25" height="25" rx="4" fill="#fff" stroke="#8b98a8" stroke-width="2"/>
+  <text x="100" y="444" fill="#2b3c51" font-family="Arial,sans-serif" font-size="22" font-weight="700">WPA + WPA2 Parameters</text>
+  <path d="M100 457H1080" stroke="#c0c8d2" stroke-width="2"/>
+  <g fill="#344256" font-family="Arial,sans-serif" font-size="20">
+    <text x="124" y="499">WPA Policy</text><text x="124" y="540">WPA2 Policy</text>
+    <text x="124" y="581">WPA2 Encryption</text><text x="124" y="622">OSEN Policy</text>
+    <text x="124" y="681">Authentication Key Management</text>
+  </g>
+  <g fill="#fff" stroke="#8492a3" stroke-width="2">
+    <rect x="339" y="479" width="22" height="22" rx="4"/><rect x="339" y="520" width="22" height="22" rx="4"/>
+    <rect x="339" y="561" width="22" height="22" rx="4"/><rect x="460" y="561" width="22" height="22" rx="4"/>
+    <rect x="339" y="602" width="22" height="22" rx="4"/><rect x="339" y="701" width="22" height="22" rx="4"/>
+  </g>
+  <g fill="#344256" font-family="Arial,sans-serif" font-size="19">
+    <text x="374" y="497">Enable</text><text x="374" y="538">Enable</text><text x="374" y="579">AES</text>
+    <text x="495" y="579">TKIP</text><text x="374" y="620">Enable</text><text x="374" y="719">802.1X</text>
+  </g>
+  <rect x="85" y="752" width="1010" height="2" fill="#d2d8e0"/>
+</svg>
