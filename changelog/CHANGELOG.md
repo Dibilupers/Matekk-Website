@@ -8,8 +8,9 @@ Commits included in this push:
 
 - `d7d5472` — Made FortiOS explanation source links visually clear and easier to click.
 - `b987de3` — Recorded the source-link change in the push changelog.
+- `a3bb0f8` — Merged the latest `origin/main` updates before publishing.
 
-Validation before push: production frontend build, targeted ESLint for the source-link component, and Git whitespace checks passed.
+Validation before push: production frontend build after syncing the latest `main`, targeted ESLint for the source-link component, and Git whitespace checks passed.
 
 ## 2026-10-24 — `main`
 
