@@ -6,6 +6,14 @@ Tracking begins 2026-10-17.
 
 - Changed built-in offline CCNA question prompts to regular weight, following the FortiOS offline reference. Online CCNA exam prompts keep their existing semibold style.
 
+## 2026-10-24 — `main`
+
+Commits included in this push:
+
+- `c756854` — Restored 150 missing CCNA multi-answer questions in the frontend using snapshot answer keys guarded by prompt-and-choice fingerprints. No API/backend changes.
+
+Validation before push: six focused CCNA converter tests, targeted ESLint, frontend production build, and Git whitespace checks passed.
+
 ## 2026-10-24 — FortiOS offline exam
 
 Commits included:

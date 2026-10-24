@@ -11,6 +11,7 @@ import {
 } from "./splitPromptExhibit";
 import { parseOptionTable } from "./ccnaOptionTable";
 import { findCcnaQuestionExplanation } from "./ccnaQuestionExplanations";
+import multiAnswerSupplement from "./ccnaMultiAnswerSupplement.json";
 
 // Text that went through the wrong character encoding somewhere ("â€“" should be "–")
 const MOJIBAKE = [
@@ -99,6 +100,21 @@ function normalizeQuestionType(questionType) {
   if (normalized === "drag_and_drop") return "drag_drop";
   if (normalized === "click_the_boxes") return "click_boxes";
   return normalized;
+}
+
+function getSupplementalMultiAnswer(row, choices) {
+  const supplement = multiAnswerSupplement[row.id];
+  if (!supplement) return null;
+
+  const normalize = (value) => String(value ?? "").replace(/\s+/g, " ").trim().toLocaleLowerCase();
+  const choiceValues = (Array.isArray(choices) ? choices : Object.values(choices ?? {})).map(normalize);
+  const signature = [...[normalize(row.question_text)], ...choiceValues].join("\n");
+  let hash = 2166136261;
+  for (let index = 0; index < signature.length; index += 1) {
+    hash = Math.imul(hash ^ signature.charCodeAt(index), 16777619);
+  }
+  const fingerprint = (hash >>> 0).toString(16).padStart(8, "0");
+  return fingerprint === supplement.signature ? supplement.answer : null;
 }
 
 function multipleChoice(row, choices) {
@@ -533,7 +549,10 @@ export function convertBankRow(row) {
       );
     }
   } else if (expandedChoices) {
-    body = multipleChoice(row, expandedChoices);
+    const answerRow = row.correct_answer?.trim()
+      ? row
+      : { ...row, correct_answer: getSupplementalMultiAnswer(row, choices) ?? "" };
+    body = multipleChoice(answerRow, expandedChoices);
     if (!body) return { problem: "correct answer does not match the available choices" };
   } else if (row.choices?.trim()) {
     return { problem: "choices are not valid JSON" };
