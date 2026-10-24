@@ -5,6 +5,8 @@ import { createServer } from "vite";
 let vite;
 let convertBankRow;
 let loadCcnaAllQuestionsBank;
+let isValidQuestion;
+let applyNativeExhibit;
 let originalFetch;
 
 before(async () => {
@@ -16,6 +18,8 @@ before(async () => {
   });
   ({ convertBankRow } = await vite.ssrLoadModule("/src/utils/ccnaBankConverter.js"));
   ({ loadCcnaAllQuestionsBank } = await vite.ssrLoadModule("/src/utils/ccnaQuestionBankApi.js"));
+  ({ isValidQuestion } = await vite.ssrLoadModule("/src/utils/ccnaExamGrading.js"));
+  ({ applyNativeExhibit } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaCompositeSetQuestions.js"));
   originalFetch = globalThis.fetch;
 });
 
@@ -165,6 +169,112 @@ function rawRow(id, prompt) {
     imageUrl: null,
   };
 }
+
+test("converts recovered CCNA matching questions into their original drag-and-drop layouts", () => {
+  const rows = [
+    {
+      id: 181,
+      prompt: "Drag and drop the Rapid PVST+ forwarding state actions from the left.",
+      answers: [
+        "BPDUs received are forwarded to the system module",
+        "The port in the forwarding state responds to network management messages",
+        "Switched frames received from other ports are advanced",
+        "Frames received from the attached segment are processed",
+      ],
+      items: ["Action", "Action", "Action", "Action"],
+      choices: [
+        "Frames received from the attached segment are discarded",
+        "BPDUs received are forwarded to the system module",
+        "The port in the forwarding state responds to network management messages",
+        "BPDUs received from the system module are processed and transmitted",
+        "Switched frames received from other ports are advanced",
+        "Frames received from the attached segment are processed",
+      ],
+      answer: [1, 2, 4, 5],
+    },
+    {
+      id: 382,
+      prompt: "Drag and drop the Ansible features from the left to the right.",
+      answers: [
+        "Uses the YAML language",
+        "Executes modules via SSH by default",
+        "Pushes configurations to the client",
+        "Operates without agents",
+      ],
+      items: ["Feature", "Feature", "Feature", "Feature"],
+      choices: [
+        "Uses the YAML language",
+        "Executes modules via SSH by default",
+        "Pushes configurations to the client",
+        "Uses agents to manage hosts",
+        "Requires clients to pull configurations from the server",
+        "Operates without agents",
+      ],
+      answer: [0, 1, 2, 5],
+    },
+    {
+      id: 608,
+      prompt: "Drag and drop characteristics of northbound APIs to the right.",
+      answers: [
+        "Supports automation",
+        "Communicates between the SDN controller and the application plane",
+        "Supports network virtualization protocols",
+        "Supports REST-based requirements",
+      ],
+      items: ["1", "2", "3", "4"],
+      choices: [
+        "Supports automation",
+        "Communicates between the SDN controller and the application plane",
+        "Communicates between the SDN controller and the data plane",
+        "Supports data sharing between systems",
+        "Supports network virtualization protocols",
+        "Supports REST-based requirements",
+        "Uses OpenFlow to interface between the data and control planes",
+      ],
+      answer: [0, 1, 4, 5],
+    },
+    {
+      id: 1306,
+      prompt: "Drag and drop each broadcast IP address on the left to the Broadcast Address column on the right.",
+      answers: [
+        "10.63.255.255/10",
+        "172.16.255.39/29",
+        "172.20.255.255/16",
+        "192.168.255.127/25",
+      ],
+      items: ["Broadcast Address", "Broadcast Address", "Broadcast Address", "Broadcast Address"],
+      choices: [
+        "10.1.255.254/24",
+        "10.63.255.255/10",
+        "172.16.255.39/29",
+        "172.20.255.255/16",
+        "192.168.1.10/24",
+        "192.168.255.127/25",
+      ],
+      answer: [1, 2, 3, 5],
+    },
+  ];
+
+  for (const expected of rows) {
+    const { question, problem } = convertBankRow({
+      ...rawRow(expected.id, expected.prompt),
+      correct_answer: expected.answers.map((answer) => `+ ${answer}`).join("\n"),
+    });
+
+    assert.equal(problem, undefined, `question ${expected.id} should convert`);
+    assert.equal(question.type, "drag_drop", `question ${expected.id} should use drag-and-drop`);
+    assert.ok(isValidQuestion(question), `question ${expected.id} should be gradable`);
+    assert.deepEqual(question.items, expected.items, `question ${expected.id} targets`);
+    assert.deepEqual(question.choices, expected.choices, `question ${expected.id} choices`);
+    assert.deepEqual(question.answer, expected.answer, `question ${expected.id} answer key`);
+  }
+});
+
+test("attaches recreated exhibits to recovered CCNA matching questions", () => {
+  for (const bankId of [181, 382, 608, 1306]) {
+    assert.ok(applyNativeExhibit({ bankId }).exhibitImage, `question ${bankId} should have a recreated exhibit`);
+  }
+});
 
 test("merges usable questions with raw-converted rows without duplicate bank IDs", async () => {
   const usableQuestion = {

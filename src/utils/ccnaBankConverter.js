@@ -354,23 +354,38 @@ function remakeSkippedQuestion(row, choices) {
     .filter(Boolean);
   const rawPrompt = cleanText(row.question_text);
 
-  const makeGroupMatch = (category, prompt) => answerItems.length === 4
-    ? {
-      prompt,
-      body: {
-        type: "match",
-        items: answerItems,
-        choices: [category],
-        answer: answerItems.map(() => 0),
-        matchStyle: "numbers",
-      },
-    }
-    : null;
+  const makeDragDrop = (items, choices, correctChoices, prompt = rawPrompt) => {
+    const normalizedAnswers = answerItems.map((item) => item.toLowerCase());
+    const expectedAnswers = correctChoices.map((item) => item.toLowerCase());
+    if (normalizedAnswers.length !== expectedAnswers.length ||
+      new Set(normalizedAnswers).size !== normalizedAnswers.length ||
+      expectedAnswers.some((item) => !normalizedAnswers.includes(item))) return null;
+
+    const answer = correctChoices.map((item) =>
+      choices.findIndex((choice) => choice.toLowerCase() === item.toLowerCase()),
+    );
+    if (answer.some((index) => index < 0)) return null;
+    return { prompt, body: { type: "drag_drop", items, choices, answer } };
+  };
 
   if (id === 181 && /Rapid PVST\+ forwarding state actions/i.test(rawPrompt)) {
-    return makeGroupMatch(
-      "Forwarding state",
-      "Match each Rapid PVST+ action to the forwarding state.",
+    const choices = [
+      "Frames received from the attached segment are discarded",
+      "BPDUs received are forwarded to the system module",
+      "The port in the forwarding state responds to network management messages",
+      "BPDUs received from the system module are processed and transmitted",
+      "Switched frames received from other ports are advanced",
+      "Frames received from the attached segment are processed",
+    ];
+    return makeDragDrop(
+      Array.from({ length: 4 }, () => "Action"),
+      choices,
+      [
+        "BPDUs received are forwarded to the system module",
+        "The port in the forwarding state responds to network management messages",
+        "Switched frames received from other ports are advanced",
+        "Frames received from the attached segment are processed",
+      ],
     );
   }
 
@@ -399,9 +414,23 @@ function remakeSkippedQuestion(row, choices) {
   }
 
   if (id === 382 && /Ansible features from the left/i.test(rawPrompt)) {
-    return makeGroupMatch(
-      "Ansible feature",
-      "Match each statement to an Ansible feature.",
+    const choices = [
+      "Uses the YAML language",
+      "Executes modules via SSH by default",
+      "Pushes configurations to the client",
+      "Uses agents to manage hosts",
+      "Requires clients to pull configurations from the server",
+      "Operates without agents",
+    ];
+    return makeDragDrop(
+      Array.from({ length: 4 }, () => "Feature"),
+      choices,
+      [
+        "Uses the YAML language",
+        "Executes modules via SSH by default",
+        "Pushes configurations to the client",
+        "Operates without agents",
+      ],
     );
   }
 
@@ -441,9 +470,24 @@ function remakeSkippedQuestion(row, choices) {
   }
 
   if (id === 608 && /characteristics of northbound APIs/i.test(rawPrompt)) {
-    return makeGroupMatch(
-      "Northbound API characteristic",
-      "Match each statement to a characteristic of an SDN northbound API.",
+    const choices = [
+      "Supports automation",
+      "Communicates between the SDN controller and the application plane",
+      "Communicates between the SDN controller and the data plane",
+      "Supports data sharing between systems",
+      "Supports network virtualization protocols",
+      "Supports REST-based requirements",
+      "Uses OpenFlow to interface between the data and control planes",
+    ];
+    return makeDragDrop(
+      ["1", "2", "3", "4"],
+      choices,
+      [
+        "Supports automation",
+        "Communicates between the SDN controller and the application plane",
+        "Supports network virtualization protocols",
+        "Supports REST-based requirements",
+      ],
     );
   }
 
@@ -459,18 +503,24 @@ function remakeSkippedQuestion(row, choices) {
   }
 
   if (id === 1306 && /broadcast IP address/i.test(rawPrompt)) {
-    return answerItems.length === 4
-      ? {
-        prompt: "Match each listed IP address to its broadcast-address category.",
-        body: {
-          type: "match",
-          items: answerItems,
-          choices: ["Broadcast Address", "Not a Broadcast Address"],
-          answer: [0, 0, 0, 0],
-          matchStyle: "numbers",
-        },
-      }
-      : null;
+    const choices = [
+      "10.1.255.254/24",
+      "10.63.255.255/10",
+      "172.16.255.39/29",
+      "172.20.255.255/16",
+      "192.168.1.10/24",
+      "192.168.255.127/25",
+    ];
+    return makeDragDrop(
+      Array.from({ length: 4 }, () => "Broadcast Address"),
+      choices,
+      [
+        "10.63.255.255/10",
+        "172.16.255.39/29",
+        "172.20.255.255/16",
+        "192.168.255.127/25",
+      ],
+    );
   }
 
   return null;

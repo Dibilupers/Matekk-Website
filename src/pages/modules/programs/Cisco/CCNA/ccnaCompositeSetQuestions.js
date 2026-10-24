@@ -5,6 +5,10 @@
 import wlcMyWlanImg from "../../../../../assets/ccna-exam/wlc-my-wlan-layer2.webp";
 import wlcPskImg from "../../../../../assets/ccna-exam/wlc-psk-layer2.webp";
 import wlcAdvancedImg from "../../../../../assets/ccna-exam/wlc-advanced-tab.webp";
+import ccna181RapidPvstActionsImg from "../../../../../assets/ccna-exam/ccna-181-rapid-pvst-actions.svg";
+import ccna382AnsibleFeaturesImg from "../../../../../assets/ccna-exam/ccna-382-ansible-features.svg";
+import ccna608NorthboundApiImg from "../../../../../assets/ccna-exam/ccna-608-northbound-api.svg";
+import ccna1306BroadcastAddressesImg from "../../../../../assets/ccna-exam/ccna-1306-broadcast-addresses.svg";
 
 // pic(image, text?) = picture exhibit, optionally with device output shown below it
 const pic = (image, text) => ({ image, text });
@@ -802,6 +806,10 @@ const BUILT_IN_QUESTION_BY_PROMPT = new Map(
 );
 
 const DATABASE_NATIVE_EXHIBITS = new Map([
+	[1306, { image: ccna1306BroadcastAddressesImg }],
+	[181, { image: ccna181RapidPvstActionsImg }],
+	[382, { image: ccna382AnsibleFeaturesImg }],
+	[608, { image: ccna608NorthboundApiImg }],
 	[23, "stp-hq-four-switch"],
 	[65, "sw1-sw2-dtp-trunk"],
 	[70, "stp-branch-four-switch"],
@@ -1845,13 +1853,14 @@ export function applyNativeExhibit(question) {
 	const databaseExhibit = DATABASE_NATIVE_EXHIBITS.get(question?.bankId);
 	const exhibitDiagram = (typeof databaseExhibit === "string" ? databaseExhibit : databaseExhibit?.diagram) ??
 		builtInQuestion?.exhibitDiagram;
+	const exhibitImage = typeof databaseExhibit === "object" ? databaseExhibit.image : undefined;
 	const hasNativeTextExhibit = typeof databaseExhibit === "object" &&
 		typeof databaseExhibit.exhibit === "string";
-	if (!exhibitDiagram && !hasNativeTextExhibit) return question;
+	if (!exhibitDiagram && !exhibitImage && !hasNativeTextExhibit) return question;
 
 	return {
 		...question,
-		exhibitImage: undefined,
+		exhibitImage: exhibitImage ?? undefined,
 		...(exhibitDiagram ? { exhibitDiagram } : {}),
 		...(hasNativeTextExhibit ? { exhibit: databaseExhibit.exhibit, nativeExhibitText: true } : {}),
 		...(builtInQuestion?.exhibit ? { exhibit: builtInQuestion.exhibit } : {}),
