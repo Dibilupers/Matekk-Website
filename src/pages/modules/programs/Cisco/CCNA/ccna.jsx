@@ -51,7 +51,7 @@ const EXAM_FORMATS = [
 	{ name: "Short Exam", questions: CCNA_EXAMS.short.questionCount, duration: "45 mins", description: "A quick practice session." },
 	{ name: "Medium Exam", questions: CCNA_EXAMS.medium.questionCount, duration: "1 hour & 30 mins", description: "A balanced, longer practice session." },
 	{ name: "Long Exam", questions: CCNA_EXAMS.long.questionCount, duration: "2 hours", description: "A full-length practice session." },
-	{ name: "All Questions Exam", questions: "All", duration: "No time limit", description: "Every question from the Questions table, in database order." },
+	{ name: "All Questions Exam", questions: "All", duration: "No time limit", description: "Every question from the Questions table, in random order." },
 ];
 function formatExamTime(totalSeconds) {
 	const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, "0");
@@ -600,7 +600,7 @@ export default function CCNA() {
 		},
 		"All Questions Exam": {
 			path: "/modules/programs/ccna/exam/all",
-			summary: "Every question from the Questions table · Database order · No time limit",
+			summary: "Every question from the Questions table · Random order · No time limit",
 		},
 	};
 
@@ -1219,7 +1219,7 @@ export default function CCNA() {
 							</button>
 						</header>
 						<p className="mt-3 text-sm leading-6 text-[#71819b]">
-							The first three formats randomly select a set of questions. All Questions Exam goes through every question from the Questions table in database order, with no time limit.
+							The first three formats randomly select a set of questions. All Questions Exam goes through every question from the Questions table in random order, with no time limit.
 						</p>
 						<div className="mt-6 grid gap-3 sm:grid-cols-2">
 							{EXAM_FORMATS.map((format) => {

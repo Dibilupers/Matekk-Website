@@ -2088,6 +2088,8 @@ function TopologyLink({ link, nodes }) {
 	const y1 = from.y + (dy / distance) * startRadius + offsetY;
 	const x2 = to.x - (dx / distance) * endRadius + offsetX;
 	const y2 = to.y - (dy / distance) * endRadius + offsetY;
+	const labelX = link.labelX ?? (x1 + x2) / 2;
+	const labelY = link.labelY ?? (y1 + y2) / 2 - 10;
 
 	return (
 		<g>
@@ -2095,36 +2097,56 @@ function TopologyLink({ link, nodes }) {
 			<circle cx={x1} cy={y1} r="4" fill="#16a34a" />
 			<circle cx={x2} cy={y2} r="4" fill="#16a34a" />
 			{link.label && (
-				<text
-					x={link.labelX ?? (x1 + x2) / 2}
-					y={link.labelY ?? (y1 + y2) / 2 - 10}
-					textAnchor="middle"
-					fontSize="12"
-					fontWeight="600"
-					fill="#526584"
-					stroke="white"
-					strokeWidth="4"
-					paintOrder="stroke"
-				>
-					{link.label}
-				</text>
+				<>
+					<rect
+						x={labelX - Math.max(22, link.label.length * 3.5 + 7)}
+						y={labelY - 12}
+						width={Math.max(44, link.label.length * 7 + 14)}
+						height="20"
+						rx="6"
+						fill="white"
+						fillOpacity="0.97"
+						stroke="#dbe4ee"
+					/>
+					<text
+						x={labelX}
+						y={labelY + 3}
+						textAnchor="middle"
+						fontSize="12"
+						fontWeight="600"
+						fill="#334155"
+					>
+						{link.label}
+					</text>
+				</>
 			)}
 		</g>
 	);
 }
 
-function TopologyDevice({ node, offlineLayout = false }) {
-	if (node.kind === "router") return <RouterIcon x={node.x} y={node.y} label={node.name} details={node.details} labelBackdrop={offlineLayout} />;
-	if (node.kind === "switch") return <SwitchIcon x={node.x} y={node.y} label={node.name} details={node.details} labelBackdrop={offlineLayout} />;
+function TopologyDevice({ node }) {
+	if (node.kind === "router") return <RouterIcon x={node.x} y={node.y} label={node.name} details={node.details} labelBackdrop />;
+	if (node.kind === "switch") return <SwitchIcon x={node.x} y={node.y} label={node.name} details={node.details} labelBackdrop />;
 	if (node.kind === "host") {
 		const server = /server/i.test(node.name);
-		return <PcIcon x={node.x} y={node.y} label={node.name} details={node.details} server={server} labelBackdrop={offlineLayout} />;
+		return <PcIcon x={node.x} y={node.y} label={node.name} details={node.details} server={server} labelBackdrop />;
 	}
 
 	return (
 		<g transform={`translate(${node.x} ${node.y})`}>
 			<ellipse cx="0" cy="0" rx="72" ry="27" fill="#e0ecfb" stroke="#1775ee" strokeWidth="1.5" />
 			<text x="0" y="4" textAnchor="middle" fontSize="12" fontWeight="700" fill="#1775ee">{node.name}</text>
+			{node.details?.length > 0 && (
+				<rect
+					x={-Math.max(36, ...node.details.map((detail) => detail.length * 2.8 + 8))}
+					y="31"
+					width={Math.max(72, ...node.details.map((detail) => detail.length * 5.6 + 16))}
+					height={node.details.length * 12 + 10}
+					rx="5"
+					fill="white"
+					stroke="#e2e8f0"
+				/>
+			)}
 			{node.details?.map((detail, index) => (
 				<text key={detail} x="0" y={40 + index * 12} textAnchor="middle" fontSize="9.5" fill="#4b5b78">{detail}</text>
 			))}
@@ -2132,7 +2154,7 @@ function TopologyDevice({ node, offlineLayout = false }) {
 	);
 }
 
-export function ExhibitDiagram({ type, className = "", offlineLayout = false }) {
+export function ExhibitDiagram({ type, className = "" }) {
 	const [openTheme, setOpenTheme] = useState(null);
 	const wrapRef = useRef(null);
 	const isRouterOnAStick = type === "router-on-a-stick-vlan20";
@@ -2148,13 +2170,13 @@ export function ExhibitDiagram({ type, className = "", offlineLayout = false }) 
 			viewBox={`${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`}
 			role="img"
 			aria-label={title}
-			className={expanded ? "block h-auto w-[1000px]" : "h-auto w-full"}
+			className={expanded ? "block h-auto w-[1000px]" : "block h-auto w-full"}
 		>
 			<rect x={viewBox.x} y={viewBox.y} width={viewBox.width} height={viewBox.height} fill="#fff" />
 			{topology.links.map((link, index) => (
 				<TopologyLink key={`${link.from}-${link.to}-${index}`} link={link} nodes={nodes} />
 			))}
-			{topology.nodes.map((node) => <TopologyDevice key={node.id} node={node} offlineLayout={offlineLayout} />)}
+			{topology.nodes.map((node) => <TopologyDevice key={node.id} node={node} />)}
 		</svg>
 	) : (
 		<div className={expanded ? "w-[1000px]" : ""}>
@@ -2172,7 +2194,7 @@ export function ExhibitDiagram({ type, className = "", offlineLayout = false }) 
 
 	return (
 		<>
-			<section ref={wrapRef} aria-label={title} className={`mb-4 rounded-2xl border border-[#d9e1ef] bg-[#f7f9fc] p-4 sm:p-5 ${className}`}>
+			<section ref={wrapRef} aria-label={title} className={`mb-4 rounded-2xl border border-[#d9e1ef] bg-[#f7f9fc] p-4 shadow-sm sm:p-5 ${className}`}>
 				<div className="mb-1 flex items-center justify-between gap-3">
 					<p className="text-xs font-bold uppercase tracking-wide text-[#526584]">{title}</p>
 					<button
@@ -2184,7 +2206,7 @@ export function ExhibitDiagram({ type, className = "", offlineLayout = false }) 
 					</button>
 				</div>
 				{topology && <p className="mb-3 text-sm text-[#526584]">{topology.note}</p>}
-				<div className={topology ? "bg-white" : ""}>{renderDiagram()}</div>
+				<div className={topology ? "overflow-x-auto rounded-xl border border-[#e2e8f0] bg-white p-2 sm:p-3" : ""}>{renderDiagram()}</div>
 			</section>
 			{openTheme && (
 				<ZoomViewer title={title} theme={openTheme} onClose={() => setOpenTheme(null)}>
@@ -2200,16 +2222,16 @@ export function ExhibitImage({ src, className = "", imageClassName = "", lazy = 
 	const [openTheme, setOpenTheme] = useState(null);
 	const wrapRef = useRef(null);
 	const image = offlineLayout
-		? <img key={src} src={src} alt="Exhibit diagram" loading={lazy ? "lazy" : undefined} className={`block h-auto max-h-[75vh] w-auto max-w-full rounded-xl border border-[#d6e5e7] bg-white object-contain !max-h-[75vh] ${imageClassName}`} />
+		? <img key={src} src={src} alt="Exhibit diagram" loading={lazy ? "lazy" : undefined} className={`block h-auto max-h-[75vh] w-auto max-w-full rounded-lg object-contain !max-h-[75vh] ${imageClassName}`} />
 		: cropTop
 		? (
-			<div className="aspect-[578/260] w-full overflow-hidden rounded-xl border border-[#d6e5e7] bg-white">
+			<div className="aspect-[578/260] w-full overflow-hidden rounded-lg bg-white">
 				<img key={src} src={src} alt="Exhibit" loading={lazy ? "lazy" : undefined} className={`h-full w-full object-cover object-top ${imageClassName}`} />
 			</div>
 		)
-		: <img key={src} src={src} alt="Exhibit" loading={lazy ? "lazy" : undefined} className={`w-auto max-w-full rounded-xl border border-[#d6e5e7] bg-white ${imageClassName}`} />;
+		: <img key={src} src={src} alt="Exhibit diagram" loading={lazy ? "lazy" : undefined} className={`block h-auto w-auto max-w-full rounded-lg object-contain ${imageClassName}`} />;
 	return (
-		<div ref={wrapRef} className={`relative mx-auto ${offlineLayout ? "flex w-full max-w-full flex-col items-center gap-3 rounded-xl border border-[#d6e5e7] bg-[#f8fafb] p-3 sm:p-4" : cropTop ? "w-full max-w-[36rem]" : "w-fit max-w-full"} ${className}`}>
+		<div ref={wrapRef} className={`relative mx-auto ${offlineLayout ? "flex w-full max-w-full flex-col items-center gap-3 rounded-2xl border border-[#d6e5e7] bg-[#f8fafb] p-3 shadow-sm sm:p-4" : cropTop ? "w-full max-w-[36rem] rounded-xl border border-[#d6e5e7] bg-white p-2 shadow-sm sm:p-3" : "w-fit max-w-full rounded-xl border border-[#d6e5e7] bg-white p-2 shadow-sm sm:p-3"} ${className}`}>
 			{image}
 			<button
 				type="button"

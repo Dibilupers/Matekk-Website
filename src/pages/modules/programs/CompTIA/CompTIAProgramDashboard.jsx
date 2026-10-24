@@ -164,7 +164,7 @@ export default function CompTIAProgramDashboard({ program }) {
 		{ name: "Medium Exam", key: "medium", length: "Medium", questions: 100, duration: "1 hour & 30 mins", description: "A balanced, longer practice session." },
 		{ name: "Long Exam", key: "long", length: "Long", questions: 150, duration: "2 hours", description: "A full-length practice session." },
 		...(includesAllQuestionsExam
-			? [{ name: "All Questions Exam", key: "all_questions", length: "All questions", questions: "All", duration: "No time limit", description: `Every question from the ${program.title} question bank, in database order.` }]
+			? [{ name: "All Questions Exam", key: "all_questions", length: "All questions", questions: "All", duration: "No time limit", description: `Every question from the ${program.title} question bank, in random order.` }]
 			: []),
 	], [includesAllQuestionsExam, program.title]);
 	const progressExamFormats = [
@@ -722,7 +722,7 @@ export default function CompTIAProgramDashboard({ program }) {
 						</header>
 						<p className="mt-3 text-sm leading-6 text-[#71819b]">
 							{includesAllQuestionsExam
-								? `The first three formats randomly select questions. All Questions Exam goes through every question from the ${program.title} question bank in database order, with no time limit.`
+								? `The first three formats randomly select questions. All Questions Exam goes through every question from the ${program.title} question bank in random order, with no time limit.`
 								: `Each exam randomly selects a set of questions from the CompTIA ${program.title} question bank. Choose the question count and time limit for your practice session.`}
 						</p>
 						{examResultsState.error && examResultsState.userId === profile?.userId && (

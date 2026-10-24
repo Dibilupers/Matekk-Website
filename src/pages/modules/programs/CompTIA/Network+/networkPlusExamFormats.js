@@ -86,7 +86,7 @@ export function createCompTIAExamFormats(
 			path: `/modules/programs/${programKey}/exam/all_questions`,
 			programName,
 			createQuestions() {
-				return [...questionBank];
+				return shuffle(questionBank);
 			},
 		},
 	};
