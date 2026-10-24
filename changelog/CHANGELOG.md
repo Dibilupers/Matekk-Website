@@ -2,6 +2,18 @@
 
 Tracking begins 2026-10-17.
 
+## 2026-10-24 — FortiOS offline exam
+
+Commits included:
+
+- `05e59d7` — Matched cached FortiOS question IDs to bundled exhibit images so offline exams and restored sessions use the local image.
+- `fd241f3` — Organized FortiOS offline question prompts into readable paragraphs, separating the exhibit instruction and final question where possible.
+- `034f8d1` — Kept sentence-style FortiOS answers, including text containing `->`, out of terminal styling in offline exams and reviews.
+- `09e87f9`, `bb43222` — Reduced FortiOS offline prompt font size and changed question text to regular weight.
+- Synced the 101 unique FortiOS questions from the supplied exports into the offline bank, including explanations and source references, 40 multi-select questions, and one matching question. Offline review displays linked sources; cached offline loading accepts all question types and in-progress All Questions exams add newly bundled questions.
+
+Question count check: The two supplied exports contain 101 unique FortiOS IDs (3403–3503); the prior offline bundle contained 90, all present in the exports. Automated checks were not run.
+
 ## 2026-10-24 — `main`
 
 Commits included in this push:

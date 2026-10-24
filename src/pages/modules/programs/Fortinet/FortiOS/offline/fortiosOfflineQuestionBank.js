@@ -4,38 +4,43 @@ import { isValidQuestion } from "../../../../../../utils/ccnaExamGrading";
 const FORTIOS_MODULE_LABELS = new Set(["fortios", "fortinet fortios", "fortigate administrator"]);
 const FORTIOS_OFFLINE_CACHE_NAME = "matekk-fortios-offline-question-bank-v1";
 
-function isSingleChoiceQuestion(question) {
+function normalizeQuestionType(question) {
 	const type = String(question?.type ?? question?.question_type ?? "")
 		.trim()
 		.toLowerCase()
 		.replace(/[_-]+/g, " ");
-	return ["single", "single choice", "multiple choice", "mcq", "radio"].includes(type);
+	if (["single", "single choice", "multiple choice", "mcq", "radio"].includes(type)) return "single";
+	if (["multi", "multiple select", "multiple selection"].includes(type)) return "multi";
+	if (["match", "matching", "drag drop", "drag and drop"].includes(type)) return "match";
+	return null;
 }
 
 function normalizeQuestion(question) {
 	if (!question || typeof question !== "object" || Array.isArray(question)) return null;
 	const moduleName = typeof question.module === "string" ? question.module.trim().toLowerCase() : "";
-	if (!FORTIOS_MODULE_LABELS.has(moduleName) || !isSingleChoiceQuestion(question)) return null;
-	if (
-		typeof question.prompt !== "string" ||
-		!question.prompt.trim() ||
-		!Array.isArray(question.options) ||
-		question.options.length < 2 ||
-		!question.options.every((option) => typeof option === "string" && option.trim()) ||
-		!Number.isInteger(question.answer) ||
-		question.answer < 0 ||
-		question.answer >= question.options.length ||
-		typeof question.explanation !== "string"
-	) return null;
+	const type = normalizeQuestionType(question);
+	if (!FORTIOS_MODULE_LABELS.has(moduleName) || !type || typeof question.prompt !== "string" || !question.prompt.trim()) return null;
 
 	const normalized = {
 		...question,
 		id: Number(question.id ?? question.bankId),
-		type: "single",
+		type,
 		prompt: question.prompt.trim(),
-		options: question.options.map((option) => option.trim()),
+		explanation: typeof question.explanation === "string" ? question.explanation : "",
+		source: typeof question.source === "string" ? question.source : "",
 		exhibitImage: question.exhibitImage || question.imageUrl || undefined,
 	};
+	if (!Number.isInteger(normalized.id)) return null;
+	if (type === "match") {
+		if (!Array.isArray(question.items) || !Array.isArray(question.choices)) return null;
+		normalized.items = question.items.map((item) => typeof item === "string" ? item.trim() : "");
+		normalized.choices = question.choices.map((choice) => typeof choice === "string" ? choice.trim() : "");
+		if (normalized.items.length === 0 || normalized.items.some((item) => !item) || normalized.choices.length < 2 || normalized.choices.some((choice) => !choice)) return null;
+	} else {
+		if (!Array.isArray(question.options)) return null;
+		normalized.options = question.options.map((option) => typeof option === "string" ? option.trim() : "");
+		if (normalized.options.length < 2 || normalized.options.some((option) => !option)) return null;
+	}
 	return isValidQuestion(normalized) ? normalized : null;
 }
 
@@ -101,9 +106,9 @@ export async function loadCachedFortiOSQuestionBank() {
 		throw new TypeError("The saved FortiOS question bank is incomplete or invalid.");
 	}
 	const questions = bank.questions.map(normalizeQuestion).filter(Boolean);
-	const uniqueQuestions = [...new Map(questions.map((question) => [question.prompt.toLowerCase(), question])).values()];
+	const uniqueQuestions = [...new Map(questions.map((question) => [question.id, question])).values()];
 	if (uniqueQuestions.length === 0) {
-		throw new Error("The saved FortiOS question bank contains no usable multiple-choice questions.");
+		throw new Error("The saved FortiOS question bank contains no usable questions.");
 	}
 	return uniqueQuestions;
 }

@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../../../../../context/auth-context";
 import { isAnswerCorrect, isQuestionAnswered } from "../../../../../../utils/ccnaExamGrading";
 import { QuestionInput, QuestionPrompt, QuestionReview } from "../../../Cisco/CCNA/ccnaExamQuestionViews";
+import FortiOSQuestionExplanation from "./FortiOSQuestionExplanation";
 import { getFortiOSImageUrls, precacheFortiOSImages } from "./fortiosOfflineImages";
 import FORTIOS_OFFLINE_QUESTIONS from "./fortiosOfflineQuestions.json";
 
@@ -276,11 +277,7 @@ export default function FortiOSOfflineExam() {
                   fortiosOffline
                 />
                 <QuestionReview question={item} value={answers[index]} fortiosOffline />
-                {item.explanation && (
-                  <p className="mt-5 rounded-xl bg-[#f5f9f9] px-4 py-3 text-sm leading-6 text-[#596983]">
-                    <strong className="text-[#005b6b]">Explanation: </strong>{item.explanation}
-                  </p>
-                )}
+                <FortiOSQuestionExplanation question={item} tone="teal" />
               </article>
             ))}
           </section>

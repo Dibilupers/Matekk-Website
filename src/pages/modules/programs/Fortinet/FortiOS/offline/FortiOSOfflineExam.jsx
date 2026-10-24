@@ -7,6 +7,7 @@ import { ExhibitImage, ExhibitText } from "../../../Cisco/CCNA/ccnaExhibit";
 import { QuestionInput, QuestionPrompt, QuestionReview } from "../../../Cisco/CCNA/ccnaExamQuestionViews";
 import { createFortiOSOfflineExam, FORTIOS_OFFLINE_EXAM_FORMATS } from "./fortiosOfflineExamFormats";
 import { loadCachedFortiOSQuestionBank } from "./fortiosOfflineQuestionBank";
+import FortiOSQuestionExplanation from "./FortiOSQuestionExplanation";
 import FORTIOS_OFFLINE_QUESTIONS from "./fortiosOfflineQuestions.json";
 import { getFortiOSBundledImageUrl } from "./fortiosOfflineImages";
 
@@ -39,6 +40,27 @@ function createSession(bank, examKey) {
 	};
 }
 
+function getBundledFortiOSQuestionBank() {
+	return FORTIOS_OFFLINE_QUESTIONS.map((item) => ({
+		...item,
+		id: Number(item.id),
+		exhibitImage: FORTIOS_BUNDLED_IMAGE_URLS.get(Number(item.id)) || undefined,
+	})).filter(isValidQuestion);
+}
+
+function attachBundledQuestionData(item) {
+	const id = Number(item.id ?? item.bankId);
+	const bundledQuestion = FORTIOS_OFFLINE_QUESTIONS.find((question) => Number(question.id) === id);
+	return {
+		...bundledQuestion,
+		...item,
+		id,
+		explanation: bundledQuestion?.explanation || item.explanation || "",
+		source: bundledQuestion?.source || item.source || "",
+		exhibitImage: FORTIOS_BUNDLED_IMAGE_URLS.get(id) || item.exhibitImage,
+	};
+}
+
 function isValidSession(session, examKey) {
 	const format = FORTIOS_OFFLINE_EXAM_FORMATS[examKey];
 	return Boolean(format && session && Array.isArray(session.questions) && session.questions.length > 0 &&
@@ -67,14 +89,13 @@ export default function FortiOSOfflineExam() {
 
 	useEffect(() => {
 		let active = true;
+		const bundledBank = getBundledFortiOSQuestionBank();
 		loadCachedFortiOSQuestionBank()
+			.catch(() => bundledBank)
 			.then((bank) => {
 				if (!active) return;
-				const offlineBank = bank.map((item) => ({
-					...item,
-					id: Number(item.id ?? item.bankId),
-					exhibitImage: FORTIOS_BUNDLED_IMAGE_URLS.get(Number(item.id ?? item.bankId)) || item.exhibitImage,
-				}));
+				const sourceBank = bank.length > bundledBank.length ? bank : bundledBank;
+				const offlineBank = sourceBank.map(attachBundledQuestionData);
 				setBankState({ status: "ready", bank: offlineBank, error: null });
 				let restoredSession = null;
 				try {
@@ -82,13 +103,14 @@ export default function FortiOSOfflineExam() {
 					if (saved) {
 						const parsed = JSON.parse(saved);
 						if (isValidSession(parsed, examKey) && parsed.questions.every((item) => offlineBank.some((candidate) => candidate.id === Number(item.id ?? item.bankId)))) {
+							const restoredQuestions = parsed.questions.map(attachBundledQuestionData);
+							const seenIds = new Set(restoredQuestions.map((item) => item.id));
+							const addedQuestions = examKey === "all_questions" && !parsed.isSubmitted
+								? offlineBank.filter((item) => !seenIds.has(item.id))
+								: [];
 							restoredSession = {
 								...parsed,
-								questions: parsed.questions.map((item) => ({
-									...item,
-									id: Number(item.id ?? item.bankId),
-									exhibitImage: FORTIOS_BUNDLED_IMAGE_URLS.get(Number(item.id ?? item.bankId)) || item.exhibitImage,
-								})),
+								questions: [...restoredQuestions, ...addedQuestions],
 							};
 						}
 					}
@@ -102,9 +124,6 @@ export default function FortiOSOfflineExam() {
 				} catch (error) {
 					setBankState({ status: "error", bank, error: error instanceof Error ? error.message : "Could not start this FortiOS exam." });
 				}
-			})
-			.catch((error) => {
-				if (active) setBankState({ status: "error", bank: [], error: error instanceof Error ? error.message : "Could not load saved FortiOS questions." });
 			});
 		return () => { active = false; };
 	}, [examKey, sessionKey]);
@@ -210,7 +229,7 @@ export default function FortiOSOfflineExam() {
 							{question.exhibit && <ExhibitText text={question.exhibit} className="my-5" />}
 							<QuestionPrompt prompt={question.prompt} hasSeparateExhibit={Boolean(question.exhibit || question.exhibitImage)} offline fortiosOffline />
 							<QuestionReview question={question} value={session.answers[session.currentIndex]} fortiosOffline />
-							{question.explanation && <p className="mt-5 rounded-xl bg-[#fff3f2] px-4 py-3 text-sm leading-6 text-[#596983]"><strong className="text-[#b31d17]">Explanation: </strong>{question.explanation}</p>}
+							<FortiOSQuestionExplanation question={question} />
 							<div className="mt-7 flex flex-wrap justify-between gap-3">
 								<button type="button" onClick={restartExam} className="inline-flex items-center gap-2 rounded-full border border-[#f1beba] px-5 py-3 font-semibold text-[#e2231a] transition hover:bg-[#fff0ef]"><RotateCcw size={17} /> Restart exam</button>
 								{session.currentIndex < session.questions.length - 1 && <button type="button" onClick={() => setSession((current) => ({ ...current, currentIndex: current.currentIndex + 1 }))} className="inline-flex items-center gap-2 rounded-full bg-[#e2231a] px-6 py-3 font-semibold text-white transition hover:bg-[#bd2119]">Next review <ChevronRight size={18} /></button>}

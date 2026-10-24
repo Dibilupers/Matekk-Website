@@ -50,7 +50,7 @@ function PromptText({ text, fortiosOffline = false }) {
 	return (
 		<div className="max-w-[72ch] space-y-3 text-sm leading-7 text-[#263654] sm:text-[15px] sm:leading-7">
 			{paragraphs.map((paragraph, index) => (
-				<p key={`${index}-${paragraph.slice(0, 24)}`} className="font-normal text-[#263654]">
+				<p key={`${index}-${paragraph.slice(0, 24)}`} className="font-normal text-[#263654]" style={{ fontWeight: 400 }}>
 					{paragraph}
 				</p>
 			))}
