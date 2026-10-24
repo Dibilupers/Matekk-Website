@@ -2,6 +2,22 @@
 
 Tracking begins 2026-10-17.
 
+## 2026-10-24 — `main`
+
+Commits included in this push:
+
+- `0c65886` — Restored CCNA questions 181, 382, 608, and 1306 using guarded frontend answer mappings when the raw bank omits `correct_answer`. Verified the merged all-questions loader reaches 1,367 from 1,363 usable questions plus these four rows. No API/backend changes.
+
+Validation before push: nine focused CCNA converter/loader/exhibit tests (including a 1,367-question assertion), targeted ESLint, frontend production build, and Git whitespace checks passed.
+
+## 2026-10-24 — `main`
+
+Commits included in this push:
+
+- `5d73a31` — Restored drag-and-drop presentation and local exhibits for CCNA questions 181, 382, 608, and 1306. The frontend now matches the recovered answer keys against the expected options; no API/backend changes.
+
+Validation before push: eight focused CCNA converter/loader/exhibit tests, targeted ESLint, frontend production build, and Git whitespace checks passed.
+
 ## 2026-10-24 — CCNA offline exam
 
 - Changed built-in offline CCNA question prompts to regular weight, following the FortiOS offline reference. Online CCNA exam prompts keep their existing semibold style.
