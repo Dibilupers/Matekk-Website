@@ -6,6 +6,14 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `b8ae9e2` — Adjusted device-detail text baselines so labels no longer overlap their backplates in practice and exam topologies.
+
+Validation before push: targeted ESLint, frontend production build, browser verification of the practice topology label, and Git whitespace checks passed. The build reports the existing large-bundle warning.
+
+## 2026-10-24 — `main`
+
+Commits included in this push:
+
 - `40c0826` — Prevented the first device added to a practice topology sandbox from being enlarged to fill the diagram.
 
 Validation before push: targeted ESLint, frontend production build, browser verification of the first router's displayed size, and Git whitespace checks passed. The build reports the existing large-bundle warning.
