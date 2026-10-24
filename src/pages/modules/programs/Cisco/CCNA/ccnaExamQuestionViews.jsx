@@ -63,10 +63,13 @@ function PromptText({ text, fortiosOffline = false }) {
 // monospace, one command per line (some imported questions had all commands squashed onto one line).
 const CLI_PROMPT = /(^|\s)[\w.-]+(\([\w-]+\))?[>#]/;
 const isCliText = (text) => typeof text === "string" && CLI_PROMPT.test(text);
+const isFortiOSCliText = (text) => typeof text === "string" && /^\s*[A-Za-z0-9_][\w.-]*(?:\([\w-]+\))?[>#]/m.test(text);
 const splitCliLines = (text) => text.replace(/[ \t]+(?=[\w.-]+(\([\w-]+\))?[>#])/g, "\n");
 
-function OptionText({ text, className = "" }) {
-	if (!isCliText(text)) return <span className={`whitespace-pre-wrap ${className}`}>{text}</span>;
+function OptionText({ text, className = "", fortiosOffline = false }) {
+	if (!(fortiosOffline ? isFortiOSCliText(text) : isCliText(text))) {
+		return <span className={`whitespace-pre-wrap ${className}`}>{text}</span>;
+	}
 	return (
 		<code className={`block min-w-0 w-full max-w-full flex-1 overflow-x-hidden break-words whitespace-pre-wrap rounded-lg bg-[#f1f5f9] px-2 py-1.5 font-mono text-xs leading-5 text-[#0f1b2d] [overflow-wrap:anywhere] sm:px-3 sm:py-2 sm:text-sm sm:leading-6 ${className}`}>
 			{splitCliLines(text)}
@@ -500,7 +503,7 @@ export function QuestionPrompt({ prompt, imageUrl, hasSeparateExhibit = Boolean(
 }
 
 /* Answer input for one exam question (pick one, choose two, or matching). */
-export function QuestionInput({ question, value, onChange, disabled }) {
+export function QuestionInput({ question, value, onChange, disabled, fortiosOffline = false }) {
 	const type = questionType(question);
 	const isMatching = ["match", "drag_drop", "click_boxes", "image"].includes(type);
 	// Backend exams don't include the answer key; "type the numbers" questions come with their box sizes instead
@@ -593,8 +596,8 @@ export function QuestionInput({ question, value, onChange, disabled }) {
 						<span className={`flex h-8 w-8 shrink-0 items-center justify-center ${isMulti ? "rounded-md" : "rounded-full"} text-sm font-bold ${isSelected ? "bg-[#005b6b] text-white" : "bg-[#e8f3f4] text-[#005b6b]"}`}>
 							{letter(optionIndex)}
 						</span>
-						{isCliText(String(displayedOption ?? "")) ? (
-							<OptionText text={String(displayedOption)} className="text-sm font-semibold sm:text-base" />
+						{(fortiosOffline ? isFortiOSCliText(String(displayedOption ?? "")) : isCliText(String(displayedOption ?? ""))) ? (
+							<OptionText text={String(displayedOption)} className="text-sm font-semibold sm:text-base" fortiosOffline={fortiosOffline} />
 						) : (
 							<AnswerOptionContent option={displayedOption} codeStyle={codeStyle} />
 						)}
@@ -606,7 +609,7 @@ export function QuestionInput({ question, value, onChange, disabled }) {
 }
 
 /* Results review for one question: shows the student's answer and the correct one. */
-export function QuestionReview({ question, value }) {
+export function QuestionReview({ question, value, fortiosOffline = false }) {
 	const type = questionType(question);
 	const isMatching = ["match", "drag_drop", "click_boxes", "image"].includes(type);
 	if (isMatching && !hasMatchContent(question, true)) return <InvalidQuestionMessage />;
@@ -703,8 +706,8 @@ export function QuestionReview({ question, value }) {
 						}`}>
 							{letter(optionIndex)}
 						</span>
-						{isCliText(String(displayedOption ?? "")) ? (
-							<OptionText text={String(displayedOption)} className="text-sm font-medium sm:text-base" />
+						{(fortiosOffline ? isFortiOSCliText(String(displayedOption ?? "")) : isCliText(String(displayedOption ?? ""))) ? (
+							<OptionText text={String(displayedOption)} className="text-sm font-medium sm:text-base" fortiosOffline={fortiosOffline} />
 						) : (
 							<AnswerOptionContent option={displayedOption} codeStyle={codeStyle} />
 						)}
