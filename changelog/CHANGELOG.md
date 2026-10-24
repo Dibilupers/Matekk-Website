@@ -2,6 +2,14 @@
 
 Tracking begins 2026-10-17.
 
+## 2026-10-24 — `Noah`
+
+Commits included in this push:
+
+- `1c3196b` — Restored 150 missing CCNA multi-answer questions in the frontend using snapshot answer keys guarded by prompt-and-choice fingerprints. No API/backend changes.
+
+Validation before push: five focused CCNA converter tests, conversion and grading checks for all 150 snapshot multi-answer rows, targeted ESLint, frontend production build, and Git whitespace checks passed.
+
 ## 2026-10-23 — `Noah`
 
 - `f959f9a` — Loaded the existing unfiltered question-bank endpoint and converted all usable CCNA rows in the frontend, keeping other course banks out of the CCNA exam. Added native conversion for supported CCNA matching questions and kept questions with missing exhibits visible with a notice. No backend API changes.
