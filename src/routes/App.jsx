@@ -894,9 +894,11 @@ function ProtectedRoute({ children }) {
   const isExamRoute = /(?:^|\/)exam(?:\/|$)/.test(pathname);
   const isOfflineCcnaExamRoute = /^\/modules\/programs\/ccna\/exam\/(?:short|medium|long|all)$/.test(pathname);
   const isOfflineFortiOSExamRoute = /^\/modules\/programs\/fortinet-fortios\/exam\/(?:short|medium|long|all_questions)\/?$/.test(pathname);
+  const isOfflineSecurityPlusExamRoute = /^\/modules\/programs\/comptia-security-plus\/exam\/(?:short|medium|long|all_questions)\/?$/.test(pathname);
   const isStandaloneOfflineFortiOSExamRoute = pathname === "/modules/programs/fortios/exam/all";
   const canAccessBuiltInOfflineExam = isOfflineCcnaExamRoute
     || isOfflineFortiOSExamRoute
+    || isOfflineSecurityPlusExamRoute
     || isStandaloneOfflineFortiOSExamRoute;
   const canAccessOfflineModule = isModuleRoute && (!isExamRoute || canAccessBuiltInOfflineExam) && !isOnline;
 
@@ -905,7 +907,7 @@ function ProtectedRoute({ children }) {
       <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6 text-center text-white">
         <section className="max-w-lg space-y-3">
           <h1 className="text-2xl font-semibold">Internet connection required</h1>
-          <p className="text-slate-300">Only CCNA and FortiOS exams with cached questions are available offline. Reconnect to take this exam.</p>
+          <p className="text-slate-300">Only CCNA, FortiOS, and Security+ exams with cached questions are available offline. Reconnect to take this exam.</p>
         </section>
       </main>
     );

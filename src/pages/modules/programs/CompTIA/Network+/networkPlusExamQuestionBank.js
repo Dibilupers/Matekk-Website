@@ -1,6 +1,8 @@
 import API_URL from "../../../../../config/api";
 import { isValidQuestion } from "../../../../../utils/ccnaExamGrading";
 
+const SECURITY_PLUS_OFFLINE_CACHE = "matekk-comptia-security-plus-offline-question-bank-v1";
+
 function hasCompTIAModule(question, programName) {
 	const moduleName = question?.module;
 	return typeof moduleName === "string" &&
@@ -47,12 +49,45 @@ function normalizeMultipleChoiceQuestion(question, programName) {
 	return normalized;
 }
 
-export async function loadCompTIAExamQuestions(programName) {
+export async function loadCompTIAExamQuestions(programName, { cacheForOffline = false } = {}) {
 	const certificationName = `CompTIA ${programName}`;
 	const query = new URLSearchParams({ module: certificationName });
-	const response = await fetch(`${API_URL}/questions/bank/all-usable?${query}`, { credentials: "include" });
+	const url = `${API_URL}/questions/bank/all-usable?${query}`;
+	const request = cacheForOffline
+		? new Request(new URL(url, window.location.origin), { credentials: "include" })
+		: null;
+	let response;
+	if (cacheForOffline && typeof navigator !== "undefined" && !navigator.onLine) {
+		if (typeof caches === "undefined") {
+			throw new Error("This browser cannot access saved Security+ exam questions offline.");
+		}
+		const cache = await caches.open(SECURITY_PLUS_OFFLINE_CACHE);
+		response = await cache.match(request, { ignoreVary: true });
+		if (!response) {
+			throw new Error("No Security+ questions are saved on this device yet. Connect to the internet and open a Security+ exam once before going offline.");
+		}
+	} else {
+		try {
+			response = cacheForOffline
+				? await fetch(request)
+				: await fetch(url, { credentials: "include" });
+		} catch (error) {
+			if (!cacheForOffline || typeof caches === "undefined") throw error;
+			const cache = await caches.open(SECURITY_PLUS_OFFLINE_CACHE);
+			response = await cache.match(request, { ignoreVary: true });
+			if (!response) throw error;
+		}
+	}
 	if (!response.ok) {
 		throw new Error(`${certificationName} question bank request failed (${response.status}).`);
+	}
+	if (cacheForOffline && !(typeof navigator !== "undefined" && !navigator.onLine) && typeof caches !== "undefined") {
+		try {
+			const cache = await caches.open(SECURITY_PLUS_OFFLINE_CACHE);
+			await cache.put(request, response.clone());
+		} catch (error) {
+			console.warn("Unable to save the Security+ question bank for offline use.", error);
+		}
 	}
 
 	const bank = await response.json();
