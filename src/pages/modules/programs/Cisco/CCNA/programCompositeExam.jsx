@@ -6,6 +6,7 @@ import { createPortal } from "react-dom";
 import { ArrowLeft, ArrowRight, ArrowUp, Clock3, Flag, Moon, RotateCcw, Sun, X } from "lucide-react";
 import { Link, Navigate, useBlocker, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../../../../context/auth-context";
+import ExplanationWithLinks from "../../../../../components/ExplanationWithLinks";
 import TrainingLogo from "../../../../../assets/MATEKK_training_logo.png";
 import { CCNA_EXAMS } from "./ccnaExamFormats";
 import { createCcnaMockExamAttemptId, saveCcnaMockExamResult } from "../../../../../utils/ccnaGradebook";
@@ -723,9 +724,17 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 												<div className="mt-5">
 													<QuestionReview question={item} value={item.selectedAnswer} />
 												</div>
-												<p className="mt-4 rounded-xl bg-[#f5f9f9] px-4 py-3 text-sm leading-6 text-[#596983]">
-													<span className="font-bold text-[#005b6b]">Explanation: </span>{item.explanation}
-												</p>
+												{item.explanation && (programKey === "fortinet-fortios" ? (
+													<ExplanationWithLinks
+														explanation={item.explanation}
+														className="mt-4 rounded-xl bg-[#f5f9f9] px-4 py-3 text-sm leading-6 text-[#596983]"
+														labelClassName="font-bold text-[#005b6b]"
+													/>
+												) : (
+													<p className="mt-4 rounded-xl bg-[#f5f9f9] px-4 py-3 text-sm leading-6 text-[#596983]">
+														<span className="font-bold text-[#005b6b]">Explanation: </span>{item.explanation}
+													</p>
+												))}
 											</article>
 										))}
 										{reviewQuestions.length === 0 && (
