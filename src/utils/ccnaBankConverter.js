@@ -357,9 +357,11 @@ function remakeSkippedQuestion(row, choices) {
   const makeDragDrop = (items, choices, correctChoices, prompt = rawPrompt) => {
     const normalizedAnswers = answerItems.map((item) => item.toLowerCase());
     const expectedAnswers = correctChoices.map((item) => item.toLowerCase());
-    if (normalizedAnswers.length !== expectedAnswers.length ||
+    if (normalizedAnswers.length && (
+      normalizedAnswers.length !== expectedAnswers.length ||
       new Set(normalizedAnswers).size !== normalizedAnswers.length ||
-      expectedAnswers.some((item) => !normalizedAnswers.includes(item))) return null;
+      expectedAnswers.some((item) => !normalizedAnswers.includes(item))
+    )) return null;
 
     const answer = correctChoices.map((item) =>
       choices.findIndex((choice) => choice.toLowerCase() === item.toLowerCase()),

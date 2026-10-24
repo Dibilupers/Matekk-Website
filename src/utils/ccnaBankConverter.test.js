@@ -170,7 +170,7 @@ function rawRow(id, prompt) {
   };
 }
 
-test("converts recovered CCNA matching questions into their original drag-and-drop layouts", () => {
+test("converts recovered CCNA matching questions when the raw response omits their answer keys", () => {
   const rows = [
     {
       id: 181,
@@ -258,7 +258,8 @@ test("converts recovered CCNA matching questions into their original drag-and-dr
   for (const expected of rows) {
     const { question, problem } = convertBankRow({
       ...rawRow(expected.id, expected.prompt),
-      correct_answer: expected.answers.map((answer) => `+ ${answer}`).join("\n"),
+      choices: null,
+      correct_answer: null,
     });
 
     assert.equal(problem, undefined, `question ${expected.id} should convert`);
@@ -270,32 +271,57 @@ test("converts recovered CCNA matching questions into their original drag-and-dr
   }
 });
 
+test("rejects recovered matching questions if a present answer key conflicts with its saved mapping", () => {
+  const { question, problem } = convertBankRow({
+    ...rawRow(1306, "Drag and drop each broadcast IP address on the left to the Broadcast Address column on the right."),
+    choices: null,
+    correct_answer: "+ 10.63.255.255/10\n+ 172.16.255.39/29\n+ 172.20.255.255/16\n+ 192.168.1.10/24",
+  });
+
+  assert.equal(question, undefined);
+  assert.equal(problem, "answer format is not a supported matching format");
+});
+
 test("attaches recreated exhibits to recovered CCNA matching questions", () => {
   for (const bankId of [181, 382, 608, 1306]) {
     assert.ok(applyNativeExhibit({ bankId }).exhibitImage, `question ${bankId} should have a recreated exhibit`);
   }
 });
 
-test("merges usable questions with raw-converted rows without duplicate bank IDs", async () => {
-  const usableQuestion = {
-    bankId: 1,
-    prompt: "Normalized question",
-    type: "single",
-    options: ["Correct", "Incorrect"],
-    answer: 0,
-    module: "CCNA Part 9",
-    topic: "Routing",
-  };
+test("restores the four omitted matching rows so the merged CCNA exam reaches 1,367 questions", async () => {
+  const missingIds = new Set([181, 382, 608, 1306]);
+  const usableQuestions = Array.from({ length: 1367 }, (_, index) => index + 1)
+    .filter((bankId) => !missingIds.has(bankId))
+    .map((bankId) => ({
+      bankId,
+      prompt: `Usable question ${bankId}`,
+      type: "single",
+      options: ["Correct", "Incorrect"],
+      answer: 0,
+      module: "CCNA Part 9",
+      topic: "Routing",
+    }));
+  const omittedRows = [
+    rawRow(181, "Drag and drop the Rapid PVST+ forwarding state actions from the left."),
+    rawRow(382, "Drag and drop the Ansible features from the left to the right."),
+    rawRow(608, "Drag and drop characteristics of northbound APIs to the right."),
+    rawRow(1306, "Drag and drop each broadcast IP address on the left to the Broadcast Address column on the right."),
+  ].map((row) => ({ ...row, choices: null, correct_answer: null }));
+
   globalThis.fetch = async (url) => {
     const payload = String(url).endsWith("/all-usable")
-      ? { questions: [usableQuestion], skippedCount: 2 }
-      : [rawRow(1, "Raw duplicate"), rawRow(2, "Raw supplemental")];
+      ? { questions: usableQuestions, skippedCount: 4 }
+      : omittedRows;
     return new Response(JSON.stringify(payload), { status: 200 });
   };
 
   const result = await loadCcnaAllQuestionsBank();
 
-  assert.deepEqual(result.questions.map((question) => question.bankId), [1, 2]);
-  assert.equal(result.questions[0].prompt, "Normalized question");
-  assert.equal(result.questions[1].prompt, "Raw supplemental");
+  assert.equal(result.questions.length, 1367);
+  assert.equal(result.skippedCount, 0);
+  for (const bankId of missingIds) {
+    const question = result.questions.find((entry) => entry.bankId === bankId);
+    assert.ok(question, `question ${bankId} should be restored`);
+    assert.equal(question.type, "drag_drop");
+  }
 });
