@@ -7,8 +7,50 @@ Tracking begins 2026-10-17.
 Commits included in this push:
 
 - `d7d5472` — Made FortiOS explanation source links visually clear and easier to click.
+- `b987de3` — Recorded the source-link change in the push changelog.
 
 Validation before push: production frontend build, targeted ESLint for the source-link component, and Git whitespace checks passed.
+
+## 2026-10-24 — `main`
+
+Commits included in this push:
+
+- `61d9f90` — Fixed the All Questions exam filter to use the converted question's `moduleTitle` field, so CCNA bank questions are not all discarded.
+
+Validation before push: targeted ESLint, frontend production build, and Git whitespace checks passed.
+
+## 2026-10-24 — `main`
+
+Commits included in this push:
+
+- `8181753` — Restored the 157 skipped CCNA question rows by converting the raw question bank in the frontend and remaking its unsupported question formats. No API/backend changes.
+
+Validation before push: targeted ESLint, frontend production build, conversion and grading checks for all 157 report rows, and Git whitespace checks passed.
+
+## 2026-10-24 — `main`
+
+Commits included in this push:
+
+- `b8ae9e2` — Adjusted device-detail text baselines so labels no longer overlap their backplates in practice and exam topologies.
+
+Validation before push: targeted ESLint, frontend production build, browser verification of the practice topology label, and Git whitespace checks passed. The build reports the existing large-bundle warning.
+
+## 2026-10-24 — `main`
+
+Commits included in this push:
+
+- `40c0826` — Prevented the first device added to a practice topology sandbox from being enlarged to fill the diagram.
+
+Validation before push: targeted ESLint, frontend production build, browser verification of the first router's displayed size, and Git whitespace checks passed. The build reports the existing large-bundle warning.
+
+## 2026-10-24 — `main`
+
+Commits included in this push:
+
+- `65890d1` — Centered CCNA topology diagrams, improved practice-lab label framing, and added an interactive practice topology sandbox with a redesigned animated toggle card.
+- `cc55111` — Merged the latest `origin/main` updates before publishing.
+
+Validation before push: targeted ESLint, frontend production build, and Git whitespace checks passed. The build reports the existing large-bundle warning.
 
 ## 2026-10-24 — `main`
 

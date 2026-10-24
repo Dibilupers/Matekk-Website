@@ -2148,7 +2148,7 @@ function TopologyDevice({ node }) {
 				/>
 			)}
 			{node.details?.map((detail, index) => (
-				<text key={detail} x="0" y={40 + index * 12} textAnchor="middle" fontSize="9.5" fill="#4b5b78">{detail}</text>
+				<text key={detail} x="0" y={43 + index * 12} textAnchor="middle" fontSize="9.5" fill="#4b5b78">{detail}</text>
 			))}
 		</g>
 	);
@@ -2170,7 +2170,7 @@ export function ExhibitDiagram({ type, className = "" }) {
 			viewBox={`${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`}
 			role="img"
 			aria-label={title}
-			className={expanded ? "block h-auto w-[1000px]" : "block h-auto w-full"}
+			className={expanded ? "mx-auto block h-auto w-[1000px]" : "mx-auto block h-auto w-full max-w-5xl"}
 		>
 			<rect x={viewBox.x} y={viewBox.y} width={viewBox.width} height={viewBox.height} fill="#fff" />
 			{topology.links.map((link, index) => (
@@ -2179,7 +2179,7 @@ export function ExhibitDiagram({ type, className = "" }) {
 			{topology.nodes.map((node) => <TopologyDevice key={node.id} node={node} />)}
 		</svg>
 	) : (
-		<div className={expanded ? "w-[1000px]" : ""}>
+		<div className={expanded ? "mx-auto w-[1000px]" : ""}>
 			<div className="grid gap-2 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)] md:items-center">
 				<TopologyNode role="Router" name="R1" details={"E0/0\nSubinterface E0/0.20"} />
 				<p className="text-center text-xs font-semibold text-[#526584]">E0/0 to E0/0</p>

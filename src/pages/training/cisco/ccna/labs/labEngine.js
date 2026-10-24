@@ -36,7 +36,7 @@ export function createLabState(lab) {
 		for (const i of Object.values(d.interfaces)) {
 			i.ip = i.ip || "";
 			i.mask = i.mask || "";
-			i.up = d.kind === "pc" ? true : Boolean(i.up);
+			i.up = d.kind === "pc" || d.kind === "switch" ? true : Boolean(i.up);
 			i.desc = i.desc || "";
 		}
 	}
@@ -126,9 +126,26 @@ export function forward(lab, state, srcDev, dstIp) {
 	let cur = srcDev;
 	const hops = [];
 	let firstOutIf = null;
+	let pendingNextIp = dstIp;
 	for (let ttl = 0; ttl < 16; ttl++) {
 		if (owns(lab, state, cur, dstIp)) return { ok: true, hops, dev: cur, firstOutIf };
 		const d = state.devices[cur];
+		if (d.kind === "switch") {
+			const targetLink = lab.links.find((link) => {
+				const [aDev, aIf] = link.a.split(":");
+				const [bDev, bIf] = link.b.split(":");
+				const peer = aDev === cur ? { dev: bDev, ifName: bIf } : bDev === cur ? { dev: aDev, ifName: aIf } : null;
+				return peer &&
+					ifaceUp(lab, state, cur, aDev === cur ? aIf : bIf) &&
+					state.devices[peer.dev]?.interfaces[peer.ifName]?.ip === pendingNextIp;
+			});
+			if (!targetLink) return { ok: false, hops, reason: "unreachable", dev: cur };
+			const [aDev, aIf] = targetLink.a.split(":");
+			const [bDev, bIf] = targetLink.b.split(":");
+			cur = aDev === cur ? bDev : aDev;
+			pendingNextIp = state.devices[cur].interfaces[aDev === cur ? aIf : bIf].ip;
+			continue;
+		}
 		let nextIp;
 		let outIf;
 		if (d.kind === "pc") {
@@ -143,9 +160,11 @@ export function forward(lab, state, srcDev, dstIp) {
 			outIf = r.outIf;
 		}
 		if (!firstOutIf) firstOutIf = outIf;
+		pendingNextIp = nextIp;
 		const p = peerOf(lab, cur, outIf);
 		const peerIf = p && state.devices[p.dev]?.interfaces[p.ifName];
-		if (!p || !peerIf || peerIf.ip !== nextIp || !ifaceUp(lab, state, p.dev, p.ifName)) {
+		const isSwitchPeer = p && state.devices[p.dev]?.kind === "switch";
+		if (!p || !peerIf || (!isSwitchPeer && peerIf.ip !== nextIp) || !ifaceUp(lab, state, p.dev, p.ifName)) {
 			return { ok: false, hops, reason: "unreachable", dev: cur };
 		}
 		hops.push(nextIp);

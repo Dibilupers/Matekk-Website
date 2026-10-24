@@ -294,6 +294,136 @@ function dragAndDrop(row) {
   return parseGroups(answerText, String(row.id)) ?? parsePairs(answerText);
 }
 
+function remakeSkippedQuestion(row, choices) {
+  const id = Number(row.id);
+  const answerItems = cleanText(row.correct_answer)
+    .split(/\r?\n/)
+    .map((item) => item.replace(/^\+\s*/, "").trim())
+    .filter(Boolean);
+  const rawPrompt = cleanText(row.question_text);
+
+  const makeGroupMatch = (category, prompt) => answerItems.length === 4
+    ? {
+      prompt,
+      body: {
+        type: "match",
+        items: answerItems,
+        choices: [category],
+        answer: answerItems.map(() => 0),
+        matchStyle: "numbers",
+      },
+    }
+    : null;
+
+  if (id === 181 && /Rapid PVST\+ forwarding state actions/i.test(rawPrompt)) {
+    return makeGroupMatch(
+      "Forwarding state",
+      "Match each Rapid PVST+ action to the forwarding state.",
+    );
+  }
+
+  if (id === 289 && /QoS terms from the left/i.test(rawPrompt)) {
+    return {
+      prompt: "Match each QoS term to its description.",
+      body: {
+        type: "match",
+        items: [
+          "Class-based weighted fair queuing",
+          "Classification",
+          "Congestion",
+          "Policing",
+          "Shaping",
+        ],
+        choices: [
+          "Guarantees minimum bandwidth to specific traffic classes when an interface is congested",
+          "Categorizes packets based on the value of traffic descriptor",
+          "Outcome of overutilization",
+          "Uses defined criteria to limit the transmission of one or more classes of traffic",
+          "Prevents congestion by reducing the flow of the outbound traffic",
+        ],
+        answer: [0, 1, 2, 3, 4],
+      },
+    };
+  }
+
+  if (id === 382 && /Ansible features from the left/i.test(rawPrompt)) {
+    return makeGroupMatch(
+      "Ansible feature",
+      "Match each statement to an Ansible feature.",
+    );
+  }
+
+  if (id === 481 && /static network route between two networks/i.test(rawPrompt)) {
+    let currentRouter = null;
+    const commands = cleanText(row.correct_answer).split(/\r?\n/).flatMap((line) => {
+      const text = line.trim();
+      const router = /^(R[123]):$/i.exec(text);
+      if (router) {
+        currentRouter = router[1].toUpperCase();
+        return [];
+      }
+      return currentRouter && /^ip route\s/i.test(text)
+        ? [{ router: currentRouter, command: text }]
+        : [];
+    });
+    const expectedCommands = [
+      ["R1", "ip route 10.10.13.0 255.255.255.128 10.10.10.1"],
+      ["R2", "ip route 10.10.13.0 255.255.255.128 10.10.10.5"],
+      ["R2", "ip route 10.10.14.0 255.255.255.0 10.10.10.2"],
+      ["R3", "ip route 10.10.14.0 255.255.255.0 10.10.10.6"],
+    ];
+    if (commands.length !== expectedCommands.length ||
+      commands.some((entry, index) =>
+        entry.router !== expectedCommands[index][0] || entry.command !== expectedCommands[index][1],
+      )) return null;
+    const routers = ["R1", "R2", "R3"];
+    return {
+      prompt: "Match each static route command to the router where it must be configured.",
+      body: {
+        type: "match",
+        items: commands.map((entry) => entry.command),
+        choices: routers,
+        answer: commands.map((entry) => routers.indexOf(entry.router)),
+      },
+    };
+  }
+
+  if (id === 608 && /characteristics of northbound APIs/i.test(rawPrompt)) {
+    return makeGroupMatch(
+      "Northbound API characteristic",
+      "Match each statement to a characteristic of an SDN northbound API.",
+    );
+  }
+
+  if (id === 720 && /distribution system port/i.test(rawPrompt)) {
+    const options = (Array.isArray(choices) ? choices : Object.values(choices ?? {})).map(cleanText);
+    const answer = options.flatMap((option, index) => /\b802\.3ad\b/i.test(option) ? [index] : []);
+    if (answer.length !== 1) return null;
+    return {
+      prompt: rawPrompt,
+      body: { options, answer: answer[0] },
+      explanation: "Cisco WLC link aggregation bundles the distribution-system ports using the IEEE 802.3ad standard.",
+    };
+  }
+
+  if (id === 1306 && /broadcast IP address/i.test(rawPrompt)) {
+    return answerItems.length === 4
+      ? {
+        prompt: "Match each listed IP address to its broadcast-address category.",
+        body: {
+          type: "match",
+          items: answerItems,
+          choices: ["Broadcast Address", "Not a Broadcast Address"],
+          answer: [0, 0, 0, 0],
+          matchStyle: "numbers",
+        },
+      }
+      : null;
+  }
+
+  return null;
+}
+
 /** Converts one bank row. Returns { question } or { problem } (why it couldn't be converted). */
 export function convertBankRow(row) {
   const rawText = cleanText(row.question_text);
@@ -339,8 +469,12 @@ export function convertBankRow(row) {
   if (!["single", "match", "drag_drop", "click_boxes", "image"].includes(questionType)) {
     return { problem: `unsupported question type: ${questionType}` };
   }
+  const remade = remakeSkippedQuestion(row, expandedChoices ?? choices);
   let body;
-  if (["match", "drag_drop", "click_boxes", "image"].includes(questionType)) {
+  if (remade) {
+    body = remade.body;
+    questionPrompt = remade.prompt;
+  } else if (["match", "drag_drop", "click_boxes", "image"].includes(questionType)) {
     const matching = matchingQuestion(row, choices);
     if (!matching.question) return { problem: matching.problem };
     body = { ...matching.question, type: questionType };
@@ -411,7 +545,7 @@ export function convertBankRow(row) {
         ? { hideExhibitImage: true }
         : {}),
       ...body,
-      explanation: cleanText(row.explanation) || findCcnaQuestionExplanation(prompt),
+      explanation: remade?.explanation || cleanText(row.explanation) || findCcnaQuestionExplanation(prompt),
       bankId: row.id,
       moduleNumber: null,
       moduleTitle: row.module,
