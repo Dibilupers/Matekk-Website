@@ -180,7 +180,7 @@ export default function FortiOSOfflineExam() {
 						<>
 							{question.exhibitImage && <ExhibitImage src={question.exhibitImage} className="mb-5" imageClassName="max-h-[32rem]" />}
 							{question.exhibit && <ExhibitText text={question.exhibit} className="mb-5" />}
-							<QuestionPrompt prompt={question.prompt} hasSeparateExhibit={Boolean(question.exhibit || question.exhibitImage)} />
+							<QuestionPrompt prompt={question.prompt} hasSeparateExhibit={Boolean(question.exhibit || question.exhibitImage)} offline />
 							<QuestionInput
 								key={session.currentIndex}
 								question={question}
@@ -205,7 +205,7 @@ export default function FortiOSOfflineExam() {
 							<h2 className="text-xl font-bold">Question {session.currentIndex + 1}</h2>
 							{question.exhibitImage && <ExhibitImage src={question.exhibitImage} className="my-5" imageClassName="max-h-[32rem]" />}
 							{question.exhibit && <ExhibitText text={question.exhibit} className="my-5" />}
-							<QuestionPrompt prompt={question.prompt} hasSeparateExhibit={Boolean(question.exhibit || question.exhibitImage)} />
+							<QuestionPrompt prompt={question.prompt} hasSeparateExhibit={Boolean(question.exhibit || question.exhibitImage)} offline />
 							<QuestionReview question={question} value={session.answers[session.currentIndex]} />
 							{question.explanation && <p className="mt-5 rounded-xl bg-[#fff3f2] px-4 py-3 text-sm leading-6 text-[#596983]"><strong className="text-[#b31d17]">Explanation: </strong>{question.explanation}</p>}
 							<div className="mt-7 flex flex-wrap justify-between gap-3">

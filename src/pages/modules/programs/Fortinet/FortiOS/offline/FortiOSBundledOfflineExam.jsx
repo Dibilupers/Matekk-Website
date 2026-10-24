@@ -211,6 +211,7 @@ export default function FortiOSOfflineExam() {
               prompt={question.prompt}
               imageUrl={question.exhibitImage}
               hasSeparateExhibit={Boolean(question.exhibitImage)}
+              offline
             />
             <QuestionInput
               question={question}
@@ -269,6 +270,7 @@ export default function FortiOSOfflineExam() {
                   prompt={item.prompt}
                   imageUrl={item.exhibitImage}
                   hasSeparateExhibit={Boolean(item.exhibitImage)}
+                  offline
                 />
                 <QuestionReview question={item} value={answers[index]} />
                 {item.explanation && (

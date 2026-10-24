@@ -22,6 +22,25 @@ function letter(index) {
 const MATCH_CHOICE_MOTION_MS = 900;
 const MATCH_CHOICE_STAGGER_MS = 40;
 
+function organizeOfflinePrompt(text) {
+	if (text.length < 180 || looksLikeCode(text)) return text;
+	const sentences = text.split(/(?<=[.!?])\s+(?=[A-Z0-9])/);
+	if (sentences.length < 3) return text;
+
+	const finalQuestionIndex = sentences.length - 1;
+	const hasFinalQuestion = /^(?:if|which|what|why|how|when|where|who)\b/i.test(sentences[finalQuestionIndex].trim()) &&
+		/\?\s*$/.test(sentences[finalQuestionIndex].trim());
+	const lastQuestionIndex = hasFinalQuestion ? finalQuestionIndex : -1;
+	const contextEnd = lastQuestionIndex > 0 ? lastQuestionIndex : sentences.length;
+	const paragraphs = [];
+	for (let index = 0; index < contextEnd; index += 2) {
+		paragraphs.push(sentences.slice(index, Math.min(index + 2, contextEnd)).join(" "));
+	}
+	if (lastQuestionIndex > 0) paragraphs.push(sentences[lastQuestionIndex]);
+	else if (contextEnd < sentences.length) paragraphs.push(sentences.slice(contextEnd).join(" "));
+	return paragraphs.join("\n\n");
+}
+
 // Answer choices that are router/switch commands (e.g. "R1(config)#ip route ...") are shown like a terminal:
 // monospace, one command per line (some imported questions had all commands squashed onto one line).
 const CLI_PROMPT = /(^|\s)[\w.-]+(\([\w-]+\))?[>#]/;
@@ -421,7 +440,8 @@ export function QuestionPrompt({ prompt, imageUrl, hasSeparateExhibit = Boolean(
 			</div>
 		);
 	}
-	const displayPrompt = (formattedOptions?.prompt ?? normalizedPrompt).replace(/\r\n/g, "\n").trim();
+	let displayPrompt = (formattedOptions?.prompt ?? normalizedPrompt).replace(/\r\n/g, "\n").trim();
+	if (offline) displayPrompt = organizeOfflinePrompt(displayPrompt);
 
 	const configuredMatch = displayPrompt.match(/\bConfigured (?:router IPv6 )?interfaces:\s*/i);
 	const promptBeforeConfigured = configuredMatch ? displayPrompt.slice(0, configuredMatch.index).trim() : displayPrompt;
