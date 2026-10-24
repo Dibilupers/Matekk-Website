@@ -125,7 +125,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 	const shouldShowExamResult = location.state?.showExamResult === true;
 	const linkedExamResult = location.state?.examResult;
 	const shouldStartNewAttempt = location.state?.retakeExam === true;
-	const { profile, isLoading: isAuthLoading } = useAuth();
+	const { profile, isLoading: isAuthLoading, isOnline } = useAuth();
 	const userId = profile?.userId;
 	// Each student's exam progress is saved separately (per signed-in user)
 	const sessionStorageKey = userId === null || userId === undefined
@@ -563,6 +563,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 									prompt={question.prompt}
 									imageUrl={question.exhibitImage}
 									hasSeparateExhibit={Boolean(question.exhibit || question.exhibitImage)}
+									regularWeight={isCompTIAExam && !isOnline}
 								/>
 								{/* Device output extracted from the question stays separate from its prompt. */}
 								{question.exhibit && (
@@ -714,7 +715,12 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 														{item.isCorrect ? "Correct" : "Incorrect"}
 													</span>
 												</div>
-												<h3 className="ccna-exam-review-question mt-4 text-[#17233d]">{item.prompt}</h3>
+												<h3
+													className="ccna-exam-review-question mt-4 text-[#17233d]"
+													style={isCompTIAExam && !isOnline ? { fontWeight: 400 } : undefined}
+												>
+													{item.prompt}
+												</h3>
 												{item.exhibitImage && (
 													<ExhibitImage src={item.exhibitImage} lazy className="mt-4" imageClassName="max-h-[26rem]" />
 												)}

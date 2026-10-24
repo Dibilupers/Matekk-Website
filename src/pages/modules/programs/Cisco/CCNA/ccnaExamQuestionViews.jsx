@@ -42,12 +42,12 @@ function organizeFortiOSOfflinePrompt(text) {
 	return { paragraphs };
 }
 
-function PromptText({ text, offline = false, fortiosOffline = false }) {
+function PromptText({ text, offline = false, regularWeight = offline, fortiosOffline = false }) {
 	if (!fortiosOffline) {
 		return (
 			<h2
-				className={`whitespace-pre-wrap text-base ${offline ? "font-normal" : "font-semibold"} leading-relaxed tracking-tight text-[#17233d] sm:text-lg`}
-				style={offline ? { fontWeight: 400 } : undefined}
+				className={`whitespace-pre-wrap text-base ${regularWeight ? "font-normal" : "font-semibold"} leading-relaxed tracking-tight text-[#17233d] sm:text-lg`}
+				style={regularWeight ? { fontWeight: 400 } : undefined}
 			>
 				{text}
 			</h2>
@@ -437,7 +437,7 @@ function InvalidQuestionMessage() {
 }
 
 // imageUrl: the question's picture, for pages that don't show it themselves (the exam page shows it separately)
-export function QuestionPrompt({ prompt, imageUrl, hasSeparateExhibit = Boolean(imageUrl), offline = false, fortiosOffline = false }) {
+export function QuestionPrompt({ prompt, imageUrl, hasSeparateExhibit = Boolean(imageUrl), offline = false, regularWeight = false, fortiosOffline = false }) {
 	const rawPrompt = String(prompt ?? "");
 	const readablePrompt = offline ? rawPrompt
 		.replace(/\r\n/g, "\n")
@@ -459,7 +459,7 @@ export function QuestionPrompt({ prompt, imageUrl, hasSeparateExhibit = Boolean(
 	if (optionTable) {
 		return (
 			<div className="mb-5 space-y-4 sm:mb-6">
-				<PromptText text={optionTable.prompt} offline={offline} fortiosOffline={fortiosOffline} />
+				<PromptText text={optionTable.prompt} offline={offline} regularWeight={regularWeight || offline} fortiosOffline={fortiosOffline} />
 				{imageUrl && <ExhibitImage src={imageUrl} lazy imageClassName="max-h-[32rem]" />}
 				<ExhibitText text={optionTable.exhibit} />
 			</div>
@@ -492,7 +492,7 @@ export function QuestionPrompt({ prompt, imageUrl, hasSeparateExhibit = Boolean(
 
 	return (
 		<div className="mb-5 space-y-4 sm:mb-6">
-			<PromptText text={promptText} offline={offline} fortiosOffline={fortiosOffline} />
+			<PromptText text={promptText} offline={offline} regularWeight={regularWeight || offline} fortiosOffline={fortiosOffline} />
 			{imageUrl && <ExhibitImage src={imageUrl} lazy imageClassName="max-h-[32rem]" />}
 			{exhibit && (
 				<section aria-label={exhibitTitle} className="overflow-hidden rounded-xl border border-[#d9e1ef] bg-[#f7f9fc]">
