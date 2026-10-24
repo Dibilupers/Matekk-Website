@@ -24,10 +24,10 @@ const MATCH_CHOICE_STAGGER_MS = 40;
 
 function organizeFortiOSOfflinePrompt(text) {
 	if (looksLikeCode(text) || /(?:^|\n)\s*(?:[-*•+]|\d+[.)])\s/m.test(text)) {
-		return { paragraphs: [text], questionIndex: -1 };
+		return { paragraphs: [text] };
 	}
 	const sentences = text.split(/(?<=[.!?])\s+(?=[A-Z0-9])/).map((sentence) => sentence.trim()).filter(Boolean);
-	if (!sentences.length) return { paragraphs: [text], questionIndex: -1 };
+	if (!sentences.length) return { paragraphs: [text] };
 
 	const paragraphs = [];
 	if (/^refer to (?:the )?exhibits?\b/i.test(sentences[0])) paragraphs.push(sentences.shift());
@@ -37,21 +37,20 @@ function organizeFortiOSOfflinePrompt(text) {
 	for (let index = 0; index < contextEnd; index += 2) {
 		paragraphs.push(sentences.slice(index, Math.min(index + 2, contextEnd)).join(" "));
 	}
-	const questionIndex = hasFinalQuestion ? paragraphs.length : -1;
 	if (hasFinalQuestion) paragraphs.push(finalSentence);
 	if (!paragraphs.length) paragraphs.push(text);
-	return { paragraphs, questionIndex };
+	return { paragraphs };
 }
 
 function PromptText({ text, fortiosOffline = false }) {
 	if (!fortiosOffline) {
 		return <h2 className="whitespace-pre-wrap text-base font-semibold leading-relaxed tracking-tight text-[#17233d] sm:text-lg">{text}</h2>;
 	}
-	const { paragraphs, questionIndex } = organizeFortiOSOfflinePrompt(text);
+	const { paragraphs } = organizeFortiOSOfflinePrompt(text);
 	return (
 		<div className="max-w-[72ch] space-y-3 text-sm leading-7 text-[#263654] sm:text-[15px] sm:leading-7">
 			{paragraphs.map((paragraph, index) => (
-				<p key={`${index}-${paragraph.slice(0, 24)}`} className={index === questionIndex ? "font-bold text-[#17233d]" : "font-normal text-[#263654]"}>
+				<p key={`${index}-${paragraph.slice(0, 24)}`} className="font-normal text-[#263654]">
 					{paragraph}
 				</p>
 			))}
