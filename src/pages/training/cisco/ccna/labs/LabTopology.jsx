@@ -161,13 +161,13 @@ function topologyViewBox(lab, state) {
 
 	if (!Number.isFinite(minX)) return { x: 0, y: 0, width: lab.layout.width, height: lab.layout.height };
 	const padding = 18;
-	const x = Math.floor(minX - padding);
-	const y = Math.floor(minY - padding);
+	const width = Math.max(lab.layout.width, Math.ceil(maxX - minX + padding * 2));
+	const height = Math.max(lab.layout.height, Math.ceil(maxY - minY + padding * 2));
 	return {
-		x,
-		y,
-		width: Math.ceil(maxX - minX + padding * 2),
-		height: Math.ceil(maxY - minY + padding * 2),
+		x: Math.floor((minX + maxX - width) / 2),
+		y: Math.floor((minY + maxY - height) / 2),
+		width,
+		height,
 	};
 }
 
