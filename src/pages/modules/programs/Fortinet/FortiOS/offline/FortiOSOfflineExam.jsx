@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { ArrowLeft, ChevronRight, Clock3, RotateCcw } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { useAuth } from "../../../../../../context/auth-context";
+import ExplanationWithLinks from "../../../../../../components/ExplanationWithLinks";
 import { isAnswerCorrect, isQuestionAnswered, isValidQuestion } from "../../../../../../utils/ccnaExamGrading";
 import { ExhibitImage, ExhibitText } from "../../../Cisco/CCNA/ccnaExhibit";
 import { QuestionInput, QuestionPrompt, QuestionReview } from "../../../Cisco/CCNA/ccnaExamQuestionViews";

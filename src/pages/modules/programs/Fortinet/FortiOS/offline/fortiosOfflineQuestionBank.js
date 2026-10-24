@@ -1,8 +1,12 @@
 import API_URL from "../../../../../../config/api";
 import { isValidQuestion } from "../../../../../../utils/ccnaExamGrading";
+import FORTIOS_OFFLINE_QUESTIONS from "./fortiosOfflineQuestions.json";
 
 const FORTIOS_MODULE_LABELS = new Set(["fortios", "fortinet fortios", "fortigate administrator"]);
 const FORTIOS_OFFLINE_CACHE_NAME = "matekk-fortios-offline-question-bank-v1";
+const BUNDLED_EXPLANATIONS = new Map(
+	FORTIOS_OFFLINE_QUESTIONS.map((question) => [question.id, question.explanation]),
+);
 
 function normalizeQuestionType(question) {
 	const type = String(question?.type ?? question?.question_type ?? "")
@@ -21,13 +25,16 @@ function normalizeQuestion(question) {
 	const type = normalizeQuestionType(question);
 	if (!FORTIOS_MODULE_LABELS.has(moduleName) || !type || typeof question.prompt !== "string" || !question.prompt.trim()) return null;
 
+	const bundledExplanation = BUNDLED_EXPLANATIONS.get(Number(question.id ?? question.bankId)) || "";
 	const normalized = {
 		...question,
 		id: Number(question.id ?? question.bankId),
 		type,
 		prompt: question.prompt.trim(),
-		explanation: typeof question.explanation === "string" ? question.explanation : "",
-		source: typeof question.source === "string" ? question.source : "",
+		explanation: typeof question.explanation === "string"
+			? (question.explanation.trim() || bundledExplanation)
+			: bundledExplanation,
+		source: typeof question.source === "string" ? question.source.trim() : "",
 		exhibitImage: question.exhibitImage || question.imageUrl || undefined,
 	};
 	if (!Number.isInteger(normalized.id)) return null;

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ArrowLeft, ArrowRight, CheckCircle2, RotateCcw } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../../../../../context/auth-context";
+import ExplanationWithLinks from "../../../../../../components/ExplanationWithLinks";
 import { isAnswerCorrect, isQuestionAnswered } from "../../../../../../utils/ccnaExamGrading";
 import { QuestionInput, QuestionPrompt, QuestionReview } from "../../../Cisco/CCNA/ccnaExamQuestionViews";
 import FortiOSQuestionExplanation from "./FortiOSQuestionExplanation";

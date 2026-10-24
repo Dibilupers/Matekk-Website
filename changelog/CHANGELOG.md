@@ -18,6 +18,74 @@ Question count check: The two supplied exports contain 101 unique FortiOS IDs (3
 
 Commits included in this push:
 
+- `df4a7dc` — Restored CCNA raw-bank conversion for choice IDs and question-type aliases, and merged the converted rows with the validated all-usable bank without duplicate question IDs. Frontend only; no API/backend changes.
+
+Validation before push: four focused CCNA converter/loader tests, targeted ESLint, frontend production build, and Git whitespace checks passed.
+
+## 2026-10-24 — `main`
+
+Commits included in this push:
+
+- `d7d5472` — Made FortiOS explanation source links visually clear and easier to click.
+- `b987de3` — Recorded the source-link change in the push changelog.
+- `a3bb0f8` — Merged the latest `origin/main` updates before publishing.
+
+Validation before push: production frontend build after syncing the latest `main`, targeted ESLint for the source-link component, and Git whitespace checks passed.
+
+## 2026-10-24 — `main`
+
+Commits included in this push:
+
+- `61d9f90` — Fixed the All Questions exam filter to use the converted question's `moduleTitle` field, so CCNA bank questions are not all discarded.
+
+Validation before push: targeted ESLint, frontend production build, and Git whitespace checks passed.
+
+## 2026-10-24 — `main`
+
+Commits included in this push:
+
+- `8181753` — Restored the 157 skipped CCNA question rows by converting the raw question bank in the frontend and remaking its unsupported question formats. No API/backend changes.
+
+Validation before push: targeted ESLint, frontend production build, conversion and grading checks for all 157 report rows, and Git whitespace checks passed.
+
+## 2026-10-24 — `main`
+
+Commits included in this push:
+
+- `b8ae9e2` — Adjusted device-detail text baselines so labels no longer overlap their backplates in practice and exam topologies.
+
+Validation before push: targeted ESLint, frontend production build, browser verification of the practice topology label, and Git whitespace checks passed. The build reports the existing large-bundle warning.
+
+## 2026-10-24 — `main`
+
+Commits included in this push:
+
+- `40c0826` — Prevented the first device added to a practice topology sandbox from being enlarged to fill the diagram.
+
+Validation before push: targeted ESLint, frontend production build, browser verification of the first router's displayed size, and Git whitespace checks passed. The build reports the existing large-bundle warning.
+
+## 2026-10-24 — `main`
+
+Commits included in this push:
+
+- `65890d1` — Centered CCNA topology diagrams, improved practice-lab label framing, and added an interactive practice topology sandbox with a redesigned animated toggle card.
+- `cc55111` — Merged the latest `origin/main` updates before publishing.
+
+Validation before push: targeted ESLint, frontend production build, and Git whitespace checks passed. The build reports the existing large-bundle warning.
+
+## 2026-10-24 — `main`
+
+Commits included in this push:
+
+- `c79ca3c` — Added FortiOS explanation source links and populated the bundled offline questions with explanations.
+- `b1b41a4` — Merged `emman` into the latest `main`, preserving the main-branch FortiOS offline question normalization changes.
+
+Validation before push: frontend production build, targeted ESLint checks for the changed exam files, and Git whitespace checks passed. Full-repository lint still reports existing findings outside the merge changes.
+
+## 2026-10-24 — `main`
+
+Commits included in this push:
+
 - `9c20772` — Randomized questions in All Questions Exams and improved shared exam topology/image exhibits with clearer labels, spacing, and framing.
 - `2448a9f` — Added the changelog entry for this push.
 - `f04b84d` — Merged the latest `main` changes before publishing.

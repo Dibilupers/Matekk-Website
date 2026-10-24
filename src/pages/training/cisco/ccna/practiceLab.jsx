@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, useSearchParams } from "react-router-dom";
-import { CheckCircle2, Circle, Download, Eye, Lightbulb, Maximize2, RotateCcw, X, XCircle, ZoomIn, ZoomOut } from "lucide-react";
+import { CheckCircle2, Circle, Download, Eye, Lightbulb, Maximize2, Network, RotateCcw, X, XCircle, ZoomIn, ZoomOut } from "lucide-react";
 import { PRACTICE_LABS } from "./labs/labDefinitions";
 import { canReach, configCommands, createLabState, execute, fullIfName, promptFor } from "./labs/labEngine";
 import LabTopology from "./labs/LabTopology";
+import TopologySandbox from "./labs/TopologySandbox";
 
 /* ==========================================================================
    CCNA Online Practice Labs — three labs of increasing difficulty.
@@ -226,6 +227,7 @@ function LabWorkspace({ lab, selectLab, fromDashboard }) {
 	const [showSolution, setShowSolution] = useState(false);
 	const [examMode, setExamMode] = useState(false);
 	const [topologyOpen, setTopologyOpen] = useState(false);
+	const [showTopologySandbox, setShowTopologySandbox] = useState(false);
 	const closeTopology = useCallback(() => setTopologyOpen(false), []);
 	const [submitted, setSubmitted] = useState(false);
 	const termRef = useRef(null);
@@ -333,7 +335,35 @@ function LabWorkspace({ lab, selectLab, fromDashboard }) {
 						</button>
 					))}
 				</div>
+				<div>
+					<button
+						type="button"
+						onClick={() => setShowTopologySandbox((visible) => !visible)}
+						aria-expanded={showTopologySandbox}
+						aria-controls="ccna-topology-sandbox"
+						className={`w-full text-left p-4 rounded-2xl border-2 transition duration-200 ease-out hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1775EE] focus-visible:ring-offset-2 motion-reduce:transform-none motion-reduce:transition-none ${showTopologySandbox ? "border-[#1775EE] bg-white shadow-md" : "border-transparent bg-[#EBF5FD] hover:shadow-md"}`}
+					>
+						<span className="flex items-center gap-2 font-bold text-[#17233d]">
+							<Network size={17} className="shrink-0 text-[#1775EE]" />
+							{showTopologySandbox ? "Close topology sandbox" : "Build your own topology"}
+						</span>
+						<span className="block mt-1 text-sm text-gray-600">Create a small network and test it with router commands and ping.</span>
+					</button>
+				</div>
 			</section>
+
+			<div
+				id="ccna-topology-sandbox"
+				aria-hidden={!showTopologySandbox}
+				inert={!showTopologySandbox}
+				className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out motion-reduce:transition-none ${showTopologySandbox ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}
+			>
+				<div className="min-h-0 overflow-hidden">
+					<div className="pt-1">
+						<TopologySandbox />
+					</div>
+				</div>
+			</div>
 
 			{/* Network diagram (full width) */}
 			<div className="p-5 rounded-2xl bg-[#EBF5FD]">
