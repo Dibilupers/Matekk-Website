@@ -6,6 +6,14 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `df4a7dc` — Restored CCNA raw-bank conversion for choice IDs and question-type aliases, and merged the converted rows with the validated all-usable bank without duplicate question IDs. Frontend only; no API/backend changes.
+
+Validation before push: four focused CCNA converter/loader tests, targeted ESLint, frontend production build, and Git whitespace checks passed.
+
+## 2026-10-24 — `main`
+
+Commits included in this push:
+
 - `d7d5472` — Made FortiOS explanation source links visually clear and easier to click.
 - `b987de3` — Recorded the source-link change in the push changelog.
 - `a3bb0f8` — Merged the latest `origin/main` updates before publishing.
