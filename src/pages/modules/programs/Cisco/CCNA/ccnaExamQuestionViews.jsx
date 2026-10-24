@@ -52,7 +52,7 @@ function PromptText({ text, fortiosOffline = false }) {
 	}
 	const { paragraphs, questionIndex } = organizeFortiOSOfflinePrompt(text);
 	return (
-		<div className="max-w-[72ch] space-y-3 text-[15px] leading-7 text-[#263654] sm:text-base sm:leading-7">
+		<div className="max-w-[72ch] space-y-3 text-sm leading-7 text-[#263654] sm:text-[15px] sm:leading-7">
 			{paragraphs.map((paragraph, index) => (
 				<p key={`${index}-${paragraph.slice(0, 24)}`} className={index === questionIndex ? "font-semibold text-[#17233d]" : "font-medium"}>
 					{paragraph}
