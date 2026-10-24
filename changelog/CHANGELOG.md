@@ -6,6 +6,15 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `65890d1` — Centered CCNA topology diagrams, improved practice-lab label framing, and added an interactive practice topology sandbox with a redesigned animated toggle card.
+- `cc55111` — Merged the latest `origin/main` updates before publishing.
+
+Validation before push: targeted ESLint, frontend production build, and Git whitespace checks passed. The build reports the existing large-bundle warning.
+
+## 2026-10-24 — `main`
+
+Commits included in this push:
+
 - `c79ca3c` — Added FortiOS explanation source links and populated the bundled offline questions with explanations.
 - `b1b41a4` — Merged `emman` into the latest `main`, preserving the main-branch FortiOS offline question normalization changes.
 
