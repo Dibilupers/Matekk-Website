@@ -19,7 +19,7 @@ export function looksLikeCode(text) {
 	if (!lines.length) return false;
 	if (/^[{[]/.test(lines[0]) || lines.filter((line) => DATA_LINE.test(line)).length >= 2) return true;
 	// A command prompt anywhere (R1#, SW1(config-if)#) is a sure sign
-	if (lines.some((line) => /(?:^|\s)[\w.-]+(?:\([\w-]+\))?#\S/.test(line))) return true;
+	if (lines.some((line) => /^\s*[A-Za-z0-9_][\w.-]*(?:\([\w-]+\))?#\S/.test(line))) return true;
 	// Device-name labels don't count either way; a bare "SW1" answer is just a name
 	const body = lines.filter((line) => !DEVICE_LABEL.test(line));
 	const commandLines = body.filter((line) => COMMAND_LINE.test(line)).length;

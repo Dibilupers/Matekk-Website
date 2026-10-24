@@ -24,7 +24,8 @@ const MATCH_CHOICE_STAGGER_MS = 40;
 
 // Answer choices that are router/switch commands (e.g. "R1(config)#ip route ...") are shown like a terminal:
 // monospace, one command per line (some imported questions had all commands squashed onto one line).
-const CLI_PROMPT = /(^|\s)[\w.-]+(\([\w-]+\))?[>#]/;
+// A prompt must start the line. Matching any `>` also catches ordinary prose such as `A -> B`.
+const CLI_PROMPT = /^\s*[A-Za-z0-9_][\w.-]*(?:\([\w-]+\))?[>#](?:\s|\S|$)/m;
 const isCliText = (text) => typeof text === "string" && CLI_PROMPT.test(text);
 const splitCliLines = (text) => text.replace(/[ \t]+(?=[\w.-]+(\([\w-]+\))?[>#])/g, "\n");
 
