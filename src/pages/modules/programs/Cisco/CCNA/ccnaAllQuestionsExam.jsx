@@ -88,7 +88,7 @@ export default function CCNAAllQuestionsExam() {
 				skippedCount: 0,
 			});
 		bankRequest
-				.then(({ questions: validQuestions }) => {
+			.then(({ questions: validQuestions }) => {
 				const orderedQuestions = [...validQuestions]
 					.filter((item) => !isOnline || isCcnaQuestionModule(item.module))
 					.map(applyNativeExhibit)
