@@ -26,23 +26,20 @@ function organizeFortiOSOfflinePrompt(text) {
 	if (looksLikeCode(text) || /(?:^|\n)\s*(?:[-*•+]|\d+[.)])\s/m.test(text)) {
 		return { paragraphs: [text], questionIndex: -1 };
 	}
-	const sentences = text.split(/(?<=[.!?])\s+(?=[A-Z0-9])/);
-	if (sentences.length < 2) return { paragraphs: [text], questionIndex: -1 };
+	const sentences = text.split(/(?<=[.!?])\s+(?=[A-Z0-9])/).map((sentence) => sentence.trim()).filter(Boolean);
+	if (!sentences.length) return { paragraphs: [text], questionIndex: -1 };
 
-	const finalQuestionIndex = sentences.length - 1;
-	const finalSentence = sentences[finalQuestionIndex].trim();
-	const hasFinalQuestion = /^(?:if|which|what|why|how|when|where|who)\b/i.test(finalSentence) && /\?\s*$/.test(finalSentence);
-	if (!hasFinalQuestion && (sentences.length < 3 || text.length < 180)) {
-		return { paragraphs: [text], questionIndex: -1 };
-	}
-
-	const contextEnd = hasFinalQuestion ? finalQuestionIndex : sentences.length;
 	const paragraphs = [];
+	if (/^refer to (?:the )?exhibits?\b/i.test(sentences[0])) paragraphs.push(sentences.shift());
+	const finalSentence = sentences.at(-1) ?? "";
+	const hasFinalQuestion = /\?\s*$/.test(finalSentence);
+	const contextEnd = hasFinalQuestion ? sentences.length - 1 : sentences.length;
 	for (let index = 0; index < contextEnd; index += 2) {
 		paragraphs.push(sentences.slice(index, Math.min(index + 2, contextEnd)).join(" "));
 	}
 	const questionIndex = hasFinalQuestion ? paragraphs.length : -1;
 	if (hasFinalQuestion) paragraphs.push(finalSentence);
+	if (!paragraphs.length) paragraphs.push(text);
 	return { paragraphs, questionIndex };
 }
 
@@ -54,7 +51,7 @@ function PromptText({ text, fortiosOffline = false }) {
 	return (
 		<div className="max-w-[72ch] space-y-3 text-sm leading-7 text-[#263654] sm:text-[15px] sm:leading-7">
 			{paragraphs.map((paragraph, index) => (
-				<p key={`${index}-${paragraph.slice(0, 24)}`} className={index === questionIndex ? "font-semibold text-[#17233d]" : "font-medium"}>
+				<p key={`${index}-${paragraph.slice(0, 24)}`} className={index === questionIndex ? "font-bold text-[#17233d]" : "font-normal text-[#263654]"}>
 					{paragraph}
 				</p>
 			))}
