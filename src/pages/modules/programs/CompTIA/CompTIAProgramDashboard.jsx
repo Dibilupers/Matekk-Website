@@ -327,13 +327,17 @@ export default function CompTIAProgramDashboard({ program }) {
 								</button>
 								<button
 									type="button"
-									className="flex h-12 items-center gap-2 rounded-full bg-[#c8102e] px-5 text-sm font-bold text-white shadow-[0_10px_20px_rgba(200,16,46,0.16)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-[#a80e27] hover:shadow-[0_14px_26px_rgba(200,16,46,0.24)] active:translate-y-0 sm:h-[58px] sm:px-7 sm:text-base"
+									disabled
+									aria-label="Start Quiz (coming soon)"
+									className="flex h-12 cursor-not-allowed items-center gap-2 rounded-full bg-[#c8102e] px-5 text-sm font-bold text-white opacity-40 sm:h-[58px] sm:px-7 sm:text-base"
 								>
 									Start Quiz <ArrowRight size={18} />
 								</button>
 								<button
 									type="button"
-									className="flex h-12 items-center gap-2 rounded-full border border-[#c8102e] px-5 text-sm font-bold text-[#c8102e] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-[#fff5f6] hover:shadow-[0_10px_20px_rgba(200,16,46,0.1)] active:translate-y-0 motion-reduce:transition-none sm:h-[58px] sm:px-7 sm:text-base"
+									disabled
+									aria-label="View All Modules (coming soon)"
+									className="flex h-12 cursor-not-allowed items-center gap-2 rounded-full border border-[#c8102e] px-5 text-sm font-bold text-[#c8102e] opacity-40 sm:h-[58px] sm:px-7 sm:text-base"
 								>
 									View All Modules <ArrowRight size={18} />
 								</button>

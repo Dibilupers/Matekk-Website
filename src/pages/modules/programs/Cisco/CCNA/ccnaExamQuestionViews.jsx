@@ -481,6 +481,34 @@ export function QuestionInput({ question, value, onChange, disabled }) {
 		? "group"
 		: Array.isArray(question.answer) ? matchMode(question) : hasGroupSizes ? "group" : isOneToOne ? "assign" : "select";
 
+	if (type === "study") {
+		return (
+			<label className="flex items-start gap-3 rounded-xl border border-[#d9e1ef] bg-[#f8fafb] p-4 text-sm text-[#526584]">
+				<input
+					type="checkbox"
+					checked={value === true}
+					disabled={disabled}
+					onChange={(event) => onChange(event.target.checked)}
+					className="mt-0.5 h-4 w-4 accent-[#005b6b]"
+				/>
+				<span>This is a review-only item and will not affect your score. Mark it reviewed to continue.</span>
+			</label>
+		);
+	}
+	if (type === "text") {
+		return (
+			<label className="block space-y-2 text-sm font-semibold text-[#526584]">
+				<span>Your answer</span>
+				<input
+					type="text"
+					value={typeof value === "string" ? value : ""}
+					disabled={disabled}
+					onChange={(event) => onChange(event.target.value)}
+					className="min-h-12 w-full rounded-xl border border-[#cbd5e1] bg-white px-4 py-3 text-base text-[#263654] outline-none focus:border-[#005b6b] focus:ring-2 focus:ring-[#cfe7ea] disabled:cursor-default disabled:bg-[#f5f9f9]"
+				/>
+			</label>
+		);
+	}
 	if (isMatching && !hasMatchContent(question)) return <InvalidQuestionMessage />;
 	if (!isMatching && !Array.isArray(question?.options)) return <InvalidQuestionMessage />;
 	if (type === "multi" && (!Array.isArray(question.answer) || question.answer.length === 0)) {
@@ -579,6 +607,23 @@ export function QuestionReview({ question, value }) {
 	const isMatching = ["match", "drag_drop", "click_boxes", "image"].includes(type);
 	if (isMatching && !hasMatchContent(question, true)) return <InvalidQuestionMessage />;
 	if (!isMatching && !isValidQuestion(question)) return <InvalidQuestionMessage />;
+
+	if (type === "study") {
+		return (
+			<div className="space-y-2 rounded-xl border border-[#e1e8ef] bg-[#f8fafb] px-4 py-3 text-sm text-[#526584]">
+				<p className="font-bold text-[#42516b]">Ungraded review item · {value === true ? "Marked reviewed" : "Not marked reviewed"}</p>
+				<p>{question.studyNote}</p>
+			</div>
+		);
+	}
+	if (type === "text") {
+		return (
+			<div className="space-y-1 rounded-xl border border-[#e1e8ef] bg-white px-4 py-3 text-sm text-[#526584]">
+				<p>Your answer: <strong className="break-words text-[#263654]">{typeof value === "string" && value.trim() ? value : "No answer"}</strong></p>
+				<p>Correct answer: <strong className="break-words text-[#287849]">{question.answer}</strong></p>
+			</div>
+		);
+	}
 
 	if (isMatching && (type === "image" || matchMode(question) === "group")) {
 		const current = Array.isArray(value) ? value : [];

@@ -15,6 +15,13 @@ function isMatchingQuestion(question) {
 
 export function isValidQuestion(question) {
 	const type = questionType(question);
+	if (type === "study") return typeof question?.prompt === "string" && question.prompt.trim().length > 0;
+	if (type === "text") {
+		return typeof question?.prompt === "string" &&
+			question.prompt.trim().length > 0 &&
+			typeof question.answer === "string" &&
+			question.answer.trim().length > 0;
+	}
 	if (isMatchingQuestion(question)) {
 		return Array.isArray(question.items) &&
 			Array.isArray(question.choices) &&
@@ -43,6 +50,8 @@ export function requiredSelections(question) {
 
 export function isQuestionAnswered(question, value) {
 	const type = questionType(question);
+	if (type === "study") return value === true;
+	if (type === "text") return typeof value === "string" && value.trim().length > 0;
 	if (type === "multi") return Array.isArray(question?.answer) && Array.isArray(value) && value.length === question.answer.length;
 	if (isMatchingQuestion(question)) {
 		return Array.isArray(question?.items) &&
@@ -56,6 +65,12 @@ export function isQuestionAnswered(question, value) {
 
 export function isAnswerCorrect(question, value) {
 	const type = questionType(question);
+	if (type === "study") return false;
+	if (type === "text") {
+		const normalize = (answer) => answer.trim().replace(/\s+/g, " ").toLocaleLowerCase();
+		return typeof value === "string" && typeof question?.answer === "string" &&
+			normalize(value) === normalize(question.answer);
+	}
 	if (type === "multi") {
 		if (!Array.isArray(question?.answer) || !Array.isArray(value) || value.length !== question.answer.length) return false;
 		const picked = [...value].sort((a, b) => a - b);
@@ -67,6 +82,10 @@ export function isAnswerCorrect(question, value) {
 			question.answer.every((a, i) => value[i] === a);
 	}
 	return value === question?.answer;
+}
+
+export function isScoredQuestion(question) {
+	return questionType(question) !== "study";
 }
 
 // How a matching question is answered on screen:

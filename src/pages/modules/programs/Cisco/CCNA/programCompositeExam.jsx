@@ -11,7 +11,7 @@ import TrainingLogo from "../../../../../assets/MATEKK_training_logo.png";
 import { CCNA_EXAMS } from "./ccnaExamFormats";
 import { createCcnaMockExamAttemptId, saveCcnaMockExamResult } from "../../../../../utils/ccnaGradebook";
 import { getCcnaExamSessionKey } from "../../../../../utils/ccnaShortExamSession";
-import { isAnswerCorrect, isQuestionAnswered, isValidQuestion } from "../../../../../utils/ccnaExamGrading";
+import { isAnswerCorrect, isQuestionAnswered, isScoredQuestion, isValidQuestion } from "../../../../../utils/ccnaExamGrading";
 import { QuestionInput, QuestionPrompt, QuestionReview } from "./ccnaExamQuestionViews";
 import { saveGradebookAssessment } from "../../../../../utils/gradebookApi";
 import { splitPromptExhibit } from "../../../../../utils/splitPromptExhibit";
@@ -179,6 +179,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 	const unansweredCount = questions.length - answeredCount;
 	const answeredPercentage = questions.length > 0 ? Math.round((answeredCount / questions.length) * 100) : 0;
 	const flaggedCount = Object.values(flaggedQuestions).filter(Boolean).length;
+	const scoredQuestionCount = questions.filter(isScoredQuestion).length;
 	const score = questions.reduce(
 		(total, item, index) => total + Number(isAnswerCorrect(item, answers[index])),
 		0,
@@ -186,27 +187,32 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 	const animatedScore = animatedResult.attempt === examAttempt ? animatedResult.score : 0;
 	const animatedElapsedSeconds = animatedResult.attempt === examAttempt ? animatedResult.elapsedSeconds : 0;
 	const resultScore = isViewingSavedResult ? linkedExamResult.score : score;
-	const resultMaxScore = isViewingSavedResult ? linkedExamResult.maxScore : questions.length;
-	const resultPercentage = Math.round((resultScore / resultMaxScore) * 100);
+	const resultMaxScore = isViewingSavedResult ? linkedExamResult.maxScore : scoredQuestionCount;
+	const resultPercentage = resultMaxScore > 0 ? Math.round((resultScore / resultMaxScore) * 100) : 0;
 	const displayedScore = isViewingSavedResult ? resultScore : animatedScore;
-	const displayedPercentage = isViewingSavedResult ? resultPercentage : Math.round((animatedScore / questions.length) * 100);
+	const displayedPercentage = isViewingSavedResult
+		? resultPercentage
+		: scoredQuestionCount > 0 ? Math.round((animatedScore / scoredQuestionCount) * 100) : 0;
 	const progressHue = displayedPercentage <= 50
 		? displayedPercentage * 1.2
 		: 60 + (displayedPercentage - 50) * 1.2;
 	const progressColor = `hsl(${progressHue} 75% 42%)`;
-	const examPassed = (isViewingSavedResult ? resultPercentage : Math.round((score / questions.length) * 100)) >= EXAM_PASS_PERCENTAGE;
+	const examPassed = (isViewingSavedResult
+		? resultPercentage
+		: scoredQuestionCount > 0 ? Math.round((score / scoredQuestionCount) * 100) : 0) >= EXAM_PASS_PERCENTAGE;
 	const showBackToTop = backToTopVisibility.attempt === examAttempt && backToTopVisibility.visible;
 	const reviewQuestions = questions
 		.map((item, index) => ({
 			...item,
 			index,
 			selectedAnswer: answers[index],
+			isScored: isScoredQuestion(item),
 			isCorrect: isAnswerCorrect(item, answers[index]),
 		}))
 		.filter((item) =>
 			answerFilter === "all" ||
 			(answerFilter === "correct" && item.isCorrect) ||
-			(answerFilter === "incorrect" && !item.isCorrect),
+			(answerFilter === "incorrect" && item.isScored && !item.isCorrect),
 		);
 	const [isDark, setIsDark] = useState(false);
 	const [gradebookSaveError, setGradebookSaveError] = useState(null);
@@ -238,10 +244,10 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 			id: attemptId,
 			title: exam.name,
 			score,
-			maxScore: questions.length,
+			maxScore: scoredQuestionCount,
 			submittedAt,
 		});
-	}, [attemptId, exam.name, isSubmitted, isViewingSavedResult, programKey, questions.length, score, submittedAt, userId]);
+	}, [attemptId, exam.name, isSubmitted, isViewingSavedResult, programKey, scoredQuestionCount, score, submittedAt, userId]);
 
 	useEffect(() => {
 		if (isAuthLoading || !isSubmitted || isViewingSavedResult || isPracticeOnlyExam || !userId || !Number.isFinite(submittedAt)) return undefined;
@@ -256,7 +262,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 			examFormat: examKey,
 			title: programKey ? `${exam.name} · ${programName}` : exam.name,
 			score,
-			maxScore: questions.length,
+			maxScore: scoredQuestionCount,
 			submittedAt,
 		}, userId).then(() => {
 			if (isActive) {
@@ -274,7 +280,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 		return () => {
 			isActive = false;
 		};
-	}, [attemptId, exam.name, examKey, gradebookSaveAttempt, isAuthLoading, isPracticeOnlyExam, isSubmitted, isViewingSavedResult, programKey, programName, questions.length, score, submittedAt, userId]);
+	}, [attemptId, exam.name, examKey, gradebookSaveAttempt, isAuthLoading, isPracticeOnlyExam, isSubmitted, isViewingSavedResult, programKey, programName, scoredQuestionCount, score, submittedAt, userId]);
 
 	function submitExam(finishedAt = Date.now()) {
 		setSubmittedAt((previousSubmittedAt) => previousSubmittedAt ?? finishedAt);
@@ -684,7 +690,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 									<div className="mt-6 flex flex-wrap justify-center gap-2" aria-label="Filter answer review">
 										{[
 											{ value: "all", label: `All (${questions.length})` },
-											{ value: "incorrect", label: `Incorrect (${questions.length - score})` },
+											{ value: "incorrect", label: `Incorrect (${scoredQuestionCount - score})` },
 											{ value: "correct", label: `Correct (${score})` },
 										].map((filter) => (
 											<button
@@ -709,9 +715,11 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 														Question {item.index + 1} of {questions.length}
 														{item.moduleNumber && ` · Module ${item.moduleNumber}: ${item.moduleTitle}`}
 													</span>
-													<span className={`rounded-full px-3 py-1 text-xs font-bold ${item.isCorrect ? "bg-[#e8f3f4] text-[#005b6b]" : "bg-[#fff0e8] text-[#b4532a]"
+													<span className={`rounded-full px-3 py-1 text-xs font-bold ${!item.isScored
+														? "bg-[#edf1f5] text-[#526584]"
+														: item.isCorrect ? "bg-[#e8f3f4] text-[#005b6b]" : "bg-[#fff0e8] text-[#b4532a]"
 														}`}>
-														{item.isCorrect ? "Correct" : "Incorrect"}
+														{!item.isScored ? "Ungraded" : item.isCorrect ? "Correct" : "Incorrect"}
 													</span>
 												</div>
 												<h3 className="ccna-exam-review-question mt-4 text-[#17233d]">{item.prompt}</h3>
