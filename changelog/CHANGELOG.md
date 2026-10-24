@@ -6,6 +6,14 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `ddf529a` — Changed CCNA questions 181, 382, and 608 to match their original drag-and-drop target layouts, corrected question 181's target and answer mapping, and labeled the recreated drop targets. No API/backend changes.
+
+Validation before push: five focused CCNA converter tests, targeted ESLint, frontend production build, and Git whitespace checks passed.
+
+## 2026-10-24 — `Noah`
+
+Commits included in this push:
+
 - `cfc40da` — Added a finish-exam confirmation to the CCNA All Questions exam and remade CCNA/WLC exhibits as SVGs, including missing exhibits for questions 260, 361, 854, 181, 382, 608, and 1306. No API/backend changes.
 
 Validation before push: targeted ESLint, frontend production build, Git whitespace checks, and browser checks confirming all nine remade exhibits' text stays within bounds without detected text or label/input overlap.
