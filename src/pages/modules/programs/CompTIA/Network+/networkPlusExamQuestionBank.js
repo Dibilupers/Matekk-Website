@@ -9,17 +9,46 @@ function hasCompTIAModule(question, programName) {
 		moduleName.trim().toLocaleLowerCase() === `comptia ${programName}`.toLocaleLowerCase();
 }
 
-function isSingleChoiceQuestion(question) {
-	const type = String(question?.type ?? question?.question_type ?? "")
-		.trim()
-		.toLowerCase()
-		.replace(/[_-]+/g, " ");
-	return ["single", "single choice", "multiple choice", "mcq", "radio"].includes(type);
-}
-
-function normalizeMultipleChoiceQuestion(question, programName) {
+function normalizeCompTIAQuestion(question, programName) {
 	if (!question || typeof question !== "object" || Array.isArray(question)) {
 		throw new TypeError(`The CompTIA ${programName} question bank contains a malformed question.`);
+	}
+	if (question.type === "study") {
+		if (typeof question.prompt !== "string" || !question.prompt.trim() || typeof question.studyNote !== "string" || !question.studyNote.trim()) {
+			throw new TypeError(`The CompTIA ${programName} question bank contains an invalid study item.`);
+		}
+		return { ...question, prompt: question.prompt.trim(), type: "study" };
+	}
+	if (question.type === "text") {
+		if (typeof question.prompt !== "string" || !question.prompt.trim() || typeof question.answer !== "string" || !question.answer.trim()) {
+			throw new TypeError(`The CompTIA ${programName} question bank contains a fill-in-the-blank question with an invalid prompt or answer.`);
+		}
+		const normalized = { ...question, prompt: question.prompt.trim(), answer: question.answer.trim(), type: "text" };
+		if (!isValidQuestion(normalized)) {
+			throw new TypeError(`The CompTIA ${programName} question bank contains an invalid fill-in-the-blank question.`);
+		}
+		return normalized;
+	}
+	if (question.type === "multi") {
+		if (
+			typeof question.prompt !== "string" ||
+			!question.prompt.trim() ||
+			!Array.isArray(question.options) ||
+			question.options.length < 2 ||
+			!question.options.every((option) => typeof option === "string" && option.trim())
+		) {
+			throw new TypeError(`The CompTIA ${programName} question bank contains a multiple-select question with an invalid prompt or options.`);
+		}
+		const normalized = {
+			...question,
+			type: "multi",
+			prompt: question.prompt.trim(),
+			options: question.options.map((option) => option.trim()),
+		};
+		if (!isValidQuestion(normalized)) {
+			throw new TypeError(`The CompTIA ${programName} question bank contains an invalid multiple-select question.`);
+		}
+		return normalized;
 	}
 	if (
 		typeof question.prompt !== "string" ||
@@ -43,6 +72,11 @@ function normalizeMultipleChoiceQuestion(question, programName) {
 		prompt: question.prompt.trim(),
 		options: question.options.map((option) => option.trim()),
 	};
+	if (!["single", "single choice", "multiple choice", "mcq", "radio"].includes(
+		String(question.type ?? question.question_type ?? "single").trim().toLowerCase().replace(/[_-]+/g, " "),
+	)) {
+		throw new TypeError(`The CompTIA ${programName} question bank contains an unsupported question type.`);
+	}
 	if (!isValidQuestion(normalized)) {
 		throw new TypeError(`The CompTIA ${programName} question bank contains an invalid multiple-choice question.`);
 	}
@@ -100,16 +134,7 @@ export async function loadCompTIAExamQuestions(programName, { cacheForOffline = 
 		throw new Error(`No questions labeled "${certificationName}" were found in the usable question bank.`);
 	}
 
-	const multipleChoiceQuestions = certificationQuestions.filter(isSingleChoiceQuestion);
-	const skippedQuestionCount = certificationQuestions.length - multipleChoiceQuestions.length;
-	if (skippedQuestionCount > 0) {
-		console.info(`${certificationName}: excluded ${skippedQuestionCount} non-multiple-choice question(s).`);
-	}
-	if (multipleChoiceQuestions.length === 0) {
-		throw new Error(`No multiple-choice questions labeled "${certificationName}" were found in the usable question bank.`);
-	}
-
-	return multipleChoiceQuestions.map((question) => normalizeMultipleChoiceQuestion(question, programName));
+	return certificationQuestions.map((question) => normalizeCompTIAQuestion(question, programName));
 }
 
 export function loadNetworkPlusExamQuestions() {

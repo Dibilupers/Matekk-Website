@@ -627,6 +627,69 @@ describe('QuestionsService', () => {
     expect(skippedCount).toBe(1);
   });
 
+  it('includes all CompTIA question types and marks unsupported items as ungraded study questions', async () => {
+    prismaMock.questions.findMany.mockResolvedValue([
+      {
+        id: 91,
+        module: 'CompTIA Security+',
+        topic: 'Threats',
+        question_text: 'Which two are valid examples? (Choose two)',
+        choices: JSON.stringify([{ id: 'A', text: 'Example A' }, { id: 'B', text: 'Example B' }, { id: 'C', text: 'Example C' }]),
+        correct_answer: 'A, C',
+        explanation: 'Choose the two valid examples.',
+        question_type: 'multiple_select',
+        match_items: null,
+        imageUrl: null,
+      },
+      {
+        id: 92,
+        module: 'CompTIA Security+',
+        topic: 'Cryptography',
+        question_text: 'Enter the protocol name.',
+        choices: null,
+        correct_answer: 'TLS',
+        explanation: 'TLS protects data in transit.',
+        question_type: 'fill_in_the_blank',
+        match_items: null,
+        imageUrl: null,
+      },
+      {
+        id: 93,
+        module: 'CompTIA Security+',
+        topic: 'Operations',
+        question_text: 'Configure the firewall rules in the simulated environment.',
+        choices: null,
+        correct_answer: null,
+        explanation: 'Review the firewall configuration steps.',
+        question_type: 'simulation',
+        match_items: null,
+        imageUrl: null,
+      },
+      {
+        id: 94,
+        module: 'CompTIA Security+',
+        topic: 'Network security',
+        question_text: 'Question with incomplete choices.',
+        choices: JSON.stringify([{ id: 'A', text: '' }, { id: 'B', text: 'Valid choice' }]),
+        correct_answer: 'A',
+        explanation: '',
+        question_type: 'multiple_choice',
+        match_items: null,
+        imageUrl: null,
+      },
+    ]);
+
+    const { questions, skippedCount } = await service.findUsableBank('CompTIA Security+');
+
+    expect(skippedCount).toBe(0);
+    expect(questions).toHaveLength(4);
+    expect(questions.map(({ type }) => type)).toEqual(['multi', 'text', 'study', 'study']);
+    expect(questions[0]).toEqual(expect.objectContaining({ type: 'multi', answer: [0, 2] }));
+    expect(questions[1]).toEqual(expect.objectContaining({ type: 'text', answer: 'TLS' }));
+    expect(questions[2]).toEqual(expect.objectContaining({ type: 'study', studyNote: expect.stringContaining('Simulation item') }));
+    expect(questions[3]).toEqual(expect.objectContaining({ type: 'study', studyNote: expect.stringContaining('included for review') }));
+  });
+
   it('filters usable questions by the requested dedicated course module', async () => {
     await service.findUsableBank('CompTIA Network+');
 
