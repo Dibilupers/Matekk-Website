@@ -6,6 +6,14 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `cfc40da` — Added a finish-exam confirmation to the CCNA All Questions exam and remade CCNA/WLC exhibits as SVGs, including missing exhibits for questions 260, 361, 854, 181, 382, 608, and 1306. No API/backend changes.
+
+Validation before push: targeted ESLint, frontend production build, Git whitespace checks, and browser checks confirming all nine remade exhibits' text stays within bounds without detected text or label/input overlap.
+
+## 2026-10-24 — `Noah`
+
+Commits included in this push:
+
 - `1c3196b` — Restored 150 missing CCNA multi-answer questions in the frontend using snapshot answer keys guarded by prompt-and-choice fingerprints. No API/backend changes.
 
 Validation before push: five focused CCNA converter tests, conversion and grading checks for all 150 snapshot multi-answer rows, targeted ESLint, frontend production build, and Git whitespace checks passed.
