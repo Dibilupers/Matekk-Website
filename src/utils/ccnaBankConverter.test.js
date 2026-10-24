@@ -74,6 +74,83 @@ test("converts multiple-choice type aliases and multi-answer choice IDs", () => 
   assert.equal(result.question.type, "multi");
 });
 
+test("restores a snapshot multi-answer row only when its prompt and choices match", () => {
+  const matchingRow = {
+    ...makeRow({ A: "FIFO", B: "CBWFQ", C: "LLC", D: "WFQ", E: "RSVP" }, ""),
+    id: 1,
+    question_text: "Which two QoS tools are used to guarantee minimum bandwidth to certain traffic? (Choose two)",
+  };
+  const restored = convertBankRow(matchingRow);
+
+  assert.equal(restored.problem, undefined);
+  assert.equal(restored.question.type, "multi");
+  assert.deepEqual(restored.question.answer, [1, 3]);
+
+  const staleRow = {
+    ...matchingRow,
+    choices: JSON.stringify({ A: "FIFO", B: "CBWFQ", C: "LLC", D: "WFQ", E: "Different option" }),
+  };
+  const rejected = convertBankRow(staleRow);
+
+  assert.equal(rejected.question, undefined);
+  assert.equal(rejected.problem, "correct answer does not match the available choices");
+});
+
+test("restores a multi-answer key before expanding embedded option-table choices", () => {
+  const row = {
+    ...makeRow({ A: "Option A", B: "Option B", C: "Option C", D: "Option D", E: "Option E" }, ""),
+    id: 815,
+    question_text: `A network administrator is evaluating network security in the aftermath of an attempted ARP spoofing attack. If Port-channel1 is the uplink interface of the access-layer switch toward the distribution-layer switch, which two configurations must the administrator configure on the access-layer switch to provide adequate protection? (Choose two)
+
+Option A
+
+ip dhcp snooping
+!
+interface Port-channel1
+ switchport port-security maximum 1
+ switchport port-security
+
+Option B
+
+ip dhcp snooping vlan 1-4094
+ip dhcp snooping
+!
+interface Port-channel1
+ ip dhcp snooping trust
+
+Option C
+
+ip dhcp snooping vlan 1-4094
+!
+interface Port-channel1
+ switchport protected
+ switchport port-security maximum 1
+ ip verify source mac-check
+
+Option D
+
+ip arp inspection trust
+!
+interface Port-channel1
+ switchport port-security maximum 4094
+ switchport port-security
+
+Option E
+
+ip arp inspection vlan 1-4094
+!
+interface Port-channel1
+ ip arp inspection trust`,
+  };
+
+  const restored = convertBankRow(row);
+
+  assert.equal(restored.problem, undefined);
+  assert.equal(restored.question.type, "multi");
+  assert.deepEqual(restored.question.answer, [1, 4]);
+  assert.match(restored.question.options[1], /ip dhcp snooping trust/);
+});
+
 function rawRow(id, prompt) {
   return {
     id,
