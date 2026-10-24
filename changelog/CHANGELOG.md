@@ -2,6 +2,10 @@
 
 Tracking begins 2026-10-17.
 
+## 2026-10-24 — CCNA offline exam
+
+- Changed built-in offline CCNA question prompts to regular weight, following the FortiOS offline reference. Online CCNA exam prompts keep their existing semibold style.
+
 ## 2026-10-24 — FortiOS offline exam
 
 Commits included:

@@ -42,9 +42,16 @@ function organizeFortiOSOfflinePrompt(text) {
 	return { paragraphs };
 }
 
-function PromptText({ text, fortiosOffline = false }) {
+function PromptText({ text, offline = false, fortiosOffline = false }) {
 	if (!fortiosOffline) {
-		return <h2 className="whitespace-pre-wrap text-base font-semibold leading-relaxed tracking-tight text-[#17233d] sm:text-lg">{text}</h2>;
+		return (
+			<h2
+				className={`whitespace-pre-wrap text-base ${offline ? "font-normal" : "font-semibold"} leading-relaxed tracking-tight text-[#17233d] sm:text-lg`}
+				style={offline ? { fontWeight: 400 } : undefined}
+			>
+				{text}
+			</h2>
+		);
 	}
 	const { paragraphs } = organizeFortiOSOfflinePrompt(text);
 	return (
@@ -452,7 +459,7 @@ export function QuestionPrompt({ prompt, imageUrl, hasSeparateExhibit = Boolean(
 	if (optionTable) {
 		return (
 			<div className="mb-5 space-y-4 sm:mb-6">
-				<PromptText text={optionTable.prompt} fortiosOffline={fortiosOffline} />
+				<PromptText text={optionTable.prompt} offline={offline} fortiosOffline={fortiosOffline} />
 				{imageUrl && <ExhibitImage src={imageUrl} lazy imageClassName="max-h-[32rem]" />}
 				<ExhibitText text={optionTable.exhibit} />
 			</div>
@@ -485,7 +492,7 @@ export function QuestionPrompt({ prompt, imageUrl, hasSeparateExhibit = Boolean(
 
 	return (
 		<div className="mb-5 space-y-4 sm:mb-6">
-			<PromptText text={promptText} fortiosOffline={fortiosOffline} />
+			<PromptText text={promptText} offline={offline} fortiosOffline={fortiosOffline} />
 			{imageUrl && <ExhibitImage src={imageUrl} lazy imageClassName="max-h-[32rem]" />}
 			{exhibit && (
 				<section aria-label={exhibitTitle} className="overflow-hidden rounded-xl border border-[#d9e1ef] bg-[#f7f9fc]">
