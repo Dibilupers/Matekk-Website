@@ -2,6 +2,14 @@
 
 Tracking begins 2026-10-17.
 
+## 2026-10-24 — `main`
+
+Commits included in this push:
+
+- `dc9a609` — Scoped the all-questions request and backend bank query to CCNA modules, retained images on multi-answer questions, and removed the skipped-question warning from the exam.
+
+Validation before push: 37 focused question-service tests, backend build, frontend production build, frontend ESLint, and Git whitespace checks passed. No production API endpoint was called.
+
 ## 2026-10-23 — `main`
 
 Commits included in this push:
