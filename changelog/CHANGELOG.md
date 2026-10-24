@@ -6,6 +6,14 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `d7d5472` — Made FortiOS explanation source links visually clear and easier to click.
+
+Validation before push: production frontend build, targeted ESLint for the source-link component, and Git whitespace checks passed.
+
+## 2026-10-24 — `main`
+
+Commits included in this push:
+
 - `c79ca3c` — Added FortiOS explanation source links and populated the bundled offline questions with explanations.
 - `b1b41a4` — Merged `emman` into the latest `main`, preserving the main-branch FortiOS offline question normalization changes.
 
