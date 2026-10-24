@@ -20,7 +20,7 @@ export function RouterIcon({ x, y, label, sub, details, active, labelBackdrop = 
 			<text x="0" y="40" textAnchor="middle" fontSize="13" fontWeight="700" fill="#17233d">{label}</text>
 			{labelBackdrop && deviceDetails.length > 0 && <rect x={-detailWidth / 2} y="47" width={detailWidth} height={deviceDetails.length * 12 + 8} rx="5" fill="#fff" stroke="#e2e8f0" strokeWidth="1" />}
 			{deviceDetails.map((detail, index) => (
-				<text key={detail} x="0" y={54 + index * 12} textAnchor="middle" fontSize="9.5" fill="#4b5b78">{detail}</text>
+				<text key={detail} x="0" y={60 + index * 12} textAnchor="middle" fontSize="9.5" fill="#4b5b78">{detail}</text>
 			))}
 		</g>
 	);
@@ -41,7 +41,7 @@ export function SwitchIcon({ x, y, label, sub, details, labelBackdrop = false })
 			<text x="0" y="40" textAnchor="middle" fontSize="13" fontWeight="700" fill="#17233d">{label}</text>
 			{labelBackdrop && deviceDetails.length > 0 && <rect x={-detailWidth / 2} y="47" width={detailWidth} height={deviceDetails.length * 12 + 8} rx="5" fill="#fff" stroke="#e2e8f0" strokeWidth="1" />}
 			{deviceDetails.map((detail, index) => (
-				<text key={detail} x="0" y={54 + index * 12} textAnchor="middle" fontSize="9.5" fill="#4b5b78">{detail}</text>
+				<text key={detail} x="0" y={60 + index * 12} textAnchor="middle" fontSize="9.5" fill="#4b5b78">{detail}</text>
 			))}
 		</g>
 	);
@@ -69,7 +69,7 @@ export function PcIcon({ x, y, label, sub, details, server, labelBackdrop = fals
 			<text x="0" y="40" textAnchor="middle" fontSize="13" fontWeight="700" fill="#17233d">{label}</text>
 			{labelBackdrop && deviceDetails.length > 0 && <rect x={-detailWidth / 2} y="47" width={detailWidth} height={deviceDetails.length * 12 + 8} rx="5" fill="#fff" stroke="#e2e8f0" strokeWidth="1" />}
 			{deviceDetails.map((detail, index) => (
-				<text key={detail} x="0" y={54 + index * 12} textAnchor="middle" fontSize="9.5" fill="#4b5b78">{detail}</text>
+				<text key={detail} x="0" y={60 + index * 12} textAnchor="middle" fontSize="9.5" fill="#4b5b78">{detail}</text>
 			))}
 		</g>
 	);

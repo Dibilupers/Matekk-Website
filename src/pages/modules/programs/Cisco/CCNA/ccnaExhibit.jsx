@@ -2148,7 +2148,7 @@ function TopologyDevice({ node }) {
 				/>
 			)}
 			{node.details?.map((detail, index) => (
-				<text key={detail} x="0" y={40 + index * 12} textAnchor="middle" fontSize="9.5" fill="#4b5b78">{detail}</text>
+				<text key={detail} x="0" y={43 + index * 12} textAnchor="middle" fontSize="9.5" fill="#4b5b78">{detail}</text>
 			))}
 		</g>
 	);
