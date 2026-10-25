@@ -152,6 +152,37 @@ const OFFLINE_LEGACY_QUESTION_IMAGE_IDS = new Map([
   [291, 1330],
 ]);
 
+const OFFLINE_LEGACY_QUESTION_OVERRIDES = new Map([
+  [398, {
+    prompt: "How must Router A be configured to send Cisco Discovery Protocol information only to Router C?",
+    options: [
+      "conf t\nRouterA(config)#no cdp run\nRouterA(config)#interface gi0/0/1\nRouterA(config)#cdp enable",
+      "conf t\nRouterA(config)#cdp run\nRouterA(config)#interface gi0/0/1\nRouterA(config)#cdp enable",
+      "conf t\nRouterA(config)#cdp run\nRouterA(config)#interface gi0/0/0\nRouterA(config)#cdp enable",
+      "conf t\nRouterA(config)#cdp run\nRouterA(config)#interface gi0/0/0\nRouterA(config)#no cdp enable",
+    ],
+  }],
+  [486, {
+    prompt: [
+      "For security reasons, disable neighbor discovery on R5 interface Gi0/1 while permitting it on Gi0/2.",
+      "",
+      "The configuration must also verify that Gi0/1 has no dynamically learned neighbors and display the IP address of R6 interface Gi0/2.",
+      "",
+      "Which configuration meets these requirements?",
+    ].join("\n"),
+    options: [
+      "R5(config)#interface Gi0/1\nR5(config-if)#no cdp enable\nR5(config-if)#exit\nR5(config)#lldp run\nR5(config)#no cdp run\nR5#show cdp neighbor detail\nR5#show lldp neighbor",
+      "R5(config)#interface Gi0/1\nR5(config-if)#no cdp run\nR5(config-if)#exit\nR5(config)#lldp run\nR5(config)#cdp enable\nR5#show cdp neighbor\nR5#show lldp neighbor",
+      "R5(config)#interface Gi0/1\nR5(config-if)#no cdp enable\nR5(config-if)#exit\nR5(config)#no lldp run\nR5(config)#cdp run\nR5#show cdp neighbor detail\nR5#show lldp neighbor",
+      "R5(config)#interface Gi0/1\nR5(config-if)#no cdp enable\nR5(config-if)#exit\nR5(config)#no lldp run\nR5(config)#cdp run\nR5#show cdp neighbor\nR5#show lldp neighbor",
+    ],
+  }],
+  [724, {
+    prompt: "A multivendor network is being configured for VoIP. Which configuration enables neighbor discovery on interface GigabitEthernet1/0/1 while keeping it disabled on the other interfaces?",
+    explanation: "Option D is the intended choice, but it is incomplete on its own: LLDP must first be enabled globally with “lldp run”. To keep LLDP disabled on the other interfaces, disable LLDP transmit and receive on those interfaces.",
+  }],
+]);
+
 const LEGACY_QUESTION_EXHIBITS = new Map([
   [50, subinterfaceR1Sw1Sw2Img],
   [217, wlcMyWlanLayer2Img],
@@ -165,6 +196,7 @@ const LEGACY_QUESTION_EXHIBITS = new Map([
 const OFFLINE_LEGACY_QUESTIONS = CCNA_LEGACY_QUESTIONS
   .map((question) => {
     const isConnectDotsQuestion = question.legacyIndex === CONNECT_DOTS_LEGACY_QUESTION_INDEX;
+    const offlineOverride = OFFLINE_LEGACY_QUESTION_OVERRIDES.get(question.legacyIndex);
     const numberedExhibit = /\bexhibit\b/i.test(question.prompt)
       ? NUMBERED_QUESTION_EXHIBITS.get(OFFLINE_LEGACY_QUESTION_IMAGE_IDS.get(question.legacyIndex))
       : undefined;
@@ -172,7 +204,8 @@ const OFFLINE_LEGACY_QUESTIONS = CCNA_LEGACY_QUESTIONS
 
     return {
       ...question,
-      ...(!question.exhibit ? splitPromptExhibit(question.prompt) : {}),
+      ...(!question.exhibit && !offlineOverride ? splitPromptExhibit(question.prompt) : {}),
+      ...offlineOverride,
       ...(isConnectDotsQuestion
         ? { prompt: "Connect each Wi-Fi term on the left to its matching description on the right." }
         : {}),
@@ -195,7 +228,7 @@ const OFFLINE_LEGACY_QUESTIONS = CCNA_LEGACY_QUESTIONS
       source: "legacy-ccna-200-301",
       moduleNumber: null,
       moduleTitle: "Legacy CCNA 200-301",
-      explanation: question.explanation?.trim() || findCcnaQuestionExplanation(question.prompt),
+      explanation: offlineOverride?.explanation || question.explanation?.trim() || findCcnaQuestionExplanation(question.prompt),
     };
   })
   .filter((question) =>
