@@ -9,6 +9,7 @@ import { CCNA_LEGACY_QUESTIONS } from "./ccnaLegacyQuestions";
 import { findCcnaQuestionExplanation } from "../../../../../utils/ccnaQuestionExplanations";
 import { isValidQuestion } from "../../../../../utils/ccnaExamGrading";
 import { splitPromptExhibit } from "../../../../../utils/splitPromptExhibit";
+import { parseFormattedOptions } from "./ccnaExamQuestionFormatting";
 
 const CONNECT_DOTS_LEGACY_QUESTION_INDEX = 654;
 
@@ -153,6 +154,70 @@ const OFFLINE_LEGACY_QUESTION_IMAGE_IDS = new Map([
 ]);
 
 const OFFLINE_LEGACY_QUESTION_OVERRIDES = new Map([
+  [382, {
+    prompt: "An engineer must configure GigabitEthernet1/1 to accommodate voice and data traffic. Which configuration accomplishes this task?",
+    options: [
+      "interface GigabitEthernet1/1\n switchport mode access\n switchport access vlan 300\n switchport voice vlan 400",
+      "interface GigabitEthernet1/1\n switchport mode access\n switchport access vlan 400\n switchport voice vlan 300",
+      "interface GigabitEthernet1/1\n switchport mode trunk\n switchport access vlan 300\n switchport voice vlan 400",
+      "interface GigabitEthernet1/1\n switchport mode trunk\n switchport trunk vlan 300\n switchport trunk vlan 400",
+    ],
+  }],
+  [476, {
+    prompt: "Which IPv6 configuration is required for R17 to successfully ping the WAN interface on R18?",
+    options: [
+      "R17#\n!\nno ip domain lookup\nip cef\nipv6 unicast-routing\n!\ninterface FastEthernet0/0\n no ip address\n duplex auto\n speed auto\n ipv6 address 2001:DB8:2::201/64\n!\ninterface FastEthernet1/0\n no ip address\n duplex auto\n speed auto\n ipv6 address 2001:DB8:3::201/64\n!\nno cdp log mismatch duplex\nipv6 route 2001:DB8:4::/64 2001:DB8:3::301",
+      "R17#\n!\nno ip domain lookup\nip cef\nipv6 unicast-routing\n!\ninterface FastEthernet0/0\n no ip address\n duplex auto\n speed auto\n ipv6 address 2001:DB8:2::201/64\n!\ninterface FastEthernet1/0\n no ip address\n duplex auto\n speed auto\n ipv6 address 2001:DB8:3::201/64\n!\nno cdp log mismatch duplex\nipv6 route 2001:DB8:4::/64 2001:DB8:2::201",
+      "R17#\n!\nno ip domain lookup\nip cef\n!\ninterface FastEthernet0/0\n no ip address\n duplex auto\n speed auto\n ipv6 address 2001:DB8:3::201/64\n!\ninterface FastEthernet1/0\n no ip address\n duplex auto\n speed auto\n ipv6 address 2001:DB8:2::201/64\n!\nno cdp log mismatch duplex\nipv6 route 2001:DB8:4::/64 2001:DB8:5::101",
+      "R17#\n!\nno ip domain lookup\nip cef\nipv6 cef\n!\ninterface FastEthernet0/0\n no ip address\n duplex auto\n speed auto\n ipv6 address 2001:DB8:2::201/64\n!\ninterface FastEthernet1/0\n no ip address\n duplex auto\n speed auto\n ipv6 address 2001:DB8:3::201/64\n!\nno cdp log mismatch duplex\nipv6 route 2001:DB8:4::/64 2001:DB8:4::302",
+    ],
+  }],
+  [532, {
+    prompt: "A Cisco engineer is configuring a factory-default router with these passwords:\n- Console user EXEC: p4ssw0rd1\n- Telnet user EXEC: s3cr3t2\n- Privileged EXEC: priv4t3p4ss\n\nWhich command sequence must the engineer configure?",
+    options: [
+      "enable secret priv4t3p4ss\n!\nline console 0\n password p4ssw0rd1\n login\n!\nline vty 0 15\n password s3cr3t2\n login",
+      "enable secret privilege 15 priv4t3p4ss\n!\nline console 0\n password p4ssw0rdi\n login\n!\nline vty 0 15\n password s3cr3t2\n login",
+      "enable secret priv413p4ss\n!\nline console 0\n password login p4ssw0rd1\n!\nline vty 0 15\n password login s3cr3t2\n login",
+      "enable secret priv4t3p4ss\n!\nline console 0\n password p4ssw0rd1\n!\nline vty 0 15\n password s3cr3t2",
+    ],
+  }],
+  [622, {
+    prompt: [
+      "Consider the following:",
+      "- SW1 is fully configured for all traffic.",
+      "- The SW4 and SW9 links to SW1 are configured.",
+      "- SW4 interface Gi0/1 and SW9 interface Gi0/0 are configured.",
+      "- All VLANs have been added to the remaining switches.",
+      "",
+      "Which configuration enables PC2 to ping PC7 without interrupting traffic between other PCs?",
+    ].join("\n"),
+    options: [
+      "SW4#\ninterface Gi0/2\n switchport mode trunk\n switchport trunk allowed vlan 14,108\n\nSW11#\ninterface Gi0/2\n switchport mode trunk\n switchport trunk allowed vlan 14,108\n!\ninterface Gi0/1\n switchport mode trunk\n switchport trunk allowed vlan 14,108\n\nSW9#\ninterface Gi0/2\n switchport mode trunk\n switchport trunk allowed vlan 14",
+      "SW4\ninterface Gi0/7\n switchport mode trunk\n switchport trunk allowed vlan 108\n!\ninterface Gi0/2\n switchport mode access\n switchport access vlan 14\n\nSW11#\ninterface Gi0/2\n switchport mode trunk\n switchport trunk allowed vlan 14,108\n!\ninterface Gi0/1\n switchport mode trunk\n switchport trunk allowed vlan 14,108\n\nSW9#\ninterface Gi0/2\n switchport mode access\n switchport access vlan 14",
+      "SW4\ninterface Gi0/2\n switchport mode trunk\n switchport trunk allowed vlan 14\n\nSW11#\ninterface Gi0/1\n switchport mode trunk\n switchport trunk allowed vlan 14\n\nSW9#\ninterface Gi0/2\n switchport mode trunk\n switchport trunk allowed vlan 108",
+      "SW4\ninterface Gi0/2\n switchport mode access\n switchport access vlan 14\n\nSW11#\ninterface Gi0/2\n switchport mode access\n switchport access vlan 14\n!\ninterface Gi0/0\n switchport mode access\n switchport access vlan 14\n!\ninterface Gi0/1\n switchport mode trunk\n\nSW9#\ninterface Gi0/2\n switchport mode access\n switchport access vlan 14",
+    ],
+  }],
+  [1131, {
+    prompt: "After an attempted ARP spoofing attack, an administrator must protect the access-layer switch. Port-channel1 is the uplink to the distribution-layer switch. Which two configurations should be applied? (Choose two)",
+    options: [
+      "ip dhcp snooping\n!\ninterface Port-channel1\n switchport port-security maximum 1\n switchport port-security",
+      "ip dhcp snooping vlan 1-4094\nip dhcp snooping\n!\ninterface Port-channel1\n ip dhcp snooping trust",
+      "ip dhcp snooping vlan 1-4094\n!\ninterface Port-channel1\n switchport protected\n switchport port-security maximum 1",
+      "ip arp inspection trust\n!\ninterface Port-channel1\n switchport port-security maximum 4094\n switchport port-security\n ip verify source mac-check",
+      "ip arp inspection vlan 1-4094\n!\ninterface Port-channel1\n ip arp inspection trust",
+    ],
+  }],
+  [1187, {
+    prompt: "An administrator must add TCP DNS access to the Services ACL while retaining its existing services. Which configuration updates the ACL efficiently?",
+    exhibit: "CPE# show ip access-list Services\nExtended IP access list Services\n\n10 permit tcp 10.0.0.0 0.255.255.255 any eq www\n20 permit tcp 10.0.0.0 0.255.255.255 any eq 443\n30 permit udp 10.0.0.0 0.255.255.255 host 198.51.100.11 eq domain\n40 deny ip any any log",
+    options: [
+      "ip access-list extended Services\n permit tcp 10.0.0.0 0.255.255.255 host 198.51.100.11 eq domain",
+      "no ip access-list extended Services\nip access-list extended Services\n 30 permit tcp 10.0.0.0 0.255.255.255 host 198.51.100.11 eq domain",
+      "no ip access-list extended Services\nip access-list extended Services\n permit udp 10.0.0.0 0.255.255.255 any eq 53\n permit tcp 10.0.0.0 0.255.255.255 host 198.51.100.11 eq domain\n deny ip any any log",
+      "ip access-list extended Services\n 35 permit tcp 10.0.0.0 0.255.255.255 host 198.51.100.11 eq domain",
+    ],
+  }],
   [500, {
     prompt: "Which configuration allows routers R14 and R86 to form an OSPFv2 adjacency and elect a central point for exchanging OSPF information?",
     options: [
@@ -202,10 +267,26 @@ const LEGACY_QUESTION_EXHIBITS = new Map([
   [926, ccna608NorthboundApiImg],
 ]);
 
+function parseOfflineAnswerTable(question) {
+  if (!Array.isArray(question.options) || question.options.length < 2) return null;
+  const hasPlaceholderOptions = question.options.every((option, index) =>
+    option === `Option ${String.fromCharCode(65 + index)}`,
+  );
+  if (!hasPlaceholderOptions) return null;
+
+  const parsed = parseFormattedOptions(question.prompt, { offline: true });
+  if (!parsed) return null;
+
+  const options = question.options.map((_, index) => parsed.options[String.fromCharCode(65 + index)]);
+  if (options.some((option) => typeof option !== "string" || !option.trim())) return null;
+  return { prompt: parsed.prompt, options };
+}
+
 const OFFLINE_LEGACY_QUESTIONS = CCNA_LEGACY_QUESTIONS
   .map((question) => {
     const isConnectDotsQuestion = question.legacyIndex === CONNECT_DOTS_LEGACY_QUESTION_INDEX;
     const offlineOverride = OFFLINE_LEGACY_QUESTION_OVERRIDES.get(question.legacyIndex);
+    const parsedAnswerTable = offlineOverride ? null : parseOfflineAnswerTable(question);
     const numberedExhibit = /\bexhibit\b/i.test(question.prompt)
       ? NUMBERED_QUESTION_EXHIBITS.get(OFFLINE_LEGACY_QUESTION_IMAGE_IDS.get(question.legacyIndex))
       : undefined;
@@ -213,7 +294,8 @@ const OFFLINE_LEGACY_QUESTIONS = CCNA_LEGACY_QUESTIONS
 
     return {
       ...question,
-      ...(!question.exhibit && !offlineOverride ? splitPromptExhibit(question.prompt) : {}),
+      ...(!question.exhibit && !offlineOverride && !parsedAnswerTable ? splitPromptExhibit(question.prompt) : {}),
+      ...parsedAnswerTable,
       ...offlineOverride,
       ...(isConnectDotsQuestion
         ? { prompt: "Connect each Wi-Fi term on the left to its matching description on the right." }
