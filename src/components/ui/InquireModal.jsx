@@ -143,7 +143,7 @@ function useEnrollForm(onClose, initialStep = 0, initialInquiryType = null, pres
     const e = {};
     if (!trainingForm.course) e.course = "Please select a course.";
     if (!RECAPTCHA_SITE_KEY) e.captcha = "CAPTCHA is not configured. Please contact us directly.";
-    else if (!captchaToken) e.captcha = "Please complete the CAPTCHA verification.";
+    else if (!captchaToken) e.captcha = captchaError || "Please complete the CAPTCHA verification.";
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -166,7 +166,7 @@ function useEnrollForm(onClose, initialStep = 0, initialInquiryType = null, pres
     if (!solutionsForm.budget) e.budget = "Please select a budget range.";
     if (!solutionsForm.projectDesc.trim()) e.projectDesc = "Please describe your project.";
     if (!RECAPTCHA_SITE_KEY) e.captcha = "CAPTCHA is not configured. Please contact us directly.";
-    else if (!captchaToken) e.captcha = "Please complete the CAPTCHA verification.";
+    else if (!captchaToken) e.captcha = captchaError || "Please complete the CAPTCHA verification.";
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -213,14 +213,13 @@ function useEnrollForm(onClose, initialStep = 0, initialInquiryType = null, pres
 
     setStatus("loading");
     try {
-      localStorage.setItem("lastModalSubmit", Date.now());
-
       const payload = inquiryType === "training"
         ? {
           inquiry_type: "Training Inquiry",
           name: trainingForm.name,
           email: trainingForm.email,
           phone: trainingForm.phone,
+          captchaToken,
           subject: "New Training Inquiry",
           message: trainingForm.message || "No additional message.",
           funding: trainingForm.funding,
@@ -232,6 +231,7 @@ function useEnrollForm(onClose, initialStep = 0, initialInquiryType = null, pres
           name: solutionsForm.name,
           email: solutionsForm.email,
           phone: solutionsForm.phone,
+          captchaToken,
           subject: "New ICT Solutions Inquiry",
           message: solutionsForm.message || "No additional message.",
           service_interest: solutionsForm.serviceInterest,
@@ -247,8 +247,18 @@ function useEnrollForm(onClose, initialStep = 0, initialInquiryType = null, pres
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
+      if (response.status === 400) {
+        const message = "CAPTCHA verification failed. Please complete it again.";
+        setStatus("idle");
+        setCaptchaToken(null);
+        setCaptchaError(message);
+        setErrors({ captcha: message });
+        captchaRef.current?.reset();
+        return;
+      }
       if (!response.ok) throw new Error("Inquiry submission failed.");
 
+      localStorage.setItem("lastModalSubmit", Date.now());
       setStatus("success");
       captchaRef.current?.reset();
       setCaptchaToken(null);

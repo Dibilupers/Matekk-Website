@@ -2,6 +2,7 @@ import emailjs from "emailjs-com";
 import { useState, useRef, useEffect } from "react";
 import DOMPurify from "dompurify";
 import ReCAPTCHA from "react-google-recaptcha";
+import API_URL from "../../config/api";
 
 const EMAILJS_SERVICE_ID  = import.meta.env.VITE_EMAILJS_SERVICE_ID;
 const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
@@ -21,7 +22,7 @@ export default function ContactForm() {
   const [loading, setLoading]           = useState(false);
   const [status, setStatus]             = useState("");
   const [recaptchaToken, setRecaptchaToken] = useState(null);
-  const [showCaptcha, setShowCaptcha]   = useState(false);
+  const [captchaError, setCaptchaError] = useState("");
 
   const timerRef    = useRef(null);
   const cooldownRef = useRef(null);
@@ -32,22 +33,6 @@ export default function ContactForm() {
     clearTimeout(timerRef.current);
     clearInterval(cooldownRef.current);
   }, []);
-
-  // Show reCAPTCHA only when every field has a value
-  const checkFormFilled = (e) => {
-    const f = e.currentTarget;
-    const allFilled =
-      f.name.value.trim()    &&
-      f.email.value.trim()   &&
-      f.phone.value.trim()   &&
-      f.subject.value.trim() &&
-      f.message.value.trim();
-    setShowCaptcha(!!allFilled);
-    if (!allFilled) {
-      setRecaptchaToken(null);
-      recaptchaRef.current?.reset();
-    }
-  };
 
   const startCooldownTimer = () => {
     clearInterval(cooldownRef.current);
@@ -64,7 +49,7 @@ export default function ContactForm() {
     }, 1000);
   };
 
-  const sendMessage = (e) => {
+  const sendMessage = async (e) => {
     e.preventDefault();
     setStatus("");
 
@@ -87,7 +72,7 @@ export default function ContactForm() {
       return;
     }
     if (!recaptchaToken) {
-      setStatus("Please complete the CAPTCHA.");
+      setStatus(captchaError || "Please complete the CAPTCHA.");
       return;
     }
 
@@ -116,8 +101,6 @@ export default function ContactForm() {
       return;
     }
 
-    // ── Send ──────────────────────────────────────────────────────────────
-    localStorage.setItem("lastFormSubmit", now);
     setLoading(true);
 
     /*
@@ -154,30 +137,50 @@ export default function ContactForm() {
       badge_border_color:  "rgba(255,255,255,0.25)",
     };
 
-    emailjs
-      .send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, payload, EMAILJS_PUBLIC_KEY)
-      .then(() => {
-        setStatus("Message sent successfully!");
-        timerRef.current = setTimeout(() => setStatus(""), 3_000);
-        setLoading(false);
-        setShowCaptcha(false);
-        setRecaptchaToken(null);
-        recaptchaRef.current?.reset();
-        e.target.reset();
-      })
-      .catch(() => {
-        setStatus("Failed to send message. Please try again.");
-        timerRef.current = setTimeout(() => setStatus(""), 5_000);
-        setLoading(false);
-        recaptchaRef.current?.reset();
-        setRecaptchaToken(null);
+    try {
+      const verification = await fetch(`${API_URL}/captcha/verify`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ captchaToken: recaptchaToken }),
       });
+      if (!verification.ok) {
+        setStatus("CAPTCHA verification failed. Please complete it again.");
+        recaptchaRef.current?.reset();
+        setRecaptchaToken(null);
+        setLoading(false);
+        return;
+      }
+    } catch {
+      setStatus("Unable to verify CAPTCHA. Check your connection and try again.");
+      recaptchaRef.current?.reset();
+      setRecaptchaToken(null);
+      setLoading(false);
+      return;
+    }
+
+    try {
+      localStorage.setItem("lastFormSubmit", now);
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, payload, EMAILJS_PUBLIC_KEY);
+      setStatus("Message sent successfully!");
+      timerRef.current = setTimeout(() => setStatus(""), 3_000);
+      setRecaptchaToken(null);
+      setCaptchaError("");
+      recaptchaRef.current?.reset();
+      e.target.reset();
+    } catch {
+      setStatus("Failed to send message. Please try again.");
+      timerRef.current = setTimeout(() => setStatus(""), 5_000);
+      recaptchaRef.current?.reset();
+      setRecaptchaToken(null);
+      setCaptchaError("");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <form
       onSubmit={sendMessage}
-      onChange={checkFormFilled}
       className="bg-white space-y-6 md:space-y-4 flex flex-col p-8 rounded-2xl w-full"
     >
       {/* Honeypot — invisible to real users */}
@@ -240,21 +243,32 @@ export default function ContactForm() {
         />
       </div>
 
-      {/* reCAPTCHA — only visible when all fields are filled */}
-      {showCaptcha && (
-        RECAPTCHA_SITE_KEY ? (
+      {RECAPTCHA_SITE_KEY ? (
+        <div className="flex flex-col items-center gap-2">
           <ReCAPTCHA
             ref={recaptchaRef}
             sitekey={RECAPTCHA_SITE_KEY}
-            onChange={setRecaptchaToken}
-            onExpired={() => setRecaptchaToken(null)}
-            className="self-center"
+            onChange={(token) => {
+              setRecaptchaToken(token);
+              setCaptchaError("");
+            }}
+            onExpired={() => {
+              setRecaptchaToken(null);
+              setCaptchaError("CAPTCHA expired. Please verify again.");
+            }}
+            onErrored={() => {
+              setRecaptchaToken(null);
+              setCaptchaError("CAPTCHA could not load. Check your connection and try again.");
+            }}
           />
-        ) : (
-          <p className="self-center text-sm text-red-500">
-            CAPTCHA is not configured. Please contact us directly.
-          </p>
-        )
+          {captchaError && (
+            <p className="text-center text-sm text-red-500">{captchaError}</p>
+          )}
+        </div>
+      ) : (
+        <p className="self-center text-sm text-red-500">
+          CAPTCHA is not configured. Please contact us directly.
+        </p>
       )}
 
       {/* Status message */}

@@ -40,6 +40,12 @@ At minimum, set `DATABASE_URL`, `DIRECT_URL`, a secure `JWT_SECRET`, and
 the app in production. Configure `VITE_API_URL` in the frontend deployment to
 the backend origin. Production auth cookies require HTTPS and use
 `SameSite=None` so credentialed frontend-to-API requests can authenticate.
+Set `RECAPTCHA_SECRET_KEY` on the backend and `VITE_RECAPTCHA_SITE_KEY` on the
+frontend using the matching Google reCAPTCHA v2 keys for the deployed domain.
+The secret key must only be stored in backend environment settings; without it,
+the backend rejects CAPTCHA-protected form submissions but the rest of the API
+remains available. Local development and tests use Google's public test keys;
+never deploy those test keys.
 To enable offline module PIN setup, optionally configure `OFFLINE_MODULE_PIN`
 on the backend with the administrator's 4–6 digit shared PIN. Do not put this
 value in a `VITE_*` variable or frontend source: the server validates it for a

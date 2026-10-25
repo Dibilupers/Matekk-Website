@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
+import { CaptchaService } from '../captcha/captcha.service.js';
 import { InquiresService } from './inquires.service.js';
 
 describe('InquiresService', () => {
@@ -13,6 +14,8 @@ describe('InquiresService', () => {
   const upsertEnrollment = vi.fn();
   const updateInquiry = vi.fn();
   const transaction = vi.fn();
+  const createInquiry = vi.fn();
+  const verifyCaptcha = vi.fn();
 
   beforeEach(async () => {
     findUnique.mockReset();
@@ -23,13 +26,16 @@ describe('InquiresService', () => {
     upsertEnrollment.mockReset();
     updateInquiry.mockReset();
     transaction.mockReset();
+    createInquiry.mockReset();
+    verifyCaptcha.mockReset();
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         InquiresService,
+        { provide: CaptchaService, useValue: { verify: verifyCaptcha } },
         {
           provide: PrismaService,
           useValue: {
-            inquires: { findUnique, updateMany, update: updateInquiry },
+            inquires: { create: createInquiry, findUnique, updateMany, update: updateInquiry },
             users: { findUnique: userFindUnique },
             program: { findUnique: programFindUnique },
             enrollment: { findMany: findEnrollments, upsert: upsertEnrollment },
@@ -44,6 +50,48 @@ describe('InquiresService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  it('verifies the CAPTCHA before creating an inquiry and does not store its token', async () => {
+    const inquiry = {
+      inquiry_type: 'Training Inquiry' as const,
+      captchaToken: 'verified-token',
+      name: 'A learner',
+      email: 'learner@example.com',
+      phone: '09171234567',
+      subject: 'Training',
+      message: 'Please send details.',
+    };
+    createInquiry.mockResolvedValue({ id: 1 });
+
+    await expect(service.create(inquiry)).resolves.toEqual({ id: 1 });
+
+    expect(verifyCaptcha).toHaveBeenCalledWith('verified-token');
+    expect(createInquiry).toHaveBeenCalledWith({
+      data: {
+        inquiry_type: 'Training Inquiry',
+        name: 'A learner',
+        email: 'learner@example.com',
+        phone: '09171234567',
+        subject: 'Training',
+        message: 'Please send details.',
+      },
+    });
+  });
+
+  it('does not create an inquiry when CAPTCHA verification fails', async () => {
+    verifyCaptcha.mockRejectedValue(new Error('CAPTCHA rejected'));
+
+    await expect(service.create({
+      captchaToken: 'invalid-token',
+      inquiry_type: 'Training Inquiry',
+      name: 'A learner',
+      email: 'learner@example.com',
+      phone: '09171234567',
+      subject: 'Training',
+      message: 'Please send details.',
+    })).rejects.toThrow('CAPTCHA rejected');
+    expect(createInquiry).not.toHaveBeenCalled();
   });
 
   it('accepts an inquiry by marking it resolved', async () => {
