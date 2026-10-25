@@ -153,15 +153,6 @@ const OFFLINE_LEGACY_QUESTION_IMAGE_IDS = new Map([
 ]);
 
 const OFFLINE_LEGACY_QUESTION_OVERRIDES = new Map([
-  [398, {
-    prompt: "How must Router A be configured to send Cisco Discovery Protocol information only to Router C?",
-    options: [
-      "conf t\nRouterA(config)#no cdp run\nRouterA(config)#interface gi0/0/1\nRouterA(config)#cdp enable",
-      "conf t\nRouterA(config)#cdp run\nRouterA(config)#interface gi0/0/1\nRouterA(config)#cdp enable",
-      "conf t\nRouterA(config)#cdp run\nRouterA(config)#interface gi0/0/0\nRouterA(config)#cdp enable",
-      "conf t\nRouterA(config)#cdp run\nRouterA(config)#interface gi0/0/0\nRouterA(config)#no cdp enable",
-    ],
-  }],
   [486, {
     prompt: [
       "For security reasons, disable neighbor discovery on R5 interface Gi0/1 while permitting it on Gi0/2.",
