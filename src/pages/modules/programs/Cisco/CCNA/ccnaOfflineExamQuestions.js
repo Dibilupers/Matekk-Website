@@ -153,6 +153,24 @@ const OFFLINE_LEGACY_QUESTION_IMAGE_IDS = new Map([
 ]);
 
 const OFFLINE_LEGACY_QUESTION_OVERRIDES = new Map([
+  [500, {
+    prompt: "Which configuration allows routers R14 and R86 to form an OSPFv2 adjacency and elect a central point for exchanging OSPF information?",
+    options: [
+      "R14#\ninterface FastEthernet0/0\n ip address 10.73.65.65 255.255.255.252\n ip ospf network broadcast\n ip ospf priority 0\n ip mtu 1400\nrouter ospf 10\n router-id 10.10.1.14\n network 10.10.1.14 0.0.0.0 area 0\n network 10.73.65.64 0.0.0.3 area 0\n\nR86#\ninterface Loopback0\n ip address 10.10.1.86 255.255.255.255\ninterface FastEthernet0/0\n ip address 10.73.65.66 255.255.255.252\n ip ospf network broadcast\n ip mtu 1500\nrouter ospf 10\n router-id 10.10.1.86\n network 10.10.1.86 0.0.0.0 area 0\n network 10.73.65.64 0.0.0.3 area 0",
+      "R14#\ninterface FastEthernet0/0\n ip address 10.73.65.65 255.255.255.252\n ip ospf network broadcast\n ip ospf priority 255\n ip mtu 1500\nrouter ospf 10\n router-id 10.10.1.14\n network 10.10.1.14 0.0.0.0 area 0\n network 10.73.65.64 0.0.0.3 area 0\n\nR86#\ninterface Loopback0\n ip address 10.10.1.86 255.255.255.255\ninterface FastEthernet0/0\n ip address 10.73.65.66 255.255.255.252\n ip ospf network broadcast\n ip mtu 1500\nrouter ospf 10\n router-id 10.10.1.86\n network 10.10.1.86 0.0.0.0 area 0\n network 10.73.65.64 0.0.0.3 area 0",
+      "R14#\ninterface Loopback0\n ip ospf 10 area 0\ninterface FastEthernet0/0\n ip address 10.73.65.65 255.255.255.252\n ip ospf network broadcast\n ip ospf 10 area 0\n ip mtu 1500\nrouter ospf 10\n ip ospf priority 255\n router-id 10.10.1.14\n\nR86#\ninterface Loopback0\n ip ospf 10 area 0\ninterface FastEthernet0/0\n ip address 10.73.65.66 255.255.255.252\n ip ospf network broadcast\n ip ospf 10 area 0\n ip mtu 1500\nrouter ospf 10\n router-id 10.10.1.86",
+      "R14#\ninterface FastEthernet0/0\n ip address 10.73.65.65 255.255.255.252\n ip ospf network broadcast\n ip ospf priority 255\n ip mtu 1500\nrouter ospf 10\n router-id 10.10.1.14\n network 10.10.1.14 0.0.0.0 area 0\n network 10.73.65.64 0.0.0.3 area 0\n\nR86#\ninterface FastEthernet0/0\n ip address 10.73.65.66 255.255.255.252\n ip ospf network broadcast\n ip mtu 1400\nrouter ospf 10\n router-id 10.10.1.86\n network 10.10.1.86 0.0.0.0 area 0\n network 10.73.65.64 0.0.0.3 area 0",
+    ],
+  }],
+  [964, {
+    prompt: "All interfaces use duplex auto and the OSPF broadcast network type. Which configuration allows routers R14 and R86 to form an OSPFv2 adjacency and elect a central point for exchanging OSPF information?",
+    options: [
+      "R14#\ninterface FastEthernet0/0\n ip address 10.73.65.65 255.255.255.252\n ip ospf priority 0\n ip mtu 1500\nrouter ospf 10\n router-id 10.10.1.14\n network 10.10.1.14 0.0.0.0 area 0\n network 10.73.65.64 0.0.0.3 area 0\n\nR86#\ninterface FastEthernet0/0\n ip address 10.73.65.66 255.255.255.252\n ip mtu 1500\nrouter ospf 10\n router-id 10.10.1.86\n network 10.10.1.86 0.0.0.0 area 0\n network 10.73.65.64 0.0.0.3 area 0",
+      "R14#\ninterface Loopback0\n ip ospf 10 area 0\ninterface FastEthernet0/0\n ip address 10.73.65.65 255.255.255.252\n ip ospf priority 255\n ip ospf 10 area 0\n ip mtu 1500\nrouter ospf 10\n router-id 10.10.1.14\n\nR86#\ninterface Loopback0\n ip ospf 10 area 0\ninterface FastEthernet0/0\n ip address 10.73.65.66 255.255.255.252\n ip ospf 10 area 0\n ip mtu 1500\nrouter ospf 10\n router-id 10.10.1.86",
+      "R14#\ninterface FastEthernet0/0\n ip address 10.73.65.65 255.255.255.252\n ip ospf priority 255\n ip mtu 1500\nrouter ospf 10\n router-id 10.10.1.14\n network 10.10.1.14 0.0.0.0 area 0\n network 10.73.65.64 0.0.0.3 area 0\n\nR86#\ninterface FastEthernet0/0\n ip address 10.73.65.66 255.255.255.252\n ip mtu 1400\nrouter ospf 10\n router-id 10.10.1.86\n network 10.10.1.86 0.0.0.0 area 0\n network 10.73.65.64 0.0.0.3 area 0",
+      "R14#\ninterface Loopback0\n ip ospf 10 area 0\ninterface FastEthernet0/0\n ip address 10.73.65.65 255.255.255.252\n ip ospf 10 area 0\n ip mtu 1500\nrouter ospf 10\n router-id 10.10.1.14\n network 10.10.1.14 0.0.0.0 area 0\n network 10.73.65.64 0.0.0.3 area 0\n\nR86#\ninterface FastEthernet0/0\n ip address 10.73.65.66 255.255.255.252\n ip mtu 1400\nrouter ospf 10\n router-id 10.10.1.86\n network 10.10.1.86 0.0.0.0 area 0\n network 10.73.65.64 0.0.0.3 area 0",
+    ],
+  }],
   [486, {
     prompt: [
       "For security reasons, disable neighbor discovery on R5 interface Gi0/1 while permitting it on Gi0/2.",
