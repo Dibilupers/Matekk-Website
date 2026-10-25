@@ -9,9 +9,12 @@ Commits included in this push:
 - `104ab8e` — Connected the homepage Contact and Inquire Now forms to backend
   Google reCAPTCHA verification; form submissions now require a valid token
   before email delivery or inquiry storage.
+- `cd016e4` — Updated both forms to use the newly registered production site
+  key, avoiding a stale deployment environment value overriding it.
 
-Validation before push: frontend production build and targeted ESLint; backend
-build, 17 CAPTCHA/environment/inquiry tests, and Git whitespace checks passed.
+Validation before push: frontend production build and targeted ESLint; confirmed
+the new site key is bundled and the old key is absent; backend build, 17
+CAPTCHA/environment/inquiry tests, and Git whitespace checks passed.
 
 ## 2026-10-25 — `main`
 
