@@ -367,6 +367,7 @@ export default function CCNAAllQuestionsExam() {
 							{!question.hidePrompt && (
 								<QuestionPrompt
 									prompt={question.prompt}
+									offline={!isOnline}
 									hasSeparateExhibit={Boolean(question.exhibit || question.exhibitImage || question.exhibitDiagram)}
 								/>
 							)}
@@ -473,6 +474,7 @@ export default function CCNAAllQuestionsExam() {
 							{!question.hidePrompt && (
 								<QuestionPrompt
 									prompt={question.prompt}
+									offline={!isOnline}
 									hasSeparateExhibit={Boolean(question.exhibit || question.exhibitImage || question.exhibitDiagram)}
 								/>
 							)}
