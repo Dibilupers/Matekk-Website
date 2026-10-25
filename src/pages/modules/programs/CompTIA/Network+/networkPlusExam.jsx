@@ -42,7 +42,7 @@ export default function NetworkPlusExam() {
 		return (
 			<NetworkPlusExamMessage
 				title={`${exam.name} is not available yet`}
-				message={`The CompTIA Network+ question bank has ${questionBankState.questions.length} multiple-choice questions. This format requires ${exam.questionCount}.`}
+				message={`The CompTIA Network+ question bank has ${questionBankState.questions.length} questions. This format requires ${exam.questionCount}.`}
 			/>
 		);
 	}
