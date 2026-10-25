@@ -6,6 +6,14 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `ed41f42` — Aligned the production frontend API base URL with `Ryuuen8/Matekk-Website1`, while keeping the local `/api` development proxy.
+
+Validation before push: frontend production build, targeted API config ESLint, Git whitespace checks, and unauthenticated production endpoint route check passed. The backend returned 401 for its protected question route without a session; the previous production `/api` route returned 404.
+
+## 2026-10-25 — `main`
+
+Commits included in this push:
+
 - `fddc196` — Connected the CompTIA Network+ and Security+ exhibit images to their matching question records.
 - `b1fb719` — Merged `emman` into the latest `main`, preserving offline CompTIA prompt styling while rendering question images in exams and restored sessions.
 
