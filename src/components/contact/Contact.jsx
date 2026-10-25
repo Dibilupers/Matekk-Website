@@ -3,13 +3,11 @@ import { useState, useRef, useEffect } from "react";
 import DOMPurify from "dompurify";
 import ReCAPTCHA from "react-google-recaptcha";
 import API_URL from "../../config/api";
+import RECAPTCHA_SITE_KEY from "../../config/recaptcha";
 
 const EMAILJS_SERVICE_ID  = import.meta.env.VITE_EMAILJS_SERVICE_ID;
 const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
 const EMAILJS_PUBLIC_KEY  = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
-const RECAPTCHA_TEST_SITE_KEY = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI";
-const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY
-  || (import.meta.env.DEV ? RECAPTCHA_TEST_SITE_KEY : "");
 const COOLDOWN_MS         = 60_000;
 
 // ── Validators ─────────────────────────────────────────────────────────────

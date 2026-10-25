@@ -4,11 +4,9 @@ import ReCAPTCHA from "react-google-recaptcha";
 import { FLAT_COURSES } from "../training/courses";
 import { useNavigate } from "react-router-dom";
 import API_URL from "../../config/api";
+import RECAPTCHA_SITE_KEY from "../../config/recaptcha";
 
 // ─── Config ────────────────────────────────────────────────────────────────
-const RECAPTCHA_TEST_SITE_KEY = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI";
-const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY
-  || (import.meta.env.DEV ? RECAPTCHA_TEST_SITE_KEY : "");
 const COOLDOWN_MS = 60_000;
 
 // ─── Constants ─────────────────────────────────────────────────────────────
