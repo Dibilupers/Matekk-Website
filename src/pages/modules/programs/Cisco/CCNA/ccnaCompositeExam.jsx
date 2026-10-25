@@ -785,7 +785,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 								{!question.hidePrompt && (
 									<QuestionPrompt
 										prompt={question.prompt}
-										offline={isOfflineExam && question.offlineLegacy === true}
+										offline={isOfflineExam}
 										hasSeparateExhibit={Boolean(question.exhibit || question.exhibitImage || question.exhibitDiagram)}
 									/>
 								)}
@@ -948,7 +948,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 												{!item.hidePrompt && (
 													<QuestionPrompt
 														prompt={item.prompt}
-														offline={isOfflineExam && item.offlineLegacy === true}
+														offline={isOfflineExam}
 														hasSeparateExhibit={Boolean(item.exhibit || item.exhibitImage || item.exhibitDiagram)}
 													/>
 												)}
