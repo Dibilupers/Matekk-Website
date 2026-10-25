@@ -6,6 +6,14 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `3b60bd5` — Switched the homepage Contact and Inquire Now forms to reCAPTCHA v3 token execution, removed the incompatible v2 checkbox integration, and validated backend action and score.
+
+Validation before push: frontend production build, targeted ESLint, 13 focused backend CAPTCHA/inquiry tests, backend build, and Git whitespace checks passed.
+
+## 2026-10-25 — `main`
+
+Commits included in this push:
+
 - `104ab8e` — Connected the homepage Contact and Inquire Now forms to backend
   Google reCAPTCHA verification; form submissions now require a valid token
   before email delivery or inquiry storage.
