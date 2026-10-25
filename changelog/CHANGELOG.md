@@ -6,6 +6,17 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `edcc33b` — Connected the homepage Contact and Inquire Now forms to backend
+  Google reCAPTCHA verification; form submissions now require a valid token
+  before email delivery or inquiry storage.
+
+Validation before push: frontend production build and targeted ESLint; backend
+build, 17 CAPTCHA/environment/inquiry tests, and Git whitespace checks passed.
+
+## 2026-10-25 — `main`
+
+Commits included in this push:
+
 - `2b3dd96` — Restored same-origin `/api` requests so the existing Vercel rewrite reaches `matekk-website1.vercel.app` while preserving the frontend authentication cookie. The direct cross-origin API override did not fix the production question data.
 
 Validation before push: frontend production build, targeted API config ESLint, Git whitespace checks, and unauthenticated production question API check (401, confirming the route responds and requires a session) passed.
