@@ -6,6 +6,14 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `2b3dd96` — Restored same-origin `/api` requests so the existing Vercel rewrite reaches `matekk-website1.vercel.app` while preserving the frontend authentication cookie. The direct cross-origin API override did not fix the production question data.
+
+Validation before push: frontend production build, targeted API config ESLint, Git whitespace checks, and unauthenticated production question API check (401, confirming the route responds and requires a session) passed.
+
+## 2026-10-25 — `main`
+
+Commits included in this push:
+
 - `ed41f42` — Aligned the production frontend API base URL with `Ryuuen8/Matekk-Website1`, while keeping the local `/api` development proxy.
 
 Validation before push: frontend production build, targeted API config ESLint, Git whitespace checks, and unauthenticated production endpoint route check passed. The backend returned 401 for its protected question route without a session; the previous production `/api` route returned 404.
