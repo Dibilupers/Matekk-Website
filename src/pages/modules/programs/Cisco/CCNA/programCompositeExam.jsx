@@ -77,7 +77,7 @@ function restoreExamSession(exam, sessionStorageKey) {
 			const questionTypeChanged = currentBankQuestion && currentBankQuestion.type !== question.type;
 			const refreshedQuestion = questionTypeChanged
 				? currentBankQuestion
-				: currentBankQuestion?.exhibitImage
+				: currentBankQuestion && (currentBankQuestion.imageUrl || currentBankQuestion.exhibitImage)
 					? { ...question, imageUrl: currentBankQuestion.imageUrl, exhibitImage: currentBankQuestion.exhibitImage }
 					: question;
 			if (questionTypeChanged) {
@@ -567,8 +567,8 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 								</p>
 								<QuestionPrompt
 									prompt={question.prompt}
-									imageUrl={question.exhibitImage}
-									hasSeparateExhibit={Boolean(question.exhibit || question.exhibitImage)}
+									imageUrl={question.exhibitImage || question.imageUrl}
+									hasSeparateExhibit={Boolean(question.exhibit || question.exhibitImage || question.imageUrl)}
 								/>
 								{/* Device output extracted from the question stays separate from its prompt. */}
 								{question.exhibit && (
