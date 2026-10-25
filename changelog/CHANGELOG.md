@@ -6,7 +6,7 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
-- `edcc33b` — Connected the homepage Contact and Inquire Now forms to backend
+- `104ab8e` — Connected the homepage Contact and Inquire Now forms to backend
   Google reCAPTCHA verification; form submissions now require a valid token
   before email delivery or inquiry storage.
 
