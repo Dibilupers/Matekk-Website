@@ -2,6 +2,15 @@
 
 Tracking begins 2026-10-17.
 
+## 2026-10-25 — `main`
+
+Commits included in this push:
+
+- `fddc196` — Connected the CompTIA Network+ and Security+ exhibit images to their matching question records.
+- `b1fb719` — Merged `emman` into the latest `main`, preserving offline CompTIA prompt styling while rendering question images in exams and restored sessions.
+
+Validation before push: frontend production build and Git whitespace checks passed.
+
 ## 2026-10-24 — `main`
 
 Commits included in this push:
