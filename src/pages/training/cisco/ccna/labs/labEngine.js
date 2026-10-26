@@ -266,6 +266,17 @@ const HELP = {
 	"config-if": ["description      Interface specific description", "do               Run an exec-level command", "end              Exit to privileged mode", "exit             Exit from interface configuration mode", "ip               Interface IP config commands (ip address)", "no               Negate a command", "shutdown         Shutdown the selected interface"],
 };
 
+function tokenStart(line, tokenIndex) {
+	const tokens = /\S+/g;
+	let match;
+	let index = 0;
+	while ((match = tokens.exec(line))) {
+		if (index === tokenIndex) return match.index;
+		index += 1;
+	}
+	return line.length;
+}
+
 export function promptFor(state, devName) {
 	const h = state.devices[devName].hostname;
 	const mode = state.consoles[devName].mode;
@@ -279,20 +290,28 @@ export function execute(lab, prev, devName, line) {
 	const con = state.consoles[devName];
 	const out = [];
 	const t = line.trim().split(/\s+/).filter(Boolean);
-	const invalid = () => out.push("% Invalid input detected at '^' marker.");
-	const incomplete = () => out.push("% Incomplete command.");
+	const invalidAt = (index = 0, message = "% Invalid input detected at '^' marker.") => {
+		const cursor = promptFor(state, devName).length + tokenStart(line, index);
+		out.push(`${" ".repeat(cursor)}^`, message);
+	};
+	const incomplete = () => {
+		const cursor = promptFor(state, devName).length + line.length;
+		out.push(`${" ".repeat(cursor)}^`, "% Incomplete command.");
+	};
 	if (t.length === 0) return { state, out };
 	if (t[0] === "?" || t[t.length - 1] === "?") return { state, out: HELP[con.mode] };
 
-	const exec = (tk, privileged) => {
+	const exec = (tk, privileged, tokenOffset = 0) => {
+		const invalid = (index = 0) => invalidAt(tokenOffset + index);
 		if (kw(tk[0], "ping", 1)) {
 			if (!tk[1]) return incomplete();
-			if (!isIp(tk[1])) return out.push("% Unrecognized host or address, or protocol not running.");
+			if (!isIp(tk[1])) return invalid(1);
 			const ok = canReach(lab, state, devName, tk[1]);
 			return out.push("Type escape sequence to abort.", `Sending 5, 100-byte ICMP Echos to ${tk[1]}, timeout is 2 seconds:`, ok ? "!!!!!" : ".....", ok ? "Success rate is 100 percent (5/5), round-trip min/avg/max = 1/2/4 ms" : "Success rate is 0 percent (0/5)");
 		}
 		if (kw(tk[0], "traceroute", 4)) {
-			if (!tk[1] || !isIp(tk[1])) return incomplete();
+			if (!tk[1]) return incomplete();
+			if (!isIp(tk[1])) return invalid(1);
 			out.push("Type escape sequence to abort.", `Tracing the route to ${tk[1]}`, "");
 			const f = forward(lab, state, devName, tk[1]);
 			const ok = f.ok && canReach(lab, state, devName, tk[1]);
@@ -304,9 +323,17 @@ export function execute(lab, prev, devName, line) {
 			if (!tk[1]) return incomplete();
 			if (privileged && kw(tk[1], "running-config", 3)) return out.push(...runningConfig(d));
 			if (privileged && kw(tk[1], "startup-config", 3)) return out.push(...(d.startup ? (con.startupText || []) : ["startup-config is not present"]));
-			if (kw(tk[1], "ip", 2) && kw(tk[2], "interface", 3) && kw(tk[3], "brief", 2)) return out.push(...showIpIntBrief(lab, state, devName));
-			if (kw(tk[1], "ip", 2) && kw(tk[2], "route", 2)) return out.push(...showIpRoute(lab, state, devName));
-			return invalid();
+			let errorToken = 1;
+			if (kw(tk[1], "ip", 2)) {
+				if (!tk[2]) return incomplete();
+				if (kw(tk[2], "interface", 3)) {
+					if (!tk[3]) return incomplete();
+					if (kw(tk[3], "brief", 2)) return out.push(...showIpIntBrief(lab, state, devName));
+					errorToken = 3;
+				} else if (kw(tk[2], "route", 2)) return out.push(...showIpRoute(lab, state, devName));
+				else errorToken = 2;
+			}
+			return invalid(errorToken);
 		}
 		if (privileged && (kw(tk[0], "write", 2) || (kw(tk[0], "copy", 2) && kw(tk[1], "running-config", 3) && kw(tk[2], "startup-config", 3)))) {
 			if (kw(tk[0], "copy", 2)) out.push("Destination filename [startup-config]? ");
@@ -322,9 +349,12 @@ export function execute(lab, prev, devName, line) {
 		if (kw(t[0], "enable", 2)) con.mode = "priv";
 		else exec(t, false);
 	} else if (mode === "priv") {
-		if (kw(t[0], "configure", 4) && (!t[1] || kw(t[1], "terminal", 1))) {
-			con.mode = "config";
-			out.push("Enter configuration commands, one per line.  End with CNTL/Z.");
+		if (kw(t[0], "configure", 4)) {
+			if (t[1] && !kw(t[1], "terminal", 1)) invalidAt(1);
+			else {
+				con.mode = "config";
+				out.push("Enter configuration commands, one per line.  End with CNTL/Z.");
+			}
 		} else if (kw(t[0], "disable", 4) || kw(t[0], "exit", 2)) con.mode = "user";
 		else exec(t, true);
 	} else {
@@ -342,7 +372,7 @@ export function execute(lab, prev, devName, line) {
 		} else if (kw(tk[0], "interface", 3)) {
 			const name = parseIface(tk.slice(1), d);
 			if (!tk[1]) incomplete();
-			else if (!name) invalid();
+			else if (!name) invalidAt((neg ? 1 : 0) + 1);
 			else {
 				con.mode = "config-if";
 				con.iface = name;
@@ -356,13 +386,17 @@ export function execute(lab, prev, devName, line) {
 				if (neg) d.secret = "";
 				else if (!tk[2]) incomplete();
 				else d.secret = tk[2];
-			} else invalid();
+			} else invalidAt((neg ? 1 : 0) + 1);
 		} else if (mode === "config" && kw(tk[0], "ip", 2) && kw(tk[1], "route", 3)) {
 			const [, , net, mask, via, adRaw] = tk;
 			const ad = adRaw === undefined ? 1 : Number(adRaw);
+			const offset = neg ? 1 : 0;
 			if (!net || !mask || !via) incomplete();
-			else if (!isIp(net) || !isMask(mask) || !isIp(via) || !(Number.isInteger(ad) && ad >= 1 && ad <= 255)) invalid();
-			else if (networkOf(net, mask) !== net) out.push("%Inconsistent address and mask");
+			else if (!isIp(net)) invalidAt(offset + 2);
+			else if (!isMask(mask)) invalidAt(offset + 3);
+			else if (!isIp(via)) invalidAt(offset + 4);
+			else if (!(Number.isInteger(ad) && ad >= 1 && ad <= 255)) invalidAt(offset + 5);
+			else if (networkOf(net, mask) !== net) invalidAt(offset + 2, "%Inconsistent address and mask");
 			else if (neg) d.routes = d.routes.filter((r) => !(r.net === net && r.mask === mask && r.via === via));
 			else {
 				d.routes = d.routes.filter((r) => !(r.net === net && r.mask === mask && r.via === via));
@@ -374,7 +408,8 @@ export function execute(lab, prev, devName, line) {
 				i.ip = "";
 				i.mask = "";
 			} else if (!tk[2] || !tk[3]) incomplete();
-			else if (!isIp(tk[2]) || !isMask(tk[3])) invalid();
+			else if (!isIp(tk[2])) invalidAt((neg ? 1 : 0) + 2);
+			else if (!isMask(tk[3])) invalidAt((neg ? 1 : 0) + 3);
 			else {
 				i.ip = tk[2];
 				i.mask = tk[3];
@@ -392,7 +427,13 @@ export function execute(lab, prev, devName, line) {
 			}
 		} else if (mode === "config-if" && kw(tk[0], "description", 3)) {
 			d.interfaces[con.iface].desc = neg ? "" : tk.slice(1).join(" ");
-		} else invalid();
+		} else {
+			const offset = neg ? 1 : 0;
+			const errorToken = kw(tk[0], "ip", 2) || kw(tk[0], "enable", 2)
+				? offset + 1
+				: offset;
+			invalidAt(errorToken);
+		}
 	}
 	return { state, out };
 }
