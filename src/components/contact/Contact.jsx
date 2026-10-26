@@ -1,15 +1,12 @@
 import emailjs from "emailjs-com";
 import { useState, useRef, useEffect } from "react";
 import DOMPurify from "dompurify";
-import ReCAPTCHA from "react-google-recaptcha";
 import API_URL from "../../config/api";
+import { executeRecaptcha, RECAPTCHA_SITE_KEY } from "../../config/recaptcha";
 
 const EMAILJS_SERVICE_ID  = import.meta.env.VITE_EMAILJS_SERVICE_ID;
 const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
 const EMAILJS_PUBLIC_KEY  = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
-const RECAPTCHA_TEST_SITE_KEY = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI";
-const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY
-  || (import.meta.env.DEV ? RECAPTCHA_TEST_SITE_KEY : "");
 const COOLDOWN_MS         = 60_000;
 
 // ── Validators ─────────────────────────────────────────────────────────────
@@ -21,12 +18,9 @@ const isTooLong    = (v, max) => v.length > max;
 export default function ContactForm() {
   const [loading, setLoading]           = useState(false);
   const [status, setStatus]             = useState("");
-  const [recaptchaToken, setRecaptchaToken] = useState(null);
-  const [captchaError, setCaptchaError] = useState("");
 
   const timerRef    = useRef(null);
   const cooldownRef = useRef(null);
-  const recaptchaRef = useRef(null);
 
   // Cleanup timers on unmount
   useEffect(() => () => {
@@ -67,15 +61,6 @@ export default function ContactForm() {
     }
 
     // ── reCAPTCHA ─────────────────────────────────────────────────────────
-    if (!RECAPTCHA_SITE_KEY) {
-      setStatus("CAPTCHA is not configured. Please contact us directly.");
-      return;
-    }
-    if (!recaptchaToken) {
-      setStatus(captchaError || "Please complete the CAPTCHA.");
-      return;
-    }
-
     // ── Sanitize ──────────────────────────────────────────────────────────
     const name    = DOMPurify.sanitize(e.target.name.value);
     const email   = DOMPurify.sanitize(e.target.email.value);
@@ -98,6 +83,10 @@ export default function ContactForm() {
     }
     if (!isValidPhone(phone)) {
       setStatus("Please enter a valid phone number.");
+      return;
+    }
+    if (!RECAPTCHA_SITE_KEY) {
+      setStatus("CAPTCHA is not configured. Please contact us directly.");
       return;
     }
 
@@ -138,22 +127,17 @@ export default function ContactForm() {
     };
 
     try {
+      const captchaToken = await executeRecaptcha("contact");
       const verification = await fetch(`${API_URL}/captcha/verify`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ captchaToken: recaptchaToken }),
+        body: JSON.stringify({ captchaToken, captchaAction: "contact" }),
       });
       if (!verification.ok) {
-        setStatus("CAPTCHA verification failed. Please complete it again.");
-        recaptchaRef.current?.reset();
-        setRecaptchaToken(null);
-        setLoading(false);
-        return;
+        throw new Error("CAPTCHA verification failed. Please try again.");
       }
     } catch {
-      setStatus("Unable to verify CAPTCHA. Check your connection and try again.");
-      recaptchaRef.current?.reset();
-      setRecaptchaToken(null);
+      setStatus("CAPTCHA verification failed. Please try again.");
       setLoading(false);
       return;
     }
@@ -163,16 +147,10 @@ export default function ContactForm() {
       await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, payload, EMAILJS_PUBLIC_KEY);
       setStatus("Message sent successfully!");
       timerRef.current = setTimeout(() => setStatus(""), 3_000);
-      setRecaptchaToken(null);
-      setCaptchaError("");
-      recaptchaRef.current?.reset();
       e.target.reset();
     } catch {
       setStatus("Failed to send message. Please try again.");
       timerRef.current = setTimeout(() => setStatus(""), 5_000);
-      recaptchaRef.current?.reset();
-      setRecaptchaToken(null);
-      setCaptchaError("");
     } finally {
       setLoading(false);
     }
@@ -245,25 +223,9 @@ export default function ContactForm() {
 
       {RECAPTCHA_SITE_KEY ? (
         <div className="flex flex-col items-center gap-2">
-          <ReCAPTCHA
-            ref={recaptchaRef}
-            sitekey={RECAPTCHA_SITE_KEY}
-            onChange={(token) => {
-              setRecaptchaToken(token);
-              setCaptchaError("");
-            }}
-            onExpired={() => {
-              setRecaptchaToken(null);
-              setCaptchaError("CAPTCHA expired. Please verify again.");
-            }}
-            onErrored={() => {
-              setRecaptchaToken(null);
-              setCaptchaError("CAPTCHA could not load. Check your connection and try again.");
-            }}
-          />
-          {captchaError && (
-            <p className="text-center text-sm text-red-500">{captchaError}</p>
-          )}
+          <p className="text-center text-xs text-gray-500">
+            Protected by Google reCAPTCHA.
+          </p>
         </div>
       ) : (
         <p className="self-center text-sm text-red-500">

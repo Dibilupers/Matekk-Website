@@ -8,13 +8,19 @@ import { ConfigService } from '@nestjs/config';
 
 type RecaptchaVerificationResponse = {
   success?: boolean;
+  action?: string;
+  score?: number;
 };
+
+export type RecaptchaAction = 'contact' | 'training_inquiry' | 'solutions_inquiry';
+
+const MINIMUM_RECAPTCHA_SCORE = 0.5;
 
 @Injectable()
 export class CaptchaService {
   constructor(private readonly config: ConfigService) {}
 
-  async verify(captchaToken: string): Promise<void> {
+  async verify(captchaToken: string, expectedAction: RecaptchaAction): Promise<void> {
     const secret = this.config.get<string>('RECAPTCHA_SECRET_KEY')?.trim();
     if (!secret) {
       throw new InternalServerErrorException('CAPTCHA verification is not configured.');
@@ -47,7 +53,13 @@ export class CaptchaService {
       throw new ServiceUnavailableException('CAPTCHA verification returned an invalid response.');
     }
 
-    if (result.success !== true) {
+    if (
+      result.success !== true
+      || result.action !== expectedAction
+      || typeof result.score !== 'number'
+      || !Number.isFinite(result.score)
+      || result.score < MINIMUM_RECAPTCHA_SCORE
+    ) {
       throw new BadRequestException('CAPTCHA verification failed. Please complete it again.');
     }
   }

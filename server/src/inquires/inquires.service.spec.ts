@@ -66,7 +66,7 @@ describe('InquiresService', () => {
 
     await expect(service.create(inquiry)).resolves.toEqual({ id: 1 });
 
-    expect(verifyCaptcha).toHaveBeenCalledWith('verified-token');
+    expect(verifyCaptcha).toHaveBeenCalledWith('verified-token', 'training_inquiry');
     expect(createInquiry).toHaveBeenCalledWith({
       data: {
         inquiry_type: 'Training Inquiry',
@@ -92,6 +92,21 @@ describe('InquiresService', () => {
       message: 'Please send details.',
     })).rejects.toThrow('CAPTCHA rejected');
     expect(createInquiry).not.toHaveBeenCalled();
+  });
+
+  it('verifies ICT solutions inquiries with their own CAPTCHA action', async () => {
+    createInquiry.mockResolvedValue({ id: 2 });
+    await service.create({
+      captchaToken: 'verified-token',
+      inquiry_type: 'ICT Solutions Inquiry',
+      name: 'A client',
+      email: 'client@example.com',
+      phone: '09171234567',
+      subject: 'Solutions',
+      message: 'Please send details.',
+    });
+
+    expect(verifyCaptcha).toHaveBeenCalledWith('verified-token', 'solutions_inquiry');
   });
 
   it('accepts an inquiry by marking it resolved', async () => {

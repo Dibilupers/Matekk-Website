@@ -27,9 +27,13 @@ describe('CaptchaService', () => {
 
   it('asks Google to verify the submitted token', async () => {
     getConfig.mockReturnValue('private-secret');
-    fetchMock.mockResolvedValue(new Response(JSON.stringify({ success: true }), { status: 200 }));
+    fetchMock.mockResolvedValue(new Response(JSON.stringify({
+      success: true,
+      action: 'contact',
+      score: 0.9,
+    }), { status: 200 }));
 
-    await expect(service.verify('captcha-token')).resolves.toBeUndefined();
+    await expect(service.verify('captcha-token', 'contact')).resolves.toBeUndefined();
 
     expect(fetchMock).toHaveBeenCalledWith(
       'https://www.google.com/recaptcha/api/siteverify',
@@ -47,13 +51,35 @@ describe('CaptchaService', () => {
     getConfig.mockReturnValue('private-secret');
     fetchMock.mockResolvedValue(new Response(JSON.stringify({ success: false }), { status: 200 }));
 
-    await expect(service.verify('invalid-token')).rejects.toBeInstanceOf(BadRequestException);
+    await expect(service.verify('invalid-token', 'contact')).rejects.toBeInstanceOf(BadRequestException);
+  });
+
+  it('rejects a token issued for a different action', async () => {
+    getConfig.mockReturnValue('private-secret');
+    fetchMock.mockResolvedValue(new Response(JSON.stringify({
+      success: true,
+      action: 'training_inquiry',
+      score: 0.9,
+    }), { status: 200 }));
+
+    await expect(service.verify('captcha-token', 'contact')).rejects.toBeInstanceOf(BadRequestException);
+  });
+
+  it('rejects a low-score v3 token', async () => {
+    getConfig.mockReturnValue('private-secret');
+    fetchMock.mockResolvedValue(new Response(JSON.stringify({
+      success: true,
+      action: 'contact',
+      score: 0.4,
+    }), { status: 200 }));
+
+    await expect(service.verify('captcha-token', 'contact')).rejects.toBeInstanceOf(BadRequestException);
   });
 
   it('fails explicitly if the production secret is not configured', async () => {
     getConfig.mockReturnValue(undefined);
 
-    await expect(service.verify('captcha-token')).rejects.toBeInstanceOf(InternalServerErrorException);
+    await expect(service.verify('captcha-token', 'contact')).rejects.toBeInstanceOf(InternalServerErrorException);
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
@@ -61,6 +87,6 @@ describe('CaptchaService', () => {
     getConfig.mockReturnValue('private-secret');
     fetchMock.mockRejectedValue(new Error('Google is unavailable'));
 
-    await expect(service.verify('captcha-token')).rejects.toBeInstanceOf(ServiceUnavailableException);
+    await expect(service.verify('captcha-token', 'contact')).rejects.toBeInstanceOf(ServiceUnavailableException);
   });
 });
