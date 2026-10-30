@@ -38,11 +38,11 @@ export default function SecurityPlusExam() {
 	if (questionBankState.status === "ready" && !exam) {
 		return <SecurityPlusExamMessage title="Exam format not found" message="Choose an exam format from the Security+ dashboard." />;
 	}
-	if (exam && questionBankState.questions.length < exam.questionCount) {
+	if (exam && questionBankState.questions.length < exam.scoredQuestionCount) {
 		return (
 			<SecurityPlusExamMessage
 				title={`${exam.name} is not available yet`}
-				message={`The CompTIA Security+ question bank has ${questionBankState.questions.length} questions. This format requires ${exam.questionCount}.`}
+				message={`The CompTIA Security+ question bank has ${questionBankState.questions.length} scored questions. This format requires ${exam.scoredQuestionCount} scored questions, followed by five unscored simulations.`}
 			/>
 		);
 	}

@@ -1,0 +1,42 @@
+[
+  {
+    "id": "sy0-simulation-81",
+    "type": "study",
+    "prompt": "HOTSPOT Select the appropriate attack and remediation from each drop-down list to label the corresponding attack with its remediation. INSTRUCTIONS Not all attacks and remediation actions will be used. If at any time you would like to bring back the initial state of the simu-lation, please click the Reset All button.",
+    "studyNote": "Simulation review item. The supplied question file does not include an answer key, so this item is not graded.",
+    "source": "CompTIA Security+ SY0-701",
+    "imagePath": null
+  },
+  {
+    "id": "sy0-simulation-82",
+    "type": "study",
+    "prompt": "HOTSPOT You are security administrator investigating a potential infection on a network. Click on each host and firewall. Review all logs to determine which host originated the Infecton and then deny each remaining hosts clean or infected.",
+    "studyNote": "Simulation review item. The supplied question file does not include an answer key, so this item is not graded.",
+    "source": "CompTIA Security+ SY0-701",
+    "imagePath": null
+  },
+  {
+    "id": "sy0-simulation-585",
+    "type": "study",
+    "prompt": "SIMULATION A security analyst is creating the first draft of a network diagram for the company's new customer-facing payment application that will be hosted by a third-party cloud service provider.",
+    "studyNote": "Simulation review item. The supplied question file does not include an answer key, so this item is not graded.",
+    "source": "CompTIA Security+ SY0-701",
+    "imagePath": "./sy0-exhibits/sy0_q585.png"
+  },
+  {
+    "id": "sy0-simulation-586",
+    "type": "study",
+    "prompt": "SIMULATION An organization has learned that its data is being exchanged on the dark web. The CIO has requested that you investigate and implement the most secure solution to protect employee accounts. INSTRUCTIONS Review the data to identify weak security practices and provide the most appropriate security solution to meet the CIO's requirements.",
+    "studyNote": "Simulation review item. The supplied question file does not include an answer key, so this item is not graded.",
+    "source": "CompTIA Security+ SY0-701",
+    "imagePath": "./sy0-exhibits/sy0_q586.png"
+  },
+  {
+    "id": "sy0-simulation-657",
+    "type": "study",
+    "prompt": "SIMULATION A recent black-box penetration test of http://example.com discovered that external website vulnerabilities exist, such as directory traversals, cross-site scripting, cross-site forgery, and insecure protocols. You are tasked with reducing the attack space and enabling secure protocols. INSTRUCTIONS Part 1 Use the drop-down menus to select the appropriate technologies for each location to implement a secure and resilient web architecture. Not all technologies will be used, and technologies may be used multiple times. Part 2 Use the drop-down menus to select the appropriate command snippets from the drop-down menus. Each command section must be filled. A. See the solution in explanation below",
+    "studyNote": "Simulation review item. The supplied question file does not include an answer key, so this item is not graded.",
+    "source": "CompTIA Security+ SY0-701",
+    "imagePath": "./sy0-exhibits/sy0_q657.png"
+  }
+]

@@ -1,4 +1,16 @@
 import { createCompTIAExamFormats } from "../Network+/networkPlusExamFormats";
+import SIMULATIONS from "./offline/securityPlusSimulations.json";
+
+const SIMULATION_EXHIBITS = import.meta.glob("./offline/sy0-exhibits/*.png", {
+	eager: true,
+	import: "default",
+	query: "?url",
+});
+const SIMULATION_EXHIBITS_BY_NAME = new Map(Object.entries(SIMULATION_EXHIBITS).map(([path, url]) => [path.split("/").at(-1), url]));
+const SIMULATION_QUESTIONS = SIMULATIONS.map((question) => ({
+	...question,
+	exhibitImage: question.imagePath ? SIMULATION_EXHIBITS_BY_NAME.get(question.imagePath.split("/").at(-1)) : undefined,
+}));
 
 function shuffle(items) {
 	const shuffled = [...items];
@@ -27,6 +39,8 @@ export function createSecurityPlusExamFormats(questionBank) {
 		examKey,
 		{
 			...format,
+			questionCount: format.questionCount + SIMULATION_QUESTIONS.length,
+			scoredQuestionCount: format.questionCount,
 			createQuestions() {
 				const questions = format.createQuestions();
 				const targetExhibitCount = Math.min(imageQuestions.length, Math.ceil(questions.length / 50) * 5);
@@ -52,7 +66,7 @@ export function createSecurityPlusExamFormats(questionBank) {
 					regularIndex += segmentRegular.length;
 					balancedQuestions.push(...shuffle([...segmentExhibits, ...segmentRegular]));
 				}
-				return balancedQuestions;
+				return [...balancedQuestions, ...SIMULATION_QUESTIONS];
 			},
 		},
 	]));
