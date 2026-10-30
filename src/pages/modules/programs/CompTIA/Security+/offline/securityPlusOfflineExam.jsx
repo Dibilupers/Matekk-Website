@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import ProgramCompositeExam from "../../../Cisco/CCNA/programCompositeExam";
 import QUESTIONS from "./securityPlusOfflineQuestions.json";
+import SIMULATIONS from "./securityPlusSimulations.json";
 import { createSecurityPlusExamFormats } from "../securityPlusExamFormats";
 
 const EXHIBITS = import.meta.glob("./sy0-exhibits/*.png", {
@@ -11,7 +12,7 @@ const EXHIBITS = import.meta.glob("./sy0-exhibits/*.png", {
 	query: "?url",
 });
 const EXHIBITS_BY_NAME = new Map(Object.entries(EXHIBITS).map(([path, url]) => [path.split("/").at(-1), url]));
-const QUESTION_BANK = QUESTIONS.map((question) => ({
+const QUESTION_BANK = [...QUESTIONS, ...SIMULATIONS].map((question) => ({
 	...question,
 	exhibitImage: question.imagePath ? EXHIBITS_BY_NAME.get(question.imagePath.split("/").at(-1)) : undefined,
 }));

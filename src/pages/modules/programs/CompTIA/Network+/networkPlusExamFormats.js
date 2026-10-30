@@ -52,22 +52,26 @@ export function createCompTIAExamFormats(
 	const uniqueQuestions = deduplicateQuestions
 		? [...new Map(questionBank.map((question) => [question.prompt.trim().toLowerCase(), question])).values()]
 		: [...questionBank];
+	const scoredQuestions = uniqueQuestions.filter((question) => question.type !== "study");
+	const reviewQuestions = uniqueQuestions.filter((question) => question.type === "study");
 
 	const timedFormats = Object.fromEntries(Object.entries(examFormatDefinitions).map(([examKey, format]) => [
 		examKey,
 		{
 			...format,
+			questionCount: format.questionCount,
+			scoredQuestionCount: format.questionCount,
 			subtitle: `${programName} question bank`,
 			sessionKey: `matekk-${programKey}-${examKey}-exam-session`,
 			path: `/modules/programs/${programKey}/exam/${examKey}`,
 			programName,
 			createQuestions() {
-				if (uniqueQuestions.length < format.questionCount) {
+				if (scoredQuestions.length < format.questionCount) {
 					throw new Error(
-						`The ${programName} question bank has ${uniqueQuestions.length} valid questions; ${format.name} requires ${format.questionCount}.`,
+						`The ${programName} question bank has ${scoredQuestions.length} scorable questions; ${format.name} requires ${format.questionCount}.`,
 					);
 				}
-				return shuffle(uniqueQuestions)
+				return shuffle(scoredQuestions)
 					.slice(0, format.questionCount)
 					.map(shuffleQuestionChoices);
 			},
@@ -81,13 +85,15 @@ export function createCompTIAExamFormats(
 		all_questions: {
 			name: "All Questions Exam",
 			subtitle: `${programName} question bank`,
-			questionCount: questionBank.length,
+			questionCount: uniqueQuestions.length,
+			scoredQuestionCount: scoredQuestions.length,
+			reviewQuestionCount: reviewQuestions.length,
 			durationSeconds: null,
 			sessionKey: `matekk-${programKey}-all_questions-exam-session`,
 			path: `/modules/programs/${programKey}/exam/all_questions`,
 			programName,
 			createQuestions() {
-				return shuffle(questionBank);
+				return [...shuffle(scoredQuestions), ...reviewQuestions];
 			},
 		},
 	};

@@ -35,14 +35,15 @@ export default function NetworkPlusExam() {
 		? createNetworkPlusExamFormats(questionBankState.questions)
 		: null;
 	const exam = examFormats?.[examKey];
+	const scoredQuestionCount = questionBankState.questions.filter((question) => question.type !== "study").length;
 	if (questionBankState.status === "ready" && !exam) {
 		return <NetworkPlusExamMessage title="Exam format not found" message="Choose an exam format from the Network+ dashboard." />;
 	}
-	if (exam && exam.durationSeconds !== null && questionBankState.questions.length < exam.questionCount) {
+	if (exam && scoredQuestionCount < exam.scoredQuestionCount) {
 		return (
 			<NetworkPlusExamMessage
 				title={`${exam.name} is not available yet`}
-				message={`The CompTIA Network+ question bank has ${questionBankState.questions.length} questions. This format requires ${exam.questionCount}.`}
+				message={`The CompTIA Network+ question bank has ${scoredQuestionCount} scorable questions. This format requires ${exam.scoredQuestionCount}.`}
 			/>
 		);
 	}

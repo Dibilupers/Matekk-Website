@@ -1,16 +1,4 @@
 import { createCompTIAExamFormats } from "../Network+/networkPlusExamFormats";
-import SIMULATIONS from "./offline/securityPlusSimulations.json";
-
-const SIMULATION_EXHIBITS = import.meta.glob("./offline/sy0-exhibits/*.png", {
-	eager: true,
-	import: "default",
-	query: "?url",
-});
-const SIMULATION_EXHIBITS_BY_NAME = new Map(Object.entries(SIMULATION_EXHIBITS).map(([path, url]) => [path.split("/").at(-1), url]));
-const SIMULATION_QUESTIONS = SIMULATIONS.map((question) => ({
-	...question,
-	exhibitImage: question.imagePath ? SIMULATION_EXHIBITS_BY_NAME.get(question.imagePath.split("/").at(-1)) : undefined,
-}));
 
 function shuffle(items) {
 	const shuffled = [...items];
@@ -32,41 +20,41 @@ export function createSecurityPlusExamFormats(questionBank) {
 		includeAllQuestions: true,
 	});
 	const imageQuestions = [...new Map(questionBank
-		.filter(hasExhibit)
+		.filter((question) => question.type !== "study" && hasExhibit(question))
 		.map((question) => [question.prompt.trim().toLocaleLowerCase(), question])).values()];
 
 	return Object.fromEntries(Object.entries(formats).map(([examKey, format]) => [
 		examKey,
 		{
 			...format,
-			questionCount: format.questionCount + SIMULATION_QUESTIONS.length,
-			scoredQuestionCount: format.questionCount,
 			createQuestions() {
 				const questions = format.createQuestions();
-				const targetExhibitCount = Math.min(imageQuestions.length, Math.ceil(questions.length / 50) * 5);
-				const selectedExhibits = [...questions.filter(hasExhibit).slice(0, targetExhibitCount)];
+				const scoredQuestions = questions.filter((question) => question.type !== "study");
+				const reviewQuestions = questions.filter((question) => question.type === "study");
+				const targetExhibitCount = Math.min(imageQuestions.length, Math.ceil(scoredQuestions.length / 50) * 5);
+				const selectedExhibits = [...scoredQuestions.filter(hasExhibit).slice(0, targetExhibitCount)];
 				const selectedPrompts = new Set(selectedExhibits.map((question) => question.prompt.trim().toLocaleLowerCase()));
 				const remainingExhibits = shuffle(imageQuestions.filter((question) => !selectedPrompts.has(question.prompt.trim().toLocaleLowerCase())));
 				selectedExhibits.push(...remainingExhibits.slice(0, targetExhibitCount - selectedExhibits.length));
-				const selectedRegularQuestions = questions.filter((question) => !hasExhibit(question));
+				const selectedRegularQuestions = scoredQuestions.filter((question) => !hasExhibit(question));
 				const regularPrompts = new Set(selectedRegularQuestions.map((question) => question.prompt.trim().toLocaleLowerCase()));
 				const regularPool = [
 					...selectedRegularQuestions,
-					...questionBank.filter((question) => !hasExhibit(question) && !regularPrompts.has(question.prompt.trim().toLocaleLowerCase())),
+					...questionBank.filter((question) => question.type !== "study" && !hasExhibit(question) && !regularPrompts.has(question.prompt.trim().toLocaleLowerCase())),
 				];
-				const regularQuestions = shuffle(regularPool).slice(0, questions.length - selectedExhibits.length);
+				const regularQuestions = shuffle(regularPool).slice(0, scoredQuestions.length - selectedExhibits.length);
 				const balancedQuestions = [];
 				let exhibitIndex = 0;
 				let regularIndex = 0;
-				for (let start = 0; start < questions.length; start += 50) {
-					const segmentSize = Math.min(50, questions.length - start);
+				for (let start = 0; start < scoredQuestions.length; start += 50) {
+					const segmentSize = Math.min(50, scoredQuestions.length - start);
 					const segmentExhibits = selectedExhibits.slice(exhibitIndex, exhibitIndex + Math.min(5, selectedExhibits.length - exhibitIndex));
 					exhibitIndex += segmentExhibits.length;
 					const segmentRegular = regularQuestions.slice(regularIndex, regularIndex + segmentSize - segmentExhibits.length);
 					regularIndex += segmentRegular.length;
 					balancedQuestions.push(...shuffle([...segmentExhibits, ...segmentRegular]));
 				}
-				return [...balancedQuestions, ...SIMULATION_QUESTIONS];
+				return [...balancedQuestions, ...reviewQuestions];
 			},
 		},
 	]));
