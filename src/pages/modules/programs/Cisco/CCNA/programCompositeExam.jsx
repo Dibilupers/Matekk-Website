@@ -579,6 +579,9 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 								{question.exhibit && (
 									<ExhibitText text={question.exhibit} className="mb-6" />
 								)}
+								{question.afterExhibitPrompt && (
+									<QuestionPrompt prompt={question.afterExhibitPrompt} regularWeight={isCompTIAExam && !isOnline} />
+								)}
 								<QuestionInput
 									key={question.bankId ?? question.id ?? currentIndex}
 									question={question}
@@ -740,6 +743,9 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 												)}
 												{item.exhibit && (
 													<ExhibitText text={item.exhibit} className="mt-4" />
+												)}
+												{item.afterExhibitPrompt && (
+													<p className="mt-4 whitespace-pre-wrap text-base leading-relaxed text-[#17233d]">{item.afterExhibitPrompt}</p>
 												)}
 												<div className="mt-5">
 													<QuestionReview question={item} value={item.selectedAnswer} plainTextOptions={plainTextOptions} />

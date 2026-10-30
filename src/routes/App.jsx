@@ -859,12 +859,12 @@ function OfflineEntryRoute({ children }) {
 
 function OfflineModulesPage() {
   const programs = [
-    { name: "CCNA", path: "/modules/programs/ccna" },
-    { name: "FortiOS", path: "/modules/programs/fortios/exam/all" },
-    { name: "CompTIA A+", path: "/modules/programs/comptia-aplus" },
-    { name: "CompTIA Security+", path: "/modules/programs/comptia-security-plus/exam/all_questions" },
-    { name: "CCNA Automation", path: "/modules/programs/ccna-automation" },
-    { name: "CCNA Cybersecurity", path: "/modules/programs/ccna-cybersecurity" },
+    { name: "CCNA", path: "/modules/programs/ccna", brand: "teal" },
+    { name: "FortiOS", path: "/modules/programs/fortinet-fortios", brand: "fortinet" },
+    { name: "CompTIA A+", path: "/modules/programs/comptia-aplus", brand: "comptia" },
+    { name: "CompTIA Security+", path: "/modules/programs/comptia-security-plus", brand: "comptia" },
+    { name: "CCNA Automation", path: "/modules/programs/ccna-automation", brand: "teal" },
+    { name: "CCNA Cybersecurity", path: "/modules/programs/ccna-cybersecurity", brand: "teal" },
   ];
 
   return (
@@ -875,15 +875,22 @@ function OfflineModulesPage() {
         <p className="mt-2 text-slate-600">Open a module you have visited and cached while online.</p>
       </header>
       <div className="grid gap-4 sm:grid-cols-2">
-        {programs.map((program) => (
-          <Link
-            className="rounded-xl border border-slate-200 bg-white p-6 font-semibold text-slate-900 shadow-sm transition hover:border-blue-400 hover:shadow-md"
-            key={program.path}
-            to={program.path}
-          >
-            {program.name}
-          </Link>
-        ))}
+        {programs.map((program) => {
+          const accentClass = program.brand === "teal"
+            ? "border-l-[#005b6b] hover:border-y-[#9fc8ce] hover:border-r-[#9fc8ce]"
+            : program.brand === "fortinet"
+              ? "border-l-[#e2231a] hover:border-y-[#f1beba] hover:border-r-[#f1beba]"
+              : "border-l-[#c8102e] hover:border-y-[#f0cbd3] hover:border-r-[#f0cbd3]";
+          return (
+            <Link
+              className={`rounded-xl border-y border-r border-l-4 border-y-slate-200 border-r-slate-200 bg-white p-6 font-semibold text-slate-900 shadow-sm transition hover:shadow-md ${accentClass}`}
+              key={program.path}
+              to={program.path}
+            >
+              {program.name}
+            </Link>
+          );
+        })}
       </div>
     </main>
   );

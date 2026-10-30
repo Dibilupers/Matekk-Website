@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import ProgramCompositeExam from "../../Cisco/CCNA/programCompositeExam";
 import { createSecurityPlusExamFormats } from "./securityPlusExamFormats";
 import { loadSecurityPlusExamQuestions } from "./securityPlusExamQuestionBank";
+import { organizeSecurityLogPrompt } from "./securityPlusQuestionFormatting";
 
 export default function SecurityPlusExam() {
 	const { examKey } = useParams();
@@ -14,7 +15,11 @@ export default function SecurityPlusExam() {
 		let isActive = true;
 		loadSecurityPlusExamQuestions()
 			.then((questions) => {
-				if (isActive) setQuestionBankState({ status: "ready", questions, error: null });
+				const organizedQuestions = questions.map((question) => ({
+					...question,
+					...organizeSecurityLogPrompt(question.prompt),
+				}));
+				if (isActive) setQuestionBankState({ status: "ready", questions: organizedQuestions, error: null });
 			})
 			.catch((error) => {
 				console.error("Unable to load the CompTIA Security+ question bank.", error);

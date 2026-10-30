@@ -136,7 +136,7 @@ function ModuleCard({ module, index, isOpen, onToggle }) {
 }
 
 export default function CompTIAProgramDashboard({ program }) {
-	const { profile } = useAuth();
+	const { profile, isOnline } = useAuth();
 	const navigate = useNavigate();
 	const isNetworkPlus = program.programKey === "comptia-network-plus";
 	const includesAllQuestionsExam = isNetworkPlus || program.includeAllQuestionsExam === true;
@@ -301,7 +301,7 @@ export default function CompTIAProgramDashboard({ program }) {
 		<main className="program-faceted-page ccna-page-enter comptia-program-page relative min-h-screen w-full min-w-0 overflow-x-clip bg-white text-[#071126]">
 			{createPortal(
 				<Link
-					to="/pages/blank"
+					to={isOnline ? "/pages/blank" : "/modules/programs"}
 					className={`fixed left-4 top-24 z-40 flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-bold text-[#c8102e] transition hover:text-[#a80e27] active:scale-95 ${hasScrolled ? "bg-white/90 shadow-md backdrop-blur-sm" : "bg-white/80"}`}
 				>
 					<ArrowLeft size={20} strokeWidth={2.5} /> Back to Courses
@@ -341,9 +341,8 @@ export default function CompTIAProgramDashboard({ program }) {
 								</button>
 								<button
 									type="button"
-									disabled
-									aria-label="View All Modules (coming soon)"
-									className="flex h-12 cursor-not-allowed items-center gap-2 rounded-full border border-[#c8102e] px-5 text-sm font-bold text-[#c8102e] opacity-40 sm:h-[58px] sm:px-7 sm:text-base"
+									onClick={() => document.getElementById("program-modules")?.scrollIntoView({ behavior: "smooth", block: "start" })}
+									className="flex h-12 items-center gap-2 rounded-full border border-[#c8102e] px-5 text-sm font-bold text-[#c8102e] transition hover:-translate-y-0.5 hover:bg-[#fff1f3] hover:shadow-[0_10px_20px_rgba(200,16,46,0.12)] active:translate-y-0 sm:h-[58px] sm:px-7 sm:text-base"
 								>
 									View All Modules <ArrowRight size={18} />
 								</button>
