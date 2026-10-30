@@ -108,6 +108,10 @@ export function createCompTIAExamFormats(
 }
 
 export function createNetworkPlusExamFormats(questionBank) {
+	return createCompTIAExamFormats(questionBank, { includeAllQuestions: true });
+}
+
+export function createNetworkPlusOfflineExamFormats(questionBank) {
 	const formats = createCompTIAExamFormats(questionBank, { includeAllQuestions: true });
 	const imageQuestions = [...new Map(questionBank
 		.filter((question) => question.type !== "study" && hasExhibit(question))
