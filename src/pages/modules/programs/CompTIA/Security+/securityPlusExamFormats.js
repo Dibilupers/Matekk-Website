@@ -14,12 +14,14 @@ function hasExhibit(question) {
 }
 
 export function createSecurityPlusExamFormats(questionBank, { offline = false } = {}) {
-	const formats = createCompTIAExamFormats(questionBank, {
+	const studyQuestions = offline ? questionBank.filter((question) => question.type === "study") : [];
+	const scoredQuestionBank = questionBank.filter((question) => question.type !== "study");
+	const formats = createCompTIAExamFormats(scoredQuestionBank, {
 		programKey: "comptia-security-plus",
 		programName: "CompTIA Security+",
 		includeAllQuestions: true,
 	});
-	const imageQuestions = [...new Map(questionBank
+	const imageQuestions = [...new Map(scoredQuestionBank
 		.filter((question) => question.type !== "study" && hasExhibit(question))
 		.map((question) => [question.prompt.trim().toLocaleLowerCase(), question])).values()];
 
@@ -27,11 +29,12 @@ export function createSecurityPlusExamFormats(questionBank, { offline = false } 
 		examKey,
 		{
 			...format,
+			questionCount: format.questionCount + (examKey === "all_questions" ? studyQuestions.length : 0),
+			scoredQuestionCount: format.questionCount,
 			sessionKey: offline ? `${format.sessionKey}-offline-simulations-v1` : format.sessionKey,
 			createQuestions() {
 				const questions = format.createQuestions();
-				const scoredQuestions = questions.filter((question) => question.type !== "study");
-				const reviewQuestions = questions.filter((question) => question.type === "study");
+				const scoredQuestions = questions;
 				const targetExhibitCount = Math.min(imageQuestions.length, Math.ceil(scoredQuestions.length / 50) * 5);
 				const selectedExhibits = [...scoredQuestions.filter(hasExhibit).slice(0, targetExhibitCount)];
 				const selectedPrompts = new Set(selectedExhibits.map((question) => question.prompt.trim().toLocaleLowerCase()));
@@ -41,7 +44,7 @@ export function createSecurityPlusExamFormats(questionBank, { offline = false } 
 				const regularPrompts = new Set(selectedRegularQuestions.map((question) => question.prompt.trim().toLocaleLowerCase()));
 				const regularPool = [
 					...selectedRegularQuestions,
-					...questionBank.filter((question) => question.type !== "study" && !hasExhibit(question) && !regularPrompts.has(question.prompt.trim().toLocaleLowerCase())),
+					...scoredQuestionBank.filter((question) => !hasExhibit(question) && !regularPrompts.has(question.prompt.trim().toLocaleLowerCase())),
 				];
 				const regularQuestions = shuffle(regularPool).slice(0, scoredQuestions.length - selectedExhibits.length);
 				const balancedQuestions = [];
@@ -55,7 +58,7 @@ export function createSecurityPlusExamFormats(questionBank, { offline = false } 
 					regularIndex += segmentRegular.length;
 					balancedQuestions.push(...shuffle([...segmentExhibits, ...segmentRegular]));
 				}
-				return [...balancedQuestions, ...reviewQuestions];
+				return examKey === "all_questions" ? [...balancedQuestions, ...studyQuestions] : balancedQuestions;
 			},
 		},
 	]));

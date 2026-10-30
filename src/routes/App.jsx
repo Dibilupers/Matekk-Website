@@ -864,6 +864,7 @@ function OfflineModulesPage() {
     { name: "FortiOS", path: "/modules/programs/fortios/exam/all" },
     { name: "CompTIA Network+", path: "/modules/programs/comptia-network-plus" },
     { name: "CompTIA A+", path: "/modules/programs/comptia-aplus" },
+    { name: "CompTIA Security+", path: "/modules/programs/comptia-security-plus/exam/all_questions" },
     { name: "CCNA Automation", path: "/modules/programs/ccna-automation" },
     { name: "CCNA Cybersecurity", path: "/modules/programs/ccna-cybersecurity" },
   ];
