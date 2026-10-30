@@ -135,6 +135,7 @@ import FortiOSExam from "../pages/modules/programs/Fortinet/FortiOS/fortiosExam"
 import FortiOSExamRoute from "../pages/modules/programs/Fortinet/FortiOS/FortiOSExamRoute";
 import NetworkPlusExam from "../pages/modules/programs/CompTIA/Network+/networkPlusExam";
 import SecurityPlusExam from "../pages/modules/programs/CompTIA/Security+/securityPlusExam";
+import SecurityPlusExamRoute from "../pages/modules/programs/CompTIA/Security+/securityPlusExamRoute";
 import NETWORK_PLUS_PROGRAM from "../pages/modules/programs/CompTIA/Network+/networkPlusProgram";
 import SECURITY_PLUS_PROGRAM from "../pages/modules/programs/CompTIA/Security+/securityPlusProgram";
 import FortiOSBundledOfflineExam from "../pages/modules/programs/Fortinet/FortiOS/offline/FortiOSBundledOfflineExam";
@@ -485,7 +486,7 @@ export default function App() {
           path="/modules/programs/comptia-security-plus/exam/:examKey"
           element={
             <ProtectedRoute>
-              <SecurityPlusExam />
+              <SecurityPlusExamRoute onlineExam={<SecurityPlusExam />} />
             </ProtectedRoute>
           }
         />

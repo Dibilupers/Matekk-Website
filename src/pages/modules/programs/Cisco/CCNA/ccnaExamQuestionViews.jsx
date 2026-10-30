@@ -420,9 +420,8 @@ function hasMultilineOption(question) {
 	return codeAnswers > 0 && codeAnswers >= question.options.length / 2;
 }
 
-function usesPlainOfflineDataOptions(question) {
-	if (question?.offlineLegacy !== true || !Array.isArray(question.options) || question.options.length === 0) return false;
-	return question.options.every((option) => /^(?:\s*\{[\s\S]*\}\s*|\s*\[[\s\S]*\]\s*|\s*\([\s\S]*\)\s*)$/.test(String(getDisplayedOption(question, option) ?? "")));
+function usesPlainOfflineOptions(question) {
+	return question?.offlineLegacy === true && Array.isArray(question.options);
 }
 
 // Guards against broken question data (e.g. an old saved attempt), so the page shows a message instead of crashing
@@ -607,8 +606,8 @@ export function QuestionInput({ question, value, onChange, disabled, fortiosOffl
 	}
 
 	const isMulti = type === "multi";
-	const plainDataOptions = usesPlainOfflineDataOptions(question);
-	const codeStyle = !plainDataOptions && hasMultilineOption(question);
+	const plainOfflineOptions = usesPlainOfflineOptions(question);
+	const codeStyle = !plainOfflineOptions && hasMultilineOption(question);
 	const needed = requiredSelections(question);
 	const selected = isMulti ? (Array.isArray(value) ? value : []) : value;
 
@@ -639,10 +638,10 @@ export function QuestionInput({ question, value, onChange, disabled, fortiosOffl
 						<span className={`flex h-8 w-8 shrink-0 items-center justify-center ${isMulti ? "rounded-md" : "rounded-full"} text-sm font-bold ${isSelected ? "bg-[#005b6b] text-white" : "bg-[#e8f3f4] text-[#005b6b]"}`}>
 							{letter(optionIndex)}
 						</span>
-						{(fortiosOffline ? isFortiOSCliText(String(displayedOption ?? "")) : isCliText(String(displayedOption ?? ""))) ? (
+						{!plainOfflineOptions && (fortiosOffline ? isFortiOSCliText(String(displayedOption ?? "")) : isCliText(String(displayedOption ?? ""))) ? (
 							<OptionText text={String(displayedOption)} className="text-sm font-semibold sm:text-base" fortiosOffline={fortiosOffline} />
 						) : (
-							<AnswerOptionContent option={displayedOption} codeStyle={codeStyle} plainText={plainDataOptions} />
+							<AnswerOptionContent option={displayedOption} codeStyle={codeStyle} plainText={plainOfflineOptions} />
 						)}
 					</button>
 				);
@@ -744,8 +743,8 @@ export function QuestionReview({ question, value, fortiosOffline = false }) {
 	}
 
 	const correctSet = new Set(type === "multi" ? question.answer : [question.answer]);
-	const plainDataOptions = usesPlainOfflineDataOptions(question);
-	const codeStyle = !plainDataOptions && hasMultilineOption(question);
+	const plainOfflineOptions = usesPlainOfflineOptions(question);
+	const codeStyle = !plainOfflineOptions && hasMultilineOption(question);
 	const pickedSet = new Set(type === "multi" ? (Array.isArray(value) ? value : []) : value === undefined ? [] : [value]);
 
 	return (
@@ -767,10 +766,10 @@ export function QuestionReview({ question, value, fortiosOffline = false }) {
 						}`}>
 							{letter(optionIndex)}
 						</span>
-						{(fortiosOffline ? isFortiOSCliText(String(displayedOption ?? "")) : isCliText(String(displayedOption ?? ""))) ? (
+						{!plainOfflineOptions && (fortiosOffline ? isFortiOSCliText(String(displayedOption ?? "")) : isCliText(String(displayedOption ?? ""))) ? (
 							<OptionText text={String(displayedOption)} className="text-sm font-medium sm:text-base" fortiosOffline={fortiosOffline} />
 						) : (
-							<AnswerOptionContent option={displayedOption} codeStyle={codeStyle} plainText={plainDataOptions} />
+							<AnswerOptionContent option={displayedOption} codeStyle={codeStyle} plainText={plainOfflineOptions} />
 						)}
 						{isSelectedAnswer && !isCorrectAnswer && <span className="shrink-0 text-xs font-semibold text-[#a44b13]">Your answer</span>}
 						{isCorrectAnswer && <span className="shrink-0 text-xs font-semibold text-[#287849]">Correct answer</span>}

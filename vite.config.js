@@ -53,7 +53,7 @@ function moduleOfflineSupport() {
       const offlineExhibitFiles = Object.values(bundle)
         .filter((output) => output.type === 'asset')
         .filter((output) => (output.originalFileNames || []).some((sourceName) => (
-          /[\\/]assets[\\/](?:ccna-offline-exams-images|ccna-exam)[\\/]/i.test(sourceName)
+          /[\\/](?:assets[\\/](?:ccna-offline-exams-images|ccna-exam)|sy0-exhibits)[\\/]/i.test(sourceName)
         )))
         .map((output) => output.fileName)
       const precacheFiles = [
