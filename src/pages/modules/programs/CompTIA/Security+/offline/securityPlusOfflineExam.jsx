@@ -16,7 +16,7 @@ const EXHIBITS_BY_NAME = new Map(Object.entries(EXHIBITS).map(([path, url]) => [
 
 const QUESTION_BANK = [...QUESTIONS, ...SIMULATIONS].map((question) => ({
 	...question,
-	...organizeSecurityLogPrompt(question.prompt),
+	...organizeSecurityLogPrompt(question.prompt, { offline: true }),
 	exhibitImage: question.imagePath ? EXHIBITS_BY_NAME.get(question.imagePath.split("/").at(-1)) : undefined,
 }));
 
