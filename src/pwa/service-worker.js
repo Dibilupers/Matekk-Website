@@ -6,6 +6,7 @@ const MODULE_ROUTE = /^\/modules\/programs(?:\/|$)/;
 const EXAM_ROUTE = /^\/modules\/programs\/[^/]+\/exam(?:\/|$)/;
 const OFFLINE_CCNA_EXAM_ROUTE = /^\/modules\/programs\/ccna\/exam\/(?:short|medium|long|all)\/?$/;
 const OFFLINE_FORTIOS_EXAM_ROUTE = /^\/modules\/programs\/fortinet-fortios\/exam\/(?:short|medium|long|all_questions)\/?$/;
+const OFFLINE_NETWORK_PLUS_EXAM_ROUTE = /^\/modules\/programs\/comptia-network-plus\/exam\/(?:short|medium|long|all_questions)\/?$/;
 const OFFLINE_SECURITY_PLUS_EXAM_ROUTE = /^\/modules\/programs\/comptia-security-plus\/exam\/(?:short|medium|long|all_questions)\/?$/;
 const OFFLINE_STANDALONE_FORTIOS_EXAM_ROUTE = /^\/modules\/programs\/fortios\/exam\/all\/?$/;
 const FORTIOS_QUESTION_BANK_ROUTE = /\/questions\/bank\/all-usable$/;
@@ -125,6 +126,7 @@ self.addEventListener('fetch', (event) => {
   if (request.mode === 'navigate' && MODULE_ROUTE.test(url.pathname)) {
     const canOpenOfflineExam = OFFLINE_CCNA_EXAM_ROUTE.test(url.pathname)
       || OFFLINE_FORTIOS_EXAM_ROUTE.test(url.pathname)
+      || OFFLINE_NETWORK_PLUS_EXAM_ROUTE.test(url.pathname)
       || OFFLINE_SECURITY_PLUS_EXAM_ROUTE.test(url.pathname)
       || OFFLINE_STANDALONE_FORTIOS_EXAM_ROUTE.test(url.pathname);
     if (EXAM_ROUTE.test(url.pathname) && !canOpenOfflineExam) {

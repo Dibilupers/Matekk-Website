@@ -134,6 +134,7 @@ import FortiOSDashboard, { FORTIOS_MODULES } from "../pages/modules/programs/For
 import FortiOSExam from "../pages/modules/programs/Fortinet/FortiOS/fortiosExam";
 import FortiOSExamRoute from "../pages/modules/programs/Fortinet/FortiOS/FortiOSExamRoute";
 import NetworkPlusExam from "../pages/modules/programs/CompTIA/Network+/networkPlusExam";
+import NetworkPlusExamRoute from "../pages/modules/programs/CompTIA/Network+/networkPlusExamRoute";
 import SecurityPlusExam from "../pages/modules/programs/CompTIA/Security+/securityPlusExam";
 import SecurityPlusExamRoute from "../pages/modules/programs/CompTIA/Security+/securityPlusExamRoute";
 import NETWORK_PLUS_PROGRAM from "../pages/modules/programs/CompTIA/Network+/networkPlusProgram";
@@ -478,7 +479,7 @@ export default function App() {
           path="/modules/programs/comptia-network-plus/exam/:examKey"
           element={
             <ProtectedRoute>
-              <NetworkPlusExam />
+              <NetworkPlusExamRoute onlineExam={<NetworkPlusExam />} />
             </ProtectedRoute>
           }
         />
@@ -861,6 +862,7 @@ function OfflineModulesPage() {
   const programs = [
     { name: "CCNA", path: "/modules/programs/ccna" },
     { name: "FortiOS", path: "/modules/programs/fortios/exam/all" },
+    { name: "CompTIA Network+", path: "/modules/programs/comptia-network-plus" },
     { name: "CompTIA A+", path: "/modules/programs/comptia-aplus" },
     { name: "CCNA Automation", path: "/modules/programs/ccna-automation" },
     { name: "CCNA Cybersecurity", path: "/modules/programs/ccna-cybersecurity" },
@@ -895,10 +897,12 @@ function ProtectedRoute({ children }) {
   const isExamRoute = /(?:^|\/)exam(?:\/|$)/.test(pathname);
   const isOfflineCcnaExamRoute = /^\/modules\/programs\/ccna\/exam\/(?:short|medium|long|all)$/.test(pathname);
   const isOfflineFortiOSExamRoute = /^\/modules\/programs\/fortinet-fortios\/exam\/(?:short|medium|long|all_questions)\/?$/.test(pathname);
+  const isOfflineNetworkPlusExamRoute = /^\/modules\/programs\/comptia-network-plus\/exam\/(?:short|medium|long|all_questions)\/?$/.test(pathname);
   const isOfflineSecurityPlusExamRoute = /^\/modules\/programs\/comptia-security-plus\/exam\/(?:short|medium|long|all_questions)\/?$/.test(pathname);
   const isStandaloneOfflineFortiOSExamRoute = pathname === "/modules/programs/fortios/exam/all";
   const canAccessBuiltInOfflineExam = isOfflineCcnaExamRoute
     || isOfflineFortiOSExamRoute
+    || isOfflineNetworkPlusExamRoute
     || isOfflineSecurityPlusExamRoute
     || isStandaloneOfflineFortiOSExamRoute;
   const canAccessOfflineModule = isModuleRoute && (!isExamRoute || canAccessBuiltInOfflineExam) && !isOnline;
@@ -908,7 +912,7 @@ function ProtectedRoute({ children }) {
       <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6 text-center text-white">
         <section className="max-w-lg space-y-3">
           <h1 className="text-2xl font-semibold">Internet connection required</h1>
-          <p className="text-slate-300">Only CCNA, FortiOS, and Security+ exams with cached questions are available offline. Reconnect to take this exam.</p>
+          <p className="text-slate-300">Only CCNA, FortiOS, and CompTIA Network+ or Security+ exams with cached questions are available offline. Reconnect to take this exam.</p>
         </section>
       </main>
     );
