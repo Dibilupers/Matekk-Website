@@ -516,7 +516,7 @@ export function QuestionPrompt({ prompt, imageUrl, hasSeparateExhibit = Boolean(
 }
 
 /* Answer input for one exam question (pick one, choose two, or matching). */
-export function QuestionInput({ question, value, onChange, disabled, fortiosOffline = false }) {
+export function QuestionInput({ question, value, onChange, disabled, fortiosOffline = false, plainTextOptions = false }) {
 	const type = questionType(question);
 	const isMatching = ["match", "drag_drop", "click_boxes", "image"].includes(type);
 	// Backend exams don't include the answer key; "type the numbers" questions come with their box sizes instead
@@ -606,7 +606,7 @@ export function QuestionInput({ question, value, onChange, disabled, fortiosOffl
 	}
 
 	const isMulti = type === "multi";
-	const plainOfflineOptions = usesPlainOfflineOptions(question);
+	const plainOfflineOptions = plainTextOptions || usesPlainOfflineOptions(question);
 	const codeStyle = !plainOfflineOptions && hasMultilineOption(question);
 	const needed = requiredSelections(question);
 	const selected = isMulti ? (Array.isArray(value) ? value : []) : value;
@@ -651,7 +651,7 @@ export function QuestionInput({ question, value, onChange, disabled, fortiosOffl
 }
 
 /* Results review for one question: shows the student's answer and the correct one. */
-export function QuestionReview({ question, value, fortiosOffline = false }) {
+export function QuestionReview({ question, value, fortiosOffline = false, plainTextOptions = false }) {
 	const type = questionType(question);
 	const isMatching = ["match", "drag_drop", "click_boxes", "image"].includes(type);
 	if (isMatching && !hasMatchContent(question, true)) return <InvalidQuestionMessage />;
@@ -743,7 +743,7 @@ export function QuestionReview({ question, value, fortiosOffline = false }) {
 	}
 
 	const correctSet = new Set(type === "multi" ? question.answer : [question.answer]);
-	const plainOfflineOptions = usesPlainOfflineOptions(question);
+	const plainOfflineOptions = plainTextOptions || usesPlainOfflineOptions(question);
 	const codeStyle = !plainOfflineOptions && hasMultilineOption(question);
 	const pickedSet = new Set(type === "multi" ? (Array.isArray(value) ? value : []) : value === undefined ? [] : [value]);
 

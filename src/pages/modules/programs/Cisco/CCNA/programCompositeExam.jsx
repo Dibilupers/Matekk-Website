@@ -117,6 +117,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 	if (!exam) throw new Error(`No exam is configured for ${programKey ?? "CCNA"} format "${examKey}".`);
 	const programName = exam.programName ?? "CCNA";
 	const isCompTIAExam = theme === "comptia";
+	const plainTextOptions = programKey === "comptia-security-plus";
 	const isFortinetExam = theme === "fortinet";
 	const isPracticeOnlyExam = isFortinetExam && examKey === "all_questions";
 	const dashboardPath = `/modules/programs/${programKey ?? "ccna"}`;
@@ -580,6 +581,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 									value={answers[currentIndex]}
 									onChange={(value) => setAnswers((previous) => ({ ...previous, [currentIndex]: value }))}
 									disabled={Boolean(lockedQuestions[currentIndex])}
+									plainTextOptions={plainTextOptions}
 								/>
 								<div className="mt-6 flex justify-end gap-3">
 									<button
@@ -736,7 +738,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 													<ExhibitText text={item.exhibit} className="mt-4" />
 												)}
 												<div className="mt-5">
-													<QuestionReview question={item} value={item.selectedAnswer} />
+													<QuestionReview question={item} value={item.selectedAnswer} plainTextOptions={plainTextOptions} />
 												</div>
 												{item.explanation && (programKey === "fortinet-fortios" ? (
 													<ExplanationWithLinks
