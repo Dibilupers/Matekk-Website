@@ -42,7 +42,7 @@ export default function SecurityPlusExam() {
 		return (
 			<SecurityPlusExamMessage
 				title={`${exam.name} is not available yet`}
-				message={`The CompTIA Security+ question bank has ${questionBankState.questions.length} scored questions. This format requires ${exam.scoredQuestionCount} scored questions, followed by five unscored simulations.`}
+				message={`The CompTIA Security+ question bank has ${questionBankState.questions.length} scored questions. This format requires ${exam.scoredQuestionCount} scored questions.`}
 			/>
 		);
 	}

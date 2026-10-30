@@ -41,11 +41,12 @@ export function createSecurityPlusExamFormats(questionBank, { includeOfflineSimu
 		examKey,
 		{
 			...format,
-			questionCount: format.questionCount + simulations.length,
+			questionCount: format.questionCount + (includeOfflineSimulations && examKey === "all_questions" ? SIMULATION_QUESTIONS.length : 0),
 			scoredQuestionCount: format.questionCount,
 			sessionKey: includeOfflineSimulations ? `${format.sessionKey}-offline-simulations-v1` : format.sessionKey,
 			createQuestions() {
 				const questions = format.createQuestions();
+				const examSimulations = includeOfflineSimulations && examKey === "all_questions" ? simulations : [];
 				const targetExhibitCount = Math.min(imageQuestions.length, Math.ceil(questions.length / 50) * 5);
 				const selectedExhibits = [...questions.filter(hasExhibit).slice(0, targetExhibitCount)];
 				const selectedPrompts = new Set(selectedExhibits.map((question) => question.prompt.trim().toLocaleLowerCase()));
@@ -69,7 +70,7 @@ export function createSecurityPlusExamFormats(questionBank, { includeOfflineSimu
 					regularIndex += segmentRegular.length;
 					balancedQuestions.push(...shuffle([...segmentExhibits, ...segmentRegular]));
 				}
-				return [...balancedQuestions, ...simulations];
+				return [...balancedQuestions, ...examSimulations];
 			},
 		},
 	]));

@@ -161,11 +161,11 @@ export default function CompTIAProgramDashboard({ program }) {
 	const progressTouchStart = useRef(null);
 	const examFormats = useMemo(() => {
 		const simulationCount = program.programKey === "comptia-security-plus" && !isOnline ? 5 : 0;
-		const simulationDescription = simulationCount ? ` Includes ${simulationCount} unscored simulations at the end for offline exams.` : "";
+		const simulationDescription = simulationCount ? ` Includes ${simulationCount} unscored simulations at the end of the offline exam.` : "";
 		return [
-		{ name: "Short Exam", key: "short", length: "Short", questions: 50 + simulationCount, duration: "45 mins", description: `A quick practice session.${simulationDescription}` },
-		{ name: "Medium Exam", key: "medium", length: "Medium", questions: 100 + simulationCount, duration: "1 hour & 30 mins", description: `A balanced, longer practice session.${simulationDescription}` },
-		{ name: "Long Exam", key: "long", length: "Long", questions: 150 + simulationCount, duration: "2 hours", description: `A full-length practice session.${simulationDescription}` },
+		{ name: "Short Exam", key: "short", length: "Short", questions: 50, duration: "45 mins", description: "A quick practice session." },
+		{ name: "Medium Exam", key: "medium", length: "Medium", questions: 100, duration: "1 hour & 30 mins", description: "A balanced, longer practice session." },
+		{ name: "Long Exam", key: "long", length: "Long", questions: 150, duration: "2 hours", description: "A full-length practice session." },
 		...(includesAllQuestionsExam
 			? [{ name: "All Questions Exam", key: "all_questions", length: "All questions", questions: "All", duration: "No time limit", description: `Every question from the ${program.title} question bank, in random order.${simulationDescription}` }]
 			: []),
