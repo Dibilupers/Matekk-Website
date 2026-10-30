@@ -55,6 +55,10 @@ export function createCompTIAExamFormats(
 	const scoredQuestions = uniqueQuestions.filter((question) => question.type !== "study");
 	const reviewQuestions = uniqueQuestions.filter((question) => question.type === "study");
 
+	const getSessionKey = (examKey) => {
+		const version = programKey.startsWith("comptia-") && examKey !== "all_questions" ? "-v2" : "";
+		return `matekk-${programKey}-${examKey}-exam-session${version}`;
+	};
 	const timedFormats = Object.fromEntries(Object.entries(examFormatDefinitions).map(([examKey, format]) => [
 		examKey,
 		{
@@ -62,7 +66,7 @@ export function createCompTIAExamFormats(
 			questionCount: format.questionCount,
 			scoredQuestionCount: format.questionCount,
 			subtitle: `${programName} question bank`,
-			sessionKey: `matekk-${programKey}-${examKey}-exam-session`,
+			sessionKey: getSessionKey(examKey),
 			path: `/modules/programs/${programKey}/exam/${examKey}`,
 			programName,
 			createQuestions() {
@@ -89,7 +93,7 @@ export function createCompTIAExamFormats(
 			scoredQuestionCount: scoredQuestions.length,
 			reviewQuestionCount: reviewQuestions.length,
 			durationSeconds: null,
-			sessionKey: `matekk-${programKey}-all_questions-exam-session`,
+			sessionKey: getSessionKey("all_questions"),
 			path: `/modules/programs/${programKey}/exam/all_questions`,
 			programName,
 			createQuestions() {

@@ -64,6 +64,9 @@ function restoreExamSession(exam, sessionStorageKey) {
 			Number.isInteger(session.currentIndex) &&
 			session.currentIndex >= 0 &&
 			session.currentIndex < exam.questionCount &&
+			(exam.durationSeconds === null ||
+				!exam.programName?.startsWith("CompTIA ") ||
+				!session.questions.some((question) => question.type === "study")) &&
 			(exam.durationSeconds === null ? session.deadline === null : Number.isFinite(session.deadline)) &&
 			typeof session.isSubmitted === "boolean";
 
