@@ -2154,7 +2154,7 @@ function TopologyDevice({ node }) {
 	);
 }
 
-export function ExhibitDiagram({ type, className = "" }) {
+export function ExhibitDiagram({ type, className = "", offlineLayout = false }) {
 	const [openTheme, setOpenTheme] = useState(null);
 	const wrapRef = useRef(null);
 	const isRouterOnAStick = type === "router-on-a-stick-vlan20";
@@ -2170,7 +2170,11 @@ export function ExhibitDiagram({ type, className = "" }) {
 			viewBox={`${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`}
 			role="img"
 			aria-label={title}
-			className={expanded ? "mx-auto block h-auto w-[1000px]" : "mx-auto block h-auto w-full max-w-5xl"}
+			className={expanded
+				? "mx-auto block h-auto w-[1000px]"
+				: offlineLayout
+					? "mx-auto block h-[min(20rem,70vw)] w-full max-w-5xl"
+					: "mx-auto block h-auto w-full max-w-5xl"}
 		>
 			<rect x={viewBox.x} y={viewBox.y} width={viewBox.width} height={viewBox.height} fill="#fff" />
 			{topology.links.map((link, index) => (
@@ -2191,10 +2195,9 @@ export function ExhibitDiagram({ type, className = "" }) {
 			</div>
 		</div>
 	);
-
 	return (
 		<>
-			<section ref={wrapRef} aria-label={title} className={`mb-4 rounded-2xl border border-[#d9e1ef] bg-[#f7f9fc] p-4 shadow-sm sm:p-5 ${className}`}>
+			<section ref={wrapRef} aria-label={title} className={`mb-4 rounded-2xl border border-[#d9e1ef] bg-[#f7f9fc] ${offlineLayout ? "p-3 sm:p-4" : "p-4 sm:p-5"} shadow-sm ${className}`}>
 				<div className="mb-1 flex items-center justify-between gap-3">
 					<p className="text-xs font-bold uppercase tracking-wide text-[#526584]">{title}</p>
 					<button
@@ -2205,7 +2208,7 @@ export function ExhibitDiagram({ type, className = "" }) {
 						<Maximize2 size={13} /> Expand
 					</button>
 				</div>
-				{topology && <p className="mb-3 text-sm text-[#526584]">{topology.note}</p>}
+				{topology && <p className="mb-3 text-sm leading-5 text-[#526584]">{topology.note}</p>}
 				<div className={topology ? "overflow-x-auto rounded-xl border border-[#e2e8f0] bg-white p-2 sm:p-3" : ""}>{renderDiagram()}</div>
 			</section>
 			{openTheme && (
@@ -2222,7 +2225,7 @@ export function ExhibitImage({ src, className = "", imageClassName = "", lazy = 
 	const [openTheme, setOpenTheme] = useState(null);
 	const wrapRef = useRef(null);
 	const image = offlineLayout
-		? <img key={src} src={src} alt="Exhibit diagram" loading={lazy ? "lazy" : undefined} className={`block h-auto max-h-[75vh] w-auto max-w-full rounded-lg object-contain !max-h-[75vh] ${imageClassName}`} />
+		? <img key={src} src={src} alt="Exhibit diagram" loading={lazy ? "lazy" : undefined} className={`block h-auto w-auto max-w-full rounded-lg object-contain !max-h-[min(50vh,22rem)] ${imageClassName}`} />
 		: cropTop
 		? (
 			<div className="aspect-[578/260] w-full overflow-hidden rounded-lg bg-white">
