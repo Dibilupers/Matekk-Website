@@ -100,7 +100,7 @@ export default function CCNAAllQuestionsExam() {
 			.then(({ questions: validQuestions }) => {
 				const bankQuestions = [...validQuestions]
 					.filter((item) => !isOnline || isCcnaQuestionModule(item.moduleTitle ?? item.module))
-					.map(applyNativeExhibit)
+					.map((item) => isOnline ? applyNativeExhibit(item) : item)
 					.sort((left, right) => left.bankId - right.bankId);
 				if (!bankQuestions.length) {
 					throw new TypeError("The Questions table has no questions that can be rendered and graded.");
