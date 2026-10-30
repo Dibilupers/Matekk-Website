@@ -136,7 +136,7 @@ function ModuleCard({ module, index, isOpen, onToggle }) {
 }
 
 export default function CompTIAProgramDashboard({ program }) {
-	const { profile } = useAuth();
+	const { profile, isOnline } = useAuth();
 	const navigate = useNavigate();
 	const isNetworkPlus = program.programKey === "comptia-network-plus";
 	const includesAllQuestionsExam = isNetworkPlus || program.includeAllQuestionsExam === true;
@@ -160,8 +160,8 @@ export default function CompTIAProgramDashboard({ program }) {
 	const [examClockNow, setExamClockNow] = useState(Date.now);
 	const progressTouchStart = useRef(null);
 	const examFormats = useMemo(() => {
-		const simulationCount = program.programKey === "comptia-security-plus" ? 5 : 0;
-		const simulationDescription = simulationCount ? ` Includes ${simulationCount} unscored simulations at the end.` : "";
+		const simulationCount = program.programKey === "comptia-security-plus" && !isOnline ? 5 : 0;
+		const simulationDescription = simulationCount ? ` Includes ${simulationCount} unscored simulations at the end for offline exams.` : "";
 		return [
 		{ name: "Short Exam", key: "short", length: "Short", questions: 50 + simulationCount, duration: "45 mins", description: `A quick practice session.${simulationDescription}` },
 		{ name: "Medium Exam", key: "medium", length: "Medium", questions: 100 + simulationCount, duration: "1 hour & 30 mins", description: `A balanced, longer practice session.${simulationDescription}` },
@@ -170,7 +170,7 @@ export default function CompTIAProgramDashboard({ program }) {
 			? [{ name: "All Questions Exam", key: "all_questions", length: "All questions", questions: "All", duration: "No time limit", description: `Every question from the ${program.title} question bank, in random order.${simulationDescription}` }]
 			: []),
 		];
-	}, [includesAllQuestionsExam, program.programKey, program.title]);
+	}, [includesAllQuestionsExam, isOnline, program.programKey, program.title]);
 	const progressExamFormats = [
 		...STANDARD_EXAM_FORMATS,
 		...(includesAllQuestionsExam

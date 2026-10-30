@@ -18,7 +18,7 @@ const QUESTION_BANK = QUESTIONS.map((question) => ({
 
 export default function SecurityPlusOfflineExam() {
 	const { examKey } = useParams();
-	const examFormats = useMemo(() => createSecurityPlusExamFormats(QUESTION_BANK), []);
+	const examFormats = useMemo(() => createSecurityPlusExamFormats(QUESTION_BANK, { includeOfflineSimulations: true }), []);
 	const exam = examFormats[examKey];
 	if (!exam) {
 		return (

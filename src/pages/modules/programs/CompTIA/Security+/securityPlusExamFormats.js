@@ -25,13 +25,15 @@ function hasExhibit(question) {
 	return Boolean(question?.exhibitImage || question?.imagePath || question?.imageUrl);
 }
 
-export function createSecurityPlusExamFormats(questionBank) {
-	const formats = createCompTIAExamFormats(questionBank, {
+export function createSecurityPlusExamFormats(questionBank, { includeOfflineSimulations = false } = {}) {
+	const regularQuestionBank = questionBank.filter((question) => question.type !== "study");
+	const simulations = includeOfflineSimulations ? SIMULATION_QUESTIONS : [];
+	const formats = createCompTIAExamFormats(regularQuestionBank, {
 		programKey: "comptia-security-plus",
 		programName: "CompTIA Security+",
 		includeAllQuestions: true,
 	});
-	const imageQuestions = [...new Map(questionBank
+	const imageQuestions = [...new Map(regularQuestionBank
 		.filter(hasExhibit)
 		.map((question) => [question.prompt.trim().toLocaleLowerCase(), question])).values()];
 
@@ -39,8 +41,9 @@ export function createSecurityPlusExamFormats(questionBank) {
 		examKey,
 		{
 			...format,
-			questionCount: format.questionCount + SIMULATION_QUESTIONS.length,
+			questionCount: format.questionCount + simulations.length,
 			scoredQuestionCount: format.questionCount,
+			sessionKey: includeOfflineSimulations ? `${format.sessionKey}-offline-simulations-v1` : format.sessionKey,
 			createQuestions() {
 				const questions = format.createQuestions();
 				const targetExhibitCount = Math.min(imageQuestions.length, Math.ceil(questions.length / 50) * 5);
@@ -66,7 +69,7 @@ export function createSecurityPlusExamFormats(questionBank) {
 					regularIndex += segmentRegular.length;
 					balancedQuestions.push(...shuffle([...segmentExhibits, ...segmentRegular]));
 				}
-				return [...balancedQuestions, ...SIMULATION_QUESTIONS];
+				return [...balancedQuestions, ...simulations];
 			},
 		},
 	]));
