@@ -859,32 +859,63 @@ function OfflineEntryRoute({ children }) {
 }
 
 function OfflineModulesPage() {
-  const programs = [
-    { name: "CCNA", path: "/modules/programs/ccna" },
-    { name: "FortiOS", path: "/modules/programs/fortios/exam/all" },
-    { name: "CompTIA Network+", path: "/modules/programs/comptia-network-plus" },
-    { name: "CompTIA A+", path: "/modules/programs/comptia-aplus" },
-    { name: "CompTIA Security+", path: "/modules/programs/comptia-security-plus/exam/all_questions" },
-    { name: "CCNA Automation", path: "/modules/programs/ccna-automation" },
-    { name: "CCNA Cybersecurity", path: "/modules/programs/ccna-cybersecurity" },
+  const categories = [
+    {
+      name: "Cisco",
+      programs: [
+        { name: "CCNA", path: "/modules/programs/ccna" },
+        { name: "CCNA Automation", path: "/modules/programs/ccna-automation" },
+        { name: "CCNA Cybersecurity", path: "/modules/programs/ccna-cybersecurity" },
+      ],
+    },
+    {
+      name: "CompTIA",
+      programs: [
+        { name: "Network+", path: "/modules/programs/comptia-network-plus" },
+        { name: "A+", path: "/modules/programs/comptia-aplus" },
+        { name: "Security+", path: "/modules/programs/comptia-security-plus/exam/all_questions" },
+      ],
+    },
+    {
+      name: "Fortinet",
+      programs: [
+        { name: "FortiOS", path: "/modules/programs/fortios/exam/all" },
+      ],
+    },
   ];
 
   return (
-    <main className="mx-auto min-h-[60vh] w-full max-w-5xl px-4 py-12 sm:px-6">
-      <header className="mb-8 text-center">
+    <main className="mx-auto min-h-[60vh] w-full max-w-5xl px-4 py-10 sm:px-6 sm:py-14">
+      <header className="mb-10 text-center">
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-600">Offline learning</p>
-        <h1 className="mt-2 text-3xl font-bold text-slate-900">Choose a module</h1>
-        <p className="mt-2 text-slate-600">Open a module you have visited and cached while online.</p>
+        <h1 className="mt-2 text-3xl font-bold text-slate-900 sm:text-4xl">Choose a module</h1>
+        <p className="mt-2 text-slate-600">Browse your cached modules by category.</p>
       </header>
-      <div className="grid gap-4 sm:grid-cols-2">
-        {programs.map((program) => (
-          <Link
-            className="rounded-xl border border-slate-200 bg-white p-6 font-semibold text-slate-900 shadow-sm transition hover:border-blue-400 hover:shadow-md"
-            key={program.path}
-            to={program.path}
-          >
-            {program.name}
-          </Link>
+      <div className="space-y-8">
+        {categories.map((category) => (
+          <section key={category.name} aria-labelledby={`offline-category-${category.name.toLowerCase()}`}>
+            <div className="mb-4 flex items-center gap-4">
+              <h2
+                id={`offline-category-${category.name.toLowerCase()}`}
+                className="shrink-0 text-lg font-bold text-slate-900"
+              >
+                {category.name}
+              </h2>
+              <div className="h-px flex-1 bg-slate-200" />
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {category.programs.map((program) => (
+                <Link
+                  className="flex min-h-16 items-center justify-between rounded-xl border border-slate-200 bg-white px-5 py-4 font-semibold text-slate-900 shadow-sm transition hover:border-blue-400 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                  key={program.path}
+                  to={program.path}
+                >
+                  <span>{program.name}</span>
+                  <span aria-hidden="true" className="text-xl font-normal text-slate-400">→</span>
+                </Link>
+              ))}
+            </div>
+          </section>
         ))}
       </div>
     </main>
