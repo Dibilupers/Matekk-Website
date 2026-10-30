@@ -111,7 +111,7 @@ function getLatestExamResult(assessments, examKey) {
 }
 
 export default function FortiOSDashboard() {
-	const { profile } = useAuth();
+	const { profile, isOnline } = useAuth();
 	const navigate = useNavigate();
 	const [typedIntro, setTypedIntro] = useState("");
 	const [hasScrolled, setHasScrolled] = useState(false);
@@ -283,7 +283,7 @@ export default function FortiOSDashboard() {
 		<main className="program-faceted-page fortios-program-page ccna-page-enter relative min-h-screen bg-white text-[#071126]">
 			{createPortal(
 				<Link
-					to="/pages/blank"
+					to={isOnline ? "/pages/blank" : "/modules/programs"}
 					className={`fixed left-4 top-24 z-40 flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-bold text-[#d9271e] transition hover:text-[#b71c16] active:scale-95 ${hasScrolled ? "bg-white/90 shadow-md backdrop-blur-sm" : "bg-white/80"}`}
 				>
 					<ArrowLeft size={20} strokeWidth={2.5} /> Back to Courses
@@ -320,14 +320,13 @@ export default function FortiOSDashboard() {
 							>
 								Start Quiz <ArrowRight size={18} />
 							</button>
-							<button
-								type="button"
-								disabled
-								aria-label="View All Modules (coming soon)"
-								className="flex h-12 cursor-not-allowed items-center gap-2 rounded-full border border-[#e2231a] px-5 text-sm font-bold text-[#d9271e] opacity-40 sm:h-[58px] sm:px-7 sm:text-base"
-							>
-								View All Modules <ArrowRight size={18} />
-							</button>
+			<button
+				type="button"
+				onClick={() => document.getElementById("course-modules")?.scrollIntoView({ behavior: "smooth", block: "start" })}
+				className="flex h-12 items-center gap-2 rounded-full border border-[#e2231a] px-5 text-sm font-bold text-[#d9271e] transition hover:-translate-y-0.5 hover:bg-[#fff4f3] hover:shadow-[0_10px_20px_rgba(226,35,26,0.12)] active:translate-y-0 sm:h-[58px] sm:px-7 sm:text-base"
+			>
+				View All Modules <ArrowRight size={18} />
+			</button>
 						</div>
 
 						<div className="mt-10 grid max-w-[810px] grid-cols-3 overflow-hidden rounded-2xl border border-[#efd9d7] bg-white shadow-[0_12px_28px_rgba(226,35,26,0.08)] transition-shadow duration-200 hover:shadow-[0_16px_32px_rgba(226,35,26,0.16)]">

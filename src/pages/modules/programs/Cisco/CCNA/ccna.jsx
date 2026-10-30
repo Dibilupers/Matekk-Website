@@ -419,7 +419,7 @@ function ModuleCard({ module, index, openSection, onToggle, quizProgress, tutori
 }
 
 export default function CCNA() {
-	const { profile } = useAuth();
+	const { profile, isOnline } = useAuth();
 	const userId = profile?.userId;
 	const [typedIntro, setTypedIntro] = useState("");
 	const [hasScrolled, setHasScrolled] = useState(false);
@@ -687,7 +687,7 @@ export default function CCNA() {
 			{/* Keep course navigation visible while scrolling, outside the page's slide-in animation. */}
 			{createPortal(
 				<Link
-					to="/pages/blank"
+					to={isOnline ? "/pages/blank" : "/modules/programs"}
 					className={`fixed left-4 top-24 z-40 flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-bold text-[#005b6b] transition hover:text-[#004653] active:scale-95 ${hasScrolled ? "bg-white/90 shadow-md backdrop-blur-sm" : "bg-white/80"}`}
 				>
 					<ArrowLeft size={20} strokeWidth={2.5} /> Back to Courses

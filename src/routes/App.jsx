@@ -862,6 +862,7 @@ function OfflineModulesPage() {
   const categories = [
     {
       name: "Cisco",
+      brand: "teal",
       programs: [
         { name: "CCNA", path: "/modules/programs/ccna" },
         { name: "CCNA Automation", path: "/modules/programs/ccna-automation" },
@@ -870,16 +871,18 @@ function OfflineModulesPage() {
     },
     {
       name: "CompTIA",
+      brand: "comptia",
       programs: [
         { name: "Network+", path: "/modules/programs/comptia-network-plus" },
         { name: "A+", path: "/modules/programs/comptia-aplus" },
-        { name: "Security+", path: "/modules/programs/comptia-security-plus/exam/all_questions" },
+        { name: "Security+", path: "/modules/programs/comptia-security-plus" },
       ],
     },
     {
       name: "Fortinet",
+      brand: "fortinet",
       programs: [
-        { name: "FortiOS", path: "/modules/programs/fortios/exam/all" },
+        { name: "FortiOS", path: "/modules/programs/fortinet-fortios" },
       ],
     },
   ];
@@ -904,16 +907,23 @@ function OfflineModulesPage() {
               <div className="h-px flex-1 bg-slate-200" />
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
-              {category.programs.map((program) => (
-                <Link
-                  className="flex min-h-16 items-center justify-between rounded-xl border border-slate-200 bg-white px-5 py-4 font-semibold text-slate-900 shadow-sm transition hover:border-blue-400 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                  key={program.path}
-                  to={program.path}
-                >
-                  <span>{program.name}</span>
-                  <span aria-hidden="true" className="text-xl font-normal text-slate-400">→</span>
-                </Link>
-              ))}
+              {category.programs.map((program) => {
+                const accentClass = category.brand === "teal"
+                  ? "border-l-[#005b6b] hover:border-y-[#9fc8ce] hover:border-r-[#9fc8ce] focus-visible:ring-[#005b6b]"
+                  : category.brand === "fortinet"
+                    ? "border-l-[#e2231a] hover:border-y-[#f1beba] hover:border-r-[#f1beba] focus-visible:ring-[#e2231a]"
+                    : "border-l-[#c8102e] hover:border-y-[#f0cbd3] hover:border-r-[#f0cbd3] focus-visible:ring-[#c8102e]";
+                return (
+                  <Link
+                    className={`flex min-h-16 items-center justify-between rounded-xl border-y border-r border-l-4 border-y-slate-200 border-r-slate-200 bg-white px-5 py-4 font-semibold text-slate-900 shadow-sm transition hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${accentClass}`}
+                    key={program.path}
+                    to={program.path}
+                  >
+                    <span>{program.name}</span>
+                    <span aria-hidden="true" className="text-xl font-normal text-slate-400">→</span>
+                  </Link>
+                );
+              })}
             </div>
           </section>
         ))}

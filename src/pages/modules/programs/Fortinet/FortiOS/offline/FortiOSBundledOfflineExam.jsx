@@ -162,14 +162,14 @@ export default function FortiOSOfflineExam() {
 
   if (!question) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-[#f5f9f9] px-4 text-[#17233d]">
+      <main data-theme="light" className="fortinet-exam-page flex min-h-screen items-center justify-center bg-[#fff8f7] px-4 text-[#17233d]">
         <p role="status" className="text-sm text-[#64748b]">Preparing the FortiOS question bank…</p>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[#f5f9f9] px-4 py-6 text-[#17233d] sm:px-8 sm:py-8">
+    <main data-theme="light" className="fortinet-exam-page min-h-screen bg-[#fff8f7] px-4 py-6 text-[#17233d] sm:px-8 sm:py-8">
       <div className="mx-auto max-w-5xl">
         <header className="mb-6 flex flex-wrap items-center justify-between gap-4 border-b border-[#d6e5e7] pb-5">
           <div>

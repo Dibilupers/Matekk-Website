@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import ProgramCompositeExam from "../../../Cisco/CCNA/programCompositeExam";
 import QUESTIONS from "./networkPlusOfflineQuestions.json";
-import { createNetworkPlusExamFormats } from "../networkPlusExamFormats";
+import { createNetworkPlusOfflineExamFormats } from "../networkPlusExamFormats";
 
 const EXHIBITS = import.meta.glob("./network-exhibits/*.png", {
 	eager: true,
@@ -18,7 +18,7 @@ const QUESTION_BANK = QUESTIONS.map((question) => ({
 
 export default function NetworkPlusOfflineExam() {
 	const { examKey } = useParams();
-	const examFormats = useMemo(() => createNetworkPlusExamFormats(QUESTION_BANK), []);
+	const examFormats = useMemo(() => createNetworkPlusOfflineExamFormats(QUESTION_BANK), []);
 	const exam = examFormats[examKey];
 
 	if (!exam) {
