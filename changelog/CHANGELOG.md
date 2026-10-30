@@ -2,6 +2,20 @@
 
 Tracking begins 2026-10-17.
 
+## 2026-10-30 — `main`
+
+Commits included in this push:
+
+- `493a927` — Kept CompTIA Network+ and Security+ simulations out of timed
+  Short, Medium, and Long exams; All Questions exams retain review-only
+  simulations at the end.
+- `d9f8663` — Merged the latest `main` into `emman`, preserving the offline
+  Security+ simulation flow alongside the updated online exam formats.
+
+Validation before push: frontend production build, targeted ESLint, simulation
+placement checks for Network+, Security+, and offline Security+, and Git
+whitespace checks passed.
+
 ## 2026-10-25 — `main`
 
 Commits included in this push:
