@@ -13,7 +13,7 @@ function hasExhibit(question) {
 	return Boolean(question?.exhibitImage || question?.imagePath || question?.imageUrl);
 }
 
-export function createSecurityPlusExamFormats(questionBank) {
+export function createSecurityPlusExamFormats(questionBank, { offline = false } = {}) {
 	const formats = createCompTIAExamFormats(questionBank, {
 		programKey: "comptia-security-plus",
 		programName: "CompTIA Security+",
@@ -27,6 +27,7 @@ export function createSecurityPlusExamFormats(questionBank) {
 		examKey,
 		{
 			...format,
+			sessionKey: offline ? `${format.sessionKey}-offline-simulations-v1` : format.sessionKey,
 			createQuestions() {
 				const questions = format.createQuestions();
 				const scoredQuestions = questions.filter((question) => question.type !== "study");
