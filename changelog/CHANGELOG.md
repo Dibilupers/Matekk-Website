@@ -6,6 +6,17 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `55ac698` — Versioned timed CompTIA exam sessions and reject restored timed
+  sessions containing review-only items, so simulations appear only at the end
+  of All Questions exams.
+
+Validation before push: frontend production build, targeted ESLint, exam-format
+checks for timed and All Questions exams, and Git whitespace checks passed.
+
+## 2026-10-30 — `main`
+
+Commits included in this push:
+
 - `493a927` — Kept CompTIA Network+ and Security+ simulations out of timed
   Short, Medium, and Long exams; All Questions exams retain review-only
   simulations at the end.
