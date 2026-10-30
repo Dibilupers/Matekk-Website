@@ -115,7 +115,7 @@ function formatTime(totalSeconds) {
 	return `${minutes}:${seconds}`;
 }
 
-function CCNACompositeExamPage({ examKey = "short", programKey = null, examFormats = null, theme = "ccna" }) {
+function CCNACompositeExamPage({ examKey = "short", programKey = null, examFormats = null, theme = "ccna", omitSessionQuestionImages = false }) {
 	const exam = examFormats?.[examKey] ?? (programKey ? getProgramExamFormats(programKey)?.[examKey] : CCNA_EXAMS[examKey]);
 	if (!exam) throw new Error(`No exam is configured for ${programKey ?? "CCNA"} format "${examKey}".`);
 	const programName = exam.programName ?? "CCNA";
@@ -230,17 +230,27 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 
 	useEffect(() => {
 		if (isViewingSavedResult || !sessionStorageKey) return;
-		window.sessionStorage.setItem(sessionStorageKey, JSON.stringify({
+		const session = {
 			attemptId,
 			submittedAt,
-			questions,
+			questions: omitSessionQuestionImages
+				? questions.map((question) => Object.fromEntries(
+					Object.entries(question).filter(([key]) => key !== "imageUrl" && key !== "exhibitImage"),
+				))
+				: questions,
 			answers,
 			lockedQuestions,
 			currentIndex,
 			deadline,
 			isSubmitted,
-		}));
-	}, [answers, attemptId, currentIndex, deadline, isSubmitted, isViewingSavedResult, lockedQuestions, questions, sessionStorageKey, submittedAt]);
+		};
+		try {
+			window.sessionStorage.setItem(sessionStorageKey, JSON.stringify(session));
+		} catch (error) {
+			if (!omitSessionQuestionImages) throw error;
+			console.warn("Unable to save the offline Security+ exam session because browser storage is full.", error);
+		}
+	}, [answers, attemptId, currentIndex, deadline, isSubmitted, isViewingSavedResult, lockedQuestions, omitSessionQuestionImages, questions, sessionStorageKey, submittedAt]);
 
 	useEffect(() => {
 		if (programKey || !isSubmitted || isViewingSavedResult || !userId || !Number.isFinite(submittedAt)) return;

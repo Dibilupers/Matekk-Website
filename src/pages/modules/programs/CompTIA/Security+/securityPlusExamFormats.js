@@ -29,6 +29,7 @@ export function createSecurityPlusExamFormats(questionBank, { offline = false } 
 		examKey,
 		{
 			...format,
+			questionBank: offline ? questionBank : undefined,
 			questionCount: format.questionCount + (examKey === "all_questions" ? studyQuestions.length : 0),
 			scoredQuestionCount: format.questionCount,
 			sessionKey: offline
