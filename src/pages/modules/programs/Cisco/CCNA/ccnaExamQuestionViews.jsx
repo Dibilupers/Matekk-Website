@@ -518,6 +518,7 @@ export function QuestionPrompt({ prompt, imageUrl, hasSeparateExhibit = Boolean(
 /* Answer input for one exam question (pick one, choose two, or matching). */
 export function QuestionInput({ question, value, onChange, disabled, fortiosOffline = false, plainTextOptions = false }) {
 	const type = questionType(question);
+	const questionKey = question.bankId ?? question.id ?? question.prompt;
 	const isMatching = ["match", "drag_drop", "click_boxes", "image"].includes(type);
 	// Backend exams don't include the answer key; "type the numbers" questions come with their box sizes instead
 	const hasGroupSizes = Array.isArray(question.groupSizes) && question.groupSizes.length === question.choices?.length &&
@@ -628,7 +629,7 @@ export function QuestionInput({ question, value, onChange, disabled, fortiosOffl
 				const isMultiline = codeStyle || String(displayedOption ?? "").includes("\n");
 				return (
 					<button
-						key={option}
+						key={`${questionKey}-option-${optionIndex}`}
 						type="button"
 						onClick={() => choose(optionIndex)}
 						disabled={disabled}
@@ -760,7 +761,7 @@ export function QuestionReview({ question, value, fortiosOffline = false, plainT
 						: "border-[#e1e8ef] bg-white text-[#42516b]";
 				const isMultiline = codeStyle || String(displayedOption ?? "").includes("\n");
 				return (
-					<div key={option} className={`flex min-h-[54px] ${isMultiline ? "items-start" : "items-center"} gap-3 rounded-xl border px-4 py-3 ${optionStyle}`}>
+					<div key={`${question.bankId ?? question.id ?? question.prompt}-review-option-${optionIndex}`} className={`flex min-h-[54px] ${isMultiline ? "items-start" : "items-center"} gap-3 rounded-xl border px-4 py-3 ${optionStyle}`}>
 						<span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
 							isCorrectAnswer ? "bg-[#2d8a56] text-white" : isSelectedAnswer ? "bg-[#c7541a] text-white" : "bg-[#edf3fb] text-[#4764a8]"
 						}`}>

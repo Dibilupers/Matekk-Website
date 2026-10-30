@@ -580,6 +580,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 									<ExhibitText text={question.exhibit} className="mb-6" />
 								)}
 								<QuestionInput
+									key={question.bankId ?? question.id ?? currentIndex}
 									question={question}
 									value={answers[currentIndex]}
 									onChange={(value) => setAnswers((previous) => ({ ...previous, [currentIndex]: value }))}
