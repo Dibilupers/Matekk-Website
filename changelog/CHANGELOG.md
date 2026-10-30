@@ -6,6 +6,18 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `c5ad68e` — Fixed stale answer choices appearing after moving to the next
+  CompTIA exam question. Choice rows now use question-specific, index-based
+  React keys so duplicate option text cannot cause rows from a previous
+  question to be reused.
+
+Validation before push: frontend production build, targeted ESLint, and Git
+whitespace checks passed.
+
+## 2026-10-30 — `main`
+
+Commits included in this push:
+
 - `55ac698` — Versioned timed CompTIA exam sessions and reject restored timed
   sessions containing review-only items, so simulations appear only at the end
   of All Questions exams.
