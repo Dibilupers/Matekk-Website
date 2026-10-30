@@ -134,6 +134,7 @@ import FortiOSDashboard, { FORTIOS_MODULES } from "../pages/modules/programs/For
 import FortiOSExam from "../pages/modules/programs/Fortinet/FortiOS/fortiosExam";
 import FortiOSExamRoute from "../pages/modules/programs/Fortinet/FortiOS/FortiOSExamRoute";
 import NetworkPlusExam from "../pages/modules/programs/CompTIA/Network+/networkPlusExam";
+import NetworkPlusExamRoute from "../pages/modules/programs/CompTIA/Network+/networkPlusExamRoute";
 import SecurityPlusExam from "../pages/modules/programs/CompTIA/Security+/securityPlusExam";
 import SecurityPlusExamRoute from "../pages/modules/programs/CompTIA/Security+/securityPlusExamRoute";
 import NETWORK_PLUS_PROGRAM from "../pages/modules/programs/CompTIA/Network+/networkPlusProgram";
@@ -478,7 +479,7 @@ export default function App() {
           path="/modules/programs/comptia-network-plus/exam/:examKey"
           element={
             <ProtectedRoute>
-              <NetworkPlusExam />
+              <NetworkPlusExamRoute onlineExam={<NetworkPlusExam />} />
             </ProtectedRoute>
           }
         />
@@ -858,39 +859,74 @@ function OfflineEntryRoute({ children }) {
 }
 
 function OfflineModulesPage() {
-  const programs = [
-    { name: "CCNA", path: "/modules/programs/ccna", brand: "teal" },
-    { name: "FortiOS", path: "/modules/programs/fortinet-fortios", brand: "fortinet" },
-    { name: "CompTIA A+", path: "/modules/programs/comptia-aplus", brand: "comptia" },
-    { name: "CompTIA Security+", path: "/modules/programs/comptia-security-plus", brand: "comptia" },
-    { name: "CCNA Automation", path: "/modules/programs/ccna-automation", brand: "teal" },
-    { name: "CCNA Cybersecurity", path: "/modules/programs/ccna-cybersecurity", brand: "teal" },
+  const categories = [
+    {
+      name: "Cisco",
+      brand: "teal",
+      programs: [
+        { name: "CCNA", path: "/modules/programs/ccna" },
+        { name: "CCNA Automation", path: "/modules/programs/ccna-automation" },
+        { name: "CCNA Cybersecurity", path: "/modules/programs/ccna-cybersecurity" },
+      ],
+    },
+    {
+      name: "CompTIA",
+      brand: "comptia",
+      programs: [
+        { name: "Network+", path: "/modules/programs/comptia-network-plus" },
+        { name: "A+", path: "/modules/programs/comptia-aplus" },
+        { name: "Security+", path: "/modules/programs/comptia-security-plus" },
+      ],
+    },
+    {
+      name: "Fortinet",
+      brand: "fortinet",
+      programs: [
+        { name: "FortiOS", path: "/modules/programs/fortinet-fortios" },
+      ],
+    },
   ];
 
   return (
-    <main className="mx-auto min-h-[60vh] w-full max-w-5xl px-4 py-12 sm:px-6">
-      <header className="mb-8 text-center">
+    <main className="mx-auto min-h-[60vh] w-full max-w-5xl px-4 py-10 sm:px-6 sm:py-14">
+      <header className="mb-10 text-center">
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-600">Offline learning</p>
-        <h1 className="mt-2 text-3xl font-bold text-slate-900">Choose a module</h1>
-        <p className="mt-2 text-slate-600">Open a module you have visited and cached while online.</p>
+        <h1 className="mt-2 text-3xl font-bold text-slate-900 sm:text-4xl">Choose a module</h1>
+        <p className="mt-2 text-slate-600">Browse your cached modules by category.</p>
       </header>
-      <div className="grid gap-4 sm:grid-cols-2">
-        {programs.map((program) => {
-          const accentClass = program.brand === "teal"
-            ? "border-l-[#005b6b] hover:border-y-[#9fc8ce] hover:border-r-[#9fc8ce]"
-            : program.brand === "fortinet"
-              ? "border-l-[#e2231a] hover:border-y-[#f1beba] hover:border-r-[#f1beba]"
-              : "border-l-[#c8102e] hover:border-y-[#f0cbd3] hover:border-r-[#f0cbd3]";
-          return (
-            <Link
-              className={`rounded-xl border-y border-r border-l-4 border-y-slate-200 border-r-slate-200 bg-white p-6 font-semibold text-slate-900 shadow-sm transition hover:shadow-md ${accentClass}`}
-              key={program.path}
-              to={program.path}
-            >
-              {program.name}
-            </Link>
-          );
-        })}
+      <div className="space-y-8">
+        {categories.map((category) => (
+          <section key={category.name} aria-labelledby={`offline-category-${category.name.toLowerCase()}`}>
+            <div className="mb-4 flex items-center gap-4">
+              <h2
+                id={`offline-category-${category.name.toLowerCase()}`}
+                className="shrink-0 text-lg font-bold text-slate-900"
+              >
+                {category.name}
+              </h2>
+              <div className="h-px flex-1 bg-slate-200" />
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {category.programs.map((program) => {
+                const accentClass = category.brand === "teal"
+                  ? "border-l-[#005b6b] hover:border-y-[#9fc8ce] hover:border-r-[#9fc8ce] focus-visible:ring-[#005b6b]"
+                  : category.brand === "fortinet"
+                    ? "border-l-[#e2231a] hover:border-y-[#f1beba] hover:border-r-[#f1beba] focus-visible:ring-[#e2231a]"
+                    : "border-l-[#c8102e] hover:border-y-[#f0cbd3] hover:border-r-[#f0cbd3] focus-visible:ring-[#c8102e]";
+                return (
+                  <Link
+                    className={`flex min-h-16 items-center justify-between rounded-xl border-y border-r border-l-4 border-y-slate-200 border-r-slate-200 bg-white px-5 py-4 font-semibold text-slate-900 shadow-sm transition hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${accentClass}`}
+                    key={program.path}
+                    to={program.path}
+                  >
+                    <span>{program.name}</span>
+                    <span aria-hidden="true" className="text-xl font-normal text-slate-400">→</span>
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
+        ))}
       </div>
     </main>
   );
@@ -903,10 +939,12 @@ function ProtectedRoute({ children }) {
   const isExamRoute = /(?:^|\/)exam(?:\/|$)/.test(pathname);
   const isOfflineCcnaExamRoute = /^\/modules\/programs\/ccna\/exam\/(?:short|medium|long|all)$/.test(pathname);
   const isOfflineFortiOSExamRoute = /^\/modules\/programs\/fortinet-fortios\/exam\/(?:short|medium|long|all_questions)\/?$/.test(pathname);
+  const isOfflineNetworkPlusExamRoute = /^\/modules\/programs\/comptia-network-plus\/exam\/(?:short|medium|long|all_questions)\/?$/.test(pathname);
   const isOfflineSecurityPlusExamRoute = /^\/modules\/programs\/comptia-security-plus\/exam\/(?:short|medium|long|all_questions)\/?$/.test(pathname);
   const isStandaloneOfflineFortiOSExamRoute = pathname === "/modules/programs/fortios/exam/all";
   const canAccessBuiltInOfflineExam = isOfflineCcnaExamRoute
     || isOfflineFortiOSExamRoute
+    || isOfflineNetworkPlusExamRoute
     || isOfflineSecurityPlusExamRoute
     || isStandaloneOfflineFortiOSExamRoute;
   const canAccessOfflineModule = isModuleRoute && (!isExamRoute || canAccessBuiltInOfflineExam) && !isOnline;
@@ -916,7 +954,7 @@ function ProtectedRoute({ children }) {
       <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6 text-center text-white">
         <section className="max-w-lg space-y-3">
           <h1 className="text-2xl font-semibold">Internet connection required</h1>
-          <p className="text-slate-300">Only CCNA, FortiOS, and Security+ exams with cached questions are available offline. Reconnect to take this exam.</p>
+          <p className="text-slate-300">Only CCNA, FortiOS, and CompTIA Network+ or Security+ exams with cached questions are available offline. Reconnect to take this exam.</p>
         </section>
       </main>
     );
