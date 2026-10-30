@@ -4,7 +4,7 @@ import SIMULATIONS from "./offline/securityPlusSimulations.json";
 const SIMULATION_EXHIBITS = import.meta.glob("./offline/sy0-exhibits/*.png", {
 	eager: true,
 	import: "default",
-	query: "?url",
+	query: "?inline",
 });
 const SIMULATION_EXHIBITS_BY_NAME = new Map(Object.entries(SIMULATION_EXHIBITS).map(([path, url]) => [path.split("/").at(-1), url]));
 const SIMULATION_QUESTIONS = SIMULATIONS.map((question) => ({

@@ -8,7 +8,7 @@ import { createSecurityPlusExamFormats } from "../securityPlusExamFormats";
 const EXHIBITS = import.meta.glob("./sy0-exhibits/*.png", {
 	eager: true,
 	import: "default",
-	query: "?url",
+	query: "?inline",
 });
 const EXHIBITS_BY_NAME = new Map(Object.entries(EXHIBITS).map(([path, url]) => [path.split("/").at(-1), url]));
 const QUESTION_BANK = QUESTIONS.map((question) => ({
