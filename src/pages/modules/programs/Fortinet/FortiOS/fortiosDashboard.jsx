@@ -928,7 +928,7 @@ export default function FortiOSDashboard() {
 									const examPath = `/modules/programs/fortinet-fortios/exam/${retakeExamFormat}`;
 									setRetakeExamFormat(null);
 									setIsExamPickerOpen(false);
-									navigate(examPath, { state: { retakeExam: true, retakeExamConfirmed: true } });
+									navigate(examPath, { state: { startNewOfflineAttempt: true } });
 								}}
 								className="rounded-full bg-[#e2231a] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#bd2119] disabled:cursor-not-allowed disabled:opacity-50"
 							>

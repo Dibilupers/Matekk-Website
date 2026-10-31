@@ -79,8 +79,7 @@ export default function FortiOSOfflineExam() {
 	const [storageError, setStorageError] = useState("");
 	const [isRetakeConfirmationOpen, setIsRetakeConfirmationOpen] = useState(false);
 	const answerReviewRef = useRef(null);
-	const requestedRetake = location.state?.retakeExam === true;
-	const retakeExamConfirmed = location.state?.retakeExamConfirmed === true;
+	const [shouldStartNewAttempt] = useState(() => location.state?.startNewOfflineAttempt === true);
 	const examName = FORTIOS_OFFLINE_EXAM_FORMATS[examKey]?.name ?? "FortiOS Exam";
 	const question = session?.questions[session.currentIndex];
 	const score = useMemo(() => session?.questions.reduce(
@@ -111,7 +110,7 @@ export default function FortiOSOfflineExam() {
 				setBankState({ status: "ready", bank: offlineBank, error: null });
 				let restoredSession = null;
 				try {
-					const saved = window.localStorage.getItem(sessionKey);
+					const saved = shouldStartNewAttempt ? null : window.localStorage.getItem(sessionKey);
 					if (saved) {
 						const parsed = JSON.parse(saved);
 						if (isValidSession(parsed, examKey) && parsed.questions.every((item) => offlineBank.some((candidate) => candidate.id === Number(item.id ?? item.bankId)))) {
@@ -143,7 +142,7 @@ export default function FortiOSOfflineExam() {
 				}
 			});
 		return () => { active = false; };
-	}, [examKey, sessionKey]);
+	}, [examKey, sessionKey, shouldStartNewAttempt]);
 
 	useEffect(() => {
 		if (sessionIsSubmitted || sessionDeadline === null || sessionDeadline === undefined) return undefined;
@@ -169,16 +168,9 @@ export default function FortiOSOfflineExam() {
 	}, [session, sessionKey]);
 
 	useEffect(() => {
-		if (!requestedRetake || !session) return;
-		const hasResult = session.isSubmitted ||
-			(session.deadline !== null && session.deadline <= Date.now());
-		if (retakeExamConfirmed) {
-			restartExam();
-		} else if (hasResult) {
-			setIsRetakeConfirmationOpen(true);
-		}
+		if (!shouldStartNewAttempt || !session) return;
 		navigate(location.pathname, { replace: true, state: null });
-	}, [location.pathname, navigate, requestedRetake, restartExam, retakeExamConfirmed, session]);
+	}, [location.pathname, navigate, session, shouldStartNewAttempt]);
 
 	useEffect(() => {
 		if (!isRetakeConfirmationOpen) return undefined;
