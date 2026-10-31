@@ -419,8 +419,10 @@ function ModuleCard({ module, index, openSection, onToggle, quizProgress, tutori
 }
 
 export default function CCNA() {
-	const { profile, isOnline } = useAuth();
+	const { profile, isOnline, isOfflinePinUnlocked } = useAuth();
 	const userId = profile?.userId;
+	const canTakeExamWithoutAccount = !isOnline && isOfflinePinUnlocked;
+	const canTakeExams = Boolean(userId) || canTakeExamWithoutAccount;
 	const [typedIntro, setTypedIntro] = useState("");
 	const [hasScrolled, setHasScrolled] = useState(false);
 	const [openSection, setOpenSection] = useState(null);
@@ -1175,7 +1177,7 @@ export default function CCNA() {
 							</button>
 							<button
 								type="button"
-								disabled={!userId}
+								disabled={!canTakeExams}
 								onClick={() => {
 									const moduleNumber = retakeQuizModule;
 									setRetakeQuizModule(null);
@@ -1271,7 +1273,7 @@ export default function CCNA() {
 								{examRuns[selectedExamFormat]?.isActive ? (
 									<button
 										type="button"
-										disabled={!userId}
+										disabled={!canTakeExams}
 										onClick={() => {
 											setIsExamPickerOpen(false);
 											navigate(examRuns[selectedExamFormat].path);
@@ -1284,7 +1286,7 @@ export default function CCNA() {
 									<div className="flex flex-wrap gap-2 sm:justify-self-end">
 										<button
 											type="button"
-											disabled={!userId}
+											disabled={!canTakeExams}
 											onClick={() => {
 												setIsExamPickerOpen(false);
 												navigate(examRuns[selectedExamFormat].path, { state: { showExamResult: true } });
@@ -1295,7 +1297,7 @@ export default function CCNA() {
 										</button>
 										<button
 											type="button"
-											disabled={!userId}
+											disabled={!canTakeExams}
 											onClick={() => setRetakeExamFormat(selectedExamFormat)}
 											className="rounded-full bg-[#005b6b] px-4 py-3 text-sm font-bold text-white transition hover:bg-[#004653] disabled:cursor-not-allowed disabled:opacity-50"
 										>
@@ -1305,7 +1307,7 @@ export default function CCNA() {
 								) : examRuns[selectedExamFormat] && (
 									<button
 										type="button"
-										disabled={!userId}
+										disabled={!canTakeExams}
 										onClick={() => {
 											setIsExamPickerOpen(false);
 											navigate(examRuns[selectedExamFormat].path);
@@ -1348,7 +1350,7 @@ export default function CCNA() {
 							</button>
 							<button
 								type="button"
-								disabled={!userId}
+								disabled={!canTakeExams}
 								onClick={() => {
 									const examRun = examRuns[retakeExamFormat];
 									setRetakeExamFormat(null);
