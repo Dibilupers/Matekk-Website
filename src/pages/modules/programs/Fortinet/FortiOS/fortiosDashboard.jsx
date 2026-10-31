@@ -122,6 +122,7 @@ export default function FortiOSDashboard() {
 	const [examClockNow, setExamClockNow] = useState(Date.now);
 	const [isExamPickerOpen, setIsExamPickerOpen] = useState(false);
 	const [selectedExamFormat, setSelectedExamFormat] = useState("short");
+	const [retakeExamFormat, setRetakeExamFormat] = useState(null);
 	const [examResultsState, setExamResultsState] = useState({ userId: null, assessments: [], loading: false, error: null });
 	const userId = profile?.userId;
 	const canTakeExamWithoutAccount = !isOnline && isOfflinePinUnlocked;
@@ -216,18 +217,21 @@ export default function FortiOSDashboard() {
 	}, [userId]);
 
 	useEffect(() => {
-		if (!isExamPickerOpen) return undefined;
+		if (!isExamPickerOpen && !retakeExamFormat) return undefined;
 		const previousOverflow = document.body.style.overflow;
 		document.body.style.overflow = "hidden";
 		function closeOnEscape(event) {
-			if (event.key === "Escape") setIsExamPickerOpen(false);
+			if (event.key === "Escape") {
+				setIsExamPickerOpen(false);
+				setRetakeExamFormat(null);
+			}
 		}
 		window.addEventListener("keydown", closeOnEscape);
 		return () => {
 			document.body.style.overflow = previousOverflow;
 			window.removeEventListener("keydown", closeOnEscape);
 		};
-	}, [isExamPickerOpen]);
+	}, [isExamPickerOpen, retakeExamFormat]);
 
 	function openExamPicker() {
 		setSelectedExamFormat("short");
@@ -871,10 +875,7 @@ export default function FortiOSDashboard() {
 											</button>
 											<button
 												type="button"
-												onClick={() => {
-													setIsExamPickerOpen(false);
-													navigate(examPath, { state: { retakeExam: true } });
-												}}
+												onClick={() => setRetakeExamFormat(selectedExamFormat)}
 												className="rounded-full bg-[#e2231a] px-4 py-3 text-sm font-bold text-white transition hover:bg-[#bd2119]"
 											>
 												Retake Exam
@@ -892,6 +893,48 @@ export default function FortiOSDashboard() {
 								</div>
 							);
 						})()}
+					</section>
+				</div>,
+				document.body,
+			)}
+			{retakeExamFormat && createPortal(
+				<div className="fixed inset-0 z-[120] grid place-items-center bg-[#071126]/60 p-4 backdrop-blur-sm">
+					<section
+						role="alertdialog"
+						aria-modal="true"
+						aria-labelledby="fortios-retake-confirm-title"
+						aria-describedby="fortios-retake-confirm-description"
+						className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl sm:p-8"
+					>
+						<p className="text-sm font-semibold text-[#e2231a]">Fortinet FortiOS practice</p>
+						<h2 id="fortios-retake-confirm-title" className="mt-2 text-xl font-bold text-[#071126] sm:text-2xl">
+							Retake the {FORTIOS_EXAM_FORMAT_DEFINITIONS[retakeExamFormat].name}?
+						</h2>
+						<p id="fortios-retake-confirm-description" className="mt-3 text-sm leading-6 text-[#71819b]">
+							A new attempt will start with a fresh set of questions. Your previous result remains available in your exam history.
+						</p>
+						<div className="mt-6 flex flex-wrap justify-end gap-3">
+							<button
+								type="button"
+								onClick={() => setRetakeExamFormat(null)}
+								className="rounded-full border border-[#efc6c3] px-5 py-3 text-sm font-semibold text-[#526584] transition hover:bg-[#fff8f7]"
+							>
+								Cancel
+							</button>
+							<button
+								type="button"
+								disabled={!canTakeExams}
+								onClick={() => {
+									const examPath = `/modules/programs/fortinet-fortios/exam/${retakeExamFormat}`;
+									setRetakeExamFormat(null);
+									setIsExamPickerOpen(false);
+									navigate(examPath, { state: { retakeExam: true, retakeExamConfirmed: true } });
+								}}
+								className="rounded-full bg-[#e2231a] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#bd2119] disabled:cursor-not-allowed disabled:opacity-50"
+							>
+								Yes, retake exam
+							</button>
+						</div>
 					</section>
 				</div>,
 				document.body,

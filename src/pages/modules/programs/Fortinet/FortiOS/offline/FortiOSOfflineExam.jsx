@@ -80,6 +80,7 @@ export default function FortiOSOfflineExam() {
 	const [isRetakeConfirmationOpen, setIsRetakeConfirmationOpen] = useState(false);
 	const answerReviewRef = useRef(null);
 	const requestedRetake = location.state?.retakeExam === true;
+	const retakeExamConfirmed = location.state?.retakeExamConfirmed === true;
 	const examName = FORTIOS_OFFLINE_EXAM_FORMATS[examKey]?.name ?? "FortiOS Exam";
 	const question = session?.questions[session.currentIndex];
 	const score = useMemo(() => session?.questions.reduce(
@@ -87,6 +88,16 @@ export default function FortiOSOfflineExam() {
 	) ?? 0, [session]);
 	const sessionDeadline = session?.deadline;
 	const sessionIsSubmitted = session?.isSubmitted;
+
+	const restartExam = useCallback(() => {
+		try {
+			const nextSession = createSession(bankState.bank, examKey);
+			setSession(nextSession);
+			setSecondsRemaining(nextSession.deadline === null ? 0 : Math.ceil((nextSession.deadline - Date.now()) / 1000));
+		} catch (error) {
+			setBankState((current) => ({ ...current, error: error instanceof Error ? error.message : "Could not restart this exam." }));
+		}
+	}, [bankState.bank, examKey]);
 
 	useEffect(() => {
 		let active = true;
@@ -159,9 +170,12 @@ export default function FortiOSOfflineExam() {
 
 	useEffect(() => {
 		if (!requestedRetake || !session) return;
-		if (session.isSubmitted) setIsRetakeConfirmationOpen(true);
+		if (session.isSubmitted) {
+			if (retakeExamConfirmed) restartExam();
+			else setIsRetakeConfirmationOpen(true);
+		}
 		navigate(location.pathname, { replace: true, state: null });
-	}, [location.pathname, navigate, requestedRetake, session]);
+	}, [location.pathname, navigate, requestedRetake, restartExam, retakeExamConfirmed, session]);
 
 	useEffect(() => {
 		if (!isRetakeConfirmationOpen) return undefined;
@@ -177,16 +191,6 @@ export default function FortiOSOfflineExam() {
 			? { ...current, isSubmitted: true, currentIndex: 0 }
 			: current);
 	}, []);
-
-	function restartExam() {
-		try {
-			const nextSession = createSession(bankState.bank, examKey);
-			setSession(nextSession);
-			setSecondsRemaining(nextSession.deadline === null ? 0 : Math.ceil((nextSession.deadline - Date.now()) / 1000));
-		} catch (error) {
-			setBankState((current) => ({ ...current, error: error instanceof Error ? error.message : "Could not restart this exam." }));
-		}
-	}
 
 	if (!FORTIOS_OFFLINE_EXAM_FORMATS[examKey]) {
 		return <OfflineExamMessage title="Exam format not found" message="Choose a FortiOS exam from the program dashboard." />;
