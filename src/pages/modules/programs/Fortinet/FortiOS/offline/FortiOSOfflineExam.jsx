@@ -170,9 +170,12 @@ export default function FortiOSOfflineExam() {
 
 	useEffect(() => {
 		if (!requestedRetake || !session) return;
-		if (session.isSubmitted) {
-			if (retakeExamConfirmed) restartExam();
-			else setIsRetakeConfirmationOpen(true);
+		const hasResult = session.isSubmitted ||
+			(session.deadline !== null && session.deadline <= Date.now());
+		if (retakeExamConfirmed) {
+			restartExam();
+		} else if (hasResult) {
+			setIsRetakeConfirmationOpen(true);
 		}
 		navigate(location.pathname, { replace: true, state: null });
 	}, [location.pathname, navigate, requestedRetake, restartExam, retakeExamConfirmed, session]);
