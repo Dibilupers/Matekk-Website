@@ -928,14 +928,14 @@ function OfflineModulesPage() {
                     : "border-l-[#c8102e] hover:border-y-[#f0cbd3] hover:border-r-[#f0cbd3] focus-visible:ring-[#c8102e]";
                 const cardClassName = `flex min-h-16 items-center justify-between rounded-xl border-y border-r border-l-4 border-y-slate-200 border-r-slate-200 bg-white px-5 py-4 font-semibold text-slate-900 shadow-sm ${
                   isAvailableOffline
-                    ? `transition-all duration-200 ease-out hover:-translate-y-1 hover:border-l-8 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 motion-reduce:transition-none motion-reduce:hover:translate-y-0 ${category.brand === "teal" ? "offline-water-card group relative isolate overflow-hidden" : ""} ${accentClass}`
+                    ? `transition-all duration-200 ease-out hover:-translate-y-1 hover:border-l-8 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 motion-reduce:transition-none motion-reduce:hover:translate-y-0 offline-water-card group relative isolate overflow-hidden offline-water-card--${category.brand} ${accentClass}`
                     : "cursor-not-allowed opacity-40"
                 }`;
                 return (
                   isAvailableOffline ? (
                     <Link className={cardClassName} key={program.path} to={program.path}>
-                      <span className={category.brand === "teal" ? "relative z-10 text-slate-900 transition-colors duration-500 group-hover:text-white group-focus-visible:text-white" : "relative z-10"}>{program.name}</span>
-                      <span aria-hidden="true" className={`relative z-10 text-xl font-normal transition-colors duration-500 ${category.brand === "teal" ? "text-slate-400 group-hover:text-white group-focus-visible:text-white" : "text-slate-400"}`}>→</span>
+                      <span className="relative z-10 text-slate-900 transition-colors duration-500 group-hover:text-white group-focus-visible:text-white">{program.name}</span>
+                      <span aria-hidden="true" className="relative z-10 text-xl font-normal text-slate-400 transition-colors duration-500 group-hover:text-white group-focus-visible:text-white">→</span>
                     </Link>
                   ) : (
                     <button

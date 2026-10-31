@@ -1708,12 +1708,23 @@ h6 {
   z-index: 0;
   inset: 0;
   content: "";
-  background: #005b6b;
-  clip-path: polygon(0 0, 100% 0, 96% 18%, 100% 36%, 96% 54%, 100% 72%, 96% 88%, 100% 100%, 0 100%);
+  background: var(--offline-water-card-fill);
   transform: scaleX(0);
   transform-origin: left center;
   transition: transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
   pointer-events: none;
+}
+
+.offline-water-card--teal {
+  --offline-water-card-fill: #005b6b;
+}
+
+.offline-water-card--comptia {
+  --offline-water-card-fill: #c8102e;
+}
+
+.offline-water-card--fortinet {
+  --offline-water-card-fill: #e2231a;
 }
 
 .offline-water-card:hover::before,
