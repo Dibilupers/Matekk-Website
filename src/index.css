@@ -1703,6 +1703,41 @@ h6 {
   }
 }
 
+.offline-water-card::before {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  content: "";
+  background: #005b6b;
+  clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
+  transition: clip-path 650ms cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+.offline-water-card:hover::before,
+.offline-water-card:focus-visible::before {
+  clip-path: polygon(0 0, 100% 0, 96% 18%, 100% 36%, 96% 54%, 100% 72%, 96% 88%, 100% 100%, 0 100%);
+  animation: offline-water-settle 260ms 650ms forwards;
+}
+
+@keyframes offline-water-settle {
+  to {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .offline-water-card::before {
+    transition: none;
+  }
+
+  .offline-water-card:hover::before,
+  .offline-water-card:focus-visible::before {
+    animation: none;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+}
+
 /* ---------- Exam exhibits: terminal window, light and dark ---------- */
 /* Light mode (default): a light terminal window */
 .ccna-term { background: #f8fafc; color: #1e293b; border: 1px solid #d6e0ea; }
