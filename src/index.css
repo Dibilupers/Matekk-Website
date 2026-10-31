@@ -1709,21 +1709,16 @@ h6 {
   inset: 0;
   content: "";
   background: #005b6b;
-  clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
-  transition: clip-path 650ms cubic-bezier(0.22, 1, 0.36, 1);
+  clip-path: polygon(0 0, 100% 0, 96% 18%, 100% 36%, 96% 54%, 100% 72%, 96% 88%, 100% 100%, 0 100%);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
   pointer-events: none;
 }
 
 .offline-water-card:hover::before,
 .offline-water-card:focus-visible::before {
-  clip-path: polygon(0 0, 100% 0, 96% 18%, 100% 36%, 96% 54%, 100% 72%, 96% 88%, 100% 100%, 0 100%);
-  animation: offline-water-settle 260ms 650ms forwards;
-}
-
-@keyframes offline-water-settle {
-  to {
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-  }
+  transform: scaleX(1);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1733,8 +1728,7 @@ h6 {
 
   .offline-water-card:hover::before,
   .offline-water-card:focus-visible::before {
-    animation: none;
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    transform: scaleX(1);
   }
 }
 

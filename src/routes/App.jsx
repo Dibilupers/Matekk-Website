@@ -934,7 +934,7 @@ function OfflineModulesPage() {
                 return (
                   isAvailableOffline ? (
                     <Link className={cardClassName} key={program.path} to={program.path}>
-                      <span className={category.brand === "teal" ? "offline-water-card__label relative z-10 transition-colors duration-500 group-hover:text-white group-focus-visible:text-white" : "relative z-10"}>{program.name}</span>
+                      <span className={category.brand === "teal" ? "relative z-10 text-slate-900 transition-colors duration-500 group-hover:text-white group-focus-visible:text-white" : "relative z-10"}>{program.name}</span>
                       <span aria-hidden="true" className={`relative z-10 text-xl font-normal transition-colors duration-500 ${category.brand === "teal" ? "text-slate-400 group-hover:text-white group-focus-visible:text-white" : "text-slate-400"}`}>→</span>
                     </Link>
                   ) : (
