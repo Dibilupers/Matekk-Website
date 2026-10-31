@@ -23,6 +23,10 @@ import CCNPEnterprise from "../pages/training/cisco/ccnp/enterprise";
 import CCNPDatacenter from "../pages/training/cisco/ccnp/datacenter";
 import CCNPSecurity from "../pages/training/cisco/ccnp/security";
 import CCNPCollaboration from "../pages/training/cisco/ccnp/collaboration";
+import CCNPEnterpriseDashboard from "../pages/modules/programs/Cisco/CCNP/CCNPEnterprise/ccnpEnterprise";
+import CCNPSecurityDashboard from "../pages/modules/programs/Cisco/CCNP/CCNPSecurity/ccnpSecurity";
+import CCNPDataCenterDashboard from "../pages/modules/programs/Cisco/CCNP/CCNPDataCenter/ccnpDataCenter";
+import CCNPCollaborationDashboard from "../pages/modules/programs/Cisco/CCNP/CCNPCollaboration/ccnpCollaboration";
 
 /* CompTIA */
 import Aplus from "../pages/training/comptia/aplus";
@@ -422,6 +426,10 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/modules/programs/ccnp/enterprise" element={<ProtectedRoute><CCNPEnterpriseDashboard /></ProtectedRoute>} />
+        <Route path="/modules/programs/ccnp/security" element={<ProtectedRoute><CCNPSecurityDashboard /></ProtectedRoute>} />
+        <Route path="/modules/programs/ccnp/datacenter" element={<ProtectedRoute><CCNPDataCenterDashboard /></ProtectedRoute>} />
+        <Route path="/modules/programs/ccnp/collaboration" element={<ProtectedRoute><CCNPCollaborationDashboard /></ProtectedRoute>} />
         <Route
           path="/modules/programs/comptia-aplus"
           element={

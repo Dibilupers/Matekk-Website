@@ -254,6 +254,10 @@ function getProgramPath(course) {
 	if (course.name === "FortiOS") return "/modules/programs/fortinet-fortios";
 	if (course.name === "CCNA Automation") return "/modules/programs/ccna-automation";
 	if (course.name === "CCNA Cybersecurity") return "/modules/programs/ccna-cybersecurity";
+	if (course.name === "CCNP Enterprise") return "/modules/programs/ccnp/enterprise";
+	if (course.name === "CCNP Security") return "/modules/programs/ccnp/security";
+	if (course.name === "CCNP Data Center") return "/modules/programs/ccnp/datacenter";
+	if (course.name === "CCNP Collaboration") return "/modules/programs/ccnp/collaboration";
 	return course.path;
 }
 
