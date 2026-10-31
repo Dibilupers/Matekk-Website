@@ -111,7 +111,7 @@ function getLatestExamResult(assessments, examKey) {
 }
 
 export default function FortiOSDashboard() {
-	const { profile, isOnline } = useAuth();
+	const { profile, isOnline, isOfflinePinUnlocked } = useAuth();
 	const navigate = useNavigate();
 	const [typedIntro, setTypedIntro] = useState("");
 	const [hasScrolled, setHasScrolled] = useState(false);
@@ -124,6 +124,8 @@ export default function FortiOSDashboard() {
 	const [selectedExamFormat, setSelectedExamFormat] = useState("short");
 	const [examResultsState, setExamResultsState] = useState({ userId: null, assessments: [], loading: false, error: null });
 	const userId = profile?.userId;
+	const canTakeExamWithoutAccount = !isOnline && isOfflinePinUnlocked;
+	const canTakeExams = Boolean(userId) || canTakeExamWithoutAccount;
 	const quizProgress = userId ? readProgramModuleQuizProgress("fortinet-fortios", userId) : { modules: {} };
 	const quizAttempts = FORTIOS_MODULES.map((module) => {
 		const savedAttempt = quizProgress.modules[module.number];
@@ -233,7 +235,7 @@ export default function FortiOSDashboard() {
 	}
 
 	function startSelectedExam() {
-		if (!selectedExam || !userId) return;
+		if (!selectedExam || !canTakeExams) return;
 		setIsExamPickerOpen(false);
 		navigate(`/modules/programs/fortinet-fortios/exam/${selectedExamFormat}`);
 	}
