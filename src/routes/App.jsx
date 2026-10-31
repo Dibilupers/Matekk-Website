@@ -875,6 +875,10 @@ function OfflineModulesPage() {
         { name: "CCNA", path: "/modules/programs/ccna" },
         { name: "CCNA Automation", path: "/modules/programs/ccna-automation" },
         { name: "CCNA Cybersecurity", path: "/modules/programs/ccna-cybersecurity" },
+        { name: "CCNP Enterprise", path: "/modules/programs/ccnp/enterprise", availableOffline: false },
+        { name: "CCNP Security", path: "/modules/programs/ccnp/security", availableOffline: false },
+        { name: "CCNP Data Center", path: "/modules/programs/ccnp/datacenter", availableOffline: false },
+        { name: "CCNP Collaboration", path: "/modules/programs/ccnp/collaboration", availableOffline: false },
       ],
     },
     {
