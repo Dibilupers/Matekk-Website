@@ -928,7 +928,7 @@ function OfflineModulesPage() {
                     : "border-l-[#c8102e] hover:border-y-[#f0cbd3] hover:border-r-[#f0cbd3] focus-visible:ring-[#c8102e]";
                 const cardClassName = `flex min-h-16 items-center justify-between rounded-xl border-y border-r border-l-4 border-y-slate-200 border-r-slate-200 bg-white px-5 py-4 font-semibold text-slate-900 shadow-sm ${
                   isAvailableOffline
-                    ? `transition hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${accentClass}`
+                    ? `transition-all duration-200 ease-out hover:-translate-y-1 hover:border-l-8 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 motion-reduce:transition-none motion-reduce:hover:translate-y-0 ${accentClass}`
                     : "cursor-not-allowed opacity-40"
                 }`;
                 return (
