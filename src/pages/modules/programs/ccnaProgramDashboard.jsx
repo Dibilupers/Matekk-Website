@@ -256,6 +256,7 @@ export default function CCNAProgramDashboard({
 	programKey,
 	programPath,
 }) {
+	const { isOnline } = useAuth();
 	const [typedIntro, setTypedIntro] = useState("");
 	const [hasScrolled, setHasScrolled] = useState(false);
 	const hasDescriptionAccent = typeof descriptionAccent === "string" && description.endsWith(descriptionAccent);
@@ -312,7 +313,7 @@ export default function CCNAProgramDashboard({
 		<main className="program-faceted-page ccna-page-enter relative min-h-screen bg-white text-[#071126]">
 			{createPortal(
 				<Link
-					to="/pages/blank"
+					to={isOnline ? "/pages/blank" : "/modules/programs"}
 					className={`fixed left-4 top-24 z-40 flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-bold text-[#005b6b] transition hover:text-[#004653] active:scale-95 ${hasScrolled ? "bg-white/90 shadow-md backdrop-blur-sm" : "bg-white/80"}`}
 				>
 					<ArrowLeft size={20} strokeWidth={2.5} /> Back to Courses
