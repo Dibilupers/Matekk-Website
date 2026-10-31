@@ -882,7 +882,7 @@ function OfflineModulesPage() {
       brand: "comptia",
       programs: [
         { name: "Network+", path: "/modules/programs/comptia-network-plus" },
-        { name: "A+", path: "/modules/programs/comptia-aplus" },
+        { name: "A+", path: "/modules/programs/comptia-aplus", availableOffline: false },
         { name: "Security+", path: "/modules/programs/comptia-security-plus" },
       ],
     },
@@ -916,20 +916,36 @@ function OfflineModulesPage() {
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
               {category.programs.map((program) => {
+                const isAvailableOffline = program.availableOffline !== false;
                 const accentClass = category.brand === "teal"
                   ? "border-l-[#005b6b] hover:border-y-[#9fc8ce] hover:border-r-[#9fc8ce] focus-visible:ring-[#005b6b]"
                   : category.brand === "fortinet"
                     ? "border-l-[#e2231a] hover:border-y-[#f1beba] hover:border-r-[#f1beba] focus-visible:ring-[#e2231a]"
                     : "border-l-[#c8102e] hover:border-y-[#f0cbd3] hover:border-r-[#f0cbd3] focus-visible:ring-[#c8102e]";
+                const cardClassName = `flex min-h-16 items-center justify-between rounded-xl border-y border-r border-l-4 border-y-slate-200 border-r-slate-200 bg-white px-5 py-4 font-semibold text-slate-900 shadow-sm ${
+                  isAvailableOffline
+                    ? `transition hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${accentClass}`
+                    : "cursor-not-allowed opacity-40"
+                }`;
                 return (
-                  <Link
-                    className={`flex min-h-16 items-center justify-between rounded-xl border-y border-r border-l-4 border-y-slate-200 border-r-slate-200 bg-white px-5 py-4 font-semibold text-slate-900 shadow-sm transition hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${accentClass}`}
-                    key={program.path}
-                    to={program.path}
-                  >
-                    <span>{program.name}</span>
-                    <span aria-hidden="true" className="text-xl font-normal text-slate-400">→</span>
-                  </Link>
+                  isAvailableOffline ? (
+                    <Link className={cardClassName} key={program.path} to={program.path}>
+                      <span>{program.name}</span>
+                      <span aria-hidden="true" className="text-xl font-normal text-slate-400">→</span>
+                    </Link>
+                  ) : (
+                    <button
+                      type="button"
+                      className={`${cardClassName} w-full text-left`}
+                      key={program.path}
+                      disabled
+                      aria-label={`${program.name} is unavailable offline`}
+                      title="Not available offline yet"
+                    >
+                      <span>{program.name}</span>
+                      <span aria-hidden="true" className="text-xl font-normal text-slate-400">→</span>
+                    </button>
+                  )
                 );
               })}
             </div>
