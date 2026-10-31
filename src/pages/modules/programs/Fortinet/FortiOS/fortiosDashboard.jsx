@@ -241,7 +241,8 @@ export default function FortiOSDashboard() {
 	function startSelectedExam() {
 		if (!selectedExam || !canTakeExams) return;
 		setIsExamPickerOpen(false);
-		navigate(`/modules/programs/fortinet-fortios/exam/${selectedExamFormat}`);
+		const examPath = `/modules/programs/fortinet-fortios/exam/${selectedExamFormat}`;
+		navigate(examPath, isOnline ? undefined : { state: { startNewOfflineAttempt: true } });
 	}
 
 	useEffect(() => {
