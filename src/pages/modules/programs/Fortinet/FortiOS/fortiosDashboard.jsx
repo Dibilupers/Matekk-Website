@@ -323,7 +323,9 @@ export default function FortiOSDashboard() {
 			<button
 				type="button"
 				onClick={() => document.getElementById("course-modules")?.scrollIntoView({ behavior: "smooth", block: "start" })}
-				className="flex h-12 items-center gap-2 rounded-full border border-[#e2231a] px-5 text-sm font-bold text-[#d9271e] transition hover:-translate-y-0.5 hover:bg-[#fff4f3] hover:shadow-[0_10px_20px_rgba(226,35,26,0.12)] active:translate-y-0 sm:h-[58px] sm:px-7 sm:text-base"
+				disabled
+				aria-label="View all modules (coming soon)"
+				className="flex h-12 cursor-not-allowed items-center gap-2 rounded-full border border-[#e2231a] px-5 text-sm font-bold text-[#d9271e] opacity-40 sm:h-[58px] sm:px-7 sm:text-base"
 			>
 				View All Modules <ArrowRight size={18} />
 			</button>

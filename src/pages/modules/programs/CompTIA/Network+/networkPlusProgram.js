@@ -2,6 +2,7 @@ import NetworkPlusBadge from "../../../../../assets/network+.webp";
 
 const NETWORK_PLUS_PROGRAM = {
 	programKey: "comptia-network-plus",
+	hasLearningModules: false,
 	title: "Network+",
 	badge: NetworkPlusBadge,
 	coursePath: "/training/comptia/network",

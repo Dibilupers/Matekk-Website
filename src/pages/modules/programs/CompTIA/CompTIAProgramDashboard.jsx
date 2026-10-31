@@ -139,6 +139,7 @@ export default function CompTIAProgramDashboard({ program }) {
 	const { profile, isOnline } = useAuth();
 	const navigate = useNavigate();
 	const isNetworkPlus = program.programKey === "comptia-network-plus";
+	const hasLearningModules = program.hasLearningModules === true;
 	const includesAllQuestionsExam = isNetworkPlus || program.includeAllQuestionsExam === true;
 	const { stats: gradebookScoreStats } = useGradebookQuizStats(
 		program.programKey,
@@ -342,7 +343,13 @@ export default function CompTIAProgramDashboard({ program }) {
 								<button
 									type="button"
 									onClick={() => document.getElementById("program-modules")?.scrollIntoView({ behavior: "smooth", block: "start" })}
-									className="flex h-12 items-center gap-2 rounded-full border border-[#c8102e] px-5 text-sm font-bold text-[#c8102e] transition hover:-translate-y-0.5 hover:bg-[#fff1f3] hover:shadow-[0_10px_20px_rgba(200,16,46,0.12)] active:translate-y-0 sm:h-[58px] sm:px-7 sm:text-base"
+									disabled={!hasLearningModules}
+									aria-label={hasLearningModules ? "View all modules" : "View all modules (coming soon)"}
+									className={`flex h-12 items-center gap-2 rounded-full border border-[#c8102e] px-5 text-sm font-bold text-[#c8102e] sm:h-[58px] sm:px-7 sm:text-base ${
+										hasLearningModules
+											? "transition hover:-translate-y-0.5 hover:bg-[#fff1f3] hover:shadow-[0_10px_20px_rgba(200,16,46,0.12)] active:translate-y-0"
+											: "cursor-not-allowed opacity-40"
+									}`}
 								>
 									View All Modules <ArrowRight size={18} />
 								</button>
