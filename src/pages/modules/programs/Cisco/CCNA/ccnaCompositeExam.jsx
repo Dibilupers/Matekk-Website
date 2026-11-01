@@ -1049,6 +1049,18 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 						<p id="ccna-short-exam-exit-description" className="mt-3 text-sm leading-6 text-[#64748b] sm:text-base">
 							Your answers and time remaining will be saved. The timer will keep running while you are away.
 						</p>
+						<div className="mt-5 flex items-center justify-between rounded-xl border border-[#c9dfe2] bg-[#f5f9f9] px-4 py-3">
+							<span className="inline-flex items-center gap-2 text-sm font-semibold text-[#526584]">
+								<Clock3 size={16} /> Time remaining
+							</span>
+							<span
+								role="timer"
+								aria-label={`${formatTime(secondsRemaining)} remaining`}
+								className={`text-lg font-bold tabular-nums ${secondsRemaining <= 300 ? "text-[#a44b13]" : "text-[#005b6b]"}`}
+							>
+								{formatTime(secondsRemaining)}
+							</span>
+						</div>
 						<div className="mt-6 flex flex-wrap justify-end gap-3">
 							<button type="button" onClick={() => blocker.reset()} className="ccna-modal-stay rounded-full border border-[#c9dfe2] px-4 py-2.5 text-sm font-semibold text-[#42516b] transition hover:bg-[#f5f9f9] sm:px-5">
 								Stay in exam
