@@ -60,12 +60,14 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 	const linkedExamResult = location.state?.examResult;
 	const shouldStartNewAttempt = location.state?.retakeExam === true;
 	const { profile, isOnline } = useAuth();
-	const [isOfflineExam] = useState(() => !isOnline);
+	const [isOfflineExam, setIsOfflineExam] = useState(() => !isOnline);
 	const userId = profile?.userId;
+	const sessionOwnerIdRef = useRef(userId);
 	// Each student's exam progress is saved separately (per signed-in user)
 	const sessionStorageKey = userId === null || userId === undefined
 		? null
 		: getCcnaExamSessionKey(exam.sessionKey, userId);
+	const offlineSessionStorageKey = `matekk-ccna-offline-exam:${examKey}`;
 	const hasLinkedExamResult = shouldShowExamResult &&
 		Number.isFinite(linkedExamResult?.score) &&
 		Number.isFinite(linkedExamResult?.maxScore) &&
@@ -175,32 +177,58 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 			try {
 				let savedSession = null;
 				const isRetake = shouldStartNewAttemptRef.current;
-				if (!isRetake && sessionStorageKey) {
-					const savedValue = window.sessionStorage.getItem(sessionStorageKey);
-					if (savedValue) {
-						try {
-							const parsed = JSON.parse(savedValue);
-							if (
-								parsed &&
-								typeof parsed.attemptId === "string" &&
-								Array.isArray(parsed.questions) &&
-								parsed.questions.every((question) =>
-									Number.isInteger(question?.id) &&
-									typeof question.prompt === "string" &&
-									(isMatchingQuestion(question)
-										? Array.isArray(question.items) && Array.isArray(question.choices)
-										: Array.isArray(question.options)),
-								)
-							) savedSession = parsed;
-							else window.sessionStorage.removeItem(sessionStorageKey);
-						} catch (error) {
-							console.error(`Unable to restore the saved ${exam.name} attempt.`, error);
-							window.sessionStorage.removeItem(sessionStorageKey);
+				const isValidSavedSession = (session) =>
+					session &&
+					typeof session.attemptId === "string" &&
+					Array.isArray(session.questions) &&
+					session.questions.every((question) =>
+						Number.isInteger(question?.id) &&
+						typeof question.prompt === "string" &&
+						(isMatchingQuestion(question)
+							? Array.isArray(question.items) && Array.isArray(question.choices)
+							: Array.isArray(question.options)),
+					);
+				if (!isRetake) {
+					if (sessionStorageKey) {
+						const savedValue = window.sessionStorage.getItem(sessionStorageKey);
+						if (savedValue) {
+							try {
+								const parsed = JSON.parse(savedValue);
+								if (isValidSavedSession(parsed)) savedSession = parsed;
+								else window.sessionStorage.removeItem(sessionStorageKey);
+							} catch (error) {
+								console.error(`Unable to restore the saved ${exam.name} attempt.`, error);
+								window.sessionStorage.removeItem(sessionStorageKey);
+							}
 						}
+					}
+					try {
+						const offlineValue = window.localStorage.getItem(offlineSessionStorageKey);
+						if (offlineValue) {
+							const parsed = JSON.parse(offlineValue);
+							const belongsToCurrentUser = parsed.userId === null
+								? userId === null || userId === undefined
+								: userId === null || userId === undefined || String(parsed.userId) === String(userId);
+							if (
+								parsed.isOfflineLegacyExam === true &&
+								belongsToCurrentUser &&
+								isValidSavedSession(parsed)
+							) savedSession = parsed;
+						}
+					} catch (error) {
+						console.error(`Unable to restore the saved offline ${exam.name} attempt.`, error);
+						window.localStorage.removeItem(offlineSessionStorageKey);
 					}
 				}
 
-				if (isOfflineExam) {
+				if (savedSession?.isOfflineLegacyExam === true &&
+					(sessionOwnerIdRef.current === null || sessionOwnerIdRef.current === undefined) &&
+					savedSession.userId !== null && savedSession.userId !== undefined) {
+					sessionOwnerIdRef.current = savedSession.userId;
+				}
+				const isOfflineAttempt = isOfflineExam || savedSession?.isOfflineLegacyExam === true;
+				if (isOfflineAttempt) {
+					if (!isOfflineExam) setIsOfflineExam(true);
 					const savedOfflineSession = savedSession?.isOfflineLegacyExam === true &&
 						savedSession.questions.length === exam.questionCount &&
 						savedSession.questions.every(isValidQuestion)
@@ -402,13 +430,14 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 		return () => {
 			isActive = false;
 		};
-	}, [exam.durationSeconds, exam.name, exam.questionCount, examKey, isOfflineExam, loadAttempt, location.pathname, navigate, sessionStorageKey]);
+	}, [exam.durationSeconds, exam.name, exam.questionCount, examKey, isOfflineExam, loadAttempt, location.pathname, navigate, offlineSessionStorageKey, sessionStorageKey, userId]);
 
 	useEffect(() => {
-		if (!attemptId || examLoadState.status !== "ready" || isViewingSavedResult || !sessionStorageKey) return;
-		window.sessionStorage.setItem(sessionStorageKey, JSON.stringify({
+		if (!attemptId || examLoadState.status !== "ready" || isViewingSavedResult) return;
+		const savedSession = {
 			attemptId,
 			isOfflineLegacyExam: isOfflineExam,
+			userId: sessionOwnerIdRef.current ?? null,
 			submittedAt,
 			questions,
 			answers,
@@ -419,8 +448,28 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 			isSubmitted,
 			serverResult,
 			score: serverResult?.score ?? null,
-		}));
-	}, [answers, attemptId, currentIndex, deadline, examLoadState.status, flaggedQuestions, isOfflineExam, isSubmitted, isViewingSavedResult, lockedQuestions, questions, serverResult, sessionStorageKey, submittedAt]);
+		};
+		if (isOfflineExam) {
+			try {
+				window.localStorage.setItem(offlineSessionStorageKey, JSON.stringify(savedSession));
+			} catch (error) {
+				console.error(`Unable to save the offline ${exam.name} attempt.`, error);
+			}
+		} else {
+			try {
+				window.localStorage.removeItem(offlineSessionStorageKey);
+			} catch (error) {
+				console.error(`Unable to clear the saved offline ${exam.name} attempt.`, error);
+			}
+		}
+		if (sessionStorageKey) {
+			try {
+				window.sessionStorage.setItem(sessionStorageKey, JSON.stringify(savedSession));
+			} catch (error) {
+				console.error(`Unable to save the ${exam.name} session for this tab.`, error);
+			}
+		}
+	}, [answers, attemptId, currentIndex, deadline, exam.name, examLoadState.status, flaggedQuestions, isOfflineExam, isSubmitted, isViewingSavedResult, lockedQuestions, offlineSessionStorageKey, questions, serverResult, sessionStorageKey, submittedAt, userId]);
 
 	useEffect(() => {
 		if (!isSubmitted || isViewingSavedResult || !userId || !Number.isFinite(submittedAt)) return;
