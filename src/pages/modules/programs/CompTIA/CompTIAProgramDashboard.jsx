@@ -22,6 +22,7 @@ import ScoreRotationCard from "../ScoreRotationCard";
 import useGradebookQuizStats from "../useGradebookQuizStats";
 import { isAnswerCorrect, isQuestionAnswered } from "../../../../utils/ccnaExamGrading";
 import { getCcnaExamSessionKey } from "../../../../utils/ccnaShortExamSession";
+import { getOfflineExamSessionKeys } from "../../../../utils/offlineExamSession";
 import { readGradebookAssessments } from "../../../../utils/gradebookApi";
 
 const STANDARD_EXAM_FORMATS = [
@@ -36,16 +37,20 @@ function formatExamTime(totalSeconds) {
 	return `${minutes}:${seconds}`;
 }
 
-function readCompTIAExamProgress(programKey, format, userId, now) {
+function readCompTIAExamProgress(programKey, format, userId, now, isOnline) {
 	const emptyProgress = { status: "not-started", deadline: null, answeredCount: 0, score: 0, maxScore: 0 };
-	if ((typeof userId !== "string" && typeof userId !== "number") || String(userId).trim() === "") {
-		return emptyProgress;
-	}
 
 	let savedSession;
 	try {
-		const sessionKey = getCcnaExamSessionKey(`matekk-${programKey}-${format.key}-exam-session`, userId);
-		savedSession = window.sessionStorage.getItem(sessionKey);
+		if (!isOnline) {
+			savedSession = getOfflineExamSessionKeys(programKey, format.key, userId)
+				.map((key) => window.localStorage.getItem(key))
+				.find(Boolean);
+		}
+		if (!savedSession && (typeof userId === "string" || typeof userId === "number") && String(userId).trim() !== "") {
+			const sessionKey = getCcnaExamSessionKey(`matekk-${programKey}-${format.key}-exam-session`, userId);
+			savedSession = window.sessionStorage.getItem(sessionKey);
+		}
 	} catch (error) {
 		console.error(`Unable to read ${format.name} progress for ${programKey}.`, error);
 		return { ...emptyProgress, status: "unavailable" };
@@ -182,7 +187,7 @@ export default function CompTIAProgramDashboard({ program }) {
 	];
 	const examProgress = progressExamFormats.map((format) => ({
 		format,
-		progress: readCompTIAExamProgress(program.programKey, format, profile?.userId, examClockNow),
+		progress: readCompTIAExamProgress(program.programKey, format, profile?.userId, examClockNow, isOnline),
 	}));
 	const examCardFormat = examFormats[examCardIndex % examFormats.length];
 	const examCardProgress = examProgress.find(({ format }) => format.key === examCardFormat.key)?.progress;

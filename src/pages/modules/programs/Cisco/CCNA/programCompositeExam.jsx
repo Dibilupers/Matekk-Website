@@ -1,7 +1,7 @@
 // Exams for the CCNA Automation and CCNA Cybersecurity programs (jhonard, d9128cd).
 // Their questions come from each program's module quizzes and are graded in the browser;
 // the CCNA exam itself uses ccnaCompositeExam.jsx, which is built and graded by the backend.
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ArrowLeft, ArrowRight, ArrowUp, Clock3, Flag, Moon, RotateCcw, Sun, X } from "lucide-react";
 import { Link, Navigate, useBlocker, useLocation, useNavigate, useParams } from "react-router-dom";
@@ -19,6 +19,7 @@ import { ExhibitImage, ExhibitText } from "./ccnaExhibit";
 import { loadCcnaQuestionBank } from "../../../../../utils/ccnaQuestionBankApi";
 import { setDatabaseQuestions } from "./ccnaQuestionBank";
 import { getProgramExamFormats } from "../../programExamFormats";
+import { getOfflineExamSessionKeys } from "../../../../../utils/offlineExamSession";
 
 
 
@@ -43,10 +44,12 @@ function createExamSession(exam) {
 	};
 }
 
-function restoreExamSession(exam, sessionStorageKey) {
+function restoreExamSession(exam, sessionStorageKey, offlineStorageKeys = []) {
 	const createSession = () => createExamSession(exam);
-	if (!sessionStorageKey || typeof window === "undefined") return createSession();
-	const savedSession = window.sessionStorage.getItem(sessionStorageKey);
+	if (typeof window === "undefined") return createSession();
+	const savedSession = offlineStorageKeys
+		.map((key) => window.localStorage.getItem(key))
+		.find(Boolean) ?? (sessionStorageKey ? window.sessionStorage.getItem(sessionStorageKey) : null);
 	if (!savedSession) return createSession();
 
 	try {
@@ -104,7 +107,8 @@ function restoreExamSession(exam, sessionStorageKey) {
 		};
 	} catch (error) {
 		console.error(`Unable to restore the saved ${exam.name} session.`, error);
-		window.sessionStorage.removeItem(sessionStorageKey);
+		offlineStorageKeys.forEach((key) => window.localStorage.removeItem(key));
+		if (sessionStorageKey) window.sessionStorage.removeItem(sessionStorageKey);
 		return createSession();
 	}
 }
@@ -115,7 +119,7 @@ function formatTime(totalSeconds) {
 	return `${minutes}:${seconds}`;
 }
 
-function CCNACompositeExamPage({ examKey = "short", programKey = null, examFormats = null, theme = "ccna", omitSessionQuestionImages = false }) {
+function CCNACompositeExamPage({ examKey = "short", programKey = null, examFormats = null, theme = "ccna", omitSessionQuestionImages = false, persistOfflineSession = false }) {
 	const exam = examFormats?.[examKey] ?? (programKey ? getProgramExamFormats(programKey)?.[examKey] : CCNA_EXAMS[examKey]);
 	if (!exam) throw new Error(`No exam is configured for ${programKey ?? "CCNA"} format "${examKey}".`);
 	const programName = exam.programName ?? "CCNA";
@@ -135,8 +139,14 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 	const sessionStorageKey = userId === null || userId === undefined
 		? null
 		: getCcnaExamSessionKey(exam.sessionKey, userId);
+	const offlineStorageKeys = useMemo(
+		() => persistOfflineSession && programKey
+			? getOfflineExamSessionKeys(programKey, examKey, userId)
+			: [],
+		[examKey, persistOfflineSession, programKey, userId],
+	);
 	const [initialSession] = useState(() =>
-		shouldStartNewAttempt ? createExamSession(exam) : restoreExamSession(exam, sessionStorageKey),
+		shouldStartNewAttempt ? createExamSession(exam) : restoreExamSession(exam, sessionStorageKey, offlineStorageKeys),
 	);
 	const hasLinkedExamResult = shouldShowExamResult &&
 		Number.isFinite(linkedExamResult?.score) &&
@@ -229,7 +239,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 	}, [location.pathname, navigate, shouldStartNewAttempt]);
 
 	useEffect(() => {
-		if (isViewingSavedResult || !sessionStorageKey) return;
+		if (isViewingSavedResult || (!sessionStorageKey && offlineStorageKeys.length === 0)) return;
 		const session = {
 			attemptId,
 			submittedAt,
@@ -245,12 +255,12 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 			isSubmitted,
 		};
 		try {
-			window.sessionStorage.setItem(sessionStorageKey, JSON.stringify(session));
+			if (sessionStorageKey) window.sessionStorage.setItem(sessionStorageKey, JSON.stringify(session));
+			offlineStorageKeys.forEach((key) => window.localStorage.setItem(key, JSON.stringify(session)));
 		} catch (error) {
-			if (!omitSessionQuestionImages) throw error;
-			console.warn("Unable to save the offline Security+ exam session because browser storage is full.", error);
+			console.error(`Unable to save the ${exam.name} session.`, error);
 		}
-	}, [answers, attemptId, currentIndex, deadline, isSubmitted, isViewingSavedResult, lockedQuestions, omitSessionQuestionImages, questions, sessionStorageKey, submittedAt]);
+	}, [answers, attemptId, currentIndex, deadline, exam.name, isSubmitted, isViewingSavedResult, lockedQuestions, offlineStorageKeys, omitSessionQuestionImages, questions, sessionStorageKey, submittedAt]);
 
 	useEffect(() => {
 		if (programKey || !isSubmitted || isViewingSavedResult || !userId || !Number.isFinite(submittedAt)) return;

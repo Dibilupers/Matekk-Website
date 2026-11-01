@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../../../context/auth-context";
 import FortiOSBadge from "../../../../../assets/nse-4-fortios.svg";
 import { readCcnaExamProgress } from "../../../../../utils/ccnaShortExamSession";
+import { isAnswerCorrect, isQuestionAnswered } from "../../../../../utils/ccnaExamGrading";
 import { readGradebookAssessments } from "../../../../../utils/gradebookApi";
 import { isCurrentProgramModuleQuizAttempt, readProgramModuleQuizProgress } from "../../../../../utils/programModuleQuizProgress";
 import ProgramBackgroundParticles from "../../ProgramBackgroundParticles";
@@ -110,6 +111,48 @@ function getLatestExamResult(assessments, examKey) {
 		.sort((first, second) => second.submittedAt - first.submittedAt)[0] ?? null;
 }
 
+function readFortiOSOfflineExamProgress(examKey, userId) {
+	const emptyProgress = { status: "not-started", deadline: null, answeredCount: 0, score: 0, maxScore: 0 };
+	const userKey = userId === null || userId === undefined || String(userId).trim() === ""
+		? "device"
+		: encodeURIComponent(String(userId));
+	const keys = userKey === "device"
+		? [`matekk-fortios-offline:device:${examKey}`]
+		: [`matekk-fortios-offline:${userKey}:${examKey}`, `matekk-fortios-offline:device:${examKey}`];
+	try {
+		const savedSession = keys.map((key) => window.localStorage.getItem(key)).find(Boolean);
+		if (!savedSession) return null;
+		const session = JSON.parse(savedSession);
+		if (
+			!session ||
+			!Array.isArray(session.questions) ||
+			!session.answers ||
+			typeof session.answers !== "object" ||
+			Array.isArray(session.answers) ||
+			typeof session.isSubmitted !== "boolean" ||
+			(session.deadline !== null && !Number.isFinite(session.deadline))
+		) {
+			throw new TypeError(`Saved FortiOS ${examKey} progress has an invalid structure.`);
+		}
+		const isExpired = !session.isSubmitted && session.deadline !== null && session.deadline <= Date.now();
+		return {
+			status: isExpired ? "expired" : session.isSubmitted ? "completed" : "in-progress",
+			deadline: isExpired || session.isSubmitted ? null : session.deadline,
+			answeredCount: session.questions.filter((question, index) =>
+				isQuestionAnswered(question, session.answers[index]),
+			).length,
+			score: session.questions.reduce(
+				(total, question, index) => total + Number(isAnswerCorrect(question, session.answers[index])),
+				0,
+			),
+			maxScore: session.questions.length,
+		};
+	} catch (error) {
+		console.error(`Unable to restore FortiOS ${examKey} offline progress.`, error);
+		return { ...emptyProgress, status: "unavailable" };
+	}
+}
+
 export default function FortiOSDashboard() {
 	const { profile, isOnline, isOfflinePinUnlocked } = useAuth();
 	const navigate = useNavigate();
@@ -141,7 +184,9 @@ export default function FortiOSDashboard() {
 	const examRuns = Object.entries(FORTIOS_EXAM_PROGRESS_FORMATS).map(([examKey, exam]) => ({
 		examKey,
 		exam,
-		progress: readCcnaExamProgress(exam.sessionKey, userId),
+		progress: isOnline
+			? readCcnaExamProgress(exam.sessionKey, userId)
+			: readFortiOSOfflineExamProgress(examKey, userId) ?? readCcnaExamProgress(exam.sessionKey, userId),
 	}));
 	const gradedExamRuns = examRuns.filter(({ examKey }) => examKey !== "all_questions");
 	const attemptedExamCount = gradedExamRuns.filter(({ progress }) => progress.status !== "not-started").length;
@@ -929,7 +974,11 @@ export default function FortiOSDashboard() {
 									const examPath = `/modules/programs/fortinet-fortios/exam/${retakeExamFormat}`;
 									setRetakeExamFormat(null);
 									setIsExamPickerOpen(false);
-									navigate(examPath, { state: { startNewOfflineAttempt: true } });
+									navigate(examPath, {
+										state: isOnline
+											? { retakeExam: true }
+											: { startNewOfflineAttempt: true },
+									});
 								}}
 								className="rounded-full bg-[#e2231a] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#bd2119] disabled:cursor-not-allowed disabled:opacity-50"
 							>

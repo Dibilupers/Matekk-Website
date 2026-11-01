@@ -73,6 +73,7 @@ export default function FortiOSOfflineExam() {
 	const navigate = useNavigate();
 	const userKey = profile?.userId === null || profile?.userId === undefined ? "device" : encodeURIComponent(String(profile.userId));
 	const sessionKey = `matekk-fortios-offline:${userKey}:${examKey}`;
+	const deviceSessionKey = `matekk-fortios-offline:device:${examKey}`;
 	const [bankState, setBankState] = useState({ status: "loading", bank: [], error: null });
 	const [session, setSession] = useState(null);
 	const [secondsRemaining, setSecondsRemaining] = useState(0);
@@ -110,7 +111,11 @@ export default function FortiOSOfflineExam() {
 				setBankState({ status: "ready", bank: offlineBank, error: null });
 				let restoredSession = null;
 				try {
-					const saved = shouldStartNewAttempt ? null : window.localStorage.getItem(sessionKey);
+					const saved = shouldStartNewAttempt
+						? null
+						: (userKey === "device" ? [sessionKey] : [sessionKey, deviceSessionKey])
+							.map((key) => window.localStorage.getItem(key))
+							.find(Boolean);
 					if (saved) {
 						const parsed = JSON.parse(saved);
 						if (isValidSession(parsed, examKey) && parsed.questions.every((item) => offlineBank.some((candidate) => candidate.id === Number(item.id ?? item.bankId)))) {
@@ -142,7 +147,7 @@ export default function FortiOSOfflineExam() {
 				}
 			});
 		return () => { active = false; };
-	}, [examKey, sessionKey, shouldStartNewAttempt]);
+	}, [deviceSessionKey, examKey, sessionKey, shouldStartNewAttempt, userKey]);
 
 	useEffect(() => {
 		if (sessionIsSubmitted || sessionDeadline === null || sessionDeadline === undefined) return undefined;
