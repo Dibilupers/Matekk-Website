@@ -206,9 +206,11 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 						const offlineValue = window.localStorage.getItem(offlineSessionStorageKey);
 						if (offlineValue) {
 							const parsed = JSON.parse(offlineValue);
-							const belongsToCurrentUser = parsed.userId === null
-								? userId === null || userId === undefined
-								: userId === null || userId === undefined || String(parsed.userId) === String(userId);
+							const belongsToCurrentUser = parsed.userId === null ||
+								parsed.userId === undefined ||
+								userId === null ||
+								userId === undefined ||
+								String(parsed.userId) === String(userId);
 							if (
 								parsed.isOfflineLegacyExam === true &&
 								belongsToCurrentUser &&
