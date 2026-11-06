@@ -930,6 +930,18 @@ h6 {
   border-color: #303a60 !important;
 }
 
+[data-theme="dark"] .ccna-click-box-choice[aria-pressed="false"] {
+  border-color: #687895 !important;
+  background-color: #1b2947 !important;
+  color: #d7deed !important;
+}
+
+[data-theme="dark"] .ccna-click-box-choice[aria-pressed="false"]:not(:disabled):hover {
+  border-color: #20c5d6 !important;
+  background-color: #26385a !important;
+  color: #ffffff !important;
+}
+
 [data-theme="dark"] .ccna-training-logo {
   background-color: #bfe9ec !important;
   box-shadow: 0 4px 16px rgb(32 197 214 / 18%);
