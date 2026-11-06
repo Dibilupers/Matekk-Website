@@ -547,7 +547,7 @@ export default function Blank() {
 										onChange={(event) => setProgramSearch(event.target.value)}
 										placeholder="Search programs"
 										aria-label="Search programs"
-										className="h-11 w-full rounded-md border border-slate-200 bg-white py-2 pl-9 pr-8 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-[#1775EE] focus:ring-2 focus:ring-[#1775EE]/20 sm:h-10"
+										className="program-search-input h-11 w-full rounded-md border border-slate-200 bg-white py-2 pl-9 pr-8 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-[#1775EE] focus:ring-2 focus:ring-[#1775EE]/20 sm:h-10"
 									/>
 									{programSearch && (
 										<button

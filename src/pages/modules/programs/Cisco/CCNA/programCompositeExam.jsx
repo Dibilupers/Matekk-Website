@@ -653,7 +653,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 										<RotateCcw size={16} /> Retake Exam
 									</button>
 									{!isViewingSavedResult && (
-										<button type="button" onClick={reviewAnswers} className="inline-flex items-center gap-2 rounded-full border border-[#9fc8ce] px-6 py-3 font-semibold text-[#005b6b] transition-all duration-200 ease-out hover:scale-105 hover:bg-[#e8f3f4] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100">
+										<button type="button" onClick={reviewAnswers} className="ccna-result-review-button inline-flex items-center gap-2 rounded-full border border-[#9fc8ce] px-6 py-3 font-semibold text-[#005b6b] transition-all duration-200 ease-out hover:scale-105 hover:bg-[#e8f3f4] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100">
 											Review Answers <ArrowLeft className="rotate-[-90deg]" size={16} />
 										</button>
 									)}

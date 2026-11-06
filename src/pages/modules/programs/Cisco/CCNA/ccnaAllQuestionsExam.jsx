@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { BookOpen, CheckCircle2, ChevronLeft, ChevronRight, Moon, RotateCcw, Sun, X } from "lucide-react";
+import { ArrowDown, BookOpen, CheckCircle2, ChevronLeft, ChevronRight, Moon, RotateCcw, Sun, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../../../../context/auth-context";
 import TrainingLogo from "../../../../../assets/MATEKK_training_logo.png";
@@ -55,9 +55,13 @@ export default function CCNAAllQuestionsExam() {
 	const [storageError, setStorageError] = useState(null);
 	const [questionNumberInput, setQuestionNumberInput] = useState("1");
 	const [isRetakeConfirmationOpen, setIsRetakeConfirmationOpen] = useState(false);
+	const [isSubmitConfirmationOpen, setIsSubmitConfirmationOpen] = useState(false);
 	// Results page: show only correct / incorrect / unanswered questions when stepping through the review
 	const [reviewFilter, setReviewFilter] = useState("all");
 	const questionCardRef = useRef(null);
+	const reviewSectionRef = useRef(null);
+	const resultSummaryRef = useRef(null);
+	const previouslySubmittedRef = useRef(false);
 	const question = questions[currentIndex];
 	const answeredCount = useMemo(
 		() => questions.reduce((count, item, index) => count + Number(isQuestionAnswered(item, answers[index])), 0),
@@ -196,9 +200,11 @@ export default function CCNAAllQuestionsExam() {
 
 	useEffect(() => {
 		if (!question) return;
+		const justSubmitted = isSubmitted && !previouslySubmittedRef.current;
+		previouslySubmittedRef.current = isSubmitted;
 		const animationFrame = window.requestAnimationFrame(() => {
 			const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-			questionCardRef.current?.scrollIntoView({
+			(justSubmitted ? resultSummaryRef : questionCardRef).current?.scrollIntoView({
 				behavior: reduceMotion ? "auto" : "smooth",
 				block: "start",
 			});
@@ -234,11 +240,20 @@ export default function CCNAAllQuestionsExam() {
 		if (first >= 0) goToQuestion(first);
 	}
 
+	function reviewAnswers() {
+		const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+		reviewSectionRef.current?.scrollIntoView({
+			behavior: reduceMotion ? "auto" : "smooth",
+			block: "start",
+		});
+	}
+
 	function submitExam() {
 		const finalScore = questions.reduce(
 			(total, item, index) => total + Number(isAnswerCorrect(item, answers[index])),
 			0,
 		);
+		setIsSubmitConfirmationOpen(false);
 		setScore(finalScore);
 		setIsSubmitted(true);
 		goToQuestion(0);
@@ -382,7 +397,7 @@ export default function CCNAAllQuestionsExam() {
 							/>
 							<div className="mt-7 flex flex-wrap items-center justify-end gap-3">
 								{currentIndex === questions.length - 1 ? (
-									<button type="button" onClick={submitExam} className="rounded-full bg-[#005b6b] px-6 py-3 font-semibold text-white transition hover:bg-[#004653]">
+									<button type="button" onClick={() => setIsSubmitConfirmationOpen(true)} className="rounded-full bg-[#005b6b] px-6 py-3 font-semibold text-white transition hover:bg-[#004653]">
 										Finish and review
 									</button>
 								) : (
@@ -397,7 +412,7 @@ export default function CCNAAllQuestionsExam() {
 								)}
 							</div>
 							{currentIndex < questions.length - 1 && (
-								<button type="button" onClick={submitExam} className="mt-5 text-sm font-semibold text-[#71819b] underline decoration-[#c9dfe2] underline-offset-4 transition hover:text-[#005b6b]">
+								<button type="button" onClick={() => setIsSubmitConfirmationOpen(true)} className="mt-5 text-sm font-semibold text-[#71819b] underline decoration-[#c9dfe2] underline-offset-4 transition hover:text-[#005b6b]">
 									Finish exam and see score
 								</button>
 							)}
@@ -405,28 +420,73 @@ export default function CCNAAllQuestionsExam() {
 					</>
 				) : (
 					<>
-						<section className="mb-6 flex flex-wrap items-end justify-between gap-5 rounded-[24px] border border-[#d6e5e7] bg-white px-6 py-8 shadow-sm sm:px-10">
+						<section ref={resultSummaryRef} className="mb-6 grid scroll-mt-6 items-center gap-8 rounded-[24px] border border-[#d6e5e7] bg-white px-6 py-8 shadow-sm sm:px-10 lg:grid-cols-[1fr_0.8fr] lg:px-14">
 							<div>
 								<p className="inline-flex items-center gap-2 rounded-full bg-[#e8f3f4] px-3 py-1.5 text-xs font-bold tracking-wide text-[#005b6b]">
 									<CheckCircle2 size={15} /> Exam complete
 								</p>
-								<h1 className="mt-4 text-3xl font-extrabold tracking-tight text-[#17233d] sm:text-4xl">Your score</h1>
-								<p className="mt-3 text-lg font-semibold text-[#005b6b]">
-									{score.toLocaleString()} / {questions.length.toLocaleString()} · {percentage}%
+								<h1 className="mt-4 max-w-xl text-3xl font-extrabold leading-tight tracking-tight text-[#17233d] sm:text-4xl">
+									Your score: <span className="text-[#005b6b]">{score.toLocaleString()} of {questions.length.toLocaleString()}</span>
+								</h1>
+								<p className="mt-3 max-w-xl leading-7 text-[#64748b]">
+									You answered {answeredCount.toLocaleString()} of {questions.length.toLocaleString()} questions. Review your answers below.
 								</p>
-								<p className="mt-2 text-sm text-[#64748b]">
-									{answeredCount.toLocaleString()} answered · {questions.length - answeredCount} unanswered. Browse the numbered questions below to review your answers.
-								</p>
+								<div className="mt-7 flex flex-wrap gap-3">
+									<button
+										type="button"
+										onClick={() => setIsRetakeConfirmationOpen(true)}
+										className="inline-flex items-center gap-2 rounded-full bg-[#005b6b] px-6 py-3 font-semibold text-white transition hover:bg-[#004653]"
+									>
+										<RotateCcw size={16} /> Retake exam
+									</button>
+									<button
+										type="button"
+										onClick={reviewAnswers}
+										className="ccna-result-review-button inline-flex items-center gap-2 rounded-full border border-[#9fc8ce] px-6 py-3 font-semibold text-[#005b6b] transition hover:bg-[#e8f3f4]"
+									>
+										Review Answers <ArrowDown size={16} />
+									</button>
+								</div>
+								<div className="mt-8 grid max-w-sm grid-cols-2 divide-x divide-[#dce5f2]">
+									<div className="pr-4">
+										<strong className="block text-2xl font-extrabold tabular-nums text-[#17233d]">{score.toLocaleString()}</strong>
+										<span className="text-xs leading-4 text-[#71819b]">Your score<br />out of {questions.length.toLocaleString()}</span>
+									</div>
+									<div className="pl-4">
+										<strong className="block text-2xl font-extrabold tabular-nums text-[#17233d]">{questions.length.toLocaleString()}</strong>
+										<span className="text-xs leading-4 text-[#71819b]">Total<br />questions</span>
+									</div>
+								</div>
 							</div>
-							<button
-								type="button"
-								onClick={() => setIsRetakeConfirmationOpen(true)}
-								className="inline-flex items-center gap-2 rounded-full bg-[#005b6b] px-6 py-3 font-semibold text-white transition hover:bg-[#004653]"
-							>
-								<RotateCcw size={16} /> Retake exam
-							</button>
+							<div className="flex justify-center py-3">
+								<div
+									role="img"
+									aria-label={`${percentage}% correct answers`}
+									className="relative flex h-56 w-56 items-center justify-center rounded-full bg-[#dceff1] sm:h-64 sm:w-64"
+								>
+									<div className="absolute inset-[12px] rounded-full bg-[#eef7f8]" />
+									<svg aria-hidden="true" viewBox="0 0 100 100" className="absolute inset-0 h-full w-full -rotate-90">
+										<circle cx="50" cy="50" r="46" fill="none" stroke="#dceff1" strokeWidth="4.5" />
+										<circle
+											cx="50"
+											cy="50"
+											r="46"
+											fill="none"
+											stroke="#005b6b"
+											strokeWidth="4.5"
+											strokeDasharray={`${2 * Math.PI * 46}`}
+											strokeDashoffset={`${2 * Math.PI * 46 * (1 - percentage / 100)}`}
+										/>
+									</svg>
+									<div className="absolute inset-[25px] rounded-full border-[10px] border-white" />
+									<div className="relative z-10 text-center">
+										<strong className="block text-5xl font-extrabold tracking-tight tabular-nums text-[#005b6b]">{percentage}%</strong>
+										<span className="mt-1 block text-sm font-semibold text-[#64748b]">correct answers</span>
+									</div>
+								</div>
+							</div>
 						</section>
-						<section aria-label="Find a question" className="mb-5 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[#d6e5e7] bg-white p-4 shadow-sm sm:p-5">
+						<section ref={reviewSectionRef} aria-label="Find a question" className="mb-5 flex scroll-mt-6 flex-wrap items-center justify-between gap-4 rounded-2xl border border-[#d6e5e7] bg-white p-4 shadow-sm sm:p-5">
 							<div role="group" aria-label="Show questions" className="flex flex-wrap gap-2">
 								{[
 									["all", "All"],
@@ -507,6 +567,42 @@ export default function CCNAAllQuestionsExam() {
 					</>
 				)}
 			</div>
+			{isSubmitConfirmationOpen && createPortal(
+				<div data-theme={isDark ? "dark" : "light"} className="fixed inset-0 z-[120] grid place-items-center bg-[#071126]/60 p-4 backdrop-blur-sm">
+					<section
+						role="alertdialog"
+						aria-modal="true"
+						aria-labelledby="ccna-all-submit-title"
+						aria-describedby="ccna-all-submit-description"
+						className="w-full max-w-md rounded-2xl border border-[#d6e5e7] bg-white p-5 text-[#17233d] shadow-2xl sm:p-8"
+					>
+						<p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#005b6b]">Finish exam</p>
+						<h2 id="ccna-all-submit-title" className="mt-2 text-xl font-bold sm:text-2xl">
+							Are you sure you want to finish this exam?
+						</h2>
+						<p id="ccna-all-submit-description" className="mt-3 text-sm leading-6 text-[#64748b]">
+							You answered {answeredCount.toLocaleString()} of {questions.length.toLocaleString()} questions. Your answers will be scored and you’ll move to the results page. You won’t be able to change them after submitting.
+						</p>
+						<div className="mt-6 flex flex-wrap justify-end gap-3">
+							<button
+								type="button"
+								onClick={() => setIsSubmitConfirmationOpen(false)}
+								className="rounded-full border border-[#c9dfe2] px-5 py-2.5 text-sm font-semibold text-[#42516b] transition hover:bg-[#f5f9f9]"
+							>
+								Continue exam
+							</button>
+							<button
+								type="button"
+								onClick={submitExam}
+								className="rounded-full bg-[#005b6b] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#004653]"
+							>
+								Yes, finish exam
+							</button>
+						</div>
+					</section>
+				</div>,
+				document.body,
+			)}
 			{isRetakeConfirmationOpen && createPortal(
 				<div data-theme="light" className="fixed inset-0 z-[120] grid place-items-center bg-[#071126]/60 p-4 backdrop-blur-sm">
 					<section

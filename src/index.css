@@ -1035,6 +1035,12 @@ h6 {
   color: #ffffff !important;
 }
 
+[data-theme="dark"] .ccna-result-review-button:hover {
+  background-color: #26385a !important;
+  border-color: #20c5d6 !important;
+  color: #e0e5f3 !important;
+}
+
 [data-theme="dark"] .ccna-answer-choice[aria-pressed="true"] {
   background-color: #005b6b !important;
   border-color: #005b6b !important;
@@ -1774,6 +1780,11 @@ h6 {
   transform-origin: left center;
   transition: transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
   pointer-events: none;
+}
+
+.program-search-input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .offline-water-card--teal {
