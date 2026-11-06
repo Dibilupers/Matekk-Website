@@ -1973,14 +1973,14 @@ h6 {
 }
 
 [data-theme="dark"].comptia-exam-page .ccna-answer-choice[aria-pressed="false"]:not(:disabled):hover > span:first-child {
-  background-color: #642033 !important;
-  color: #ffb3c0 !important;
+  background-color: #3b2530 !important;
+  color: #e5aebb !important;
 }
 
 [data-theme="dark"].comptia-exam-page .ccna-answer-choice[aria-pressed="false"]:not(:disabled):hover {
-  background-color: #3b1c27 !important;
-  border-color: #c8102e !important;
-  color: #f5dce1 !important;
+  background-color: #2b1d25 !important;
+  border-color: #77404b !important;
+  color: #e5cbd0 !important;
 }
 
 .fortinet-exam-page {
@@ -2145,12 +2145,12 @@ h6 {
 }
 
 [data-theme="dark"].fortinet-exam-page .ccna-answer-choice[aria-pressed="false"]:not(:disabled):hover {
-  background-color: #3b1c1b !important;
-  border-color: #e2231a !important;
-  color: #f4e8e7 !important;
+  background-color: #2b1d1b !important;
+  border-color: #78433e !important;
+  color: #e5cbc8 !important;
 }
 
 [data-theme="dark"].fortinet-exam-page .ccna-answer-choice[aria-pressed="false"]:not(:disabled):hover > span:first-child {
-  background-color: #5a2926 !important;
-  color: #ffaaa4 !important;
+  background-color: #3b2724 !important;
+  color: #e7aaa4 !important;
 }
