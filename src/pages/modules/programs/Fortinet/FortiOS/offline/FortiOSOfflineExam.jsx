@@ -227,11 +227,11 @@ export default function FortiOSOfflineExam() {
 			<div className="mx-auto max-w-[1125px]">
 				<header className="mb-7 flex flex-wrap items-center justify-between gap-4 border-b border-[#efd0cd] pb-5">
 					<div className="flex min-w-0 items-center gap-4">
-						<Link to="/modules/programs/fortinet-fortios" aria-label="Back to FortiOS course" className="shrink-0 rounded-lg bg-white px-3 py-2 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+						<Link to="/modules/programs/fortinet-fortios" aria-label="Back to FortiOS course" className="ccna-training-logo shrink-0 rounded-lg bg-white px-3 py-2 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
 							<img src={TrainingLogo} alt="MATEKK Cybercore Academy" className="h-auto w-32 sm:w-36" />
 						</Link>
 						<div className="hidden min-w-0 border-l border-[#efd0cd] pl-4 sm:block">
-							<p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#e2231a]">FortiOS exam · Offline</p>
+							<p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#70809a]">FortiOS exam · Offline</p>
 							<p className="mt-1 truncate text-sm font-bold text-[#17233d]">{examName} · FortiOS question bank</p>
 						</div>
 					</div>
@@ -255,7 +255,7 @@ export default function FortiOSOfflineExam() {
 				{!session.isSubmitted && (
 					<section aria-label="Exam progress" className="mb-5 rounded-2xl border border-[#f1d3d0] bg-white p-5 shadow-sm sm:mb-6 sm:p-8">
 						<div className="flex flex-wrap items-center justify-between gap-3">
-							<p className="rounded-xl bg-[#fff0ef] px-4 py-2 text-sm font-semibold text-[#bd2119]">{examName}</p>
+							<p className="rounded-xl bg-[#e1f5ef] px-4 py-2 text-sm font-semibold text-[#075b4a]">{examName}</p>
 							{session.deadline === null ? (
 								<div className="shrink-0 rounded-full border border-[#efd0cd] bg-white px-3 py-2 text-xs font-semibold text-[#e2231a] sm:px-4 sm:text-sm">
 									No time limit
@@ -284,7 +284,7 @@ export default function FortiOSOfflineExam() {
 							<div className="exam-progress-fill h-full rounded-full bg-[#e2231a] transition-[width]" style={{ width: `${answeredPercentage}%` }} />
 						</div>
 						<div className="mt-4 flex flex-wrap gap-2.5 text-sm text-[#526584]">
-							<span className="exam-progress-badge rounded-xl bg-[#fff8f7] px-3 py-2">{answeredCount} answered</span>
+							<span className={`exam-progress-badge rounded-xl px-3 py-2 ${isDark ? "bg-[#1b2947]" : "bg-[#f8fafb]"}`}>{answeredCount} answered</span>
 							<button
 								type="button"
 								onClick={() => setFlaggedQuestions((previous) => ({
@@ -301,7 +301,7 @@ export default function FortiOSOfflineExam() {
 								<Flag size={15} fill={flaggedQuestions[session.currentIndex] ? "currentColor" : "none"} />
 								{flaggedCount} flagged
 							</button>
-							<span className="exam-progress-badge rounded-xl bg-[#fff8f7] px-3 py-2">{unansweredCount} left</span>
+							<span className={`exam-progress-badge rounded-xl px-3 py-2 ${isDark ? "bg-[#1b2947]" : "bg-[#f8fafb]"}`}>{unansweredCount} left</span>
 						</div>
 					</section>
 				)}
