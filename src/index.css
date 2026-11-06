@@ -1745,6 +1745,25 @@ h6 {
   }
 }
 
+.offline-modules-page {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  width: 100%;
+  background-color: #f8fafc;
+  background-image:
+    radial-gradient(ellipse at 8% 0%, rgb(32 197 214 / 9%), transparent 34rem),
+    radial-gradient(ellipse at 96% 18%, rgb(0 91 107 / 6%), transparent 30rem),
+    linear-gradient(132deg, transparent 0 15%, rgb(8 122 145 / 2.5%) 15.1% 27%, transparent 27.1% 100%),
+    linear-gradient(48deg, transparent 0 66%, rgb(255 255 255 / 90%) 66.1% 78%, transparent 78.1% 100%);
+}
+
+.offline-modules-page > header,
+.offline-modules-page > .space-y-8 {
+  max-width: 64rem;
+  margin-inline: auto;
+}
+
 .offline-water-card::before {
   position: absolute;
   z-index: 0;

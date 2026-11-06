@@ -901,7 +901,7 @@ function OfflineModulesPage() {
   ];
 
   return (
-    <main className="mx-auto min-h-[60vh] w-full max-w-5xl px-4 py-10 sm:px-6 sm:py-14">
+    <main className="offline-modules-page min-h-screen w-full px-4 py-10 sm:px-6 sm:py-14">
       <header className="mb-10 text-center">
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-600">Offline learning</p>
         <h1 className="mt-2 text-3xl font-bold text-slate-900 sm:text-4xl">Choose a module</h1>
