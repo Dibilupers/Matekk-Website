@@ -919,6 +919,11 @@ h6 {
   background-color: #161d38 !important;
 }
 
+[data-theme="dark"] .ccna-drag-drop-source-panel {
+  background-color: #10172f !important;
+  border-color: #303a60 !important;
+}
+
 [data-theme="dark"] .ccna-training-logo {
   background-color: #bfe9ec !important;
   box-shadow: 0 4px 16px rgb(32 197 214 / 18%);
