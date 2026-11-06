@@ -1874,9 +1874,9 @@ h6 {
 }
 
 .comptia-exam-page .ccna-answer-choice[aria-pressed="true"] {
-  background-color: #c8102e !important;
+  background-color: #fff1f3 !important;
   border-color: #c8102e !important;
-  color: #ffffff !important;
+  color: #263654 !important;
 }
 
 .comptia-exam-page .ccna-answer-choice[aria-pressed="true"] > span:first-child {
@@ -1893,6 +1893,10 @@ h6 {
 .comptia-exam-page .ccna-answer-choice[aria-pressed="false"]:not(:disabled):hover > span:first-child {
   background-color: #ffe3e8 !important;
   color: #a80e27 !important;
+}
+
+.comptia-exam-page .ccna-answer-choice[aria-pressed="true"]:hover {
+  background-color: #ffe8ec !important;
 }
 
 .comptia-exam-page [class~="bg-[#5746bd]"] {
@@ -1930,8 +1934,8 @@ h6 {
 [data-theme="dark"].comptia-exam-page [class~="bg-[#eaf3f4]"],
 [data-theme="dark"].comptia-exam-page [class~="bg-[#f6f4ff]"],
 [data-theme="dark"].comptia-exam-page .ccna-answer-choice[aria-pressed="true"] {
-  background-color: #a80e27 !important;
-  color: #ffffff !important;
+  background-color: #3b1c27 !important;
+  color: #f5dce1 !important;
 }
 
 [data-theme="dark"].comptia-exam-page [class~="bg-[#005b6b]"],
@@ -1962,6 +1966,10 @@ h6 {
 [data-theme="dark"].comptia-exam-page .ccna-answer-choice[aria-pressed="true"] > span:first-child {
   background-color: #c8102e !important;
   color: #ffffff !important;
+}
+
+[data-theme="dark"].comptia-exam-page .ccna-answer-choice[aria-pressed="true"]:hover {
+  background-color: #47202d !important;
 }
 
 [data-theme="dark"].comptia-exam-page .ccna-answer-choice[aria-pressed="false"]:not(:disabled):hover > span:first-child {
@@ -2038,9 +2046,9 @@ h6 {
 }
 
 .fortinet-exam-page .ccna-answer-choice[aria-pressed="true"] {
-  background-color: #e2231a !important;
+  background-color: #fff1f0 !important;
   border-color: #e2231a !important;
-  color: #ffffff !important;
+  color: #263654 !important;
 }
 
 .fortinet-exam-page .ccna-answer-choice[aria-pressed="true"] > span:first-child {
@@ -2057,6 +2065,10 @@ h6 {
 .fortinet-exam-page .ccna-answer-choice[aria-pressed="false"]:not(:disabled):hover > span:first-child {
   background-color: #ffe2df !important;
   color: #bd2119 !important;
+}
+
+.fortinet-exam-page .ccna-answer-choice[aria-pressed="true"]:hover {
+  background-color: #ffe9e7 !important;
 }
 
 .fortinet-exam-page [class~="bg-[#5746bd]"] {
@@ -2094,8 +2106,8 @@ h6 {
 [data-theme="dark"].fortinet-exam-page [class~="bg-[#eaf3f4]"],
 [data-theme="dark"].fortinet-exam-page [class~="bg-[#f6f4ff]"],
 [data-theme="dark"].fortinet-exam-page .ccna-answer-choice[aria-pressed="true"] {
-  background-color: #bd2119 !important;
-  color: #ffffff !important;
+  background-color: #3b1c1b !important;
+  color: #f4e8e7 !important;
 }
 
 [data-theme="dark"].fortinet-exam-page [class~="bg-[#005b6b]"],
@@ -2126,6 +2138,10 @@ h6 {
 [data-theme="dark"].fortinet-exam-page .ccna-answer-choice[aria-pressed="true"] > span:first-child {
   background-color: #e2231a !important;
   color: #ffffff !important;
+}
+
+[data-theme="dark"].fortinet-exam-page .ccna-answer-choice[aria-pressed="true"]:hover {
+  background-color: #48201e !important;
 }
 
 [data-theme="dark"].fortinet-exam-page .ccna-answer-choice[aria-pressed="false"]:not(:disabled):hover {
