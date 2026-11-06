@@ -331,7 +331,7 @@ export default function CCNAAllQuestionsExam() {
 										No time limit
 									</span>
 								</div>
-								<span className={`rounded-xl px-3 py-2 text-sm ${isDark ? "bg-[#1b2947] text-[#cbd5e1]" : "bg-[#f8fafb] text-[#526584]"}`}>
+								<span className={`exam-progress-badge rounded-xl px-3 py-2 text-sm ${isDark ? "bg-[#1b2947] text-[#cbd5e1]" : "bg-[#f8fafb] text-[#526584]"}`}>
 									{answeredCount.toLocaleString()} of {questions.length.toLocaleString()} answered
 								</span>
 							</div>
@@ -358,8 +358,8 @@ export default function CCNAAllQuestionsExam() {
 							<p className="mt-2 text-sm text-[#64748b]">
 								Answer each question to unlock the next one. You can return to any question you’ve already opened.
 							</p>
-							<div className={`mt-3 h-2 overflow-hidden rounded-full ${isDark ? "bg-[#303a60]" : "bg-[#e7e7e7]"}`}>
-								<div className={`h-full rounded-full transition-[width] ${isDark ? "bg-[#20c5d6] shadow-[0_0_10px_rgba(32,197,214,0.55)]" : "bg-[#159b73]"}`} style={{ width: `${questions.length ? (answeredCount / questions.length) * 100 : 0}%` }} />
+							<div className={`exam-progress-track mt-3 h-2 overflow-hidden rounded-full ${isDark ? "bg-[#303a60]" : "bg-[#e7e7e7]"}`}>
+								<div className={`exam-progress-fill h-full rounded-full transition-[width] ${isDark ? "bg-[#20c5d6] shadow-[0_0_10px_rgba(32,197,214,0.55)]" : "bg-[#159b73]"}`} style={{ width: `${questions.length ? (answeredCount / questions.length) * 100 : 0}%` }} />
 							</div>
 						</section>
 

@@ -547,9 +547,9 @@ export default function CCNAModuleQuiz() {
 							aria-valuemax={moduleQuiz.questions.length}
 							aria-valuenow={answeredCount}
 							aria-valuetext={`${answeredCount} of ${moduleQuiz.questions.length} questions answered`}
-							className="mb-6 h-2 overflow-hidden rounded-full bg-[#dfe9eb]"
+							className="exam-progress-track mb-6 h-2 overflow-hidden rounded-full bg-[#dfe9eb]"
 						>
-							<div className="ccna-progress-fill h-full rounded-full bg-[#005b6b] transition-[width] duration-300" style={{ width: `${(answeredCount / moduleQuiz.questions.length) * 100}%` }} />
+							<div className="ccna-progress-fill exam-progress-fill h-full rounded-full bg-[#005b6b] transition-[width] duration-300" style={{ width: `${(answeredCount / moduleQuiz.questions.length) * 100}%` }} />
 						</div>
 
 						<div className="mx-auto max-w-3xl">

@@ -805,12 +805,12 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 								aria-valuemax={questions.length}
 								aria-valuenow={answeredCount}
 								aria-valuetext={`${answeredCount} of ${questions.length} answered, ${answeredPercentage}%`}
-								className={`mt-3 h-2 overflow-hidden rounded-full ${isDark ? "bg-[#303a60]" : "bg-[#e7e7e7]"}`}
+								className={`exam-progress-track mt-3 h-2 overflow-hidden rounded-full ${isDark ? "bg-[#303a60]" : "bg-[#e7e7e7]"}`}
 							>
-								<div className={`h-full rounded-full transition-[width] ${isDark ? "bg-[#20c5d6] shadow-[0_0_10px_rgba(32,197,214,0.55)]" : "bg-[#159b73]"}`} style={{ width: `${answeredPercentage}%` }} />
+								<div className={`exam-progress-fill h-full rounded-full transition-[width] ${isDark ? "bg-[#20c5d6] shadow-[0_0_10px_rgba(32,197,214,0.55)]" : "bg-[#159b73]"}`} style={{ width: `${answeredPercentage}%` }} />
 							</div>
 							<div className={`mt-4 flex flex-wrap gap-2.5 text-sm ${isDark ? "text-[#cbd5e1]" : "text-[#526584]"}`}>
-								<span className={`rounded-xl px-3 py-2 ${isDark ? "bg-[#1b2947]" : "bg-[#f8fafb]"}`}>{answeredCount} answered</span>
+								<span className={`exam-progress-badge rounded-xl px-3 py-2 ${isDark ? "bg-[#1b2947]" : "bg-[#f8fafb]"}`}>{answeredCount} answered</span>
 								<button
 									type="button"
 									onClick={() => setFlaggedQuestions((previous) => ({
@@ -819,15 +819,15 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 									}))}
 									aria-label={`${flaggedQuestions[currentIndex] ? "Unflag" : "Flag"} question ${currentIndex + 1}; ${flaggedCount} flagged`}
 									aria-pressed={Boolean(flaggedQuestions[currentIndex])}
-									className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 transition ${flaggedQuestions[currentIndex]
+									className={`exam-progress-badge inline-flex items-center gap-2 rounded-xl px-3 py-2 transition ${flaggedQuestions[currentIndex]
 										? isDark ? "bg-[#42291f] text-[#ffc28e]" : "bg-[#fff1d6] text-[#8a5200]"
 										: isDark ? "bg-[#1b2947] hover:bg-[#263654]" : "bg-[#f8fafb] hover:bg-[#eef3f5]"
-										}`}
+										} ${flaggedQuestions[currentIndex] ? "exam-progress-flagged" : ""}`}
 								>
 									<Flag size={15} fill={flaggedQuestions[currentIndex] ? "currentColor" : "none"} />
 									{flaggedCount} flagged
 								</button>
-								<span className={`rounded-xl px-3 py-2 ${isDark ? "bg-[#1b2947]" : "bg-[#f8fafb]"}`}>{unansweredCount} left</span>
+								<span className={`exam-progress-badge rounded-xl px-3 py-2 ${isDark ? "bg-[#1b2947]" : "bg-[#f8fafb]"}`}>{unansweredCount} left</span>
 							</div>
 						</section>
 
