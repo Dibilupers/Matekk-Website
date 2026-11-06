@@ -336,7 +336,7 @@ export default function FortiOSDashboard() {
 			{createPortal(
 				<Link
 					to={isOnline ? "/pages/blank" : "/modules/programs"}
-					className={`fixed ${isOnline ? "left-4 top-24" : "right-4 top-16"} z-40 flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-bold text-[#d9271e] transition hover:text-[#b71c16] active:scale-95 ${!isOnline || hasScrolled ? "bg-white/90 shadow-md backdrop-blur-sm" : "bg-white/80"}`}
+					className={`fixed left-4 ${isOnline ? "top-24" : "top-5"} z-40 flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-bold text-[#d9271e] transition hover:text-[#b71c16] active:scale-95 ${!isOnline || hasScrolled ? "bg-white/90 shadow-md backdrop-blur-sm" : "bg-white/80"}`}
 				>
 					<ArrowLeft size={20} strokeWidth={2.5} /> Back to Courses
 				</Link>,
