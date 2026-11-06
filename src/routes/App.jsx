@@ -171,12 +171,13 @@ export default function App() {
     || location.pathname.startsWith("/modules/programs/fortinet-fortios/exam/");
   const isAdminPage = location.pathname === "/admin";
   const isAccountPendingPage = location.pathname === "/account-pending";
+  const isLoginPage = location.pathname === "/login";
   useHeadingTypeIn(location.pathname);
 
   return (
     <>
       <CCNAExamTimeNotification />
-      {isOnline && !isFullScreenAssessment && !isAccountPendingPage && <NavBar />}
+      {isOnline && !isFullScreenAssessment && !isAccountPendingPage && !isLoginPage && <NavBar />}
       <ScrollToTop />
 
       {/* Keyed by path so every page change replays the fade-in (navbar stays outside, so it never flickers) */}

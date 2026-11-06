@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ArrowRight, Eye, EyeOff, Facebook, Instagram, Phone } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { ArrowLeft, ArrowRight, Eye, EyeOff, Facebook, Instagram, Phone } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/auth-context";
 import API_URL from "../config/api";
 import NetworkBackground from "../components/NetworkBackground";
@@ -370,12 +370,19 @@ export default function Login() {
   }
 
   if (isCheckingSession) {
-    return <main className="flex min-h-[calc(100vh-5rem)] items-center justify-center bg-[#0A1225] text-slate-200">Checking your session...</main>;
+    return <main className="flex min-h-screen items-center justify-center bg-[#0A1225] text-slate-200">Checking your session...</main>;
   }
 
   return (
-    <main className="fade-in-up relative isolate min-h-[calc(100vh-5rem)] overflow-hidden bg-[#0A1225] px-4 py-8 sm:px-10 sm:py-10 lg:px-16">
+    <main className="fade-in-up relative isolate min-h-screen overflow-hidden bg-[#0A1225] px-4 py-8 pt-20 sm:px-10 sm:py-10 sm:pt-20 lg:px-16">
       <NetworkBackground paused={isLoginAnimating} />
+      <Link
+        to="/"
+        className="group absolute left-4 top-4 z-20 inline-flex items-center gap-2 rounded-full border border-white/30 bg-[#101c36]/75 px-4 py-2.5 text-sm font-semibold text-white shadow-lg backdrop-blur transition duration-200 hover:-translate-y-0.5 hover:border-[#54c8ff] hover:bg-[#1775EE] hover:shadow-[0_10px_24px_rgba(23,117,238,0.3)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#54c8ff] motion-reduce:transform-none motion-reduce:transition-none sm:left-8 sm:top-6"
+      >
+        <ArrowLeft size={17} className="transition-transform duration-200 group-hover:-translate-x-1 motion-reduce:transform-none motion-reduce:transition-none" />
+        Back to Home
+      </Link>
 
       <div className={isRegistering
         ? "relative z-10 mx-auto grid w-full max-w-6xl items-center gap-12 lg:grid-cols-[minmax(320px,35rem)_minmax(0,1fr)] lg:gap-16"
