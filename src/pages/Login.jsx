@@ -455,16 +455,16 @@ export default function Login() {
               </p>
             </div>
             <div className={`mx-auto grid w-full max-w-xl grid-cols-1 gap-3 sm:grid-cols-2 ${!isRegistering ? "lg:gap-2" : ""}`}>
-              <a href="https://www.facebook.com/matekkcybercore/" className={`group flex items-center gap-3 rounded-lg bg-white/85 p-3 shadow-sm transition hover:shadow-md ${!isRegistering ? "lg:p-1.5" : ""}`}>
+              <a href="https://www.facebook.com/matekkcybercore/" target="_blank" rel="noopener noreferrer" className={`group flex items-center gap-3 rounded-lg bg-white/85 p-3 shadow-sm transition hover:shadow-md ${!isRegistering ? "lg:p-1.5" : ""}`}>
                 <Facebook className="text-[#1877F2]" size={18} /><span className={`text-sm font-semibold text-slate-700 transition-colors group-hover:text-[#087ff5] ${!isRegistering ? "lg:text-sm" : ""}`}>Matekk Cybercore Academy</span>
               </a>
               <a href="tel:09771968226" className={`group flex items-center gap-3 rounded-lg bg-white/85 p-3 shadow-sm transition hover:shadow-md ${!isRegistering ? "lg:p-1.5" : ""}`}>
                 <Phone className="text-green-600" size={18} /><span className={`text-sm font-semibold text-slate-700 transition-colors group-hover:text-[#087ff5] ${!isRegistering ? "lg:text-sm" : ""}`}>09771968226</span>
               </a>
-              <a href="https://www.instagram.com/matekkcybercore/" className={`group flex items-center gap-3 rounded-lg bg-white/85 p-3 shadow-sm transition hover:shadow-md ${!isRegistering ? "lg:p-1.5" : ""}`}>
+              <a href="https://www.instagram.com/matekkcybercore/" target="_blank" rel="noopener noreferrer" className={`group flex items-center gap-3 rounded-lg bg-white/85 p-3 shadow-sm transition hover:shadow-md ${!isRegistering ? "lg:p-1.5" : ""}`}>
                 <Instagram className="text-pink-500" size={18} /><span className={`text-sm font-semibold text-slate-700 transition-colors group-hover:text-[#087ff5] ${!isRegistering ? "lg:text-sm" : ""}`}>@matekkcybercore</span>
               </a>
-              <a href="https://www.tiktok.com/@training.matekkcybercore" className={`group flex items-center gap-1 rounded-lg bg-white/85 p-3 shadow-sm transition hover:shadow-md ${!isRegistering ? "lg:p-1.5" : ""}`}>
+              <a href="https://www.tiktok.com/@training.matekkcybercore" target="_blank" rel="noopener noreferrer" className={`group flex items-center gap-1 rounded-lg bg-white/85 p-3 shadow-sm transition hover:shadow-md ${!isRegistering ? "lg:p-1.5" : ""}`}>
                 <img src={TikTokLogo} alt="TikTok" className={`h-5 w-5 ${!isRegistering ? "lg:h-[18px] lg:w-[18px]" : ""}`} />
                 <span className={`text-sm font-semibold text-slate-700 transition-colors group-hover:text-[#087ff5] ${!isRegistering ? "lg:text-sm" : ""}`}>@training.matekk</span>
               </a>
