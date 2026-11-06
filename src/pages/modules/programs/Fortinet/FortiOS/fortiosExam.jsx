@@ -51,7 +51,7 @@ export default function FortiOSExam() {
 		return (
 			<FortiOSExamMessage
 				title={questionBankState.status === "loading" ? "Preparing your FortiOS exam" : "Unable to load the FortiOS question bank"}
-				message={questionBankState.status === "loading" ? "Loading FortiOS questions…" : questionBankState.error}
+				message={questionBankState.status === "loading" ? "Loading questions on FortiOS, please wait…" : questionBankState.error}
 				isLoading={questionBankState.status === "loading"}
 				onRetry={questionBankState.status === "error" ? () => {
 					setQuestionBankState({ status: "loading", questions: [], error: null });
@@ -83,9 +83,11 @@ function FortiOSExamMessage({ title, message, isLoading = false, onRetry }) {
 						Try again
 					</button>
 				)}
-				<Link to="/modules/programs/fortinet-fortios" className="mt-6 inline-flex items-center gap-2 font-semibold text-[#e2231a] transition hover:text-[#bd2119]">
-					<ArrowLeft size={17} /> Back to FortiOS
-				</Link>
+				{!isLoading && (
+					<Link to="/modules/programs/fortinet-fortios" className="mt-6 inline-flex items-center gap-2 font-semibold text-[#e2231a] transition hover:text-[#bd2119]">
+						<ArrowLeft size={17} /> Back to FortiOS
+					</Link>
+				)}
 			</section>
 		</main>
 	);

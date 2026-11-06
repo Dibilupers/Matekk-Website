@@ -196,7 +196,7 @@ export default function FortiOSOfflineExam() {
 		return <OfflineExamMessage title="Exam format not found" message="Choose a FortiOS exam from the program dashboard." />;
 	}
 	if (bankState.status === "loading" || !session) {
-		return <OfflineExamMessage title={bankState.status === "error" ? "FortiOS offline exam unavailable" : "Preparing your offline FortiOS exam"} message={bankState.error ?? "Loading questions saved on this device…"} isLoading={bankState.status !== "error"} />;
+		return <OfflineExamMessage title={bankState.status === "error" ? "FortiOS offline exam unavailable" : "Preparing your offline FortiOS exam"} message={bankState.error ?? "Loading questions on FortiOS, please wait…"} isLoading={bankState.status !== "error"} />;
 	}
 
 	const answeredCount = session.questions.reduce((total, item, index) => total + Number(isQuestionAnswered(item, session.answers[index])), 0);
@@ -412,7 +412,11 @@ function OfflineExamMessage({ title, message, isLoading = false }) {
 				<p className="text-sm font-semibold uppercase tracking-[0.12em] text-[#e2231a]">Offline FortiOS</p>
 				<h1 className="mt-2 text-2xl font-bold text-[#e2231a]">{title}</h1>
 				<p className="mt-3 text-sm leading-6 text-[#64748b]" role={isLoading ? "status" : "alert"}>{message}</p>
-				<Link to="/modules/programs/fortinet-fortios" className="mt-6 inline-flex items-center gap-2 font-semibold text-[#e2231a] transition hover:text-[#bd2119]"><ArrowLeft size={17} /> Back to FortiOS</Link>
+				{!isLoading && (
+					<Link to="/modules/programs/fortinet-fortios" className="mt-6 inline-flex items-center gap-2 font-semibold text-[#e2231a] transition hover:text-[#bd2119]">
+						<ArrowLeft size={17} /> Back to FortiOS
+					</Link>
+				)}
 			</section>
 		</main>
 	);

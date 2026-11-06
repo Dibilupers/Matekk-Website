@@ -557,12 +557,12 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 								aria-valuemax={questions.length}
 								aria-valuenow={answeredCount}
 								aria-valuetext={`${answeredCount} of ${questions.length} answered, ${answeredPercentage}%`}
-								className="mt-3 h-2 overflow-hidden rounded-full bg-[#e7e7e7]"
+								className={`mt-3 h-2 overflow-hidden rounded-full ${isDark ? "bg-[#303a60]" : "bg-[#e7e7e7]"}`}
 							>
-								<div className="h-full rounded-full bg-[#159b73] transition-[width]" style={{ width: `${answeredPercentage}%` }} />
+								<div className={`h-full rounded-full transition-[width] ${isDark ? "bg-[#20c5d6] shadow-[0_0_10px_rgba(32,197,214,0.55)]" : "bg-[#159b73]"}`} style={{ width: `${answeredPercentage}%` }} />
 							</div>
-							<div className="mt-4 flex flex-wrap gap-2.5 text-sm text-[#526584]">
-								<span className="rounded-xl bg-[#f8fafb] px-3 py-2">{answeredCount} answered</span>
+							<div className={`mt-4 flex flex-wrap gap-2.5 text-sm ${isDark ? "text-[#cbd5e1]" : "text-[#526584]"}`}>
+								<span className={`rounded-xl px-3 py-2 ${isDark ? "bg-[#1b2947]" : "bg-[#f8fafb]"}`}>{answeredCount} answered</span>
 								<button
 									type="button"
 									onClick={() => setFlaggedQuestions((previous) => ({
@@ -572,14 +572,14 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 									aria-label={`${flaggedQuestions[currentIndex] ? "Unflag" : "Flag"} question ${currentIndex + 1}; ${flaggedCount} flagged`}
 									aria-pressed={Boolean(flaggedQuestions[currentIndex])}
 									className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 transition ${flaggedQuestions[currentIndex]
-										? "bg-[#fff1d6] text-[#8a5200]"
-										: "bg-[#f8fafb] hover:bg-[#eef3f5]"
+										? isDark ? "bg-[#42291f] text-[#ffc28e]" : "bg-[#fff1d6] text-[#8a5200]"
+										: isDark ? "bg-[#1b2947] hover:bg-[#263654]" : "bg-[#f8fafb] hover:bg-[#eef3f5]"
 										}`}
 								>
 									<Flag size={15} fill={flaggedQuestions[currentIndex] ? "currentColor" : "none"} />
 									{flaggedCount} flagged
 								</button>
-								<span className="rounded-xl bg-[#f8fafb] px-3 py-2">{unansweredCount} left</span>
+								<span className={`rounded-xl px-3 py-2 ${isDark ? "bg-[#1b2947]" : "bg-[#f8fafb]"}`}>{unansweredCount} left</span>
 							</div>
 						</section>
 
@@ -845,7 +845,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 				document.body,
 			)}
 			{blocker.state === "blocked" && createPortal(
-				<div data-theme="light" className={`fixed inset-0 z-[120] grid place-items-center overflow-y-auto bg-[#071126]/55 p-4 backdrop-blur-[2px] sm:p-6 ${isCompTIAExam ? "comptia-exam-dialog" : ""} ${isFortinetExam ? "fortinet-exam-dialog" : ""}`}>
+				<div data-theme={isDark ? "dark" : "light"} className={`fixed inset-0 z-[120] grid place-items-center overflow-y-auto bg-[#071126]/55 p-4 backdrop-blur-[2px] sm:p-6 ${isCompTIAExam ? "comptia-exam-dialog" : ""} ${isFortinetExam ? "fortinet-exam-dialog" : ""}`}>
 					<section
 						role="alertdialog"
 						aria-modal="true"
@@ -858,6 +858,20 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 						<p id="ccna-short-exam-exit-description" className="mt-3 text-sm leading-6 text-[#64748b] sm:text-base">
 							Your answers and time remaining will be saved. The timer will keep running while you are away.
 						</p>
+						{(isCompTIAExam || isFortinetExam || programKey === "ccna-automation" || programKey === "ccna-cybersecurity") && exam.durationSeconds !== null && (
+							<div className={`mt-5 flex items-center justify-between rounded-xl border px-4 py-3 ${isDark ? "border-[#303a60] bg-[#10172f]" : isCompTIAExam ? "border-[#f1cbd2] bg-[#fff9fa]" : isFortinetExam ? "border-[#f1d3d0] bg-[#fff8f7]" : "border-[#c9dfe2] bg-[#f5f9f9]"}`}>
+								<span className={`inline-flex items-center gap-2 text-sm font-semibold ${isDark ? "text-[#e0e5f3]" : "text-[#526584]"}`}>
+									<Clock3 size={16} /> Time remaining
+								</span>
+								<span
+									role="timer"
+									aria-label={`${formatTime(secondsRemaining)} remaining`}
+									className={`text-lg font-bold tabular-nums ${secondsRemaining <= 300 ? "text-[#a44b13]" : isCompTIAExam ? "text-[#c8102e]" : isFortinetExam ? "text-[#e2231a]" : "text-[#005b6b]"}`}
+								>
+									{formatTime(secondsRemaining)}
+								</span>
+							</div>
+						)}
 						<div className="mt-6 flex flex-wrap justify-end gap-3">
 							<button type="button" onClick={() => blocker.reset()} className="ccna-modal-stay rounded-full border border-[#c9dfe2] px-4 py-2.5 text-sm font-semibold text-[#42516b] transition hover:bg-[#f5f9f9] sm:px-5">
 								Stay in exam

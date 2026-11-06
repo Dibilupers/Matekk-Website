@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { ArrowLeft, ArrowUp, Check, Moon, RotateCcw, Sun, X } from "lucide-react";
+import { ArrowLeft, ArrowUp, Check, Clock3, Moon, RotateCcw, Sun, X } from "lucide-react";
 import { Link, useBlocker, useLocation, useParams } from "react-router-dom";
 import { useAuth } from "../../../../../context/auth-context";
 import TrainingLogo from "../../../../../assets/MATEKK_training_logo.png";
@@ -762,6 +762,18 @@ export default function CCNAModuleQuiz() {
 						<p id="ccna-module-exit-description" className="mt-3 text-sm leading-6 text-[#64748b] sm:text-base">
 							Your answers and remaining time will be saved, but the timer will keep running while you are away.
 						</p>
+						<div className="mt-5 flex items-center justify-between rounded-xl border border-[#c9dfe2] bg-[#f5f9f9] px-4 py-3">
+							<span className={`inline-flex items-center gap-2 text-sm font-semibold ${isDark ? "text-[#e0e5f3]" : "text-[#526584]"}`}>
+								<Clock3 size={16} /> Time remaining
+							</span>
+							<span
+								role="timer"
+								aria-label={`${formatTime(secondsLeft)} remaining`}
+								className={`text-lg font-bold tabular-nums ${secondsLeft <= 300 ? "text-[#a44b13]" : "text-[#005b6b]"}`}
+							>
+								{formatTime(secondsLeft)}
+							</span>
+						</div>
 						<div className="mt-5 flex flex-wrap justify-end gap-2 sm:mt-6 sm:gap-3">
 							<button
 								type="button"
