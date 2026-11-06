@@ -317,27 +317,27 @@ function GroupMatchInput({ question, value, onChange, disabled }) {
 			<div className="grid gap-4 sm:grid-cols-2">
 				<ol className="space-y-2">
 					{question.items.map((item, itemIndex) => (
-						<li key={itemIndex} className="flex items-start gap-3 rounded-xl border border-[#cfe0f5] bg-[#eef5fe] px-3 py-2.5">
+						<li key={itemIndex} className="ccna-group-match-item flex items-start gap-3 rounded-xl border border-[#cfe0f5] bg-[#eef5fe] px-3 py-2.5">
 							<span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#1d4ed8] text-sm font-bold text-white">{itemIndex + 1}</span>
-							<span className="text-sm font-semibold whitespace-pre-wrap text-[#263654] sm:text-[15px]">{item}</span>
+							<span className="ccna-group-match-item-text text-sm font-semibold whitespace-pre-wrap text-[#263654] sm:text-[15px]">{item}</span>
 						</li>
 					))}
 				</ol>
 				<div className="space-y-3">
 					{question.choices.map((choice, choiceIndex) => (
-						<div key={choiceIndex} className="overflow-hidden rounded-xl border border-[#e6d9a8]">
-							<div className="bg-[#fdf8dc] px-3 py-2 text-center text-sm font-semibold text-[#5b4d12]">{choice}</div>
+						<div key={choiceIndex} className="ccna-group-match-box overflow-hidden rounded-xl border border-[#e6d9a8]">
+							<div className="ccna-group-match-box-title bg-[#fdf8dc] px-3 py-2 text-center text-sm font-semibold text-[#5b4d12]">{choice}</div>
 							{Array.from({ length: sizes[choiceIndex] }).map((_, k) => (
-								<div key={k} className="h-7 border-t border-[#f1d4d4] bg-[#fbe7e7]" aria-hidden="true" />
+								<div key={k} className="ccna-group-match-slot h-7 border-t border-[#f1d4d4] bg-[#fbe7e7]" aria-hidden="true" />
 							))}
 						</div>
 					))}
 				</div>
 			</div>
 			<label className="block">
-				<span className="block text-sm text-[#526584]">
+				<span className="ccna-group-match-instructions block text-sm text-[#526584]">
 					Type the item numbers for each box in order from top to bottom, with each box's numbers in ascending order.
-					For example, <strong className="font-mono text-[#263654]">{example}</strong> would mean {exampleMeaning}.
+					For example, <strong className="ccna-group-match-instructions-example font-mono text-[#263654]">{example}</strong> would mean {exampleMeaning}.
 				</span>
 				<input
 					type="text"
@@ -376,7 +376,7 @@ function GroupMatchInput({ question, value, onChange, disabled }) {
 					}}
 					placeholder={"e.g. " + example}
 					aria-label="Your answer (item numbers)"
-					className="mt-2 w-48 rounded-xl border border-[#c9dfe2] bg-white px-3 py-2 font-mono text-lg tracking-[0.3em] text-[#005b6b] outline-none focus:border-[#005b6b] focus:ring-2 focus:ring-[#cfe7ea] disabled:cursor-default disabled:bg-[#f5f9f9]"
+					className="ccna-group-match-code mt-2 w-48 rounded-xl border border-[#c9dfe2] bg-white px-3 py-2 font-mono text-lg tracking-[0.3em] text-[#005b6b] outline-none focus:border-[#005b6b] focus:ring-2 focus:ring-[#cfe7ea] disabled:cursor-default disabled:bg-[#f5f9f9]"
 				/>
 				{error && (
 					<span
