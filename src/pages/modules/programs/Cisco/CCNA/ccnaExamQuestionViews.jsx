@@ -77,7 +77,7 @@ function OptionText({ text, className = "", fortiosOffline = false }) {
 		return <span className={`whitespace-pre-wrap ${className}`}>{text}</span>;
 	}
 	return (
-		<code className={`block min-w-0 w-full max-w-full flex-1 overflow-x-hidden break-words whitespace-pre-wrap rounded-lg bg-[#f1f5f9] px-2 py-1.5 font-mono text-xs leading-5 text-[#0f1b2d] [overflow-wrap:anywhere] sm:px-3 sm:py-2 sm:text-sm sm:leading-6 ${className}`}>
+		<code className={`ccna-answer-code block min-w-0 w-full max-w-full flex-1 overflow-x-hidden break-words whitespace-pre-wrap rounded-lg bg-[#f1f5f9] px-2 py-1.5 font-mono text-xs leading-5 text-[#0f1b2d] [overflow-wrap:anywhere] sm:px-3 sm:py-2 sm:text-sm sm:leading-6 ${className}`}>
 			{splitCliLines(text)}
 		</code>
 	);
@@ -405,7 +405,7 @@ function AnswerOptionContent({ option, codeStyle = false, plainText = false }) {
 	const formattedText = text.replace(/(?<=\S)[ \t]{3,}(?=\S)/g, "\n");
 
 	return (
-		<pre className="min-w-0 flex-1 overflow-x-hidden rounded-lg border border-[#d9e1ef] bg-[#f1f5f9] px-2 py-1.5 font-mono text-xs leading-5 text-[#263654] whitespace-pre-wrap break-words [overflow-wrap:anywhere] sm:px-3 sm:py-2 sm:text-sm">
+		<pre className="ccna-answer-code min-w-0 flex-1 overflow-x-hidden rounded-lg border border-[#d9e1ef] bg-[#f1f5f9] px-2 py-1.5 font-mono text-xs leading-5 text-[#263654] whitespace-pre-wrap break-words [overflow-wrap:anywhere] sm:px-3 sm:py-2 sm:text-sm">
 			<code>{formattedText}</code>
 		</pre>
 	);

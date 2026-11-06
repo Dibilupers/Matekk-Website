@@ -919,6 +919,12 @@ h6 {
   background-color: #161d38 !important;
 }
 
+[data-theme="dark"] .ccna-answer-code {
+  background-color: #10172f !important;
+  border-color: #303a60 !important;
+  color: #e0e5f3 !important;
+}
+
 [data-theme="dark"] .ccna-drag-drop-source-panel {
   background-color: #10172f !important;
   border-color: #303a60 !important;
