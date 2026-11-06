@@ -2110,6 +2110,24 @@ h6 {
   color: #f4e8e7 !important;
 }
 
+[data-theme="dark"].fortinet-exam-page [class~="bg-[#fff8f7]"],
+[data-theme="dark"].fortinet-exam-page [class~="bg-[#fff0ef]"] {
+  background-color: #211313 !important;
+}
+
+[data-theme="dark"].fortinet-exam-page [class~="text-[#e2231a]"],
+[data-theme="dark"].fortinet-exam-page [class~="text-[#bd2119]"] {
+  color: #ff8b84 !important;
+}
+
+[data-theme="dark"].fortinet-exam-page [class~="border-[#efd0cd]"],
+[data-theme="dark"].fortinet-exam-page [class~="border-[#f1d3d0]"],
+[data-theme="dark"].fortinet-exam-page [class~="border-[#f1beba]"],
+[data-theme="dark"].fortinet-exam-page [class~="border-[#f5d9d6]"],
+[data-theme="dark"].fortinet-exam-page [class~="border-white"] {
+  border-color: #50302d !important;
+}
+
 [data-theme="dark"].fortinet-exam-page [class~="bg-[#005b6b]"],
 [data-theme="dark"].fortinet-exam-page [class~="bg-[#159b73]"],
 [data-theme="dark"].fortinet-exam-page [class~="bg-[#5746bd]"] {
@@ -2153,4 +2171,19 @@ h6 {
 [data-theme="dark"].fortinet-exam-page .ccna-answer-choice[aria-pressed="false"]:not(:disabled):hover > span:first-child {
   background-color: #3b2724 !important;
   color: #e7aaa4 !important;
+}
+
+[data-theme="dark"].fortinet-exam-dialog [class~="text-[#e2231a]"],
+[data-theme="dark"].fortinet-exam-dialog [class~="text-[#bd2119]"] {
+  color: #ff8b84 !important;
+}
+
+[data-theme="dark"].fortinet-exam-dialog [class~="border-[#f1d3d0]"],
+[data-theme="dark"].fortinet-exam-dialog [class~="border-[#f1beba]"] {
+  border-color: #50302d !important;
+}
+
+[data-theme="dark"].fortinet-exam-dialog [class~="hover:bg-[#fff8f7]"]:hover,
+[data-theme="dark"].fortinet-exam-dialog [class~="hover:bg-[#fff0ef]"]:hover {
+  background-color: #211313 !important;
 }

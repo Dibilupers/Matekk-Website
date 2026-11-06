@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { ArrowDown, ArrowLeft, ChevronRight, Clock3, RotateCcw, X } from "lucide-react";
+import { ArrowDown, ArrowLeft, ChevronRight, Clock3, Flag, Moon, RotateCcw, Sun, X } from "lucide-react";
 import { Link, useBlocker, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../../../../../context/auth-context";
 import ExplanationWithLinks from "../../../../../../components/ExplanationWithLinks";
@@ -79,6 +79,8 @@ export default function FortiOSOfflineExam() {
 	const [session, setSession] = useState(null);
 	const [secondsRemaining, setSecondsRemaining] = useState(0);
 	const [storageError, setStorageError] = useState("");
+	const [flaggedQuestions, setFlaggedQuestions] = useState({});
+	const [isDark, setIsDark] = useState(false);
 	const [isRetakeConfirmationOpen, setIsRetakeConfirmationOpen] = useState(false);
 	const answerReviewRef = useRef(null);
 	const blocker = useBlocker(({ currentLocation, nextLocation }) =>
@@ -101,6 +103,7 @@ export default function FortiOSOfflineExam() {
 			const nextSession = createSession(bankState.bank, examKey);
 			setSession(nextSession);
 			setSecondsRemaining(nextSession.deadline === null ? 0 : Math.ceil((nextSession.deadline - Date.now()) / 1000));
+			setFlaggedQuestions({});
 		} catch (error) {
 			setBankState((current) => ({ ...current, error: error instanceof Error ? error.message : "Could not restart this exam." }));
 		}
@@ -208,6 +211,7 @@ export default function FortiOSOfflineExam() {
 
 	const answeredCount = session.questions.reduce((total, item, index) => total + Number(isQuestionAnswered(item, session.answers[index])), 0);
 	const unansweredCount = session.questions.length - answeredCount;
+	const flaggedCount = Object.values(flaggedQuestions).filter(Boolean).length;
 	const answeredPercentage = session.questions.length > 0
 		? Math.round((answeredCount / session.questions.length) * 100)
 		: 0;
@@ -219,7 +223,7 @@ export default function FortiOSOfflineExam() {
 		: Math.max(0, FORTIOS_OFFLINE_EXAM_FORMATS[examKey].durationSeconds - secondsRemaining);
 
 	return (
-		<main data-theme="light" className="fortinet-exam-page min-h-screen bg-[#fff8f7] px-4 py-6 text-[#17233d] sm:px-8 sm:py-8">
+		<main data-theme={isDark ? "dark" : "light"} className="fortinet-exam-page min-h-screen bg-[#fff8f7] px-4 py-6 text-[#17233d] sm:px-8 sm:py-8">
 			<div className="mx-auto max-w-[1125px]">
 				<header className="mb-7 flex flex-wrap items-center justify-between gap-4 border-b border-[#efd0cd] pb-5">
 					<div className="flex min-w-0 items-center gap-4">
@@ -231,9 +235,21 @@ export default function FortiOSOfflineExam() {
 							<p className="mt-1 truncate text-sm font-bold text-[#17233d]">{examName} · FortiOS question bank</p>
 						</div>
 					</div>
-					<Link to="/modules/programs/fortinet-fortios" className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[#f1beba] px-3 py-2 text-xs font-semibold text-[#e2231a] transition hover:bg-[#fff0ef] sm:gap-2 sm:px-4 sm:text-sm">
-						<X size={16} /> <span>{session.isSubmitted ? "Back to FortiOS" : "Exit exam"}</span>
-					</Link>
+					<div className="flex w-full items-center justify-between gap-2 sm:w-auto sm:justify-end">
+						<button
+							type="button"
+							onClick={() => setIsDark((value) => !value)}
+							aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
+							aria-pressed={isDark}
+							className="ccna-dark-hover inline-flex shrink-0 items-center gap-2 rounded-full border border-[#f1beba] bg-white px-3 py-2 text-xs font-semibold text-[#e2231a] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 motion-reduce:transition-none motion-reduce:hover:translate-y-0 sm:px-4 sm:text-sm"
+						>
+							{isDark ? <Sun size={16} /> : <Moon size={16} />}
+							<span className="hidden sm:inline">{isDark ? "Light mode" : "Dark mode"}</span>
+						</button>
+						<Link to="/modules/programs/fortinet-fortios" className="ccna-dark-hover inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[#f1beba] px-3 py-2 text-xs font-semibold text-[#e2231a] transition hover:scale-105 active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100 sm:gap-2 sm:px-4 sm:text-sm">
+							<X size={16} /> <span>{session.isSubmitted ? "Back to FortiOS" : "Exit exam"}</span>
+						</Link>
+					</div>
 				</header>
 
 				{!session.isSubmitted && (
@@ -269,6 +285,22 @@ export default function FortiOSOfflineExam() {
 						</div>
 						<div className="mt-4 flex flex-wrap gap-2.5 text-sm text-[#526584]">
 							<span className="exam-progress-badge rounded-xl bg-[#fff8f7] px-3 py-2">{answeredCount} answered</span>
+							<button
+								type="button"
+								onClick={() => setFlaggedQuestions((previous) => ({
+									...previous,
+									[session.currentIndex]: !previous[session.currentIndex],
+								}))}
+								aria-label={`${flaggedQuestions[session.currentIndex] ? "Unflag" : "Flag"} question ${session.currentIndex + 1}; ${flaggedCount} flagged`}
+								aria-pressed={Boolean(flaggedQuestions[session.currentIndex])}
+								className={`exam-progress-badge inline-flex items-center gap-2 rounded-xl px-3 py-2 transition ${flaggedQuestions[session.currentIndex]
+									? isDark ? "bg-[#42291f] text-[#ffc28e]" : "bg-[#fff1d6] text-[#8a5200]"
+									: isDark ? "bg-[#1b2947] hover:bg-[#263654]" : "bg-[#fff8f7] hover:bg-[#fff0ef]"
+									} ${flaggedQuestions[session.currentIndex] ? "exam-progress-flagged" : ""}`}
+							>
+								<Flag size={15} fill={flaggedQuestions[session.currentIndex] ? "currentColor" : "none"} />
+								{flaggedCount} flagged
+							</button>
 							<span className="exam-progress-badge rounded-xl bg-[#fff8f7] px-3 py-2">{unansweredCount} left</span>
 						</div>
 					</section>
@@ -413,7 +445,7 @@ export default function FortiOSOfflineExam() {
 					{storageError && <p className="mt-4 text-sm text-amber-700" role="status">{storageError}</p>}
 			</div>
 			{isRetakeConfirmationOpen && createPortal(
-				<div data-theme="light" className="fortinet-exam-dialog fixed inset-0 z-[120] grid place-items-center bg-[#071126]/60 p-4 backdrop-blur-sm">
+				<div data-theme={isDark ? "dark" : "light"} className="fortinet-exam-dialog fixed inset-0 z-[120] grid place-items-center bg-[#071126]/60 p-4 backdrop-blur-sm">
 					<section
 						role="alertdialog"
 						aria-modal="true"
@@ -453,7 +485,7 @@ export default function FortiOSOfflineExam() {
 				document.body,
 			)}
 			{blocker.state === "blocked" && createPortal(
-				<div data-theme="light" className="fortinet-exam-dialog fixed inset-0 z-[120] grid place-items-center overflow-y-auto bg-[#071126]/60 p-4 backdrop-blur-sm">
+				<div data-theme={isDark ? "dark" : "light"} className="fortinet-exam-dialog fixed inset-0 z-[120] grid place-items-center overflow-y-auto bg-[#071126]/60 p-4 backdrop-blur-sm">
 					<section
 						role="alertdialog"
 						aria-modal="true"
