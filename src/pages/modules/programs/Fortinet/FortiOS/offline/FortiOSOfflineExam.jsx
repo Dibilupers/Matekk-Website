@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ArrowDown, ArrowLeft, ChevronRight, Clock3, RotateCcw, X } from "lucide-react";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useBlocker, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../../../../../context/auth-context";
 import ExplanationWithLinks from "../../../../../../components/ExplanationWithLinks";
 import { isAnswerCorrect, isQuestionAnswered, isValidQuestion } from "../../../../../../utils/ccnaExamGrading";
 import { ExhibitImage, ExhibitText } from "../../../Cisco/CCNA/ccnaExhibit";
 import { QuestionInput, QuestionPrompt, QuestionReview } from "../../../Cisco/CCNA/ccnaExamQuestionViews";
+import TrainingLogo from "../../../../../../assets/MATEKK_training_logo.png";
 import { createFortiOSOfflineExam, FORTIOS_OFFLINE_EXAM_FORMATS } from "./fortiosOfflineExamFormats";
 import { loadCachedFortiOSQuestionBank } from "./fortiosOfflineQuestionBank";
 import FortiOSQuestionExplanation from "./FortiOSQuestionExplanation";
@@ -80,6 +81,12 @@ export default function FortiOSOfflineExam() {
 	const [storageError, setStorageError] = useState("");
 	const [isRetakeConfirmationOpen, setIsRetakeConfirmationOpen] = useState(false);
 	const answerReviewRef = useRef(null);
+	const blocker = useBlocker(({ currentLocation, nextLocation }) =>
+		Boolean(session && !session.isSubmitted) &&
+		(currentLocation.pathname !== nextLocation.pathname ||
+			currentLocation.search !== nextLocation.search ||
+			currentLocation.hash !== nextLocation.hash),
+	);
 	const [shouldStartNewAttempt] = useState(() => location.state?.startNewOfflineAttempt === true);
 	const examName = FORTIOS_OFFLINE_EXAM_FORMATS[examKey]?.name ?? "FortiOS Exam";
 	const question = session?.questions[session.currentIndex];
@@ -200,6 +207,10 @@ export default function FortiOSOfflineExam() {
 	}
 
 	const answeredCount = session.questions.reduce((total, item, index) => total + Number(isQuestionAnswered(item, session.answers[index])), 0);
+	const unansweredCount = session.questions.length - answeredCount;
+	const answeredPercentage = session.questions.length > 0
+		? Math.round((answeredCount / session.questions.length) * 100)
+		: 0;
 	const percentage = session.questions.length ? Math.round((score / session.questions.length) * 100) : 0;
 	const examPassed = percentage >= 80;
 	const progressColor = examPassed ? "#159b73" : "#c47a1a";
@@ -209,22 +220,59 @@ export default function FortiOSOfflineExam() {
 
 	return (
 		<main data-theme="light" className="fortinet-exam-page min-h-screen bg-[#fff8f7] px-4 py-6 text-[#17233d] sm:px-8 sm:py-8">
-			<div className="mx-auto max-w-5xl">
-				<Link to="/modules/programs/fortinet-fortios" className="inline-flex items-center gap-2 rounded-full border border-[#f1beba] bg-white px-5 py-3 font-semibold text-[#e2231a] transition hover:bg-[#fff0ef]">
-					<ArrowLeft size={18} /> Back to FortiOS
-				</Link>
-				<header className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[#f1d3d0] bg-white p-5 shadow-sm sm:p-7">
-					<div>
-						<p className="text-sm font-semibold uppercase tracking-[0.12em] text-[#e2231a]">Offline FortiOS</p>
-						<h1 className="mt-1 text-2xl font-bold sm:text-3xl">{session.isSubmitted ? "Exam results" : examName}</h1>
-						<p className="mt-1 text-sm text-[#71809b]">{session.isSubmitted ? `${score} of ${session.questions.length} correct · ${percentage}%` : `Question ${session.currentIndex + 1} of ${session.questions.length} · ${answeredCount} answered`}</p>
-					</div>
-					{session.deadline !== null && !session.isSubmitted && (
-						<div className="flex items-center gap-2 rounded-full bg-[#fff0ef] px-4 py-2 font-semibold text-[#c51f19]" role="timer" aria-label="Time remaining">
-							<Clock3 size={18} /> {formatTime(secondsRemaining)}
+			<div className="mx-auto max-w-[1125px]">
+				<header className="mb-7 flex flex-wrap items-center justify-between gap-4 border-b border-[#efd0cd] pb-5">
+					<div className="flex min-w-0 items-center gap-4">
+						<Link to="/modules/programs/fortinet-fortios" aria-label="Back to FortiOS course" className="shrink-0 rounded-lg bg-white px-3 py-2 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+							<img src={TrainingLogo} alt="MATEKK Cybercore Academy" className="h-auto w-32 sm:w-36" />
+						</Link>
+						<div className="hidden min-w-0 border-l border-[#efd0cd] pl-4 sm:block">
+							<p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#e2231a]">FortiOS exam · Offline</p>
+							<p className="mt-1 truncate text-sm font-bold text-[#17233d]">{examName} · FortiOS question bank</p>
 						</div>
-					)}
+					</div>
+					<Link to="/modules/programs/fortinet-fortios" className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[#f1beba] px-3 py-2 text-xs font-semibold text-[#e2231a] transition hover:bg-[#fff0ef] sm:gap-2 sm:px-4 sm:text-sm">
+						<X size={16} /> <span>{session.isSubmitted ? "Back to FortiOS" : "Exit exam"}</span>
+					</Link>
 				</header>
+
+				{!session.isSubmitted && (
+					<section aria-label="Exam progress" className="mb-5 rounded-2xl border border-[#f1d3d0] bg-white p-5 shadow-sm sm:mb-6 sm:p-8">
+						<div className="flex flex-wrap items-center justify-between gap-3">
+							<p className="rounded-xl bg-[#fff0ef] px-4 py-2 text-sm font-semibold text-[#bd2119]">{examName}</p>
+							{session.deadline === null ? (
+								<div className="shrink-0 rounded-full border border-[#efd0cd] bg-white px-3 py-2 text-xs font-semibold text-[#e2231a] sm:px-4 sm:text-sm">
+									No time limit
+								</div>
+							) : (
+								<div role="timer" aria-label={`${formatTime(secondsRemaining)} remaining`} className="shrink-0 rounded-full border border-[#efd0cd] bg-white px-3 py-2 text-xs font-semibold tabular-nums text-[#e2231a] sm:px-4 sm:text-sm">
+									{formatTime(secondsRemaining)}
+								</div>
+							)}
+						</div>
+						<div className="mt-5 flex flex-wrap items-baseline justify-between gap-2">
+							<h1 className="text-4xl font-extrabold leading-tight tracking-tight text-[#17233d] sm:text-[2.65rem]">
+								Question {session.currentIndex + 1} <span className="text-base font-normal text-[#64748b] sm:text-lg">of {session.questions.length}</span>
+							</h1>
+							<p className="text-sm text-[#64748b] sm:text-base">{answeredCount} answered <span aria-hidden="true">·</span> {answeredPercentage}%</p>
+						</div>
+						<div
+							role="progressbar"
+							aria-label="Exam progress"
+							aria-valuemin={0}
+							aria-valuemax={session.questions.length}
+							aria-valuenow={answeredCount}
+							aria-valuetext={`${answeredCount} of ${session.questions.length} answered, ${answeredPercentage}%`}
+							className="exam-progress-track mt-3 h-2 overflow-hidden rounded-full bg-[#e7e7e7]"
+						>
+							<div className="exam-progress-fill h-full rounded-full bg-[#e2231a] transition-[width]" style={{ width: `${answeredPercentage}%` }} />
+						</div>
+						<div className="mt-4 flex flex-wrap gap-2.5 text-sm text-[#526584]">
+							<span className="exam-progress-badge rounded-xl bg-[#fff8f7] px-3 py-2">{answeredCount} answered</span>
+							<span className="exam-progress-badge rounded-xl bg-[#fff8f7] px-3 py-2">{unansweredCount} left</span>
+						</div>
+					</section>
+				)}
 
 				{session.isSubmitted && (
 					<section className="fade-in-up mt-5 grid items-center gap-8 rounded-[24px] border border-[#f1d3d0] bg-white px-5 py-8 shadow-sm sm:px-8 sm:py-10 lg:grid-cols-[1fr_0.8fr] lg:px-14 lg:py-14">
@@ -310,8 +358,11 @@ export default function FortiOSOfflineExam() {
 				)}
 
 				{!session.isSubmitted ? (
-					<section className="mt-5 rounded-2xl border border-[#f1d3d0] bg-white p-5 shadow-sm sm:p-8">
+					<section className="rounded-[20px] border border-[#f1d3d0] bg-white p-4 shadow-sm sm:p-7">
 						<>
+							<p className="mb-2 text-sm text-[#70809a]">
+								Question {session.currentIndex + 1} of {session.questions.length}
+							</p>
 							{question.exhibitImage && <ExhibitImage src={question.exhibitImage} className="mb-5" imageClassName="max-h-[32rem]" />}
 							{question.exhibit && <ExhibitText text={question.exhibit} className="mb-5" />}
 							<QuestionPrompt prompt={question.prompt} hasSeparateExhibit={Boolean(question.exhibit || question.exhibitImage)} offline fortiosOffline />
@@ -395,6 +446,42 @@ export default function FortiOSOfflineExam() {
 								className="rounded-full bg-[#e2231a] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#bd2119]"
 							>
 								Yes, retake exam
+							</button>
+						</div>
+					</section>
+				</div>,
+				document.body,
+			)}
+			{blocker.state === "blocked" && createPortal(
+				<div data-theme="light" className="fortinet-exam-dialog fixed inset-0 z-[120] grid place-items-center overflow-y-auto bg-[#071126]/60 p-4 backdrop-blur-sm">
+					<section
+						role="alertdialog"
+						aria-modal="true"
+						aria-labelledby="fortios-offline-exit-title"
+						aria-describedby="fortios-offline-exit-description"
+						className="w-full max-w-md rounded-2xl border border-[#f1d3d0] bg-white p-5 text-[#17233d] shadow-2xl sm:p-8"
+					>
+						<p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#e2231a]">Exam in progress</p>
+						<h2 id="fortios-offline-exit-title" className="mt-2 text-xl font-bold sm:text-2xl">Are you sure you want to exit the exam?</h2>
+						<p id="fortios-offline-exit-description" className="mt-3 text-sm leading-6 text-[#64748b] sm:text-base">
+							Your answers and time remaining will be saved. The timer will keep running while you are away.
+						</p>
+						{session.deadline !== null && (
+							<div className="mt-5 flex items-center justify-between rounded-xl border border-[#f1d3d0] bg-[#fff8f7] px-4 py-3">
+								<span className="inline-flex items-center gap-2 text-sm font-semibold text-[#526584]">
+									<Clock3 size={16} /> Time remaining
+								</span>
+								<span role="timer" aria-label={`${formatTime(secondsRemaining)} remaining`} className="text-lg font-bold tabular-nums text-[#e2231a]">
+									{formatTime(secondsRemaining)}
+								</span>
+							</div>
+						)}
+						<div className="mt-6 flex flex-wrap justify-end gap-3">
+							<button type="button" onClick={() => blocker.reset()} className="rounded-full border border-[#f1d3d0] px-5 py-2.5 text-sm font-semibold text-[#42516b] transition hover:bg-[#fff8f7]">
+								Stay in exam
+							</button>
+							<button type="button" onClick={() => blocker.proceed()} className="rounded-full bg-[#e2231a] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#bd2119]">
+								Exit exam
 							</button>
 						</div>
 					</section>
