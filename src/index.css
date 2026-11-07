@@ -147,6 +147,18 @@ h6 {
   animation: ccna-validation-shake 260ms ease-in-out both;
 }
 
+.mamaaa-reveal-zoom {
+  animation: mamaaa-reveal-zoom 650ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.mamaaa-reveal-shake {
+  animation: mamaaa-reveal-shake 720ms ease-in-out 560ms both;
+}
+
+.mamaaa-caption-pop {
+  animation: mamaaa-caption-pop 420ms cubic-bezier(0.16, 1, 0.3, 1) 420ms both;
+}
+
 .ccna-match-choice-placed {
   animation: ccna-match-choice-placed 800ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
@@ -1159,6 +1171,47 @@ h6 {
     transform: translateX(0);
   }
 
+  @keyframes mamaaa-reveal-zoom {
+    from {
+      opacity: 0.4;
+      transform: scale(0.28);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes mamaaa-reveal-shake {
+    0%,
+    100% {
+      transform: translateX(0) rotate(0);
+    }
+
+    20%,
+    60% {
+      transform: translateX(-8px) rotate(-1.5deg);
+    }
+
+    40%,
+    80% {
+      transform: translateX(8px) rotate(1.5deg);
+    }
+  }
+
+  @keyframes mamaaa-caption-pop {
+    from {
+      opacity: 0;
+      transform: translateY(0.75rem) scale(0.85);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
   25% {
     transform: translateX(-4px);
   }
@@ -1275,6 +1328,9 @@ h6 {
   .ccna-question-transition,
   .ccna-notification-boink,
   .ccna-validation-shake,
+  .mamaaa-reveal-zoom,
+  .mamaaa-reveal-shake,
+  .mamaaa-caption-pop,
   .ccna-match-choice-placed,
   .ccna-match-choice-fading,
   .ccna-match-choice-returned,
