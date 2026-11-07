@@ -2,6 +2,14 @@
 
 Tracking begins 2026-10-17.
 
+## 2026-11-07 — `main`
+
+Commits included in this push:
+
+- `074aa3b` — Reverted persistent offline module unlock state; a PIN unlock now lasts only for the current browser session again.
+
+Validation before push: targeted ESLint, frontend production build, and Git whitespace checks passed.
+
 ## 2026-10-30 — `main`
 
 Commits included in this push:
