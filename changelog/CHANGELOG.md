@@ -6,6 +6,17 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `73ae61e` — Added individual notification dismissal, a Read all action, and
+  Clear notifications while preserving exam progress and persisting dismissed
+  state per user.
+
+Validation before push: exam notification and route regression tests, targeted
+ESLint, frontend production build, and Git whitespace checks passed.
+
+## 2026-11-07 — `main`
+
+Commits included in this push:
+
 - `90ad7ec` — Changed the exam notification badge to count unread updates,
   persist read state per user, and clear the count when the panel is opened.
 
