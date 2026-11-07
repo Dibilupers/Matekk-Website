@@ -7,6 +7,7 @@ import {
 	getExamNotificationReadId,
 	readExamNotificationDismissedIds,
 	readExamNotificationReadIds,
+	shouldShowExamNotification,
 	writeExamNotificationDismissedIds,
 	writeExamNotificationReadIds,
 } from "../utils/examNotificationReadState";
@@ -211,7 +212,7 @@ export default function ExamNotifications() {
 	const isNotificationRead = (item) => readIds.has(getExamNotificationReadId(item)) ||
 		readIds.has(`${item.id}:${item.status}:${item.activityAt}`);
 	const dismissedIds = new Set(dismissedState.userId === userId ? dismissedState.ids : []);
-	const notifications = allNotifications.filter((item) => !dismissedIds.has(getExamNotificationReadId(item)));
+	const notifications = allNotifications.filter((item) => shouldShowExamNotification(item, dismissedIds));
 	const unreadCount = notifications.filter((item) => !isNotificationRead(item)).length;
 
 	useEffect(() => {

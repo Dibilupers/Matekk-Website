@@ -6,6 +6,7 @@ import {
 	getExamNotificationReadStorageKey,
 	readExamNotificationDismissedIds,
 	readExamNotificationReadIds,
+	shouldShowExamNotification,
 	writeExamNotificationDismissedIds,
 	writeExamNotificationReadIds,
 } from "./examNotificationReadState.js";
@@ -66,4 +67,14 @@ test("dismissed notification IDs persist separately from read IDs", () => {
 		true,
 	);
 	assert.deepEqual(readExamNotificationReadIds(storage, "user-1"), []);
+});
+
+test("active exam notifications remain visible even after being dismissed", () => {
+	const active = { id: "ccna:medium", sessionId: "attempt-1", status: "in-progress", submittedAt: 0 };
+	const dismissedIds = new Set([getExamNotificationReadId(active)]);
+	assert.equal(shouldShowExamNotification(active, dismissedIds), true);
+
+	const completed = { ...active, status: "completed", submittedAt: 123 };
+	dismissedIds.add(getExamNotificationReadId(completed));
+	assert.equal(shouldShowExamNotification(completed, dismissedIds), false);
 });

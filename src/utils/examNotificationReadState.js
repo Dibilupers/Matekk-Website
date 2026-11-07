@@ -13,6 +13,11 @@ export function getExamNotificationReadId(notification) {
 	return `${notification.id}:${notification.sessionId}:${notification.status}:${notification.submittedAt}`;
 }
 
+export function shouldShowExamNotification(notification, dismissedIds) {
+	return notification.status === "in-progress" ||
+		!dismissedIds.has(getExamNotificationReadId(notification));
+}
+
 function readNotificationIds(storage, key, description) {
 	const value = storage.getItem(key);
 	if (value === null) return [];
