@@ -5,9 +5,13 @@ import { createServer } from "vite";
 let vite;
 let convertBankRow;
 let loadCcnaAllQuestionsBank;
+let loadCachedCcnaAllQuestionsBank;
+let createOfflineCcnaExamQuestions;
 let isValidQuestion;
 let applyNativeExhibit;
 let originalFetch;
+let originalCaches;
+let originalWindow;
 
 before(async () => {
   vite = await createServer({
@@ -18,13 +22,21 @@ before(async () => {
   });
   ({ convertBankRow } = await vite.ssrLoadModule("/src/utils/ccnaBankConverter.js"));
   ({ loadCcnaAllQuestionsBank } = await vite.ssrLoadModule("/src/utils/ccnaQuestionBankApi.js"));
+  ({ loadCachedCcnaAllQuestionsBank } = await vite.ssrLoadModule("/src/utils/ccnaOfflineQuestionBank.js"));
+  ({ createOfflineCcnaExamQuestions } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaOfflineTimedExam.js"));
   ({ isValidQuestion } = await vite.ssrLoadModule("/src/utils/ccnaExamGrading.js"));
   ({ applyNativeExhibit } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaCompositeSetQuestions.js"));
   originalFetch = globalThis.fetch;
+  originalCaches = globalThis.caches;
+  originalWindow = globalThis.window;
 });
 
 after(async () => {
   globalThis.fetch = originalFetch;
+  if (originalCaches === undefined) delete globalThis.caches;
+  else globalThis.caches = originalCaches;
+  if (originalWindow === undefined) delete globalThis.window;
+  else globalThis.window = originalWindow;
   await vite.close();
 });
 
@@ -315,13 +327,50 @@ test("restores the four omitted matching rows so the merged CCNA exam reaches 1,
     return new Response(JSON.stringify(payload), { status: 200 });
   };
 
+  const cachedResponses = new Map();
+  globalThis.window = { location: { origin: "https://matekk.test" } };
+  globalThis.caches = {
+    open: async () => ({
+      put: async (request, response) => cachedResponses.set(request.url, response),
+      match: async (request) => cachedResponses.get(request.url)?.clone(),
+    }),
+  };
+
   const result = await loadCcnaAllQuestionsBank();
 
   assert.equal(result.questions.length, 1367);
   assert.equal(result.skippedCount, 0);
+  const cachedQuestions = await loadCachedCcnaAllQuestionsBank();
+  assert.equal(cachedQuestions.length, 1367);
+  assert.deepEqual(
+    cachedQuestions.map((question) => question.bankId),
+    result.questions.map((question) => question.bankId),
+  );
   for (const bankId of missingIds) {
     const question = result.questions.find((entry) => entry.bankId === bankId);
     assert.ok(question, `question ${bankId} should be restored`);
     assert.equal(question.type, "drag_drop");
+  }
+});
+test("offline timed CCNA formats sample their existing lengths from the cached shared bank", () => {
+  const bankQuestions = Array.from({ length: 1367 }, (_, index) => ({
+    bankId: index + 1,
+    prompt: `Shared-bank question ${index + 1}`,
+    type: "single",
+    options: ["Correct", "Incorrect"],
+    answer: 0,
+    module: "CCNA Part 9",
+    topic: "Routing",
+  }));
+  const bankIds = new Set(bankQuestions.map((question) => question.bankId));
+
+  for (const [examKey, expectedCount] of [["short", 50], ["medium", 100], ["long", 150]]) {
+    const questions = createOfflineCcnaExamQuestions(examKey, bankQuestions);
+    assert.equal(questions.length, expectedCount);
+    assert.ok(
+      questions.some((question) => bankIds.has(question.id)),
+      `${examKey} exam should sample questions from the shared bank`,
+    );
+    assert.ok(questions.every((question) => isValidQuestion(question)));
   }
 });
