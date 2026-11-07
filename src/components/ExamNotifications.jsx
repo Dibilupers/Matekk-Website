@@ -2,15 +2,16 @@ import { useEffect, useState } from "react";
 import { Bell, CircleAlert, Clock3, X } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/auth-context";
+import { getExamRoute } from "../utils/examRoutes";
 
 const PROGRAMS = {
-	ccna: { name: "CCNA", route: "ccna" },
-	"ccna-automation": { name: "CCNA Automation", route: "ccna-automation" },
-	"ccna-cybersecurity": { name: "CCNA Cybersecurity", route: "ccna-cybersecurity" },
-	"comptia-network-plus": { name: "CompTIA Network+", route: "comptia-network-plus" },
-	"comptia-security-plus": { name: "CompTIA Security+", route: "comptia-security-plus" },
-	"fortinet-fortios": { name: "Fortinet FortiOS", route: "fortinet-fortios" },
-	"fortios-offline": { name: "FortiOS", route: "fortios" },
+	ccna: { name: "CCNA" },
+	"ccna-automation": { name: "CCNA Automation" },
+	"ccna-cybersecurity": { name: "CCNA Cybersecurity" },
+	"comptia-network-plus": { name: "CompTIA Network+" },
+	"comptia-security-plus": { name: "CompTIA Security+" },
+	"fortinet-fortios": { name: "Fortinet FortiOS" },
+	"fortios-offline": { name: "FortiOS" },
 };
 
 const EXAM_NAMES = {
@@ -95,15 +96,13 @@ function parseExamSession(value, key, storageType, userId) {
 		details = getExamDetails(scopedKey);
 	}
 	if (!details || !PROGRAMS[details.programKey] || !EXAM_NAMES[details.examKey]) return null;
+	const route = getExamRoute(details.programKey, details.examKey);
+	if (!route) return null;
 
 	const deadline = Number.isFinite(session.deadline) ? session.deadline : null;
 	const isExpired = (deadline !== null && !session.isSubmitted && deadline <= Date.now()) ||
 		(Number.isFinite(session.submittedAt) && deadline !== null && session.submittedAt >= deadline);
 	const status = isExpired ? "expired" : session.isSubmitted ? "completed" : "in-progress";
-	const route = details.programKey === "fortios-offline"
-		? "/modules/programs/fortios/exam/all"
-		: `/modules/programs/${PROGRAMS[details.programKey].route}/exam/${details.examKey}`;
-
 	return {
 		id: `${details.programKey}:${details.examKey}`,
 		title: `${PROGRAMS[details.programKey].name} · ${EXAM_NAMES[details.examKey]}`,

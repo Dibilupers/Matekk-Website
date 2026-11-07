@@ -1,3 +1,5 @@
+import { getExamRoute } from "../../../../../utils/examRoutes";
+
 const EXAM_FORMATS = {
 	short: { name: "Short Exam", questionCount: 50, durationSeconds: 45 * 60 },
 	medium: { name: "Medium Exam", questionCount: 100, durationSeconds: 90 * 60 },
@@ -71,7 +73,7 @@ export function createCompTIAExamFormats(
 			scoredQuestionCount: format.questionCount,
 			subtitle: `${programName} question bank`,
 			sessionKey: getSessionKey(examKey),
-			path: `/modules/programs/${programKey}/exam/${examKey}`,
+			path: getExamRoute(programKey, examKey),
 			programName,
 			createQuestions() {
 				if (scoredQuestions.length < format.questionCount) {
@@ -98,7 +100,7 @@ export function createCompTIAExamFormats(
 			reviewQuestionCount: reviewQuestions.length,
 			durationSeconds: null,
 			sessionKey: getSessionKey("all_questions"),
-			path: `/modules/programs/${programKey}/exam/all_questions`,
+			path: getExamRoute(programKey, "all_questions"),
 			programName,
 			createQuestions() {
 				return [...shuffle(scoredQuestions), ...reviewQuestions];
