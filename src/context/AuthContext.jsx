@@ -2,9 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import API_URL from "../config/api";
 import {
 	hasOfflineModulePin,
-	hasPersistedOfflineModuleUnlock,
 	saveOfflineModulePin,
-	saveOfflineModuleUnlock,
 	verifyOfflineModulePin,
 } from "../utils/offlineModulePin";
 import { AuthContext } from "./auth-context";
@@ -51,9 +49,7 @@ export function AuthProvider({ children }) {
   const [isLoading, setIsLoading] = useState(true);
   const [isOnline, setIsOnline] = useState(() => navigator.onLine);
   const [hasOfflinePin, setHasOfflinePin] = useState(hasOfflineModulePin);
-  const [isOfflinePinUnlocked, setIsOfflinePinUnlocked] = useState(
-    () => !navigator.onLine && hasPersistedOfflineModuleUnlock(),
-  );
+  const [isOfflinePinUnlocked, setIsOfflinePinUnlocked] = useState(false);
 
   useEffect(() => {
     const updateOnlineStatus = () => setIsOnline(navigator.onLine);
@@ -66,9 +62,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    if (!isOnline && hasPersistedOfflineModuleUnlock()) {
-      setIsOfflinePinUnlocked(true);
-    }
+    if (isOnline) setIsOfflinePinUnlocked(false);
   }, [isOnline]);
 
   const refreshProfile = useCallback(async () => {
@@ -228,10 +222,7 @@ export function AuthProvider({ children }) {
 
   const unlockOfflineModules = useCallback(async (pin) => {
     const verified = await verifyOfflineModulePin(pin);
-    if (verified) {
-      saveOfflineModuleUnlock();
-      setIsOfflinePinUnlocked(true);
-    }
+    if (verified) setIsOfflinePinUnlocked(true);
     return verified;
   }, []);
 

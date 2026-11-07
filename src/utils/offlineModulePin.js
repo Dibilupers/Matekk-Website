@@ -1,5 +1,4 @@
 const OFFLINE_PIN_KEY = "matekk-offline-module-pin";
-const OFFLINE_PIN_UNLOCKED_KEY = "matekk-offline-module-pin-unlocked";
 export const OFFLINE_PIN_SETUP_DISMISSED_KEY = "matekk-offline-pin-setup-dismissed";
 const PBKDF2_ITERATIONS = 250000;
 
@@ -56,14 +55,6 @@ export function hasOfflineModulePin() {
 	return Boolean(readVerifier());
 }
 
-export function hasPersistedOfflineModuleUnlock() {
-	return localStorage.getItem(OFFLINE_PIN_UNLOCKED_KEY) === "true" && hasOfflineModulePin();
-}
-
-export function saveOfflineModuleUnlock() {
-	localStorage.setItem(OFFLINE_PIN_UNLOCKED_KEY, "true");
-}
-
 export async function saveOfflineModulePin(pin) {
 	if (!/^\d{4,6}$/.test(pin)) {
 		throw new Error("The offline PIN must contain 4 to 6 digits.");
@@ -75,7 +66,6 @@ export async function saveOfflineModulePin(pin) {
 		salt: encodeBase64(salt),
 		hash: encodeBase64(hash),
 	}));
-	localStorage.removeItem(OFFLINE_PIN_UNLOCKED_KEY);
 }
 
 export async function verifyOfflineModulePin(pin) {
@@ -92,6 +82,5 @@ export async function verifyOfflineModulePin(pin) {
 
 export function clearOfflineModulePin() {
 	localStorage.removeItem(OFFLINE_PIN_KEY);
-	localStorage.removeItem(OFFLINE_PIN_UNLOCKED_KEY);
 	sessionStorage.removeItem(OFFLINE_PIN_SETUP_DISMISSED_KEY);
 }
