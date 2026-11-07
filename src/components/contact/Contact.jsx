@@ -10,8 +10,14 @@ const EMAILJS_PUBLIC_KEY  = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 const COOLDOWN_MS         = 60_000;
 
 // ── Validators ─────────────────────────────────────────────────────────────
-const isValidEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-const isValidPhone = (v) => /^[0-9+\-\s()]{7,15}$/.test(v);
+const MAX_NAME_LENGTH = 36;
+const MAX_EMAIL_LENGTH = 50;
+const MAX_PHONE_LENGTH = 11;
+const MAX_SUBJECT_LENGTH = 36;
+const MAX_MESSAGE_LENGTH = 500;
+const isValidName = (v) => /^[\p{L}\p{M}]+(?:[ '\u2019-][\p{L}\p{M}]+)*$/u.test(v.trim());
+const isValidEmail = (v) => v.length <= MAX_EMAIL_LENGTH && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+const isValidPhone = (v) => /^\d{11}$/.test(v);
 const isEmpty      = (v) => v.trim().length === 0;
 const isTooLong    = (v, max) => v.length > max;
 
@@ -69,12 +75,32 @@ export default function ContactForm() {
     const message = DOMPurify.sanitize(e.target.message.value);
 
     // ── Validate ──────────────────────────────────────────────────────────
-    if (isEmpty(name) || isEmpty(subject) || isEmpty(message)) {
+    if (isEmpty(name) || isEmpty(email) || isEmpty(phone) || isEmpty(subject) || isEmpty(message)) {
       setStatus("Please fill in all fields.");
       return;
     }
-    if (isTooLong(message, 1000)) {
-      setStatus("Message is too long (max 1,000 characters).");
+    if (isTooLong(name, MAX_NAME_LENGTH)) {
+      setStatus(`Full name must be ${MAX_NAME_LENGTH} characters or fewer.`);
+      return;
+    }
+    if (!isValidName(name)) {
+      setStatus("Full name can contain letters, spaces, apostrophes, and hyphens only.");
+      return;
+    }
+    if (isTooLong(email, MAX_EMAIL_LENGTH)) {
+      setStatus(`Email must be ${MAX_EMAIL_LENGTH} characters or fewer.`);
+      return;
+    }
+    if (isTooLong(phone, MAX_PHONE_LENGTH) || !isValidPhone(phone)) {
+      setStatus("Mobile number must contain exactly 11 digits.");
+      return;
+    }
+    if (isTooLong(subject, MAX_SUBJECT_LENGTH)) {
+      setStatus(`Subject must be ${MAX_SUBJECT_LENGTH} characters or fewer.`);
+      return;
+    }
+    if (isTooLong(message, MAX_MESSAGE_LENGTH)) {
+      setStatus(`Message is too long (max ${MAX_MESSAGE_LENGTH} characters).`);
       return;
     }
     if (!isValidEmail(email)) {
@@ -176,7 +202,7 @@ export default function ContactForm() {
           <label htmlFor="name">Full Name</label>
           <span className="text-red-400">*</span>
         </div>
-        <input id="name" name="name" type="text" placeholder="e.g. Juan Dela Cruz" className="contact_form_input" required />
+        <input id="name" name="name" type="text" maxLength={MAX_NAME_LENGTH} autoComplete="name" placeholder="e.g. Juan Dela Cruz" className="contact_form_input" required />
       </div>
 
       {/* Email & Phone */}
@@ -186,14 +212,26 @@ export default function ContactForm() {
             <label htmlFor="email">Email</label>
             <span className="text-red-400">*</span>
           </div>
-          <input id="email" name="email" type="email" placeholder="e.g. juan.delacruz@gmail.com" className="contact_form_input" required />
+          <input id="email" name="email" type="email" maxLength={MAX_EMAIL_LENGTH} autoComplete="email" placeholder="e.g. juan.delacruz@gmail.com" className="contact_form_input" required />
         </div>
         <div className="flex flex-col space-y-1 w-full">
           <div className="flex items-center space-x-1">
             <label htmlFor="phone">Mobile Number</label>
             <span className="text-red-400">*</span>
           </div>
-          <input id="phone" name="phone" type="tel" placeholder="e.g. 0917 123 4567" className="contact_form_input" required />
+          <input
+            id="phone"
+            name="phone"
+            type="tel"
+            inputMode="numeric"
+            pattern="[0-9]{11}"
+            placeholder="e.g. 09171234567"
+            className="contact_form_input"
+            onChange={(event) => {
+              event.target.value = event.target.value.replace(/\D/g, "").slice(0, MAX_PHONE_LENGTH);
+            }}
+            required
+          />
         </div>
       </div>
 
@@ -203,7 +241,7 @@ export default function ContactForm() {
           <label htmlFor="subject">Subject</label>
           <span className="text-red-400">*</span>
         </div>
-        <input id="subject" name="subject" type="text" placeholder="e.g. CCNA training schedule" className="contact_form_input" required />
+        <input id="subject" name="subject" type="text" maxLength={MAX_SUBJECT_LENGTH} placeholder="e.g. CCNA training schedule" className="contact_form_input" required />
       </div>
 
       {/* Message */}
@@ -215,6 +253,7 @@ export default function ContactForm() {
         <textarea
           id="message"
           name="message"
+          maxLength={MAX_MESSAGE_LENGTH}
           placeholder="e.g. Hi! I would like to ask about the next CCNA batch and the training fee."
           className="contact_form_input h-32 resize-none"
           required
