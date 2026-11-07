@@ -2,6 +2,14 @@
 
 Tracking begins 2026-10-17.
 
+## 2026-11-07 — `main`
+
+Commits included in this push:
+
+- `e67fff6` — Restored the website source state at `ea16d514`, including persistent offline module PIN unlock behavior.
+
+Validation before push: targeted ESLint, frontend production build, and Git whitespace checks passed.
+
 ## 2026-10-30 — `main`
 
 Commits included in this push:
