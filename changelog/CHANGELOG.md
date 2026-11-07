@@ -6,6 +6,12 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `ae76ae5` — Integrated the latest notification-management update while
+  retaining per-item unread state, the mark-all menu, and clear/dismiss actions.
+
+Validation before push: notification read-state and exam-route regression tests,
+targeted ESLint, frontend production build, and Git whitespace checks passed.
+
 - `db5cb2f` — Merged the latest `origin/main` changes and resolved the
   notification conflict so opening the dropdown does not mark every item read.
 
