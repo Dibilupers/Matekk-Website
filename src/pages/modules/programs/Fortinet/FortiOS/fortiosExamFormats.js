@@ -1,4 +1,5 @@
 import { createCompTIAExamFormats } from "../../CompTIA/Network+/networkPlusExamFormats";
+import { getExamRoute } from "../../../../../utils/examRoutes";
 
 export const FORTIOS_EXAM_FORMAT_DEFINITIONS = {
 	short: { name: "Short Exam", questionCount: 25, durationSeconds: 25 * 60 },
@@ -14,6 +15,7 @@ export const FORTIOS_EXAM_PROGRESS_FORMATS = Object.fromEntries(
 			...format,
 			programName: "FortiOS",
 			sessionKey: `matekk-fortinet-fortios-${examKey}-exam-session`,
+			path: getExamRoute("fortinet-fortios", examKey),
 		},
 	]),
 );

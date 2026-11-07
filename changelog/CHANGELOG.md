@@ -6,6 +6,53 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `e3d67b2` — Added unread exam notification indicators, persistent read state,
+  subdued styling for read updates, and a menu to mark all notifications read.
+
+Validation before push: notification read-state and exam-route regression tests,
+targeted ESLint, frontend production build, and Git whitespace checks passed.
+
+- `90ad7ec` — Changed the exam notification badge to count unread updates,
+  persist read state per user, and clear the count when the panel is opened.
+
+Validation before push: exam notification and route regression tests, targeted
+ESLint, frontend production build, and Git whitespace checks passed.
+
+## 2026-11-07 — `main`
+
+Commits included in this push:
+
+- `97f3e2a` — Allowed periods in contact names so middle initials such as
+  “L.” pass name validation.
+
+Validation before push: targeted ESLint, frontend production build, and Git
+whitespace checks passed.
+
+## 2026-11-07 — `main`
+
+Commits included in this push:
+
+- `b068b48` — Fixed exam notification destinations by sharing canonical routes
+  with exam formats and app routing, preserving the legacy CCNA link, and
+  adding route regression tests.
+
+Validation before push: exam route regression tests, targeted ESLint, frontend
+production build, and Git whitespace checks passed.
+
+## 2026-11-07 — `main`
+
+Commits included in this push:
+
+- `f793c0c` — Added a search-friendly site title and description, and updated
+  contact form validation with the requested field limits.
+
+Validation before push: frontend production build, targeted ESLint, and Git
+whitespace checks passed.
+
+## 2026-11-07 — `main`
+
+Commits included in this push:
+
 - `e67fff6` — Restored the website source state at `ea16d514`, including persistent offline module PIN unlock behavior.
 
 Validation before push: targeted ESLint, frontend production build, and Git whitespace checks passed.

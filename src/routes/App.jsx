@@ -6,6 +6,7 @@ import Footer from "../components/footer/footer";
 import ScrollToTop from "../components/scroll/ScrollToTop";
 import OfflineModuleAccess from "../components/OfflineModuleAccess";
 import useHeadingTypeIn from "../utils/useHeadingTypeIn";
+import { getExamRoute, getExamRoutePattern, LEGACY_CCNA_ALL_QUESTIONS_ROUTE } from "../utils/examRoutes";
 
 /* Pages */
 import Home from "../pages/Home";
@@ -482,7 +483,7 @@ export default function App() {
           }
         />
         <Route
-          path="/modules/programs/fortinet-fortios/exam/:examKey"
+          path={getExamRoutePattern("fortinet-fortios")}
           element={
             <ProtectedRoute>
               <FortiOSExamRoute onlineExam={<FortiOSExam />} />
@@ -490,7 +491,7 @@ export default function App() {
           }
         />
         <Route
-          path="/modules/programs/comptia-network-plus/exam/:examKey"
+          path={getExamRoutePattern("comptia-network-plus")}
           element={
             <ProtectedRoute>
               <NetworkPlusExamRoute onlineExam={<NetworkPlusExam />} />
@@ -498,7 +499,7 @@ export default function App() {
           }
         />
         <Route
-          path="/modules/programs/comptia-security-plus/exam/:examKey"
+          path={getExamRoutePattern("comptia-security-plus")}
           element={
             <ProtectedRoute>
               <SecurityPlusExamRoute onlineExam={<SecurityPlusExam />} />
@@ -638,7 +639,7 @@ export default function App() {
           }
         />
         <Route
-          path="/modules/programs/ccna/exam/short"
+          path={getExamRoute("ccna", "short")}
           element={
             <ProtectedRoute>
               <CCNACompositeExam key="short" examKey="short" />
@@ -646,7 +647,7 @@ export default function App() {
           }
         />
         <Route
-          path="/modules/programs/ccna/exam/medium"
+          path={getExamRoute("ccna", "medium")}
           element={
             <ProtectedRoute>
               <CCNACompositeExam key="medium" examKey="medium" />
@@ -654,7 +655,7 @@ export default function App() {
           }
         />
         <Route
-          path="/modules/programs/ccna/exam/long"
+          path={getExamRoute("ccna", "long")}
           element={
             <ProtectedRoute>
               <CCNACompositeExam key="long" examKey="long" />
@@ -662,7 +663,7 @@ export default function App() {
           }
         />
         <Route
-          path="/modules/programs/ccna/exam/all"
+          path={getExamRoute("ccna", "all_questions")}
           element={
             <ProtectedRoute>
               <CCNAAllQuestionsExam />
@@ -670,7 +671,15 @@ export default function App() {
           }
         />
         <Route
-          path="/modules/programs/fortios/exam/all"
+          path={LEGACY_CCNA_ALL_QUESTIONS_ROUTE}
+          element={
+            <ProtectedRoute>
+              <CCNAAllQuestionsExam />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={getExamRoute("fortios-offline", "all_questions")}
           element={
             <ProtectedRoute>
               <FortiOSBundledOfflineExam />
@@ -678,7 +687,7 @@ export default function App() {
           }
         />
         <Route
-          path="/modules/programs/ccna-automation/exam/:examKey"
+          path={getExamRoutePattern("ccna-automation")}
           element={
             <ProtectedRoute>
               <ProgramCompositeExam programKey="ccna-automation" />
@@ -686,7 +695,7 @@ export default function App() {
           }
         />
         <Route
-          path="/modules/programs/ccna-cybersecurity/exam/:examKey"
+          path={getExamRoutePattern("ccna-cybersecurity")}
           element={
             <ProtectedRoute>
               <ProgramCompositeExam programKey="ccna-cybersecurity" />
@@ -971,7 +980,10 @@ function ProtectedRoute({ children }) {
   const { pathname } = useLocation();
   const isModuleRoute = /^\/modules\/programs(?:\/|$)/.test(pathname);
   const isExamRoute = /(?:^|\/)exam(?:\/|$)/.test(pathname);
-  const isOfflineCcnaExamRoute = /^\/modules\/programs\/ccna\/exam\/(?:short|medium|long|all)\/?$/.test(pathname)
+  const normalizedPathname = pathname.replace(/\/+$/, "") || "/";
+  const isOfflineCcnaExamRoute = ["short", "medium", "long", "all_questions"]
+    .some((examKey) => normalizedPathname === getExamRoute("ccna", examKey))
+    || normalizedPathname === LEGACY_CCNA_ALL_QUESTIONS_ROUTE
     || /^\/modules\/programs\/ccna-(?:automation|cybersecurity)\/exam\/(?:short|medium|long)\/?$/.test(pathname);
   const isOfflineFortiOSExamRoute = /^\/modules\/programs\/fortinet-fortios\/exam\/(?:short|medium|long|all_questions)\/?$/.test(pathname);
   const isOfflineNetworkPlusExamRoute = /^\/modules\/programs\/comptia-network-plus\/exam\/(?:short|medium|long|all_questions)\/?$/.test(pathname);

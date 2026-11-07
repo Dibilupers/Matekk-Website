@@ -2,15 +2,21 @@ import { useEffect, useState } from "react";
 import { Bell, CircleAlert, Clock3, Ellipsis, X } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/auth-context";
+import { getExamRoute } from "../utils/examRoutes";
+import {
+	getExamNotificationReadId,
+	readExamNotificationReadIds,
+	writeExamNotificationReadIds,
+} from "../utils/examNotificationReadState";
 
 const PROGRAMS = {
-	ccna: { name: "CCNA", route: "ccna" },
-	"ccna-automation": { name: "CCNA Automation", route: "ccna-automation" },
-	"ccna-cybersecurity": { name: "CCNA Cybersecurity", route: "ccna-cybersecurity" },
-	"comptia-network-plus": { name: "CompTIA Network+", route: "comptia-network-plus" },
-	"comptia-security-plus": { name: "CompTIA Security+", route: "comptia-security-plus" },
-	"fortinet-fortios": { name: "Fortinet FortiOS", route: "fortinet-fortios" },
-	"fortios-offline": { name: "FortiOS", route: "fortios" },
+	ccna: { name: "CCNA" },
+	"ccna-automation": { name: "CCNA Automation" },
+	"ccna-cybersecurity": { name: "CCNA Cybersecurity" },
+	"comptia-network-plus": { name: "CompTIA Network+" },
+	"comptia-security-plus": { name: "CompTIA Security+" },
+	"fortinet-fortios": { name: "Fortinet FortiOS" },
+	"fortios-offline": { name: "FortiOS" },
 };
 
 const EXAM_NAMES = {
@@ -19,26 +25,6 @@ const EXAM_NAMES = {
 	long: "Long Exam",
 	all_questions: "All Questions Exam",
 };
-
-function getReadNotificationsKey(userId) {
-	return `matekk-exam-notifications-read:${encodeURIComponent(String(userId))}`;
-}
-
-function readNotificationKeys(userId) {
-	const stored = window.localStorage.getItem(getReadNotificationsKey(userId));
-	if (!stored) return [];
-
-	try {
-		const parsed = JSON.parse(stored);
-		if (!Array.isArray(parsed) || !parsed.every((key) => typeof key === "string")) {
-			throw new TypeError("Saved notification read state is invalid.");
-		}
-		return parsed;
-	} catch (error) {
-		console.error("Unable to read saved exam notification state.", error);
-		return [];
-	}
-}
 
 function getExamDetails(key) {
 	const patterns = [
@@ -115,15 +101,13 @@ function parseExamSession(value, key, storageType, userId) {
 		details = getExamDetails(scopedKey);
 	}
 	if (!details || !PROGRAMS[details.programKey] || !EXAM_NAMES[details.examKey]) return null;
+	const route = getExamRoute(details.programKey, details.examKey);
+	if (!route) return null;
 
 	const deadline = Number.isFinite(session.deadline) ? session.deadline : null;
 	const isExpired = (deadline !== null && !session.isSubmitted && deadline <= Date.now()) ||
 		(Number.isFinite(session.submittedAt) && deadline !== null && session.submittedAt >= deadline);
 	const status = isExpired ? "expired" : session.isSubmitted ? "completed" : "in-progress";
-	const route = details.programKey === "fortios-offline"
-		? "/modules/programs/fortios/exam/all"
-		: `/modules/programs/${PROGRAMS[details.programKey].route}/exam/${details.examKey}`;
-
 	return {
 		id: `${details.programKey}:${details.examKey}`,
 		title: `${PROGRAMS[details.programKey].name} · ${EXAM_NAMES[details.examKey]}`,
@@ -131,6 +115,13 @@ function parseExamSession(value, key, storageType, userId) {
 		examName: EXAM_NAMES[details.examKey],
 		status,
 		deadline,
+		sessionId: typeof session.attemptId === "string"
+			? session.attemptId
+			: Number.isFinite(session.deadline)
+				? String(session.deadline)
+				: Array.isArray(session.questionIds)
+					? session.questionIds.join(",")
+					: "legacy",
 		route,
 		submittedAt: Number.isFinite(session.submittedAt) ? session.submittedAt : 0,
 		activityAt: session.submittedAt || session.startedAt || deadline || 0,
@@ -206,28 +197,29 @@ export default function ExamNotifications() {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [now, setNow] = useState(0);
 	const [notificationState, setNotificationState] = useState({ userId: null, items: [] });
-	const [readState, setReadState] = useState({ userId: null, keys: [] });
+	const [readState, setReadState] = useState({ userId: null, ids: [] });
 	const notifications = (notificationState.userId === userId ? notificationState.items : []).map((item) => ({
 		...item,
 		status: item.status === "in-progress" && item.deadline !== null && item.deadline <= now
 			? "expired"
 			: item.status,
-		notificationKey: `${item.id}:${item.status === "in-progress" && item.deadline !== null && item.deadline <= now ? "expired" : item.status}:${item.activityAt}`,
 	}));
-	const readKeys = readState.userId === userId ? readState.keys : [];
-	const unreadCount = notifications.filter((item) => !readKeys.includes(item.notificationKey)).length;
+	const readIds = new Set(readState.userId === userId ? readState.ids : []);
+	const isNotificationRead = (item) => readIds.has(getExamNotificationReadId(item)) ||
+		readIds.has(`${item.id}:${item.status}:${item.activityAt}`);
+	const unreadCount = notifications.filter((item) => !isNotificationRead(item)).length;
 
 	useEffect(() => {
 		if (userId === null || userId === undefined) return undefined;
 		const refresh = () => {
 			try {
 				setNotificationState({ userId, items: collectExamNotifications(userId) });
-				setReadState({ userId, keys: readNotificationKeys(userId) });
+				setReadState({ userId, ids: readExamNotificationReadIds(window.localStorage, userId) });
 				setNow(Date.now());
 			} catch (error) {
 				console.error("Unable to load exam notifications.", error);
 				setNotificationState({ userId, items: [] });
-				setReadState({ userId, keys: [] });
+				setReadState({ userId, ids: [] });
 			}
 		};
 		refresh();
@@ -241,14 +233,14 @@ export default function ExamNotifications() {
 		};
 	}, [userId]);
 
-	function markNotificationsRead(keys) {
-		const nextKeys = [...new Set([...readKeys, ...keys])];
-		try {
-			window.localStorage.setItem(getReadNotificationsKey(userId), JSON.stringify(nextKeys));
-		} catch (error) {
-			console.error("Unable to save exam notification read state.", error);
-		}
-		setReadState({ userId, keys: nextKeys });
+	function markNotificationsRead(items) {
+		const nextIds = new Set(readIds);
+		items.forEach((item) => {
+			nextIds.add(getExamNotificationReadId(item));
+			nextIds.add(`${item.id}:${item.status}:${item.activityAt}`);
+		});
+		writeExamNotificationReadIds(window.localStorage, userId, nextIds);
+		setReadState({ userId, ids: [...nextIds] });
 	}
 
 	if (!profile || isGradebookPage || isAssessmentPage) return null;
@@ -296,7 +288,7 @@ export default function ExamNotifications() {
 										<button
 											type="button"
 											onClick={() => {
-												markNotificationsRead(notifications.map((item) => item.notificationKey));
+												markNotificationsRead(notifications);
 												setIsMenuOpen(false);
 											}}
 											disabled={unreadCount === 0}
@@ -319,7 +311,7 @@ export default function ExamNotifications() {
 									<button
 										type="button"
 										onClick={() => {
-											markNotificationsRead([item.notificationKey]);
+											markNotificationsRead([item]);
 											navigate(item.route);
 											setIsOpen(false);
 											setIsMenuOpen(false);
@@ -334,9 +326,9 @@ export default function ExamNotifications() {
 											{item.status === "expired" ? <CircleAlert size={18} /> : <Clock3 size={18} />}
 										</span>
 										<span className="min-w-0 flex-1">
-											<strong className={`block text-sm ${readKeys.includes(item.notificationKey) ? "font-medium text-[#71819b] opacity-70" : "font-bold text-[#17233d]"}`}>{item.title}</strong>
+											<strong className={`block text-sm ${isNotificationRead(item) ? "font-medium text-[#71819b] opacity-70" : "font-bold text-[#17233d]"}`}>{item.title}</strong>
 											<span className={`mt-1 block text-xs font-semibold ${
-												readKeys.includes(item.notificationKey) ? "text-[#8b98ad] opacity-70" :
+												isNotificationRead(item) ? "text-[#8b98ad] opacity-70" :
 													item.status === "expired" ? "text-[#b42335]" :
 														item.status === "completed" ? "text-[#16724e]" :
 															"text-[#1775ee]"
@@ -346,7 +338,7 @@ export default function ExamNotifications() {
 															`In progress · ${formatRemainingTime(item.deadline, now) || "Open exam"}`}
 											</span>
 										</span>
-										{!readKeys.includes(item.notificationKey) && (
+										{!isNotificationRead(item) && (
 											<span aria-label="Unread" className="mt-4 h-2.5 w-2.5 shrink-0 rounded-full bg-[#459bff]" />
 										)}
 									</button>

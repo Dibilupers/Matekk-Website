@@ -3,6 +3,7 @@ import {
 	CCNA_CYBERSECURITY_MODULE_QUIZZES,
 } from "./programModuleQuizData";
 import { FORTIOS_EXAM_PROGRESS_FORMATS } from "./Fortinet/FortiOS/fortiosExamFormats";
+import { getExamRoute } from "../../../utils/examRoutes";
 
 const QUESTION_COUNTS = {
 	short: 20,
@@ -66,6 +67,7 @@ export function getProgramExamFormats(programKey) {
 			...details,
 			questionCount,
 			sessionKey: `${programKey}-${examKey}-exam`,
+			path: getExamRoute(programKey, examKey),
 			createQuestions: () => shuffle(uniqueQuestionPool).slice(0, questionCount),
 			programName,
 		}];
