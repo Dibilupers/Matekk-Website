@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/auth-context";
 import InquireNowButton from "../ui/InquireNowButton";
+import ExamNotifications from "../ExamNotifications";
 import MainLogo from "../../assets/MATEKK_logo.webp";
 import TrainingLogo from "../../assets/MATEKK_training_logo.png";
 import SolutionsLogo from "../../assets/MATEKK_services_logo.png";
@@ -825,6 +826,8 @@ function NavBar() {
           cursor-pointer"
         />
         {isAuthenticated ? (
+          <>
+            <ExamNotifications />
           <div className="relative">
             <button
               type="button"
@@ -842,6 +845,7 @@ function NavBar() {
             </button>
             {isProfileOpen && profilePanel()}
           </div>
+          </>
         ) : (
           <button type="button" onClick={() => navigate("/login")} className="block rounded-full bg-[#1775EE] px-5.5 py-2 text-center text-white transition-all duration-300 hover:bg-[#0062E0]">
             Login
@@ -851,6 +855,7 @@ function NavBar() {
 
       {/* Mobile + Tablet Hamburger */}
       <div className="flex lg:hidden items-center justify-end gap-3">
+        {isAuthenticated && <ExamNotifications />}
         {isAuthenticated && (
           <button
             type="button"

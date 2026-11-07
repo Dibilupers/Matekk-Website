@@ -180,6 +180,7 @@ export default function ExamNotifications() {
 	const navigate = useNavigate();
 	const userId = profile?.userId;
 	const isGradebookPage = pathname.includes("/gradebook") || pathname === "/modules/programs/ccna/results";
+	const isAssessmentPage = pathname.includes("/exam/") || pathname.includes("/quiz/");
 	const [isOpen, setIsOpen] = useState(false);
 	const [now, setNow] = useState(0);
 	const [notificationState, setNotificationState] = useState({ userId: null, items: [] });
@@ -212,23 +213,30 @@ export default function ExamNotifications() {
 		};
 	}, [userId]);
 
-	if (!profile || isGradebookPage) return null;
+	if (!profile || isGradebookPage || isAssessmentPage) return null;
 	const activeCount = notifications.filter((item) => item.status === "in-progress").length;
 
 	return (
-		<div className="fixed right-4 top-24 z-[90] sm:right-8" aria-label="Exam notifications">
+		<div className="relative" aria-label="Exam notifications">
 			<button
 				type="button"
 				onClick={() => setIsOpen((open) => !open)}
 				aria-label={`Exam notifications${notifications.length ? `, ${notifications.length} updates` : ""}`}
 				aria-expanded={isOpen}
-				className="relative flex h-12 w-12 items-center justify-center rounded-full border border-[#d6e5e7] bg-white text-[#005b6b] shadow-[0_8px_20px_rgba(15,35,75,0.12)] transition hover:-translate-y-0.5 hover:text-[#b42335] hover:shadow-lg"
+				className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[#1775ee] transition hover:bg-[#eef6ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1775ee]"
 			>
 				<Bell size={21} />
-				{notifications.length > 0 && <span className="absolute right-0.5 top-0.5 h-3 w-3 rounded-full border-2 border-white bg-[#c6283d]" aria-label="New exam notifications" />}
+				{notifications.length > 0 && (
+					<span
+						aria-hidden="true"
+						className="absolute right-0 top-0 flex h-[18px] min-w-[18px] items-center justify-center rounded-full border-2 border-white bg-[#c6283d] px-1 text-[10px] font-bold leading-none text-white"
+					>
+						{notifications.length > 99 ? "99+" : notifications.length}
+					</span>
+				)}
 			</button>
 			{isOpen && (
-				<section className="absolute right-0 top-14 w-[min(22rem,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-[#d6e5e7] bg-white shadow-[0_16px_40px_rgba(15,35,75,0.2)]">
+				<section className="absolute right-0 top-full z-[90] mt-3 w-[min(22rem,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-[#d6e5e7] bg-white shadow-[0_16px_40px_rgba(15,35,75,0.2)]">
 					<header className="flex items-center justify-between border-b border-[#e2ecec] px-4 py-3">
 						<div>
 							<h2 className="font-bold text-[#071126]">Exam notifications</h2>
@@ -248,12 +256,12 @@ export default function ExamNotifications() {
 											navigate(item.route);
 											setIsOpen(false);
 										}}
-										className="flex w-full items-start gap-3 px-4 py-3 text-left transition hover:bg-[#f5f9f9]"
+										className="flex w-full items-start gap-3 px-4 py-3 text-left transition hover:bg-[#f5f9ff]"
 									>
 										<span className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${
 											item.status === "expired" ? "bg-[#fff0ef] text-[#b42335]" :
 												item.status === "completed" ? "bg-[#eaf7f0] text-[#16724e]" :
-													"bg-[#e8f3f4] text-[#005b6b]"
+													"bg-[#eef6ff] text-[#1775ee]"
 										}`}>
 											{item.status === "expired" ? <CircleAlert size={18} /> : <Clock3 size={18} />}
 										</span>
@@ -262,7 +270,7 @@ export default function ExamNotifications() {
 											<span className={`mt-1 block text-xs font-semibold ${
 												item.status === "expired" ? "text-[#b42335]" :
 													item.status === "completed" ? "text-[#16724e]" :
-														"text-[#005b6b]"
+														"text-[#1775ee]"
 											}`}>
 												{item.status === "expired" ? "Time expired · View exam" :
 													item.status === "completed" ? "Completed · View result" :
