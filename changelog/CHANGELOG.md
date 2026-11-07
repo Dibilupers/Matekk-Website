@@ -6,6 +6,17 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `b068b48` — Fixed exam notification destinations by sharing canonical routes
+  with exam formats and app routing, preserving the legacy CCNA link, and
+  adding route regression tests.
+
+Validation before push: exam route regression tests, targeted ESLint, frontend
+production build, and Git whitespace checks passed.
+
+## 2026-11-07 — `main`
+
+Commits included in this push:
+
 - `f793c0c` — Added a search-friendly site title and description, and updated
   contact form validation with the requested field limits.
 
