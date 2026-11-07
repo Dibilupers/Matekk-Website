@@ -1,35 +1,53 @@
 const STORAGE_KEY_PREFIX = "matekk-exam-notifications-read:";
+const DISMISSED_STORAGE_KEY_PREFIX = "matekk-exam-notifications-dismissed:";
 
 export function getExamNotificationReadStorageKey(userId) {
 	return `${STORAGE_KEY_PREFIX}${encodeURIComponent(String(userId))}`;
+}
+
+export function getExamNotificationDismissedStorageKey(userId) {
+	return `${DISMISSED_STORAGE_KEY_PREFIX}${encodeURIComponent(String(userId))}`;
 }
 
 export function getExamNotificationReadId(notification) {
 	return `${notification.id}:${notification.sessionId}:${notification.status}:${notification.submittedAt}`;
 }
 
-export function readExamNotificationReadIds(storage, userId) {
-	const value = storage.getItem(getExamNotificationReadStorageKey(userId));
+function readNotificationIds(storage, key, description) {
+	const value = storage.getItem(key);
 	if (value === null) return [];
 	try {
 		const parsed = JSON.parse(value);
 		if (!Array.isArray(parsed) || !parsed.every((id) => typeof id === "string")) {
-			throw new TypeError("Saved exam notification read state has an invalid format.");
+			throw new TypeError(`Saved exam notification ${description} has an invalid format.`);
 		}
 		return parsed;
 	} catch (error) {
-		console.error("Unable to read saved exam notification read state.", error);
+		console.error(`Unable to read saved exam notification ${description}.`, error);
 		return [];
 	}
 }
 
-export function writeExamNotificationReadIds(storage, userId, readIds) {
+function writeNotificationIds(storage, key, ids, description) {
 	try {
-		storage.setItem(
-			getExamNotificationReadStorageKey(userId),
-			JSON.stringify([...readIds]),
-		);
+		storage.setItem(key, JSON.stringify([...ids]));
 	} catch (error) {
-		console.error("Unable to save exam notification read state.", error);
+		console.error(`Unable to save exam notification ${description}.`, error);
 	}
+}
+
+export function readExamNotificationReadIds(storage, userId) {
+	return readNotificationIds(storage, getExamNotificationReadStorageKey(userId), "read state");
+}
+
+export function writeExamNotificationReadIds(storage, userId, readIds) {
+	writeNotificationIds(storage, getExamNotificationReadStorageKey(userId), readIds, "read state");
+}
+
+export function readExamNotificationDismissedIds(storage, userId) {
+	return readNotificationIds(storage, getExamNotificationDismissedStorageKey(userId), "dismissed state");
+}
+
+export function writeExamNotificationDismissedIds(storage, userId, dismissedIds) {
+	writeNotificationIds(storage, getExamNotificationDismissedStorageKey(userId), dismissedIds, "dismissed state");
 }

@@ -1,9 +1,12 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import {
+	getExamNotificationDismissedStorageKey,
 	getExamNotificationReadId,
 	getExamNotificationReadStorageKey,
+	readExamNotificationDismissedIds,
 	readExamNotificationReadIds,
+	writeExamNotificationDismissedIds,
 	writeExamNotificationReadIds,
 } from "./examNotificationReadState.js";
 
@@ -46,4 +49,21 @@ test("read notification IDs persist and malformed data is reported", () => {
 	} finally {
 		console.error = originalError;
 	}
+});
+
+test("dismissed notification IDs persist separately from read IDs", () => {
+	const values = new Map();
+	const storage = {
+		getItem: (key) => values.get(key) ?? null,
+		setItem: (key, value) => values.set(key, value),
+	};
+	const dismissedIds = ["ccna:all_questions:attempt-1:in-progress:0"];
+
+	writeExamNotificationDismissedIds(storage, "user-1", dismissedIds);
+	assert.deepEqual(readExamNotificationDismissedIds(storage, "user-1"), dismissedIds);
+	assert.equal(
+		values.has(getExamNotificationDismissedStorageKey("user-1")),
+		true,
+	);
+	assert.deepEqual(readExamNotificationReadIds(storage, "user-1"), []);
 });

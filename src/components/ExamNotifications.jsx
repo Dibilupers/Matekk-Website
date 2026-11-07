@@ -5,7 +5,9 @@ import { useAuth } from "../context/auth-context";
 import { getExamRoute } from "../utils/examRoutes";
 import {
 	getExamNotificationReadId,
+	readExamNotificationDismissedIds,
 	readExamNotificationReadIds,
+	writeExamNotificationDismissedIds,
 	writeExamNotificationReadIds,
 } from "../utils/examNotificationReadState";
 
@@ -196,13 +198,16 @@ export default function ExamNotifications() {
 	const [now, setNow] = useState(0);
 	const [notificationState, setNotificationState] = useState({ userId: null, items: [] });
 	const [readState, setReadState] = useState({ userId: null, ids: [] });
-	const notifications = (notificationState.userId === userId ? notificationState.items : []).map((item) => ({
+	const [dismissedState, setDismissedState] = useState({ userId: null, ids: [] });
+	const allNotifications = (notificationState.userId === userId ? notificationState.items : []).map((item) => ({
 		...item,
 		status: item.status === "in-progress" && item.deadline !== null && item.deadline <= now
 			? "expired"
 			: item.status,
 	}));
 	const readIds = new Set(readState.userId === userId ? readState.ids : []);
+	const dismissedIds = new Set(dismissedState.userId === userId ? dismissedState.ids : []);
+	const notifications = allNotifications.filter((item) => !dismissedIds.has(getExamNotificationReadId(item)));
 	const unreadCount = notifications.filter((item) => !readIds.has(getExamNotificationReadId(item))).length;
 
 	useEffect(() => {
@@ -211,11 +216,13 @@ export default function ExamNotifications() {
 			try {
 				setNotificationState({ userId, items: collectExamNotifications(userId) });
 				setReadState({ userId, ids: readExamNotificationReadIds(window.localStorage, userId) });
+				setDismissedState({ userId, ids: readExamNotificationDismissedIds(window.localStorage, userId) });
 				setNow(Date.now());
 			} catch (error) {
 				console.error("Unable to load exam notifications.", error);
 				setNotificationState({ userId, items: [] });
 				setReadState({ userId, ids: [] });
+				setDismissedState({ userId, ids: [] });
 			}
 		};
 		refresh();
@@ -231,11 +238,26 @@ export default function ExamNotifications() {
 
 	if (!profile || isGradebookPage || isAssessmentPage) return null;
 	const activeCount = notifications.filter((item) => item.status === "in-progress").length;
+	const markNotificationsRead = (items) => {
+		const updatedReadIds = new Set([
+			...readIds,
+			...items.map(getExamNotificationReadId),
+		]);
+		writeExamNotificationReadIds(window.localStorage, userId, updatedReadIds);
+		setReadState({ userId, ids: [...updatedReadIds] });
+	};
+	const dismissNotifications = (items) => {
+		const updatedDismissedIds = new Set([
+			...dismissedIds,
+			...items.map(getExamNotificationReadId),
+		]);
+		writeExamNotificationDismissedIds(window.localStorage, userId, updatedDismissedIds);
+		setDismissedState({ userId, ids: [...updatedDismissedIds] });
+		markNotificationsRead(items);
+	};
 	const toggleNotifications = () => {
 		if (!isOpen) {
-			const updatedReadIds = new Set([...readIds, ...notifications.map(getExamNotificationReadId)]);
-			writeExamNotificationReadIds(window.localStorage, userId, updatedReadIds);
-			setReadState({ userId, ids: [...updatedReadIds] });
+			markNotificationsRead(notifications);
 		}
 		setIsOpen((open) => !open);
 	};
@@ -266,21 +288,40 @@ export default function ExamNotifications() {
 							<h2 className="font-bold text-[#071126]">Exam notifications</h2>
 							<p className="text-xs text-[#71819b]">{activeCount ? `${activeCount} exam${activeCount === 1 ? "" : "s"} in progress` : "Your exam updates"}</p>
 						</div>
-						<button type="button" onClick={() => setIsOpen(false)} aria-label="Close exam notifications" className="rounded-full p-1.5 text-[#71819b] transition hover:bg-[#fff4f3] hover:text-[#b42335]"><X size={17} /></button>
+						<div className="flex items-center gap-2">
+							<button
+								type="button"
+								onClick={() => markNotificationsRead(notifications)}
+								disabled={unreadCount === 0}
+								className="text-xs font-semibold text-[#1775ee] hover:underline disabled:cursor-default disabled:text-[#9aa7ba] disabled:no-underline"
+							>
+								Read all
+							</button>
+							<button
+								type="button"
+								onClick={() => dismissNotifications(notifications)}
+								disabled={notifications.length === 0}
+								className="text-xs font-semibold text-[#b42335] hover:underline disabled:cursor-default disabled:text-[#9aa7ba] disabled:no-underline"
+							>
+								Clear notifications
+							</button>
+							<button type="button" onClick={() => setIsOpen(false)} aria-label="Close exam notifications" className="rounded-full p-1.5 text-[#71819b] transition hover:bg-[#fff4f3] hover:text-[#b42335]"><X size={17} /></button>
+						</div>
 					</header>
 					{notifications.length === 0 ? (
 						<p className="px-4 py-6 text-sm text-[#71819b]">No exam activity yet. Started, completed, or timed-out exams will appear here.</p>
 					) : (
 						<ul className="max-h-[min(65vh,28rem)] overflow-y-auto divide-y divide-[#edf1f5]">
 							{notifications.map((item) => (
-								<li key={item.id}>
+								<li key={getExamNotificationReadId(item)}>
+									<div className="flex items-start">
 									<button
 										type="button"
 										onClick={() => {
 											navigate(item.route);
 											setIsOpen(false);
 										}}
-										className="flex w-full items-start gap-3 px-4 py-3 text-left transition hover:bg-[#f5f9ff]"
+										className="flex min-w-0 flex-1 items-start gap-3 px-4 py-3 text-left transition hover:bg-[#f5f9ff]"
 									>
 										<span className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${
 											item.status === "expired" ? "bg-[#fff0ef] text-[#b42335]" :
@@ -302,6 +343,15 @@ export default function ExamNotifications() {
 											</span>
 										</span>
 									</button>
+									<button
+										type="button"
+										onClick={() => dismissNotifications([item])}
+										aria-label={`Remove ${item.title} notification`}
+										className="mr-2 mt-3 rounded-full p-1.5 text-[#71819b] transition hover:bg-[#fff4f3] hover:text-[#b42335] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#b42335]"
+									>
+										<X size={16} />
+									</button>
+									</div>
 								</li>
 							))}
 						</ul>
