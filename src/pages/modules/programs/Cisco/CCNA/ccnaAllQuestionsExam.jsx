@@ -8,6 +8,7 @@ import ExamBrand from "../../../../../components/ExamBrand";
 import { isAnswerCorrect, isQuestionAnswered } from "../../../../../utils/ccnaExamGrading";
 import { isCcnaQuestionModule } from "../../../../../utils/ccnaQuestionModule";
 import { loadCcnaAllQuestionsBank } from "../../../../../utils/ccnaQuestionBankApi";
+import { loadCachedCcnaAllQuestionsBank } from "../../../../../utils/ccnaOfflineQuestionBank";
 import { ExhibitDiagram, ExhibitImage, ExhibitText } from "./ccnaExhibit";
 import { QuestionInput, QuestionPrompt, QuestionReview } from "./ccnaExamQuestionViews";
 import { applyNativeExhibit } from "./ccnaCompositeSetQuestions";
@@ -45,6 +46,7 @@ export default function CCNAAllQuestionsExam() {
 		? null
 		: `matekk-ccna-all-questions:${encodeURIComponent(String(profile.userId))}`;
 	const [loadState, setLoadState] = useState({ status: "loading", error: null });
+	const [questionBankSource, setQuestionBankSource] = useState(null);
 	const [loadAttempt, setLoadAttempt] = useState(0);
 	const [questions, setQuestions] = useState([]);
 	const [answers, setAnswers] = useState({});
@@ -96,16 +98,19 @@ export default function CCNAAllQuestionsExam() {
 		let isActive = true;
 		setLoadState({ status: "loading", error: null });
 		const bankRequest = isOnline
-			? loadCcnaAllQuestionsBank()
-			: Promise.resolve({
-				questions: getOfflineLegacyQuestionBank(),
-				skippedCount: 0,
-			});
+			? loadCcnaAllQuestionsBank().then((bank) => ({ ...bank, source: "online" }))
+			: loadCachedCcnaAllQuestionsBank().then((questions) => questions
+				? { questions, skippedCount: 0, source: "cached-online" }
+				: {
+					questions: getOfflineLegacyQuestionBank(),
+					skippedCount: 0,
+					source: "bundled",
+				});
 		bankRequest
-			.then(({ questions: validQuestions }) => {
+			.then(({ questions: validQuestions, source }) => {
 				const bankQuestions = [...validQuestions]
 					.filter((item) => !isOnline || isCcnaQuestionModule(item.moduleTitle ?? item.module))
-					.map((item) => isOnline ? applyNativeExhibit(item) : item)
+					.map((item) => source !== "bundled" ? applyNativeExhibit(item) : item)
 					.sort((left, right) => left.bankId - right.bankId);
 				if (!bankQuestions.length) {
 					throw new TypeError("The Questions table has no questions that can be rendered and graded.");
@@ -163,6 +168,7 @@ export default function CCNAAllQuestionsExam() {
 					}
 				}
 				setQuestions(orderedQuestions);
+				setQuestionBankSource(source);
 				setLoadState({ status: "ready", error: null });
 			})
 			.catch((error) => {
@@ -314,7 +320,13 @@ export default function CCNAAllQuestionsExam() {
 						)}
 						<div className="min-w-0 border-l border-[#cbd5e1] pl-4">
 							<p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#70809a]">CCNA practice</p>
-							<p className="mt-1 truncate text-sm font-bold text-[#17233d]">All Questions Exam · Online Question Bank</p>
+							<p className="mt-1 truncate text-sm font-bold text-[#17233d]">
+								All Questions Exam · {questionBankSource === "cached-online"
+									? "Saved Online Question Bank"
+									: questionBankSource === "bundled"
+										? "Built-in Offline Question Bank"
+										: "Online Question Bank"} · {questions.length.toLocaleString()} questions
+							</p>
 						</div>
 					</div>
 					<div className="flex w-full items-center justify-between gap-2 sm:w-auto sm:justify-end">
@@ -337,6 +349,11 @@ export default function CCNAAllQuestionsExam() {
 				{storageError && (
 					<p role="status" className="mb-4 rounded-xl border border-[#f0d79e] bg-[#fffaf0] px-4 py-3 text-sm text-[#805b12]">
 						{storageError}
+					</p>
+				)}
+				{questionBankSource === "bundled" && (
+					<p role="status" className="mb-4 rounded-xl border border-[#f0d79e] bg-[#fffaf0] px-4 py-3 text-sm leading-6 text-[#805b12]">
+						This device has not saved the complete online question bank. Connect to the internet and open this exam once to save it for offline use.
 					</p>
 				)}
 				{!isSubmitted ? (

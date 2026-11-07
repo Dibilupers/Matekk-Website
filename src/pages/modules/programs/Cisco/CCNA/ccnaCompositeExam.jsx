@@ -17,8 +17,10 @@ import {
 } from "../../../../../utils/splitPromptExhibit";
 import { cleanText } from "../../../../../utils/ccnaBankConverter";
 import { ExhibitDiagram, ExhibitImage, ExhibitText } from "./ccnaExhibit";
-import { loadCcnaQuestionBank } from "../../../../../utils/ccnaQuestionBankApi";
+import { loadCcnaAllQuestionsBank } from "../../../../../utils/ccnaQuestionBankApi";
+import { loadCachedCcnaAllQuestionsBank } from "../../../../../utils/ccnaOfflineQuestionBank";
 import { getDatabaseQuestionById, setDatabaseQuestions } from "./ccnaQuestionBank";
+import { createOfflineCcnaExamQuestions } from "./ccnaOfflineTimedExam";
 import { applyNativeExhibit } from "./ccnaCompositeSetQuestions";
 import { createOfflineLegacyExamQuestions, getOfflineLegacyQuestionBank } from "./ccnaOfflineExamQuestions";
 import { resumeCcnaExam, startCcnaExam, submitCcnaExam } from "../../../../../utils/ccnaExamApi";
@@ -172,9 +174,9 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 			// The question bank supplies each question's picture / printout; load it alongside the exam questions
 			const bankReady = isOfflineExam
 				? Promise.resolve()
-				: loadCcnaQuestionBank()
+				: loadCcnaAllQuestionsBank()
 				.then(({ questions: bankQuestions }) => setDatabaseQuestions(bankQuestions))
-				.catch((error) => console.error("Unable to load the CCNA question bank; exam pictures may be missing.", error));
+				.catch((error) => console.error("Unable to load and save the complete CCNA question bank.", error));
 			try {
 				let savedSession = null;
 				const isRetake = shouldStartNewAttemptRef.current;
@@ -232,17 +234,23 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 				const isOfflineAttempt = isOfflineExam || savedSession?.isOfflineLegacyExam === true;
 				if (isOfflineAttempt) {
 					if (!isOfflineExam) setIsOfflineExam(true);
+					const cachedQuestionBank = await loadCachedCcnaAllQuestionsBank();
 					const savedOfflineSession = savedSession?.isOfflineLegacyExam === true &&
 						savedSession.questions.length === exam.questionCount &&
 						savedSession.questions.every(isValidQuestion)
 						? savedSession
 						: null;
-					const currentOfflineQuestionsById = new Map(
+					const currentCachedQuestionsById = new Map(
+						(cachedQuestionBank ?? []).map((question) => [question.bankId, question]),
+					);
+					const currentLegacyQuestionsById = new Map(
 						getOfflineLegacyQuestionBank().map((question) => [question.id, question]),
 					);
 					const offlineQuestions = savedOfflineSession
 						? savedOfflineSession.questions.map((question) => {
-							const currentQuestion = currentOfflineQuestionsById.get(question.id ?? question.bankId);
+							const currentQuestion = question.offlineBankSource === "database"
+								? currentCachedQuestionsById.get(question.id ?? question.bankId)
+								: currentLegacyQuestionsById.get(question.id ?? question.bankId);
 							const restoredQuestion = {
 								...(currentQuestion ?? {}),
 								...question,
@@ -259,7 +267,9 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 							}
 							return restoredQuestion;
 						})
-						: createOfflineLegacyExamQuestions(exam.questionCount);
+						: cachedQuestionBank
+							? createOfflineCcnaExamQuestions(examKey, cachedQuestionBank)
+							: createOfflineLegacyExamQuestions(exam.questionCount);
 					const offlineDeadline = Number.isFinite(savedOfflineSession?.deadline)
 						? savedOfflineSession.deadline
 						: Date.now() + exam.durationSeconds * 1000;

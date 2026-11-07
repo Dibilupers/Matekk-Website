@@ -4,6 +4,7 @@ import API_URL from "../config/api";
 import { convertBank } from "./ccnaBankConverter";
 import { isValidQuestion } from "./ccnaExamGrading";
 import { isCcnaQuestionModule } from "./ccnaQuestionModule";
+import { cacheCcnaAllQuestionsBank } from "./ccnaOfflineQuestionBank";
 
 let cached = null; // { questions, problems }
 let pending = null;
@@ -41,7 +42,7 @@ export function loadCcnaAllQuestionsBank() {
         return payload;
       }),
   ])
-    .then(([rawBank, usableBank]) => {
+    .then(async ([rawBank, usableBank]) => {
       const questionsById = new Map(
         usableBank.questions
           .filter((question) => isCcnaQuestionModule(question.module))
@@ -52,6 +53,11 @@ export function loadCcnaAllQuestionsBank() {
         if (!questionsById.has(question.bankId)) questionsById.set(question.bankId, question);
       });
       const questions = [...questionsById.values()];
+      try {
+        await cacheCcnaAllQuestionsBank(questions);
+      } catch (error) {
+        console.warn("Unable to save the complete CCNA question bank for offline use.", error);
+      }
       cachedAllQuestions = {
         questions,
         skippedCount: Math.max(0, rawBank.rowCount - questions.length),
