@@ -497,7 +497,7 @@ export default function FortiOSOfflineExam() {
 							Your answers and time remaining will be saved. The timer will keep running while you are away.
 						</p>
 						{session.deadline !== null && (
-							<div className="mt-5 flex items-center justify-between rounded-xl border border-[#f1d3d0] bg-[#fff8f7] px-4 py-3">
+							<div className="fortios-exam-time-remaining mt-5 flex items-center justify-between rounded-xl border border-[#f1d3d0] bg-[#fff8f7] px-4 py-3">
 								<span className="inline-flex items-center gap-2 text-sm font-semibold text-[#526584]">
 									<Clock3 size={16} /> Time remaining
 								</span>

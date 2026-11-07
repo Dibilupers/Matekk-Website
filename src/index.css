@@ -2213,6 +2213,14 @@ h6 {
   border-color: #50302d !important;
 }
 
+[data-theme="dark"].fortinet-exam-dialog .fortios-exam-time-remaining {
+  background-color: #211313 !important;
+}
+
+[data-theme="dark"].fortinet-exam-dialog .fortios-exam-time-remaining > span:first-child {
+  color: #e0d0ce !important;
+}
+
 [data-theme="dark"].fortinet-exam-dialog [class~="hover:bg-[#fff8f7]"]:hover,
 [data-theme="dark"].fortinet-exam-dialog [class~="hover:bg-[#fff0ef]"]:hover {
   background-color: #211313 !important;
