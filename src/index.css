@@ -942,11 +942,6 @@ h6 {
   color: #ffffff !important;
 }
 
-[data-theme="dark"] .ccna-training-logo {
-  background-color: #bfe9ec !important;
-  box-shadow: 0 4px 16px rgb(32 197 214 / 18%);
-}
-
 [data-theme="dark"] [class~="bg-[#f5f9f9]"],
 [data-theme="dark"] [class~="bg-[#f0f7f7]"],
 [data-theme="dark"] [class~="bg-[#f2f8f8]"] {

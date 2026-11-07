@@ -7,7 +7,7 @@ import ExplanationWithLinks from "../../../../../../components/ExplanationWithLi
 import { isAnswerCorrect, isQuestionAnswered, isValidQuestion } from "../../../../../../utils/ccnaExamGrading";
 import { ExhibitImage, ExhibitText } from "../../../Cisco/CCNA/ccnaExhibit";
 import { QuestionInput, QuestionPrompt, QuestionReview } from "../../../Cisco/CCNA/ccnaExamQuestionViews";
-import TrainingLogo from "../../../../../../assets/MATEKK_training_logo.png";
+import ExamBrand from "../../../../../../components/ExamBrand";
 import { createFortiOSOfflineExam, FORTIOS_OFFLINE_EXAM_FORMATS } from "./fortiosOfflineExamFormats";
 import { loadCachedFortiOSQuestionBank } from "./fortiosOfflineQuestionBank";
 import FortiOSQuestionExplanation from "./FortiOSQuestionExplanation";
@@ -227,9 +227,7 @@ export default function FortiOSOfflineExam() {
 			<div className="mx-auto max-w-[1125px]">
 				<header className="mb-7 flex flex-wrap items-center justify-between gap-4 border-b border-[#efd0cd] pb-5">
 					<div className="flex min-w-0 items-center gap-4">
-						<Link to="/modules/programs/fortinet-fortios" aria-label="Back to FortiOS course" className="ccna-training-logo shrink-0 rounded-lg bg-white px-3 py-2 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
-							<img src={TrainingLogo} alt="MATEKK Cybercore Academy" className="h-auto w-32 sm:w-36" />
-						</Link>
+						<ExamBrand to="/modules/programs/fortinet-fortios" isDark={isDark} />
 						<div className="hidden min-w-0 border-l border-[#efd0cd] pl-4 sm:block">
 							<p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#70809a]">FortiOS exam · Offline</p>
 							<p className="mt-1 truncate text-sm font-bold text-[#17233d]">{examName} · FortiOS question bank</p>

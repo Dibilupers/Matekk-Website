@@ -172,6 +172,11 @@ export default function App() {
   const isAdminPage = location.pathname === "/admin";
   const isAccountPendingPage = location.pathname === "/account-pending";
   const isLoginPage = location.pathname === "/login";
+  const isCcnaProgramPage = [
+    "/modules/programs/ccna",
+    "/modules/programs/ccna-cybersecurity",
+    "/modules/programs/ccna-automation",
+  ].some((basePath) => location.pathname === basePath || location.pathname.startsWith(`${basePath}/`));
   useHeadingTypeIn(location.pathname);
 
   return (
@@ -724,7 +729,7 @@ export default function App() {
         <Route path="*" element={<NotFound />} />
       </Routes>
 
-      {isOnline && !isFullScreenAssessment && !isAdminPage && !isAccountPendingPage && <Footer />}
+      {isOnline && !isFullScreenAssessment && !isAdminPage && !isAccountPendingPage && !isLoginPage && !isCcnaProgramPage && <Footer />}
       </div>
     </>
   );
