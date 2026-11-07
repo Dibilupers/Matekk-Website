@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { ArrowLeft, ArrowUp, Check, Clock3, Moon, RotateCcw, Sun, X } from "lucide-react";
 import { Link, useBlocker, useLocation, useParams } from "react-router-dom";
 import { useAuth } from "../../../../../context/auth-context";
+import TrainingLogo from "../../../../../assets/MATEKK_training_logo.png";
 import ExamBrand from "../../../../../components/ExamBrand";
 import { CCNA_MODULE_QUIZZES } from "./ccnaModuleQuizData";
 import {
@@ -139,7 +140,7 @@ function formatTime(seconds) {
 const QUIZ_PASS_PERCENTAGE = 80;
 
 export default function CCNAModuleQuiz() {
-	const { profile } = useAuth();
+	const { profile, isOnline } = useAuth();
 	const userId = profile?.userId;
 	const { moduleNumber } = useParams();
 	const location = useLocation();
@@ -496,7 +497,13 @@ export default function CCNAModuleQuiz() {
 				)}
 				<header className="mb-7 flex flex-col gap-4 border-b border-[#d6e5e7] pb-5 sm:flex-row sm:items-center sm:justify-between">
 					<div className="flex min-w-0 items-center gap-4">
-						<ExamBrand to={coursePath} isDark={isDark} />
+						{isOnline ? (
+							<Link to={coursePath} aria-label={`Back to ${courseTitle} course`} className="ccna-training-logo shrink-0 rounded-lg bg-white px-3 py-2 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+								<img src={TrainingLogo} alt="MATEKK Cybercore Academy" className="h-auto w-32 sm:w-36" />
+							</Link>
+						) : (
+							<ExamBrand to={coursePath} isDark={isDark} />
+						)}
 						<div className="hidden min-w-0 border-l border-[#cbd5e1] pl-4 sm:block">
 							<p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#70809a]">{courseTitle} module quiz</p>
 							<p className="mt-1 truncate text-sm font-bold text-[#17233d]">Module {moduleQuiz.number}: {moduleQuiz.title}</p>

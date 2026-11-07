@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { ArrowLeft, ArrowRight, ArrowUp, Clock3, Flag, Moon, RotateCcw, Sun, X } from "lucide-react";
 import { Link, useBlocker, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../../../context/auth-context";
+import TrainingLogo from "../../../../../assets/MATEKK_training_logo.png";
 import ExamBrand from "../../../../../components/ExamBrand";
 import { CCNA_EXAMS } from "./ccnaExamFormats";
 import { saveCcnaMockExamResult } from "../../../../../utils/ccnaGradebook";
@@ -753,7 +754,13 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 				)}
 				<header className="mb-7 flex flex-wrap items-center justify-between gap-4 border-b border-[#d6e5e7] pb-5">
 					<div className="flex min-w-0 items-center gap-4">
-						<ExamBrand to="/modules/programs/ccna" isDark={isDark} />
+						{isOfflineExam ? (
+							<ExamBrand to="/modules/programs/ccna" isDark={isDark} />
+						) : (
+							<Link to="/modules/programs/ccna" aria-label="Back to CCNA course" className="ccna-training-logo shrink-0 rounded-lg bg-white px-3 py-2 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 motion-reduce:transition-none">
+								<img src={TrainingLogo} alt="MATEKK Cybercore Academy" className="h-auto w-32 sm:w-36" />
+							</Link>
+						)}
 						<div className="hidden min-w-0 border-l border-[#cbd5e1] pl-4 sm:block">
 							<p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#70809a]">CCNA composite exam</p>
 							<p className="mt-1 truncate text-sm font-bold text-[#17233d]">{exam.name} · {exam.subtitle}</p>
