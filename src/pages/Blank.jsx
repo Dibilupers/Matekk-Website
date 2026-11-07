@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../context/auth-context";
 import API_URL from "../config/api";
 import { FLAT_COURSES, TRAINING_COURSES } from "../components/training/courses";
-import MamaaaReveal from "../assets/mamaaa-reveal.jpg";
 import CCNALogo from "../assets/CCNA.png";
 import APlusLogo from "../assets/aplus.webp";
 import NetworkPlusLogo from "../assets/network+.webp";
@@ -282,9 +281,7 @@ export default function Blank() {
 	const [enrollmentRecords, setEnrollmentRecords] = useState([]);
 	const [enrollmentsError, setEnrollmentsError] = useState("");
 	const [programsError, setProgramsError] = useState("");
-	const [isSurpriseOpen, setIsSurpriseOpen] = useState(false);
-	const [avatarClickCount, setAvatarClickCount] = useState(0);
-	const [avatarClickMessage, setAvatarClickMessage] = useState("");
+	const [isDpPreviewOpen, setIsDpPreviewOpen] = useState(false);
 	const profile = sessionProfile;
 	const hasProfile = profile !== null;
 	const [introText] = useState(() => PROGRAM_INTROS[Math.floor(Math.random() * PROGRAM_INTROS.length)]);
@@ -330,40 +327,14 @@ export default function Blank() {
 	};
 
 	useEffect(() => {
-		if (!isSurpriseOpen) return undefined;
+		if (!isDpPreviewOpen) return undefined;
 
 		const closeOnEscape = (event) => {
-			if (event.key === "Escape") setIsSurpriseOpen(false);
+			if (event.key === "Escape") setIsDpPreviewOpen(false);
 		};
 		window.addEventListener("keydown", closeOnEscape);
 		return () => window.removeEventListener("keydown", closeOnEscape);
-	}, [isSurpriseOpen]);
-
-	function handleAvatarClick(event) {
-		const nextClickCount = avatarClickCount + 1;
-		if (nextClickCount === 5) {
-			setAvatarClickCount(0);
-			setAvatarClickMessage("Surprise revealed!");
-			setIsSurpriseOpen(true);
-			return;
-		}
-
-		setAvatarClickCount(nextClickCount);
-		setAvatarClickMessage(`Nope! ${5 - nextClickCount} more ${nextClickCount === 4 ? "click" : "clicks"}...`);
-		if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-			event.currentTarget.animate(
-				[
-					{ transform: "translateX(0) rotate(0)" },
-					{ transform: "translateX(-7px) rotate(-4deg)" },
-					{ transform: "translateX(7px) rotate(4deg)" },
-					{ transform: "translateX(-5px) rotate(-3deg)" },
-					{ transform: "translateX(5px) rotate(3deg)" },
-					{ transform: "translateX(0) rotate(0)" },
-				],
-				{ duration: 360, easing: "ease-in-out" },
-			);
-		}
-	}
+	}, [isDpPreviewOpen]);
 
 	useEffect(() => {
 		if (!profile?.username) return undefined;
@@ -492,15 +463,15 @@ export default function Blank() {
 				<div className="fade-in-up mb-10 flex max-w-5xl items-center gap-5 sm:gap-7">
 					<button
 						type="button"
-						onClick={handleAvatarClick}
-						aria-label="Click the profile picture five times to reveal a surprise"
-						className="group flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-blue-200 bg-white text-[#087ff5] shadow-sm transition hover:scale-105 hover:border-[#087ff5] sm:h-24 sm:w-24"
+						onClick={() => profile.profile_photo && setIsDpPreviewOpen(true)}
+						disabled={!profile.profile_photo}
+						aria-label={profile.profile_photo ? "View profile picture" : "No profile picture uploaded"}
+						className="group flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-blue-200 bg-white text-[#087ff5] shadow-sm transition hover:scale-105 hover:border-[#087ff5] disabled:cursor-default disabled:text-slate-400 sm:h-24 sm:w-24"
 					>
 						{profile.profile_photo
 							? <img src={profile.profile_photo} alt="" className="h-full w-full object-cover" />
 							: <CircleUserRound aria-hidden="true" size={56} strokeWidth={1.5} />}
 					</button>
-					<span className="sr-only" aria-live="polite">{avatarClickMessage}</span>
 					<div className="min-w-0">
 						<p className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-[#087ff5]">MATEKK Training Academy</p>
 						<h1 className="text-3xl font-bold text-slate-950 sm:text-4xl">
@@ -641,33 +612,32 @@ export default function Blank() {
 					</section>
 				</div>
 			</div>
-			{isSurpriseOpen && (
+			{isDpPreviewOpen && profile.profile_photo && (
 				<div
-					className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/85 p-4 sm:p-8"
+					className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/80 p-4 sm:p-8"
 					onClick={(event) => {
-						if (event.target === event.currentTarget) setIsSurpriseOpen(false);
+						if (event.target === event.currentTarget) setIsDpPreviewOpen(false);
 					}}
 				>
 					<section
 						role="dialog"
 						aria-modal="true"
-						aria-label="Surprise picture"
-						className="mamaaa-reveal-zoom relative flex max-h-full max-w-full flex-col items-center"
+						aria-label="Profile picture preview"
+						className="relative flex max-h-full max-w-full items-center justify-center"
 					>
 						<button
 							type="button"
-							onClick={() => setIsSurpriseOpen(false)}
-							aria-label="Close surprise picture"
+							onClick={() => setIsDpPreviewOpen(false)}
+							aria-label="Close profile picture preview"
 							className="absolute -right-2 -top-2 z-10 rounded-full bg-white p-2 text-slate-800 shadow-lg transition hover:bg-slate-100 sm:-right-4 sm:-top-4"
 						>
 							<X size={20} />
 						</button>
 						<img
-							src={MamaaaReveal}
-							alt="A surprised person looking upward"
-							className="mamaaa-reveal-shake max-h-[75vh] max-w-[min(90vw,32rem)] rounded-2xl object-contain shadow-2xl"
+							src={profile.profile_photo}
+							alt="Enlarged profile picture"
+							className="max-h-[85vh] max-w-[min(90vw,48rem)] rounded-2xl object-contain shadow-2xl"
 						/>
-						<p className="mamaaa-caption-pop mt-4 rounded-full bg-white px-6 py-3 text-2xl font-black text-[#087ff5] shadow-xl sm:text-3xl">Mamaaa!!</p>
 					</section>
 				</div>
 			)}
