@@ -6,6 +6,16 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `b545876` — Added the Advanced voice VLAN and neighbor-discovery lab in a
+  screenshot-style command worksheet, with a fullscreen topology expand control.
+
+Validation before push: focused lab tests, targeted ESLint, production build,
+and Git whitespace checks passed.
+
+## 2026-11-07 — `main`
+
+Commits included in this push:
+
 - `9d5dee2` — Removed the broken recreated exhibit image from CCNA question
   1306 while preserving its drag-and-drop format.
 
