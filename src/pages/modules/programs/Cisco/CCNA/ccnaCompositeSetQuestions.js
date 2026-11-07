@@ -8,7 +8,6 @@ import wlcAdvancedImg from "../../../../../assets/ccna-exam/wlc-advanced-tab.web
 import ccna181RapidPvstActionsImg from "../../../../../assets/ccna-exam/ccna-181-rapid-pvst-actions.svg";
 import ccna382AnsibleFeaturesImg from "../../../../../assets/ccna-exam/ccna-382-ansible-features.svg";
 import ccna608NorthboundApiImg from "../../../../../assets/ccna-exam/ccna-608-northbound-api.svg";
-import ccna1306BroadcastAddressesImg from "../../../../../assets/ccna-exam/ccna-1306-broadcast-addresses.svg";
 
 // pic(image, text?) = picture exhibit, optionally with device output shown below it
 const pic = (image, text) => ({ image, text });
@@ -806,7 +805,6 @@ const BUILT_IN_QUESTION_BY_PROMPT = new Map(
 );
 
 const DATABASE_NATIVE_EXHIBITS = new Map([
-	[1306, { image: ccna1306BroadcastAddressesImg }],
 	[181, { image: ccna181RapidPvstActionsImg }],
 	[382, { image: ccna382AnsibleFeaturesImg }],
 	[608, { image: ccna608NorthboundApiImg }],

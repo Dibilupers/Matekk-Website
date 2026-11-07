@@ -294,10 +294,18 @@ test("rejects recovered matching questions if a present answer key conflicts wit
   assert.equal(problem, "answer format is not a supported matching format");
 });
 
-test("attaches recreated exhibits to recovered CCNA matching questions", () => {
-  for (const bankId of [181, 382, 608, 1306]) {
+test("attaches recreated exhibits to recovered CCNA matching questions that need them", () => {
+  for (const bankId of [181, 382, 608]) {
     assert.ok(applyNativeExhibit({ bankId }).exhibitImage, `question ${bankId} should have a recreated exhibit`);
   }
+  assert.equal(applyNativeExhibit({ bankId: 1306 }).exhibitImage, undefined);
+  const { question } = convertBankRow({
+    ...rawRow(1306, "Drag and drop each broadcast IP address on the left to the Broadcast Address column on the right."),
+    choices: null,
+    correct_answer: null,
+  });
+  assert.equal(question.type, "drag_drop");
+  assert.ok(isValidQuestion(question));
 });
 
 test("restores the four omitted matching rows so the merged CCNA exam reaches 1,367 questions", async () => {
