@@ -6,6 +6,16 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `90ad7ec` — Changed the exam notification badge to count unread updates,
+  persist read state per user, and clear the count when the panel is opened.
+
+Validation before push: exam notification and route regression tests, targeted
+ESLint, frontend production build, and Git whitespace checks passed.
+
+## 2026-11-07 — `main`
+
+Commits included in this push:
+
 - `97f3e2a` — Allowed periods in contact names so middle initials such as
   “L.” pass name validation.
 
