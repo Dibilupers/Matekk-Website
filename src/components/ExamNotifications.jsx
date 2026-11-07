@@ -5,7 +5,9 @@ import { useAuth } from "../context/auth-context";
 import { getExamRoute } from "../utils/examRoutes";
 import {
 	getExamNotificationReadId,
+	readExamNotificationDismissedIds,
 	readExamNotificationReadIds,
+	writeExamNotificationDismissedIds,
 	writeExamNotificationReadIds,
 } from "../utils/examNotificationReadState";
 
@@ -198,7 +200,8 @@ export default function ExamNotifications() {
 	const [now, setNow] = useState(0);
 	const [notificationState, setNotificationState] = useState({ userId: null, items: [] });
 	const [readState, setReadState] = useState({ userId: null, ids: [] });
-	const notifications = (notificationState.userId === userId ? notificationState.items : []).map((item) => ({
+	const [dismissedState, setDismissedState] = useState({ userId: null, ids: [] });
+	const allNotifications = (notificationState.userId === userId ? notificationState.items : []).map((item) => ({
 		...item,
 		status: item.status === "in-progress" && item.deadline !== null && item.deadline <= now
 			? "expired"
@@ -207,6 +210,8 @@ export default function ExamNotifications() {
 	const readIds = new Set(readState.userId === userId ? readState.ids : []);
 	const isNotificationRead = (item) => readIds.has(getExamNotificationReadId(item)) ||
 		readIds.has(`${item.id}:${item.status}:${item.activityAt}`);
+	const dismissedIds = new Set(dismissedState.userId === userId ? dismissedState.ids : []);
+	const notifications = allNotifications.filter((item) => !dismissedIds.has(getExamNotificationReadId(item)));
 	const unreadCount = notifications.filter((item) => !isNotificationRead(item)).length;
 
 	useEffect(() => {
@@ -215,11 +220,13 @@ export default function ExamNotifications() {
 			try {
 				setNotificationState({ userId, items: collectExamNotifications(userId) });
 				setReadState({ userId, ids: readExamNotificationReadIds(window.localStorage, userId) });
+				setDismissedState({ userId, ids: readExamNotificationDismissedIds(window.localStorage, userId) });
 				setNow(Date.now());
 			} catch (error) {
 				console.error("Unable to load exam notifications.", error);
 				setNotificationState({ userId, items: [] });
 				setReadState({ userId, ids: [] });
+				setDismissedState({ userId, ids: [] });
 			}
 		};
 		refresh();
@@ -241,6 +248,14 @@ export default function ExamNotifications() {
 		});
 		writeExamNotificationReadIds(window.localStorage, userId, nextIds);
 		setReadState({ userId, ids: [...nextIds] });
+	}
+
+	function dismissNotifications(items) {
+		const nextIds = new Set(dismissedIds);
+		items.forEach((item) => nextIds.add(getExamNotificationReadId(item)));
+		writeExamNotificationDismissedIds(window.localStorage, userId, nextIds);
+		setDismissedState({ userId, ids: [...nextIds] });
+		markNotificationsRead(items);
 	}
 
 	if (!profile || isGradebookPage || isAssessmentPage) return null;
@@ -296,6 +311,17 @@ export default function ExamNotifications() {
 										>
 											Mark all as read
 										</button>
+										<button
+											type="button"
+											onClick={() => {
+												dismissNotifications(notifications);
+												setIsMenuOpen(false);
+											}}
+											disabled={notifications.length === 0}
+											className="w-full rounded-lg px-3 py-2 text-left text-sm font-semibold text-[#b42335] transition hover:bg-[#fff4f3] disabled:cursor-not-allowed disabled:opacity-50"
+										>
+											Clear notifications
+										</button>
 									</div>
 								)}
 							</div>
@@ -307,7 +333,8 @@ export default function ExamNotifications() {
 					) : (
 						<ul className="max-h-[min(65vh,28rem)] overflow-y-auto divide-y divide-[#edf1f5]">
 							{notifications.map((item) => (
-								<li key={item.id}>
+								<li key={getExamNotificationReadId(item)}>
+									<div className="flex items-start">
 									<button
 										type="button"
 										onClick={() => {
@@ -316,7 +343,7 @@ export default function ExamNotifications() {
 											setIsOpen(false);
 											setIsMenuOpen(false);
 										}}
-										className="flex w-full items-start gap-3 px-4 py-3 text-left transition hover:bg-[#f5f9ff]"
+										className="flex min-w-0 flex-1 items-start gap-3 px-4 py-3 text-left transition hover:bg-[#f5f9ff]"
 									>
 										<span className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${
 											item.status === "expired" ? "bg-[#fff0ef] text-[#b42335]" :
@@ -342,6 +369,15 @@ export default function ExamNotifications() {
 											<span aria-label="Unread" className="mt-4 h-2.5 w-2.5 shrink-0 rounded-full bg-[#459bff]" />
 										)}
 									</button>
+									<button
+										type="button"
+										onClick={() => dismissNotifications([item])}
+										aria-label={`Remove ${item.title} notification`}
+										className="mr-2 mt-3 rounded-full p-1.5 text-[#71819b] transition hover:bg-[#fff4f3] hover:text-[#b42335] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#b42335]"
+									>
+										<X size={16} />
+									</button>
+									</div>
 								</li>
 							))}
 						</ul>
