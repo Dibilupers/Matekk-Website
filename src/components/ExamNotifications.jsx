@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Bell, CircleAlert, Clock3, Ellipsis, X } from "lucide-react";
+import { Bell, CircleAlert, Clock3, X } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/auth-context";
 import { getExamRoute } from "../utils/examRoutes";
@@ -196,7 +196,6 @@ export default function ExamNotifications() {
 	const isGradebookPage = pathname.includes("/gradebook") || pathname === "/modules/programs/ccna/results";
 	const isAssessmentPage = pathname.includes("/exam/") || pathname.includes("/quiz/");
 	const [isOpen, setIsOpen] = useState(false);
-	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [now, setNow] = useState(0);
 	const [notificationState, setNotificationState] = useState({ userId: null, items: [] });
 	const [readState, setReadState] = useState({ userId: null, ids: [] });
@@ -287,46 +286,7 @@ export default function ExamNotifications() {
 							<h2 className="font-bold text-[#071126]">Exam notifications</h2>
 							<p className="text-xs text-[#71819b]">{activeCount ? `${activeCount} exam${activeCount === 1 ? "" : "s"} in progress` : "Your exam updates"}</p>
 						</div>
-						<div className="flex items-center gap-1">
-							<div className="relative">
-								<button
-									type="button"
-									onClick={() => setIsMenuOpen((open) => !open)}
-									aria-label="More notification options"
-									aria-expanded={isMenuOpen}
-									className="rounded-full p-1.5 text-[#71819b] transition hover:bg-[#eef6ff] hover:text-[#1775ee]"
-								>
-									<Ellipsis size={19} />
-								</button>
-								{isMenuOpen && (
-									<div className="absolute right-0 top-full z-10 mt-1 w-44 rounded-xl border border-[#e2ecec] bg-white p-1.5 shadow-lg">
-										<button
-											type="button"
-											onClick={() => {
-												markNotificationsRead(notifications);
-												setIsMenuOpen(false);
-											}}
-											disabled={unreadCount === 0}
-											className="w-full rounded-lg px-3 py-2 text-left text-sm font-semibold text-[#17233d] transition hover:bg-[#eef6ff] disabled:cursor-not-allowed disabled:opacity-50"
-										>
-											Mark all as read
-										</button>
-										<button
-											type="button"
-											onClick={() => {
-												dismissNotifications(notifications);
-												setIsMenuOpen(false);
-											}}
-											disabled={notifications.length === 0}
-											className="w-full rounded-lg px-3 py-2 text-left text-sm font-semibold text-[#b42335] transition hover:bg-[#fff4f3] disabled:cursor-not-allowed disabled:opacity-50"
-										>
-											Clear notifications
-										</button>
-									</div>
-								)}
-							</div>
-							<button type="button" onClick={() => { setIsOpen(false); setIsMenuOpen(false); }} aria-label="Close exam notifications" className="rounded-full p-1.5 text-[#71819b] transition hover:bg-[#fff4f3] hover:text-[#b42335]"><X size={17} /></button>
-						</div>
+						<button type="button" onClick={() => setIsOpen(false)} aria-label="Close exam notifications" className="rounded-full p-1.5 text-[#71819b] transition hover:bg-[#fff4f3] hover:text-[#b42335]"><X size={17} /></button>
 					</header>
 					{notifications.length === 0 ? (
 						<p className="px-4 py-6 text-sm text-[#71819b]">No exam activity yet. Started, completed, or timed-out exams will appear here.</p>
@@ -341,7 +301,6 @@ export default function ExamNotifications() {
 											markNotificationsRead([item]);
 											navigate(item.route);
 											setIsOpen(false);
-											setIsMenuOpen(false);
 										}}
 										className="flex min-w-0 flex-1 items-start gap-3 px-4 py-3 text-left transition hover:bg-[#f5f9ff]"
 									>
