@@ -5,6 +5,7 @@ import { CheckCircle2, Circle, Download, Eye, Lightbulb, Maximize2, Network, Rot
 import { PRACTICE_LABS } from "./labs/labDefinitions";
 import { canReach, configCommands, createLabState, execute, fullIfName, promptFor } from "./labs/labEngine";
 import LabTopology from "./labs/LabTopology";
+import LabCommandWorksheet from "./labs/LabCommandWorksheet";
 import TopologySandbox from "./labs/TopologySandbox";
 
 /* ==========================================================================
@@ -148,17 +149,19 @@ function PacketTracerSection({ lab }) {
 								<span className="block text-sm font-medium text-[#71819b]">Text file</span>
 								<span className="mt-4 block text-sm leading-5 text-[#71819b]">Device setup, cabling, starting configuration, and lab tasks.</span>
 							</a>
-							<a
-								href={pktFile}
-								download
-								onClick={() => setShowDownloadPicker(false)}
-								className="min-w-0 rounded-2xl border border-[#d6e5e7] p-4 text-left text-[#263654] transition-colors hover:border-[#a9cdd2] hover:bg-[#f8fbfc] sm:p-5"
-							>
-								<span className="block text-lg font-bold">Packet Tracer project</span>
-								<span className="mt-3 block text-3xl font-extrabold">.PKT</span>
-								<span className="block text-sm font-medium text-[#71819b]">Cisco Packet Tracer</span>
-								<span className="mt-4 block text-sm leading-5 text-[#71819b]">Ready-to-open project file for Lab {lab.id}.</span>
-							</a>
+							{lab.hasPacketTracerFile !== false && (
+								<a
+									href={pktFile}
+									download
+									onClick={() => setShowDownloadPicker(false)}
+									className="min-w-0 rounded-2xl border border-[#d6e5e7] p-4 text-left text-[#263654] transition-colors hover:border-[#a9cdd2] hover:bg-[#f8fbfc] sm:p-5"
+								>
+									<span className="block text-lg font-bold">Packet Tracer project</span>
+									<span className="mt-3 block text-3xl font-extrabold">.PKT</span>
+									<span className="block text-sm font-medium text-[#71819b]">Cisco Packet Tracer</span>
+									<span className="mt-4 block text-sm leading-5 text-[#71819b]">Ready-to-open project file for Lab {lab.id}.</span>
+								</a>
+							)}
 						</div>
 					</section>
 				</div>,
@@ -249,7 +252,9 @@ function LabWorkspace({ lab, selectLab, fromDashboard }) {
 	const doneCount = Object.values(status).filter(Boolean).length;
 	const allDone = doneCount === lab.tasks.length;
 	const showResults = !examMode || submitted;
-	const finalOk = canReach(lab, state, lab.finalCheck.from, lab.finalCheck.to);
+	const finalOk = lab.finalCheck.check
+		? lab.finalCheck.check(state)
+		: canReach(lab, state, lab.finalCheck.from, lab.finalCheck.to);
 	const con = consoles[device];
 
 	useEffect(() => {
@@ -314,13 +319,13 @@ function LabWorkspace({ lab, selectLab, fromDashboard }) {
 				)}
 				<h6 className="w-fit px-4 py-2 text-[#1775EE] bg-blue-50 rounded-full">CCNA Practice Labs</h6>
 				<h3>
-					Hands-on <span className="text-[#1775EE]">Router Labs</span>
+					Hands-on <span className="text-[#1775EE]">Network Labs</span>
 				</h3>
 				<p className="max-w-3xl">
-					Practice real Cisco IOS commands in your browser. Pick a lab, configure the routers in the console,
+					Practice real Cisco IOS commands in your browser. Pick a lab, configure routers or switches in the console,
 					and watch the network come to life. Cisco shortcuts such as <code>conf t</code>, <code>int g0/0</code>, and <code>sh ip route</code> work too.
 				</p>
-				<div className="grid gap-3 md:grid-cols-3">
+				<div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
 					{PRACTICE_LABS.map((l) => (
 						<button
 							key={l.id}
@@ -366,7 +371,19 @@ function LabWorkspace({ lab, selectLab, fromDashboard }) {
 			</div>
 
 			{/* Network diagram (full width) */}
-			<div className="p-5 rounded-2xl bg-[#EBF5FD]">
+			{lab.worksheet ? (
+				<>
+					<LabCommandWorksheet
+						lab={lab}
+						state={state}
+						setState={setState}
+						activeDevice={device}
+						onReset={reset}
+						onExpand={() => setTopologyOpen(true)}
+					/>
+					{topologyOpen && <TopologyFullscreen lab={lab} state={state} device={device} onClose={closeTopology} />}
+				</>
+			) : <div className="p-5 rounded-2xl bg-[#EBF5FD]">
 				<div className="flex items-center justify-between mb-2">
 					<h5 className="text-[#1775EE]">Topology</h5>
 					<div className="flex items-center gap-2">
@@ -390,9 +407,9 @@ function LabWorkspace({ lab, selectLab, fromDashboard }) {
 				</button>
 				{topologyOpen && <TopologyFullscreen lab={lab} state={state} device={device} onClose={closeTopology} />}
 				<p className="text-xs text-gray-600 mt-1">Green links are up; red dashed links are down. The router you are configuring is circled.</p>
-			</div>
+			</div>}
 
-			<div className="grid gap-6 lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)] items-start lg:items-stretch">
+			{!lab.worksheet && <div className="grid gap-6 lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)] items-start lg:items-stretch">
 				{/* Left: tasks */}
 				<aside className="flex flex-col gap-4">
 
@@ -538,7 +555,7 @@ function LabWorkspace({ lab, selectLab, fromDashboard }) {
 						Supports the commands these labs use: configuration, show ip route, show ip interface brief, show running-config, ping, and traceroute.
 					</p>
 				</section>
-			</div>
+			</div>}
 
 			<PacketTracerSection lab={lab} />
 
