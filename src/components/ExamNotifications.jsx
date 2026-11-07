@@ -270,7 +270,7 @@ export default function ExamNotifications() {
 				aria-expanded={isOpen}
 				className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[#1775ee] transition hover:bg-[#eef6ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1775ee]"
 			>
-				<Bell size={21} />
+				<Bell size={21} fill={isOpen ? "currentColor" : "none"} />
 				{unreadCount > 0 && (
 					<span
 						aria-hidden="true"
@@ -334,7 +334,6 @@ export default function ExamNotifications() {
 						<ul className="max-h-[min(65vh,28rem)] overflow-y-auto divide-y divide-[#edf1f5]">
 							{notifications.map((item) => (
 								<li key={getExamNotificationReadId(item)}>
-									<div className="flex items-start">
 									<button
 										type="button"
 										onClick={() => {
@@ -369,15 +368,6 @@ export default function ExamNotifications() {
 											<span aria-label="Unread" className="mt-4 h-2.5 w-2.5 shrink-0 rounded-full bg-[#459bff]" />
 										)}
 									</button>
-									<button
-										type="button"
-										onClick={() => dismissNotifications([item])}
-										aria-label={`Remove ${item.title} notification`}
-										className="mr-2 mt-3 rounded-full p-1.5 text-[#71819b] transition hover:bg-[#fff4f3] hover:text-[#b42335] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#b42335]"
-									>
-										<X size={16} />
-									</button>
-									</div>
 								</li>
 							))}
 						</ul>
