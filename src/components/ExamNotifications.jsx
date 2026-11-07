@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Bell, CircleAlert, Clock3, X } from "lucide-react";
+import { Bell, CircleAlert, Clock3, Ellipsis, X } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/auth-context";
 
@@ -19,6 +19,26 @@ const EXAM_NAMES = {
 	long: "Long Exam",
 	all_questions: "All Questions Exam",
 };
+
+function getReadNotificationsKey(userId) {
+	return `matekk-exam-notifications-read:${encodeURIComponent(String(userId))}`;
+}
+
+function readNotificationKeys(userId) {
+	const stored = window.localStorage.getItem(getReadNotificationsKey(userId));
+	if (!stored) return [];
+
+	try {
+		const parsed = JSON.parse(stored);
+		if (!Array.isArray(parsed) || !parsed.every((key) => typeof key === "string")) {
+			throw new TypeError("Saved notification read state is invalid.");
+		}
+		return parsed;
+	} catch (error) {
+		console.error("Unable to read saved exam notification state.", error);
+		return [];
+	}
+}
 
 function getExamDetails(key) {
 	const patterns = [
@@ -113,6 +133,7 @@ function parseExamSession(value, key, storageType, userId) {
 		deadline,
 		route,
 		submittedAt: Number.isFinite(session.submittedAt) ? session.submittedAt : 0,
+		activityAt: session.submittedAt || session.startedAt || deadline || 0,
 	};
 }
 
@@ -182,24 +203,31 @@ export default function ExamNotifications() {
 	const isGradebookPage = pathname.includes("/gradebook") || pathname === "/modules/programs/ccna/results";
 	const isAssessmentPage = pathname.includes("/exam/") || pathname.includes("/quiz/");
 	const [isOpen, setIsOpen] = useState(false);
+	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [now, setNow] = useState(0);
 	const [notificationState, setNotificationState] = useState({ userId: null, items: [] });
+	const [readState, setReadState] = useState({ userId: null, keys: [] });
 	const notifications = (notificationState.userId === userId ? notificationState.items : []).map((item) => ({
 		...item,
 		status: item.status === "in-progress" && item.deadline !== null && item.deadline <= now
 			? "expired"
 			: item.status,
+		notificationKey: `${item.id}:${item.status === "in-progress" && item.deadline !== null && item.deadline <= now ? "expired" : item.status}:${item.activityAt}`,
 	}));
+	const readKeys = readState.userId === userId ? readState.keys : [];
+	const unreadCount = notifications.filter((item) => !readKeys.includes(item.notificationKey)).length;
 
 	useEffect(() => {
 		if (userId === null || userId === undefined) return undefined;
 		const refresh = () => {
 			try {
 				setNotificationState({ userId, items: collectExamNotifications(userId) });
+				setReadState({ userId, keys: readNotificationKeys(userId) });
 				setNow(Date.now());
 			} catch (error) {
 				console.error("Unable to load exam notifications.", error);
 				setNotificationState({ userId, items: [] });
+				setReadState({ userId, keys: [] });
 			}
 		};
 		refresh();
@@ -213,6 +241,16 @@ export default function ExamNotifications() {
 		};
 	}, [userId]);
 
+	function markNotificationsRead(keys) {
+		const nextKeys = [...new Set([...readKeys, ...keys])];
+		try {
+			window.localStorage.setItem(getReadNotificationsKey(userId), JSON.stringify(nextKeys));
+		} catch (error) {
+			console.error("Unable to save exam notification read state.", error);
+		}
+		setReadState({ userId, keys: nextKeys });
+	}
+
 	if (!profile || isGradebookPage || isAssessmentPage) return null;
 	const activeCount = notifications.filter((item) => item.status === "in-progress").length;
 
@@ -221,28 +259,56 @@ export default function ExamNotifications() {
 			<button
 				type="button"
 				onClick={() => setIsOpen((open) => !open)}
-				aria-label={`Exam notifications${notifications.length ? `, ${notifications.length} updates` : ""}`}
+				aria-label={`Exam notifications${unreadCount ? `, ${unreadCount} unread` : ""}`}
 				aria-expanded={isOpen}
 				className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[#1775ee] transition hover:bg-[#eef6ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1775ee]"
 			>
 				<Bell size={21} />
-				{notifications.length > 0 && (
+				{unreadCount > 0 && (
 					<span
 						aria-hidden="true"
 						className="absolute right-0 top-0 flex h-[18px] min-w-[18px] items-center justify-center rounded-full border-2 border-white bg-[#c6283d] px-1 text-[10px] font-bold leading-none text-white"
 					>
-						{notifications.length > 99 ? "99+" : notifications.length}
+						{unreadCount > 99 ? "99+" : unreadCount}
 					</span>
 				)}
 			</button>
 			{isOpen && (
 				<section className="absolute right-0 top-full z-[90] mt-3 w-[min(22rem,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-[#d6e5e7] bg-white shadow-[0_16px_40px_rgba(15,35,75,0.2)]">
-					<header className="flex items-center justify-between border-b border-[#e2ecec] px-4 py-3">
+					<header className="relative flex items-center justify-between border-b border-[#e2ecec] px-4 py-3">
 						<div>
 							<h2 className="font-bold text-[#071126]">Exam notifications</h2>
 							<p className="text-xs text-[#71819b]">{activeCount ? `${activeCount} exam${activeCount === 1 ? "" : "s"} in progress` : "Your exam updates"}</p>
 						</div>
-						<button type="button" onClick={() => setIsOpen(false)} aria-label="Close exam notifications" className="rounded-full p-1.5 text-[#71819b] transition hover:bg-[#fff4f3] hover:text-[#b42335]"><X size={17} /></button>
+						<div className="flex items-center gap-1">
+							<div className="relative">
+								<button
+									type="button"
+									onClick={() => setIsMenuOpen((open) => !open)}
+									aria-label="More notification options"
+									aria-expanded={isMenuOpen}
+									className="rounded-full p-1.5 text-[#71819b] transition hover:bg-[#eef6ff] hover:text-[#1775ee]"
+								>
+									<Ellipsis size={19} />
+								</button>
+								{isMenuOpen && (
+									<div className="absolute right-0 top-full z-10 mt-1 w-44 rounded-xl border border-[#e2ecec] bg-white p-1.5 shadow-lg">
+										<button
+											type="button"
+											onClick={() => {
+												markNotificationsRead(notifications.map((item) => item.notificationKey));
+												setIsMenuOpen(false);
+											}}
+											disabled={unreadCount === 0}
+											className="w-full rounded-lg px-3 py-2 text-left text-sm font-semibold text-[#17233d] transition hover:bg-[#eef6ff] disabled:cursor-not-allowed disabled:opacity-50"
+										>
+											Mark all as read
+										</button>
+									</div>
+								)}
+							</div>
+							<button type="button" onClick={() => { setIsOpen(false); setIsMenuOpen(false); }} aria-label="Close exam notifications" className="rounded-full p-1.5 text-[#71819b] transition hover:bg-[#fff4f3] hover:text-[#b42335]"><X size={17} /></button>
+						</div>
 					</header>
 					{notifications.length === 0 ? (
 						<p className="px-4 py-6 text-sm text-[#71819b]">No exam activity yet. Started, completed, or timed-out exams will appear here.</p>
@@ -253,8 +319,10 @@ export default function ExamNotifications() {
 									<button
 										type="button"
 										onClick={() => {
+											markNotificationsRead([item.notificationKey]);
 											navigate(item.route);
 											setIsOpen(false);
+											setIsMenuOpen(false);
 										}}
 										className="flex w-full items-start gap-3 px-4 py-3 text-left transition hover:bg-[#f5f9ff]"
 									>
@@ -266,17 +334,21 @@ export default function ExamNotifications() {
 											{item.status === "expired" ? <CircleAlert size={18} /> : <Clock3 size={18} />}
 										</span>
 										<span className="min-w-0 flex-1">
-											<strong className="block text-sm text-[#17233d]">{item.title}</strong>
+											<strong className={`block text-sm ${readKeys.includes(item.notificationKey) ? "font-medium text-[#71819b] opacity-70" : "font-bold text-[#17233d]"}`}>{item.title}</strong>
 											<span className={`mt-1 block text-xs font-semibold ${
-												item.status === "expired" ? "text-[#b42335]" :
-													item.status === "completed" ? "text-[#16724e]" :
-														"text-[#1775ee]"
+												readKeys.includes(item.notificationKey) ? "text-[#8b98ad] opacity-70" :
+													item.status === "expired" ? "text-[#b42335]" :
+														item.status === "completed" ? "text-[#16724e]" :
+															"text-[#1775ee]"
 											}`}>
 												{item.status === "expired" ? "Time expired · View exam" :
 													item.status === "completed" ? "Completed · View result" :
 															`In progress · ${formatRemainingTime(item.deadline, now) || "Open exam"}`}
 											</span>
 										</span>
+										{!readKeys.includes(item.notificationKey) && (
+											<span aria-label="Unread" className="mt-4 h-2.5 w-2.5 shrink-0 rounded-full bg-[#459bff]" />
+										)}
 									</button>
 								</li>
 							))}
