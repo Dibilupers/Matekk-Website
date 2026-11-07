@@ -15,7 +15,7 @@ const MAX_EMAIL_LENGTH = 50;
 const MAX_PHONE_LENGTH = 11;
 const MAX_SUBJECT_LENGTH = 36;
 const MAX_MESSAGE_LENGTH = 500;
-const isValidName = (v) => /^[\p{L}\p{M}]+(?:[ '\u2019-][\p{L}\p{M}]+)*$/u.test(v.trim());
+const isValidName = (v) => /^[\p{L}\p{M}]+\.?(?:[ '\u2019-][\p{L}\p{M}]+\.?)*$/u.test(v.trim());
 const isValidEmail = (v) => v.length <= MAX_EMAIL_LENGTH && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 const isValidPhone = (v) => /^\d{11}$/.test(v);
 const isEmpty      = (v) => v.trim().length === 0;
@@ -84,7 +84,7 @@ export default function ContactForm() {
       return;
     }
     if (!isValidName(name)) {
-      setStatus("Full name can contain letters, spaces, apostrophes, and hyphens only.");
+      setStatus("Full name can contain letters, spaces, periods, apostrophes, and hyphens only.");
       return;
     }
     if (isTooLong(email, MAX_EMAIL_LENGTH)) {
