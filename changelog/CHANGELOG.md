@@ -6,6 +6,16 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `97f3e2a` — Allowed periods in contact names so middle initials such as
+  “L.” pass name validation.
+
+Validation before push: targeted ESLint, frontend production build, and Git
+whitespace checks passed.
+
+## 2026-11-07 — `main`
+
+Commits included in this push:
+
 - `b068b48` — Fixed exam notification destinations by sharing canonical routes
   with exam formats and app routing, preserving the legacy CCNA link, and
   adding route regression tests.
