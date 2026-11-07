@@ -6,6 +6,18 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `ed410da` — Saved the complete merged CCNA question bank for offline use and
+  enabled the Short, Medium, and Long offline exams to sample from it while
+  preserving their existing question counts. The All Questions exam also uses
+  the saved bank, with the older bundled bank as a first-use fallback.
+
+Validation before push: ten focused CCNA bank and offline-exam tests, targeted
+ESLint, frontend production build, and Git whitespace checks passed.
+
+## 2026-11-07 — `main`
+
+Commits included in this push:
+
 - `19392b6` — Removed bulk read and clear actions from the exam notification
   menu while retaining per-notification dismissal.
 
