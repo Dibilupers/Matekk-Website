@@ -3,6 +3,11 @@ import { Bell, CircleAlert, Clock3, X } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/auth-context";
 import { getExamRoute } from "../utils/examRoutes";
+import {
+	getExamNotificationReadId,
+	readExamNotificationReadIds,
+	writeExamNotificationReadIds,
+} from "../utils/examNotificationReadState";
 
 const PROGRAMS = {
 	ccna: { name: "CCNA" },
@@ -110,6 +115,13 @@ function parseExamSession(value, key, storageType, userId) {
 		examName: EXAM_NAMES[details.examKey],
 		status,
 		deadline,
+		sessionId: typeof session.attemptId === "string"
+			? session.attemptId
+			: Number.isFinite(session.deadline)
+				? String(session.deadline)
+				: Array.isArray(session.questionIds)
+					? session.questionIds.join(",")
+					: "legacy",
 		route,
 		submittedAt: Number.isFinite(session.submittedAt) ? session.submittedAt : 0,
 	};
@@ -183,22 +195,27 @@ export default function ExamNotifications() {
 	const [isOpen, setIsOpen] = useState(false);
 	const [now, setNow] = useState(0);
 	const [notificationState, setNotificationState] = useState({ userId: null, items: [] });
+	const [readState, setReadState] = useState({ userId: null, ids: [] });
 	const notifications = (notificationState.userId === userId ? notificationState.items : []).map((item) => ({
 		...item,
 		status: item.status === "in-progress" && item.deadline !== null && item.deadline <= now
 			? "expired"
 			: item.status,
 	}));
+	const readIds = new Set(readState.userId === userId ? readState.ids : []);
+	const unreadCount = notifications.filter((item) => !readIds.has(getExamNotificationReadId(item))).length;
 
 	useEffect(() => {
 		if (userId === null || userId === undefined) return undefined;
 		const refresh = () => {
 			try {
 				setNotificationState({ userId, items: collectExamNotifications(userId) });
+				setReadState({ userId, ids: readExamNotificationReadIds(window.localStorage, userId) });
 				setNow(Date.now());
 			} catch (error) {
 				console.error("Unable to load exam notifications.", error);
 				setNotificationState({ userId, items: [] });
+				setReadState({ userId, ids: [] });
 			}
 		};
 		refresh();
@@ -214,23 +231,31 @@ export default function ExamNotifications() {
 
 	if (!profile || isGradebookPage || isAssessmentPage) return null;
 	const activeCount = notifications.filter((item) => item.status === "in-progress").length;
+	const toggleNotifications = () => {
+		if (!isOpen) {
+			const updatedReadIds = new Set([...readIds, ...notifications.map(getExamNotificationReadId)]);
+			writeExamNotificationReadIds(window.localStorage, userId, updatedReadIds);
+			setReadState({ userId, ids: [...updatedReadIds] });
+		}
+		setIsOpen((open) => !open);
+	};
 
 	return (
 		<div className="relative" aria-label="Exam notifications">
 			<button
 				type="button"
-				onClick={() => setIsOpen((open) => !open)}
-				aria-label={`Exam notifications${notifications.length ? `, ${notifications.length} updates` : ""}`}
+				onClick={toggleNotifications}
+				aria-label={`Exam notifications${unreadCount ? `, ${unreadCount} new` : ""}`}
 				aria-expanded={isOpen}
 				className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[#1775ee] transition hover:bg-[#eef6ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1775ee]"
 			>
 				<Bell size={21} />
-				{notifications.length > 0 && (
+				{unreadCount > 0 && (
 					<span
 						aria-hidden="true"
 						className="absolute right-0 top-0 flex h-[18px] min-w-[18px] items-center justify-center rounded-full border-2 border-white bg-[#c6283d] px-1 text-[10px] font-bold leading-none text-white"
 					>
-						{notifications.length > 99 ? "99+" : notifications.length}
+						{unreadCount > 99 ? "99+" : unreadCount}
 					</span>
 				)}
 			</button>

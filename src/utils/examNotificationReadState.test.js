@@ -1,0 +1,49 @@
+import assert from "node:assert/strict";
+import { test } from "node:test";
+import {
+	getExamNotificationReadId,
+	getExamNotificationReadStorageKey,
+	readExamNotificationReadIds,
+	writeExamNotificationReadIds,
+} from "./examNotificationReadState.js";
+
+test("notification read state is scoped to the user", () => {
+	assert.equal(getExamNotificationReadStorageKey("user 1"), "matekk-exam-notifications-read:user%201");
+	assert.notEqual(getExamNotificationReadStorageKey("user 1"), getExamNotificationReadStorageKey("user 2"));
+});
+
+test("notification updates are identified by exam, status, and completion time", () => {
+	const active = { id: "ccna:all_questions", sessionId: "attempt-1", status: "in-progress", submittedAt: 0 };
+	assert.equal(getExamNotificationReadId(active), "ccna:all_questions:attempt-1:in-progress:0");
+	assert.notEqual(
+		getExamNotificationReadId(active),
+		getExamNotificationReadId({ ...active, sessionId: "attempt-2" }),
+	);
+	assert.notEqual(
+		getExamNotificationReadId(active),
+		getExamNotificationReadId({ ...active, status: "completed", submittedAt: 123 }),
+	);
+});
+
+test("read notification IDs persist and malformed data is reported", () => {
+	const values = new Map();
+	const storage = {
+		getItem: (key) => values.get(key) ?? null,
+		setItem: (key, value) => values.set(key, value),
+	};
+	const ids = ["ccna:all_questions:attempt-1:in-progress:0"];
+
+	writeExamNotificationReadIds(storage, "user-1", ids);
+	assert.deepEqual(readExamNotificationReadIds(storage, "user-1"), ids);
+
+	values.set(getExamNotificationReadStorageKey("user-1"), "{invalid");
+	const originalError = console.error;
+	const errors = [];
+	console.error = (...args) => errors.push(args);
+	try {
+		assert.deepEqual(readExamNotificationReadIds(storage, "user-1"), []);
+		assert.equal(errors.length, 1);
+	} finally {
+		console.error = originalError;
+	}
+});
