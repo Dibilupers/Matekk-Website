@@ -3,6 +3,7 @@ import { Link, Navigate, Routes, Route, useLocation } from "react-router-dom";
 import { X } from "lucide-react";
 import NavBar from "../components/navbar/navbar";
 import Footer from "../components/footer/footer";
+import ExamNotifications from "../components/ExamNotifications";
 import ScrollToTop from "../components/scroll/ScrollToTop";
 import OfflineModuleAccess from "../components/OfflineModuleAccess";
 import useHeadingTypeIn from "../utils/useHeadingTypeIn";
@@ -183,6 +184,7 @@ export default function App() {
     <>
       <CCNAExamTimeNotification />
       {isOnline && !isFullScreenAssessment && !isAccountPendingPage && !isLoginPage && <NavBar />}
+      <ExamNotifications />
       <ScrollToTop />
 
       {/* Keyed by path so every page change replays the fade-in (navbar stays outside, so it never flickers) */}

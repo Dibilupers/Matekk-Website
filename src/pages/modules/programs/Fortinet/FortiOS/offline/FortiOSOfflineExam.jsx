@@ -164,7 +164,7 @@ export default function FortiOSOfflineExam() {
 		const updateTimer = () => {
 			const remaining = Math.max(0, Math.ceil((sessionDeadline - Date.now()) / 1000));
 			setSecondsRemaining(remaining);
-			if (remaining === 0) setSession((current) => current ? { ...current, isSubmitted: true, currentIndex: 0 } : current);
+			if (remaining === 0) setSession((current) => current ? { ...current, isSubmitted: true, submittedAt: Date.now(), currentIndex: 0 } : current);
 		};
 		updateTimer();
 		const timer = window.setInterval(updateTimer, 1000);
@@ -198,7 +198,7 @@ export default function FortiOSOfflineExam() {
 
 	const submitExam = useCallback(() => {
 		setSession((current) => current && !current.isSubmitted
-			? { ...current, isSubmitted: true, currentIndex: 0 }
+			? { ...current, isSubmitted: true, submittedAt: Date.now(), currentIndex: 0 }
 			: current);
 	}, []);
 
