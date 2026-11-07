@@ -22,6 +22,7 @@ import ScoreRotationCard from "../ScoreRotationCard";
 import useGradebookQuizStats from "../useGradebookQuizStats";
 import { isAnswerCorrect, isQuestionAnswered } from "../../../../utils/ccnaExamGrading";
 import { getCcnaExamSessionKey } from "../../../../utils/ccnaShortExamSession";
+import { getCompTIAExamSessionKey } from "../../../../utils/comptiaExamSession";
 import { getOfflineExamSessionKeys } from "../../../../utils/offlineExamSession";
 import { readGradebookAssessments } from "../../../../utils/gradebookApi";
 
@@ -48,7 +49,7 @@ function readCompTIAExamProgress(programKey, format, userId, now, isOnline) {
 				.find(Boolean);
 		}
 		if (!savedSession && (typeof userId === "string" || typeof userId === "number") && String(userId).trim() !== "") {
-			const sessionKey = getCcnaExamSessionKey(`matekk-${programKey}-${format.key}-exam-session`, userId);
+			const sessionKey = getCcnaExamSessionKey(getCompTIAExamSessionKey(programKey, format.key), userId);
 			savedSession = window.sessionStorage.getItem(sessionKey);
 		}
 	} catch (error) {

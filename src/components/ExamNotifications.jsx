@@ -34,7 +34,7 @@ function getExamDetails(key) {
 		{ regex: /^matekk-ccna-all-questions-session$/, programKey: "ccna", examKey: "all_questions" },
 		{ regex: /^(ccna-automation|ccna-cybersecurity)-(short|medium|long)-exam$/, programKeyFromMatch: 1, examKeyFromMatch: 2 },
 		{ regex: /^matekk-fortinet-fortios-(short|medium|long|all_questions)-exam-session$/, programKey: "fortinet-fortios" },
-		{ regex: /^matekk-(comptia-network-plus|comptia-security-plus)-(short|medium|long|all_questions)-exam-session(?:-v2)?$/, programKeyFromMatch: 1, examKeyFromMatch: 2 },
+		{ regex: /^matekk-(comptia-network-plus|comptia-security-plus)-(short|medium|long|all_questions)-exam-session(?:-v2)?(?:-organized-logs-v1)?$/, programKeyFromMatch: 1, examKeyFromMatch: 2 },
 	];
 
 	for (const { regex, programKey, programKeyFromMatch, examKey, examKeyFromMatch } of patterns) {

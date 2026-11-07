@@ -1,4 +1,5 @@
 import { getExamRoute } from "../../../../../utils/examRoutes";
+import { getCompTIAExamSessionKey } from "../../../../../utils/comptiaExamSession";
 
 const EXAM_FORMATS = {
 	short: { name: "Short Exam", questionCount: 50, durationSeconds: 45 * 60 },
@@ -61,10 +62,6 @@ export function createCompTIAExamFormats(
 	const scoredQuestions = uniqueQuestions.filter((question) => question.type !== "study");
 	const reviewQuestions = uniqueQuestions.filter((question) => question.type === "study");
 
-	const getSessionKey = (examKey) => {
-		const version = programKey.startsWith("comptia-") && examKey !== "all_questions" ? "-v2" : "";
-		return `matekk-${programKey}-${examKey}-exam-session${version}`;
-	};
 	const timedFormats = Object.fromEntries(Object.entries(examFormatDefinitions).map(([examKey, format]) => [
 		examKey,
 		{
@@ -72,7 +69,7 @@ export function createCompTIAExamFormats(
 			questionCount: format.questionCount,
 			scoredQuestionCount: format.questionCount,
 			subtitle: `${programName} question bank`,
-			sessionKey: getSessionKey(examKey),
+			sessionKey: getCompTIAExamSessionKey(programKey, examKey),
 			path: getExamRoute(programKey, examKey),
 			programName,
 			createQuestions() {
@@ -99,7 +96,7 @@ export function createCompTIAExamFormats(
 			scoredQuestionCount: scoredQuestions.length,
 			reviewQuestionCount: reviewQuestions.length,
 			durationSeconds: null,
-			sessionKey: getSessionKey("all_questions"),
+			sessionKey: getCompTIAExamSessionKey(programKey, "all_questions"),
 			path: getExamRoute(programKey, "all_questions"),
 			programName,
 			createQuestions() {
