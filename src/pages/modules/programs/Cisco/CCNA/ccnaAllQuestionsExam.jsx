@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { ArrowDown, CheckCircle2, ChevronLeft, ChevronRight, Moon, RotateCcw, Sun, X } from "lucide-react";
+import { ArrowDown, CheckCircle2, ChevronLeft, ChevronRight, Flag, Moon, RotateCcw, Sun, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../../../../context/auth-context";
 import TrainingLogo from "../../../../../assets/MATEKK_training_logo.png";
@@ -50,6 +50,7 @@ export default function CCNAAllQuestionsExam() {
 	const [loadAttempt, setLoadAttempt] = useState(0);
 	const [questions, setQuestions] = useState([]);
 	const [answers, setAnswers] = useState({});
+	const [flaggedQuestions, setFlaggedQuestions] = useState({});
 	const [currentIndex, setCurrentIndex] = useState(0);
 	const [furthestOpenedIndex, setFurthestOpenedIndex] = useState(0);
 	const [isSubmitted, setIsSubmitted] = useState(false);
@@ -71,6 +72,7 @@ export default function CCNAAllQuestionsExam() {
 		[answers, questions],
 	);
 	const unansweredCount = questions.length - answeredCount;
+	const flaggedCount = Object.values(flaggedQuestions).filter(Boolean).length;
 	const answeredPercentage = questions.length ? Math.round((answeredCount / questions.length) * 100) : 0;
 	const percentage = questions.length ? Math.round((score / questions.length) * 100) : 0;
 	const reviewStatuses = useMemo(
@@ -160,6 +162,16 @@ export default function CCNAAllQuestionsExam() {
 										0,
 									));
 								}
+								const restoredFlags = {};
+								if (parsed.flaggedQuestions && typeof parsed.flaggedQuestions === "object" && !Array.isArray(parsed.flaggedQuestions)) {
+									for (const [indexText, isFlagged] of Object.entries(parsed.flaggedQuestions)) {
+										const index = Number(indexText);
+										if (Number.isInteger(index) && index >= 0 && index < orderedQuestions.length && isFlagged === true) {
+											restoredFlags[index] = true;
+										}
+									}
+								}
+								setFlaggedQuestions(restoredFlags);
 							} else {
 								window.localStorage.removeItem(storageKey);
 							}
@@ -192,6 +204,7 @@ export default function CCNAAllQuestionsExam() {
 				version: 1,
 				questionIds: questions.map((item) => item.bankId),
 				answers,
+				flaggedQuestions,
 				currentIndex,
 				furthestOpenedIndex,
 				isSubmitted,
@@ -201,7 +214,7 @@ export default function CCNAAllQuestionsExam() {
 			console.error("Unable to save all-questions exam progress.", error);
 			setStorageError("Your latest progress could not be saved in this browser.");
 		}
-	}, [answers, currentIndex, furthestOpenedIndex, isSubmitted, loadState.status, questions, storageKey]);
+	}, [answers, currentIndex, flaggedQuestions, furthestOpenedIndex, isSubmitted, loadState.status, questions, storageKey]);
 
 	useEffect(() => {
 		setQuestionNumberInput(String(currentIndex + 1));
@@ -271,6 +284,7 @@ export default function CCNAAllQuestionsExam() {
 	function restartExam() {
 		setQuestions((currentQuestions) => shuffleQuestions(currentQuestions));
 		setAnswers({});
+		setFlaggedQuestions({});
 		setCurrentIndex(0);
 		setFurthestOpenedIndex(0);
 		setIsSubmitted(false);
@@ -405,6 +419,22 @@ export default function CCNAAllQuestionsExam() {
 								<span className={`exam-progress-badge rounded-xl px-3 py-2 ${isDark ? "bg-[#1b2947]" : "bg-[#f8fafb]"}`}>
 									{answeredCount.toLocaleString()} answered
 								</span>
+								<button
+									type="button"
+									onClick={() => setFlaggedQuestions((previous) => ({
+										...previous,
+										[currentIndex]: !previous[currentIndex],
+									}))}
+									aria-label={`${flaggedQuestions[currentIndex] ? "Unflag" : "Flag"} question ${currentIndex + 1}; ${flaggedCount} flagged`}
+									aria-pressed={Boolean(flaggedQuestions[currentIndex])}
+									className={`exam-progress-badge inline-flex items-center gap-2 rounded-xl px-3 py-2 transition ${flaggedQuestions[currentIndex]
+										? isDark ? "bg-[#42291f] text-[#ffc28e]" : "bg-[#fff1d6] text-[#8a5200]"
+										: isDark ? "bg-[#1b2947] hover:bg-[#263654]" : "bg-[#f8fafb] hover:bg-[#eef3f5]"
+										} ${flaggedQuestions[currentIndex] ? "exam-progress-flagged" : ""}`}
+								>
+									<Flag size={15} fill={flaggedQuestions[currentIndex] ? "currentColor" : "none"} />
+									{flaggedCount.toLocaleString()} flagged
+								</button>
 								<span className={`exam-progress-badge rounded-xl px-3 py-2 ${isDark ? "bg-[#1b2947]" : "bg-[#f8fafb]"}`}>
 									{unansweredCount.toLocaleString()} left
 								</span>

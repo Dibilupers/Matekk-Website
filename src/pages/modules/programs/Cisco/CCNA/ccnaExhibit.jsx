@@ -219,7 +219,7 @@ export function ExhibitText({ text, className = "" }) {
 	return (
 		<div ref={wrapRef} className={`ccna-term relative left-1/2 w-[min(80rem,calc(100vw_-_2rem))] max-w-none -translate-x-1/2 overflow-hidden rounded-xl shadow-sm lg:left-auto lg:w-full lg:translate-x-0 ${className}`}>
 			<TerminalBar label={label} onExpand={overflows ? () => setOpenTheme(pageTheme(wrapRef.current)) : null} />
-			<pre ref={boxRef} aria-label="Exhibit" className="max-h-96 overflow-x-hidden overflow-y-auto whitespace-pre-wrap break-words p-4 text-xs leading-5 [overflow-wrap:anywhere] sm:text-[13px]"><code>{text}</code></pre>
+			<pre ref={boxRef} aria-label="Exhibit" className="ccna-term-output max-h-96 overflow-x-hidden overflow-y-auto whitespace-pre-wrap break-words p-4 text-xs leading-5 [overflow-wrap:anywhere] sm:text-[13px]"><code>{text}</code></pre>
 			{openTheme && (
 				<ZoomViewer title={label} theme={openTheme} onClose={() => setOpenTheme(null)}>
 					<pre className="ccna-term rounded-lg border-0 p-4 font-mono text-[14px] leading-[1.6] whitespace-pre-wrap break-words [overflow-wrap:anywhere]"><code>{text}</code></pre>
