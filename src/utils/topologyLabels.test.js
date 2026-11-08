@@ -30,3 +30,13 @@ test("keeps labels close to their requested cable positions", () => {
 
 	assert.ok(Math.hypot(label.x - 100, label.y - 100) <= 36);
 });
+
+test("keeps interface labels for parallel LACP links visibly separated", () => {
+	const labelHeight = 17.5;
+	const labels = placeTopologyLabels([
+		{ x: 100, y: 86, width: 36, height: labelHeight, centerOffsetY: 2 - labelHeight / 2 },
+		{ x: 100, y: 114, width: 36, height: labelHeight, centerOffsetY: 2 - labelHeight / 2 },
+	], []);
+
+	assert.ok(Math.abs(labels[0].y - labels[1].y) >= labelHeight + 3);
+});

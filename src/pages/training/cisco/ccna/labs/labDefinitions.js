@@ -347,8 +347,8 @@ const LAB3 = {
 		{ a: "SW-1:e0/1", b: "SW-2:e0/1", lane: -5 },
 		{ a: "SW-1:e0/2", b: "SW-3:e0/2" },
 		{ a: "SW-2:e0/2", b: "SW-4:e0/2" },
-		{ a: "SW-3:e0/0", b: "SW-4:e0/0", net: "Po34 · LACP", lane: -5 },
-		{ a: "SW-3:e0/1", b: "SW-4:e0/1", lane: 5 },
+		{ a: "SW-3:e0/0", b: "SW-4:e0/0", net: "Po34 · LACP", lane: -14 },
+		{ a: "SW-3:e0/1", b: "SW-4:e0/1", lane: 14 },
 	],
 	layout: {
 		width: 740,
