@@ -597,6 +597,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 								<QuestionPrompt
 									prompt={question.prompt}
 									imageUrl={question.exhibitImage || question.imageUrl}
+									hideExhibitImage={question.hideExhibitImage}
 									hasSeparateExhibit={Boolean(question.exhibit || question.exhibitImage || question.imageUrl)}
 									regularWeight={isCompTIAExam && !isOnline}
 								/>
@@ -763,7 +764,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 												>
 													{item.prompt}
 												</h3>
-												{item.exhibitImage && (
+												{item.exhibitImage && !item.hideExhibitImage && (
 													<ExhibitImage src={item.exhibitImage} lazy className="mt-4" imageClassName="max-h-[26rem]" />
 												)}
 												{item.exhibit && (

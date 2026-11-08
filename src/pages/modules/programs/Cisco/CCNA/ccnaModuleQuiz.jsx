@@ -563,6 +563,7 @@ export default function CCNAModuleQuiz() {
 								<QuestionPrompt
 									prompt={currentQuestion.prompt}
 									imageUrl={currentQuestion.imageUrl}
+									hideExhibitImage={currentQuestion.hideExhibitImage}
 									hasSeparateExhibit={Boolean(currentQuestion.exhibit || currentQuestion.imageUrl)}
 								/>
 								<QuestionInput
@@ -712,6 +713,7 @@ export default function CCNAModuleQuiz() {
 											<QuestionPrompt
 												prompt={question.prompt}
 												imageUrl={question.imageUrl}
+												hideExhibitImage={question.hideExhibitImage}
 												hasSeparateExhibit={Boolean(question.exhibit || question.imageUrl)}
 											/>
 											<div className="mt-5">

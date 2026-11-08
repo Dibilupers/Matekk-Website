@@ -1,8 +1,9 @@
 import emailjs from "emailjs-com";
 import { useState, useRef, useEffect } from "react";
 import DOMPurify from "dompurify";
+import HCaptcha from "@hcaptcha/react-hcaptcha";
 import API_URL from "../../config/api";
-import { executeRecaptcha, RECAPTCHA_SITE_KEY } from "../../config/recaptcha";
+import { HCAPTCHA_SITE_KEY } from "../../config/hcaptcha";
 
 const EMAILJS_SERVICE_ID  = import.meta.env.VITE_EMAILJS_SERVICE_ID;
 const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
@@ -24,9 +25,11 @@ const isTooLong    = (v, max) => v.length > max;
 export default function ContactForm() {
   const [loading, setLoading]           = useState(false);
   const [status, setStatus]             = useState("");
+  const [captchaToken, setCaptchaToken] = useState("");
 
   const timerRef    = useRef(null);
   const cooldownRef = useRef(null);
+  const captchaRef = useRef(null);
 
   // Cleanup timers on unmount
   useEffect(() => () => {
@@ -66,7 +69,6 @@ export default function ContactForm() {
       return;
     }
 
-    // ── reCAPTCHA ─────────────────────────────────────────────────────────
     // ── Sanitize ──────────────────────────────────────────────────────────
     const name    = DOMPurify.sanitize(e.target.name.value);
     const email   = DOMPurify.sanitize(e.target.email.value);
@@ -111,8 +113,12 @@ export default function ContactForm() {
       setStatus("Please enter a valid phone number.");
       return;
     }
-    if (!RECAPTCHA_SITE_KEY) {
+    if (!HCAPTCHA_SITE_KEY) {
       setStatus("CAPTCHA is not configured. Please contact us directly.");
+      return;
+    }
+    if (!captchaToken) {
+      setStatus("Please complete the CAPTCHA verification.");
       return;
     }
 
@@ -153,22 +159,25 @@ export default function ContactForm() {
     };
 
     try {
-      const captchaToken = await executeRecaptcha("contact");
       const verification = await fetch(`${API_URL}/captcha/verify`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ captchaToken, captchaAction: "contact" }),
+        body: JSON.stringify({ captchaToken }),
       });
       if (!verification.ok) {
         throw new Error("CAPTCHA verification failed. Please try again.");
       }
     } catch {
       setStatus("CAPTCHA verification failed. Please try again.");
+      captchaRef.current?.resetCaptcha();
+      setCaptchaToken("");
       setLoading(false);
       return;
     }
 
     try {
+      captchaRef.current?.resetCaptcha();
+      setCaptchaToken("");
       localStorage.setItem("lastFormSubmit", now);
       await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, payload, EMAILJS_PUBLIC_KEY);
       setStatus("Message sent successfully!");
@@ -260,11 +269,18 @@ export default function ContactForm() {
         />
       </div>
 
-      {RECAPTCHA_SITE_KEY ? (
+      {HCAPTCHA_SITE_KEY ? (
         <div className="flex flex-col items-center gap-2">
-          <p className="text-center text-xs text-gray-500">
-            Protected by Google reCAPTCHA.
-          </p>
+          <HCaptcha
+            ref={captchaRef}
+            sitekey={HCAPTCHA_SITE_KEY}
+            onVerify={setCaptchaToken}
+            onExpire={() => setCaptchaToken("")}
+            onError={() => {
+              setCaptchaToken("");
+              setStatus("CAPTCHA could not load. Check your connection and try again.");
+            }}
+          />
         </div>
       ) : (
         <p className="self-center text-sm text-red-500">

@@ -444,7 +444,15 @@ function InvalidQuestionMessage() {
 }
 
 // imageUrl: the question's picture, for pages that don't show it themselves (the exam page shows it separately)
-export function QuestionPrompt({ prompt, imageUrl, hasSeparateExhibit = Boolean(imageUrl), offline = false, regularWeight = false, fortiosOffline = false }) {
+export function QuestionPrompt({
+	prompt,
+	imageUrl,
+	hideExhibitImage = false,
+	hasSeparateExhibit = Boolean(imageUrl),
+	offline = false,
+	regularWeight = false,
+	fortiosOffline = false,
+}) {
 	const rawPrompt = String(prompt ?? "");
 	const readablePrompt = offline ? rawPrompt
 		.replace(/\r\n/g, "\n")
@@ -467,7 +475,7 @@ export function QuestionPrompt({ prompt, imageUrl, hasSeparateExhibit = Boolean(
 		return (
 			<div className="mb-5 space-y-4 sm:mb-6">
 				<PromptText text={optionTable.prompt} offline={offline} regularWeight={regularWeight || offline} fortiosOffline={fortiosOffline} />
-				{imageUrl && <ExhibitImage src={imageUrl} lazy imageClassName="max-h-[32rem]" />}
+				{imageUrl && !hideExhibitImage && <ExhibitImage src={imageUrl} lazy imageClassName="max-h-[32rem]" />}
 				<ExhibitText text={optionTable.exhibit} />
 			</div>
 		);
@@ -500,7 +508,7 @@ export function QuestionPrompt({ prompt, imageUrl, hasSeparateExhibit = Boolean(
 	return (
 		<div className="mb-5 space-y-4 sm:mb-6">
 			<PromptText text={promptText} offline={offline} regularWeight={regularWeight || offline} fortiosOffline={fortiosOffline} />
-			{imageUrl && <ExhibitImage src={imageUrl} lazy imageClassName="max-h-[32rem]" />}
+			{imageUrl && !hideExhibitImage && <ExhibitImage src={imageUrl} lazy imageClassName="max-h-[32rem]" />}
 			{exhibit && (
 				<section aria-label={exhibitTitle} className="overflow-hidden rounded-xl border border-[#d9e1ef] bg-[#f7f9fc]">
 					<p className="border-b border-[#d9e1ef] px-4 py-2 text-xs font-bold uppercase tracking-wide text-[#526584]">

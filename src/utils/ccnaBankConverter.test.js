@@ -360,6 +360,21 @@ test("restores the four omitted matching rows so the merged CCNA exam reaches 1,
     assert.equal(question.type, "drag_drop");
   }
 });
+test("marks the recreated matching activity screenshot to stay hidden", () => {
+  const { question } = convertBankRow({
+    ...rawRow(570, "Refer to the exhibit. Drag and drop destination IPs onto the network segments."),
+    imageUrl: "https://example.com/questions/ccna-question-570.png",
+    question_type: "match",
+    choices: JSON.stringify(["Internet", "Router1"]),
+    match_items: ["10.10.10.16", "10.10.13.1"],
+    correct_answer: JSON.stringify([0, 1]),
+  });
+
+  assert.equal(question.type, "match");
+  assert.equal(question.hideExhibitImage, true);
+  assert.ok(question.exhibitImage);
+});
+
 test("offline timed CCNA formats sample their existing lengths from the cached shared bank", () => {
   const bankQuestions = Array.from({ length: 1367 }, (_, index) => ({
     bankId: index + 1,
