@@ -6,6 +6,16 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `2920393` — Added collision-aware positioning for practice-lab and exam
+  topology link labels so annotations avoid device labels and one another.
+
+Validation before push: twelve focused topology and lab tests, targeted ESLint,
+production build, and Git whitespace checks passed.
+
+## 2026-11-08 — `main`
+
+Commits included in this push:
+
 - `9d35c62` — Added a shared viewport-fit calculation for practice and exam
   topology diagrams, fitting the complete diagram initially and recalculating
   when the viewer size changes.
