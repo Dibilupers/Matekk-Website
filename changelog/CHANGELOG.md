@@ -6,6 +6,16 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `c3e4b0c` — Sent the required `contact` action with hCaptcha verification
+  requests from the Contact and Enrollment forms.
+
+Validation before push: frontend production build, targeted ESLint, and Git
+whitespace checks passed.
+
+## 2026-11-08 — `main`
+
+Commits included in this push:
+
 - `3619424` — Replaced reCAPTCHA with hCaptcha across the contact, inquiry, and
   enrollment forms, and hid the source exhibit image when it is recreated in
   CCNA exam questions.
