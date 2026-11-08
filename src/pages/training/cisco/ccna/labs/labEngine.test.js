@@ -4,6 +4,7 @@ import { createServer } from "vite";
 
 let vite;
 let PRACTICE_LABS;
+let HIDDEN_PRACTICE_LABS;
 let createLabState;
 let execute;
 let applyWorksheetCommands;
@@ -17,7 +18,7 @@ before(async () => {
 		optimizeDeps: { noDiscovery: true, include: [] },
 		appType: "custom",
 	});
-	({ PRACTICE_LABS } = await vite.ssrLoadModule("/src/pages/training/cisco/ccna/labs/labDefinitions.js"));
+	({ PRACTICE_LABS, HIDDEN_PRACTICE_LABS } = await vite.ssrLoadModule("/src/pages/training/cisco/ccna/labs/labDefinitions.js"));
 	({ createLabState, execute, canReach, canReachIpv6 } = await vite.ssrLoadModule("/src/pages/training/cisco/ccna/labs/labEngine.js"));
 	({ applyWorksheetCommands } = await vite.ssrLoadModule("/src/pages/training/cisco/ccna/labs/worksheetCommands.js"));
 });
@@ -26,13 +27,13 @@ after(async () => {
 	await vite.close();
 });
 
-test("loads five practice labs with distinct static-routing and dual-stack labs", () => {
-	assert.deepEqual(PRACTICE_LABS.map(({ id }) => id), [1, 2, 3, 4, 5]);
+test("shows four practice labs with static-routing and failover as Lab 4", () => {
+	assert.deepEqual(PRACTICE_LABS.map(({ id }) => id), [1, 2, 3, 4]);
 	assert.equal(PRACTICE_LABS[0].title, "Voice VLAN Configuration 2");
 	assert.equal(PRACTICE_LABS[1].title, "Voice VLANs and LLDP");
 	assert.equal(PRACTICE_LABS[2].title, "Allowed VLANs, Native VLAN, and LACP");
 	assert.equal(PRACTICE_LABS[3].title, "Static Routing and Failover");
-	assert.equal(PRACTICE_LABS[4].title, "IPv4 and IPv6 Router Connectivity");
+	assert.deepEqual(HIDDEN_PRACTICE_LABS.map(({ id }) => id), [5]);
 });
 
 test("the recreated voice VLAN lab matches its topology and worksheet", () => {
@@ -114,8 +115,8 @@ test("the static-routing lab worksheet configures primary, backup, default, and 
 	assert.ok(lab.finalCheck.check(result.state, lab));
 });
 
-test("the dual-stack lab configures both interfaces, verifies IPv4/IPv6 pings, and saves", () => {
-	const lab = PRACTICE_LABS.find(({ id }) => id === 5);
+test("the simulator still supports IPv6 addressing, ping, and saving for a future lab", () => {
+	const lab = HIDDEN_PRACTICE_LABS[0];
 	const answers = [
 		"interface e0/1",
 		"ip address 192.168.180.17 255.255.255.240",
@@ -142,7 +143,7 @@ test("the dual-stack lab configures both interfaces, verifies IPv4/IPv6 pings, a
 });
 
 test("IPv6 interface addresses require a valid prefix length", () => {
-	const lab = PRACTICE_LABS.find(({ id }) => id === 5);
+	const lab = HIDDEN_PRACTICE_LABS[0];
 	const state = createLabState(lab);
 	state.consoles.R1.mode = "config-if";
 	state.consoles.R1.iface = "e0/1";

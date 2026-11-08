@@ -533,10 +533,10 @@ const LAB4 = {
 		nodes: {
 			R1: { x: 130, y: 170, details: ["Primary via R2", "Backup via R3"] },
 			R2: { x: 385, y: 90 },
-			R3: { x: 385, y: 300, details: ["Default via ISP"] },
+			R3: { x: 385, y: 300 },
 			R4: { x: 640, y: 190, details: ["10.0.41.0/24 LAN"] },
 			PC1: { x: 780, y: 190, sub: "10.0.41.10" },
-			ISP: { x: 385, y: 440, sub: "209.165.201.1" },
+			ISP: { x: 600, y: 440, sub: "209.165.201.1" },
 		},
 	},
 	tasks: [
@@ -732,4 +732,5 @@ const LAB5 = {
 	hasPacketTracerFile: false,
 };
 
-export const PRACTICE_LABS = [LAB1, LAB2, LAB3, LAB4, LAB5];
+export const PRACTICE_LABS = [LAB1, LAB2, LAB3, LAB4];
+export const HIDDEN_PRACTICE_LABS = [LAB5];

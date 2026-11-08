@@ -6,6 +6,16 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- Pending — Repositioned the Lab 4 ISP link to prevent topology-label overlap
+  and hid Lab 5 from the website's practice-lab list.
+
+Validation before push: eleven focused practice-lab and topology-label tests,
+targeted ESLint, frontend production build, and Git whitespace checks passed.
+
+## 2026-11-08 — `main`
+
+Commits included in this push:
+
 - `d43f85f` — Replaced the duplicate Practice Lab 4 with static routing and
   failover, added Practice Lab 5 for IPv4/IPv6 router connectivity, and extended
   the simulator with IPv6 addressing and ping support.
