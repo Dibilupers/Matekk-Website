@@ -6,6 +6,17 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `9d35c62` — Added a shared viewport-fit calculation for practice and exam
+  topology diagrams, fitting the complete diagram initially and recalculating
+  when the viewer size changes.
+
+Validation before push: ten focused topology and lab tests, targeted ESLint,
+production build, and Git whitespace checks passed.
+
+## 2026-11-08 — `main`
+
+Commits included in this push:
+
 - `d7f7ca0` — Replaced CCNA Practice Labs 1–3 from the supplied worksheet and
   corrected the Lab 4 topology spacing to prevent labels and devices from
   overlapping.
