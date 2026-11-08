@@ -510,11 +510,11 @@ export function QuestionPrompt({
 			<PromptText text={promptText} offline={offline} regularWeight={regularWeight || offline} fortiosOffline={fortiosOffline} />
 			{imageUrl && !hideExhibitImage && <ExhibitImage src={imageUrl} lazy imageClassName="max-h-[32rem]" />}
 			{exhibit && (
-				<section aria-label={exhibitTitle} className="overflow-hidden rounded-xl border border-[#d9e1ef] bg-[#f7f9fc]">
-					<p className="border-b border-[#d9e1ef] px-4 py-2 text-xs font-bold uppercase tracking-wide text-[#526584]">
+				<section aria-label={exhibitTitle} className="ccna-prompt-exhibit overflow-hidden rounded-xl border border-[#d9e1ef] bg-[#f7f9fc]">
+					<p className="ccna-prompt-exhibit-title border-b border-[#d9e1ef] px-4 py-2 text-xs font-bold uppercase tracking-wide text-[#526584]">
 						{exhibitTitle}
 					</p>
-					<pre className="overflow-x-hidden whitespace-pre-wrap break-words px-4 py-3 font-mono text-xs leading-6 text-[#263654] [overflow-wrap:anywhere] sm:text-sm">
+					<pre className="ccna-prompt-exhibit-output overflow-x-hidden whitespace-pre-wrap break-words px-4 py-3 font-mono text-xs leading-6 text-[#263654] [overflow-wrap:anywhere] sm:text-sm">
 						{exhibit}
 					</pre>
 				</section>

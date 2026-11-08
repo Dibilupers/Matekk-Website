@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ArrowDown, CheckCircle2, ChevronLeft, ChevronRight, Flag, Moon, RotateCcw, Sun, X } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useBlocker } from "react-router-dom";
 import { useAuth } from "../../../../../context/auth-context";
 import TrainingLogo from "../../../../../assets/MATEKK_training_logo.png";
 import ExamBrand from "../../../../../components/ExamBrand";
@@ -60,6 +60,12 @@ export default function CCNAAllQuestionsExam() {
 	const [questionNumberInput, setQuestionNumberInput] = useState("1");
 	const [isRetakeConfirmationOpen, setIsRetakeConfirmationOpen] = useState(false);
 	const [isSubmitConfirmationOpen, setIsSubmitConfirmationOpen] = useState(false);
+	const blocker = useBlocker(({ currentLocation, nextLocation }) =>
+		!isSubmitted &&
+		(currentLocation.pathname !== nextLocation.pathname ||
+			currentLocation.search !== nextLocation.search ||
+			currentLocation.hash !== nextLocation.hash),
+	);
 	// Results page: show only correct / incorrect / unanswered questions when stepping through the review
 	const [reviewFilter, setReviewFilter] = useState("all");
 	const questionCardRef = useRef(null);
@@ -699,6 +705,46 @@ export default function CCNAAllQuestionsExam() {
 								className="rounded-full bg-[#005b6b] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#004653]"
 							>
 								Yes, retake exam
+							</button>
+						</div>
+					</section>
+				</div>,
+				document.body,
+			)}
+			{blocker.state === "blocked" && createPortal(
+				<div data-theme={isDark ? "dark" : "light"} className="fixed inset-0 z-[120] grid place-items-center overflow-y-auto bg-[#071126]/55 p-4 backdrop-blur-[2px] sm:p-6">
+					<section
+						role="alertdialog"
+						aria-modal="true"
+						aria-labelledby="ccna-all-questions-exit-title"
+						aria-describedby="ccna-all-questions-exit-description"
+						className="w-full max-w-md rounded-2xl border border-[#d6e5e7] bg-white p-5 text-[#17233d] shadow-2xl sm:p-8"
+					>
+						<p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#005b6b]">Exam in progress</p>
+						<h2 id="ccna-all-questions-exit-title" className="mt-2 text-xl font-bold sm:text-2xl">
+							Are you sure you want to exit the exam?
+						</h2>
+						<p id="ccna-all-questions-exit-description" className="mt-3 text-sm leading-6 text-[#64748b] sm:text-base">
+							{storageKey && !storageError
+								? "Your answers and flagged questions are saved automatically. You can continue this exam when you return."
+								: storageError
+									? "Your latest progress could not be saved. If you exit now, you may lose your recent changes."
+									: "Your progress may not be saved after you exit this exam."}
+						</p>
+						<div className="mt-6 flex flex-wrap justify-end gap-3">
+							<button
+								type="button"
+								onClick={() => blocker.reset()}
+								className="ccna-modal-stay rounded-full border border-[#c9dfe2] px-4 py-2.5 text-sm font-semibold text-[#42516b] transition hover:bg-[#f5f9f9] sm:px-5"
+							>
+								Stay in exam
+							</button>
+							<button
+								type="button"
+								onClick={() => blocker.proceed()}
+								className="rounded-full bg-[#005b6b] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#004653] sm:px-5"
+							>
+								Exit exam
 							</button>
 						</div>
 					</section>
