@@ -18,6 +18,32 @@ export const prefixLen = (m) => ipToInt(m).toString(2).replace(/0/g, "").length;
 export const networkOf = (ip, mask) => intToIp((ipToInt(ip) & ipToInt(mask)) >>> 0);
 export const sameSubnet = (a, b, mask) => networkOf(a, mask) === networkOf(b, mask);
 
+function parseIpv6(value) {
+	const [address, prefixText, ...extra] = value.trim().toLowerCase().split("/");
+	if (!address || extra.length || (prefixText !== undefined && !/^\d{1,3}$/.test(prefixText))) return null;
+	const prefix = prefixText === undefined ? 128 : Number(prefixText);
+	if (prefix > 128) return null;
+	const halves = address.split("::");
+	if (halves.length > 2) return null;
+	const left = halves[0] ? halves[0].split(":") : [];
+	const right = halves.length === 2 && halves[1] ? halves[1].split(":") : [];
+	const groups = [...left, ...right];
+	if (groups.some((group) => !/^[\da-f]{1,4}$/.test(group))) return null;
+	const missing = 8 - groups.length;
+	if ((halves.length === 1 && missing !== 0) || (halves.length === 2 && missing < 1)) return null;
+	const expanded = [...left, ...Array(missing).fill("0"), ...right].map((group) => Number.parseInt(group, 16));
+	const addressValue = expanded.reduce((result, group) => (result << 16n) | BigInt(group), 0n);
+	return { address: expanded.map((group) => group.toString(16)).join(":"), addressValue, prefix };
+}
+
+export const isIpv6 = (address) => typeof address === "string" && parseIpv6(address) !== null;
+
+function sameIpv6Subnet(left, right, prefix = left.prefix) {
+	if (!left || !right) return false;
+	const shift = BigInt(128 - prefix);
+	return (left.addressValue >> shift) === (right.addressValue >> shift);
+}
+
 const FULL_NAME = (ifName) => {
 	if (ifName.startsWith("g")) return `GigabitEthernet${ifName.slice(1)}`;
 	if (ifName.startsWith("lo")) return `Loopback${ifName.slice(2)}`;
@@ -41,6 +67,7 @@ export function createLabState(lab) {
 		for (const i of Object.values(d.interfaces)) {
 			i.ip = i.ip || "";
 			i.mask = i.mask || "";
+			i.ipv6 = i.ipv6 || "";
 			i.up = d.kind === "pc" || d.kind === "switch" ? true : Boolean(i.up);
 			i.desc = i.desc || "";
 			if (d.kind === "switch") {
@@ -206,6 +233,22 @@ export function canReach(lab, state, fromDev, dstIp) {
 	return forward(lab, state, go.dev, srcIp).ok;
 }
 
+export function canReachIpv6(lab, state, fromDev, dstAddress) {
+	const destination = parseIpv6(dstAddress);
+	if (!destination) return false;
+	const device = state.devices[fromDev];
+	return Object.entries(device.interfaces).some(([ifName, intf]) => {
+		if (!intf.ipv6 || !ifaceUp(lab, state, fromDev, ifName)) return false;
+		const source = parseIpv6(intf.ipv6);
+		const peer = peerOf(lab, fromDev, ifName);
+		const peerInterface = peer && state.devices[peer.dev]?.interfaces[peer.ifName];
+		const peerAddress = peerInterface?.ipv6 && parseIpv6(peerInterface.ipv6);
+		return source && peerAddress && peerAddress.address === destination.address &&
+			sameIpv6Subnet(source, destination) && sameIpv6Subnet(peerAddress, source) &&
+			ifaceUp(lab, state, peer.dev, peer.ifName);
+	});
+}
+
 // ---------- show commands ----------
 export function runningConfig(d) {
 	const lines = ["Building configuration...", "", "Current configuration : 1342 bytes", "!", "version 15.4", "!", `hostname ${d.hostname}`, "!"];
@@ -238,6 +281,7 @@ export function runningConfig(d) {
 		lines.push(`interface ${FULL_NAME(ifName)}`);
 		if (i.desc) lines.push(` description ${i.desc}`);
 		lines.push(i.ip ? ` ip address ${i.ip} ${i.mask}` : " no ip address");
+		if (i.ipv6) lines.push(` ipv6 address ${i.ipv6}`);
 		if (!i.up && !ifName.startsWith("lo")) lines.push(" shutdown");
 		lines.push("!");
 	}
@@ -282,8 +326,10 @@ export function configCommands(d) {
 		return out;
 	}
 	for (const [ifName, i] of Object.entries(d.interfaces)) {
-		if (!i.ip) continue;
-		out.push(`interface ${ifName}`, ` ip address ${i.ip} ${i.mask}`);
+		if (!i.ip && !i.ipv6) continue;
+		out.push(`interface ${ifName}`);
+		if (i.ip) out.push(` ip address ${i.ip} ${i.mask}`);
+		if (i.ipv6) out.push(` ipv6 address ${i.ipv6}`);
 		if (i.up || ifName.startsWith("lo")) out.push(" no shutdown");
 	}
 	out.push("exit");
@@ -322,10 +368,8 @@ const kw = (token, word, min = 1) => !!token && token.length >= min && word.star
 function parseIface(tokens, device) {
 	const joined = tokens.join("").toLowerCase();
 	let m;
-	if (device.kind === "switch") {
-		m = joined.match(/^e(?:t(?:h(?:e(?:r(?:n(?:e(?:t)?)?)?)?)?)?)?0\/(\d)$/);
-		if (m && device.interfaces[`e0/${m[1]}`]) return `e0/${m[1]}`;
-	}
+	m = joined.match(/^e(?:t(?:h(?:e(?:r(?:n(?:e(?:t)?)?)?)?)?)?)?0\/(\d)$/);
+	if (m && device.interfaces[`e0/${m[1]}`]) return `e0/${m[1]}`;
 	m = joined.match(/^g(?:i(?:g(?:a(?:b(?:i(?:t(?:e(?:t(?:h(?:e(?:r(?:n(?:e(?:t)?)?)?)?)?)?)?)?)?)?)?)?)?)?0\/(\d)$/);
 	if (m && device.interfaces[`g0/${m[1]}`]) return `g0/${m[1]}`;
 	m = joined.match(/^lo(?:o(?:p(?:b(?:a(?:c(?:k)?)?)?)?)?)?(\d)$/);
@@ -348,7 +392,7 @@ const HELP = {
 	user: ["enable           Turn on privileged commands", "ping             Send echo messages", "show             Show running system information", "traceroute       Trace route to destination"],
 	priv: ["configure        Enter configuration mode", "copy             Copy from one file to another", "disable          Turn off privileged commands", "ping             Send echo messages", "show             Show running system information", "traceroute       Trace route to destination", "write            Write running configuration to memory"],
 	config: ["do               Run an exec-level command", "enable           Modify enable password parameters", "end              Exit to privileged mode", "exit             Exit from configure mode", "hostname         Set system's network name", "interface        Select an interface or interface range", "ip               Global IP configuration subcommands (ip route)", "lldp             Global LLDP configuration", "no               Negate a command", "vlan             Configure a VLAN"],
-	"config-if": ["channel-group    Configure LACP EtherChannel", "description      Interface specific description", "do               Run an exec-level command", "end              Exit to privileged mode", "exit             Exit from interface configuration mode", "ip               Interface IP config commands (ip address)", "lldp             Configure LLDP on the interface", "no               Negate a command", "shutdown         Shutdown the selected interface", "switchport       Configure switch port mode and VLANs"],
+	"config-if": ["channel-group    Configure LACP EtherChannel", "description      Interface specific description", "do               Run an exec-level command", "end              Exit to privileged mode", "exit             Exit from interface configuration mode", "ip               Interface IP config commands (ip address)", "ipv6             IPv6 interface configuration", "lldp             Configure LLDP on the interface", "no               Negate a command", "shutdown         Shutdown the selected interface", "switchport       Configure switch port mode and VLANs"],
 	"config-if-range": ["channel-group    Configure LACP EtherChannel", "description      Interface specific description", "do               Run an exec-level command", "end              Exit to privileged mode", "exit             Exit from interface configuration mode", "lldp             Configure LLDP on the interface range", "no               Negate a command", "switchport       Configure switch port mode and VLANs"],
 	"config-vlan": ["end              Exit to privileged mode", "exit             Exit from VLAN configuration mode", "name             Assign a name to the VLAN"],
 };
@@ -398,6 +442,12 @@ export function execute(lab, prev, devName, line) {
 	const exec = (tk, privileged, tokenOffset = 0) => {
 		const invalid = (index = 0) => invalidAt(tokenOffset + index);
 		if (kw(tk[0], "ping", 1)) {
+			if (kw(tk[1], "ipv6", 2)) {
+				if (!tk[2]) return incomplete();
+				if (!isIpv6(tk[2])) return invalid(2);
+				const ok = canReachIpv6(lab, state, devName, tk[2]);
+				return out.push("Type escape sequence to abort.", `Sending 5, 100-byte ICMP Echos to ${tk[2]}, timeout is 2 seconds:`, ok ? "!!!!!" : ".....", ok ? "Success rate is 100 percent (5/5), round-trip min/avg/max = 1/2/4 ms" : "Success rate is 0 percent (0/5)");
+			}
 			if (!tk[1]) return incomplete();
 			if (!isIp(tk[1])) return invalid(1);
 			const ok = canReach(lab, state, devName, tk[1]);
@@ -537,6 +587,12 @@ export function execute(lab, prev, devName, line) {
 				i.ip = tk[2];
 				i.mask = tk[3];
 			}
+		} else if (mode === "config-if" && kw(tk[0], "ipv6", 4) && kw(tk[1], "address", 3)) {
+			const i = d.interfaces[con.iface];
+			if (neg) i.ipv6 = "";
+			else if (!tk[2]) incomplete();
+			else if (!tk[2].includes("/") || !isIpv6(tk[2])) invalidAt((neg ? 1 : 0) + 2);
+			else i.ipv6 = tk[2].toLowerCase();
 		} else if (mode === "config-if" && kw(tk[0], "shutdown", 2)) {
 			const i = d.interfaces[con.iface];
 			const name = FULL_NAME(con.iface);
