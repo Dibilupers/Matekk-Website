@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { ArrowDown, BookOpen, CheckCircle2, ChevronLeft, ChevronRight, Moon, RotateCcw, Sun, X } from "lucide-react";
+import { ArrowDown, CheckCircle2, ChevronLeft, ChevronRight, Moon, RotateCcw, Sun, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../../../../context/auth-context";
 import TrainingLogo from "../../../../../assets/MATEKK_training_logo.png";
@@ -70,6 +70,8 @@ export default function CCNAAllQuestionsExam() {
 		() => questions.reduce((count, item, index) => count + Number(isQuestionAnswered(item, answers[index])), 0),
 		[answers, questions],
 	);
+	const unansweredCount = questions.length - answeredCount;
+	const answeredPercentage = questions.length ? Math.round((answeredCount / questions.length) * 100) : 0;
 	const percentage = questions.length ? Math.round((score / questions.length) * 100) : 0;
 	const reviewStatuses = useMemo(
 		() => (isSubmitted
@@ -318,14 +320,14 @@ export default function CCNAAllQuestionsExam() {
 						) : (
 							<ExamBrand to="/modules/programs/ccna" isDark={isDark} />
 						)}
-						<div className="min-w-0 border-l border-[#cbd5e1] pl-4">
-							<p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#70809a]">CCNA practice</p>
+						<div className="hidden min-w-0 border-l border-[#cbd5e1] pl-4 sm:block">
+							<p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#70809a]">CCNA composite exam</p>
 							<p className="mt-1 truncate text-sm font-bold text-[#17233d]">
 								All Questions Exam · {questionBankSource === "cached-online"
 									? "Saved Online Question Bank"
 									: questionBankSource === "bundled"
 										? "Built-in Offline Question Bank"
-										: "Online Question Bank"} · {questions.length.toLocaleString()} questions
+										: "Online Question Bank"}
 							</p>
 						</div>
 					</div>
@@ -360,19 +362,12 @@ export default function CCNAAllQuestionsExam() {
 					<>
 						<section aria-label="Exam progress" className="mb-5 rounded-2xl border border-[#d6e5e7] bg-white p-5 shadow-sm sm:mb-6 sm:p-8">
 							<div className="flex flex-wrap items-center justify-between gap-3">
-								<div className="flex flex-wrap items-center gap-2">
-									<p className="inline-flex items-center gap-2 rounded-xl bg-[#e8f3f4] px-4 py-2 text-sm font-semibold text-[#005b6b]">
-										<BookOpen size={16} /> Untimed · Database order
-									</p>
-									<span className="shrink-0 rounded-full border border-[#c9dfe2] bg-white px-3 py-2 text-xs font-semibold text-[#005b6b] sm:px-4 sm:text-sm">
-										No time limit
-									</span>
+								<p className="rounded-xl bg-[#e1f5ef] px-4 py-2 text-sm font-semibold text-[#075b4a]">All Questions Exam</p>
+								<div className="shrink-0 rounded-full border border-[#c9dfe2] bg-white px-3 py-2 text-xs font-semibold text-[#005b6b] sm:px-4 sm:text-sm">
+									No time limit
 								</div>
-								<span className={`exam-progress-badge rounded-xl px-3 py-2 text-sm ${isDark ? "bg-[#1b2947] text-[#cbd5e1]" : "bg-[#f8fafb] text-[#526584]"}`}>
-									{answeredCount.toLocaleString()} of {questions.length.toLocaleString()} answered
-								</span>
 							</div>
-							<div className="mt-5 flex flex-wrap items-baseline justify-between gap-3">
+							<div className="mt-5 flex flex-wrap items-baseline justify-between gap-2">
 								<h1 className="text-xl font-semibold text-[#17233d] sm:text-2xl">
 									Question {currentIndex + 1} <span className="text-base font-normal text-[#64748b] sm:text-lg">of {questions.length.toLocaleString()}</span>
 								</h1>
@@ -392,15 +387,34 @@ export default function CCNAAllQuestionsExam() {
 									</button>
 								</form>
 							</div>
-							<p className="mt-2 text-sm text-[#64748b]">
-								Answer each question to unlock the next one. You can return to any question you’ve already opened.
+							<p className="mt-2 text-sm text-[#64748b] sm:text-base">
+								{answeredCount.toLocaleString()} answered <span aria-hidden="true">·</span> {answeredPercentage}%
 							</p>
-							<div className={`exam-progress-track mt-3 h-2 overflow-hidden rounded-full ${isDark ? "bg-[#303a60]" : "bg-[#e7e7e7]"}`}>
-								<div className={`exam-progress-fill h-full rounded-full transition-[width] ${isDark ? "bg-[#20c5d6] shadow-[0_0_10px_rgba(32,197,214,0.55)]" : "bg-[#159b73]"}`} style={{ width: `${questions.length ? (answeredCount / questions.length) * 100 : 0}%` }} />
+							<div
+								role="progressbar"
+								aria-label="Exam progress"
+								aria-valuemin={0}
+								aria-valuemax={questions.length}
+								aria-valuenow={answeredCount}
+								aria-valuetext={`${answeredCount} of ${questions.length} answered, ${answeredPercentage}%`}
+								className={`exam-progress-track mt-3 h-2 overflow-hidden rounded-full ${isDark ? "bg-[#303a60]" : "bg-[#e7e7e7]"}`}
+							>
+								<div className={`exam-progress-fill h-full rounded-full transition-[width] ${isDark ? "bg-[#20c5d6] shadow-[0_0_10px_rgba(32,197,214,0.55)]" : "bg-[#159b73]"}`} style={{ width: `${answeredPercentage}%` }} />
+							</div>
+							<div className={`mt-4 flex flex-wrap gap-2.5 text-sm ${isDark ? "text-[#cbd5e1]" : "text-[#526584]"}`}>
+								<span className={`exam-progress-badge rounded-xl px-3 py-2 ${isDark ? "bg-[#1b2947]" : "bg-[#f8fafb]"}`}>
+									{answeredCount.toLocaleString()} answered
+								</span>
+								<span className={`exam-progress-badge rounded-xl px-3 py-2 ${isDark ? "bg-[#1b2947]" : "bg-[#f8fafb]"}`}>
+									{unansweredCount.toLocaleString()} left
+								</span>
 							</div>
 						</section>
 
 						<section key={`question-${currentIndex}`} ref={questionCardRef} className="ccna-question-transition scroll-mt-4 rounded-[20px] border border-[#d6e5e7] bg-white p-4 shadow-sm sm:p-7">
+							<p className="mb-2 text-sm text-[#70809a]">
+								Question {currentIndex + 1} of {questions.length.toLocaleString()}
+							</p>
 							{!question.hidePrompt && (
 								<QuestionPrompt
 									prompt={question.prompt}
@@ -429,7 +443,7 @@ export default function CCNAAllQuestionsExam() {
 										disabled={!isQuestionAnswered(question, answers[currentIndex])}
 										className="inline-flex items-center gap-2 rounded-full bg-[#005b6b] px-6 py-3 font-semibold text-white transition hover:bg-[#004653] disabled:cursor-not-allowed disabled:opacity-40"
 									>
-										Next <ChevronRight size={18} />
+										Next Question <ChevronRight size={18} />
 									</button>
 								)}
 							</div>
