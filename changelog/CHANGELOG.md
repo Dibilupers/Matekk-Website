@@ -2,6 +2,17 @@
 
 Tracking begins 2026-10-17.
 
+## 2026-11-08 — `main`
+
+Commits included in this push:
+
+- `3619424` — Replaced reCAPTCHA with hCaptcha across the contact, inquiry, and
+  enrollment forms, and hid the source exhibit image when it is recreated in
+  CCNA exam questions.
+
+Validation before push: frontend production build, focused CCNA tests, 19
+focused backend tests, targeted ESLint/Oxlint, and Git whitespace checks passed.
+
 ## 2026-11-07 — `main`
 
 Commits included in this push:
