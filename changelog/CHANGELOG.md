@@ -6,6 +6,17 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `d43f85f` — Replaced the duplicate Practice Lab 4 with static routing and
+  failover, added Practice Lab 5 for IPv4/IPv6 router connectivity, and extended
+  the simulator with IPv6 addressing and ping support.
+
+Validation before push: seven focused practice-lab tests, targeted ESLint,
+frontend production build, and Git whitespace checks passed.
+
+## 2026-11-08 — `main`
+
+Commits included in this push:
+
 - `72cb376` — Added a mobile Courses shortcut, updated recreated CCNA exam
   exhibits and matching-question bank data, and validated the contact CAPTCHA
   action in its request DTO.
