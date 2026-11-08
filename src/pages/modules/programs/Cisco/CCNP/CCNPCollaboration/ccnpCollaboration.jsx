@@ -26,7 +26,7 @@ export default function CCNPCollaborationDashboard() {
 	const concentrationCount = tracks.filter((track) => track.type === "Concentration exam").length;
 
 	return (
-		<main className="program-faceted-page ccna-page-enter relative min-h-screen bg-white text-[#071126]">
+		<main className="program-faceted-page ccnp-program-page ccna-page-enter relative min-h-screen bg-white text-[#071126]">
 			{createPortal(<Link to={isOnline ? "/pages/blank" : "/modules/programs"} className={`fixed left-4 ${isOnline ? "top-24" : "top-5"} z-40 flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-2 text-sm font-bold text-[#005b6b] shadow-md backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5 hover:text-[#004653]`}><ArrowLeft size={20} strokeWidth={2.5} /> Back to Courses</Link>, document.body)}
 			<ProgramBackgroundParticles className="mx-auto max-w-[1440px] px-6 pb-16 pt-14 sm:px-10 lg:px-14 lg:pb-20 lg:pt-16">
 				<div className="grid min-w-0 items-center gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-4">

@@ -271,6 +271,10 @@ h6 {
   animation: program-particle-float var(--particle-duration) ease-in-out var(--particle-delay) infinite alternate;
 }
 
+.ccnp-program-page .program-background-particle:nth-child(3n) {
+  background: radial-gradient(circle, rgb(234 107 125 / 76%) 0 var(--particle-size), rgb(234 107 125 / 14%) calc(var(--particle-size) + 1px), transparent 13px);
+}
+
 @keyframes program-particle-float {
   from {
     translate: 0 7px;
