@@ -6,6 +6,18 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `72cb376` — Added a mobile Courses shortcut, updated recreated CCNA exam
+  exhibits and matching-question bank data, and validated the contact CAPTCHA
+  action in its request DTO.
+
+Validation before push: frontend and backend production builds, fourteen
+focused CCNA bank/exhibit tests, five CAPTCHA tests, targeted ESLint, and Git
+whitespace checks passed.
+
+## 2026-11-08 — `main`
+
+Commits included in this push:
+
 - `cb94681` — Increased spacing between Lab 3's parallel LACP links so their
   port labels no longer overlap.
 
