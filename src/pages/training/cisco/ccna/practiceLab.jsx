@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, useSearchParams } from "react-router-dom";
 import { CheckCircle2, Circle, Download, Eye, Lightbulb, Maximize2, Network, RotateCcw, X, XCircle, ZoomIn, ZoomOut } from "lucide-react";
@@ -7,6 +7,7 @@ import { canReach, configCommands, createLabState, execute, fullIfName, promptFo
 import LabTopology from "./labs/LabTopology";
 import LabCommandWorksheet from "./labs/LabCommandWorksheet";
 import TopologySandbox from "./labs/TopologySandbox";
+import { topologyFitScale } from "../../../../utils/topologyFit";
 
 /* ==========================================================================
    CCNA Online Practice Labs — three labs of increasing difficulty.
@@ -176,9 +177,46 @@ const ZOOM_STEPS = [1, 1.5, 2, 3];
 
 // Rendered into <body> so the dashboard's page animation (a CSS transform) can't trap the fixed overlay.
 function TopologyFullscreen({ lab, state, device, onClose }) {
-	// Phones start zoomed in: the whole diagram at 100% is too small to read in portrait
-	const [zoomIndex, setZoomIndex] = useState(() => (window.innerWidth < 640 ? 2 : 0));
+	const viewportRef = useRef(null);
+	const topologyRef = useRef(null);
+	const [fitSize, setFitSize] = useState(null);
+	const [zoomIndex, setZoomIndex] = useState(0);
 	const zoom = ZOOM_STEPS[zoomIndex];
+
+	useLayoutEffect(() => {
+		const viewport = viewportRef.current;
+		const topology = topologyRef.current;
+		if (!viewport || !topology) return undefined;
+
+		const measure = () => {
+			const { width, height } = topology.viewBox.baseVal;
+			if (!width || !height || !viewport.clientWidth || !viewport.clientHeight) return;
+			const fit = topologyFitScale(width, height, viewport.clientWidth, viewport.clientHeight, 32);
+			const nextSize = {
+				width: width * fit,
+				height: height * fit,
+				viewportWidth: viewport.clientWidth,
+				viewportHeight: viewport.clientHeight,
+			};
+			setFitSize((current) => current
+				&& Math.abs(current.width - nextSize.width) < 0.5
+				&& Math.abs(current.height - nextSize.height) < 0.5
+				&& current.viewportWidth === nextSize.viewportWidth
+				&& current.viewportHeight === nextSize.viewportHeight
+				? current
+				: nextSize);
+		};
+
+		measure();
+		const resizeObserver = new ResizeObserver(measure);
+		resizeObserver.observe(viewport);
+		const viewBoxObserver = new MutationObserver(measure);
+		viewBoxObserver.observe(topology, { attributes: true, attributeFilter: ["viewBox"] });
+		return () => {
+			resizeObserver.disconnect();
+			viewBoxObserver.disconnect();
+		};
+	}, [lab.id]);
 
 	useEffect(() => {
 		const onKey = (e) => { if (e.key === "Escape") onClose(); };
@@ -203,12 +241,28 @@ function TopologyFullscreen({ lab, state, device, onClose }) {
 					<button type="button" className={`${btn} ml-2`} onClick={onClose} aria-label="Close full screen"><X size={20} /></button>
 				</div>
 			</div>
-			{/* Scrolls in both directions when zoomed in */}
-			<div className="flex-1 overflow-auto">
-				<div className="flex min-h-full items-center justify-center p-4" style={{ width: `${zoom * 100}%`, minWidth: "100%" }}>
-					<div className="w-full max-h-full rounded-2xl bg-white p-3 shadow-sm" style={{ maxWidth: zoom === 1 ? "min(100%, calc((100vh - 7rem) * 1.9))" : "none" }}>
-						<LabTopology lab={lab} state={state} activeDevice={device} />
-					</div>
+			{/* The initial scale fits the full viewBox; larger steps remain scrollable. */}
+			<div ref={viewportRef} className="flex-1 overflow-auto">
+				<div
+					className="flex min-w-full min-h-full p-4"
+					style={{
+						width: fitSize ? Math.max(fitSize.viewportWidth, fitSize.width * zoom + 32) : "100%",
+						height: fitSize ? Math.max(fitSize.viewportHeight, fitSize.height * zoom + 32) : "100%",
+						boxSizing: "border-box",
+					}}
+				>
+					<LabTopology
+						lab={lab}
+						state={state}
+						activeDevice={device}
+						svgRef={topologyRef}
+						className="m-auto block max-w-none shrink-0"
+						style={{
+							width: fitSize ? `${fitSize.width * zoom}px` : "100%",
+							height: fitSize ? `${fitSize.height * zoom}px` : "100%",
+							visibility: fitSize ? "visible" : "hidden",
+						}}
+					/>
 				</div>
 			</div>
 			<p className="px-4 py-2 text-center text-xs text-gray-600 bg-white border-t border-[#d6e0ee]">Use + / − to zoom, drag or scroll to move around. Tip: turn your phone sideways for a bigger view.</p>

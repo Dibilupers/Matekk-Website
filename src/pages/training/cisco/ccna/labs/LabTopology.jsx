@@ -171,12 +171,19 @@ function topologyViewBox(lab, state) {
 	};
 }
 
-export default function LabTopology({ lab, state, activeDevice }) {
+export default function LabTopology({
+	lab,
+	state,
+	activeDevice,
+	className = "mx-auto h-auto w-full max-w-5xl",
+	style,
+	svgRef,
+}) {
 	const { layout } = lab;
 	const pos = (name) => layout.nodes[name];
 	const viewBox = topologyViewBox(lab, state);
 	return (
-		<svg viewBox={`${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`} className="mx-auto h-auto w-full max-w-5xl" role="img" aria-label={`Lab topology: ${lab.title}`}>
+		<svg ref={svgRef} viewBox={`${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`} className={className} style={style} role="img" aria-label={`Lab topology: ${lab.title}`}>
 			{layout.cloud && (
 				<line x1={layout.cloud.x} y1={layout.cloud.y + 22} x2={pos(layout.cloud.attach).x} y2={pos(layout.cloud.attach).y - 22} stroke="#94a3b8" strokeWidth="2" strokeDasharray="4 4" />
 			)}

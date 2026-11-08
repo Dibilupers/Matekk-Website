@@ -2,6 +2,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react
 import { createPortal } from "react-dom";
 import { Maximize2, X } from "lucide-react";
 import { PcIcon, RouterIcon, SwitchIcon } from "../../../../training/cisco/ccna/labs/LabTopology";
+import { topologyFitScale } from "../../../../../utils/topologyFit";
 
 /* Exam exhibits (router output and pictures). Each one can open full screen, where it starts zoomed
    to fit the screen and can be zoomed by touch: pinch with two fingers, drag with one, double-tap to
@@ -38,17 +39,23 @@ function ZoomViewer({ title, theme, onClose, children }) {
 		const width = content.scrollWidth;
 		const height = content.scrollHeight;
 		if (!width || !height) return;
-		const availableWidth = Math.max(1, scroller.clientWidth - 24);
-		const availableHeight = Math.max(1, scroller.clientHeight - 24);
-		const fitScale = Math.min(1, availableWidth / width, availableHeight / height);
+		const fitScale = topologyFitScale(width, height, scroller.clientWidth, scroller.clientHeight);
 		setNatural({ width, height });
 		setFit(fitScale);
 		setScale(fitScale);
 	}, []);
 	useLayoutEffect(() => {
 		measure();
+		const scroller = scrollerRef.current;
+		const resizeObserver = new ResizeObserver(measure);
+		if (scroller) resizeObserver.observe(scroller);
 		const content = contentRef.current;
-		content?.querySelectorAll("img").forEach((img) => { if (!img.complete) img.addEventListener("load", measure, { once: true }); });
+		const pendingImages = Array.from(content?.querySelectorAll("img") ?? []).filter((img) => !img.complete);
+		pendingImages.forEach((img) => img.addEventListener("load", measure, { once: true }));
+		return () => {
+			resizeObserver.disconnect();
+			pendingImages.forEach((img) => img.removeEventListener("load", measure));
+		};
 	}, [measure]);
 
 	// Zoom while keeping the point under the fingers / cursor in place
