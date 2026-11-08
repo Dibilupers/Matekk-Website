@@ -6,6 +6,17 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `d7f7ca0` — Replaced CCNA Practice Labs 1–3 from the supplied worksheet and
+  corrected the Lab 4 topology spacing to prevent labels and devices from
+  overlapping.
+
+Validation before push: six focused lab tests, targeted ESLint, production
+build, and Git whitespace checks passed.
+
+## 2026-11-08 — `main`
+
+Commits included in this push:
+
 - `c3e4b0c` — Sent the required `contact` action with hCaptcha verification
   requests from the Contact and Enrollment forms.
 
