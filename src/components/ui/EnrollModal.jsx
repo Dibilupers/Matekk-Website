@@ -104,7 +104,7 @@ function useEnrollForm(onClose) {
       const verification = await fetch(`${API_URL}/captcha/verify`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ captchaToken }),
+        body: JSON.stringify({ captchaToken, captchaAction: "contact" }),
       });
       if (!verification.ok) throw new Error("CAPTCHA verification failed.");
 
