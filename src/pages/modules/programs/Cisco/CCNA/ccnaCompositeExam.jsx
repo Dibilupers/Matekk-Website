@@ -259,7 +259,10 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 							if (currentQuestion) {
 								restoredQuestion.type = currentQuestion.type;
 								restoredQuestion.prompt = currentQuestion.prompt;
-								if (currentQuestion.exhibitImage) {
+								restoredQuestion.hideExhibitImage = currentQuestion.hideExhibitImage === true;
+								if (currentQuestion.hideExhibitImage) {
+									delete restoredQuestion.exhibitImage;
+								} else if (currentQuestion.exhibitImage) {
 									restoredQuestion.exhibitImage = currentQuestion.exhibitImage;
 								} else {
 									delete restoredQuestion.exhibitImage;
@@ -330,8 +333,8 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 				const loadedQuestions = apiAttempt.questions.map((apiQuestion) => {
 					const bankQuestion = getDatabaseQuestionById(apiQuestion.id) ??
 						applyNativeExhibit({ ...apiQuestion, bankId: apiQuestion.id });
-					const hasRecreatedMatchExhibit = apiQuestion.type === "match" &&
-						RECREATED_MATCH_EXHIBIT_QUESTION_IDS.has(apiQuestion.id);
+					const hideExhibitImage = bankQuestion?.hideExhibitImage === true ||
+						(apiQuestion.type === "match" && RECREATED_MATCH_EXHIBIT_QUESTION_IDS.has(apiQuestion.id));
 					// Fix text saved with the wrong encoding ("â€œwarningâ€" -> “warning”) for display.
 					// The original option text is kept for submitting, since the backend grades by exact text.
 					const cleanList = (list) => (Array.isArray(list) ? list.map((value) => (typeof value === "string" ? cleanText(value) : value)) : list);
@@ -351,7 +354,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 						? { prompt: cleanText(apiQuestion.prompt) }
 						: splitPromptExhibit(cleanText(apiQuestion.prompt));
 					const exhibitDiagram = bankQuestion?.exhibitDiagram;
-					const exhibitImage = exhibitDiagram || bankQuestion?.nativeExhibitText
+					const exhibitImage = hideExhibitImage || exhibitDiagram || bankQuestion?.nativeExhibitText
 						? undefined
 						: bankQuestion?.exhibitImage || apiQuestion.imageUrl;
 					const displayedExhibit = bankQuestion?.exhibit && !isOptionTable ? bankQuestion.exhibit : exhibit;
@@ -377,10 +380,10 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 						...(typeof apiQuestion.explanation === "string" ? { explanation: cleanText(apiQuestion.explanation) } : {}),
 						...(shouldDisplayExhibit ? { exhibit: displayedExhibit } : {}),
 						...(exhibitDiagram ? { exhibitDiagram } : {}),
+						...(hideExhibitImage ? { hideExhibitImage: true } : {}),
 						...(bankQuestion?.hidePrompt ? { hidePrompt: true } : {}),
 						...(bankQuestion?.exhibitImageCropTop ? { exhibitImageCropTop: true } : {}),
-						// Question 570's image is a screenshot of the matching interaction recreated by the site.
-						...(!hasRecreatedMatchExhibit && exhibitImage ? { exhibitImage } : {}),
+						...(exhibitImage ? { exhibitImage } : {}),
 					};
 				});
 
@@ -856,7 +859,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 									/>
 								)}
 								{question.exhibitDiagram && <ExhibitDiagram type={question.exhibitDiagram} offlineLayout={isOfflineExam} />}
-								{question.exhibitImage && (
+								{question.exhibitImage && !question.hideExhibitImage && (
 									<ExhibitImage
 										src={question.exhibitImage}
 										className="mb-6"
@@ -1019,7 +1022,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 													/>
 												)}
 								{item.exhibitDiagram && <ExhibitDiagram type={item.exhibitDiagram} className="mt-4" offlineLayout={isOfflineExam} />}
-												{item.exhibitImage && (
+												{item.exhibitImage && !item.hideExhibitImage && (
 													<ExhibitImage
 														src={item.exhibitImage}
 														lazy

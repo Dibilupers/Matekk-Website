@@ -214,4 +214,188 @@ const LAB3 = {
 	ptDevices: "four 2911 routers (R1, R2, R3, ISP) and one PC (PC-B)",
 };
 
-export const PRACTICE_LABS = [LAB1, LAB2, LAB3];
+// ---------------------------------------------------------------- Lab 4
+const LAB4 = {
+	id: 4,
+	level: "Advanced",
+	title: "Voice VLANs and Neighbor Discovery",
+	summary: "Configure phone-and-PC access, a data VLAN, LLDP between switches, and disable CDP on the router link.",
+	editable: ["SW-1", "SW-2"],
+	devices: {
+		"SW-1": {
+			kind: "switch",
+			hostname: "SW-1",
+			interfaces: { "e0/0": {}, "e0/1": {}, "e0/2": {} },
+			vlans: {},
+			lldpEnabled: false,
+		},
+		"SW-2": {
+			kind: "switch",
+			hostname: "SW-2",
+			interfaces: { "e0/0": {}, "e0/1": {} },
+			vlans: {},
+			lldpEnabled: false,
+		},
+		R1: {
+			kind: "router",
+			hostname: "R1",
+			interfaces: { "g0/0": { ip: "10.10.1.1", mask: "255.255.255.0", up: true } },
+		},
+		"IP Phone": {
+			kind: "pc",
+			hostname: "",
+			gateway: "10.11.1.1",
+			interfaces: { fa0: { ip: "10.11.1.10", mask: "255.255.255.0" }, fa1: {} },
+		},
+		PC1: pc("10.10.1.10", "255.255.255.0", "10.10.1.1"),
+		PC2: pc("192.168.30.10", "255.255.255.0", "192.168.30.1"),
+	},
+	links: [
+		{ a: "SW-1:e0/0", b: "SW-2:e0/0", net: "LLDP link" },
+		{ a: "SW-1:e0/1", b: "IP Phone:fa0", net: "Data VLAN 10 · Voice VLAN 11" },
+		{ a: "IP Phone:fa1", b: "PC1:fa0", net: "Phone pass-through" },
+		{ a: "SW-2:e0/1", b: "PC2:fa0", net: "VLAN 30" },
+		{ a: "SW-1:e0/2", b: "R1:g0/0", net: "Router link" },
+	],
+	layout: {
+		width: 760,
+		height: 340,
+		nodes: {
+			R1: { x: 310, y: 42, sub: "preconfigured · CDP disabled on SW-1" },
+			"SW-1": { x: 310, y: 155, sub: "Data VLAN 10 · Voice VLAN 11" },
+			"SW-2": { x: 610, y: 155, sub: "Data VLAN 30" },
+			"IP Phone": { x: 140, y: 245, label: "IP Phone", sub: "Voice VLAN 11" },
+			PC1: { x: 140, y: 322, sub: "Data VLAN 10" },
+			PC2: { x: 610, y: 270, sub: "VLAN 30" },
+		},
+	},
+	tasks: [
+		{
+			id: "sw1-phone-port",
+			device: "SW-1",
+			text: "Configure E0/1 as an access port for the PC in VLAN 10 and the IP phone in voice VLAN 11.",
+			hint: "interface e0/1 → switchport mode access → switchport access vlan 10 → switchport voice vlan 11",
+			check: (s) => {
+				const port = s.devices["SW-1"].interfaces["e0/1"];
+				return port.switchportMode === "access" && port.accessVlan === 10 && port.voiceVlan === 11;
+			},
+		},
+		{
+			id: "sw2-pc-port",
+			device: "SW-2",
+			text: "Configure E0/1 on SW-2 as an access port in VLAN 30 for PC2.",
+			hint: "interface e0/1 → switchport mode access → switchport access vlan 30",
+			check: (s) => {
+				const port = s.devices["SW-2"].interfaces["e0/1"];
+				return port.switchportMode === "access" && port.accessVlan === 30;
+			},
+		},
+		{
+			id: "sw1-vlan10",
+			device: "SW-1",
+			text: 'Create VLAN 10 on SW-1 and name it "Engineering".',
+			hint: "configure terminal → vlan 10 → name Engineering",
+			check: (s) => s.devices["SW-1"].vlans["10"] === "Engineering",
+		},
+		{
+			id: "lldp-link",
+			device: "SW-1",
+			text: "Enable LLDP globally on both switches and enable LLDP transmit and receive on both ends of the SW-1–SW-2 link.",
+			hint: "On both switches use lldp run, then on interface e0/0 use lldp transmit and lldp receive.",
+			check: (s) => ["SW-1", "SW-2"].every((name) => {
+				const port = s.devices[name].interfaces["e0/0"];
+				return s.devices[name].lldpEnabled && port.lldpTransmit && port.lldpReceive;
+			}),
+		},
+		{
+			id: "disable-cdp",
+			device: "SW-1",
+			text: "Disable CDP on SW-1 E0/2, the link to R1.",
+			hint: "interface e0/2 → no cdp enable",
+			check: (s) => s.devices["SW-1"].interfaces["e0/2"].cdpEnabled === false,
+		},
+		{
+			id: "save-switches",
+			device: "SW-1",
+			text: "Save the configuration on both SW-1 and SW-2.",
+			hint: "On each switch run copy running-config startup-config.",
+			check: (s) => ["SW-1", "SW-2"].every((name) => isSaved(s, name)),
+		},
+	],
+	worksheet: [
+		{
+			title: "Task 1. Configure SW-1 switch port E0/1 to carry traffic for the Cisco IP phone and PC",
+			slots: [
+				{ devices: ["SW-1"], prompt: "SW-1(config)#", context: "config" },
+				{ devices: ["SW-1"], prompt: "SW-1(config-if)#", context: "config-if", iface: "e0/1" },
+				{ devices: ["SW-1"], prompt: "SW-1(config-if)#", context: "config-if", iface: "e0/1" },
+				{ devices: ["SW-1"], prompt: "SW-1(config-if)#", context: "config-if", iface: "e0/1" },
+			],
+		},
+		{
+			title: "Task 2. Configure SW-2 E0/1 to carry traffic for PC2",
+			slots: [
+				{ devices: ["SW-2"], prompt: "SW-2(config)#", context: "config" },
+				{ devices: ["SW-2"], prompt: "SW-2(config-if)#", context: "config-if", iface: "e0/1" },
+				{ devices: ["SW-2"], prompt: "SW-2(config-if)#", context: "config-if", iface: "e0/1" },
+			],
+		},
+		{
+			title: 'Task 3. Configure VLAN 10 with the name "Engineering" on SW-1',
+			slots: [
+				{ devices: ["SW-1"], prompt: "SW-1(config)#", context: "config" },
+				{ devices: ["SW-1"], prompt: "SW-1(config-vlan)#", context: "config-vlan", vlan: "10" },
+				{ devices: ["SW-1"], prompt: "SW-1(config-vlan)#", context: "config-vlan", vlan: "10" },
+			],
+		},
+		{
+			title: "Task 4. Configure the link between SW-1 and SW-2 to use the vendor neutral neighbor discovery protocol",
+			instructions: "On both SW-1 and SW-2:",
+			slots: [
+				{ devices: ["SW-1", "SW-2"], prompt: "SW-1, SW-2(config)#", context: "config" },
+				{ devices: ["SW-1", "SW-2"], prompt: "SW-1, SW-2(config)#", context: "config" },
+				{ devices: ["SW-1", "SW-2"], prompt: "SW-1, SW-2(config-if)#", context: "config-if", iface: "e0/0" },
+				{ devices: ["SW-1", "SW-2"], prompt: "SW-1, SW-2(config-if)#", context: "config-if", iface: "e0/0" },
+			],
+		},
+		{
+			title: "Task 5. Configure the link on SW-1 to R1 so that it does not allow the Cisco neighbor discovery protocol to pass",
+			slots: [
+				{ devices: ["SW-1"], prompt: "SW-1(config)#", context: "config" },
+				{ devices: ["SW-1"], prompt: "SW-1(config-if)#", context: "config-if", iface: "e0/2" },
+			],
+		},
+		{
+			title: "Save configuration on SW-1, SW-2:",
+			slots: [
+				{ devices: ["SW-1", "SW-2"], prompt: "SW-1#, SW-2#", context: "priv" },
+			],
+		},
+	],
+	solution: {
+		"SW-1": [
+			"enable", "configure terminal",
+			"interface e0/1", "switchport mode access", "switchport access vlan 10", "switchport voice vlan 11", "exit",
+			"vlan 10", "name Engineering", "exit",
+			"lldp run", "interface e0/0", "lldp transmit", "lldp receive", "exit",
+			"interface e0/2", "no cdp enable", "end", "copy running-config startup-config",
+		],
+		"SW-2": [
+			"enable", "configure terminal",
+			"interface e0/1", "switchport mode access", "switchport access vlan 30", "exit",
+			"lldp run", "interface e0/0", "lldp transmit", "lldp receive", "end",
+			"copy running-config startup-config",
+		],
+	},
+	finalCheck: {
+		label: "SW-1 and SW-2 have LLDP enabled on their inter-switch link",
+		check: (state) => ["SW-1", "SW-2"].every((name) => {
+			const port = state.devices[name].interfaces["e0/0"];
+			return state.devices[name].lldpEnabled && port.lldpTransmit && port.lldpReceive;
+		}),
+	},
+	ptDevices: "two Catalyst switches (SW-1, SW-2), one router (R1), one IP phone, and two PCs",
+	hasPacketTracerFile: false,
+};
+
+export const PRACTICE_LABS = [LAB1, LAB2, LAB3, LAB4];

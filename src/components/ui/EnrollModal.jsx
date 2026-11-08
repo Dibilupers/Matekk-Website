@@ -1,6 +1,8 @@
 import { useState, useRef, useCallback } from "react";
 import emailjs from "@emailjs/browser";
 import HCaptcha from "@hcaptcha/react-hcaptcha";
+import API_URL from "../../config/api";
+import { HCAPTCHA_SITE_KEY } from "../../config/hcaptcha";
 
 /**
  * EnrollModal — Production Component
@@ -27,7 +29,6 @@ import HCaptcha from "@hcaptcha/react-hcaptcha";
 const EMAILJS_SERVICE_ID  = import.meta.env.VITE_EMAILJS_SERVICE_ID;
 const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
 const EMAILJS_PUBLIC_KEY  = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
-const HCAPTCHA_SITE_KEY   = import.meta.env.VITE_HCAPTCHA_SITE_KEY;
 
 // ─── Constants ─────────────────────────────────────────────────────────────
 const FUNDING_OPTIONS = [
@@ -85,7 +86,9 @@ function useEnrollForm(onClose) {
     const e = {};
     if (!form.course)
       e.course = "Please select a course.";
-    if (!captchaToken)
+    if (!HCAPTCHA_SITE_KEY)
+      e.captcha = "CAPTCHA is not configured. Please contact us directly.";
+    else if (!captchaToken)
       e.captcha = "Please complete the CAPTCHA verification.";
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -98,6 +101,13 @@ function useEnrollForm(onClose) {
     if (!validateStep2()) return;
     setStatus("loading");
     try {
+      const verification = await fetch(`${API_URL}/captcha/verify`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ captchaToken }),
+      });
+      if (!verification.ok) throw new Error("CAPTCHA verification failed.");
+
       await emailjs.send(
         EMAILJS_SERVICE_ID,
         EMAILJS_TEMPLATE_ID,
@@ -116,7 +126,7 @@ function useEnrollForm(onClose) {
       captchaRef.current?.resetCaptcha();
       setCaptchaToken(null);
     } catch (err) {
-      console.error("EmailJS error:", err);
+      console.error("Enrollment form submission failed:", err);
       setStatus("error");
       captchaRef.current?.resetCaptcha();
       setCaptchaToken(null);

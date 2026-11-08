@@ -208,7 +208,7 @@ export default function LabTopology({ lab, state, activeDevice }) {
 			})}
 			{Object.entries(layout.nodes).map(([name, n]) => {
 				const d = state.devices[name];
-				if (d.kind === "pc") return <PcIcon key={name} x={n.x} y={n.y} label={name} sub={n.sub} server={name.startsWith("SRV")} labelBackdrop />;
+				if (d.kind === "pc") return <PcIcon key={name} x={n.x} y={n.y} label={n.label ?? name} sub={n.sub} server={name.startsWith("SRV")} labelBackdrop />;
 				if (d.kind === "switch") return <SwitchIcon key={name} x={n.x} y={n.y} label={name} sub={n.sub} labelBackdrop />;
 				return <RouterIcon key={name} x={n.x} y={n.y} label={d.hostname} sub={n.sub} active={activeDevice === name} labelBackdrop />;
 			})}

@@ -25,68 +25,61 @@ describe('CaptchaService', () => {
     vi.unstubAllGlobals();
   });
 
-  it('asks Google to verify the submitted token', async () => {
-    getConfig.mockReturnValue('private-secret');
+  it('asks hCaptcha to verify the submitted token for the configured site key', async () => {
+    getConfig.mockImplementation((key: string) => ({
+      HCAPTCHA_SECRET_KEY: 'private-secret',
+      HCAPTCHA_SITE_KEY: 'public-site-key',
+    })[key]);
     fetchMock.mockResolvedValue(new Response(JSON.stringify({
       success: true,
-      action: 'contact',
-      score: 0.9,
     }), { status: 200 }));
 
-    await expect(service.verify('captcha-token', 'contact')).resolves.toBeUndefined();
+    await expect(service.verify('captcha-token')).resolves.toBeUndefined();
 
     expect(fetchMock).toHaveBeenCalledWith(
-      'https://www.google.com/recaptcha/api/siteverify',
+      'https://api.hcaptcha.com/siteverify',
       expect.objectContaining({
         method: 'POST',
         body: new URLSearchParams({
           secret: 'private-secret',
           response: 'captcha-token',
+          sitekey: 'public-site-key',
         }),
       }),
     );
   });
 
-  it('rejects tokens Google does not accept', async () => {
-    getConfig.mockReturnValue('private-secret');
+  it('rejects tokens hCaptcha does not accept', async () => {
+    getConfig.mockImplementation((key: string) => ({
+      HCAPTCHA_SECRET_KEY: 'private-secret',
+      HCAPTCHA_SITE_KEY: 'public-site-key',
+    })[key]);
     fetchMock.mockResolvedValue(new Response(JSON.stringify({ success: false }), { status: 200 }));
 
-    await expect(service.verify('invalid-token', 'contact')).rejects.toBeInstanceOf(BadRequestException);
-  });
-
-  it('rejects a token issued for a different action', async () => {
-    getConfig.mockReturnValue('private-secret');
-    fetchMock.mockResolvedValue(new Response(JSON.stringify({
-      success: true,
-      action: 'training_inquiry',
-      score: 0.9,
-    }), { status: 200 }));
-
-    await expect(service.verify('captcha-token', 'contact')).rejects.toBeInstanceOf(BadRequestException);
-  });
-
-  it('rejects a low-score v3 token', async () => {
-    getConfig.mockReturnValue('private-secret');
-    fetchMock.mockResolvedValue(new Response(JSON.stringify({
-      success: true,
-      action: 'contact',
-      score: 0.4,
-    }), { status: 200 }));
-
-    await expect(service.verify('captcha-token', 'contact')).rejects.toBeInstanceOf(BadRequestException);
+    await expect(service.verify('invalid-token')).rejects.toBeInstanceOf(BadRequestException);
   });
 
   it('fails explicitly if the production secret is not configured', async () => {
-    getConfig.mockReturnValue(undefined);
+    getConfig.mockImplementation((key: string) => key === 'HCAPTCHA_SITE_KEY' ? 'public-site-key' : undefined);
 
-    await expect(service.verify('captcha-token', 'contact')).rejects.toBeInstanceOf(InternalServerErrorException);
+    await expect(service.verify('captcha-token')).rejects.toBeInstanceOf(InternalServerErrorException);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('fails explicitly if the hCaptcha site key is not configured', async () => {
+    getConfig.mockImplementation((key: string) => key === 'HCAPTCHA_SECRET_KEY' ? 'private-secret' : undefined);
+
+    await expect(service.verify('captcha-token')).rejects.toBeInstanceOf(InternalServerErrorException);
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it('reports verification service failures without accepting the token', async () => {
-    getConfig.mockReturnValue('private-secret');
-    fetchMock.mockRejectedValue(new Error('Google is unavailable'));
+    getConfig.mockImplementation((key: string) => ({
+      HCAPTCHA_SECRET_KEY: 'private-secret',
+      HCAPTCHA_SITE_KEY: 'public-site-key',
+    })[key]);
+    fetchMock.mockRejectedValue(new Error('hCaptcha is unavailable'));
 
-    await expect(service.verify('captcha-token', 'contact')).rejects.toBeInstanceOf(ServiceUnavailableException);
+    await expect(service.verify('captcha-token')).rejects.toBeInstanceOf(ServiceUnavailableException);
   });
 });
