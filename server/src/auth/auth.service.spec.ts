@@ -33,6 +33,7 @@ describe('AuthService', () => {
       ...(options.foundUser ?? user),
       first_name: '',
       last_name: '',
+      display_name: '',
     }));
     const findMany = vi.fn(async () => []);
     const create = vi.fn(async () => user);
@@ -202,11 +203,12 @@ describe('AuthService', () => {
     const mocks = createService();
     await mocks.service.updateProfile(12, {
       first_name: '  Updated  ',
+      display_name: '  Friendly Name  ',
       email: 'student@example.com',
     });
     expect(mocks.update).toHaveBeenCalledWith({
       where: { id: 12 },
-      data: { first_name: 'Updated', email: 'student@example.com' },
+      data: { first_name: 'Updated', display_name: 'Friendly Name', email: 'student@example.com' },
     });
 
     const duplicateEmailMocks = createService({ matchingEmail: true });
@@ -214,6 +216,20 @@ describe('AuthService', () => {
       email: 'taken@example.com',
     })).rejects.toThrow('Email address is already in use.');
     expect(duplicateEmailMocks.update).not.toHaveBeenCalled();
+  });
+
+  it('prevents students from changing their role and allows admins to update it', async () => {
+    const studentMocks = createService();
+    await expect(studentMocks.service.updateProfile(12, { role: 'Admin' }))
+      .rejects.toThrow('Only administrators can change account roles.');
+    expect(studentMocks.update).not.toHaveBeenCalled();
+
+    const adminMocks = createService({ foundUser: { ...user, role: 'Admin' } });
+    await adminMocks.service.updateProfile(12, { role: 'Student' });
+    expect(adminMocks.update).toHaveBeenCalledWith({
+      where: { id: 12 },
+      data: { role: 'Student' },
+    });
   });
 
   it('allows a user to change username and rejects case-insensitive duplicates', async () => {

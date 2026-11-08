@@ -25,6 +25,7 @@ import { getCcnaExamSessionKey } from "../../../../utils/ccnaShortExamSession";
 import { getCompTIAExamSessionKey } from "../../../../utils/comptiaExamSession";
 import { getOfflineExamSessionKeys } from "../../../../utils/offlineExamSession";
 import { readGradebookAssessments } from "../../../../utils/gradebookApi";
+import { getProfileDisplayName } from "../../../../utils/profile";
 
 const STANDARD_EXAM_FORMATS = [
 	{ key: "short", name: "Short Exam", questionCount: 50, durationSeconds: 45 * 60 },
@@ -428,7 +429,7 @@ export default function CompTIAProgramDashboard({ program }) {
 								className="block w-full rounded-lg pr-7 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c8102e]"
 							>
 								<div className="flex items-center justify-between gap-2">
-									<strong className="truncate text-sm text-[#c8102e]">{profile?.username ?? "Student"}</strong>
+									<strong className="truncate text-sm text-[#c8102e]">{getProfileDisplayName(profile)}</strong>
 									<span className="text-xs font-semibold text-[#7c89a1]">{examCardIndex + 1}/{examFormats.length}</span>
 								</div>
 								<p className="mt-0.5 text-sm leading-snug text-[#64708a]">

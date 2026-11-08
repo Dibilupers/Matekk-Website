@@ -2,6 +2,7 @@ import { useState } from "react";
 import { BadgeCheck, Check, Clock3, LogOut, Mail, RefreshCw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/auth-context";
+import { getProfileDisplayName } from "../utils/profile";
 
 export default function AccountPending() {
 	const navigate = useNavigate();
@@ -68,7 +69,7 @@ export default function AccountPending() {
 						</div>
 					</div>
 					<div className="mx-auto mt-5 max-w-[620px] rounded-xl bg-[#f4f7fd] px-4 py-3 text-left text-xs sm:px-6 sm:py-4 sm:text-sm">
-						<div className="flex justify-between gap-4 py-1"><span className="text-[#74819a]">Name</span><strong className="text-right">{profile?.username || "—"}</strong></div>
+						<div className="flex justify-between gap-4 py-1"><span className="text-[#74819a]">Name</span><strong className="text-right">{getProfileDisplayName(profile)}</strong></div>
 						<div className="flex justify-between gap-4 py-1"><span className="text-[#74819a]">Role</span><strong className="text-right">{profile?.role || "Student"}</strong></div>
 						<div className="flex justify-between gap-4 py-1"><span className="text-[#74819a]">Status</span><strong className="text-right text-[#d98200]">Pending</strong></div>
 					</div>

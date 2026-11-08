@@ -5,6 +5,7 @@ import { useAuth } from "../context/auth-context";
 import API_URL from "../config/api";
 import { FLAT_COURSES } from "../components/training/courses";
 import { readGradebookAssessments } from "../utils/gradebookApi";
+import { getProfileDisplayName } from "../utils/profile";
 
 const INPUT_CLASS = "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-[#2f5bea] focus:ring-2 focus:ring-blue-100";
 const LABEL_CLASS = "block space-y-2 text-sm font-semibold text-slate-900";
@@ -94,7 +95,9 @@ function ProfileForm({ profile, refreshProfile }) {
     setFields({
       first_name: profile?.first_name ?? "",
       last_name: profile?.last_name ?? "",
+      display_name: profile?.display_name ?? "",
       username: profile?.username ?? "",
+      role: profile?.role?.trim() ?? "Student",
       email: profile?.email ?? "",
       phone_number: profile?.phone_number ?? "",
       birth_date: dateInputValue(profile?.birth_date),
@@ -106,6 +109,8 @@ function ProfileForm({ profile, refreshProfile }) {
   function updateField(field, value) {
     setFields((current) => ({ ...current, [field]: value }));
   }
+
+  const isAdmin = profile?.role?.trim().toLowerCase() === "admin";
 
   async function saveProfile(event) {
     event.preventDefault();
@@ -122,7 +127,9 @@ function ProfileForm({ profile, refreshProfile }) {
         body: JSON.stringify({
           first_name: fields.first_name.trim(),
           last_name: fields.last_name.trim(),
+          display_name: fields.display_name.trim(),
           username: fields.username.trim(),
+          ...(isAdmin ? { role: fields.role } : {}),
           email: fields.email.trim() || null,
           phone_number: fields.phone_number.trim() || null,
           birth_date: fields.birth_date || undefined,
@@ -245,7 +252,9 @@ function ProfileForm({ profile, refreshProfile }) {
     setFields({
       first_name: profile?.first_name ?? "",
       last_name: profile?.last_name ?? "",
+      display_name: profile?.display_name ?? "",
       username: profile?.username ?? "",
+      role: profile?.role?.trim() ?? "Student",
       email: profile?.email ?? "",
       phone_number: profile?.phone_number ?? "",
       birth_date: dateInputValue(profile?.birth_date),
@@ -315,8 +324,18 @@ function ProfileForm({ profile, refreshProfile }) {
               <label className={LABEL_CLASS}>Username
                 <input className={INPUT_CLASS} value={fields.username ?? ""} onChange={(event) => updateField("username", event.target.value)} autoComplete="username" minLength={3} maxLength={30} pattern="[A-Za-z0-9._-]+" title="Use 3-30 letters, numbers, periods, underscores, or hyphens." required />
               </label>
+              <label className={LABEL_CLASS}>Display name
+                <input className={INPUT_CLASS} value={fields.display_name ?? ""} onChange={(event) => updateField("display_name", event.target.value)} maxLength={80} placeholder={profile?.first_name || profile?.username || "How you want to be greeted"} />
+              </label>
               <label className={LABEL_CLASS}>Role
-                <input className={`${INPUT_CLASS} bg-slate-50`} value={profile?.role ?? "Learner"} readOnly />
+                {isAdmin ? (
+                  <select className={INPUT_CLASS} value={fields.role ?? profile.role.trim()} onChange={(event) => updateField("role", event.target.value)}>
+                    <option value="Student">Student</option>
+                    <option value="Admin">Admin</option>
+                  </select>
+                ) : (
+                  <input className={`${INPUT_CLASS} cursor-not-allowed bg-slate-50`} value={profile?.role?.trim() || "Student"} disabled />
+                )}
               </label>
               <label className={LABEL_CLASS}>Email
                 <input type="email" className={INPUT_CLASS} value={fields.email ?? ""} onChange={(event) => updateField("email", event.target.value)} maxLength={254} />
@@ -777,7 +796,7 @@ export default function Account({ view = "profile" }) {
               : isHistory
               ? <LearningHistory />
               : <>
-                  <div className="mb-5 flex items-center gap-2 text-sm text-slate-500"><UserRound size={17} aria-hidden="true" /> {profile?.username ?? "My account"}</div>
+                  <div className="mb-5 flex items-center gap-2 text-sm text-slate-500"><UserRound size={17} aria-hidden="true" /> {getProfileDisplayName(profile)}</div>
                   <ProfileForm profile={profile} refreshProfile={refreshProfile} />
                 </>}
           </section>

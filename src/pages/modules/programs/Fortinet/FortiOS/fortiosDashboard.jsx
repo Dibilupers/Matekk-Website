@@ -11,6 +11,7 @@ import { isCurrentProgramModuleQuizAttempt, readProgramModuleQuizProgress } from
 import ProgramBackgroundParticles from "../../ProgramBackgroundParticles";
 import ScoreRotationCard from "../../ScoreRotationCard";
 import useGradebookQuizStats from "../../useGradebookQuizStats";
+import { getProfileDisplayName } from "../../../../../utils/profile";
 import { FORTIOS_EXAM_FORMAT_DEFINITIONS, FORTIOS_EXAM_PROGRESS_FORMATS } from "./fortiosExamFormats";
 
 export const FORTIOS_MODULES = [
@@ -447,7 +448,7 @@ export default function FortiOSDashboard() {
 									className="block w-full rounded-lg pr-7 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e2231a]"
 								>
 									<div className="flex items-center justify-between gap-2">
-										<strong className="truncate text-sm text-[#e2231a]">{profile?.username ?? "Student"}</strong>
+										<strong className="truncate text-sm text-[#e2231a]">{getProfileDisplayName(profile)}</strong>
 										<span className="shrink-0 text-xs font-semibold text-[#7c89a1]">{examCardIndex + 1}/{examCards.length}</span>
 									</div>
 									<p className="mt-0.5 text-sm leading-snug text-[#64708a]">

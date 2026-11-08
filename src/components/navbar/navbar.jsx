@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/auth-context";
+import { getProfileDisplayName } from "../../utils/profile";
 import InquireNowButton from "../ui/InquireNowButton";
 import ExamNotifications from "../ExamNotifications";
 import MainLogo from "../../assets/MATEKK_logo.webp";
@@ -68,7 +69,7 @@ function NavBar() {
     navigate("/login");
   }
 
-  const profileName = profile?.username || "My Profile";
+  const profileName = getProfileDisplayName(profile);
   const profileRole = profile?.role || "Learner";
   const isAdmin = profile?.role?.trim().toLowerCase() === "admin";
   const closeProfile = () => {

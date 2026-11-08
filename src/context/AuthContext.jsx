@@ -43,6 +43,7 @@ function storeOfflineProfile(profile) {
     active_status: profile.active_status,
     first_name: profile.first_name,
     last_name: profile.last_name,
+    display_name: profile.display_name,
   }));
 }
 

@@ -9,6 +9,7 @@ import {
 } from "../../../../../utils/ccnaModuleQuizProgress";
 import { readCcnaExamProgress, readCcnaShortExamProgress } from "../../../../../utils/ccnaShortExamSession";
 import { readGradebookAssessments } from "../../../../../utils/gradebookApi";
+import { getProfileDisplayName } from "../../../../../utils/profile";
 import { CCNA_MODULE_QUIZZES } from "./ccnaModuleQuizData";
 import { CCNA_EXAMS } from "./ccnaExamFormats";
 
@@ -288,7 +289,7 @@ function AssessmentTable({ title, rows, filter, sort }) {
 export default function CCNAGradebook() {
 	const { profile } = useAuth();
 	const userId = profile?.userId;
-	const welcomeText = `Welcome, ${profile?.username ?? "Student"}!`;
+	const welcomeText = `Welcome, ${getProfileDisplayName(profile)}!`;
 	const [prefersReducedMotion] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
 	const [typedWelcome, setTypedWelcome] = useState(() => prefersReducedMotion ? welcomeText : "");
 	const [backendGradebook, setBackendGradebook] = useState({ userId: null, assessments: [], error: null });
@@ -386,7 +387,7 @@ export default function CCNAGradebook() {
 								<ArrowLeft size={18} /> Back to course
 							</Link>
 							<div className="pt-3">
-								<h1 aria-label={welcomeText} className="typewriter-caret text-3xl font-bold sm:text-4xl">{typedWelcome}</h1>
+								<h1 aria-label={welcomeText} className="typewriter-caret text-3xl font-bold sm:text-4xl">{prefersReducedMotion ? welcomeText : typedWelcome}</h1>
 								<p className="mt-1 text-base text-white/85">Your grades and progress on CCNA</p>
 							</div>
 						</div>

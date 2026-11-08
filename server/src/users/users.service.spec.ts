@@ -166,6 +166,7 @@ describe('UsersService', () => {
         programs_enrolled: true,
         first_name: true,
         last_name: true,
+        display_name: true,
         birth_date: true,
         gender: true,
         city_province: true,

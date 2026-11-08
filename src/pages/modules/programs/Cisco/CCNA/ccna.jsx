@@ -35,6 +35,7 @@ import { readCcnaExamProgress, readCcnaShortExamProgress } from "../../../../../
 import { readCcnaMockExamResults } from "../../../../../utils/ccnaGradebook";
 import { CCNA_EXAMS } from "./ccnaExamFormats";
 import useGradebookQuizStats from "../../useGradebookQuizStats";
+import { getProfileDisplayName } from "../../../../../utils/profile";
 import ProgramBackgroundParticles from "../../ProgramBackgroundParticles";
 import ScoreRotationCard from "../../ScoreRotationCard";
 
@@ -167,7 +168,7 @@ function NetworkIllustration({ quizAverage, examAverage, examCards }) {
 					className="block w-full rounded-lg pr-7 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#005b6b]"
 				>
 					<div className="flex items-center justify-between gap-2">
-						<strong className="text-sm text-[#005b6b]">{profile?.username}</strong>
+						<strong className="text-sm text-[#005b6b]">{getProfileDisplayName(profile)}</strong>
 						<span className="text-xs font-semibold text-[#7c89a1]">{examCardIndex + 1}/{examCards.length}</span>
 					</div>
 					<p className="mt-0.5 text-sm leading-snug text-[#64708a]">

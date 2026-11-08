@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, BookOpen, CircleSlash, CircleUserRound, LayoutGrid, List, Search, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/auth-context";
+import { getProfileDisplayName } from "../utils/profile";
 import API_URL from "../config/api";
 import { FLAT_COURSES, TRAINING_COURSES } from "../components/training/courses";
 import CCNALogo from "../assets/CCNA.png";
@@ -283,6 +284,7 @@ export default function Blank() {
 	const [programsError, setProgramsError] = useState("");
 	const [isDpPreviewOpen, setIsDpPreviewOpen] = useState(false);
 	const profile = sessionProfile;
+	const profileDisplayName = profile ? getProfileDisplayName(profile) : "";
 	const hasProfile = profile !== null;
 	const [introText] = useState(() => PROGRAM_INTROS[Math.floor(Math.random() * PROGRAM_INTROS.length)]);
 	const [typedUsername, setTypedUsername] = useState("");
@@ -337,9 +339,9 @@ export default function Blank() {
 	}, [isDpPreviewOpen]);
 
 	useEffect(() => {
-		if (!profile?.username) return undefined;
+		if (!profileDisplayName) return undefined;
 
-		const welcomeText = String(profile.username);
+		const welcomeText = profileDisplayName;
 		let timeoutId;
 		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
 			timeoutId = window.setTimeout(() => setTypedUsername(welcomeText), 0);
@@ -363,7 +365,7 @@ export default function Blank() {
 
 		timeoutId = window.setTimeout(startTyping, 120);
 		return () => window.clearTimeout(timeoutId);
-	}, [profile?.username]);
+	}, [profileDisplayName]);
 
 	useEffect(() => {
 		if (!hasProfile) return undefined;
@@ -475,7 +477,7 @@ export default function Blank() {
 					<div className="min-w-0">
 						<p className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-[#087ff5]">MATEKK Training Academy</p>
 						<h1 className="text-3xl font-bold text-slate-950 sm:text-4xl">
-							Welcome, <span className={typedUsername.length < String(profile.username).length ? "typewriter-caret" : ""}>{typedUsername}</span>
+							Welcome, <span className={typedUsername.length < profileDisplayName.length ? "typewriter-caret" : ""}>{typedUsername}</span>
 						</h1>
 						<p className="mt-3 text-slate-600">
 							<span className="typewriter-caret">{typedIntro}</span>
