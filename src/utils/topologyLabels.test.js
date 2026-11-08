@@ -4,11 +4,11 @@ import { placeTopologyLabels } from "./topologyLabels.js";
 
 test("moves a link label away from a device annotation", () => {
 	const [label] = placeTopologyLabels(
-		[{ x: 100, y: 100, width: 90, height: 20, centerOffsetY: -2 }],
-		[{ x: 100, y: 100, width: 120, height: 60 }],
+		[{ x: 100, y: 100, width: 50, height: 20, centerOffsetY: -2 }],
+		[{ x: 100, y: 100, width: 40, height: 40 }],
 	);
 
-	assert.notEqual(label.y, 100);
+	assert.notDeepEqual([label.x, label.y], [100, 100]);
 });
 
 test("separates colliding labels while preserving clear requested positions", () => {
@@ -20,4 +20,13 @@ test("separates colliding labels while preserving clear requested positions", ()
 
 	assert.notDeepEqual([labels[0].x, labels[0].y], [labels[1].x, labels[1].y]);
 	assert.deepEqual([labels[2].x, labels[2].y], [300, 100]);
+});
+
+test("keeps labels close to their requested cable positions", () => {
+	const [label] = placeTopologyLabels(
+		[{ x: 100, y: 100, width: 80, height: 20 }],
+		[{ x: 100, y: 100, width: 80, height: 50 }],
+	);
+
+	assert.ok(Math.hypot(label.x - 100, label.y - 100) <= 36);
 });

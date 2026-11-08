@@ -344,11 +344,11 @@ const LAB3 = {
 	},
 	links: [
 		{ a: "R1:g0/0", b: "SW-1:e0/0", net: "VLANs 5, 6" },
-		{ a: "SW-1:e0/1", b: "SW-2:e0/1", net: "Native VLAN 77", lane: -5 },
-		{ a: "SW-1:e0/2", b: "SW-3:e0/2", net: "Trunk" },
-		{ a: "SW-2:e0/2", b: "SW-4:e0/2", net: "Trunk" },
+		{ a: "SW-1:e0/1", b: "SW-2:e0/1", lane: -5 },
+		{ a: "SW-1:e0/2", b: "SW-3:e0/2" },
+		{ a: "SW-2:e0/2", b: "SW-4:e0/2" },
 		{ a: "SW-3:e0/0", b: "SW-4:e0/0", net: "Po34 · LACP", lane: -5 },
-		{ a: "SW-3:e0/1", b: "SW-4:e0/1", net: "Po34 · LACP", lane: 5 },
+		{ a: "SW-3:e0/1", b: "SW-4:e0/1", lane: 5 },
 	],
 	layout: {
 		width: 740,
