@@ -189,14 +189,13 @@ function formatRemainingTime(deadline, now) {
 	return `Time left ${minutes}:${String(seconds % 60).padStart(2, "0")}`;
 }
 
-export default function ExamNotifications() {
+export default function ExamNotifications({ isOpen, onOpenChange }) {
 	const { profile } = useAuth();
 	const { pathname } = useLocation();
 	const navigate = useNavigate();
 	const userId = profile?.userId;
 	const isGradebookPage = pathname.includes("/gradebook") || pathname === "/modules/programs/ccna/results";
 	const isAssessmentPage = pathname.includes("/exam/") || pathname.includes("/quiz/");
-	const [isOpen, setIsOpen] = useState(false);
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [now, setNow] = useState(0);
 	const [notificationState, setNotificationState] = useState({ userId: null, items: [] });
@@ -268,7 +267,7 @@ export default function ExamNotifications() {
 				type="button"
 				onClick={() => {
 					if (isOpen) setIsMenuOpen(false);
-					setIsOpen((open) => !open);
+					onOpenChange(!isOpen);
 				}}
 				aria-label={`Exam notifications${unreadCount ? `, ${unreadCount} unread` : ""}`}
 				aria-expanded={isOpen}
@@ -340,7 +339,7 @@ export default function ExamNotifications() {
 										onClick={() => {
 											markNotificationsRead([item]);
 											navigate(item.route);
-											setIsOpen(false);
+											onOpenChange(false);
 											setIsMenuOpen(false);
 										}}
 										className="flex min-w-0 flex-1 items-start gap-3 px-4 py-3 text-left transition hover:bg-[#f5f9ff]"

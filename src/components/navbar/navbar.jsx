@@ -47,6 +47,7 @@ function NavBar() {
   const subPanelClass = `mobile-menu-sub${menuGoingBack ? " mobile-menu-back" : ""}`;
   const { logout, profile, isAuthenticated } = useAuth();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isGradebookChooserOpen, setIsGradebookChooserOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -827,11 +828,14 @@ function NavBar() {
         />
         {isAuthenticated ? (
           <>
-            <ExamNotifications />
+            <ExamNotifications isOpen={isNotificationsOpen} onOpenChange={setIsNotificationsOpen} />
           <div className="relative">
             <button
               type="button"
-              onClick={() => setIsProfileOpen((current) => !current)}
+              onClick={() => {
+                setIsNotificationsOpen(false);
+                setIsProfileOpen((current) => !current);
+              }}
               aria-expanded={isProfileOpen}
               className="flex max-w-52 shrink-0 items-center gap-2 rounded-xl border-b-2 border-white bg-white px-2 py-1 text-left transition-all duration-300 hover:border-[#1775ee] hover:bg-[#eef6ff]"
             >
@@ -855,11 +859,14 @@ function NavBar() {
 
       {/* Mobile + Tablet Hamburger */}
       <div className="flex lg:hidden items-center justify-end gap-3">
-        {isAuthenticated && <ExamNotifications />}
+        {isAuthenticated && <ExamNotifications isOpen={isNotificationsOpen} onOpenChange={setIsNotificationsOpen} />}
         {isAuthenticated && (
           <button
             type="button"
-            onClick={() => setIsProfileOpen(true)}
+            onClick={() => {
+              setIsNotificationsOpen(false);
+              setIsProfileOpen(true);
+            }}
             aria-label="Open profile menu"
             aria-expanded={isProfileOpen}
             className="flex h-10 w-10 items-center justify-center rounded-full text-[#1775ee] transition hover:bg-[#eef6ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1775ee]"
