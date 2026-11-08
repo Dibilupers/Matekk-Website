@@ -9,6 +9,9 @@ let loadCachedCcnaAllQuestionsBank;
 let createOfflineCcnaExamQuestions;
 let isValidQuestion;
 let applyNativeExhibit;
+let compositeSetQuestions;
+let getOfflineLegacyQuestionBank;
+let builtInQuestionBank;
 let originalFetch;
 let originalCaches;
 let originalWindow;
@@ -26,6 +29,9 @@ before(async () => {
   ({ createOfflineCcnaExamQuestions } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaOfflineTimedExam.js"));
   ({ isValidQuestion } = await vite.ssrLoadModule("/src/utils/ccnaExamGrading.js"));
   ({ applyNativeExhibit } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaCompositeSetQuestions.js"));
+  ({ CCNA_COMPOSITE_SET_QUESTIONS: compositeSetQuestions } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaCompositeSetQuestions.js"));
+  ({ getOfflineLegacyQuestionBank } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaOfflineExamQuestions.js"));
+  ({ CCNA_QUESTION_BANK: builtInQuestionBank } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaQuestionBank.jsx"));
   originalFetch = globalThis.fetch;
   originalCaches = globalThis.caches;
   originalWindow = globalThis.window;
@@ -296,7 +302,9 @@ test("rejects recovered matching questions if a present answer key conflicts wit
 
 test("attaches recreated exhibits to recovered CCNA matching questions that need them", () => {
   for (const bankId of [181, 382, 608]) {
-    assert.ok(applyNativeExhibit({ bankId }).exhibitImage, `question ${bankId} should have a recreated exhibit`);
+    const question = applyNativeExhibit({ bankId });
+    assert.equal(question.hideExhibitImage, true, `question ${bankId} should hide the duplicate activity exhibit`);
+    assert.equal(question.exhibitImage, undefined);
   }
   assert.equal(applyNativeExhibit({ bankId: 1306 }).exhibitImage, undefined);
   const { question } = convertBankRow({
@@ -306,6 +314,84 @@ test("attaches recreated exhibits to recovered CCNA matching questions that need
   });
   assert.equal(question.type, "drag_drop");
   assert.ok(isValidQuestion(question));
+});
+
+test("recreates the WLC security exhibit for question 1012 instead of showing its source image", () => {
+  const question = applyNativeExhibit({ bankId: 1012 });
+
+  assert.equal(question.exhibitDiagram, "wlc-security-tab");
+  assert.equal(question.exhibitImage, undefined);
+  const offlineQuestion = getOfflineLegacyQuestionBank().find((entry) => entry.legacyIndex === 1301);
+  assert.ok(offlineQuestion);
+  assert.equal(offlineQuestion.exhibitDiagram, "wlc-security-tab-legacy");
+  assert.equal(offlineQuestion.exhibitImage, undefined);
+  const bundledQuestion = builtInQuestionBank.find((entry) => entry.legacyIndex === 1301);
+  assert.ok(bundledQuestion);
+  assert.equal(bundledQuestion.exhibitDiagram, "wlc-security-tab-legacy");
+  for (const [prompt, exhibitDiagram] of [
+    ["Web Passthrough Layer 3 Web Policy", "wlc-my-wlan-layer2"],
+    ["RADIUS server to service all user and device authentication", "wlc-psk-layer2"],
+    ["clients must reauthenticate hourly", "wlc-advanced-tab"],
+  ]) {
+    const compositeQuestion = compositeSetQuestions.find((entry) => entry.prompt.includes(prompt));
+    assert.ok(compositeQuestion, `composite question "${prompt}" should be present`);
+    assert.equal(compositeQuestion.exhibitDiagram, exhibitDiagram);
+    assert.equal(compositeQuestion.exhibitImage, undefined);
+  }
+});
+
+test("replaces recreated matching-activity screenshots with their existing interactions or native exhibits", () => {
+  for (const bankId of [181, 299, 382, 608, 1306]) {
+    assert.equal(applyNativeExhibit({ bankId }).hideExhibitImage, true, `question ${bankId} should hide its duplicate activity image`);
+  }
+  assert.equal(applyNativeExhibit({ bankId: 441 }).exhibitDiagram, "routing-protocols-prefix");
+  assert.equal(applyNativeExhibit({ bankId: 441 }).hideExhibitImage, true);
+  assert.equal(applyNativeExhibit({ bankId: 1305 }).nativeExhibitText, true);
+  assert.equal(applyNativeExhibit({ bankId: 1305 }).hideExhibitImage, true);
+  assert.equal(applyNativeExhibit({ bankId: 1317 }).nativeExhibitText, true);
+  assert.equal(applyNativeExhibit({ bankId: 1321 }).hideExhibitImage, true);
+  assert.equal(applyNativeExhibit({ bankId: 1321 }).exhibitDiagram, "static-nat-router-webserver");
+
+  for (const legacyIndex of [266, 267, 278, 282, 498, 617, 700, 759, 926]) {
+    const question = getOfflineLegacyQuestionBank().find((entry) => entry.legacyIndex === legacyIndex);
+    assert.ok(question, `offline question ${legacyIndex} should remain available`);
+    assert.equal(question.hideExhibitImage, true, `offline question ${legacyIndex} should hide the duplicate activity image`);
+  }
+  assert.equal(
+    getOfflineLegacyQuestionBank().find((entry) => entry.legacyIndex === 759).exhibitDiagram,
+    "routing-protocols-prefix",
+  );
+  assert.equal(
+    getOfflineLegacyQuestionBank().find((entry) => entry.legacyIndex === 266).exhibit?.includes("10.0.0.0/8 is variably subnetted"),
+    true,
+  );
+  assert.match(
+    getOfflineLegacyQuestionBank().find((entry) => entry.legacyIndex === 278).exhibit,
+    /192\.168\.1\.20 \(Preferred\)/,
+  );
+  assert.equal(
+    getOfflineLegacyQuestionBank().find((entry) => entry.legacyIndex === 282).exhibitDiagram,
+    "static-nat-router-webserver",
+  );
+});
+
+test("keeps the Router1 routing-method question prompt and matching controls while replacing its screenshot with a topology", () => {
+  const { question } = convertBankRow({
+    ...rawRow(441, "Refer to the exhibit. The Router1 routing table has multiple methods to reach 10.10.10.0/24. Drag and drop the network conditions."),
+    imageUrl: "https://example.com/questions/ccna-question-441.png",
+    question_type: "match",
+    match_items: ["All protocols are up", "OSPF and eBGP are down"],
+    choices: JSON.stringify(["eBGP", "EIGRP", "Static"]),
+    correct_answer: JSON.stringify([0, 1]),
+  });
+  const offlineQuestion = getOfflineLegacyQuestionBank().find((entry) => entry.legacyIndex === 759);
+
+  assert.match(question.prompt, /multiple methods to reach 10\.10\.10\.0\/24/);
+  assert.equal(question.type, "match");
+  assert.equal(question.hideExhibitImage, true);
+  assert.equal(applyNativeExhibit({ ...question, bankId: 441 }).exhibitDiagram, "routing-protocols-prefix");
+  assert.equal(offlineQuestion.exhibitDiagram, "routing-protocols-prefix");
+  assert.equal(offlineQuestion.hideExhibitImage, true);
 });
 
 test("restores the four omitted matching rows so the merged CCNA exam reaches 1,367 questions", async () => {

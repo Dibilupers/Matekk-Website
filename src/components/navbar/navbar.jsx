@@ -427,7 +427,7 @@ function NavBar() {
 
   return (
     <header
-      className={`flex flex-row items-center justify-between py-4 bg-white border-b border-slate-200 sticky top-0 z-50 ${t} px-[2.063rem] md:px-16 xl:px-[7.438rem] ${scrolled ? "shadow-md" : ""}`}
+      className={`flex flex-row items-center justify-between py-4 bg-white border-b border-slate-200 sticky top-0 z-50 ${t} px-4 md:px-16 xl:px-[7.438rem] ${scrolled ? "shadow-md" : ""}`}
     >
       {/* Logo */}
       <button
@@ -859,7 +859,17 @@ function NavBar() {
       </div>
 
       {/* Mobile + Tablet Hamburger */}
-      <div className="flex lg:hidden items-center justify-end gap-3">
+      <div className="flex lg:hidden items-center justify-end gap-2">
+        {isAuthenticated && (
+          <button
+            type="button"
+            onClick={() => navigate("/pages/blank")}
+            className="flex h-9 items-center gap-1.5 whitespace-nowrap rounded-full border border-[#1775EE] px-2.5 text-xs font-medium text-[#1775EE] transition hover:bg-[#1775EE] hover:text-white sm:px-3 sm:text-sm"
+          >
+            <BookOpen size={16} aria-hidden="true" />
+            Courses
+          </button>
+        )}
         {isAuthenticated && <ExamNotifications isOpen={isNotificationsOpen} onOpenChange={setIsNotificationsOpen} />}
         {isAuthenticated && (
           <button

@@ -240,6 +240,21 @@ function TopologyNode({ role, name, details }) {
 }
 
 const NETWORK_TOPOLOGIES = {
+	"routing-protocols-prefix": {
+		title: "Router1 routes to 10.10.10.0/24",
+		note: "Router1 learns the same destination through five routing methods.",
+		nodes: [
+			{ id: "router", kind: "router", name: "Router1", x: 500, y: 120 },
+			{ id: "network", kind: "network", name: "10.10.10.0/24", x: 500, y: 470 },
+		],
+		links: [
+			{ from: "router", to: "network", label: "OSPF", labelX: 330, labelY: 240, offset: -20 },
+			{ from: "router", to: "network", label: "eBGP", labelX: 410, labelY: 280, offset: -10 },
+			{ from: "router", to: "network", label: "Static", labelX: 500, labelY: 315 },
+			{ from: "router", to: "network", label: "EIGRP", labelX: 590, labelY: 280, offset: 10 },
+			{ from: "router", to: "network", label: "iBGP", labelX: 670, labelY: 240, offset: 20 },
+		],
+	},
 	"ipv6-block-r1-r2": {
 		title: "IPv6 block and access LANs",
 		note: "Address block: 2001:0db8:fff:fcf3::/64",
@@ -2190,20 +2205,206 @@ function TopologyDevice({ node }) {
 	);
 }
 
+const WLC_EXHIBITS = {
+	"wlc-security-tab": { title: "WLC Security settings", variant: "security" },
+	"wlc-security-tab-legacy": { title: "WLC Security settings", variant: "security-legacy" },
+	"wlc-my-wlan-layer2": { title: "WLC WLAN Layer 2 settings", variant: "my-wlan" },
+	"wlc-psk-layer2": { title: "WLC PSK Layer 2 settings", variant: "psk" },
+	"wlc-advanced-tab": { title: "WLC Advanced settings", variant: "advanced" },
+};
+
+function WlcTabs({ active = "Security", nested = false }) {
+	const tabs = nested ? ["Layer 2", "Layer 3", "AAA Servers"] : ["General", "Security", "QoS", "Policy-Mapping", "Advanced"];
+	return (
+		<div className={`flex gap-1 border-b border-[#a9bdd3] ${nested ? "bg-[#e5edf5] px-3 pt-2" : "bg-[#d5e4f2] px-2 pt-2"}`}>
+			{tabs.map((tab) => (
+				<span
+					key={tab}
+					aria-current={tab === active ? "page" : undefined}
+					className={`rounded-t-md border border-b-0 px-3 py-1.5 font-semibold ${tab === active ? "border-[#9aaec4] bg-[#f8f7f8] text-[#26354b]" : "border-[#b4c6d9] bg-[#c4d9ee] text-[#3d516b]"}`}
+				>
+					{tab}
+				</span>
+			))}
+		</div>
+	);
+}
+
+function WlcSection({ title, children, className = "" }) {
+	return (
+		<section className={`mb-3 ${className}`}>
+			<h3 className="mb-1 border-b border-[#96b4d2] pb-1 font-bold text-[#3c7184]">{title}</h3>
+			<div className="space-y-1 px-2">{children}</div>
+		</section>
+	);
+}
+
+function WlcSetting({ label, value, checked }) {
+	return (
+		<div className="grid min-h-6 grid-cols-[minmax(0,1fr)_minmax(8rem,0.8fr)] items-center gap-2">
+			<span>{label}</span>
+			{checked !== undefined ? (
+				<span className="flex items-center gap-2">
+					<span
+						role="img"
+						aria-label={checked ? "Enabled" : "Disabled"}
+						className={`flex h-4 w-4 items-center justify-center rounded-[2px] border ${checked ? "border-[#2784d8] bg-[#2784d8] text-white" : "border-[#aab2ba] bg-white"} ${checked ? "text-[11px] font-bold" : ""}`}
+					>
+						{checked ? "✓" : ""}
+					</span>
+					{value}
+				</span>
+			) : (
+				<span className="inline-flex min-h-6 items-center rounded-sm border border-[#bac0c7] bg-white px-2 shadow-inner">{value}</span>
+			)}
+		</div>
+	);
+}
+
+function WlcSettingsPanel({ variant, expanded }) {
+	const legacySecurity = variant === "security-legacy";
+	return (
+		<div
+			role="group"
+			aria-label="Recreated Cisco Wireless LAN Controller configuration exhibit"
+			className={`mx-auto w-full overflow-hidden border border-[#c5ccd3] bg-[#f8f7f8] text-left font-sans text-xs text-[#262a2e] shadow-sm ${expanded ? "min-w-[52rem] max-w-5xl" : "max-w-3xl"}`}
+		>
+			<WlcTabs active={variant === "advanced" ? "Advanced" : "Security"} />
+			{(variant === "my-wlan" || variant === "psk") && (
+				<>
+					<div className="bg-[#f4f3f5] px-4 pt-2 text-sm font-semibold text-[#4c5664]">WLANs &gt; Edit &quot;my_WLAN&quot;</div>
+					<WlcTabs active="Layer 2" nested />
+				</>
+			)}
+			<div className="grid gap-x-8 p-3 sm:grid-cols-2 sm:p-4">
+				{variant === "security" || legacySecurity ? (
+					<>
+						<div>
+							<WlcSection title="Fast Transition">
+								<WlcSetting label="Fast Transition" value={legacySecurity ? "Disable" : "Adaptive"} />
+								<WlcSetting label="Over the DS" checked={false} />
+								<WlcSetting label="Reassociation Timeout" value={legacySecurity ? "30 Seconds" : "20 Seconds"} />
+							</WlcSection>
+							<WlcSection title="Protected Management Frame">
+								<WlcSetting label="PMF" value={legacySecurity ? "Optional" : "Required"} />
+								<WlcSetting label="Comeback timer (1-10 sec)" value="1" />
+								<WlcSetting label="SA Query Timeout (100-500 msec)" value="200" />
+							</WlcSection>
+						</div>
+						<div>
+							<WlcSection title="Authentication Key Management">
+								<WlcSetting label="802.1X-SHA1" checked value="Enable" />
+								<WlcSetting label="802.1X-SHA2" checked={false} value="Enable" />
+								<WlcSetting label="CCKM" checked={false} value="Enable" />
+							</WlcSection>
+							{!legacySecurity && <WlcSetting label="WPA gtk-randomize State 4" value="Disable" />}
+						</div>
+					</>
+				) : null}
+				{variant === "my-wlan" && (
+					<>
+						<div>
+							<WlcSection title="Layer 2 Security">
+								<WlcSetting label="Layer 2 Security" value="WPA+WPA2" />
+								<WlcSetting label="MAC Filtering" checked={false} />
+							</WlcSection>
+							<WlcSection title="Fast Transition">
+								<WlcSetting label="Fast Transition" value="Adaptive" />
+								<WlcSetting label="Over the DS" checked />
+								<WlcSetting label="Reassociation Timeout" value="20 Seconds" />
+							</WlcSection>
+							<WlcSection title="Protected Management Frame">
+								<WlcSetting label="PMF" value="Disabled" />
+							</WlcSection>
+						</div>
+						<WlcSection title="WPA+WPA2 Parameters">
+							<WlcSetting label="WPA Policy" checked={false} />
+							<WlcSetting label="WPA2 Policy" checked />
+							<WlcSetting label="WPA2 Encryption: AES" checked />
+							<WlcSetting label="TKIP / CCMP256 / GCMP128 / GCMP256" checked={false} />
+							<WlcSetting label="OSEN Policy" checked={false} />
+							<WlcSetting label="802.1X" value="Enable" />
+						</WlcSection>
+					</>
+				)}
+				{variant === "psk" && (
+					<>
+						<div>
+							<WlcSection title="Layer 2 Security">
+								<WlcSetting label="Layer 2 Security" value="WPA+WPA2" />
+								<WlcSetting label="Security Type" value="Personal" />
+								<WlcSetting label="MAC Filtering" checked={false} />
+								<WlcSetting label="AutoConfig iPSK" checked={false} value="Enable" />
+							</WlcSection>
+							<WlcSection title="WPA+WPA2 Parameters">
+								<WlcSetting label="WPA Policy" checked={false} />
+								<WlcSetting label="WPA2 Policy" checked={false} />
+								<WlcSetting label="CCMP128 (AES)" checked />
+								<WlcSetting label="TKIP" checked={false} />
+							</WlcSection>
+						</div>
+						<div>
+							<WlcSection title="Authentication Key Management">
+								<WlcSetting label="PSK Format" value="ASCII" />
+								<WlcSetting label="Key" value="••••••••" />
+							</WlcSection>
+							<WlcSetting label="WPA GTK-randomize State 14" value="Disable" />
+						</div>
+					</>
+				)}
+				{variant === "advanced" && (
+					<>
+						<div>
+							<WlcSection title="Advanced">
+								<WlcSetting label="Allow AAA Override" checked={false} value="Enabled" />
+								<WlcSetting label="Coverage Hole Detection" checked={false} value="Enabled" />
+								<WlcSetting label="Enable Session Timeout" checked={false} />
+								<WlcSetting label="Session Timeout (secs)" value="" />
+								<WlcSetting label="Aironet IE" checked={false} value="Enabled" />
+								<WlcSetting label="Override Interface ACL (IPv4)" value="None" />
+								<WlcSetting label="Layer2 ACL" value="None" />
+								<WlcSetting label="P2P Blocking Action" value="Disabled" />
+								<WlcSetting label="Maximum Allowed Clients" value="0" />
+								<WlcSetting label="Maximum Allowed Clients Per AP Radio" value="200" />
+							</WlcSection>
+						</div>
+						<div>
+							<WlcSection title="DHCP">
+								<WlcSetting label="DHCP Server Override" checked={false} />
+								<WlcSetting label="DHCP Addr. Assignment Required" checked={false} />
+							</WlcSection>
+							<WlcSection title="Management Frame Protection (MFP)">
+								<WlcSetting label="MFP Client Protection" value="Optional" />
+							</WlcSection>
+							<WlcSection title="DTIM Period (in beacon intervals)">
+								<WlcSetting label="802.11a/n (1-255)" value="1" />
+								<WlcSetting label="802.11b/g/n (1-255)" value="1" />
+							</WlcSection>
+						</div>
+					</>
+				)}
+			</div>
+		</div>
+	);
+}
+
 export function ExhibitDiagram({ type, className = "", offlineLayout = false }) {
 	const [openTheme, setOpenTheme] = useState(null);
 	const wrapRef = useRef(null);
 	const isRouterOnAStick = type === "router-on-a-stick-vlan20";
 	const topology = isRouterOnAStick ? null : NETWORK_TOPOLOGIES[type];
-	if (!isRouterOnAStick && !topology) return null;
-	const title = topology?.title ?? "Network topology";
+	const wlcExhibit = WLC_EXHIBITS[type];
+	if (!isRouterOnAStick && !topology && !wlcExhibit) return null;
+	const title = topology?.title ?? wlcExhibit?.title ?? "Network topology";
 	const nodes = topology ? new Map(topology.nodes.map((node) => [node.id, node])) : null;
 	const labels = topology ? topologyLabels(topology) : null;
 	const generatedViewBox = topology ? topologyViewBox(topology, labels) : null;
 	const viewBox = topology
 		? topology.viewBox ? includeViewBox(topology.viewBox, generatedViewBox) : generatedViewBox
 		: null;
-	const renderDiagram = (expanded = false) => topology ? (
+	const renderDiagram = (expanded = false) => wlcExhibit ? (
+		<WlcSettingsPanel variant={wlcExhibit.variant} expanded={expanded} />
+	) : topology ? (
 		<svg
 			viewBox={`${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`}
 			role="img"
@@ -2247,7 +2448,7 @@ export function ExhibitDiagram({ type, className = "", offlineLayout = false }) 
 					</button>
 				</div>
 				{topology && <p className="mb-3 text-sm leading-5 text-[#526584]">{topology.note}</p>}
-				<div className={topology ? "overflow-x-auto rounded-xl border border-[#e2e8f0] bg-white p-2 sm:p-3" : ""}>{renderDiagram()}</div>
+				<div className={topology || wlcExhibit ? "overflow-x-auto rounded-xl border border-[#e2e8f0] bg-white p-2 sm:p-3" : ""}>{renderDiagram()}</div>
 			</section>
 			{openTheme && (
 				<ZoomViewer title={title} theme={openTheme} onClose={() => setOpenTheme(null)}>

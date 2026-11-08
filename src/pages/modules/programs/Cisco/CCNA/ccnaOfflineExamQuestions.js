@@ -1,11 +1,6 @@
-import ccna1306BroadcastAddressesImg from "../../../../../assets/ccna-exam/ccna-1306-broadcast-addresses.png";
-import ccna181RapidPvstActionsImg from "../../../../../assets/ccna-exam/ccna-181-rapid-pvst-actions.png";
-import ccna382AnsibleFeaturesImg from "../../../../../assets/ccna-exam/ccna-382-ansible-features.png";
-import ccna608NorthboundApiImg from "../../../../../assets/ccna-exam/ccna-608-northbound-api.png";
 import subinterfaceR1Sw1Sw2Img from "../../../../../assets/ccna-exam/subinterface-r1-sw1-sw2.webp";
-import wlcMyWlanLayer2Img from "../../../../../assets/ccna-exam/wlc-my-wlan-layer2.webp";
-import wlcPskLayer2Img from "../../../../../assets/ccna-exam/wlc-psk-layer2.webp";
 import { CCNA_LEGACY_QUESTIONS } from "./ccnaLegacyQuestions";
+import { CCNA_RECREATED_TEXT_EXHIBITS } from "./ccnaCompositeSetQuestions";
 import { findCcnaQuestionExplanation } from "../../../../../utils/ccnaQuestionExplanations";
 import { isValidQuestion } from "../../../../../utils/ccnaExamGrading";
 import { splitPromptExhibit } from "../../../../../utils/splitPromptExhibit";
@@ -259,12 +254,28 @@ const OFFLINE_LEGACY_QUESTION_OVERRIDES = new Map([
 
 const LEGACY_QUESTION_EXHIBITS = new Map([
   [50, subinterfaceR1Sw1Sw2Img],
-  [217, wlcMyWlanLayer2Img],
-  [227, wlcPskLayer2Img],
-  [267, ccna1306BroadcastAddressesImg],
-  [498, ccna181RapidPvstActionsImg],
-  [700, ccna382AnsibleFeaturesImg],
-  [926, ccna608NorthboundApiImg],
+]);
+
+const LEGACY_QUESTION_NATIVE_EXHIBITS = new Map([
+  [217, "wlc-my-wlan-layer2"],
+  [227, "wlc-psk-layer2"],
+  [1301, "wlc-security-tab-legacy"],
+  [759, { diagram: "routing-protocols-prefix", hideExhibitImage: true }],
+  [266, {
+    hideExhibitImage: true,
+    exhibit: CCNA_RECREATED_TEXT_EXHIBITS.routingTableComponents,
+  }],
+  [278, { hideExhibitImage: true, exhibit: CCNA_RECREATED_TEXT_EXHIBITS.wirelessIpConfig }],
+  [267, { hideExhibitImage: true }],
+  [498, { hideExhibitImage: true }],
+  [617, { hideExhibitImage: true, removeExhibitLeadIn: true }],
+  [282, {
+    hideExhibitImage: true,
+    diagram: "static-nat-router-webserver",
+    exhibit: CCNA_RECREATED_TEXT_EXHIBITS.staticNat,
+  }],
+  [700, { hideExhibitImage: true }],
+  [926, { hideExhibitImage: true }],
 ]);
 
 function parseOfflineAnswerTable(question) {
@@ -290,10 +301,17 @@ const OFFLINE_LEGACY_QUESTIONS = CCNA_LEGACY_QUESTIONS
     const numberedExhibit = /\bexhibit\b/i.test(question.prompt)
       ? NUMBERED_QUESTION_EXHIBITS.get(OFFLINE_LEGACY_QUESTION_IMAGE_IDS.get(question.legacyIndex))
       : undefined;
-    const exhibitImage = numberedExhibit || LEGACY_QUESTION_EXHIBITS.get(question.legacyIndex);
+    const nativeExhibit = LEGACY_QUESTION_NATIVE_EXHIBITS.get(question.legacyIndex);
+    const exhibitDiagram = typeof nativeExhibit === "string" ? nativeExhibit : nativeExhibit?.diagram;
+    const exhibitImage = nativeExhibit?.hideExhibitImage || exhibitDiagram
+      ? undefined
+      : numberedExhibit || LEGACY_QUESTION_EXHIBITS.get(question.legacyIndex);
 
     return {
       ...question,
+      ...(nativeExhibit?.removeExhibitLeadIn
+        ? { prompt: question.prompt.replace(/^\s*Refer to (?:the )?exhibit\.?\s*/i, "") }
+        : {}),
       ...(!question.exhibit && !offlineOverride && !parsedAnswerTable ? splitPromptExhibit(question.prompt) : {}),
       ...parsedAnswerTable,
       ...offlineOverride,
@@ -301,6 +319,9 @@ const OFFLINE_LEGACY_QUESTIONS = CCNA_LEGACY_QUESTIONS
         ? { prompt: "Connect each Wi-Fi term on the left to its matching description on the right." }
         : {}),
       ...(exhibitImage ? { exhibitImage } : {}),
+      ...(nativeExhibit?.hideExhibitImage ? { hideExhibitImage: true } : {}),
+      ...(exhibitDiagram ? { exhibitDiagram } : {}),
+      ...(nativeExhibit?.exhibit ? { exhibit: nativeExhibit.exhibit } : {}),
       ...(question.type === "match" &&
       question.items?.length === question.choices?.length &&
       question.answer?.length === question.items.length &&
@@ -324,7 +345,11 @@ const OFFLINE_LEGACY_QUESTIONS = CCNA_LEGACY_QUESTIONS
   })
   .filter((question) =>
     isValidQuestion(question) &&
-    (!/\bexhibit\b/i.test(question.prompt) || question.exhibit || question.exhibitImage),
+    (!/\bexhibit\b/i.test(question.prompt) ||
+      question.exhibit ||
+      question.exhibitImage ||
+      question.exhibitDiagram ||
+      question.hideExhibitImage),
   );
 
 export function getOfflineLegacyQuestionBank() {
