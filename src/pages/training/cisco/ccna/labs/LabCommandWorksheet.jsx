@@ -30,11 +30,9 @@ export default function LabCommandWorksheet({ lab, state, setState, activeDevice
 			<aside className="flex flex-col gap-4">
 				<section className="rounded border border-[#9ca3af] bg-white p-4">
 					<h5 className="mb-3 text-xs font-bold uppercase tracking-wide text-[#b91c1c]">Tasks</h5>
-					<p className="mb-4 text-xs leading-5 text-[#334155]">
-						R1 has been pre-configured with all the necessary commands. All physical cabling is in place and verified. Connectivity between the end devices must be configured.
-					</p>
+					<p className="mb-4 text-xs leading-5 text-[#334155]">{lab.worksheetInstructions}</p>
 					<ol className="list-decimal space-y-3 pl-5 text-xs leading-5 text-[#1f2937]">
-						{lab.tasks.slice(0, 5).map((task) => (
+						{lab.tasks.map((task) => (
 							<li key={task.id}>
 								{task.text}
 								{submitted && (

@@ -6,6 +6,71 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `72cb376` — Added a mobile Courses shortcut, updated recreated CCNA exam
+  exhibits and matching-question bank data, and validated the contact CAPTCHA
+  action in its request DTO.
+
+Validation before push: frontend and backend production builds, fourteen
+focused CCNA bank/exhibit tests, five CAPTCHA tests, targeted ESLint, and Git
+whitespace checks passed.
+
+## 2026-11-08 — `main`
+
+Commits included in this push:
+
+- `cb94681` — Increased spacing between Lab 3's parallel LACP links so their
+  port labels no longer overlap.
+
+Validation before push: ten focused topology and lab tests, production build,
+and Git whitespace checks passed.
+
+## 2026-11-08 — `main`
+
+Commits included in this push:
+
+- `549f1c6` — Tightened topology label placement to keep labels close to their
+  cables and removed redundant trunk, native-VLAN, and duplicate LACP labels
+  from Practice Lab 3.
+
+Validation before push: thirteen focused topology and lab tests, targeted
+ESLint, production build, and Git whitespace checks passed.
+
+## 2026-11-08 — `main`
+
+Commits included in this push:
+
+- `2920393` — Added collision-aware positioning for practice-lab and exam
+  topology link labels so annotations avoid device labels and one another.
+
+Validation before push: twelve focused topology and lab tests, targeted ESLint,
+production build, and Git whitespace checks passed.
+
+## 2026-11-08 — `main`
+
+Commits included in this push:
+
+- `9d35c62` — Added a shared viewport-fit calculation for practice and exam
+  topology diagrams, fitting the complete diagram initially and recalculating
+  when the viewer size changes.
+
+Validation before push: ten focused topology and lab tests, targeted ESLint,
+production build, and Git whitespace checks passed.
+
+## 2026-11-08 — `main`
+
+Commits included in this push:
+
+- `d7f7ca0` — Replaced CCNA Practice Labs 1–3 from the supplied worksheet and
+  corrected the Lab 4 topology spacing to prevent labels and devices from
+  overlapping.
+
+Validation before push: six focused lab tests, targeted ESLint, production
+build, and Git whitespace checks passed.
+
+## 2026-11-08 — `main`
+
+Commits included in this push:
+
 - `c3e4b0c` — Sent the required `contact` action with hCaptcha verification
   requests from the Contact and Enrollment forms.
 

@@ -636,9 +636,12 @@ export function convertBankRow(row) {
     // This image is a screenshot of the matching activity, now replaced by the interactive version.
     exhibitImage = undefined;
   }
+  const displayPrompt = row.id === 299
+    ? questionPrompt.replace(/^\s*Refer to (?:the )?exhibit\.?\s*/i, "")
+    : questionPrompt;
   return {
     question: {
-      prompt: questionPrompt,
+      prompt: displayPrompt,
       ...(exhibit && !(hasCompleteOptionTable || (hasSeparateExhibit && /^Option [A-H]$/i.test(exhibit.trim()))) ? { exhibit } : {}),
       ...(exhibitImage ? { exhibitImage } : {}),
       // This source screenshot repeats the matching options below the routing diagram.
@@ -648,7 +651,7 @@ export function convertBankRow(row) {
       ...(row.id === 481 && /questions\/ccna-question-481\.png$/i.test(row.imageUrl ?? "")
         ? { hidePrompt: true }
         : {}),
-      ...(row.id === 570 && /questions\/ccna-question-570\.png$/i.test(row.imageUrl ?? "")
+      ...([181, 299, 382, 441, 570, 608, 1305, 1306, 1317, 1321].includes(row.id)
         ? { hideExhibitImage: true }
         : {}),
       ...body,
