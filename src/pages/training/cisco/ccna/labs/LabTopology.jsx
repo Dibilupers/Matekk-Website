@@ -1,4 +1,5 @@
 import { linkUp } from "./labEngine";
+import { placeTopologyLabels } from "../../../../../utils/topologyLabels";
 
 /* Packet Tracer-style network diagram. Links are green when both ends are up,
    red/dashed when down. Router labels follow the live hostname. */
@@ -100,7 +101,69 @@ function TopologyLabel({ x, y, children, fontSize = 9.5, fontWeight = 500 }) {
 	);
 }
 
-function topologyViewBox(lab, state) {
+function topologyNodeBounds(name, node, state) {
+	const device = state.devices[name];
+	const label = device.kind === "router" ? device.hostname : name;
+	const details = node.details ?? (node.sub ? [node.sub] : []);
+	const labelWidth = Math.max(48, label.length * 7.2 + 16);
+	const detailWidth = Math.max(48, ...details.map((detail) => detail.length * 5.2 + 12));
+	const iconHalfWidth = device.kind === "pc" ? 30 : 38;
+	const top = device.kind === "pc" ? -30 : -28;
+	const bottom = details.length ? 55 + details.length * 12 : 45;
+	return {
+		x: node.x,
+		y: node.y + (top + bottom) / 2,
+		width: 2 * Math.max(iconHalfWidth, labelWidth / 2, details.length ? detailWidth / 2 : 0),
+		height: bottom - top,
+	};
+}
+
+function topologyLabels(lab, state) {
+	const obstacles = Object.entries(lab.layout.nodes)
+		.map(([name, node]) => topologyNodeBounds(name, node, state));
+	const labels = [];
+	lab.links.forEach((link, index) => {
+		const [aDevice, aInterface] = link.a.split(":");
+		const [bDevice, bInterface] = link.b.split(":");
+		const a = lab.layout.nodes[aDevice];
+		const b = lab.layout.nodes[bDevice];
+		const dx = b.x - a.x;
+		const dy = b.y - a.y;
+		const length = Math.hypot(dx, dy) || 1;
+		const ux = dx / length;
+		const uy = dy / length;
+		const nx = -uy * 11;
+		const ny = ux * 11;
+		const laneX = -uy * (link.lane ?? 0);
+		const laneY = ux * (link.lane ?? 0);
+		const x1 = a.x + ux * 34 + laneX;
+		const y1 = a.y + uy * 34 + laneY;
+		const x2 = b.x - ux * 34 + laneX;
+		const y2 = b.y - uy * 34 + laneY;
+		const addLabel = (key, text, x, y, fontSize = 9.5) => {
+			const height = fontSize + 8;
+			labels.push({
+				key,
+				text,
+				x,
+				y,
+				width: Math.max(24, String(text).length * fontSize * 0.58 + 10),
+				height,
+				centerOffsetY: 2 - height / 2,
+			});
+		};
+		addLabel(`${index}-a`, SHORT(aInterface), x1 + ux * 16 + nx, y1 + uy * 16 + ny + 3);
+		addLabel(`${index}-b`, SHORT(bInterface), x2 - ux * 16 + nx, y2 - uy * 16 + ny + 3);
+		if (link.net) addLabel(`${index}-net`, link.net, (x1 + x2) / 2 - nx, (y1 + y2) / 2 - ny + 3, 9.5);
+	});
+
+	return placeTopologyLabels(labels, obstacles).reduce((map, label) => {
+		map.set(label.key, label);
+		return map;
+	}, new Map());
+}
+
+function topologyViewBox(lab, state, labels) {
 	let minX = Infinity;
 	let minY = Infinity;
 	let maxX = -Infinity;
@@ -111,44 +174,15 @@ function topologyViewBox(lab, state) {
 		maxX = Math.max(maxX, x + halfWidth);
 		maxY = Math.max(maxY, y + halfHeight);
 	};
-	const includeLabel = (x, y, label) => {
-		const width = Math.max(24, String(label).length * 9.5 * 0.58 + 10);
-		const height = 9.5 + 8;
-		include(x, y - height / 2 + 2, width / 2, height / 2);
-	};
 	const pos = (name) => lab.layout.nodes[name];
 
 	Object.entries(lab.layout.nodes).forEach(([name, node]) => {
-		const device = state.devices[name];
-		const label = device.kind === "router" ? device.hostname : name;
-		const details = node.details ?? (node.sub ? [node.sub] : []);
-		const labelWidth = Math.max(48, label.length * 7.2 + 16);
-		const detailWidth = Math.max(48, ...details.map((detail) => detail.length * 5.2 + 12));
-		const iconHalfWidth = device.kind === "pc" ? 30 : 38;
-		const top = device.kind === "pc" ? -30 : -28;
-		const bottom = details.length ? 55 + details.length * 12 : 45;
-		include(node.x, node.y + (top + bottom) / 2, Math.max(iconHalfWidth, labelWidth / 2, details.length ? detailWidth / 2 : 0), (bottom - top) / 2);
+		const bounds = topologyNodeBounds(name, node, state);
+		include(bounds.x, bounds.y, bounds.width / 2, bounds.height / 2);
 	});
 
-	lab.links.forEach((link) => {
-		const [aDevice, aInterface] = link.a.split(":");
-		const [bDevice, bInterface] = link.b.split(":");
-		const a = pos(aDevice);
-		const b = pos(bDevice);
-		const dx = b.x - a.x;
-		const dy = b.y - a.y;
-		const length = Math.hypot(dx, dy) || 1;
-		const ux = dx / length;
-		const uy = dy / length;
-		const nx = -uy * 11;
-		const ny = ux * 11;
-		const x1 = a.x + ux * 34;
-		const y1 = a.y + uy * 34;
-		const x2 = b.x - ux * 34;
-		const y2 = b.y - uy * 34;
-		includeLabel(x1 + ux * 16 + nx, y1 + uy * 16 + ny + 3, SHORT(aInterface));
-		includeLabel(x2 - ux * 16 + nx, y2 - uy * 16 + ny + 3, SHORT(bInterface));
-		includeLabel((x1 + x2) / 2 - nx, (y1 + y2) / 2 - ny + 3, link.net);
+	labels.forEach((label) => {
+		include(label.x, label.y + label.centerOffsetY, label.width / 2, label.height / 2);
 	});
 
 	if (lab.layout.cloud) {
@@ -181,13 +215,14 @@ export default function LabTopology({
 }) {
 	const { layout } = lab;
 	const pos = (name) => layout.nodes[name];
-	const viewBox = topologyViewBox(lab, state);
+	const labels = topologyLabels(lab, state);
+	const viewBox = topologyViewBox(lab, state, labels);
 	return (
 		<svg ref={svgRef} viewBox={`${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`} className={className} style={style} role="img" aria-label={`Lab topology: ${lab.title}`}>
 			{layout.cloud && (
 				<line x1={layout.cloud.x} y1={layout.cloud.y + 22} x2={pos(layout.cloud.attach).x} y2={pos(layout.cloud.attach).y - 22} stroke="#94a3b8" strokeWidth="2" strokeDasharray="4 4" />
 			)}
-			{lab.links.map((l) => {
+			{lab.links.map((l, index) => {
 				const [ad, ai] = l.a.split(":");
 				const [bd, bi] = l.b.split(":");
 				const A = pos(ad);
@@ -203,15 +238,14 @@ export default function LabTopology({
 				const laneX = -uy * (l.lane ?? 0), laneY = ux * (l.lane ?? 0);
 				const x1 = A.x + ux * off + laneX, y1 = A.y + uy * off + laneY;
 				const x2 = B.x - ux * off + laneX, y2 = B.y - uy * off + laneY;
-				const nx = -uy * 11, ny = ux * 11; // perpendicular offset for labels
 				return (
 					<g key={`${l.a}-${l.b}`}>
 						<line x1={x1} y1={y1} x2={x2} y2={y2} stroke={color} strokeWidth="3" strokeDasharray={up ? "0" : "6 5"} />
 						<circle cx={x1} cy={y1} r="4" fill={color} />
 						<circle cx={x2} cy={y2} r="4" fill={color} />
-						<TopologyLabel x={x1 + ux * 16 + nx} y={y1 + uy * 16 + ny + 3}>{SHORT(ai)}</TopologyLabel>
-						<TopologyLabel x={x2 - ux * 16 + nx} y={y2 - uy * 16 + ny + 3}>{SHORT(bi)}</TopologyLabel>
-						<TopologyLabel x={(x1 + x2) / 2 - nx} y={(y1 + y2) / 2 - ny + 3} fontWeight={600}>{l.net}</TopologyLabel>
+						<TopologyLabel x={labels.get(`${index}-a`).x} y={labels.get(`${index}-a`).y}>{SHORT(ai)}</TopologyLabel>
+						<TopologyLabel x={labels.get(`${index}-b`).x} y={labels.get(`${index}-b`).y}>{SHORT(bi)}</TopologyLabel>
+						{l.net && <TopologyLabel x={labels.get(`${index}-net`).x} y={labels.get(`${index}-net`).y} fontWeight={600}>{l.net}</TopologyLabel>}
 					</g>
 				);
 			})}

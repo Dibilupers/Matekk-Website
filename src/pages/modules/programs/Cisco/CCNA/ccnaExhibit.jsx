@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { Maximize2, X } from "lucide-react";
 import { PcIcon, RouterIcon, SwitchIcon } from "../../../../training/cisco/ccna/labs/LabTopology";
 import { topologyFitScale } from "../../../../../utils/topologyFit";
+import { placeTopologyLabels } from "../../../../../utils/topologyLabels";
 
 /* Exam exhibits (router output and pictures). Each one can open full screen, where it starts zoomed
    to fit the screen and can be zoomed by touch: pinch with two fingers, drag with one, double-tap to
@@ -2040,7 +2041,34 @@ function nodeRadius(kind) {
 	return 34;
 }
 
-function topologyViewBox(topology) {
+function topologyLabels(topology) {
+	const obstacles = topology.nodes.map((node) => {
+		const details = node.details ?? [];
+		const width = Math.max(
+			nodeRadius(node.kind),
+			node.name.length * 7.2 + 16,
+			...details.map((detail) => detail.length * 5.2 + 12),
+		);
+		const top = node.kind === "network" ? -27 : -30;
+		const bottom = 55 + details.length * 12;
+		return { x: node.x, y: node.y + (top + bottom) / 2, width: width * 2, height: bottom - top };
+	});
+	const labels = topology.links.flatMap((link, index) => {
+		if (!link.label) return [];
+		const from = topology.nodes.find((node) => node.id === link.from);
+		const to = topology.nodes.find((node) => node.id === link.to);
+		const labelX = link.labelX ?? (from.x + to.x) / 2;
+		const labelY = link.labelY ?? (from.y + to.y) / 2 - 10;
+		const width = Math.max(44, link.label.length * 7 + 14);
+		return [{ key: index, text: link.label, x: labelX, y: labelY, width, height: 20, centerOffsetY: -2 }];
+	});
+	return placeTopologyLabels(labels, obstacles).reduce((map, label) => {
+		map.set(label.key, label);
+		return map;
+	}, new Map());
+}
+
+function topologyViewBox(topology, labels) {
 	let minX = Infinity;
 	let minY = Infinity;
 	let maxX = -Infinity;
@@ -2051,8 +2079,6 @@ function topologyViewBox(topology) {
 		minY = Math.min(minY, y - height);
 		maxY = Math.max(maxY, y + height);
 	};
-	const nodes = new Map(topology.nodes.map((node) => [node.id, node]));
-
 	topology.nodes.forEach((node) => {
 		const details = node.details ?? [];
 		const textWidth = Math.max(nodeRadius(node.kind), node.name.length * 4, ...details.map((detail) => detail.length * 2.8));
@@ -2060,13 +2086,8 @@ function topologyViewBox(topology) {
 		include(node.x, node.y + 62 + details.length * 12, textWidth + 10, 8);
 	});
 
-	topology.links.forEach((link) => {
-		if (!link.label) return;
-		const from = nodes.get(link.from);
-		const to = nodes.get(link.to);
-		const labelX = link.labelX ?? (from.x + to.x) / 2;
-		const labelY = link.labelY ?? (from.y + to.y) / 2 - 10;
-		include(labelX, labelY, link.label.length * 3.5 + 8, 12);
+	labels.forEach((label) => {
+		include(label.x, label.y + label.centerOffsetY, label.width / 2, label.height / 2);
 	});
 
 	if (!Number.isFinite(minX)) return { x: 0, y: 0, width: 1000, height: topology.height ?? 560 };
@@ -2081,7 +2102,15 @@ function topologyViewBox(topology) {
 	};
 }
 
-function TopologyLink({ link, nodes }) {
+function includeViewBox(base, expanded) {
+	const x = Math.min(base.x, expanded.x);
+	const y = Math.min(base.y, expanded.y);
+	const right = Math.max(base.x + base.width, expanded.x + expanded.width);
+	const bottom = Math.max(base.y + base.height, expanded.y + expanded.height);
+	return { x, y, width: right - x, height: bottom - y };
+}
+
+function TopologyLink({ link, nodes, labelPosition }) {
 	const from = nodes.get(link.from);
 	const to = nodes.get(link.to);
 	const dx = to.x - from.x;
@@ -2095,8 +2124,8 @@ function TopologyLink({ link, nodes }) {
 	const y1 = from.y + (dy / distance) * startRadius + offsetY;
 	const x2 = to.x - (dx / distance) * endRadius + offsetX;
 	const y2 = to.y - (dy / distance) * endRadius + offsetY;
-	const labelX = link.labelX ?? (x1 + x2) / 2;
-	const labelY = link.labelY ?? (y1 + y2) / 2 - 10;
+	const labelX = labelPosition?.x ?? link.labelX ?? (x1 + x2) / 2;
+	const labelY = labelPosition?.y ?? link.labelY ?? (y1 + y2) / 2 - 10;
 
 	return (
 		<g>
@@ -2169,8 +2198,10 @@ export function ExhibitDiagram({ type, className = "", offlineLayout = false }) 
 	if (!isRouterOnAStick && !topology) return null;
 	const title = topology?.title ?? "Network topology";
 	const nodes = topology ? new Map(topology.nodes.map((node) => [node.id, node])) : null;
+	const labels = topology ? topologyLabels(topology) : null;
+	const generatedViewBox = topology ? topologyViewBox(topology, labels) : null;
 	const viewBox = topology
-		? topology.viewBox ?? topologyViewBox(topology)
+		? topology.viewBox ? includeViewBox(topology.viewBox, generatedViewBox) : generatedViewBox
 		: null;
 	const renderDiagram = (expanded = false) => topology ? (
 		<svg
@@ -2185,7 +2216,7 @@ export function ExhibitDiagram({ type, className = "", offlineLayout = false }) 
 		>
 			<rect x={viewBox.x} y={viewBox.y} width={viewBox.width} height={viewBox.height} fill="#fff" />
 			{topology.links.map((link, index) => (
-				<TopologyLink key={`${link.from}-${link.to}-${index}`} link={link} nodes={nodes} />
+				<TopologyLink key={`${link.from}-${link.to}-${index}`} link={link} nodes={nodes} labelPosition={labels.get(index)} />
 			))}
 			{topology.nodes.map((node) => <TopologyDevice key={node.id} node={node} />)}
 		</svg>
