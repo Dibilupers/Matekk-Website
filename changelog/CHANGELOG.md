@@ -6,6 +6,17 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `549f1c6` — Tightened topology label placement to keep labels close to their
+  cables and removed redundant trunk, native-VLAN, and duplicate LACP labels
+  from Practice Lab 3.
+
+Validation before push: thirteen focused topology and lab tests, targeted
+ESLint, production build, and Git whitespace checks passed.
+
+## 2026-11-08 — `main`
+
+Commits included in this push:
+
 - `2920393` — Added collision-aware positioning for practice-lab and exam
   topology link labels so annotations avoid device labels and one another.
 
