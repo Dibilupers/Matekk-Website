@@ -16,9 +16,17 @@ export function applyWorksheetCommands(lab, groups, answers, startingState) {
 
 			for (const device of slot.devices) {
 				const preparedState = structuredClone(state);
-				preparedState.consoles[device].mode = slot.context;
-				preparedState.consoles[device].iface = slot.iface ?? null;
-				preparedState.consoles[device].vlan = slot.vlan ?? null;
+				const consoleState = preparedState.consoles[device];
+				consoleState.mode = slot.context;
+				if (slot.iface) {
+					consoleState.iface = slot.iface;
+					consoleState.ifaces = null;
+				} else if (slot.context === "config" || slot.context === "config-vlan" || slot.context === "priv") {
+					consoleState.iface = null;
+					consoleState.ifaces = null;
+				}
+				if (slot.vlan !== undefined) consoleState.vlan = slot.vlan;
+				else if (slot.context !== "config-vlan") consoleState.vlan = null;
 				const result = execute(lab, preparedState, device, command);
 				state = result.state;
 				if (result.out.some((line) => /% Invalid input|% Incomplete command/.test(line))) {

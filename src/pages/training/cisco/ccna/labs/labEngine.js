@@ -45,6 +45,7 @@ export function createLabState(lab) {
 			i.desc = i.desc || "";
 			if (d.kind === "switch") {
 				i.switchportMode = i.switchportMode || "dynamic";
+				i.trunkNativeVlan = i.trunkNativeVlan ?? 1;
 				i.cdpEnabled = i.cdpEnabled !== false;
 				i.lldpTransmit = Boolean(i.lldpTransmit);
 				i.lldpReceive = Boolean(i.lldpReceive);
@@ -52,7 +53,7 @@ export function createLabState(lab) {
 		}
 	}
 	const consoles = {};
-	for (const name of lab.editable) consoles[name] = { mode: "user", iface: null };
+	for (const name of lab.editable) consoles[name] = { mode: "user", iface: null, ifaces: null };
 	return { devices, consoles, initial: Object.fromEntries(lab.editable.map((n) => [n, signature(devices[n])])) };
 }
 
@@ -218,9 +219,13 @@ export function runningConfig(d) {
 		}
 		for (const [ifName, i] of Object.entries(d.interfaces)) {
 			lines.push(`interface ${FULL_NAME(ifName)}`);
+			if (i.switchportMode === "trunk") lines.push(" switchport trunk encapsulation dot1q");
 			if (i.switchportMode !== "dynamic") lines.push(` switchport mode ${i.switchportMode}`);
 			if (i.accessVlan !== undefined) lines.push(` switchport access vlan ${i.accessVlan}`);
 			if (i.voiceVlan !== undefined) lines.push(` switchport voice vlan ${i.voiceVlan}`);
+			if (i.trunkAllowedVlans) lines.push(` switchport trunk allowed vlan ${i.trunkAllowedVlans.join(",")}`);
+			if (i.trunkNativeVlan !== 1) lines.push(` switchport trunk native vlan ${i.trunkNativeVlan}`);
+			if (i.portChannel !== undefined) lines.push(` channel-group ${i.portChannel} mode ${i.lacpMode}`);
 			if (i.lldpTransmit) lines.push(" lldp transmit");
 			if (i.lldpReceive) lines.push(" lldp receive");
 			if (!i.cdpEnabled) lines.push(" no cdp enable");
@@ -250,6 +255,29 @@ export function configCommands(d) {
 	}
 	const out = ["enable", "configure terminal", `hostname ${d.hostname}`];
 	if (d.kind === "switch") {
+		for (const [vlanId, name] of Object.entries(d.vlans ?? {}).sort(([left], [right]) => Number(left) - Number(right))) {
+			out.push(`vlan ${vlanId}`);
+			if (name) out.push(` name ${name}`);
+			out.push("exit");
+		}
+		if (d.lldpEnabled) out.push("lldp run");
+		for (const [ifName, intf] of Object.entries(d.interfaces)) {
+			out.push(`interface ${ifName}`);
+			if (intf.switchportMode === "trunk") {
+				out.push(" switchport trunk encapsulation dot1q", " switchport mode trunk");
+			} else if (intf.switchportMode === "access") {
+				out.push(" switchport mode access");
+			}
+			if (intf.accessVlan !== undefined) out.push(` switchport access vlan ${intf.accessVlan}`);
+			if (intf.voiceVlan !== undefined) out.push(` switchport voice vlan ${intf.voiceVlan}`);
+			if (intf.trunkAllowedVlans) out.push(` switchport trunk allowed vlan ${intf.trunkAllowedVlans.join(",")}`);
+			if (intf.trunkNativeVlan !== undefined && intf.trunkNativeVlan !== 1) out.push(` switchport trunk native vlan ${intf.trunkNativeVlan}`);
+			if (intf.portChannel !== undefined) out.push(` channel-group ${intf.portChannel} mode ${intf.lacpMode}`);
+			if (intf.lldpTransmit) out.push(" lldp transmit");
+			if (intf.lldpReceive) out.push(" lldp receive");
+			if (!intf.cdpEnabled) out.push(" no cdp enable");
+			out.push("exit");
+		}
 		out.push("end");
 		return out;
 	}
@@ -305,11 +333,23 @@ function parseIface(tokens, device) {
 	return null;
 }
 
+function parseIfaceRange(tokens, device) {
+	const input = tokens.join("").toLowerCase();
+	const match = input.match(/^(e0\/\d+)-(\d+)$/);
+	if (!match) return null;
+	const first = Number(match[1].slice(match[1].lastIndexOf("/") + 1));
+	const last = Number(match[2]);
+	if (last < first) return null;
+	const interfaces = Array.from({ length: last - first + 1 }, (_, index) => `e0/${first + index}`);
+	return interfaces.every((name) => device.interfaces[name]) ? interfaces : null;
+}
+
 const HELP = {
 	user: ["enable           Turn on privileged commands", "ping             Send echo messages", "show             Show running system information", "traceroute       Trace route to destination"],
 	priv: ["configure        Enter configuration mode", "copy             Copy from one file to another", "disable          Turn off privileged commands", "ping             Send echo messages", "show             Show running system information", "traceroute       Trace route to destination", "write            Write running configuration to memory"],
-	config: ["do               Run an exec-level command", "enable           Modify enable password parameters", "end              Exit to privileged mode", "exit             Exit from configure mode", "hostname         Set system's network name", "interface        Select an interface to configure", "ip               Global IP configuration subcommands (ip route)", "lldp             Global LLDP configuration", "no               Negate a command", "vlan             Configure a VLAN"],
-	"config-if": ["description      Interface specific description", "do               Run an exec-level command", "end              Exit to privileged mode", "exit             Exit from interface configuration mode", "ip               Interface IP config commands (ip address)", "lldp             Configure LLDP on the interface", "no               Negate a command", "shutdown         Shutdown the selected interface", "switchport       Configure switch port mode and VLANs"],
+	config: ["do               Run an exec-level command", "enable           Modify enable password parameters", "end              Exit to privileged mode", "exit             Exit from configure mode", "hostname         Set system's network name", "interface        Select an interface or interface range", "ip               Global IP configuration subcommands (ip route)", "lldp             Global LLDP configuration", "no               Negate a command", "vlan             Configure a VLAN"],
+	"config-if": ["channel-group    Configure LACP EtherChannel", "description      Interface specific description", "do               Run an exec-level command", "end              Exit to privileged mode", "exit             Exit from interface configuration mode", "ip               Interface IP config commands (ip address)", "lldp             Configure LLDP on the interface", "no               Negate a command", "shutdown         Shutdown the selected interface", "switchport       Configure switch port mode and VLANs"],
+	"config-if-range": ["channel-group    Configure LACP EtherChannel", "description      Interface specific description", "do               Run an exec-level command", "end              Exit to privileged mode", "exit             Exit from interface configuration mode", "lldp             Configure LLDP on the interface range", "no               Negate a command", "switchport       Configure switch port mode and VLANs"],
 	"config-vlan": ["end              Exit to privileged mode", "exit             Exit from VLAN configuration mode", "name             Assign a name to the VLAN"],
 };
 
@@ -332,6 +372,7 @@ export function promptFor(state, devName) {
 		priv: `${h}#`,
 		config: `${h}(config)#`,
 		"config-if": `${h}(config-if)#`,
+		"config-if-range": `${h}(config-if-range)#`,
 		"config-vlan": `${h}(config-vlan)#`,
 	}[mode];
 }
@@ -417,11 +458,13 @@ export function execute(lab, prev, devName, line) {
 		else if (kw(t[0], "end", 2)) {
 			con.mode = "priv";
 			con.iface = null;
+			con.ifaces = null;
 			con.vlan = null;
 		} else if (kw(t[0], "exit", 2)) {
-			if (mode === "config-if") {
+			if (mode === "config-if" || mode === "config-if-range") {
 				con.mode = "config";
 				con.iface = null;
+				con.ifaces = null;
 			} else if (mode === "config-vlan") {
 				con.mode = "config";
 				con.vlan = null;
@@ -446,12 +489,16 @@ export function execute(lab, prev, devName, line) {
 			else if (!tk[1]) incomplete();
 			else d.vlans[con.vlan] = tk.slice(1).join(" ");
 		} else if (kw(tk[0], "interface", 3)) {
-			const name = parseIface(tk.slice(1), d);
+			const isRange = kw(tk[1], "range", 3);
+			const names = isRange ? parseIfaceRange(tk.slice(2), d) : null;
+			const name = isRange ? null : parseIface(tk.slice(1), d);
 			if (!tk[1]) incomplete();
-			else if (!name) invalidAt((neg ? 1 : 0) + 1);
+			else if (isRange && !names) invalidAt((neg ? 1 : 0) + 2);
+			else if (!isRange && !name) invalidAt((neg ? 1 : 0) + 1);
 			else {
-				con.mode = "config-if";
+				con.mode = isRange ? "config-if-range" : "config-if";
 				con.iface = name;
+				con.ifaces = names;
 			}
 		} else if (mode === "config" && kw(tk[0], "hostname", 3)) {
 			if (neg) d.hostname = "Router";
@@ -503,26 +550,45 @@ export function execute(lab, prev, devName, line) {
 			}
 		} else if (mode === "config-if" && kw(tk[0], "description", 3)) {
 			d.interfaces[con.iface].desc = neg ? "" : tk.slice(1).join(" ");
-		} else if (mode === "config-if" && d.kind === "switch" && kw(tk[0], "switchport", 6)) {
-			const port = d.interfaces[con.iface];
-			if (kw(tk[1], "mode", 1) && kw(tk[2], "access", 2)) {
-				port.switchportMode = neg ? "dynamic" : "access";
+		} else if ((mode === "config-if" || mode === "config-if-range") && d.kind === "switch" && kw(tk[0], "switchport", 6)) {
+			const ports = (con.ifaces ?? [con.iface]).map((name) => d.interfaces[name]);
+			if (kw(tk[1], "mode", 1) && (kw(tk[2], "access", 2) || kw(tk[2], "trunk", 2))) {
+				for (const port of ports) port.switchportMode = neg ? "dynamic" : kw(tk[2], "trunk", 2) ? "trunk" : "access";
 			} else if (kw(tk[1], "access", 2) && kw(tk[2], "vlan", 2)) {
 				const vlanId = Number(tk[3]);
 				if (!Number.isInteger(vlanId) || vlanId < 1 || vlanId > 4094) incomplete();
-				else port.accessVlan = neg ? undefined : vlanId;
+				else for (const port of ports) port.accessVlan = neg ? undefined : vlanId;
 			} else if (kw(tk[1], "voice", 2) && kw(tk[2], "vlan", 2)) {
 				const vlanId = Number(tk[3]);
 				if (!Number.isInteger(vlanId) || vlanId < 1 || vlanId > 4094) incomplete();
-				else port.voiceVlan = neg ? undefined : vlanId;
+				else for (const port of ports) port.voiceVlan = neg ? undefined : vlanId;
+			} else if (kw(tk[1], "trunk", 2) && kw(tk[2], "native", 2) && kw(tk[3], "vlan", 2)) {
+				const vlanId = Number(tk[4]);
+				if (!Number.isInteger(vlanId) || vlanId < 1 || vlanId > 4094) incomplete();
+				else for (const port of ports) port.trunkNativeVlan = neg ? 1 : vlanId;
+			} else if (kw(tk[1], "trunk", 2) && kw(tk[2], "allowed", 2) && kw(tk[3], "vlan", 2)) {
+				const allowed = (tk[4] ?? "").split(",").map(Number);
+				if (!tk[4] || allowed.some((vlanId) => !Number.isInteger(vlanId) || vlanId < 1 || vlanId > 4094)) incomplete();
+				else for (const port of ports) port.trunkAllowedVlans = neg ? undefined : allowed;
 			} else invalidAt((neg ? 1 : 0) + 2);
-		} else if (mode === "config-if" && d.kind === "switch" && kw(tk[0], "lldp", 2)) {
-			const port = d.interfaces[con.iface];
-			if (kw(tk[1], "transmit", 2)) port.lldpTransmit = !neg;
-			else if (kw(tk[1], "receive", 2)) port.lldpReceive = !neg;
+		} else if ((mode === "config-if" || mode === "config-if-range") && d.kind === "switch" && kw(tk[0], "channel-group", 7)) {
+			const channelGroup = Number(tk[1]);
+			const lacpMode = tk[3]?.toLowerCase();
+			if (!Number.isInteger(channelGroup) || channelGroup < 1 || channelGroup > 4096 || !kw(tk[2], "mode", 2) || !["active", "passive"].includes(lacpMode)) {
+				incomplete();
+			} else {
+				for (const name of con.ifaces ?? [con.iface]) {
+					d.interfaces[name].portChannel = neg ? undefined : channelGroup;
+					d.interfaces[name].lacpMode = neg ? undefined : lacpMode;
+				}
+			}
+		} else if ((mode === "config-if" || mode === "config-if-range") && d.kind === "switch" && kw(tk[0], "lldp", 2)) {
+			const ports = (con.ifaces ?? [con.iface]).map((name) => d.interfaces[name]);
+			if (kw(tk[1], "transmit", 2)) for (const port of ports) port.lldpTransmit = !neg;
+			else if (kw(tk[1], "receive", 2)) for (const port of ports) port.lldpReceive = !neg;
 			else invalidAt((neg ? 1 : 0) + 2);
-		} else if (mode === "config-if" && d.kind === "switch" && kw(tk[0], "cdp", 2) && kw(tk[1], "enable", 2)) {
-			d.interfaces[con.iface].cdpEnabled = !neg;
+		} else if ((mode === "config-if" || mode === "config-if-range") && d.kind === "switch" && kw(tk[0], "cdp", 2) && kw(tk[1], "enable", 2)) {
+			for (const name of con.ifaces ?? [con.iface]) d.interfaces[name].cdpEnabled = !neg;
 		} else {
 			const offset = neg ? 1 : 0;
 			const errorToken = kw(tk[0], "ip", 2) || kw(tk[0], "enable", 2)

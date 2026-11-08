@@ -121,7 +121,7 @@ function topologyViewBox(lab, state) {
 	Object.entries(lab.layout.nodes).forEach(([name, node]) => {
 		const device = state.devices[name];
 		const label = device.kind === "router" ? device.hostname : name;
-		const details = node.sub ? [node.sub] : [];
+		const details = node.details ?? (node.sub ? [node.sub] : []);
 		const labelWidth = Math.max(48, label.length * 7.2 + 16);
 		const detailWidth = Math.max(48, ...details.map((detail) => detail.length * 5.2 + 12));
 		const iconHalfWidth = device.kind === "pc" ? 30 : 38;
@@ -193,7 +193,9 @@ export default function LabTopology({ lab, state, activeDevice }) {
 				const ux = dx / len;
 				const uy = dy / len;
 				const off = 34; // keep cable ends clear of the icons
-				const x1 = A.x + ux * off, y1 = A.y + uy * off, x2 = B.x - ux * off, y2 = B.y - uy * off;
+				const laneX = -uy * (l.lane ?? 0), laneY = ux * (l.lane ?? 0);
+				const x1 = A.x + ux * off + laneX, y1 = A.y + uy * off + laneY;
+				const x2 = B.x - ux * off + laneX, y2 = B.y - uy * off + laneY;
 				const nx = -uy * 11, ny = ux * 11; // perpendicular offset for labels
 				return (
 					<g key={`${l.a}-${l.b}`}>
@@ -208,9 +210,9 @@ export default function LabTopology({ lab, state, activeDevice }) {
 			})}
 			{Object.entries(layout.nodes).map(([name, n]) => {
 				const d = state.devices[name];
-				if (d.kind === "pc") return <PcIcon key={name} x={n.x} y={n.y} label={n.label ?? name} sub={n.sub} server={name.startsWith("SRV")} labelBackdrop />;
-				if (d.kind === "switch") return <SwitchIcon key={name} x={n.x} y={n.y} label={name} sub={n.sub} labelBackdrop />;
-				return <RouterIcon key={name} x={n.x} y={n.y} label={d.hostname} sub={n.sub} active={activeDevice === name} labelBackdrop />;
+				if (d.kind === "pc") return <PcIcon key={name} x={n.x} y={n.y} label={n.label ?? name} sub={n.sub} details={n.details} server={name.startsWith("SRV")} labelBackdrop />;
+				if (d.kind === "switch") return <SwitchIcon key={name} x={n.x} y={n.y} label={name} sub={n.sub} details={n.details} labelBackdrop />;
+				return <RouterIcon key={name} x={n.x} y={n.y} label={d.hostname} sub={n.sub} details={n.details} active={activeDevice === name} labelBackdrop />;
 			})}
 			{layout.cloud && <CloudIcon x={layout.cloud.x} y={layout.cloud.y} label={layout.cloud.label} sub={layout.cloud.sub} />}
 		</svg>
