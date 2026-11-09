@@ -4,6 +4,7 @@ import { Maximize2, X } from "lucide-react";
 import { PcIcon, RouterIcon, SwitchIcon } from "../../../../training/cisco/ccna/labs/LabTopology";
 import { topologyFitScale } from "../../../../../utils/topologyFit";
 import { placeTopologyLabels } from "../../../../../utils/topologyLabels";
+import { topologyLinkGeometry, topologyLinkLabelPosition } from "../../../../../utils/topologyGeometry";
 
 /* Exam exhibits (router output and pictures). Each one can open full screen, where it starts zoomed
    to fit the screen and can be zoomed by touch: pinch with two fingers, drag with one, double-tap to
@@ -2056,6 +2057,10 @@ function nodeRadius(kind) {
 	return 34;
 }
 
+function topologyGeometryKind(node) {
+	return node.kind === "host" && /server/i.test(node.name) ? "server" : node.kind;
+}
+
 function topologyLabels(topology) {
 	const obstacles = topology.nodes.map((node) => {
 		const details = node.details ?? [];
@@ -2072,8 +2077,21 @@ function topologyLabels(topology) {
 		if (!link.label) return [];
 		const from = topology.nodes.find((node) => node.id === link.from);
 		const to = topology.nodes.find((node) => node.id === link.to);
-		const labelX = link.labelX ?? (from.x + to.x) / 2;
-		const labelY = link.labelY ?? (from.y + to.y) / 2 - 10;
+		const geometry = topologyLinkGeometry(
+			from,
+			to,
+			topologyGeometryKind(from),
+			topologyGeometryKind(to),
+			link.offset ?? 0,
+		);
+		const { x: labelX, y: labelY } = topologyLinkLabelPosition(
+			geometry.x1,
+			geometry.y1,
+			geometry.x2,
+			geometry.y2,
+			link.labelX,
+			link.labelY,
+		);
 		const width = Math.max(44, link.label.length * 7 + 14);
 		return [{ key: index, text: link.label, x: labelX, y: labelY, width, height: 20, centerOffsetY: -2 }];
 	});
@@ -2128,17 +2146,14 @@ function includeViewBox(base, expanded) {
 function TopologyLink({ link, nodes, labelPosition }) {
 	const from = nodes.get(link.from);
 	const to = nodes.get(link.to);
-	const dx = to.x - from.x;
-	const dy = to.y - from.y;
-	const distance = Math.hypot(dx, dy) || 1;
-	const offsetX = (-dy / distance) * (link.offset ?? 0);
-	const offsetY = (dx / distance) * (link.offset ?? 0);
-	const startRadius = nodeRadius(from.kind);
-	const endRadius = nodeRadius(to.kind);
-	const x1 = from.x + (dx / distance) * startRadius + offsetX;
-	const y1 = from.y + (dy / distance) * startRadius + offsetY;
-	const x2 = to.x - (dx / distance) * endRadius + offsetX;
-	const y2 = to.y - (dy / distance) * endRadius + offsetY;
+	const geometry = topologyLinkGeometry(
+		from,
+		to,
+		topologyGeometryKind(from),
+		topologyGeometryKind(to),
+		link.offset ?? 0,
+	);
+	const { x1, y1, x2, y2 } = geometry;
 	const labelX = labelPosition?.x ?? link.labelX ?? (x1 + x2) / 2;
 	const labelY = labelPosition?.y ?? link.labelY ?? (y1 + y2) / 2 - 10;
 

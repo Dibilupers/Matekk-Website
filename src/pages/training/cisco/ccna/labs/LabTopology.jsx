@@ -1,5 +1,6 @@
 import { linkUp } from "./labEngine";
 import { placeTopologyLabels } from "../../../../../utils/topologyLabels";
+import { topologyLinkGeometry } from "../../../../../utils/topologyGeometry";
 
 /* Packet Tracer-style network diagram. Links are green when both ends are up,
    red/dashed when down. Router labels follow the live hostname. */
@@ -87,6 +88,7 @@ function CloudIcon({ x, y, label, sub }) {
 }
 
 const SHORT = (ifName) => (ifName.startsWith("g") ? `G${ifName.slice(1)}` : ifName.startsWith("fa") ? "Fa0" : ifName);
+const geometryKind = (device, name) => device.kind === "pc" && name.startsWith("SRV") ? "server" : device.kind;
 
 function TopologyLabel({ x, y, children, fontSize = 9.5, fontWeight = 500 }) {
 	const width = Math.max(24, String(children).length * fontSize * 0.58 + 10);
@@ -127,19 +129,16 @@ function topologyLabels(lab, state) {
 		const [bDevice, bInterface] = link.b.split(":");
 		const a = lab.layout.nodes[aDevice];
 		const b = lab.layout.nodes[bDevice];
-		const dx = b.x - a.x;
-		const dy = b.y - a.y;
-		const length = Math.hypot(dx, dy) || 1;
-		const ux = dx / length;
-		const uy = dy / length;
-		const nx = -uy * 11;
-		const ny = ux * 11;
-		const laneX = -uy * (link.lane ?? 0);
-		const laneY = ux * (link.lane ?? 0);
-		const x1 = a.x + ux * 34 + laneX;
-		const y1 = a.y + uy * 34 + laneY;
-		const x2 = b.x - ux * 34 + laneX;
-		const y2 = b.y - uy * 34 + laneY;
+		const geometry = topologyLinkGeometry(
+			a,
+			b,
+			geometryKind(state.devices[aDevice], aDevice),
+			geometryKind(state.devices[bDevice], bDevice),
+			link.lane ?? 0,
+		);
+		const { x1, y1, x2, y2, ux, uy, nx, ny } = geometry;
+		const normalX = nx * 11;
+		const normalY = ny * 11;
 		const addLabel = (key, text, x, y, fontSize = 9.5) => {
 			const height = fontSize + 8;
 			labels.push({
@@ -152,9 +151,9 @@ function topologyLabels(lab, state) {
 				centerOffsetY: 2 - height / 2,
 			});
 		};
-		addLabel(`${index}-a`, SHORT(aInterface), x1 + ux * 16 + nx, y1 + uy * 16 + ny + 3);
-		addLabel(`${index}-b`, SHORT(bInterface), x2 - ux * 16 + nx, y2 - uy * 16 + ny + 3);
-		if (link.net) addLabel(`${index}-net`, link.net, (x1 + x2) / 2 - nx, (y1 + y2) / 2 - ny + 3, 9.5);
+		addLabel(`${index}-a`, SHORT(aInterface), x1 + ux * 16 + normalX, y1 + uy * 16 + normalY + 3);
+		addLabel(`${index}-b`, SHORT(bInterface), x2 - ux * 16 + normalX, y2 - uy * 16 + normalY + 3);
+		if (link.net) addLabel(`${index}-net`, link.net, (x1 + x2) / 2 - normalX, (y1 + y2) / 2 - normalY + 3, 9.5);
 	});
 
 	return placeTopologyLabels(labels, obstacles).reduce((map, label) => {
@@ -217,10 +216,18 @@ export default function LabTopology({
 	const pos = (name) => layout.nodes[name];
 	const labels = topologyLabels(lab, state);
 	const viewBox = topologyViewBox(lab, state, labels);
+	const cloudLink = layout.cloud
+		? topologyLinkGeometry(
+			{ x: layout.cloud.x, y: layout.cloud.y },
+			pos(layout.cloud.attach),
+			"cloud",
+			geometryKind(state.devices[layout.cloud.attach], layout.cloud.attach),
+		)
+		: null;
 	return (
 		<svg ref={svgRef} viewBox={`${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`} className={className} style={style} role="img" aria-label={`Lab topology: ${lab.title}`}>
-			{layout.cloud && (
-				<line x1={layout.cloud.x} y1={layout.cloud.y + 22} x2={pos(layout.cloud.attach).x} y2={pos(layout.cloud.attach).y - 22} stroke="#94a3b8" strokeWidth="2" strokeDasharray="4 4" />
+			{cloudLink && (
+				<line x1={cloudLink.x1} y1={cloudLink.y1} x2={cloudLink.x2} y2={cloudLink.y2} stroke="#94a3b8" strokeWidth="2" strokeDasharray="4 4" />
 			)}
 			{lab.links.map((l, index) => {
 				const [ad, ai] = l.a.split(":");
@@ -229,15 +236,14 @@ export default function LabTopology({
 				const B = pos(bd);
 				const up = linkUp(lab, state, l);
 				const color = up ? "#16a34a" : "#dc2626";
-				const dx = B.x - A.x;
-				const dy = B.y - A.y;
-				const len = Math.hypot(dx, dy) || 1;
-				const ux = dx / len;
-				const uy = dy / len;
-				const off = 34; // keep cable ends clear of the icons
-				const laneX = -uy * (l.lane ?? 0), laneY = ux * (l.lane ?? 0);
-				const x1 = A.x + ux * off + laneX, y1 = A.y + uy * off + laneY;
-				const x2 = B.x - ux * off + laneX, y2 = B.y - uy * off + laneY;
+				const geometry = topologyLinkGeometry(
+					A,
+					B,
+					geometryKind(state.devices[ad], ad),
+					geometryKind(state.devices[bd], bd),
+					l.lane ?? 0,
+				);
+				const { x1, y1, x2, y2 } = geometry;
 				return (
 					<g key={`${l.a}-${l.b}`}>
 						<line x1={x1} y1={y1} x2={x2} y2={y2} stroke={color} strokeWidth="3" strokeDasharray={up ? "0" : "6 5"} />
