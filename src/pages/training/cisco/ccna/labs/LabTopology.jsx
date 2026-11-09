@@ -1,6 +1,10 @@
 import { linkUp } from "./labEngine";
 import { placeTopologyLabels } from "../../../../../utils/topologyLabels";
-import { topologyLinkGeometry, topologyPortLabelPositions } from "../../../../../utils/topologyGeometry";
+import {
+	topologyCableLabelPosition,
+	topologyLinkGeometry,
+	topologyPortLabelPositions,
+} from "../../../../../utils/topologyGeometry";
 
 /* Packet Tracer-style network diagram. Links are green when both ends are up,
    red/dashed when down. Router labels follow the live hostname. */
@@ -95,7 +99,7 @@ function TopologyLabel({ x, y, children, fontSize = 9.5, fontWeight = 500 }) {
 	const height = fontSize + 8;
 	return (
 		<g>
-			<rect x={x - width / 2} y={y - height + 2} width={width} height={height} rx="4" fill="#fff" fillOpacity="0.97" stroke="#dbe4ee" strokeWidth="1" />
+			<rect x={x - width / 2} y={y - height + 2} width={width} height={height} rx="4" fill="#fff" stroke="#dbe4ee" strokeWidth="1" />
 			<text x={x} y={y} textAnchor="middle" dominantBaseline="auto" fontSize={fontSize} fontWeight={fontWeight} fill="#334155">
 				{children}
 			</text>
@@ -137,24 +141,34 @@ function topologyLabels(lab, state) {
 			link.lane ?? 0,
 		);
 		const { x1, y1, x2, y2, nx, ny } = geometry;
-		const normalX = nx * 11;
-		const normalY = ny * 11;
 		const [portA, portB] = topologyPortLabelPositions(geometry);
-		const addLabel = (key, text, x, y, fontSize = 9.5) => {
+		const addLabel = (key, text, point, side, fontSize = 9.5) => {
 			const height = fontSize + 8;
+			const width = Math.max(24, String(text).length * fontSize * 0.58 + 10);
+			const centerOffsetY = 2 - height / 2;
+			const position = topologyCableLabelPosition({
+				...point,
+				nx,
+				ny,
+				width,
+				height,
+				side,
+				centerOffsetY,
+			});
 			labels.push({
 				key,
 				text,
-				x,
-				y,
-				width: Math.max(24, String(text).length * fontSize * 0.58 + 10),
+				...position,
+				width,
 				height,
-				centerOffsetY: 2 - height / 2,
+				centerOffsetY,
 			});
 		};
-		addLabel(`${index}-a`, SHORT(aInterface), portA.x + normalX, portA.y + normalY + 3);
-		addLabel(`${index}-b`, SHORT(bInterface), portB.x + normalX, portB.y + normalY + 3);
-		if (link.net) addLabel(`${index}-net`, link.net, (x1 + x2) / 2 - normalX, (y1 + y2) / 2 - normalY + 3, 9.5);
+		addLabel(`${index}-a`, SHORT(aInterface), portA, 1);
+		addLabel(`${index}-b`, SHORT(bInterface), portB, 1);
+		if (link.net) {
+			addLabel(`${index}-net`, link.net, { x: (x1 + x2) / 2, y: (y1 + y2) / 2 }, -1);
+		}
 	});
 
 	return placeTopologyLabels(labels, obstacles).reduce((map, label) => {

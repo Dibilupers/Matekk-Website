@@ -2091,6 +2091,11 @@ function topologyLabels(topology) {
 			geometry.y2,
 			link.labelX,
 			link.labelY,
+			{
+				width: Math.max(44, link.label.length * 7 + 14),
+				height: 20,
+				centerOffsetY: -2,
+			},
 		);
 		const width = Math.max(44, link.label.length * 7 + 14);
 		return [{ key: index, text: link.label, x: labelX, y: labelY, width, height: 20, centerOffsetY: -2 }];
@@ -2171,7 +2176,7 @@ function TopologyLink({ link, nodes, labelPosition }) {
 						height="20"
 						rx="6"
 						fill="white"
-						fillOpacity="0.97"
+						fillOpacity="1"
 						stroke="#dbe4ee"
 					/>
 					<text

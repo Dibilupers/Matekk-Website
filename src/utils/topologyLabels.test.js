@@ -28,7 +28,17 @@ test("keeps labels close to their requested cable positions", () => {
 		[{ x: 100, y: 100, width: 80, height: 50 }],
 	);
 
-	assert.ok(Math.hypot(label.x - 100, label.y - 100) <= 36);
+	assert.ok(Math.hypot(label.x - 100, label.y - 100) <= 42);
+});
+
+test("moves labels beyond large overlapping device annotations", () => {
+	const [label] = placeTopologyLabels(
+		[{ x: 100, y: 100, width: 30, height: 20 }],
+		[{ x: 100, y: 100, width: 500, height: 100 }],
+	);
+	const boxY = label.y + (label.centerOffsetY ?? 0);
+
+	assert.ok(Math.abs(label.x - 100) >= 268 || Math.abs(boxY - 100) >= 63);
 });
 
 test("keeps interface labels for parallel LACP links visibly separated", () => {

@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+	topologyCableLabelPosition,
 	topologyLinkGeometry,
 	topologyLinkLabelPosition,
 	topologyPortLabelPositions,
@@ -54,6 +55,22 @@ test("anchors interface labels at even points along the cable", () => {
 		topologyPortLabelPositions({ x1: 40, y1: 10, x2: 40, y2: 110 }),
 		[{ x: 40, y: 35 }, { x: 40, y: 85 }],
 	);
+});
+
+test("keeps wide interface and network labels clear of vertical cables", () => {
+	const label = topologyCableLabelPosition({
+		x: 100,
+		y: 50,
+		nx: -1,
+		ny: 0,
+		width: 110,
+		height: 17.5,
+		side: -1,
+		centerOffsetY: 2 - 17.5 / 2,
+	});
+
+	assert.equal(label.x, 159);
+	assert.equal(label.y, 50);
 });
 
 test("keeps a legacy label hint close to the cable", () => {

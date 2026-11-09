@@ -68,7 +68,36 @@ export function topologyPortLabelPositions({ x1, y1, x2, y2 }) {
 	];
 }
 
-export function topologyLinkLabelPosition(x1, y1, x2, y2, preferredX, preferredY) {
+export function topologyCableLabelPosition({
+	x,
+	y,
+	nx,
+	ny,
+	width,
+	height,
+	side = 1,
+	centerOffsetY = 0,
+	gap = 4,
+	requestedOffset = 0,
+}) {
+	const boxRadius = Math.abs(nx) * width / 2 + Math.abs(ny) * height / 2;
+	const requiredOffset = boxRadius + gap - side * centerOffsetY * ny;
+	const normalOffset = side * Math.max(requiredOffset, requestedOffset);
+	return {
+		x: x + nx * normalOffset,
+		y: y + ny * normalOffset,
+	};
+}
+
+export function topologyLinkLabelPosition(
+	x1,
+	y1,
+	x2,
+	y2,
+	preferredX,
+	preferredY,
+	{ width = 44, height = 20, centerOffsetY = -2, gap = 4 } = {},
+) {
 	const dx = x2 - x1;
 	const dy = y2 - y1;
 	const lengthSquared = dx * dx + dy * dy || 1;
@@ -88,12 +117,21 @@ export function topologyLinkLabelPosition(x1, y1, x2, y2, preferredX, preferredY
 	const preferredOffset = hasPreference
 		? (targetX - anchorX) * nx + (targetY - anchorY) * ny
 		: -LABEL_SIDE_OFFSET;
-	const sideOffset = Math.abs(preferredOffset) < 4
-		? -LABEL_SIDE_OFFSET
-		: Math.max(-MAX_LABEL_SIDE_OFFSET, Math.min(MAX_LABEL_SIDE_OFFSET, preferredOffset));
+	const side = Math.abs(preferredOffset) < 4 ? -1 : Math.sign(preferredOffset);
+	const requestedOffset = Math.abs(preferredOffset) < 4
+		? LABEL_SIDE_OFFSET
+		: Math.min(MAX_LABEL_SIDE_OFFSET, Math.abs(preferredOffset));
 
-	return {
-		x: anchorX + nx * sideOffset,
-		y: anchorY + ny * sideOffset,
-	};
+	return topologyCableLabelPosition({
+		x: anchorX,
+		y: anchorY,
+		nx,
+		ny,
+		width,
+		height,
+		centerOffsetY,
+		gap,
+		side,
+		requestedOffset,
+	});
 }

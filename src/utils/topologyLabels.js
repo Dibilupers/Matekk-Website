@@ -8,10 +8,16 @@ export function placeTopologyLabels(labels, obstacles, gap = 3) {
 
 	return labels.map((label) => {
 		const step = Math.max(6, Math.ceil((label.height + gap) / 4));
-		const offsets = [[0, 0]];
-		for (let ring = 1; ring <= 6; ring += 1) {
+		const hasCollision = (x, y) => {
+			const box = { ...label, x, y: y + (label.centerOffsetY ?? 0) };
+			return obstacles.some((obstacle) => intersects(box, obstacle, gap))
+				|| placed.some((other) => intersects(box, other.box, gap));
+		};
+		let position = hasCollision(label.x, label.y) ? null : { x: label.x, y: label.y };
+
+		for (let ring = 1; !position; ring += 1) {
 			const distance = ring * step;
-			offsets.push(
+			const offsets = [
 				[0, -distance],
 				[-distance, 0],
 				[0, distance],
@@ -20,27 +26,16 @@ export function placeTopologyLabels(labels, obstacles, gap = 3) {
 				[distance, -distance],
 				[-distance, distance],
 				[distance, distance],
-			);
+			];
+			const clearOffset = offsets.find(([dx, dy]) => !hasCollision(label.x + dx, label.y + dy));
+			if (clearOffset) {
+				position = { x: label.x + clearOffset[0], y: label.y + clearOffset[1] };
+			}
 		}
 
-		const candidates = offsets
-			.map(([dx, dy]) => ({ x: label.x + dx, y: label.y + dy }))
-			.map((candidate) => {
-				const box = { ...label, ...candidate, y: candidate.y + (label.centerOffsetY ?? 0) };
-				const collisions = obstacles.filter((obstacle) => intersects(box, obstacle, gap)).length
-					+ placed.filter((other) => intersects(box, other.box, gap)).length;
-				return {
-					...candidate,
-					box,
-					collisions,
-					distance: Math.hypot(candidate.x - label.x, candidate.y - label.y),
-				};
-			})
-			.sort((a, b) => a.collisions - b.collisions || a.distance - b.distance);
-		const { x, y } = candidates[0] ?? { x: label.x, y: label.y };
-		const position = { x, y };
-		const box = { ...label, ...position, y: position.y + (label.centerOffsetY ?? 0) };
-		placed.push({ ...position, box });
-		return { ...label, ...position };
+		const { x, y } = position;
+		const box = { ...label, x, y: y + (label.centerOffsetY ?? 0) };
+		placed.push({ x, y, box });
+		return { ...label, x, y };
 	});
 }
