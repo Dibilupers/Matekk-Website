@@ -6,6 +6,16 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `6aee17e` — Made the IOS terminal the default for the voice VLAN practice lab
+  and added a toggle back to its worksheet format.
+
+Validation before push: seven focused practice-lab tests, targeted ESLint,
+frontend production build, and Git whitespace checks.
+
+## 2026-11-09 — `main`
+
+Commits included in this push:
+
 - `f669842` — Kept topology label boxes clear of cable lines and other labels,
   expanding collision placement until it finds an open position.
 
