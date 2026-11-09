@@ -6,6 +6,17 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `70ec721` — Aligned practice-lab and CCNA exam topology cables with device
+  outlines and positioned link labels beside their actual cable segments.
+
+Validation before push: twelve focused practice-lab and geometry tests,
+targeted ESLint, frontend production build, Git whitespace checks, and a
+practice-lab topology preview.
+
+## 2026-11-09 — `main`
+
+Commits included in this push:
+
 - `be220b8` — Limited successful contact-form submissions to one per day,
   retained a 60-second retry cooldown after failures, added a send confirmation,
   and displayed the support email after successful delivery.
