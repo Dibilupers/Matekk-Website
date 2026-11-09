@@ -7,7 +7,7 @@ import { FLAT_COURSES } from "../components/training/courses";
 import { readGradebookAssessments } from "../utils/gradebookApi";
 import { getProfileDisplayName } from "../utils/profile";
 
-const INPUT_CLASS = "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-[#2f5bea] focus:ring-2 focus:ring-blue-100";
+const INPUT_CLASS = "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-[#2f5bea] focus:ring-2 focus:ring-blue-100 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500";
 const LABEL_CLASS = "block space-y-2 text-sm font-semibold text-slate-900";
 
 function cookieFetch(url, options = {}) {
@@ -21,6 +21,16 @@ function dateInputValue(value) {
   if (!value) return "";
   const date = new Date(value);
   return Number.isNaN(date.getTime()) ? "" : date.toISOString().slice(0, 10);
+}
+
+function getCooldownMessage(changedAt, cooldownDays, fieldLabel) {
+  if (!changedAt) return "";
+  const availableAt = new Date(changedAt).getTime() + cooldownDays * 24 * 60 * 60 * 1000;
+  const remainingMs = availableAt - Date.now();
+  if (!Number.isFinite(availableAt) || remainingMs <= 0) return "";
+  const daysRemaining = Math.ceil(remainingMs / (24 * 60 * 60 * 1000));
+  const availableDate = new Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(new Date(availableAt));
+  return `${fieldLabel} can be changed again on ${availableDate} (${daysRemaining} day${daysRemaining === 1 ? "" : "s"} left).`;
 }
 
 function AccountSidebar({ view }) {
@@ -111,6 +121,8 @@ function ProfileForm({ profile, refreshProfile }) {
   }
 
   const isAdmin = profile?.role?.trim().toLowerCase() === "admin";
+  const usernameCooldownMessage = isAdmin ? "" : getCooldownMessage(profile?.username_changed_at, 30, "Username");
+  const displayNameCooldownMessage = isAdmin ? "" : getCooldownMessage(profile?.display_name_changed_at, 7, "Display name");
 
   async function saveProfile(event) {
     event.preventDefault();
@@ -322,10 +334,26 @@ function ProfileForm({ profile, refreshProfile }) {
                 <input className={INPUT_CLASS} value={fields.last_name ?? ""} onChange={(event) => updateField("last_name", event.target.value)} maxLength={80} />
               </label>
               <label className={LABEL_CLASS}>Username
-                <input className={INPUT_CLASS} value={fields.username ?? ""} onChange={(event) => updateField("username", event.target.value)} autoComplete="username" minLength={3} maxLength={30} pattern="[A-Za-z0-9._-]+" title="Use 3-30 letters, numbers, periods, underscores, or hyphens." required />
+                <input className={INPUT_CLASS} value={fields.username ?? ""} onChange={(event) => updateField("username", event.target.value)} autoComplete="username" minLength={3} maxLength={30} pattern="[A-Za-z0-9._-]+" title="Use 3-30 letters, numbers, periods, underscores, or hyphens." required disabled={Boolean(usernameCooldownMessage)} />
+                {usernameCooldownMessage && <span className="block text-xs font-normal text-slate-500">{usernameCooldownMessage}</span>}
               </label>
               <label className={LABEL_CLASS}>Display name
-                <input className={INPUT_CLASS} value={fields.display_name ?? ""} onChange={(event) => updateField("display_name", event.target.value)} maxLength={80} placeholder={profile?.first_name || profile?.username || "How you want to be greeted"} />
+                <span className="relative block">
+                  <input className={`${INPUT_CLASS} pr-12`} value={fields.display_name ?? ""} onChange={(event) => updateField("display_name", event.target.value)} maxLength={80} placeholder={profile?.first_name || profile?.username || "How you want to be greeted"} disabled={Boolean(displayNameCooldownMessage)} />
+                  {fields.display_name && (
+                    <button
+                      type="button"
+                      aria-label="Clear display name"
+                      title="Clear display name"
+                      disabled={Boolean(displayNameCooldownMessage)}
+                      onClick={() => updateField("display_name", "")}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                      <X size={16} aria-hidden="true" />
+                    </button>
+                  )}
+                </span>
+                {displayNameCooldownMessage && <span className="block text-xs font-normal text-slate-500">{displayNameCooldownMessage}</span>}
               </label>
               <label className={LABEL_CLASS}>Role
                 {isAdmin ? (
