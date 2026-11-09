@@ -58,6 +58,16 @@ export function topologyLinkGeometry(from, to, fromKind, toKind, offset = 0) {
 	};
 }
 
+export function topologyPortLabelPositions({ x1, y1, x2, y2 }) {
+	const dx = x2 - x1;
+	const dy = y2 - y1;
+
+	return [
+		{ x: x1 + dx * 0.25, y: y1 + dy * 0.25 },
+		{ x: x1 + dx * 0.75, y: y1 + dy * 0.75 },
+	];
+}
+
 export function topologyLinkLabelPosition(x1, y1, x2, y2, preferredX, preferredY) {
 	const dx = x2 - x1;
 	const dy = y2 - y1;

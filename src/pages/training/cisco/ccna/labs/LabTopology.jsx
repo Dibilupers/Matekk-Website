@@ -1,6 +1,6 @@
 import { linkUp } from "./labEngine";
 import { placeTopologyLabels } from "../../../../../utils/topologyLabels";
-import { topologyLinkGeometry } from "../../../../../utils/topologyGeometry";
+import { topologyLinkGeometry, topologyPortLabelPositions } from "../../../../../utils/topologyGeometry";
 
 /* Packet Tracer-style network diagram. Links are green when both ends are up,
    red/dashed when down. Router labels follow the live hostname. */
@@ -136,9 +136,10 @@ function topologyLabels(lab, state) {
 			geometryKind(state.devices[bDevice], bDevice),
 			link.lane ?? 0,
 		);
-		const { x1, y1, x2, y2, ux, uy, nx, ny } = geometry;
+		const { x1, y1, x2, y2, nx, ny } = geometry;
 		const normalX = nx * 11;
 		const normalY = ny * 11;
+		const [portA, portB] = topologyPortLabelPositions(geometry);
 		const addLabel = (key, text, x, y, fontSize = 9.5) => {
 			const height = fontSize + 8;
 			labels.push({
@@ -151,8 +152,8 @@ function topologyLabels(lab, state) {
 				centerOffsetY: 2 - height / 2,
 			});
 		};
-		addLabel(`${index}-a`, SHORT(aInterface), x1 + ux * 16 + normalX, y1 + uy * 16 + normalY + 3);
-		addLabel(`${index}-b`, SHORT(bInterface), x2 - ux * 16 + normalX, y2 - uy * 16 + normalY + 3);
+		addLabel(`${index}-a`, SHORT(aInterface), portA.x + normalX, portA.y + normalY + 3);
+		addLabel(`${index}-b`, SHORT(bInterface), portB.x + normalX, portB.y + normalY + 3);
 		if (link.net) addLabel(`${index}-net`, link.net, (x1 + x2) / 2 - normalX, (y1 + y2) / 2 - normalY + 3, 9.5);
 	});
 

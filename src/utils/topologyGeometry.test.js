@@ -1,6 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { topologyLinkGeometry, topologyLinkLabelPosition } from "./topologyGeometry.js";
+import {
+	topologyLinkGeometry,
+	topologyLinkLabelPosition,
+	topologyPortLabelPositions,
+} from "./topologyGeometry.js";
 
 test("connects vertical links to the visible device boundaries", () => {
 	const link = topologyLinkGeometry(
@@ -43,6 +47,13 @@ test("keeps offset links attached to device shapes", () => {
 	assert.equal(link.y1, 5);
 	assert.equal(link.x2, 174);
 	assert.equal(link.y2, 5);
+});
+
+test("anchors interface labels at even points along the cable", () => {
+	assert.deepEqual(
+		topologyPortLabelPositions({ x1: 40, y1: 10, x2: 40, y2: 110 }),
+		[{ x: 40, y: 35 }, { x: 40, y: 85 }],
+	);
 });
 
 test("keeps a legacy label hint close to the cable", () => {

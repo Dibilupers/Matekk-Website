@@ -169,7 +169,7 @@ const voiceVlanLab = {
 		nodes: {
 			R1: { x: 310, y: 35, details: ["VLAN 10 · 10.10.1.1", "VLAN 30 · 192.168.30.1"] },
 			"SW-1": { x: 310, y: 170, sub: "Data VLAN 10 · Voice VLAN 11" },
-			"SW-2": { x: 610, y: 170, sub: "Data VLAN 30" },
+			"SW-2": { x: 610, y: 110, sub: "Data VLAN 30" },
 			"IP Phone": { x: 140, y: 280, label: "IP Phone", sub: "Voice VLAN 11 · 10.11.1.10" },
 			PC1: { x: 140, y: 465, sub: "VLAN 10 · 10.10.1.10" },
 			PC2: { x: 610, y: 285, sub: "VLAN 30 · 192.168.30.10" },
