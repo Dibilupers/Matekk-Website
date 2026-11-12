@@ -7,6 +7,7 @@ import { placeTopologyLabels } from "../../../../../utils/topologyLabels";
 import {
 	topologyLinkGeometry,
 	topologyLinkLabelPosition,
+	topologyPortLabelCandidates,
 	topologyPortLabelParts,
 	topologyPortLabelPositions,
 } from "../../../../../utils/topologyGeometry";
@@ -2093,9 +2094,10 @@ function topologyLabels(topology) {
 		);
 		const portNames = topologyPortLabelParts(link.label);
 		if (portNames) {
-			const positions = topologyPortLabelPositions(geometry);
+			const [start, end] = topologyPortLabelPositions(geometry);
 			portNames.forEach((text, part) => {
-				const point = positions[portNames.length === 1 ? 0 : part];
+				const endpoint = portNames.length === 1 ? 0 : part;
+				const point = endpoint === 0 ? start : end;
 				portLabels.push({
 					key: index,
 					text,
@@ -2105,6 +2107,7 @@ function topologyLabels(topology) {
 					height: 12,
 					centerOffsetY: -2,
 					onCable: true,
+					candidates: topologyPortLabelCandidates(geometry, endpoint),
 				});
 			});
 			return;
@@ -2133,16 +2136,10 @@ function topologyLabels(topology) {
 			centerOffsetY: -2,
 		});
 	});
-	const placedNetworkLabels = placeTopologyLabels(networkLabels, [
+	const placedLabels = placeTopologyLabels([...portLabels, ...networkLabels], [
 		...obstacles,
-		...portLabels.map((label) => ({
-			x: label.x,
-			y: label.y + label.centerOffsetY,
-			width: label.width,
-			height: label.height,
-		})),
 	]);
-	return [...portLabels, ...placedNetworkLabels].reduce((map, label) => {
+	return placedLabels.reduce((map, label) => {
 		const linkLabels = map.get(label.key) ?? [];
 		linkLabels.push(label);
 		map.set(label.key, linkLabels);

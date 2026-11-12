@@ -4,9 +4,11 @@ import {
 	topologyCableLabelPosition,
 	topologyLinkGeometry,
 	topologyLinkLabelPosition,
+	topologyPortLabelCandidates,
 	topologyPortLabelParts,
 	topologyPortLabelPositions,
 } from "./topologyGeometry.js";
+import { placeTopologyLabels } from "./topologyLabels.js";
 
 test("connects vertical links to the visible device boundaries", () => {
 	const link = topologyLinkGeometry(
@@ -56,6 +58,25 @@ test("anchors interface labels at even points along the cable", () => {
 		topologyPortLabelPositions({ x1: 40, y1: 10, x2: 40, y2: 110 }),
 		[{ x: 40, y: 35 }, { x: 40, y: 85 }],
 	);
+});
+
+test("moves cable labels clear of device names while keeping them on the connected link", () => {
+	const geometry = topologyLinkGeometry(
+		{ x: 100, y: 0 },
+		{ x: 100, y: 100 },
+		"switch",
+		"switch",
+	);
+	const candidates = topologyPortLabelCandidates(geometry, 0);
+	const [label] = placeTopologyLabels(
+		[{ text: "e0/2", x: 100, y: 40, width: 24, height: 12, candidates }],
+		[{ x: 100, y: 40, width: 70, height: 30 }],
+	);
+
+	assert.equal(label.x, 100);
+	assert.ok(label.y > geometry.y1);
+	assert.ok(label.y < geometry.y2);
+	assert.ok(Math.abs(label.y - 40) > 10);
 });
 
 test("identifies interface-only labels without treating link descriptions as ports", () => {

@@ -13,9 +13,10 @@ export function placeTopologyLabels(labels, obstacles, gap = 3) {
 			return obstacles.some((obstacle) => intersects(box, obstacle, gap))
 				|| placed.some((other) => intersects(box, other.box, gap));
 		};
-		let position = hasCollision(label.x, label.y) ? null : { x: label.x, y: label.y };
+		const candidates = label.candidates ?? [{ x: label.x, y: label.y }];
+		let position = candidates.find(({ x, y }) => !hasCollision(x, y));
 
-		for (let ring = 1; !position; ring += 1) {
+		for (let ring = 1; !position && ring <= 200; ring += 1) {
 			const distance = ring * step;
 			const offsets = [
 				[0, -distance],
@@ -33,9 +34,14 @@ export function placeTopologyLabels(labels, obstacles, gap = 3) {
 			}
 		}
 
+		if (!position) {
+			throw new Error(`Unable to place topology label "${label.text}" without overlap.`);
+		}
+
 		const { x, y } = position;
 		const box = { ...label, x, y: y + (label.centerOffsetY ?? 0) };
 		placed.push({ x, y, box });
-		return { ...label, x, y };
+		const { candidates: _candidates, ...placedLabel } = label;
+		return { ...placedLabel, x, y };
 	});
 }

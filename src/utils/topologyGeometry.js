@@ -69,6 +69,24 @@ export function topologyPortLabelPositions({ x1, y1, x2, y2 }) {
 	];
 }
 
+export function topologyPortLabelCandidates({ x1, y1, x2, y2, nx, ny }, endpoint) {
+	const fromStart = endpoint === 0;
+	const fractions = fromStart
+		? [0.25, 0.3, 0.35, 0.4, 0.45, 0.5]
+		: [0.75, 0.7, 0.65, 0.6, 0.55, 0.5];
+	const offsets = [0, -8, 8, -16, 16, -24, 24];
+
+	const atFraction = (fraction, offset) => ({
+		x: x1 + (x2 - x1) * fraction + nx * offset,
+		y: y1 + (y2 - y1) * fraction + ny * offset,
+	});
+
+	return [
+		...fractions.map((fraction) => atFraction(fraction, 0)),
+		...fractions.flatMap((fraction) => offsets.slice(1).map((offset) => atFraction(fraction, offset))),
+	];
+}
+
 export function topologyPortLabelParts(label) {
 	const parts = label.split(/\s*↔\s*/);
 	return parts.length <= 2 && parts.every((part) => TOPOLOGY_PORT_NAME.test(part)) ? parts : null;

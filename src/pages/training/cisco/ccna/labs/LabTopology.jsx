@@ -3,6 +3,7 @@ import { placeTopologyLabels } from "../../../../../utils/topologyLabels";
 import {
 	topologyCableLabelPosition,
 	topologyLinkGeometry,
+	topologyPortLabelCandidates,
 	topologyPortLabelPositions,
 } from "../../../../../utils/topologyGeometry";
 
@@ -141,7 +142,7 @@ function topologyLabels(lab, state) {
 		);
 		const { x1, y1, x2, y2, nx, ny } = geometry;
 		const [portA, portB] = topologyPortLabelPositions(geometry);
-		const addLabel = (key, text, point, side, fontSize = 9.5) => {
+		const addLabel = (key, text, point, side, fontSize = 9.5, candidates) => {
 			const height = fontSize + 2;
 			const width = Math.max(18, String(text).length * fontSize * 0.58);
 			const centerOffsetY = 2 - height / 2;
@@ -163,25 +164,20 @@ function topologyLabels(lab, state) {
 				width,
 				height,
 				centerOffsetY,
+				candidates,
 			});
 		};
-		addLabel(`${index}-a`, SHORT(aInterface), portA, 0);
-		addLabel(`${index}-b`, SHORT(bInterface), portB, 0);
+		addLabel(`${index}-a`, SHORT(aInterface), portA, 0, 9.5, topologyPortLabelCandidates(geometry, 0));
+		addLabel(`${index}-b`, SHORT(bInterface), portB, 0, 9.5, topologyPortLabelCandidates(geometry, 1));
 		if (link.net) {
 			addLabel(`${index}-net`, link.net, { x: (x1 + x2) / 2, y: (y1 + y2) / 2 }, -1);
 		}
 	});
 
-	const placedNetworkLabels = placeTopologyLabels(networkLabels, [
+	const placedLabels = placeTopologyLabels([...portLabels, ...networkLabels], [
 		...obstacles,
-		...portLabels.map((label) => ({
-			x: label.x,
-			y: label.y + label.centerOffsetY,
-			width: label.width,
-			height: label.height,
-		})),
 	]);
-	return [...portLabels, ...placedNetworkLabels].reduce((map, label) => {
+	return placedLabels.reduce((map, label) => {
 		map.set(label.key, label);
 		return map;
 	}, new Map());
