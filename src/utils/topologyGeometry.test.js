@@ -4,6 +4,7 @@ import {
 	topologyCableLabelPosition,
 	topologyLinkGeometry,
 	topologyLinkLabelPosition,
+	topologyPortLabelParts,
 	topologyPortLabelPositions,
 } from "./topologyGeometry.js";
 
@@ -55,6 +56,15 @@ test("anchors interface labels at even points along the cable", () => {
 		topologyPortLabelPositions({ x1: 40, y1: 10, x2: 40, y2: 110 }),
 		[{ x: 40, y: 35 }, { x: 40, y: 85 }],
 	);
+});
+
+test("identifies interface-only labels without treating link descriptions as ports", () => {
+	assert.deepEqual(topologyPortLabelParts("Fa0/0"), ["Fa0/0"]);
+	assert.deepEqual(
+		topologyPortLabelParts("GigabitEthernet0/0 ↔ GigabitEthernet0/0"),
+		["GigabitEthernet0/0", "GigabitEthernet0/0"],
+	);
+	assert.equal(topologyPortLabelParts("Gi0/1 · 802.1Q trunk · VLANs 1, 100-103"), null);
 });
 
 test("keeps wide interface and network labels clear of vertical cables", () => {

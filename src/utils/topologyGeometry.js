@@ -10,6 +10,7 @@ const NODE_SHAPES = {
 
 const LABEL_SIDE_OFFSET = 14;
 const MAX_LABEL_SIDE_OFFSET = 20;
+const TOPOLOGY_PORT_NAME = /^(?:fa|fastethernet|gi|gigabitethernet|te|tengigabitethernet|se|serial|eth|ethernet|e)\d+(?:\/\d+)*(?:\.\d+)?$/i;
 
 function boundaryDistance(kind, x, y, ux, uy) {
 	const shape = NODE_SHAPES[kind] ?? NODE_SHAPES.router;
@@ -66,6 +67,11 @@ export function topologyPortLabelPositions({ x1, y1, x2, y2 }) {
 		{ x: x1 + dx * 0.25, y: y1 + dy * 0.25 },
 		{ x: x1 + dx * 0.75, y: y1 + dy * 0.75 },
 	];
+}
+
+export function topologyPortLabelParts(label) {
+	const parts = label.split(/\s*↔\s*/);
+	return parts.length <= 2 && parts.every((part) => TOPOLOGY_PORT_NAME.test(part)) ? parts : null;
 }
 
 export function topologyCableLabelPosition({
