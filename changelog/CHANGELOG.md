@@ -6,6 +6,17 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `16fd932` — Prevented topology interface and descriptive labels from
+  overlapping device labels or each other while keeping cable labels on or near
+  their associated links.
+
+Validation before push: nine topology geometry/label tests, targeted ESLint,
+frontend production build, and a live Lab 3 render with no text collisions.
+
+## 2026-11-12 — `main`
+
+Commits included in this push:
+
 - `fe11982` — Removed topology label backplates, placed interface labels on
   their connected cables in practice labs and CCNA exhibits, and updated the
   proposal with matching Lab 3 before/after screenshots.
