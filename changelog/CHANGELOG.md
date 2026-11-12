@@ -2,6 +2,16 @@
 
 Tracking begins 2026-10-17.
 
+## 2026-11-12 — `main`
+
+Commits included in this push:
+
+- `ded0d13` — Added the seven-page project proposal PDF with practice-lab,
+  CCNA exhibit, and reconstructed topology comparisons.
+
+Validation before push: verified the seven-page PDF and embedded comparison
+images; Git whitespace checks passed.
+
 ## 2026-11-09 — `main`
 
 Commits included in this push:
