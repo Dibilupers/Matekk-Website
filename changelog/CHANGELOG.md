@@ -6,6 +6,17 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `fe11982` — Removed topology label backplates, placed interface labels on
+  their connected cables in practice labs and CCNA exhibits, and updated the
+  proposal with matching Lab 3 before/after screenshots.
+
+Validation before push: eight topology geometry/label tests, targeted ESLint,
+frontend production build, and seven-page proposal verification.
+
+## 2026-11-12 — `main`
+
+Commits included in this push:
+
 - `ded0d13` — Added the seven-page project proposal PDF with practice-lab,
   CCNA exhibit, and reconstructed topology comparisons.
 
