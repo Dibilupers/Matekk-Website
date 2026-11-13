@@ -2,6 +2,18 @@
 
 Tracking begins 2026-10-17.
 
+## 2026-11-13 — `main`
+
+Commits included in this push:
+
+- `e09ff2f` — Rebuilt CCNA Questions 246 and 273 as original topologies,
+  corrected exhibit mappings and topology labels, and updated the comparison
+  PDF and repair notes.
+
+Validation before push: 33 focused tests, targeted ESLint, production build,
+Git whitespace checks, and SHA-256 verification that the requested comparison
+PDF matches the reviewed 162-page copy.
+
 ## 2026-11-12 — `main`
 
 Commits included in this push:
