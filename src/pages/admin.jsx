@@ -437,7 +437,7 @@ export default function UsersDashboard() {
 				<div className="mx-auto max-w-[1216px]">
 					<h1 className="text-3xl font-bold leading-tight tracking-tight sm:text-[40px]">{activeSection === "users" ? "Users" : activeSection === "enrollments" ? "Enroll a student" : "Inquiries"}</h1>
 					<p className="mt-1 text-sm text-white/90 sm:text-base">{activeSection === "users" ? "Manage who has access to your workspace." : activeSection === "enrollments" ? "Add a student to a program and see who is already enrolled." : "Review messages and requests submitted through the website."}</p>
-					<div className={`mt-6 grid gap-3 sm:grid-cols-2 lg:gap-4 ${activeSection === "users" ? "grid-cols-2 lg:grid-cols-5" : "grid-cols-3"}`}>
+					<div className={`mt-6 grid gap-3 lg:gap-4 ${activeSection === "users" ? "grid-cols-2 lg:grid-cols-5" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"}`}>
 						{activeSection === "users" ? (
 							<>
 								<div className="min-w-0 rounded-[14px] border border-white/30 bg-white/15 px-4 py-3.5"><span className="block text-xs font-medium text-white/90">Total users</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-4xl">{userCount}</strong></div>
@@ -448,9 +448,9 @@ export default function UsersDashboard() {
 							</>
 						) : activeSection === "inquiries" ? (
 							<>
-								<div className="rounded-[14px] border border-white/30 bg-white/15 px-4 py-3.5"><span className="block text-xs text-white/90 sm:text-sm">Total inquiries</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-4xl">{inquiries.length}</strong></div>
-								<div className="rounded-[14px] border border-white/30 bg-white/15 px-4 py-3.5"><span className="block text-xs text-white/90 sm:text-sm">Open</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-4xl">{openInquiryCount}</strong></div>
-								<div className="rounded-[14px] border border-white/30 bg-white/15 px-4 py-3.5"><span className="block text-xs text-white/90 sm:text-sm">Resolved</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-4xl">{resolvedInquiryCount}</strong></div>
+								<div className="min-w-0 rounded-[14px] border border-white/30 bg-white/15 px-4 py-3.5"><span className="block text-xs font-medium text-white/90">Total inquiries</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-4xl">{inquiries.length}</strong></div>
+								<div className="min-w-0 rounded-[14px] border border-white/30 bg-white/15 px-4 py-3.5"><span className="block text-xs font-medium text-white/90">Open</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-4xl">{openInquiryCount}</strong></div>
+								<div className="min-w-0 rounded-[14px] border border-white/30 bg-white/15 px-4 py-3.5"><span className="block text-xs font-medium text-white/90">Resolved</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-4xl">{resolvedInquiryCount}</strong></div>
 							</>
 						) : (
 							<>
