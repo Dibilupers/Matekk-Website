@@ -688,21 +688,21 @@ export default function UsersDashboard() {
 											</div>
 
 											<fieldset className="mt-5">
-												<legend className="text-xs font-semibold text-[#344054]">Programs (programId)</legend>
+												<legend className="text-xs font-semibold text-[#2166f3]">Programs (programId)</legend>
 												<div className="mt-2 space-y-2">
 													{Array.from(new Set(programs.map((program) => program.training?.name || "Other"))).map((trainingName) => (
 														<div key={trainingName} className="space-y-1">
-															<p className="pt-2 text-xs font-bold uppercase tracking-wide text-[#667085]">{trainingName} training</p>
+															<p className="pt-2 text-xs font-bold uppercase tracking-wide text-[#2166f3]">{trainingName} training</p>
 															{programs.filter((program) => (program.training?.name || "Other") === trainingName).map((program) => (
 																<div key={program.id} className="space-y-1">
 																	<label className="flex cursor-pointer items-center gap-3 rounded-lg border border-[#e3e9f4] px-3 py-2.5 text-sm hover:bg-[#f8faff]">
 																		<input type="checkbox" checked={selectedProgramIds.includes(program.id)} onChange={() => toggleProgram(program.id)} className="h-4 w-4 accent-[#2b5cf0]" />
-																		<span className="flex-1">{program.name} — Entire program</span>
+																		<span className="flex-1 font-medium text-[#2166f3]">{program.name} — Entire program</span>
 																	</label>
 																	{program.modules?.map((module) => (
 																		<label key={module.id} className="ml-6 flex cursor-pointer items-center gap-3 rounded-lg border border-[#e3e9f4] px-3 py-2.5 text-sm hover:bg-[#f8faff]">
 																			<input type="checkbox" checked={selectedProgramIds.includes(module.id)} onChange={() => toggleProgram(module.id)} className="h-4 w-4 accent-[#2b5cf0]" />
-																			<span className="flex-1">{program.name} — {module.name}</span>
+																			<span className="flex-1 font-medium text-[#2166f3]">{program.name} — {module.name}</span>
 																		</label>
 																	))}
 																</div>
