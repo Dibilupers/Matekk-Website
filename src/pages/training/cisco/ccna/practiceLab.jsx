@@ -283,6 +283,7 @@ function LabWorkspace({ lab, selectLab, fromDashboard }) {
 	const [showHints, setShowHints] = useState(false);
 	const [showSolution, setShowSolution] = useState(false);
 	const [examMode, setExamMode] = useState(false);
+	const [labView, setLabView] = useState("terminal");
 	const [topologyOpen, setTopologyOpen] = useState(false);
 	const [showTopologySandbox, setShowTopologySandbox] = useState(false);
 	const closeTopology = useCallback(() => setTopologyOpen(false), []);
@@ -394,6 +395,27 @@ function LabWorkspace({ lab, selectLab, fromDashboard }) {
 						</button>
 					))}
 				</div>
+				{lab.worksheet && (
+					<div className="flex flex-wrap items-center gap-2" role="group" aria-label="Practice lab view">
+						<span className="text-sm font-semibold text-[#334155]">Lab format:</span>
+						<button
+							type="button"
+							aria-pressed={labView === "terminal"}
+							onClick={() => setLabView("terminal")}
+							className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${labView === "terminal" ? "border-[#1775EE] bg-[#1775EE] text-white" : "border-[#1775EE] bg-white text-[#1775EE] hover:bg-blue-50"}`}
+						>
+							Terminal (default)
+						</button>
+						<button
+							type="button"
+							aria-pressed={labView === "worksheet"}
+							onClick={() => setLabView("worksheet")}
+							className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${labView === "worksheet" ? "border-[#1775EE] bg-[#1775EE] text-white" : "border-[#1775EE] bg-white text-[#1775EE] hover:bg-blue-50"}`}
+						>
+							Current worksheet
+						</button>
+					</div>
+				)}
 				<div>
 					<button
 						type="button"
@@ -425,7 +447,7 @@ function LabWorkspace({ lab, selectLab, fromDashboard }) {
 			</div>
 
 			{/* Network diagram (full width) */}
-			{lab.worksheet ? (
+			{lab.worksheet && labView === "worksheet" ? (
 				<>
 					<LabCommandWorksheet
 						lab={lab}
@@ -463,7 +485,7 @@ function LabWorkspace({ lab, selectLab, fromDashboard }) {
 				<p className="text-xs text-gray-600 mt-1">Green links are up; red dashed links are down. The router you are configuring is circled.</p>
 			</div>}
 
-			{!lab.worksheet && <div className="grid gap-6 lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)] items-start lg:items-stretch">
+			{(!lab.worksheet || labView === "terminal") && <div className="grid gap-6 lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)] items-start lg:items-stretch">
 				{/* Left: tasks */}
 				<aside className="flex flex-col gap-4">
 

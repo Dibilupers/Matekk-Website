@@ -2,6 +2,92 @@
 
 Tracking begins 2026-10-17.
 
+## 2026-11-12 — `main`
+
+Commits included in this push:
+
+- `16fd932` — Prevented topology interface and descriptive labels from
+  overlapping device labels or each other while keeping cable labels on or near
+  their associated links.
+
+Validation before push: nine topology geometry/label tests, targeted ESLint,
+frontend production build, and a live Lab 3 render with no text collisions.
+
+## 2026-11-12 — `main`
+
+Commits included in this push:
+
+- `fe11982` — Removed topology label backplates, placed interface labels on
+  their connected cables in practice labs and CCNA exhibits, and updated the
+  proposal with matching Lab 3 before/after screenshots.
+
+Validation before push: eight topology geometry/label tests, targeted ESLint,
+frontend production build, and seven-page proposal verification.
+
+## 2026-11-12 — `main`
+
+Commits included in this push:
+
+- `ded0d13` — Added the seven-page project proposal PDF with practice-lab,
+  CCNA exhibit, and reconstructed topology comparisons.
+
+Validation before push: verified the seven-page PDF and embedded comparison
+images; Git whitespace checks passed.
+
+## 2026-11-09 — `main`
+
+Commits included in this push:
+
+- `6aee17e` — Made the IOS terminal the default for the voice VLAN practice lab
+  and added a toggle back to its worksheet format.
+
+Validation before push: seven focused practice-lab tests, targeted ESLint,
+frontend production build, and Git whitespace checks.
+
+## 2026-11-09 — `main`
+
+Commits included in this push:
+
+- `f669842` — Kept topology label boxes clear of cable lines and other labels,
+  expanding collision placement until it finds an open position.
+
+Validation before push: nineteen focused topology and practice-lab tests,
+targeted ESLint, frontend production build, Git whitespace checks, and a local
+practice-lab preview with no overlapping link labels.
+
+## 2026-11-09 — `main`
+
+Commits included in this push:
+
+- `627f136` — Raised SW-2 in the Voice VLAN practice topology and repositioned
+  port labels along their links, keeping labels clear of the cable lines.
+
+Validation before push: seventeen focused topology and practice-lab tests,
+targeted ESLint, frontend production build, Git whitespace checks, and a
+practice-lab topology preview.
+
+## 2026-11-09 — `main`
+
+Commits included in this push:
+
+- `70ec721` — Aligned practice-lab and CCNA exam topology cables with device
+  outlines and positioned link labels beside their actual cable segments.
+
+Validation before push: twelve focused practice-lab and geometry tests,
+targeted ESLint, frontend production build, Git whitespace checks, and a
+practice-lab topology preview.
+
+## 2026-11-09 — `main`
+
+Commits included in this push:
+
+- `be220b8` — Limited successful contact-form submissions to one per day,
+  retained a 60-second retry cooldown after failures, added a send confirmation,
+  and displayed the support email after successful delivery.
+
+Validation before push: targeted ESLint, frontend production build, and Git
+whitespace checks passed.
+
 ## 2026-11-08 — `main`
 
 Commits included in this push:
