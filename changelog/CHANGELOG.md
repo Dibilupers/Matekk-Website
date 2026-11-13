@@ -2,6 +2,16 @@
 
 Tracking begins 2026-10-17.
 
+## 2026-11-14 — `main`
+
+Commits included in this push:
+
+- `e9a09e1` — Collapsed the CCNA practice-lab list behind a “More labs” control
+  and smoothly scrolled to the lab workspace when a student selects a lab.
+
+Validation before push: targeted ESLint, frontend production build, and Git
+whitespace checks passed.
+
 ## 2026-11-13 — `main`
 
 Commits included in this push:
