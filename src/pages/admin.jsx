@@ -695,13 +695,13 @@ export default function UsersDashboard() {
 															<p className="pt-2 text-xs font-bold uppercase tracking-wide text-[#667085]">{trainingName} training</p>
 															{programs.filter((program) => (program.training?.name || "Other") === trainingName).map((program) => (
 																<div key={program.id} className="space-y-1">
-																	<label className="flex cursor-pointer items-center gap-3 rounded-lg border border-[#2166f3] bg-[#2166f3] px-3 py-2.5 text-sm text-white transition-colors hover:border-[#1554d1] hover:bg-[#1554d1]">
-																		<input type="checkbox" checked={selectedProgramIds.includes(program.id)} onChange={() => toggleProgram(program.id)} className="h-4 w-4 accent-white" />
+																	<label className="flex cursor-pointer items-center gap-3 rounded-lg border border-[#e3e9f4] px-3 py-2.5 text-sm hover:bg-[#f8faff]">
+																		<input type="checkbox" checked={selectedProgramIds.includes(program.id)} onChange={() => toggleProgram(program.id)} className="h-4 w-4 accent-[#2b5cf0]" />
 																		<span className="flex-1">{program.name} — Entire program</span>
 																	</label>
 																	{program.modules?.map((module) => (
-																		<label key={module.id} className="ml-6 flex cursor-pointer items-center gap-3 rounded-lg border border-[#2166f3] bg-[#2166f3] px-3 py-2.5 text-sm text-white transition-colors hover:border-[#1554d1] hover:bg-[#1554d1]">
-																			<input type="checkbox" checked={selectedProgramIds.includes(module.id)} onChange={() => toggleProgram(module.id)} className="h-4 w-4 accent-white" />
+																		<label key={module.id} className="ml-6 flex cursor-pointer items-center gap-3 rounded-lg border border-[#e3e9f4] px-3 py-2.5 text-sm hover:bg-[#f8faff]">
+																			<input type="checkbox" checked={selectedProgramIds.includes(module.id)} onChange={() => toggleProgram(module.id)} className="h-4 w-4 accent-[#2b5cf0]" />
 																			<span className="flex-1">{program.name} — {module.name}</span>
 																		</label>
 																	))}
