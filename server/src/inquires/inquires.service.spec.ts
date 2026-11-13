@@ -66,7 +66,7 @@ describe('InquiresService', () => {
 
     await expect(service.create(inquiry)).resolves.toEqual({ id: 1 });
 
-    expect(verifyCaptcha).toHaveBeenCalledWith('verified-token', 'training_inquiry');
+    expect(verifyCaptcha).toHaveBeenCalledWith('verified-token');
     expect(createInquiry).toHaveBeenCalledWith({
       data: {
         inquiry_type: 'Training Inquiry',
@@ -106,7 +106,7 @@ describe('InquiresService', () => {
       message: 'Please send details.',
     });
 
-    expect(verifyCaptcha).toHaveBeenCalledWith('verified-token', 'solutions_inquiry');
+    expect(verifyCaptcha).toHaveBeenCalledWith('verified-token');
   });
 
   it('accepts an inquiry by marking it resolved', async () => {

@@ -51,7 +51,7 @@ export default function NetworkPlusExam() {
 		return (
 			<NetworkPlusExamMessage
 				title={questionBankState.status === "loading" ? "Preparing your Network+ exam" : "Unable to load the Network+ question bank"}
-				message={questionBankState.status === "loading" ? "Loading questions labeled CompTIA Network+…" : questionBankState.error}
+				message={questionBankState.status === "loading" ? "Loading questions on Network+, please wait…" : questionBankState.error}
 				isLoading={questionBankState.status === "loading"}
 				onRetry={questionBankState.status === "error" ? () => {
 					setQuestionBankState({ status: "loading", questions: [], error: null });
@@ -83,9 +83,11 @@ function NetworkPlusExamMessage({ title, message, isLoading = false, onRetry }) 
 						Try again
 					</button>
 				)}
-				<Link to="/modules/programs/comptia-network-plus" className="mt-6 inline-flex items-center gap-2 font-semibold text-[#c8102e] transition hover:text-[#a80e27]">
-					<ArrowLeft size={17} /> Back to Network+
-				</Link>
+				{!isLoading && (
+					<Link to="/modules/programs/comptia-network-plus" className="mt-6 inline-flex items-center gap-2 font-semibold text-[#c8102e] transition hover:text-[#a80e27]">
+						<ArrowLeft size={17} /> Back to Network+
+					</Link>
+				)}
 			</section>
 		</main>
 	);

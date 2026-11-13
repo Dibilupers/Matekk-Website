@@ -2,6 +2,15 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react
 import { createPortal } from "react-dom";
 import { Maximize2, X } from "lucide-react";
 import { PcIcon, RouterIcon, SwitchIcon } from "../../../../training/cisco/ccna/labs/LabTopology";
+import { topologyFitScale } from "../../../../../utils/topologyFit";
+import { placeTopologyLabels } from "../../../../../utils/topologyLabels";
+import {
+	topologyLinkGeometry,
+	topologyLinkLabelPosition,
+	topologyPortLabelCandidates,
+	topologyPortLabelParts,
+	topologyPortLabelPositions,
+} from "../../../../../utils/topologyGeometry";
 
 /* Exam exhibits (router output and pictures). Each one can open full screen, where it starts zoomed
    to fit the screen and can be zoomed by touch: pinch with two fingers, drag with one, double-tap to
@@ -38,17 +47,23 @@ function ZoomViewer({ title, theme, onClose, children }) {
 		const width = content.scrollWidth;
 		const height = content.scrollHeight;
 		if (!width || !height) return;
-		const availableWidth = Math.max(1, scroller.clientWidth - 24);
-		const availableHeight = Math.max(1, scroller.clientHeight - 24);
-		const fitScale = Math.min(1, availableWidth / width, availableHeight / height);
+		const fitScale = topologyFitScale(width, height, scroller.clientWidth, scroller.clientHeight);
 		setNatural({ width, height });
 		setFit(fitScale);
 		setScale(fitScale);
 	}, []);
 	useLayoutEffect(() => {
 		measure();
+		const scroller = scrollerRef.current;
+		const resizeObserver = new ResizeObserver(measure);
+		if (scroller) resizeObserver.observe(scroller);
 		const content = contentRef.current;
-		content?.querySelectorAll("img").forEach((img) => { if (!img.complete) img.addEventListener("load", measure, { once: true }); });
+		const pendingImages = Array.from(content?.querySelectorAll("img") ?? []).filter((img) => !img.complete);
+		pendingImages.forEach((img) => img.addEventListener("load", measure, { once: true }));
+		return () => {
+			resizeObserver.disconnect();
+			pendingImages.forEach((img) => img.removeEventListener("load", measure));
+		};
 	}, [measure]);
 
 	// Zoom while keeping the point under the fingers / cursor in place
@@ -211,7 +226,7 @@ export function ExhibitText({ text, className = "" }) {
 	return (
 		<div ref={wrapRef} className={`ccna-term relative left-1/2 w-[min(80rem,calc(100vw_-_2rem))] max-w-none -translate-x-1/2 overflow-hidden rounded-xl shadow-sm lg:left-auto lg:w-full lg:translate-x-0 ${className}`}>
 			<TerminalBar label={label} onExpand={overflows ? () => setOpenTheme(pageTheme(wrapRef.current)) : null} />
-			<pre ref={boxRef} aria-label="Exhibit" className="max-h-96 overflow-x-hidden overflow-y-auto whitespace-pre-wrap break-words p-4 text-xs leading-5 [overflow-wrap:anywhere] sm:text-[13px]"><code>{text}</code></pre>
+			<pre ref={boxRef} aria-label="Exhibit" className="ccna-term-output max-h-96 overflow-x-hidden overflow-y-auto whitespace-pre-wrap break-words p-4 text-xs leading-5 [overflow-wrap:anywhere] sm:text-[13px]"><code>{text}</code></pre>
 			{openTheme && (
 				<ZoomViewer title={label} theme={openTheme} onClose={() => setOpenTheme(null)}>
 					<pre className="ccna-term rounded-lg border-0 p-4 font-mono text-[14px] leading-[1.6] whitespace-pre-wrap break-words [overflow-wrap:anywhere]"><code>{text}</code></pre>
@@ -232,6 +247,21 @@ function TopologyNode({ role, name, details }) {
 }
 
 const NETWORK_TOPOLOGIES = {
+	"routing-protocols-prefix": {
+		title: "Router1 routes to 10.10.10.0/24",
+		note: "Router1 learns the same destination through five routing methods.",
+		nodes: [
+			{ id: "router", kind: "router", name: "Router1", x: 500, y: 120 },
+			{ id: "network", kind: "network", name: "10.10.10.0/24", x: 500, y: 470 },
+		],
+		links: [
+			{ from: "router", to: "network", label: "OSPF", labelX: 330, labelY: 240, offset: -20 },
+			{ from: "router", to: "network", label: "eBGP", labelX: 410, labelY: 280, offset: -10 },
+			{ from: "router", to: "network", label: "Static", labelX: 500, labelY: 315 },
+			{ from: "router", to: "network", label: "EIGRP", labelX: 590, labelY: 280, offset: 10 },
+			{ from: "router", to: "network", label: "iBGP", labelX: 670, labelY: 240, offset: 20 },
+		],
+	},
 	"ipv6-block-r1-r2": {
 		title: "IPv6 block and access LANs",
 		note: "Address block: 2001:0db8:fff:fcf3::/64",
@@ -2033,7 +2063,91 @@ function nodeRadius(kind) {
 	return 34;
 }
 
-function topologyViewBox(topology) {
+function topologyGeometryKind(node) {
+	return node.kind === "host" && /server/i.test(node.name) ? "server" : node.kind;
+}
+
+function topologyLabels(topology) {
+	const obstacles = topology.nodes.map((node) => {
+		const details = node.details ?? [];
+		const width = Math.max(
+			nodeRadius(node.kind),
+			node.name.length * 7.2 + 16,
+			...details.map((detail) => detail.length * 5.2 + 12),
+		);
+		const top = node.kind === "network" ? -27 : -30;
+		const bottom = 55 + details.length * 12;
+		return { x: node.x, y: node.y + (top + bottom) / 2, width: width * 2, height: bottom - top };
+	});
+	const portLabels = [];
+	const networkLabels = [];
+	topology.links.forEach((link, index) => {
+		if (!link.label) return;
+		const from = topology.nodes.find((node) => node.id === link.from);
+		const to = topology.nodes.find((node) => node.id === link.to);
+		const geometry = topologyLinkGeometry(
+			from,
+			to,
+			topologyGeometryKind(from),
+			topologyGeometryKind(to),
+			link.offset ?? 0,
+		);
+		const portNames = topologyPortLabelParts(link.label);
+		if (portNames) {
+			const [start, end] = topologyPortLabelPositions(geometry);
+			portNames.forEach((text, part) => {
+				const endpoint = portNames.length === 1 ? 0 : part;
+				const point = endpoint === 0 ? start : end;
+				portLabels.push({
+					key: index,
+					text,
+					x: point.x,
+					y: point.y,
+					width: Math.max(20, text.length * 6.3),
+					height: 12,
+					centerOffsetY: -2,
+					onCable: true,
+					candidates: topologyPortLabelCandidates(geometry, endpoint),
+				});
+			});
+			return;
+		}
+		const { x: labelX, y: labelY } = topologyLinkLabelPosition(
+			geometry.x1,
+			geometry.y1,
+			geometry.x2,
+			geometry.y2,
+			link.labelX,
+			link.labelY,
+			{
+				width: Math.max(44, link.label.length * 7 + 14),
+				height: 20,
+				centerOffsetY: -2,
+			},
+		);
+		const width = Math.max(20, link.label.length * 6.3);
+		networkLabels.push({
+			key: index,
+			text: link.label,
+			x: labelX,
+			y: labelY,
+			width,
+			height: 12,
+			centerOffsetY: -2,
+		});
+	});
+	const placedLabels = placeTopologyLabels([...portLabels, ...networkLabels], [
+		...obstacles,
+	]);
+	return placedLabels.reduce((map, label) => {
+		const linkLabels = map.get(label.key) ?? [];
+		linkLabels.push(label);
+		map.set(label.key, linkLabels);
+		return map;
+	}, new Map());
+}
+
+function topologyViewBox(topology, labels) {
 	let minX = Infinity;
 	let minY = Infinity;
 	let maxX = -Infinity;
@@ -2044,8 +2158,6 @@ function topologyViewBox(topology) {
 		minY = Math.min(minY, y - height);
 		maxY = Math.max(maxY, y + height);
 	};
-	const nodes = new Map(topology.nodes.map((node) => [node.id, node]));
-
 	topology.nodes.forEach((node) => {
 		const details = node.details ?? [];
 		const textWidth = Math.max(nodeRadius(node.kind), node.name.length * 4, ...details.map((detail) => detail.length * 2.8));
@@ -2053,13 +2165,10 @@ function topologyViewBox(topology) {
 		include(node.x, node.y + 62 + details.length * 12, textWidth + 10, 8);
 	});
 
-	topology.links.forEach((link) => {
-		if (!link.label) return;
-		const from = nodes.get(link.from);
-		const to = nodes.get(link.to);
-		const labelX = link.labelX ?? (from.x + to.x) / 2;
-		const labelY = link.labelY ?? (from.y + to.y) / 2 - 10;
-		include(labelX, labelY, link.label.length * 3.5 + 8, 12);
+	labels.forEach((linkLabels) => {
+		linkLabels.forEach((label) => {
+			include(label.x, label.y + label.centerOffsetY, label.width / 2, label.height / 2);
+		});
 	});
 
 	if (!Number.isFinite(minX)) return { x: 0, y: 0, width: 1000, height: topology.height ?? 560 };
@@ -2074,83 +2183,265 @@ function topologyViewBox(topology) {
 	};
 }
 
+function includeViewBox(base, expanded) {
+	const x = Math.min(base.x, expanded.x);
+	const y = Math.min(base.y, expanded.y);
+	const right = Math.max(base.x + base.width, expanded.x + expanded.width);
+	const bottom = Math.max(base.y + base.height, expanded.y + expanded.height);
+	return { x, y, width: right - x, height: bottom - y };
+}
+
 function TopologyLink({ link, nodes }) {
 	const from = nodes.get(link.from);
 	const to = nodes.get(link.to);
-	const dx = to.x - from.x;
-	const dy = to.y - from.y;
-	const distance = Math.hypot(dx, dy) || 1;
-	const offsetX = (-dy / distance) * (link.offset ?? 0);
-	const offsetY = (dx / distance) * (link.offset ?? 0);
-	const startRadius = nodeRadius(from.kind);
-	const endRadius = nodeRadius(to.kind);
-	const x1 = from.x + (dx / distance) * startRadius + offsetX;
-	const y1 = from.y + (dy / distance) * startRadius + offsetY;
-	const x2 = to.x - (dx / distance) * endRadius + offsetX;
-	const y2 = to.y - (dy / distance) * endRadius + offsetY;
-	const labelX = link.labelX ?? (x1 + x2) / 2;
-	const labelY = link.labelY ?? (y1 + y2) / 2 - 10;
-
+	const geometry = topologyLinkGeometry(
+		from,
+		to,
+		topologyGeometryKind(from),
+		topologyGeometryKind(to),
+		link.offset ?? 0,
+	);
+	const { x1, y1, x2, y2 } = geometry;
 	return (
 		<g>
 			<line x1={x1} y1={y1} x2={x2} y2={y2} stroke="#16a34a" strokeWidth="3" />
 			<circle cx={x1} cy={y1} r="4" fill="#16a34a" />
 			<circle cx={x2} cy={y2} r="4" fill="#16a34a" />
-			{link.label && (
-				<>
-					<rect
-						x={labelX - Math.max(22, link.label.length * 3.5 + 7)}
-						y={labelY - 12}
-						width={Math.max(44, link.label.length * 7 + 14)}
-						height="20"
-						rx="6"
-						fill="white"
-						fillOpacity="0.97"
-						stroke="#dbe4ee"
-					/>
-					<text
-						x={labelX}
-						y={labelY + 3}
-						textAnchor="middle"
-						fontSize="12"
-						fontWeight="600"
-						fill="#334155"
-					>
-						{link.label}
-					</text>
-				</>
-			)}
 		</g>
 	);
 }
 
+function TopologyLinkLabel({ link, nodes, labelPosition }) {
+	if (!link.label) return null;
+	const from = nodes.get(link.from);
+	const to = nodes.get(link.to);
+	const geometry = topologyLinkGeometry(
+		from,
+		to,
+		topologyGeometryKind(from),
+		topologyGeometryKind(to),
+		link.offset ?? 0,
+	);
+	const x = labelPosition?.x ?? link.labelX ?? (geometry.x1 + geometry.x2) / 2;
+	const y = labelPosition?.y ?? link.labelY ?? (geometry.y1 + geometry.y2) / 2 - 10;
+
+	return (
+		<text
+			x={x}
+			y={labelPosition?.onCable ? y : y + 3}
+			textAnchor="middle"
+			fontSize="12"
+			fontWeight="600"
+			fill="#17233d"
+			paintOrder="stroke"
+			stroke="#fff"
+			strokeWidth="3"
+			strokeLinejoin="round"
+		>
+			{labelPosition?.text ?? link.label}
+		</text>
+	);
+}
+
 function TopologyDevice({ node }) {
-	if (node.kind === "router") return <RouterIcon x={node.x} y={node.y} label={node.name} details={node.details} labelBackdrop />;
-	if (node.kind === "switch") return <SwitchIcon x={node.x} y={node.y} label={node.name} details={node.details} labelBackdrop />;
+	if (node.kind === "router") return <RouterIcon x={node.x} y={node.y} label={node.name} details={node.details} />;
+	if (node.kind === "switch") return <SwitchIcon x={node.x} y={node.y} label={node.name} details={node.details} />;
 	if (node.kind === "host") {
 		const server = /server/i.test(node.name);
-		return <PcIcon x={node.x} y={node.y} label={node.name} details={node.details} server={server} labelBackdrop />;
+		return <PcIcon x={node.x} y={node.y} label={node.name} details={node.details} server={server} />;
 	}
 
 	return (
 		<g transform={`translate(${node.x} ${node.y})`}>
 			<ellipse cx="0" cy="0" rx="72" ry="27" fill="#e0ecfb" stroke="#1775ee" strokeWidth="1.5" />
 			<text x="0" y="4" textAnchor="middle" fontSize="12" fontWeight="700" fill="#1775ee">{node.name}</text>
-			{node.details?.length > 0 && (
-				<rect
-					x={-Math.max(36, ...node.details.map((detail) => detail.length * 2.8 + 8))}
-					y="31"
-					width={Math.max(72, ...node.details.map((detail) => detail.length * 5.6 + 16))}
-					height={node.details.length * 12 + 10}
-					rx="5"
-					fill="white"
-					stroke="#e2e8f0"
-				/>
-			)}
 			{node.details?.map((detail, index) => (
 				<text key={detail} x="0" y={43 + index * 12} textAnchor="middle" fontSize="9.5" fill="#4b5b78">{detail}</text>
 			))}
 		</g>
+	);
+}
+
+const WLC_EXHIBITS = {
+	"wlc-security-tab": { title: "WLC Security settings", variant: "security" },
+	"wlc-security-tab-legacy": { title: "WLC Security settings", variant: "security-legacy" },
+	"wlc-my-wlan-layer2": { title: "WLC WLAN Layer 2 settings", variant: "my-wlan" },
+	"wlc-psk-layer2": { title: "WLC PSK Layer 2 settings", variant: "psk" },
+	"wlc-advanced-tab": { title: "WLC Advanced settings", variant: "advanced" },
+};
+
+function WlcTabs({ active = "Security", nested = false }) {
+	const tabs = nested ? ["Layer 2", "Layer 3", "AAA Servers"] : ["General", "Security", "QoS", "Policy-Mapping", "Advanced"];
+	return (
+		<div className={`flex gap-1 border-b border-[#a9bdd3] ${nested ? "bg-[#e5edf5] px-3 pt-2" : "bg-[#d5e4f2] px-2 pt-2"}`}>
+			{tabs.map((tab) => (
+				<span
+					key={tab}
+					aria-current={tab === active ? "page" : undefined}
+					className={`rounded-t-md border border-b-0 px-3 py-1.5 font-semibold ${tab === active ? "border-[#9aaec4] bg-[#f8f7f8] text-[#26354b]" : "border-[#b4c6d9] bg-[#c4d9ee] text-[#3d516b]"}`}
+				>
+					{tab}
+				</span>
+			))}
+		</div>
+	);
+}
+
+function WlcSection({ title, children, className = "" }) {
+	return (
+		<section className={`mb-3 ${className}`}>
+			<h3 className="mb-1 border-b border-[#96b4d2] pb-1 font-bold text-[#3c7184]">{title}</h3>
+			<div className="space-y-1 px-2">{children}</div>
+		</section>
+	);
+}
+
+function WlcSetting({ label, value, checked }) {
+	return (
+		<div className="grid min-h-6 grid-cols-[minmax(0,1fr)_minmax(8rem,0.8fr)] items-center gap-2">
+			<span>{label}</span>
+			{checked !== undefined ? (
+				<span className="flex items-center gap-2">
+					<span
+						role="img"
+						aria-label={checked ? "Enabled" : "Disabled"}
+						className={`flex h-4 w-4 items-center justify-center rounded-[2px] border ${checked ? "border-[#2784d8] bg-[#2784d8] text-white" : "border-[#aab2ba] bg-white"} ${checked ? "text-[11px] font-bold" : ""}`}
+					>
+						{checked ? "✓" : ""}
+					</span>
+					{value}
+				</span>
+			) : (
+				<span className="inline-flex min-h-6 items-center rounded-sm border border-[#bac0c7] bg-white px-2 shadow-inner">{value}</span>
+			)}
+		</div>
+	);
+}
+
+function WlcSettingsPanel({ variant, expanded }) {
+	const legacySecurity = variant === "security-legacy";
+	return (
+		<div
+			role="group"
+			aria-label="Recreated Cisco Wireless LAN Controller configuration exhibit"
+			className={`mx-auto w-full overflow-hidden border border-[#c5ccd3] bg-[#f8f7f8] text-left font-sans text-xs text-[#262a2e] shadow-sm ${expanded ? "min-w-[52rem] max-w-5xl" : "max-w-3xl"}`}
+		>
+			<WlcTabs active={variant === "advanced" ? "Advanced" : "Security"} />
+			{(variant === "my-wlan" || variant === "psk") && (
+				<>
+					<div className="bg-[#f4f3f5] px-4 pt-2 text-sm font-semibold text-[#4c5664]">WLANs &gt; Edit &quot;my_WLAN&quot;</div>
+					<WlcTabs active="Layer 2" nested />
+				</>
+			)}
+			<div className="grid gap-x-8 p-3 sm:grid-cols-2 sm:p-4">
+				{variant === "security" || legacySecurity ? (
+					<>
+						<div>
+							<WlcSection title="Fast Transition">
+								<WlcSetting label="Fast Transition" value={legacySecurity ? "Disable" : "Adaptive"} />
+								<WlcSetting label="Over the DS" checked={false} />
+								<WlcSetting label="Reassociation Timeout" value={legacySecurity ? "30 Seconds" : "20 Seconds"} />
+							</WlcSection>
+							<WlcSection title="Protected Management Frame">
+								<WlcSetting label="PMF" value={legacySecurity ? "Optional" : "Required"} />
+								<WlcSetting label="Comeback timer (1-10 sec)" value="1" />
+								<WlcSetting label="SA Query Timeout (100-500 msec)" value="200" />
+							</WlcSection>
+						</div>
+						<div>
+							<WlcSection title="Authentication Key Management">
+								<WlcSetting label="802.1X-SHA1" checked value="Enable" />
+								<WlcSetting label="802.1X-SHA2" checked={false} value="Enable" />
+								<WlcSetting label="CCKM" checked={false} value="Enable" />
+							</WlcSection>
+							{!legacySecurity && <WlcSetting label="WPA gtk-randomize State 4" value="Disable" />}
+						</div>
+					</>
+				) : null}
+				{variant === "my-wlan" && (
+					<>
+						<div>
+							<WlcSection title="Layer 2 Security">
+								<WlcSetting label="Layer 2 Security" value="WPA+WPA2" />
+								<WlcSetting label="MAC Filtering" checked={false} />
+							</WlcSection>
+							<WlcSection title="Fast Transition">
+								<WlcSetting label="Fast Transition" value="Adaptive" />
+								<WlcSetting label="Over the DS" checked />
+								<WlcSetting label="Reassociation Timeout" value="20 Seconds" />
+							</WlcSection>
+							<WlcSection title="Protected Management Frame">
+								<WlcSetting label="PMF" value="Disabled" />
+							</WlcSection>
+						</div>
+						<WlcSection title="WPA+WPA2 Parameters">
+							<WlcSetting label="WPA Policy" checked={false} />
+							<WlcSetting label="WPA2 Policy" checked />
+							<WlcSetting label="WPA2 Encryption: AES" checked />
+							<WlcSetting label="TKIP / CCMP256 / GCMP128 / GCMP256" checked={false} />
+							<WlcSetting label="OSEN Policy" checked={false} />
+							<WlcSetting label="802.1X" value="Enable" />
+						</WlcSection>
+					</>
+				)}
+				{variant === "psk" && (
+					<>
+						<div>
+							<WlcSection title="Layer 2 Security">
+								<WlcSetting label="Layer 2 Security" value="WPA+WPA2" />
+								<WlcSetting label="Security Type" value="Personal" />
+								<WlcSetting label="MAC Filtering" checked={false} />
+								<WlcSetting label="AutoConfig iPSK" checked={false} value="Enable" />
+							</WlcSection>
+							<WlcSection title="WPA+WPA2 Parameters">
+								<WlcSetting label="WPA Policy" checked={false} />
+								<WlcSetting label="WPA2 Policy" checked={false} />
+								<WlcSetting label="CCMP128 (AES)" checked />
+								<WlcSetting label="TKIP" checked={false} />
+							</WlcSection>
+						</div>
+						<div>
+							<WlcSection title="Authentication Key Management">
+								<WlcSetting label="PSK Format" value="ASCII" />
+								<WlcSetting label="Key" value="••••••••" />
+							</WlcSection>
+							<WlcSetting label="WPA GTK-randomize State 14" value="Disable" />
+						</div>
+					</>
+				)}
+				{variant === "advanced" && (
+					<>
+						<div>
+							<WlcSection title="Advanced">
+								<WlcSetting label="Allow AAA Override" checked={false} value="Enabled" />
+								<WlcSetting label="Coverage Hole Detection" checked={false} value="Enabled" />
+								<WlcSetting label="Enable Session Timeout" checked={false} />
+								<WlcSetting label="Session Timeout (secs)" value="" />
+								<WlcSetting label="Aironet IE" checked={false} value="Enabled" />
+								<WlcSetting label="Override Interface ACL (IPv4)" value="None" />
+								<WlcSetting label="Layer2 ACL" value="None" />
+								<WlcSetting label="P2P Blocking Action" value="Disabled" />
+								<WlcSetting label="Maximum Allowed Clients" value="0" />
+								<WlcSetting label="Maximum Allowed Clients Per AP Radio" value="200" />
+							</WlcSection>
+						</div>
+						<div>
+							<WlcSection title="DHCP">
+								<WlcSetting label="DHCP Server Override" checked={false} />
+								<WlcSetting label="DHCP Addr. Assignment Required" checked={false} />
+							</WlcSection>
+							<WlcSection title="Management Frame Protection (MFP)">
+								<WlcSetting label="MFP Client Protection" value="Optional" />
+							</WlcSection>
+							<WlcSection title="DTIM Period (in beacon intervals)">
+								<WlcSetting label="802.11a/n (1-255)" value="1" />
+								<WlcSetting label="802.11b/g/n (1-255)" value="1" />
+							</WlcSection>
+						</div>
+					</>
+				)}
+			</div>
+		</div>
 	);
 }
 
@@ -2159,13 +2450,18 @@ export function ExhibitDiagram({ type, className = "", offlineLayout = false }) 
 	const wrapRef = useRef(null);
 	const isRouterOnAStick = type === "router-on-a-stick-vlan20";
 	const topology = isRouterOnAStick ? null : NETWORK_TOPOLOGIES[type];
-	if (!isRouterOnAStick && !topology) return null;
-	const title = topology?.title ?? "Network topology";
+	const wlcExhibit = WLC_EXHIBITS[type];
+	if (!isRouterOnAStick && !topology && !wlcExhibit) return null;
+	const title = topology?.title ?? wlcExhibit?.title ?? "Network topology";
 	const nodes = topology ? new Map(topology.nodes.map((node) => [node.id, node])) : null;
+	const labels = topology ? topologyLabels(topology) : null;
+	const generatedViewBox = topology ? topologyViewBox(topology, labels) : null;
 	const viewBox = topology
-		? topology.viewBox ?? topologyViewBox(topology)
+		? topology.viewBox ? includeViewBox(topology.viewBox, generatedViewBox) : generatedViewBox
 		: null;
-	const renderDiagram = (expanded = false) => topology ? (
+	const renderDiagram = (expanded = false) => wlcExhibit ? (
+		<WlcSettingsPanel variant={wlcExhibit.variant} expanded={expanded} />
+	) : topology ? (
 		<svg
 			viewBox={`${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`}
 			role="img"
@@ -2181,6 +2477,16 @@ export function ExhibitDiagram({ type, className = "", offlineLayout = false }) 
 				<TopologyLink key={`${link.from}-${link.to}-${index}`} link={link} nodes={nodes} />
 			))}
 			{topology.nodes.map((node) => <TopologyDevice key={node.id} node={node} />)}
+			{topology.links.map((link, index) => (
+				(labels.get(index) ?? []).map((labelPosition, labelIndex) => (
+					<TopologyLinkLabel
+						key={`label-${link.from}-${link.to}-${index}-${labelIndex}`}
+						link={link}
+						nodes={nodes}
+						labelPosition={labelPosition}
+					/>
+				))
+			))}
 		</svg>
 	) : (
 		<div className={expanded ? "mx-auto w-[1000px]" : ""}>
@@ -2209,7 +2515,7 @@ export function ExhibitDiagram({ type, className = "", offlineLayout = false }) 
 					</button>
 				</div>
 				{topology && <p className="mb-3 text-sm leading-5 text-[#526584]">{topology.note}</p>}
-				<div className={topology ? "overflow-x-auto rounded-xl border border-[#e2e8f0] bg-white p-2 sm:p-3" : ""}>{renderDiagram()}</div>
+				<div className={topology || wlcExhibit ? "overflow-x-auto rounded-xl border border-[#e2e8f0] bg-white p-2 sm:p-3" : ""}>{renderDiagram()}</div>
 			</section>
 			{openTheme && (
 				<ZoomViewer title={title} theme={openTheme} onClose={() => setOpenTheme(null)}>

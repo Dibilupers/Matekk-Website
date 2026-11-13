@@ -35,6 +35,7 @@ import { readCcnaExamProgress, readCcnaShortExamProgress } from "../../../../../
 import { readCcnaMockExamResults } from "../../../../../utils/ccnaGradebook";
 import { CCNA_EXAMS } from "./ccnaExamFormats";
 import useGradebookQuizStats from "../../useGradebookQuizStats";
+import { getProfileDisplayName } from "../../../../../utils/profile";
 import ProgramBackgroundParticles from "../../ProgramBackgroundParticles";
 import ScoreRotationCard from "../../ScoreRotationCard";
 
@@ -167,7 +168,7 @@ function NetworkIllustration({ quizAverage, examAverage, examCards }) {
 					className="block w-full rounded-lg pr-7 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#005b6b]"
 				>
 					<div className="flex items-center justify-between gap-2">
-						<strong className="text-sm text-[#005b6b]">{profile?.username}</strong>
+						<strong className="text-sm text-[#005b6b]">{getProfileDisplayName(profile)}</strong>
 						<span className="text-xs font-semibold text-[#7c89a1]">{examCardIndex + 1}/{examCards.length}</span>
 					</div>
 					<p className="mt-0.5 text-sm leading-snug text-[#64708a]">
@@ -419,8 +420,10 @@ function ModuleCard({ module, index, openSection, onToggle, quizProgress, tutori
 }
 
 export default function CCNA() {
-	const { profile, isOnline } = useAuth();
+	const { profile, isOnline, isOfflinePinUnlocked } = useAuth();
 	const userId = profile?.userId;
+	const canTakeExamWithoutAccount = !isOnline && isOfflinePinUnlocked;
+	const canTakeExams = Boolean(userId) || canTakeExamWithoutAccount;
 	const [typedIntro, setTypedIntro] = useState("");
 	const [hasScrolled, setHasScrolled] = useState(false);
 	const [openSection, setOpenSection] = useState(null);
@@ -688,7 +691,7 @@ export default function CCNA() {
 			{createPortal(
 				<Link
 					to={isOnline ? "/pages/blank" : "/modules/programs"}
-					className={`fixed left-4 top-24 z-40 flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-bold text-[#005b6b] transition hover:text-[#004653] active:scale-95 ${hasScrolled ? "bg-white/90 shadow-md backdrop-blur-sm" : "bg-white/80"}`}
+					className={`fixed left-4 ${isOnline ? "top-24" : "top-5"} z-40 flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-bold text-[#005b6b] transition hover:text-[#004653] active:scale-95 ${!isOnline || hasScrolled ? "bg-white/90 shadow-md backdrop-blur-sm" : "bg-white/80"}`}
 				>
 					<ArrowLeft size={20} strokeWidth={2.5} /> Back to Courses
 				</Link>,
@@ -1175,7 +1178,7 @@ export default function CCNA() {
 							</button>
 							<button
 								type="button"
-								disabled={!userId}
+								disabled={!canTakeExams}
 								onClick={() => {
 									const moduleNumber = retakeQuizModule;
 									setRetakeQuizModule(null);
@@ -1271,7 +1274,7 @@ export default function CCNA() {
 								{examRuns[selectedExamFormat]?.isActive ? (
 									<button
 										type="button"
-										disabled={!userId}
+										disabled={!canTakeExams}
 										onClick={() => {
 											setIsExamPickerOpen(false);
 											navigate(examRuns[selectedExamFormat].path);
@@ -1284,7 +1287,7 @@ export default function CCNA() {
 									<div className="flex flex-wrap gap-2 sm:justify-self-end">
 										<button
 											type="button"
-											disabled={!userId}
+											disabled={!canTakeExams}
 											onClick={() => {
 												setIsExamPickerOpen(false);
 												navigate(examRuns[selectedExamFormat].path, { state: { showExamResult: true } });
@@ -1295,7 +1298,7 @@ export default function CCNA() {
 										</button>
 										<button
 											type="button"
-											disabled={!userId}
+											disabled={!canTakeExams}
 											onClick={() => setRetakeExamFormat(selectedExamFormat)}
 											className="rounded-full bg-[#005b6b] px-4 py-3 text-sm font-bold text-white transition hover:bg-[#004653] disabled:cursor-not-allowed disabled:opacity-50"
 										>
@@ -1305,7 +1308,7 @@ export default function CCNA() {
 								) : examRuns[selectedExamFormat] && (
 									<button
 										type="button"
-										disabled={!userId}
+										disabled={!canTakeExams}
 										onClick={() => {
 											setIsExamPickerOpen(false);
 											navigate(examRuns[selectedExamFormat].path);
@@ -1348,7 +1351,7 @@ export default function CCNA() {
 							</button>
 							<button
 								type="button"
-								disabled={!userId}
+								disabled={!canTakeExams}
 								onClick={() => {
 									const examRun = examRuns[retakeExamFormat];
 									setRetakeExamFormat(null);

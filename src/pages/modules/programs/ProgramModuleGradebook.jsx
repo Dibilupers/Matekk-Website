@@ -8,6 +8,7 @@ import {
 	readProgramModuleQuizProgress,
 } from "../../../utils/programModuleQuizProgress";
 import { readGradebookAssessments } from "../../../utils/gradebookApi";
+import { getProfileDisplayName } from "../../../utils/profile";
 import { getProgramExamFormats, LEGACY_PROGRAM_EXAM_NAMES } from "./programExamFormats";
 
 function getGradeTone(score) {
@@ -282,7 +283,7 @@ export default function ProgramModuleGradebook({ programKey, programName, module
 	const isCompTIAProgram = ["comptia-network-plus", "comptia-security-plus"].includes(programKey);
 	const isFortinetProgram = programKey === "fortinet-fortios";
 	const userId = profile?.userId;
-	const welcomeText = `Welcome, ${profile?.username ?? "Student"}!`;
+	const welcomeText = `Welcome, ${getProfileDisplayName(profile)}!`;
 	const [prefersReducedMotion] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
 	const [typedWelcome, setTypedWelcome] = useState(() => prefersReducedMotion ? welcomeText : "");
 	const [filter, setFilter] = useState("all");
@@ -370,7 +371,7 @@ export default function ProgramModuleGradebook({ programKey, programName, module
 							<ArrowLeft size={18} /> Back to course
 						</Link>
 						<div className="mx-auto max-w-[1680px] pt-10">
-							<h1 aria-label={welcomeText} className="typewriter-caret text-3xl font-bold sm:text-4xl">{typedWelcome}</h1>
+							<h1 aria-label={welcomeText} className="typewriter-caret text-3xl font-bold sm:text-4xl">{prefersReducedMotion ? welcomeText : typedWelcome}</h1>
 							<p className="mt-1 text-base text-white/85">Your grades and progress on {programName}</p>
 						</div>
 					</div>

@@ -34,7 +34,7 @@ export function DragDropQuestionInput({ question, value, onChange, disabled }) {
 					Drag each command onto the router where it belongs. Multiple commands may go to the same router; unused commands stay unassigned.
 				</p>
 				<div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
-					<section aria-label="Draggable commands" className="space-y-2 rounded-2xl border border-[#d9e1ef] bg-[#f7f9fc] p-3">
+					<section aria-label="Draggable commands" className="ccna-drag-drop-source-panel space-y-2 rounded-2xl border border-[#d9e1ef] bg-[#f7f9fc] p-3">
 						<h3 className="text-xs font-bold uppercase tracking-wide text-[#64748b]">Commands</h3>
 						{question.items.map((item, itemIndex) => (
 							<button
@@ -143,7 +143,7 @@ export function DragDropQuestionInput({ question, value, onChange, disabled }) {
 				Drag each answer onto its matching item, or select an answer and then choose an item.
 			</p>
 			<div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
-				<section aria-label="Draggable answers" className="space-y-2 rounded-2xl border border-[#d9e1ef] bg-[#f7f9fc] p-3">
+				<section aria-label="Draggable answers" className="ccna-drag-drop-source-panel space-y-2 rounded-2xl border border-[#d9e1ef] bg-[#f7f9fc] p-3">
 					<h3 className="text-xs font-bold uppercase tracking-wide text-[#64748b]">Answers</h3>
 					{question.choices.map((choice, choiceIndex) => {
 						const assigned = usedChoices.has(choiceIndex);

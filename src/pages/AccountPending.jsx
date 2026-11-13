@@ -2,6 +2,7 @@ import { useState } from "react";
 import { BadgeCheck, Check, Clock3, LogOut, Mail, RefreshCw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/auth-context";
+import { getProfileDisplayName } from "../utils/profile";
 
 export default function AccountPending() {
 	const navigate = useNavigate();
@@ -32,14 +33,14 @@ export default function AccountPending() {
 	}
 
 	return (
-		<main className="min-h-screen bg-[#f3f6ff] px-4 py-8 font-poppins text-[#14213d] sm:px-8 sm:py-12">
-			<div className="mx-auto max-w-[940px] overflow-hidden bg-white shadow-sm">
-				<header className="bg-[#2166f3] px-5 pb-16 pt-8 text-white sm:px-12 sm:py-9">
+		<main className="min-h-dvh bg-[#f3f6ff] px-3 py-3 font-poppins text-[#14213d] sm:px-6 sm:py-6 lg:px-8 lg:py-8">
+			<div className="mx-auto flex min-h-[calc(100dvh-1.5rem)] w-full max-w-[1180px] flex-col overflow-hidden rounded-2xl bg-white shadow-sm sm:min-h-[calc(100dvh-3rem)] lg:min-h-[calc(100dvh-4rem)]">
+				<header className="shrink-0 bg-[#2166f3] px-5 pb-16 pt-7 text-white sm:px-10 sm:py-8 lg:px-14">
 					<h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Almost there!</h1>
 					<p className="mt-2 break-words text-sm text-blue-100 sm:text-base">Your account is being reviewed by our team.</p>
 				</header>
 
-				<section className="relative mx-auto -mt-10 max-w-[510px] rounded-2xl border border-[#e7edf8] bg-white px-6 pb-8 pt-11 text-center shadow-[0_18px_45px_rgba(32,95,190,0.12)] sm:px-8">
+				<section className="relative mx-auto -mt-10 mb-6 w-[calc(100%-1.5rem)] max-w-[900px] flex-1 rounded-2xl border border-[#e7edf8] bg-white px-4 pb-6 pt-11 text-center shadow-[0_18px_45px_rgba(32,95,190,0.12)] sm:mb-8 sm:w-[calc(100%-3rem)] sm:px-8 sm:pb-8 lg:px-12">
 					<div className="absolute left-1/2 top-0 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-4 border-white bg-white text-[#2174fa] shadow-sm">
 						<BadgeCheck size={32} strokeWidth={1.8} />
 					</div>
@@ -49,7 +50,7 @@ export default function AccountPending() {
 						Pending admin approval
 					</span>
 					<h2 className="mt-4 text-xl font-bold">Waiting for admin approval</h2>
-					<p className="mx-auto mt-2 max-w-[380px] text-sm leading-5 text-[#74819a]">
+					<p className="mx-auto mt-2 max-w-[520px] text-sm leading-5 text-[#74819a] sm:text-base sm:leading-6">
 						Thanks for signing up. An administrator needs to approve your account before you can access courses and your workspace. This usually takes up to 24 hours.
 					</p>
 
@@ -67,8 +68,8 @@ export default function AccountPending() {
 							<span className="mt-2 text-[11px] text-[#8792a6]">Access granted</span>
 						</div>
 					</div>
-					<div className="mx-auto mt-5 max-w-[420px] rounded-xl bg-[#f4f7fd] px-4 py-3 text-left text-xs">
-						<div className="flex justify-between gap-4 py-1"><span className="text-[#74819a]">Name</span><strong className="text-right">{profile?.username || "—"}</strong></div>
+					<div className="mx-auto mt-5 max-w-[620px] rounded-xl bg-[#f4f7fd] px-4 py-3 text-left text-xs sm:px-6 sm:py-4 sm:text-sm">
+						<div className="flex justify-between gap-4 py-1"><span className="text-[#74819a]">Name</span><strong className="text-right">{getProfileDisplayName(profile)}</strong></div>
 						<div className="flex justify-between gap-4 py-1"><span className="text-[#74819a]">Role</span><strong className="text-right">{profile?.role || "Student"}</strong></div>
 						<div className="flex justify-between gap-4 py-1"><span className="text-[#74819a]">Status</span><strong className="text-right text-[#d98200]">Pending</strong></div>
 					</div>

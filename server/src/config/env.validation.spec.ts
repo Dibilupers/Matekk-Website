@@ -2,18 +2,20 @@ import { describe, expect, it } from 'vitest';
 import { envValidationSchema } from './env.validation.js';
 
 describe('production environment validation', () => {
-  it('uses Google test keys by default outside production', () => {
+  it('allows the API to start without hCaptcha keys so unrelated endpoints remain available', () => {
     const { error, value } = envValidationSchema.validate({ NODE_ENV: 'development' });
 
     expect(error).toBeUndefined();
-    expect(value.RECAPTCHA_SECRET_KEY).toBe('6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuZZevZx9c5');
+    expect(value.HCAPTCHA_SECRET_KEY).toBeUndefined();
+    expect(value.HCAPTCHA_SITE_KEY).toBeUndefined();
   });
 
   it('requires a frontend origin allowlist for credentialed cross-origin API requests', () => {
     const { error } = envValidationSchema.validate({
       NODE_ENV: 'production',
       JWT_SECRET: 'a'.repeat(32),
-      RECAPTCHA_SECRET_KEY: 'production-recaptcha-secret',
+      HCAPTCHA_SECRET_KEY: 'production-hcaptcha-secret',
+      HCAPTCHA_SITE_KEY: 'production-hcaptcha-site-key',
     });
 
     expect(error?.details[0]?.path).toEqual(['CORS_ORIGINS']);
@@ -23,7 +25,8 @@ describe('production environment validation', () => {
     const { error, value } = envValidationSchema.validate({
       NODE_ENV: 'production',
       JWT_SECRET: 'a'.repeat(32),
-      RECAPTCHA_SECRET_KEY: 'production-recaptcha-secret',
+      HCAPTCHA_SECRET_KEY: 'production-hcaptcha-secret',
+      HCAPTCHA_SITE_KEY: 'production-hcaptcha-site-key',
       CORS_ORIGINS: 'https://academy.example.com,https://www.example.com',
     });
 
@@ -35,7 +38,8 @@ describe('production environment validation', () => {
     const { error } = envValidationSchema.validate({
       NODE_ENV: 'production',
       JWT_SECRET: 'a'.repeat(32),
-      RECAPTCHA_SECRET_KEY: 'production-recaptcha-secret',
+      HCAPTCHA_SECRET_KEY: 'production-hcaptcha-secret',
+      HCAPTCHA_SITE_KEY: 'production-hcaptcha-site-key',
       CORS_ORIGINS: 'https://academy.example.com/account',
     });
 
@@ -46,7 +50,8 @@ describe('production environment validation', () => {
     const { error } = envValidationSchema.validate({
       NODE_ENV: 'production',
       JWT_SECRET: 'a'.repeat(32),
-      RECAPTCHA_SECRET_KEY: 'production-recaptcha-secret',
+      HCAPTCHA_SECRET_KEY: 'production-hcaptcha-secret',
+      HCAPTCHA_SITE_KEY: 'production-hcaptcha-site-key',
       CORS_ORIGINS: 'https://academy.example.com',
       OFFLINE_MODULE_PIN: '246810',
     });
@@ -58,7 +63,8 @@ describe('production environment validation', () => {
     const { error } = envValidationSchema.validate({
       NODE_ENV: 'production',
       JWT_SECRET: 'a'.repeat(32),
-      RECAPTCHA_SECRET_KEY: 'production-recaptcha-secret',
+      HCAPTCHA_SECRET_KEY: 'production-hcaptcha-secret',
+      HCAPTCHA_SITE_KEY: 'production-hcaptcha-site-key',
       CORS_ORIGINS: 'https://academy.example.com',
       OFFLINE_MODULE_PIN: 'pin123',
     });
@@ -66,7 +72,7 @@ describe('production environment validation', () => {
     expect(error?.details[0]?.path).toEqual(['OFFLINE_MODULE_PIN']);
   });
 
-  it('allows the API to start without the production reCAPTCHA secret so other endpoints stay available', () => {
+  it('allows the API to start without production hCaptcha keys so other endpoints stay available', () => {
     const { error, value } = envValidationSchema.validate({
       NODE_ENV: 'production',
       JWT_SECRET: 'a'.repeat(32),
@@ -74,6 +80,7 @@ describe('production environment validation', () => {
     });
 
     expect(error).toBeUndefined();
-    expect(value.RECAPTCHA_SECRET_KEY).toBeUndefined();
+    expect(value.HCAPTCHA_SECRET_KEY).toBeUndefined();
+    expect(value.HCAPTCHA_SITE_KEY).toBeUndefined();
   });
 });

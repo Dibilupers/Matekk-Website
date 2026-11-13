@@ -2,6 +2,323 @@
 
 Tracking begins 2026-10-17.
 
+## 2026-11-12 — `main`
+
+Commits included in this push:
+
+- `16fd932` — Prevented topology interface and descriptive labels from
+  overlapping device labels or each other while keeping cable labels on or near
+  their associated links.
+
+Validation before push: nine topology geometry/label tests, targeted ESLint,
+frontend production build, and a live Lab 3 render with no text collisions.
+
+## 2026-11-12 — `main`
+
+Commits included in this push:
+
+- `fe11982` — Removed topology label backplates, placed interface labels on
+  their connected cables in practice labs and CCNA exhibits, and updated the
+  proposal with matching Lab 3 before/after screenshots.
+
+Validation before push: eight topology geometry/label tests, targeted ESLint,
+frontend production build, and seven-page proposal verification.
+
+## 2026-11-12 — `main`
+
+Commits included in this push:
+
+- `ded0d13` — Added the seven-page project proposal PDF with practice-lab,
+  CCNA exhibit, and reconstructed topology comparisons.
+
+Validation before push: verified the seven-page PDF and embedded comparison
+images; Git whitespace checks passed.
+
+## 2026-11-09 — `main`
+
+Commits included in this push:
+
+- `6aee17e` — Made the IOS terminal the default for the voice VLAN practice lab
+  and added a toggle back to its worksheet format.
+
+Validation before push: seven focused practice-lab tests, targeted ESLint,
+frontend production build, and Git whitespace checks.
+
+## 2026-11-09 — `main`
+
+Commits included in this push:
+
+- `f669842` — Kept topology label boxes clear of cable lines and other labels,
+  expanding collision placement until it finds an open position.
+
+Validation before push: nineteen focused topology and practice-lab tests,
+targeted ESLint, frontend production build, Git whitespace checks, and a local
+practice-lab preview with no overlapping link labels.
+
+## 2026-11-09 — `main`
+
+Commits included in this push:
+
+- `627f136` — Raised SW-2 in the Voice VLAN practice topology and repositioned
+  port labels along their links, keeping labels clear of the cable lines.
+
+Validation before push: seventeen focused topology and practice-lab tests,
+targeted ESLint, frontend production build, Git whitespace checks, and a
+practice-lab topology preview.
+
+## 2026-11-09 — `main`
+
+Commits included in this push:
+
+- `70ec721` — Aligned practice-lab and CCNA exam topology cables with device
+  outlines and positioned link labels beside their actual cable segments.
+
+Validation before push: twelve focused practice-lab and geometry tests,
+targeted ESLint, frontend production build, Git whitespace checks, and a
+practice-lab topology preview.
+
+## 2026-11-09 — `main`
+
+Commits included in this push:
+
+- `be220b8` — Limited successful contact-form submissions to one per day,
+  retained a 60-second retry cooldown after failures, added a send confirmation,
+  and displayed the support email after successful delivery.
+
+Validation before push: targeted ESLint, frontend production build, and Git
+whitespace checks passed.
+
+## 2026-11-08 — `main`
+
+Commits included in this push:
+
+- Pending — Repositioned the Lab 4 ISP link to prevent topology-label overlap
+  and hid Lab 5 from the website's practice-lab list.
+
+Validation before push: eleven focused practice-lab and topology-label tests,
+targeted ESLint, frontend production build, and Git whitespace checks passed.
+
+## 2026-11-08 — `main`
+
+Commits included in this push:
+
+- `d43f85f` — Replaced the duplicate Practice Lab 4 with static routing and
+  failover, added Practice Lab 5 for IPv4/IPv6 router connectivity, and extended
+  the simulator with IPv6 addressing and ping support.
+
+Validation before push: seven focused practice-lab tests, targeted ESLint,
+frontend production build, and Git whitespace checks passed.
+
+## 2026-11-08 — `main`
+
+Commits included in this push:
+
+- `72cb376` — Added a mobile Courses shortcut, updated recreated CCNA exam
+  exhibits and matching-question bank data, and validated the contact CAPTCHA
+  action in its request DTO.
+
+Validation before push: frontend and backend production builds, fourteen
+focused CCNA bank/exhibit tests, five CAPTCHA tests, targeted ESLint, and Git
+whitespace checks passed.
+
+## 2026-11-08 — `main`
+
+Commits included in this push:
+
+- `cb94681` — Increased spacing between Lab 3's parallel LACP links so their
+  port labels no longer overlap.
+
+Validation before push: ten focused topology and lab tests, production build,
+and Git whitespace checks passed.
+
+## 2026-11-08 — `main`
+
+Commits included in this push:
+
+- `549f1c6` — Tightened topology label placement to keep labels close to their
+  cables and removed redundant trunk, native-VLAN, and duplicate LACP labels
+  from Practice Lab 3.
+
+Validation before push: thirteen focused topology and lab tests, targeted
+ESLint, production build, and Git whitespace checks passed.
+
+## 2026-11-08 — `main`
+
+Commits included in this push:
+
+- `2920393` — Added collision-aware positioning for practice-lab and exam
+  topology link labels so annotations avoid device labels and one another.
+
+Validation before push: twelve focused topology and lab tests, targeted ESLint,
+production build, and Git whitespace checks passed.
+
+## 2026-11-08 — `main`
+
+Commits included in this push:
+
+- `9d35c62` — Added a shared viewport-fit calculation for practice and exam
+  topology diagrams, fitting the complete diagram initially and recalculating
+  when the viewer size changes.
+
+Validation before push: ten focused topology and lab tests, targeted ESLint,
+production build, and Git whitespace checks passed.
+
+## 2026-11-08 — `main`
+
+Commits included in this push:
+
+- `d7f7ca0` — Replaced CCNA Practice Labs 1–3 from the supplied worksheet and
+  corrected the Lab 4 topology spacing to prevent labels and devices from
+  overlapping.
+
+Validation before push: six focused lab tests, targeted ESLint, production
+build, and Git whitespace checks passed.
+
+## 2026-11-08 — `main`
+
+Commits included in this push:
+
+- `c3e4b0c` — Sent the required `contact` action with hCaptcha verification
+  requests from the Contact and Enrollment forms.
+
+Validation before push: frontend production build, targeted ESLint, and Git
+whitespace checks passed.
+
+## 2026-11-08 — `main`
+
+Commits included in this push:
+
+- `3619424` — Replaced reCAPTCHA with hCaptcha across the contact, inquiry, and
+  enrollment forms, and hid the source exhibit image when it is recreated in
+  CCNA exam questions.
+
+Validation before push: frontend production build, focused CCNA tests, 19
+focused backend tests, targeted ESLint/Oxlint, and Git whitespace checks passed.
+
+## 2026-11-07 — `main`
+
+Commits included in this push:
+
+- `b545876` — Added the Advanced voice VLAN and neighbor-discovery lab in a
+  screenshot-style command worksheet, with a fullscreen topology expand control.
+
+Validation before push: focused lab tests, targeted ESLint, production build,
+and Git whitespace checks passed.
+
+## 2026-11-07 — `main`
+
+Commits included in this push:
+
+- `9d5dee2` — Removed the broken recreated exhibit image from CCNA question
+  1306 while preserving its drag-and-drop format.
+
+Validation before push: ten focused CCNA bank and offline-exam tests, targeted
+ESLint, frontend production build, and Git whitespace checks passed.
+
+## 2026-11-07 — `main`
+
+Commits included in this push:
+
+- `ed410da` — Saved the complete merged CCNA question bank for offline use and
+  enabled the Short, Medium, and Long offline exams to sample from it while
+  preserving their existing question counts. The All Questions exam also uses
+  the saved bank, with the older bundled bank as a first-use fallback.
+
+Validation before push: ten focused CCNA bank and offline-exam tests, targeted
+ESLint, frontend production build, and Git whitespace checks passed.
+
+## 2026-11-07 — `main`
+
+Commits included in this push:
+
+- `19392b6` — Removed bulk read and clear actions from the exam notification
+  menu while retaining per-notification dismissal.
+
+Validation before push: exam notification and route regression tests, targeted
+ESLint, frontend production build, and Git whitespace checks passed.
+
+## 2026-11-07 — `main`
+
+Commits included in this push:
+
+- `ae76ae5` — Integrated the latest notification-management update while
+  retaining per-item unread state, the mark-all menu, and clear/dismiss actions.
+
+Validation before push: notification read-state and exam-route regression tests,
+targeted ESLint, frontend production build, and Git whitespace checks passed.
+
+- `db5cb2f` — Merged the latest `origin/main` changes and resolved the
+  notification conflict so opening the dropdown does not mark every item read.
+
+Validation before push: notification read-state and exam-route regression tests,
+targeted ESLint, frontend production build, and Git whitespace checks passed.
+
+- `e3d67b2` — Added unread exam notification indicators, persistent read state,
+  subdued styling for read updates, and a menu to mark all notifications read.
+
+Validation before push: notification read-state and exam-route regression tests,
+targeted ESLint, frontend production build, and Git whitespace checks passed.
+
+## 2026-11-07 — `main`
+
+Commits included in this push:
+
+- `73ae61e` — Added individual notification dismissal, a Read all action, and
+  Clear notifications while preserving exam progress and persisting dismissed
+  state per user.
+
+Validation before push: exam notification and route regression tests, targeted
+ESLint, frontend production build, and Git whitespace checks passed.
+
+## 2026-11-07 — `main`
+
+Commits included in this push:
+
+- `90ad7ec` — Changed the exam notification badge to count unread updates,
+  persist read state per user, and clear the count when the panel is opened.
+
+Validation before push: exam notification and route regression tests, targeted
+ESLint, frontend production build, and Git whitespace checks passed.
+
+## 2026-11-07 — `main`
+
+Commits included in this push:
+
+- `97f3e2a` — Allowed periods in contact names so middle initials such as
+  “L.” pass name validation.
+
+Validation before push: targeted ESLint, frontend production build, and Git
+whitespace checks passed.
+
+## 2026-11-07 — `main`
+
+Commits included in this push:
+
+- `b068b48` — Fixed exam notification destinations by sharing canonical routes
+  with exam formats and app routing, preserving the legacy CCNA link, and
+  adding route regression tests.
+
+Validation before push: exam route regression tests, targeted ESLint, frontend
+production build, and Git whitespace checks passed.
+
+## 2026-11-07 — `main`
+
+Commits included in this push:
+
+- `f793c0c` — Added a search-friendly site title and description, and updated
+  contact form validation with the requested field limits.
+
+Validation before push: frontend production build, targeted ESLint, and Git
+whitespace checks passed.
+
+## 2026-11-07 — `main`
+
+Commits included in this push:
+
+- `e67fff6` — Restored the website source state at `ea16d514`, including persistent offline module PIN unlock behavior.
+
+Validation before push: targeted ESLint, frontend production build, and Git whitespace checks passed.
+
 ## 2026-10-30 — `main`
 
 Commits included in this push:

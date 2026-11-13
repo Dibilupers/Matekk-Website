@@ -5,11 +5,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../../../context/auth-context";
 import FortiOSBadge from "../../../../../assets/nse-4-fortios.svg";
 import { readCcnaExamProgress } from "../../../../../utils/ccnaShortExamSession";
+import { isAnswerCorrect, isQuestionAnswered } from "../../../../../utils/ccnaExamGrading";
 import { readGradebookAssessments } from "../../../../../utils/gradebookApi";
 import { isCurrentProgramModuleQuizAttempt, readProgramModuleQuizProgress } from "../../../../../utils/programModuleQuizProgress";
 import ProgramBackgroundParticles from "../../ProgramBackgroundParticles";
 import ScoreRotationCard from "../../ScoreRotationCard";
 import useGradebookQuizStats from "../../useGradebookQuizStats";
+import { getProfileDisplayName } from "../../../../../utils/profile";
 import { FORTIOS_EXAM_FORMAT_DEFINITIONS, FORTIOS_EXAM_PROGRESS_FORMATS } from "./fortiosExamFormats";
 
 export const FORTIOS_MODULES = [
@@ -110,8 +112,50 @@ function getLatestExamResult(assessments, examKey) {
 		.sort((first, second) => second.submittedAt - first.submittedAt)[0] ?? null;
 }
 
+function readFortiOSOfflineExamProgress(examKey, userId) {
+	const emptyProgress = { status: "not-started", deadline: null, answeredCount: 0, score: 0, maxScore: 0 };
+	const userKey = userId === null || userId === undefined || String(userId).trim() === ""
+		? "device"
+		: encodeURIComponent(String(userId));
+	const keys = userKey === "device"
+		? [`matekk-fortios-offline:device:${examKey}`]
+		: [`matekk-fortios-offline:${userKey}:${examKey}`, `matekk-fortios-offline:device:${examKey}`];
+	try {
+		const savedSession = keys.map((key) => window.localStorage.getItem(key)).find(Boolean);
+		if (!savedSession) return null;
+		const session = JSON.parse(savedSession);
+		if (
+			!session ||
+			!Array.isArray(session.questions) ||
+			!session.answers ||
+			typeof session.answers !== "object" ||
+			Array.isArray(session.answers) ||
+			typeof session.isSubmitted !== "boolean" ||
+			(session.deadline !== null && !Number.isFinite(session.deadline))
+		) {
+			throw new TypeError(`Saved FortiOS ${examKey} progress has an invalid structure.`);
+		}
+		const isExpired = !session.isSubmitted && session.deadline !== null && session.deadline <= Date.now();
+		return {
+			status: isExpired ? "expired" : session.isSubmitted ? "completed" : "in-progress",
+			deadline: isExpired || session.isSubmitted ? null : session.deadline,
+			answeredCount: session.questions.filter((question, index) =>
+				isQuestionAnswered(question, session.answers[index]),
+			).length,
+			score: session.questions.reduce(
+				(total, question, index) => total + Number(isAnswerCorrect(question, session.answers[index])),
+				0,
+			),
+			maxScore: session.questions.length,
+		};
+	} catch (error) {
+		console.error(`Unable to restore FortiOS ${examKey} offline progress.`, error);
+		return { ...emptyProgress, status: "unavailable" };
+	}
+}
+
 export default function FortiOSDashboard() {
-	const { profile, isOnline } = useAuth();
+	const { profile, isOnline, isOfflinePinUnlocked } = useAuth();
 	const navigate = useNavigate();
 	const [typedIntro, setTypedIntro] = useState("");
 	const [hasScrolled, setHasScrolled] = useState(false);
@@ -122,8 +166,11 @@ export default function FortiOSDashboard() {
 	const [examClockNow, setExamClockNow] = useState(Date.now);
 	const [isExamPickerOpen, setIsExamPickerOpen] = useState(false);
 	const [selectedExamFormat, setSelectedExamFormat] = useState("short");
+	const [retakeExamFormat, setRetakeExamFormat] = useState(null);
 	const [examResultsState, setExamResultsState] = useState({ userId: null, assessments: [], loading: false, error: null });
 	const userId = profile?.userId;
+	const canTakeExamWithoutAccount = !isOnline && isOfflinePinUnlocked;
+	const canTakeExams = Boolean(userId) || canTakeExamWithoutAccount;
 	const quizProgress = userId ? readProgramModuleQuizProgress("fortinet-fortios", userId) : { modules: {} };
 	const quizAttempts = FORTIOS_MODULES.map((module) => {
 		const savedAttempt = quizProgress.modules[module.number];
@@ -138,7 +185,9 @@ export default function FortiOSDashboard() {
 	const examRuns = Object.entries(FORTIOS_EXAM_PROGRESS_FORMATS).map(([examKey, exam]) => ({
 		examKey,
 		exam,
-		progress: readCcnaExamProgress(exam.sessionKey, userId),
+		progress: isOnline
+			? readCcnaExamProgress(exam.sessionKey, userId)
+			: readFortiOSOfflineExamProgress(examKey, userId) ?? readCcnaExamProgress(exam.sessionKey, userId),
 	}));
 	const gradedExamRuns = examRuns.filter(({ examKey }) => examKey !== "all_questions");
 	const attemptedExamCount = gradedExamRuns.filter(({ progress }) => progress.status !== "not-started").length;
@@ -214,18 +263,21 @@ export default function FortiOSDashboard() {
 	}, [userId]);
 
 	useEffect(() => {
-		if (!isExamPickerOpen) return undefined;
+		if (!isExamPickerOpen && !retakeExamFormat) return undefined;
 		const previousOverflow = document.body.style.overflow;
 		document.body.style.overflow = "hidden";
 		function closeOnEscape(event) {
-			if (event.key === "Escape") setIsExamPickerOpen(false);
+			if (event.key === "Escape") {
+				setIsExamPickerOpen(false);
+				setRetakeExamFormat(null);
+			}
 		}
 		window.addEventListener("keydown", closeOnEscape);
 		return () => {
 			document.body.style.overflow = previousOverflow;
 			window.removeEventListener("keydown", closeOnEscape);
 		};
-	}, [isExamPickerOpen]);
+	}, [isExamPickerOpen, retakeExamFormat]);
 
 	function openExamPicker() {
 		setSelectedExamFormat("short");
@@ -233,9 +285,10 @@ export default function FortiOSDashboard() {
 	}
 
 	function startSelectedExam() {
-		if (!selectedExam || !userId) return;
+		if (!selectedExam || !canTakeExams) return;
 		setIsExamPickerOpen(false);
-		navigate(`/modules/programs/fortinet-fortios/exam/${selectedExamFormat}`);
+		const examPath = `/modules/programs/fortinet-fortios/exam/${selectedExamFormat}`;
+		navigate(examPath, isOnline ? undefined : { state: { startNewOfflineAttempt: true } });
 	}
 
 	useEffect(() => {
@@ -284,7 +337,7 @@ export default function FortiOSDashboard() {
 			{createPortal(
 				<Link
 					to={isOnline ? "/pages/blank" : "/modules/programs"}
-					className={`fixed left-4 top-24 z-40 flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-bold text-[#d9271e] transition hover:text-[#b71c16] active:scale-95 ${hasScrolled ? "bg-white/90 shadow-md backdrop-blur-sm" : "bg-white/80"}`}
+					className={`fixed left-4 ${isOnline ? "top-24" : "top-5"} z-40 flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-bold text-[#d9271e] transition hover:text-[#b71c16] active:scale-95 ${!isOnline || hasScrolled ? "bg-white/90 shadow-md backdrop-blur-sm" : "bg-white/80"}`}
 				>
 					<ArrowLeft size={20} strokeWidth={2.5} /> Back to Courses
 				</Link>,
@@ -323,7 +376,9 @@ export default function FortiOSDashboard() {
 			<button
 				type="button"
 				onClick={() => document.getElementById("course-modules")?.scrollIntoView({ behavior: "smooth", block: "start" })}
-				className="flex h-12 items-center gap-2 rounded-full border border-[#e2231a] px-5 text-sm font-bold text-[#d9271e] transition hover:-translate-y-0.5 hover:bg-[#fff4f3] hover:shadow-[0_10px_20px_rgba(226,35,26,0.12)] active:translate-y-0 sm:h-[58px] sm:px-7 sm:text-base"
+				disabled
+				aria-label="View all modules (coming soon)"
+				className="flex h-12 cursor-not-allowed items-center gap-2 rounded-full border border-[#e2231a] px-5 text-sm font-bold text-[#d9271e] opacity-40 sm:h-[58px] sm:px-7 sm:text-base"
 			>
 				View All Modules <ArrowRight size={18} />
 			</button>
@@ -393,7 +448,7 @@ export default function FortiOSDashboard() {
 									className="block w-full rounded-lg pr-7 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e2231a]"
 								>
 									<div className="flex items-center justify-between gap-2">
-										<strong className="truncate text-sm text-[#e2231a]">{profile?.username ?? "Student"}</strong>
+										<strong className="truncate text-sm text-[#e2231a]">{getProfileDisplayName(profile)}</strong>
 										<span className="shrink-0 text-xs font-semibold text-[#7c89a1]">{examCardIndex + 1}/{examCards.length}</span>
 									</div>
 									<p className="mt-0.5 text-sm leading-snug text-[#64708a]">
@@ -867,10 +922,7 @@ export default function FortiOSDashboard() {
 											</button>
 											<button
 												type="button"
-												onClick={() => {
-													setIsExamPickerOpen(false);
-													navigate(examPath, { state: { retakeExam: true } });
-												}}
+												onClick={() => setRetakeExamFormat(selectedExamFormat)}
 												className="rounded-full bg-[#e2231a] px-4 py-3 text-sm font-bold text-white transition hover:bg-[#bd2119]"
 											>
 												Retake Exam
@@ -888,6 +940,52 @@ export default function FortiOSDashboard() {
 								</div>
 							);
 						})()}
+					</section>
+				</div>,
+				document.body,
+			)}
+			{retakeExamFormat && createPortal(
+				<div className="fixed inset-0 z-[120] grid place-items-center bg-[#071126]/60 p-4 backdrop-blur-sm">
+					<section
+						role="alertdialog"
+						aria-modal="true"
+						aria-labelledby="fortios-retake-confirm-title"
+						aria-describedby="fortios-retake-confirm-description"
+						className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl sm:p-8"
+					>
+						<p className="text-sm font-semibold text-[#e2231a]">Fortinet FortiOS practice</p>
+						<h2 id="fortios-retake-confirm-title" className="mt-2 text-xl font-bold text-[#071126] sm:text-2xl">
+							Retake the {FORTIOS_EXAM_FORMAT_DEFINITIONS[retakeExamFormat].name}?
+						</h2>
+						<p id="fortios-retake-confirm-description" className="mt-3 text-sm leading-6 text-[#71819b]">
+							A new attempt will start with a fresh set of questions. Your previous result remains available in your exam history.
+						</p>
+						<div className="mt-6 flex flex-wrap justify-end gap-3">
+							<button
+								type="button"
+								onClick={() => setRetakeExamFormat(null)}
+								className="rounded-full border border-[#efc6c3] px-5 py-3 text-sm font-semibold text-[#526584] transition hover:bg-[#fff8f7]"
+							>
+								Cancel
+							</button>
+							<button
+								type="button"
+								disabled={!canTakeExams}
+								onClick={() => {
+									const examPath = `/modules/programs/fortinet-fortios/exam/${retakeExamFormat}`;
+									setRetakeExamFormat(null);
+									setIsExamPickerOpen(false);
+									navigate(examPath, {
+										state: isOnline
+											? { retakeExam: true }
+											: { startNewOfflineAttempt: true },
+									});
+								}}
+								className="rounded-full bg-[#e2231a] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#bd2119] disabled:cursor-not-allowed disabled:opacity-50"
+							>
+								Yes, retake exam
+							</button>
+						</div>
 					</section>
 				</div>,
 				document.body,

@@ -44,6 +44,9 @@ model Users {
   examAttempts      ExamAttempt[]
   first_name        String       @default("")
   last_name         String       @default("")
+  display_name      String       @default("")
+  username_changed_at     DateTime?
+  display_name_changed_at DateTime?
   birth_date        DateTime     @default(now())
   gender            String?
   city_province     String       @default("")

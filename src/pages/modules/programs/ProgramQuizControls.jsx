@@ -43,8 +43,10 @@ function formatExamTime(totalSeconds) {
 }
 
 export default function ProgramQuizControls({ programKey, basePath, modules, learningProgress, gradebookPath }) {
-	const { profile } = useAuth();
+	const { profile, isOnline, isOfflinePinUnlocked } = useAuth();
 	const userId = profile?.userId;
+	const canTakeExamWithoutAccount = !isOnline && isOfflinePinUnlocked;
+	const canTakeExams = Boolean(userId) || canTakeExamWithoutAccount;
 	const navigate = useNavigate();
 	const [isQuizPickerOpen, setIsQuizPickerOpen] = useState(false);
 	const [isExamPickerOpen, setIsExamPickerOpen] = useState(false);
@@ -101,7 +103,7 @@ export default function ProgramQuizControls({ programKey, basePath, modules, lea
 	function openExamPicker() {
 		setSelectedExamFormat("short");
 		setExamResultsError("");
-		if (examFormats && userId) setExamRuns(getExamRuns(examFormats, userId));
+		if (examFormats) setExamRuns(getExamRuns(examFormats, userId));
 		setIsExamPickerOpen(true);
 	}
 
@@ -197,7 +199,7 @@ export default function ProgramQuizControls({ programKey, basePath, modules, lea
 										)}
 									</div>
 									{examRuns[selectedExamFormat].isActive ? (
-										<button type="button" disabled={!userId} onClick={() => {
+										<button type="button" disabled={!canTakeExams} onClick={() => {
 											setIsExamPickerOpen(false);
 											navigate(`${basePath}/exam/${selectedExamFormat}`);
 										}} className="shrink-0 rounded-full bg-[#005b6b] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#004653] disabled:cursor-not-allowed disabled:opacity-50">
@@ -205,7 +207,7 @@ export default function ProgramQuizControls({ programKey, basePath, modules, lea
 										</button>
 									) : examRuns[selectedExamFormat].result.hasResult ? (
 										<div className="flex flex-wrap gap-2 sm:justify-self-end">
-											<button type="button" disabled={!userId} onClick={() => {
+											<button type="button" disabled={!canTakeExams} onClick={() => {
 												setIsExamPickerOpen(false);
 												const { result } = examRuns[selectedExamFormat];
 												navigate(`${basePath}/exam/${selectedExamFormat}`, {
@@ -214,12 +216,12 @@ export default function ProgramQuizControls({ programKey, basePath, modules, lea
 											}} className="rounded-full border border-[#9fc8ce] px-4 py-3 text-sm font-bold text-[#005b6b] transition hover:bg-[#e8f3f4] disabled:cursor-not-allowed disabled:opacity-50">
 												Review Result
 											</button>
-											<button type="button" disabled={!userId} onClick={() => setRetakeExamFormat(selectedExamFormat)} className="rounded-full bg-[#005b6b] px-4 py-3 text-sm font-bold text-white transition hover:bg-[#004653] disabled:cursor-not-allowed disabled:opacity-50">
+											<button type="button" disabled={!canTakeExams} onClick={() => setRetakeExamFormat(selectedExamFormat)} className="rounded-full bg-[#005b6b] px-4 py-3 text-sm font-bold text-white transition hover:bg-[#004653] disabled:cursor-not-allowed disabled:opacity-50">
 												Retake Exam
 											</button>
 										</div>
 									) : (
-										<button type="button" disabled={!userId} onClick={() => {
+										<button type="button" disabled={!canTakeExams} onClick={() => {
 											setIsExamPickerOpen(false);
 											navigate(`${basePath}/exam/${selectedExamFormat}`);
 										}} className="justify-self-start rounded-full bg-[#005b6b] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#004653] disabled:cursor-not-allowed disabled:opacity-50 sm:justify-self-end">
@@ -242,7 +244,7 @@ export default function ProgramQuizControls({ programKey, basePath, modules, lea
 						<p className="mt-3 text-sm leading-6 text-[#71819b]">A new attempt will start with a fresh set of randomly selected questions. Your previous result will remain saved.</p>
 						<div className="mt-6 flex flex-wrap justify-end gap-3">
 							<button type="button" onClick={() => setRetakeExamFormat(null)} className="rounded-full border border-[#c9dfe2] px-5 py-3 text-sm font-semibold text-[#526584] transition hover:bg-[#f5f9f9]">Cancel</button>
-							<button type="button" disabled={!userId} onClick={() => {
+							<button type="button" disabled={!canTakeExams} onClick={() => {
 								const examKey = retakeExamFormat;
 								setRetakeExamFormat(null);
 								setIsExamPickerOpen(false);

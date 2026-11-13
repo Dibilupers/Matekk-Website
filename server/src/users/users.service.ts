@@ -14,6 +14,9 @@ export type User = {
     course_enrolled?: string[];
     first_name?: string;
     last_name?: string;
+    display_name?: string;
+    username_changed_at?: Date | null;
+    display_name_changed_at?: Date | null;
     birth_date?: Date;
     gender?: string | null;
     city_province?: string;
@@ -135,6 +138,9 @@ export class UsersService {
                 programs_enrolled: true,
                 first_name: true,
                 last_name: true,
+                display_name: true,
+                username_changed_at: true,
+                display_name_changed_at: true,
                 birth_date: true,
                 gender: true,
                 city_province: true,
@@ -172,6 +178,9 @@ export class UsersService {
             ),
             first_name: databaseUser.first_name,
             last_name: databaseUser.last_name,
+            display_name: databaseUser.display_name,
+            username_changed_at: databaseUser.username_changed_at,
+            display_name_changed_at: databaseUser.display_name_changed_at,
             birth_date: databaseUser.birth_date,
             gender: databaseUser.gender,
             city_province: databaseUser.city_province,
@@ -210,6 +219,9 @@ export class UsersService {
             module_enrolled: getEnrolledProgramNames(user.enrollments, user.programs_enrolled),
             first_name: user.first_name,
             last_name: user.last_name,
+            display_name: user.display_name,
+            username_changed_at: user.username_changed_at,
+            display_name_changed_at: user.display_name_changed_at,
             birth_date: user.birth_date,
             gender: user.gender,
             city_province: user.city_province,

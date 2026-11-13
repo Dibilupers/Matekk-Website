@@ -77,7 +77,7 @@ function OptionText({ text, className = "", fortiosOffline = false }) {
 		return <span className={`whitespace-pre-wrap ${className}`}>{text}</span>;
 	}
 	return (
-		<code className={`block min-w-0 w-full max-w-full flex-1 overflow-x-hidden break-words whitespace-pre-wrap rounded-lg bg-[#f1f5f9] px-2 py-1.5 font-mono text-xs leading-5 text-[#0f1b2d] [overflow-wrap:anywhere] sm:px-3 sm:py-2 sm:text-sm sm:leading-6 ${className}`}>
+		<code className={`ccna-answer-code block min-w-0 w-full max-w-full flex-1 overflow-x-hidden break-words whitespace-pre-wrap rounded-lg bg-[#f1f5f9] px-2 py-1.5 font-mono text-xs leading-5 text-[#0f1b2d] [overflow-wrap:anywhere] sm:px-3 sm:py-2 sm:text-sm sm:leading-6 ${className}`}>
 			{splitCliLines(text)}
 		</code>
 	);
@@ -317,27 +317,27 @@ function GroupMatchInput({ question, value, onChange, disabled }) {
 			<div className="grid gap-4 sm:grid-cols-2">
 				<ol className="space-y-2">
 					{question.items.map((item, itemIndex) => (
-						<li key={itemIndex} className="flex items-start gap-3 rounded-xl border border-[#cfe0f5] bg-[#eef5fe] px-3 py-2.5">
+						<li key={itemIndex} className="ccna-group-match-item flex items-start gap-3 rounded-xl border border-[#cfe0f5] bg-[#eef5fe] px-3 py-2.5">
 							<span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#1d4ed8] text-sm font-bold text-white">{itemIndex + 1}</span>
-							<span className="text-sm font-semibold whitespace-pre-wrap text-[#263654] sm:text-[15px]">{item}</span>
+							<span className="ccna-group-match-item-text text-sm font-semibold whitespace-pre-wrap text-[#263654] sm:text-[15px]">{item}</span>
 						</li>
 					))}
 				</ol>
 				<div className="space-y-3">
 					{question.choices.map((choice, choiceIndex) => (
-						<div key={choiceIndex} className="overflow-hidden rounded-xl border border-[#e6d9a8]">
-							<div className="bg-[#fdf8dc] px-3 py-2 text-center text-sm font-semibold text-[#5b4d12]">{choice}</div>
+						<div key={choiceIndex} className="ccna-group-match-box overflow-hidden rounded-xl border border-[#e6d9a8]">
+							<div className="ccna-group-match-box-title bg-[#fdf8dc] px-3 py-2 text-center text-sm font-semibold text-[#5b4d12]">{choice}</div>
 							{Array.from({ length: sizes[choiceIndex] }).map((_, k) => (
-								<div key={k} className="h-7 border-t border-[#f1d4d4] bg-[#fbe7e7]" aria-hidden="true" />
+								<div key={k} className="ccna-group-match-slot h-7 border-t border-[#f1d4d4] bg-[#fbe7e7]" aria-hidden="true" />
 							))}
 						</div>
 					))}
 				</div>
 			</div>
 			<label className="block">
-				<span className="block text-sm text-[#526584]">
+				<span className="ccna-group-match-instructions block text-sm text-[#526584]">
 					Type the item numbers for each box in order from top to bottom, with each box's numbers in ascending order.
-					For example, <strong className="font-mono text-[#263654]">{example}</strong> would mean {exampleMeaning}.
+					For example, <strong className="ccna-group-match-instructions-example font-mono text-[#263654]">{example}</strong> would mean {exampleMeaning}.
 				</span>
 				<input
 					type="text"
@@ -376,7 +376,7 @@ function GroupMatchInput({ question, value, onChange, disabled }) {
 					}}
 					placeholder={"e.g. " + example}
 					aria-label="Your answer (item numbers)"
-					className="mt-2 w-48 rounded-xl border border-[#c9dfe2] bg-white px-3 py-2 font-mono text-lg tracking-[0.3em] text-[#005b6b] outline-none focus:border-[#005b6b] focus:ring-2 focus:ring-[#cfe7ea] disabled:cursor-default disabled:bg-[#f5f9f9]"
+					className="ccna-group-match-code mt-2 w-48 rounded-xl border border-[#c9dfe2] bg-white px-3 py-2 font-mono text-lg tracking-[0.3em] text-[#005b6b] outline-none focus:border-[#005b6b] focus:ring-2 focus:ring-[#cfe7ea] disabled:cursor-default disabled:bg-[#f5f9f9]"
 				/>
 				{error && (
 					<span
@@ -405,7 +405,7 @@ function AnswerOptionContent({ option, codeStyle = false, plainText = false }) {
 	const formattedText = text.replace(/(?<=\S)[ \t]{3,}(?=\S)/g, "\n");
 
 	return (
-		<pre className="min-w-0 flex-1 overflow-x-hidden rounded-lg border border-[#d9e1ef] bg-[#f1f5f9] px-2 py-1.5 font-mono text-xs leading-5 text-[#263654] whitespace-pre-wrap break-words [overflow-wrap:anywhere] sm:px-3 sm:py-2 sm:text-sm">
+		<pre className="ccna-answer-code min-w-0 flex-1 overflow-x-hidden rounded-lg border border-[#d9e1ef] bg-[#f1f5f9] px-2 py-1.5 font-mono text-xs leading-5 text-[#263654] whitespace-pre-wrap break-words [overflow-wrap:anywhere] sm:px-3 sm:py-2 sm:text-sm">
 			<code>{formattedText}</code>
 		</pre>
 	);
@@ -444,7 +444,15 @@ function InvalidQuestionMessage() {
 }
 
 // imageUrl: the question's picture, for pages that don't show it themselves (the exam page shows it separately)
-export function QuestionPrompt({ prompt, imageUrl, hasSeparateExhibit = Boolean(imageUrl), offline = false, regularWeight = false, fortiosOffline = false }) {
+export function QuestionPrompt({
+	prompt,
+	imageUrl,
+	hideExhibitImage = false,
+	hasSeparateExhibit = Boolean(imageUrl),
+	offline = false,
+	regularWeight = false,
+	fortiosOffline = false,
+}) {
 	const rawPrompt = String(prompt ?? "");
 	const readablePrompt = offline ? rawPrompt
 		.replace(/\r\n/g, "\n")
@@ -467,7 +475,7 @@ export function QuestionPrompt({ prompt, imageUrl, hasSeparateExhibit = Boolean(
 		return (
 			<div className="mb-5 space-y-4 sm:mb-6">
 				<PromptText text={optionTable.prompt} offline={offline} regularWeight={regularWeight || offline} fortiosOffline={fortiosOffline} />
-				{imageUrl && <ExhibitImage src={imageUrl} lazy imageClassName="max-h-[32rem]" />}
+				{imageUrl && !hideExhibitImage && <ExhibitImage src={imageUrl} lazy imageClassName="max-h-[32rem]" />}
 				<ExhibitText text={optionTable.exhibit} />
 			</div>
 		);
@@ -500,13 +508,13 @@ export function QuestionPrompt({ prompt, imageUrl, hasSeparateExhibit = Boolean(
 	return (
 		<div className="mb-5 space-y-4 sm:mb-6">
 			<PromptText text={promptText} offline={offline} regularWeight={regularWeight || offline} fortiosOffline={fortiosOffline} />
-			{imageUrl && <ExhibitImage src={imageUrl} lazy imageClassName="max-h-[32rem]" />}
+			{imageUrl && !hideExhibitImage && <ExhibitImage src={imageUrl} lazy imageClassName="max-h-[32rem]" />}
 			{exhibit && (
-				<section aria-label={exhibitTitle} className="overflow-hidden rounded-xl border border-[#d9e1ef] bg-[#f7f9fc]">
-					<p className="border-b border-[#d9e1ef] px-4 py-2 text-xs font-bold uppercase tracking-wide text-[#526584]">
+				<section aria-label={exhibitTitle} className="ccna-prompt-exhibit overflow-hidden rounded-xl border border-[#d9e1ef] bg-[#f7f9fc]">
+					<p className="ccna-prompt-exhibit-title border-b border-[#d9e1ef] px-4 py-2 text-xs font-bold uppercase tracking-wide text-[#526584]">
 						{exhibitTitle}
 					</p>
-					<pre className="overflow-x-hidden whitespace-pre-wrap break-words px-4 py-3 font-mono text-xs leading-6 text-[#263654] [overflow-wrap:anywhere] sm:text-sm">
+					<pre className="ccna-prompt-exhibit-output overflow-x-hidden whitespace-pre-wrap break-words px-4 py-3 font-mono text-xs leading-6 text-[#263654] [overflow-wrap:anywhere] sm:text-sm">
 						{exhibit}
 					</pre>
 				</section>

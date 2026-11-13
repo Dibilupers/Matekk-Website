@@ -1,13 +1,14 @@
 // Exams for the CCNA Automation and CCNA Cybersecurity programs (jhonard, d9128cd).
 // Their questions come from each program's module quizzes and are graded in the browser;
 // the CCNA exam itself uses ccnaCompositeExam.jsx, which is built and graded by the backend.
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ArrowLeft, ArrowRight, ArrowUp, Clock3, Flag, Moon, RotateCcw, Sun, X } from "lucide-react";
 import { Link, Navigate, useBlocker, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../../../../context/auth-context";
 import ExplanationWithLinks from "../../../../../components/ExplanationWithLinks";
 import TrainingLogo from "../../../../../assets/MATEKK_training_logo.png";
+import ExamBrand from "../../../../../components/ExamBrand";
 import { CCNA_EXAMS } from "./ccnaExamFormats";
 import { createCcnaMockExamAttemptId, saveCcnaMockExamResult } from "../../../../../utils/ccnaGradebook";
 import { getCcnaExamSessionKey } from "../../../../../utils/ccnaShortExamSession";
@@ -19,6 +20,7 @@ import { ExhibitImage, ExhibitText } from "./ccnaExhibit";
 import { loadCcnaQuestionBank } from "../../../../../utils/ccnaQuestionBankApi";
 import { setDatabaseQuestions } from "./ccnaQuestionBank";
 import { getProgramExamFormats } from "../../programExamFormats";
+import { getOfflineExamSessionKeys } from "../../../../../utils/offlineExamSession";
 
 
 
@@ -43,10 +45,12 @@ function createExamSession(exam) {
 	};
 }
 
-function restoreExamSession(exam, sessionStorageKey) {
+function restoreExamSession(exam, sessionStorageKey, offlineStorageKeys = []) {
 	const createSession = () => createExamSession(exam);
-	if (!sessionStorageKey || typeof window === "undefined") return createSession();
-	const savedSession = window.sessionStorage.getItem(sessionStorageKey);
+	if (typeof window === "undefined") return createSession();
+	const savedSession = offlineStorageKeys
+		.map((key) => window.localStorage.getItem(key))
+		.find(Boolean) ?? (sessionStorageKey ? window.sessionStorage.getItem(sessionStorageKey) : null);
 	if (!savedSession) return createSession();
 
 	try {
@@ -104,7 +108,8 @@ function restoreExamSession(exam, sessionStorageKey) {
 		};
 	} catch (error) {
 		console.error(`Unable to restore the saved ${exam.name} session.`, error);
-		window.sessionStorage.removeItem(sessionStorageKey);
+		offlineStorageKeys.forEach((key) => window.localStorage.removeItem(key));
+		if (sessionStorageKey) window.sessionStorage.removeItem(sessionStorageKey);
 		return createSession();
 	}
 }
@@ -115,7 +120,7 @@ function formatTime(totalSeconds) {
 	return `${minutes}:${seconds}`;
 }
 
-function CCNACompositeExamPage({ examKey = "short", programKey = null, examFormats = null, theme = "ccna", omitSessionQuestionImages = false }) {
+function CCNACompositeExamPage({ examKey = "short", programKey = null, examFormats = null, theme = "ccna", omitSessionQuestionImages = false, persistOfflineSession = false }) {
 	const exam = examFormats?.[examKey] ?? (programKey ? getProgramExamFormats(programKey)?.[examKey] : CCNA_EXAMS[examKey]);
 	if (!exam) throw new Error(`No exam is configured for ${programKey ?? "CCNA"} format "${examKey}".`);
 	const programName = exam.programName ?? "CCNA";
@@ -135,8 +140,14 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 	const sessionStorageKey = userId === null || userId === undefined
 		? null
 		: getCcnaExamSessionKey(exam.sessionKey, userId);
+	const offlineStorageKeys = useMemo(
+		() => persistOfflineSession && programKey
+			? getOfflineExamSessionKeys(programKey, examKey, userId)
+			: [],
+		[examKey, persistOfflineSession, programKey, userId],
+	);
 	const [initialSession] = useState(() =>
-		shouldStartNewAttempt ? createExamSession(exam) : restoreExamSession(exam, sessionStorageKey),
+		shouldStartNewAttempt ? createExamSession(exam) : restoreExamSession(exam, sessionStorageKey, offlineStorageKeys),
 	);
 	const hasLinkedExamResult = shouldShowExamResult &&
 		Number.isFinite(linkedExamResult?.score) &&
@@ -229,7 +240,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 	}, [location.pathname, navigate, shouldStartNewAttempt]);
 
 	useEffect(() => {
-		if (isViewingSavedResult || !sessionStorageKey) return;
+		if (isViewingSavedResult || (!sessionStorageKey && offlineStorageKeys.length === 0)) return;
 		const session = {
 			attemptId,
 			submittedAt,
@@ -245,12 +256,12 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 			isSubmitted,
 		};
 		try {
-			window.sessionStorage.setItem(sessionStorageKey, JSON.stringify(session));
+			if (sessionStorageKey) window.sessionStorage.setItem(sessionStorageKey, JSON.stringify(session));
+			offlineStorageKeys.forEach((key) => window.localStorage.setItem(key, JSON.stringify(session)));
 		} catch (error) {
-			if (!omitSessionQuestionImages) throw error;
-			console.warn("Unable to save the offline Security+ exam session because browser storage is full.", error);
+			console.error(`Unable to save the ${exam.name} session.`, error);
 		}
-	}, [answers, attemptId, currentIndex, deadline, isSubmitted, isViewingSavedResult, lockedQuestions, omitSessionQuestionImages, questions, sessionStorageKey, submittedAt]);
+	}, [answers, attemptId, currentIndex, deadline, exam.name, isSubmitted, isViewingSavedResult, lockedQuestions, offlineStorageKeys, omitSessionQuestionImages, questions, sessionStorageKey, submittedAt]);
 
 	useEffect(() => {
 		if (programKey || !isSubmitted || isViewingSavedResult || !userId || !Number.isFinite(submittedAt)) return;
@@ -489,9 +500,13 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 				)}
 				<header className="mb-7 flex flex-wrap items-center justify-between gap-4 border-b border-[#d6e5e7] pb-5">
 					<div className="flex min-w-0 items-center gap-4">
-						<Link to={dashboardPath} aria-label={`Back to ${programName} course`} className="ccna-training-logo shrink-0 rounded-lg bg-white px-3 py-2 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 motion-reduce:transition-none">
-							<img src={TrainingLogo} alt="MATEKK Cybercore Academy" className="h-auto w-32 sm:w-36" />
-						</Link>
+						{isOnline ? (
+							<Link to={dashboardPath} aria-label={`Back to ${programName} course`} className="ccna-training-logo shrink-0 rounded-lg bg-white px-3 py-2 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 motion-reduce:transition-none">
+								<img src={TrainingLogo} alt="MATEKK Cybercore Academy" className="h-auto w-32 sm:w-36" />
+							</Link>
+						) : (
+							<ExamBrand to={dashboardPath} isDark={isDark} />
+						)}
 						<div className="hidden min-w-0 border-l border-[#cbd5e1] pl-4 sm:block">
 							<p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#70809a]">{programName} exam</p>
 							<p className="mt-1 truncate text-sm font-bold text-[#17233d]">{exam.name} · {exam.subtitle}</p>
@@ -547,12 +562,12 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 								aria-valuemax={questions.length}
 								aria-valuenow={answeredCount}
 								aria-valuetext={`${answeredCount} of ${questions.length} answered, ${answeredPercentage}%`}
-								className="mt-3 h-2 overflow-hidden rounded-full bg-[#e7e7e7]"
+								className={`exam-progress-track mt-3 h-2 overflow-hidden rounded-full ${isDark ? "bg-[#303a60]" : "bg-[#e7e7e7]"}`}
 							>
-								<div className="h-full rounded-full bg-[#159b73] transition-[width]" style={{ width: `${answeredPercentage}%` }} />
+								<div className={`exam-progress-fill h-full rounded-full transition-[width] ${isDark ? "bg-[#20c5d6] shadow-[0_0_10px_rgba(32,197,214,0.55)]" : "bg-[#159b73]"}`} style={{ width: `${answeredPercentage}%` }} />
 							</div>
-							<div className="mt-4 flex flex-wrap gap-2.5 text-sm text-[#526584]">
-								<span className="rounded-xl bg-[#f8fafb] px-3 py-2">{answeredCount} answered</span>
+							<div className={`mt-4 flex flex-wrap gap-2.5 text-sm ${isDark ? "text-[#cbd5e1]" : "text-[#526584]"}`}>
+								<span className={`exam-progress-badge rounded-xl px-3 py-2 ${isDark ? "bg-[#1b2947]" : "bg-[#f8fafb]"}`}>{answeredCount} answered</span>
 								<button
 									type="button"
 									onClick={() => setFlaggedQuestions((previous) => ({
@@ -561,15 +576,15 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 									}))}
 									aria-label={`${flaggedQuestions[currentIndex] ? "Unflag" : "Flag"} question ${currentIndex + 1}; ${flaggedCount} flagged`}
 									aria-pressed={Boolean(flaggedQuestions[currentIndex])}
-									className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 transition ${flaggedQuestions[currentIndex]
-										? "bg-[#fff1d6] text-[#8a5200]"
-										: "bg-[#f8fafb] hover:bg-[#eef3f5]"
-										}`}
+									className={`exam-progress-badge inline-flex items-center gap-2 rounded-xl px-3 py-2 transition ${flaggedQuestions[currentIndex]
+										? isDark ? "bg-[#42291f] text-[#ffc28e]" : "bg-[#fff1d6] text-[#8a5200]"
+										: isDark ? "bg-[#1b2947] hover:bg-[#263654]" : "bg-[#f8fafb] hover:bg-[#eef3f5]"
+										} ${flaggedQuestions[currentIndex] ? "exam-progress-flagged" : ""}`}
 								>
 									<Flag size={15} fill={flaggedQuestions[currentIndex] ? "currentColor" : "none"} />
 									{flaggedCount} flagged
 								</button>
-								<span className="rounded-xl bg-[#f8fafb] px-3 py-2">{unansweredCount} left</span>
+								<span className={`exam-progress-badge rounded-xl px-3 py-2 ${isDark ? "bg-[#1b2947]" : "bg-[#f8fafb]"}`}>{unansweredCount} left</span>
 							</div>
 						</section>
 
@@ -582,6 +597,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 								<QuestionPrompt
 									prompt={question.prompt}
 									imageUrl={question.exhibitImage || question.imageUrl}
+									hideExhibitImage={question.hideExhibitImage}
 									hasSeparateExhibit={Boolean(question.exhibit || question.exhibitImage || question.imageUrl)}
 									regularWeight={isCompTIAExam && !isOnline}
 								/>
@@ -643,7 +659,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 										<RotateCcw size={16} /> Retake Exam
 									</button>
 									{!isViewingSavedResult && (
-										<button type="button" onClick={reviewAnswers} className="inline-flex items-center gap-2 rounded-full border border-[#9fc8ce] px-6 py-3 font-semibold text-[#005b6b] transition-all duration-200 ease-out hover:scale-105 hover:bg-[#e8f3f4] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100">
+										<button type="button" onClick={reviewAnswers} className="ccna-result-review-button inline-flex items-center gap-2 rounded-full border border-[#9fc8ce] px-6 py-3 font-semibold text-[#005b6b] transition-all duration-200 ease-out hover:scale-105 hover:bg-[#e8f3f4] active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100">
 											Review Answers <ArrowLeft className="rotate-[-90deg]" size={16} />
 										</button>
 									)}
@@ -748,7 +764,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 												>
 													{item.prompt}
 												</h3>
-												{item.exhibitImage && (
+												{item.exhibitImage && !item.hideExhibitImage && (
 													<ExhibitImage src={item.exhibitImage} lazy className="mt-4" imageClassName="max-h-[26rem]" />
 												)}
 												{item.exhibit && (
@@ -835,7 +851,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 				document.body,
 			)}
 			{blocker.state === "blocked" && createPortal(
-				<div data-theme="light" className={`fixed inset-0 z-[120] grid place-items-center overflow-y-auto bg-[#071126]/55 p-4 backdrop-blur-[2px] sm:p-6 ${isCompTIAExam ? "comptia-exam-dialog" : ""} ${isFortinetExam ? "fortinet-exam-dialog" : ""}`}>
+				<div data-theme={isDark ? "dark" : "light"} className={`fixed inset-0 z-[120] grid place-items-center overflow-y-auto bg-[#071126]/55 p-4 backdrop-blur-[2px] sm:p-6 ${isCompTIAExam ? "comptia-exam-dialog" : ""} ${isFortinetExam ? "fortinet-exam-dialog" : ""}`}>
 					<section
 						role="alertdialog"
 						aria-modal="true"
@@ -848,6 +864,20 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 						<p id="ccna-short-exam-exit-description" className="mt-3 text-sm leading-6 text-[#64748b] sm:text-base">
 							Your answers and time remaining will be saved. The timer will keep running while you are away.
 						</p>
+						{(isCompTIAExam || isFortinetExam || programKey === "ccna-automation" || programKey === "ccna-cybersecurity") && exam.durationSeconds !== null && (
+							<div className={`mt-5 flex items-center justify-between rounded-xl border px-4 py-3 ${isDark ? "border-[#303a60] bg-[#10172f]" : isCompTIAExam ? "border-[#f1cbd2] bg-[#fff9fa]" : isFortinetExam ? "border-[#f1d3d0] bg-[#fff8f7]" : "border-[#c9dfe2] bg-[#f5f9f9]"}`}>
+								<span className={`inline-flex items-center gap-2 text-sm font-semibold ${isDark ? "text-[#e0e5f3]" : "text-[#526584]"}`}>
+									<Clock3 size={16} /> Time remaining
+								</span>
+								<span
+									role="timer"
+									aria-label={`${formatTime(secondsRemaining)} remaining`}
+									className={`text-lg font-bold tabular-nums ${secondsRemaining <= 300 ? "text-[#a44b13]" : isCompTIAExam ? "text-[#c8102e]" : isFortinetExam ? "text-[#e2231a]" : "text-[#005b6b]"}`}
+								>
+									{formatTime(secondsRemaining)}
+								</span>
+							</div>
+						)}
 						<div className="mt-6 flex flex-wrap justify-end gap-3">
 							<button type="button" onClick={() => blocker.reset()} className="ccna-modal-stay rounded-full border border-[#c9dfe2] px-4 py-2.5 text-sm font-semibold text-[#42516b] transition hover:bg-[#f5f9f9] sm:px-5">
 								Stay in exam

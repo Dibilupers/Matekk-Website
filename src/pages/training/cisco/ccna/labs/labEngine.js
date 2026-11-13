@@ -18,10 +18,37 @@ export const prefixLen = (m) => ipToInt(m).toString(2).replace(/0/g, "").length;
 export const networkOf = (ip, mask) => intToIp((ipToInt(ip) & ipToInt(mask)) >>> 0);
 export const sameSubnet = (a, b, mask) => networkOf(a, mask) === networkOf(b, mask);
 
+function parseIpv6(value) {
+	const [address, prefixText, ...extra] = value.trim().toLowerCase().split("/");
+	if (!address || extra.length || (prefixText !== undefined && !/^\d{1,3}$/.test(prefixText))) return null;
+	const prefix = prefixText === undefined ? 128 : Number(prefixText);
+	if (prefix > 128) return null;
+	const halves = address.split("::");
+	if (halves.length > 2) return null;
+	const left = halves[0] ? halves[0].split(":") : [];
+	const right = halves.length === 2 && halves[1] ? halves[1].split(":") : [];
+	const groups = [...left, ...right];
+	if (groups.some((group) => !/^[\da-f]{1,4}$/.test(group))) return null;
+	const missing = 8 - groups.length;
+	if ((halves.length === 1 && missing !== 0) || (halves.length === 2 && missing < 1)) return null;
+	const expanded = [...left, ...Array(missing).fill("0"), ...right].map((group) => Number.parseInt(group, 16));
+	const addressValue = expanded.reduce((result, group) => (result << 16n) | BigInt(group), 0n);
+	return { address: expanded.map((group) => group.toString(16)).join(":"), addressValue, prefix };
+}
+
+export const isIpv6 = (address) => typeof address === "string" && parseIpv6(address) !== null;
+
+function sameIpv6Subnet(left, right, prefix = left.prefix) {
+	if (!left || !right) return false;
+	const shift = BigInt(128 - prefix);
+	return (left.addressValue >> shift) === (right.addressValue >> shift);
+}
+
 const FULL_NAME = (ifName) => {
 	if (ifName.startsWith("g")) return `GigabitEthernet${ifName.slice(1)}`;
 	if (ifName.startsWith("lo")) return `Loopback${ifName.slice(2)}`;
 	if (ifName.startsWith("fa")) return `FastEthernet${ifName.slice(2)}`;
+	if (ifName.startsWith("e")) return `Ethernet${ifName.slice(1)}`;
 	return ifName;
 };
 export const fullIfName = FULL_NAME;
@@ -33,20 +60,38 @@ export function createLabState(lab) {
 		d.routes = d.routes || [];
 		d.secret = d.secret || "";
 		d.startup = null;
+		if (d.kind === "switch") {
+			d.vlans = d.vlans || {};
+			d.lldpEnabled = Boolean(d.lldpEnabled);
+		}
 		for (const i of Object.values(d.interfaces)) {
 			i.ip = i.ip || "";
 			i.mask = i.mask || "";
+			i.ipv6 = i.ipv6 || "";
 			i.up = d.kind === "pc" || d.kind === "switch" ? true : Boolean(i.up);
 			i.desc = i.desc || "";
+			if (d.kind === "switch") {
+				i.switchportMode = i.switchportMode || "dynamic";
+				i.trunkNativeVlan = i.trunkNativeVlan ?? 1;
+				i.cdpEnabled = i.cdpEnabled !== false;
+				i.lldpTransmit = Boolean(i.lldpTransmit);
+				i.lldpReceive = Boolean(i.lldpReceive);
+			}
 		}
 	}
 	const consoles = {};
-	for (const name of lab.editable) consoles[name] = { mode: "user", iface: null };
+	for (const name of lab.editable) consoles[name] = { mode: "user", iface: null, ifaces: null };
 	return { devices, consoles, initial: Object.fromEntries(lab.editable.map((n) => [n, signature(devices[n])])) };
 }
 
 export function signature(d) {
-	return JSON.stringify({ h: d.hostname, s: d.secret, i: d.interfaces, r: d.routes });
+	return JSON.stringify({
+		h: d.hostname,
+		s: d.secret,
+		i: d.interfaces,
+		r: d.routes,
+		...(d.kind === "switch" ? { v: d.vlans, l: d.lldpEnabled } : {}),
+	});
 }
 
 export const isSaved = (state, name) => {
@@ -188,14 +233,55 @@ export function canReach(lab, state, fromDev, dstIp) {
 	return forward(lab, state, go.dev, srcIp).ok;
 }
 
+export function canReachIpv6(lab, state, fromDev, dstAddress) {
+	const destination = parseIpv6(dstAddress);
+	if (!destination) return false;
+	const device = state.devices[fromDev];
+	return Object.entries(device.interfaces).some(([ifName, intf]) => {
+		if (!intf.ipv6 || !ifaceUp(lab, state, fromDev, ifName)) return false;
+		const source = parseIpv6(intf.ipv6);
+		const peer = peerOf(lab, fromDev, ifName);
+		const peerInterface = peer && state.devices[peer.dev]?.interfaces[peer.ifName];
+		const peerAddress = peerInterface?.ipv6 && parseIpv6(peerInterface.ipv6);
+		return source && peerAddress && peerAddress.address === destination.address &&
+			sameIpv6Subnet(source, destination) && sameIpv6Subnet(peerAddress, source) &&
+			ifaceUp(lab, state, peer.dev, peer.ifName);
+	});
+}
+
 // ---------- show commands ----------
 export function runningConfig(d) {
 	const lines = ["Building configuration...", "", "Current configuration : 1342 bytes", "!", "version 15.4", "!", `hostname ${d.hostname}`, "!"];
 	if (d.secret) lines.push("enable secret 5 $1$mERr$hx5rVt7rPNoS4wqbXKX7m0", "!");
+	if (d.kind === "switch") {
+		if (d.lldpEnabled) lines.push("lldp run", "!");
+		for (const [vlanId, name] of Object.entries(d.vlans).sort(([left], [right]) => Number(left) - Number(right))) {
+			lines.push(`vlan ${vlanId}`);
+			if (name) lines.push(` name ${name}`);
+			lines.push("!");
+		}
+		for (const [ifName, i] of Object.entries(d.interfaces)) {
+			lines.push(`interface ${FULL_NAME(ifName)}`);
+			if (i.switchportMode === "trunk") lines.push(" switchport trunk encapsulation dot1q");
+			if (i.switchportMode !== "dynamic") lines.push(` switchport mode ${i.switchportMode}`);
+			if (i.accessVlan !== undefined) lines.push(` switchport access vlan ${i.accessVlan}`);
+			if (i.voiceVlan !== undefined) lines.push(` switchport voice vlan ${i.voiceVlan}`);
+			if (i.trunkAllowedVlans) lines.push(` switchport trunk allowed vlan ${i.trunkAllowedVlans.join(",")}`);
+			if (i.trunkNativeVlan !== 1) lines.push(` switchport trunk native vlan ${i.trunkNativeVlan}`);
+			if (i.portChannel !== undefined) lines.push(` channel-group ${i.portChannel} mode ${i.lacpMode}`);
+			if (i.lldpTransmit) lines.push(" lldp transmit");
+			if (i.lldpReceive) lines.push(" lldp receive");
+			if (!i.cdpEnabled) lines.push(" no cdp enable");
+			lines.push("!");
+		}
+		lines.push("line con 0", "line vty 0 4", " login", "!", "end");
+		return lines;
+	}
 	for (const [ifName, i] of Object.entries(d.interfaces)) {
 		lines.push(`interface ${FULL_NAME(ifName)}`);
 		if (i.desc) lines.push(` description ${i.desc}`);
 		lines.push(i.ip ? ` ip address ${i.ip} ${i.mask}` : " no ip address");
+		if (i.ipv6) lines.push(` ipv6 address ${i.ipv6}`);
 		if (!i.up && !ifName.startsWith("lo")) lines.push(" shutdown");
 		lines.push("!");
 	}
@@ -212,9 +298,38 @@ export function configCommands(d) {
 		return [`IP address ${i.ip}`, `Subnet mask ${i.mask}`, `Default gateway ${d.gateway}`];
 	}
 	const out = ["enable", "configure terminal", `hostname ${d.hostname}`];
+	if (d.kind === "switch") {
+		for (const [vlanId, name] of Object.entries(d.vlans ?? {}).sort(([left], [right]) => Number(left) - Number(right))) {
+			out.push(`vlan ${vlanId}`);
+			if (name) out.push(` name ${name}`);
+			out.push("exit");
+		}
+		if (d.lldpEnabled) out.push("lldp run");
+		for (const [ifName, intf] of Object.entries(d.interfaces)) {
+			out.push(`interface ${ifName}`);
+			if (intf.switchportMode === "trunk") {
+				out.push(" switchport trunk encapsulation dot1q", " switchport mode trunk");
+			} else if (intf.switchportMode === "access") {
+				out.push(" switchport mode access");
+			}
+			if (intf.accessVlan !== undefined) out.push(` switchport access vlan ${intf.accessVlan}`);
+			if (intf.voiceVlan !== undefined) out.push(` switchport voice vlan ${intf.voiceVlan}`);
+			if (intf.trunkAllowedVlans) out.push(` switchport trunk allowed vlan ${intf.trunkAllowedVlans.join(",")}`);
+			if (intf.trunkNativeVlan !== undefined && intf.trunkNativeVlan !== 1) out.push(` switchport trunk native vlan ${intf.trunkNativeVlan}`);
+			if (intf.portChannel !== undefined) out.push(` channel-group ${intf.portChannel} mode ${intf.lacpMode}`);
+			if (intf.lldpTransmit) out.push(" lldp transmit");
+			if (intf.lldpReceive) out.push(" lldp receive");
+			if (!intf.cdpEnabled) out.push(" no cdp enable");
+			out.push("exit");
+		}
+		out.push("end");
+		return out;
+	}
 	for (const [ifName, i] of Object.entries(d.interfaces)) {
-		if (!i.ip) continue;
-		out.push(`interface ${ifName}`, ` ip address ${i.ip} ${i.mask}`);
+		if (!i.ip && !i.ipv6) continue;
+		out.push(`interface ${ifName}`);
+		if (i.ip) out.push(` ip address ${i.ip} ${i.mask}`);
+		if (i.ipv6) out.push(` ipv6 address ${i.ipv6}`);
 		if (i.up || ifName.startsWith("lo")) out.push(" no shutdown");
 	}
 	out.push("exit");
@@ -252,18 +367,34 @@ const kw = (token, word, min = 1) => !!token && token.length >= min && word.star
 
 function parseIface(tokens, device) {
 	const joined = tokens.join("").toLowerCase();
-	let m = joined.match(/^g(?:i(?:g(?:a(?:b(?:i(?:t(?:e(?:t(?:h(?:e(?:r(?:n(?:e(?:t)?)?)?)?)?)?)?)?)?)?)?)?)?)?0\/(\d)$/);
+	let m;
+	m = joined.match(/^e(?:t(?:h(?:e(?:r(?:n(?:e(?:t)?)?)?)?)?)?)?0\/(\d)$/);
+	if (m && device.interfaces[`e0/${m[1]}`]) return `e0/${m[1]}`;
+	m = joined.match(/^g(?:i(?:g(?:a(?:b(?:i(?:t(?:e(?:t(?:h(?:e(?:r(?:n(?:e(?:t)?)?)?)?)?)?)?)?)?)?)?)?)?)?0\/(\d)$/);
 	if (m && device.interfaces[`g0/${m[1]}`]) return `g0/${m[1]}`;
 	m = joined.match(/^lo(?:o(?:p(?:b(?:a(?:c(?:k)?)?)?)?)?)?(\d)$/);
 	if (m && device.interfaces[`lo${m[1]}`]) return `lo${m[1]}`;
 	return null;
 }
 
+function parseIfaceRange(tokens, device) {
+	const input = tokens.join("").toLowerCase();
+	const match = input.match(/^(e0\/\d+)-(\d+)$/);
+	if (!match) return null;
+	const first = Number(match[1].slice(match[1].lastIndexOf("/") + 1));
+	const last = Number(match[2]);
+	if (last < first) return null;
+	const interfaces = Array.from({ length: last - first + 1 }, (_, index) => `e0/${first + index}`);
+	return interfaces.every((name) => device.interfaces[name]) ? interfaces : null;
+}
+
 const HELP = {
 	user: ["enable           Turn on privileged commands", "ping             Send echo messages", "show             Show running system information", "traceroute       Trace route to destination"],
 	priv: ["configure        Enter configuration mode", "copy             Copy from one file to another", "disable          Turn off privileged commands", "ping             Send echo messages", "show             Show running system information", "traceroute       Trace route to destination", "write            Write running configuration to memory"],
-	config: ["do               Run an exec-level command", "enable           Modify enable password parameters", "end              Exit to privileged mode", "exit             Exit from configure mode", "hostname         Set system's network name", "interface        Select an interface to configure", "ip               Global IP configuration subcommands (ip route)", "no               Negate a command"],
-	"config-if": ["description      Interface specific description", "do               Run an exec-level command", "end              Exit to privileged mode", "exit             Exit from interface configuration mode", "ip               Interface IP config commands (ip address)", "no               Negate a command", "shutdown         Shutdown the selected interface"],
+	config: ["do               Run an exec-level command", "enable           Modify enable password parameters", "end              Exit to privileged mode", "exit             Exit from configure mode", "hostname         Set system's network name", "interface        Select an interface or interface range", "ip               Global IP configuration subcommands (ip route)", "lldp             Global LLDP configuration", "no               Negate a command", "vlan             Configure a VLAN"],
+	"config-if": ["channel-group    Configure LACP EtherChannel", "description      Interface specific description", "do               Run an exec-level command", "end              Exit to privileged mode", "exit             Exit from interface configuration mode", "ip               Interface IP config commands (ip address)", "ipv6             IPv6 interface configuration", "lldp             Configure LLDP on the interface", "no               Negate a command", "shutdown         Shutdown the selected interface", "switchport       Configure switch port mode and VLANs"],
+	"config-if-range": ["channel-group    Configure LACP EtherChannel", "description      Interface specific description", "do               Run an exec-level command", "end              Exit to privileged mode", "exit             Exit from interface configuration mode", "lldp             Configure LLDP on the interface range", "no               Negate a command", "switchport       Configure switch port mode and VLANs"],
+	"config-vlan": ["end              Exit to privileged mode", "exit             Exit from VLAN configuration mode", "name             Assign a name to the VLAN"],
 };
 
 function tokenStart(line, tokenIndex) {
@@ -280,7 +411,14 @@ function tokenStart(line, tokenIndex) {
 export function promptFor(state, devName) {
 	const h = state.devices[devName].hostname;
 	const mode = state.consoles[devName].mode;
-	return { user: `${h}>`, priv: `${h}#`, config: `${h}(config)#`, "config-if": `${h}(config-if)#` }[mode];
+	return {
+		user: `${h}>`,
+		priv: `${h}#`,
+		config: `${h}(config)#`,
+		"config-if": `${h}(config-if)#`,
+		"config-if-range": `${h}(config-if-range)#`,
+		"config-vlan": `${h}(config-vlan)#`,
+	}[mode];
 }
 
 /* Run one CLI line on a device. Returns the new state and output lines. */
@@ -304,6 +442,12 @@ export function execute(lab, prev, devName, line) {
 	const exec = (tk, privileged, tokenOffset = 0) => {
 		const invalid = (index = 0) => invalidAt(tokenOffset + index);
 		if (kw(tk[0], "ping", 1)) {
+			if (kw(tk[1], "ipv6", 2)) {
+				if (!tk[2]) return incomplete();
+				if (!isIpv6(tk[2])) return invalid(2);
+				const ok = canReachIpv6(lab, state, devName, tk[2]);
+				return out.push("Type escape sequence to abort.", `Sending 5, 100-byte ICMP Echos to ${tk[2]}, timeout is 2 seconds:`, ok ? "!!!!!" : ".....", ok ? "Success rate is 100 percent (5/5), round-trip min/avg/max = 1/2/4 ms" : "Success rate is 0 percent (0/5)");
+			}
 			if (!tk[1]) return incomplete();
 			if (!isIp(tk[1])) return invalid(1);
 			const ok = canReach(lab, state, devName, tk[1]);
@@ -364,18 +508,47 @@ export function execute(lab, prev, devName, line) {
 		else if (kw(t[0], "end", 2)) {
 			con.mode = "priv";
 			con.iface = null;
+			con.ifaces = null;
+			con.vlan = null;
 		} else if (kw(t[0], "exit", 2)) {
-			if (mode === "config-if") {
+			if (mode === "config-if" || mode === "config-if-range") {
 				con.mode = "config";
 				con.iface = null;
+				con.ifaces = null;
+			} else if (mode === "config-vlan") {
+				con.mode = "config";
+				con.vlan = null;
 			} else con.mode = "priv";
+		} else if (mode === "config" && d.kind === "switch" && kw(tk[0], "vlan", 2)) {
+			if (!/^\d+$/.test(tk[1] ?? "") || Number(tk[1]) < 1 || Number(tk[1]) > 4094) {
+				if (tk[1]) invalidAt((neg ? 1 : 0) + 1);
+				else incomplete();
+			} else {
+				const vlanId = String(Number(tk[1]));
+				if (neg) delete d.vlans[vlanId];
+				else {
+					d.vlans[vlanId] ??= "";
+					con.mode = "config-vlan";
+					con.vlan = vlanId;
+				}
+			}
+		} else if (mode === "config" && d.kind === "switch" && kw(tk[0], "lldp", 2) && kw(tk[1], "run", 2)) {
+			d.lldpEnabled = !neg;
+		} else if (mode === "config-vlan" && kw(tk[0], "name", 2)) {
+			if (neg) d.vlans[con.vlan] = "";
+			else if (!tk[1]) incomplete();
+			else d.vlans[con.vlan] = tk.slice(1).join(" ");
 		} else if (kw(tk[0], "interface", 3)) {
-			const name = parseIface(tk.slice(1), d);
+			const isRange = kw(tk[1], "range", 3);
+			const names = isRange ? parseIfaceRange(tk.slice(2), d) : null;
+			const name = isRange ? null : parseIface(tk.slice(1), d);
 			if (!tk[1]) incomplete();
-			else if (!name) invalidAt((neg ? 1 : 0) + 1);
+			else if (isRange && !names) invalidAt((neg ? 1 : 0) + 2);
+			else if (!isRange && !name) invalidAt((neg ? 1 : 0) + 1);
 			else {
-				con.mode = "config-if";
+				con.mode = isRange ? "config-if-range" : "config-if";
 				con.iface = name;
+				con.ifaces = names;
 			}
 		} else if (mode === "config" && kw(tk[0], "hostname", 3)) {
 			if (neg) d.hostname = "Router";
@@ -414,6 +587,12 @@ export function execute(lab, prev, devName, line) {
 				i.ip = tk[2];
 				i.mask = tk[3];
 			}
+		} else if (mode === "config-if" && kw(tk[0], "ipv6", 4) && kw(tk[1], "address", 3)) {
+			const i = d.interfaces[con.iface];
+			if (neg) i.ipv6 = "";
+			else if (!tk[2]) incomplete();
+			else if (!tk[2].includes("/") || !isIpv6(tk[2])) invalidAt((neg ? 1 : 0) + 2);
+			else i.ipv6 = tk[2].toLowerCase();
 		} else if (mode === "config-if" && kw(tk[0], "shutdown", 2)) {
 			const i = d.interfaces[con.iface];
 			const name = FULL_NAME(con.iface);
@@ -427,6 +606,45 @@ export function execute(lab, prev, devName, line) {
 			}
 		} else if (mode === "config-if" && kw(tk[0], "description", 3)) {
 			d.interfaces[con.iface].desc = neg ? "" : tk.slice(1).join(" ");
+		} else if ((mode === "config-if" || mode === "config-if-range") && d.kind === "switch" && kw(tk[0], "switchport", 6)) {
+			const ports = (con.ifaces ?? [con.iface]).map((name) => d.interfaces[name]);
+			if (kw(tk[1], "mode", 1) && (kw(tk[2], "access", 2) || kw(tk[2], "trunk", 2))) {
+				for (const port of ports) port.switchportMode = neg ? "dynamic" : kw(tk[2], "trunk", 2) ? "trunk" : "access";
+			} else if (kw(tk[1], "access", 2) && kw(tk[2], "vlan", 2)) {
+				const vlanId = Number(tk[3]);
+				if (!Number.isInteger(vlanId) || vlanId < 1 || vlanId > 4094) incomplete();
+				else for (const port of ports) port.accessVlan = neg ? undefined : vlanId;
+			} else if (kw(tk[1], "voice", 2) && kw(tk[2], "vlan", 2)) {
+				const vlanId = Number(tk[3]);
+				if (!Number.isInteger(vlanId) || vlanId < 1 || vlanId > 4094) incomplete();
+				else for (const port of ports) port.voiceVlan = neg ? undefined : vlanId;
+			} else if (kw(tk[1], "trunk", 2) && kw(tk[2], "native", 2) && kw(tk[3], "vlan", 2)) {
+				const vlanId = Number(tk[4]);
+				if (!Number.isInteger(vlanId) || vlanId < 1 || vlanId > 4094) incomplete();
+				else for (const port of ports) port.trunkNativeVlan = neg ? 1 : vlanId;
+			} else if (kw(tk[1], "trunk", 2) && kw(tk[2], "allowed", 2) && kw(tk[3], "vlan", 2)) {
+				const allowed = (tk[4] ?? "").split(",").map(Number);
+				if (!tk[4] || allowed.some((vlanId) => !Number.isInteger(vlanId) || vlanId < 1 || vlanId > 4094)) incomplete();
+				else for (const port of ports) port.trunkAllowedVlans = neg ? undefined : allowed;
+			} else invalidAt((neg ? 1 : 0) + 2);
+		} else if ((mode === "config-if" || mode === "config-if-range") && d.kind === "switch" && kw(tk[0], "channel-group", 7)) {
+			const channelGroup = Number(tk[1]);
+			const lacpMode = tk[3]?.toLowerCase();
+			if (!Number.isInteger(channelGroup) || channelGroup < 1 || channelGroup > 4096 || !kw(tk[2], "mode", 2) || !["active", "passive"].includes(lacpMode)) {
+				incomplete();
+			} else {
+				for (const name of con.ifaces ?? [con.iface]) {
+					d.interfaces[name].portChannel = neg ? undefined : channelGroup;
+					d.interfaces[name].lacpMode = neg ? undefined : lacpMode;
+				}
+			}
+		} else if ((mode === "config-if" || mode === "config-if-range") && d.kind === "switch" && kw(tk[0], "lldp", 2)) {
+			const ports = (con.ifaces ?? [con.iface]).map((name) => d.interfaces[name]);
+			if (kw(tk[1], "transmit", 2)) for (const port of ports) port.lldpTransmit = !neg;
+			else if (kw(tk[1], "receive", 2)) for (const port of ports) port.lldpReceive = !neg;
+			else invalidAt((neg ? 1 : 0) + 2);
+		} else if ((mode === "config-if" || mode === "config-if-range") && d.kind === "switch" && kw(tk[0], "cdp", 2) && kw(tk[1], "enable", 2)) {
+			for (const name of con.ifaces ?? [con.iface]) d.interfaces[name].cdpEnabled = !neg;
 		} else {
 			const offset = neg ? 1 : 0;
 			const errorToken = kw(tk[0], "ip", 2) || kw(tk[0], "enable", 2)

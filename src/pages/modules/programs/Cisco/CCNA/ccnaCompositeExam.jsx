@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowRight, ArrowUp, Clock3, Flag, Moon, RotateCcw, Sun, X }
 import { Link, useBlocker, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../../../context/auth-context";
 import TrainingLogo from "../../../../../assets/MATEKK_training_logo.png";
+import ExamBrand from "../../../../../components/ExamBrand";
 import { CCNA_EXAMS } from "./ccnaExamFormats";
 import { saveCcnaMockExamResult } from "../../../../../utils/ccnaGradebook";
 import { getCcnaExamSessionKey } from "../../../../../utils/ccnaShortExamSession";
@@ -16,8 +17,10 @@ import {
 } from "../../../../../utils/splitPromptExhibit";
 import { cleanText } from "../../../../../utils/ccnaBankConverter";
 import { ExhibitDiagram, ExhibitImage, ExhibitText } from "./ccnaExhibit";
-import { loadCcnaQuestionBank } from "../../../../../utils/ccnaQuestionBankApi";
+import { loadCcnaAllQuestionsBank } from "../../../../../utils/ccnaQuestionBankApi";
+import { loadCachedCcnaAllQuestionsBank } from "../../../../../utils/ccnaOfflineQuestionBank";
 import { getDatabaseQuestionById, setDatabaseQuestions } from "./ccnaQuestionBank";
+import { createOfflineCcnaExamQuestions } from "./ccnaOfflineTimedExam";
 import { applyNativeExhibit } from "./ccnaCompositeSetQuestions";
 import { createOfflineLegacyExamQuestions, getOfflineLegacyQuestionBank } from "./ccnaOfflineExamQuestions";
 import { resumeCcnaExam, startCcnaExam, submitCcnaExam } from "../../../../../utils/ccnaExamApi";
@@ -60,12 +63,14 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 	const linkedExamResult = location.state?.examResult;
 	const shouldStartNewAttempt = location.state?.retakeExam === true;
 	const { profile, isOnline } = useAuth();
-	const [isOfflineExam] = useState(() => !isOnline);
+	const [isOfflineExam, setIsOfflineExam] = useState(() => !isOnline);
 	const userId = profile?.userId;
+	const sessionOwnerIdRef = useRef(userId);
 	// Each student's exam progress is saved separately (per signed-in user)
 	const sessionStorageKey = userId === null || userId === undefined
 		? null
 		: getCcnaExamSessionKey(exam.sessionKey, userId);
+	const offlineSessionStorageKey = `matekk-ccna-offline-exam:${examKey}`;
 	const hasLinkedExamResult = shouldShowExamResult &&
 		Number.isFinite(linkedExamResult?.score) &&
 		Number.isFinite(linkedExamResult?.maxScore) &&
@@ -169,49 +174,83 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 			// The question bank supplies each question's picture / printout; load it alongside the exam questions
 			const bankReady = isOfflineExam
 				? Promise.resolve()
-				: loadCcnaQuestionBank()
+				: loadCcnaAllQuestionsBank()
 				.then(({ questions: bankQuestions }) => setDatabaseQuestions(bankQuestions))
-				.catch((error) => console.error("Unable to load the CCNA question bank; exam pictures may be missing.", error));
+				.catch((error) => console.error("Unable to load and save the complete CCNA question bank.", error));
 			try {
 				let savedSession = null;
 				const isRetake = shouldStartNewAttemptRef.current;
-				if (!isRetake && sessionStorageKey) {
-					const savedValue = window.sessionStorage.getItem(sessionStorageKey);
-					if (savedValue) {
-						try {
-							const parsed = JSON.parse(savedValue);
-							if (
-								parsed &&
-								typeof parsed.attemptId === "string" &&
-								Array.isArray(parsed.questions) &&
-								parsed.questions.every((question) =>
-									Number.isInteger(question?.id) &&
-									typeof question.prompt === "string" &&
-									(isMatchingQuestion(question)
-										? Array.isArray(question.items) && Array.isArray(question.choices)
-										: Array.isArray(question.options)),
-								)
-							) savedSession = parsed;
-							else window.sessionStorage.removeItem(sessionStorageKey);
-						} catch (error) {
-							console.error(`Unable to restore the saved ${exam.name} attempt.`, error);
-							window.sessionStorage.removeItem(sessionStorageKey);
+				const isValidSavedSession = (session) =>
+					session &&
+					typeof session.attemptId === "string" &&
+					Array.isArray(session.questions) &&
+					session.questions.every((question) =>
+						Number.isInteger(question?.id) &&
+						typeof question.prompt === "string" &&
+						(isMatchingQuestion(question)
+							? Array.isArray(question.items) && Array.isArray(question.choices)
+							: Array.isArray(question.options)),
+					);
+				if (!isRetake) {
+					if (sessionStorageKey) {
+						const savedValue = window.sessionStorage.getItem(sessionStorageKey);
+						if (savedValue) {
+							try {
+								const parsed = JSON.parse(savedValue);
+								if (isValidSavedSession(parsed)) savedSession = parsed;
+								else window.sessionStorage.removeItem(sessionStorageKey);
+							} catch (error) {
+								console.error(`Unable to restore the saved ${exam.name} attempt.`, error);
+								window.sessionStorage.removeItem(sessionStorageKey);
+							}
 						}
+					}
+					try {
+						const offlineValue = window.localStorage.getItem(offlineSessionStorageKey);
+						if (offlineValue) {
+							const parsed = JSON.parse(offlineValue);
+							const belongsToCurrentUser = parsed.userId === null ||
+								parsed.userId === undefined ||
+								userId === null ||
+								userId === undefined ||
+								String(parsed.userId) === String(userId);
+							if (
+								parsed.isOfflineLegacyExam === true &&
+								belongsToCurrentUser &&
+								isValidSavedSession(parsed)
+							) savedSession = parsed;
+						}
+					} catch (error) {
+						console.error(`Unable to restore the saved offline ${exam.name} attempt.`, error);
+						window.localStorage.removeItem(offlineSessionStorageKey);
 					}
 				}
 
-				if (isOfflineExam) {
+				if (savedSession?.isOfflineLegacyExam === true &&
+					(sessionOwnerIdRef.current === null || sessionOwnerIdRef.current === undefined) &&
+					savedSession.userId !== null && savedSession.userId !== undefined) {
+					sessionOwnerIdRef.current = savedSession.userId;
+				}
+				const isOfflineAttempt = isOfflineExam || savedSession?.isOfflineLegacyExam === true;
+				if (isOfflineAttempt) {
+					if (!isOfflineExam) setIsOfflineExam(true);
+					const cachedQuestionBank = await loadCachedCcnaAllQuestionsBank();
 					const savedOfflineSession = savedSession?.isOfflineLegacyExam === true &&
 						savedSession.questions.length === exam.questionCount &&
 						savedSession.questions.every(isValidQuestion)
 						? savedSession
 						: null;
-					const currentOfflineQuestionsById = new Map(
+					const currentCachedQuestionsById = new Map(
+						(cachedQuestionBank ?? []).map((question) => [question.bankId, question]),
+					);
+					const currentLegacyQuestionsById = new Map(
 						getOfflineLegacyQuestionBank().map((question) => [question.id, question]),
 					);
 					const offlineQuestions = savedOfflineSession
 						? savedOfflineSession.questions.map((question) => {
-							const currentQuestion = currentOfflineQuestionsById.get(question.id ?? question.bankId);
+							const currentQuestion = question.offlineBankSource === "database"
+								? currentCachedQuestionsById.get(question.id ?? question.bankId)
+								: currentLegacyQuestionsById.get(question.id ?? question.bankId);
 							const restoredQuestion = {
 								...(currentQuestion ?? {}),
 								...question,
@@ -220,7 +259,10 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 							if (currentQuestion) {
 								restoredQuestion.type = currentQuestion.type;
 								restoredQuestion.prompt = currentQuestion.prompt;
-								if (currentQuestion.exhibitImage) {
+								restoredQuestion.hideExhibitImage = currentQuestion.hideExhibitImage === true;
+								if (currentQuestion.hideExhibitImage) {
+									delete restoredQuestion.exhibitImage;
+								} else if (currentQuestion.exhibitImage) {
 									restoredQuestion.exhibitImage = currentQuestion.exhibitImage;
 								} else {
 									delete restoredQuestion.exhibitImage;
@@ -228,7 +270,9 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 							}
 							return restoredQuestion;
 						})
-						: createOfflineLegacyExamQuestions(exam.questionCount);
+						: cachedQuestionBank
+							? createOfflineCcnaExamQuestions(examKey, cachedQuestionBank)
+							: createOfflineLegacyExamQuestions(exam.questionCount);
 					const offlineDeadline = Number.isFinite(savedOfflineSession?.deadline)
 						? savedOfflineSession.deadline
 						: Date.now() + exam.durationSeconds * 1000;
@@ -289,8 +333,8 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 				const loadedQuestions = apiAttempt.questions.map((apiQuestion) => {
 					const bankQuestion = getDatabaseQuestionById(apiQuestion.id) ??
 						applyNativeExhibit({ ...apiQuestion, bankId: apiQuestion.id });
-					const hasRecreatedMatchExhibit = apiQuestion.type === "match" &&
-						RECREATED_MATCH_EXHIBIT_QUESTION_IDS.has(apiQuestion.id);
+					const hideExhibitImage = bankQuestion?.hideExhibitImage === true ||
+						(apiQuestion.type === "match" && RECREATED_MATCH_EXHIBIT_QUESTION_IDS.has(apiQuestion.id));
 					// Fix text saved with the wrong encoding ("â€œwarningâ€" -> “warning”) for display.
 					// The original option text is kept for submitting, since the backend grades by exact text.
 					const cleanList = (list) => (Array.isArray(list) ? list.map((value) => (typeof value === "string" ? cleanText(value) : value)) : list);
@@ -310,7 +354,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 						? { prompt: cleanText(apiQuestion.prompt) }
 						: splitPromptExhibit(cleanText(apiQuestion.prompt));
 					const exhibitDiagram = bankQuestion?.exhibitDiagram;
-					const exhibitImage = exhibitDiagram || bankQuestion?.nativeExhibitText
+					const exhibitImage = hideExhibitImage || exhibitDiagram || bankQuestion?.nativeExhibitText
 						? undefined
 						: bankQuestion?.exhibitImage || apiQuestion.imageUrl;
 					const displayedExhibit = bankQuestion?.exhibit && !isOptionTable ? bankQuestion.exhibit : exhibit;
@@ -336,10 +380,10 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 						...(typeof apiQuestion.explanation === "string" ? { explanation: cleanText(apiQuestion.explanation) } : {}),
 						...(shouldDisplayExhibit ? { exhibit: displayedExhibit } : {}),
 						...(exhibitDiagram ? { exhibitDiagram } : {}),
+						...(hideExhibitImage ? { hideExhibitImage: true } : {}),
 						...(bankQuestion?.hidePrompt ? { hidePrompt: true } : {}),
 						...(bankQuestion?.exhibitImageCropTop ? { exhibitImageCropTop: true } : {}),
-						// Question 570's image is a screenshot of the matching interaction recreated by the site.
-						...(!hasRecreatedMatchExhibit && exhibitImage ? { exhibitImage } : {}),
+						...(exhibitImage ? { exhibitImage } : {}),
 					};
 				});
 
@@ -402,13 +446,14 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 		return () => {
 			isActive = false;
 		};
-	}, [exam.durationSeconds, exam.name, exam.questionCount, examKey, isOfflineExam, loadAttempt, location.pathname, navigate, sessionStorageKey]);
+	}, [exam.durationSeconds, exam.name, exam.questionCount, examKey, isOfflineExam, loadAttempt, location.pathname, navigate, offlineSessionStorageKey, sessionStorageKey, userId]);
 
 	useEffect(() => {
-		if (!attemptId || examLoadState.status !== "ready" || isViewingSavedResult || !sessionStorageKey) return;
-		window.sessionStorage.setItem(sessionStorageKey, JSON.stringify({
+		if (!attemptId || examLoadState.status !== "ready" || isViewingSavedResult) return;
+		const savedSession = {
 			attemptId,
 			isOfflineLegacyExam: isOfflineExam,
+			userId: sessionOwnerIdRef.current ?? null,
 			submittedAt,
 			questions,
 			answers,
@@ -419,8 +464,28 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 			isSubmitted,
 			serverResult,
 			score: serverResult?.score ?? null,
-		}));
-	}, [answers, attemptId, currentIndex, deadline, examLoadState.status, flaggedQuestions, isOfflineExam, isSubmitted, isViewingSavedResult, lockedQuestions, questions, serverResult, sessionStorageKey, submittedAt]);
+		};
+		if (isOfflineExam) {
+			try {
+				window.localStorage.setItem(offlineSessionStorageKey, JSON.stringify(savedSession));
+			} catch (error) {
+				console.error(`Unable to save the offline ${exam.name} attempt.`, error);
+			}
+		} else {
+			try {
+				window.localStorage.removeItem(offlineSessionStorageKey);
+			} catch (error) {
+				console.error(`Unable to clear the saved offline ${exam.name} attempt.`, error);
+			}
+		}
+		if (sessionStorageKey) {
+			try {
+				window.sessionStorage.setItem(sessionStorageKey, JSON.stringify(savedSession));
+			} catch (error) {
+				console.error(`Unable to save the ${exam.name} session for this tab.`, error);
+			}
+		}
+	}, [answers, attemptId, currentIndex, deadline, exam.name, examLoadState.status, flaggedQuestions, isOfflineExam, isSubmitted, isViewingSavedResult, lockedQuestions, offlineSessionStorageKey, questions, serverResult, sessionStorageKey, submittedAt, userId]);
 
 	useEffect(() => {
 		if (!isSubmitted || isViewingSavedResult || !userId || !Number.isFinite(submittedAt)) return;
@@ -674,7 +739,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 					<h1 className="text-2xl font-bold">{examLoadState.status === "loading" ? "Preparing your exam" : "Unable to load your exam"}</h1>
 					<p role={examLoadState.status === "error" ? "alert" : undefined} className="mt-3 text-sm leading-6 text-[#64748b]">
 						{examLoadState.status === "loading"
-							? "Loading a randomized set of questions from the question database…"
+							? "Loading questions on CCNA, please wait…"
 							: examLoadState.error}
 					</p>
 					{examLoadState.status === "error" && (
@@ -702,9 +767,13 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 				)}
 				<header className="mb-7 flex flex-wrap items-center justify-between gap-4 border-b border-[#d6e5e7] pb-5">
 					<div className="flex min-w-0 items-center gap-4">
-						<Link to="/modules/programs/ccna" aria-label="Back to CCNA course" className="ccna-training-logo shrink-0 rounded-lg bg-white px-3 py-2 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 motion-reduce:transition-none">
-							<img src={TrainingLogo} alt="MATEKK Cybercore Academy" className="h-auto w-32 sm:w-36" />
-						</Link>
+						{isOfflineExam ? (
+							<ExamBrand to="/modules/programs/ccna" isDark={isDark} />
+						) : (
+							<Link to="/modules/programs/ccna" aria-label="Back to CCNA course" className="ccna-training-logo shrink-0 rounded-lg bg-white px-3 py-2 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 motion-reduce:transition-none">
+								<img src={TrainingLogo} alt="MATEKK Cybercore Academy" className="h-auto w-32 sm:w-36" />
+							</Link>
+						)}
 						<div className="hidden min-w-0 border-l border-[#cbd5e1] pl-4 sm:block">
 							<p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#70809a]">CCNA composite exam</p>
 							<p className="mt-1 truncate text-sm font-bold text-[#17233d]">{exam.name} · {exam.subtitle}</p>
@@ -754,12 +823,12 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 								aria-valuemax={questions.length}
 								aria-valuenow={answeredCount}
 								aria-valuetext={`${answeredCount} of ${questions.length} answered, ${answeredPercentage}%`}
-								className="mt-3 h-2 overflow-hidden rounded-full bg-[#e7e7e7]"
+								className={`exam-progress-track mt-3 h-2 overflow-hidden rounded-full ${isDark ? "bg-[#303a60]" : "bg-[#e7e7e7]"}`}
 							>
-								<div className="h-full rounded-full bg-[#159b73] transition-[width]" style={{ width: `${answeredPercentage}%` }} />
+								<div className={`exam-progress-fill h-full rounded-full transition-[width] ${isDark ? "bg-[#20c5d6] shadow-[0_0_10px_rgba(32,197,214,0.55)]" : "bg-[#159b73]"}`} style={{ width: `${answeredPercentage}%` }} />
 							</div>
-							<div className="mt-4 flex flex-wrap gap-2.5 text-sm text-[#526584]">
-								<span className="rounded-xl bg-[#f8fafb] px-3 py-2">{answeredCount} answered</span>
+							<div className={`mt-4 flex flex-wrap gap-2.5 text-sm ${isDark ? "text-[#cbd5e1]" : "text-[#526584]"}`}>
+								<span className={`exam-progress-badge rounded-xl px-3 py-2 ${isDark ? "bg-[#1b2947]" : "bg-[#f8fafb]"}`}>{answeredCount} answered</span>
 								<button
 									type="button"
 									onClick={() => setFlaggedQuestions((previous) => ({
@@ -768,15 +837,15 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 									}))}
 									aria-label={`${flaggedQuestions[currentIndex] ? "Unflag" : "Flag"} question ${currentIndex + 1}; ${flaggedCount} flagged`}
 									aria-pressed={Boolean(flaggedQuestions[currentIndex])}
-									className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 transition ${flaggedQuestions[currentIndex]
-										? "bg-[#fff1d6] text-[#8a5200]"
-										: "bg-[#f8fafb] hover:bg-[#eef3f5]"
-										}`}
+									className={`exam-progress-badge inline-flex items-center gap-2 rounded-xl px-3 py-2 transition ${flaggedQuestions[currentIndex]
+										? isDark ? "bg-[#42291f] text-[#ffc28e]" : "bg-[#fff1d6] text-[#8a5200]"
+										: isDark ? "bg-[#1b2947] hover:bg-[#263654]" : "bg-[#f8fafb] hover:bg-[#eef3f5]"
+										} ${flaggedQuestions[currentIndex] ? "exam-progress-flagged" : ""}`}
 								>
 									<Flag size={15} fill={flaggedQuestions[currentIndex] ? "currentColor" : "none"} />
 									{flaggedCount} flagged
 								</button>
-								<span className="rounded-xl bg-[#f8fafb] px-3 py-2">{unansweredCount} left</span>
+								<span className={`exam-progress-badge rounded-xl px-3 py-2 ${isDark ? "bg-[#1b2947]" : "bg-[#f8fafb]"}`}>{unansweredCount} left</span>
 							</div>
 						</section>
 
@@ -790,7 +859,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 									/>
 								)}
 								{question.exhibitDiagram && <ExhibitDiagram type={question.exhibitDiagram} offlineLayout={isOfflineExam} />}
-								{question.exhibitImage && (
+								{question.exhibitImage && !question.hideExhibitImage && (
 									<ExhibitImage
 										src={question.exhibitImage}
 										className="mb-6"
@@ -953,7 +1022,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 													/>
 												)}
 								{item.exhibitDiagram && <ExhibitDiagram type={item.exhibitDiagram} className="mt-4" offlineLayout={isOfflineExam} />}
-												{item.exhibitImage && (
+												{item.exhibitImage && !item.hideExhibitImage && (
 													<ExhibitImage
 														src={item.exhibitImage}
 														lazy
@@ -1036,7 +1105,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 				document.body,
 			)}
 			{blocker.state === "blocked" && createPortal(
-				<div data-theme="light" className="fixed inset-0 z-[120] grid place-items-center overflow-y-auto bg-[#071126]/55 p-4 backdrop-blur-[2px] sm:p-6">
+				<div data-theme={isDark ? "dark" : "light"} className="fixed inset-0 z-[120] grid place-items-center overflow-y-auto bg-[#071126]/55 p-4 backdrop-blur-[2px] sm:p-6">
 					<section
 						role="alertdialog"
 						aria-modal="true"
@@ -1049,6 +1118,18 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 						<p id="ccna-short-exam-exit-description" className="mt-3 text-sm leading-6 text-[#64748b] sm:text-base">
 							Your answers and time remaining will be saved. The timer will keep running while you are away.
 						</p>
+						<div className="mt-5 flex items-center justify-between rounded-xl border border-[#c9dfe2] bg-[#f5f9f9] px-4 py-3">
+							<span className={`inline-flex items-center gap-2 text-sm font-semibold ${isDark ? "text-[#e0e5f3]" : "text-[#526584]"}`}>
+								<Clock3 size={16} /> Time remaining
+							</span>
+							<span
+								role="timer"
+								aria-label={`${formatTime(secondsRemaining)} remaining`}
+								className={`text-lg font-bold tabular-nums ${secondsRemaining <= 300 ? "text-[#a44b13]" : "text-[#005b6b]"}`}
+							>
+								{formatTime(secondsRemaining)}
+							</span>
+						</div>
 						<div className="mt-6 flex flex-wrap justify-end gap-3">
 							<button type="button" onClick={() => blocker.reset()} className="ccna-modal-stay rounded-full border border-[#c9dfe2] px-4 py-2.5 text-sm font-semibold text-[#42516b] transition hover:bg-[#f5f9f9] sm:px-5">
 								Stay in exam

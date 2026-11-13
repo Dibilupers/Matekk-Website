@@ -58,6 +58,7 @@ export const CCNA_QUESTION_BANK = [
   // Kept tagged so older CCNA 200-301 questions remain identifiable in the shared bank.
   ...CCNA_LEGACY_ALL_QUESTIONS.map((question) => ({
     ...question,
+    ...applyNativeExhibit(question),
     // Router output pasted into the question text moves into the exhibit box
     ...(question.exhibit ? {} : splitPromptExhibit(question.prompt)),
     source: "legacy-ccna-200-301",
@@ -65,7 +66,13 @@ export const CCNA_QUESTION_BANK = [
     moduleTitle: "Legacy CCNA 200-301",
   }))
     // Skip questions whose exhibit picture was lost when they were taken from the PDF (they can't be answered)
-    .filter((question) => !/\bexhibit\b/i.test(question.prompt) || question.exhibit || question.exhibitImage),
+    .filter((question) =>
+      !/\bexhibit\b/i.test(question.prompt) ||
+      question.exhibit ||
+      question.exhibitImage ||
+      question.exhibitDiagram ||
+      question.hideExhibitImage,
+    ),
 // Questions without their own explanation borrow one from the same question elsewhere in the site
 ].map((question) => ({
   ...question,

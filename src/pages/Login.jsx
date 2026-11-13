@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ArrowRight, Eye, EyeOff, Facebook, Instagram, Phone } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { ArrowLeft, ArrowRight, Eye, EyeOff, Facebook, Instagram, Phone } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/auth-context";
 import API_URL from "../config/api";
 import NetworkBackground from "../components/NetworkBackground";
@@ -36,6 +36,9 @@ const trainingLogos = [
   { src: Azure, alt: "Microsoft Azure fundamentals" },
 ];
 
+const loginDescription =
+  "MATEKK Cybercore Technologies delivers industry-driven ICT, engineering solutions, and professional training designed to empower businesses and individuals.";
+
 export default function Login() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
@@ -51,6 +54,7 @@ export default function Login() {
   const orbitRingRef = useRef(null);
   const { login, verifyLoginOtp } = useAuth();
   const [isCheckingSession, setIsCheckingSession] = useState(true);
+  const [typedDescription, setTypedDescription] = useState("");
   const [isRegistering, setIsRegistering] = useState(false);
   const [registrationStep, setRegistrationStep] = useState(0);
   const formCardRef = useRef(null);
@@ -70,6 +74,25 @@ export default function Login() {
   const [moduleId, setModuleId] = useState("");
   const [programs, setPrograms] = useState([]);
   const [isLoadingPrograms, setIsLoadingPrograms] = useState(false);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setTypedDescription(loginDescription);
+      return undefined;
+    }
+
+    let visibleCharacters = 0;
+    const intervalId = window.setInterval(() => {
+      visibleCharacters += 1;
+      setTypedDescription(loginDescription.slice(0, visibleCharacters));
+
+      if (visibleCharacters >= loginDescription.length) {
+        window.clearInterval(intervalId);
+      }
+    }, 18);
+
+    return () => window.clearInterval(intervalId);
+  }, []);
 
   const navigateAfterLogin = useCallback((path) => {
     const shouldSkipAnimation =
@@ -370,22 +393,29 @@ export default function Login() {
   }
 
   if (isCheckingSession) {
-    return <main className="flex min-h-[calc(100vh-5rem)] items-center justify-center bg-[#0A1225] text-slate-200">Checking your session...</main>;
+    return <main className="flex min-h-screen items-center justify-center bg-[#0A1225] text-slate-200">Checking your session...</main>;
   }
 
   return (
-    <main className="fade-in-up relative isolate min-h-[calc(100vh-5rem)] overflow-hidden bg-[#0A1225] px-4 py-8 sm:px-10 sm:py-10 lg:px-16">
+    <main className="fade-in-up relative isolate min-h-[100dvh] overflow-x-clip bg-[#0A1225] px-4 py-8 pt-20 sm:px-10 sm:py-10 sm:pt-20 lg:px-16 lg:py-3 lg:pt-16">
       <NetworkBackground paused={isLoginAnimating} />
+      <Link
+        to="/"
+        className="group absolute left-4 top-4 z-20 inline-flex items-center gap-2 rounded-full border border-white/30 bg-[#101c36]/75 px-4 py-2.5 text-sm font-semibold text-white shadow-lg backdrop-blur transition duration-200 hover:-translate-y-0.5 hover:border-[#54c8ff] hover:bg-[#1775EE] hover:shadow-[0_10px_24px_rgba(23,117,238,0.3)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#54c8ff] motion-reduce:transform-none motion-reduce:transition-none sm:left-8 sm:top-6"
+      >
+        <ArrowLeft size={17} className="transition-transform duration-200 group-hover:-translate-x-1 motion-reduce:transform-none motion-reduce:transition-none" />
+        Back to Home
+      </Link>
 
       <div className={isRegistering
-        ? "relative z-10 mx-auto grid w-full max-w-6xl items-center gap-12 lg:grid-cols-[minmax(320px,35rem)_minmax(0,1fr)] lg:gap-16"
-        : "relative z-10 mx-auto grid w-full max-w-6xl items-center gap-12 lg:grid-cols-[minmax(320px,390px)_1fr] lg:gap-20"}
+        ? "relative z-10 mx-auto grid w-full max-w-6xl items-center gap-12 lg:grid-cols-[minmax(320px,35rem)_minmax(0,1fr)] lg:gap-10"
+        : "relative z-10 mx-auto grid w-full max-w-6xl items-center gap-8 lg:h-full lg:grid-cols-[minmax(320px,390px)_1fr] lg:gap-12"}
       >
-        <section className="order-2 mx-auto w-full max-w-2xl space-y-7 text-center lg:order-2 lg:text-left">
-            <div className="relative mx-auto flex min-h-[27rem] w-full max-w-[32rem] items-center justify-center">
+        <section className={`order-2 mx-auto w-full max-w-2xl text-center lg:order-2 lg:text-left ${isRegistering ? "space-y-7" : "space-y-5 lg:space-y-2"}`}>
+            <div className={`relative mx-auto flex w-full max-w-[32rem] items-center justify-center ${isRegistering ? "min-h-[27rem]" : "min-h-[20rem] lg:min-h-[25rem]"}`}>
               <div
                 ref={orbitRingRef}
-                className={`login-orbit-ring pointer-events-none absolute left-1/2 top-1/2 hidden aspect-square w-[26rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/20 lg:block ${isLoginAnimating ? "login-orbit-sinking" : ""}`}
+                className={`login-orbit-ring pointer-events-none absolute left-1/2 top-1/2 hidden aspect-square w-[24rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/20 lg:block ${isLoginAnimating ? "login-orbit-sinking" : ""}`}
                 aria-hidden="true"
               >
                 <span className={`login-orbit-ripple ${isLoginAnimating ? "login-orbit-ripple-active" : ""}`} />
@@ -393,7 +423,7 @@ export default function Login() {
                   <div
                     key={logo.alt}
                     style={{ "--angle": `${index * 30}deg`, animationDelay: `${index * 85}ms` }}
-                    className={`login-orbit-badge pointer-events-auto absolute left-1/2 top-1/2 -ml-[2rem] -mt-[2rem] flex h-[4rem] w-[4rem] items-center justify-center rounded-full border border-slate-100 bg-white p-2 shadow-[0_8px_14px_rgba(15,23,42,0.18)] [transform:rotate(var(--angle))_translateY(-10.75rem)] ${isLoginAnimating ? "login-orbit-badge-sinking" : ""}`}
+                    className={`login-orbit-badge pointer-events-auto absolute left-1/2 top-1/2 -ml-[1.875rem] -mt-[1.875rem] flex h-[3.75rem] w-[3.75rem] items-center justify-center rounded-full border border-slate-100 bg-white p-2 shadow-[0_8px_14px_rgba(15,23,42,0.18)] [transform:rotate(var(--angle))_translateY(-9.75rem)] ${isLoginAnimating ? "login-orbit-badge-sinking" : ""}`}
                   >
                     <div className="h-full w-full">
                       <img src={logo.src} alt="" className="h-full w-full object-contain" />
@@ -417,23 +447,26 @@ export default function Login() {
                 </div>
               ))}
             </div>
-            <div className="mx-auto w-full max-w-xl space-y-2 rounded-2xl border border-white/80 bg-white/75 p-5 shadow-[0_12px_32px_rgba(15,23,42,0.12)] backdrop-blur-sm sm:p-6">
-              <h2 className="text-2xl font-bold text-slate-900 sm:text-3xl">Grow with <span className="text-[#1775EE]">Matekk</span></h2>
-              <p className="text-base leading-relaxed text-slate-800">MATEKK Cybercore Technologies delivers industry-driven ICT, engineering solutions, and professional training designed to empower businesses and individuals.</p>
+            <div className={`mx-auto w-full max-w-xl space-y-2 rounded-2xl border border-white/80 bg-white/75 p-5 shadow-[0_12px_32px_rgba(15,23,42,0.12)] backdrop-blur-sm sm:p-6 ${!isRegistering ? "lg:space-y-1 lg:p-3" : ""}`}>
+              <h2 className={`text-2xl font-bold text-slate-900 sm:text-3xl ${!isRegistering ? "lg:text-xl" : ""}`}>Grow with <span className="text-[#1775EE]">Matekk</span></h2>
+              <p aria-label={loginDescription} className={`text-base leading-relaxed text-slate-800 ${!isRegistering ? "lg:text-sm lg:leading-5" : ""}`}>
+                <span aria-hidden="true">{typedDescription}</span>
+                {typedDescription.length < loginDescription.length && <span aria-hidden="true" className="ml-0.5 animate-pulse">|</span>}
+              </p>
             </div>
-            <div className="mx-auto grid w-full max-w-xl grid-cols-1 gap-3 sm:grid-cols-2">
-              <a href="https://www.facebook.com/matekkcybercore/" className="group flex items-center gap-3 rounded-lg bg-white/85 p-3 shadow-sm transition hover:shadow-md">
-                <Facebook className="text-[#1877F2]" size={22} /><span className="text-sm font-semibold text-slate-700 transition-colors group-hover:text-[#087ff5]">Matekk Cybercore Academy</span>
+            <div className={`mx-auto grid w-full max-w-xl grid-cols-1 gap-3 sm:grid-cols-2 ${!isRegistering ? "lg:gap-2" : ""}`}>
+              <a href="https://www.facebook.com/matekkcybercore/" target="_blank" rel="noopener noreferrer" className={`group flex items-center gap-3 rounded-lg bg-white/85 p-3 shadow-sm transition hover:shadow-md ${!isRegistering ? "lg:p-1.5" : ""}`}>
+                <Facebook className="text-[#1877F2]" size={18} /><span className={`text-sm font-semibold text-slate-700 transition-colors group-hover:text-[#087ff5] ${!isRegistering ? "lg:text-sm" : ""}`}>Matekk Cybercore Academy</span>
               </a>
-              <a href="tel:09771968226" className="group flex items-center gap-3 rounded-lg bg-white/85 p-3 shadow-sm transition hover:shadow-md">
-                <Phone className="text-green-600" size={22} /><span className="text-sm font-semibold text-slate-700 transition-colors group-hover:text-[#087ff5]">09771968226</span>
+              <a href="tel:09771968226" className={`group flex items-center gap-3 rounded-lg bg-white/85 p-3 shadow-sm transition hover:shadow-md ${!isRegistering ? "lg:p-1.5" : ""}`}>
+                <Phone className="text-green-600" size={18} /><span className={`text-sm font-semibold text-slate-700 transition-colors group-hover:text-[#087ff5] ${!isRegistering ? "lg:text-sm" : ""}`}>09771968226</span>
               </a>
-              <a href="https://www.instagram.com/matekkcybercore/" className="group flex items-center gap-3 rounded-lg bg-white/85 p-3 shadow-sm transition hover:shadow-md">
-                <Instagram className="text-pink-500" size={22} /><span className="text-sm font-semibold text-slate-700 transition-colors group-hover:text-[#087ff5]">@matekkcybercore</span>
+              <a href="https://www.instagram.com/matekkcybercore/" target="_blank" rel="noopener noreferrer" className={`group flex items-center gap-3 rounded-lg bg-white/85 p-3 shadow-sm transition hover:shadow-md ${!isRegistering ? "lg:p-1.5" : ""}`}>
+                <Instagram className="text-pink-500" size={18} /><span className={`text-sm font-semibold text-slate-700 transition-colors group-hover:text-[#087ff5] ${!isRegistering ? "lg:text-sm" : ""}`}>@matekkcybercore</span>
               </a>
-              <a href="https://www.tiktok.com/@training.matekkcybercore" className="group flex items-center gap-1 rounded-lg bg-white/85 p-3 shadow-sm transition hover:shadow-md">
-                <img src={TikTokLogo} alt="TikTok" className="h-5 w-5" />
-                <span className="text-sm font-semibold text-slate-700 transition-colors group-hover:text-[#087ff5]">@training.matekk</span>
+              <a href="https://www.tiktok.com/@training.matekkcybercore" target="_blank" rel="noopener noreferrer" className={`group flex items-center gap-1 rounded-lg bg-white/85 p-3 shadow-sm transition hover:shadow-md ${!isRegistering ? "lg:p-1.5" : ""}`}>
+                <img src={TikTokLogo} alt="TikTok" className={`h-5 w-5 ${!isRegistering ? "lg:h-[18px] lg:w-[18px]" : ""}`} />
+                <span className={`text-sm font-semibold text-slate-700 transition-colors group-hover:text-[#087ff5] ${!isRegistering ? "lg:text-sm" : ""}`}>@training.matekk</span>
               </a>
             </div>
         </section>
@@ -443,7 +476,7 @@ export default function Login() {
           className={`scroll-mt-24 mx-auto w-full rounded-2xl border bg-white shadow-[0_14px_35px_rgba(15,23,42,0.1)] ${
             isRegistering
               ? "order-1 max-w-[35rem] space-y-5 border-slate-100 px-6 py-7 sm:px-8 sm:py-8 lg:order-1"
-              : "order-1 max-w-md space-y-5 border-slate-300 px-5 py-7 sm:px-11 sm:py-9 lg:order-1"
+              : "order-1 max-w-md space-y-5 border-slate-300 px-5 py-7 sm:px-11 sm:py-9 lg:order-1 lg:space-y-3 lg:px-8 lg:py-5"
           }`}
         >
             {isRegistering ? (
@@ -487,7 +520,7 @@ export default function Login() {
               </div>
             )}
 
-            <form onSubmit={isRegistering ? submitRegistration : submit} className="space-y-4">
+            <form onSubmit={isRegistering ? submitRegistration : submit} className={`space-y-4 ${!isRegistering ? "lg:space-y-3" : ""}`}>
               {isRegistering ? (
                 <>
                   {registrationStep === 0 && (

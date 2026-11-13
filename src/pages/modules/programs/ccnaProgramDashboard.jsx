@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/auth-context";
 import { readCcnaExamProgress } from "../../../utils/ccnaShortExamSession";
 import { readGradebookAssessments } from "../../../utils/gradebookApi";
+import { getProfileDisplayName } from "../../../utils/profile";
 import { getProgramExamFormats, LEGACY_PROGRAM_EXAM_NAMES } from "./programExamFormats";
 import ProgramBackgroundParticles from "./ProgramBackgroundParticles";
 import ScoreRotationCard from "./ScoreRotationCard";
@@ -131,7 +132,7 @@ function ProgramExamNotification({ programKey, basePath }) {
 						className="block w-full rounded-lg pr-7 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#005b6b]"
 					>
 						<div className="flex items-center justify-between gap-2">
-							<strong className="text-sm text-[#005b6b]">{profile?.username}</strong>
+							<strong className="text-sm text-[#005b6b]">{getProfileDisplayName(profile)}</strong>
 							<span className="text-xs font-semibold text-[#7c89a1]">{safeIndex + 1}/{examCards.length}</span>
 						</div>
 						<p className="mt-0.5 text-sm leading-snug text-[#64708a]">
@@ -256,6 +257,7 @@ export default function CCNAProgramDashboard({
 	programKey,
 	programPath,
 }) {
+	const { isOnline } = useAuth();
 	const [typedIntro, setTypedIntro] = useState("");
 	const [hasScrolled, setHasScrolled] = useState(false);
 	const hasDescriptionAccent = typeof descriptionAccent === "string" && description.endsWith(descriptionAccent);
@@ -312,8 +314,8 @@ export default function CCNAProgramDashboard({
 		<main className="program-faceted-page ccna-page-enter relative min-h-screen bg-white text-[#071126]">
 			{createPortal(
 				<Link
-					to="/pages/blank"
-					className={`fixed left-4 top-24 z-40 flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-bold text-[#005b6b] transition hover:text-[#004653] active:scale-95 ${hasScrolled ? "bg-white/90 shadow-md backdrop-blur-sm" : "bg-white/80"}`}
+					to={isOnline ? "/pages/blank" : "/modules/programs"}
+					className={`fixed left-4 ${isOnline ? "top-24" : "top-5"} z-40 flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-bold text-[#005b6b] transition hover:text-[#004653] active:scale-95 ${!isOnline || hasScrolled ? "bg-white/90 shadow-md backdrop-blur-sm" : "bg-white/80"}`}
 				>
 					<ArrowLeft size={20} strokeWidth={2.5} /> Back to Courses
 				</Link>,

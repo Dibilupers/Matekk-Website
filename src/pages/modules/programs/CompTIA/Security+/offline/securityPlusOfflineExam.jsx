@@ -44,6 +44,7 @@ export default function SecurityPlusOfflineExam() {
 			examFormats={examFormats}
 			theme="comptia"
 			omitSessionQuestionImages
+			persistOfflineSession
 		/>
 	);
 }

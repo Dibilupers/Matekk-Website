@@ -1,12 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { BookOpen, CheckCircle2, ChevronLeft, ChevronRight, Moon, RotateCcw, Sun, X } from "lucide-react";
-import { Link } from "react-router-dom";
+import { ArrowDown, CheckCircle2, ChevronLeft, ChevronRight, Flag, Moon, RotateCcw, Sun, X } from "lucide-react";
+import { Link, useBlocker } from "react-router-dom";
 import { useAuth } from "../../../../../context/auth-context";
 import TrainingLogo from "../../../../../assets/MATEKK_training_logo.png";
+import ExamBrand from "../../../../../components/ExamBrand";
 import { isAnswerCorrect, isQuestionAnswered } from "../../../../../utils/ccnaExamGrading";
 import { isCcnaQuestionModule } from "../../../../../utils/ccnaQuestionModule";
 import { loadCcnaAllQuestionsBank } from "../../../../../utils/ccnaQuestionBankApi";
+import { loadCachedCcnaAllQuestionsBank } from "../../../../../utils/ccnaOfflineQuestionBank";
 import { ExhibitDiagram, ExhibitImage, ExhibitText } from "./ccnaExhibit";
 import { QuestionInput, QuestionPrompt, QuestionReview } from "./ccnaExamQuestionViews";
 import { applyNativeExhibit } from "./ccnaCompositeSetQuestions";
@@ -44,9 +46,11 @@ export default function CCNAAllQuestionsExam() {
 		? null
 		: `matekk-ccna-all-questions:${encodeURIComponent(String(profile.userId))}`;
 	const [loadState, setLoadState] = useState({ status: "loading", error: null });
+	const [questionBankSource, setQuestionBankSource] = useState(null);
 	const [loadAttempt, setLoadAttempt] = useState(0);
 	const [questions, setQuestions] = useState([]);
 	const [answers, setAnswers] = useState({});
+	const [flaggedQuestions, setFlaggedQuestions] = useState({});
 	const [currentIndex, setCurrentIndex] = useState(0);
 	const [furthestOpenedIndex, setFurthestOpenedIndex] = useState(0);
 	const [isSubmitted, setIsSubmitted] = useState(false);
@@ -55,14 +59,27 @@ export default function CCNAAllQuestionsExam() {
 	const [storageError, setStorageError] = useState(null);
 	const [questionNumberInput, setQuestionNumberInput] = useState("1");
 	const [isRetakeConfirmationOpen, setIsRetakeConfirmationOpen] = useState(false);
+	const [isSubmitConfirmationOpen, setIsSubmitConfirmationOpen] = useState(false);
+	const blocker = useBlocker(({ currentLocation, nextLocation }) =>
+		!isSubmitted &&
+		(currentLocation.pathname !== nextLocation.pathname ||
+			currentLocation.search !== nextLocation.search ||
+			currentLocation.hash !== nextLocation.hash),
+	);
 	// Results page: show only correct / incorrect / unanswered questions when stepping through the review
 	const [reviewFilter, setReviewFilter] = useState("all");
 	const questionCardRef = useRef(null);
+	const reviewSectionRef = useRef(null);
+	const resultSummaryRef = useRef(null);
+	const previouslySubmittedRef = useRef(false);
 	const question = questions[currentIndex];
 	const answeredCount = useMemo(
 		() => questions.reduce((count, item, index) => count + Number(isQuestionAnswered(item, answers[index])), 0),
 		[answers, questions],
 	);
+	const unansweredCount = questions.length - answeredCount;
+	const flaggedCount = Object.values(flaggedQuestions).filter(Boolean).length;
+	const answeredPercentage = questions.length ? Math.round((answeredCount / questions.length) * 100) : 0;
 	const percentage = questions.length ? Math.round((score / questions.length) * 100) : 0;
 	const reviewStatuses = useMemo(
 		() => (isSubmitted
@@ -91,16 +108,19 @@ export default function CCNAAllQuestionsExam() {
 		let isActive = true;
 		setLoadState({ status: "loading", error: null });
 		const bankRequest = isOnline
-			? loadCcnaAllQuestionsBank()
-			: Promise.resolve({
-				questions: getOfflineLegacyQuestionBank(),
-				skippedCount: 0,
-			});
+			? loadCcnaAllQuestionsBank().then((bank) => ({ ...bank, source: "online" }))
+			: loadCachedCcnaAllQuestionsBank().then((questions) => questions
+				? { questions, skippedCount: 0, source: "cached-online" }
+				: {
+					questions: getOfflineLegacyQuestionBank(),
+					skippedCount: 0,
+					source: "bundled",
+				});
 		bankRequest
-			.then(({ questions: validQuestions }) => {
+			.then(({ questions: validQuestions, source }) => {
 				const bankQuestions = [...validQuestions]
 					.filter((item) => !isOnline || isCcnaQuestionModule(item.moduleTitle ?? item.module))
-					.map((item) => isOnline ? applyNativeExhibit(item) : item)
+					.map((item) => source !== "bundled" ? applyNativeExhibit(item) : item)
 					.sort((left, right) => left.bankId - right.bankId);
 				if (!bankQuestions.length) {
 					throw new TypeError("The Questions table has no questions that can be rendered and graded.");
@@ -148,6 +168,16 @@ export default function CCNAAllQuestionsExam() {
 										0,
 									));
 								}
+								const restoredFlags = {};
+								if (parsed.flaggedQuestions && typeof parsed.flaggedQuestions === "object" && !Array.isArray(parsed.flaggedQuestions)) {
+									for (const [indexText, isFlagged] of Object.entries(parsed.flaggedQuestions)) {
+										const index = Number(indexText);
+										if (Number.isInteger(index) && index >= 0 && index < orderedQuestions.length && isFlagged === true) {
+											restoredFlags[index] = true;
+										}
+									}
+								}
+								setFlaggedQuestions(restoredFlags);
 							} else {
 								window.localStorage.removeItem(storageKey);
 							}
@@ -158,6 +188,7 @@ export default function CCNAAllQuestionsExam() {
 					}
 				}
 				setQuestions(orderedQuestions);
+				setQuestionBankSource(source);
 				setLoadState({ status: "ready", error: null });
 			})
 			.catch((error) => {
@@ -179,6 +210,7 @@ export default function CCNAAllQuestionsExam() {
 				version: 1,
 				questionIds: questions.map((item) => item.bankId),
 				answers,
+				flaggedQuestions,
 				currentIndex,
 				furthestOpenedIndex,
 				isSubmitted,
@@ -188,7 +220,7 @@ export default function CCNAAllQuestionsExam() {
 			console.error("Unable to save all-questions exam progress.", error);
 			setStorageError("Your latest progress could not be saved in this browser.");
 		}
-	}, [answers, currentIndex, furthestOpenedIndex, isSubmitted, loadState.status, questions, storageKey]);
+	}, [answers, currentIndex, flaggedQuestions, furthestOpenedIndex, isSubmitted, loadState.status, questions, storageKey]);
 
 	useEffect(() => {
 		setQuestionNumberInput(String(currentIndex + 1));
@@ -196,9 +228,11 @@ export default function CCNAAllQuestionsExam() {
 
 	useEffect(() => {
 		if (!question) return;
+		const justSubmitted = isSubmitted && !previouslySubmittedRef.current;
+		previouslySubmittedRef.current = isSubmitted;
 		const animationFrame = window.requestAnimationFrame(() => {
 			const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-			questionCardRef.current?.scrollIntoView({
+			(justSubmitted ? resultSummaryRef : questionCardRef).current?.scrollIntoView({
 				behavior: reduceMotion ? "auto" : "smooth",
 				block: "start",
 			});
@@ -234,11 +268,20 @@ export default function CCNAAllQuestionsExam() {
 		if (first >= 0) goToQuestion(first);
 	}
 
+	function reviewAnswers() {
+		const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+		reviewSectionRef.current?.scrollIntoView({
+			behavior: reduceMotion ? "auto" : "smooth",
+			block: "start",
+		});
+	}
+
 	function submitExam() {
 		const finalScore = questions.reduce(
 			(total, item, index) => total + Number(isAnswerCorrect(item, answers[index])),
 			0,
 		);
+		setIsSubmitConfirmationOpen(false);
 		setScore(finalScore);
 		setIsSubmitted(true);
 		goToQuestion(0);
@@ -247,6 +290,7 @@ export default function CCNAAllQuestionsExam() {
 	function restartExam() {
 		setQuestions((currentQuestions) => shuffleQuestions(currentQuestions));
 		setAnswers({});
+		setFlaggedQuestions({});
 		setCurrentIndex(0);
 		setFurthestOpenedIndex(0);
 		setIsSubmitted(false);
@@ -289,12 +333,22 @@ export default function CCNAAllQuestionsExam() {
 			<div className="mx-auto max-w-[1125px]">
 				<header className="mb-7 flex flex-wrap items-center justify-between gap-4 border-b border-[#d6e5e7] pb-5">
 					<div className="flex min-w-0 items-center gap-4">
-						<Link to="/modules/programs/ccna" aria-label="Back to CCNA course" className="ccna-training-logo shrink-0 rounded-lg bg-white px-3 py-2 shadow-sm">
-							<img src={TrainingLogo} alt="MATEKK Cybercore Academy" className="h-auto w-32 sm:w-36" />
-						</Link>
-						<div className="min-w-0 border-l border-[#cbd5e1] pl-4">
-							<p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#70809a]">CCNA practice</p>
-							<p className="mt-1 truncate text-sm font-bold text-[#17233d]">All Questions Exam · Online Question Bank</p>
+						{isOnline ? (
+							<Link to="/modules/programs/ccna" aria-label="Back to CCNA course" className="ccna-training-logo shrink-0 rounded-lg bg-white px-3 py-2 shadow-sm">
+								<img src={TrainingLogo} alt="MATEKK Cybercore Academy" className="h-auto w-32 sm:w-36" />
+							</Link>
+						) : (
+							<ExamBrand to="/modules/programs/ccna" isDark={isDark} />
+						)}
+						<div className="hidden min-w-0 border-l border-[#cbd5e1] pl-4 sm:block">
+							<p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#70809a]">CCNA composite exam</p>
+							<p className="mt-1 truncate text-sm font-bold text-[#17233d]">
+								All Questions Exam · {questionBankSource === "cached-online"
+									? "Saved Online Question Bank"
+									: questionBankSource === "bundled"
+										? "Built-in Offline Question Bank"
+										: "Online Question Bank"}
+							</p>
 						</div>
 					</div>
 					<div className="flex w-full items-center justify-between gap-2 sm:w-auto sm:justify-end">
@@ -319,23 +373,21 @@ export default function CCNAAllQuestionsExam() {
 						{storageError}
 					</p>
 				)}
+				{questionBankSource === "bundled" && (
+					<p role="status" className="mb-4 rounded-xl border border-[#f0d79e] bg-[#fffaf0] px-4 py-3 text-sm leading-6 text-[#805b12]">
+						This device has not saved the complete online question bank. Connect to the internet and open this exam once to save it for offline use.
+					</p>
+				)}
 				{!isSubmitted ? (
 					<>
 						<section aria-label="Exam progress" className="mb-5 rounded-2xl border border-[#d6e5e7] bg-white p-5 shadow-sm sm:mb-6 sm:p-8">
 							<div className="flex flex-wrap items-center justify-between gap-3">
-								<div className="flex flex-wrap items-center gap-2">
-									<p className="inline-flex items-center gap-2 rounded-xl bg-[#e8f3f4] px-4 py-2 text-sm font-semibold text-[#005b6b]">
-										<BookOpen size={16} /> Untimed · Database order
-									</p>
-									<span className="shrink-0 rounded-full border border-[#c9dfe2] bg-white px-3 py-2 text-xs font-semibold text-[#005b6b] sm:px-4 sm:text-sm">
-										No time limit
-									</span>
+								<p className="rounded-xl bg-[#e1f5ef] px-4 py-2 text-sm font-semibold text-[#075b4a]">All Questions Exam</p>
+								<div className="shrink-0 rounded-full border border-[#c9dfe2] bg-white px-3 py-2 text-xs font-semibold text-[#005b6b] sm:px-4 sm:text-sm">
+									No time limit
 								</div>
-								<span className="rounded-xl bg-[#f8fafb] px-3 py-2 text-sm text-[#526584]">
-									{answeredCount.toLocaleString()} of {questions.length.toLocaleString()} answered
-								</span>
 							</div>
-							<div className="mt-5 flex flex-wrap items-baseline justify-between gap-3">
+							<div className="mt-5 flex flex-wrap items-baseline justify-between gap-2">
 								<h1 className="text-xl font-semibold text-[#17233d] sm:text-2xl">
 									Question {currentIndex + 1} <span className="text-base font-normal text-[#64748b] sm:text-lg">of {questions.length.toLocaleString()}</span>
 								</h1>
@@ -355,15 +407,50 @@ export default function CCNAAllQuestionsExam() {
 									</button>
 								</form>
 							</div>
-							<p className="mt-2 text-sm text-[#64748b]">
-								Answer each question to unlock the next one. You can return to any question you’ve already opened.
+							<p className="mt-2 text-sm text-[#64748b] sm:text-base">
+								{answeredCount.toLocaleString()} answered <span aria-hidden="true">·</span> {answeredPercentage}%
 							</p>
-							<div className="mt-3 h-2 overflow-hidden rounded-full bg-[#e7e7e7]">
-								<div className="h-full rounded-full bg-[#159b73] transition-[width]" style={{ width: `${questions.length ? (answeredCount / questions.length) * 100 : 0}%` }} />
+							<div
+								role="progressbar"
+								aria-label="Exam progress"
+								aria-valuemin={0}
+								aria-valuemax={questions.length}
+								aria-valuenow={answeredCount}
+								aria-valuetext={`${answeredCount} of ${questions.length} answered, ${answeredPercentage}%`}
+								className={`exam-progress-track mt-3 h-2 overflow-hidden rounded-full ${isDark ? "bg-[#303a60]" : "bg-[#e7e7e7]"}`}
+							>
+								<div className={`exam-progress-fill h-full rounded-full transition-[width] ${isDark ? "bg-[#20c5d6] shadow-[0_0_10px_rgba(32,197,214,0.55)]" : "bg-[#159b73]"}`} style={{ width: `${answeredPercentage}%` }} />
+							</div>
+							<div className={`mt-4 flex flex-wrap gap-2.5 text-sm ${isDark ? "text-[#cbd5e1]" : "text-[#526584]"}`}>
+								<span className={`exam-progress-badge rounded-xl px-3 py-2 ${isDark ? "bg-[#1b2947]" : "bg-[#f8fafb]"}`}>
+									{answeredCount.toLocaleString()} answered
+								</span>
+								<button
+									type="button"
+									onClick={() => setFlaggedQuestions((previous) => ({
+										...previous,
+										[currentIndex]: !previous[currentIndex],
+									}))}
+									aria-label={`${flaggedQuestions[currentIndex] ? "Unflag" : "Flag"} question ${currentIndex + 1}; ${flaggedCount} flagged`}
+									aria-pressed={Boolean(flaggedQuestions[currentIndex])}
+									className={`exam-progress-badge inline-flex items-center gap-2 rounded-xl px-3 py-2 transition ${flaggedQuestions[currentIndex]
+										? isDark ? "bg-[#42291f] text-[#ffc28e]" : "bg-[#fff1d6] text-[#8a5200]"
+										: isDark ? "bg-[#1b2947] hover:bg-[#263654]" : "bg-[#f8fafb] hover:bg-[#eef3f5]"
+										} ${flaggedQuestions[currentIndex] ? "exam-progress-flagged" : ""}`}
+								>
+									<Flag size={15} fill={flaggedQuestions[currentIndex] ? "currentColor" : "none"} />
+									{flaggedCount.toLocaleString()} flagged
+								</button>
+								<span className={`exam-progress-badge rounded-xl px-3 py-2 ${isDark ? "bg-[#1b2947]" : "bg-[#f8fafb]"}`}>
+									{unansweredCount.toLocaleString()} left
+								</span>
 							</div>
 						</section>
 
 						<section key={`question-${currentIndex}`} ref={questionCardRef} className="ccna-question-transition scroll-mt-4 rounded-[20px] border border-[#d6e5e7] bg-white p-4 shadow-sm sm:p-7">
+							<p className="mb-2 text-sm text-[#70809a]">
+								Question {currentIndex + 1} of {questions.length.toLocaleString()}
+							</p>
 							{!question.hidePrompt && (
 								<QuestionPrompt
 									prompt={question.prompt}
@@ -382,7 +469,7 @@ export default function CCNAAllQuestionsExam() {
 							/>
 							<div className="mt-7 flex flex-wrap items-center justify-end gap-3">
 								{currentIndex === questions.length - 1 ? (
-									<button type="button" onClick={submitExam} className="rounded-full bg-[#005b6b] px-6 py-3 font-semibold text-white transition hover:bg-[#004653]">
+									<button type="button" onClick={() => setIsSubmitConfirmationOpen(true)} className="rounded-full bg-[#005b6b] px-6 py-3 font-semibold text-white transition hover:bg-[#004653]">
 										Finish and review
 									</button>
 								) : (
@@ -392,12 +479,12 @@ export default function CCNAAllQuestionsExam() {
 										disabled={!isQuestionAnswered(question, answers[currentIndex])}
 										className="inline-flex items-center gap-2 rounded-full bg-[#005b6b] px-6 py-3 font-semibold text-white transition hover:bg-[#004653] disabled:cursor-not-allowed disabled:opacity-40"
 									>
-										Next <ChevronRight size={18} />
+										Next Question <ChevronRight size={18} />
 									</button>
 								)}
 							</div>
 							{currentIndex < questions.length - 1 && (
-								<button type="button" onClick={submitExam} className="mt-5 text-sm font-semibold text-[#71819b] underline decoration-[#c9dfe2] underline-offset-4 transition hover:text-[#005b6b]">
+								<button type="button" onClick={() => setIsSubmitConfirmationOpen(true)} className="mt-5 text-sm font-semibold text-[#71819b] underline decoration-[#c9dfe2] underline-offset-4 transition hover:text-[#005b6b]">
 									Finish exam and see score
 								</button>
 							)}
@@ -405,28 +492,73 @@ export default function CCNAAllQuestionsExam() {
 					</>
 				) : (
 					<>
-						<section className="mb-6 flex flex-wrap items-end justify-between gap-5 rounded-[24px] border border-[#d6e5e7] bg-white px-6 py-8 shadow-sm sm:px-10">
+						<section ref={resultSummaryRef} className="mb-6 grid scroll-mt-6 items-center gap-8 rounded-[24px] border border-[#d6e5e7] bg-white px-6 py-8 shadow-sm sm:px-10 lg:grid-cols-[1fr_0.8fr] lg:px-14">
 							<div>
 								<p className="inline-flex items-center gap-2 rounded-full bg-[#e8f3f4] px-3 py-1.5 text-xs font-bold tracking-wide text-[#005b6b]">
 									<CheckCircle2 size={15} /> Exam complete
 								</p>
-								<h1 className="mt-4 text-3xl font-extrabold tracking-tight text-[#17233d] sm:text-4xl">Your score</h1>
-								<p className="mt-3 text-lg font-semibold text-[#005b6b]">
-									{score.toLocaleString()} / {questions.length.toLocaleString()} · {percentage}%
+								<h1 className="mt-4 max-w-xl text-3xl font-extrabold leading-tight tracking-tight text-[#17233d] sm:text-4xl">
+									Your score: <span className="text-[#005b6b]">{score.toLocaleString()} of {questions.length.toLocaleString()}</span>
+								</h1>
+								<p className="mt-3 max-w-xl leading-7 text-[#64748b]">
+									You answered {answeredCount.toLocaleString()} of {questions.length.toLocaleString()} questions. Review your answers below.
 								</p>
-								<p className="mt-2 text-sm text-[#64748b]">
-									{answeredCount.toLocaleString()} answered · {questions.length - answeredCount} unanswered. Browse the numbered questions below to review your answers.
-								</p>
+								<div className="mt-7 flex flex-wrap gap-3">
+									<button
+										type="button"
+										onClick={() => setIsRetakeConfirmationOpen(true)}
+										className="inline-flex items-center gap-2 rounded-full bg-[#005b6b] px-6 py-3 font-semibold text-white transition hover:bg-[#004653]"
+									>
+										<RotateCcw size={16} /> Retake exam
+									</button>
+									<button
+										type="button"
+										onClick={reviewAnswers}
+										className="ccna-result-review-button inline-flex items-center gap-2 rounded-full border border-[#9fc8ce] px-6 py-3 font-semibold text-[#005b6b] transition hover:bg-[#e8f3f4]"
+									>
+										Review Answers <ArrowDown size={16} />
+									</button>
+								</div>
+								<div className="mt-8 grid max-w-sm grid-cols-2 divide-x divide-[#dce5f2]">
+									<div className="pr-4">
+										<strong className="block text-2xl font-extrabold tabular-nums text-[#17233d]">{score.toLocaleString()}</strong>
+										<span className="text-xs leading-4 text-[#71819b]">Your score<br />out of {questions.length.toLocaleString()}</span>
+									</div>
+									<div className="pl-4">
+										<strong className="block text-2xl font-extrabold tabular-nums text-[#17233d]">{questions.length.toLocaleString()}</strong>
+										<span className="text-xs leading-4 text-[#71819b]">Total<br />questions</span>
+									</div>
+								</div>
 							</div>
-							<button
-								type="button"
-								onClick={() => setIsRetakeConfirmationOpen(true)}
-								className="inline-flex items-center gap-2 rounded-full bg-[#005b6b] px-6 py-3 font-semibold text-white transition hover:bg-[#004653]"
-							>
-								<RotateCcw size={16} /> Retake exam
-							</button>
+							<div className="flex justify-center py-3">
+								<div
+									role="img"
+									aria-label={`${percentage}% correct answers`}
+									className="relative flex h-56 w-56 items-center justify-center rounded-full bg-[#dceff1] sm:h-64 sm:w-64"
+								>
+									<div className="absolute inset-[12px] rounded-full bg-[#eef7f8]" />
+									<svg aria-hidden="true" viewBox="0 0 100 100" className="absolute inset-0 h-full w-full -rotate-90">
+										<circle cx="50" cy="50" r="46" fill="none" stroke="#dceff1" strokeWidth="4.5" />
+										<circle
+											cx="50"
+											cy="50"
+											r="46"
+											fill="none"
+											stroke="#005b6b"
+											strokeWidth="4.5"
+											strokeDasharray={`${2 * Math.PI * 46}`}
+											strokeDashoffset={`${2 * Math.PI * 46 * (1 - percentage / 100)}`}
+										/>
+									</svg>
+									<div className="absolute inset-[25px] rounded-full border-[10px] border-white" />
+									<div className="relative z-10 text-center">
+										<strong className="block text-5xl font-extrabold tracking-tight tabular-nums text-[#005b6b]">{percentage}%</strong>
+										<span className="mt-1 block text-sm font-semibold text-[#64748b]">correct answers</span>
+									</div>
+								</div>
+							</div>
 						</section>
-						<section aria-label="Find a question" className="mb-5 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[#d6e5e7] bg-white p-4 shadow-sm sm:p-5">
+						<section ref={reviewSectionRef} aria-label="Find a question" className="mb-5 flex scroll-mt-6 flex-wrap items-center justify-between gap-4 rounded-2xl border border-[#d6e5e7] bg-white p-4 shadow-sm sm:p-5">
 							<div role="group" aria-label="Show questions" className="flex flex-wrap gap-2">
 								{[
 									["all", "All"],
@@ -507,6 +639,42 @@ export default function CCNAAllQuestionsExam() {
 					</>
 				)}
 			</div>
+			{isSubmitConfirmationOpen && createPortal(
+				<div data-theme={isDark ? "dark" : "light"} className="fixed inset-0 z-[120] grid place-items-center bg-[#071126]/60 p-4 backdrop-blur-sm">
+					<section
+						role="alertdialog"
+						aria-modal="true"
+						aria-labelledby="ccna-all-submit-title"
+						aria-describedby="ccna-all-submit-description"
+						className="w-full max-w-md rounded-2xl border border-[#d6e5e7] bg-white p-5 text-[#17233d] shadow-2xl sm:p-8"
+					>
+						<p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#005b6b]">Finish exam</p>
+						<h2 id="ccna-all-submit-title" className="mt-2 text-xl font-bold sm:text-2xl">
+							Are you sure you want to finish this exam?
+						</h2>
+						<p id="ccna-all-submit-description" className="mt-3 text-sm leading-6 text-[#64748b]">
+							You answered {answeredCount.toLocaleString()} of {questions.length.toLocaleString()} questions. Your answers will be scored and you’ll move to the results page. You won’t be able to change them after submitting.
+						</p>
+						<div className="mt-6 flex flex-wrap justify-end gap-3">
+							<button
+								type="button"
+								onClick={() => setIsSubmitConfirmationOpen(false)}
+								className="rounded-full border border-[#c9dfe2] px-5 py-2.5 text-sm font-semibold text-[#42516b] transition hover:bg-[#f5f9f9]"
+							>
+								Continue exam
+							</button>
+							<button
+								type="button"
+								onClick={submitExam}
+								className="rounded-full bg-[#005b6b] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#004653]"
+							>
+								Yes, finish exam
+							</button>
+						</div>
+					</section>
+				</div>,
+				document.body,
+			)}
 			{isRetakeConfirmationOpen && createPortal(
 				<div data-theme="light" className="fixed inset-0 z-[120] grid place-items-center bg-[#071126]/60 p-4 backdrop-blur-sm">
 					<section
@@ -537,6 +705,46 @@ export default function CCNAAllQuestionsExam() {
 								className="rounded-full bg-[#005b6b] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#004653]"
 							>
 								Yes, retake exam
+							</button>
+						</div>
+					</section>
+				</div>,
+				document.body,
+			)}
+			{blocker.state === "blocked" && createPortal(
+				<div data-theme={isDark ? "dark" : "light"} className="fixed inset-0 z-[120] grid place-items-center overflow-y-auto bg-[#071126]/55 p-4 backdrop-blur-[2px] sm:p-6">
+					<section
+						role="alertdialog"
+						aria-modal="true"
+						aria-labelledby="ccna-all-questions-exit-title"
+						aria-describedby="ccna-all-questions-exit-description"
+						className="w-full max-w-md rounded-2xl border border-[#d6e5e7] bg-white p-5 text-[#17233d] shadow-2xl sm:p-8"
+					>
+						<p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#005b6b]">Exam in progress</p>
+						<h2 id="ccna-all-questions-exit-title" className="mt-2 text-xl font-bold sm:text-2xl">
+							Are you sure you want to exit the exam?
+						</h2>
+						<p id="ccna-all-questions-exit-description" className="mt-3 text-sm leading-6 text-[#64748b] sm:text-base">
+							{storageKey && !storageError
+								? "Your answers and flagged questions are saved automatically. You can continue this exam when you return."
+								: storageError
+									? "Your latest progress could not be saved. If you exit now, you may lose your recent changes."
+									: "Your progress may not be saved after you exit this exam."}
+						</p>
+						<div className="mt-6 flex flex-wrap justify-end gap-3">
+							<button
+								type="button"
+								onClick={() => blocker.reset()}
+								className="ccna-modal-stay rounded-full border border-[#c9dfe2] px-4 py-2.5 text-sm font-semibold text-[#42516b] transition hover:bg-[#f5f9f9] sm:px-5"
+							>
+								Stay in exam
+							</button>
+							<button
+								type="button"
+								onClick={() => blocker.proceed()}
+								className="rounded-full bg-[#005b6b] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#004653] sm:px-5"
+							>
+								Exit exam
 							</button>
 						</div>
 					</section>

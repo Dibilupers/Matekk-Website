@@ -6,6 +6,7 @@ import Footer from "../components/footer/footer";
 import ScrollToTop from "../components/scroll/ScrollToTop";
 import OfflineModuleAccess from "../components/OfflineModuleAccess";
 import useHeadingTypeIn from "../utils/useHeadingTypeIn";
+import { getExamRoute, getExamRoutePattern, LEGACY_CCNA_ALL_QUESTIONS_ROUTE } from "../utils/examRoutes";
 
 /* Pages */
 import Home from "../pages/Home";
@@ -23,6 +24,10 @@ import CCNPEnterprise from "../pages/training/cisco/ccnp/enterprise";
 import CCNPDatacenter from "../pages/training/cisco/ccnp/datacenter";
 import CCNPSecurity from "../pages/training/cisco/ccnp/security";
 import CCNPCollaboration from "../pages/training/cisco/ccnp/collaboration";
+import CCNPEnterpriseDashboard from "../pages/modules/programs/Cisco/CCNP/CCNPEnterprise/ccnpEnterprise";
+import CCNPSecurityDashboard from "../pages/modules/programs/Cisco/CCNP/CCNPSecurity/ccnpSecurity";
+import CCNPDataCenterDashboard from "../pages/modules/programs/Cisco/CCNP/CCNPDataCenter/ccnpDataCenter";
+import CCNPCollaborationDashboard from "../pages/modules/programs/Cisco/CCNP/CCNPCollaboration/ccnpCollaboration";
 
 /* CompTIA */
 import Aplus from "../pages/training/comptia/aplus";
@@ -167,12 +172,18 @@ export default function App() {
     || location.pathname.startsWith("/modules/programs/fortinet-fortios/exam/");
   const isAdminPage = location.pathname === "/admin";
   const isAccountPendingPage = location.pathname === "/account-pending";
+  const isLoginPage = location.pathname === "/login";
+  const isCcnaProgramPage = [
+    "/modules/programs/ccna",
+    "/modules/programs/ccna-cybersecurity",
+    "/modules/programs/ccna-automation",
+  ].some((basePath) => location.pathname === basePath || location.pathname.startsWith(`${basePath}/`));
   useHeadingTypeIn(location.pathname);
 
   return (
     <>
       <CCNAExamTimeNotification />
-      {isOnline && !isFullScreenAssessment && !isAccountPendingPage && <NavBar />}
+      {isOnline && !isFullScreenAssessment && !isAccountPendingPage && !isLoginPage && <NavBar />}
       <ScrollToTop />
 
       {/* Keyed by path so every page change replays the fade-in (navbar stays outside, so it never flickers) */}
@@ -422,6 +433,10 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/modules/programs/ccnp/enterprise" element={<ProtectedRoute><CCNPEnterpriseDashboard /></ProtectedRoute>} />
+        <Route path="/modules/programs/ccnp/security" element={<ProtectedRoute><CCNPSecurityDashboard /></ProtectedRoute>} />
+        <Route path="/modules/programs/ccnp/datacenter" element={<ProtectedRoute><CCNPDataCenterDashboard /></ProtectedRoute>} />
+        <Route path="/modules/programs/ccnp/collaboration" element={<ProtectedRoute><CCNPCollaborationDashboard /></ProtectedRoute>} />
         <Route
           path="/modules/programs/comptia-aplus"
           element={
@@ -468,7 +483,7 @@ export default function App() {
           }
         />
         <Route
-          path="/modules/programs/fortinet-fortios/exam/:examKey"
+          path={getExamRoutePattern("fortinet-fortios")}
           element={
             <ProtectedRoute>
               <FortiOSExamRoute onlineExam={<FortiOSExam />} />
@@ -476,7 +491,7 @@ export default function App() {
           }
         />
         <Route
-          path="/modules/programs/comptia-network-plus/exam/:examKey"
+          path={getExamRoutePattern("comptia-network-plus")}
           element={
             <ProtectedRoute>
               <NetworkPlusExamRoute onlineExam={<NetworkPlusExam />} />
@@ -484,7 +499,7 @@ export default function App() {
           }
         />
         <Route
-          path="/modules/programs/comptia-security-plus/exam/:examKey"
+          path={getExamRoutePattern("comptia-security-plus")}
           element={
             <ProtectedRoute>
               <SecurityPlusExamRoute onlineExam={<SecurityPlusExam />} />
@@ -624,7 +639,7 @@ export default function App() {
           }
         />
         <Route
-          path="/modules/programs/ccna/exam/short"
+          path={getExamRoute("ccna", "short")}
           element={
             <ProtectedRoute>
               <CCNACompositeExam key="short" examKey="short" />
@@ -632,7 +647,7 @@ export default function App() {
           }
         />
         <Route
-          path="/modules/programs/ccna/exam/medium"
+          path={getExamRoute("ccna", "medium")}
           element={
             <ProtectedRoute>
               <CCNACompositeExam key="medium" examKey="medium" />
@@ -640,7 +655,7 @@ export default function App() {
           }
         />
         <Route
-          path="/modules/programs/ccna/exam/long"
+          path={getExamRoute("ccna", "long")}
           element={
             <ProtectedRoute>
               <CCNACompositeExam key="long" examKey="long" />
@@ -648,7 +663,7 @@ export default function App() {
           }
         />
         <Route
-          path="/modules/programs/ccna/exam/all"
+          path={getExamRoute("ccna", "all_questions")}
           element={
             <ProtectedRoute>
               <CCNAAllQuestionsExam />
@@ -656,7 +671,15 @@ export default function App() {
           }
         />
         <Route
-          path="/modules/programs/fortios/exam/all"
+          path={LEGACY_CCNA_ALL_QUESTIONS_ROUTE}
+          element={
+            <ProtectedRoute>
+              <CCNAAllQuestionsExam />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={getExamRoute("fortios-offline", "all_questions")}
           element={
             <ProtectedRoute>
               <FortiOSBundledOfflineExam />
@@ -664,7 +687,7 @@ export default function App() {
           }
         />
         <Route
-          path="/modules/programs/ccna-automation/exam/:examKey"
+          path={getExamRoutePattern("ccna-automation")}
           element={
             <ProtectedRoute>
               <ProgramCompositeExam programKey="ccna-automation" />
@@ -672,7 +695,7 @@ export default function App() {
           }
         />
         <Route
-          path="/modules/programs/ccna-cybersecurity/exam/:examKey"
+          path={getExamRoutePattern("ccna-cybersecurity")}
           element={
             <ProtectedRoute>
               <ProgramCompositeExam programKey="ccna-cybersecurity" />
@@ -715,7 +738,7 @@ export default function App() {
         <Route path="*" element={<NotFound />} />
       </Routes>
 
-      {isOnline && !isFullScreenAssessment && !isAdminPage && !isAccountPendingPage && <Footer />}
+      {isOnline && !isFullScreenAssessment && !isAdminPage && !isAccountPendingPage && !isLoginPage && !isCcnaProgramPage && <Footer />}
       </div>
     </>
   );
@@ -867,6 +890,10 @@ function OfflineModulesPage() {
         { name: "CCNA", path: "/modules/programs/ccna" },
         { name: "CCNA Automation", path: "/modules/programs/ccna-automation" },
         { name: "CCNA Cybersecurity", path: "/modules/programs/ccna-cybersecurity" },
+        { name: "CCNP Enterprise", path: "/modules/programs/ccnp/enterprise", availableOffline: false },
+        { name: "CCNP Security", path: "/modules/programs/ccnp/security", availableOffline: false },
+        { name: "CCNP Data Center", path: "/modules/programs/ccnp/datacenter", availableOffline: false },
+        { name: "CCNP Collaboration", path: "/modules/programs/ccnp/collaboration", availableOffline: false },
       ],
     },
     {
@@ -874,7 +901,7 @@ function OfflineModulesPage() {
       brand: "comptia",
       programs: [
         { name: "Network+", path: "/modules/programs/comptia-network-plus" },
-        { name: "A+", path: "/modules/programs/comptia-aplus" },
+        { name: "A+", path: "/modules/programs/comptia-aplus", availableOffline: false },
         { name: "Security+", path: "/modules/programs/comptia-security-plus" },
       ],
     },
@@ -888,7 +915,7 @@ function OfflineModulesPage() {
   ];
 
   return (
-    <main className="mx-auto min-h-[60vh] w-full max-w-5xl px-4 py-10 sm:px-6 sm:py-14">
+    <main className="offline-modules-page min-h-screen w-full px-4 py-10 sm:px-6 sm:py-14">
       <header className="mb-10 text-center">
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-600">Offline learning</p>
         <h1 className="mt-2 text-3xl font-bold text-slate-900 sm:text-4xl">Choose a module</h1>
@@ -908,20 +935,36 @@ function OfflineModulesPage() {
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
               {category.programs.map((program) => {
+                const isAvailableOffline = program.availableOffline !== false;
                 const accentClass = category.brand === "teal"
                   ? "border-l-[#005b6b] hover:border-y-[#9fc8ce] hover:border-r-[#9fc8ce] focus-visible:ring-[#005b6b]"
                   : category.brand === "fortinet"
                     ? "border-l-[#e2231a] hover:border-y-[#f1beba] hover:border-r-[#f1beba] focus-visible:ring-[#e2231a]"
                     : "border-l-[#c8102e] hover:border-y-[#f0cbd3] hover:border-r-[#f0cbd3] focus-visible:ring-[#c8102e]";
+                const cardClassName = `flex min-h-16 items-center justify-between rounded-xl border-y border-r border-l-4 border-y-slate-200 border-r-slate-200 bg-white px-5 py-4 font-semibold text-slate-900 shadow-sm ${
+                  isAvailableOffline
+                    ? `transition-all duration-200 ease-out hover:-translate-y-1 hover:border-l-8 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 motion-reduce:transition-none motion-reduce:hover:translate-y-0 offline-water-card group relative isolate overflow-hidden offline-water-card--${category.brand} ${accentClass}`
+                    : "cursor-not-allowed opacity-40"
+                }`;
                 return (
-                  <Link
-                    className={`flex min-h-16 items-center justify-between rounded-xl border-y border-r border-l-4 border-y-slate-200 border-r-slate-200 bg-white px-5 py-4 font-semibold text-slate-900 shadow-sm transition hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${accentClass}`}
-                    key={program.path}
-                    to={program.path}
-                  >
-                    <span>{program.name}</span>
-                    <span aria-hidden="true" className="text-xl font-normal text-slate-400">→</span>
-                  </Link>
+                  isAvailableOffline ? (
+                    <Link className={cardClassName} key={program.path} to={program.path}>
+                      <span className="relative z-10 text-slate-900 transition-colors duration-500 group-hover:text-white group-focus-visible:text-white">{program.name}</span>
+                      <span aria-hidden="true" className="relative z-10 text-xl font-normal text-slate-400 transition-colors duration-500 group-hover:text-white group-focus-visible:text-white">→</span>
+                    </Link>
+                  ) : (
+                    <button
+                      type="button"
+                      className={`${cardClassName} w-full text-left`}
+                      key={program.path}
+                      disabled
+                      aria-label={`${program.name} is unavailable offline`}
+                      title="Not available offline yet"
+                    >
+                      <span>{program.name}</span>
+                      <span aria-hidden="true" className="text-xl font-normal text-slate-400">→</span>
+                    </button>
+                  )
                 );
               })}
             </div>
@@ -937,7 +980,11 @@ function ProtectedRoute({ children }) {
   const { pathname } = useLocation();
   const isModuleRoute = /^\/modules\/programs(?:\/|$)/.test(pathname);
   const isExamRoute = /(?:^|\/)exam(?:\/|$)/.test(pathname);
-  const isOfflineCcnaExamRoute = /^\/modules\/programs\/ccna\/exam\/(?:short|medium|long|all)$/.test(pathname);
+  const normalizedPathname = pathname.replace(/\/+$/, "") || "/";
+  const isOfflineCcnaExamRoute = ["short", "medium", "long", "all_questions"]
+    .some((examKey) => normalizedPathname === getExamRoute("ccna", examKey))
+    || normalizedPathname === LEGACY_CCNA_ALL_QUESTIONS_ROUTE
+    || /^\/modules\/programs\/ccna-(?:automation|cybersecurity)\/exam\/(?:short|medium|long)\/?$/.test(pathname);
   const isOfflineFortiOSExamRoute = /^\/modules\/programs\/fortinet-fortios\/exam\/(?:short|medium|long|all_questions)\/?$/.test(pathname);
   const isOfflineNetworkPlusExamRoute = /^\/modules\/programs\/comptia-network-plus\/exam\/(?:short|medium|long|all_questions)\/?$/.test(pathname);
   const isOfflineSecurityPlusExamRoute = /^\/modules\/programs\/comptia-security-plus\/exam\/(?:short|medium|long|all_questions)\/?$/.test(pathname);
@@ -954,7 +1001,7 @@ function ProtectedRoute({ children }) {
       <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6 text-center text-white">
         <section className="max-w-lg space-y-3">
           <h1 className="text-2xl font-semibold">Internet connection required</h1>
-          <p className="text-slate-300">Only CCNA, FortiOS, and CompTIA Network+ or Security+ exams with cached questions are available offline. Reconnect to take this exam.</p>
+          <p className="text-slate-300">Only CCNA, CCNA Automation, CCNA Cybersecurity, FortiOS, and CompTIA Network+ or Security+ exams with cached questions are available offline. Reconnect to take this exam.</p>
         </section>
       </main>
     );

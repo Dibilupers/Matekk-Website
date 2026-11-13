@@ -181,7 +181,7 @@ export function ClickBoxesQuestionInput({ question, value, onChange, disabled })
 											aria-pressed={selected}
 											aria-label={`${choice}${usedElsewhere ? ", already matched" : ""}`}
 											onClick={(event) => chooseClickBox(event, question, assignments, choiceIndex, itemIndex, onChange)}
-											className={`box-border min-w-0 max-w-full overflow-hidden whitespace-normal break-words border border-dashed px-2 py-1.5 text-left text-[13px] leading-5 [overflow-wrap:anywhere] transition-[max-width,opacity,padding,border-width,background-color] duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[#005b6b] disabled:cursor-default motion-reduce:transition-none ${
+											className={`ccna-click-box-choice box-border min-w-0 max-w-full overflow-hidden whitespace-normal break-words border border-dashed px-2 py-1.5 text-left text-[13px] leading-5 [overflow-wrap:anywhere] transition-[max-width,opacity,padding,border-width,background-color] duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[#005b6b] disabled:cursor-default motion-reduce:transition-none ${
 												selected
 													? "border-2 border-[#16a34a] bg-[#ecfdf3] font-semibold text-[#14532d] shadow-[0_0_0_1px_rgba(22,163,74,0.18)]"
 													: collapsed

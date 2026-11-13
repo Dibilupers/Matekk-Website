@@ -1,26 +1,55 @@
 import emailjs from "emailjs-com";
 import { useState, useRef, useEffect } from "react";
 import DOMPurify from "dompurify";
+import HCaptcha from "@hcaptcha/react-hcaptcha";
 import API_URL from "../../config/api";
-import { executeRecaptcha, RECAPTCHA_SITE_KEY } from "../../config/recaptcha";
+import { HCAPTCHA_SITE_KEY } from "../../config/hcaptcha";
 
 const EMAILJS_SERVICE_ID  = import.meta.env.VITE_EMAILJS_SERVICE_ID;
 const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
 const EMAILJS_PUBLIC_KEY  = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
-const COOLDOWN_MS         = 60_000;
+const SUCCESS_COOLDOWN_MS = 24 * 60 * 60 * 1000;
+const FAILURE_COOLDOWN_MS = 60_000;
+const PREVIOUS_SUCCESS_COOLDOWN_MS = 60 * 60 * 1000;
+const CONTACT_EMAIL = "info@matekkcybercore.com";
 
 // ── Validators ─────────────────────────────────────────────────────────────
-const isValidEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-const isValidPhone = (v) => /^[0-9+\-\s()]{7,15}$/.test(v);
+const MAX_NAME_LENGTH = 36;
+const MAX_EMAIL_LENGTH = 50;
+const MAX_PHONE_LENGTH = 11;
+const MAX_SUBJECT_LENGTH = 36;
+const MAX_MESSAGE_LENGTH = 500;
+const isValidName = (v) => /^[\p{L}\p{M}]+\.?(?:[ '\u2019-][\p{L}\p{M}]+\.?)*$/u.test(v.trim());
+const isValidEmail = (v) => v.length <= MAX_EMAIL_LENGTH && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+const isValidPhone = (v) => /^\d{11}$/.test(v);
 const isEmpty      = (v) => v.trim().length === 0;
 const isTooLong    = (v, max) => v.length > max;
+const getCooldownDuration = () => {
+  const storedDuration = Number(localStorage.getItem("lastFormSubmitCooldownMs"));
+  if (storedDuration === PREVIOUS_SUCCESS_COOLDOWN_MS) {
+    localStorage.setItem("lastFormSubmitCooldownMs", String(SUCCESS_COOLDOWN_MS));
+    return SUCCESS_COOLDOWN_MS;
+  }
+  return storedDuration || FAILURE_COOLDOWN_MS;
+};
+const formatRemainingTime = (seconds) => {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const remainingSeconds = seconds % 60;
+
+  if (hours > 0) return `${hours}h ${minutes}m`;
+  if (minutes > 0) return `${minutes}m ${remainingSeconds}s`;
+  return `${remainingSeconds}s`;
+};
 
 export default function ContactForm() {
   const [loading, setLoading]           = useState(false);
   const [status, setStatus]             = useState("");
+  const [captchaToken, setCaptchaToken] = useState("");
 
   const timerRef    = useRef(null);
   const cooldownRef = useRef(null);
+  const captchaRef = useRef(null);
 
   // Cleanup timers on unmount
   useEffect(() => () => {
@@ -30,17 +59,26 @@ export default function ContactForm() {
 
   const startCooldownTimer = () => {
     clearInterval(cooldownRef.current);
-    cooldownRef.current = setInterval(() => {
-      const sLeft = Math.ceil(
-        (COOLDOWN_MS - (Date.now() - Number(localStorage.getItem("lastFormSubmit")))) / 1000,
-      );
+    const updateCooldownStatus = () => {
+      const lastSubmit = Number(localStorage.getItem("lastFormSubmit"));
+      const cooldownMs = getCooldownDuration();
+      const sLeft = Math.ceil((cooldownMs - (Date.now() - lastSubmit)) / 1000);
+
+      if (!Number.isFinite(lastSubmit)) {
+        clearInterval(cooldownRef.current);
+        return;
+      }
+
       if (sLeft <= 0) {
         clearInterval(cooldownRef.current);
         setStatus("");
       } else {
-        setStatus(`Please wait ${sLeft}s before sending again.`);
+        setStatus(`You can send another message in ${formatRemainingTime(sLeft)}.`);
       }
-    }, 1000);
+    };
+
+    cooldownRef.current = setInterval(updateCooldownStatus, 1000);
+    updateCooldownStatus();
   };
 
   const sendMessage = async (e) => {
@@ -51,16 +89,16 @@ export default function ContactForm() {
     if (e.target.honeypot.value) return;
 
     // ── Rate limit ────────────────────────────────────────────────────────
-    const lastSent = localStorage.getItem("lastFormSubmit");
-    const now      = Date.now();
-    if (lastSent && now - Number(lastSent) < COOLDOWN_MS) {
-      const sLeft = Math.ceil((COOLDOWN_MS - (now - Number(lastSent))) / 1000);
-      setStatus(`Please wait ${sLeft}s before sending again.`);
+    const lastSent = Number(localStorage.getItem("lastFormSubmit"));
+    const cooldownMs = getCooldownDuration();
+    const now = Date.now();
+    if (Number.isFinite(lastSent) && now - lastSent < cooldownMs) {
+      const sLeft = Math.ceil((cooldownMs - (now - lastSent)) / 1000);
+      setStatus(`You can send another message in ${formatRemainingTime(sLeft)}.`);
       startCooldownTimer();
       return;
     }
 
-    // ── reCAPTCHA ─────────────────────────────────────────────────────────
     // ── Sanitize ──────────────────────────────────────────────────────────
     const name    = DOMPurify.sanitize(e.target.name.value);
     const email   = DOMPurify.sanitize(e.target.email.value);
@@ -69,12 +107,32 @@ export default function ContactForm() {
     const message = DOMPurify.sanitize(e.target.message.value);
 
     // ── Validate ──────────────────────────────────────────────────────────
-    if (isEmpty(name) || isEmpty(subject) || isEmpty(message)) {
+    if (isEmpty(name) || isEmpty(email) || isEmpty(phone) || isEmpty(subject) || isEmpty(message)) {
       setStatus("Please fill in all fields.");
       return;
     }
-    if (isTooLong(message, 1000)) {
-      setStatus("Message is too long (max 1,000 characters).");
+    if (isTooLong(name, MAX_NAME_LENGTH)) {
+      setStatus(`Full name must be ${MAX_NAME_LENGTH} characters or fewer.`);
+      return;
+    }
+    if (!isValidName(name)) {
+      setStatus("Full name can contain letters, spaces, periods, apostrophes, and hyphens only.");
+      return;
+    }
+    if (isTooLong(email, MAX_EMAIL_LENGTH)) {
+      setStatus(`Email must be ${MAX_EMAIL_LENGTH} characters or fewer.`);
+      return;
+    }
+    if (isTooLong(phone, MAX_PHONE_LENGTH) || !isValidPhone(phone)) {
+      setStatus("Mobile number must contain exactly 11 digits.");
+      return;
+    }
+    if (isTooLong(subject, MAX_SUBJECT_LENGTH)) {
+      setStatus(`Subject must be ${MAX_SUBJECT_LENGTH} characters or fewer.`);
+      return;
+    }
+    if (isTooLong(message, MAX_MESSAGE_LENGTH)) {
+      setStatus(`Message is too long (max ${MAX_MESSAGE_LENGTH} characters).`);
       return;
     }
     if (!isValidEmail(email)) {
@@ -85,8 +143,17 @@ export default function ContactForm() {
       setStatus("Please enter a valid phone number.");
       return;
     }
-    if (!RECAPTCHA_SITE_KEY) {
+    if (!HCAPTCHA_SITE_KEY) {
       setStatus("CAPTCHA is not configured. Please contact us directly.");
+      return;
+    }
+    if (!captchaToken) {
+      setStatus("Please complete the CAPTCHA verification.");
+      return;
+    }
+    if (!window.confirm(
+      `Are you sure you want to send this message? You can send one message per 24 hours. For additional questions, email ${CONTACT_EMAIL}.`,
+    )) {
       return;
     }
 
@@ -127,7 +194,6 @@ export default function ContactForm() {
     };
 
     try {
-      const captchaToken = await executeRecaptcha("contact");
       const verification = await fetch(`${API_URL}/captcha/verify`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -138,19 +204,25 @@ export default function ContactForm() {
       }
     } catch {
       setStatus("CAPTCHA verification failed. Please try again.");
+      captchaRef.current?.resetCaptcha();
+      setCaptchaToken("");
       setLoading(false);
       return;
     }
 
     try {
-      localStorage.setItem("lastFormSubmit", now);
+      captchaRef.current?.resetCaptcha();
+      setCaptchaToken("");
       await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, payload, EMAILJS_PUBLIC_KEY);
-      setStatus("Message sent successfully!");
-      timerRef.current = setTimeout(() => setStatus(""), 3_000);
+      localStorage.setItem("lastFormSubmit", String(Date.now()));
+      localStorage.setItem("lastFormSubmitCooldownMs", String(SUCCESS_COOLDOWN_MS));
+      setStatus("success");
       e.target.reset();
     } catch {
+      localStorage.setItem("lastFormSubmit", String(Date.now()));
+      localStorage.setItem("lastFormSubmitCooldownMs", String(FAILURE_COOLDOWN_MS));
       setStatus("Failed to send message. Please try again.");
-      timerRef.current = setTimeout(() => setStatus(""), 5_000);
+      timerRef.current = setTimeout(startCooldownTimer, 5_000);
     } finally {
       setLoading(false);
     }
@@ -176,7 +248,7 @@ export default function ContactForm() {
           <label htmlFor="name">Full Name</label>
           <span className="text-red-400">*</span>
         </div>
-        <input id="name" name="name" type="text" placeholder="e.g. Juan Dela Cruz" className="contact_form_input" required />
+        <input id="name" name="name" type="text" maxLength={MAX_NAME_LENGTH} autoComplete="name" placeholder="e.g. Juan Dela Cruz" className="contact_form_input" required />
       </div>
 
       {/* Email & Phone */}
@@ -186,14 +258,26 @@ export default function ContactForm() {
             <label htmlFor="email">Email</label>
             <span className="text-red-400">*</span>
           </div>
-          <input id="email" name="email" type="email" placeholder="e.g. juan.delacruz@gmail.com" className="contact_form_input" required />
+          <input id="email" name="email" type="email" maxLength={MAX_EMAIL_LENGTH} autoComplete="email" placeholder="e.g. juan.delacruz@gmail.com" className="contact_form_input" required />
         </div>
         <div className="flex flex-col space-y-1 w-full">
           <div className="flex items-center space-x-1">
             <label htmlFor="phone">Mobile Number</label>
             <span className="text-red-400">*</span>
           </div>
-          <input id="phone" name="phone" type="tel" placeholder="e.g. 0917 123 4567" className="contact_form_input" required />
+          <input
+            id="phone"
+            name="phone"
+            type="tel"
+            inputMode="numeric"
+            pattern="[0-9]{11}"
+            placeholder="e.g. 09171234567"
+            className="contact_form_input"
+            onChange={(event) => {
+              event.target.value = event.target.value.replace(/\D/g, "").slice(0, MAX_PHONE_LENGTH);
+            }}
+            required
+          />
         </div>
       </div>
 
@@ -203,7 +287,7 @@ export default function ContactForm() {
           <label htmlFor="subject">Subject</label>
           <span className="text-red-400">*</span>
         </div>
-        <input id="subject" name="subject" type="text" placeholder="e.g. CCNA training schedule" className="contact_form_input" required />
+        <input id="subject" name="subject" type="text" maxLength={MAX_SUBJECT_LENGTH} placeholder="e.g. CCNA training schedule" className="contact_form_input" required />
       </div>
 
       {/* Message */}
@@ -215,17 +299,25 @@ export default function ContactForm() {
         <textarea
           id="message"
           name="message"
+          maxLength={MAX_MESSAGE_LENGTH}
           placeholder="e.g. Hi! I would like to ask about the next CCNA batch and the training fee."
           className="contact_form_input h-32 resize-none"
           required
         />
       </div>
 
-      {RECAPTCHA_SITE_KEY ? (
+      {HCAPTCHA_SITE_KEY ? (
         <div className="flex flex-col items-center gap-2">
-          <p className="text-center text-xs text-gray-500">
-            Protected by Google reCAPTCHA.
-          </p>
+          <HCaptcha
+            ref={captchaRef}
+            sitekey={HCAPTCHA_SITE_KEY}
+            onVerify={setCaptchaToken}
+            onExpire={() => setCaptchaToken("")}
+            onError={() => {
+              setCaptchaToken("");
+              setStatus("CAPTCHA could not load. Check your connection and try again.");
+            }}
+          />
         </div>
       ) : (
         <p className="self-center text-sm text-red-500">
@@ -236,11 +328,14 @@ export default function ContactForm() {
       {/* Status message */}
       {status && (
         <p
-          className={`text-center font-medium ${
-            status.includes("successfully") ? "text-green-500" : "text-red-400"
-          }`}
+          className={`text-center font-medium ${status === "success" ? "text-green-600" : "text-red-400"}`}
         >
-          {status}
+          {status === "success" ? (
+            <>
+              Message sent successfully! If you have additional questions, email{" "}
+              <a className="underline" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+            </>
+          ) : status}
         </p>
       )}
 

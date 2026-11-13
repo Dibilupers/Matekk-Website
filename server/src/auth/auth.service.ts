@@ -1,5 +1,5 @@
 
-import { BadRequestException, ConflictException, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ConflictException, ForbiddenException, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { Prisma } from '../generated/prisma/client.js';
 import { UsersService } from '../users/users.service.js';
 import { JwtService } from '@nestjs/jwt';
@@ -11,6 +11,9 @@ import { UpdateProfileDto } from './dto/profile.dto.js';
 import { ChangePasswordDto } from './dto/change-password.dto.js';
 import { ProfilePhotoDto } from './dto/profile-photo.dto.js';
 import { EnrollmentRequestDto } from './dto/enrollment-request.dto.js';
+
+const USERNAME_CHANGE_COOLDOWN_MS = 30 * 24 * 60 * 60 * 1000;
+const DISPLAY_NAME_CHANGE_COOLDOWN_MS = 7 * 24 * 60 * 60 * 1000;
 
 @Injectable()
 export class AuthService {
@@ -229,8 +232,47 @@ export class AuthService {
     async updateProfile(userId: number, dto: UpdateProfileDto) {
         const normalize = (value: string | null | undefined) =>
             typeof value === 'string' ? value.trim() : value;
+        const changesName = dto.username !== undefined || dto.display_name !== undefined;
+        const currentUser = dto.role !== undefined || changesName
+            ? await this.prisma.users.findUnique({
+                where: { id: userId },
+                select: {
+                    role: true,
+                    ...(changesName ? {
+                        username: true,
+                        display_name: true,
+                        username_changed_at: true,
+                        display_name_changed_at: true,
+                    } : {}),
+                },
+            })
+            : null;
+        if (dto.role !== undefined) {
+            if (!currentUser) throw new UnauthorizedException();
+            if (currentUser.role.trim().toLowerCase() !== 'admin') {
+                throw new ForbiddenException('Only administrators can change account roles.');
+            }
+        }
+        if (changesName && !currentUser) throw new UnauthorizedException();
         const username = normalize(dto.username);
         const email = normalize(dto.email);
+        const displayName = normalize(dto.display_name);
+        const now = new Date();
+        const usernameChanged = username !== undefined && username !== currentUser?.username;
+        const displayNameChanged = displayName !== undefined && displayName !== currentUser?.display_name;
+        const usernameChangedAt = currentUser?.username_changed_at;
+        const displayNameChangedAt = currentUser?.display_name_changed_at;
+        const isAdmin = currentUser?.role.trim().toLowerCase() === 'admin';
+        if (!isAdmin && usernameChanged && usernameChangedAt
+            && now.getTime() < usernameChangedAt.getTime() + USERNAME_CHANGE_COOLDOWN_MS) {
+            const availableAt = new Date(usernameChangedAt.getTime() + USERNAME_CHANGE_COOLDOWN_MS);
+            throw new BadRequestException(`Username can only be changed once every 30 days. Try again after ${availableAt.toLocaleDateString()}.`);
+        }
+        if (!isAdmin && displayNameChanged && displayNameChangedAt
+            && now.getTime() < displayNameChangedAt.getTime() + DISPLAY_NAME_CHANGE_COOLDOWN_MS) {
+            const availableAt = new Date(displayNameChangedAt.getTime() + DISPLAY_NAME_CHANGE_COOLDOWN_MS);
+            throw new BadRequestException(`Display name can only be changed once every 7 days. Try again after ${availableAt.toLocaleDateString()}.`);
+        }
         if (username) {
             const existingUser = await this.prisma.users.findFirst({
                 where: { username: { equals: username, mode: 'insensitive' }, NOT: { id: userId } },
@@ -247,9 +289,13 @@ export class AuthService {
         }
 
         const data = {
-            ...(dto.username !== undefined ? { username: dto.username.trim() } : {}),
+            ...(dto.username !== undefined ? { username: username ?? '' } : {}),
+            ...(usernameChanged ? { username_changed_at: now } : {}),
             ...(dto.first_name !== undefined ? { first_name: normalize(dto.first_name) ?? '' } : {}),
             ...(dto.last_name !== undefined ? { last_name: normalize(dto.last_name) ?? '' } : {}),
+            ...(dto.display_name !== undefined ? { display_name: displayName ?? '' } : {}),
+            ...(displayNameChanged ? { display_name_changed_at: now } : {}),
+            ...(dto.role !== undefined ? { role: dto.role } : {}),
             ...(dto.email !== undefined ? { email } : {}),
             ...(dto.birth_date !== undefined ? { birth_date: new Date(dto.birth_date) } : {}),
             ...(dto.gender !== undefined ? { gender: normalize(dto.gender) || null } : {}),

@@ -1,4 +1,5 @@
 import { createCompTIAExamFormats } from "../Network+/networkPlusExamFormats";
+import { getCompTIAExamSessionKey } from "../../../../../utils/comptiaExamSession";
 
 function shuffle(items) {
 	const shuffled = [...items];
@@ -34,7 +35,7 @@ export function createSecurityPlusExamFormats(questionBank, { offline = false } 
 			scoredQuestionCount: format.questionCount,
 			sessionKey: offline
 				? `${format.sessionKey}-offline-simulations-v1-organized-logs-v1`
-				: `${format.sessionKey}-organized-logs-v1`,
+				: getCompTIAExamSessionKey("comptia-security-plus", examKey),
 			createQuestions() {
 				const questions = format.createQuestions();
 				const scoredQuestions = questions;

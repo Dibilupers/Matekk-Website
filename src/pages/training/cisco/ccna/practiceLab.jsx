@@ -1,11 +1,13 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, useSearchParams } from "react-router-dom";
 import { CheckCircle2, Circle, Download, Eye, Lightbulb, Maximize2, Network, RotateCcw, X, XCircle, ZoomIn, ZoomOut } from "lucide-react";
 import { PRACTICE_LABS } from "./labs/labDefinitions";
 import { canReach, configCommands, createLabState, execute, fullIfName, promptFor } from "./labs/labEngine";
 import LabTopology from "./labs/LabTopology";
+import LabCommandWorksheet from "./labs/LabCommandWorksheet";
 import TopologySandbox from "./labs/TopologySandbox";
+import { topologyFitScale } from "../../../../utils/topologyFit";
 
 /* ==========================================================================
    CCNA Online Practice Labs — three labs of increasing difficulty.
@@ -148,17 +150,19 @@ function PacketTracerSection({ lab }) {
 								<span className="block text-sm font-medium text-[#71819b]">Text file</span>
 								<span className="mt-4 block text-sm leading-5 text-[#71819b]">Device setup, cabling, starting configuration, and lab tasks.</span>
 							</a>
-							<a
-								href={pktFile}
-								download
-								onClick={() => setShowDownloadPicker(false)}
-								className="min-w-0 rounded-2xl border border-[#d6e5e7] p-4 text-left text-[#263654] transition-colors hover:border-[#a9cdd2] hover:bg-[#f8fbfc] sm:p-5"
-							>
-								<span className="block text-lg font-bold">Packet Tracer project</span>
-								<span className="mt-3 block text-3xl font-extrabold">.PKT</span>
-								<span className="block text-sm font-medium text-[#71819b]">Cisco Packet Tracer</span>
-								<span className="mt-4 block text-sm leading-5 text-[#71819b]">Ready-to-open project file for Lab {lab.id}.</span>
-							</a>
+							{lab.hasPacketTracerFile !== false && (
+								<a
+									href={pktFile}
+									download
+									onClick={() => setShowDownloadPicker(false)}
+									className="min-w-0 rounded-2xl border border-[#d6e5e7] p-4 text-left text-[#263654] transition-colors hover:border-[#a9cdd2] hover:bg-[#f8fbfc] sm:p-5"
+								>
+									<span className="block text-lg font-bold">Packet Tracer project</span>
+									<span className="mt-3 block text-3xl font-extrabold">.PKT</span>
+									<span className="block text-sm font-medium text-[#71819b]">Cisco Packet Tracer</span>
+									<span className="mt-4 block text-sm leading-5 text-[#71819b]">Ready-to-open project file for Lab {lab.id}.</span>
+								</a>
+							)}
 						</div>
 					</section>
 				</div>,
@@ -173,9 +177,46 @@ const ZOOM_STEPS = [1, 1.5, 2, 3];
 
 // Rendered into <body> so the dashboard's page animation (a CSS transform) can't trap the fixed overlay.
 function TopologyFullscreen({ lab, state, device, onClose }) {
-	// Phones start zoomed in: the whole diagram at 100% is too small to read in portrait
-	const [zoomIndex, setZoomIndex] = useState(() => (window.innerWidth < 640 ? 2 : 0));
+	const viewportRef = useRef(null);
+	const topologyRef = useRef(null);
+	const [fitSize, setFitSize] = useState(null);
+	const [zoomIndex, setZoomIndex] = useState(0);
 	const zoom = ZOOM_STEPS[zoomIndex];
+
+	useLayoutEffect(() => {
+		const viewport = viewportRef.current;
+		const topology = topologyRef.current;
+		if (!viewport || !topology) return undefined;
+
+		const measure = () => {
+			const { width, height } = topology.viewBox.baseVal;
+			if (!width || !height || !viewport.clientWidth || !viewport.clientHeight) return;
+			const fit = topologyFitScale(width, height, viewport.clientWidth, viewport.clientHeight, 32);
+			const nextSize = {
+				width: width * fit,
+				height: height * fit,
+				viewportWidth: viewport.clientWidth,
+				viewportHeight: viewport.clientHeight,
+			};
+			setFitSize((current) => current
+				&& Math.abs(current.width - nextSize.width) < 0.5
+				&& Math.abs(current.height - nextSize.height) < 0.5
+				&& current.viewportWidth === nextSize.viewportWidth
+				&& current.viewportHeight === nextSize.viewportHeight
+				? current
+				: nextSize);
+		};
+
+		measure();
+		const resizeObserver = new ResizeObserver(measure);
+		resizeObserver.observe(viewport);
+		const viewBoxObserver = new MutationObserver(measure);
+		viewBoxObserver.observe(topology, { attributes: true, attributeFilter: ["viewBox"] });
+		return () => {
+			resizeObserver.disconnect();
+			viewBoxObserver.disconnect();
+		};
+	}, [lab.id]);
 
 	useEffect(() => {
 		const onKey = (e) => { if (e.key === "Escape") onClose(); };
@@ -200,12 +241,28 @@ function TopologyFullscreen({ lab, state, device, onClose }) {
 					<button type="button" className={`${btn} ml-2`} onClick={onClose} aria-label="Close full screen"><X size={20} /></button>
 				</div>
 			</div>
-			{/* Scrolls in both directions when zoomed in */}
-			<div className="flex-1 overflow-auto">
-				<div className="flex min-h-full items-center justify-center p-4" style={{ width: `${zoom * 100}%`, minWidth: "100%" }}>
-					<div className="w-full max-h-full rounded-2xl bg-white p-3 shadow-sm" style={{ maxWidth: zoom === 1 ? "min(100%, calc((100vh - 7rem) * 1.9))" : "none" }}>
-						<LabTopology lab={lab} state={state} activeDevice={device} />
-					</div>
+			{/* The initial scale fits the full viewBox; larger steps remain scrollable. */}
+			<div ref={viewportRef} className="flex-1 overflow-auto">
+				<div
+					className="flex min-w-full min-h-full p-4"
+					style={{
+						width: fitSize ? Math.max(fitSize.viewportWidth, fitSize.width * zoom + 32) : "100%",
+						height: fitSize ? Math.max(fitSize.viewportHeight, fitSize.height * zoom + 32) : "100%",
+						boxSizing: "border-box",
+					}}
+				>
+					<LabTopology
+						lab={lab}
+						state={state}
+						activeDevice={device}
+						svgRef={topologyRef}
+						className="m-auto block max-w-none shrink-0"
+						style={{
+							width: fitSize ? `${fitSize.width * zoom}px` : "100%",
+							height: fitSize ? `${fitSize.height * zoom}px` : "100%",
+							visibility: fitSize ? "visible" : "hidden",
+						}}
+					/>
 				</div>
 			</div>
 			<p className="px-4 py-2 text-center text-xs text-gray-600 bg-white border-t border-[#d6e0ee]">Use + / − to zoom, drag or scroll to move around. Tip: turn your phone sideways for a bigger view.</p>
@@ -226,6 +283,7 @@ function LabWorkspace({ lab, selectLab, fromDashboard }) {
 	const [showHints, setShowHints] = useState(false);
 	const [showSolution, setShowSolution] = useState(false);
 	const [examMode, setExamMode] = useState(false);
+	const [labView, setLabView] = useState("terminal");
 	const [topologyOpen, setTopologyOpen] = useState(false);
 	const [showTopologySandbox, setShowTopologySandbox] = useState(false);
 	const closeTopology = useCallback(() => setTopologyOpen(false), []);
@@ -249,7 +307,9 @@ function LabWorkspace({ lab, selectLab, fromDashboard }) {
 	const doneCount = Object.values(status).filter(Boolean).length;
 	const allDone = doneCount === lab.tasks.length;
 	const showResults = !examMode || submitted;
-	const finalOk = canReach(lab, state, lab.finalCheck.from, lab.finalCheck.to);
+	const finalOk = lab.finalCheck.check
+		? lab.finalCheck.check(state)
+		: canReach(lab, state, lab.finalCheck.from, lab.finalCheck.to);
 	const con = consoles[device];
 
 	useEffect(() => {
@@ -314,13 +374,13 @@ function LabWorkspace({ lab, selectLab, fromDashboard }) {
 				)}
 				<h6 className="w-fit px-4 py-2 text-[#1775EE] bg-blue-50 rounded-full">CCNA Practice Labs</h6>
 				<h3>
-					Hands-on <span className="text-[#1775EE]">Router Labs</span>
+					Hands-on <span className="text-[#1775EE]">Network Labs</span>
 				</h3>
 				<p className="max-w-3xl">
-					Practice real Cisco IOS commands in your browser. Pick a lab, configure the routers in the console,
+					Practice real Cisco IOS commands in your browser. Pick a lab, configure routers or switches in the console,
 					and watch the network come to life. Cisco shortcuts such as <code>conf t</code>, <code>int g0/0</code>, and <code>sh ip route</code> work too.
 				</p>
-				<div className="grid gap-3 md:grid-cols-3">
+				<div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
 					{PRACTICE_LABS.map((l) => (
 						<button
 							key={l.id}
@@ -335,6 +395,27 @@ function LabWorkspace({ lab, selectLab, fromDashboard }) {
 						</button>
 					))}
 				</div>
+				{lab.worksheet && (
+					<div className="flex flex-wrap items-center gap-2" role="group" aria-label="Practice lab view">
+						<span className="text-sm font-semibold text-[#334155]">Lab format:</span>
+						<button
+							type="button"
+							aria-pressed={labView === "terminal"}
+							onClick={() => setLabView("terminal")}
+							className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${labView === "terminal" ? "border-[#1775EE] bg-[#1775EE] text-white" : "border-[#1775EE] bg-white text-[#1775EE] hover:bg-blue-50"}`}
+						>
+							Terminal (default)
+						</button>
+						<button
+							type="button"
+							aria-pressed={labView === "worksheet"}
+							onClick={() => setLabView("worksheet")}
+							className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${labView === "worksheet" ? "border-[#1775EE] bg-[#1775EE] text-white" : "border-[#1775EE] bg-white text-[#1775EE] hover:bg-blue-50"}`}
+						>
+							Current worksheet
+						</button>
+					</div>
+				)}
 				<div>
 					<button
 						type="button"
@@ -366,7 +447,19 @@ function LabWorkspace({ lab, selectLab, fromDashboard }) {
 			</div>
 
 			{/* Network diagram (full width) */}
-			<div className="p-5 rounded-2xl bg-[#EBF5FD]">
+			{lab.worksheet && labView === "worksheet" ? (
+				<>
+					<LabCommandWorksheet
+						lab={lab}
+						state={state}
+						setState={setState}
+						activeDevice={device}
+						onReset={reset}
+						onExpand={() => setTopologyOpen(true)}
+					/>
+					{topologyOpen && <TopologyFullscreen lab={lab} state={state} device={device} onClose={closeTopology} />}
+				</>
+			) : <div className="p-5 rounded-2xl bg-[#EBF5FD]">
 				<div className="flex items-center justify-between mb-2">
 					<h5 className="text-[#1775EE]">Topology</h5>
 					<div className="flex items-center gap-2">
@@ -390,9 +483,9 @@ function LabWorkspace({ lab, selectLab, fromDashboard }) {
 				</button>
 				{topologyOpen && <TopologyFullscreen lab={lab} state={state} device={device} onClose={closeTopology} />}
 				<p className="text-xs text-gray-600 mt-1">Green links are up; red dashed links are down. The router you are configuring is circled.</p>
-			</div>
+			</div>}
 
-			<div className="grid gap-6 lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)] items-start lg:items-stretch">
+			{(!lab.worksheet || labView === "terminal") && <div className="grid gap-6 lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)] items-start lg:items-stretch">
 				{/* Left: tasks */}
 				<aside className="flex flex-col gap-4">
 
@@ -538,7 +631,7 @@ function LabWorkspace({ lab, selectLab, fromDashboard }) {
 						Supports the commands these labs use: configuration, show ip route, show ip interface brief, show running-config, ping, and traceroute.
 					</p>
 				</section>
-			</div>
+			</div>}
 
 			<PacketTracerSection lab={lab} />
 

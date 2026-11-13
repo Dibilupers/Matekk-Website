@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, BookOpen, CircleSlash, CircleUserRound, LayoutGrid, List, Search, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/auth-context";
+import { getProfileDisplayName } from "../utils/profile";
 import API_URL from "../config/api";
 import { FLAT_COURSES, TRAINING_COURSES } from "../components/training/courses";
 import CCNALogo from "../assets/CCNA.png";
@@ -254,6 +255,10 @@ function getProgramPath(course) {
 	if (course.name === "FortiOS") return "/modules/programs/fortinet-fortios";
 	if (course.name === "CCNA Automation") return "/modules/programs/ccna-automation";
 	if (course.name === "CCNA Cybersecurity") return "/modules/programs/ccna-cybersecurity";
+	if (course.name === "CCNP Enterprise") return "/modules/programs/ccnp/enterprise";
+	if (course.name === "CCNP Security") return "/modules/programs/ccnp/security";
+	if (course.name === "CCNP Data Center") return "/modules/programs/ccnp/datacenter";
+	if (course.name === "CCNP Collaboration") return "/modules/programs/ccnp/collaboration";
 	return course.path;
 }
 
@@ -279,6 +284,7 @@ export default function Blank() {
 	const [programsError, setProgramsError] = useState("");
 	const [isDpPreviewOpen, setIsDpPreviewOpen] = useState(false);
 	const profile = sessionProfile;
+	const profileDisplayName = profile ? getProfileDisplayName(profile) : "";
 	const hasProfile = profile !== null;
 	const [introText] = useState(() => PROGRAM_INTROS[Math.floor(Math.random() * PROGRAM_INTROS.length)]);
 	const [typedUsername, setTypedUsername] = useState("");
@@ -333,9 +339,9 @@ export default function Blank() {
 	}, [isDpPreviewOpen]);
 
 	useEffect(() => {
-		if (!profile?.username) return undefined;
+		if (!profileDisplayName) return undefined;
 
-		const welcomeText = String(profile.username);
+		const welcomeText = profileDisplayName;
 		let timeoutId;
 		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
 			timeoutId = window.setTimeout(() => setTypedUsername(welcomeText), 0);
@@ -359,7 +365,7 @@ export default function Blank() {
 
 		timeoutId = window.setTimeout(startTyping, 120);
 		return () => window.clearTimeout(timeoutId);
-	}, [profile?.username]);
+	}, [profileDisplayName]);
 
 	useEffect(() => {
 		if (!hasProfile) return undefined;
@@ -471,7 +477,7 @@ export default function Blank() {
 					<div className="min-w-0">
 						<p className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-[#087ff5]">MATEKK Training Academy</p>
 						<h1 className="text-3xl font-bold text-slate-950 sm:text-4xl">
-							Welcome, <span className={typedUsername.length < String(profile.username).length ? "typewriter-caret" : ""}>{typedUsername}</span>
+							Welcome, <span className={typedUsername.length < profileDisplayName.length ? "typewriter-caret" : ""}>{typedUsername}</span>
 						</h1>
 						<p className="mt-3 text-slate-600">
 							<span className="typewriter-caret">{typedIntro}</span>
@@ -543,7 +549,7 @@ export default function Blank() {
 										onChange={(event) => setProgramSearch(event.target.value)}
 										placeholder="Search programs"
 										aria-label="Search programs"
-										className="h-11 w-full rounded-md border border-slate-200 bg-white py-2 pl-9 pr-8 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-[#1775EE] focus:ring-2 focus:ring-[#1775EE]/20 sm:h-10"
+										className="program-search-input h-11 w-full rounded-md border border-slate-200 bg-white py-2 pl-9 pr-8 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-[#1775EE] focus:ring-2 focus:ring-[#1775EE]/20 sm:h-10"
 									/>
 									{programSearch && (
 										<button

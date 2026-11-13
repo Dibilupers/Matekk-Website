@@ -2,7 +2,9 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/auth-context";
+import { getProfileDisplayName } from "../../utils/profile";
 import InquireNowButton from "../ui/InquireNowButton";
+import ExamNotifications from "../ExamNotifications";
 import MainLogo from "../../assets/MATEKK_logo.webp";
 import TrainingLogo from "../../assets/MATEKK_training_logo.png";
 import SolutionsLogo from "../../assets/MATEKK_services_logo.png";
@@ -46,6 +48,7 @@ function NavBar() {
   const subPanelClass = `mobile-menu-sub${menuGoingBack ? " mobile-menu-back" : ""}`;
   const { logout, profile, isAuthenticated } = useAuth();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isGradebookChooserOpen, setIsGradebookChooserOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -66,7 +69,7 @@ function NavBar() {
     navigate("/login");
   }
 
-  const profileName = profile?.username || "My Profile";
+  const profileName = getProfileDisplayName(profile);
   const profileRole = profile?.role || "Learner";
   const isAdmin = profile?.role?.trim().toLowerCase() === "admin";
   const closeProfile = () => {
@@ -424,7 +427,7 @@ function NavBar() {
 
   return (
     <header
-      className={`flex flex-row items-center justify-between py-4 bg-white border-b border-slate-200 sticky top-0 z-50 ${t} px-[2.063rem] md:px-16 xl:px-[7.438rem] ${scrolled ? "shadow-md" : ""}`}
+      className={`flex flex-row items-center justify-between py-4 bg-white border-b border-slate-200 sticky top-0 z-50 ${t} px-4 md:px-16 xl:px-[7.438rem] ${scrolled ? "shadow-md" : ""}`}
     >
       {/* Logo */}
       <button
@@ -825,10 +828,15 @@ function NavBar() {
           cursor-pointer"
         />
         {isAuthenticated ? (
+          <>
+            <ExamNotifications isOpen={isNotificationsOpen} onOpenChange={setIsNotificationsOpen} />
           <div className="relative">
             <button
               type="button"
-              onClick={() => setIsProfileOpen((current) => !current)}
+              onClick={() => {
+                setIsNotificationsOpen(false);
+                setIsProfileOpen((current) => !current);
+              }}
               aria-expanded={isProfileOpen}
               className="flex max-w-52 shrink-0 items-center gap-2 rounded-xl border-b-2 border-white bg-white px-2 py-1 text-left transition-all duration-300 hover:border-[#1775ee] hover:bg-[#eef6ff]"
             >
@@ -842,6 +850,7 @@ function NavBar() {
             </button>
             {isProfileOpen && profilePanel()}
           </div>
+          </>
         ) : (
           <button type="button" onClick={() => navigate("/login")} className="block rounded-full bg-[#1775EE] px-5.5 py-2 text-center text-white transition-all duration-300 hover:bg-[#0062E0]">
             Login
@@ -850,11 +859,25 @@ function NavBar() {
       </div>
 
       {/* Mobile + Tablet Hamburger */}
-      <div className="flex lg:hidden items-center justify-end gap-3">
+      <div className="flex lg:hidden items-center justify-end gap-2">
         {isAuthenticated && (
           <button
             type="button"
-            onClick={() => setIsProfileOpen(true)}
+            onClick={() => navigate("/pages/blank")}
+            className="flex h-9 items-center gap-1.5 whitespace-nowrap rounded-full border border-[#1775EE] px-2.5 text-xs font-medium text-[#1775EE] transition hover:bg-[#1775EE] hover:text-white sm:px-3 sm:text-sm"
+          >
+            <BookOpen size={16} aria-hidden="true" />
+            Courses
+          </button>
+        )}
+        {isAuthenticated && <ExamNotifications isOpen={isNotificationsOpen} onOpenChange={setIsNotificationsOpen} />}
+        {isAuthenticated && (
+          <button
+            type="button"
+            onClick={() => {
+              setIsNotificationsOpen(false);
+              setIsProfileOpen(true);
+            }}
             aria-label="Open profile menu"
             aria-expanded={isProfileOpen}
             className="flex h-10 w-10 items-center justify-center rounded-full text-[#1775ee] transition hover:bg-[#eef6ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1775ee]"

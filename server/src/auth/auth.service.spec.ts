@@ -33,6 +33,9 @@ describe('AuthService', () => {
       ...(options.foundUser ?? user),
       first_name: '',
       last_name: '',
+      display_name: options.foundUser?.display_name ?? '',
+      username_changed_at: options.foundUser?.username_changed_at ?? null,
+      display_name_changed_at: options.foundUser?.display_name_changed_at ?? null,
     }));
     const findMany = vi.fn(async () => []);
     const create = vi.fn(async () => user);
@@ -202,11 +205,17 @@ describe('AuthService', () => {
     const mocks = createService();
     await mocks.service.updateProfile(12, {
       first_name: '  Updated  ',
+      display_name: '  Friendly Name  ',
       email: 'student@example.com',
     });
     expect(mocks.update).toHaveBeenCalledWith({
       where: { id: 12 },
-      data: { first_name: 'Updated', email: 'student@example.com' },
+      data: expect.objectContaining({
+        first_name: 'Updated',
+        display_name: 'Friendly Name',
+        display_name_changed_at: expect.any(Date),
+        email: 'student@example.com',
+      }),
     });
 
     const duplicateEmailMocks = createService({ matchingEmail: true });
@@ -214,6 +223,20 @@ describe('AuthService', () => {
       email: 'taken@example.com',
     })).rejects.toThrow('Email address is already in use.');
     expect(duplicateEmailMocks.update).not.toHaveBeenCalled();
+  });
+
+  it('prevents students from changing their role and allows admins to update it', async () => {
+    const studentMocks = createService();
+    await expect(studentMocks.service.updateProfile(12, { role: 'Admin' }))
+      .rejects.toThrow('Only administrators can change account roles.');
+    expect(studentMocks.update).not.toHaveBeenCalled();
+
+    const adminMocks = createService({ foundUser: { ...user, role: 'Admin' } });
+    await adminMocks.service.updateProfile(12, { role: 'Student' });
+    expect(adminMocks.update).toHaveBeenCalledWith({
+      where: { id: 12 },
+      data: { role: 'Student' },
+    });
   });
 
   it('allows a user to change username and rejects case-insensitive duplicates', async () => {
@@ -228,7 +251,10 @@ describe('AuthService', () => {
     });
     expect(mocks.update).toHaveBeenCalledWith({
       where: { id: 12 },
-      data: { username: 'new.name' },
+      data: expect.objectContaining({
+        username: 'new.name',
+        username_changed_at: expect.any(Date),
+      }),
     });
 
     const duplicateUsernameMocks = createService({ matchingEmail: true });
@@ -236,6 +262,59 @@ describe('AuthService', () => {
       username: 'existing',
     })).rejects.toThrow('Username is already in use.');
     expect(duplicateUsernameMocks.update).not.toHaveBeenCalled();
+  });
+
+  it('limits username changes to once every 30 days', async () => {
+    const changedAt = new Date(Date.now() - 10 * 24 * 60 * 60 * 1000);
+    const mocks = createService({ foundUser: { ...user, username_changed_at: changedAt } });
+
+    await expect(mocks.service.updateProfile(12, { username: 'another-name' }))
+      .rejects.toThrow('Username can only be changed once every 30 days.');
+    expect(mocks.update).not.toHaveBeenCalled();
+  });
+
+  it('allows admins to change username and display name during student cooldowns', async () => {
+    const changedAt = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    const mocks = createService({
+      foundUser: {
+        ...user,
+        role: 'Admin',
+        display_name: 'Current Name',
+        username_changed_at: changedAt,
+        display_name_changed_at: changedAt,
+      },
+    });
+
+    await mocks.service.updateProfile(12, { username: 'admin-renamed', display_name: '' });
+
+    expect(mocks.update).toHaveBeenCalledWith({
+      where: { id: 12 },
+      data: expect.objectContaining({
+        username: 'admin-renamed',
+        display_name: '',
+      }),
+    });
+  });
+
+  it('limits display name changes to once every 7 days and timestamps a cleared name', async () => {
+    const changedAt = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000);
+    const lockedMocks = createService({
+      foundUser: { ...user, display_name: 'Friendly Name', display_name_changed_at: changedAt },
+    });
+
+    await expect(lockedMocks.service.updateProfile(12, { display_name: '' }))
+      .rejects.toThrow('Display name can only be changed once every 7 days.');
+    expect(lockedMocks.update).not.toHaveBeenCalled();
+
+    const availableMocks = createService({ foundUser: { ...user, display_name: 'Friendly Name' } });
+    await availableMocks.service.updateProfile(12, { display_name: '' });
+    expect(availableMocks.update).toHaveBeenCalledWith({
+      where: { id: 12 },
+      data: expect.objectContaining({
+        display_name: '',
+        display_name_changed_at: expect.any(Date),
+      }),
+    });
   });
 
   it('loads profile by stable user ID rather than the mutable username', async () => {

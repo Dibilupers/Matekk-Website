@@ -1,17 +1,7 @@
 // CCNA composite question set (85 questions) used in the Medium Exam.
-// Topology-only exhibits are rendered natively; mixed CLI and GUI exhibits stay as pictures.
+// Network topologies and WLC settings panels are rendered natively; mixed CLI exhibits stay as pictures.
 // Answer keys were worked out from the question content (not supplied in the source).
 
-import wlcMyWlanImg from "../../../../../assets/ccna-exam/wlc-my-wlan-layer2.webp";
-import wlcPskImg from "../../../../../assets/ccna-exam/wlc-psk-layer2.webp";
-import wlcAdvancedImg from "../../../../../assets/ccna-exam/wlc-advanced-tab.webp";
-import ccna181RapidPvstActionsImg from "../../../../../assets/ccna-exam/ccna-181-rapid-pvst-actions.svg";
-import ccna382AnsibleFeaturesImg from "../../../../../assets/ccna-exam/ccna-382-ansible-features.svg";
-import ccna608NorthboundApiImg from "../../../../../assets/ccna-exam/ccna-608-northbound-api.svg";
-import ccna1306BroadcastAddressesImg from "../../../../../assets/ccna-exam/ccna-1306-broadcast-addresses.svg";
-
-// pic(image, text?) = picture exhibit, optionally with device output shown below it
-const pic = (image, text) => ({ image, text });
 const ex = (exhibit) => (exhibit && typeof exhibit === "object"
 	? {
 		...(exhibit.image ? { exhibitImage: exhibit.image } : {}),
@@ -516,7 +506,7 @@ interface fastethernet0/1
 	one("A network engineer is configuring a wireless LAN with Web Passthrough Layer 3 Web Policy. Which action must the engineer take to complete the configuration?", [
 		"Set the Layer 2 Security to None.", "Enable the WPA Policy.", "Enable TKIP and CCMP256 WPA2 Encryption.", "Set the Layer 2 Security to 802.1X.",
 	], 0, "Web Passthrough is a Layer 3 web policy for open guest access, so Layer 2 Security must be set to None.",
-	pic(wlcMyWlanImg)),
+	siteExhibit("wlc-my-wlan-layer2")),
 
 	two("Which two HTTP methods are suitable for actions performed by REST-based APIs? (Choose two)", ["GET", "REMOVE", "REDIRECT", "POST", "POP"], [0, 3],
 		"REST APIs use HTTP methods such as GET, POST, PUT, PATCH, and DELETE. REMOVE, REDIRECT, and POP are not HTTP methods."),
@@ -544,7 +534,7 @@ interface fastethernet0/1
 		"Select Authentication server under the AAA servers tab.", "Set Authentication under the Layer 3 tab.",
 		"Enable WPA2 Policy under the Layer 2 tab.", "Enable AutoConfig iPSK under the Layer 2 tab.", "Configure Enterprise Security type under the Layer 2 tab.",
 	], [0, 3], "Identity PSK lets devices without 802.1X get per-device keys from the RADIUS server: enable AutoConfig iPSK and select the RADIUS authentication server under AAA Servers.",
-	pic(wlcPskImg)),
+	siteExhibit("wlc-psk-layer2")),
 
 	one("Which security method is used to prevent man-in-the-middle attack?", ["anti-replay", "authorization", "accounting", "authentication"], 3,
 		"Mutual authentication of both endpoints prevents an attacker from impersonating either side in a man-in-the-middle attack."),
@@ -625,7 +615,7 @@ Neighbor ID  Pri  State    Dead Time  Address       Interface
 		"Set the Maximum Allowed Clients value to 10.", "Enable the Enable Session Timeout option and set the value to 3600.",
 		"Set the Maximum Allowed Clients Per AP Radio value to 10.",
 	], [2, 3], "Session Timeout of 3600 seconds forces hourly reauthentication, and Maximum Allowed Clients limits connections to the whole WLAN.",
-	pic(wlcAdvancedImg)),
+	siteExhibit("wlc-advanced-tab")),
 
 	one("Which goal is achieved by the implementation of private IPv4 addressing on a network?", [
 		"provides an added level of protection against Internet exposure", "allows communication across the Internet to other private networks",
@@ -805,11 +795,64 @@ const BUILT_IN_QUESTION_BY_PROMPT = new Map(
 		.map((question) => [normalizePrompt(question.prompt), question]),
 );
 
+export const CCNA_RECREATED_TEXT_EXHIBITS = {
+	routingTableComponents: `A         B*                 C             D             E
+          0.0.0.0/0 [20/0] via 10.111.11.93, 6w3d
+          10.0.0.0/8 is variably subnetted, 165 subnets, 16 masks
+O E1      10.1.1.55/32 [110/31] via 10.153.0.10, 4w0d, GigabitEthernet0/1`,
+	wirelessIpConfig: `C:\\> ipconfig /all
+
+Windows IP Configuration
+   Host Name . . . . . . . . . . . . : JAS
+   Node Type . . . . . . . . . . . . : Mixed
+   IP Routing Enabled. . . . . . . . : No
+   WINS Proxy Enabled. . . . . . . . : No
+
+Wireless LAN adapter Local Area Connection* 6:
+   Description . . . . . . . . . . . : Microsoft Wi-Fi Direct Virtual Adapter
+   Physical Address. . . . . . . . . : 1A-76-3F-7C-57-DF
+   DHCP Enabled. . . . . . . . . . . : Yes
+   Autoconfiguration Enabled . . . . : Yes
+
+Wireless LAN adapter Wi-Fi:
+   Description . . . . . . . . . . . : Intel(R) Dual Band Wireless-AC 8260
+   Physical Address. . . . . . . . . : B8-76-3F-7C-57-DF
+   DHCP Enabled. . . . . . . . . . . : No
+   Autoconfiguration Enabled . . . . : Yes
+   IPv4 Address. . . . . . . . . . . : 192.168.1.20 (Preferred)
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . . : 192.168.1.1
+   DNS Servers . . . . . . . . . . . : 192.168.1.15
+                                       192.168.1.16
+   NetBIOS over Tcpip. . . . . . . . : Enabled`,
+	staticNat: `Webserver: 172.16.1.2
+interface Ethernet0
+ A
+ B
+interface Serial0
+ C
+ D
+ E
+ F
+access-list 1 permit 172.16.1.0 0.0.0.255`,
+};
+
 const DATABASE_NATIVE_EXHIBITS = new Map([
-	[1306, { image: ccna1306BroadcastAddressesImg }],
-	[181, { image: ccna181RapidPvstActionsImg }],
-	[382, { image: ccna382AnsibleFeaturesImg }],
-	[608, { image: ccna608NorthboundApiImg }],
+	[181, { hideExhibitImage: true }],
+	[382, { hideExhibitImage: true }],
+	[608, { hideExhibitImage: true }],
+	[299, { hideExhibitImage: true, removeExhibitLeadIn: true }],
+	[1305, {
+		hideExhibitImage: true,
+		exhibit: CCNA_RECREATED_TEXT_EXHIBITS.routingTableComponents,
+	}],
+	[1306, { hideExhibitImage: true }],
+	[1317, {
+		hideExhibitImage: true,
+		exhibit: CCNA_RECREATED_TEXT_EXHIBITS.wirelessIpConfig,
+	}],
+	[1012, { diagram: "wlc-security-tab" }],
+	[441, { diagram: "routing-protocols-prefix", hideExhibitImage: true }],
 	[23, "stp-hq-four-switch"],
 	[65, "sw1-sw2-dtp-trunk"],
 	[70, "stp-branch-four-switch"],
@@ -1125,16 +1168,8 @@ S3 · priority 30000 · MAC CCCC.CC…CCCC`,
 	[1199, "r1-r2-database-security"],
 	[1321, {
 		diagram: "static-nat-router-webserver",
-		exhibit: `Webserver: 172.16.1.2
-interface Ethernet0
- A
- B
-interface Serial0
- C
- D
- E
- F
-access-list 1 permit 172.16.1.0 0.0.0.255`,
+		exhibit: CCNA_RECREATED_TEXT_EXHIBITS.staticNat,
+		hideExhibitImage: true,
 	}],
 	[13, {
 		exhibit: `access-list 101 permit ospf any any
@@ -1842,6 +1877,22 @@ export function getBuiltInQuestionByPrompt(prompt) {
 	const builtInQuestion = BUILT_IN_QUESTION_BY_PROMPT.get(normalizePrompt(prompt));
 	if (builtInQuestion) return builtInQuestion;
 
+	if (/router1 routing table has multiple methods to reach 10\.10\.10\.0\/24/i.test(prompt)) {
+		return { exhibitDiagram: "routing-protocols-prefix", hideExhibitImage: true };
+	}
+	if (/ip address configurations must be completed on the dc-1 and hq-1 routers/i.test(prompt)) {
+		return { hideExhibitImage: true, removeExhibitLeadIn: true };
+	}
+	if (/engineer is configuring the router to provide static nat for the webserver/i.test(prompt)) {
+		return {
+			diagram: "static-nat-router-webserver",
+			exhibit: CCNA_RECREATED_TEXT_EXHIBITS.staticNat,
+			hideExhibitImage: true,
+		};
+	}
+	if (/engineer was asked to update a wireless lan controller configuration on a newly deployed ssid/i.test(prompt)) {
+		return { exhibitDiagram: "wlc-security-tab-legacy", hideExhibitImage: true };
+	}
 	if (/an ipv6 address must be obtained automatically on the lan interface on r1/i.test(prompt)) {
 		return { exhibitDiagram: "ipv6-dhcpv6-lan" };
 	}
@@ -1854,15 +1905,23 @@ export function applyNativeExhibit(question) {
 	const exhibitDiagram = (typeof databaseExhibit === "string" ? databaseExhibit : databaseExhibit?.diagram) ??
 		builtInQuestion?.exhibitDiagram;
 	const exhibitImage = typeof databaseExhibit === "object" ? databaseExhibit.image : undefined;
-	const hasNativeTextExhibit = typeof databaseExhibit === "object" &&
-		typeof databaseExhibit.exhibit === "string";
-	if (!exhibitDiagram && !exhibitImage && !hasNativeTextExhibit) return question;
+	const exhibit = typeof databaseExhibit === "object" ? databaseExhibit.exhibit : undefined;
+	const hasNativeTextExhibit = typeof exhibit === "string";
+	const hideExhibitImage = databaseExhibit?.hideExhibitImage === true ||
+		builtInQuestion?.hideExhibitImage === true;
+	const removeExhibitLeadIn = databaseExhibit?.removeExhibitLeadIn === true ||
+		builtInQuestion?.removeExhibitLeadIn === true;
+	if (!exhibitDiagram && !exhibitImage && !hasNativeTextExhibit && !hideExhibitImage && !removeExhibitLeadIn) return question;
 
 	return {
 		...question,
+		...(removeExhibitLeadIn && typeof question.prompt === "string"
+			? { prompt: question.prompt.replace(/^\s*Refer to (?:the )?exhibit\.?\s*/i, "") }
+			: {}),
 		exhibitImage: exhibitImage ?? undefined,
+		...(hideExhibitImage ? { hideExhibitImage: true } : {}),
 		...(exhibitDiagram ? { exhibitDiagram } : {}),
-		...(hasNativeTextExhibit ? { exhibit: databaseExhibit.exhibit, nativeExhibitText: true } : {}),
+		...(hasNativeTextExhibit ? { exhibit, nativeExhibitText: true } : {}),
 		...(builtInQuestion?.exhibit ? { exhibit: builtInQuestion.exhibit } : {}),
 	};
 }

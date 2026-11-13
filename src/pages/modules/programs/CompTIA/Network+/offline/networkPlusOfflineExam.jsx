@@ -43,6 +43,7 @@ export default function NetworkPlusOfflineExam() {
 			examKey={examKey}
 			examFormats={examFormats}
 			theme="comptia"
+			persistOfflineSession
 		/>
 	);
 }

@@ -22,7 +22,10 @@ import ScoreRotationCard from "../ScoreRotationCard";
 import useGradebookQuizStats from "../useGradebookQuizStats";
 import { isAnswerCorrect, isQuestionAnswered } from "../../../../utils/ccnaExamGrading";
 import { getCcnaExamSessionKey } from "../../../../utils/ccnaShortExamSession";
+import { getCompTIAExamSessionKey } from "../../../../utils/comptiaExamSession";
+import { getOfflineExamSessionKeys } from "../../../../utils/offlineExamSession";
 import { readGradebookAssessments } from "../../../../utils/gradebookApi";
+import { getProfileDisplayName } from "../../../../utils/profile";
 
 const STANDARD_EXAM_FORMATS = [
 	{ key: "short", name: "Short Exam", questionCount: 50, durationSeconds: 45 * 60 },
@@ -36,16 +39,20 @@ function formatExamTime(totalSeconds) {
 	return `${minutes}:${seconds}`;
 }
 
-function readCompTIAExamProgress(programKey, format, userId, now) {
+function readCompTIAExamProgress(programKey, format, userId, now, isOnline) {
 	const emptyProgress = { status: "not-started", deadline: null, answeredCount: 0, score: 0, maxScore: 0 };
-	if ((typeof userId !== "string" && typeof userId !== "number") || String(userId).trim() === "") {
-		return emptyProgress;
-	}
 
 	let savedSession;
 	try {
-		const sessionKey = getCcnaExamSessionKey(`matekk-${programKey}-${format.key}-exam-session`, userId);
-		savedSession = window.sessionStorage.getItem(sessionKey);
+		if (!isOnline) {
+			savedSession = getOfflineExamSessionKeys(programKey, format.key, userId)
+				.map((key) => window.localStorage.getItem(key))
+				.find(Boolean);
+		}
+		if (!savedSession && (typeof userId === "string" || typeof userId === "number") && String(userId).trim() !== "") {
+			const sessionKey = getCcnaExamSessionKey(getCompTIAExamSessionKey(programKey, format.key), userId);
+			savedSession = window.sessionStorage.getItem(sessionKey);
+		}
 	} catch (error) {
 		console.error(`Unable to read ${format.name} progress for ${programKey}.`, error);
 		return { ...emptyProgress, status: "unavailable" };
@@ -139,6 +146,7 @@ export default function CompTIAProgramDashboard({ program }) {
 	const { profile, isOnline } = useAuth();
 	const navigate = useNavigate();
 	const isNetworkPlus = program.programKey === "comptia-network-plus";
+	const hasLearningModules = program.hasLearningModules === true;
 	const includesAllQuestionsExam = isNetworkPlus || program.includeAllQuestionsExam === true;
 	const { stats: gradebookScoreStats } = useGradebookQuizStats(
 		program.programKey,
@@ -181,7 +189,7 @@ export default function CompTIAProgramDashboard({ program }) {
 	];
 	const examProgress = progressExamFormats.map((format) => ({
 		format,
-		progress: readCompTIAExamProgress(program.programKey, format, profile?.userId, examClockNow),
+		progress: readCompTIAExamProgress(program.programKey, format, profile?.userId, examClockNow, isOnline),
 	}));
 	const examCardFormat = examFormats[examCardIndex % examFormats.length];
 	const examCardProgress = examProgress.find(({ format }) => format.key === examCardFormat.key)?.progress;
@@ -302,7 +310,7 @@ export default function CompTIAProgramDashboard({ program }) {
 			{createPortal(
 				<Link
 					to={isOnline ? "/pages/blank" : "/modules/programs"}
-					className={`fixed left-4 top-24 z-40 flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-bold text-[#c8102e] transition hover:text-[#a80e27] active:scale-95 ${hasScrolled ? "bg-white/90 shadow-md backdrop-blur-sm" : "bg-white/80"}`}
+					className={`fixed left-4 ${isOnline ? "top-24" : "top-5"} z-40 flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-bold text-[#c8102e] transition hover:text-[#a80e27] active:scale-95 ${!isOnline || hasScrolled ? "bg-white/90 shadow-md backdrop-blur-sm" : "bg-white/80"}`}
 				>
 					<ArrowLeft size={20} strokeWidth={2.5} /> Back to Courses
 				</Link>,
@@ -342,7 +350,13 @@ export default function CompTIAProgramDashboard({ program }) {
 								<button
 									type="button"
 									onClick={() => document.getElementById("program-modules")?.scrollIntoView({ behavior: "smooth", block: "start" })}
-									className="flex h-12 items-center gap-2 rounded-full border border-[#c8102e] px-5 text-sm font-bold text-[#c8102e] transition hover:-translate-y-0.5 hover:bg-[#fff1f3] hover:shadow-[0_10px_20px_rgba(200,16,46,0.12)] active:translate-y-0 sm:h-[58px] sm:px-7 sm:text-base"
+									disabled={!hasLearningModules}
+									aria-label={hasLearningModules ? "View all modules" : "View all modules (coming soon)"}
+									className={`flex h-12 items-center gap-2 rounded-full border border-[#c8102e] px-5 text-sm font-bold text-[#c8102e] sm:h-[58px] sm:px-7 sm:text-base ${
+										hasLearningModules
+											? "transition hover:-translate-y-0.5 hover:bg-[#fff1f3] hover:shadow-[0_10px_20px_rgba(200,16,46,0.12)] active:translate-y-0"
+											: "cursor-not-allowed opacity-40"
+									}`}
 								>
 									View All Modules <ArrowRight size={18} />
 								</button>
@@ -415,7 +429,7 @@ export default function CompTIAProgramDashboard({ program }) {
 								className="block w-full rounded-lg pr-7 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c8102e]"
 							>
 								<div className="flex items-center justify-between gap-2">
-									<strong className="truncate text-sm text-[#c8102e]">{profile?.username ?? "Student"}</strong>
+									<strong className="truncate text-sm text-[#c8102e]">{getProfileDisplayName(profile)}</strong>
 									<span className="text-xs font-semibold text-[#7c89a1]">{examCardIndex + 1}/{examFormats.length}</span>
 								</div>
 								<p className="mt-0.5 text-sm leading-snug text-[#64708a]">
