@@ -1101,7 +1101,8 @@ Router2(config)#ntp server 209.165.200.225
 Router2(config)#ntp master 7`,
 	}],
 	[403, {
-		diagram: "four-router-pc-routing",
+		diagram: "r1-floating-default-routes",
+		hideExhibitImage: true,
 		exhibit: `R1(config)#ip route 0.0.0.0 0.0.0.0 172.16.20.2
 R1(config)#ip route 0.0.0.0 0.0.0.0 10.0.0.2 20`,
 	}],
@@ -1126,8 +1127,6 @@ DNS Servers: 8.8.8.8`,
 	}],
 	[479, "cpe-dual-isp"],
 	[484, "ipv6-r1-r2-access-lans"],
-	[516, "r14-r86-pc10-static-routes"],
-	[517, "r14-r86-pc10-static-routes"],
 	[520, {
 		diagram: "ospf-four-router-two-area",
 		exhibit: `R1#show ip route

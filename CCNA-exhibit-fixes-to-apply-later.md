@@ -91,7 +91,7 @@ The diagram renderer does not infer labels from the original screenshot; topolog
 
 - Keep the original SW-to-PC link labeled `Gig0/1` and preserve the exact `GigabitEthernet0/1` access and port-security commands.
 - Do not substitute the unrelated `PC1`/`Fa0`/`Fa0/1` topology or add speed/duplex details that are absent from the source.
-- The comparison PDF retains the original Question 369 exhibit 1:1; the website now uses a dedicated switch-to-PC Gig0/1 topology without changing Question 242's shared diagram.
+- The comparison PDF's after panel now uses a distinct SW-to-PC Gig0/1 drawing and retains the exact IOS commands; the original before panel is preserved. The website uses the same dedicated topology without changing Question 242's shared diagram.
 
 ## Question 387 — dual-site IPv6 network with ISP
 
@@ -109,10 +109,10 @@ The diagram renderer does not infer labels from the original screenshot; topolog
 
 ## Question 403 — three-router floating default routes
 
-- The original exhibit has three routers in a triangle, not four. It also shows PC1 on the left LAN, PC3 on the upper LAN, and a switch and PC2 on the right LAN; the website diagram now preserves that layout.
+- Redraw the topology as a route-focused diagram: R1 above two distinct next-hop routers, with the primary and floating routes visually differentiated; keep PC1, PC3, and the switch/PC2 on their original LANs.
 - Preserve the original network labels: `172.16.30.0/24` (PC1 LAN), `172.16.20.0/24` (left-to-upper router), `172.16.10.0/24` (PC3 LAN), `209.165.201.0/27` (upper-to-right router), `10.0.0.0/24` (left-to-right router), and `192.168.200.0/24` (PC2 LAN).
-- Keep R1's primary default route via `172.16.20.2` and its floating backup via `10.0.0.2` with administrative distance 20. Do not add router names or labels absent from the source image.
-- The comparison PDF uses the original Question 403 image 1:1; the website topology now shows the three-router triangle, its original LANs, and both R1 default routes.
+- Keep R1's primary default route via `172.16.20.2` and its floating backup via `10.0.0.2` with administrative distance 20; do not invent additional IPs or interface labels.
+- The website now uses a distinct three-router layout, hides the source image, and keeps both route commands. The comparison PDF's after panel now uses this redraw; the original before panel is preserved on page 77 of the 162-page PDF.
 
 ## Question 624 — LACP configuration exhibit
 
@@ -120,11 +120,18 @@ The diagram renderer does not infer labels from the original screenshot; topolog
 - Do not reuse Question 204's two-switch EtherChannel topology in Question 624.
 - Keep Question 204's topology with Question 204.
 
+## Questions 516 and 517 — distinct matching activities
+
+- Question 516 matches AAA services; Question 517 matches TCP/UDP characteristics. They are different questions and must retain their own drag-and-drop choices and answers.
+- Removed the unrelated R14–R86 static-route diagram that had been assigned to both; neither matching activity needs that topology.
+- The comparison PDF now gives each question its own matching-activity panel; the original before panels remain unchanged.
+
 ## Question 1099 — four-switch spanning-tree ring
 
 - The original exhibit has four switches, not three: S1, S2, S3, and S4 form a four-link ring. Preserve only the perimeter links S1–S4, S4–S3, S3–S2, and S2–S1; do not redraw it as a three-switch triangle.
 - Match the original bridge data: S1 priority 30000 / MAC `AA:AA:AA:AA:AA:AA`; S2 priority 4096 / MAC `BB:BB:BB:BB:BB:BB`; S3 priority 28672 / MAC `CC:CC:CC:CC:CC:CC`; S4 priority 8192 / MAC `DD:DD:DD:DD:DD:DD`.
 - The website topology now uses the original four-switch ring and bridge data.
+- The comparison PDF's after panel now uses a distinct four-switch ring redraw with the same bridge data; the original before panel remains unchanged.
 
 ## Questions 851 and 852 — distinct spanning-tree data
 
@@ -136,13 +143,13 @@ The diagram renderer does not infer labels from the original screenshot; topolog
 
 - The source exhibit is IOS DHCP configuration, not a network topology. Do not add a CPE, client PCs, company network, or central DHCP server diagram.
 - Preserve the original commands and values: excluded range `192.168.10.1`–`192.168.10.20`; pool `LAN-POOL`; network `192.168.10.0/24`; default router `192.168.10.1`; DNS `8.8.8.8`; lease 3; and `GigabitEthernet0/1` with `192.168.10.1/24` and helper address `172.20.255.11`.
-- The comparison PDF uses the original Question 1011 image 1:1; the website exhibit now shows the DHCP configuration only.
+- The comparison PDF's after panel now presents the same commands in an IOS terminal-style exhibit; the original before panel is preserved. The website keeps its configuration-only terminal exhibit.
 
 ## Question 1199 — R1/R2 database topology
 
 - Keep `Gi0/0` on the database-switch-to-R1 link and `Gi0/1` on the R1-to-LAN-switch link.
 - Match the original exhibit's subnet labels and single R1–R2 `S0/0/0` link; do not add a second serial link or substitute other subnets.
-- The comparison PDF retains the original Question 1199 exhibit 1:1; the website topology now shows its original single serial link and LAN subnets.
+- The comparison PDF's after panel now uses a custom redraw with the same single serial link, subnet labels, and Gi0/0/Gi0/1 placements; the original before panel is preserved.
 
 ## Question 1305 — drag-and-drop routing-table matching
 
@@ -171,18 +178,18 @@ The diagram renderer does not infer labels from the original screenshot; topolog
 - Remaining comparison headers retain the original 166-question sequence.
 - Refreshed the after panels for Questions 65, 70, 177, 246, 268, 275, 441, 1012, and 1305 from the current website exhibits. The before panels, cover, and page order are preserved; Question 441 is labeled as an illustrative reconstruction because its original image is unavailable.
 - Question 273's after panel now uses the rebuilt two-WAN, two-site topology; its original “before” exhibit is preserved.
-- Question 369's after panel now retains the original exhibit 1:1 instead of the incorrect `PC1`/`Fa0` redraw.
+- Question 369's after panel now uses a custom SW-to-PC Gig0/1 drawing and terminal; its original before panel is pixel-identical to the previous PDF (page 144 of 162).
 - Question 275's after panel now labels its inter-switch trunk with the configured VLANs 5 and 10 instead of the contradictory VLAN 100.
 - Question 246's after panel now uses a distinct route-path layout and replaces the source image with the R14-to-R86-to-destination topology.
 - Question 273's after panel now retains the full original dual-WAN topology 1:1.
 - Question 339's after panel now retains the original three-router exhibit 1:1 instead of the incorrect switch-centered star.
 - Question 387's after panel now retains the original dual-site IPv6/ISP exhibit 1:1 instead of the incomplete redraw.
-- Question 403's after panel now retains the original three-router exhibit 1:1 instead of the unrelated four-router redraw.
-- Question 1011's after panel now retains the original configuration exhibit 1:1; no topology is added.
+- Question 403's after panel now uses the route-focused three-router redraw; its original before panel is pixel-identical to the previous PDF.
+- Question 1011's after panel now uses a terminal-style redraw of the DHCP configuration; its original before panel is pixel-identical to the previous PDF (page 113 of 162).
 - Questions 851 and 852's after panels show their distinct bridge-priority/MAC data without the shared unverified topology; neither original image is available locally.
 - Question 624's after panel shows configuration only; Question 204 retains its two-switch topology.
-- Question 1099's comparison PDF retains the original four-switch ring and bridge data 1:1; the website now displays the corrected four-switch ring.
-- Question 1199's after panel now preserves the original wires and `Gi0/0`/`Gi0/1` placement 1:1.
+- Question 1099's after panel now uses a distinct four-switch ring redraw; its original before panel is pixel-identical to the previous PDF (page 116 of 162).
+- Question 1199's after panel now uses a custom topology redraw with interface labels attached to their links; its original before panel is pixel-identical to the previous PDF (page 121 of 162).
 - Question 1321's after panel is configuration-only and matches the original PAT overload exhibit.
 - Question 1329 was visually checked: both interface labels sit on their wires, with IP addresses below.
 - Focused CCNA tests, targeted lint, and the production build passed after implementation. No commit or push was made.

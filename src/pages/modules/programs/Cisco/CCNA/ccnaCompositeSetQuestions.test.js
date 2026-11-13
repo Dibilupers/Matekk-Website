@@ -50,6 +50,46 @@ test("rebuilds Question 273 as separate WAN networks and hides the source image"
 	assert.equal(question.hideExhibitImage, true);
 });
 
+test("redraws Question 403 as a route-focused topology and hides the source image", () => {
+	const question = applyNativeExhibit({ bankId: 403 });
+
+	assert.equal(question.exhibitDiagram, "r1-floating-default-routes");
+	assert.equal(question.hideExhibitImage, true);
+	assert.match(question.exhibit, /172\.16\.20\.2/);
+	assert.match(question.exhibit, /10\.0\.0\.2 20/);
+});
+
+test("keeps Questions 516 and 517 as distinct matching activities without the shared route diagram", () => {
+	const question516 = applyNativeExhibit({
+		bankId: 516,
+		type: "match",
+		prompt: "Drag and drop the descriptions or AAA services from the left onto the corresponding services on the right.",
+		items: ["records user commands", "logs session statistics"],
+		choices: ["Accounting", "Authentication", "Authorization"],
+		answer: [0, 0],
+	});
+	const question517 = applyNativeExhibit({
+		bankId: 517,
+		type: "match",
+		prompt: "Drag and drop the TCP or UDP details from the left onto their corresponding protocols on the right.",
+		items: ["used to reliably share files between devices"],
+		choices: ["TCP", "UDP"],
+		answer: [0],
+	});
+
+	assert.equal(question516.exhibitDiagram, undefined);
+	assert.equal(question517.exhibitDiagram, undefined);
+	assert.equal(question516.type, "match");
+	assert.equal(question517.type, "match");
+	assert.notEqual(question516.prompt, question517.prompt);
+	assert.deepEqual(question516.items, ["records user commands", "logs session statistics"]);
+	assert.deepEqual(question517.items, ["used to reliably share files between devices"]);
+	assert.deepEqual(question516.choices, ["Accounting", "Authentication", "Authorization"]);
+	assert.deepEqual(question517.choices, ["TCP", "UDP"]);
+	assert.deepEqual(question516.answer, [0, 0]);
+	assert.deepEqual(question517.answer, [0]);
+});
+
 test("corrects Question 275's trunk label to match the allowed VLANs", () => {
 	const question = applyNativeExhibit({ bankId: 275 });
 
