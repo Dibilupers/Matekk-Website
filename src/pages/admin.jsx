@@ -3,6 +3,22 @@ import { ArrowDown, ArrowUp, ChevronDown, Download, Inbox, Pencil, Search, Trash
 import API_URL from "../config/api";
 import { useAuth } from "../context/auth-context";
 
+const defaultProgramOptionLabels = new Set([
+	"CCNA — CCNA Automation",
+	"CCNA — CCNA Cybersecurity",
+	"CCNP — CCNP Collaboration",
+	"CCNP — CCNP Data Center",
+	"CCNP — CCNP Enterprise",
+	"CCNP — CCNP Security",
+	"A+ (Core 1 & 2)",
+	"CySA+",
+	"Linux+",
+	"Network+",
+	"PenTest+",
+	"Security+",
+	"FortiOS",
+]);
+
 function mapApiUser(user) {
 	const normalizedRole = typeof user.role === "string" ? user.role.trim() : "";
 	return {
@@ -695,13 +711,13 @@ export default function UsersDashboard() {
 															<p className="pt-2 text-xs font-bold uppercase tracking-wide text-[#667085]">{trainingName} training</p>
 															{programs.filter((program) => (program.training?.name || "Other") === trainingName).map((program) => (
 																<div key={program.id} className="space-y-1">
-																	<label className="flex cursor-pointer items-center gap-3 rounded-lg border border-[#e3e9f4] px-3 py-2.5 text-sm hover:bg-[#f8faff]">
-																		<input type="checkbox" checked={selectedProgramIds.includes(program.id)} onChange={() => toggleProgram(program.id)} className="h-4 w-4 accent-[#2b5cf0]" />
+																	<label className={`flex cursor-pointer items-center gap-3 rounded-lg border px-3 py-2.5 text-sm ${defaultProgramOptionLabels.has(program.name) ? "border-[#e3e9f4] hover:bg-[#f8faff]" : "border-[#2166f3] bg-[#2166f3] text-white transition-colors hover:border-[#1554d1] hover:bg-[#1554d1]"}`}>
+																		<input type="checkbox" checked={selectedProgramIds.includes(program.id)} onChange={() => toggleProgram(program.id)} className={`h-4 w-4 ${defaultProgramOptionLabels.has(program.name) ? "accent-[#2b5cf0]" : "accent-white"}`} />
 																		<span className="flex-1">{program.name} — Entire program</span>
 																	</label>
 																	{program.modules?.map((module) => (
-																		<label key={module.id} className="ml-6 flex cursor-pointer items-center gap-3 rounded-lg border border-[#e3e9f4] px-3 py-2.5 text-sm hover:bg-[#f8faff]">
-																			<input type="checkbox" checked={selectedProgramIds.includes(module.id)} onChange={() => toggleProgram(module.id)} className="h-4 w-4 accent-[#2b5cf0]" />
+																		<label key={module.id} className={`ml-6 flex cursor-pointer items-center gap-3 rounded-lg border px-3 py-2.5 text-sm ${defaultProgramOptionLabels.has(`${program.name} — ${module.name}`) ? "border-[#e3e9f4] hover:bg-[#f8faff]" : "border-[#2166f3] bg-[#2166f3] text-white transition-colors hover:border-[#1554d1] hover:bg-[#1554d1]"}`}>
+																			<input type="checkbox" checked={selectedProgramIds.includes(module.id)} onChange={() => toggleProgram(module.id)} className={`h-4 w-4 ${defaultProgramOptionLabels.has(`${program.name} — ${module.name}`) ? "accent-[#2b5cf0]" : "accent-white"}`} />
 																			<span className="flex-1">{program.name} — {module.name}</span>
 																		</label>
 																	))}
