@@ -1,6 +1,6 @@
 import subinterfaceR1Sw1Sw2Img from "../../../../../assets/ccna-exam/subinterface-r1-sw1-sw2.webp";
 import { CCNA_LEGACY_QUESTIONS } from "./ccnaLegacyQuestions";
-import { CCNA_RECREATED_TEXT_EXHIBITS } from "./ccnaCompositeSetQuestions";
+import { applyNativeExhibit, CCNA_RECREATED_TEXT_EXHIBITS } from "./ccnaCompositeSetQuestions";
 import { findCcnaQuestionExplanation } from "../../../../../utils/ccnaQuestionExplanations";
 import { isValidQuestion } from "../../../../../utils/ccnaExamGrading";
 import { splitPromptExhibit } from "../../../../../utils/splitPromptExhibit";
@@ -302,14 +302,18 @@ const OFFLINE_LEGACY_QUESTIONS = CCNA_LEGACY_QUESTIONS
       ? NUMBERED_QUESTION_EXHIBITS.get(OFFLINE_LEGACY_QUESTION_IMAGE_IDS.get(question.legacyIndex))
       : undefined;
     const nativeExhibit = LEGACY_QUESTION_NATIVE_EXHIBITS.get(question.legacyIndex);
-    const exhibitDiagram = typeof nativeExhibit === "string" ? nativeExhibit : nativeExhibit?.diagram;
-    const exhibitImage = nativeExhibit?.hideExhibitImage || exhibitDiagram
+    const promptNativeExhibit = applyNativeExhibit(question);
+    const exhibitDiagram = (typeof nativeExhibit === "string" ? nativeExhibit : nativeExhibit?.diagram) ??
+      promptNativeExhibit.exhibitDiagram;
+    const hideExhibitImage = nativeExhibit?.hideExhibitImage || promptNativeExhibit.hideExhibitImage;
+    const exhibitImage = hideExhibitImage || exhibitDiagram
       ? undefined
-      : numberedExhibit || LEGACY_QUESTION_EXHIBITS.get(question.legacyIndex);
+      : numberedExhibit || promptNativeExhibit.exhibitImage || LEGACY_QUESTION_EXHIBITS.get(question.legacyIndex);
+    const exhibit = nativeExhibit?.exhibit || (promptNativeExhibit.nativeExhibitText ? promptNativeExhibit.exhibit : undefined);
 
     return {
       ...question,
-      ...(nativeExhibit?.removeExhibitLeadIn
+      ...(nativeExhibit?.removeExhibitLeadIn || promptNativeExhibit.removeExhibitLeadIn
         ? { prompt: question.prompt.replace(/^\s*Refer to (?:the )?exhibit\.?\s*/i, "") }
         : {}),
       ...(!question.exhibit && !offlineOverride && !parsedAnswerTable ? splitPromptExhibit(question.prompt) : {}),
@@ -319,9 +323,9 @@ const OFFLINE_LEGACY_QUESTIONS = CCNA_LEGACY_QUESTIONS
         ? { prompt: "Connect each Wi-Fi term on the left to its matching description on the right." }
         : {}),
       ...(exhibitImage ? { exhibitImage } : {}),
-      ...(nativeExhibit?.hideExhibitImage ? { hideExhibitImage: true } : {}),
+      ...(hideExhibitImage ? { hideExhibitImage: true } : {}),
       ...(exhibitDiagram ? { exhibitDiagram } : {}),
-      ...(nativeExhibit?.exhibit ? { exhibit: nativeExhibit.exhibit } : {}),
+      ...(exhibit ? { exhibit } : {}),
       ...(question.type === "match" &&
       question.items?.length === question.choices?.length &&
       question.answer?.length === question.items.length &&

@@ -262,6 +262,42 @@ const NETWORK_TOPOLOGIES = {
 			{ from: "router", to: "network", label: "iBGP", labelX: 670, labelY: 240, offset: 20 },
 		],
 	},
+	"dc-hq-interface-addressing": {
+		title: "DC-1 and HQ-1 interface addressing",
+		note: "Select the address command that matches each interface requirement; no link between the routers is specified.",
+		nodes: [
+			{
+				id: "dc1",
+				kind: "router",
+				name: "DC-1",
+				x: 300,
+				y: 220,
+				details: ["Gi1/0 · last usable /30", "Gi1/1 · first usable /29", "Gi1/2 · last usable /28"],
+			},
+			{
+				id: "hq1",
+				kind: "router",
+				name: "HQ-1",
+				x: 700,
+				y: 220,
+				details: ["Gi1/3 · last usable /29"],
+			},
+		],
+		links: [],
+	},
+	"r14-r86-ospf-adjacency": {
+		title: "R14 and R86 OSPF adjacency",
+		note: "Both FastEthernet0/0 interfaces share the 10.73.65.64/30 Ethernet network in OSPF area 0.",
+		nodes: [
+			{ id: "r14", kind: "router", name: "R14", x: 180, y: 250, details: ["Fa0/0 · 10.73.65.65/30"] },
+			{ id: "segment", kind: "network", name: "Shared Ethernet segment", x: 500, y: 250, details: ["10.73.65.64/30", "OSPF area 0"] },
+			{ id: "r86", kind: "router", name: "R86", x: 820, y: 250, details: ["Fa0/0 · 10.73.65.66/30"] },
+		],
+		links: [
+			{ from: "r14", to: "segment", label: "Fa0/0" },
+			{ from: "segment", to: "r86", label: "Fa0/0" },
+		],
+	},
 	"ipv6-block-r1-r2": {
 		title: "IPv6 block and access LANs",
 		note: "Address block: 2001:0db8:fff:fcf3::/64",

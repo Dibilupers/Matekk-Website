@@ -1881,7 +1881,18 @@ export function getBuiltInQuestionByPrompt(prompt) {
 		return { exhibitDiagram: "routing-protocols-prefix", hideExhibitImage: true };
 	}
 	if (/ip address configurations must be completed on the dc-1 and hq-1 routers/i.test(prompt)) {
-		return { hideExhibitImage: true, removeExhibitLeadIn: true };
+		return {
+			exhibitDiagram: "dc-hq-interface-addressing",
+			hideExhibitImage: true,
+			removeExhibitLeadIn: true,
+		};
+	}
+	if (/routers\s+r14\s+and\s+r86\s+to\s+form\s+an\s+ospfv2\s+adjacency\s+(?:while\s+acting\s+as|and\s+act\s+as)\s+a\s+central\s+point\s+for\s+exchanging\s+ospf\s+information\s+between\s+routers/i.test(prompt)) {
+		return {
+			exhibitDiagram: "r14-r86-ospf-adjacency",
+			hideExhibitImage: true,
+			removeExhibitLeadIn: true,
+		};
 	}
 	if (/engineer is configuring the router to provide static nat for the webserver/i.test(prompt)) {
 		return {
