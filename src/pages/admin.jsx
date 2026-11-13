@@ -422,7 +422,7 @@ export default function UsersDashboard() {
 	};
 
 	return (
-		<main className="min-h-screen w-full overflow-x-hidden bg-white font-poppins text-[#0f172a]">
+		<main className="min-h-screen w-full overflow-x-hidden bg-[#f4f6fa] font-sans text-[#0f172a]">
 			{inquiryNotification && (
 				<div role="status" aria-live="polite" className="fixed bottom-5 right-5 z-50 flex max-w-sm items-start gap-4 rounded-xl bg-[#145bb7] px-5 py-4 text-sm text-white shadow-xl">
 					<div className="flex-1">
@@ -433,54 +433,54 @@ export default function UsersDashboard() {
 					<button type="button" onClick={() => setInquiryNotification("")} aria-label="Dismiss inquiry notification" className="rounded p-1 hover:bg-white/10"><X size={16} /></button>
 				</div>
 			)}
-			<header className="bg-[#1775ee] px-5 py-6 text-white sm:px-8 sm:py-7">
-				<div className="mx-auto max-w-[950px]">
-					<h1 className="text-2xl font-bold leading-tight tracking-wide sm:text-[32px]">{activeSection === "users" ? "Users" : activeSection === "enrollments" ? "Enroll a student" : "Inquiries"}</h1>
-					<p className="mt-1 text-sm sm:text-lg">{activeSection === "users" ? "Manage who has access to your workspace." : activeSection === "enrollments" ? "Add a student to a program and see who is already enrolled." : "Review messages and requests submitted through the website."}</p>
-					<div className={`mt-6 grid gap-3 text-center sm:mt-7 sm:gap-6 ${activeSection === "users" ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5" : "grid-cols-3"}`}>
+			<header className="bg-[#1673ee] px-5 py-8 text-white sm:px-8 sm:py-9">
+				<div className="mx-auto max-w-[1216px]">
+					<h1 className="text-3xl font-bold leading-tight tracking-tight sm:text-[40px]">{activeSection === "users" ? "Users" : activeSection === "enrollments" ? "Enroll a student" : "Inquiries"}</h1>
+					<p className="mt-1 text-sm text-white/90 sm:text-base">{activeSection === "users" ? "Manage who has access to your workspace." : activeSection === "enrollments" ? "Add a student to a program and see who is already enrolled." : "Review messages and requests submitted through the website."}</p>
+					<div className={`mt-6 grid gap-3 sm:grid-cols-2 lg:gap-4 ${activeSection === "users" ? "grid-cols-2 lg:grid-cols-5" : "grid-cols-3"}`}>
 						{activeSection === "users" ? (
 							<>
-								<div className="flex min-w-0 flex-col items-stretch"><span className="flex h-12 items-start justify-center pt-1 text-center text-sm font-medium leading-5 sm:text-base">Total Users</span><strong className="mt-1 flex h-12 items-center justify-center text-4xl font-bold leading-none sm:text-[40px]">{userCount}</strong></div>
-								<div className="flex min-w-0 flex-col items-stretch"><span className="flex h-12 items-start justify-center pt-1 text-center text-sm font-medium leading-5 sm:text-base">Active</span><strong className="mt-1 flex h-12 items-center justify-center text-4xl font-bold leading-none sm:text-[40px]">{activeUserCount}</strong></div>
-								<div className="flex min-w-0 flex-col items-stretch"><span className="flex h-12 items-start justify-center pt-1 text-center text-sm font-medium leading-5 sm:text-base">Pending approval</span><strong className="mt-1 flex h-12 items-center justify-center text-4xl font-bold leading-none sm:text-[40px]">{pendingApprovalCount}</strong></div>
-								<div className="flex min-w-0 flex-col items-stretch"><span className="flex h-12 items-start justify-center pt-1 text-center text-sm font-medium leading-5 sm:text-base">Pending approval for enrollment</span><strong className="mt-1 flex h-12 items-center justify-center text-4xl font-bold leading-none sm:text-[40px]">{pendingEnrollmentApprovalCount}</strong></div>
-								<div className="flex min-w-0 flex-col items-stretch"><span className="flex h-12 items-start justify-center pt-1 text-center text-sm font-medium leading-5 sm:text-base">Inquiries</span><strong className="mt-1 flex h-12 items-center justify-center text-4xl font-bold leading-none sm:text-[40px]">{openInquiryCount}</strong></div>
+								<div className="min-w-0 rounded-[14px] border border-white/30 bg-white/15 px-4 py-3.5"><span className="block text-xs font-medium text-white/90">Total users</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-4xl">{userCount}</strong></div>
+								<div className="min-w-0 rounded-[14px] border border-white/30 bg-white/15 px-4 py-3.5"><span className="block text-xs font-medium text-white/90">Active</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-4xl">{activeUserCount}</strong></div>
+								<div className="min-w-0 rounded-[14px] border border-white/30 bg-white/15 px-4 py-3.5"><span className="block text-xs font-medium text-white/90">Pending approval</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-4xl">{pendingApprovalCount}</strong></div>
+								<div className="min-w-0 rounded-[14px] border border-white/30 bg-white/15 px-4 py-3.5"><span className="block text-xs font-medium text-white/90">Pending enrollment</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-4xl">{pendingEnrollmentApprovalCount}</strong></div>
+								<button type="button" onClick={showInquiries} className="min-w-0 rounded-[14px] bg-white px-4 py-3.5 text-left text-[#0b4fc2] transition hover:bg-blue-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"><span className="block text-xs font-semibold">Inquiries · needs attention</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-4xl">{openInquiryCount}</strong></button>
 							</>
 						) : activeSection === "inquiries" ? (
 							<>
-								<div><span className="block text-xs sm:text-base">Total Inquiries</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-[40px]">{inquiries.length}</strong></div>
-								<div><span className="block text-xs sm:text-base">Open</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-[40px]">{openInquiryCount}</strong></div>
-								<div><span className="block text-xs sm:text-base">Resolved</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-[40px]">{resolvedInquiryCount}</strong></div>
+								<div className="rounded-[14px] border border-white/30 bg-white/15 px-4 py-3.5"><span className="block text-xs text-white/90 sm:text-sm">Total inquiries</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-4xl">{inquiries.length}</strong></div>
+								<div className="rounded-[14px] border border-white/30 bg-white/15 px-4 py-3.5"><span className="block text-xs text-white/90 sm:text-sm">Open</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-4xl">{openInquiryCount}</strong></div>
+								<div className="rounded-[14px] border border-white/30 bg-white/15 px-4 py-3.5"><span className="block text-xs text-white/90 sm:text-sm">Resolved</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-4xl">{resolvedInquiryCount}</strong></div>
 							</>
 						) : (
 							<>
-								<div><span className="block text-xs sm:text-base">Total Enrollments</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-[40px]">{enrollments.length}</strong></div>
-								<div><span className="block text-xs sm:text-base">Students</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-[40px]">{enrolledStudentCount}</strong></div>
-								<div><span className="block text-xs sm:text-base">Programs</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-[40px]">{programs.length}</strong></div>
+								<div className="rounded-[14px] border border-white/30 bg-white/15 px-4 py-3.5"><span className="block text-xs text-white/90 sm:text-sm">Total enrollments</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-4xl">{enrollments.length}</strong></div>
+								<div className="rounded-[14px] border border-white/30 bg-white/15 px-4 py-3.5"><span className="block text-xs text-white/90 sm:text-sm">Students</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-4xl">{enrolledStudentCount}</strong></div>
+								<div className="rounded-[14px] border border-white/30 bg-white/15 px-4 py-3.5"><span className="block text-xs text-white/90 sm:text-sm">Programs</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-4xl">{programs.length}</strong></div>
 							</>
 						)}
 					</div>
 				</div>
 			</header>
 
-			<section className="mx-auto max-w-[1180px] px-4 sm:px-8">
-				<div className="py-5 sm:py-7">
-					<nav aria-label="Admin sections" className="mb-5 flex flex-wrap gap-2 border-b border-[#e3e9f4] pb-4">
-						<button type="button" onClick={() => setActiveSection("users")} className={`flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition ${activeSection === "users" ? "bg-[#2b5cf0] text-white shadow-lg shadow-[#2b5cf0]/20" : "text-[#667085] hover:bg-[#edf3ff] hover:text-[#2b5cf0]"}`}>
+			<section className="mx-auto max-w-[1280px] px-4 py-6 sm:px-8 sm:py-8">
+				<div className="overflow-hidden rounded-2xl border border-[#e2e8f0] bg-white shadow-sm">
+					<nav aria-label="Admin sections" className="flex flex-wrap gap-1 border-b border-[#e2e8f0] p-3">
+						<button type="button" onClick={() => setActiveSection("users")} className={`flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition ${activeSection === "users" ? "bg-[#1673ee] text-white" : "text-[#475569] hover:bg-[#f1f5f9] hover:text-[#0b4fc2]"}`}>
 							<Users size={17} /> Users
 						</button>
-						<button type="button" onClick={showInquiries} className={`flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition ${activeSection === "inquiries" ? "bg-[#2b5cf0] text-white shadow-lg shadow-[#2b5cf0]/20" : "text-[#667085] hover:bg-[#edf3ff] hover:text-[#2b5cf0]"}`}>
+						<button type="button" onClick={showInquiries} className={`flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition ${activeSection === "inquiries" ? "bg-[#1673ee] text-white" : "text-[#475569] hover:bg-[#f1f5f9] hover:text-[#0b4fc2]"}`}>
 							<Inbox size={17} /> Inquiries
-							{newInquiryCount > 0 && <span className={`rounded-full px-2 py-0.5 text-[11px] font-bold ${activeSection === "inquiries" ? "bg-white text-[#2b5cf0]" : "bg-[#e5484d] text-white"}`} aria-label={`${newInquiryCount} new inquiries`}>{newInquiryCount}</span>}
+							{newInquiryCount > 0 && <span className={`rounded-full px-2 py-0.5 text-[11px] font-bold ${activeSection === "inquiries" ? "bg-white text-[#0b4fc2]" : "bg-[#b42318] text-white"}`} aria-label={`${newInquiryCount} new inquiries`}>{newInquiryCount}</span>}
 						</button>
-						<button type="button" onClick={() => setActiveSection("enrollments")} className={`flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition ${activeSection === "enrollments" ? "bg-[#2b5cf0] text-white shadow-lg shadow-[#2b5cf0]/20" : "text-[#667085] hover:bg-[#edf3ff] hover:text-[#2b5cf0]"}`}>
+						<button type="button" onClick={() => setActiveSection("enrollments")} className={`flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition ${activeSection === "enrollments" ? "bg-[#1673ee] text-white" : "text-[#475569] hover:bg-[#f1f5f9] hover:text-[#0b4fc2]"}`}>
 							<Users size={17} /> Enroll students
 						</button>
 					</nav>
 
 					{activeSection === "users" ? (
 						<>
-							<div role="tablist" aria-label="User lists" className="mb-5 flex flex-wrap gap-2 border-b border-[#e3e9f4]">
+							<div role="tablist" aria-label="User lists" className="flex flex-wrap gap-6 border-b border-[#e2e8f0] px-6">
 								<button
 									type="button"
 									role="tab"
@@ -488,7 +488,7 @@ export default function UsersDashboard() {
 									aria-selected={userListTab === "all"}
 									aria-controls="users-list-panel"
 									onClick={() => setUserListTab("all")}
-									className={`border-b-2 px-4 py-3 text-sm font-semibold transition ${userListTab === "all" ? "border-[#2b5cf0] text-[#2b5cf0]" : "border-transparent text-[#667085] hover:text-[#2b5cf0]"}`}
+									className={`border-b-2 px-0 py-4 text-sm font-semibold transition ${userListTab === "all" ? "border-[#1673ee] text-[#0b4fc2]" : "border-transparent text-[#475569] hover:text-[#0b4fc2]"}`}
 								>
 									All users
 								</button>
@@ -499,10 +499,10 @@ export default function UsersDashboard() {
 									aria-selected={userListTab === "pending"}
 									aria-controls="users-list-panel"
 									onClick={() => setUserListTab("pending")}
-									className={`flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition ${userListTab === "pending" ? "border-[#2b5cf0] text-[#2b5cf0]" : "border-transparent text-[#667085] hover:text-[#2b5cf0]"}`}
+									className={`flex items-center gap-2 border-b-2 px-0 py-4 text-sm font-semibold transition ${userListTab === "pending" ? "border-[#1673ee] text-[#0b4fc2]" : "border-transparent text-[#475569] hover:text-[#0b4fc2]"}`}
 								>
 									Pending approval
-									<span className={`rounded-full px-2 py-0.5 text-[11px] font-bold ${userListTab === "pending" ? "bg-[#edf3ff] text-[#2b5cf0]" : "bg-[#f1f3f8] text-[#667085]"}`}>{pendingApprovalCount}</span>
+									<span className={`rounded-full px-2 py-0.5 text-[11px] font-bold ${userListTab === "pending" ? "bg-[#eaf2ff] text-[#0b4fc2]" : "bg-[#f1f5f9] text-[#475569]"}`}>{pendingApprovalCount}</span>
 								</button>
 								<button
 									type="button"
@@ -511,46 +511,46 @@ export default function UsersDashboard() {
 									aria-selected={userListTab === "enrollment"}
 									aria-controls="users-list-panel"
 									onClick={() => setUserListTab("enrollment")}
-									className={`flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition ${userListTab === "enrollment" ? "border-[#2b5cf0] text-[#2b5cf0]" : "border-transparent text-[#667085] hover:text-[#2b5cf0]"}`}
+									className={`flex items-center gap-2 border-b-2 px-0 py-4 text-sm font-semibold transition ${userListTab === "enrollment" ? "border-[#1673ee] text-[#0b4fc2]" : "border-transparent text-[#475569] hover:text-[#0b4fc2]"}`}
 								>
 									Pending approval for enrollment
-									<span className={`rounded-full px-2 py-0.5 text-[11px] font-bold ${userListTab === "enrollment" ? "bg-[#edf3ff] text-[#2b5cf0]" : "bg-[#f1f3f8] text-[#667085]"}`}>{pendingEnrollmentApprovalCount}</span>
+									<span className={`rounded-full px-2 py-0.5 text-[11px] font-bold ${userListTab === "enrollment" ? "bg-[#eaf2ff] text-[#0b4fc2]" : "bg-[#f1f5f9] text-[#475569]"}`}>{pendingEnrollmentApprovalCount}</span>
 								</button>
 							</div>
-							<div className="mb-4 flex flex-wrap gap-3">
-								<div className="relative">
+							<div className="flex flex-wrap items-center gap-3 px-6 py-4">
+								<div className="relative min-w-[240px] flex-1 sm:max-w-[380px]">
 									<Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#667085]" />
 									<input
 										type="search"
 										value={search}
 										onChange={(event) => setSearch(event.target.value)}
 										placeholder={userListTab === "enrollment" ? "Search enrollment requests" : "Search email or name"}
-										className="h-11 w-full min-w-[240px] rounded-[14px] border border-[#e3e9f4] bg-white pl-11 pr-4 text-sm outline-none placeholder:text-[#667085] focus:border-[#2b5cf0] focus:ring-2 focus:ring-[#2b5cf0]/15 sm:flex-1"
+										className="h-11 w-full rounded-[10px] border border-[#cbd5e1] bg-white pl-11 pr-4 text-sm outline-none placeholder:text-[#64748b] focus:border-[#1673ee] focus:ring-2 focus:ring-[#1673ee]/15"
 									/>
 								</div>
-								{userListTab !== "enrollment" && userListTab === "all" && <select value={status} onChange={(event) => setStatus(event.target.value)} className="h-11 min-w-[150px] rounded-[14px] border border-[#e3e9f4] bg-white px-4 text-sm text-[#667085] outline-none focus:border-[#2b5cf0]">
+								{userListTab !== "enrollment" && userListTab === "all" && <select value={status} onChange={(event) => setStatus(event.target.value)} className="h-11 min-w-[150px] rounded-[10px] border border-[#cbd5e1] bg-white px-4 text-sm text-[#334155] outline-none focus:border-[#1673ee]">
 									<option>All statuses</option>
 									<option>Active</option>
 									<option>Pending</option>
 									<option>Inactive</option>
 									<option>Suspended</option>
 								</select>}
-								{userListTab !== "enrollment" && <select value={role} onChange={(event) => setRole(event.target.value)} className="h-11 min-w-[140px] rounded-[14px] border border-[#e3e9f4] bg-white px-4 text-sm text-[#667085] outline-none focus:border-[#2b5cf0]">
+								{userListTab !== "enrollment" && <select value={role} onChange={(event) => setRole(event.target.value)} className="h-11 min-w-[140px] rounded-[10px] border border-[#cbd5e1] bg-white px-4 text-sm text-[#334155] outline-none focus:border-[#1673ee]">
 									<option>All roles</option>
 									<option>Student</option>
 									<option>Admin</option>
 								</select>}
-								{userListTab !== "enrollment" && <select value={subject} onChange={(event) => setSubject(event.target.value)} className="h-11 min-w-[150px] rounded-[14px] border border-[#e3e9f4] bg-white px-4 text-sm text-[#667085] outline-none focus:border-[#2b5cf0]">
+								{userListTab !== "enrollment" && <select value={subject} onChange={(event) => setSubject(event.target.value)} className="h-11 min-w-[150px] rounded-[10px] border border-[#cbd5e1] bg-white px-4 text-sm text-[#334155] outline-none focus:border-[#1673ee]">
 									<option>All subjects</option>
 									<option>ECE Review</option>
 									<option>Networking</option>
 									<option>Cybersecurity</option>
 								</select>}
-								{userListTab !== "enrollment" && <button type="button" onClick={exportUsers} title="Export users" aria-label="Export users" className="flex h-11 items-center justify-center gap-2 rounded-full border-[1.5px] border-[#2b5cf0] px-5 text-sm font-semibold text-[#2b5cf0] transition hover:bg-[#edf3ff]"><Download size={17} /><span>Export CSV</span></button>}
+								{userListTab !== "enrollment" && <button type="button" onClick={exportUsers} title="Export users" aria-label="Export users" className="ml-auto flex h-11 items-center justify-center gap-2 rounded-[10px] border border-[#1673ee] px-4 text-sm font-semibold text-[#0b4fc2] transition hover:bg-[#eff6ff]"><Download size={17} /><span>Export CSV</span></button>}
 							</div>
 
 							{userListTab !== "enrollment" && selectedCount > 0 && (
-								<div className="mb-4 flex flex-wrap items-center gap-4 rounded-[14px] border border-[#cddcff] bg-[#edf3ff] px-4 py-3 text-sm text-[#334155]">
+								<div className="mx-6 mb-4 flex flex-wrap items-center gap-4 rounded-xl border border-[#bfdbfe] bg-[#eff6ff] px-4 py-3 text-sm text-[#334155]">
 									<strong>{selectedCount} selected</strong>
 									<button type="button" onClick={() => suspendUsers(selectedUsers)} className="flex items-center gap-1 font-semibold text-[#2b5cf0] hover:underline"><UserMinus size={15} /> Suspend</button>
 									<button type="button" onClick={() => removeUsers(selectedUsers)} className="flex items-center gap-1 font-semibold text-[#e5484d] hover:underline"><Trash2 size={15} /> Delete</button>
@@ -559,18 +559,18 @@ export default function UsersDashboard() {
 							)}
 
 							{userListTab !== "enrollment" && usersError && (
-								<div role="alert" className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+								<div role="alert" className="mx-6 mb-4 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
 									<span>{usersError}</span>
 									<button type="button" onClick={() => setUsersRequestAttempt((attempt) => attempt + 1)} className="font-semibold underline">
 										Retry
 									</button>
 								</div>
 							)}
-							{userListTab !== "enrollment" && approvalError && <p role="alert" className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{approvalError}</p>}
+							{userListTab !== "enrollment" && approvalError && <p role="alert" className="mx-6 mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{approvalError}</p>}
 							{userListTab === "enrollment" ? (
 								<>
 									{(inquiriesError || inquiryActionError) && <p role="alert" className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{inquiryActionError || inquiriesError}</p>}
-									<div id="users-list-panel" role="tabpanel" aria-labelledby="pending-enrollment-tab" className="overflow-x-auto rounded-[18px] border border-[#e3e9f4]">
+									<div id="users-list-panel" role="tabpanel" aria-labelledby="pending-enrollment-tab" className="overflow-x-auto border-y border-[#e2e8f0]">
 										<table className="w-full min-w-[760px] border-collapse text-left text-sm">
 											<thead>
 												<tr className="h-12 border-b border-[#e3e9f4] bg-[#f8faff] text-xs text-[#667085]">
@@ -610,37 +610,37 @@ export default function UsersDashboard() {
 								</>
 							) : (
 							<>
-							<div id="users-list-panel" role="tabpanel" aria-labelledby={userListTab === "pending" ? "pending-users-tab" : "all-users-tab"} className="overflow-x-auto rounded-[18px] border border-[#e3e9f4]">
-								<table className="w-full min-w-[760px] border-collapse text-left text-sm">
+							<div id="users-list-panel" role="tabpanel" aria-labelledby={userListTab === "pending" ? "pending-users-tab" : "all-users-tab"} className="overflow-x-auto border-y border-[#e2e8f0]">
+								<table className="w-full min-w-[900px] border-collapse text-left text-sm">
 									<thead>
-										<tr className="h-12 border-b border-[#e3e9f4] bg-[#f8faff] text-xs text-[#667085]">
-											<th className="w-12 px-3 sm:px-4"><input type="checkbox" checked={allVisibleSelected} onChange={toggleAll} aria-label="Select all users" className="h-4 w-4 rounded border-[#b5c1d6] accent-[#2b5cf0]" /></th>
-											<th className="px-3 py-3 sm:px-4"><button type="button" onClick={() => sortBy("name")} className="flex items-center gap-1 font-semibold">Name {sortConfig.key === "name" && (sortConfig.direction === "asc" ? <ArrowUp size={14} /> : <ArrowDown size={14} />)}</button></th>
-											<th className="px-3 py-3 font-semibold sm:px-4">Status</th>
-											<th className="px-3 py-3 font-semibold sm:px-4">Role</th>
-											<th className="px-3 py-3 font-semibold sm:px-4">Enrolled subject</th>
-											<th className="px-3 py-3 sm:px-4"><button type="button" onClick={() => sortBy("lastActive")} className="flex items-center gap-1 font-semibold">Last active {sortConfig.key === "lastActive" && (sortConfig.direction === "asc" ? <ArrowUp size={14} /> : <ArrowDown size={14} />)}</button></th>
-											<th className="w-20 px-3 py-3 font-semibold sm:px-4">Actions</th>
+										<tr className="h-12 border-b border-[#e2e8f0] bg-[#f8fafc] text-xs text-[#475569]">
+											<th className="w-12 px-4"><input type="checkbox" checked={allVisibleSelected} onChange={toggleAll} aria-label="Select all users" className="h-[18px] w-[18px] rounded border-[#cbd5e1] accent-[#1673ee]" /></th>
+											<th className="px-4 py-3"><button type="button" onClick={() => sortBy("name")} className="flex items-center gap-1 font-semibold">Name {sortConfig.key === "name" && (sortConfig.direction === "asc" ? <ArrowUp size={14} /> : <ArrowDown size={14} />)}</button></th>
+											<th className="px-4 py-3 font-semibold">Status</th>
+											<th className="px-4 py-3 font-semibold">Role</th>
+											<th className="px-4 py-3 font-semibold">Enrolled subjects</th>
+											<th className="px-4 py-3"><button type="button" onClick={() => sortBy("lastActive")} className="flex items-center gap-1 font-semibold">Last active {sortConfig.key === "lastActive" && (sortConfig.direction === "asc" ? <ArrowUp size={14} /> : <ArrowDown size={14} />)}</button></th>
+											<th className="px-4 py-3 text-right font-semibold">Actions</th>
 										</tr>
 									</thead>
 									<tbody>
 										{usersLoading && <tr><td colSpan="7" className="h-20 text-center text-sm text-[#667085]">Loading users...</td></tr>}
 										{!usersLoading && !usersError && userRows.length === 0 && <tr><td colSpan="7" className="h-20 text-center text-sm text-[#667085]">No users found.</td></tr>}
 										{filteredUsers.map((user) => (
-											<tr key={user.name} className="border-b border-[#eef2f9] transition-colors last:border-b-0 hover:bg-[#fbfcff]">
-												<td className="px-3 py-3 sm:px-4"><input type="checkbox" checked={selectedUsers.includes(user.name)} onChange={() => toggleUser(user.name)} aria-label={`Select ${user.name}`} className="h-4 w-4 rounded border-[#b5c1d6] accent-[#2b5cf0]" /></td>
-												<td className="px-3 py-3 sm:px-4">
-													<div className="flex items-center gap-3"><span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#2b5cf0] text-xs font-semibold text-white">{initials(user.name)}</span><span><span className="block font-semibold leading-tight text-[#0f172a]">{user.name}</span>
-														<div className="mt-0.5 text-xs font-normal text-[#667085]">{user.email}</div>
+											<tr key={user.name} className="border-b border-[#e2e8f0] transition-colors last:border-b-0 hover:bg-[#f8fafc]">
+												<td className="px-4 py-3"><input type="checkbox" checked={selectedUsers.includes(user.name)} onChange={() => toggleUser(user.name)} aria-label={`Select ${user.name}`} className="h-[18px] w-[18px] rounded border-[#cbd5e1] accent-[#1673ee]" /></td>
+												<td className="px-4 py-3">
+													<div className="flex items-center gap-3"><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#1673ee] text-sm font-semibold text-white">{initials(user.name)}</span><span><span className="block font-semibold leading-tight text-[#0f172a]">{user.name}</span>
+														<div className="mt-0.5 text-[13px] font-normal text-[#475569]">{user.email}</div>
 													</span></div>
 												</td>
-												<td className="px-3 py-3 sm:px-4"><span className={`before:mr-2 before:inline-block before:h-2 before:w-2 before:rounded-full ${user.status === "Active" ? "text-[#0f172a] before:bg-[#12a150]" : user.status === "Suspended" ? "text-[#0f172a] before:bg-[#e5484d]" : "text-[#667085] before:bg-[#94a3b8]"}`}>{user.status}</span></td>
-												<td className="px-3 py-3 sm:px-4"><span className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${user.role === "Admin" ? "bg-[#fff0e0] text-[#b4520a]" : "bg-[#e8efff] text-[#2b5cf0]"}`}>{user.role}</span></td>
-												<td className="px-3 py-3 text-[#334155] sm:px-4">{user.enrolledSubject}</td>
-												<td className="whitespace-nowrap px-3 py-3 text-[#667085] sm:px-4">{user.lastActive}</td>
-												<td className="px-3 py-3 sm:px-4"><div className="flex items-center gap-3 text-[#667085]">
+												<td className="px-4 py-3"><span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ${user.status === "Active" ? "bg-[#e7f6ec] text-[#0b6b33]" : user.status === "Pending" ? "bg-[#fff8e6] text-[#946200]" : user.status === "Suspended" ? "bg-[#fef3f2] text-[#b42318]" : "bg-[#f1f5f9] text-[#475569]"}`}><span className={`h-[7px] w-[7px] rounded-full ${user.status === "Active" ? "bg-[#16a34a]" : user.status === "Pending" ? "bg-[#d97706]" : user.status === "Suspended" ? "bg-[#b42318]" : "bg-[#94a3b8]"}`} />{user.status}</span></td>
+												<td className="px-4 py-3"><span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${user.role === "Admin" ? "bg-[#fff7ed] text-[#b45309]" : "bg-[#eff6ff] text-[#0b4fc2]"}`}>{user.role}</span></td>
+												<td className="px-4 py-3 text-[#334155]"><span className="inline-flex rounded-full bg-[#f1f5f9] px-2.5 py-1 text-xs font-medium text-[#334155]">{user.enrolledSubject}</span></td>
+												<td className="whitespace-nowrap px-4 py-3 text-[#475569]">{user.lastActive}</td>
+												<td className="px-4 py-3"><div className="flex items-center justify-end gap-1.5 text-[#475569]">
 													{isAdmin && userListTab === "pending" && user.status === "Pending" && <button type="button" onClick={() => approveUser(user)} disabled={approvingUserId === user.id} className="whitespace-nowrap rounded-lg bg-[#2174fa] px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-[#145fd5] disabled:cursor-wait disabled:opacity-60">{approvingUserId === user.id ? "Approving..." : "Approve"}</button>}
-													<button type="button" title={`Edit ${user.name}`} aria-label={`Edit ${user.name}`} className="transition hover:text-[#2b5cf0]"><Pencil size={16} /></button><button type="button" onClick={() => removeUsers([user.name])} title={`Delete ${user.name}`} aria-label={`Delete ${user.name}`} className="transition hover:text-[#e5484d]"><Trash2 size={16} /></button></div></td>
+													<button type="button" title={`Edit ${user.name}`} aria-label={`Edit ${user.name}`} className="rounded-md p-2 transition hover:bg-[#eff6ff] hover:text-[#0b4fc2]"><Pencil size={17} /></button><button type="button" onClick={() => removeUsers([user.name])} title={`Delete ${user.name}`} aria-label={`Delete ${user.name}`} className="rounded-md p-2 transition hover:bg-[#fef3f2] hover:text-[#b42318]"><Trash2 size={17} /></button></div></td>
 											</tr>
 										))}
 										{!usersLoading && !usersError && userRows.length > 0 && filteredUsers.length === 0 && (
@@ -649,7 +649,7 @@ export default function UsersDashboard() {
 									</tbody>
 								</table>
 							</div>
-							<div className="flex items-center justify-between border-t border-[#e3e9f4] px-1 pt-4 text-xs text-[#667085]"><span>Showing {filteredUsers.length} of {userListTab === "pending" ? pendingApprovalCount : userRows.length} {userListTab === "pending" ? "pending users" : "users"}</span><span>Page 1 of 1</span></div>
+							<div className="flex flex-wrap items-center justify-between gap-2 border-t border-[#e2e8f0] px-6 py-4 text-xs text-[#475569]"><span>Showing {filteredUsers.length} of {userListTab === "pending" ? pendingApprovalCount : userRows.length} {userListTab === "pending" ? "pending users" : "users"}</span><span>Page 1 of 1</span></div>
 							</>
 							)}
 						</>
