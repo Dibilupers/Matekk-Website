@@ -316,10 +316,10 @@ test("attaches recreated exhibits to recovered CCNA matching questions that need
   assert.ok(isValidQuestion(question));
 });
 
-test("recreates the WLC security exhibit for question 1012 instead of showing its source image", () => {
+test("recreates the source-matching WLC security exhibit for question 1012", () => {
   const question = applyNativeExhibit({ bankId: 1012 });
 
-  assert.equal(question.exhibitDiagram, "wlc-security-tab");
+  assert.equal(question.exhibitDiagram, "wlc-security-tab-legacy");
   assert.equal(question.exhibitImage, undefined);
   const offlineQuestion = getOfflineLegacyQuestionBank().find((entry) => entry.legacyIndex === 1301);
   assert.ok(offlineQuestion);
@@ -350,13 +350,20 @@ test("replaces recreated matching-activity screenshots with their existing inter
   assert.equal(applyNativeExhibit({ bankId: 1305 }).hideExhibitImage, true);
   assert.equal(applyNativeExhibit({ bankId: 1317 }).nativeExhibitText, true);
   assert.equal(applyNativeExhibit({ bankId: 1321 }).hideExhibitImage, true);
-  assert.equal(applyNativeExhibit({ bankId: 1321 }).exhibitDiagram, "static-nat-router-webserver");
+  assert.equal(applyNativeExhibit({ bankId: 1321 }).exhibitDiagram, undefined);
+  assert.match(applyNativeExhibit({ bankId: 1321 }).exhibit, /ip nat inside source list 1 interface Gi0\/1 overload/);
 
   for (const legacyIndex of [266, 267, 278, 282, 498, 617, 700, 759, 926]) {
     const question = getOfflineLegacyQuestionBank().find((entry) => entry.legacyIndex === legacyIndex);
     assert.ok(question, `offline question ${legacyIndex} should remain available`);
     assert.equal(question.hideExhibitImage, true, `offline question ${legacyIndex} should hide the duplicate activity image`);
   }
+  const offlineQuestion299 = getOfflineLegacyQuestionBank().find((entry) => entry.legacyIndex === 617);
+  assert.equal(offlineQuestion299.type, "match");
+  assert.deepEqual(offlineQuestion299.items, ["DC-1 Gi1/0", "DC-1 Gi1/1", "DC-1 Gi1/2", "HQ-1 Gi1/3"]);
+  assert.deepEqual(offlineQuestion299.answer, [2, 5, 4, 6]);
+  assert.equal(offlineQuestion299.choices.length, 7);
+  assert.equal(getOfflineLegacyQuestionBank().find((entry) => entry.legacyIndex === 266).choices.length, 7);
   assert.equal(
     getOfflineLegacyQuestionBank().find((entry) => entry.legacyIndex === 759).exhibitDiagram,
     "routing-protocols-prefix",
@@ -369,10 +376,9 @@ test("replaces recreated matching-activity screenshots with their existing inter
     getOfflineLegacyQuestionBank().find((entry) => entry.legacyIndex === 278).exhibit,
     /192\.168\.1\.20 \(Preferred\)/,
   );
-  assert.equal(
-    getOfflineLegacyQuestionBank().find((entry) => entry.legacyIndex === 282).exhibitDiagram,
-    "static-nat-router-webserver",
-  );
+  const offlinePatQuestion = getOfflineLegacyQuestionBank().find((entry) => entry.legacyIndex === 282);
+  assert.equal(offlinePatQuestion.exhibitDiagram, undefined);
+  assert.match(offlinePatQuestion.exhibit, /ip nat inside source list 1 interface Gi0\/1 overload/);
 });
 
 test("keeps the Router1 routing-method question prompt and matching controls while replacing its screenshot with a topology", () => {

@@ -1,6 +1,7 @@
 const NODE_SHAPES = {
 	router: { type: "rect", left: -32, right: 32, top: -16, bottom: 22 },
 	switch: { type: "rect", left: -34, right: 34, top: -20, bottom: 12 },
+	phone: { type: "rect", left: -28, right: 28, top: -15, bottom: 12 },
 	host: { type: "rect", left: -26, right: 26, top: -22, bottom: 23 },
 	pc: { type: "rect", left: -26, right: 26, top: -22, bottom: 23 },
 	server: { type: "rect", left: -16, right: 16, top: -26, bottom: 18 },
