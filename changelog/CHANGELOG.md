@@ -6,6 +6,17 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `fa9a62f` — Replaced the text-based CCNA practice-lab PDF with real
+  before-and-after website screenshots for Labs 5–11, fixed the final-check
+  topology argument and Lab 7 solution sequence, and added regression tests.
+
+Validation before push: 13 focused practice-lab tests, targeted ESLint,
+frontend production build, Git whitespace checks, and PDF page/image checks.
+
+## 2026-11-13 — `main`
+
+Commits included in this push:
+
 - `8f213e1` — Unlocked the dual-stack Lab 5, added six CCNA practice labs with
   tested ACL and OSPF simulator support, simplified the lab picker to reveal
   details only for the selected lab, and added a seven-lab before-and-after PDF.
