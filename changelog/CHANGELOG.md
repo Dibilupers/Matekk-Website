@@ -6,6 +6,21 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `266c428` — Corrected Question 403's route-focused topology and removed the
+  incorrect shared route diagram from Questions 516 and 517, preserving their
+  separate matching activities.
+
+Also updated the requested 162-page comparison PDF with reviewed after-panel
+redraws for Questions 369, 403, 516/517, 1011, 1099, and 1199; the original
+before panels were preserved.
+
+Validation before push: 11 focused CCNA tests, targeted ESLint, production
+build, Git whitespace checks, and PDF page/content checks.
+
+## 2026-11-13 — `main`
+
+Commits included in this push:
+
 - `e09ff2f` — Rebuilt CCNA Questions 246 and 273 as original topologies,
   corrected exhibit mappings and topology labels, and updated the comparison
   PDF and repair notes.
