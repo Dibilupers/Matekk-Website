@@ -935,13 +935,13 @@ const LAB7 = {
 	],
 	solution: {
 		"SW-1": [
-			"enable", "configure terminal", "vlan 20", "name Staff", "vlan 30", "name Guest", "exit",
+			"enable", "configure terminal", "vlan 20", "name Staff", "exit", "vlan 30", "name Guest", "exit",
 			"interface e0/1", "switchport mode access", "switchport access vlan 20",
 			"interface e0/0", "switchport mode trunk", "switchport trunk allowed vlan 20,30",
 			"end", "copy running-config startup-config",
 		],
 		"SW-2": [
-			"enable", "configure terminal", "vlan 20", "name Staff", "vlan 30", "name Guest", "exit",
+			"enable", "configure terminal", "vlan 20", "name Staff", "exit", "vlan 30", "name Guest", "exit",
 			"interface e0/1", "switchport mode access", "switchport access vlan 30",
 			"interface e0/0", "switchport mode trunk", "switchport trunk allowed vlan 20,30",
 			"end", "copy running-config startup-config",

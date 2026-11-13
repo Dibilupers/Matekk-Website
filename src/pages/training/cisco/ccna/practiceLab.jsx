@@ -308,7 +308,7 @@ function LabWorkspace({ lab, selectLab, fromDashboard }) {
 	const allDone = doneCount === lab.tasks.length;
 	const showResults = !examMode || submitted;
 	const finalOk = lab.finalCheck.check
-		? lab.finalCheck.check(state)
+		? lab.finalCheck.check(state, lab)
 		: canReach(lab, state, lab.finalCheck.from, lab.finalCheck.to);
 	const con = consoles[device];
 

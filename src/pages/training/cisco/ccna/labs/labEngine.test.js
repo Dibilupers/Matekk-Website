@@ -38,6 +38,35 @@ test("shows the unlocked dual-stack Lab 5 and all six additional labs", () => {
 	assert.deepEqual(HIDDEN_PRACTICE_LABS, []);
 });
 
+test("every lab final check accepts its lab topology", () => {
+	for (const lab of PRACTICE_LABS) {
+		assert.doesNotThrow(
+			() => lab.finalCheck.check(createLabState(lab), lab),
+			`Lab ${lab.id} final check should accept its topology`,
+		);
+	}
+});
+
+test("the new labs' terminal solutions execute and pass every task", () => {
+	for (const lab of PRACTICE_LABS.filter(({ id }) => id >= 5)) {
+		let state = createLabState(lab);
+		for (const [device, commands] of Object.entries(lab.solution)) {
+			for (const command of commands) {
+				const result = execute(lab, state, device, command);
+				assert.ok(
+					!result.out.some((line) => /% Invalid input|% Incomplete command/.test(line)),
+					`Lab ${lab.id} ${device} should accept "${command}"`,
+				);
+				state = result.state;
+			}
+		}
+		for (const task of lab.tasks) {
+			assert.ok(task.check(state, lab), `Lab ${lab.id} task "${task.id}" should pass`);
+		}
+		assert.ok(lab.finalCheck.check(state, lab), `Lab ${lab.id} final check should pass`);
+	}
+});
+
 test("the recreated voice VLAN lab matches its topology and worksheet", () => {
 	const lab = PRACTICE_LABS.find(({ id }) => id === 1);
 	const answers = [
