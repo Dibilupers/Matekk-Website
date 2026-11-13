@@ -656,13 +656,13 @@ export default function UsersDashboard() {
 					) : (
 						<section aria-label={activeSection === "enrollments" ? "Student enrollments" : "Website inquiries"}>
 							{activeSection === "enrollments" ? (
-								<div>
-									<div className="mb-5">
+								<div className="space-y-5 p-5 sm:p-6">
+									<div>
 										<h2 className="text-xl font-bold text-[#14213d]">Enroll a student</h2>
 										<p className="mt-1 text-sm text-[#667085]">Add a student to one or more programs and review current enrollments.</p>
 									</div>
-									{enrollmentError && <p role="alert" className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{enrollmentError}</p>}
-									{enrollmentMessage && <p role="status" className="mb-4 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">{enrollmentMessage}</p>}
+									{enrollmentError && <p role="alert" className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{enrollmentError}</p>}
+									{enrollmentMessage && <p role="status" className="rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">{enrollmentMessage}</p>}
 									<div className="grid items-start gap-5 lg:grid-cols-[minmax(280px,0.85fr)_minmax(0,1.15fr)]">
 										<form onSubmit={enrollStudent} className="rounded-2xl border border-[#e3e9f4] bg-white p-5 shadow-sm">
 											<h3 className="font-bold text-[#14213d]">New enrollment</h3>
@@ -688,21 +688,21 @@ export default function UsersDashboard() {
 											</div>
 
 											<fieldset className="mt-5">
-												<legend className="text-xs font-semibold text-[#2166f3]">Programs (programId)</legend>
+												<legend className="text-xs font-semibold text-[#344054]">Programs (programId)</legend>
 												<div className="mt-2 space-y-2">
 													{Array.from(new Set(programs.map((program) => program.training?.name || "Other"))).map((trainingName) => (
 														<div key={trainingName} className="space-y-1">
-															<p className="pt-2 text-xs font-bold uppercase tracking-wide text-[#2166f3]">{trainingName} training</p>
+															<p className="pt-2 text-xs font-bold uppercase tracking-wide text-[#667085]">{trainingName} training</p>
 															{programs.filter((program) => (program.training?.name || "Other") === trainingName).map((program) => (
 																<div key={program.id} className="space-y-1">
 																	<label className="flex cursor-pointer items-center gap-3 rounded-lg border border-[#e3e9f4] px-3 py-2.5 text-sm hover:bg-[#f8faff]">
 																		<input type="checkbox" checked={selectedProgramIds.includes(program.id)} onChange={() => toggleProgram(program.id)} className="h-4 w-4 accent-[#2b5cf0]" />
-																		<span className="flex-1 font-medium text-[#2166f3]">{program.name} — Entire program</span>
+																		<span className="flex-1">{program.name} — Entire program</span>
 																	</label>
 																	{program.modules?.map((module) => (
 																		<label key={module.id} className="ml-6 flex cursor-pointer items-center gap-3 rounded-lg border border-[#e3e9f4] px-3 py-2.5 text-sm hover:bg-[#f8faff]">
 																			<input type="checkbox" checked={selectedProgramIds.includes(module.id)} onChange={() => toggleProgram(module.id)} className="h-4 w-4 accent-[#2b5cf0]" />
-																			<span className="flex-1 font-medium text-[#2166f3]">{program.name} — {module.name}</span>
+																			<span className="flex-1">{program.name} — {module.name}</span>
 																		</label>
 																	))}
 																</div>
