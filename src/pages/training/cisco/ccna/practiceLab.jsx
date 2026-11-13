@@ -10,7 +10,7 @@ import TopologySandbox from "./labs/TopologySandbox";
 import { topologyFitScale } from "../../../../utils/topologyFit";
 
 /* ==========================================================================
-   CCNA Online Practice Labs — three labs of increasing difficulty.
+   CCNA Online Practice Labs — hands-on labs from fundamentals to routing.
    Students type real Cisco IOS commands; tasks are checked live (or on
    Submit in exam mode). Each lab can also be built in Cisco Packet Tracer.
    ========================================================================== */
@@ -380,20 +380,53 @@ function LabWorkspace({ lab, selectLab, fromDashboard }) {
 					Practice real Cisco IOS commands in your browser. Pick a lab, configure routers or switches in the console,
 					and watch the network come to life. Cisco shortcuts such as <code>conf t</code>, <code>int g0/0</code>, and <code>sh ip route</code> work too.
 				</p>
-				<div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-					{PRACTICE_LABS.map((l) => (
-						<button
-							key={l.id}
-							type="button"
-							onClick={() => selectLab(l.id)}
-							aria-pressed={l.id === lab.id}
-							className={`text-left p-4 rounded-2xl border-2 transition hover:-translate-y-0.5 ${l.id === lab.id ? "border-[#1775EE] bg-white shadow-md" : "border-transparent bg-[#EBF5FD]"}`}
-						>
-							<span className={`inline-block text-xs font-bold px-2.5 py-1 rounded-full ${LEVEL_STYLE[l.level]}`}>Lab {l.id} · {l.level}</span>
-							<span className="block mt-2 font-bold text-[#17233d]">{l.title}</span>
-							<span className="block mt-1 text-sm text-gray-600">{l.summary}</span>
-						</button>
-					))}
+				<div className="flex flex-wrap items-end justify-between gap-3">
+					<div>
+						<p className="text-xs font-bold uppercase tracking-[0.16em] text-[#005b6b]">Practice library</p>
+						<h4 className="mt-1 text-lg font-bold text-[#17233d]">Choose a lab</h4>
+					</div>
+					<span className="text-sm font-medium text-[#71819b]">{PRACTICE_LABS.length} labs · select a title to open</span>
+				</div>
+				<div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+					{PRACTICE_LABS.map((l) => {
+						const selected = l.id === lab.id;
+						return (
+							<button
+								key={l.id}
+								type="button"
+								onClick={() => selectLab(l.id)}
+								aria-label={`Open Lab ${l.id}: ${l.title}`}
+								aria-pressed={selected}
+								className={`group h-full rounded-2xl border-2 p-4 text-left transition duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1775EE] focus-visible:ring-offset-2 ${selected ? "border-[#1775EE] bg-white shadow-md" : "border-transparent bg-[#EBF5FD] hover:border-[#c5e1f4] hover:bg-white hover:shadow-sm"}`}
+							>
+								<span className="block font-bold text-[#17233d] group-hover:text-[#005b6b]">{l.title}</span>
+								{selected && (
+									<>
+										<span className="mt-3 flex flex-wrap items-center gap-2">
+											<span className={`inline-block rounded-full px-2.5 py-1 text-xs font-bold ${LEVEL_STYLE[l.level]}`}>
+												Lab {l.id} · {l.level}
+											</span>
+											{l.id === 5 && (
+												<span className="inline-block rounded-full bg-violet-100 px-2.5 py-1 text-xs font-bold text-violet-800">
+													Bonus lab
+												</span>
+											)}
+										</span>
+										<span className="mt-2 block text-sm leading-5 text-gray-600">{l.summary}</span>
+									</>
+								)}
+							</button>
+						);
+					})}
+				</div>
+				<div className="flex flex-wrap gap-3">
+					<a
+						href="/downloads/ccna-practice-labs-before-after.pdf"
+						download
+						className="inline-flex w-fit items-center gap-2 rounded-full bg-[#005b6b] px-5 py-3 font-semibold text-white shadow transition hover:bg-[#004653] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1775EE] focus-visible:ring-offset-2"
+					>
+						<Download className="h-4 w-4" /> Download before-and-after PDF
+					</a>
 				</div>
 				{lab.worksheet && (
 					<div className="flex flex-wrap items-center gap-2" role="group" aria-label="Practice lab view">
@@ -628,7 +661,7 @@ function LabWorkspace({ lab, selectLab, fromDashboard }) {
 						</form>
 					</div>
 					<p className="text-xs text-gray-500">
-						Supports the commands these labs use: configuration, show ip route, show ip interface brief, show running-config, ping, and traceroute.
+						Supports the commands used in these labs, including VLANs, LACP, ACLs, OSPF, static routes, show commands, ping, and traceroute.
 					</p>
 				</section>
 			</div>}
