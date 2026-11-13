@@ -6,6 +6,17 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `8f213e1` — Unlocked the dual-stack Lab 5, added six CCNA practice labs with
+  tested ACL and OSPF simulator support, simplified the lab picker to reveal
+  details only for the selected lab, and added a seven-lab before-and-after PDF.
+
+Validation before push: 11 focused practice-lab tests, targeted ESLint,
+frontend production build, Git whitespace checks, and PDF page/content checks.
+
+## 2026-11-13 — `main`
+
+Commits included in this push:
+
 - `266c428` — Corrected Question 403's route-focused topology and removed the
   incorrect shared route diagram from Questions 516 and 517, preserving their
   separate matching activities.
