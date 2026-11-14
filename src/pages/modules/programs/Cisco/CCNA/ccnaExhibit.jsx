@@ -2563,18 +2563,18 @@ export function ExhibitDiagram({ type, className = "", offlineLayout = false }) 
 }
 
 /* Picture exhibit: always expandable, since diagrams shrink a lot on phones. */
-export function ExhibitImage({ src, className = "", imageClassName = "", lazy = false, cropTop = false, offlineLayout = false }) {
+export function ExhibitImage({ src, alt = "Exhibit diagram", className = "", imageClassName = "", lazy = false, cropTop = false, offlineLayout = false }) {
 	const [openTheme, setOpenTheme] = useState(null);
 	const wrapRef = useRef(null);
 	const image = offlineLayout
-		? <img key={src} src={src} alt="Exhibit diagram" loading={lazy ? "lazy" : undefined} className={`block h-auto w-auto max-w-full rounded-lg object-contain !max-h-[min(50vh,22rem)] ${imageClassName}`} />
+		? <img key={src} src={src} alt={alt} loading={lazy ? "lazy" : undefined} className={`block h-auto w-auto max-w-full rounded-lg object-contain !max-h-[min(50vh,22rem)] ${imageClassName}`} />
 		: cropTop
 		? (
 			<div className="aspect-[578/260] w-full overflow-hidden rounded-lg bg-white">
-				<img key={src} src={src} alt="Exhibit" loading={lazy ? "lazy" : undefined} className={`h-full w-full object-cover object-top ${imageClassName}`} />
+				<img key={src} src={src} alt={alt} loading={lazy ? "lazy" : undefined} className={`h-full w-full object-cover object-top ${imageClassName}`} />
 			</div>
 		)
-		: <img key={src} src={src} alt="Exhibit diagram" loading={lazy ? "lazy" : undefined} className={`block h-auto w-auto max-w-full rounded-lg object-contain ${imageClassName}`} />;
+		: <img key={src} src={src} alt={alt} loading={lazy ? "lazy" : undefined} className={`block h-auto w-auto max-w-full rounded-lg object-contain ${imageClassName}`} />;
 	return (
 		<div ref={wrapRef} className={`relative mx-auto ${offlineLayout ? "flex w-full max-w-full flex-col items-center gap-3 rounded-2xl border border-[#d6e5e7] bg-[#f8fafb] p-3 shadow-sm sm:p-4" : cropTop ? "w-full max-w-[36rem] rounded-xl border border-[#d6e5e7] bg-white p-2 shadow-sm sm:p-3" : "w-fit max-w-full rounded-xl border border-[#d6e5e7] bg-white p-2 shadow-sm sm:p-3"} ${className}`}>
 			{image}

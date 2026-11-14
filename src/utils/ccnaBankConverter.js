@@ -561,12 +561,23 @@ export function convertBankRow(row) {
   const { prompt, exhibit } = hasCompleteOptionTable
     ? { prompt: parsedOptionTable.prompt }
     : splitPromptExhibit(rawText);
+  const afterExhibitText = typeof row.afterExhibitText === "string" ? row.afterExhibitText.trim() : "";
+  const afterExhibitImageUrl = typeof row.afterExhibitImageUrl === "string" ? row.afterExhibitImageUrl : null;
+  const afterExhibit = afterExhibitText || afterExhibitImageUrl
+    ? {
+        title: typeof row.afterExhibitTitle === "string" ? row.afterExhibitTitle.trim() || null : null,
+        text: afterExhibitText,
+        comparisonNo: Number.isInteger(row.afterExhibitComparisonNo) ? row.afterExhibitComparisonNo : null,
+        imageUrl: afterExhibitImageUrl,
+        questionId: row.id,
+      }
+    : null;
   let exhibitImage = row.imageUrl || undefined;
   const cleanedPrompt = removeDuplicateExhibitLeadIn(cleanText(prompt));
   let questionPrompt = cleanedPrompt;
-  const hasSeparateExhibit = Boolean(exhibitImage || (exhibit && !/^Option [A-H]$/i.test(exhibit.trim())));
+  const hasSeparateExhibit = Boolean(afterExhibit || exhibitImage || (exhibit && !/^Option [A-H]$/i.test(exhibit.trim())));
   questionPrompt = hasSeparateExhibit ? removeTrailingOptionExhibitLabel(questionPrompt) : questionPrompt;
-  if (mentionsExhibit(rawText) && !exhibit && !exhibitImage && !hasCompleteOptionTable) {
+  if (mentionsExhibit(rawText) && !exhibit && !exhibitImage && !afterExhibit && !hasCompleteOptionTable) {
     return { problem: "referenced exhibit has no available text or image" };
   }
 
@@ -592,7 +603,7 @@ export function convertBankRow(row) {
       return { problem: "click-the-boxes questions must use each answer choice exactly once" };
     }
     if (questionType === "image") {
-      if (!exhibitImage) return { problem: "image question has no available image" };
+      if (!exhibitImage && !afterExhibit) return { problem: "image question has no available image" };
       if (body.choices.length > body.items.length) {
         return { problem: "image question has fewer items than answer groups" };
       }
@@ -655,6 +666,14 @@ export function convertBankRow(row) {
         ? { hideExhibitImage: true }
         : {}),
       ...body,
+      ...(afterExhibit
+        ? {
+            afterExhibit,
+            exhibit: undefined,
+            exhibitImage: undefined,
+            hideExhibitImage: true,
+          }
+        : {}),
       explanation: remade?.explanation || cleanText(row.explanation) || findCcnaQuestionExplanation(prompt),
       bankId: row.id,
       moduleNumber: null,
