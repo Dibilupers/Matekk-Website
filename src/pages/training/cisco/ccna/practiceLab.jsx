@@ -435,15 +435,6 @@ function LabWorkspace({ lab, selectLab, fromDashboard, labStartRef }) {
 						})}
 					</div>
 				)}
-				<div className="flex flex-wrap gap-3">
-					<a
-						href="/downloads/ccna-practice-labs-before-after.pdf"
-						download
-						className="inline-flex w-fit items-center gap-2 rounded-full bg-[#005b6b] px-5 py-3 font-semibold text-white shadow transition hover:bg-[#004653] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1775EE] focus-visible:ring-offset-2"
-					>
-						<Download className="h-4 w-4" /> Download before-and-after PDF
-					</a>
-				</div>
 				{lab.worksheet && (
 					<div className="flex flex-wrap items-center gap-2" role="group" aria-label="Practice lab view">
 						<span className="text-sm font-semibold text-[#334155]">Lab format:</span>
