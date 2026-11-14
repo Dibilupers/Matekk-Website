@@ -6,6 +6,20 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `0d2c3ec` — Added partial/illustrative exhibits for 11 live gap rows, hid
+  Question 491's unrelated image and stale exhibit cue, and added the updated
+  63-page before-and-after PDF. Added a configurable backend host binding for
+  local validation.
+
+Validation before push: 14 focused exhibit tests, targeted ESLint, frontend and
+backend builds, Git whitespace checks, and PDF signature/page-count checks
+passed. `ccnaBankConverter.test.js` had one failing assertion for offline
+legacy question 282 (bank ID 1321) expecting the original exhibit text.
+
+## 2026-11-14 — `main`
+
+Commits included in this push:
+
 - `b7c13f7` — Removed the before-and-after PDF download button from the CCNA
   practice-labs page.
 
