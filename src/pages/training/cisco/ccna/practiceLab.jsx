@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, useSearchParams } from "react-router-dom";
-import { CheckCircle2, Circle, Download, Eye, Lightbulb, Maximize2, Network, RotateCcw, X, XCircle, ZoomIn, ZoomOut } from "lucide-react";
+import { CheckCircle2, ChevronDown, ChevronUp, Circle, Download, Eye, Lightbulb, Maximize2, Network, RotateCcw, X, XCircle, ZoomIn, ZoomOut } from "lucide-react";
 import { PRACTICE_LABS } from "./labs/labDefinitions";
 import { canReach, configCommands, createLabState, execute, fullIfName, promptFor } from "./labs/labEngine";
 import LabTopology from "./labs/LabTopology";
@@ -10,7 +10,7 @@ import TopologySandbox from "./labs/TopologySandbox";
 import { topologyFitScale } from "../../../../utils/topologyFit";
 
 /* ==========================================================================
-   CCNA Online Practice Labs — three labs of increasing difficulty.
+   CCNA Online Practice Labs — hands-on labs from fundamentals to routing.
    Students type real Cisco IOS commands; tasks are checked live (or on
    Submit in exam mode). Each lab can also be built in Cisco Packet Tracer.
    ========================================================================== */
@@ -272,7 +272,7 @@ function TopologyFullscreen({ lab, state, device, onClose }) {
 }
 
 // ---------- page ----------
-function LabWorkspace({ lab, selectLab, fromDashboard }) {
+function LabWorkspace({ lab, selectLab, fromDashboard, labStartRef }) {
 
 	const [state, setState] = useState(() => createLabState(lab));
 	const [consoles, setConsoles] = useState(() => freshConsoles(lab));
@@ -286,6 +286,7 @@ function LabWorkspace({ lab, selectLab, fromDashboard }) {
 	const [labView, setLabView] = useState("terminal");
 	const [topologyOpen, setTopologyOpen] = useState(false);
 	const [showTopologySandbox, setShowTopologySandbox] = useState(false);
+	const [showLabPicker, setShowLabPicker] = useState(false);
 	const closeTopology = useCallback(() => setTopologyOpen(false), []);
 	const [submitted, setSubmitted] = useState(false);
 	const termRef = useRef(null);
@@ -308,7 +309,7 @@ function LabWorkspace({ lab, selectLab, fromDashboard }) {
 	const allDone = doneCount === lab.tasks.length;
 	const showResults = !examMode || submitted;
 	const finalOk = lab.finalCheck.check
-		? lab.finalCheck.check(state)
+		? lab.finalCheck.check(state, lab)
 		: canReach(lab, state, lab.finalCheck.from, lab.finalCheck.to);
 	const con = consoles[device];
 
@@ -380,21 +381,60 @@ function LabWorkspace({ lab, selectLab, fromDashboard }) {
 					Practice real Cisco IOS commands in your browser. Pick a lab, configure routers or switches in the console,
 					and watch the network come to life. Cisco shortcuts such as <code>conf t</code>, <code>int g0/0</code>, and <code>sh ip route</code> work too.
 				</p>
-				<div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-					{PRACTICE_LABS.map((l) => (
-						<button
-							key={l.id}
-							type="button"
-							onClick={() => selectLab(l.id)}
-							aria-pressed={l.id === lab.id}
-							className={`text-left p-4 rounded-2xl border-2 transition hover:-translate-y-0.5 ${l.id === lab.id ? "border-[#1775EE] bg-white shadow-md" : "border-transparent bg-[#EBF5FD]"}`}
-						>
-							<span className={`inline-block text-xs font-bold px-2.5 py-1 rounded-full ${LEVEL_STYLE[l.level]}`}>Lab {l.id} · {l.level}</span>
-							<span className="block mt-2 font-bold text-[#17233d]">{l.title}</span>
-							<span className="block mt-1 text-sm text-gray-600">{l.summary}</span>
-						</button>
-					))}
+				<div className="flex flex-wrap items-end justify-between gap-3">
+					<div>
+						<p className="text-xs font-bold uppercase tracking-[0.16em] text-[#005b6b]">Practice library</p>
+						<h4 className="mt-1 text-lg font-bold text-[#17233d]">Choose a lab</h4>
+						<p className="mt-1 text-sm text-[#71819b]">Currently open: {lab.title}</p>
+					</div>
+					<button
+						type="button"
+						onClick={() => setShowLabPicker((visible) => !visible)}
+						aria-expanded={showLabPicker}
+						aria-controls="ccna-practice-lab-picker"
+						className="inline-flex items-center gap-2 rounded-full border border-[#1775EE] px-4 py-2 text-sm font-semibold text-[#1775EE] transition hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1775EE] focus-visible:ring-offset-2"
+					>
+						{showLabPicker ? "Fewer labs" : `More labs (${PRACTICE_LABS.length})`}
+						{showLabPicker ? <ChevronUp size={16} aria-hidden="true" /> : <ChevronDown size={16} aria-hidden="true" />}
+					</button>
 				</div>
+				{showLabPicker && (
+					<div id="ccna-practice-lab-picker" className="grid gap-3 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+						{PRACTICE_LABS.map((l) => {
+							const selected = l.id === lab.id;
+							return (
+								<button
+									key={l.id}
+									type="button"
+									onClick={() => {
+										setShowLabPicker(false);
+										selectLab(l.id);
+									}}
+									aria-label={`Open Lab ${l.id}: ${l.title}`}
+									aria-pressed={selected}
+									className={`group h-full rounded-2xl border-2 p-4 text-left transition duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1775EE] focus-visible:ring-offset-2 ${selected ? "border-[#1775EE] bg-white shadow-md" : "border-transparent bg-[#EBF5FD] hover:border-[#c5e1f4] hover:bg-white hover:shadow-sm"}`}
+								>
+									<span className="block font-bold text-[#17233d] group-hover:text-[#005b6b]">{l.title}</span>
+									{selected && (
+										<>
+											<span className="mt-3 flex flex-wrap items-center gap-2">
+												<span className={`inline-block rounded-full px-2.5 py-1 text-xs font-bold ${LEVEL_STYLE[l.level]}`}>
+													Lab {l.id} · {l.level}
+												</span>
+												{l.id === 5 && (
+													<span className="inline-block rounded-full bg-violet-100 px-2.5 py-1 text-xs font-bold text-violet-800">
+														Bonus lab
+													</span>
+												)}
+											</span>
+											<span className="mt-2 block text-sm leading-5 text-gray-600">{l.summary}</span>
+										</>
+									)}
+								</button>
+							);
+						})}
+					</div>
+				)}
 				{lab.worksheet && (
 					<div className="flex flex-wrap items-center gap-2" role="group" aria-label="Practice lab view">
 						<span className="text-sm font-semibold text-[#334155]">Lab format:</span>
@@ -446,44 +486,46 @@ function LabWorkspace({ lab, selectLab, fromDashboard }) {
 				</div>
 			</div>
 
-			{/* Network diagram (full width) */}
-			{lab.worksheet && labView === "worksheet" ? (
-				<>
-					<LabCommandWorksheet
-						lab={lab}
-						state={state}
-						setState={setState}
-						activeDevice={device}
-						onReset={reset}
-						onExpand={() => setTopologyOpen(true)}
-					/>
-					{topologyOpen && <TopologyFullscreen lab={lab} state={state} device={device} onClose={closeTopology} />}
-				</>
-			) : <div className="p-5 rounded-2xl bg-[#EBF5FD]">
-				<div className="flex items-center justify-between mb-2">
-					<h5 className="text-[#1775EE]">Topology</h5>
-					<div className="flex items-center gap-2">
-						<span className={`text-xs font-bold px-2.5 py-1 rounded-full ${LEVEL_STYLE[lab.level]}`}>{lab.level}</span>
-						<button
-							type="button"
-							onClick={() => setTopologyOpen(true)}
-							className="flex items-center gap-1.5 rounded-full border border-[#1775EE] bg-white px-3 py-1 text-xs font-bold text-[#1775EE] hover:bg-[#1775EE] hover:text-white transition"
-						>
-							<Maximize2 size={14} /> Expand
-						</button>
+			<div ref={labStartRef} className="scroll-mt-24">
+				{/* Network diagram (full width) */}
+				{lab.worksheet && labView === "worksheet" ? (
+					<>
+						<LabCommandWorksheet
+							lab={lab}
+							state={state}
+							setState={setState}
+							activeDevice={device}
+							onReset={reset}
+							onExpand={() => setTopologyOpen(true)}
+						/>
+						{topologyOpen && <TopologyFullscreen lab={lab} state={state} device={device} onClose={closeTopology} />}
+					</>
+				) : <div className="p-5 rounded-2xl bg-[#EBF5FD]">
+					<div className="flex items-center justify-between mb-2">
+						<h5 className="text-[#1775EE]">Topology</h5>
+						<div className="flex items-center gap-2">
+							<span className={`text-xs font-bold px-2.5 py-1 rounded-full ${LEVEL_STYLE[lab.level]}`}>{lab.level}</span>
+							<button
+								type="button"
+								onClick={() => setTopologyOpen(true)}
+								className="flex items-center gap-1.5 rounded-full border border-[#1775EE] bg-white px-3 py-1 text-xs font-bold text-[#1775EE] hover:bg-[#1775EE] hover:text-white transition"
+							>
+								<Maximize2 size={14} /> Expand
+							</button>
+						</div>
 					</div>
-				</div>
-				<button
-					type="button"
-					onClick={() => setTopologyOpen(true)}
-					className="block mx-auto w-full max-w-4xl cursor-zoom-in"
-					aria-label="Open the topology full screen"
-				>
-					<LabTopology lab={lab} state={state} activeDevice={device} />
-				</button>
-				{topologyOpen && <TopologyFullscreen lab={lab} state={state} device={device} onClose={closeTopology} />}
-				<p className="text-xs text-gray-600 mt-1">Green links are up; red dashed links are down. The router you are configuring is circled.</p>
-			</div>}
+					<button
+						type="button"
+						onClick={() => setTopologyOpen(true)}
+						className="block mx-auto w-full max-w-4xl cursor-zoom-in"
+						aria-label="Open the topology full screen"
+					>
+						<LabTopology lab={lab} state={state} activeDevice={device} />
+					</button>
+					{topologyOpen && <TopologyFullscreen lab={lab} state={state} device={device} onClose={closeTopology} />}
+					<p className="text-xs text-gray-600 mt-1">Green links are up; red dashed links are down. The router you are configuring is circled.</p>
+				</div>}
+			</div>
 
 			{(!lab.worksheet || labView === "terminal") && <div className="grid gap-6 lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)] items-start lg:items-stretch">
 				{/* Left: tasks */}
@@ -628,7 +670,7 @@ function LabWorkspace({ lab, selectLab, fromDashboard }) {
 						</form>
 					</div>
 					<p className="text-xs text-gray-500">
-						Supports the commands these labs use: configuration, show ip route, show ip interface brief, show running-config, ping, and traceroute.
+						Supports the commands used in these labs, including VLANs, LACP, ACLs, OSPF, static routes, show commands, ping, and traceroute.
 					</p>
 				</section>
 			</div>}
@@ -657,10 +699,26 @@ function LabWorkspace({ lab, selectLab, fromDashboard }) {
 // ---------- page: picks the lab from ?lab=N; each lab mounts fresh (key) ----------
 export default function CCNAPracticeLab({ fromDashboard = false }) {
 	const [params, setParams] = useSearchParams();
+	const scrollToSelectedLabRef = useRef(false);
+	const labStartRef = useRef(null);
 	const labIndex = Math.min(PRACTICE_LABS.length - 1, Math.max(0, Number(params.get("lab") || 1) - 1));
 	const lab = PRACTICE_LABS[labIndex];
 
+	useEffect(() => {
+		if (!scrollToSelectedLabRef.current) return undefined;
+		scrollToSelectedLabRef.current = false;
+		const frame = requestAnimationFrame(() => {
+			labStartRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+		});
+		return () => cancelAnimationFrame(frame);
+	}, [lab.id]);
+
 	function selectLab(id) {
+		if (id === lab.id) {
+			labStartRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+			return;
+		}
+		scrollToSelectedLabRef.current = true;
 		setParams((p) => {
 			const next = new URLSearchParams(p);
 			next.set("lab", String(id));
@@ -668,5 +726,5 @@ export default function CCNAPracticeLab({ fromDashboard = false }) {
 		});
 	}
 
-	return <LabWorkspace key={lab.id} lab={lab} selectLab={selectLab} fromDashboard={fromDashboard} />;
+	return <LabWorkspace key={lab.id} lab={lab} selectLab={selectLab} fromDashboard={fromDashboard} labStartRef={labStartRef} />;
 }

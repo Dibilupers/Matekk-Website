@@ -38,6 +38,18 @@ test("connects diagonal links to the visible device boundaries", () => {
 	assert.ok(link.y2 < 200 && link.y2 > 166);
 });
 
+test("connects IP-phone links to the phone body boundaries", () => {
+	const link = topologyLinkGeometry(
+		{ x: 100, y: 0 },
+		{ x: 100, y: 100 },
+		"switch",
+		"phone",
+	);
+
+	assert.equal(link.y1, 12);
+	assert.equal(link.y2, 85);
+});
+
 test("keeps offset links attached to device shapes", () => {
 	const link = topologyLinkGeometry(
 		{ x: 0, y: 0 },

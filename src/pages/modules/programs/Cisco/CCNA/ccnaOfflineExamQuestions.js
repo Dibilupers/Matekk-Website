@@ -163,6 +163,31 @@ const OFFLINE_LEGACY_QUESTION_IMAGE_IDS = new Map([
 ]);
 
 const OFFLINE_LEGACY_QUESTION_OVERRIDES = new Map([
+  [266, {
+    choices: [
+      "route source",
+      "administrative distance",
+      "metric",
+      "timestamp",
+      "outbound interface",
+      "next-hop interface",
+      "subnet mask",
+    ],
+  }],
+  [617, {
+    type: "match",
+    items: ["DC-1 Gi1/0", "DC-1 Gi1/1", "DC-1 Gi1/2", "HQ-1 Gi1/3"],
+    choices: [
+      "ip address 192.168.4.13 255.255.255.240",
+      "ip address 209.165.202.129 255.255.255.252",
+      "ip address 209.165.202.130 255.255.255.252",
+      "ip address 209.165.202.131 255.255.255.252",
+      "ip address 192.168.3.14 255.255.255.240",
+      "ip address 192.168.4.9 255.255.255.248",
+      "ip address 192.168.3.14 255.255.255.248",
+    ],
+    answer: [2, 5, 4, 6],
+  }],
   [382, {
     prompt: "An engineer must configure GigabitEthernet1/1 to accommodate voice and data traffic. Which configuration accomplishes this task?",
     options: [
@@ -285,8 +310,7 @@ const LEGACY_QUESTION_NATIVE_EXHIBITS = new Map([
   [617, { hideExhibitImage: true, removeExhibitLeadIn: true }],
   [282, {
     hideExhibitImage: true,
-    diagram: "static-nat-router-webserver",
-    exhibit: CCNA_RECREATED_TEXT_EXHIBITS.staticNat,
+    exhibit: CCNA_RECREATED_TEXT_EXHIBITS.patOverload,
   }],
   [700, { hideExhibitImage: true }],
   [926, { hideExhibitImage: true }],

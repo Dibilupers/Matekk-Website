@@ -796,10 +796,13 @@ const BUILT_IN_QUESTION_BY_PROMPT = new Map(
 );
 
 export const CCNA_RECREATED_TEXT_EXHIBITS = {
-	routingTableComponents: `A         B*                 C             D             E
-          0.0.0.0/0 [20/0] via 10.111.11.93, 6w3d
+	routingTableComponents: `A             B  C                    D
+↓             ↓  ↓                    ↓
+B* 0.0.0.0/0 [20/0] via 10.111.11.93, 6w3d
           10.0.0.0/8 is variably subnetted, 165 subnets, 16 masks
-O E1      10.1.1.55/32 [110/31] via 10.153.0.10, 4w0d, GigabitEthernet0/1`,
+${" ".repeat(55)}E
+${" ".repeat(55)}↓
+O E1      10.1.1.55/32 [110/31] via 10.153.0.10, 4w0d, GigabitEthernet0/0/1`,
 	wirelessIpConfig: `C:\\> ipconfig /all
 
 Windows IP Configuration
@@ -835,29 +838,64 @@ interface Serial0
  E
  F
 access-list 1 permit 172.16.1.0 0.0.0.255`,
+	patOverload: `R1(config)#access-list 1 permit 192.168.10.0 0.0.0.255
+R1(config)#ip nat inside source list 1 interface Gi0/1 overload
+
+R1(config)#interface Gi0/0
+R1(config-if)#ip nat inside
+
+R1(config)#interface Gi0/1
+R1(config-if)#ip nat outside`,
 };
 
 const DATABASE_NATIVE_EXHIBITS = new Map([
 	[181, { hideExhibitImage: true }],
 	[382, { hideExhibitImage: true }],
 	[608, { hideExhibitImage: true }],
-	[299, { hideExhibitImage: true, removeExhibitLeadIn: true }],
+	[299, {
+		hideExhibitImage: true,
+		removeExhibitLeadIn: true,
+		type: "match",
+		items: ["DC-1 Gi1/0", "DC-1 Gi1/1", "DC-1 Gi1/2", "HQ-1 Gi1/3"],
+		choices: [
+			"ip address 192.168.4.13 255.255.255.240",
+			"ip address 209.165.202.129 255.255.255.252",
+			"ip address 209.165.202.130 255.255.255.252",
+			"ip address 209.165.202.131 255.255.255.252",
+			"ip address 192.168.3.14 255.255.255.240",
+			"ip address 192.168.4.9 255.255.255.248",
+			"ip address 192.168.3.14 255.255.255.248",
+		],
+		answer: [2, 5, 4, 6],
+	}],
 	[1305, {
 		hideExhibitImage: true,
 		exhibit: CCNA_RECREATED_TEXT_EXHIBITS.routingTableComponents,
+		choices: [
+			"route source",
+			"administrative distance",
+			"metric",
+			"timestamp",
+			"outbound interface",
+			"next-hop interface",
+			"subnet mask",
+		],
 	}],
 	[1306, { hideExhibitImage: true }],
 	[1317, {
 		hideExhibitImage: true,
 		exhibit: CCNA_RECREATED_TEXT_EXHIBITS.wirelessIpConfig,
 	}],
-	[1012, { diagram: "wlc-security-tab" }],
+	[1012, { diagram: "wlc-security-tab-legacy" }],
 	[441, { diagram: "routing-protocols-prefix", hideExhibitImage: true }],
 	[23, "stp-hq-four-switch"],
 	[65, "sw1-sw2-dtp-trunk"],
 	[70, "stp-branch-four-switch"],
 	[99, "r4-mixed-routing"],
-	[177, "routers-abc-floating-route"],
+	[177, {
+		diagram: "routers-abc-floating-route-source",
+		hideExhibitImage: true,
+	}],
 	[506, "r14-r86-eigrp-floating-route"],
 	[534, {
 		diagram: "eigrp-three-router-pc-server",
@@ -884,7 +922,7 @@ Trunking Native Mode VLAN: 1 (default)
 Administrative Native VLAN tagging: enabled
 Voice VLAN: none
 Operational private-vlan: none
-Trunking VLANs Enabled: all
+Trunking VLANs Enabled: 5
 Pruning VLANs Enabled: 2-1001
 Capture Mode: Disabled`,
 	}],
@@ -893,9 +931,9 @@ Capture Mode: Disabled`,
 		diagram: "host-switch-mac-table",
 		exhibit: `SwitchA#show mac-address-table
 VLAN  MAC Address       Type     Ports
-2     000c.65dc.bb7b    DYNAMIC  Fa0/1
-2     0010.11dc.3e91    DYNAMIC  Fa0/2
-2     0041.48d7.c782    DYNAMIC  Fa0/3`,
+2     887a.a2b6.735c    DYNAMIC  Fa0/1
+2     0d59.5d3a.deaa    DYNAMIC  Fa0/2
+2     1d62.9a53.cc85    DYNAMIC  Fa0/3`,
 	}],
 	[214, {
 		diagram: "phone-pc-access-vlan",
@@ -944,17 +982,22 @@ PC4          00:50:79:66:68:44`,
 	[172, {
 		diagram: "rtr1-access-list-lan",
 		exhibit: `RTR-1
+hostname RTR-1
+!
 interface GigabitEthernet0/0
- ip address 10.10.1.254 255.255.255.0
+ ip address 10.150.1.254 255.255.255.0
  duplex auto
  speed auto
-access-list 10 deny host 10.10.1.1
+!
+access-list 10 deny host 10.150.1.1
+!
 line con 0
- password 7 02050D480809
+ password 7 083238384A11
  login
+!
 line vty 0 4
  access-class 10 in
- password 7 02050D480809
+ password 7 083238384A11
  login
 end`,
 	}],
@@ -974,7 +1017,7 @@ interface FastEthernet0/2
 
 SW1#show mac-address-table
 VLAN  MAC Address       Type     Ports
-2     0007.ec53.4289    DYNAMIC  Fa0/1`,
+2     0007.ec53.3390    DYNAMIC  Fa0/1`,
 	}],
 	[193, "r1-pc-internet"],
 	[212, "nat-router-two-pcs"],
@@ -989,7 +1032,7 @@ Neighbor ID     Pri   State           Dead Time   Address       Interface
 	[242, "pc-switch-link-status"],
 	[244, "ipv6-ho-isp-cloud"],
 	[245, "dhcp-client-router-server"],
-	[246, "r14-r86-static-route-172"],
+	[246, { diagram: "r14-r86-static-route-172", hideExhibitImage: true }],
 	[248, "lan-primary-backup-isps"],
 	[261, {
 		diagram: "lacp-switch1-switch2-config",
@@ -1013,8 +1056,14 @@ interface range Ethernet1/1-2
  switchport mode access
  switchport access vlan 2`,
 	}],
-	[273, "dual-wan-site-routing"],
-	[275, "vlan5-vlan100-four-hosts"],
+	[273, { diagram: "dual-wan-site-routing", hideExhibitImage: true }],
+	[275, {
+		diagram: "vlan5-vlan10-four-hosts",
+		hideExhibitImage: true,
+		exhibit: `Switch2(config)#interface fa0/1
+Switch2(config-if)#switchport mode dynamic auto
+Switch2(config-if)#switchport trunk allowed vlan 5,10`,
+	}],
 	[284, "lacp-three-parallel-switches"],
 	[311, "r1-r2-r3-network"],
 	[317, {
@@ -1042,7 +1091,7 @@ router ospf 100
 	[356, "r1-r2-r3-shared-lan"],
 	[367, "r1-r2-r3-neighbor-discovery"],
 	[371, "two-site-serial-file-server"],
-	[387, "ipv6-r1-r2-access-lans"],
+	[387, "dual-site-ipv6-isp-file-workstations"],
 	[396, "r1-r2-point-to-point"],
 	[399, {
 		diagram: "ntp-router-mesh",
@@ -1051,7 +1100,12 @@ Router1(config)#ntp server 209.165.200.226
 Router2(config)#ntp server 209.165.200.225
 Router2(config)#ntp master 7`,
 	}],
-	[403, "four-router-pc-routing"],
+	[403, {
+		diagram: "r1-floating-default-routes",
+		hideExhibitImage: true,
+		exhibit: `R1(config)#ip route 0.0.0.0 0.0.0.0 172.16.20.2
+R1(config)#ip route 0.0.0.0 0.0.0.0 10.0.0.2 20`,
+	}],
 	[405, "nat-router-lans-internet"],
 	[406, {
 		diagram: "switch-voice-vlan-phone",
@@ -1073,8 +1127,6 @@ DNS Servers: 8.8.8.8`,
 	}],
 	[479, "cpe-dual-isp"],
 	[484, "ipv6-r1-r2-access-lans"],
-	[516, "r14-r86-pc10-static-routes"],
-	[517, "r14-r86-pc10-static-routes"],
 	[520, {
 		diagram: "ospf-four-router-two-area",
 		exhibit: `R1#show ip route
@@ -1123,14 +1175,12 @@ SW3 · priority 32768 · MAC 0C:0A:A8:1A:3C:9D
 SW4 · priority 8192 · MAC 0C:0A:18:A1:B3:19`,
 	}],
 	[851, {
-		diagram: "stp-four-switch-user-dns",
 		exhibit: `SW1 · priority 8192 · MAC 0C:B4:86:22:42:37
 SW2 · priority 8192 · MAC 0C:0B:15:22:05:97
 SW3 · priority 4096 · MAC 0C:0B:15:1A:3C:9D
 SW4 · priority 4096 · MAC 0C:B0:18:A1:B3:19`,
 	}],
 	[852, {
-		diagram: "stp-four-switch-user-dns",
 		exhibit: `SW1 · priority 32768 · MAC 0C:E4:85:71:03:80
 SW2 · priority 4096 · MAC 0C:0E:1A:22:05:97
 SW3 · priority 8192 · MAC 0C:E0:A1:1A:3C:9D
@@ -1141,7 +1191,21 @@ SW4 · priority 12288 · MAC 0C:00:18:A1:B3:19`,
 	[909, "router-on-a-stick-vlan2-vlan3"],
 	[934, "four-router-subnet-growth"],
 	[996, "ospf-multipath-reference-bandwidth"],
-	[1011, "cpe-dhcp-central-server"],
+	[1011, {
+		hideExhibitImage: true,
+		exhibit: `ip dhcp excluded-address 192.168.10.1 192.168.10.20
+!
+ip dhcp pool LAN-POOL
+ network 192.168.10.0 255.255.255.0
+ default-router 192.168.10.1
+ dns-server 8.8.8.8
+ lease 3
+!
+interface GigabitEthernet0/1
+ ip address 192.168.10.1 255.255.255.0
+ ip helper-address 172.20.255.11
+ no shutdown`,
+	}],
 	[1084, {
 		diagram: "lacp-fastethernet-two-switch",
 		exhibit: `SW1
@@ -1155,20 +1219,14 @@ interface FastEthernet0/2
  switchport mode trunk`,
 	}],
 	[1088, "switch-vlan200-two-pcs"],
-	[1099, {
-		diagram: "stp-three-switch-triangle",
-		exhibit: `S1 · priority 32768 · MAC DDDD.DD…DDDD
-S2 · priority 32768 · MAC AAAA.AA…AAAA
-S3 · priority 30000 · MAC CCCC.CC…CCCC`,
-	}],
+	[1099, { diagram: "stp-four-switch-ring", hideExhibitImage: true }],
 	[1119, "four-router-subnet-growth"],
 	[1125, "three-router-pc-routing"],
 	[1167, "ospf-four-router-broadcast"],
 	[1194, "vlan-switch-web-server"],
 	[1199, "r1-r2-database-security"],
 	[1321, {
-		diagram: "static-nat-router-webserver",
-		exhibit: CCNA_RECREATED_TEXT_EXHIBITS.staticNat,
+		exhibit: CCNA_RECREATED_TEXT_EXHIBITS.patOverload,
 		hideExhibitImage: true,
 	}],
 	[13, {
@@ -1355,16 +1413,16 @@ SW2#show run interface fastEthernet0/1
  switchport trunk encapsulation dot1q
  switchport mode trunk
  switchport trunk allowed vlan 100,200,300
- channel-group 1 mode active
+ channel-group 1 mode on
 
 SW2#show run interface fastEthernet0/2
  switchport trunk encapsulation dot1q
  switchport mode trunk
  switchport trunk allowed vlan 100,200,300
- channel-group 1 mode active`,
+ channel-group 1 mode on`,
 	}],
 	[624, {
-		diagram: "lacp-fastethernet-two-switch",
+		hideExhibitImage: true,
 		exhibit: `SW1#show run interface fastEthernet0/1
  switchport trunk encapsulation dot1q
  switchport mode trunk
@@ -1616,7 +1674,7 @@ Wireless LAN adapter Wi-Fi:
                                        arcap.se`,
 	}],
 	[369, {
-		diagram: "pc-switch-link-status",
+		diagram: "switch-port-security-gig0-1",
 		exhibit: `SW# conf t
 SW(config)#interface gigabitEthernet0/1
 SW(config-if)#switchport mode access
@@ -1913,6 +1971,7 @@ export function getBuiltInQuestionByPrompt(prompt) {
 export function applyNativeExhibit(question) {
 	const builtInQuestion = getBuiltInQuestionByPrompt(question?.prompt);
 	const databaseExhibit = DATABASE_NATIVE_EXHIBITS.get(question?.bankId);
+	const questionOverride = typeof databaseExhibit === "object" ? databaseExhibit : {};
 	const exhibitDiagram = (typeof databaseExhibit === "string" ? databaseExhibit : databaseExhibit?.diagram) ??
 		builtInQuestion?.exhibitDiagram;
 	const exhibitImage = typeof databaseExhibit === "object" ? databaseExhibit.image : undefined;
@@ -1922,10 +1981,17 @@ export function applyNativeExhibit(question) {
 		builtInQuestion?.hideExhibitImage === true;
 	const removeExhibitLeadIn = databaseExhibit?.removeExhibitLeadIn === true ||
 		builtInQuestion?.removeExhibitLeadIn === true;
-	if (!exhibitDiagram && !exhibitImage && !hasNativeTextExhibit && !hideExhibitImage && !removeExhibitLeadIn) return question;
+	const hasQuestionOverride = ["type", "items", "choices", "answer"].some((key) =>
+		Object.prototype.hasOwnProperty.call(questionOverride, key),
+	);
+	if (!exhibitDiagram && !exhibitImage && !hasNativeTextExhibit && !hideExhibitImage && !removeExhibitLeadIn && !hasQuestionOverride) return question;
 
 	return {
 		...question,
+		...(Object.prototype.hasOwnProperty.call(questionOverride, "type") ? { type: questionOverride.type } : {}),
+		...(Object.prototype.hasOwnProperty.call(questionOverride, "items") ? { items: questionOverride.items } : {}),
+		...(Object.prototype.hasOwnProperty.call(questionOverride, "choices") ? { choices: questionOverride.choices } : {}),
+		...(Object.prototype.hasOwnProperty.call(questionOverride, "answer") ? { answer: questionOverride.answer } : {}),
 		...(removeExhibitLeadIn && typeof question.prompt === "string"
 			? { prompt: question.prompt.replace(/^\s*Refer to (?:the )?exhibit\.?\s*/i, "") }
 			: {}),

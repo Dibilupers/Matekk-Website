@@ -251,15 +251,19 @@ const NETWORK_TOPOLOGIES = {
 		title: "Router1 routes to 10.10.10.0/24",
 		note: "Router1 learns the same destination through five routing methods.",
 		nodes: [
-			{ id: "router", kind: "router", name: "Router1", x: 500, y: 120 },
-			{ id: "network", kind: "network", name: "10.10.10.0/24", x: 500, y: 470 },
+			{ id: "router", kind: "router", name: "Router1", x: 220, y: 300 },
+			{ id: "network", kind: "network", name: "10.10.10.0/24", x: 780, y: 300 },
 		],
 		links: [
-			{ from: "router", to: "network", label: "OSPF", labelX: 330, labelY: 240, offset: -20 },
-			{ from: "router", to: "network", label: "eBGP", labelX: 410, labelY: 280, offset: -10 },
-			{ from: "router", to: "network", label: "Static", labelX: 500, labelY: 315 },
-			{ from: "router", to: "network", label: "EIGRP", labelX: 590, labelY: 280, offset: 10 },
-			{ from: "router", to: "network", label: "iBGP", labelX: 670, labelY: 240, offset: 20 },
+			{
+				from: "router",
+				to: "network",
+				label: "OSPF · eBGP · Static",
+				secondaryLabel: "EIGRP · iBGP",
+				labelX: 500,
+				labelY: 270,
+				fixedLabel: true,
+			},
 		],
 	},
 	"dc-hq-interface-addressing": {
@@ -493,6 +497,45 @@ const NETWORK_TOPOLOGIES = {
 			{ from: "c", to: "b", label: "192.168.3.0/24 · .1 ↔ .2", labelX: 680, labelY: 330 },
 		],
 	},
+	"routers-abc-floating-route-source": {
+		title: "Router A, Router B, and Router C networks",
+		note: "Network labels and interfaces are reproduced from the source exhibit.",
+		configuration: "RouterA(config)#ip route 0.0.0.0 0.0.0.0 172.168.177.2",
+		nodes: [
+			{ id: "a", kind: "router", name: "Router A", x: 260, y: 180 },
+			{ id: "b", kind: "router", name: "Router B", x: 740, y: 140 },
+			{ id: "c", kind: "router", name: "Router C", x: 260, y: 440 },
+		],
+		links: [
+			{
+				from: "a",
+				to: "b",
+				label: "Gi0/0/0 ↔ Gi0/0/0 · 10.170.5.0/24",
+				labelX: 500,
+				labelY: 112,
+				labelConnector: true,
+				color: "#dc2626",
+			},
+			{
+				from: "a",
+				to: "c",
+				label: "Gi0/0/1 ↔ Gi0/0/0 · 172.40.39.0/24",
+				labelX: 180,
+				labelY: 310,
+				labelConnector: true,
+				color: "#dc2626",
+			},
+			{
+				from: "c",
+				to: "b",
+				label: "Gi0/0/1 · 192.82.43.0/24",
+				labelX: 540,
+				labelY: 330,
+				labelConnector: true,
+				color: "#dc2626",
+			},
+		],
+	},
 	"eigrp-three-router-pc-server": {
 		title: "R1–R2–R3 EIGRP topology",
 		note: "PC1, PC2, and the application server use separate /24 LANs; R1–R2 and R2–R3 use /30 links.",
@@ -557,10 +600,10 @@ const NETWORK_TOPOLOGIES = {
 			{ id: "b4", kind: "switch", name: "Branch-4", x: 720, y: 400 },
 		],
 		links: [
-			{ from: "b1", to: "b2", label: "10G · VLAN 5", labelY: 115 },
-			{ from: "b1", to: "b3", label: "10G", labelX: 235 },
-			{ from: "b2", to: "b4", label: "10G", labelX: 765 },
-			{ from: "b3", to: "b4", label: "10G · VLAN 5", labelY: 440 },
+			{ from: "b1", to: "b2", label: "10G · VLAN 5", labelY: 115, labelConnector: true },
+			{ from: "b1", to: "b3", label: "10G", labelX: 235, labelConnector: true },
+			{ from: "b2", to: "b4", label: "10G", labelX: 765, labelConnector: true },
+			{ from: "b3", to: "b4", label: "10G · VLAN 5", labelY: 440, labelConnector: true },
 		],
 	},
 	"r4-mixed-routing": {
@@ -661,7 +704,13 @@ const NETWORK_TOPOLOGIES = {
 			{ id: "sw2", kind: "switch", name: "SW2", x: 740, y: 250 },
 		],
 		links: [
-			{ from: "sw1", to: "sw2", label: "Gi1/1 ↔ Gi1/1 · trunk · VLANs 2–20", labelY: 200 },
+			{
+				from: "sw1",
+				to: "sw2",
+				label: "Gi1/1 ↔ Gi1/1 · trunk · VLANs 2–20",
+				labelY: 200,
+				labelConnector: true,
+			},
 		],
 	},
 	"printer-switch-dtp": {
@@ -675,8 +724,8 @@ const NETWORK_TOPOLOGIES = {
 		],
 		links: [
 			{ from: "printer", to: "sw1", label: "Ethernet1/1", labelY: 250 },
-			{ from: "sw1", to: "sw2", label: "Ethernet0/2 · Ethernet0/2", labelY: 245 },
-			{ from: "sw2", to: "lan" },
+			{ from: "sw1", to: "sw2", label: "Ethernet0/2 ↔ Ethernet0/2", labelY: 245 },
+			{ from: "sw2", to: "lan", label: "Ethernet0/2", labelY: 250 },
 		],
 	},
 	"host-switch-mac-table": {
@@ -732,17 +781,28 @@ const NETWORK_TOPOLOGIES = {
 	},
 	"voice-vlan-two-switch": {
 		title: "Voice and data VLAN topology",
-		note: "Switch A and Switch B provide data VLAN 50 and voice VLAN 51 to IP phones and PCs.",
+		note: "Each switch carries data VLAN 50 and voice VLAN 61; the attached PC connects through an IP phone.",
 		nodes: [
 			{ id: "a", kind: "switch", name: "Switch A", x: 280, y: 170 },
 			{ id: "b", kind: "switch", name: "Switch B", x: 720, y: 170 },
-			{ id: "phonea", kind: "host", name: "PC A", x: 280, y: 350, details: ["IP phone"] },
-			{ id: "phoneb", kind: "host", name: "PC B", x: 720, y: 350, details: ["IP phone"] },
+			{ id: "phonea", kind: "phone", name: "IP Phone", x: 280, y: 330 },
+			{ id: "phoneb", kind: "phone", name: "IP Phone", x: 720, y: 330 },
+			{ id: "pca", kind: "host", name: "PC A", x: 280, y: 485 },
+			{ id: "pcb", kind: "host", name: "PC B", x: 720, y: 485 },
 		],
 		links: [
-			{ from: "a", to: "b", label: "Data VLAN 50 · Voice VLAN 51", labelY: 125 },
-			{ from: "a", to: "phonea", label: "Gi0/1", labelX: 335, labelY: 275 },
-			{ from: "b", to: "phoneb", label: "Gi0/1", labelX: 665, labelY: 275 },
+			{
+				from: "a",
+				to: "b",
+				label: "Gi0/0 ↔ Gi0/0 · Data VLAN 50 · Voice VLAN 61",
+				labelY: 125,
+				labelConnector: true,
+				color: "#dc2626",
+			},
+			{ from: "a", to: "phonea", label: "Gi0/1", labelX: 335, labelY: 275, color: "#dc2626" },
+			{ from: "b", to: "phoneb", label: "Gi0/1", labelX: 665, labelY: 275, color: "#dc2626" },
+			{ from: "phonea", to: "pca", color: "#dc2626" },
+			{ from: "phoneb", to: "pcb", color: "#dc2626" },
 		],
 	},
 	"ospf-r1-r2-r3-shared-lan": {
@@ -1079,18 +1139,22 @@ const NETWORK_TOPOLOGIES = {
 	},
 	"ipv6-three-router-policy": {
 		title: "Three-router IPv6 routing topology",
-		note: "R1 connects to R2 and R3; both downstream routers serve the shared 2001:db8:23::/64 destination segment.",
+		note: "R2 and R3 connect to one shared 2001:db8:23::/64 LAN; three PCs and a separate addressed PC are attached to it.",
 		nodes: [
 			{ id: "r1", kind: "router", name: "R1", x: 500, y: 100 },
-			{ id: "r2", kind: "router", name: "R2", x: 260, y: 315 },
-			{ id: "r3", kind: "router", name: "R3", x: 740, y: 315 },
-			{ id: "lan", kind: "network", name: "2001:db8:23::/64", x: 500, y: 520 },
+			{ id: "r2", kind: "router", name: "R2", x: 260, y: 315, details: ["fd00:59:12::2/64"] },
+			{ id: "r3", kind: "router", name: "R3", x: 740, y: 315, details: ["fd00:59:13::3/64"] },
+			{ id: "lan", kind: "network", name: "2001:db8:23::/64", x: 500, y: 495 },
+			{ id: "pcs", kind: "host", name: "Three PCs", x: 250, y: 680 },
+			{ id: "pc", kind: "host", name: "PC", x: 750, y: 680, details: ["2001:db8:23::14/64"] },
 		],
 		links: [
-			{ from: "r1", to: "r2", label: "fd00:12::/64", labelX: 360, labelY: 190 },
-			{ from: "r1", to: "r3", label: "fd00:13::/64", labelX: 640, labelY: 190 },
-			{ from: "r2", to: "lan", label: "2001:db8:23::/64", labelX: 330, labelY: 430 },
-			{ from: "r3", to: "lan", label: "2001:db8:23::/64", labelX: 670, labelY: 430 },
+			{ from: "r1", to: "r2", label: "fd00:59:12::1/64", labelX: 360, labelY: 190 },
+			{ from: "r1", to: "r3", label: "fd00:59:13::1/64", labelX: 640, labelY: 190 },
+			{ from: "r2", to: "lan" },
+			{ from: "r3", to: "lan" },
+			{ from: "lan", to: "pcs" },
+			{ from: "lan", to: "pc" },
 		],
 	},
 	"two-site-r1-r2-wan": {
@@ -1110,12 +1174,12 @@ const NETWORK_TOPOLOGIES = {
 	},
 	"rtr1-access-list-lan": {
 		title: "RTR-1 access-list network",
-		note: "PC-1 and PC-2 connect through a switch to RTR-1 Gi0/0; the configuration exhibit is reproduced below.",
+		note: "PC-1 and PC-2 connect through SW1 to RTR-1 Gi0/0 on 10.150.1.0/24; the configuration exhibit is reproduced below.",
 		nodes: [
-			{ id: "r", kind: "router", name: "RTR-1", x: 500, y: 100, details: ["Gi0/0 · 10.10.1.254/24"] },
-			{ id: "sw", kind: "switch", name: "Access switch", x: 500, y: 300 },
-			{ id: "p1", kind: "host", name: "PC-1", x: 320, y: 510, details: ["10.10.1.1"] },
-			{ id: "p2", kind: "host", name: "PC-2", x: 680, y: 510, details: ["10.10.1.2"] },
+			{ id: "r", kind: "router", name: "RTR-1", x: 500, y: 100, details: ["Gi0/0 · 10.150.1.254/24"] },
+			{ id: "sw", kind: "switch", name: "SW1", x: 500, y: 300 },
+			{ id: "p1", kind: "host", name: "PC-1", x: 320, y: 510, details: ["10.150.1.1/24"] },
+			{ id: "p2", kind: "host", name: "PC-2", x: 680, y: 510, details: ["10.150.1.2/24"] },
 		],
 		links: [
 			{ from: "r", to: "sw", label: "Gi0/0", labelX: 570, labelY: 205 },
@@ -1124,16 +1188,20 @@ const NETWORK_TOPOLOGIES = {
 	},
 	"r1-primary-backup-internet": {
 		title: "Primary and backup Internet routes",
-		note: "R1 uses R3 as the primary Internet path and R2 as the backup path.",
+		note: "R1 connects the 192.150.16.0/24 LAN to the Internet through primary R3 and backup R2 paths.",
 		nodes: [
-			{ id: "r1", kind: "router", name: "R1", x: 500, y: 300 },
-			{ id: "r2", kind: "router", name: "R2", x: 210, y: 500 },
-			{ id: "r3", kind: "router", name: "R3", x: 790, y: 500 },
-			{ id: "internet", kind: "network", name: "Internet", x: 500, y: 620 },
+			{ id: "sw", kind: "switch", name: "Switch", x: 300, y: 120 },
+			{ id: "pc", kind: "host", name: "PC1", x: 780, y: 120, details: ["192.150.16.1"] },
+			{ id: "r1", kind: "router", name: "R1", x: 500, y: 300, details: ["Gi0/0 · 192.150.16.2", "Gi0/1 · 10.151.9.226", "Gi0/2 · 172.73.189.4"] },
+			{ id: "r2", kind: "router", name: "R2", x: 210, y: 530, details: ["Gi0/0 · 10.151.9.230"] },
+			{ id: "r3", kind: "router", name: "R3", x: 790, y: 530, details: ["Gi0/0 · 172.73.189.5"] },
+			{ id: "internet", kind: "network", name: "Internet", x: 500, y: 700 },
 		],
 		links: [
-			{ from: "r1", to: "r2", label: "Backup · 209.165.200.224/27", labelX: 315, labelY: 390 },
-			{ from: "r1", to: "r3", label: "Primary · 209.165.201.0/27", labelX: 685, labelY: 390 },
+			{ from: "sw", to: "pc", label: "192.150.16.0/24", labelY: 75 },
+			{ from: "sw", to: "r1", label: "Gi0/0", labelX: 390, labelY: 210 },
+			{ from: "r1", to: "r2", label: "Gi0/1 · 10.151.9.224/27 · .226 ↔ .230", labelX: 315, labelY: 415 },
+			{ from: "r1", to: "r3", label: "Gi0/2 · 172.73.189.0/27 · .4 ↔ .5", labelX: 685, labelY: 415 },
 			{ from: "r2", to: "internet" }, { from: "r3", to: "internet" },
 		],
 	},
@@ -1179,8 +1247,8 @@ const NETWORK_TOPOLOGIES = {
 		title: "SW1 VLAN 2 workstation topology",
 		note: "PC1 and PC2 connect to SW1 Fa0/1 and Fa0/2 in VLAN 2.",
 		nodes: [
-			{ id: "p1", kind: "host", name: "PC1", x: 250, y: 100, details: ["VLAN 2"] },
-			{ id: "p2", kind: "host", name: "PC2", x: 750, y: 100, details: ["VLAN 2"] },
+			{ id: "p1", kind: "host", name: "PC1", x: 250, y: 100, details: ["VLAN 2", "MAC 0007.ec53.3390"] },
+			{ id: "p2", kind: "host", name: "PC2", x: 750, y: 100, details: ["VLAN 2", "MAC 0007.ec89.2748"] },
 			{ id: "sw", kind: "switch", name: "SW1", x: 500, y: 300 },
 		],
 		links: [
@@ -1257,6 +1325,15 @@ const NETWORK_TOPOLOGIES = {
 		],
 		links: [{ from: "pc", to: "sw", label: "Fa0 ↔ Fa0/1", labelX: 500, labelY: 260 }],
 	},
+	"switch-port-security-gig0-1": {
+		title: "Switch port-security topology",
+		note: "A switch connects to one PC on GigabitEthernet0/1.",
+		nodes: [
+			{ id: "sw", kind: "switch", name: "SW", x: 300, y: 280 },
+			{ id: "pc", kind: "host", name: "PC", x: 700, y: 280 },
+		],
+		links: [{ from: "sw", to: "pc", label: "Gig0/1", labelY: 235 }],
+	},
 	"ipv6-ho-isp-cloud": {
 		title: "Head-office IPv6 network",
 		note: "R1 connects the server LAN to the ISP cloud and the head-office LAN.",
@@ -1284,16 +1361,16 @@ const NETWORK_TOPOLOGIES = {
 		links: [{ from: "client", to: "r1", label: "Gi0/0", labelY: 250 }, { from: "r1", to: "server", label: "Gi0/1", labelY: 250 }],
 	},
 	"r14-r86-static-route-172": {
-		title: "R14–R86 static-route topology",
-		note: "R14 and R86 connect over 10.73.65.64/30; the destination LAN on R86 is 172.21.34.0/25.",
+		title: "R14 to R86 route path",
+		note: "R14 reaches 172.21.34.0/25 through R86. Router interface and loopback addresses are shown at each endpoint.",
 		nodes: [
-			{ id: "r14", kind: "router", name: "R14", x: 280, y: 220, details: ["Loopback0 · 10.10.1.14/32"] },
-			{ id: "r86", kind: "router", name: "R86", x: 720, y: 220, details: ["Loopback0 · 10.10.1.86/32"] },
-			{ id: "lan", kind: "network", name: "172.21.34.0/25", x: 720, y: 470 },
+			{ id: "r14", kind: "router", name: "R14", x: 180, y: 440, details: ["Loopback0 · 10.10.1.14/32", "Fa0/0 · 10.73.65.65/30"] },
+			{ id: "r86", kind: "router", name: "R86", x: 500, y: 180, details: ["Loopback0 · 10.10.1.86/32", "Fa0/0 · 10.73.65.66/30"] },
+			{ id: "lan", kind: "network", name: "Destination LAN", x: 820, y: 440, details: ["172.21.34.0/25"] },
 		],
 		links: [
-			{ from: "r14", to: "r86", label: "Fa0/0 · .65 ↔ .66 · 10.73.65.64/30", labelY: 165 },
-			{ from: "r86", to: "lan", label: "LAN", labelX: 790, labelY: 350 },
+			{ from: "r14", to: "r86", label: "Transit · 10.73.65.64/30", labelX: 330, labelY: 280, labelConnector: true },
+			{ from: "r86", to: "lan", label: "Connected LAN", labelX: 680, labelY: 290, labelConnector: true },
 		],
 	},
 	"lan-primary-backup-isps": {
@@ -1324,38 +1401,60 @@ const NETWORK_TOPOLOGIES = {
 		],
 	},
 	"dual-wan-site-routing": {
-		title: "Dual-WAN workstation sites",
-		note: "R1 and R2 connect over two WAN circuits and each serves a workstation LAN.",
+		title: "Dual-WAN branch network",
+		note: "WAN 1: 172.16.0.0/30 on G0/0 · WAN 2: 172.16.0.4/30 on G0/1 · SW3 LAN: 172.16.1.0/24 · SW4 LAN: 172.16.2.0/27",
+		configuration: `SW3 · Router OSPF 200
+Network 172.16.0.0 0.0.0.3
+Network 172.16.1.0 0.0.0.3
+
+SW4 · Router OSPF 200
+Network 172.16.0.0 0.0.0.3
+Network 172.16.2.0 0.0.0.31`,
 		nodes: [
-			{ id: "r1", kind: "router", name: "R1", x: 280, y: 145 },
-			{ id: "r2", kind: "router", name: "R2", x: 720, y: 145 },
-			{ id: "s1", kind: "switch", name: "SW1", x: 280, y: 355 },
-			{ id: "s2", kind: "switch", name: "SW2", x: 720, y: 355 },
-			{ id: "p1", kind: "host", name: "Workstations", x: 280, y: 540, details: ["172.16.1.0/24"] },
-			{ id: "p2", kind: "host", name: "Workstations", x: 720, y: 540, details: ["172.16.2.0/24"] },
+			{ id: "r1", kind: "router", name: "R1", x: 330, y: 400 },
+			{ id: "r2", kind: "router", name: "R2", x: 670, y: 400 },
+			{ id: "wan1", kind: "network", name: "WAN 1", x: 500, y: 130 },
+			{ id: "wan2", kind: "network", name: "WAN 2", x: 500, y: 640 },
+			{ id: "sw3", kind: "switch", name: "SW3", x: 150, y: 700 },
+			{ id: "sw4", kind: "switch", name: "SW4", x: 850, y: 700 },
+			{ id: "phone1", kind: "phone", name: "IP Phone 1", x: 85, y: 900 },
+			{ id: "phone2", kind: "phone", name: "IP Phone 2", x: 215, y: 900 },
+			{ id: "phone3", kind: "phone", name: "IP Phone 3", x: 785, y: 900 },
+			{ id: "phone4", kind: "phone", name: "IP Phone 4", x: 915, y: 900 },
+			{ id: "pc1", kind: "host", name: "PC1", x: 85, y: 1040 },
+			{ id: "pc2", kind: "host", name: "PC2", x: 215, y: 1040 },
+			{ id: "pc3", kind: "host", name: "PC3", x: 785, y: 1040 },
+			{ id: "pc4", kind: "host", name: "PC4", x: 915, y: 1040 },
 		],
 		links: [
-			{ from: "r1", to: "r2", label: "Primary · 172.16.0.0/30", labelY: 90, offset: -10 },
-			{ from: "r1", to: "r2", label: "Secondary · 172.16.0.4/30", labelY: 205, offset: 10 },
-			{ from: "r1", to: "s1" }, { from: "r2", to: "s2" },
-			{ from: "s1", to: "p1" }, { from: "s2", to: "p2" },
+			{ from: "r1", to: "wan1", label: "G0/0", labelX: 385, labelY: 315, fixedLabel: true, labelConnector: true, color: "#2563eb" },
+			{ from: "r2", to: "wan1", label: "G0/0", labelX: 615, labelY: 315, fixedLabel: true, labelConnector: true, color: "#2563eb" },
+			{ from: "r1", to: "wan2", label: "G0/1", labelX: 385, labelY: 485, fixedLabel: true, labelConnector: true, color: "#9333ea" },
+			{ from: "r2", to: "wan2", label: "G0/1", labelX: 615, labelY: 485, fixedLabel: true, labelConnector: true, color: "#9333ea" },
+			{ from: "r1", to: "sw3" }, { from: "r2", to: "sw4" },
+			{ from: "sw3", to: "phone1" }, { from: "sw3", to: "phone2" },
+			{ from: "sw4", to: "phone3" }, { from: "sw4", to: "phone4" },
+			{ from: "phone1", to: "pc1" }, { from: "phone2", to: "pc2" },
+			{ from: "phone3", to: "pc3" }, { from: "phone4", to: "pc4" },
 		],
 	},
-	"vlan5-vlan100-four-hosts": {
-		title: "VLAN 5 and VLAN 100 access topology",
-		note: "SW1 and SW2 connect PC1–PC4 across VLAN 5 and VLAN 100.",
+	"vlan5-vlan10-four-hosts": {
+		title: "VLAN 5 and VLAN 10 access topology",
+		note: "PC1 and PC2 are in VLAN 5; PC3 and PC4 are in VLAN 10. The inter-switch trunk carries VLANs 5 and 10, matching the displayed configuration.",
 		nodes: [
 			{ id: "s1", kind: "switch", name: "SW1", x: 300, y: 300 },
 			{ id: "s2", kind: "switch", name: "SW2", x: 700, y: 300 },
 			{ id: "p1", kind: "host", name: "PC1", x: 180, y: 100, details: ["VLAN 5"] },
 			{ id: "p2", kind: "host", name: "PC2", x: 820, y: 100, details: ["VLAN 5"] },
-			{ id: "p3", kind: "host", name: "PC3", x: 180, y: 520, details: ["VLAN 100"] },
-			{ id: "p4", kind: "host", name: "PC4", x: 820, y: 520, details: ["VLAN 100"] },
+			{ id: "p3", kind: "host", name: "PC3", x: 180, y: 520, details: ["VLAN 10"] },
+			{ id: "p4", kind: "host", name: "PC4", x: 820, y: 520, details: ["VLAN 10"] },
 		],
 		links: [
-			{ from: "s1", to: "s2", label: "VLAN 5 · VLAN 100", labelY: 245 },
-			{ from: "s1", to: "p1" }, { from: "s2", to: "p2" },
-			{ from: "s1", to: "p3" }, { from: "s2", to: "p4" },
+			{ from: "s1", to: "s2", label: "Fa0/1 ↔ Fa0/1 · Trunk VLANs 5, 10", labelY: 245 },
+			{ from: "s1", to: "p1", label: "Fa0/2", labelX: 240, labelY: 190 },
+			{ from: "s2", to: "p2", label: "Fa0/2", labelX: 760, labelY: 190 },
+			{ from: "s1", to: "p3", label: "Fa0/3", labelX: 240, labelY: 410 },
+			{ from: "s2", to: "p4", label: "Fa0/3", labelX: 760, labelY: 410 },
 		],
 	},
 	"lacp-three-parallel-switches": {
@@ -1412,20 +1511,24 @@ const NETWORK_TOPOLOGIES = {
 		links: [{ from: "sw", to: "a" }, { from: "sw", to: "b" }],
 	},
 	"three-routers-vlan-switch-pcs": {
-		title: "Three-router VLAN routing topology",
-		note: "R1, R2, and R3 connect to a shared switch and PC1–PC3.",
+		title: "Three-router network topology",
+		note: "The left router connects separately to the upper router, lower router, and switch; each endpoint remains on its original path.",
 		nodes: [
-			{ id: "r1", kind: "router", name: "R1", x: 250, y: 145, details: ["192.168.0.0/24"] },
-			{ id: "r2", kind: "router", name: "R2", x: 500, y: 145, details: ["172.16.0.0/24"] },
-			{ id: "r3", kind: "router", name: "R3", x: 750, y: 145, details: ["192.168.0.0/24"] },
-			{ id: "sw", kind: "switch", name: "SW", x: 500, y: 340 },
-			{ id: "p1", kind: "host", name: "PC1", x: 250, y: 550, details: ["10.0.0.5"] },
-			{ id: "p2", kind: "host", name: "PC2", x: 500, y: 550, details: ["10.0.0.8"] },
-			{ id: "p3", kind: "host", name: "PC3", x: 750, y: 550, details: ["10.0.0.12"] },
+			{ id: "r1", kind: "router", name: "Router", x: 170, y: 330 },
+			{ id: "r2", kind: "router", name: "Router", x: 620, y: 130 },
+			{ id: "r3", kind: "router", name: "Router", x: 620, y: 530 },
+			{ id: "p1", kind: "host", name: "PC1", x: 870, y: 100, details: ["10.0.0.5"] },
+			{ id: "sw", kind: "switch", name: "SW", x: 430, y: 330 },
+			{ id: "p2", kind: "host", name: "PC2", x: 700, y: 330, details: ["10.0.0.8"] },
+			{ id: "p3", kind: "host", name: "PC3", x: 870, y: 560, details: ["10.0.0.12"] },
 		],
 		links: [
-			{ from: "r1", to: "sw" }, { from: "r2", to: "sw" }, { from: "r3", to: "sw" },
-			{ from: "sw", to: "p1" }, { from: "sw", to: "p2" }, { from: "sw", to: "p3" },
+			{ from: "r1", to: "r2", label: "172.16.0.0/24", labelX: 385, labelY: 210 },
+			{ from: "r1", to: "r3", label: "192.168.0.0/24", labelX: 385, labelY: 460 },
+			{ from: "r1", to: "sw", label: "10.0.0.0/24", labelY: 285 },
+			{ from: "r2", to: "p1" },
+			{ from: "sw", to: "p2" },
+			{ from: "r3", to: "p3" },
 		],
 	},
 	"ospf-two-site-election": {
@@ -1530,20 +1633,28 @@ const NETWORK_TOPOLOGIES = {
 			{ from: "r1", to: "r3" },
 		],
 	},
-	"four-router-pc-routing": {
-		title: "Four-router routed network",
-		note: "PC1, PC3, and a remote workstation connect through R1–R2–R3–R4.",
+	"r1-floating-default-routes": {
+		title: "Three-router floating default routes",
+		note: "Primary: 172.16.20.2 · Floating backup: 10.0.0.2 · Administrative distance: 20.",
 		nodes: [
-			{ id: "pc1", kind: "host", name: "PC1", x: 120, y: 130 },
-			{ id: "r1", kind: "router", name: "R1", x: 320, y: 290 },
-			{ id: "r2", kind: "router", name: "R2", x: 500, y: 130 },
-			{ id: "r3", kind: "router", name: "R3", x: 680, y: 290 },
-			{ id: "r4", kind: "router", name: "R4", x: 500, y: 500 },
-			{ id: "pc3", kind: "host", name: "PC3", x: 880, y: 500 },
+			{ id: "r1", kind: "router", name: "R1", x: 450, y: 250 },
+			{ id: "primary", kind: "router", name: "Primary next hop", x: 260, y: 520, details: ["172.16.20.2"] },
+			{ id: "backup", kind: "router", name: "Backup next hop", x: 640, y: 520, details: ["10.0.0.2 · AD 20"] },
+			{ id: "pc1-lan", kind: "network", name: "172.16.30.0/24", x: 80, y: 250, details: ["PC1 LAN"] },
+			{ id: "pc1", kind: "host", name: "PC1", x: 80, y: 430 },
+			{ id: "pc3-lan", kind: "network", name: "172.16.10.0/24", x: 260, y: 720, details: ["PC3 LAN"] },
+			{ id: "pc3", kind: "host", name: "PC3", x: 260, y: 900 },
+			{ id: "pc2-lan", kind: "network", name: "192.168.200.0/24", x: 810, y: 520, details: ["PC2 LAN"] },
+			{ id: "sw", kind: "switch", name: "Switch", x: 810, y: 690 },
+			{ id: "pc2", kind: "host", name: "PC2", x: 810, y: 860 },
 		],
 		links: [
-			{ from: "pc1", to: "r1" }, { from: "r1", to: "r2" }, { from: "r2", to: "r3" },
-			{ from: "r1", to: "r4" }, { from: "r4", to: "r3" }, { from: "r3", to: "pc3" },
+			{ from: "r1", to: "primary", label: "172.16.20.0/24", color: "#2563eb" },
+			{ from: "r1", to: "backup", label: "10.0.0.0/24", color: "#d97706" },
+			{ from: "primary", to: "backup", label: "209.165.201.0/27", color: "#64748b" },
+			{ from: "r1", to: "pc1-lan" }, { from: "pc1-lan", to: "pc1" },
+			{ from: "primary", to: "pc3-lan" }, { from: "pc3-lan", to: "pc3" },
+			{ from: "backup", to: "pc2-lan" }, { from: "pc2-lan", to: "sw" }, { from: "sw", to: "pc2" },
 		],
 	},
 	"nat-router-lans-internet": {
@@ -1628,19 +1739,27 @@ const NETWORK_TOPOLOGIES = {
 			{ from: "sw1", to: "server" }, { from: "sw2", to: "pcs" },
 		],
 	},
-	"r14-r86-pc10-static-routes": {
-		title: "R14–R86 PC10 static-route topology",
-		note: "R14 and R86 connect over 10.73.65.64/30; PC10 (.10) is on R86 LAN 10.80.65.0/28.",
+	"dual-site-ipv6-isp-file-workstations": {
+		title: "Dual-site IPv6 network with ISP",
+		note: "R1 connects to the server LAN and R2; R2 connects to the workstation LAN and ISP.",
 		nodes: [
-			{ id: "r14", kind: "router", name: "R14", x: 280, y: 190, details: ["Loopback0 · 10.10.1.14/32"] },
-			{ id: "r86", kind: "router", name: "R86", x: 720, y: 190, details: ["Loopback0 · 10.10.1.86/32"] },
-			{ id: "lan", kind: "network", name: "10.80.65.0/28", x: 720, y: 390 },
-			{ id: "pc10", kind: "host", name: "PC10", x: 720, y: 570, details: ["10.80.65.10"] },
+			{ id: "r1", kind: "router", name: "R1", x: 220, y: 170 },
+			{ id: "r2", kind: "router", name: "R2", x: 600, y: 170 },
+			{ id: "isp", kind: "network", name: "ISP", x: 940, y: 170 },
+			{ id: "sw1", kind: "switch", name: "SW1", x: 220, y: 370, details: ["2001:DB8:D8D2:1008::/64"] },
+			{ id: "sw2", kind: "switch", name: "SW2", x: 600, y: 370, details: ["2001:DB8:D8D2:1009::/64"] },
+			{ id: "file", kind: "host", name: "File Server", x: 100, y: 570 },
+			{ id: "mgmt", kind: "host", name: "Network Management Server", x: 340, y: 570 },
+			{ id: "phones", kind: "host", name: "IP Phones", x: 500, y: 570 },
+			{ id: "pcs", kind: "host", name: "Workstations", x: 700, y: 570 },
 		],
 		links: [
-			{ from: "r14", to: "r86", label: "Fa0/0 · .65 ↔ .66", labelY: 140 },
-			{ from: "r86", to: "lan", label: "Fa0/1", labelX: 790, labelY: 285 },
-			{ from: "lan", to: "pc10" },
+			{ from: "r1", to: "r2", label: "Int G0/0", labelY: 120 },
+			{ from: "r2", to: "isp", label: "Int G0/1", labelY: 120 },
+			{ from: "r1", to: "sw1" },
+			{ from: "r2", to: "sw2" },
+			{ from: "sw1", to: "file" }, { from: "sw1", to: "mgmt" },
+			{ from: "sw2", to: "phones" }, { from: "sw2", to: "pcs" },
 		],
 	},
 	"ospf-four-router-two-area": {
@@ -1995,6 +2114,20 @@ const NETWORK_TOPOLOGIES = {
 		],
 		links: [{ from: "s1", to: "s2" }, { from: "s1", to: "s3" }, { from: "s2", to: "s3" }],
 	},
+	"stp-four-switch-ring": {
+		title: "Four-switch spanning-tree ring",
+		note: "S1–S4 connect in a four-link ring; each switch shows its bridge priority and MAC address.",
+		nodes: [
+			{ id: "s1", kind: "switch", name: "S1", x: 500, y: 100, details: ["Priority 30000", "MAC AA:AA:AA:AA:AA:AA"] },
+			{ id: "s2", kind: "switch", name: "S2", x: 800, y: 330, details: ["Priority 4096", "MAC BB:BB:BB:BB:BB:BB"] },
+			{ id: "s3", kind: "switch", name: "S3", x: 500, y: 560, details: ["Priority 28672", "MAC CC:CC:CC:CC:CC:CC"] },
+			{ id: "s4", kind: "switch", name: "S4", x: 200, y: 330, details: ["Priority 8192", "MAC DD:DD:DD:DD:DD:DD"] },
+		],
+		links: [
+			{ from: "s1", to: "s2" }, { from: "s2", to: "s3" },
+			{ from: "s3", to: "s4" }, { from: "s4", to: "s1" },
+		],
+	},
 	"three-router-pc-routing": {
 		title: "Three-router PC routing path",
 		note: "R1–R2–R3 connect two user LANs over 10.10.1.0/30 and 10.10.2.0/30.",
@@ -2044,22 +2177,24 @@ const NETWORK_TOPOLOGIES = {
 		],
 	},
 	"r1-r2-database-security": {
-		title: "R1–R2 internal database network",
-		note: "R1 connects the 10.0.70.0/25 client LAN to R2 over two serial links; the database server is on R1's LAN.",
+		title: "R1–R2 database and client network",
+		note: "R1 and R2 connect over Serial0/0/0; R1's Gi0/0 reaches the database server and Gi0/1 reaches the 172.19.108.0/24 client LAN.",
 		nodes: [
-			{ id: "db", kind: "host", name: "Internal Database", x: 150, y: 120, details: ["10.0.54.0/28"] },
-			{ id: "sw1", kind: "switch", name: "Database switch", x: 300, y: 300 },
-			{ id: "r1", kind: "router", name: "R1", x: 500, y: 300 },
-			{ id: "r2", kind: "router", name: "R2", x: 800, y: 300 },
-			{ id: "sw2", kind: "switch", name: "Client switch", x: 800, y: 500 },
-			{ id: "pc", kind: "host", name: "PC", x: 800, y: 670, details: ["10.0.70.0/25"] },
-			{ id: "lan", kind: "switch", name: "R1 Gi0/1 LAN", x: 500, y: 500, details: ["10.0.0.0/24"] },
+			{ id: "db", kind: "host", name: "Internal Database Server", x: 120, y: 110, details: ["192.168.141.0/28"] },
+			{ id: "sw1", kind: "switch", name: "Database switch", x: 270, y: 250 },
+			{ id: "r1", kind: "router", name: "R1", x: 500, y: 250 },
+			{ id: "r2", kind: "router", name: "R2", x: 850, y: 250 },
+			{ id: "sw2", kind: "switch", name: "R1 LAN switch", x: 500, y: 455 },
+			{ id: "pc1", kind: "host", name: "PC", x: 500, y: 625, details: ["172.19.108.0/24"] },
+			{ id: "sw3", kind: "switch", name: "R2 LAN switch", x: 850, y: 455 },
+			{ id: "pc2", kind: "host", name: "PC", x: 850, y: 625, details: ["192.168.205.0/25"] },
 		],
 		links: [
 			{ from: "db", to: "sw1" }, { from: "sw1", to: "r1", label: "Gi0/0" },
-			{ from: "r1", to: "r2", label: "Serial0/0/0 ↔ Serial0/0/0", labelY: 245, offset: -10 },
-			{ from: "r1", to: "r2", label: "Serial0/0/1 ↔ Serial0/0/1", labelY: 350, offset: 10 },
-			{ from: "r1", to: "lan" }, { from: "r2", to: "sw2" }, { from: "sw2", to: "pc" },
+			{ from: "r1", to: "r2", label: "S0/0/0 ↔ S0/0/0", labelY: 200 },
+			{ from: "r1", to: "sw2", label: "Gi0/1", labelX: 565, labelY: 350 },
+			{ from: "sw2", to: "pc1" },
+			{ from: "r2", to: "sw3" }, { from: "sw3", to: "pc2" },
 		],
 	},
 	"static-nat-router-webserver": {
@@ -2076,18 +2211,18 @@ const NETWORK_TOPOLOGIES = {
 		],
 	},
 	"dhcp-relay-r1-r2-server": {
-		title: "R1–R2 DHCP relay topology",
-		note: "R1's DHCP client LAN reaches the DHCP server on R2's network through a switch.",
+		title: "DHCP relay topology",
+		note: "A router connects through a switch to R2 and then to the DHCP server.",
 		nodes: [
-			{ id: "r1", kind: "router", name: "R1", x: 200, y: 280 },
-			{ id: "sw", kind: "switch", name: "Access switch", x: 450, y: 280 },
-			{ id: "r2", kind: "router", name: "R2", x: 700, y: 280 },
-			{ id: "dhcp", kind: "host", name: "DHCP Server", x: 930, y: 280, details: ["198.51.100.100"] },
+			{ id: "r1", kind: "router", name: "R1", x: 160, y: 280 },
+			{ id: "sw", kind: "switch", name: "Switch", x: 400, y: 280 },
+			{ id: "r2", kind: "router", name: "R2", x: 650, y: 280 },
+			{ id: "dhcp", kind: "host", name: "DHCP server", x: 920, y: 280, details: ["198.51.100.100"] },
 		],
 		links: [
-			{ from: "r1", to: "sw", label: "Fa0/0", labelY: 230 },
-			{ from: "sw", to: "r2", label: "192.0.2.2 · Gi0/0", labelY: 230 },
-			{ from: "r2", to: "dhcp", label: "Gi0/1 · 198.51.100.1", labelY: 230 },
+			{ from: "r1", to: "sw", label: "Fa0/0", labelX: 280, labelY: 265, fixedLabel: true },
+			{ from: "sw", to: "r2", label: "Gi0/0", secondaryLabel: "192.0.2.2", labelX: 525, labelY: 265, fixedLabel: true },
+			{ from: "r2", to: "dhcp", label: "Gi0/1", secondaryLabel: "198.51.100.1", labelX: 785, labelY: 265, fixedLabel: true },
 		],
 	},
 };
@@ -2096,6 +2231,7 @@ function nodeRadius(kind) {
 	if (kind === "network") return 78;
 	if (kind === "host") return 34;
 	if (kind === "switch") return 38;
+	if (kind === "phone") return 32;
 	return 34;
 }
 
@@ -2238,11 +2374,12 @@ function TopologyLink({ link, nodes }) {
 		link.offset ?? 0,
 	);
 	const { x1, y1, x2, y2 } = geometry;
+	const color = link.color ?? "#16a34a";
 	return (
 		<g>
-			<line x1={x1} y1={y1} x2={x2} y2={y2} stroke="#16a34a" strokeWidth="3" />
-			<circle cx={x1} cy={y1} r="4" fill="#16a34a" />
-			<circle cx={x2} cy={y2} r="4" fill="#16a34a" />
+			<line x1={x1} y1={y1} x2={x2} y2={y2} stroke={color} strokeWidth="3" />
+			<circle cx={x1} cy={y1} r="4" fill={color} />
+			<circle cx={x2} cy={y2} r="4" fill={color} />
 		</g>
 	);
 }
@@ -2258,30 +2395,82 @@ function TopologyLinkLabel({ link, nodes, labelPosition }) {
 		topologyGeometryKind(to),
 		link.offset ?? 0,
 	);
-	const x = labelPosition?.x ?? link.labelX ?? (geometry.x1 + geometry.x2) / 2;
-	const y = labelPosition?.y ?? link.labelY ?? (geometry.y1 + geometry.y2) / 2 - 10;
+	const x = link.fixedLabel
+		? link.labelX ?? (geometry.x1 + geometry.x2) / 2
+		: labelPosition?.x ?? link.labelX ?? (geometry.x1 + geometry.x2) / 2;
+	const y = link.fixedLabel
+		? link.labelY ?? (geometry.y1 + geometry.y2) / 2 - 10
+		: labelPosition?.y ?? link.labelY ?? (geometry.y1 + geometry.y2) / 2 - 10;
+	const connector = (() => {
+		if (!link.labelConnector || labelPosition?.onCable) return null;
+		const cableX = geometry.x2 - geometry.x1;
+		const cableY = geometry.y2 - geometry.y1;
+		const cableLengthSquared = cableX * cableX + cableY * cableY;
+		if (!cableLengthSquared) return null;
+		const centerX = x;
+		const centerY = y + (labelPosition?.centerOffsetY ?? -2);
+		const projection = Math.max(0, Math.min(1, (
+			(centerX - geometry.x1) * cableX + (centerY - geometry.y1) * cableY
+		) / cableLengthSquared));
+		const endX = geometry.x1 + projection * cableX;
+		const endY = geometry.y1 + projection * cableY;
+		const towardCableX = endX - centerX;
+		const towardCableY = endY - centerY;
+		if (Math.hypot(towardCableX, towardCableY) < 1) return null;
+		const halfWidth = (labelPosition?.width ?? link.label.length * 6.3) / 2;
+		const halfHeight = (labelPosition?.height ?? 12) / 2;
+		const edgeScale = Math.min(
+			Math.abs(towardCableX) > 0 ? halfWidth / Math.abs(towardCableX) : Infinity,
+			Math.abs(towardCableY) > 0 ? halfHeight / Math.abs(towardCableY) : Infinity,
+		);
+		return {
+			x1: centerX + towardCableX * edgeScale,
+			y1: centerY + towardCableY * edgeScale,
+			x2: endX,
+			y2: endY,
+		};
+	})();
 
 	return (
-		<text
-			x={x}
-			y={labelPosition?.onCable ? y : y + 3}
-			textAnchor="middle"
-			fontSize="12"
-			fontWeight="600"
-			fill="#17233d"
-			paintOrder="stroke"
-			stroke="#fff"
-			strokeWidth="3"
-			strokeLinejoin="round"
-		>
-			{labelPosition?.text ?? link.label}
-		</text>
+		<g>
+			{connector && (
+				<line
+					{...connector}
+					stroke={link.color ?? "#16a34a"}
+					strokeWidth="3"
+				/>
+			)}
+			<text
+				x={x}
+				y={labelPosition?.onCable ? y : y + 3}
+				textAnchor="middle"
+				fontSize="12"
+				fontWeight="600"
+				fill="#17233d"
+				paintOrder="stroke"
+				stroke="#fff"
+				strokeWidth="3"
+				strokeLinejoin="round"
+			>
+				{labelPosition?.text ?? link.label}
+				{link.secondaryLabel && <tspan x={x} dy="16">{link.secondaryLabel}</tspan>}
+			</text>
+		</g>
 	);
 }
 
 function TopologyDevice({ node }) {
 	if (node.kind === "router") return <RouterIcon x={node.x} y={node.y} label={node.name} details={node.details} />;
 	if (node.kind === "switch") return <SwitchIcon x={node.x} y={node.y} label={node.name} details={node.details} />;
+	if (node.kind === "phone") {
+		return (
+			<g transform={`translate(${node.x} ${node.y})`}>
+				<path d="M-28 -15 H28 V12 H-28 Z" fill="#2879bd" stroke="#1b5b88" strokeWidth="1.5" />
+				<text x="0" y="3" textAnchor="middle" fontSize="9" fontWeight="700" fill="#fff">IP</text>
+				<text x="0" y="34" textAnchor="middle" fontSize="11" fontWeight="700" fill="#17233d">{node.name}</text>
+			</g>
+		);
+	}
 	if (node.kind === "host") {
 		const server = /server/i.test(node.name);
 		return <PcIcon x={node.x} y={node.y} label={node.name} details={node.details} server={server} />;
@@ -2498,32 +2687,39 @@ export function ExhibitDiagram({ type, className = "", offlineLayout = false }) 
 	const renderDiagram = (expanded = false) => wlcExhibit ? (
 		<WlcSettingsPanel variant={wlcExhibit.variant} expanded={expanded} />
 	) : topology ? (
-		<svg
-			viewBox={`${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`}
-			role="img"
-			aria-label={title}
-			className={expanded
-				? "mx-auto block h-auto w-[1000px]"
-				: offlineLayout
-					? "mx-auto block h-[min(20rem,70vw)] w-full max-w-5xl"
-					: "mx-auto block h-auto w-full max-w-5xl"}
-		>
-			<rect x={viewBox.x} y={viewBox.y} width={viewBox.width} height={viewBox.height} fill="#fff" />
-			{topology.links.map((link, index) => (
-				<TopologyLink key={`${link.from}-${link.to}-${index}`} link={link} nodes={nodes} />
-			))}
-			{topology.nodes.map((node) => <TopologyDevice key={node.id} node={node} />)}
-			{topology.links.map((link, index) => (
-				(labels.get(index) ?? []).map((labelPosition, labelIndex) => (
-					<TopologyLinkLabel
-						key={`label-${link.from}-${link.to}-${index}-${labelIndex}`}
-						link={link}
-						nodes={nodes}
-						labelPosition={labelPosition}
-					/>
-				))
-			))}
-		</svg>
+		<>
+			<svg
+				viewBox={`${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`}
+				role="img"
+				aria-label={title}
+				className={expanded
+					? "mx-auto block h-auto w-[1000px]"
+					: offlineLayout
+						? "mx-auto block h-[min(20rem,70vw)] w-full max-w-5xl"
+						: "mx-auto block h-auto w-full max-w-5xl"}
+			>
+				<rect x={viewBox.x} y={viewBox.y} width={viewBox.width} height={viewBox.height} fill="#fff" />
+				{topology.links.map((link, index) => (
+					<TopologyLink key={`${link.from}-${link.to}-${index}`} link={link} nodes={nodes} />
+				))}
+				{topology.nodes.map((node) => <TopologyDevice key={node.id} node={node} />)}
+				{topology.links.map((link, index) => (
+					(labels.get(index) ?? []).map((labelPosition, labelIndex) => (
+						<TopologyLinkLabel
+							key={`label-${link.from}-${link.to}-${index}-${labelIndex}`}
+							link={link}
+							nodes={nodes}
+							labelPosition={labelPosition}
+						/>
+					))
+				))}
+			</svg>
+			{topology.configuration && (
+				<pre className="mt-3 overflow-x-auto rounded-lg bg-[#f8fafc] p-3 font-mono text-xs text-[#26354b]">
+					<code>{topology.configuration}</code>
+				</pre>
+			)}
+		</>
 	) : (
 		<div className={expanded ? "mx-auto w-[1000px]" : ""}>
 			<div className="grid gap-2 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)] md:items-center">

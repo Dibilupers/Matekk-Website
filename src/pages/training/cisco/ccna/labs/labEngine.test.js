@@ -10,6 +10,7 @@ let execute;
 let applyWorksheetCommands;
 let canReach;
 let canReachIpv6;
+let getOspfDr;
 
 before(async () => {
 	vite = await createServer({
@@ -19,7 +20,7 @@ before(async () => {
 		appType: "custom",
 	});
 	({ PRACTICE_LABS, HIDDEN_PRACTICE_LABS } = await vite.ssrLoadModule("/src/pages/training/cisco/ccna/labs/labDefinitions.js"));
-	({ createLabState, execute, canReach, canReachIpv6 } = await vite.ssrLoadModule("/src/pages/training/cisco/ccna/labs/labEngine.js"));
+	({ createLabState, execute, canReach, canReachIpv6, getOspfDr } = await vite.ssrLoadModule("/src/pages/training/cisco/ccna/labs/labEngine.js"));
 	({ applyWorksheetCommands } = await vite.ssrLoadModule("/src/pages/training/cisco/ccna/labs/worksheetCommands.js"));
 });
 
@@ -27,13 +28,43 @@ after(async () => {
 	await vite.close();
 });
 
-test("shows four practice labs with static-routing and failover as Lab 4", () => {
-	assert.deepEqual(PRACTICE_LABS.map(({ id }) => id), [1, 2, 3, 4]);
+test("shows the unlocked dual-stack Lab 5 and all six additional labs", () => {
+	assert.deepEqual(PRACTICE_LABS.map(({ id }) => id), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
 	assert.equal(PRACTICE_LABS[0].title, "Voice VLAN Configuration 2");
 	assert.equal(PRACTICE_LABS[1].title, "Voice VLANs and LLDP");
 	assert.equal(PRACTICE_LABS[2].title, "Allowed VLANs, Native VLAN, and LACP");
 	assert.equal(PRACTICE_LABS[3].title, "Static Routing and Failover");
-	assert.deepEqual(HIDDEN_PRACTICE_LABS.map(({ id }) => id), [5]);
+	assert.equal(PRACTICE_LABS[4].title, "IPv4 and IPv6 Router Connectivity");
+	assert.deepEqual(HIDDEN_PRACTICE_LABS, []);
+});
+
+test("every lab final check accepts its lab topology", () => {
+	for (const lab of PRACTICE_LABS) {
+		assert.doesNotThrow(
+			() => lab.finalCheck.check(createLabState(lab), lab),
+			`Lab ${lab.id} final check should accept its topology`,
+		);
+	}
+});
+
+test("the new labs' terminal solutions execute and pass every task", () => {
+	for (const lab of PRACTICE_LABS.filter(({ id }) => id >= 5)) {
+		let state = createLabState(lab);
+		for (const [device, commands] of Object.entries(lab.solution)) {
+			for (const command of commands) {
+				const result = execute(lab, state, device, command);
+				assert.ok(
+					!result.out.some((line) => /% Invalid input|% Incomplete command/.test(line)),
+					`Lab ${lab.id} ${device} should accept "${command}"`,
+				);
+				state = result.state;
+			}
+		}
+		for (const task of lab.tasks) {
+			assert.ok(task.check(state, lab), `Lab ${lab.id} task "${task.id}" should pass`);
+		}
+		assert.ok(lab.finalCheck.check(state, lab), `Lab ${lab.id} final check should pass`);
+	}
 });
 
 test("the recreated voice VLAN lab matches its topology and worksheet", () => {
@@ -116,7 +147,7 @@ test("the static-routing lab worksheet configures primary, backup, default, and 
 });
 
 test("the simulator still supports IPv6 addressing, ping, and saving for a future lab", () => {
-	const lab = HIDDEN_PRACTICE_LABS[0];
+	const lab = PRACTICE_LABS.find(({ id }) => id === 5);
 	const answers = [
 		"interface e0/1",
 		"ip address 192.168.180.17 255.255.255.240",
@@ -143,7 +174,7 @@ test("the simulator still supports IPv6 addressing, ping, and saving for a futur
 });
 
 test("IPv6 interface addresses require a valid prefix length", () => {
-	const lab = HIDDEN_PRACTICE_LABS[0];
+	const lab = PRACTICE_LABS.find(({ id }) => id === 5);
 	const state = createLabState(lab);
 	state.consoles.R1.mode = "config-if";
 	state.consoles.R1.iface = "e0/1";
@@ -151,4 +182,99 @@ test("IPv6 interface addresses require a valid prefix length", () => {
 	const result = execute(lab, state, "R1", "ipv6 address 2001:db8:acca::1");
 	assert.ok(result.out.some((line) => line.includes("% Invalid input")));
 	assert.equal(result.state.devices.R1.interfaces["e0/1"].ipv6, "");
+});
+
+test("the /26 and /125 point-to-point worksheet configures and verifies both protocols", () => {
+	const lab = PRACTICE_LABS.find(({ id }) => id === 6);
+	const answers = [
+		"interface e0/0", "ip address 10.26.0.1 255.255.255.192", "ipv6 address 2001:db8:26::1/125", "no shutdown",
+		"interface e0/0", "ip address 10.26.0.2 255.255.255.192", "ipv6 address 2001:db8:26::2/125", "no shutdown",
+		"ping 10.26.0.2", "ping ipv6 2001:db8:26::2", "copy running-config startup-config",
+	];
+	const result = applyWorksheetCommands(lab, lab.worksheet, answers, createLabState(lab));
+
+	assert.deepEqual(result.failedSlots, []);
+	for (const task of lab.tasks) assert.ok(task.check(result.state, lab), `${task.id} should pass`);
+	assert.ok(canReach(lab, result.state, "R1", "10.26.0.2"));
+	assert.ok(canReachIpv6(lab, result.state, "R1", "2001:db8:26::2"));
+});
+
+test("the VLAN and LACP worksheets pass their configuration checks", () => {
+	const vlanLab = PRACTICE_LABS.find(({ id }) => id === 7);
+	const vlanAnswers = [
+		"vlan 20", "name Staff", "vlan 30", "name Guest", "exit",
+		"interface e0/1", "switchport mode access", "switchport access vlan 20",
+		"interface e0/1", "switchport mode access", "switchport access vlan 30",
+		"interface e0/0", "switchport mode trunk", "switchport trunk allowed vlan 20,30",
+		"copy running-config startup-config",
+	];
+	const vlanResult = applyWorksheetCommands(vlanLab, vlanLab.worksheet, vlanAnswers, createLabState(vlanLab));
+	assert.deepEqual(vlanResult.failedSlots, []);
+	for (const task of vlanLab.tasks) assert.ok(task.check(vlanResult.state, vlanLab), `${task.id} should pass`);
+
+	const lacpLab = PRACTICE_LABS.find(({ id }) => id === 8);
+	const lacpAnswers = [
+		"interface e0/2", "switchport mode access", "switchport access vlan 40",
+		"interface range e0/0 - 1", "switchport mode trunk", "switchport trunk allowed vlan 40,50",
+		"interface range e0/0 - 1", "channel-group 10 mode active",
+		"interface range e0/0 - 1", "channel-group 10 mode passive",
+		"copy running-config startup-config",
+	];
+	const lacpResult = applyWorksheetCommands(lacpLab, lacpLab.worksheet, lacpAnswers, createLabState(lacpLab));
+	assert.deepEqual(lacpResult.failedSlots, []);
+	for (const task of lacpLab.tasks) assert.ok(task.check(lacpResult.state, lacpLab), `${task.id} should pass`);
+});
+
+test("standard ACLs filter packets by source and routing labs verify both directions", () => {
+	const aclLab = PRACTICE_LABS.find(({ id }) => id === 9);
+	const aclAnswers = [
+		"ip route 192.168.50.0 255.255.255.0 10.0.12.2",
+		"ip route 192.168.10.0 255.255.255.0 10.0.12.1",
+		"access-list 10 permit host 192.168.10.10",
+		"interface e0/0", "ip access-group 10 in",
+		"ping 192.168.50.10",
+		"copy running-config startup-config",
+	];
+	const aclResult = applyWorksheetCommands(aclLab, aclLab.worksheet, aclAnswers, createLabState(aclLab));
+	assert.deepEqual(aclResult.failedSlots, []);
+	for (const task of aclLab.tasks) assert.ok(task.check(aclResult.state, aclLab), `${task.id} should pass`);
+	assert.ok(canReach(aclLab, aclResult.state, "Trusted PC", "192.168.50.10"));
+	assert.equal(canReach(aclLab, aclResult.state, "Guest PC", "192.168.50.10"), false);
+	assert.ok(execute(aclLab, aclResult.state, "R1", "show running-config").out
+		.some((line) => line.includes("access-list 10 permit 192.168.10.10 0.0.0.0")));
+
+	const routeLab = PRACTICE_LABS.find(({ id }) => id === 10);
+	const routeAnswers = [
+		"ip route 172.16.20.0 255.255.255.0 10.10.12.2",
+		"ip route 0.0.0.0 0.0.0.0 10.10.12.1",
+		"show ip route", "ping 172.16.20.20",
+		"copy running-config startup-config",
+	];
+	const routeResult = applyWorksheetCommands(routeLab, routeLab.worksheet, routeAnswers, createLabState(routeLab));
+	assert.deepEqual(routeResult.failedSlots, []);
+	for (const task of routeLab.tasks) assert.ok(task.check(routeResult.state, routeLab), `${task.id} should pass`);
+	assert.ok(canReach(routeLab, routeResult.state, "PC1", "172.16.20.20"));
+});
+
+test("OSPF DR election uses interface priority then router ID", () => {
+	const lab = PRACTICE_LABS.find(({ id }) => id === 11);
+	const answers = [
+		"router ospf 10", "router-id 1.1.1.1",
+		"router ospf 10", "router-id 2.2.2.2",
+		"router ospf 10", "router-id 3.3.3.3",
+		"network 10.11.0.0 0.0.0.7 area 0",
+		"network 10.11.0.0 0.0.0.7 area 0",
+		"network 10.11.0.0 0.0.0.7 area 0",
+		"interface e0/0", "ip ospf priority 100",
+		"interface e0/0", "ip ospf priority 150",
+		"interface e0/0", "ip ospf priority 150",
+		"copy running-config startup-config",
+	];
+	const result = applyWorksheetCommands(lab, lab.worksheet, answers, createLabState(lab));
+
+	assert.deepEqual(result.failedSlots, []);
+	for (const task of lab.tasks) assert.ok(task.check(result.state, lab), `${task.id} should pass`);
+	assert.equal(getOspfDr(lab, result.state, "10.11.0.0/29"), "R3");
+	assert.ok(execute(lab, result.state, "R3", "show running-config").out
+		.some((line) => line.includes("network 10.11.0.0 0.0.0.7 area 0")));
 });

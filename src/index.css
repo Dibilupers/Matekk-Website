@@ -332,6 +332,47 @@ h6 {
   background-color: rgb(255 255 255 / 28%);
 }
 
+.admin-stat-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  transition:
+    border-color 220ms ease-out,
+    box-shadow 220ms ease-out;
+}
+
+.admin-stat-card::before {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  transform: translateY(101%);
+  border-radius: inherit;
+  background: #ffffff;
+  content: "";
+  transition: transform 460ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.admin-stat-card > span,
+.admin-stat-card > strong {
+  position: relative;
+  z-index: 1;
+  transition: color 220ms ease-out;
+}
+
+.admin-stat-card:hover::before {
+  transform: translateY(0);
+}
+
+.admin-stat-card:hover {
+  border-color: rgb(255 255 255 / 75%);
+  box-shadow: 0 12px 24px rgb(15 23 42 / 16%);
+}
+
+.admin-stat-card:hover > span,
+.admin-stat-card:hover > strong {
+  color: #0b4fc2;
+}
+
 .ccna-logo-circle {
   border: 3px solid #087a91;
   box-shadow:
@@ -1253,7 +1294,8 @@ h6 {
   .program-stat-item::before,
   .program-stat-item > strong,
   .program-stat-item > span,
-  .gradebook-stat-card::before {
+  .gradebook-stat-card::before,
+  .admin-stat-card::before {
     transition-duration: 1ms;
   }
 

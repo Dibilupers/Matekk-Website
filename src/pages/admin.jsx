@@ -3,6 +3,22 @@ import { ArrowDown, ArrowUp, ChevronDown, Download, Inbox, Pencil, Search, Trash
 import API_URL from "../config/api";
 import { useAuth } from "../context/auth-context";
 
+const defaultProgramOptionLabels = new Set([
+	"CCNA — CCNA Automation",
+	"CCNA — CCNA Cybersecurity",
+	"CCNP — CCNP Collaboration",
+	"CCNP — CCNP Data Center",
+	"CCNP — CCNP Enterprise",
+	"CCNP — CCNP Security",
+	"A+ (Core 1 & 2)",
+	"CySA+",
+	"Linux+",
+	"Network+",
+	"PenTest+",
+	"Security+",
+	"FortiOS",
+]);
+
 function mapApiUser(user) {
 	const normalizedRole = typeof user.role === "string" ? user.role.trim() : "";
 	return {
@@ -440,23 +456,23 @@ export default function UsersDashboard() {
 					<div className={`mt-6 grid gap-3 lg:gap-4 ${activeSection === "users" ? "grid-cols-2 lg:grid-cols-5" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"}`}>
 						{activeSection === "users" ? (
 							<>
-								<div className="min-w-0 rounded-[14px] border border-white/30 bg-white/15 px-4 py-3.5 transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-md motion-reduce:transition-none motion-reduce:hover:translate-y-0"><span className="block text-xs font-medium text-white/90">Total users</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-4xl">{userCount}</strong></div>
-								<div className="min-w-0 rounded-[14px] border border-white/30 bg-white/15 px-4 py-3.5 transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-md motion-reduce:transition-none motion-reduce:hover:translate-y-0"><span className="block text-xs font-medium text-white/90">Active</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-4xl">{activeUserCount}</strong></div>
-								<div className="min-w-0 rounded-[14px] border border-white/30 bg-white/15 px-4 py-3.5 transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-md motion-reduce:transition-none motion-reduce:hover:translate-y-0"><span className="block text-xs font-medium text-white/90">Pending approval</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-4xl">{pendingApprovalCount}</strong></div>
-								<div className="min-w-0 rounded-[14px] border border-white/30 bg-white/15 px-4 py-3.5 transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-md motion-reduce:transition-none motion-reduce:hover:translate-y-0"><span className="block text-xs font-medium text-white/90">Pending enrollment</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-4xl">{pendingEnrollmentApprovalCount}</strong></div>
+								<div className="admin-stat-card min-w-0 rounded-[14px] border border-white/30 bg-white/15 px-4 py-3.5"><span className="block text-xs font-medium text-white/90">Total users</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-4xl">{userCount}</strong></div>
+								<div className="admin-stat-card min-w-0 rounded-[14px] border border-white/30 bg-white/15 px-4 py-3.5"><span className="block text-xs font-medium text-white/90">Active</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-4xl">{activeUserCount}</strong></div>
+								<div className="admin-stat-card min-w-0 rounded-[14px] border border-white/30 bg-white/15 px-4 py-3.5"><span className="block text-xs font-medium text-white/90">Pending approval</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-4xl">{pendingApprovalCount}</strong></div>
+								<div className="admin-stat-card min-w-0 rounded-[14px] border border-white/30 bg-white/15 px-4 py-3.5"><span className="block text-xs font-medium text-white/90">Pending enrollment</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-4xl">{pendingEnrollmentApprovalCount}</strong></div>
 								<button type="button" onClick={showInquiries} className="min-w-0 rounded-[14px] bg-white px-4 py-3.5 text-left text-[#0b4fc2] transition-all duration-200 ease-out hover:-translate-y-1 hover:bg-blue-50 hover:shadow-md active:translate-y-0 motion-reduce:transition-none motion-reduce:hover:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"><span className="block text-xs font-semibold">Inquiries · needs attention</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-4xl">{openInquiryCount}</strong></button>
 							</>
 						) : activeSection === "inquiries" ? (
 							<>
-								<div className="min-w-0 rounded-[14px] border border-white/30 bg-white/15 px-4 py-3.5 transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-md motion-reduce:transition-none motion-reduce:hover:translate-y-0"><span className="block text-xs font-medium text-white/90">Total inquiries</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-4xl">{inquiries.length}</strong></div>
-								<div className="min-w-0 rounded-[14px] border border-white/30 bg-white/15 px-4 py-3.5 transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-md motion-reduce:transition-none motion-reduce:hover:translate-y-0"><span className="block text-xs font-medium text-white/90">Open</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-4xl">{openInquiryCount}</strong></div>
-								<div className="min-w-0 rounded-[14px] border border-white/30 bg-white/15 px-4 py-3.5 transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-md motion-reduce:transition-none motion-reduce:hover:translate-y-0"><span className="block text-xs font-medium text-white/90">Resolved</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-4xl">{resolvedInquiryCount}</strong></div>
+								<div className="admin-stat-card min-w-0 rounded-[14px] border border-white/30 bg-white/15 px-4 py-3.5"><span className="block text-xs font-medium text-white/90">Total inquiries</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-4xl">{inquiries.length}</strong></div>
+								<div className="admin-stat-card min-w-0 rounded-[14px] border border-white/30 bg-white/15 px-4 py-3.5"><span className="block text-xs font-medium text-white/90">Open</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-4xl">{openInquiryCount}</strong></div>
+								<div className="admin-stat-card min-w-0 rounded-[14px] border border-white/30 bg-white/15 px-4 py-3.5"><span className="block text-xs font-medium text-white/90">Resolved</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-4xl">{resolvedInquiryCount}</strong></div>
 							</>
 						) : (
 							<>
-								<div className="rounded-[14px] border border-white/30 bg-white/15 px-4 py-3.5 transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-md motion-reduce:transition-none motion-reduce:hover:translate-y-0"><span className="block text-xs text-white/90 sm:text-sm">Total enrollments</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-4xl">{enrollments.length}</strong></div>
-								<div className="rounded-[14px] border border-white/30 bg-white/15 px-4 py-3.5 transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-md motion-reduce:transition-none motion-reduce:hover:translate-y-0"><span className="block text-xs text-white/90 sm:text-sm">Students</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-4xl">{enrolledStudentCount}</strong></div>
-								<div className="rounded-[14px] border border-white/30 bg-white/15 px-4 py-3.5 transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-md motion-reduce:transition-none motion-reduce:hover:translate-y-0"><span className="block text-xs text-white/90 sm:text-sm">Programs</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-4xl">{programs.length}</strong></div>
+								<div className="admin-stat-card rounded-[14px] border border-white/30 bg-white/15 px-4 py-3.5"><span className="block text-xs text-white/90 sm:text-sm">Total enrollments</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-4xl">{enrollments.length}</strong></div>
+								<div className="admin-stat-card rounded-[14px] border border-white/30 bg-white/15 px-4 py-3.5"><span className="block text-xs text-white/90 sm:text-sm">Students</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-4xl">{enrolledStudentCount}</strong></div>
+								<div className="admin-stat-card rounded-[14px] border border-white/30 bg-white/15 px-4 py-3.5"><span className="block text-xs text-white/90 sm:text-sm">Programs</span><strong className="mt-1 block text-3xl font-bold leading-none sm:text-4xl">{programs.length}</strong></div>
 							</>
 						)}
 					</div>
@@ -656,13 +672,13 @@ export default function UsersDashboard() {
 					) : (
 						<section aria-label={activeSection === "enrollments" ? "Student enrollments" : "Website inquiries"}>
 							{activeSection === "enrollments" ? (
-								<div>
-									<div className="mb-5">
+								<div className="space-y-5 p-5 sm:p-6">
+									<div>
 										<h2 className="text-xl font-bold text-[#14213d]">Enroll a student</h2>
 										<p className="mt-1 text-sm text-[#667085]">Add a student to one or more programs and review current enrollments.</p>
 									</div>
-									{enrollmentError && <p role="alert" className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{enrollmentError}</p>}
-									{enrollmentMessage && <p role="status" className="mb-4 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">{enrollmentMessage}</p>}
+									{enrollmentError && <p role="alert" className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{enrollmentError}</p>}
+									{enrollmentMessage && <p role="status" className="rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">{enrollmentMessage}</p>}
 									<div className="grid items-start gap-5 lg:grid-cols-[minmax(280px,0.85fr)_minmax(0,1.15fr)]">
 										<form onSubmit={enrollStudent} className="rounded-2xl border border-[#e3e9f4] bg-white p-5 shadow-sm">
 											<h3 className="font-bold text-[#14213d]">New enrollment</h3>
@@ -695,13 +711,13 @@ export default function UsersDashboard() {
 															<p className="pt-2 text-xs font-bold uppercase tracking-wide text-[#667085]">{trainingName} training</p>
 															{programs.filter((program) => (program.training?.name || "Other") === trainingName).map((program) => (
 																<div key={program.id} className="space-y-1">
-																	<label className="flex cursor-pointer items-center gap-3 rounded-lg border border-[#e3e9f4] px-3 py-2.5 text-sm hover:bg-[#f8faff]">
-																		<input type="checkbox" checked={selectedProgramIds.includes(program.id)} onChange={() => toggleProgram(program.id)} className="h-4 w-4 accent-[#2b5cf0]" />
+																	<label className={`flex cursor-pointer items-center gap-3 rounded-lg border px-3 py-2.5 text-sm ${defaultProgramOptionLabels.has(program.name) ? "border-[#e3e9f4] hover:bg-[#f8faff]" : "border-[#2166f3] bg-[#2166f3] text-white transition-colors hover:border-[#1554d1] hover:bg-[#1554d1]"}`}>
+																		<input type="checkbox" checked={selectedProgramIds.includes(program.id)} onChange={() => toggleProgram(program.id)} className={`h-4 w-4 ${defaultProgramOptionLabels.has(program.name) ? "accent-[#2b5cf0]" : "accent-white"}`} />
 																		<span className="flex-1">{program.name} — Entire program</span>
 																	</label>
 																	{program.modules?.map((module) => (
-																		<label key={module.id} className="ml-6 flex cursor-pointer items-center gap-3 rounded-lg border border-[#e3e9f4] px-3 py-2.5 text-sm hover:bg-[#f8faff]">
-																			<input type="checkbox" checked={selectedProgramIds.includes(module.id)} onChange={() => toggleProgram(module.id)} className="h-4 w-4 accent-[#2b5cf0]" />
+																		<label key={module.id} className={`ml-6 flex cursor-pointer items-center gap-3 rounded-lg border px-3 py-2.5 text-sm ${defaultProgramOptionLabels.has(`${program.name} — ${module.name}`) ? "border-[#e3e9f4] hover:bg-[#f8faff]" : "border-[#2166f3] bg-[#2166f3] text-white transition-colors hover:border-[#1554d1] hover:bg-[#1554d1]"}`}>
+																			<input type="checkbox" checked={selectedProgramIds.includes(module.id)} onChange={() => toggleProgram(module.id)} className={`h-4 w-4 ${defaultProgramOptionLabels.has(`${program.name} — ${module.name}`) ? "accent-[#2b5cf0]" : "accent-white"}`} />
 																			<span className="flex-1">{program.name} — {module.name}</span>
 																		</label>
 																	))}

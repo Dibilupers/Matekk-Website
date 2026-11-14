@@ -2,6 +2,75 @@
 
 Tracking begins 2026-10-17.
 
+## 2026-11-14 — `main`
+
+Commits included in this push:
+
+- `b7c13f7` — Removed the before-and-after PDF download button from the CCNA
+  practice-labs page.
+
+Validation before push: targeted ESLint, frontend production build, and Git
+whitespace checks passed.
+
+## 2026-11-14 — `main`
+
+Commits included in this push:
+
+- `e9a09e1` — Collapsed the CCNA practice-lab list behind a “More labs” control
+  and smoothly scrolled to the lab workspace when a student selects a lab.
+
+Validation before push: targeted ESLint, frontend production build, and Git
+whitespace checks passed.
+
+## 2026-11-13 — `main`
+
+Commits included in this push:
+
+- `fa9a62f` — Replaced the text-based CCNA practice-lab PDF with real
+  before-and-after website screenshots for Labs 5–11, fixed the final-check
+  topology argument and Lab 7 solution sequence, and added regression tests.
+
+Validation before push: 13 focused practice-lab tests, targeted ESLint,
+frontend production build, Git whitespace checks, and PDF page/image checks.
+
+## 2026-11-13 — `main`
+
+Commits included in this push:
+
+- `8f213e1` — Unlocked the dual-stack Lab 5, added six CCNA practice labs with
+  tested ACL and OSPF simulator support, simplified the lab picker to reveal
+  details only for the selected lab, and added a seven-lab before-and-after PDF.
+
+Validation before push: 11 focused practice-lab tests, targeted ESLint,
+frontend production build, Git whitespace checks, and PDF page/content checks.
+
+## 2026-11-13 — `main`
+
+Commits included in this push:
+
+- `266c428` — Corrected Question 403's route-focused topology and removed the
+  incorrect shared route diagram from Questions 516 and 517, preserving their
+  separate matching activities.
+
+Also updated the requested 162-page comparison PDF with reviewed after-panel
+redraws for Questions 369, 403, 516/517, 1011, 1099, and 1199; the original
+before panels were preserved.
+
+Validation before push: 11 focused CCNA tests, targeted ESLint, production
+build, Git whitespace checks, and PDF page/content checks.
+
+## 2026-11-13 — `main`
+
+Commits included in this push:
+
+- `e09ff2f` — Rebuilt CCNA Questions 246 and 273 as original topologies,
+  corrected exhibit mappings and topology labels, and updated the comparison
+  PDF and repair notes.
+
+Validation before push: 33 focused tests, targeted ESLint, production build,
+Git whitespace checks, and SHA-256 verification that the requested comparison
+PDF matches the reviewed 162-page copy.
+
 ## 2026-11-12 — `main`
 
 Commits included in this push:
