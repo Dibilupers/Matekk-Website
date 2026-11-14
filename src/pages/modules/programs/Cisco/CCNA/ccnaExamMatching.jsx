@@ -1,4 +1,5 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { shuffleChoiceIndexes } from "./ccnaExamMatchingUtils.js";
 
 const letter = (index) => String.fromCharCode(65 + index);
 const EMPTY_CONNECTIONS = [];
@@ -10,6 +11,10 @@ function MatchBoard({ question, value, onChange, disabled = false, review = fals
 	const [activeItem, setActiveItem] = useState(null);
 	const [boardSize, setBoardSize] = useState({ width: 0, height: 0 });
 	const [lines, setLines] = useState([]);
+	const choiceOrder = useMemo(
+		() => shuffleChoiceIndexes(question.choices.length),
+		[question.choices],
+	);
 	const connections = Array.isArray(value) ? value : EMPTY_CONNECTIONS;
 	useEffect(() => {
 		const board = boardRef.current;
@@ -76,7 +81,8 @@ function MatchBoard({ question, value, onChange, disabled = false, review = fals
 		setLines(connections.flatMap((choiceIndex, itemIndex) => {
 			if (!Number.isInteger(choiceIndex) || choiceIndex < 0 || choiceIndex >= question.choices.length) return [];
 			const left = leftDots.current[itemIndex];
-			const right = rightDots.current[choiceIndex];
+			const displayChoiceIndex = choiceOrder.indexOf(choiceIndex);
+			const right = rightDots.current[displayChoiceIndex];
 			if (!left || !right) return [];
 			const leftBounds = left.getBoundingClientRect();
 			const rightBounds = right.getBoundingClientRect();
@@ -89,7 +95,7 @@ function MatchBoard({ question, value, onChange, disabled = false, review = fals
 				y2: rightBounds.top + rightBounds.height / 2 - bounds.top,
 			}];
 		}));
-	}, [boardSize, connections, question]);
+	}, [boardSize, connections, question, choiceOrder]);
 
 	return (
 		<div className="space-y-3">
@@ -140,13 +146,14 @@ function MatchBoard({ question, value, onChange, disabled = false, review = fals
 					</div>
 					{Array.from({ length: Math.max(question.items.length, question.choices.length) }, (_, rowIndex) => {
 						const item = question.items[rowIndex];
-						const choice = question.choices[rowIndex];
+						const choiceIndex = choiceOrder[rowIndex];
+						const choice = question.choices[choiceIndex];
 						const isActive = activeItem === rowIndex;
 						const itemConnected = Number.isInteger(connections[rowIndex]);
 						const itemCorrect = review && connections[rowIndex] === question.answer[rowIndex];
-						const connectedItem = connections.findIndex((answer) => answer === rowIndex);
+						const connectedItem = connections.findIndex((answer) => answer === choiceIndex);
 						const choiceConnected = connectedItem >= 0;
-						const choiceCorrect = review && connectedItem === question.answer.findIndex((answer) => answer === rowIndex);
+						const choiceCorrect = review && connectedItem === question.answer.findIndex((answer) => answer === choiceIndex);
 
 						return (
 							<div key={rowIndex} className="grid grid-cols-[minmax(0,1.3fr)_minmax(0,0.7fr)] items-stretch border-b border-[#e5eaf1] sm:grid-cols-2">
@@ -181,8 +188,8 @@ function MatchBoard({ question, value, onChange, disabled = false, review = fals
 										type="button"
 										disabled={disabled || review}
 										onClick={() => {
-											if (activeItem !== null) connectTo(rowIndex);
-											else if (choiceConnected) clearChoice(rowIndex);
+											if (activeItem !== null) connectTo(choiceIndex);
+											else if (choiceConnected) clearChoice(choiceIndex);
 										}}
 										aria-label={choiceConnected ? `Remove match for ${question.items[connectedItem]}: ${choice}` : `Connect to ${choice}`}
 										className="grid min-h-[76px] min-w-0 grid-cols-[4rem_minmax(0,1fr)] items-center gap-1 bg-transparent px-2 py-2 text-left focus-visible:z-30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-[#5746bd] disabled:cursor-default sm:gap-4 sm:px-5"

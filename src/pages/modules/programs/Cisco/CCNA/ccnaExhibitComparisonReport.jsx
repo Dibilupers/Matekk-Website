@@ -1,6 +1,9 @@
 import { applyNativeExhibit } from "./ccnaCompositeSetQuestions.js";
 import { ExhibitDiagram, ExhibitText } from "./ccnaExhibit";
 import { CCNA_LEGACY_QUESTIONS } from "./ccnaLegacyQuestions.js";
+import { shuffleChoiceIndexes } from "./ccnaExamMatchingUtils.js";
+import { CCNA_AFTER_EXHIBITS, getBundledCcnaAfterExhibitImage } from "../../../../../utils/ccnaAfterExhibits.js";
+import { matchMode } from "../../../../../utils/ccnaExamGrading.js";
 
 const CANDIDATES = [
   [71, 387], [161, 478], [225, 542], [252, 570], [260, 578], [281, 599], [285, 603],
@@ -40,6 +43,20 @@ const NO_EXHIBIT_ADJUSTMENTS = [
     afterNote: "No exhibit required. The stale “Refer to the exhibit” lead-in is removed, and the unrelated local image is hidden.",
   },
 ];
+
+const MATCHING_QUESTIONS = CCNA_LEGACY_QUESTIONS
+  .filter((question) => question.type === "match" && matchMode(question) === "assign")
+  .map((question) => ({
+    ...question,
+    reportChoiceOrder: shuffleChoiceIndexes(question.choices.length),
+  }));
+
+const AFTER_EXHIBIT_REVIEW_IDS = CCNA_AFTER_EXHIBITS
+  .filter((entry) => entry.needs_check)
+  .map((entry) => entry.question_id);
+const MISSING_AFTER_EXHIBIT_IDS = CCNA_AFTER_EXHIBITS
+  .filter((entry) => !getBundledCcnaAfterExhibitImage(entry.question_id))
+  .map((entry) => entry.question_id);
 
 const QUALITY_LABELS = {
   illustrative: "Illustrative only; original values were unavailable.",
@@ -125,6 +142,126 @@ function ReportPage({ bankId, legacyIndex, summary, beforeNote, qualityLabel, af
   );
 }
 
+function MatchingBoardPreview({ question, answered }) {
+  const choiceOrder = question.reportChoiceOrder;
+  const rowCount = question.items.length;
+  const rowHeight = 52;
+  const headerHeight = 42;
+  const boardHeight = headerHeight + rowCount * rowHeight;
+
+  return (
+    <div className="matching-preview-board">
+      {answered && (
+        <svg
+          aria-hidden="true"
+          className="matching-preview-lines"
+          viewBox={`0 0 1000 ${boardHeight}`}
+          preserveAspectRatio="none"
+        >
+          {question.answer.map((choiceIndex, itemIndex) => {
+            const displayChoiceIndex = choiceOrder.indexOf(choiceIndex);
+            const y1 = headerHeight + rowHeight * (itemIndex + 0.5);
+            const y2 = headerHeight + rowHeight * (displayChoiceIndex + 0.5);
+            return (
+              <g key={itemIndex}>
+                <line x1="620" y1={y1} x2="680" y2={y2} />
+                <circle cx="620" cy={y1} r="5" />
+                <circle cx="680" cy={y2} r="5" />
+              </g>
+            );
+          })}
+        </svg>
+      )}
+      <div className="matching-preview-header">
+        <div>Column A</div>
+        <div>Column B</div>
+      </div>
+      {Array.from({ length: rowCount }, (_, rowIndex) => {
+        const choiceIndex = choiceOrder[rowIndex];
+        return (
+          <div className="matching-preview-row" key={rowIndex}>
+            <div className="matching-preview-item">
+              <span className="matching-preview-number">{rowIndex + 1}.</span>
+              <span>{question.items[rowIndex]}</span>
+            </div>
+            <div className="matching-preview-choice">
+              <span className="matching-preview-letter">{String.fromCharCode(65 + rowIndex)}.</span>
+              <span>{question.choices[choiceIndex]}</span>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function MatchingReportPage({ question }) {
+  const recordId = question.legacyIndex ?? question.legacyNumber;
+  return (
+    <article className="report-page matching-report-page">
+      <header className="report-header">
+        <div className="report-kicker">CCNA matching-question answer states</div>
+        <h1>Matching question · local record {recordId}</h1>
+        <p>{question.prompt}</p>
+      </header>
+      <div className="report-columns">
+        <section className="report-panel report-before">
+          <h2>Before answering</h2>
+          <p className="matching-preview-caption">Choices are shuffled; no matches have been selected.</p>
+          <MatchingBoardPreview question={question} answered={false} />
+        </section>
+        <section className="report-panel report-after">
+          <h2>After answering</h2>
+          <p className="matching-preview-caption">The completed matches are connected below.</p>
+          <MatchingBoardPreview question={question} answered />
+        </section>
+      </div>
+      <footer className="report-footer">
+        Local CCNA bank record {recordId}. The after-answer example uses the saved answer mapping; Column B remains shuffled.
+      </footer>
+    </article>
+  );
+}
+
+function ReportSummaryPage() {
+  const mappedCount = CCNA_AFTER_EXHIBITS.length;
+  const imageCount = mappedCount - MISSING_AFTER_EXHIBIT_IDS.length;
+  const reviewIds = AFTER_EXHIBIT_REVIEW_IDS.join(", ");
+
+  return (
+    <article className="report-page report-summary-page">
+      <header className="report-header">
+        <div className="report-kicker">Local CCNA review copy</div>
+        <h1>CCNA Exhibit and Matching Review</h1>
+        <p>Replacement-exhibit inventory and before/after matching-question answer states.</p>
+      </header>
+      <div className="report-summary-content">
+        <section>
+          <h2>Exhibit inventory</h2>
+          <p><strong>{imageCount} of {mappedCount}</strong> mapped replacement exhibits have an image file.</p>
+          <p>{MISSING_AFTER_EXHIBIT_IDS.length
+            ? `Replacement images are missing for bank IDs: ${MISSING_AFTER_EXHIBIT_IDS.join(", ")}.`
+            : "No replacement images are missing from the mapped after-exhibit inventory."}</p>
+          <p><strong>{AFTER_EXHIBIT_REVIEW_IDS.length} entries</strong> are still flagged for source/content verification (not missing image files):</p>
+          <p className="report-summary-ids">{reviewIds}</p>
+        </section>
+        <section>
+          <h2>Matching answer states</h2>
+          <p><strong>{MATCHING_QUESTIONS.length} one-to-one matching questions</strong> from the local CCNA question bank are shown unanswered and answered. Column B is shuffled in both states.</p>
+        </section>
+        <section>
+          <h2>Scope</h2>
+          <p>The exhibit check covers the workspace's mapped replacement images and the candidate gaps already included in this report. A fresh authenticated live-bank review was not run for this update, so unlisted live-bank gaps cannot be ruled out.</p>
+          <p>Where source details are incomplete, existing reconstructions remain marked partial or illustrative rather than presenting unknown values as verified.</p>
+        </section>
+      </div>
+      <footer className="report-footer">
+        Local review only. The image inventory confirms files are present; review flags still require comparison with their original sources.
+      </footer>
+    </article>
+  );
+}
+
 export default function CcnaExhibitComparisonReport() {
   return (
     <>
@@ -169,6 +306,26 @@ export default function CcnaExhibitComparisonReport() {
         .report-match-row span { color: #526584; }
         .report-unavailable { padding: 0.1in; border: 1px dashed #aab9ca; color: #526584; font-size: 10px; }
         .report-no-exhibit { margin: 0.2in 0 0; padding: 0.14in; border: 1px dashed #aab9ca; border-radius: 6px; color: #526584; font-size: 10px; line-height: 1.5; }
+        .matching-report-page .report-header p { max-height: 1.05in; overflow: hidden; white-space: pre-wrap; }
+        .matching-preview-caption { margin: 0 0 0.08in; color: #64748b; font-size: 8px; line-height: 1.35; }
+        .matching-preview-board { position: relative; overflow: hidden; border: 1px solid #d6e0ec; border-radius: 6px; background: #fff; }
+        .matching-preview-lines { position: absolute; z-index: 1; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+        .matching-preview-lines line { stroke: #287849; stroke-width: 4; stroke-linecap: round; }
+        .matching-preview-lines circle { fill: #287849; }
+        .matching-preview-header, .matching-preview-row { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr); }
+        .matching-preview-header { position: relative; z-index: 2; height: 0.44in; place-items: center; border-bottom: 1px solid #e5eaf1; color: #64748b; font-size: 8px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+        .matching-preview-row { position: relative; z-index: 2; min-height: 0.54in; border-bottom: 1px solid #e5eaf1; }
+        .matching-preview-row:last-child { border-bottom: 0; }
+        .matching-preview-item, .matching-preview-choice { display: flex; min-width: 0; align-items: center; gap: 0.06in; padding: 0.04in 0.08in; color: #263654; font-size: 8px; line-height: 1.2; }
+        .matching-preview-item { border-right: 1px solid #e5eaf1; }
+        .matching-preview-number, .matching-preview-letter { flex: 0 0 auto; color: #526584; font-weight: 700; }
+        .matching-preview-choice { padding-left: 0.16in; }
+        .report-summary-content { display: grid; align-content: start; gap: 0.2in; padding-top: 0.2in; }
+        .report-summary-content section { border: 1px solid #d6e0ec; border-radius: 8px; padding: 0.16in; background: #f8fbff; }
+        .report-summary-content h2 { margin: 0 0 0.08in; color: #17324a; font-size: 15px; }
+        .report-summary-content p { margin: 0 0 0.08in; color: #42516b; font-size: 10px; line-height: 1.4; }
+        .report-summary-content p:last-child { margin-bottom: 0; }
+        .report-summary-ids { color: #526584 !important; font-size: 8px !important; }
         @media screen {
           .report-page { box-shadow: 0 5px 20px #1e2b441a; }
         }
@@ -177,6 +334,7 @@ export default function CcnaExhibitComparisonReport() {
           .report-page { margin: 0; box-shadow: none; }
         }
       `}</style>
+      <ReportSummaryPage />
       {CANDIDATES.map(([bankId, legacyIndex]) => (
         <ReportPage key={bankId} bankId={bankId} legacyIndex={legacyIndex} />
       ))}
@@ -185,6 +343,9 @@ export default function CcnaExhibitComparisonReport() {
       ))}
       {NO_EXHIBIT_ADJUSTMENTS.map((candidate) => (
         <ReportPage key={candidate.bankId} {...candidate} />
+      ))}
+      {MATCHING_QUESTIONS.map((question) => (
+        <MatchingReportPage key={question.legacyIndex} question={question} />
       ))}
     </>
   );
