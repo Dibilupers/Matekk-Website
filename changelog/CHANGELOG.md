@@ -6,6 +6,21 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `bd728c0` — Shuffled choices on CCNA matching questions without changing
+  answer grading, added 57 before-and-after matching examples to the exhibit
+  comparison PDF, and included the updated project proposal PDF from the
+  worktree.
+
+Validation before push: focused matching tests, targeted ESLint, production
+build, PDF checks (121 pages; 57 matching examples; all 161 mapped exhibit
+images present locally), and Git whitespace checks passed. 22 exhibit records
+remain flagged for source/content review; no authenticated live-bank review was
+run.
+
+## 2026-11-14 — `main`
+
+Commits included in this push:
+
 - `0d2c3ec` — Added partial/illustrative exhibits for 11 live gap rows, hid
   Question 491's unrelated image and stale exhibit cue, and added the updated
   63-page before-and-after PDF. Added a configurable backend host binding for
