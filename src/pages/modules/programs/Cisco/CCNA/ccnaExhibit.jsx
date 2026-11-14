@@ -247,6 +247,173 @@ function TopologyNode({ role, name, details }) {
 }
 
 const NETWORK_TOPOLOGIES = {
+	"candidate-vlan-roles-24": {
+		title: "SW11 data and voice VLAN roles",
+		note: "The live row names SW11, Gi1/1, Gi1/3, and the endpoint roles. It does not provide the endpoint-to-port mapping or VLAN IDs.",
+		nodes: [
+			{ id: "endpoints", kind: "network", name: "Endpoints", x: 120, y: 220, details: ["PC-1 · PC-2 · Phone-1"] },
+			{ id: "sw11", kind: "switch", name: "SW11", x: 480, y: 220, details: ["Gi1/1 · Gi1/3", "Mapping unavailable"] },
+			{ id: "data", kind: "network", name: "Data VLAN", x: 860, y: 150, details: ["VLAN ID unavailable"] },
+			{ id: "voice", kind: "network", name: "Voice VLAN", x: 860, y: 300, details: ["VLAN ID unavailable"] },
+		],
+		links: [
+			{ from: "endpoints", to: "sw11", label: "Port assignments unavailable" },
+			{ from: "sw11", to: "data", label: "PC-1 / PC-2" },
+			{ from: "sw11", to: "voice", label: "Phone-1" },
+		],
+	},
+	"candidate-acl-sources-29": {
+		title: "ACL source-interface requirements",
+		note: "The prompt specifies the permit/deny policy and source interfaces, but the live row omits addresses, topology, and ACL direction.",
+		nodes: [
+			{ id: "g00", kind: "network", name: "G0/0 source", x: 160, y: 150, details: ["Permit hosts"] },
+			{ id: "router", kind: "router", name: "Router", x: 500, y: 230, details: ["ACL placement unknown"] },
+			{ id: "gi01", kind: "network", name: "Gi0/1 source", x: 840, y: 310, details: ["Deny traffic"] },
+		],
+		links: [
+			{ from: "g00", to: "router", label: "Permit" },
+			{ from: "gi01", to: "router", label: "Deny" },
+		],
+	},
+	"candidate-voice-data-66": {
+		title: "Voice and data on SW1 Gi1/1",
+		note: "Only the interface and voice/data requirement are source-backed. VLAN IDs and endpoint details were not present in the live row.",
+		nodes: [
+			{ id: "data", kind: "network", name: "Data VLAN", x: 160, y: 220, details: ["ID unavailable"] },
+			{ id: "sw1", kind: "switch", name: "SW1", x: 500, y: 220, details: ["Gi1/1"] },
+			{ id: "voice", kind: "network", name: "Voice VLAN", x: 840, y: 220, details: ["ID unavailable"] },
+		],
+		links: [
+			{ from: "data", to: "sw1", label: "Data role" },
+			{ from: "sw1", to: "voice", label: "Voice role" },
+		],
+	},
+	"candidate-cdp-target-82": {
+		title: "CDP visibility toward Router C",
+		note: "Router A and Router C are named in the prompt. The actual topology and interface IDs were absent; this is a logical relationship, not a recovered physical link.",
+		nodes: [
+			{ id: "routerA", kind: "router", name: "Router A", x: 220, y: 220, details: ["CDP on target path only"] },
+			{ id: "routerC", kind: "router", name: "Router C", x: 780, y: 220, details: ["Target neighbor"] },
+		],
+		links: [{ from: "routerA", to: "routerC", label: "Logical CDP target; path unknown" }],
+	},
+	"candidate-ipv6-wan-159": {
+		title: "R17 to R18 WAN reachability",
+		note: "The routers and WAN relationship come from the prompt. IPv6 prefixes, interface addresses, and next-hop details were not present in the live row.",
+		nodes: [
+			{ id: "r17", kind: "router", name: "R17", x: 180, y: 220, details: ["Interface details unavailable"] },
+			{ id: "wan", kind: "network", name: "WAN link", x: 500, y: 220, details: ["IPv6 prefix unavailable"] },
+			{ id: "r18", kind: "router", name: "R18", x: 820, y: 220, details: ["WAN address unavailable"] },
+		],
+		links: [
+			{ from: "r17", to: "wan", label: "IPv6 details unavailable" },
+			{ from: "wan", to: "r18" },
+		],
+	},
+	"candidate-etherchannel-198": {
+		title: "SW1/SW2 LACP EtherChannel",
+		note: "The prompt specifies an industry-standard EtherChannel and PC connectivity. Member ports and VLAN details were absent from the live row.",
+		nodes: [
+			{ id: "pcsA", kind: "network", name: "PC group A", x: 120, y: 220 },
+			{ id: "sw1", kind: "switch", name: "SW1", x: 380, y: 220, details: ["Member ports unavailable"] },
+			{ id: "sw2", kind: "switch", name: "SW2", x: 660, y: 220, details: ["Member ports unavailable"] },
+			{ id: "pcsB", kind: "network", name: "PC group B", x: 920, y: 220 },
+		],
+		links: [
+			{ from: "pcsA", to: "sw1" },
+			{ from: "sw1", to: "sw2", label: "LACP port-channel" },
+			{ from: "sw2", to: "pcsB" },
+		],
+	},
+	"candidate-pc2-file-server-policy-703": {
+		title: "PC2 access policy",
+		note: "The source gives the access goal but omits the physical path, addresses, and ACL attachment point. This is a logical policy diagram only.",
+		nodes: [
+			{ id: "pc2", kind: "host", name: "PC2", x: 140, y: 220 },
+			{ id: "policy", kind: "router", name: "ACL boundary", x: 500, y: 220, details: ["Placement unavailable"] },
+			{ id: "server", kind: "host", name: "File server", x: 860, y: 140 },
+			{ id: "other", kind: "network", name: "Other hosts", x: 860, y: 310 },
+		],
+		links: [
+			{ from: "pc2", to: "policy" },
+			{ from: "policy", to: "server", label: "Blocked", color: "#dc2626" },
+			{ from: "policy", to: "other", label: "Allowed" },
+		],
+	},
+	"candidate-router2-route-sources-832": {
+		title: "Router 2 route-learning context",
+		note: "The live row contains route-set options but no topology, neighbor identities, or routing-protocol data. The exact installed routes cannot be reconstructed.",
+		nodes: [
+			{ id: "router2", kind: "router", name: "Router 2", x: 380, y: 220, details: ["Installed routes unavailable"] },
+			{ id: "neighbors", kind: "network", name: "Neighbor advertisements", x: 800, y: 220, details: ["Topology and protocols unavailable"] },
+		],
+		links: [{ from: "neighbors", to: "router2", label: "Route sources missing" }],
+	},
+	"candidate-workstation-fqdn-924": {
+		title: "Workstation-to-server name resolution",
+		note: "The prompt names Workstation 1, Server 1, and FQDN access. The live row omits the IP, gateway, and DNS values needed for a source-faithful exhibit.",
+		nodes: [
+			{ id: "workstation", kind: "host", name: "Workstation 1", x: 150, y: 220, details: ["IP settings unavailable"] },
+			{ id: "network", kind: "network", name: "Network / DNS", x: 500, y: 220, details: ["Resolver details unavailable"] },
+			{ id: "server", kind: "host", name: "Server 1", x: 850, y: 220, details: ["FQDN / IP unavailable"] },
+		],
+		links: [
+			{ from: "workstation", to: "network", label: "Name resolution" },
+			{ from: "network", to: "server" },
+		],
+	},
+	"candidate-wifi-zones": {
+		title: "2.4 GHz channel overlap",
+		note: "The source identifies Zones 3 and 4 as using Channel 11; other zone assignments were not recovered.",
+		nodes: [
+			{ id: "zone3", kind: "network", name: "Zone 3", x: 250, y: 210, details: ["2.4 GHz", "Channel 11"] },
+			{ id: "zone4", kind: "network", name: "Zone 4", x: 750, y: 210, details: ["2.4 GHz", "Channel 11"] },
+		],
+		links: [{ from: "zone3", to: "zone4", label: "Overlapping channel" }],
+	},
+	"candidate-static-route": {
+		title: "Illustrative static-route path",
+		note: "The question export did not include the original addresses. Documentation-only prefixes are used here for illustration.",
+		nodes: [
+			{ id: "hostA", kind: "host", name: "Host A", x: 120, y: 220, details: ["192.0.2.10/24"] },
+			{ id: "r1", kind: "router", name: "R1", x: 380, y: 220, details: ["192.0.2.1/24"] },
+			{ id: "r2", kind: "router", name: "R2", x: 640, y: 220, details: ["198.51.100.1/24"] },
+			{ id: "hostB", kind: "host", name: "Host B", x: 900, y: 220, details: ["198.51.100.10/24"] },
+		],
+		links: [
+			{ from: "hostA", to: "r1", label: "LAN A" },
+			{ from: "r1", to: "r2", label: "Transit network" },
+			{ from: "r2", to: "hostB", label: "LAN B" },
+		],
+	},
+	"candidate-ospf-destinations": {
+		title: "Illustrative OSPF path between sites",
+		note: "The source destination addresses and segment labels were unavailable; this diagram shows only the site-to-site relationship.",
+		nodes: [
+			{ id: "siteA", kind: "network", name: "Site A LAN", x: 140, y: 220, details: ["Destination values unavailable"] },
+			{ id: "r1", kind: "router", name: "R1", x: 390, y: 220 },
+			{ id: "r2", kind: "router", name: "R2", x: 650, y: 220 },
+			{ id: "siteB", kind: "network", name: "Site B LAN", x: 900, y: 220, details: ["Destination values unavailable"] },
+		],
+		links: [
+			{ from: "siteA", to: "r1", label: "Site A" },
+			{ from: "r1", to: "r2", label: "OSPF" },
+			{ from: "r2", to: "siteB", label: "Site B" },
+		],
+	},
+	"candidate-host-c-gateway": {
+		title: "Host C default-gateway mismatch",
+		note: "Router A's LAN address is 192.168.1.254; Host C is configured with the incorrect gateway 192.168.1.1.",
+		nodes: [
+			{ id: "router", kind: "router", name: "Router A", x: 270, y: 220, details: ["Gi0/0/0 · 192.168.1.254"] },
+			{ id: "lan", kind: "network", name: "192.168.1.0/24 LAN", x: 590, y: 220 },
+			{ id: "host", kind: "host", name: "Host C", x: 900, y: 220, details: ["Default gateway · 192.168.1.1 (incorrect)"] },
+		],
+		links: [
+			{ from: "router", to: "lan" },
+			{ from: "lan", to: "host" },
+		],
+	},
 	"routing-protocols-prefix": {
 		title: "Router1 routes to 10.10.10.0/24",
 		note: "Router1 learns the same destination through five routing methods.",
@@ -2487,12 +2654,106 @@ function TopologyDevice({ node }) {
 	);
 }
 
+const candidateWlc = (title, activeTab, sections, path = "WLANs > Edit WLAN", nestedTab = "Layer 2") => ({
+	title,
+	activeTab,
+	nestedTab,
+	path,
+	sections,
+	note: "Illustrative reconstruction from the question's answer details; unspecified settings are omitted.",
+});
+
 const WLC_EXHIBITS = {
 	"wlc-security-tab": { title: "WLC Security settings", variant: "security" },
 	"wlc-security-tab-legacy": { title: "WLC Security settings", variant: "security-legacy" },
 	"wlc-my-wlan-layer2": { title: "WLC WLAN Layer 2 settings", variant: "my-wlan" },
 	"wlc-psk-layer2": { title: "WLC PSK Layer 2 settings", variant: "psk" },
 	"wlc-advanced-tab": { title: "WLC Advanced settings", variant: "advanced" },
+	"candidate-wlc-260": candidateWlc("802.11r fast transition", "Security", [
+		{ title: "Layer 2 Security", settings: [{ label: "Security", value: "WPA+WPA2" }] },
+		{ title: "Fast Transition", settings: [{ label: "Fast Transition", value: "Enabled" }] },
+		{ title: "Authentication Key Management", settings: [{ label: "FT 802.1X", checked: true, value: "Enable" }] },
+	]),
+	"candidate-wlc-281": candidateWlc("802.11w protected management frames", "Security", [
+		{ title: "Layer 2 Security", settings: [{ label: "Security", value: "WPA+WPA2" }, { label: "WPA2 Encryption", value: "AES" }] },
+		{ title: "Protected Management Frame", settings: [{ label: "PMF", value: "Required" }] },
+	]),
+	"candidate-wlc-285": candidateWlc("RADIUS network-user authentication", "Security", [
+		{ title: "RADIUS Authentication Server", settings: [{ label: "Server Status", checked: true, value: "Enabled" }, { label: "Network User", checked: true, value: "Enable" }, { label: "Management", checked: false, value: "Enable" }] },
+	], "Security > AAA Servers", "AAA Servers"),
+	"candidate-wlc-294": candidateWlc("WPA2 enterprise authentication", "Security", [
+		{ title: "Layer 2 Security", settings: [{ label: "Security", value: "WPA+WPA2" }] },
+		{ title: "WPA+WPA2 Parameters", settings: [{ label: "WPA2 Policy", checked: true }, { label: "AES Encryption", checked: true }] },
+		{ title: "Authentication Key Management", settings: [{ label: "802.1X", checked: true, value: "Enable" }] },
+	]),
+	"candidate-wlc-361": candidateWlc("802.11r fast transition", "Security", [
+		{ title: "Layer 2 Security", settings: [{ label: "Security", value: "WPA+WPA2" }] },
+		{ title: "Fast Transition", settings: [{ label: "Fast Transition", value: "Enabled" }] },
+		{ title: "Authentication Key Management", settings: [{ label: "FT 802.1X", checked: true, value: "Enable" }] },
+	]),
+	"candidate-wlc-377": candidateWlc("FlexConnect local switching", "Advanced", [
+		{ title: "FlexConnect", settings: [{ label: "Local Switching", checked: true, value: "Enabled" }] },
+	], "WLANs > Edit WLAN > Advanced", null),
+	"candidate-wlc-384": candidateWlc("Local EAP user lifetime", "Security", [
+		{ title: "Local EAP", settings: [{ label: "Authentication", checked: true, value: "Enabled" }] },
+		{ title: "Local Net Users", settings: [{ label: "Guest User", checked: false, value: "Enabled" }, { label: "Lifetime", value: "Not limited" }] },
+	], "Security > Local EAP"),
+	"candidate-wlc-414": candidateWlc("Guest web authentication prerequisites", "Security", [
+		{ title: "Layer 2 Security", settings: [{ label: "Security", value: "None" }, { label: "MAC Filtering", checked: false }] },
+		{ title: "Layer 3 Security", settings: [{ label: "Authentication", checked: true, value: "Web Auth" }] },
+	], "WLANs > Edit guest WLAN", "Layer 3"),
+	"candidate-wlc-518": candidateWlc("WPA2 preshared-key authentication", "Security", [
+		{ title: "WPA+WPA2 Parameters", settings: [{ label: "WPA2 Policy", checked: true }, { label: "PMF", value: "Disabled" }] },
+		{ title: "Authentication Key Management", settings: [{ label: "PSK", checked: true, value: "Enable" }, { label: "802.1X", checked: false, value: "Enable" }] },
+	]),
+	"candidate-wlc-593": candidateWlc("2.4 GHz high-speed WLAN", "General", [
+		{ title: "WLAN", settings: [{ label: "Profile Name", value: "lantest" }, { label: "Status", checked: true, value: "Enabled" }, { label: "Radio Policy", value: "802.11g only" }] },
+	], "WLANs > Edit lantest", null),
+	"candidate-wlc-666": candidateWlc("Static IP client tunneling", "Advanced", [
+		{ title: "Client mobility", settings: [{ label: "P2P Blocking Action", value: "Disabled" }, { label: "Static IP Tunneling", checked: true, value: "Enabled" }] },
+	], "WLANs > Edit WLAN > Advanced", null),
+	"candidate-wlc-712": candidateWlc("Band selection and AAA override", "Advanced", [
+		{ title: "Client policy", settings: [{ label: "Client Band Select", checked: true, value: "Enabled" }, { label: "Allow AAA Override", checked: true, value: "Enabled" }] },
+	], "WLANs > Edit WLAN > Advanced", null),
+	"candidate-wlc-760": candidateWlc("2.4 GHz WLAN with hidden SSID", "General", [
+		{ title: "WLAN", settings: [{ label: "Broadcast SSID", checked: false, value: "Enabled" }, { label: "Radio Policy", value: "802.11g only" }] },
+	], "WLANs > Edit WLAN", null),
+	"candidate-wlc-794": candidateWlc("Web authentication policy", "Security", [
+		{ title: "Layer 3 Security", settings: [{ label: "Web Policy", checked: true, value: "Authentication" }, { label: "Pre-authentication traffic", value: "DHCP and DNS" }] },
+	], "WLANs > Edit WLAN", "Layer 3"),
+	"candidate-wlc-827": candidateWlc("WPA2 with client MAC filtering", "Security", [
+		{ title: "Layer 2 Security", settings: [{ label: "WPA2 Policy", checked: true }, { label: "MAC Filtering", checked: true }] },
+	]),
+	"candidate-wlc-838": candidateWlc("WPA2 AES preshared key", "Security", [
+		{ title: "WPA+WPA2 Parameters", settings: [{ label: "WPA2 Policy", checked: true }, { label: "Encryption", value: "AES (CCMP128)" }] },
+		{ title: "Authentication Key Management", settings: [{ label: "PSK", checked: true, value: "Enable" }] },
+	]),
+	"candidate-wlc-854": candidateWlc("WPA2 AES PSK configuration", "Security", [
+		{ title: "WPA+WPA2 Parameters", settings: [{ label: "WPA2 Policy", checked: true }, { label: "WPA2 Encryption", value: "AES" }] },
+		{ title: "Authentication Key Management", settings: [{ label: "PSK", checked: true, value: "Enable" }, { label: "PSK Format", value: "ASCII" }, { label: "Pre-shared key", value: "***********" }] },
+	]),
+	"candidate-wlc-872": candidateWlc("WLAN MAC filtering", "Security", [
+		{ title: "Layer 2 Security", settings: [{ label: "MAC Filtering", checked: true, value: "Enabled" }] },
+	]),
+	"candidate-wlc-883": candidateWlc("Assign WLAN clients to Data", "General", [
+		{ title: "WLAN", settings: [{ label: "Status", checked: true, value: "Enabled" }, { label: "Interface / Interface Group", value: "Data" }] },
+	], "WLANs > Edit My_WLAN", null),
+	"candidate-wlc-890": candidateWlc("WPA3 SAE authentication", "Security", [
+		{ title: "Authentication Key Management", settings: [{ label: "FT + SAE", checked: true, value: "Enabled" }] },
+	]),
+	"candidate-wlc-911": candidateWlc("WPA2-only 63-character PSK", "Security", [
+		{ title: "WPA+WPA2 Parameters", settings: [{ label: "WPA Policy", checked: false }, { label: "WPA2 Policy", checked: true }, { label: "WPA Encryption", checked: false }] },
+		{ title: "Authentication Key Management", settings: [{ label: "PSK", checked: true, value: "ASCII" }, { label: "Key length", value: "63 characters (masked)" }] },
+	]),
+	"candidate-wlc-955": candidateWlc("Secure software download", "General", [
+		{ title: "Download File", settings: [{ label: "File Type", value: "Code" }, { label: "Transfer Mode", value: "SFTP (TCP 22)" }, { label: "File Server IP", value: "Not recovered" }] },
+	], "Commands > Download File", null),
+	"candidate-wlc-992": candidateWlc("Wi-Fi Direct client policy", "Advanced", [
+		{ title: "Peer-to-peer policy", settings: [{ label: "Wi-Fi Direct Client Policy", value: "Not-Allow" }] },
+	], "WLANs > Edit WLAN > Advanced", null),
+	"candidate-wlc-1015": candidateWlc("PSK-SHA2 authentication", "Security", [
+		{ title: "Authentication Key Management", settings: [{ label: "PSK-SHA2", checked: true, value: "Enable" }, { label: "AAA server", checked: false, value: "Not used" }] },
+	]),
 };
 
 function WlcTabs({ active = "Security", nested = false }) {
@@ -2515,7 +2776,7 @@ function WlcTabs({ active = "Security", nested = false }) {
 function WlcSection({ title, children, className = "" }) {
 	return (
 		<section className={`mb-3 ${className}`}>
-			<h3 className="mb-1 border-b border-[#96b4d2] pb-1 font-bold text-[#3c7184]">{title}</h3>
+			<h4 className="mb-1 border-b border-[#96b4d2] pb-1 text-[11px] leading-4 font-bold text-[#3c7184]">{title}</h4>
 			<div className="space-y-1 px-2">{children}</div>
 		</section>
 	);
@@ -2543,7 +2804,30 @@ function WlcSetting({ label, value, checked }) {
 	);
 }
 
-function WlcSettingsPanel({ variant, expanded }) {
+function WlcSettingsPanel({ variant, expanded, config }) {
+	if (config.sections) {
+		return (
+			<div
+				role="group"
+				aria-label="Illustrative recreated WLC configuration exhibit"
+				className={`mx-auto w-full overflow-hidden border border-[#c5ccd3] bg-[#f8f7f8] text-left font-sans text-xs text-[#262a2e] shadow-sm ${expanded ? "min-w-[52rem] max-w-5xl" : "max-w-3xl"}`}
+			>
+				<WlcTabs active={config.activeTab} />
+				{config.path && <div className="bg-[#f4f3f5] px-4 pt-2 text-sm font-semibold text-[#4c5664]">{config.path}</div>}
+				{config.nestedTab && <WlcTabs active={config.nestedTab} nested />}
+				<div className="grid gap-x-8 p-3 sm:grid-cols-2 sm:p-4">
+					{config.sections.map((section) => (
+						<WlcSection key={section.title} title={section.title}>
+							{section.settings.map((setting) => (
+								<WlcSetting key={setting.label} {...setting} />
+							))}
+						</WlcSection>
+					))}
+				</div>
+				<p className="border-t border-[#d5dbe2] px-4 py-2 text-[11px] leading-4 text-[#64748b]">{config.note}</p>
+			</div>
+		);
+	}
 	const legacySecurity = variant === "security-legacy";
 	return (
 		<div
@@ -2685,7 +2969,7 @@ export function ExhibitDiagram({ type, className = "", offlineLayout = false }) 
 		? topology.viewBox ? includeViewBox(topology.viewBox, generatedViewBox) : generatedViewBox
 		: null;
 	const renderDiagram = (expanded = false) => wlcExhibit ? (
-		<WlcSettingsPanel variant={wlcExhibit.variant} expanded={expanded} />
+		<WlcSettingsPanel variant={wlcExhibit.variant} config={wlcExhibit} expanded={expanded} />
 	) : topology ? (
 		<>
 			<svg

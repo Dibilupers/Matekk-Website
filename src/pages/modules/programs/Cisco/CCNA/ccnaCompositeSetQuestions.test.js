@@ -4,6 +4,7 @@ import {
 	applyNativeExhibit,
 	CCNA_RECREATED_TEXT_EXHIBITS,
 } from "./ccnaCompositeSetQuestions.js";
+import { CCNA_RECREATED_CANDIDATE_EXHIBITS } from "./ccnaRecreatedCandidateExhibits.js";
 
 test("applies the Question 299 IP-address matching override", () => {
 	const question = applyNativeExhibit({
@@ -138,4 +139,42 @@ test("aligns the Question 1305 exhibit markers with their routing-table values",
 	assert.deepEqual(pointerPositions, markerPositions);
 	assert.equal(outboundMarker.indexOf("E"), outboundRoute.indexOf("GigabitEthernet0/0/1"));
 	assert.equal(outboundPointer.indexOf("↓"), outboundMarker.indexOf("E"));
+});
+
+test("reconstructs candidate exhibits from the local source records", () => {
+	assert.equal(CCNA_RECREATED_CANDIDATE_EXHIBITS.size, 50);
+
+	const jsonQuestion = applyNativeExhibit({ bankId: 303 });
+	assert.match(jsonQuestion.exhibit, /"Routers": \["R1", "R2", "R3"\]/);
+	assert.equal(jsonQuestion.nativeExhibitText, true);
+
+	const terminalQuestion = applyNativeExhibit({ bankId: 1096 });
+	assert.match(terminalQuestion.exhibit, /vtp mode transparent/);
+	assert.equal(terminalQuestion.exhibitQuality, "source-backed");
+
+	const wirelessQuestion = applyNativeExhibit({ bankId: 260 });
+	assert.equal(wirelessQuestion.exhibitDiagram, "candidate-wlc-260");
+
+	const illustrativeQuestion = applyNativeExhibit({ bankId: 451 });
+	assert.equal(illustrativeQuestion.exhibitQuality, "illustrative");
+	assert.match(illustrativeQuestion.exhibit, /original content is unavailable/i);
+});
+
+test("adds partial exhibits for live rows missing both image and inline exhibit data", () => {
+	for (const bankId of [24, 29, 66, 82, 159, 169, 198, 557, 703, 832, 924]) {
+		const question = applyNativeExhibit({ bankId, prompt: "Refer to the exhibit." });
+		assert.equal(question.hideExhibitImage, true);
+		assert.ok(question.exhibitDiagram || question.exhibit);
+		assert.ok(["partial", "illustrative"].includes(question.exhibitQuality));
+	}
+});
+
+test("hides Question 491's unrelated image and removes its stale exhibit lead-in", () => {
+	const question = applyNativeExhibit({
+		bankId: 491,
+		prompt: "Refer to the exhibit. Local access for R4 must be established.",
+	});
+
+	assert.equal(question.hideExhibitImage, true);
+	assert.equal(question.prompt, "Local access for R4 must be established.");
 });

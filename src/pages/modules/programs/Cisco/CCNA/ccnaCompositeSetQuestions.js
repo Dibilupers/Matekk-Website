@@ -1,6 +1,7 @@
 // CCNA composite question set (85 questions) used in the Medium Exam.
 // Network topologies and WLC settings panels are rendered natively; mixed CLI exhibits stay as pictures.
 // Answer keys were worked out from the question content (not supplied in the source).
+import { CCNA_RECREATED_CANDIDATE_EXHIBITS } from "./ccnaRecreatedCandidateExhibits.js";
 
 const ex = (exhibit) => (exhibit && typeof exhibit === "object"
 	? {
@@ -852,6 +853,7 @@ const DATABASE_NATIVE_EXHIBITS = new Map([
 	[181, { hideExhibitImage: true }],
 	[382, { hideExhibitImage: true }],
 	[608, { hideExhibitImage: true }],
+	[491, { hideExhibitImage: true, removeExhibitLeadIn: true }],
 	[299, {
 		hideExhibitImage: true,
 		removeExhibitLeadIn: true,
@@ -1970,7 +1972,8 @@ export function getBuiltInQuestionByPrompt(prompt) {
 
 export function applyNativeExhibit(question) {
 	const builtInQuestion = getBuiltInQuestionByPrompt(question?.prompt);
-	const databaseExhibit = DATABASE_NATIVE_EXHIBITS.get(question?.bankId);
+	const databaseExhibit = CCNA_RECREATED_CANDIDATE_EXHIBITS.get(question?.bankId) ??
+		DATABASE_NATIVE_EXHIBITS.get(question?.bankId);
 	const questionOverride = typeof databaseExhibit === "object" ? databaseExhibit : {};
 	const exhibitDiagram = (typeof databaseExhibit === "string" ? databaseExhibit : databaseExhibit?.diagram) ??
 		builtInQuestion?.exhibitDiagram;
@@ -1999,6 +2002,7 @@ export function applyNativeExhibit(question) {
 		...(hideExhibitImage ? { hideExhibitImage: true } : {}),
 		...(exhibitDiagram ? { exhibitDiagram } : {}),
 		...(hasNativeTextExhibit ? { exhibit, nativeExhibitText: true } : {}),
+		...(databaseExhibit?.exhibitQuality ? { exhibitQuality: databaseExhibit.exhibitQuality } : {}),
 		...(builtInQuestion?.exhibit ? { exhibit: builtInQuestion.exhibit } : {}),
 	};
 }
