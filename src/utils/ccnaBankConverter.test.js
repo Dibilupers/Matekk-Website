@@ -12,6 +12,8 @@ let applyNativeExhibit;
 let compositeSetQuestions;
 let getOfflineLegacyQuestionBank;
 let builtInQuestionBank;
+let createShortExamQuestions;
+let setDatabaseQuestions;
 let originalFetch;
 let originalCaches;
 let originalWindow;
@@ -32,6 +34,7 @@ before(async () => {
   ({ CCNA_COMPOSITE_SET_QUESTIONS: compositeSetQuestions } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaCompositeSetQuestions.js"));
   ({ getOfflineLegacyQuestionBank } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaOfflineExamQuestions.js"));
   ({ CCNA_QUESTION_BANK: builtInQuestionBank } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaQuestionBank.jsx"));
+  ({ createShortExamQuestions, setDatabaseQuestions } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaQuestionBank.jsx"));
   originalFetch = globalThis.fetch;
   originalCaches = globalThis.caches;
   originalWindow = globalThis.window;
@@ -465,6 +468,141 @@ test("restores the four omitted matching rows so the merged CCNA exam reaches 1,
     const question = result.questions.find((entry) => entry.bankId === bankId);
     assert.ok(question, `question ${bankId} should be restored`);
     assert.equal(question.type, "drag_drop");
+  }
+});
+
+test("jumbles offline matching choices without changing their correct answers", () => {
+  const bankQuestions = [
+    ...Array.from({ length: 5 }, (_, index) => ({
+      bankId: index + 1,
+      prompt: `Offline matching question ${index + 1}`,
+      type: "match",
+      items: ["Item A", "Item B", "Item C"],
+      choices: ["Choice A", "Choice B", "Choice C"],
+      answer: [0, 1, 2],
+    })),
+    {
+      bankId: 6,
+      prompt: "Offline grouped matching question",
+      type: "match",
+      items: ["Item A", "Item B", "Item C"],
+      choices: ["Choice A", "Choice B", "Choice C"],
+      answer: [0, 0, 2],
+    },
+    ...Array.from({ length: 6 }, (_, index) => ({
+      bankId: index + 7,
+      prompt: `Offline drag-and-drop question ${index + 1}`,
+      type: "drag_drop",
+      items: ["Item A", "Item B", "Item C"],
+      choices: ["Choice A", "Choice B", "Choice C"],
+      answer: [0, 1, 2],
+    })),
+    {
+      bankId: 13,
+      prompt: "Offline click-boxes question",
+      type: "click_boxes",
+      items: ["Item A", "Item B", "Item C"],
+      choices: ["Choice A", "Choice B", "Choice C"],
+      answer: [0, 1, 2],
+    },
+    {
+      bankId: 14,
+      prompt: "Offline second click-boxes question",
+      type: "click_boxes",
+      items: ["Item A", "Item B", "Item C"],
+      choices: ["Choice A", "Choice B", "Choice C"],
+      answer: [0, 1, 2],
+    },
+    {
+      bankId: 15,
+      prompt: "Offline image question",
+      type: "image",
+      items: ["Item A", "Item B", "Item C", "Item D"],
+      choices: ["Choice A", "Choice B", "Choice C"],
+      answer: [0, 1, 1, 2],
+      groupSizes: [1, 2, 1],
+    },
+    {
+      bankId: 16,
+      prompt: "Offline second image question",
+      type: "image",
+      items: ["Item A", "Item B", "Item C", "Item D"],
+      choices: ["Choice A", "Choice B", "Choice C"],
+      answer: [0, 1, 1, 2],
+      groupSizes: [1, 2, 1],
+    },
+    ...Array.from({ length: 45 }, (_, index) => ({
+      bankId: index + 17,
+      prompt: `Offline multiple-choice question ${index + 1}`,
+      type: "single",
+      options: ["Correct", "Incorrect"],
+      answer: 0,
+    })),
+  ];
+  const originalRandom = Math.random;
+  Math.random = () => 0;
+
+  try {
+    setDatabaseQuestions(bankQuestions);
+    const onlineQuestions = createShortExamQuestions();
+    const questions = createOfflineCcnaExamQuestions("short", bankQuestions);
+    const originalQuestions = new Map(bankQuestions.map((question) => [question.prompt, question]));
+    const shuffledQuestions = questions.filter((question) =>
+      ["match", "drag_drop"].includes(question.type) &&
+      question.matchStyle !== "numbers" &&
+      new Set(question.answer).size === question.answer.length,
+    );
+    const unchangedQuestions = questions.filter((question) =>
+      ["click_boxes", "image"].includes(question.type) ||
+      (question.type === "match" && !shuffledQuestions.includes(question)),
+    );
+    const onlineMatchingQuestions = onlineQuestions.filter((question) =>
+      ["match", "drag_drop"].includes(question.type),
+    );
+
+    assert.equal(shuffledQuestions.length, 7);
+    for (const question of shuffledQuestions) {
+      const original = originalQuestions.get(question.prompt);
+      assert.ok(original, `expected ${question.prompt} to come from the offline bank`);
+      assert.notDeepEqual(question.choices, original.choices, `${question.prompt} choices should be jumbled`);
+      assert.deepEqual(
+        question.answer.map((choiceIndex) => question.choices[choiceIndex]),
+        original.answer.map((choiceIndex) => original.choices[choiceIndex]),
+        `${question.prompt} should retain its original correct matches`,
+      );
+    }
+
+    assert.equal(unchangedQuestions.length, 3);
+    for (const question of unchangedQuestions) {
+      const original = originalQuestions.get(question.prompt);
+      assert.ok(original, `expected ${question.prompt} to come from the offline bank`);
+      assert.deepEqual(question.choices, original.choices);
+      assert.deepEqual(question.answer, original.answer);
+      if (question.type === "image") assert.deepEqual(question.groupSizes, original.groupSizes);
+    }
+
+    assert.equal(onlineMatchingQuestions.length, 8);
+    for (const question of onlineMatchingQuestions) {
+      const original = originalQuestions.get(question.prompt);
+      assert.ok(original, `expected ${question.prompt} to come from the online bank`);
+      assert.deepEqual(question.choices, original.choices, `${question.prompt} should not be jumbled online`);
+    }
+
+    Math.random = () => 0.999;
+    const noOpShuffleQuestions = createOfflineCcnaExamQuestions("short", bankQuestions).filter((question) =>
+      ["match", "drag_drop"].includes(question.type) &&
+      question.matchStyle !== "numbers" &&
+      new Set(question.answer).size === question.answer.length,
+    );
+    assert.equal(noOpShuffleQuestions.length, 8);
+    for (const question of noOpShuffleQuestions) {
+      const original = originalQuestions.get(question.prompt);
+      assert.ok(original, `expected ${question.prompt} to come from the offline bank`);
+      assert.notDeepEqual(question.choices, original.choices, `${question.prompt} should always be jumbled`);
+    }
+  } finally {
+    setDatabaseQuestions([]);
+    Math.random = originalRandom;
   }
 });
 test("marks the recreated matching activity screenshot to stay hidden", () => {
