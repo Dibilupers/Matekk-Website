@@ -28,6 +28,30 @@ export function shuffle(items) {
   return shuffled;
 }
 
+function shuffleMatchingChoices(question) {
+  if (
+    question.type !== "match" ||
+    question.matchStyle === "numbers" ||
+    !Array.isArray(question.items) ||
+    !Array.isArray(question.choices) ||
+    !Array.isArray(question.answer) ||
+    question.items.length !== question.choices.length ||
+    question.answer.length !== question.items?.length ||
+    new Set(question.answer).size !== question.answer.length ||
+    question.answer.some((index) => !Number.isInteger(index) || index < 0 || index >= question.choices.length)
+  ) {
+    return question;
+  }
+
+  const choiceOrder = shuffle(question.choices.map((_, index) => index));
+  const shuffledIndexes = new Map(choiceOrder.map((originalIndex, index) => [originalIndex, index]));
+  return {
+    ...question,
+    choices: choiceOrder.map((index) => question.choices[index]),
+    answer: question.answer.map((index) => shuffledIndexes.get(index)),
+  };
+}
+
 export const CCNA_QUESTION_BANK = [
   ...CCNA_MODULE_QUIZZES.filter((quiz) => /^[1-6]\.0$/.test(quiz.number)).flatMap((quiz) =>
     quiz.questions.map((question) => ({
@@ -184,7 +208,7 @@ function createExamQuestions(sourceQuestions, count) {
       ...imageQuestions.slice(imageStart, imageStart + imageQuota),
       ...otherQuestions.slice(otherStart, otherStart + Math.min(otherPerBlock, blockLength - matchingPerBlock - dragDropQuota - clickBoxesQuota - imageQuota)),
     ];
-    questions.push(...shuffle(blockQuestions));
+    questions.push(...shuffle(blockQuestions).map(shuffleMatchingChoices));
   }
 
   return questions;
