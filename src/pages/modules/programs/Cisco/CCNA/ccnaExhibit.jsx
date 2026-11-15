@@ -2978,10 +2978,8 @@ export function ExhibitDiagram({ type, className = "", offlineLayout = false, co
 				aria-label={title}
 				className={expanded
 					? "mx-auto block h-auto w-[1000px]"
-					: offlineLayout
-						? "mx-auto block h-[min(20rem,70vw)] w-full max-w-5xl"
-						: compact
-							? "mx-auto block h-auto w-full max-w-5xl !max-h-[min(38vh,20rem)]"
+					: offlineLayout || compact
+						? "mx-auto block h-auto w-full max-w-5xl !max-h-[min(38vh,20rem)]"
 						: "mx-auto block h-auto w-full max-w-5xl"}
 			>
 				<rect x={viewBox.x} y={viewBox.y} width={viewBox.width} height={viewBox.height} fill="#fff" />
@@ -3049,7 +3047,7 @@ export function ExhibitImage({ src, alt = "Exhibit diagram", className = "", ima
 	const [openTheme, setOpenTheme] = useState(null);
 	const wrapRef = useRef(null);
 	const image = offlineLayout
-		? <img key={src} src={src} alt={alt} loading={lazy ? "lazy" : undefined} className={`block h-auto w-auto max-w-full rounded-lg object-contain !max-h-[min(50vh,22rem)] ${imageClassName}`} />
+		? <img key={src} src={src} alt={alt} loading={lazy ? "lazy" : undefined} className={`block h-auto w-auto max-w-full rounded-lg object-contain !max-h-[min(38vh,20rem)] ${imageClassName}`} />
 		: cropTop
 		? (
 			<div className="aspect-[578/260] w-full overflow-hidden rounded-lg bg-white">
