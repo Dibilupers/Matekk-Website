@@ -12,6 +12,8 @@ let applyNativeExhibit;
 let compositeSetQuestions;
 let getOfflineLegacyQuestionBank;
 let builtInQuestionBank;
+let createShortExamQuestions;
+let setDatabaseQuestions;
 let originalFetch;
 let originalCaches;
 let originalWindow;
@@ -32,6 +34,7 @@ before(async () => {
   ({ CCNA_COMPOSITE_SET_QUESTIONS: compositeSetQuestions } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaCompositeSetQuestions.js"));
   ({ getOfflineLegacyQuestionBank } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaOfflineExamQuestions.js"));
   ({ CCNA_QUESTION_BANK: builtInQuestionBank } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaQuestionBank.jsx"));
+  ({ createShortExamQuestions, setDatabaseQuestions } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaQuestionBank.jsx"));
   originalFetch = globalThis.fetch;
   originalCaches = globalThis.caches;
   originalWindow = globalThis.window;
@@ -540,20 +543,24 @@ test("jumbles offline matching choices without changing their correct answers", 
   Math.random = () => 0;
 
   try {
+    setDatabaseQuestions(bankQuestions);
+    const onlineQuestions = createShortExamQuestions();
     const questions = createOfflineCcnaExamQuestions("short", bankQuestions);
     const originalQuestions = new Map(bankQuestions.map((question) => [question.prompt, question]));
     const shuffledQuestions = questions.filter((question) =>
-      question.type === "match" &&
+      ["match", "drag_drop"].includes(question.type) &&
       question.matchStyle !== "numbers" &&
-      question.items.length === question.choices.length &&
       new Set(question.answer).size === question.answer.length,
     );
     const unchangedQuestions = questions.filter((question) =>
-      ["drag_drop", "click_boxes", "image"].includes(question.type) ||
+      ["click_boxes", "image"].includes(question.type) ||
       (question.type === "match" && !shuffledQuestions.includes(question)),
     );
+    const onlineMatchingQuestions = onlineQuestions.filter((question) =>
+      ["match", "drag_drop"].includes(question.type),
+    );
 
-    assert.equal(shuffledQuestions.length, 4);
+    assert.equal(shuffledQuestions.length, 7);
     for (const question of shuffledQuestions) {
       const original = originalQuestions.get(question.prompt);
       assert.ok(original, `expected ${question.prompt} to come from the offline bank`);
@@ -565,7 +572,7 @@ test("jumbles offline matching choices without changing their correct answers", 
       );
     }
 
-    assert.equal(unchangedQuestions.length, 6);
+    assert.equal(unchangedQuestions.length, 3);
     for (const question of unchangedQuestions) {
       const original = originalQuestions.get(question.prompt);
       assert.ok(original, `expected ${question.prompt} to come from the offline bank`);
@@ -573,7 +580,28 @@ test("jumbles offline matching choices without changing their correct answers", 
       assert.deepEqual(question.answer, original.answer);
       if (question.type === "image") assert.deepEqual(question.groupSizes, original.groupSizes);
     }
+
+    assert.equal(onlineMatchingQuestions.length, 8);
+    for (const question of onlineMatchingQuestions) {
+      const original = originalQuestions.get(question.prompt);
+      assert.ok(original, `expected ${question.prompt} to come from the online bank`);
+      assert.deepEqual(question.choices, original.choices, `${question.prompt} should not be jumbled online`);
+    }
+
+    Math.random = () => 0.999;
+    const noOpShuffleQuestions = createOfflineCcnaExamQuestions("short", bankQuestions).filter((question) =>
+      ["match", "drag_drop"].includes(question.type) &&
+      question.matchStyle !== "numbers" &&
+      new Set(question.answer).size === question.answer.length,
+    );
+    assert.equal(noOpShuffleQuestions.length, 8);
+    for (const question of noOpShuffleQuestions) {
+      const original = originalQuestions.get(question.prompt);
+      assert.ok(original, `expected ${question.prompt} to come from the offline bank`);
+      assert.notDeepEqual(question.choices, original.choices, `${question.prompt} should always be jumbled`);
+    }
   } finally {
+    setDatabaseQuestions([]);
     Math.random = originalRandom;
   }
 });
