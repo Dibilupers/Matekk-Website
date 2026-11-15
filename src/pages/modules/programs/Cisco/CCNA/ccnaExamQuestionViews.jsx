@@ -452,6 +452,7 @@ export function QuestionPrompt({
 	offline = false,
 	regularWeight = false,
 	fortiosOffline = false,
+	compactExhibit = false,
 }) {
 	const rawPrompt = String(prompt ?? "");
 	const readablePrompt = offline ? rawPrompt
@@ -475,7 +476,7 @@ export function QuestionPrompt({
 		return (
 			<div className="mb-5 space-y-4 sm:mb-6">
 				<PromptText text={optionTable.prompt} offline={offline} regularWeight={regularWeight || offline} fortiosOffline={fortiosOffline} />
-				{imageUrl && !hideExhibitImage && <ExhibitImage src={imageUrl} lazy imageClassName="max-h-[32rem]" />}
+				{imageUrl && !hideExhibitImage && <ExhibitImage src={imageUrl} lazy compact={compactExhibit} imageClassName="max-h-[32rem]" />}
 				<ExhibitText text={optionTable.exhibit} />
 			</div>
 		);
@@ -508,7 +509,7 @@ export function QuestionPrompt({
 	return (
 		<div className="mb-5 space-y-4 sm:mb-6">
 			<PromptText text={promptText} offline={offline} regularWeight={regularWeight || offline} fortiosOffline={fortiosOffline} />
-			{imageUrl && !hideExhibitImage && <ExhibitImage src={imageUrl} lazy imageClassName="max-h-[32rem]" />}
+			{imageUrl && !hideExhibitImage && <ExhibitImage src={imageUrl} lazy compact={compactExhibit} imageClassName="max-h-[32rem]" />}
 			{exhibit && (
 				<section aria-label={exhibitTitle} className="ccna-prompt-exhibit overflow-hidden rounded-xl border border-[#d9e1ef] bg-[#f7f9fc]">
 					<p className="ccna-prompt-exhibit-title border-b border-[#d9e1ef] px-4 py-2 text-xs font-bold uppercase tracking-wide text-[#526584]">
@@ -523,7 +524,7 @@ export function QuestionPrompt({
 	);
 }
 
-export function QuestionExhibits({ question, className = "mb-6" }) {
+export function QuestionExhibits({ question, className = "mb-6", compact = false }) {
 	if (question.afterExhibit) {
 		if (question.afterExhibit.imageUrl) {
 			return (
@@ -531,6 +532,7 @@ export function QuestionExhibits({ question, className = "mb-6" }) {
 					<ExhibitImage
 						src={question.afterExhibit.imageUrl}
 						alt=""
+						compact={compact}
 						imageClassName="max-h-[min(70vh,44rem)]"
 					/>
 					<div className="sr-only">
@@ -559,8 +561,8 @@ export function QuestionExhibits({ question, className = "mb-6" }) {
 
 	return (
 		<>
-			{question.exhibitDiagram && <ExhibitDiagram type={question.exhibitDiagram} className={className} />}
-			{question.exhibitImage && !question.hideExhibitImage && <ExhibitImage src={question.exhibitImage} className={className} imageClassName="max-h-[32rem]" cropTop={question.exhibitImageCropTop} />}
+			{question.exhibitDiagram && <ExhibitDiagram type={question.exhibitDiagram} className={className} compact={compact} />}
+			{question.exhibitImage && !question.hideExhibitImage && <ExhibitImage src={question.exhibitImage} className={className} compact={compact} imageClassName="max-h-[32rem]" cropTop={question.exhibitImageCropTop} />}
 			{question.exhibit && <ExhibitText text={question.exhibit} className={className} />}
 		</>
 	);

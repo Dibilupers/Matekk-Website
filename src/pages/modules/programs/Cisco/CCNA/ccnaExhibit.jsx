@@ -2670,7 +2670,7 @@ function WlcSettingsPanel({ variant, expanded }) {
 	);
 }
 
-export function ExhibitDiagram({ type, className = "", offlineLayout = false }) {
+export function ExhibitDiagram({ type, className = "", offlineLayout = false, compact = false }) {
 	const [openTheme, setOpenTheme] = useState(null);
 	const wrapRef = useRef(null);
 	const isRouterOnAStick = type === "router-on-a-stick-vlan20";
@@ -2696,6 +2696,8 @@ export function ExhibitDiagram({ type, className = "", offlineLayout = false }) 
 					? "mx-auto block h-auto w-[1000px]"
 					: offlineLayout
 						? "mx-auto block h-[min(20rem,70vw)] w-full max-w-5xl"
+						: compact
+							? "mx-auto block h-auto w-full max-w-5xl !max-h-[min(38vh,20rem)]"
 						: "mx-auto block h-auto w-full max-w-5xl"}
 			>
 				<rect x={viewBox.x} y={viewBox.y} width={viewBox.width} height={viewBox.height} fill="#fff" />
@@ -2759,7 +2761,7 @@ export function ExhibitDiagram({ type, className = "", offlineLayout = false }) 
 }
 
 /* Picture exhibit: always expandable, since diagrams shrink a lot on phones. */
-export function ExhibitImage({ src, alt = "Exhibit diagram", className = "", imageClassName = "", lazy = false, cropTop = false, offlineLayout = false }) {
+export function ExhibitImage({ src, alt = "Exhibit diagram", className = "", imageClassName = "", lazy = false, cropTop = false, offlineLayout = false, compact = false }) {
 	const [openTheme, setOpenTheme] = useState(null);
 	const wrapRef = useRef(null);
 	const image = offlineLayout
@@ -2770,7 +2772,7 @@ export function ExhibitImage({ src, alt = "Exhibit diagram", className = "", ima
 				<img key={src} src={src} alt={alt} loading={lazy ? "lazy" : undefined} className={`h-full w-full object-cover object-top ${imageClassName}`} />
 			</div>
 		)
-		: <img key={src} src={src} alt={alt} loading={lazy ? "lazy" : undefined} className={`block h-auto w-auto max-w-full rounded-lg object-contain ${imageClassName}`} />;
+		: <img key={src} src={src} alt={alt} loading={lazy ? "lazy" : undefined} className={`block h-auto w-auto max-w-full rounded-lg object-contain ${compact ? "!max-h-[min(38vh,20rem)]" : ""} ${imageClassName}`} />;
 	return (
 		<div ref={wrapRef} className={`relative mx-auto ${offlineLayout ? "flex w-full max-w-full flex-col items-center gap-3 rounded-2xl border border-[#d6e5e7] bg-[#f8fafb] p-3 shadow-sm sm:p-4" : cropTop ? "w-full max-w-[36rem] rounded-xl border border-[#d6e5e7] bg-white p-2 shadow-sm sm:p-3" : "w-fit max-w-full rounded-xl border border-[#d6e5e7] bg-white p-2 shadow-sm sm:p-3"} ${className}`}>
 			{image}
