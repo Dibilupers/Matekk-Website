@@ -58,6 +58,8 @@ export function createLabState(lab) {
 	const devices = structuredClone(lab.devices);
 	for (const d of Object.values(devices)) {
 		d.routes = d.routes || [];
+		d.accessLists = d.accessLists || {};
+		d.ospf = d.ospf || null;
 		d.secret = d.secret || "";
 		d.startup = null;
 		if (d.kind === "switch") {
@@ -76,6 +78,9 @@ export function createLabState(lab) {
 				i.cdpEnabled = i.cdpEnabled !== false;
 				i.lldpTransmit = Boolean(i.lldpTransmit);
 				i.lldpReceive = Boolean(i.lldpReceive);
+			} else if (d.kind === "router") {
+				i.ospfPriority = i.ospfPriority ?? 1;
+				i.accessGroups = i.accessGroups || {};
 			}
 		}
 	}
@@ -90,6 +95,8 @@ export function signature(d) {
 		s: d.secret,
 		i: d.interfaces,
 		r: d.routes,
+		a: d.accessLists,
+		o: d.ospf,
 		...(d.kind === "switch" ? { v: d.vlans, l: d.lldpEnabled } : {}),
 	});
 }
@@ -166,15 +173,33 @@ function owns(lab, state, devName, ip) {
 	return Object.entries(d.interfaces).some(([ifName, i]) => i.ip === ip && ifaceUp(lab, state, devName, ifName));
 }
 
+function aclAllows(device, ifName, sourceIp, direction) {
+	const accessList = device.interfaces[ifName]?.accessGroups?.[direction];
+	if (!accessList) return true;
+	const entries = device.accessLists[String(accessList)] || [];
+	for (const entry of entries) {
+		const matches = ((ipToInt(sourceIp) ^ ipToInt(entry.source)) & (~ipToInt(entry.wildcard))) === 0;
+		if (matches) return entry.action === "permit";
+	}
+	return false;
+}
+
 /* Walk the packet hop by hop. Returns { ok, hops: [next-hop IPs], dev, firstOutIf } */
 export function forward(lab, state, srcDev, dstIp) {
 	let cur = srcDev;
 	const hops = [];
 	let firstOutIf = null;
 	let pendingNextIp = dstIp;
+	let sourceIp = state.devices[srcDev].kind === "pc"
+		? Object.values(state.devices[srcDev].interfaces)[0].ip
+		: "";
+	let incomingIf = null;
 	for (let ttl = 0; ttl < 16; ttl++) {
-		if (owns(lab, state, cur, dstIp)) return { ok: true, hops, dev: cur, firstOutIf };
 		const d = state.devices[cur];
+		if (d.kind === "router" && incomingIf && !aclAllows(d, incomingIf, sourceIp, "in")) {
+			return { ok: false, hops, reason: "access-list", dev: cur };
+		}
+		if (owns(lab, state, cur, dstIp)) return { ok: true, hops, dev: cur, firstOutIf };
 		if (d.kind === "switch") {
 			const targetLink = lab.links.find((link) => {
 				const [aDev, aIf] = link.a.split(":");
@@ -187,6 +212,7 @@ export function forward(lab, state, srcDev, dstIp) {
 			if (!targetLink) return { ok: false, hops, reason: "unreachable", dev: cur };
 			const [aDev, aIf] = targetLink.a.split(":");
 			const [bDev, bIf] = targetLink.b.split(":");
+			incomingIf = aDev === cur ? bIf : aIf;
 			cur = aDev === cur ? bDev : aDev;
 			pendingNextIp = state.devices[cur].interfaces[aDev === cur ? aIf : bIf].ip;
 			continue;
@@ -205,6 +231,10 @@ export function forward(lab, state, srcDev, dstIp) {
 			outIf = r.outIf;
 		}
 		if (!firstOutIf) firstOutIf = outIf;
+		if (!sourceIp) sourceIp = d.interfaces[outIf].ip;
+		if (d.kind === "router" && !aclAllows(d, outIf, sourceIp, "out")) {
+			return { ok: false, hops, reason: "access-list", dev: cur };
+		}
 		pendingNextIp = nextIp;
 		const p = peerOf(lab, cur, outIf);
 		const peerIf = p && state.devices[p.dev]?.interfaces[p.ifName];
@@ -213,9 +243,55 @@ export function forward(lab, state, srcDev, dstIp) {
 			return { ok: false, hops, reason: "unreachable", dev: cur };
 		}
 		hops.push(nextIp);
+		incomingIf = p.ifName;
 		cur = p.dev;
 	}
 	return { ok: false, hops, reason: "loop" };
+}
+
+function ospfNetworksFor(device, intf) {
+	if (!device.ospf || !intf.ip || !isMask(intf.mask)) return [];
+	return device.ospf.networks.filter(({ net, wildcard }) => (
+		((ipToInt(intf.ip) ^ ipToInt(net)) & (~ipToInt(wildcard))) === 0
+	));
+}
+
+function routerIdFor(device) {
+	if (device.ospf?.routerId) return device.ospf.routerId;
+	const loopback = Object.entries(device.interfaces)
+		.filter(([name, intf]) => name.startsWith("lo") && intf.ip)
+		.map(([, intf]) => intf.ip)
+		.sort((left, right) => ipToInt(right) - ipToInt(left))[0];
+	if (loopback) return loopback;
+	return Object.values(device.interfaces)
+		.filter((intf) => intf.ip)
+		.map((intf) => intf.ip)
+		.sort((left, right) => ipToInt(right) - ipToInt(left))[0] || "0.0.0.0";
+}
+
+export function getOspfDr(lab, state, subnet) {
+	const [network, prefixText] = subnet.split("/");
+	const prefix = Number(prefixText);
+	if (!isIp(network) || !Number.isInteger(prefix) || prefix < 0 || prefix > 32) return null;
+	const candidates = [];
+	for (const [name, device] of Object.entries(state.devices)) {
+		if (device.kind !== "router") continue;
+		for (const [ifName, intf] of Object.entries(device.interfaces)) {
+			if (!intf.ip || !isMask(intf.mask) || prefixLen(intf.mask) !== prefix ||
+				networkOf(intf.ip, intf.mask) !== network || !ifaceUp(lab, state, name, ifName) ||
+				!ospfNetworksFor(device, intf).length) continue;
+			if (!candidates.some((candidate) => candidate.name === name)) {
+				candidates.push({
+					name,
+					routerId: routerIdFor(device),
+					priority: intf.ospfPriority ?? 1,
+				});
+			}
+		}
+	}
+	return candidates
+		.filter(({ priority }) => priority > 0)
+		.sort((left, right) => right.priority - left.priority || ipToInt(right.routerId) - ipToInt(left.routerId))[0]?.name ?? null;
 }
 
 function sourceIpFor(state, devName, outIf) {
@@ -277,9 +353,24 @@ export function runningConfig(d) {
 		lines.push("line con 0", "line vty 0 4", " login", "!", "end");
 		return lines;
 	}
+	for (const [aclId, entries] of Object.entries(d.accessLists || {})) {
+		for (const entry of entries) lines.push(`access-list ${aclId} ${entry.action} ${entry.source} ${entry.wildcard}`);
+	}
+	if (d.ospf) {
+		lines.push(`router ospf ${d.ospf.processId}`);
+		if (d.ospf.routerId) lines.push(` router-id ${d.ospf.routerId}`);
+		for (const network of d.ospf.networks) {
+			lines.push(` network ${network.net} ${network.wildcard} area ${network.area}`);
+		}
+		lines.push("!");
+	}
 	for (const [ifName, i] of Object.entries(d.interfaces)) {
 		lines.push(`interface ${FULL_NAME(ifName)}`);
 		if (i.desc) lines.push(` description ${i.desc}`);
+		for (const [direction, aclId] of Object.entries(i.accessGroups || {})) {
+			lines.push(` ip access-group ${aclId} ${direction}`);
+		}
+		if (i.ospfPriority !== undefined && i.ospfPriority !== 1) lines.push(` ip ospf priority ${i.ospfPriority}`);
 		lines.push(i.ip ? ` ip address ${i.ip} ${i.mask}` : " no ip address");
 		if (i.ipv6) lines.push(` ipv6 address ${i.ipv6}`);
 		if (!i.up && !ifName.startsWith("lo")) lines.push(" shutdown");
@@ -333,6 +424,17 @@ export function configCommands(d) {
 		if (i.up || ifName.startsWith("lo")) out.push(" no shutdown");
 	}
 	out.push("exit");
+	for (const [aclId, entries] of Object.entries(d.accessLists || {})) {
+		for (const entry of entries) out.push(`access-list ${aclId} ${entry.action} ${entry.source} ${entry.wildcard}`);
+	}
+	if (d.ospf) {
+		out.push(`router ospf ${d.ospf.processId}`);
+		if (d.ospf.routerId) out.push(` router-id ${d.ospf.routerId}`);
+		for (const network of d.ospf.networks) {
+			out.push(` network ${network.net} ${network.wildcard} area ${network.area}`);
+		}
+		out.push("exit");
+	}
 	for (const r of d.routes) out.push(`ip route ${r.net} ${r.mask} ${r.via}${r.ad && r.ad !== 1 ? ` ${r.ad}` : ""}`);
 	out.push("end");
 	return out;
@@ -391,10 +493,11 @@ function parseIfaceRange(tokens, device) {
 const HELP = {
 	user: ["enable           Turn on privileged commands", "ping             Send echo messages", "show             Show running system information", "traceroute       Trace route to destination"],
 	priv: ["configure        Enter configuration mode", "copy             Copy from one file to another", "disable          Turn off privileged commands", "ping             Send echo messages", "show             Show running system information", "traceroute       Trace route to destination", "write            Write running configuration to memory"],
-	config: ["do               Run an exec-level command", "enable           Modify enable password parameters", "end              Exit to privileged mode", "exit             Exit from configure mode", "hostname         Set system's network name", "interface        Select an interface or interface range", "ip               Global IP configuration subcommands (ip route)", "lldp             Global LLDP configuration", "no               Negate a command", "vlan             Configure a VLAN"],
-	"config-if": ["channel-group    Configure LACP EtherChannel", "description      Interface specific description", "do               Run an exec-level command", "end              Exit to privileged mode", "exit             Exit from interface configuration mode", "ip               Interface IP config commands (ip address)", "ipv6             IPv6 interface configuration", "lldp             Configure LLDP on the interface", "no               Negate a command", "shutdown         Shutdown the selected interface", "switchport       Configure switch port mode and VLANs"],
+	config: ["access-list      Configure a numbered standard ACL", "do               Run an exec-level command", "enable           Modify enable password parameters", "end              Exit to privileged mode", "exit             Exit from configure mode", "hostname         Set system's network name", "interface        Select an interface or interface range", "ip               Global IP configuration subcommands (ip route)", "lldp             Global LLDP configuration", "no               Negate a command", "router           Enable a routing process", "vlan             Configure a VLAN"],
+	"config-if": ["channel-group    Configure LACP EtherChannel", "description      Interface specific description", "do               Run an exec-level command", "end              Exit to privileged mode", "exit             Exit from interface configuration mode", "ip               Interface IP config commands (ip address, access-group, ospf priority)", "ipv6             IPv6 interface configuration", "lldp             Configure LLDP on the interface", "no               Negate a command", "shutdown         Shutdown the selected interface", "switchport       Configure switch port mode and VLANs"],
 	"config-if-range": ["channel-group    Configure LACP EtherChannel", "description      Interface specific description", "do               Run an exec-level command", "end              Exit to privileged mode", "exit             Exit from interface configuration mode", "lldp             Configure LLDP on the interface range", "no               Negate a command", "switchport       Configure switch port mode and VLANs"],
 	"config-vlan": ["end              Exit to privileged mode", "exit             Exit from VLAN configuration mode", "name             Assign a name to the VLAN"],
+	"config-router": ["end              Exit to privileged mode", "exit             Exit from routing protocol configuration mode", "network          Enable OSPF on matching interfaces", "router-id        Set the OSPF router ID"],
 };
 
 function tokenStart(line, tokenIndex) {
@@ -418,6 +521,7 @@ export function promptFor(state, devName) {
 		"config-if": `${h}(config-if)#`,
 		"config-if-range": `${h}(config-if-range)#`,
 		"config-vlan": `${h}(config-vlan)#`,
+		"config-router": `${h}(config-router)#`,
 	}[mode];
 }
 
@@ -518,6 +622,8 @@ export function execute(lab, prev, devName, line) {
 			} else if (mode === "config-vlan") {
 				con.mode = "config";
 				con.vlan = null;
+			} else if (mode === "config-router") {
+				con.mode = "config";
 			} else con.mode = "priv";
 		} else if (mode === "config" && d.kind === "switch" && kw(tk[0], "vlan", 2)) {
 			if (!/^\d+$/.test(tk[1] ?? "") || Number(tk[1]) < 1 || Number(tk[1]) > 4094) {
@@ -534,6 +640,48 @@ export function execute(lab, prev, devName, line) {
 			}
 		} else if (mode === "config" && d.kind === "switch" && kw(tk[0], "lldp", 2) && kw(tk[1], "run", 2)) {
 			d.lldpEnabled = !neg;
+		} else if (mode === "config" && d.kind === "router" && kw(tk[0], "access-list", 7)) {
+			const aclId = tk[1];
+			const action = tk[2]?.toLowerCase();
+			let source;
+			let wildcard;
+			if (!/^\d+$/.test(aclId ?? "") || Number(aclId) < 1 || Number(aclId) > 99 ||
+				!["permit", "deny"].includes(action)) {
+				incomplete();
+			} else if (kw(tk[3], "any", 3)) {
+				source = "0.0.0.0";
+				wildcard = "255.255.255.255";
+			} else if (kw(tk[3], "host", 2)) {
+				if (!isIp(tk[4])) invalidAt((neg ? 1 : 0) + 4);
+				else {
+					source = tk[4];
+					wildcard = "0.0.0.0";
+				}
+			} else if (isIp(tk[3]) && isIp(tk[4])) {
+				source = tk[3];
+				wildcard = tk[4];
+			} else {
+				incomplete();
+			}
+			if (source && wildcard) {
+				const entries = d.accessLists[aclId] || [];
+				if (neg) {
+					const index = entries.findIndex((entry) => entry.action === action &&
+						entry.source === source && entry.wildcard === wildcard);
+					if (index >= 0) entries.splice(index, 1);
+					if (entries.length) d.accessLists[aclId] = entries;
+					else delete d.accessLists[aclId];
+				} else {
+					d.accessLists[aclId] = [...entries, { action, source, wildcard }];
+				}
+			}
+		} else if (mode === "config" && d.kind === "router" && kw(tk[0], "router", 3) && kw(tk[1], "ospf", 4)) {
+			const processId = Number(tk[2]);
+			if (!Number.isInteger(processId) || processId < 1 || processId > 65535) incomplete();
+			else {
+				d.ospf = { processId, routerId: d.ospf?.routerId || "", networks: d.ospf?.networks || [] };
+				con.mode = "config-router";
+			}
 		} else if (mode === "config-vlan" && kw(tk[0], "name", 2)) {
 			if (neg) d.vlans[con.vlan] = "";
 			else if (!tk[1]) incomplete();
@@ -575,6 +723,27 @@ export function execute(lab, prev, devName, line) {
 				d.routes = d.routes.filter((r) => !(r.net === net && r.mask === mask && r.via === via));
 				d.routes.push({ net, mask, via, ad });
 			}
+		} else if (mode === "config-router" && kw(tk[0], "router-id", 6)) {
+			if (neg) d.ospf.routerId = "";
+			else if (!isIp(tk[1])) incomplete();
+			else d.ospf.routerId = tk[1];
+		} else if (mode === "config-router" && kw(tk[0], "network", 2)) {
+			const [, net, wildcard, areaKeyword, area] = tk;
+			if (!isIp(net) || !isIp(wildcard) || !kw(areaKeyword, "area", 2) ||
+				!(isIp(area) || /^\d+$/.test(area ?? ""))) {
+				incomplete();
+			} else {
+				const entry = { net, wildcard, area };
+				if (neg) {
+					d.ospf.networks = d.ospf.networks.filter((item) => (
+						item.net !== net || item.wildcard !== wildcard || item.area !== area
+					));
+				} else if (!d.ospf.networks.some((item) => (
+					item.net === net && item.wildcard === wildcard && item.area === area
+				))) {
+					d.ospf.networks.push(entry);
+				}
+			}
 		} else if (mode === "config-if" && kw(tk[0], "ip", 2) && kw(tk[1], "address", 3)) {
 			const i = d.interfaces[con.iface];
 			if (neg) {
@@ -587,6 +756,18 @@ export function execute(lab, prev, devName, line) {
 				i.ip = tk[2];
 				i.mask = tk[3];
 			}
+		} else if (mode === "config-if" && d.kind === "router" && kw(tk[0], "ip", 2) &&
+			kw(tk[1], "access-group", 6)) {
+			const aclId = tk[2];
+			const direction = tk[3]?.toLowerCase();
+			if (!/^\d+$/.test(aclId ?? "") || !["in", "out"].includes(direction)) incomplete();
+			else if (neg) delete d.interfaces[con.iface].accessGroups[direction];
+			else d.interfaces[con.iface].accessGroups[direction] = Number(aclId);
+		} else if (mode === "config-if" && d.kind === "router" && kw(tk[0], "ip", 2) &&
+			kw(tk[1], "ospf", 4) && kw(tk[2], "priority", 4)) {
+			const priority = Number(tk[3]);
+			if (!Number.isInteger(priority) || priority < 0 || priority > 255) incomplete();
+			else d.interfaces[con.iface].ospfPriority = neg ? 1 : priority;
 		} else if (mode === "config-if" && kw(tk[0], "ipv6", 4) && kw(tk[1], "address", 3)) {
 			const i = d.interfaces[con.iface];
 			if (neg) i.ipv6 = "";

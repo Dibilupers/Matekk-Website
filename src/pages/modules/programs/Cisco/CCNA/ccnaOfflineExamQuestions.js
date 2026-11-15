@@ -5,8 +5,22 @@ import { findCcnaQuestionExplanation } from "../../../../../utils/ccnaQuestionEx
 import { isValidQuestion } from "../../../../../utils/ccnaExamGrading";
 import { splitPromptExhibit } from "../../../../../utils/splitPromptExhibit";
 import { parseFormattedOptions } from "./ccnaExamQuestionFormatting";
+import {
+  CCNA_AFTER_EXHIBITS,
+  getBundledCcnaAfterExhibitImage,
+} from "../../../../../utils/ccnaAfterExhibits";
 
 const CONNECT_DOTS_LEGACY_QUESTION_INDEX = 654;
+
+const AFTER_EXHIBITS_BY_LEGACY_INDEX = new Map();
+for (const exhibit of CCNA_AFTER_EXHIBITS) {
+  if (!exhibit.after_exhibit_text?.trim() && !exhibit.after_exhibit_image_url) continue;
+  if (!Number.isSafeInteger(exhibit.offlineLegacyIndex)) continue;
+  const current = AFTER_EXHIBITS_BY_LEGACY_INDEX.get(exhibit.offlineLegacyIndex);
+  if (!current || exhibit.preferredOfflineMatch) {
+    AFTER_EXHIBITS_BY_LEGACY_INDEX.set(exhibit.offlineLegacyIndex, exhibit);
+  }
+}
 
 const NUMBERED_QUESTION_EXHIBIT_IMAGES = import.meta.glob(
   "../../../../../assets/ccna-offline-exams-images/ccna-question-*.png",
@@ -149,6 +163,31 @@ const OFFLINE_LEGACY_QUESTION_IMAGE_IDS = new Map([
 ]);
 
 const OFFLINE_LEGACY_QUESTION_OVERRIDES = new Map([
+  [266, {
+    choices: [
+      "route source",
+      "administrative distance",
+      "metric",
+      "timestamp",
+      "outbound interface",
+      "next-hop interface",
+      "subnet mask",
+    ],
+  }],
+  [617, {
+    type: "match",
+    items: ["DC-1 Gi1/0", "DC-1 Gi1/1", "DC-1 Gi1/2", "HQ-1 Gi1/3"],
+    choices: [
+      "ip address 192.168.4.13 255.255.255.240",
+      "ip address 209.165.202.129 255.255.255.252",
+      "ip address 209.165.202.130 255.255.255.252",
+      "ip address 209.165.202.131 255.255.255.252",
+      "ip address 192.168.3.14 255.255.255.240",
+      "ip address 192.168.4.9 255.255.255.248",
+      "ip address 192.168.3.14 255.255.255.248",
+    ],
+    answer: [2, 5, 4, 6],
+  }],
   [382, {
     prompt: "An engineer must configure GigabitEthernet1/1 to accommodate voice and data traffic. Which configuration accomplishes this task?",
     options: [
@@ -271,8 +310,7 @@ const LEGACY_QUESTION_NATIVE_EXHIBITS = new Map([
   [617, { hideExhibitImage: true, removeExhibitLeadIn: true }],
   [282, {
     hideExhibitImage: true,
-    diagram: "static-nat-router-webserver",
-    exhibit: CCNA_RECREATED_TEXT_EXHIBITS.staticNat,
+    exhibit: CCNA_RECREATED_TEXT_EXHIBITS.patOverload,
   }],
   [700, { hideExhibitImage: true }],
   [926, { hideExhibitImage: true }],
@@ -302,6 +340,7 @@ const OFFLINE_LEGACY_QUESTIONS = CCNA_LEGACY_QUESTIONS
       ? NUMBERED_QUESTION_EXHIBITS.get(OFFLINE_LEGACY_QUESTION_IMAGE_IDS.get(question.legacyIndex))
       : undefined;
     const nativeExhibit = LEGACY_QUESTION_NATIVE_EXHIBITS.get(question.legacyIndex);
+    const afterExhibit = AFTER_EXHIBITS_BY_LEGACY_INDEX.get(question.legacyIndex);
     const promptNativeExhibit = applyNativeExhibit(question);
     const exhibitDiagram = (typeof nativeExhibit === "string" ? nativeExhibit : nativeExhibit?.diagram) ??
       promptNativeExhibit.exhibitDiagram;
@@ -326,6 +365,20 @@ const OFFLINE_LEGACY_QUESTIONS = CCNA_LEGACY_QUESTIONS
       ...(hideExhibitImage ? { hideExhibitImage: true } : {}),
       ...(exhibitDiagram ? { exhibitDiagram } : {}),
       ...(exhibit ? { exhibit } : {}),
+      ...(afterExhibit
+        ? {
+            afterExhibit: {
+              title: afterExhibit.after_exhibit_title,
+              text: afterExhibit.after_exhibit_text,
+              comparisonNo: afterExhibit.comparison_no,
+              imageUrl: getBundledCcnaAfterExhibitImage(afterExhibit.question_id),
+              questionId: afterExhibit.question_id,
+            },
+            exhibit: undefined,
+            exhibitImage: undefined,
+            hideExhibitImage: true,
+          }
+        : {}),
       ...(question.type === "match" &&
       question.items?.length === question.choices?.length &&
       question.answer?.length === question.items.length &&
@@ -353,6 +406,7 @@ const OFFLINE_LEGACY_QUESTIONS = CCNA_LEGACY_QUESTIONS
       question.exhibit ||
       question.exhibitImage ||
       question.exhibitDiagram ||
+      question.afterExhibit ||
       question.hideExhibitImage),
   );
 

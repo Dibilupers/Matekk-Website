@@ -316,10 +316,10 @@ test("attaches recreated exhibits to recovered CCNA matching questions that need
   assert.ok(isValidQuestion(question));
 });
 
-test("recreates the WLC security exhibit for question 1012 instead of showing its source image", () => {
+test("recreates the source-matching WLC security exhibit for question 1012", () => {
   const question = applyNativeExhibit({ bankId: 1012 });
 
-  assert.equal(question.exhibitDiagram, "wlc-security-tab");
+  assert.equal(question.exhibitDiagram, "wlc-security-tab-legacy");
   assert.equal(question.exhibitImage, undefined);
   const offlineQuestion = getOfflineLegacyQuestionBank().find((entry) => entry.legacyIndex === 1301);
   assert.ok(offlineQuestion);
@@ -350,29 +350,34 @@ test("replaces recreated matching-activity screenshots with their existing inter
   assert.equal(applyNativeExhibit({ bankId: 1305 }).hideExhibitImage, true);
   assert.equal(applyNativeExhibit({ bankId: 1317 }).nativeExhibitText, true);
   assert.equal(applyNativeExhibit({ bankId: 1321 }).hideExhibitImage, true);
-  assert.equal(applyNativeExhibit({ bankId: 1321 }).exhibitDiagram, "static-nat-router-webserver");
+  assert.equal(applyNativeExhibit({ bankId: 1321 }).exhibitDiagram, undefined);
+  assert.match(applyNativeExhibit({ bankId: 1321 }).exhibit, /ip nat inside source list 1 interface Gi0\/1 overload/);
 
   for (const legacyIndex of [266, 267, 278, 282, 498, 617, 700, 759, 926]) {
     const question = getOfflineLegacyQuestionBank().find((entry) => entry.legacyIndex === legacyIndex);
     assert.ok(question, `offline question ${legacyIndex} should remain available`);
     assert.equal(question.hideExhibitImage, true, `offline question ${legacyIndex} should hide the duplicate activity image`);
   }
+  const offlineQuestion299 = getOfflineLegacyQuestionBank().find((entry) => entry.legacyIndex === 617);
+  assert.equal(offlineQuestion299.type, "match");
+  assert.deepEqual(offlineQuestion299.items, ["DC-1 Gi1/0", "DC-1 Gi1/1", "DC-1 Gi1/2", "HQ-1 Gi1/3"]);
+  assert.deepEqual(offlineQuestion299.answer, [2, 5, 4, 6]);
+  assert.equal(offlineQuestion299.choices.length, 7);
+  assert.equal(getOfflineLegacyQuestionBank().find((entry) => entry.legacyIndex === 266).choices.length, 7);
   assert.equal(
     getOfflineLegacyQuestionBank().find((entry) => entry.legacyIndex === 759).exhibitDiagram,
     "routing-protocols-prefix",
   );
-  assert.equal(
-    getOfflineLegacyQuestionBank().find((entry) => entry.legacyIndex === 266).exhibit?.includes("10.0.0.0/8 is variably subnetted"),
-    true,
-  );
+  const question1305 = getOfflineLegacyQuestionBank().find((entry) => entry.legacyIndex === 266);
+  assert.equal(question1305.afterExhibit.questionId, 1305);
+  assert.match(question1305.afterExhibit.imageUrl, /ccna-after-exhibit-1305\.png$/);
   assert.match(
-    getOfflineLegacyQuestionBank().find((entry) => entry.legacyIndex === 278).exhibit,
+    getOfflineLegacyQuestionBank().find((entry) => entry.legacyIndex === 278).afterExhibit.text,
     /192\.168\.1\.20 \(Preferred\)/,
   );
-  assert.equal(
-    getOfflineLegacyQuestionBank().find((entry) => entry.legacyIndex === 282).exhibitDiagram,
-    "static-nat-router-webserver",
-  );
+  const offlinePatQuestion = getOfflineLegacyQuestionBank().find((entry) => entry.legacyIndex === 282);
+  assert.equal(offlinePatQuestion.exhibitDiagram, undefined);
+  assert.match(offlinePatQuestion.exhibit, /ip nat inside source list 1 interface Gi0\/1 overload/);
 });
 
 test("keeps the Router1 routing-method question prompt and matching controls while replacing its screenshot with a topology", () => {
@@ -407,6 +412,14 @@ test("restores the four omitted matching rows so the merged CCNA exam reaches 1,
       module: "CCNA Part 9",
       topic: "Routing",
     }));
+  const signedAfterExhibitUrl = "https://example.com/storage/ccna-after-exhibit-23.png?token=short-lived";
+  usableQuestions[22].afterExhibit = {
+    questionId: 23,
+    title: "HEADQUARTERS SPANNING-TREE TOPOLOGY",
+    text: "",
+    comparisonNo: 10,
+    imageUrl: signedAfterExhibitUrl,
+  };
   const omittedRows = [
     rawRow(181, "Drag and drop the Rapid PVST+ forwarding state actions from the left."),
     rawRow(382, "Drag and drop the Ansible features from the left to the right."),
@@ -436,6 +449,14 @@ test("restores the four omitted matching rows so the merged CCNA exam reaches 1,
   assert.equal(result.skippedCount, 0);
   const cachedQuestions = await loadCachedCcnaAllQuestionsBank();
   assert.equal(cachedQuestions.length, 1367);
+  assert.equal(
+    result.questions.find((question) => question.bankId === 23).afterExhibit.imageUrl,
+    signedAfterExhibitUrl,
+  );
+  assert.match(
+    cachedQuestions.find((question) => question.bankId === 23).afterExhibit.imageUrl,
+    /ccna-after-exhibit-23\.png$/,
+  );
   assert.deepEqual(
     cachedQuestions.map((question) => question.bankId),
     result.questions.map((question) => question.bankId),
@@ -569,6 +590,79 @@ test("marks the recreated matching activity screenshot to stay hidden", () => {
   assert.equal(question.type, "match");
   assert.equal(question.hideExhibitImage, true);
   assert.ok(question.exhibitImage);
+});
+
+test("uses a corrected after exhibit instead of the original bank exhibit", () => {
+  const { question } = convertBankRow({
+    ...rawRow(23, "Refer to the exhibit. Which switch is the root bridge?"),
+    imageUrl: "https://example.com/questions/ccna-question-23.png",
+    afterExhibitTitle: "HEADQUARTERS SPANNING-TREE TOPOLOGY",
+    afterExhibitText: "Switch 1 connects HQ1 and Switch 2.",
+    afterExhibitComparisonNo: 10,
+  });
+
+  assert.equal(question.afterExhibit.title, "HEADQUARTERS SPANNING-TREE TOPOLOGY");
+  assert.equal(question.afterExhibit.text, "Switch 1 connects HQ1 and Switch 2.");
+  assert.equal(question.afterExhibit.comparisonNo, 10);
+  assert.equal(question.exhibit, undefined);
+  assert.equal(question.exhibitImage, undefined);
+  assert.equal(question.hideExhibitImage, true);
+});
+
+test("keeps image-only corrected exhibits renderable without a legacy image", () => {
+  const { question, problem } = convertBankRow({
+    ...rawRow(70, "Refer to the exhibit. Which switch has the root role?"),
+    imageUrl: null,
+    afterExhibitImageUrl: "https://example.com/questions/ccna-after-exhibit-70.png",
+    afterExhibitComparisonNo: 12,
+  });
+
+  assert.equal(problem, undefined);
+  assert.equal(question.afterExhibit.imageUrl, "https://example.com/questions/ccna-after-exhibit-70.png");
+  assert.equal(question.exhibitImage, undefined);
+});
+
+test("adds corrected exhibits to the bundled offline legacy question", () => {
+  const question = getOfflineLegacyQuestionBank().find(
+    (entry) => entry.afterExhibit?.comparisonNo === 10,
+  );
+
+  assert.ok(question);
+  assert.equal(question.afterExhibit.title, "HEADQUARTERS SPANNING-TREE TOPOLOGY");
+  assert.equal(question.hideExhibitImage, true);
+  assert.equal(question.exhibitImage, undefined);
+});
+
+test("uses the corrected PDF panel image for an offline image-only exhibit", () => {
+  const question = getOfflineLegacyQuestionBank().find(
+    (entry) => entry.afterExhibit?.comparisonNo === 9,
+  );
+
+  assert.ok(question);
+  assert.match(question.afterExhibit.imageUrl, /ccna-after-exhibit-441\.png$/);
+  assert.equal(question.hideExhibitImage, true);
+});
+
+test("includes the corrected PDF panel image for question 1305 offline", () => {
+  const question = getOfflineLegacyQuestionBank().find(
+    (entry) => entry.afterExhibit?.questionId === 1305,
+  );
+
+  assert.ok(question);
+  assert.match(question.afterExhibit.imageUrl, /ccna-after-exhibit-1305\.png$/);
+  assert.equal(question.hideExhibitImage, true);
+});
+
+test("includes a redacted screenshot for question 1317 in the bundled after exhibits", () => {
+  const question = getOfflineLegacyQuestionBank().find(
+    (entry) => entry.afterExhibit?.comparisonNo === 7,
+  );
+
+  assert.ok(question);
+  assert.match(question.afterExhibit.imageUrl, /ccna-after-exhibit-1317\.png$/);
+  assert.match(question.afterExhibit.text, /CCNA-LAB/);
+  assert.doesNotMatch(question.afterExhibit.text, /Physical Address[^\n]*[0-9a-f]{2}[:-]/i);
+  assert.doesNotMatch(question.afterExhibit.text, /Host Name.*JAS/i);
 });
 
 test("offline timed CCNA formats sample their existing lengths from the cached shared bank", () => {

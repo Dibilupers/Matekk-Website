@@ -9,8 +9,7 @@ import { isAnswerCorrect, isQuestionAnswered } from "../../../../../utils/ccnaEx
 import { isCcnaQuestionModule } from "../../../../../utils/ccnaQuestionModule";
 import { loadCcnaAllQuestionsBank } from "../../../../../utils/ccnaQuestionBankApi";
 import { loadCachedCcnaAllQuestionsBank } from "../../../../../utils/ccnaOfflineQuestionBank";
-import { ExhibitDiagram, ExhibitImage, ExhibitText } from "./ccnaExhibit";
-import { QuestionInput, QuestionPrompt, QuestionReview } from "./ccnaExamQuestionViews";
+import { QuestionExhibits, QuestionInput, QuestionPrompt, QuestionReview } from "./ccnaExamQuestionViews";
 import { applyNativeExhibit } from "./ccnaCompositeSetQuestions";
 import { getOfflineLegacyQuestionBank } from "./ccnaOfflineExamQuestions";
 
@@ -455,12 +454,10 @@ export default function CCNAAllQuestionsExam() {
 								<QuestionPrompt
 									prompt={question.prompt}
 									offline={!isOnline}
-									hasSeparateExhibit={Boolean(question.exhibit || question.exhibitImage || question.exhibitDiagram)}
+									hasSeparateExhibit={Boolean(question.afterExhibit || question.exhibit || question.exhibitImage || question.exhibitDiagram)}
 								/>
 							)}
-							{question.exhibitDiagram && <ExhibitDiagram type={question.exhibitDiagram} className="mb-6" />}
-							{question.exhibitImage && !question.hideExhibitImage && <ExhibitImage src={question.exhibitImage} className="mb-6" imageClassName="max-h-[32rem]" cropTop={question.exhibitImageCropTop} />}
-							{question.exhibit && <ExhibitText text={question.exhibit} className="mb-6" />}
+							<QuestionExhibits question={question} className="mb-6" />
 							<QuestionInput
 								key={currentIndex}
 								question={question}
@@ -607,12 +604,10 @@ export default function CCNAAllQuestionsExam() {
 								<QuestionPrompt
 									prompt={question.prompt}
 									offline={!isOnline}
-									hasSeparateExhibit={Boolean(question.exhibit || question.exhibitImage || question.exhibitDiagram)}
+									hasSeparateExhibit={Boolean(question.afterExhibit || question.exhibit || question.exhibitImage || question.exhibitDiagram)}
 								/>
 							)}
-							{question.exhibitDiagram && <ExhibitDiagram type={question.exhibitDiagram} className="mt-4" />}
-							{question.exhibitImage && !question.hideExhibitImage && <ExhibitImage src={question.exhibitImage} className="mb-6" imageClassName="max-h-[32rem]" cropTop={question.exhibitImageCropTop} />}
-							{question.exhibit && <ExhibitText text={question.exhibit} className="mb-6" />}
+							<QuestionExhibits question={question} className="mb-6" />
 							<QuestionReview question={question} value={answers[currentIndex]} />
 							{question.explanation && <p className="mt-5 rounded-xl bg-[#f5f9f9] px-4 py-3 text-sm leading-6 text-[#596983]"><strong className="text-[#005b6b]">Explanation: </strong>{question.explanation}</p>}
 							<div className={`mt-7 flex flex-wrap gap-3 ${isOnline ? "justify-between" : "justify-end"}`}>

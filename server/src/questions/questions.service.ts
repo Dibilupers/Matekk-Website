@@ -19,6 +19,12 @@ const EXAM_CONFIG = {
 } as const;
 
 type ExamKey = keyof typeof EXAM_CONFIG;
+type AfterExhibit = {
+  title: string | null;
+  text: string;
+  comparisonNo: number | null;
+  imageUrl: string | null;
+};
 type ExamQuestionBase = {
   id: number;
   prompt: string;
@@ -69,29 +75,22 @@ type CompTIAStudyQuestion = {
   module: string | null;
   topic: string | null;
 };
+type QuestionBankMetadata = {
+  bankId: number;
+  explanation: string;
+  source: 'question-bank';
+  afterExhibit?: AfterExhibit;
+};
 type UsableBankQuestion =
-  | (SingleExamQuestion & {
-      bankId: number;
+  | ((SingleExamQuestion & {
       answer: number;
-      explanation: string;
-      source: 'question-bank';
     })
   | (MatchExamQuestion & {
-      bankId: number;
       answer: number[];
-      explanation: string;
-      source: 'question-bank';
     })
-  | (CompTIAMultiQuestion & {
-      bankId: number;
-      explanation: string;
-      source: 'question-bank';
-    })
-  | ((CompTIATextQuestion | CompTIAStudyQuestion) & {
-      bankId: number;
-      explanation: string;
-      source: 'question-bank';
-    });
+  | CompTIAMultiQuestion
+  | CompTIATextQuestion
+  | CompTIAStudyQuestion) & QuestionBankMetadata;
 
 function isSingleChoiceQuestionType(questionType: string | null | undefined) {
   const normalizedType = questionType?.trim().toLocaleLowerCase().replace(/[\s-]+/g, '_');
@@ -976,18 +975,29 @@ export class QuestionsService {
         question_type: true,
         match_items: true,
         imageUrl: true,
+        afterExhibitComparisonNo: true,
+        afterExhibitOriginalStatus: true,
+        afterExhibitTitle: true,
+        afterExhibitText: true,
+        afterExhibitImageUrl: true,
+        afterExhibitNeedsCheck: true,
+        afterExhibitCheckNote: true,
       },
       orderBy: { id: 'asc' },
     });
     const imagePaths = [...new Set(rows.flatMap((row) => {
-      const imageUrl = row.imageUrl;
-      return imageUrl && !/^https?:\/\//i.test(imageUrl) ? [imageUrl] : [];
+      return [row.imageUrl, row.afterExhibitImageUrl].filter(
+        (imageUrl): imageUrl is string => Boolean(imageUrl && !/^https?:\/\//i.test(imageUrl)),
+      );
     }))];
     const signedUrls = await this.storage.createSignedQuestionImageUrls(imagePaths);
 
     return rows.map((row) => ({
       ...row,
       imageUrl: row.imageUrl ? signedUrls.get(row.imageUrl) ?? row.imageUrl : null,
+      afterExhibitImageUrl: row.afterExhibitImageUrl
+        ? signedUrls.get(row.afterExhibitImageUrl) ?? row.afterExhibitImageUrl
+        : null,
     }));
   }
 
@@ -1007,6 +1017,16 @@ export class QuestionsService {
         bankId: row.id,
         explanation: row.explanation,
         source: 'question-bank' as const,
+        ...(row.afterExhibitText?.trim() || row.afterExhibitImageUrl
+          ? {
+              afterExhibit: {
+                title: row.afterExhibitTitle,
+                text: row.afterExhibitText ?? '',
+                comparisonNo: row.afterExhibitComparisonNo,
+                imageUrl: row.afterExhibitImageUrl,
+              },
+            }
+          : {}),
       };
 
       if (!question) {

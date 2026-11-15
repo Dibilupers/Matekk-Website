@@ -5,6 +5,7 @@ import { convertBank } from "./ccnaBankConverter";
 import { isValidQuestion } from "./ccnaExamGrading";
 import { isCcnaQuestionModule } from "./ccnaQuestionModule";
 import { cacheCcnaAllQuestionsBank } from "./ccnaOfflineQuestionBank";
+import { getBundledCcnaAfterExhibitImage } from "./ccnaAfterExhibits";
 
 let cached = null; // { questions, problems }
 let pending = null;
@@ -54,7 +55,13 @@ export function loadCcnaAllQuestionsBank() {
       });
       const questions = [...questionsById.values()];
       try {
-        await cacheCcnaAllQuestionsBank(questions);
+        const offlineQuestions = questions.map((question) => {
+          const imageUrl = getBundledCcnaAfterExhibitImage(question.bankId);
+          return question.afterExhibit && imageUrl
+            ? { ...question, afterExhibit: { ...question.afterExhibit, imageUrl } }
+            : question;
+        });
+        await cacheCcnaAllQuestionsBank(offlineQuestions);
       } catch (error) {
         console.warn("Unable to save the complete CCNA question bank for offline use.", error);
       }

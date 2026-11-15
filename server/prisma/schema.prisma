@@ -119,6 +119,13 @@ model Questions {
   question_type  String @default("single")
   match_items    Json?  @db.JsonB
   imageUrl       String?
+  afterExhibitComparisonNo  Int?
+  afterExhibitOriginalStatus String?
+  afterExhibitTitle         String?
+  afterExhibitText          String?  @db.Text
+  afterExhibitImageUrl      String?
+  afterExhibitNeedsCheck    Boolean  @default(false)
+  afterExhibitCheckNote     String?
 }
 
 model Program {

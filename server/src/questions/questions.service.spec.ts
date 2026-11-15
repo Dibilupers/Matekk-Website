@@ -121,6 +121,7 @@ describe('QuestionsService', () => {
       question_type: 'single',
       match_items: null,
       imageUrl: null,
+      afterExhibitImageUrl: null,
     }));
     prismaMock.questions.findMany.mockResolvedValue(rows);
 
@@ -143,6 +144,10 @@ describe('QuestionsService', () => {
         question_type: 'single',
         match_items: null,
         imageUrl: null,
+        afterExhibitTitle: 'R1 ROUTING TABLE',
+        afterExhibitText: 'R1 reaches network 10.1.1.0/24.',
+        afterExhibitComparisonNo: 10,
+        afterExhibitImageUrl: 'questions/ccna-after-exhibit-1.png',
       },
       {
         id: 2,
@@ -175,7 +180,17 @@ describe('QuestionsService', () => {
     expect(questions).toHaveLength(2);
     expect(skippedCount).toBe(1);
     expect(questions).toEqual(expect.arrayContaining([
-      expect.objectContaining({ bankId: 1, answer: 1, type: 'single' }),
+      expect.objectContaining({
+        bankId: 1,
+        answer: 1,
+        type: 'single',
+        afterExhibit: {
+          title: 'R1 ROUTING TABLE',
+          text: 'R1 reaches network 10.1.1.0/24.',
+          comparisonNo: 10,
+          imageUrl: 'questions/ccna-after-exhibit-1.png',
+        },
+      }),
       expect.objectContaining({ bankId: 3, answer: [1, 0], type: 'match' }),
     ]));
   });
@@ -1204,13 +1219,18 @@ describe('QuestionsService', () => {
       correct_answer: 'A',
       explanation: '',
       imageUrl: 'questions/ccna-question-1.png',
+      afterExhibitImageUrl: 'questions/ccna-after-exhibit-1.png',
     };
     const signedUrl = 'https://example.supabase.co/storage/v1/object/sign/question-images/questions/ccna-question-1.png?token=test';
+    const signedAfterExhibitUrl = 'https://example.supabase.co/storage/v1/object/sign/question-images/questions/ccna-after-exhibit-1.png?token=after-test';
     const prisma = {
       questions: { findMany: vi.fn().mockResolvedValue([row]) },
     };
     const storage = {
-      createSignedQuestionImageUrls: vi.fn().mockResolvedValue(new Map([[row.imageUrl, signedUrl]])),
+      createSignedQuestionImageUrls: vi.fn().mockResolvedValue(new Map([
+        [row.imageUrl, signedUrl],
+        [row.afterExhibitImageUrl, signedAfterExhibitUrl],
+      ])),
     };
     const module = await Test.createTestingModule({
       providers: [
@@ -1226,7 +1246,14 @@ describe('QuestionsService', () => {
 
     const questionsService = module.get<QuestionsService>(QuestionsService);
 
-    await expect(questionsService.findBank()).resolves.toEqual([{ ...row, imageUrl: signedUrl }]);
-    expect(storage.createSignedQuestionImageUrls).toHaveBeenCalledWith([row.imageUrl]);
+    await expect(questionsService.findBank()).resolves.toEqual([{
+      ...row,
+      imageUrl: signedUrl,
+      afterExhibitImageUrl: signedAfterExhibitUrl,
+    }]);
+    expect(storage.createSignedQuestionImageUrls).toHaveBeenCalledWith([
+      row.imageUrl,
+      row.afterExhibitImageUrl,
+    ]);
   });
 });

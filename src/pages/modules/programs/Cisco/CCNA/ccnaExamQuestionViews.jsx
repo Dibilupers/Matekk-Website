@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { groupCode, groupSizes, isValidQuestion, matchMode, parseGroupCode, questionType, requiredSelections } from "../../../../../utils/ccnaExamGrading";
 import { getDisplayedOption, getOptionTableExhibit, parseFormattedOptions } from "./ccnaExamQuestionFormatting";
-import { ExhibitImage, ExhibitText } from "./ccnaExhibit";
+import { ExhibitDiagram, ExhibitImage, ExhibitText } from "./ccnaExhibit";
 import { looksLikeCode, tidySentence } from "../../../../../utils/answerTextStyle";
 import {
 	removeDuplicateExhibitLeadIn,
@@ -520,6 +520,49 @@ export function QuestionPrompt({
 				</section>
 			)}
 		</div>
+	);
+}
+
+export function QuestionExhibits({ question, className = "mb-6" }) {
+	if (question.afterExhibit) {
+		if (question.afterExhibit.imageUrl) {
+			return (
+				<div className={className}>
+					<ExhibitImage
+						src={question.afterExhibit.imageUrl}
+						alt=""
+						imageClassName="max-h-[min(70vh,44rem)]"
+					/>
+					<div className="sr-only">
+						<h3>{question.afterExhibit.title || `After exhibit for question ${question.afterExhibit.questionId}`}</h3>
+						<p>{question.afterExhibit.text}</p>
+					</div>
+				</div>
+			);
+		}
+		return (
+			<section aria-label="After exhibit" className={`overflow-hidden rounded-xl border border-[#d6e5e7] bg-white ${className}`}>
+				<div className="border-b border-[#d6e5e7] bg-[#f7fbfa] px-4 py-3">
+					<p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#168264]">After · Fixed Exhibit</p>
+					{question.afterExhibit.title && (
+						<h3 className="mt-1 text-sm font-bold tracking-wide text-[#263654] sm:text-base">
+							{question.afterExhibit.title}
+						</h3>
+					)}
+				</div>
+				<pre className="max-h-[32rem] overflow-auto whitespace-pre-wrap break-words px-4 py-3 font-mono text-xs leading-6 text-[#263654] [overflow-wrap:anywhere] sm:text-sm">
+					{question.afterExhibit.text}
+				</pre>
+			</section>
+		);
+	}
+
+	return (
+		<>
+			{question.exhibitDiagram && <ExhibitDiagram type={question.exhibitDiagram} className={className} />}
+			{question.exhibitImage && !question.hideExhibitImage && <ExhibitImage src={question.exhibitImage} className={className} imageClassName="max-h-[32rem]" cropTop={question.exhibitImageCropTop} />}
+			{question.exhibit && <ExhibitText text={question.exhibit} className={className} />}
+		</>
 	);
 }
 
