@@ -27,15 +27,15 @@ const NUMBERED_QUESTION_EXHIBIT_IMAGES = import.meta.glob(
   { eager: true, import: "default", query: "?url" },
 );
 
-const NUMBERED_QUESTION_EXHIBITS = Object.entries(NUMBERED_QUESTION_EXHIBIT_IMAGES)
+const NUMBERED_QUESTION_EXHIBIT_VARIANTS = Object.entries(NUMBERED_QUESTION_EXHIBIT_IMAGES)
   .reduce((exhibits, [path, image]) => {
     const match = path.match(/ccna-question-(\d+)(-corrected)?\.png$/);
     if (!match) return exhibits;
 
     const questionNumber = Number(match[1]);
-    if (!exhibits.has(questionNumber) || match[2]) {
-      exhibits.set(questionNumber, image);
-    }
+    const variants = exhibits.get(questionNumber) ?? [];
+    variants.push({ image, corrected: Boolean(match[2]) });
+    exhibits.set(questionNumber, variants);
     return exhibits;
   }, new Map());
 
@@ -160,6 +160,24 @@ const OFFLINE_LEGACY_QUESTION_IMAGE_IDS = new Map([
   [282, 1321],
   [290, 1329],
   [291, 1330],
+  [161, 161],
+  [192, 192],
+  [193, 193],
+  [203, 203],
+  [345, 345],
+  [386, 386],
+  [387, 387],
+  [405, 405],
+  [1001, 1001],
+  [1084, 1084],
+  [1089, 1089],
+  [1108, 1108],
+  [1127, 1127],
+  [1148, 1148],
+  [1149, 1149],
+  [1167, 1167],
+  [1168, 1168],
+  [1199, 1199],
 ]);
 
 const OFFLINE_LEGACY_QUESTION_OVERRIDES = new Map([
@@ -336,9 +354,12 @@ const OFFLINE_LEGACY_QUESTIONS = CCNA_LEGACY_QUESTIONS
     const isConnectDotsQuestion = question.legacyIndex === CONNECT_DOTS_LEGACY_QUESTION_INDEX;
     const offlineOverride = OFFLINE_LEGACY_QUESTION_OVERRIDES.get(question.legacyIndex);
     const parsedAnswerTable = offlineOverride ? null : parseOfflineAnswerTable(question);
+    const numberedExhibitVariants =
+      NUMBERED_QUESTION_EXHIBIT_VARIANTS.get(OFFLINE_LEGACY_QUESTION_IMAGE_IDS.get(question.legacyIndex)) ?? [];
     const numberedExhibit = /\bexhibit\b/i.test(question.prompt)
-      ? NUMBERED_QUESTION_EXHIBITS.get(OFFLINE_LEGACY_QUESTION_IMAGE_IDS.get(question.legacyIndex))
+      ? numberedExhibitVariants.find(({ corrected }) => corrected)?.image ?? numberedExhibitVariants[0]?.image
       : undefined;
+    const offlineSourceExhibitImages = numberedExhibitVariants.map(({ image }) => image);
     const nativeExhibit = LEGACY_QUESTION_NATIVE_EXHIBITS.get(question.legacyIndex);
     const afterExhibit = AFTER_EXHIBITS_BY_LEGACY_INDEX.get(question.legacyIndex);
     const promptNativeExhibit = applyNativeExhibit(question);
@@ -362,6 +383,7 @@ const OFFLINE_LEGACY_QUESTIONS = CCNA_LEGACY_QUESTIONS
         ? { prompt: "Connect each Wi-Fi term on the left to its matching description on the right." }
         : {}),
       ...(exhibitImage ? { exhibitImage } : {}),
+      ...(offlineSourceExhibitImages.length ? { offlineSourceExhibitImages } : {}),
       ...(hideExhibitImage ? { hideExhibitImage: true } : {}),
       ...(exhibitDiagram ? { exhibitDiagram } : {}),
       ...(exhibit ? { exhibit } : {}),

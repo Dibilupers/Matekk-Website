@@ -34,6 +34,7 @@ import {
 import { readCcnaExamProgress, readCcnaShortExamProgress } from "../../../../../utils/ccnaShortExamSession";
 import { readCcnaMockExamResults } from "../../../../../utils/ccnaGradebook";
 import { CCNA_EXAMS } from "./ccnaExamFormats";
+import { CCNA_OFFLINE_EXHIBIT_QUESTIONS_ROUTE } from "../../../../../utils/examRoutes";
 import useGradebookQuizStats from "../../useGradebookQuizStats";
 import { getProfileDisplayName } from "../../../../../utils/profile";
 import ProgramBackgroundParticles from "../../ProgramBackgroundParticles";
@@ -54,6 +55,8 @@ const EXAM_FORMATS = [
 	{ name: "Long Exam", questions: CCNA_EXAMS.long.questionCount, duration: "2 hours", description: "A full-length practice session." },
 	{ name: "All Questions Exam", questions: "All", duration: "No time limit", description: "Every question from the Questions table, in random order." },
 ];
+const isLocalhost = typeof window !== "undefined" &&
+	["localhost", "127.0.0.1", "::1", "[::1]"].includes(window.location.hostname);
 function formatExamTime(totalSeconds) {
 	const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, "0");
 	const seconds = (totalSeconds % 60).toString().padStart(2, "0");
@@ -421,6 +424,14 @@ function ModuleCard({ module, index, openSection, onToggle, quizProgress, tutori
 
 export default function CCNA() {
 	const { profile, isOnline, isOfflinePinUnlocked } = useAuth();
+	const availableExamFormats = isLocalhost && !isOnline
+		? [...EXAM_FORMATS, {
+			name: "Exhibit Questions",
+			questions: "All",
+			duration: "No time limit",
+			description: "Practice every offline question that refers to an exhibit.",
+		}]
+		: EXAM_FORMATS;
 	const userId = profile?.userId;
 	const canTakeExamWithoutAccount = !isOnline && isOfflinePinUnlocked;
 	const canTakeExams = Boolean(userId) || canTakeExamWithoutAccount;
@@ -604,6 +615,10 @@ export default function CCNA() {
 		"All Questions Exam": {
 			path: "/modules/programs/ccna/exam/all",
 			summary: "Every question from the Questions table · Random order · No time limit",
+		},
+		"Exhibit Questions": {
+			path: CCNA_OFFLINE_EXHIBIT_QUESTIONS_ROUTE,
+			summary: "Offline questions that refer to an exhibit · Random order · No time limit",
 		},
 	};
 
@@ -1223,9 +1238,10 @@ export default function CCNA() {
 						</header>
 						<p className="mt-3 text-sm leading-6 text-[#71819b]">
 							The first three formats randomly select a set of questions. All Questions Exam goes through every question from the Questions table in random order, with no time limit.
+							{isLocalhost && !isOnline && " Exhibit Questions is available locally while offline and includes questions that refer to an exhibit."}
 						</p>
 						<div className="mt-6 grid gap-3 sm:grid-cols-2">
-							{EXAM_FORMATS.map((format) => {
+							{availableExamFormats.map((format) => {
 								const isSelected = selectedExamFormat === format.name;
 								const examRun = examRuns[format.name];
 								return (
@@ -1259,7 +1275,7 @@ export default function CCNA() {
 								);
 							})}
 						</div>
-						{selectedExamFormat && (
+						{selectedExamFormat && availableExamFormats.some((format) => format.name === selectedExamFormat) && (
 							<div className="mt-5 grid grid-cols-1 gap-3 rounded-xl bg-[#f5f9f9] p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
 								<div className="min-w-0 sm:pr-3">
 									<p className="text-sm text-[#526584]">{examRuns[selectedExamFormat]?.summary ?? `${selectedExamFormat} selected.`}</p>

@@ -25,6 +25,8 @@ import { applyNativeExhibit } from "./ccnaCompositeSetQuestions";
 import { createOfflineLegacyExamQuestions, getOfflineLegacyQuestionBank } from "./ccnaOfflineExamQuestions";
 import { resumeCcnaExam, startCcnaExam, submitCcnaExam } from "../../../../../utils/ccnaExamApi";
 const EXAM_PASS_PERCENTAGE = 80;
+const isLocalhost = typeof window !== "undefined" &&
+	["localhost", "127.0.0.1", "::1", "[::1]"].includes(window.location.hostname);
 const RECREATED_MATCH_EXHIBIT_QUESTION_IDS = new Set([570]);
 const isMatchingQuestion = (question) => ["match", "drag_drop", "click_boxes", "image"].includes(question?.type);
 const isRoutingProtocolComparisonQuestion = (question) =>
@@ -718,12 +720,14 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 		card.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
 	}, [currentIndex]);
 
-	function goToQuestion(index) {
+	function goToQuestion(index, { skipUnanswered = false } = {}) {
 		if (index < 0 || index >= questions.length) return;
 		if (
 			index < currentIndex ||
 			index > currentIndex + 1 ||
-			(index > currentIndex && !isQuestionAnswered(questions[currentIndex], answers[currentIndex]))
+			(index > currentIndex &&
+				!skipUnanswered &&
+				!isQuestionAnswered(questions[currentIndex], answers[currentIndex]))
 		) return;
 
 		if (index > currentIndex && isQuestionAnswered(questions[currentIndex], answers[currentIndex])) {
@@ -881,7 +885,17 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 									onChange={(value) => setAnswers((previous) => ({ ...previous, [currentIndex]: value }))}
 									disabled={Boolean(lockedQuestions[currentIndex])}
 								/>
-								<div className="mt-6 flex justify-end gap-3">
+								<div className="mt-6 flex flex-wrap justify-end gap-3">
+									{!isOnline && isLocalhost && currentIndex < questions.length - 1 && (
+										<button
+											type="button"
+											onClick={() => goToQuestion(currentIndex + 1, { skipUnanswered: true })}
+											disabled={isSubmitting}
+											className="rounded-full border border-[#c9dfe2] bg-white px-6 py-3 font-semibold text-[#005b6b] transition hover:bg-[#e8f3f4] disabled:cursor-not-allowed disabled:opacity-40"
+										>
+											Skip question
+										</button>
+									)}
 									<button
 										type="button"
 										onClick={() => currentIndex === questions.length - 1 ? submitExam() : goToQuestion(currentIndex + 1)}

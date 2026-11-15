@@ -8,6 +8,7 @@ const ROUTABLE_PROGRAMS = new Set([
 ]);
 
 export const LEGACY_CCNA_ALL_QUESTIONS_ROUTE = "/modules/programs/ccna/exam/all_questions";
+export const CCNA_OFFLINE_EXHIBIT_QUESTIONS_ROUTE = "/modules/programs/ccna/exam/offline_exhibits";
 
 export function getExamRoute(programKey, examKey) {
 	if (programKey === "fortios-offline" && examKey === "all_questions") {
