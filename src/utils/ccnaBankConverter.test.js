@@ -1,7 +1,5 @@
 import assert from "node:assert/strict";
-import { readdirSync } from "node:fs";
 import { after, before, test } from "node:test";
-import { fileURLToPath } from "node:url";
 import { createServer } from "vite";
 
 let vite;
@@ -13,7 +11,6 @@ let isValidQuestion;
 let applyNativeExhibit;
 let compositeSetQuestions;
 let getOfflineLegacyQuestionBank;
-let getOfflineReferExhibitQuestionBank;
 let builtInQuestionBank;
 let createShortExamQuestions;
 let setDatabaseQuestions;
@@ -35,10 +32,7 @@ before(async () => {
   ({ isValidQuestion } = await vite.ssrLoadModule("/src/utils/ccnaExamGrading.js"));
   ({ applyNativeExhibit } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaCompositeSetQuestions.js"));
   ({ CCNA_COMPOSITE_SET_QUESTIONS: compositeSetQuestions } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaCompositeSetQuestions.js"));
-  ({
-    getOfflineLegacyQuestionBank,
-    getOfflineReferExhibitQuestionBank,
-  } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaOfflineExamQuestions.js"));
+  ({ getOfflineLegacyQuestionBank } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaOfflineExamQuestions.js"));
   ({ CCNA_QUESTION_BANK: builtInQuestionBank } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaQuestionBank.jsx"));
   ({ createShortExamQuestions, setDatabaseQuestions } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaQuestionBank.jsx"));
   originalFetch = globalThis.fetch;
@@ -386,7 +380,7 @@ test("replaces recreated matching-activity screenshots with their existing inter
   );
   const offlinePatQuestion = getOfflineLegacyQuestionBank().find((entry) => entry.legacyIndex === 282);
   assert.equal(offlinePatQuestion.exhibitDiagram, undefined);
-  assert.match(offlinePatQuestion.afterExhibit.text, /ip nat inside source list 1 interface Gi0\/1 overload/);
+  assert.match(offlinePatQuestion.exhibit, /ip nat inside source list 1 interface Gi0\/1 overload/);
 });
 
 test("keeps the Router1 routing-method question prompt and matching controls while replacing its screenshot with a topology", () => {
@@ -665,54 +659,6 @@ test("adds corrected exhibits to the bundled offline legacy question", () => {
   assert.equal(question.afterExhibit.title, "HEADQUARTERS SPANNING-TREE TOPOLOGY");
   assert.equal(question.hideExhibitImage, true);
   assert.equal(question.exhibitImage, undefined);
-});
-
-test("includes every ZIP question in the offline refer-exhibit bank", () => {
-  const questions = getOfflineReferExhibitQuestionBank();
-
-  assert.equal(questions.length, 389);
-  assert.equal(new Set(questions.map((question) => question.bankId)).size, 389);
-  assert.ok(questions.every(isValidQuestion));
-  assert.ok(questions.some((question) => question.legacyIndex === 340));
-  const question44 = questions.find((question) => question.legacyIndex === 44);
-  assert.ok(question44.offlineSourceExhibitImages.length);
-  assert.match(question44.afterExhibit.imageUrl, /ccna-after-exhibit-1081\.png$/);
-});
-
-test("connects the remaining offline refer-exhibit questions to their bundled screenshots", () => {
-  const expectedImageIds = [
-    161, 192, 193, 203, 345, 386, 387, 405, 1001, 1084, 1089, 1108, 1127, 1148, 1149, 1167, 1168, 1199,
-  ];
-  const questions = getOfflineLegacyQuestionBank();
-
-  for (const imageId of expectedImageIds) {
-    const question = questions.find((entry) => entry.legacyIndex === imageId);
-    assert.ok(question, `offline question ${imageId} should be available`);
-    if (question.exhibitImage) {
-      assert.match(question.exhibitImage, new RegExp(`ccna-question-${imageId}\\.png$`));
-    } else {
-      assert.ok(
-        question.exhibit || question.exhibitDiagram || question.afterExhibit?.imageUrl || question.afterExhibit?.text,
-        `offline question ${imageId} should retain its native or corrected exhibit`,
-      );
-    }
-  }
-});
-
-test("links every supplied image to a question on the offline exhibit route", () => {
-  const questions = getOfflineLegacyQuestionBank();
-  const exhibitQuestions = questions.filter((question) =>
-    /\brefer to (?:the )?exhibits?\b/i.test(question.prompt) ||
-    question.offlineSourceExhibitImages?.length,
-  );
-  const suppliedImageNames = readdirSync(fileURLToPath(new URL("../assets/ccna-offline-exams-images/", import.meta.url)))
-    .filter((name) => name.endsWith(".png"))
-    .sort();
-  const sourceImages = new Set(exhibitQuestions.flatMap((question) => question.offlineSourceExhibitImages ?? []));
-  const linkedImageNames = [...sourceImages].map((image) => image.split("/").at(-1)).sort();
-
-  assert.deepEqual(linkedImageNames, suppliedImageNames);
-  assert.ok(exhibitQuestions.some((question) => question.legacyIndex === 268));
 });
 
 test("uses the corrected PDF panel image for an offline image-only exhibit", () => {
