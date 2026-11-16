@@ -386,7 +386,11 @@ export function runningConfig(d) {
 export function configCommands(d) {
 	if (d.kind === "pc") {
 		const i = Object.values(d.interfaces)[0];
-		return [`IP address ${i.ip}`, `Subnet mask ${i.mask}`, `Default gateway ${d.gateway}`];
+		return [
+			`IP address ${i.ip}`,
+			`Subnet mask ${i.mask}`,
+			...(d.gateway ? [`Default gateway ${d.gateway}`] : []),
+		];
 	}
 	const out = ["enable", "configure terminal", `hostname ${d.hostname}`];
 	if (d.kind === "switch") {

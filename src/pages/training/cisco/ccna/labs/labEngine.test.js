@@ -7,6 +7,7 @@ let PRACTICE_LABS;
 let HIDDEN_PRACTICE_LABS;
 let createLabState;
 let execute;
+let configCommands;
 let applyWorksheetCommands;
 let canReach;
 let canReachIpv6;
@@ -20,7 +21,7 @@ before(async () => {
 		appType: "custom",
 	});
 	({ PRACTICE_LABS, HIDDEN_PRACTICE_LABS } = await vite.ssrLoadModule("/src/pages/training/cisco/ccna/labs/labDefinitions.js"));
-	({ createLabState, execute, canReach, canReachIpv6, getOspfDr } = await vite.ssrLoadModule("/src/pages/training/cisco/ccna/labs/labEngine.js"));
+	({ createLabState, execute, configCommands, canReach, canReachIpv6, getOspfDr } = await vite.ssrLoadModule("/src/pages/training/cisco/ccna/labs/labEngine.js"));
 	({ applyWorksheetCommands } = await vite.ssrLoadModule("/src/pages/training/cisco/ccna/labs/worksheetCommands.js"));
 });
 
@@ -44,6 +45,21 @@ test("every lab final check accepts its lab topology", () => {
 			() => lab.finalCheck.check(createLabState(lab), lab),
 			`Lab ${lab.id} final check should accept its topology`,
 		);
+	}
+});
+
+test("Layer 2 labs omit nonexistent gateways from Packet Tracer setup", () => {
+	for (const [labId, deviceNames] of [
+		[1, ["IP Phone", "PC1", "PC2"]],
+		[7, ["PC1", "PC2"]],
+		[8, ["PC1", "PC2"]],
+	]) {
+		const lab = PRACTICE_LABS.find(({ id }) => id === labId);
+		for (const deviceName of deviceNames) {
+			const device = lab.devices[deviceName];
+			assert.equal(device.gateway, "");
+			assert.ok(configCommands(device).every((command) => !command.startsWith("Default gateway ")));
+		}
 	}
 });
 
@@ -72,7 +88,7 @@ test("the recreated voice VLAN lab matches its topology and worksheet", () => {
 	const answers = [
 		"interface e0/1", "switchport mode access", "switchport access vlan 10", "switchport voice vlan 11",
 		"interface e0/1", "switchport mode access", "switchport access vlan 30",
-		"vlan 10", "name Engineering", "exit",
+		"vlan 10", "name Engineering", "exit", "vlan 11", "exit", "vlan 30", "exit",
 		"lldp run", "interface e0/0", "lldp transmit", "lldp receive",
 		"interface e0/2", "no cdp enable", "copy running-config startup-config",
 	];
@@ -82,6 +98,8 @@ test("the recreated voice VLAN lab matches its topology and worksheet", () => {
 	for (const task of lab.tasks) assert.ok(task.check(result.state), `${task.id} should pass`);
 	assert.ok(lab.finalCheck.check(result.state));
 	assert.equal(lab.links.length, 5);
+	assert.equal(result.state.devices["SW-1"].vlans["11"], "");
+	assert.equal(result.state.devices["SW-2"].vlans["30"], "");
 });
 
 test("the two-switch VLAN and voice-port worksheet configures every range member", () => {
@@ -214,6 +232,7 @@ test("the VLAN and LACP worksheets pass their configuration checks", () => {
 
 	const lacpLab = PRACTICE_LABS.find(({ id }) => id === 8);
 	const lacpAnswers = [
+		"vlan 40", "vlan 50",
 		"interface e0/2", "switchport mode access", "switchport access vlan 40",
 		"interface range e0/0 - 1", "switchport mode trunk", "switchport trunk allowed vlan 40,50",
 		"interface range e0/0 - 1", "channel-group 10 mode active",
@@ -232,7 +251,6 @@ test("standard ACLs filter packets by source and routing labs verify both direct
 		"ip route 192.168.10.0 255.255.255.0 10.0.12.1",
 		"access-list 10 permit host 192.168.10.10",
 		"interface e0/0", "ip access-group 10 in",
-		"ping 192.168.50.10",
 		"copy running-config startup-config",
 	];
 	const aclResult = applyWorksheetCommands(aclLab, aclLab.worksheet, aclAnswers, createLabState(aclLab));
@@ -247,7 +265,7 @@ test("standard ACLs filter packets by source and routing labs verify both direct
 	const routeAnswers = [
 		"ip route 172.16.20.0 255.255.255.0 10.10.12.2",
 		"ip route 0.0.0.0 0.0.0.0 10.10.12.1",
-		"show ip route", "ping 172.16.20.20",
+		"show ip route",
 		"copy running-config startup-config",
 	];
 	const routeResult = applyWorksheetCommands(routeLab, routeLab.worksheet, routeAnswers, createLabState(routeLab));
@@ -259,15 +277,18 @@ test("standard ACLs filter packets by source and routing labs verify both direct
 test("OSPF DR election uses interface priority then router ID", () => {
 	const lab = PRACTICE_LABS.find(({ id }) => id === 11);
 	const answers = [
+		"interface e0/0", "ip ospf priority 100",
+		"interface e0/0", "ip ospf priority 150",
+		"interface e0/0", "ip ospf priority 150",
 		"router ospf 10", "router-id 1.1.1.1",
 		"router ospf 10", "router-id 2.2.2.2",
 		"router ospf 10", "router-id 3.3.3.3",
 		"network 10.11.0.0 0.0.0.7 area 0",
 		"network 10.11.0.0 0.0.0.7 area 0",
 		"network 10.11.0.0 0.0.0.7 area 0",
-		"interface e0/0", "ip ospf priority 100",
-		"interface e0/0", "ip ospf priority 150",
-		"interface e0/0", "ip ospf priority 150",
+		"interface e0/0", "no shutdown",
+		"interface e0/0", "no shutdown",
+		"interface e0/0", "no shutdown",
 		"copy running-config startup-config",
 	];
 	const result = applyWorksheetCommands(lab, lab.worksheet, answers, createLabState(lab));
