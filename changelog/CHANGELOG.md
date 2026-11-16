@@ -2,6 +2,17 @@
 
 Tracking begins 2026-10-17.
 
+## 2026-11-16 — `main`
+
+Commits included in this push:
+
+- `5cf2c9c` — Corrected CCNA practice-lab topology and verification instructions,
+  added missing VLAN setup, and removed nonexistent default gateways from the
+  Packet Tracer setup guide.
+
+Validation before push: 14 practice-lab tests, targeted ESLint, production
+build, and Git whitespace checks passed. Vite reported its large-chunk advisory.
+
 ## 2026-11-15 — `main`
 
 Commits included in this push:
