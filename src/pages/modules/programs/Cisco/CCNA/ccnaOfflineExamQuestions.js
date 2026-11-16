@@ -12,6 +12,43 @@ import {
 
 const CONNECT_DOTS_LEGACY_QUESTION_INDEX = 654;
 
+// QuestionNumber values from the supplied offline refer-exhibit CSV.
+const OFFLINE_REFER_EXHIBIT_QUESTION_IDS = new Set([
+  33, 41, 43, 44, 45, 46, 47, 49, 50, 51, 52, 59,
+  60, 61, 62, 67, 71, 72, 79, 82, 84, 88, 90, 91,
+  92, 93, 96, 97, 99, 100, 101, 103, 104, 106, 109, 110,
+  111, 112, 118, 120, 121, 123, 124, 125, 126, 128, 130, 131,
+  132, 137, 139, 142, 157, 158, 160, 161, 162, 163, 167, 177,
+  181, 189, 192, 193, 201, 203, 215, 264, 266, 278, 282, 290,
+  291, 306, 329, 331, 332, 339, 340, 341, 345, 350, 354, 355,
+  381, 382, 385, 386, 387, 389, 398, 405, 406, 415, 421, 426,
+  436, 452, 453, 460, 474, 476, 478, 486, 489, 491, 494, 495,
+  496, 497, 499, 500, 502, 504, 505, 506, 507, 508, 509, 510,
+  515, 519, 520, 521, 522, 523, 529, 531, 533, 538, 541, 542,
+  545, 548, 551, 554, 558, 559, 560, 562, 563, 564, 566, 568,
+  569, 570, 572, 574, 577, 578, 579, 580, 581, 586, 588, 591,
+  592, 593, 599, 602, 603, 612, 613, 616, 617, 618, 621, 622,
+  624, 627, 628, 629, 635, 641, 645, 646, 651, 655, 656, 657,
+  661, 662, 663, 667, 674, 675, 679, 682, 684, 685, 687, 689,
+  695, 699, 701, 702, 704, 705, 708, 711, 712, 713, 714, 716,
+  717, 719, 720, 721, 723, 724, 729, 730, 732, 736, 738, 747,
+  754, 756, 758, 759, 760, 769, 770, 772, 778, 782, 788, 790,
+  794, 797, 798, 799, 800, 802, 804, 806, 807, 808, 809, 816,
+  817, 824, 829, 830, 834, 835, 836, 837, 838, 839, 840, 844,
+  848, 852, 856, 860, 869, 870, 872, 875, 876, 878, 881, 882,
+  883, 884, 887, 888, 892, 898, 901, 909, 910, 911, 912, 914,
+  920, 929, 932, 934, 935, 940, 949, 962, 963, 964, 968, 982,
+  985, 987, 990, 991, 992, 1001, 1007, 1016, 1019, 1023, 1025, 1028,
+  1040, 1041, 1044, 1049, 1052, 1056, 1060, 1065, 1067, 1076, 1084, 1085,
+  1086, 1087, 1089, 1108, 1110, 1112, 1113, 1114, 1115, 1116, 1123, 1124,
+  1126, 1127, 1130, 1138, 1140, 1143, 1145, 1147, 1148, 1149, 1150, 1151,
+  1152, 1153, 1154, 1159, 1161, 1167, 1168, 1170, 1180, 1184, 1186, 1187,
+  1188, 1190, 1199, 1200, 1206, 1211, 1224, 1225, 1226, 1227, 1228, 1231,
+  1232, 1235, 1237, 1238, 1242, 1245, 1258, 1260, 1261, 1262, 1269, 1275,
+  1276, 1277, 1278, 1281, 1285, 1288, 1290, 1291, 1292, 1294, 1296, 1300,
+  1301, 1303, 1304, 1313, 1319,
+]);
+
 const AFTER_EXHIBITS_BY_LEGACY_INDEX = new Map();
 for (const exhibit of CCNA_AFTER_EXHIBITS) {
   if (!exhibit.after_exhibit_text?.trim() && !exhibit.after_exhibit_image_url) continue;
@@ -349,7 +386,7 @@ function parseOfflineAnswerTable(question) {
   return { prompt: parsed.prompt, options };
 }
 
-const OFFLINE_LEGACY_QUESTIONS = CCNA_LEGACY_QUESTIONS
+const OFFLINE_LEGACY_QUESTION_CANDIDATES = CCNA_LEGACY_QUESTIONS
   .map((question) => {
     const isConnectDotsQuestion = question.legacyIndex === CONNECT_DOTS_LEGACY_QUESTION_INDEX;
     const offlineOverride = OFFLINE_LEGACY_QUESTION_OVERRIDES.get(question.legacyIndex);
@@ -421,7 +458,9 @@ const OFFLINE_LEGACY_QUESTIONS = CCNA_LEGACY_QUESTIONS
       moduleTitle: "Legacy CCNA 200-301",
       explanation: offlineOverride?.explanation || question.explanation?.trim() || findCcnaQuestionExplanation(question.prompt),
     };
-  })
+  });
+
+const OFFLINE_LEGACY_QUESTIONS = OFFLINE_LEGACY_QUESTION_CANDIDATES
   .filter((question) =>
     isValidQuestion(question) &&
     (!/\bexhibit\b/i.test(question.prompt) ||
@@ -434,6 +473,15 @@ const OFFLINE_LEGACY_QUESTIONS = CCNA_LEGACY_QUESTIONS
 
 export function getOfflineLegacyQuestionBank() {
   return OFFLINE_LEGACY_QUESTIONS.map((question) => ({ ...question }));
+}
+
+export function getOfflineReferExhibitQuestionBank() {
+  return OFFLINE_LEGACY_QUESTION_CANDIDATES
+    .filter((question) =>
+      OFFLINE_REFER_EXHIBIT_QUESTION_IDS.has(question.legacyIndex) &&
+      isValidQuestion(question),
+    )
+    .map((question) => ({ ...question }));
 }
 
 export function createOfflineLegacyExamQuestions(count) {

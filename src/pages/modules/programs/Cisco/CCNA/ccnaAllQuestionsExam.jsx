@@ -11,7 +11,10 @@ import { loadCcnaAllQuestionsBank } from "../../../../../utils/ccnaQuestionBankA
 import { loadCachedCcnaAllQuestionsBank } from "../../../../../utils/ccnaOfflineQuestionBank";
 import { QuestionExhibits, QuestionInput, QuestionPrompt, QuestionReview } from "./ccnaExamQuestionViews";
 import { applyNativeExhibit } from "./ccnaCompositeSetQuestions";
-import { getOfflineLegacyQuestionBank } from "./ccnaOfflineExamQuestions";
+import {
+	getOfflineLegacyQuestionBank,
+	getOfflineReferExhibitQuestionBank,
+} from "./ccnaOfflineExamQuestions";
 
 function isValidSavedAnswer(question, answer) {
 	if (["match", "drag_drop", "click_boxes", "image"].includes(question.type)) {
@@ -38,9 +41,6 @@ function shuffleQuestions(items) {
 	}
 	return shuffled;
 }
-
-const isLocalhost = typeof window !== "undefined" &&
-	["localhost", "127.0.0.1", "::1", "[::1]"].includes(window.location.hostname);
 
 export default function CCNAAllQuestionsExam({ exhibitsOnly = false }) {
 	const { profile, isOnline } = useAuth();
@@ -78,7 +78,7 @@ export default function CCNAAllQuestionsExam({ exhibitsOnly = false }) {
 	const resultSummaryRef = useRef(null);
 	const previouslySubmittedRef = useRef(false);
 	const question = questions[currentIndex];
-	const canSkipQuestion = !isOnline && isLocalhost;
+	const canSkipQuestion = !isOnline;
 	const answeredCount = useMemo(
 		() => questions.reduce((count, item, index) => count + Number(isQuestionAnswered(item, answers[index])), 0),
 		[answers, questions],
@@ -115,7 +115,7 @@ export default function CCNAAllQuestionsExam({ exhibitsOnly = false }) {
 		setLoadState({ status: "loading", error: null });
 		const bankRequest = exhibitsOnly
 			? Promise.resolve({
-				questions: getOfflineLegacyQuestionBank(),
+				questions: getOfflineReferExhibitQuestionBank(),
 				skippedCount: 0,
 				source: "bundled",
 			})
@@ -133,9 +133,6 @@ export default function CCNAAllQuestionsExam({ exhibitsOnly = false }) {
 				const bankQuestions = [...validQuestions]
 					.filter((item) => !isOnline || isCcnaQuestionModule(item.moduleTitle ?? item.module))
 					.map((item) => source !== "bundled" ? applyNativeExhibit(item) : item)
-					.filter((item) => !exhibitsOnly ||
-						/\brefer to (?:the )?exhibits?\b/i.test(item.prompt) ||
-						item.offlineSourceExhibitImages?.length)
 					.sort((left, right) => left.bankId - right.bankId);
 				if (!bankQuestions.length) {
 					throw new TypeError(exhibitsOnly
@@ -346,13 +343,13 @@ export default function CCNAAllQuestionsExam({ exhibitsOnly = false }) {
 		);
 	}
 
-	if (exhibitsOnly && (isOnline || !isLocalhost)) {
+	if (exhibitsOnly && isOnline) {
 		return (
 			<main className="flex min-h-screen items-center justify-center bg-[#f5f9f9] px-4 py-16 text-[#17233d] sm:px-8">
 				<section className="w-full max-w-xl rounded-2xl border border-[#d6e5e7] bg-white p-8 text-center shadow-sm">
 					<h1 className="text-2xl font-bold">Offline exhibit practice</h1>
 					<p className="mt-3 text-sm leading-6 text-[#64748b]">
-						This question set is available only on localhost while offline.
+						This question set is available only while offline.
 					</p>
 					<Link to="/modules/programs/ccna" className="mt-6 inline-flex rounded-full bg-[#005b6b] px-6 py-3 font-semibold text-white transition hover:bg-[#004653]">
 						Return to CCNA

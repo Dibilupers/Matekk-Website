@@ -13,6 +13,7 @@ let isValidQuestion;
 let applyNativeExhibit;
 let compositeSetQuestions;
 let getOfflineLegacyQuestionBank;
+let getOfflineReferExhibitQuestionBank;
 let builtInQuestionBank;
 let createShortExamQuestions;
 let setDatabaseQuestions;
@@ -34,7 +35,10 @@ before(async () => {
   ({ isValidQuestion } = await vite.ssrLoadModule("/src/utils/ccnaExamGrading.js"));
   ({ applyNativeExhibit } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaCompositeSetQuestions.js"));
   ({ CCNA_COMPOSITE_SET_QUESTIONS: compositeSetQuestions } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaCompositeSetQuestions.js"));
-  ({ getOfflineLegacyQuestionBank } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaOfflineExamQuestions.js"));
+  ({
+    getOfflineLegacyQuestionBank,
+    getOfflineReferExhibitQuestionBank,
+  } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaOfflineExamQuestions.js"));
   ({ CCNA_QUESTION_BANK: builtInQuestionBank } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaQuestionBank.jsx"));
   ({ createShortExamQuestions, setDatabaseQuestions } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaQuestionBank.jsx"));
   originalFetch = globalThis.fetch;
@@ -661,6 +665,18 @@ test("adds corrected exhibits to the bundled offline legacy question", () => {
   assert.equal(question.afterExhibit.title, "HEADQUARTERS SPANNING-TREE TOPOLOGY");
   assert.equal(question.hideExhibitImage, true);
   assert.equal(question.exhibitImage, undefined);
+});
+
+test("includes every ZIP question in the offline refer-exhibit bank", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+
+  assert.equal(questions.length, 389);
+  assert.equal(new Set(questions.map((question) => question.bankId)).size, 389);
+  assert.ok(questions.every(isValidQuestion));
+  assert.ok(questions.some((question) => question.legacyIndex === 340));
+  const question44 = questions.find((question) => question.legacyIndex === 44);
+  assert.ok(question44.offlineSourceExhibitImages.length);
+  assert.match(question44.afterExhibit.imageUrl, /ccna-after-exhibit-1081\.png$/);
 });
 
 test("connects the remaining offline refer-exhibit questions to their bundled screenshots", () => {
