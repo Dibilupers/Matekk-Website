@@ -14,6 +14,29 @@ Commits included in this push:
 Validation before push: 15 focused practice-lab tests, production build, and
 Git whitespace checks passed.
 
+## 2026-11-16 — `main`
+
+Commits included in this push:
+
+- `5cf2c9c` — Corrected CCNA practice-lab topology and verification instructions,
+  added missing VLAN setup, and removed nonexistent default gateways from the
+  Packet Tracer setup guide.
+
+Validation before push: 14 practice-lab tests, targeted ESLint, production
+build, and Git whitespace checks passed. Vite reported its large-chunk advisory.
+
+## 2026-11-15 — `main`
+
+Commits included in this push:
+
+- `d97130e` — Added a localhost-only CCNA offline exhibit route, linked all
+  120 supplied exhibit images (including original and corrected variants),
+  displayed source images alongside corrected exhibits, and added skip
+  navigation to local CCNA practice exams.
+
+Validation before push: 23 CCNA converter/offline-exhibit tests, targeted ESLint,
+frontend production build, Git whitespace checks, and localhost HTTP 200.
+
 ## 2026-11-14 — `main`
 
 Commits included in this push:

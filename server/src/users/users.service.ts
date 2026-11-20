@@ -232,10 +232,10 @@ export class UsersService {
 
     async findAuthUserById(
         userId: number,
-    ): Promise<{ userId: number; username: string; active_status: boolean } | undefined> {
+    ): Promise<{ userId: number; username: string; role: string; active_status: boolean } | undefined> {
         const databaseUser = await this.prisma.users.findUnique({
             where: { id: userId },
-            select: { id: true, username: true, active_status: true },
+            select: { id: true, username: true, role: true, active_status: true },
         });
 
         if (!databaseUser) return undefined;
@@ -243,6 +243,7 @@ export class UsersService {
         return {
             userId: databaseUser.id,
             username: databaseUser.username,
+            role: databaseUser.role,
             active_status: databaseUser.active_status,
         };
     }

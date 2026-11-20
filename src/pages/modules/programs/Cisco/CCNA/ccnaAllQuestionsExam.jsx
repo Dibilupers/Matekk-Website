@@ -454,10 +454,11 @@ export default function CCNAAllQuestionsExam() {
 								<QuestionPrompt
 									prompt={question.prompt}
 									offline={!isOnline}
+									compactExhibit
 									hasSeparateExhibit={Boolean(question.afterExhibit || question.exhibit || question.exhibitImage || question.exhibitDiagram)}
 								/>
 							)}
-							<QuestionExhibits question={question} className="mb-6" />
+							<QuestionExhibits question={question} className="mb-6" compact />
 							<QuestionInput
 								key={currentIndex}
 								question={question}
@@ -604,10 +605,11 @@ export default function CCNAAllQuestionsExam() {
 								<QuestionPrompt
 									prompt={question.prompt}
 									offline={!isOnline}
+									compactExhibit
 									hasSeparateExhibit={Boolean(question.afterExhibit || question.exhibit || question.exhibitImage || question.exhibitDiagram)}
 								/>
 							)}
-							<QuestionExhibits question={question} className="mb-6" />
+							<QuestionExhibits question={question} className="mb-6" compact />
 							<QuestionReview question={question} value={answers[currentIndex]} />
 							{question.explanation && <p className="mt-5 rounded-xl bg-[#f5f9f9] px-4 py-3 text-sm leading-6 text-[#596983]"><strong className="text-[#005b6b]">Explanation: </strong>{question.explanation}</p>}
 							<div className={`mt-7 flex flex-wrap gap-3 ${isOnline ? "justify-between" : "justify-end"}`}>

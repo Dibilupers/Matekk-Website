@@ -855,10 +855,11 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 									<QuestionPrompt
 										prompt={question.prompt}
 										offline={isOfflineExam}
+										compactExhibit
 										hasSeparateExhibit={Boolean(question.exhibit || question.exhibitImage || question.exhibitDiagram)}
 									/>
 								)}
-								{question.exhibitDiagram && <ExhibitDiagram type={question.exhibitDiagram} offlineLayout={isOfflineExam} />}
+								{question.exhibitDiagram && <ExhibitDiagram type={question.exhibitDiagram} offlineLayout={isOfflineExam} compact />}
 								{question.exhibitImage && !question.hideExhibitImage && (
 									<ExhibitImage
 										src={question.exhibitImage}
@@ -866,6 +867,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 										imageClassName={`max-h-[32rem] ${!isOfflineExam && enlargeRouteExhibit ? "!w-[min(30rem,calc(100vw_-_3rem))]" : ""}`}
 										cropTop={question.exhibitImageCropTop}
 										offlineLayout={isOfflineExam && question.offlineLegacy === true}
+										compact
 									/>
 								)}
 								{question.exhibit && (
@@ -1018,10 +1020,11 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 													<QuestionPrompt
 														prompt={item.prompt}
 														offline={isOfflineExam}
+														compactExhibit
 														hasSeparateExhibit={Boolean(item.exhibit || item.exhibitImage || item.exhibitDiagram)}
 													/>
 												)}
-								{item.exhibitDiagram && <ExhibitDiagram type={item.exhibitDiagram} className="mt-4" offlineLayout={isOfflineExam} />}
+								{item.exhibitDiagram && <ExhibitDiagram type={item.exhibitDiagram} className="mt-4" offlineLayout={isOfflineExam} compact />}
 												{item.exhibitImage && !item.hideExhibitImage && (
 													<ExhibitImage
 														src={item.exhibitImage}
@@ -1030,6 +1033,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 														imageClassName={`max-h-[26rem] ${!isOfflineExam && isRoutingProtocolComparisonQuestion(item) ? "!w-[min(30rem,calc(100vw_-_3rem))]" : ""}`}
 														cropTop={item.exhibitImageCropTop}
 														offlineLayout={isOfflineExam && item.offlineLegacy === true}
+														compact
 													/>
 												)}
 												{item.exhibit && (

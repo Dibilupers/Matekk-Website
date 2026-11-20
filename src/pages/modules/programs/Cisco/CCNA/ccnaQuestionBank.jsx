@@ -28,6 +28,33 @@ export function shuffle(items) {
   return shuffled;
 }
 
+function shuffleMatchingChoices(question) {
+  if (
+    !["match", "drag_drop"].includes(question.type) ||
+    question.matchStyle === "numbers" ||
+    !Array.isArray(question.items) ||
+    !Array.isArray(question.choices) ||
+    question.choices.length < 2 ||
+    !Array.isArray(question.answer) ||
+    question.answer.length !== question.items?.length ||
+    new Set(question.answer).size !== question.answer.length ||
+    question.answer.some((index) => !Number.isInteger(index) || index < 0 || index >= question.choices.length)
+  ) {
+    return question;
+  }
+
+  const choiceOrder = shuffle(question.choices.map((_, index) => index));
+  if (choiceOrder.every((index, shuffledIndex) => index === shuffledIndex)) {
+    choiceOrder.push(choiceOrder.shift());
+  }
+  const shuffledIndexes = new Map(choiceOrder.map((originalIndex, index) => [originalIndex, index]));
+  return {
+    ...question,
+    choices: choiceOrder.map((index) => question.choices[index]),
+    answer: question.answer.map((index) => shuffledIndexes.get(index)),
+  };
+}
+
 export const CCNA_QUESTION_BANK = [
   ...CCNA_MODULE_QUIZZES.filter((quiz) => /^[1-6]\.0$/.test(quiz.number)).flatMap((quiz) =>
     quiz.questions.map((question) => ({
@@ -106,7 +133,7 @@ function getUniqueQuestions(sourceQuestions) {
   });
 }
 
-function createExamQuestions(sourceQuestions, count) {
+function createExamQuestions(sourceQuestions, count, { jumbleMatchingAnswers = false } = {}) {
   const matchingPerBlock = 5;
   const dragDropPerBlock = 3;
   const clickBoxesPerBlock = 1;
@@ -184,7 +211,9 @@ function createExamQuestions(sourceQuestions, count) {
       ...imageQuestions.slice(imageStart, imageStart + imageQuota),
       ...otherQuestions.slice(otherStart, otherStart + Math.min(otherPerBlock, blockLength - matchingPerBlock - dragDropQuota - clickBoxesQuota - imageQuota)),
     ];
-    questions.push(...shuffle(blockQuestions));
+    questions.push(...shuffle(blockQuestions).map((question) =>
+      jumbleMatchingAnswers ? shuffleMatchingChoices(question) : question,
+    ));
   }
 
   return questions;
@@ -204,21 +233,21 @@ export function getDatabaseQuestionById(id) {
 }
 
 
-export function createShortExamQuestions() {
-  if (databaseQuestions) return createExamQuestions(databaseQuestions, 50);
+export function createShortExamQuestions(options) {
+  if (databaseQuestions) return createExamQuestions(databaseQuestions, 50, options);
   const moduleQuestions = CCNA_QUESTION_BANK.filter((question) => {
     const moduleNumber = question.moduleNumber;
     return (typeof moduleNumber === "string" && /^([1-6])\.0$/.test(moduleNumber)) ||
       SHORT_EXAM_SOURCES.has(question.source);
   });
 
-  return createExamQuestions(moduleQuestions, 50);
+  return createExamQuestions(moduleQuestions, 50, options);
 }
 
-export function createMediumExamQuestions() {
-  return createExamQuestions(databaseQuestions ?? CCNA_QUESTION_BANK, 100);
+export function createMediumExamQuestions(options) {
+  return createExamQuestions(databaseQuestions ?? CCNA_QUESTION_BANK, 100, options);
 }
 
-export function createLongExamQuestions() {
-  return createExamQuestions(databaseQuestions ?? CCNA_QUESTION_BANK, 150);
+export function createLongExamQuestions(options) {
+  return createExamQuestions(databaseQuestions ?? CCNA_QUESTION_BANK, 150, options);
 }

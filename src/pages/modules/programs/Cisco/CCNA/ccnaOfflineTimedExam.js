@@ -9,9 +9,9 @@ export function createOfflineCcnaExamQuestions(examKey, questions) {
 	setDatabaseQuestions(questions);
 
 	const examQuestions = {
-		short: createShortExamQuestions,
-		medium: createMediumExamQuestions,
-		long: createLongExamQuestions,
+		short: () => createShortExamQuestions({ jumbleMatchingAnswers: true }),
+		medium: () => createMediumExamQuestions({ jumbleMatchingAnswers: true }),
+		long: () => createLongExamQuestions({ jumbleMatchingAnswers: true }),
 	}[examKey];
 	if (!examQuestions) throw new RangeError(`Unsupported offline CCNA exam format: ${examKey}.`);
 

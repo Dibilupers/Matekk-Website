@@ -2,6 +2,7 @@ import {
 	CCNA_AUTOMATION_MODULE_QUIZZES,
 	CCNA_CYBERSECURITY_MODULE_QUIZZES,
 } from "./programModuleQuizData";
+import { classifyCcnaProgramQuestion } from "./ccnaProgramQuestionClassifier";
 import { FORTIOS_EXAM_PROGRESS_FORMATS } from "./Fortinet/FortiOS/fortiosExamFormats";
 import { getExamRoute } from "../../../utils/examRoutes";
 
@@ -42,21 +43,32 @@ function shuffle(items) {
 	return shuffled;
 }
 
-export function getProgramExamFormats(programKey) {
+export function getProgramExamFormats(programKey, questionBank = null) {
 	if (programKey === "fortinet-fortios") return FORTIOS_EXAM_PROGRESS_FORMATS;
 
 	const moduleQuizzes = PROGRAM_QUIZZES[programKey];
 	const programName = PROGRAM_NAMES[programKey];
 	if (!moduleQuizzes || !programName) return null;
 
-	const questionPool = moduleQuizzes.flatMap((module) =>
-		module.questions.map((question) => ({
-			...question,
-			moduleNumber: module.number,
-			moduleTitle: module.title,
-		})),
-	);
+	const questionPool = Array.isArray(questionBank)
+		? questionBank
+			.filter((question) => classifyCcnaProgramQuestion(question) === programKey)
+			.map((question) => ({
+				...question,
+				moduleNumber: null,
+				moduleTitle: question.topic || "CCNA Question Bank",
+			}))
+		: moduleQuizzes.flatMap((module) =>
+			module.questions.map((question) => ({
+				...question,
+				moduleNumber: module.number,
+				moduleTitle: module.title,
+			})),
+		);
 	const uniqueQuestionPool = [...new Map(questionPool.map((question) => [question.prompt, question])).values()];
+	if (!uniqueQuestionPool.length) {
+		throw new Error(`The CCNA question bank has no questions classified for ${programName}.`);
+	}
 
 	return Object.fromEntries(Object.entries(EXAM_DETAILS).map(([examKey, details]) => {
 		const questionCount = QUESTION_COUNTS[examKey];

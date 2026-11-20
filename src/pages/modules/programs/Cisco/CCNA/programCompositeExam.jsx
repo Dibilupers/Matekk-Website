@@ -17,7 +17,11 @@ import { QuestionInput, QuestionPrompt, QuestionReview } from "./ccnaExamQuestio
 import { saveGradebookAssessment } from "../../../../../utils/gradebookApi";
 import { splitPromptExhibit } from "../../../../../utils/splitPromptExhibit";
 import { ExhibitImage, ExhibitText } from "./ccnaExhibit";
-import { loadCcnaQuestionBank } from "../../../../../utils/ccnaQuestionBankApi";
+import {
+	loadCcnaAllQuestionsBank,
+	loadCcnaQuestionBank,
+} from "../../../../../utils/ccnaQuestionBankApi";
+import { loadCachedCcnaAllQuestionsBank } from "../../../../../utils/ccnaOfflineQuestionBank";
 import { setDatabaseQuestions } from "./ccnaQuestionBank";
 import { getProgramExamFormats } from "../../programExamFormats";
 import { getOfflineExamSessionKeys } from "../../../../../utils/offlineExamSession";
@@ -894,8 +898,8 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 	);
 }
 
-// Loads the database question bank first, so a new attempt draws its questions from it.
-// (If the bank can't be reached, the exam still works with the questions built into the site.)
+// CCNA Automation and Cybersecurity exams draw from the CCNA database bank and its offline cache.
+// The regular CCNA exam retains its built-in fallback when the database bank cannot be reached.
 export default function CCNACompositeExam({ programKey = null, examFormats = null, theme = "ccna", ...props }) {
 	const routeParams = useParams();
 	const examKey = props.examKey ?? routeParams.examKey ?? "short";
@@ -905,14 +909,59 @@ export default function CCNACompositeExam({ programKey = null, examFormats = nul
 			: null
 	);
 	const isProgramExam = Boolean(resolvedProgramKey);
+	const isCcnaSpecialtyExam = resolvedProgramKey === "ccna-automation" || resolvedProgramKey === "ccna-cybersecurity";
+	const { isOnline } = useAuth();
 	const [status, setStatus] = useState("loading");
-	const isReady = isProgramExam || status === "ready";
+	const [programExamFormats, setProgramExamFormats] = useState(null);
+	const [loadError, setLoadError] = useState(null);
+	const [loadAttempt, setLoadAttempt] = useState(0);
+	const isReady = (isProgramExam && !isCcnaSpecialtyExam) || status === "ready";
 	const hasValidExam = resolvedProgramKey
 		? Boolean(examFormats?.[examKey] ?? getProgramExamFormats(resolvedProgramKey)?.[examKey])
 		: Boolean(CCNA_EXAMS[examKey]);
 	useEffect(() => {
-		if (isProgramExam) return undefined;
 		let active = true;
+		if (!isProgramExam || isCcnaSpecialtyExam) setStatus("loading");
+		setLoadError(null);
+		if (isCcnaSpecialtyExam) {
+			const loadProgramQuestionBank = async () => {
+				try {
+					const bank = isOnline
+						? await loadCcnaAllQuestionsBank()
+						: { questions: await loadCachedCcnaAllQuestionsBank() };
+					if (!bank.questions?.length) {
+						throw new Error("No saved CCNA question bank is available offline. Connect online once to download questions for this exam.");
+					}
+					if (!active) return;
+					setDatabaseQuestions(bank.questions);
+					setProgramExamFormats(getProgramExamFormats(resolvedProgramKey, bank.questions));
+					setStatus("ready");
+				} catch (error) {
+					if (isOnline) {
+						try {
+							const cachedQuestions = await loadCachedCcnaAllQuestionsBank();
+							if (cachedQuestions?.length) {
+								if (!active) return;
+								setDatabaseQuestions(cachedQuestions);
+								setProgramExamFormats(getProgramExamFormats(resolvedProgramKey, cachedQuestions));
+								setStatus("ready");
+								return;
+							}
+						} catch (cacheError) {
+							console.error("Unable to load the cached CCNA question bank for the program exam.", cacheError);
+						}
+					}
+					console.error(`Unable to load the CCNA question bank for ${resolvedProgramKey}.`, error);
+					if (active) {
+						setLoadError(error instanceof Error ? error.message : "The CCNA question bank could not be loaded.");
+						setStatus("error");
+					}
+				}
+			};
+			loadProgramQuestionBank();
+			return () => { active = false; };
+		}
+		if (isProgramExam) return () => { active = false; };
 		loadCcnaQuestionBank()
 			.then(({ questions }) => {
 				setDatabaseQuestions(questions);
@@ -923,17 +972,36 @@ export default function CCNACompositeExam({ programKey = null, examFormats = nul
 				if (active) setStatus("ready");
 			});
 		return () => { active = false; };
-	}, [isProgramExam]);
+	}, [isCcnaSpecialtyExam, isOnline, isProgramExam, loadAttempt, resolvedProgramKey]);
 
 	if (!hasValidExam) return <Navigate to={`/modules/programs/${resolvedProgramKey ?? "ccna"}`} replace />;
+	if (status === "error") {
+		return (
+			<main className="flex min-h-screen items-center justify-center bg-[#f5f9f9] px-4 text-[#17233d]">
+				<section className="w-full max-w-xl rounded-2xl border border-[#d6e5e7] bg-white p-6 shadow-sm sm:p-8">
+					<p className="text-sm font-bold uppercase tracking-wide text-[#005b6b]">{resolvedProgramKey === "ccna-automation" ? "CCNA Automation" : "CCNA Cybersecurity"} Exam</p>
+					<h1 className="mt-2 text-2xl font-extrabold">Could not load exam questions</h1>
+					<p role="alert" className="mt-3 text-sm leading-6 text-[#526584]">{loadError}</p>
+					<div className="mt-6 flex flex-wrap gap-3">
+						<button type="button" onClick={() => setLoadAttempt((attempt) => attempt + 1)} className="rounded-full bg-[#005b6b] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#004653]">
+							Try again
+						</button>
+						<Link to={`/modules/programs/${resolvedProgramKey}`} className="rounded-full border border-[#c9dfe2] px-5 py-2.5 text-sm font-semibold text-[#005b6b] hover:bg-[#f5f9f9]">
+							Back to program
+						</Link>
+					</div>
+				</section>
+			</main>
+		);
+	}
 	if (!isReady) {
 		return (
 			<main className="flex min-h-screen items-center justify-center bg-[#f5f9f9] px-4 text-[#17233d]">
 				<p role="status" className="rounded-2xl border border-[#d6e5e7] bg-white px-6 py-4 text-sm font-semibold text-[#005b6b] shadow-sm">
-					Loading the CCNA question bank…
+					{isProgramExam ? "Loading and classifying CCNA question-bank questions…" : "Loading the CCNA question bank…"}
 				</p>
 			</main>
 		);
 	}
-	return <CCNACompositeExamPage key={`${resolvedProgramKey ?? "ccna"}-${examKey}`} {...props} examKey={examKey} programKey={resolvedProgramKey} examFormats={examFormats} theme={theme} />;
+	return <CCNACompositeExamPage key={`${resolvedProgramKey ?? "ccna"}-${examKey}`} {...props} examKey={examKey} programKey={resolvedProgramKey} examFormats={isCcnaSpecialtyExam ? programExamFormats : examFormats} theme={theme} />;
 }
