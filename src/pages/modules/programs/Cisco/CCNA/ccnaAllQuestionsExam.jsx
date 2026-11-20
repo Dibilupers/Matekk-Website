@@ -42,9 +42,6 @@ function shuffleQuestions(items) {
 	return shuffled;
 }
 
-const isLocalhost = typeof window !== "undefined" &&
-	["localhost", "127.0.0.1", "::1", "[::1]"].includes(window.location.hostname);
-
 export default function CCNAAllQuestionsExam({ exhibitsOnly = false }) {
 	const { profile, isOnline } = useAuth();
 	const baseStorageKey = profile?.userId === null || profile?.userId === undefined
@@ -81,7 +78,7 @@ export default function CCNAAllQuestionsExam({ exhibitsOnly = false }) {
 	const resultSummaryRef = useRef(null);
 	const previouslySubmittedRef = useRef(false);
 	const question = questions[currentIndex];
-	const canSkipQuestion = exhibitsOnly && !isOnline && isLocalhost;
+	const canSkipQuestion = exhibitsOnly && !isOnline;
 	const answeredCount = useMemo(
 		() => questions.reduce((count, item, index) => count + Number(isQuestionAnswered(item, answers[index])), 0),
 		[answers, questions],
@@ -339,22 +336,6 @@ export default function CCNAAllQuestionsExam({ exhibitsOnly = false }) {
 							Try again
 						</button>
 					)}
-				</section>
-			</main>
-		);
-	}
-
-	if (exhibitsOnly && (isOnline || !isLocalhost)) {
-		return (
-			<main className="flex min-h-screen items-center justify-center bg-[#f5f9f9] px-4 py-16 text-[#17233d] sm:px-8">
-				<section className="w-full max-w-xl rounded-2xl border border-[#d6e5e7] bg-white p-8 text-center shadow-sm">
-					<h1 className="text-2xl font-bold">Local Refer to Exhibit exam</h1>
-					<p className="mt-3 text-sm leading-6 text-[#64748b]">
-						This question set is available only offline on localhost.
-					</p>
-					<Link to="/modules/programs/ccna" className="mt-6 inline-flex rounded-full bg-[#005b6b] px-6 py-3 font-semibold text-white transition hover:bg-[#004653]">
-						Return to CCNA
-					</Link>
 				</section>
 			</main>
 		);

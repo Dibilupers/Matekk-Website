@@ -55,8 +55,6 @@ const EXAM_FORMATS = [
 	{ name: "Long Exam", questions: CCNA_EXAMS.long.questionCount, duration: "2 hours", description: "A full-length practice session." },
 	{ name: "All Questions Exam", questions: "All", duration: "No time limit", description: "Every question from the Questions table, in random order." },
 ];
-const isLocalhost = typeof window !== "undefined" &&
-	["localhost", "127.0.0.1", "::1", "[::1]"].includes(window.location.hostname);
 function formatExamTime(totalSeconds) {
 	const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, "0");
 	const seconds = (totalSeconds % 60).toString().padStart(2, "0");
@@ -424,14 +422,12 @@ function ModuleCard({ module, index, openSection, onToggle, quizProgress, tutori
 
 export default function CCNA() {
 	const { profile, isOnline, isOfflinePinUnlocked } = useAuth();
-	const availableExamFormats = isLocalhost && !isOnline
-		? [...EXAM_FORMATS, {
-			name: "Refer to Exhibit",
-			questions: "All",
-			duration: "No time limit",
-			description: "Offline localhost exhibit questions; drag-and-drop questions stay in the regular exams.",
-		}]
-		: EXAM_FORMATS;
+	const availableExamFormats = [...EXAM_FORMATS, {
+		name: "Refer to Exhibit",
+		questions: "All",
+		duration: "No time limit",
+		description: "Bundled Refer to Exhibit questions; drag-and-drop questions stay in the regular exams.",
+	}];
 	const userId = profile?.userId;
 	const canTakeExamWithoutAccount = !isOnline && isOfflinePinUnlocked;
 	const canTakeExams = Boolean(userId) || canTakeExamWithoutAccount;
@@ -1238,7 +1234,7 @@ export default function CCNA() {
 						</header>
 						<p className="mt-3 text-sm leading-6 text-[#71819b]">
 							The first three formats randomly select a set of questions. All Questions Exam goes through every question from the Questions table in random order, with no time limit.
-							{isLocalhost && !isOnline && " Refer to Exhibit is available only offline on localhost; drag-and-drop questions remain in the regular exam formats."}
+							{" Refer to Exhibit uses bundled offline exhibit questions; drag-and-drop questions remain in the regular exam formats."}
 						</p>
 						<div className="mt-6 grid gap-3 sm:grid-cols-2">
 							{availableExamFormats.map((format) => {
