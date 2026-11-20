@@ -6,8 +6,7 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
-- `bee2f3f` - Bundled the localhost/offline-only CCNA exhibit images and mapped them to the Refer-to-Exhibit question bank.
-- `ce3c2b3` - Recorded the offline exhibit update and validation in the changelog.
+- `9c59c37` - Bundled the localhost/offline-only CCNA exhibit images and mapped them to the Refer-to-Exhibit question bank.
 
 Validation before push: `npm run build` passed. Focused CCNA tests passed 47 of 48 checks; the remaining question 1321 PAT assertion is unrelated to the offline exhibit mapping.
 
