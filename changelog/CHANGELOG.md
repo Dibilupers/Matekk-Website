@@ -6,6 +6,8 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- Restored Refer to Exhibit as an offline-only main-deployment exam; hidden when the app is online.
+
 - Bundled Refer to Exhibit exam on public main deployments, including the CCNA exam card and route.
 
 - `9c59c37` - Bundled the localhost/offline-only CCNA exhibit images and mapped them to the Refer-to-Exhibit question bank.

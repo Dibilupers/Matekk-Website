@@ -341,6 +341,22 @@ export default function CCNAAllQuestionsExam({ exhibitsOnly = false }) {
 		);
 	}
 
+	if (exhibitsOnly && isOnline) {
+		return (
+			<main className="flex min-h-screen items-center justify-center bg-[#f5f9f9] px-4 py-16 text-[#17233d] sm:px-8">
+				<section className="w-full max-w-xl rounded-2xl border border-[#d6e5e7] bg-white p-8 text-center shadow-sm">
+					<h1 className="text-2xl font-bold">Offline Refer to Exhibit exam</h1>
+					<p className="mt-3 text-sm leading-6 text-[#64748b]">
+						This question set is available only while the app is offline.
+					</p>
+					<Link to="/modules/programs/ccna" className="mt-6 inline-flex rounded-full bg-[#005b6b] px-6 py-3 font-semibold text-white transition hover:bg-[#004653]">
+						Return to CCNA
+					</Link>
+				</section>
+			</main>
+		);
+	}
+
 	if (!question) return null;
 
 	return (
