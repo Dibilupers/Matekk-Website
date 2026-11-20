@@ -675,14 +675,16 @@ export default function App() {
             </ProtectedRoute>
           }
         />
-        <Route
-          path={CCNA_OFFLINE_EXHIBIT_QUESTIONS_ROUTE}
-          element={
-            <ProtectedRoute>
-              <CCNAAllQuestionsExam exhibitsOnly />
-            </ProtectedRoute>
-          }
-        />
+        {import.meta.env.DEV && (
+          <Route
+            path={CCNA_OFFLINE_EXHIBIT_QUESTIONS_ROUTE}
+            element={
+              <ProtectedRoute>
+                <CCNAAllQuestionsExam exhibitsOnly />
+              </ProtectedRoute>
+            }
+          />
+        )}
         <Route
           path={LEGACY_CCNA_ALL_QUESTIONS_ROUTE}
           element={
@@ -997,7 +999,7 @@ function ProtectedRoute({ children }) {
   const isOfflineCcnaExamRoute = ["short", "medium", "long", "all_questions"]
     .some((examKey) => normalizedPathname === getExamRoute("ccna", examKey))
     || normalizedPathname === LEGACY_CCNA_ALL_QUESTIONS_ROUTE
-    || normalizedPathname === CCNA_OFFLINE_EXHIBIT_QUESTIONS_ROUTE
+    || (import.meta.env.DEV && normalizedPathname === CCNA_OFFLINE_EXHIBIT_QUESTIONS_ROUTE)
     || /^\/modules\/programs\/ccna-(?:automation|cybersecurity)\/exam\/(?:short|medium|long)\/?$/.test(pathname);
   const isOfflineFortiOSExamRoute = /^\/modules\/programs\/fortinet-fortios\/exam\/(?:short|medium|long|all_questions)\/?$/.test(pathname);
   const isOfflineNetworkPlusExamRoute = /^\/modules\/programs\/comptia-network-plus\/exam\/(?:short|medium|long|all_questions)\/?$/.test(pathname);

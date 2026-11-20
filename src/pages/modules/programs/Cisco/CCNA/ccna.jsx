@@ -614,10 +614,14 @@ export default function CCNA() {
 			path: "/modules/programs/ccna/exam/all",
 			summary: "Every question from the Questions table · Random order · No time limit",
 		},
-		"Refer to Exhibit": {
-			path: CCNA_OFFLINE_EXHIBIT_QUESTIONS_ROUTE,
-			summary: "Offline Refer to Exhibit questions only · Drag-and-drop questions excluded · No time limit",
-		},
+		...(import.meta.env.DEV
+			? {
+				"Refer to Exhibit": {
+					path: CCNA_OFFLINE_EXHIBIT_QUESTIONS_ROUTE,
+					summary: "Offline Refer to Exhibit questions only · Drag-and-drop questions excluded · No time limit",
+				},
+			}
+			: {}),
 	};
 
 	useEffect(() => {
