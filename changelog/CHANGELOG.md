@@ -2,6 +2,18 @@
 
 Tracking begins 2026-10-17.
 
+## 2026-11-20 — `fix/ccna-recreate-exhibit-images`
+
+Commits included in this push:
+
+- `5db117d` — Improved the Packet Tracer build steps for all 11 CCNA practice
+  labs with model-specific device recommendations, cable and interface
+  mappings, Lab 11 router-ID corrections, and focused build-guide regression
+  coverage.
+
+Validation before push: 15 focused practice-lab tests, production build, and
+Git whitespace checks passed.
+
 ## 2026-11-14 — `main`
 
 Commits included in this push:
