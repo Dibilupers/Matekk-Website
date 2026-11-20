@@ -6,6 +6,20 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `ad08531` — Featured Labs 6–11, kept the worksheet as the default, added
+  draggable sandbox devices, and blocked unsupported same-device connections.
+
+Validation before push: all 17 practice-lab tests, targeted ESLint, production
+build, Packet Tracer build-guide setup and solution replay for all 11 labs
+(featured Labs 6–11 first), and browser checks for lab ordering, grid layout,
+and connection handling passed. Lab 3's model-specific
+`switchport trunk encapsulation dot1q` was omitted during replay, as documented
+for Catalyst 2960 models.
+
+## 2026-11-20 — `main`
+
+Commits included in this push:
+
 - `436e69a` — Corrected CCNA practice-lab topology and setup guidance, improved
   Packet Tracer preconfiguration, and expanded simulator regression coverage.
 - `5db117d` — Added model-specific device recommendations, cable/interface
