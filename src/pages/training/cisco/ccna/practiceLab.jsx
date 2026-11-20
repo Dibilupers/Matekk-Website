@@ -21,6 +21,9 @@ const LEVEL_STYLE = {
 	Intermediate: "bg-amber-100 text-amber-800",
 	Advanced: "bg-red-100 text-red-800",
 };
+const FEATURED_LAB_IDS = new Set([6, 7, 8, 9, 10, 11]);
+const FEATURED_LABS = PRACTICE_LABS.filter(({ id }) => FEATURED_LAB_IDS.has(id));
+const ADDITIONAL_LABS = PRACTICE_LABS.filter(({ id }) => !FEATURED_LAB_IDS.has(id));
 
 const welcome = (name) => [
 	`Cisco IOS Software, ISR Software (Practice Simulator) — ${name}`,
@@ -253,7 +256,7 @@ function LabWorkspace({ lab, selectLab, fromDashboard, labStartRef }) {
 	const [showHints, setShowHints] = useState(false);
 	const [showSolution, setShowSolution] = useState(false);
 	const [examMode, setExamMode] = useState(false);
-	const [labView, setLabView] = useState("terminal");
+	const [labView, setLabView] = useState("worksheet");
 	const [topologyOpen, setTopologyOpen] = useState(false);
 	const [showTopologySandbox, setShowTopologySandbox] = useState(false);
 	const [showLabPicker, setShowLabPicker] = useState(false);
@@ -335,6 +338,40 @@ function LabWorkspace({ lab, selectLab, fromDashboard, labStartRef }) {
 		inputRef.current?.focus();
 	}
 
+	function renderLabCard(l) {
+		const selected = l.id === lab.id;
+		return (
+			<button
+				key={l.id}
+				type="button"
+				onClick={() => {
+					setShowLabPicker(false);
+					selectLab(l.id);
+				}}
+				aria-label={`Open Lab ${l.id}: ${l.title}`}
+				aria-pressed={selected}
+				className={`group h-full rounded-2xl border-2 p-4 text-left transition duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1775EE] focus-visible:ring-offset-2 ${selected ? "border-[#1775EE] bg-white shadow-md" : "border-transparent bg-[#EBF5FD] hover:border-[#c5e1f4] hover:bg-white hover:shadow-sm"}`}
+			>
+				<span className="block font-bold text-[#17233d] group-hover:text-[#005b6b]">{l.title}</span>
+				{selected && (
+					<>
+						<span className="mt-3 flex flex-wrap items-center gap-2">
+							<span className={`inline-block rounded-full px-2.5 py-1 text-xs font-bold ${LEVEL_STYLE[l.level]}`}>
+								Lab {l.id} · {l.level}
+							</span>
+							{l.id === 5 && (
+								<span className="inline-block rounded-full bg-violet-100 px-2.5 py-1 text-xs font-bold text-violet-800">
+									Bonus lab
+								</span>
+							)}
+						</span>
+						<span className="mt-2 block text-sm leading-5 text-gray-600">{l.summary}</span>
+					</>
+				)}
+			</button>
+		);
+	}
+
 	return (
 		<main className={`flex flex-col mx-[2.063rem] md:mx-16 xl:mx-[7.438rem] py-10 gap-8 ${fromDashboard ? "ccna-page-enter ccna-lab-theme" : ""}`}>
 			{/* Header + lab picker */}
@@ -358,72 +395,45 @@ function LabWorkspace({ lab, selectLab, fromDashboard, labStartRef }) {
 						<h4 className="mt-1 text-lg font-bold text-[#17233d]">Choose a lab</h4>
 						<p className="mt-1 text-sm text-[#71819b]">Currently open: {lab.title}</p>
 					</div>
-					<button
-						type="button"
-						onClick={() => setShowLabPicker((visible) => !visible)}
-						aria-expanded={showLabPicker}
-						aria-controls="ccna-practice-lab-picker"
-						className="inline-flex items-center gap-2 rounded-full border border-[#1775EE] px-4 py-2 text-sm font-semibold text-[#1775EE] transition hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1775EE] focus-visible:ring-offset-2"
-					>
-						{showLabPicker ? "Fewer labs" : `More labs (${PRACTICE_LABS.length})`}
-						{showLabPicker ? <ChevronUp size={16} aria-hidden="true" /> : <ChevronDown size={16} aria-hidden="true" />}
-					</button>
 				</div>
-				{showLabPicker && (
-					<div id="ccna-practice-lab-picker" className="grid gap-3 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-						{PRACTICE_LABS.map((l) => {
-							const selected = l.id === lab.id;
-							return (
-								<button
-									key={l.id}
-									type="button"
-									onClick={() => {
-										setShowLabPicker(false);
-										selectLab(l.id);
-									}}
-									aria-label={`Open Lab ${l.id}: ${l.title}`}
-									aria-pressed={selected}
-									className={`group h-full rounded-2xl border-2 p-4 text-left transition duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1775EE] focus-visible:ring-offset-2 ${selected ? "border-[#1775EE] bg-white shadow-md" : "border-transparent bg-[#EBF5FD] hover:border-[#c5e1f4] hover:bg-white hover:shadow-sm"}`}
-								>
-									<span className="block font-bold text-[#17233d] group-hover:text-[#005b6b]">{l.title}</span>
-									{selected && (
-										<>
-											<span className="mt-3 flex flex-wrap items-center gap-2">
-												<span className={`inline-block rounded-full px-2.5 py-1 text-xs font-bold ${LEVEL_STYLE[l.level]}`}>
-													Lab {l.id} · {l.level}
-												</span>
-												{l.id === 5 && (
-													<span className="inline-block rounded-full bg-violet-100 px-2.5 py-1 text-xs font-bold text-violet-800">
-														Bonus lab
-													</span>
-												)}
-											</span>
-											<span className="mt-2 block text-sm leading-5 text-gray-600">{l.summary}</span>
-										</>
-									)}
-								</button>
-							);
-						})}
-					</div>
+				<div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+					{FEATURED_LABS.map(renderLabCard)}
+				</div>
+				{ADDITIONAL_LABS.length > 0 && (
+					<>
+						<button
+							type="button"
+							onClick={() => setShowLabPicker((visible) => !visible)}
+							aria-expanded={showLabPicker}
+							aria-controls="ccna-additional-labs"
+							className="inline-flex items-center gap-2 self-center rounded-full border border-[#1775EE] px-4 py-2 text-sm font-semibold text-[#1775EE] transition hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1775EE] focus-visible:ring-offset-2"
+						>
+							{showLabPicker ? "Fewer labs" : `More labs (${ADDITIONAL_LABS.length})`}
+							{showLabPicker ? <ChevronUp size={16} aria-hidden="true" /> : <ChevronDown size={16} aria-hidden="true" />}
+						</button>
+						<div id="ccna-additional-labs" hidden={!showLabPicker} className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+							{ADDITIONAL_LABS.map(renderLabCard)}
+						</div>
+					</>
 				)}
 				{lab.worksheet && (
 					<div className="flex flex-wrap items-center gap-2" role="group" aria-label="Practice lab view">
 						<span className="text-sm font-semibold text-[#334155]">Lab format:</span>
 						<button
 							type="button"
-							aria-pressed={labView === "terminal"}
-							onClick={() => setLabView("terminal")}
-							className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${labView === "terminal" ? "border-[#1775EE] bg-[#1775EE] text-white" : "border-[#1775EE] bg-white text-[#1775EE] hover:bg-blue-50"}`}
-						>
-							Terminal (default)
-						</button>
-						<button
-							type="button"
 							aria-pressed={labView === "worksheet"}
 							onClick={() => setLabView("worksheet")}
 							className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${labView === "worksheet" ? "border-[#1775EE] bg-[#1775EE] text-white" : "border-[#1775EE] bg-white text-[#1775EE] hover:bg-blue-50"}`}
 						>
-							Current worksheet
+							Current worksheet (default)
+						</button>
+						<button
+							type="button"
+							aria-pressed={labView === "terminal"}
+							onClick={() => setLabView("terminal")}
+							className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${labView === "terminal" ? "border-[#1775EE] bg-[#1775EE] text-white" : "border-[#1775EE] bg-white text-[#1775EE] hover:bg-blue-50"}`}
+						>
+							Terminal
 						</button>
 					</div>
 				)}

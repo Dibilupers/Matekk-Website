@@ -33,7 +33,7 @@ function getNextDeviceName(devices, kind) {
 	return `${prefix}${number}`;
 }
 
-function withSandboxLayout(lab, state) {
+function withSandboxLayout(lab, state, positions) {
 	const entries = Object.entries(lab.devices);
 	const columns = Math.max(1, Math.min(3, entries.length));
 	const nodes = Object.fromEntries(entries.map(([name, device], index) => {
@@ -42,9 +42,10 @@ function withSandboxLayout(lab, state) {
 		const address = firstInterface
 			? `${firstInterface[0].toUpperCase()} · ${firstInterface[1].ip}`
 			: device.kind === "switch" ? "Layer 2 switch" : "No IP address";
+		const position = positions[name];
 		return [name, {
-			x: 120 + (index % columns) * 250,
-			y: 100 + Math.floor(index / columns) * 185,
+			x: position?.x ?? 120 + (index % columns) * 250,
+			y: position?.y ?? 100 + Math.floor(index / columns) * 185,
 			sub: address,
 		}];
 	}));
@@ -121,6 +122,7 @@ function CommandConsole({ lab, state, setState, routers }) {
 
 export default function TopologySandbox() {
 	const [sandbox, setSandbox] = useState(createSandbox);
+	const [nodePositions, setNodePositions] = useState({});
 	const [sourcePort, setSourcePort] = useState("");
 	const [destinationPort, setDestinationPort] = useState("");
 	const [selectedPc, setSelectedPc] = useState("");
@@ -132,7 +134,7 @@ export default function TopologySandbox() {
 	const { lab, state } = sandbox;
 	const routers = Object.entries(lab.devices).filter(([, device]) => device.kind === "router").map(([name]) => name);
 	const pcs = Object.entries(lab.devices).filter(([, device]) => device.kind === "pc").map(([name]) => name);
-	const renderedLab = useMemo(() => withSandboxLayout(lab, state), [lab, state]);
+	const renderedLab = useMemo(() => withSandboxLayout(lab, state, nodePositions), [lab, state, nodePositions]);
 	const endpoints = Object.entries(state.devices).flatMap(([deviceName, device]) =>
 		Object.keys(device.interfaces).map((ifName) => `${deviceName}:${ifName}`),
 	);
@@ -140,6 +142,8 @@ export default function TopologySandbox() {
 	const availablePorts = endpoints.filter((endpoint) => !usedPorts.has(endpoint));
 	const sourceOptions = availablePorts.filter((endpoint) => endpoint !== destinationPort);
 	const destinationOptions = availablePorts.filter((endpoint) => endpoint !== sourcePort);
+	const sameDeviceConnection = sourcePort && destinationPort
+		&& sourcePort.split(":")[0] === destinationPort.split(":")[0];
 
 	function updateSandbox(updateLab, updateState) {
 		setSandbox((current) => ({
@@ -202,6 +206,11 @@ export default function TopologySandbox() {
 			},
 		);
 		if (selectedPc === name) setSelectedPc(nextName.find((deviceName) => lab.devices[deviceName]?.kind === "pc") ?? "");
+		setNodePositions((current) => {
+			const positions = { ...current };
+			delete positions[name];
+			return positions;
+		});
 		if (pingFrom === name) {
 			setPingFrom(nextName.find((deviceName) => ["pc", "router"].includes(lab.devices[deviceName]?.kind)) ?? "");
 		}
@@ -213,7 +222,7 @@ export default function TopologySandbox() {
 
 	function connectPorts(event) {
 		event.preventDefault();
-		if (!sourcePort || !destinationPort || sourcePort === destinationPort) return;
+		if (!sourcePort || !destinationPort || sameDeviceConnection) return;
 		updateSandbox(
 			(currentLab) => ({
 				...currentLab,
@@ -268,6 +277,7 @@ export default function TopologySandbox() {
 
 	function resetSandbox() {
 		setSandbox(createSandbox());
+		setNodePositions({});
 		setSourcePort("");
 		setDestinationPort("");
 		setSelectedPc("");
@@ -276,6 +286,10 @@ export default function TopologySandbox() {
 		setPingResult("");
 		setPcConfigError("");
 		setConsoleGeneration((current) => current + 1);
+	}
+
+	function moveNode(name, position) {
+		setNodePositions((current) => ({ ...current, [name]: position }));
 	}
 
 	return (
@@ -288,7 +302,7 @@ export default function TopologySandbox() {
 					<h4 className="mt-2 text-xl font-bold text-[#17233d]">Topology Sandbox</h4>
 					<p className="mt-1 max-w-3xl text-sm leading-6 text-gray-600">
 						Create a small network, connect device ports, configure router interfaces and routes, then test connectivity.
-						Switches forward traffic between connected ports; VLANs and wireless networks are not simulated.
+						Drag devices to arrange the topology, or focus a device and use the arrow keys. Switches forward traffic between connected ports; VLANs and wireless networks are not simulated.
 					</p>
 				</div>
 				<button type="button" onClick={resetSandbox} className="inline-flex items-center gap-2 rounded-full border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50">
@@ -311,7 +325,7 @@ export default function TopologySandbox() {
 			<div className="overflow-x-auto rounded-2xl border border-[#d6e0ee] bg-[#f8fafc] p-3">
 				{Object.keys(lab.devices).length ? (
 					<div className="mx-auto min-w-[580px] max-w-5xl">
-						<LabTopology lab={renderedLab} state={state} activeDevice={null} />
+						<LabTopology lab={renderedLab} state={state} activeDevice={null} onNodePositionChange={moveNode} />
 					</div>
 				) : (
 					<div className="flex min-h-40 flex-col items-center justify-center gap-2 text-center text-sm text-gray-500">
@@ -336,7 +350,7 @@ export default function TopologySandbox() {
 							))}
 						</ul>
 						<form onSubmit={connectPorts} className="space-y-2 border-t border-[#d6e0ee] pt-3">
-							<p className="text-sm font-semibold text-[#263654]">Connect two free ports</p>
+							<p className="text-sm font-semibold text-[#263654]">Connect two free ports on different devices</p>
 							<div className="grid gap-2 sm:grid-cols-[1fr_auto_1fr]">
 								<select aria-label="First port" value={sourcePort} onChange={(event) => setSourcePort(event.target.value)} className="min-w-0 rounded-lg border border-gray-300 bg-white px-2 py-2 text-sm">
 									<option value="">Choose port</option>
@@ -348,7 +362,8 @@ export default function TopologySandbox() {
 									{destinationOptions.map((port) => <option key={port} value={port}>{port}</option>)}
 								</select>
 							</div>
-							<button type="submit" disabled={!sourcePort || !destinationPort} className="rounded-full border border-[#1775EE] px-4 py-2 text-sm font-semibold text-[#1775EE] hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50">Connect</button>
+							{sameDeviceConnection && <p role="alert" className="text-sm text-red-600">Choose ports on two different devices; same-device connections are not supported.</p>}
+							<button type="submit" disabled={!sourcePort || !destinationPort || sameDeviceConnection} className="rounded-full border border-[#1775EE] px-4 py-2 text-sm font-semibold text-[#1775EE] hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50">Connect</button>
 						</form>
 						{lab.links.length > 0 && (
 							<ul className="space-y-1">
