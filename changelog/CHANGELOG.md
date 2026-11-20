@@ -2,6 +2,17 @@
 
 Tracking begins 2026-10-17.
 
+## 2026-11-20 - main
+
+Commits included in this push:
+
+- `ce17cc8` - Hid the Refer-to-Exhibit card and route from production builds
+  while keeping them available in development.
+
+Validation before push: focused exam-route tests, targeted ESLint, production
+build, and `git diff --check` passed. The production bundle contains neither
+the offline-exhibit route nor its exam-card summary.
+
 ## 2026-11-20 - Noah
 
 Commits included in this push:
