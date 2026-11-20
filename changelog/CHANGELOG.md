@@ -2,6 +2,35 @@
 
 Tracking begins 2026-10-17.
 
+## 2026-11-20 - Noah
+
+Commits included in this push:
+
+- `9c59c37` - Bundled the supplied CCNA exhibit images and mapped them to the
+  offline Refer-to-Exhibit question bank.
+- `d45d827` - Recorded the rebased offline exhibit push.
+- `7accf1a` - Added the Refer-to-Exhibit exam card and route to main.
+- `398dbc4` - Kept the Refer-to-Exhibit exam offline-only on main.
+- `c58277a` - Added corrected exhibit panels and legacy image mappings,
+  redrew native exam exhibits, and aligned live and offline question data.
+- `aa7c59c` - Merged the latest main exam rollout into Noah.
+
+Validation before push: 83 focused CCNA tests, targeted ESLint, production
+build, and `git diff --check` passed. ESLint disabled the existing
+`react-refresh/only-export-components` rule for the CCNA question-bank module.
+
+## 2026-11-20 - main
+
+Commits included in this push:
+
+- `c58277a` - Added corrected exhibit panels and legacy image mappings,
+  redrew native exam exhibits, and aligned live and offline question data.
+- `aa7c59c` - Merged the latest main exam rollout into Noah.
+
+Validation before push: 83 focused CCNA tests, targeted ESLint, production
+build, and `git diff --check` passed. ESLint disabled the existing
+`react-refresh/only-export-components` rule for the CCNA question-bank module.
+
 ## 2026-11-20 - main
 
 Commits included in this push:
