@@ -189,7 +189,7 @@ const voiceVlanLab = {
 		check: (state) => voiceVlanTasks.slice(0, 5).every((task) => task.check(state)),
 	},
 	ptDevices: "two Catalyst switches (SW-1, SW-2: Catalyst 2960-24TT or 3560-24PS), one router (R1: Cisco 2911 or 1941), one 7960 IP phone, and two PCs (PC1, PC2)",
-	ptNotes: "Verify in Packet Tracer with: show vlan brief, show interfaces switchport, show lldp neighbors, and show cdp neighbors.",
+	ptNotes: "Verify with show vlan brief, show interfaces switchport, and show lldp neighbors. Confirm CDP is disabled on SW-1 FastEthernet0/3 with show running-config interface FastEthernet0/3.",
 	hasPacketTracerFile: false,
 };
 
@@ -215,7 +215,7 @@ const LAB2 = {
 			"SW-1": {
 				x: 180,
 				y: 120,
-				details: ["VLAN 77 · User_VLAN", "VLAN 177 · Voice_VLAN", "E0/1–E0/3 · data + voice"],
+				details: ["VLAN 77 · User_VLAN", "VLAN 177 · Voice_VLAN", "E0/1–E0/3 · data + voice", "Layer 2 only · no router required"],
 			},
 			"SW-2": {
 				x: 540,
@@ -259,7 +259,7 @@ const LAB2 = {
 			check: (state) => LAB2_DEVICES.every((name) => isSaved(state, name)),
 		},
 	],
-	worksheetInstructions: "All physical cabling is in place. Configure both switches for the data and voice VLANs shown. The E0/1–E0/3 ports are practice access ports; endpoint devices are not drawn in this topology.",
+	worksheetInstructions: "This is a Layer 2 switch-only exercise; no router is required. All physical cabling is in place. Configure both switches for the data and voice VLANs shown. The E0/1–E0/3 ports are practice access ports; endpoint devices are not drawn in this topology.",
 	worksheet: [
 		{
 			title: "Task 1. Create VLAN 77 (User_VLAN) and VLAN 177 (Voice_VLAN)",
@@ -299,12 +299,12 @@ const LAB2 = {
 	],
 	solution: {
 		"SW-1": [
-			"enable", "configure terminal", "vlan 77", "name User_VLAN", "vlan 177", "name Voice_VLAN", "exit",
+			"enable", "configure terminal", "vlan 77", "name User_VLAN", "exit", "vlan 177", "name Voice_VLAN", "exit",
 			"interface range e0/1 - 3", "switchport mode access", "switchport access vlan 77", "switchport voice vlan 177",
 			"exit", "lldp run", "interface e0/0", "lldp transmit", "lldp receive", "end", "copy running-config startup-config",
 		],
 		"SW-2": [
-			"enable", "configure terminal", "vlan 77", "name User_VLAN", "vlan 177", "name Voice_VLAN", "exit",
+			"enable", "configure terminal", "vlan 77", "name User_VLAN", "exit", "vlan 177", "name Voice_VLAN", "exit",
 			"interface range e0/1 - 3", "switchport mode access", "switchport access vlan 77", "switchport voice vlan 177",
 			"exit", "lldp run", "interface e0/0", "lldp transmit", "lldp receive", "end", "copy running-config startup-config",
 		],
@@ -315,7 +315,7 @@ const LAB2 = {
 			.every((id) => LAB2.tasks.find((task) => task.id === id).check(state)),
 	},
 	ptDevices: "two Catalyst switches (SW-1, SW-2: Catalyst 2960-24TT or 3560-24PS)",
-	ptNotes: "FastEthernet0/2–0/4 (E0/1–E0/3) are practice access ports with no end devices attached. Verify with show vlan brief, show interfaces switchport, and show lldp neighbors.",
+	ptNotes: "This Layer 2 switch-only exercise needs no router or end devices. FastEthernet0/2–0/4 (E0/1–E0/3) are practice access ports. Verify with show vlan brief, show interfaces switchport, and show lldp neighbors.",
 	hasPacketTracerFile: false,
 };
 
@@ -466,7 +466,7 @@ const LAB3 = {
 		check: (state) => LAB3.tasks.slice(0, 4).every((task) => task.check(state)),
 	},
 	ptDevices: "one router (R1: Cisco 2911 or 1941) and four Catalyst switches (SW-1 through SW-4: Catalyst 3560-24PS, or 2960-24TT without dot1q encapsulation)",
-	ptNotes: "On Catalyst 2960-24TT switches, omit \"switchport trunk encapsulation dot1q\" in pre-configuration. Verify with show interfaces trunk and show etherchannel summary.",
+	ptNotes: "R1 is a reference device; this exercise does not configure VLAN routing. On Catalyst 2960-24TT switches, omit \"switchport trunk encapsulation dot1q\" in pre-configuration. Verify with show interfaces trunk and show etherchannel summary.",
 	hasPacketTracerFile: false,
 };
 
@@ -1353,7 +1353,7 @@ const LAB11 = {
 	title: "OSPF DR Election on a Broadcast LAN",
 	summary: "Set OSPF interface priorities before enabling the shared-segment election, then identify the initial DR.",
 	editable: LAB11_ROUTERS,
-	worksheetInstructions: "All E0/0 interfaces start shutdown so the election cannot begin during setup. Configure priorities and OSPF on all routers before bringing the three E0/0 interfaces up consecutively. OSPF does not preempt an elected DR; if an election has already completed on a live network, restart OSPF on all routers before checking the new result.",
+	worksheetInstructions: "All E0/0 interfaces start shutdown so the election cannot begin during setup. Configure priorities and OSPF on all routers first, then bring up R3 E0/0 before R2 and R1. OSPF does not preempt an elected DR; enabling R1 first can elect R1 and prevent R3 from taking over. If an election has already completed in another order, restart OSPF on all routers before checking the intended result.",
 	devices: {
 		R1: {
 			kind: "router",
@@ -1411,8 +1411,8 @@ const LAB11 = {
 		},
 		{
 			id: "enable-interfaces",
-			text: "After configuring all routers, bring up each E0/0 interface to start the shared-segment election.",
-			hint: "On R1, R2, and R3, use interface e0/0 followed by no shutdown.",
+			text: "After configuring all routers, bring up R3 E0/0 first, then R2 and R1, so R3 is present for the initial DR election.",
+			hint: "On R3, R2, then R1: use interface e0/0 followed by no shutdown. OSPF does not preempt an elected DR.",
 			check: (state) => LAB11_ROUTERS.every((name) => state.devices[name].interfaces["e0/0"].up),
 		},
 		{
@@ -1452,8 +1452,8 @@ const LAB11 = {
 			})),
 		},
 		{
-			title: "Task 4. Bring up E0/0 after configuring all routers",
-			slots: LAB11_ROUTERS.flatMap((name) => [
+			title: "Task 4. Bring up R3 E0/0 first, then R2 and R1",
+			slots: ["R3", "R2", "R1"].flatMap((name) => [
 				{ devices: [name], prompt: `${name}(config)#`, context: "config" },
 				{ devices: [name], prompt: `${name}(config-if)#`, context: "config-if", iface: "e0/0" },
 			]),
@@ -1464,9 +1464,9 @@ const LAB11 = {
 		},
 	],
 	solution: {
-		R1: [
-			"enable", "configure terminal", "interface e0/0", "ip ospf priority 100", "exit",
-			"router ospf 10", "router-id 1.1.1.1", "network 10.11.0.0 0.0.0.7 area 0", "exit",
+		R3: [
+			"enable", "configure terminal", "interface e0/0", "ip ospf priority 150", "exit",
+			"router ospf 10", "router-id 3.3.3.3", "network 10.11.0.0 0.0.0.7 area 0", "exit",
 			"interface e0/0", "no shutdown", "end", "copy running-config startup-config",
 		],
 		R2: [
@@ -1474,9 +1474,9 @@ const LAB11 = {
 			"router ospf 10", "router-id 2.2.2.2", "network 10.11.0.0 0.0.0.7 area 0", "exit",
 			"interface e0/0", "no shutdown", "end", "copy running-config startup-config",
 		],
-		R3: [
-			"enable", "configure terminal", "interface e0/0", "ip ospf priority 150", "exit",
-			"router ospf 10", "router-id 3.3.3.3", "network 10.11.0.0 0.0.0.7 area 0", "exit",
+		R1: [
+			"enable", "configure terminal", "interface e0/0", "ip ospf priority 100", "exit",
+			"router ospf 10", "router-id 1.1.1.1", "network 10.11.0.0 0.0.0.7 area 0", "exit",
 			"interface e0/0", "no shutdown", "end", "copy running-config startup-config",
 		],
 	},
@@ -1485,7 +1485,7 @@ const LAB11 = {
 		check: (state, lab) => LAB11.tasks.every((task) => task.check(state, lab)),
 	},
 	ptDevices: "three routers (R1, R2, R3: Cisco 2911 or 1941) and one Catalyst switch (SW-1: Catalyst 2960-24TT)",
-	ptNotes: "Configure OSPF priorities and process 10 on all three routers before running \"no shutdown\" on GigabitEthernet0/0 so the initial DR election uses your configured priorities. Verify the DR (R3) with \"show ip ospf neighbor\" and \"show ip ospf interface GigabitEthernet0/0\".",
+	ptNotes: "Configure priorities and OSPF process 10 on all routers first. Bring R3 GigabitEthernet0/0 up before R2 and R1; OSPF does not preempt the first DR. Verify R3 with show ip ospf neighbor and show ip ospf interface GigabitEthernet0/0.",
 	hasPacketTracerFile: false,
 };
 

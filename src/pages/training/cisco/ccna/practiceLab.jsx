@@ -281,6 +281,7 @@ function LabWorkspace({ lab, selectLab, fromDashboard, labStartRef }) {
 	const finalOk = lab.finalCheck.check
 		? lab.finalCheck.check(state, lab)
 		: canReach(lab, state, lab.finalCheck.from, lab.finalCheck.to);
+	const consoleTitle = lab.devices[device]?.kind === "switch" ? "Switch Console" : "Router Console";
 	const con = consoles[device];
 
 	useEffect(() => {
@@ -493,7 +494,7 @@ function LabWorkspace({ lab, selectLab, fromDashboard, labStartRef }) {
 						<LabTopology lab={lab} state={state} activeDevice={device} />
 					</button>
 					{topologyOpen && <TopologyFullscreen lab={lab} state={state} device={device} onClose={closeTopology} />}
-					<p className="text-xs text-gray-600 mt-1">Green links are up; red dashed links are down. The router you are configuring is circled.</p>
+					<p className="text-xs text-gray-600 mt-1">Green links are up; red dashed links are down. The device you are configuring is circled.</p>
 				</div>}
 			</div>
 
@@ -591,9 +592,9 @@ function LabWorkspace({ lab, selectLab, fromDashboard, labStartRef }) {
 				<section className="flex flex-col gap-2 min-w-0 lg:h-full">
 					<div className="flex flex-wrap items-center justify-between gap-2">
 						<div className="flex flex-wrap items-center gap-2">
-							<h5>Router Console</h5>
+							<h5>{consoleTitle}</h5>
 							{lab.editable.length > 1 && (
-								<div className="flex gap-1.5" role="tablist" aria-label="Choose router">
+								<div className="flex gap-1.5" role="tablist" aria-label="Choose device">
 									{lab.editable.map((n) => (
 										<button
 											key={n}
@@ -631,7 +632,7 @@ function LabWorkspace({ lab, selectLab, fromDashboard, labStartRef }) {
 								value={input}
 								onChange={(e) => setInput(e.target.value)}
 								onKeyDown={onKeyDown}
-								aria-label="Router command"
+								aria-label={`${consoleTitle.replace(" Console", "")} command`}
 								autoComplete="off"
 								autoCapitalize="off"
 								spellCheck={false}
@@ -671,7 +672,10 @@ export default function CCNAPracticeLab({ fromDashboard = false }) {
 	const [params, setParams] = useSearchParams();
 	const scrollToSelectedLabRef = useRef(false);
 	const labStartRef = useRef(null);
-	const labIndex = Math.min(PRACTICE_LABS.length - 1, Math.max(0, Number(params.get("lab") || 1) - 1));
+	const requestedLab = Number(params.get("lab") || 1);
+	const labIndex = Number.isInteger(requestedLab)
+		? Math.min(PRACTICE_LABS.length - 1, Math.max(0, requestedLab - 1))
+		: 0;
 	const lab = PRACTICE_LABS[labIndex];
 
 	useEffect(() => {

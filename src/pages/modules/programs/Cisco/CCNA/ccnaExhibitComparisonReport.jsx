@@ -142,15 +142,17 @@ function ReportPage({ bankId, legacyIndex, summary, beforeNote, qualityLabel, af
   );
 }
 
-function MatchingBoardPreview({ question, answered }) {
+function MatchingBoardPreview({ question, answered, spacious = false }) {
   const choiceOrder = question.reportChoiceOrder;
   const rowCount = question.items.length;
   const rowHeight = 52;
   const headerHeight = 42;
   const boardHeight = headerHeight + rowCount * rowHeight;
+  const lineStartX = spacious ? 450 : 620;
+  const lineEndX = spacious ? 550 : 680;
 
   return (
-    <div className="matching-preview-board">
+    <div className={`matching-preview-board${spacious ? " matching-only-board" : ""}`}>
       {answered && (
         <svg
           aria-hidden="true"
@@ -164,9 +166,9 @@ function MatchingBoardPreview({ question, answered }) {
             const y2 = headerHeight + rowHeight * (displayChoiceIndex + 0.5);
             return (
               <g key={itemIndex}>
-                <line x1="620" y1={y1} x2="680" y2={y2} />
-                <circle cx="620" cy={y1} r="5" />
-                <circle cx="680" cy={y2} r="5" />
+                <line x1={lineStartX} y1={y1} x2={lineEndX} y2={y2} />
+                <circle cx={lineStartX} cy={y1} r="5" />
+                <circle cx={lineEndX} cy={y2} r="5" />
               </g>
             );
           })}
@@ -259,6 +261,134 @@ function ReportSummaryPage() {
         Local review only. The image inventory confirms files are present; review flags still require comparison with their original sources.
       </footer>
     </article>
+  );
+}
+
+function MatchingOnlyPage({ question, questionIndex, answered }) {
+  const recordId = question.legacyIndex ?? question.legacyNumber;
+  const prompt = question.prompt.trim().replace(/\n[ \t]*\n+/g, "\n");
+
+  return (
+    <article className="matching-only-page">
+      <header className="matching-only-header">
+        <div className="matching-only-eyebrow">
+          <span>CCNA MATCHING · QUESTION {questionIndex + 1} OF {MATCHING_QUESTIONS.length}</span>
+          <span className={`matching-only-state ${answered ? "is-answered" : ""}`}>
+            {answered ? "After answering" : "Before answering"}
+          </span>
+        </div>
+        <h1>Question {questionIndex + 1} <span>· Local record {recordId}</span></h1>
+        <p className="matching-only-prompt">{prompt}</p>
+      </header>
+      <div className="matching-only-caption">
+        {answered
+          ? "Column B is shuffled; lines show the saved correct matches."
+          : "Column B is shuffled; no matches have been selected."}
+      </div>
+      <MatchingBoardPreview question={question} answered={answered} spacious />
+      <footer className="matching-only-footer">
+        {answered
+          ? "After-answer example · Connectors show the answer mapping for this local CCNA record."
+          : "Before-answer example · Choice order remains the same on the following answer page."}
+      </footer>
+    </article>
+  );
+}
+
+function MatchingOnlyCoverPage() {
+  return (
+    <article className="matching-only-page matching-only-cover">
+      <div className="matching-only-cover-kicker">CCNA · STUDY EDITION</div>
+      <div className="matching-only-cover-content">
+        <p className="matching-only-cover-label">MATCHING QUESTIONS</p>
+        <h1>Before &amp; After</h1>
+        <p className="matching-only-cover-description">
+          A clear, full-page view of every one-to-one matching question in the local CCNA bank.
+          Each question is shown unanswered and then answered, with Column B shuffled in both views.
+        </p>
+        <div className="matching-only-cover-stats">
+          <div><strong>{MATCHING_QUESTIONS.length}</strong><span>questions</span></div>
+          <div><strong>{MATCHING_QUESTIONS.length * 2}</strong><span>answer-state pages</span></div>
+        </div>
+      </div>
+      <footer className="matching-only-footer">
+        The answered views use the saved answer mappings from the local question bank.
+      </footer>
+    </article>
+  );
+}
+
+export function CcnaMatchingQuestionsReport() {
+  return (
+    <>
+      <style>{`
+        @page { size: landscape; margin: 0.35in; }
+        html, body, #root { margin: 0; min-height: 100%; background: #e8edf4; }
+        .matching-only-page {
+          box-sizing: border-box;
+          width: 10.3in;
+          height: 7.8in;
+          margin: 0 auto 1rem;
+          padding: 0.28in 0.32in 0.22in;
+          overflow: hidden;
+          background: #fff;
+          color: #17233d;
+          page-break-after: always;
+          break-after: page;
+          display: flex;
+          flex-direction: column;
+          gap: 0.1in;
+          font-family: Arial, sans-serif;
+        }
+        .matching-only-header { flex: 0 0 auto; border-bottom: 2px solid #d6e5e7; padding-bottom: 0.12in; }
+        .matching-only-eyebrow { display: flex; align-items: center; justify-content: space-between; gap: 0.2in; color: #526584; font-size: 9px; font-weight: 700; letter-spacing: 0.12em; }
+        .matching-only-state { flex: 0 0 auto; border-radius: 999px; padding: 0.07in 0.14in; background: #fff4dc; color: #8a5700; font-size: 10px; letter-spacing: 0; }
+        .matching-only-state.is-answered { background: #e6f4eb; color: #22623d; }
+        .matching-only-header h1 { margin: 0.08in 0; color: #17324a; font-size: 21px; }
+        .matching-only-header h1 span { color: #64748b; font-size: 14px; font-weight: 500; }
+        .matching-only-prompt { margin: 0; border-left: 3px solid #1f7a8c; border-radius: 0 5px 5px 0; padding: 0.1in 0.14in; background: #f5f8fb; color: #263654; font-family: "Cascadia Code", "Courier New", monospace; font-size: 10px; line-height: 1.32; white-space: pre-wrap; overflow-wrap: anywhere; }
+        .matching-only-caption { flex: 0 0 auto; color: #64748b; font-size: 10px; line-height: 1.35; }
+        .matching-only-page .matching-preview-board { position: relative; flex: 1 1 0; min-height: 0; overflow: hidden; display: flex; flex-direction: column; border: 1px solid #d6e0ec; border-radius: 8px; background: #fff; }
+        .matching-only-page .matching-preview-lines { position: absolute; z-index: 1; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+        .matching-only-page .matching-preview-lines line { stroke: #287849; stroke-width: 4; stroke-linecap: round; }
+        .matching-only-page .matching-preview-lines circle { fill: #287849; }
+        .matching-only-page .matching-preview-header, .matching-only-page .matching-preview-row { display: grid; grid-template-columns: minmax(0, 1fr) 0.85in minmax(0, 1fr); }
+        .matching-only-page .matching-preview-header { position: relative; z-index: 2; flex: 0 0 0.5in; place-items: center; border-bottom: 1px solid #e5eaf1; background: #f5f8fb; color: #526584; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+        .matching-only-page .matching-preview-header > div:first-child, .matching-only-page .matching-preview-item { grid-column: 1; }
+        .matching-only-page .matching-preview-header > div:last-child, .matching-only-page .matching-preview-choice { grid-column: 3; }
+        .matching-only-page .matching-preview-row { position: relative; z-index: 2; flex: 1 1 0; min-height: 0; border-bottom: 1px solid #e5eaf1; }
+        .matching-only-page .matching-preview-row:last-child { border-bottom: 0; }
+        .matching-only-page .matching-preview-item, .matching-only-page .matching-preview-choice { display: flex; min-width: 0; align-items: center; gap: 0.1in; padding: 0.08in 0.14in; color: #263654; font-size: 13px; line-height: 1.35; }
+        .matching-only-page .matching-preview-item { border-right: 0; }
+        .matching-only-page .matching-preview-number, .matching-only-page .matching-preview-letter { flex: 0 0 auto; color: #526584; font-weight: 700; }
+        .matching-only-page .matching-preview-choice { padding-left: 0.22in; }
+        .matching-only-footer { flex: 0 0 auto; border-top: 1px solid #e5eaf1; padding-top: 0.08in; color: #64748b; font-size: 8px; }
+        .matching-only-cover { justify-content: space-between; padding: 0.65in; background: linear-gradient(135deg, #f8fbff 0%, #fff 58%, #e8f3f5 100%); }
+        .matching-only-cover-kicker { color: #1f7a8c; font-size: 11px; font-weight: 700; letter-spacing: 0.16em; }
+        .matching-only-cover-content { max-width: 8in; }
+        .matching-only-cover-label { margin: 0 0 0.12in; color: #526584; font-size: 12px; font-weight: 700; letter-spacing: 0.18em; }
+        .matching-only-cover-content h1 { margin: 0; color: #17324a; font-size: 54px; letter-spacing: -0.04em; }
+        .matching-only-cover-description { margin: 0.2in 0 0; color: #526584; font-size: 17px; line-height: 1.5; }
+        .matching-only-cover-stats { display: flex; gap: 0.22in; margin-top: 0.32in; }
+        .matching-only-cover-stats div { display: flex; min-width: 2.1in; flex-direction: column; border-left: 3px solid #1f7a8c; padding-left: 0.14in; }
+        .matching-only-cover-stats strong { color: #17324a; font-size: 28px; }
+        .matching-only-cover-stats span { color: #64748b; font-size: 11px; }
+        @media screen {
+          .matching-only-page { box-shadow: 0 5px 20px #1e2b441a; }
+        }
+        @media print {
+          html, body, #root { background: #fff; }
+          .matching-only-page { margin: 0; box-shadow: none; }
+        }
+      `}</style>
+      <MatchingOnlyCoverPage />
+      {MATCHING_QUESTIONS.map((question, questionIndex) => (
+        <div className="matching-only-question-pages" key={question.legacyIndex}>
+          <MatchingOnlyPage question={question} questionIndex={questionIndex} answered={false} />
+          <MatchingOnlyPage question={question} questionIndex={questionIndex} answered />
+        </div>
+      ))}
+    </>
   );
 }
 

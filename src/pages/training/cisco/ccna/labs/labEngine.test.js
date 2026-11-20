@@ -50,6 +50,51 @@ test("every lab final check accepts its lab topology", () => {
 	}
 });
 
+test("every lab topology displays all devices and links only existing interfaces", () => {
+	for (const lab of PRACTICE_LABS) {
+		assert.deepEqual(
+			Object.keys(lab.layout.nodes).sort(),
+			Object.keys(lab.devices).sort(),
+			`Lab ${lab.id} should display every declared device and no undeclared devices`,
+		);
+		const linkedDevices = new Set();
+		for (const link of lab.links) {
+			for (const endpoint of [link.a, link.b]) {
+				const [deviceName, interfaceName] = endpoint.split(":");
+				assert.ok(lab.devices[deviceName], `Lab ${lab.id} link ${endpoint} should reference a declared device`);
+				assert.ok(
+					lab.devices[deviceName].interfaces[interfaceName],
+					`Lab ${lab.id} link ${endpoint} should reference a declared interface`,
+				);
+				linkedDevices.add(deviceName);
+			}
+		}
+		assert.deepEqual(
+			[...linkedDevices].sort(),
+			Object.keys(lab.devices).sort(),
+			`Lab ${lab.id} should connect every displayed device`,
+		);
+	}
+});
+
+test("worksheet prompts target editable devices and real interfaces", () => {
+	for (const lab of PRACTICE_LABS) {
+		for (const group of lab.worksheet ?? []) {
+			for (const slot of group.slots) {
+				for (const name of slot.devices) {
+					assert.ok(lab.editable.includes(name), `Lab ${lab.id} worksheet should only target editable device ${name}`);
+					if (slot.iface) {
+						assert.ok(
+							lab.devices[name].interfaces[slot.iface],
+							`Lab ${lab.id} worksheet should only target existing interface ${name}:${slot.iface}`,
+						);
+					}
+				}
+			}
+		}
+	}
+});
+
 test("Layer 2 labs omit nonexistent gateways from Packet Tracer setup", () => {
 	for (const [labId, deviceNames] of [
 		[1, ["IP Phone", "PC1", "PC2"]],
@@ -71,6 +116,20 @@ test("Packet Tracer build guides use Packet Tracer interface names and complete 
 		assert.ok(guide.includes(`DEVICES: ${lab.ptDevices}`), `Lab ${lab.id} should list Packet Tracer devices`);
 		assert.ok(guide.includes("PRE-CONFIGURATION"), `Lab ${lab.id} should include preconfiguration`);
 		assert.ok(guide.includes("YOUR TASKS"), `Lab ${lab.id} should include tasks`);
+		for (const name of Object.keys(lab.devices)) {
+			assert.ok(guide.includes(`[${name}]`), `Lab ${lab.id} should include setup for ${name}`);
+		}
+		for (const link of lab.links) {
+			const [deviceA, interfaceA] = link.a.split(":");
+			const [deviceB, interfaceB] = link.b.split(":");
+			assert.ok(
+				guide.split("\n").some((line) => (
+					line.includes(`${deviceA} ${ptIfName(lab.devices[deviceA], interfaceA, deviceA)}`) &&
+					line.includes(`${deviceB} ${ptIfName(lab.devices[deviceB], interfaceB, deviceB)}`)
+				)),
+				`Lab ${lab.id} guide should cable ${link.a} to ${link.b}`,
+			);
+		}
 	}
 
 	const lab1 = PRACTICE_LABS.find(({ id }) => id === 1);
@@ -83,8 +142,8 @@ test("Packet Tracer build guides use Packet Tracer interface names and complete 
 	assert.equal(ptIfName(lab1.devices.R1, "g0/0", "R1"), "GigabitEthernet0/0");
 });
 
-test("the new labs' terminal solutions execute and pass every task", () => {
-	for (const lab of PRACTICE_LABS.filter(({ id }) => id >= 5)) {
+test("every lab's terminal solution executes and passes every task", () => {
+	for (const lab of PRACTICE_LABS) {
 		let state = createLabState(lab);
 		for (const [device, commands] of Object.entries(lab.solution)) {
 			for (const command of commands) {
@@ -296,6 +355,10 @@ test("standard ACLs filter packets by source and routing labs verify both direct
 
 test("OSPF DR election uses interface priority then router ID", () => {
 	const lab = PRACTICE_LABS.find(({ id }) => id === 11);
+	assert.deepEqual(Object.keys(lab.solution), ["R3", "R2", "R1"]);
+	const bringUpGroup = lab.worksheet.find(({ title }) => title.startsWith("Task 4"));
+	assert.deepEqual([...new Set(bringUpGroup.slots.flatMap(({ devices }) => devices))], ["R3", "R2", "R1"]);
+	assert.match(buildPacketTracerGuide(lab), /bring R3 GigabitEthernet0\/0 up before R2 and R1/i);
 	const answers = [
 		"interface e0/0", "ip ospf priority 100",
 		"interface e0/0", "ip ospf priority 150",
