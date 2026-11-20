@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 import { Link, useSearchParams } from "react-router-dom";
 import { CheckCircle2, ChevronDown, ChevronUp, Circle, Download, Eye, Lightbulb, Maximize2, Network, RotateCcw, X, XCircle, ZoomIn, ZoomOut } from "lucide-react";
 import { PRACTICE_LABS } from "./labs/labDefinitions";
-import { canReach, configCommands, createLabState, execute, fullIfName, promptFor } from "./labs/labEngine";
+import { buildPacketTracerGuide, canReach, createLabState, execute, promptFor } from "./labs/labEngine";
 import LabTopology from "./labs/LabTopology";
 import LabCommandWorksheet from "./labs/LabCommandWorksheet";
 import TopologySandbox from "./labs/TopologySandbox";
@@ -35,41 +35,11 @@ function freshConsoles(lab) {
 }
 
 // ---------- Packet Tracer section ----------
-function buildGuideText(lab) {
-	const lines = [
-		"MATEKK Cybercore Academy — CCNA Practice Lab " + lab.id + " (" + lab.level + ")",
-		lab.title,
-		"Packet Tracer build guide (Packet Tracer 8.2 or newer)",
-		"=".repeat(70),
-		"",
-		"DEVICES: " + lab.ptDevices,
-		"",
-		"CABLING",
-		"-------",
-		...lab.links.map((l) => {
-			const [ad, ai] = l.a.split(":");
-			const [bd, bi] = l.b.split(":");
-			return `  ${ad} ${fullIfName(ai)}  <->  ${bd} ${fullIfName(bi)}   (${l.net})`;
-		}),
-		"",
-		"PRE-CONFIGURATION (enter these on each device before you start)",
-		"---------------------------------------------------------------",
-	];
-	const start = createLabState(lab);
-	for (const [name, d] of Object.entries(lab.devices)) {
-		lines.push("", `[${name}]${d.kind === "pc" ? "  (Desktop > IP Configuration)" : ""}`);
-		lines.push(...configCommands(start.devices[name]).map((c) => "  " + c));
-	}
-	lines.push("", "YOUR TASKS", "----------", ...lab.tasks.map((t, i) => `${i + 1}. ${t.text}`));
-	lines.push("", "FINAL CHECK", "-----------", `  ${lab.finalCheck.label}`, "", "Tip: practise the same tasks online first in the MATEKK CCNA Practice Lab.");
-	return lines.join("\n");
-}
-
 function PacketTracerSection({ lab }) {
 	const pktFile = `/downloads/ccna-lab${lab.id}.pkt`;
 	const [showDownloadPicker, setShowDownloadPicker] = useState(false);
 	const [showSteps, setShowSteps] = useState(false);
-	const guide = useMemo(() => buildGuideText(lab), [lab]);
+	const guide = useMemo(() => buildPacketTracerGuide(lab), [lab]);
 	const guideUrl = useMemo(() => URL.createObjectURL(new Blob([guide], { type: "text/plain" })), [guide]);
 	useEffect(() => () => URL.revokeObjectURL(guideUrl), [guideUrl]);
 

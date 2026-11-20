@@ -188,7 +188,8 @@ const voiceVlanLab = {
 		label: "Switch ports and LLDP match the voice VLAN topology",
 		check: (state) => voiceVlanTasks.slice(0, 5).every((task) => task.check(state)),
 	},
-	ptDevices: "two Catalyst switches (SW-1, SW-2), one router (R1), one IP phone, and two PCs",
+	ptDevices: "two Catalyst switches (SW-1, SW-2: Catalyst 2960-24TT or 3560-24PS), one router (R1: Cisco 2911 or 1941), one 7960 IP phone, and two PCs (PC1, PC2)",
+	ptNotes: "Verify in Packet Tracer with: show vlan brief, show interfaces switchport, show lldp neighbors, and show cdp neighbors.",
 	hasPacketTracerFile: false,
 };
 
@@ -313,7 +314,8 @@ const LAB2 = {
 		check: (state) => ["create-vlans", "configure-access-ports", "enable-lldp"]
 			.every((id) => LAB2.tasks.find((task) => task.id === id).check(state)),
 	},
-	ptDevices: "two Catalyst switches (SW-1, SW-2)",
+	ptDevices: "two Catalyst switches (SW-1, SW-2: Catalyst 2960-24TT or 3560-24PS)",
+	ptNotes: "FastEthernet0/2–0/4 (E0/1–E0/3) are practice access ports with no end devices attached. Verify with show vlan brief, show interfaces switchport, and show lldp neighbors.",
 	hasPacketTracerFile: false,
 };
 
@@ -463,7 +465,8 @@ const LAB3 = {
 		label: "Allowed VLANs, native VLAN, and LACP settings are configured",
 		check: (state) => LAB3.tasks.slice(0, 4).every((task) => task.check(state)),
 	},
-	ptDevices: "five switches/routers: R1 and SW-1 through SW-4",
+	ptDevices: "one router (R1: Cisco 2911 or 1941) and four Catalyst switches (SW-1 through SW-4: Catalyst 3560-24PS, or 2960-24TT without dot1q encapsulation)",
+	ptNotes: "On Catalyst 2960-24TT switches, omit \"switchport trunk encapsulation dot1q\" in pre-configuration. Verify with show interfaces trunk and show etherchannel summary.",
 	hasPacketTracerFile: false,
 };
 
@@ -631,7 +634,8 @@ const LAB4 = {
 		label: "Primary and backup paths, default routes, and saved configurations are complete",
 		check: (state, lab) => LAB4.tasks.every((task) => task.check(state, lab)),
 	},
-	ptDevices: "four routers (R1–R4), one ISP router, and one PC",
+	ptDevices: "five Cisco 2911 routers (R1–R4 and ISP; 2911 provides 3 GigabitEthernet ports for R3 and R4) and one PC (PC1)",
+	ptNotes: "To test failover in Packet Tracer, ping 10.0.41.10 from R1 (via R2), then run \"shutdown\" on R1 GigabitEthernet0/0 and ping 10.0.41.10 again (via R3).",
 	hasPacketTracerFile: false,
 };
 
@@ -734,7 +738,8 @@ const LAB5 = {
 		label: "IPv4 and IPv6 addressing, connectivity, and saved configurations are complete",
 		check: (state, lab) => LAB5.tasks.every((task) => task.check(state, lab)),
 	},
-	ptDevices: "two routers (R1 and R2)",
+	ptDevices: "two routers (R1 and R2: Cisco 2911 or 1941)",
+	ptNotes: "In Packet Tracer, run \"ping 192.168.180.30\" and \"ping ipv6 2001:db8:acca::2\" from R1. Enable \"ipv6 unicast-routing\" in global config if your Packet Tracer router model requires it.",
 	hasPacketTracerFile: false,
 };
 
@@ -831,7 +836,8 @@ const LAB6 = {
 		label: "The /26 and /125 interfaces are up, reachable, and saved",
 		check: (state, lab) => LAB6.tasks.every((task) => task.check(state, lab)),
 	},
-	ptDevices: "two routers (R1 and R2)",
+	ptDevices: "two routers (R1 and R2: Cisco 2911 or 1941)",
+	ptNotes: "In Packet Tracer, run \"ping 10.26.0.2\" and \"ping ipv6 2001:db8:26::2\" from R1. Enable \"ipv6 unicast-routing\" in global config if your Packet Tracer router model requires it.",
 	hasPacketTracerFile: false,
 };
 
@@ -958,7 +964,8 @@ const LAB7 = {
 		label: "Both VLANs, access ports, and the trunk are configured and saved",
 		check: (state) => LAB7.tasks.every((task) => task.check(state)),
 	},
-	ptDevices: "two Catalyst switches (SW-1 and SW-2), two PCs",
+	ptDevices: "two Catalyst switches (SW-1 and SW-2: Catalyst 2960-24TT or 3560-24PS) and two PCs (PC1, PC2)",
+	ptNotes: "No router is present, so inter-VLAN ping between PC1 (VLAN 20) and PC2 (VLAN 30) is not expected. Verify with show vlan brief and show interfaces trunk.",
 	hasPacketTracerFile: false,
 };
 
@@ -1098,7 +1105,8 @@ const LAB8 = {
 		label: "Access ports and both LACP EtherChannel trunk members are configured and saved",
 		check: (state) => LAB8.tasks.every((task) => task.check(state)),
 	},
-	ptDevices: "two Catalyst switches (SW-1 and SW-2), two PCs",
+	ptDevices: "two Catalyst switches (SW-1 and SW-2: Catalyst 2960-24TT or 3560-24PS) and two PCs (PC1, PC2)",
+	ptNotes: "Both PCs share VLAN 40 and 192.168.40.0/24; test connectivity with \"ping 192.168.40.20\" from PC1 after LACP converges. Verify with show etherchannel summary and show interfaces trunk.",
 	hasPacketTracerFile: false,
 };
 
@@ -1224,7 +1232,8 @@ const LAB9 = {
 		label: "The trusted host reaches the server, the guest is filtered, and both routers are saved",
 		check: (state, lab) => LAB9.tasks.every((task) => task.check(state, lab)),
 	},
-	ptDevices: "two routers (R1 and R2), one switch, two PCs, one server",
+	ptDevices: "two routers (R1 and R2: Cisco 2911 or 1941), one Catalyst switch (SW-1: Catalyst 2960-24TT), two PCs (Trusted PC, Guest PC), and one server (Server)",
+	ptNotes: "Verify the ACL in Packet Tracer by pinging 192.168.50.10 from Trusted PC (succeeds) and Guest PC (fails); a ping sourced from R1 does not test the inbound LAN ACL.",
 	hasPacketTracerFile: false,
 };
 
@@ -1329,7 +1338,8 @@ const LAB10 = {
 		label: "Static and default routes carry traffic between both LANs",
 		check: (state, lab) => LAB10.tasks.every((task) => task.check(state, lab)),
 	},
-	ptDevices: "two routers (R1 and R2), one PC, one server",
+	ptDevices: "two routers (R1 and R2: Cisco 2911 or 1941), one PC (PC1), and one server (Server)",
+	ptNotes: "Verify end-to-end connectivity in Packet Tracer by running \"ping 172.16.20.20\" from PC1's Command Prompt, and inspect \"show ip route\" on R1.",
 	hasPacketTracerFile: false,
 };
 
@@ -1388,7 +1398,7 @@ const LAB11 = {
 		},
 		{
 			id: "configure-ospf",
-			text: "On all routers, start OSPF process 10, set the shown router ID, and advertise 10.11.0.0/29 in area 0.",
+			text: "On all routers, start OSPF process 10, set each router ID (R1: 1.1.1.1, R2: 2.2.2.2, R3: 3.3.3.3), and advertise 10.11.0.0/29 in area 0.",
 			hint: "On each router: router ospf 10 → router-id <ID> → network 10.11.0.0 0.0.0.7 area 0.",
 			check: (state) => LAB11_ROUTERS.every((name) => {
 				const ospf = state.devices[name].ospf;
@@ -1474,7 +1484,8 @@ const LAB11 = {
 		label: "OSPF is enabled and R3 wins the initial DR election",
 		check: (state, lab) => LAB11.tasks.every((task) => task.check(state, lab)),
 	},
-	ptDevices: "three routers (R1, R2, R3) and one Catalyst switch",
+	ptDevices: "three routers (R1, R2, R3: Cisco 2911 or 1941) and one Catalyst switch (SW-1: Catalyst 2960-24TT)",
+	ptNotes: "Configure OSPF priorities and process 10 on all three routers before running \"no shutdown\" on GigabitEthernet0/0 so the initial DR election uses your configured priorities. Verify the DR (R3) with \"show ip ospf neighbor\" and \"show ip ospf interface GigabitEthernet0/0\".",
 	hasPacketTracerFile: false,
 };
 

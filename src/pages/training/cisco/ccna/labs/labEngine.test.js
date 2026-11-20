@@ -12,6 +12,8 @@ let applyWorksheetCommands;
 let canReach;
 let canReachIpv6;
 let getOspfDr;
+let buildPacketTracerGuide;
+let ptIfName;
 
 before(async () => {
 	vite = await createServer({
@@ -21,7 +23,7 @@ before(async () => {
 		appType: "custom",
 	});
 	({ PRACTICE_LABS, HIDDEN_PRACTICE_LABS } = await vite.ssrLoadModule("/src/pages/training/cisco/ccna/labs/labDefinitions.js"));
-	({ createLabState, execute, configCommands, canReach, canReachIpv6, getOspfDr } = await vite.ssrLoadModule("/src/pages/training/cisco/ccna/labs/labEngine.js"));
+	({ createLabState, execute, configCommands, canReach, canReachIpv6, getOspfDr, buildPacketTracerGuide, ptIfName } = await vite.ssrLoadModule("/src/pages/training/cisco/ccna/labs/labEngine.js"));
 	({ applyWorksheetCommands } = await vite.ssrLoadModule("/src/pages/training/cisco/ccna/labs/worksheetCommands.js"));
 });
 
@@ -61,6 +63,24 @@ test("Layer 2 labs omit nonexistent gateways from Packet Tracer setup", () => {
 			assert.ok(configCommands(device).every((command) => !command.startsWith("Default gateway ")));
 		}
 	}
+});
+
+test("Packet Tracer build guides use Packet Tracer interface names and complete preconfiguration", () => {
+	for (const lab of PRACTICE_LABS) {
+		const guide = buildPacketTracerGuide(lab);
+		assert.ok(guide.includes(`DEVICES: ${lab.ptDevices}`), `Lab ${lab.id} should list Packet Tracer devices`);
+		assert.ok(guide.includes("PRE-CONFIGURATION"), `Lab ${lab.id} should include preconfiguration`);
+		assert.ok(guide.includes("YOUR TASKS"), `Lab ${lab.id} should include tasks`);
+	}
+
+	const lab1 = PRACTICE_LABS.find(({ id }) => id === 1);
+	const lab1Guide = buildPacketTracerGuide(lab1);
+	assert.ok(lab1Guide.includes("FastEthernet0/2 (E0/1)"), "switch E0/1 should map to Packet Tracer FastEthernet0/2");
+	assert.ok(lab1Guide.includes("GigabitEthernet0/0"), "router G0/0 should map to Packet Tracer GigabitEthernet0/0");
+	assert.ok(lab1Guide.includes("Switch"), "IP Phone fa0 should map to the Switch port");
+	assert.ok(lab1Guide.includes("PC"), "IP Phone fa1 should map to the PC port");
+	assert.equal(ptIfName(lab1.devices["SW-1"], "e0/1", "SW-1"), "FastEthernet0/2");
+	assert.equal(ptIfName(lab1.devices.R1, "g0/0", "R1"), "GigabitEthernet0/0");
 });
 
 test("the new labs' terminal solutions execute and pass every task", () => {
