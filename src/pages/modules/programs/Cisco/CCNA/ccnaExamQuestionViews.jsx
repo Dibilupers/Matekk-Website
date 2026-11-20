@@ -524,7 +524,20 @@ export function QuestionPrompt({
 	);
 }
 
-export function QuestionExhibits({ question, className = "mb-6", compact = false }) {
+export function QuestionExhibits({ question, className = "mb-6", compact = false, includeOfflineSourceImages = false }) {
+	const offlineSourceExhibits = includeOfflineSourceImages && Array.isArray(question.offlineSourceExhibitImages)
+		? question.offlineSourceExhibitImages
+			.filter((src) => src !== question.exhibitImage)
+			.map((src, index) => (
+				<figure key={`${src}-${index}`} className={className}>
+					<figcaption className="mb-2 text-xs font-semibold text-[#596983]">
+						Provided offline exhibit image{question.offlineSourceExhibitImages.length > 1 ? ` ${index + 1}` : ""}
+					</figcaption>
+					<ExhibitImage src={src} alt={`Provided offline exhibit image ${index + 1}`} compact={compact} imageClassName="max-h-[32rem]" lazy />
+				</figure>
+			))
+		: null;
+
 	if (question.afterExhibit) {
 		const sourceExhibits = (
 			<>
@@ -537,6 +550,7 @@ export function QuestionExhibits({ question, className = "mb-6", compact = false
 		if (question.afterExhibit.imageUrl) {
 			return (
 				<>
+					{offlineSourceExhibits}
 					{sourceExhibits}
 					<div className={className}>
 						<ExhibitImage
@@ -555,6 +569,7 @@ export function QuestionExhibits({ question, className = "mb-6", compact = false
 		}
 		return (
 			<>
+				{offlineSourceExhibits}
 				{sourceExhibits}
 				<section aria-label="After exhibit" className={`overflow-hidden rounded-xl border border-[#d6e5e7] bg-white ${className}`}>
 					<div className="border-b border-[#d6e5e7] bg-[#f7fbfa] px-4 py-3">
@@ -575,8 +590,24 @@ export function QuestionExhibits({ question, className = "mb-6", compact = false
 
 	return (
 		<>
+			{offlineSourceExhibits}
 			{question.exhibitDiagram && <ExhibitDiagram type={question.exhibitDiagram} className={className} compact={compact} />}
-			{question.exhibitImage && !question.hideExhibitImage && <ExhibitImage src={question.exhibitImage} className={className} compact={compact} imageClassName="max-h-[32rem]" cropTop={question.exhibitImageCropTop} />}
+			{question.exhibitImage && !question.hideExhibitImage && (
+				includeOfflineSourceImages ? (
+					<figure className={className}>
+						<figcaption className="mb-2 text-xs font-semibold text-[#596983]">Offline exhibit image</figcaption>
+						<ExhibitImage
+							src={question.exhibitImage}
+							alt="Offline exhibit image"
+							compact={compact}
+							imageClassName="max-h-[32rem]"
+							cropTop={question.exhibitImageCropTop}
+						/>
+					</figure>
+				) : (
+					<ExhibitImage src={question.exhibitImage} className={className} compact={compact} imageClassName="max-h-[32rem]" cropTop={question.exhibitImageCropTop} />
+				)
+			)}
 			{question.exhibit && <ExhibitText text={question.exhibit} className={className} />}
 		</>
 	);

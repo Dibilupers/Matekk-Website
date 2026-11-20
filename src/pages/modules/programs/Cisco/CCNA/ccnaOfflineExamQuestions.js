@@ -1,3 +1,23 @@
+import aclQuestion77ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-77-acl-exhibit.jpg";
+import jsonObject769ExhibitImg from "../../../../../assets/ccna-exam/ccna-json-object-exhibit-769.svg";
+import ipAddressAssignmentExhibitImg from "../../../../../assets/ccna-exam/ccna-question-875-ip-address-exhibit.jpg";
+import stpRootBridge962ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-962-stp-root-bridge-exhibit.jpg";
+import pcIpConfig963ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-963-ipconfig-exhibit.png";
+import wlanAdvanced1028ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-1028-wlan-advanced-exhibit.png";
+import hostA1114ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-1114-host-a-exhibit.png";
+import vlanSwitchTopology1130ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-1130-switch-vlan-topology.jpg";
+import hostC1152ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-1152-host-c-network-config.jpg";
+import wlcWpa2Psk1154ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-1154-wlc-wpa2.jpg";
+import stpTopology1167ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-1167-stp-topology.jpg";
+import wlcWpa2Aes1170ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-1170-wlc-wpa2-aes.jpg";
+import sw11Vlan340ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-340-sw11-vlan.jpg";
+import wlcMacFiltering872ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-872-wlc-mac-filtering.jpg";
+import wlcSae890ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-890-wlc-sae.jpg";
+import wlc63CharPsk911ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-911-wlc-63-char-psk.jpg";
+import workstationServerFqdn924ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-924-workstation-server-fqdn.jpg";
+import wlcP2pBlocking992ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-992-wlc-p2p-blocking.webp";
+import patVlan341ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-341-pat-vlan.webp";
+import voiceDataVlan382ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-382-voice-data-vlan.webp";
 import { CCNA_LEGACY_QUESTIONS } from "./ccnaLegacyQuestions";
 import { applyNativeExhibit, CCNA_RECREATED_TEXT_EXHIBITS } from "./ccnaCompositeSetQuestions";
 import { findCcnaQuestionExplanation } from "../../../../../utils/ccnaQuestionExplanations";
@@ -12,6 +32,179 @@ import { getCcnaExhibitImageByLegacyIndex } from "../../../../../utils/ccnaExhib
 import { shuffleMatchingChoices } from "./ccnaMatchingChoices";
 
 const CONNECT_DOTS_LEGACY_QUESTION_INDEX = 654;
+const OFFLINE_REFER_EXHIBIT_QUESTION_IDS = new Set(
+  CCNA_LEGACY_QUESTIONS
+    .filter((question) => /\bexhibit\b/i.test(question.prompt))
+    .map((question) => question.legacyIndex),
+);
+const OFFLINE_REFER_EXHIBIT_IMAGE_OVERRIDES = new Map([
+  [345, { exhibitImage: aclQuestion77ExhibitImg }],
+  [341, { exhibitImage: patVlan341ExhibitImg }],
+  [382, { exhibitImage: voiceDataVlan382ExhibitImg }],
+  [340, { exhibitImage: sw11Vlan340ExhibitImg }],
+  [1188, { exhibitImage: wlcMacFiltering872ExhibitImg }],
+  [1206, { exhibitImage: wlcSae890ExhibitImg }],
+  [1227, { exhibitImage: wlc63CharPsk911ExhibitImg }],
+  [1232, { exhibitImage: workstationServerFqdn924ExhibitImg }],
+  [1281, { exhibitImage: wlcP2pBlocking992ExhibitImg }],
+  [1112, {
+    prompt: "Refer to the exhibit.\n\nVoIP is being implemented in the network using VLAN ID 73 and named “VoIP”. Each user needs a Cisco IP phone at their desk. Switchport e0/0 has been configured as an access port in the data VLAN. Cisco Discovery Protocol is enabled globally. Which command sequence completed the configuration?",
+    exhibit: `SW_1#show vlan
+
+VLAN  Name                 Status    Ports
+----  -------------------  --------  ---------------------------
+1     default              active    Et0/2, Et1/0, Et1/0, Et1/3
+5     MGMT Vlan            active    Et1/1
+6     Server Vlan          active
+72    Data Vlan            active    Et0/0
+1002  fddi-default         act/unsup
+1003  token-ring-default   act/unsup
+1004  fddinet-default     act/unsup
+1005  trnet-default       act/unsup`,
+    exhibitImage: undefined,
+    offlineSourceExhibitImages: [],
+  }],
+  [44, { offlineSourceExhibitImages: [] }],
+  [51, { offlineSourceExhibitImages: [] }],
+  [62, { offlineSourceExhibitImages: [] }],
+  [494, { offlineSourceExhibitImages: [], afterExhibit: undefined }],
+  [507, { offlineSourceExhibitImages: [] }],
+  [542, { offlineSourceExhibitImages: [] }],
+  [570, { offlineSourceExhibitImages: [] }],
+  [508, { offlineSourceExhibitImages: [] }],
+  [645, { offlineSourceExhibitImages: [] }],
+  [687, { offlineSourceExhibitImages: [] }],
+  [1300, { offlineSourceExhibitImages: [] }],
+  [1301, { offlineSourceExhibitImages: [] }],
+  [769, {
+    offlineSourceExhibitImages: [],
+    afterExhibit: undefined,
+    exhibitDiagram: undefined,
+    exhibit: undefined,
+    exhibitImage: jsonObject769ExhibitImg,
+    hideExhibitImage: false,
+    exhibitQuality: "illustrative",
+  }],
+  [875, {
+    offlineSourceExhibitImages: [],
+    afterExhibit: undefined,
+    exhibitDiagram: undefined,
+    exhibit: undefined,
+    exhibitImage: ipAddressAssignmentExhibitImg,
+    hideExhibitImage: false,
+  }],
+  [962, {
+    offlineSourceExhibitImages: [],
+    afterExhibit: undefined,
+    exhibitDiagram: undefined,
+    exhibit: undefined,
+    exhibitImage: stpRootBridge962ExhibitImg,
+    hideExhibitImage: false,
+  }],
+  [963, {
+    offlineSourceExhibitImages: [],
+    afterExhibit: undefined,
+    exhibitDiagram: undefined,
+    exhibit: undefined,
+    exhibitImage: pcIpConfig963ExhibitImg,
+    hideExhibitImage: false,
+  }],
+  [1028, {
+    offlineSourceExhibitImages: [],
+    afterExhibit: undefined,
+    exhibitDiagram: undefined,
+    exhibit: undefined,
+    exhibitImage: wlanAdvanced1028ExhibitImg,
+    hideExhibitImage: false,
+  }],
+  [1114, {
+    offlineSourceExhibitImages: [],
+    afterExhibit: undefined,
+    exhibitDiagram: undefined,
+    exhibit: undefined,
+    exhibitImage: hostA1114ExhibitImg,
+    hideExhibitImage: false,
+  }],
+  [1130, {
+    offlineSourceExhibitImages: [],
+    afterExhibit: undefined,
+    exhibitDiagram: undefined,
+    exhibit: undefined,
+    exhibitImage: vlanSwitchTopology1130ExhibitImg,
+    hideExhibitImage: false,
+  }],
+  [1143, {
+    offlineSourceExhibitImages: [],
+    afterExhibit: undefined,
+    exhibitDiagram: undefined,
+    exhibit: undefined,
+    exhibitImage: vlanSwitchTopology1130ExhibitImg,
+    hideExhibitImage: false,
+  }],
+  [1152, {
+    offlineSourceExhibitImages: [],
+    afterExhibit: undefined,
+    exhibitDiagram: undefined,
+    exhibit: undefined,
+    exhibitImage: hostC1152ExhibitImg,
+    hideExhibitImage: false,
+  }],
+  [1154, {
+    offlineSourceExhibitImages: [],
+    afterExhibit: undefined,
+    exhibitDiagram: undefined,
+    exhibit: undefined,
+    exhibitImage: wlcWpa2Psk1154ExhibitImg,
+    hideExhibitImage: false,
+  }],
+  [1167, {
+    offlineSourceExhibitImages: [],
+    afterExhibit: undefined,
+    exhibitDiagram: undefined,
+    exhibit: undefined,
+    exhibitImage: stpTopology1167ExhibitImg,
+    hideExhibitImage: false,
+  }],
+  [1170, {
+    offlineSourceExhibitImages: [],
+    afterExhibit: undefined,
+    exhibitDiagram: undefined,
+    exhibit: undefined,
+    exhibitImage: wlcWpa2Aes1170ExhibitImg,
+    hideExhibitImage: false,
+  }],
+]);
+
+const OFFLINE_REFER_EXHIBIT_QUESTION_OVERRIDES = new Map([
+  [875, {
+    optionIndex: 1,
+    option: `R7#
+interface FastEthernet1/0
+ip address 10.88.31.126 255.255.255.192
+R8#
+interface FastEthernet0/0
+ip address 10.19.63.94 255.255.255.240
+R9#
+interface FastEthernet1/1
+ip address 10.23.98.158 255.255.255.224`,
+    explanation: `Option B configures each router with the last usable address and the subnet mask shown in the exhibit.
+
+R7: 10.88.31.64/26 has broadcast address 10.88.31.127, so the last usable address is 10.88.31.126.
+R8: 10.19.63.80/28 has broadcast address 10.19.63.95, so the last usable address is 10.19.63.94.
+R9: 10.23.98.128/27 has broadcast address 10.23.98.159, so the last usable address is 10.23.98.158.`,
+  }],
+  [963, {
+explanation: `The PC address 192.168.10.25 with subnet mask 255.255.255.0 is in 192.168.10.0/24. The configured default gateway 192.168.1.1 is outside that subnet, so the PC cannot reach its router. Set the default gateway to the router's address in 192.168.10.0/24. The DNS server is not the subnet mismatch.`,
+  }],
+  [1114, {
+answer: 1,
+explanation: "Host A is configured with 192.168.1.255/24, which is the broadcast address of the 192.168.1.0/24 LAN, not a valid host address. The default gateway 192.168.1.1 matches the router's LAN interface, and the exhibit provides a DNS server. Correct the host IP address.",
+  }],
+  [1152, {
+answer: 1,
+explanation: "Host C is configured with IP address 192.168.1.12 and subnet mask 255.255.255.0, so it is on the 192.168.1.0/24 subnet. The router's LAN address is 192.168.1.1, but Host C's default gateway is set to 192.168.2.1, which is outside its subnet. The default gateway is preventing Host C from reaching the internet.",
+  }],
+]);
 
 const AFTER_EXHIBITS_BY_LEGACY_INDEX = new Map();
 for (const exhibit of CCNA_AFTER_EXHIBITS) {
@@ -28,15 +221,15 @@ const NUMBERED_QUESTION_EXHIBIT_IMAGES = import.meta.glob(
   { eager: true, import: "default", query: "?url" },
 );
 
-const NUMBERED_QUESTION_EXHIBITS = Object.entries(NUMBERED_QUESTION_EXHIBIT_IMAGES)
+const NUMBERED_QUESTION_EXHIBIT_VARIANTS = Object.entries(NUMBERED_QUESTION_EXHIBIT_IMAGES)
   .reduce((exhibits, [path, image]) => {
     const match = path.match(/ccna-question-(\d+)(-corrected)?\.png$/);
     if (!match) return exhibits;
 
     const questionNumber = Number(match[1]);
-    if (!exhibits.has(questionNumber) || match[2]) {
-      exhibits.set(questionNumber, image);
-    }
+    const variants = exhibits.get(questionNumber) ?? [];
+    variants.push({ image, corrected: Boolean(match[2]) });
+    exhibits.set(questionNumber, variants);
     return exhibits;
   }, new Map());
 
@@ -368,17 +561,20 @@ function parseOfflineAnswerTable(question) {
   return { prompt: parsed.prompt, options };
 }
 
-const OFFLINE_LEGACY_QUESTIONS = CCNA_LEGACY_QUESTIONS
+const OFFLINE_LEGACY_QUESTION_CANDIDATES = CCNA_LEGACY_QUESTIONS
   .map((question) => {
     const isConnectDotsQuestion = question.legacyIndex === CONNECT_DOTS_LEGACY_QUESTION_INDEX;
     const offlineOverride = OFFLINE_LEGACY_QUESTION_OVERRIDES.get(question.legacyIndex);
     const parsedAnswerTable = offlineOverride ? null : parseOfflineAnswerTable(question);
+    const numberedExhibitVariants =
+      NUMBERED_QUESTION_EXHIBIT_VARIANTS.get(OFFLINE_LEGACY_QUESTION_IMAGE_IDS.get(question.legacyIndex)) ?? [];
     const numberedExhibit = /\bexhibit\b/i.test(question.prompt)
-      ? NUMBERED_QUESTION_EXHIBITS.get(OFFLINE_LEGACY_QUESTION_IMAGE_IDS.get(question.legacyIndex))
+      ? numberedExhibitVariants.find(({ corrected }) => corrected)?.image ?? numberedExhibitVariants[0]?.image
       : undefined;
     const legacyIndexedExhibit = /\bexhibit\b/i.test(question.prompt)
       ? getCcnaExhibitImageByLegacyIndex(question.legacyIndex)
       : undefined;
+    const offlineSourceExhibitImages = numberedExhibitVariants.map(({ image }) => image);
     const nativeExhibit = LEGACY_QUESTION_NATIVE_EXHIBITS.get(question.legacyIndex);
     const afterExhibit = AFTER_EXHIBITS_BY_LEGACY_INDEX.get(question.legacyIndex);
     const promptNativeExhibit = applyNativeExhibit(question);
@@ -406,6 +602,7 @@ const OFFLINE_LEGACY_QUESTIONS = CCNA_LEGACY_QUESTIONS
       ...(removeExhibitLeadIn
         ? { prompt: promptWithoutExhibitLeadIn }
         : {}),
+      ...(offlineSourceExhibitImages.length ? { offlineSourceExhibitImages } : {}),
       ...(isConnectDotsQuestion
         ? { prompt: "Connect each Wi-Fi term on the left to its matching description on the right." }
         : {}),
@@ -449,7 +646,9 @@ const OFFLINE_LEGACY_QUESTIONS = CCNA_LEGACY_QUESTIONS
       moduleTitle: "Legacy CCNA 200-301",
       explanation: offlineOverride?.explanation || question.explanation?.trim() || findCcnaQuestionExplanation(question.prompt),
     };
-  })
+  });
+
+const OFFLINE_LEGACY_QUESTIONS = OFFLINE_LEGACY_QUESTION_CANDIDATES
   .filter((question) =>
     isValidQuestion(question) &&
     (!/\bexhibit\b/i.test(question.prompt) ||
@@ -462,6 +661,35 @@ const OFFLINE_LEGACY_QUESTIONS = CCNA_LEGACY_QUESTIONS
 
 export function getOfflineLegacyQuestionBank() {
   return OFFLINE_LEGACY_QUESTIONS.map((question) => ({ ...question }));
+}
+
+export function getOfflineReferExhibitQuestionBank() {
+  return OFFLINE_LEGACY_QUESTION_CANDIDATES
+    .filter((question) =>
+      OFFLINE_REFER_EXHIBIT_QUESTION_IDS.has(question.legacyIndex) &&
+      question.type !== "drag_drop" &&
+      question.type !== "match" &&
+      isValidQuestion(question),
+    )
+    .map((question) => {
+      const withImageOverrides = {
+        ...question,
+        ...OFFLINE_REFER_EXHIBIT_IMAGE_OVERRIDES.get(question.legacyIndex),
+      };
+      const questionOverride = OFFLINE_REFER_EXHIBIT_QUESTION_OVERRIDES.get(question.legacyIndex);
+      if (!questionOverride) return withImageOverrides;
+
+      return {
+        ...withImageOverrides,
+        ...(Number.isInteger(questionOverride.optionIndex) ? {
+          options: withImageOverrides.options.map((option, index) =>
+            index === questionOverride.optionIndex ? questionOverride.option : option,
+          ),
+        } : {}),
+        ...(Number.isInteger(questionOverride.answer) ? { answer: questionOverride.answer } : {}),
+        ...(questionOverride.explanation ? { explanation: questionOverride.explanation } : {}),
+      };
+    });
 }
 
 export function createOfflineLegacyExamQuestions(count) {
