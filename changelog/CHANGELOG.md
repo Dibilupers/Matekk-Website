@@ -6,6 +6,18 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `967854a` — Added device-local autosave and restoration for CCNA practice
+  labs and the topology sandbox, preserved separate worksheet and terminal
+  attempts when switching views, and surfaced local-storage failures.
+
+Validation before push: 21 practice-lab and storage tests, targeted ESLint,
+production build, and browser checks for worksheet drafts, terminal state, and
+sandbox topology surviving reloads passed. Vite reported a large-bundle warning.
+
+## 2026-11-20 — `main`
+
+Commits included in this push:
+
 - `ad08531` — Featured Labs 6–11, kept the worksheet as the default, added
   draggable sandbox devices, and blocked unsupported same-device connections.
 
