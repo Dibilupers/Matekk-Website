@@ -5,6 +5,7 @@ import {
 	CCNA_RECREATED_TEXT_EXHIBITS,
 } from "./ccnaCompositeSetQuestions.js";
 import { CCNA_RECREATED_CANDIDATE_EXHIBITS } from "./ccnaRecreatedCandidateExhibits.js";
+import { CCNA_LEGACY_QUESTIONS } from "./ccnaLegacyQuestions.js";
 
 test("applies the Question 299 IP-address matching override", () => {
 	const question = applyNativeExhibit({
@@ -33,14 +34,147 @@ test("uses the source-faithful three-router exhibit for Question 177", () => {
 	assert.equal(question.hideExhibitImage, true);
 });
 
+test("uses the source-faithful four-router OSPF exhibit for Question 1167", () => {
+	const question = applyNativeExhibit({ bankId: 1167 });
+
+	assert.equal(question.exhibitDiagram, "ospf-four-router-broadcast");
+	assert.equal(question.hideExhibitImage, true);
+});
+
+test("adds the three VLAN subnet labels to Question 1194's topology", () => {
+	const question = applyNativeExhibit({ bankId: 1194 });
+
+	assert.equal(question.exhibitDiagram, "vlan-switch-web-server");
+	assert.equal(question.hideExhibitImage, true);
+});
+
+test("recreates Question 1197's R1-to-PC-1 exhibit with its source configuration", () => {
+	const question = applyNativeExhibit({ bankId: 1197 });
+
+	assert.equal(question.exhibitDiagram, "r1-ssh-acl-pc1");
+	assert.equal(question.hideExhibitImage, true);
+	assert.equal(question.exhibitQuality, "source-backed");
+});
+
+test("recreates Question 1199's database and client topology", () => {
+	const question = applyNativeExhibit({ bankId: 1199 });
+
+	assert.equal(question.exhibitDiagram, "r1-r2-database-security");
+	assert.equal(question.hideExhibitImage, true);
+});
+
+test("keeps Question 130's DR/BDR answer aligned with its exhibit priorities", () => {
+	const question = CCNA_LEGACY_QUESTIONS.find(({ legacyIndex }) => legacyIndex === 130);
+
+	assert.equal(question.options[question.answer], "Router R2 will become the DR and router R4 will become the BDR.");
+	assert.match(question.explanation, /Priority 0.*ineligible/i);
+});
+
+test("recreates Question 1157's interface summary and hides its mismatched image", () => {
+	const question = applyNativeExhibit({ bankId: 1157 });
+
+	assert.equal(question.exhibit, CCNA_RECREATED_TEXT_EXHIBITS.routerInterfaceBrief);
+	assert.equal(question.hideExhibitImage, true);
+	assert.match(question.exhibit, /192\.168\.0\.1/);
+	assert.match(question.exhibit, /10\.10\.10\.20/);
+	assert.match(question.exhibit, /172\.16\.15\.10/);
+	assert.doesNotMatch(question.exhibit, /10\.0\.8\.29|10\.7\.3\.28/);
+});
+
 test("uses the voice-and-data VLAN topology for Question 268", () => {
 	assert.equal(applyNativeExhibit({ bankId: 268 }).exhibitDiagram, "voice-vlan-two-switch");
+});
+
+test("redraws Question 382's voice and data VLAN exhibit", () => {
+	const question = applyNativeExhibit({ bankId: 382 });
+
+	assert.equal(question.exhibitDiagram, "voice-data-vlan300-400");
+	assert.equal(question.hideExhibitImage, true);
+});
+
+test("redraws Question 39's switch configurations as a two-column exhibit", () => {
+	const question = applyNativeExhibit({ bankId: 39 });
+
+	assert.equal(question.exhibitDiagram, "switch-config-two-column-39");
+	assert.equal(question.hideExhibitImage, true);
+	assert.equal(question.exhibit, undefined);
 });
 
 test("rebuilds Question 246 as a complete route topology and hides the source image", () => {
 	const question = applyNativeExhibit({ bankId: 246 });
 
 	assert.equal(question.exhibitDiagram, "r14-r86-static-route-172");
+	assert.equal(question.hideExhibitImage, true);
+});
+
+test("rebuilds the R86 route to R14's 172.16.34.0/29 network", () => {
+	const question = applyNativeExhibit({
+		prompt: "Refer to the exhibit. A static route must be configured on R86 to forward traffic for the 172.16.34.0/29 network, which resides on R14.",
+	});
+
+	assert.equal(question.exhibitDiagram, "r86-static-route-to-r14-17216-34");
+	assert.equal(question.hideExhibitImage, true);
+});
+
+test("uses the IPv6 WAN exhibit for both its live-bank ID and legacy prompt", () => {
+	const byBankId = applyNativeExhibit({ bankId: 159 });
+	const byPrompt = applyNativeExhibit({
+		prompt: "Refer to the exhibit. Which IPv6 configuration is required for R17 to successfully ping the WAN interface on R18?",
+	});
+
+	assert.equal(byBankId.exhibitDiagram, "candidate-ipv6-wan-159");
+	assert.equal(byBankId.hideExhibitImage, true);
+	assert.equal(byPrompt.exhibitDiagram, "candidate-ipv6-wan-159");
+	assert.equal(byPrompt.hideExhibitImage, true);
+});
+
+test("selects answer-enriched candidate topologies for matching live question IDs", () => {
+	const expectedDiagrams = new Map([
+		[24, "candidate-vlan-roles-24"],
+		[66, "candidate-voice-data-66"],
+		[82, "candidate-cdp-target-82"],
+		[198, "candidate-etherchannel-198"],
+		[703, "candidate-pc2-file-server-policy-703"],
+	]);
+
+	for (const [bankId, exhibitDiagram] of expectedDiagrams) {
+		const question = applyNativeExhibit({ bankId });
+		assert.equal(question.exhibitDiagram, exhibitDiagram);
+		assert.equal(question.hideExhibitImage, true);
+	}
+
+	assert.equal(applyNativeExhibit({ bankId: 24 }).exhibitQuality, "source-backed");
+	const legacyQuestion = applyNativeExhibit({
+		prompt: "Refer to the exhibit. An administrator must configure interfaces Gi1/1 and Gi1/3 on switch SW11.",
+	});
+	assert.equal(legacyQuestion.exhibitDiagram, "candidate-vlan-roles-24");
+	assert.equal(legacyQuestion.hideExhibitImage, true);
+});
+
+test("uses the VLAN 100/200 PAT exhibit for the matching question prompt", () => {
+	const question = applyNativeExhibit({
+		prompt: "Refer to exhibit. Which configuration must be applied to the router that configures PAT to translate all addresses in VLAN 200 while allowing devices on VLAN 100 to use their own IP addresses?",
+	});
+
+	assert.equal(question.exhibitDiagram, "pat-vlan-subnetting-100-200");
+	assert.equal(question.hideExhibitImage, true);
+});
+
+test("uses the Subnet A/B outbound ACL exhibit for the matching question prompt", () => {
+	const question = applyNativeExhibit({
+		prompt: "Refer to the exhibit. Option A: permit 10.100.100.0 0.0.0.255; deny 192.168.0.0 0.0.255.255. An access list is required to permit traffic from any host on interface G0/0 and deny traffic from interface Gi0/1. Which access list must be applied?",
+	});
+
+	assert.equal(question.exhibitDiagram, "standard-acl-subnet-a-b-gi02");
+	assert.equal(question.hideExhibitImage, true);
+});
+
+test("uses the Router1/Router2 NTP exhibit for the matching question prompt", () => {
+	const question = applyNativeExhibit({
+		prompt: "Refer to the exhibit. The ntp server 192.168.0.3 command has been configured on Router1 to make it an NTP client of router 2. Which command must be configured on Router2 so that it operates in server-only mode?",
+	});
+
+	assert.equal(question.exhibitDiagram, "r1-r2-ntp-link");
 	assert.equal(question.hideExhibitImage, true);
 });
 
@@ -150,6 +284,7 @@ test("reconstructs candidate exhibits from the local source records", () => {
 
 	const terminalQuestion = applyNativeExhibit({ bankId: 1096 });
 	assert.match(terminalQuestion.exhibit, /vtp mode transparent/);
+	assert.equal(terminalQuestion.exhibitDiagram, "vtp-transparent-frame-flow");
 	assert.equal(terminalQuestion.exhibitQuality, "source-backed");
 
 	const wirelessQuestion = applyNativeExhibit({ bankId: 260 });
@@ -161,7 +296,7 @@ test("reconstructs candidate exhibits from the local source records", () => {
 });
 
 test("adds partial exhibits for live rows missing both image and inline exhibit data", () => {
-	for (const bankId of [24, 29, 66, 82, 159, 169, 198, 557, 703, 832, 924]) {
+	for (const bankId of [29, 66, 82, 159, 169, 198, 557, 703, 832, 924]) {
 		const question = applyNativeExhibit({ bankId, prompt: "Refer to the exhibit." });
 		assert.equal(question.hideExhibitImage, true);
 		assert.ok(question.exhibitDiagram || question.exhibit);

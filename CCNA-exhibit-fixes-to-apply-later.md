@@ -1,6 +1,6 @@
 # CCNA Exhibit Fixes
 
-**Status:** Implemented in the CCNA All Questions Exam source on `fix/ccna-recreate-exhibit-images`. Changes are not committed or pushed.
+**Status:** Implemented in the CCNA All Questions Exam source. A comprehensive “Refer to the exhibit” audit remains for follow-up.
 
 ## Implementation summary
 
@@ -21,6 +21,27 @@ The PDF includes 161 of the 166 mapped question comparisons plus a cover page. E
 - The exhibit mapping contains 166 question IDs. The PDF has 162 landscape pages total: one cover and 161 comparisons; entries without a replacement exhibit are omitted.
 - This workspace has matching original exhibit image files for 100 mapped IDs. The included comparisons contain 99 original images; the 62 included questions without a local original are marked “Exhibit Missing” rather than using guessed source material.
 - Five mappings have no replacement exhibit and are omitted from the PDF and this repair list.
+
+## User-supplied image bundle audit — 2026-11-20
+
+- Added 349 original exhibit images and 81 corrected exhibit images from `Images.zip`, plus a 349-row mapping from legacy question indexes to live question-bank IDs. The 81 corrected images include 71 new files and 10 updated versions.
+- The bundled legacy bank has 1,319 questions, including 388 “Refer to the exhibit” prompts. The ZIP provides original images for 348 of those prompts; 40 still have no matching source or corrected image and were not guessed: 340, 341, 452, 519, 624, 702, 732, 747, 769, 799, 809, 836, 844, 883, 888, 911, 920, 962, 963, 982, 1028, 1041, 1067, 1076, 1110, 1112, 1114, 1143, 1148, 1152, 1154, 1159, 1170, 1188, 1199, 1206, 1227, 1232, 1245, and 1281.
+- The local built-in bank now retains 349 refer-to-exhibit legacy questions; the 40 without exhibits remain excluded rather than shown without required context. The offline legacy bank includes 339 valid refer-to-exhibit questions; nine additional image-backed prompts remain excluded by its existing question validation.
+- The live question-bank API was unavailable during this pass. The local fallback mapping is covered by regression tests, but live Supabase question rows were not verified. These changes have not been pushed.
+- Legacy question 102 (index 1138) has a source image that repeats the answer choices instead of showing the referenced switch configuration. The misleading exhibit reference is now removed and the duplicate image hidden rather than inventing a topology.
+
+## Legacy question 476 — R17/R18 IPv6 WAN reachability
+
+- Replace the unavailable placeholders with the addresses in the answer choices: R17 Fa0/0 `2001:DB8:2::201/64`, R17 Fa1/0 `2001:DB8:3::201/64`, R18 transit `2001:DB8:3::301/64`, and R18 WAN `2001:DB8:4::302/64`.
+- Show the R17–R18 transit as `2001:DB8:3::/64` and the WAN network as `2001:DB8:4::/64`.
+
+## Answer-derived topology details
+
+- SW11's correct configuration uses Data VLAN 8 on Gi1/1 and Gi1/3, with Voice VLAN 9 on Gi1/3.
+- SW1's Gi1/1 uses Data VLAN 300 and Voice VLAN 400.
+- Router A disables CDP on Gi0/0/0, leaving Gi0/0/1 enabled toward Router C.
+- The SW1/SW2 EtherChannel uses trunking on Gi0/1 and Gi0/2, with LACP active on SW1 and passive on SW2.
+- PC2 is `192.168.2.10`; ACL 1 is applied outbound on R2 Gi0/1 to deny PC2 and permit other traffic.
 
 ## Why some labels were missing
 
@@ -72,6 +93,11 @@ The diagram renderer does not infer labels from the original screenshot; topolog
 
 - Replace the source exhibit with a separate, newly arranged route-path diagram: R14 routes through R86 to destination LAN `172.21.34.0/25`.
 - Show the Fa0/0 transit subnet `10.73.65.64/30`, endpoint addresses `.65` at R14 and `.66` at R86, and both loopbacks: R14 `10.10.1.14/32` and R86 `10.10.1.86/32`.
+
+## Legacy question 835 — R86 static route to R14
+
+- Replace the source screenshot with a native topology showing R86 reaching `172.16.34.0/29` through R14 over `10.73.65.64/30`.
+- Label R14 as `.65` and R86 as `.66` on Fa0/0; place the destination network on R14 and hide the source image's unrelated R86 LAN.
 
 ## Question 273 — Dual-WAN workstation sites
 

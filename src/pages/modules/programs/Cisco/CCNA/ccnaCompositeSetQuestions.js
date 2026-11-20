@@ -804,6 +804,14 @@ B* 0.0.0.0/0 [20/0] via 10.111.11.93, 6w3d
 ${" ".repeat(55)}E
 ${" ".repeat(55)}↓
 O E1      10.1.1.55/32 [110/31] via 10.153.0.10, 4w0d, GigabitEthernet0/0/1`,
+	routerInterfaceBrief: `R1#show ip interface brief
+Interface              IP-Address      OK? Method Status                Protocol
+FastEthernet0/0        unassigned      YES administratively down down
+GigabitEthernet0/1     192.168.0.1     YES NVRAM  up                    up
+GigabitEthernet0/2     192.168.0.2     YES NVRAM  up                    up
+GigabitEthernet0/3     10.10.10.20     YES NVRAM  up                    up
+GigabitEthernet0/4     unassigned      YES NVRAM  administratively down down
+Loopback0              172.16.15.10    YES manual up                    up`,
 	wirelessIpConfig: `C:\\> ipconfig /all
 
 Windows IP Configuration
@@ -851,7 +859,7 @@ R1(config-if)#ip nat outside`,
 
 const DATABASE_NATIVE_EXHIBITS = new Map([
 	[181, { hideExhibitImage: true }],
-	[382, { hideExhibitImage: true }],
+	[382, { diagram: "voice-data-vlan300-400", hideExhibitImage: true }],
 	[608, { hideExhibitImage: true }],
 	[491, { hideExhibitImage: true, removeExhibitLeadIn: true }],
 	[299, {
@@ -1224,9 +1232,9 @@ interface FastEthernet0/2
 	[1099, { diagram: "stp-four-switch-ring", hideExhibitImage: true }],
 	[1119, "four-router-subnet-growth"],
 	[1125, "three-router-pc-routing"],
-	[1167, "ospf-four-router-broadcast"],
-	[1194, "vlan-switch-web-server"],
-	[1199, "r1-r2-database-security"],
+	[1167, { diagram: "ospf-four-router-broadcast", hideExhibitImage: true }],
+	[1194, { diagram: "vlan-switch-web-server", hideExhibitImage: true }],
+	[1199, { diagram: "r1-r2-database-security", hideExhibitImage: true }],
 	[1321, {
 		exhibit: CCNA_RECREATED_TEXT_EXHIBITS.patOverload,
 		hideExhibitImage: true,
@@ -1256,26 +1264,8 @@ with manager.connect(host='192.168.1.1', port=830,
     print(m.get_config('running').data_xml)`,
 	}],
 	[39, {
-		exhibit: `Switch A
-Vlan 10,11,12,13
-
-interface GigabitEthernet0/1
- switchport mode trunk
- switchport trunk allowed vlan 10-12
-!
-interface GigabitEthernet0/4
- switchport access vlan 13
- switchport mode access
-
-Switch B
-Vlan 10,11,12,13
-
-interface GigabitEthernet0/1
- switchport mode trunk
-!
-interface GigabitEthernet0/3
- switchport access vlan 13
- switchport mode access`,
+		diagram: "switch-config-two-column-39",
+		hideExhibitImage: true,
 	}],
 	[143, {
 		exhibit: `Switch1#show etherchannel summary
@@ -1741,24 +1731,25 @@ L 209.165.200.253/32 is directly connected, Serial0/0/1`,
 	}],
 	[1082, {
 		exhibit: `S1#show interface trunk
-Port    Mode  Encapsulation  Status    Native vlan
-Fa0/1   on    802.1q         Trunking  1
+Port          Mode  Encapsulation  Status    Native vlan
+Fa0/1         on    802.1q         trunking  1
 
-Port    Vlans allowed on trunk
-Fa0/1   1,100,5
+Port          Vlans allowed on trunk
+Fa0/1         1-1005
 
-Port    Vlans allowed and active in management domain
-Fa0/1   1,2
+Port          Vlans allowed and active in management domain
+Fa0/1         1,2
 
+-------------------------------------------------------------------------------
 S2#show interface trunk
-Port    Mode  Encapsulation  Status    Native vlan
-Fa0/1   on    802.1q         Trunking  2
+Port          Mode  Encapsulation  Status    Native vlan
+Fa0/1         on    802.1q         trunking  2
 
-Port    Vlans allowed on trunk
-Fa0/1   1,100,5
+Port          Vlans allowed on trunk
+Fa0/1         1-4094
 
-Port    Vlans allowed and active in management domain
-Fa0/1   1,2`,
+Port          Vlans allowed and active in management domain
+Fa0/1         1,12`,
 	}],
 	[1097, {
 		exhibit: `SW1#show spanning-tree vlan 30
@@ -1872,14 +1863,8 @@ S 209.165.201.0/27 is subnetted, 1 subnets
   209.165.201.0 [1/0] via 209.165.202.130`,
 	}],
 	[1157, {
-		exhibit: `R1#show ip interface brief
-Interface              IP-Address      OK? Method Status                Protocol
-FastEthernet0/0        unassigned      YES administratively down down
-GigabitEthernet0/1     192.168.0.1     YES NVRAM  up                    up
-GigabitEthernet0/2     192.168.0.2     YES NVRAM  up                    up
-GigabitEthernet0/3     10.10.10.20    YES NVRAM  up                    up
-GigabitEthernet0/4     unassigned      YES NVRAM  administratively down down
-Loopback0              172.16.15.10    YES manual up                    up`,
+		hideExhibitImage: true,
+		exhibit: CCNA_RECREATED_TEXT_EXHIBITS.routerInterfaceBrief,
 	}],
 	[1168, {
 		exhibit: `R1#show ip ospf int gi0/0
@@ -1934,6 +1919,47 @@ D 192.168.0.0/24 [90/201728] via 172.16.0.2, 00:00:04, FastEthernet0/0`,
 
 export function getBuiltInQuestionByPrompt(prompt) {
 	if (typeof prompt !== "string") return null;
+	if (/which configuration enables sw2 to establish an lacp etherchannel/i.test(prompt)) {
+		return { hideExhibitImage: true, removeExhibitLeadIn: true };
+	}
+	if (
+		/static route must be configured on r86/i.test(prompt) &&
+		/172\.16\.34\.0\/29/i.test(prompt) &&
+		/resides on r14/i.test(prompt)
+	) {
+		return { exhibitDiagram: "r86-static-route-to-r14-17216-34", hideExhibitImage: true };
+	}
+	if (/which ipv6 configuration is required for r17 to successfully ping the wan interface on r18/i.test(prompt)) {
+		return { exhibitDiagram: "candidate-ipv6-wan-159", hideExhibitImage: true };
+	}
+	if (/configure interfaces gi1\/1 and gi1\/3 on switch sw11/i.test(prompt)) {
+		return { exhibitDiagram: "candidate-vlan-roles-24", hideExhibitImage: true };
+	}
+	if (/which configuration must be applied to the router that configures pat to translate all addresses in vlan 200/i.test(prompt)) {
+		return { exhibitDiagram: "pat-vlan-subnetting-100-200", hideExhibitImage: true };
+	}
+	if (
+		/which access list must be applied/i.test(prompt) &&
+		/10\.100\.100\.0 0\.0\.0\.255/i.test(prompt) &&
+		/192\.168\.0\.0/i.test(prompt)
+	) {
+		return { exhibitDiagram: "standard-acl-subnet-a-b-gi02", hideExhibitImage: true };
+	}
+	if (/the ntp server 192\.168\.0\.3 command has been configured on router1/i.test(prompt)) {
+		return { exhibitDiagram: "r1-r2-ntp-link", hideExhibitImage: true };
+	}
+	if (/configure gigabitethernet1\/1 to accommodate voice and data traffic/i.test(prompt)) {
+		return { exhibitDiagram: "candidate-voice-data-66", hideExhibitImage: true };
+	}
+	if (/router a be configured so that it only sends cisco discovery protocol information to router c/i.test(prompt)) {
+		return { exhibitDiagram: "candidate-cdp-target-82", hideExhibitImage: true };
+	}
+	if (/etherchannel to form dynamically between sw1 and sw2/i.test(prompt)) {
+		return { exhibitDiagram: "candidate-etherchannel-198", hideExhibitImage: true };
+	}
+	if (/connections must be blocked from pc2 to the file server/i.test(prompt)) {
+		return { exhibitDiagram: "candidate-pc2-file-server-policy-703", hideExhibitImage: true };
+	}
 	const builtInQuestion = BUILT_IN_QUESTION_BY_PROMPT.get(normalizePrompt(prompt));
 	if (builtInQuestion) return builtInQuestion;
 

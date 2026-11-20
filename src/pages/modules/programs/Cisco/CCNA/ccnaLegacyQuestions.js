@@ -1782,13 +1782,13 @@ export const CCNA_LEGACY_QUESTIONS = [
     "legacyNumber": 5,
     "prompt": "Refer to the exhibit. If the switch reboots and all routers have to re-establish OSPF adjacencies, which\nrouters will become the new DR and BDR?",
     "options": [
-      "Router R3 will become the DR and router R1 will become the BDR.",
+      "Router R2 will become the DR and router R4 will become the BDR.",
       "Router R4 will become the DR and router R3 will become the BDR.",
       "Router R1 will become the DR and router R2 will become the BDR.",
       "Router R3 will become the DR and router R2 will become the BDR."
     ],
     "answer": 0,
-    "explanation": "After the new election, R3 and R1 have highest priority (of 2) so they will be elected DR and BDR. R3 will be\nelected DR because its has higher router ID (of 3.3.3.3)."
+    "explanation": "R1 has priority 0 and is ineligible for DR/BDR election. R2 has the highest eligible priority (3), so it becomes DR. R4 has the next-highest priority (2), so it becomes BDR."
   },
   {
     "legacyIndex": 131,
@@ -16969,7 +16969,7 @@ export const CCNA_LEGACY_QUESTIONS = [
       "Option D"
     ],
     "answer": 1,
-    "explanation": "The Etherchannel group numbers are only locally significant and can be different on two ends."
+    "explanation": "The active mode enables LACP and initiates negotiation. Desirable and auto are PAgP modes, while on configures a static EtherChannel. The channel-group number is locally significant and may differ between switches."
   },
   {
     "legacyIndex": 1139,

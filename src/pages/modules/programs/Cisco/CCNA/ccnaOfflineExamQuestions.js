@@ -1,4 +1,3 @@
-import subinterfaceR1Sw1Sw2Img from "../../../../../assets/ccna-exam/subinterface-r1-sw1-sw2.webp";
 import { CCNA_LEGACY_QUESTIONS } from "./ccnaLegacyQuestions";
 import { applyNativeExhibit, CCNA_RECREATED_TEXT_EXHIBITS } from "./ccnaCompositeSetQuestions";
 import { findCcnaQuestionExplanation } from "../../../../../utils/ccnaQuestionExplanations";
@@ -9,6 +8,8 @@ import {
   CCNA_AFTER_EXHIBITS,
   getBundledCcnaAfterExhibitImage,
 } from "../../../../../utils/ccnaAfterExhibits";
+import { getCcnaExhibitImageByLegacyIndex } from "../../../../../utils/ccnaExhibitImages";
+import { shuffleMatchingChoices } from "./ccnaMatchingChoices";
 
 const CONNECT_DOTS_LEGACY_QUESTION_INDEX = 654;
 
@@ -291,11 +292,47 @@ const OFFLINE_LEGACY_QUESTION_OVERRIDES = new Map([
   }],
 ]);
 
-const LEGACY_QUESTION_EXHIBITS = new Map([
-  [50, subinterfaceR1Sw1Sw2Img],
-]);
-
 const LEGACY_QUESTION_NATIVE_EXHIBITS = new Map([
+  [340, { diagram: "candidate-vlan-roles-24", hideExhibitImage: true }],
+  [355, { diagram: "switch-config-two-column-39", hideExhibitImage: true }],
+  [382, { diagram: "voice-data-vlan300-400", hideExhibitImage: true }],
+  [50, { diagram: "router-on-a-stick-vlan20", hideExhibitImage: true }],
+  [59, { diagram: "vtp-transparent-frame-flow", hideExhibitImage: true }],
+  [84, { diagram: "redundant-switch-network", hideExhibitImage: true }],
+  [130, { diagram: "ospf-four-router-broadcast", hideExhibitImage: true }],
+  [157, { diagram: "vlan-switch-web-server", hideExhibitImage: true }],
+  [160, { diagram: "r1-ssh-acl-pc1", hideExhibitImage: true }],
+  [162, { diagram: "r1-r2-database-security", hideExhibitImage: true }],
+  [174, { diagram: "site-to-site-vpn-main-remote-campuses", hideExhibitImage: true }],
+  [215, { hideExhibitImage: true }],
+  [341, { diagram: "pat-vlan-subnetting-100-200", hideExhibitImage: true }],
+  [345, { diagram: "standard-acl-subnet-a-b-gi02", hideExhibitImage: true }],
+  [354, { diagram: "r1-r2-ntp-link", hideExhibitImage: true }],
+  [120, { exhibit: CCNA_RECREATED_TEXT_EXHIBITS.routerInterfaceBrief, hideExhibitImage: true }],
+  [45, {
+    hideExhibitImage: true,
+    displayAlongsideAfterExhibit: true,
+    exhibit: `S1#show interface trunk
+Port          Mode  Encapsulation  Status    Native vlan
+Fa0/1         on    802.1q         trunking  1
+
+Port          Vlans allowed on trunk
+Fa0/1         1-1005
+
+Port          Vlans allowed and active in management domain
+Fa0/1         1,2
+
+-------------------------------------------------------------------------------
+S2#show interface trunk
+Port          Mode  Encapsulation  Status    Native vlan
+Fa0/1         on    802.1q         trunking  2
+
+Port          Vlans allowed on trunk
+Fa0/1         1-4094
+
+Port          Vlans allowed and active in management domain
+Fa0/1         1,12`,
+  }],
   [217, "wlc-my-wlan-layer2"],
   [227, "wlc-psk-layer2"],
   [1301, "wlc-security-tab-legacy"],
@@ -339,6 +376,9 @@ const OFFLINE_LEGACY_QUESTIONS = CCNA_LEGACY_QUESTIONS
     const numberedExhibit = /\bexhibit\b/i.test(question.prompt)
       ? NUMBERED_QUESTION_EXHIBITS.get(OFFLINE_LEGACY_QUESTION_IMAGE_IDS.get(question.legacyIndex))
       : undefined;
+    const legacyIndexedExhibit = /\bexhibit\b/i.test(question.prompt)
+      ? getCcnaExhibitImageByLegacyIndex(question.legacyIndex)
+      : undefined;
     const nativeExhibit = LEGACY_QUESTION_NATIVE_EXHIBITS.get(question.legacyIndex);
     const afterExhibit = AFTER_EXHIBITS_BY_LEGACY_INDEX.get(question.legacyIndex);
     const promptNativeExhibit = applyNativeExhibit(question);
@@ -347,17 +387,25 @@ const OFFLINE_LEGACY_QUESTIONS = CCNA_LEGACY_QUESTIONS
     const hideExhibitImage = nativeExhibit?.hideExhibitImage || promptNativeExhibit.hideExhibitImage;
     const exhibitImage = hideExhibitImage || exhibitDiagram
       ? undefined
-      : numberedExhibit || promptNativeExhibit.exhibitImage || LEGACY_QUESTION_EXHIBITS.get(question.legacyIndex);
+      : numberedExhibit ||
+        promptNativeExhibit.exhibitImage ||
+        legacyIndexedExhibit;
     const exhibit = nativeExhibit?.exhibit || (promptNativeExhibit.nativeExhibitText ? promptNativeExhibit.exhibit : undefined);
+    const nativePrompt = promptNativeExhibit.prompt;
+    const removeExhibitLeadIn = nativeExhibit?.removeExhibitLeadIn ||
+      (typeof nativePrompt === "string" && nativePrompt !== question.prompt);
+    const promptWithoutExhibitLeadIn = typeof nativePrompt === "string" && nativePrompt !== question.prompt
+      ? nativePrompt
+      : question.prompt.replace(/^\s*Refer to (?:the )?exhibit\.?\s*/i, "");
 
     return {
       ...question,
-      ...(nativeExhibit?.removeExhibitLeadIn || promptNativeExhibit.removeExhibitLeadIn
-        ? { prompt: question.prompt.replace(/^\s*Refer to (?:the )?exhibit\.?\s*/i, "") }
-        : {}),
       ...(!question.exhibit && !offlineOverride && !parsedAnswerTable ? splitPromptExhibit(question.prompt) : {}),
       ...parsedAnswerTable,
       ...offlineOverride,
+      ...(removeExhibitLeadIn
+        ? { prompt: promptWithoutExhibitLeadIn }
+        : {}),
       ...(isConnectDotsQuestion
         ? { prompt: "Connect each Wi-Fi term on the left to its matching description on the right." }
         : {}),
@@ -371,10 +419,12 @@ const OFFLINE_LEGACY_QUESTIONS = CCNA_LEGACY_QUESTIONS
               title: afterExhibit.after_exhibit_title,
               text: afterExhibit.after_exhibit_text,
               comparisonNo: afterExhibit.comparison_no,
-              imageUrl: getBundledCcnaAfterExhibitImage(afterExhibit.question_id),
+              imageUrl: afterExhibit.hide_after_exhibit_image
+                ? null
+                : getBundledCcnaAfterExhibitImage(afterExhibit.question_id),
               questionId: afterExhibit.question_id,
             },
-            exhibit: undefined,
+            exhibit: nativeExhibit?.displayAlongsideAfterExhibit ? exhibit : undefined,
             exhibitImage: undefined,
             hideExhibitImage: true,
           }
@@ -453,5 +503,6 @@ export function createOfflineLegacyExamQuestions(count) {
   const remainingQuestions = shuffle(questions.filter((question) => !selectedIds.has(question.id)))
     .slice(0, count - selectedIds.size);
 
-  return shuffle([...dragDropQuestions, ...clickBoxesQuestions, ...connectDotsQuestions, ...imageExhibitQuestions, ...remainingQuestions]);
+  return shuffle([...dragDropQuestions, ...clickBoxesQuestions, ...connectDotsQuestions, ...imageExhibitQuestions, ...remainingQuestions])
+    .map((question) => shuffleMatchingChoices(question, shuffle));
 }

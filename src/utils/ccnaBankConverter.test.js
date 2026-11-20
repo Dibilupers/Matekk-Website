@@ -1,22 +1,31 @@
 import assert from "node:assert/strict";
 import { after, before, test } from "node:test";
+import React from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { createServer } from "vite";
 
 let vite;
 let convertBankRow;
 let loadCcnaAllQuestionsBank;
 let loadCachedCcnaAllQuestionsBank;
+let getCcnaExhibitImageByBankId;
+let getCcnaExhibitImageByLegacyIndex;
+let ccnaExhibitImageMap;
 let createOfflineCcnaExamQuestions;
 let isValidQuestion;
 let applyNativeExhibit;
 let compositeSetQuestions;
 let getOfflineLegacyQuestionBank;
+let createOfflineLegacyExamQuestions;
+let ExhibitDiagram;
+let QuestionExhibits;
 let builtInQuestionBank;
 let createShortExamQuestions;
 let setDatabaseQuestions;
 let originalFetch;
 let originalCaches;
 let originalWindow;
+let originalReact;
 
 before(async () => {
   vite = await createServer({
@@ -27,17 +36,23 @@ before(async () => {
   });
   ({ convertBankRow } = await vite.ssrLoadModule("/src/utils/ccnaBankConverter.js"));
   ({ loadCcnaAllQuestionsBank } = await vite.ssrLoadModule("/src/utils/ccnaQuestionBankApi.js"));
+  ({ getCcnaExhibitImageByBankId, getCcnaExhibitImageByLegacyIndex } = await vite.ssrLoadModule("/src/utils/ccnaExhibitImages.js"));
+  ({ default: ccnaExhibitImageMap } = await vite.ssrLoadModule("/src/assets/ccna-exhibit-image-map.json"));
   ({ loadCachedCcnaAllQuestionsBank } = await vite.ssrLoadModule("/src/utils/ccnaOfflineQuestionBank.js"));
   ({ createOfflineCcnaExamQuestions } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaOfflineTimedExam.js"));
   ({ isValidQuestion } = await vite.ssrLoadModule("/src/utils/ccnaExamGrading.js"));
   ({ applyNativeExhibit } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaCompositeSetQuestions.js"));
   ({ CCNA_COMPOSITE_SET_QUESTIONS: compositeSetQuestions } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaCompositeSetQuestions.js"));
-  ({ getOfflineLegacyQuestionBank } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaOfflineExamQuestions.js"));
+  ({ getOfflineLegacyQuestionBank, createOfflineLegacyExamQuestions } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaOfflineExamQuestions.js"));
+  ({ ExhibitDiagram } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaExhibit.jsx"));
+  ({ QuestionExhibits } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaExamQuestionViews.jsx"));
   ({ CCNA_QUESTION_BANK: builtInQuestionBank } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaQuestionBank.jsx"));
   ({ createShortExamQuestions, setDatabaseQuestions } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaQuestionBank.jsx"));
   originalFetch = globalThis.fetch;
   originalCaches = globalThis.caches;
   originalWindow = globalThis.window;
+  originalReact = globalThis.React;
+  globalThis.React = React;
 });
 
 after(async () => {
@@ -46,7 +61,236 @@ after(async () => {
   else globalThis.caches = originalCaches;
   if (originalWindow === undefined) delete globalThis.window;
   else globalThis.window = originalWindow;
+  if (originalReact === undefined) delete globalThis.React;
+  else globalThis.React = originalReact;
   await vite.close();
+});
+
+test("maps original exhibit images to legacy and live-bank question IDs", () => {
+  assert.equal(ccnaExhibitImageMap.length, 349);
+  const legacyIndexes = new Set();
+  for (const entry of ccnaExhibitImageMap) {
+    assert.ok(!legacyIndexes.has(entry.legacy_question_index));
+    legacyIndexes.add(entry.legacy_question_index);
+    const image = getCcnaExhibitImageByLegacyIndex(entry.legacy_question_index);
+    assert.match(image, new RegExp(`ccna-exhibit-${entry.legacy_question_index}\\.png$`));
+    if (Number.isSafeInteger(entry.after_exhibit_question_id)) {
+      assert.equal(getCcnaExhibitImageByBankId(entry.after_exhibit_question_id), image);
+    }
+  }
+  assert.equal(legacyIndexes.size, 349);
+
+  const offlineQuestion = getOfflineLegacyQuestionBank().find((question) => question.legacyIndex === 41);
+  assert.ok(offlineQuestion);
+  assert.match(offlineQuestion.exhibitImage, /ccna-exhibit-41\.png$/);
+
+  const builtInQuestion = builtInQuestionBank.find(
+    (question) => question.source === "legacy-ccna-200-301" && question.legacyIndex === 41,
+  );
+  assert.ok(builtInQuestion);
+  assert.match(builtInQuestion.exhibitImage, /ccna-exhibit-41\.png$/);
+});
+
+test("makes the LACP question self-contained when its source image only repeats the choices", () => {
+  const legacyQuestion = getOfflineLegacyQuestionBank().find((question) => question.legacyIndex === 1138);
+  const builtInQuestion = builtInQuestionBank.find(
+    (question) => question.source === "legacy-ccna-200-301" && question.legacyIndex === 1138,
+  );
+  assert.ok(legacyQuestion);
+  assert.ok(builtInQuestion);
+  assert.doesNotMatch(legacyQuestion.prompt, /refer to the exhibit/i);
+  assert.equal(legacyQuestion.hideExhibitImage, true);
+  assert.equal(legacyQuestion.exhibitImage, undefined);
+  assert.match(legacyQuestion.explanation, /active mode enables LACP/);
+  assert.doesNotMatch(builtInQuestion.prompt, /refer to the exhibit/i);
+  assert.equal(builtInQuestion.hideExhibitImage, true);
+  assert.equal(builtInQuestion.exhibitImage, undefined);
+
+  const result = convertBankRow({
+    ...makeRow([
+      "SW2(config-if)#channel-group 2 mode desirable",
+      "SW2(config-if)#channel-group 1 mode active",
+      "SW2(config-if)#channel-group 1 mode on",
+      "SW2(config-if)#channel-group 2 mode auto",
+    ], "B"),
+    question_text: "Refer to the exhibit. Which configuration enables SW2 to establish an LACP EtherChannel?",
+    imageUrl: "https://example.com/questions/ccna-question-102.png",
+  });
+
+  assert.equal(result.problem, undefined);
+  assert.doesNotMatch(result.question.prompt, /refer to the exhibit/i);
+  assert.equal(result.question.hideExhibitImage, true);
+  assert.equal(result.question.exhibitImage, undefined);
+  assert.equal(result.question.answer, 1);
+  assert.match(result.question.explanation, /active mode enables LACP/);
+});
+
+test("recreates the native-VLAN trunk exhibit and retains its separate fixed exhibit", () => {
+  const question = getOfflineLegacyQuestionBank().find((item) => item.legacyIndex === 45);
+  assert.ok(question);
+  assert.equal(question.hideExhibitImage, true);
+  assert.equal(question.exhibitImage, undefined);
+  assert.match(question.exhibit, /S1#show interface trunk/);
+  assert.match(question.exhibit, /Fa0\/1\s+on\s+802\.1q\s+trunking\s+1/);
+  assert.match(question.exhibit, /Fa0\/1\s+on\s+802\.1q\s+trunking\s+2/);
+  assert.match(question.exhibit, /Fa0\/1\s+1-1005/);
+  assert.match(question.exhibit, /Fa0\/1\s+1-4094/);
+  assert.match(question.exhibit, /Fa0\/1\s+1,2/);
+  assert.match(question.exhibit, /Fa0\/1\s+1,12/);
+  assert.equal(question.afterExhibit.questionId, 1082);
+
+  const markup = renderToStaticMarkup(React.createElement(QuestionExhibits, { question }));
+  assert.match(markup, /S1#show interface trunk/);
+  assert.match(markup, /1-1005/);
+  assert.match(markup, /1-4094/);
+  assert.match(markup, /ccna-after-exhibit-1082\.png/);
+
+  const liveQuestion = applyNativeExhibit({
+    bankId: 1082,
+    prompt: "Refer to the exhibit. A frame from VLAN1 of switch S1 is sent to switch S2 where the frame received on VLAN2. What causes this behavior?",
+  });
+  assert.equal(liveQuestion.exhibit, question.exhibit);
+  assert.match(liveQuestion.exhibit, /Fa0\/1\s+1-1005/);
+  assert.match(liveQuestion.exhibit, /Fa0\/1\s+1-4094/);
+});
+
+test("replaces the blurry subinterface topology with its native diagram", () => {
+  const question = getOfflineLegacyQuestionBank().find((item) => item.legacyIndex === 50);
+  assert.ok(question);
+  assert.equal(question.exhibitDiagram, "router-on-a-stick-vlan20");
+  assert.equal(question.hideExhibitImage, true);
+  assert.equal(question.exhibitImage, undefined);
+  assert.match(question.exhibit, /switchport access vlan 20/);
+
+  const markup = renderToStaticMarkup(React.createElement(ExhibitDiagram, {
+    type: question.exhibitDiagram,
+    offlineLayout: true,
+    compact: true,
+  }));
+  assert.match(markup, /R1/);
+  assert.match(markup, /SW1/);
+  assert.match(markup, /SW2/);
+  assert.match(markup, /E0\/0 to E0\/0/);
+  assert.match(markup, /E0\/1 to E0\/1/);
+  assert.doesNotMatch(markup, /VLAN 20 host/);
+});
+
+test("replaces the VTP frame-flow screenshot with its native topology", () => {
+  const question = getOfflineLegacyQuestionBank().find((item) => item.legacyIndex === 59);
+  assert.ok(question);
+  assert.equal(question.exhibitDiagram, "vtp-transparent-frame-flow");
+  assert.equal(question.hideExhibitImage, true);
+  assert.equal(question.exhibitImage, undefined);
+  assert.match(question.exhibit, /vtp mode transparent/);
+  assert.match(question.exhibit, /switchport trunk encapsulation/);
+  assert.match(question.exhibit, /\s+dot1q/);
+
+  const markup = renderToStaticMarkup(React.createElement(ExhibitDiagram, {
+    type: question.exhibitDiagram,
+    offlineLayout: true,
+    compact: true,
+  }));
+  assert.match(markup, /PC A/);
+  assert.match(markup, /SW2/);
+  assert.match(markup, /PC B/);
+  assert.match(markup, /VTP transparent/);
+  assert.match(markup, /Trunk · VLAN ID 2/);
+  assert.match(markup, /Access · untagged/);
+});
+
+test("redraws the redundant-network exhibit with every original host and address", () => {
+  const question = getOfflineLegacyQuestionBank().find((item) => item.legacyIndex === 84);
+  assert.ok(question);
+  assert.equal(question.exhibitDiagram, "redundant-switch-network");
+  assert.equal(question.hideExhibitImage, true);
+  assert.equal(question.exhibitImage, undefined);
+  assert.equal(question.afterExhibit.questionId, 1121);
+
+  const diagramMarkup = renderToStaticMarkup(React.createElement(ExhibitDiagram, {
+    type: question.exhibitDiagram,
+    offlineLayout: true,
+    compact: true,
+  }));
+  for (const value of [
+    "10.142.137.1/24",
+    "172.25.117.2/24",
+    "Host 1",
+    "Host 2",
+    "Host 3",
+    "Host 4",
+    "Host 5",
+    "Host 6",
+  ]) {
+    assert.ok(diagramMarkup.includes(value), `the topology should show ${value}`);
+  }
+
+  const allExhibitsMarkup = renderToStaticMarkup(React.createElement(QuestionExhibits, { question }));
+  assert.ok(allExhibitsMarkup.includes("10.142.137.1/24"));
+  assert.match(allExhibitsMarkup, /ccna-after-exhibit-1121\.png/);
+
+  const liveQuestion = applyNativeExhibit({ bankId: 1121 });
+  assert.equal(liveQuestion.exhibitDiagram, "redundant-switch-network");
+});
+
+test("remakes the R86 static-route exhibit instead of showing the source screenshot", () => {
+  const legacyQuestion = getOfflineLegacyQuestionBank().find((question) => question.legacyIndex === 835);
+  assert.ok(legacyQuestion);
+  assert.equal(legacyQuestion.exhibitDiagram, "r86-static-route-to-r14-17216-34");
+  assert.equal(legacyQuestion.hideExhibitImage, true);
+  assert.equal(legacyQuestion.exhibitImage, undefined);
+
+  const result = convertBankRow({
+    ...makeRow([
+      "ip route 172.16.34.0 255.255.255.248 10.73.65.65",
+      "ip route 172.16.34.0 255.255.255.224 10.73.65.66",
+      "ip route 10.73.65.65 255.255.255.248 172.16.34.0",
+      "ip route 172.16.34.0 0.0.0.7 10.73.65.64",
+    ], "A"),
+    id: 517,
+    question_text: "Refer to the exhibit. A static route must be configured on R86 to forward traffic for the 172.16.34.0/29 network, which resides on R14. Which command must be used to fulfill the request?",
+    imageUrl: "https://example.com/questions/ccna-exhibit-835.png",
+  });
+
+  assert.equal(result.problem, undefined);
+  assert.equal(result.question.exhibitDiagram, "r86-static-route-to-r14-17216-34");
+  assert.equal(result.question.hideExhibitImage, true);
+  assert.equal(result.question.exhibitImage, undefined);
+});
+
+test("shows the option-derived IPv6 addresses in the R17-to-R18 WAN exhibit", () => {
+  const legacyQuestion = getOfflineLegacyQuestionBank().find((question) => question.legacyIndex === 476);
+  assert.ok(legacyQuestion);
+  assert.equal(legacyQuestion.exhibitDiagram, "candidate-ipv6-wan-159");
+  assert.equal(legacyQuestion.hideExhibitImage, true);
+
+  const markup = renderToStaticMarkup(React.createElement(ExhibitDiagram, { type: legacyQuestion.exhibitDiagram }));
+  assert.match(markup, /2001:DB8:2::201\/64/);
+  assert.match(markup, /2001:DB8:3::201\/64/);
+  assert.match(markup, /2001:DB8:3::301\/64/);
+  assert.match(markup, /2001:DB8:4::\/64/);
+  assert.match(markup, /2001:DB8:4::302\/64/);
+  assert.doesNotMatch(markup, /unavailable/i);
+});
+
+test("uses answer-derived topology details in offline legacy questions", () => {
+  const cases = [
+    { legacyIndex: 340, diagram: "candidate-vlan-roles-24", values: ["Data VLAN: 8", "Voice VLAN: 9", "Gi1/3"] },
+    { legacyIndex: 382, diagram: "voice-data-vlan300-400", values: ["switchport access vlan 300", "switchport voice vlan 400"] },
+    { legacyIndex: 398, diagram: "candidate-cdp-target-82", values: ["Gi0/0/0", "Gi0/0/1"] },
+    { legacyIndex: 515, diagram: "candidate-etherchannel-198", values: ["Gi0/1", "Gi0/2", "LACP channel 1"] },
+    { legacyIndex: 1019, diagram: "candidate-pc2-file-server-policy-703", values: ["192.168.2.10", "Gi0/1", "ACL 1 outbound"] },
+  ];
+
+  for (const { legacyIndex, diagram, values } of cases) {
+    const question = getOfflineLegacyQuestionBank().find((item) => item.legacyIndex === legacyIndex);
+    assert.ok(question, `legacy question ${legacyIndex} should be included`);
+    assert.equal(question.exhibitDiagram, diagram);
+    assert.equal(question.hideExhibitImage, true);
+
+    const markup = renderToStaticMarkup(React.createElement(ExhibitDiagram, { type: diagram }));
+    for (const value of values) assert.ok(markup.includes(value), `${diagram} should show ${value}`);
+    assert.doesNotMatch(markup, /unavailable/i, `${diagram} should not show unavailable placeholders`);
+  }
 });
 
 function makeRow(choices, correctAnswer, questionType = "single") {
@@ -380,7 +624,8 @@ test("replaces recreated matching-activity screenshots with their existing inter
   );
   const offlinePatQuestion = getOfflineLegacyQuestionBank().find((entry) => entry.legacyIndex === 282);
   assert.equal(offlinePatQuestion.exhibitDiagram, undefined);
-  assert.match(offlinePatQuestion.exhibit, /ip nat inside source list 1 interface Gi0\/1 overload/);
+  assert.equal(offlinePatQuestion.exhibit, undefined);
+  assert.match(offlinePatQuestion.afterExhibit.text, /ip nat inside source list 1 interface Gi0\/1 overload/);
 });
 
 test("keeps the Router1 routing-method question prompt and matching controls while replacing its screenshot with a topology", () => {
@@ -402,8 +647,8 @@ test("keeps the Router1 routing-method question prompt and matching controls whi
   assert.equal(offlineQuestion.hideExhibitImage, true);
 });
 
-test("restores the four omitted matching rows so the merged CCNA exam reaches 1,367 questions", async () => {
-  const missingIds = new Set([181, 382, 608, 1306]);
+test("restores omitted matching rows and mapped exhibit images in the merged CCNA exam", async () => {
+  const missingIds = new Set([181, 382, 608, 1306, 1081]);
   const usableQuestions = Array.from({ length: 1367 }, (_, index) => index + 1)
     .filter((bankId) => !missingIds.has(bankId))
     .map((bankId) => ({
@@ -429,10 +674,11 @@ test("restores the four omitted matching rows so the merged CCNA exam reaches 1,
     rawRow(608, "Drag and drop characteristics of northbound APIs to the right."),
     rawRow(1306, "Drag and drop each broadcast IP address on the left to the Broadcast Address column on the right."),
   ].map((row) => ({ ...row, choices: null, correct_answer: null }));
+  omittedRows.push(rawRow(1081, "Refer to the exhibit. Which interface is configured for this task?"));
 
   globalThis.fetch = async (url) => {
     const payload = String(url).endsWith("/all-usable")
-      ? { questions: usableQuestions, skippedCount: 4 }
+      ? { questions: usableQuestions, skippedCount: 5 }
       : omittedRows;
     return new Response(JSON.stringify(payload), { status: 200 });
   };
@@ -467,8 +713,12 @@ test("restores the four omitted matching rows so the merged CCNA exam reaches 1,
   for (const bankId of missingIds) {
     const question = result.questions.find((entry) => entry.bankId === bankId);
     assert.ok(question, `question ${bankId} should be restored`);
-    assert.equal(question.type, "drag_drop");
+    if (bankId !== 1081) assert.equal(question.type, "drag_drop");
   }
+  assert.match(
+    result.questions.find((question) => question.bankId === 1081).exhibitImage,
+    /ccna-exhibit-44\.png$/,
+  );
 });
 
 test("jumbles offline matching choices without changing their correct answers", () => {
@@ -605,6 +855,28 @@ test("jumbles offline matching choices without changing their correct answers", 
     Math.random = originalRandom;
   }
 });
+
+test("shuffles the legacy offline SNMP matches without changing their correct answers", () => {
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0.5;
+    const legacyQuestions = getOfflineLegacyQuestionBank();
+    const originalQuestion = legacyQuestions.find((question) => question.legacyIndex === 318);
+    const examQuestion = createOfflineLegacyExamQuestions(legacyQuestions.length)
+      .find((question) => question.legacyIndex === 318);
+
+    assert.ok(originalQuestion);
+    assert.ok(examQuestion);
+    assert.notDeepEqual(examQuestion.choices, originalQuestion.choices);
+    assert.deepEqual(
+      examQuestion.answer.map((choiceIndex) => examQuestion.choices[choiceIndex]),
+      originalQuestion.answer.map((choiceIndex) => originalQuestion.choices[choiceIndex]),
+    );
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
 test("marks the recreated matching activity screenshot to stay hidden", () => {
   const { question } = convertBankRow({
     ...rawRow(570, "Refer to the exhibit. Drag and drop destination IPs onto the network segments."),

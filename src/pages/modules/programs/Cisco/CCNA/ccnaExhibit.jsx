@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Maximize2, X } from "lucide-react";
-import { PcIcon, RouterIcon, SwitchIcon } from "../../../../training/cisco/ccna/labs/LabTopology";
+import { PcIcon, PhoneIcon, RouterIcon, SwitchIcon } from "../../../../training/cisco/ccna/labs/LabTopology";
 import { topologyFitScale } from "../../../../../utils/topologyFit";
-import { placeTopologyLabels } from "../../../../../utils/topologyLabels";
+import { placeTopologyLabels, wrapTopologyNodeLabel } from "../../../../../utils/topologyLabels";
 import {
 	topologyLinkGeometry,
 	topologyLinkLabelPosition,
@@ -241,25 +241,165 @@ function TopologyNode({ role, name, details }) {
 		<div className="min-w-0 rounded-xl border border-[#d6e5e7] bg-white px-3 py-3 text-center shadow-sm">
 			<p className="text-[11px] font-bold uppercase tracking-wide text-[#70809a]">{role}</p>
 			<p className="mt-1 font-bold text-[#17324a]">{name}</p>
-			<p className="mt-1 whitespace-pre-line text-xs leading-5 text-[#526584]">{details}</p>
+			{details && <p className="mt-1 whitespace-pre-line text-xs leading-5 text-[#526584]">{details}</p>}
 		</div>
 	);
 }
 
 const NETWORK_TOPOLOGIES = {
-	"candidate-vlan-roles-24": {
-		title: "SW11 data and voice VLAN roles",
-		note: "The live row names SW11, Gi1/1, Gi1/3, and the endpoint roles. It does not provide the endpoint-to-port mapping or VLAN IDs.",
+	"switch-config-two-column-39": {
+		title: "Switch A and Switch B configuration",
+		viewBox: { x: 0, y: 0, width: 640, height: 320 },
+		canvasBackground: "#fff",
+		nodes: [],
+		links: [],
+		annotations: [
+			{ x: 0, y: 0, lines: [], box: { x: 15, y: 15, width: 613, height: 300, fill: "#fff", stroke: "#4b4b4b", strokeWidth: 2, rx: 0 } },
+			{ x: 0, y: 0, lines: [], box: { x: 321, y: 16, width: 2, height: 298, fill: "#4b4b4b", stroke: "none", rx: 0 } },
+			{
+				x: 27,
+				y: 39,
+				lines: [
+					"Switch A",
+					"Vlan 10,11,12,13",
+					"",
+					"interface GigabitEthernet0/1",
+					"switchport mode trunk",
+					"switchport trunk allowed vlan 10-12",
+					"!",
+					"interface GigabitEthernet0/4",
+					"switchport access vlan 13",
+					"switchport mode access",
+				],
+				indentLines: [4, 5, 8, 9],
+				indentWidth: 7,
+				lineHeight: 25,
+				fontFamily: "Arial, Helvetica, sans-serif",
+				fontSize: 16,
+				fontWeight: 400,
+				color: "#222",
+			},
+			{
+				x: 337,
+				y: 39,
+				lines: [
+					"Switch B",
+					"Vlan 10,11,12,13",
+					"",
+					"interface GigabitEthernet0/1",
+					"switchport mode trunk",
+					"!",
+					"interface GigabitEthernet0/3",
+					"switchport access vlan 13",
+					"switchport mode access",
+				],
+				indentLines: [4, 7, 8],
+				indentWidth: 7,
+				lineHeight: 25,
+				fontFamily: "Arial, Helvetica, sans-serif",
+				fontSize: 16,
+				fontWeight: 400,
+				color: "#222",
+			},
+		],
+	},
+	"voice-data-vlan300-400": {
+		title: "Voice at Data VLAN Configuration sa GigabitEthernet1/1",
+		viewBox: { x: 0, y: 0, width: 1000, height: 750 },
+		canvasBackground: "#fff",
 		nodes: [
-			{ id: "endpoints", kind: "network", name: "Endpoints", x: 120, y: 220, details: ["PC-1 · PC-2 · Phone-1"] },
-			{ id: "sw11", kind: "switch", name: "SW11", x: 480, y: 220, details: ["Gi1/1 · Gi1/3", "Mapping unavailable"] },
-			{ id: "data", kind: "network", name: "Data VLAN", x: 860, y: 150, details: ["VLAN ID unavailable"] },
-			{ id: "voice", kind: "network", name: "Voice VLAN", x: 860, y: 300, details: ["VLAN ID unavailable"] },
+			{ id: "router", kind: "router", name: "", x: 500, y: 335, scale: 2 },
+			{ id: "switch", kind: "switch", name: "", x: 500, y: 535, scale: 2.2 },
+			{ id: "phone", kind: "phone", name: "", x: 305, y: 635, scale: 2.3 },
+			{ id: "pc", kind: "host", name: "", x: 705, y: 635, scale: 1.8 },
 		],
 		links: [
-			{ from: "endpoints", to: "sw11", label: "Port assignments unavailable" },
-			{ from: "sw11", to: "data", label: "PC-1 / PC-2" },
-			{ from: "sw11", to: "voice", label: "Phone-1" },
+			{ points: [{ x: 480, y: 370 }, { x: 480, y: 490 }], color: "#222", strokeWidth: 2 },
+			{ points: [{ x: 520, y: 370 }, { x: 520, y: 490 }], color: "#222", strokeWidth: 2 },
+			{ points: [{ x: 430, y: 545 }, { x: 305, y: 545 }, { x: 305, y: 596 }], color: "#222", strokeWidth: 2 },
+			{ points: [{ x: 570, y: 545 }, { x: 705, y: 545 }, { x: 705, y: 596 }], color: "#222", strokeWidth: 2 },
+		],
+		flowArrows: [
+			{ points: [{ x: 300, y: 580 }, { x: 300, y: 520 }, { x: 430, y: 520 }], color: "#a01f24", strokeWidth: 4 },
+			{ points: [{ x: 600, y: 520 }, { x: 730, y: 520 }, { x: 730, y: 580 }], color: "#176f96", strokeWidth: 4 },
+		],
+		annotations: [
+			{ x: 40, y: 62, lines: ["Voice at Data VLAN Configuration sa GigabitEthernet1/1"], fontSize: 36, fontWeight: 700, color: "#111" },
+			{ x: 0, y: 0, lines: [], box: { x: 610, y: 130, width: 360, height: 150, fill: "#f3f3f3", stroke: "#555", strokeWidth: 1.5, rx: 0 } },
+			{ x: 622, y: 163, lines: ["interface GigabitEthernet1/1"], fontSize: 25, color: "#222" },
+			{ x: 635, y: 198, lines: ["switchport mode access", "switchport access vlan 300", "switchport voice vlan 400"], lineHeight: 34, fontSize: 25, fontWeight: 700, color: "#222" },
+			{ x: 265, y: 410, lines: ["GigabitEthernet1/1"], fontSize: 23, fontWeight: 700, color: "#111" },
+			{ x: 155, y: 497, lines: ["Voice Traffic (VLAN 400)"], textAnchor: "middle", fontSize: 21, fontWeight: 700, color: "#8f1d22" },
+			{ x: 155, y: 527, lines: ["Tagged Traffic (802.1Q)"], textAnchor: "middle", fontSize: 20, color: "#222" },
+			{ x: 748, y: 497, lines: ["Data Traffic (VLAN 300)"], fontSize: 21, fontWeight: 700, color: "#176f96" },
+			{ x: 748, y: 527, lines: ["Untagged Traffic"], fontSize: 20, color: "#222" },
+			{ x: 500, y: 592, lines: ["Multilayer", "Switch"], textAnchor: "middle", lineHeight: 26, fontSize: 22, fontWeight: 700, color: "#111" },
+			{ x: 155, y: 615, lines: ["IP Phone", "(VLAN 400 - Voice)"], textAnchor: "middle", lineHeight: 25, fontSize: 21, fontWeight: 700, color: "#111" },
+			{ x: 305, y: 700, lines: ["IP Phone", "(VLAN 400 - Voice)"], textAnchor: "middle", lineHeight: 25, fontSize: 21, fontWeight: 700, color: "#111" },
+			{ x: 855, y: 615, lines: ["PC", "(VLAN 300 - Data)"], textAnchor: "middle", lineHeight: 25, fontSize: 21, fontWeight: 700, color: "#111" },
+			{ x: 705, y: 700, lines: ["PC (Host)", "(VLAN 300 - Data)"], textAnchor: "middle", lineHeight: 25, fontSize: 21, fontWeight: 700, color: "#111" },
+		],
+	},
+	"candidate-vlan-roles-24": {
+		title: "Exhibit: SW11 VLAN Configuration",
+		viewBox: { x: 0, y: 0, width: 1000, height: 640 },
+		canvasBackground: "#f1f0ec",
+		rightLabels: {
+			x: 760,
+			y: 565,
+			lineHeight: 30,
+			fontSize: 18,
+			fontWeight: 500,
+			items: ["Data VLAN: 8", "Voice VLAN: 9"],
+		},
+		connectionMarkers: [
+			{ x: 335, y: 297 },
+			{ x: 571, y: 166 },
+			{ x: 335, y: 333 },
+			{ x: 568, y: 424 },
+			{ x: 634, y: 430 },
+			{ x: 796, y: 430 },
+		],
+		nodes: [
+			{ id: "sw11", kind: "switch", name: "SW11", x: 300, y: 315 },
+			{ id: "pc1", kind: "host", name: "PC-1", x: 600, y: 150 },
+			{ id: "phone1", kind: "phone", name: "Phone-1", x: 600, y: 430 },
+			{ id: "pc2", kind: "host", name: "PC-2", x: 830, y: 430 },
+		],
+		links: [
+			{
+				from: "sw11",
+				to: "pc1",
+				color: "#111827",
+				label: "Gi1/1",
+				labelX: 435,
+				labelY: 270,
+				fixedLabel: true,
+				labelFontSize: 17,
+				labelFontWeight: 500,
+				extraLabels: [
+					{ text: "Switch", x: 292, y: 270, fontSize: 20, fontWeight: 500 },
+					{ text: "Data VLAN", x: 690, y: 185, fontSize: 20, fontWeight: 500 },
+				],
+			},
+			{
+				from: "sw11",
+				to: "phone1",
+				color: "#111827",
+				label: "Gi1/3",
+				labelX: 465,
+				labelY: 420,
+				fixedLabel: true,
+				labelFontSize: 17,
+				labelFontWeight: 500,
+				extraLabels: [{ text: "Voice VLAN", x: 600, y: 385, fontSize: 20, fontWeight: 500 }],
+			},
+			{
+				from: "phone1",
+				to: "pc2",
+				color: "#111827",
+				extraLabels: [{ text: "Data VLAN", x: 790, y: 385, fontSize: 20, fontWeight: 500 }],
+			},
 		],
 	},
 	"candidate-acl-sources-29": {
@@ -277,60 +417,82 @@ const NETWORK_TOPOLOGIES = {
 	},
 	"candidate-voice-data-66": {
 		title: "Voice and data on SW1 Gi1/1",
-		note: "Only the interface and voice/data requirement are source-backed. VLAN IDs and endpoint details were not present in the live row.",
+		note: "The answer choices specify data VLAN 300 and voice VLAN 400 on the Gi1/1 access port.",
 		nodes: [
-			{ id: "data", kind: "network", name: "Data VLAN", x: 160, y: 220, details: ["ID unavailable"] },
-			{ id: "sw1", kind: "switch", name: "SW1", x: 500, y: 220, details: ["Gi1/1"] },
-			{ id: "voice", kind: "network", name: "Voice VLAN", x: 840, y: 220, details: ["ID unavailable"] },
+			{ id: "data", kind: "network", name: "Data VLAN 300", x: 160, y: 220 },
+			{ id: "sw1", kind: "switch", name: "SW1", x: 500, y: 220, details: ["Gi1/1 · access VLAN 300", "Voice VLAN 400"] },
+			{ id: "voice", kind: "network", name: "Voice VLAN 400", x: 840, y: 220 },
 		],
 		links: [
-			{ from: "data", to: "sw1", label: "Data role" },
-			{ from: "sw1", to: "voice", label: "Voice role" },
+			{ from: "data", to: "sw1", label: "Access VLAN 300" },
+			{ from: "sw1", to: "voice", label: "Voice VLAN 400" },
 		],
 	},
 	"candidate-cdp-target-82": {
 		title: "CDP visibility toward Router C",
-		note: "Router A and Router C are named in the prompt. The actual topology and interface IDs were absent; this is a logical relationship, not a recovered physical link.",
+		note: "The correct configuration disables CDP on Gi0/0/0, leaving the Gi0/0/1 path to Router C enabled.",
 		nodes: [
-			{ id: "routerA", kind: "router", name: "Router A", x: 220, y: 220, details: ["CDP on target path only"] },
-			{ id: "routerC", kind: "router", name: "Router C", x: 780, y: 220, details: ["Target neighbor"] },
+			{ id: "other", kind: "network", name: "Other interface", x: 150, y: 220, details: ["CDP disabled"] },
+			{ id: "routerA", kind: "router", name: "Router A", x: 500, y: 220, details: ["CDP enabled globally"] },
+			{ id: "routerC", kind: "router", name: "Router C", x: 850, y: 220, details: ["Target neighbor"] },
 		],
-		links: [{ from: "routerA", to: "routerC", label: "Logical CDP target; path unknown" }],
+		links: [
+			{ from: "other", to: "routerA", label: "Gi0/0/0 · no cdp enable" },
+			{ from: "routerA", to: "routerC", label: "Gi0/0/1 · CDP enabled" },
+		],
 	},
 	"candidate-ipv6-wan-159": {
 		title: "R17 to R18 WAN reachability",
-		note: "The routers and WAN relationship come from the prompt. IPv6 prefixes, interface addresses, and next-hop details were not present in the live row.",
+		note: "IPv6 addresses and prefixes shown here are taken from the answer choices for the R17–R18 WAN path.",
 		nodes: [
-			{ id: "r17", kind: "router", name: "R17", x: 180, y: 220, details: ["Interface details unavailable"] },
-			{ id: "wan", kind: "network", name: "WAN link", x: 500, y: 220, details: ["IPv6 prefix unavailable"] },
-			{ id: "r18", kind: "router", name: "R18", x: 820, y: 220, details: ["WAN address unavailable"] },
+			{ id: "r17", kind: "router", name: "R17", x: 180, y: 220, details: ["Fa0/0 · 2001:DB8:2::201/64", "Fa1/0 · 2001:DB8:3::201/64"] },
+			{ id: "r18", kind: "router", name: "R18", x: 610, y: 220, details: ["Transit · 2001:DB8:3::301/64"] },
+			{ id: "wan", kind: "network", name: "2001:DB8:4::/64", x: 940, y: 220, details: ["R18 · 2001:DB8:4::302/64"] },
 		],
 		links: [
-			{ from: "r17", to: "wan", label: "IPv6 details unavailable" },
-			{ from: "wan", to: "r18" },
+			{ from: "r17", to: "r18", label: "2001:DB8:3::/64" },
+			{ from: "r18", to: "wan", label: "WAN interface" },
 		],
 	},
 	"candidate-etherchannel-198": {
 		title: "SW1/SW2 LACP EtherChannel",
-		note: "The prompt specifies an industry-standard EtherChannel and PC connectivity. Member ports and VLAN details were absent from the live row.",
+		note: "The answer choices use Gi0/1 and Gi0/2 as trunks, with LACP active on SW1 and passive on SW2.",
 		nodes: [
 			{ id: "pcsA", kind: "network", name: "PC group A", x: 120, y: 220 },
-			{ id: "sw1", kind: "switch", name: "SW1", x: 380, y: 220, details: ["Member ports unavailable"] },
-			{ id: "sw2", kind: "switch", name: "SW2", x: 660, y: 220, details: ["Member ports unavailable"] },
+			{ id: "sw1", kind: "switch", name: "SW1", x: 380, y: 220, details: ["Gi0/1 · Gi0/2 trunks", "LACP channel 1 · active"] },
+			{ id: "sw2", kind: "switch", name: "SW2", x: 660, y: 220, details: ["Gi0/1 · Gi0/2 trunks", "LACP channel 1 · passive"] },
 			{ id: "pcsB", kind: "network", name: "PC group B", x: 920, y: 220 },
 		],
 		links: [
 			{ from: "pcsA", to: "sw1" },
-			{ from: "sw1", to: "sw2", label: "LACP port-channel" },
+			{ from: "sw1", to: "sw2", label: "Gi0/1 ↔ Gi0/1", offset: -12 },
+			{ from: "sw1", to: "sw2", label: "Gi0/2 ↔ Gi0/2", offset: 12 },
 			{ from: "sw2", to: "pcsB" },
+		],
+	},
+	"vtp-transparent-frame-flow": {
+		title: "VTP domain and VLAN 2 frame flow",
+		note: "The sending switch adds VLAN ID 2 to frames from PC A; the receiving switch removes the VLAN ID before sending frames to PC B.",
+		nodes: [
+			{ id: "pcA", kind: "host", name: "PC A", x: 120, y: 440, details: ["VLAN 2"] },
+			{ id: "sw1", kind: "switch", name: "Switch", x: 120, y: 240 },
+			{ id: "sw2", kind: "switch", name: "SW2", x: 500, y: 240, details: ["VTP transparent"] },
+			{ id: "sw3", kind: "switch", name: "Switch", x: 880, y: 240 },
+			{ id: "pcB", kind: "host", name: "PC B", x: 880, y: 440 },
+		],
+		links: [
+			{ from: "pcA", to: "sw1", label: "Access · VLAN 2" },
+			{ from: "sw1", to: "sw2", label: "Trunk · VLAN ID 2" },
+			{ from: "sw2", to: "sw3", label: "Trunk · VLAN ID 2" },
+			{ from: "sw3", to: "pcB", label: "Access · untagged" },
 		],
 	},
 	"candidate-pc2-file-server-policy-703": {
 		title: "PC2 access policy",
-		note: "The source gives the access goal but omits the physical path, addresses, and ACL attachment point. This is a logical policy diagram only.",
+		note: "The answer choices identify PC2 as 192.168.2.10 and place ACL 1 outbound on R2 Gi0/1; no file-server address is specified.",
 		nodes: [
-			{ id: "pc2", kind: "host", name: "PC2", x: 140, y: 220 },
-			{ id: "policy", kind: "router", name: "ACL boundary", x: 500, y: 220, details: ["Placement unavailable"] },
+			{ id: "pc2", kind: "host", name: "PC2", x: 140, y: 220, details: ["192.168.2.10"] },
+			{ id: "policy", kind: "router", name: "R2", x: 500, y: 220, details: ["Gi0/1 · ACL 1 outbound", "deny PC2 · permit any"] },
 			{ id: "server", kind: "host", name: "File server", x: 860, y: 140 },
 			{ id: "other", kind: "network", name: "Other hosts", x: 860, y: 310 },
 		],
@@ -399,6 +561,183 @@ const NETWORK_TOPOLOGIES = {
 			{ from: "siteA", to: "r1", label: "Site A" },
 			{ from: "r1", to: "r2", label: "OSPF" },
 			{ from: "r2", to: "siteB", label: "Site B" },
+		],
+	},
+	"site-to-site-vpn-main-remote-campuses": {
+		title: "Main Campus and Remote Campuses",
+		viewBox: { x: 0, y: 0, width: 1000, height: 600 },
+		canvasBackground: "#d0d0d0",
+		rightLabels: {
+			x: 850,
+			y: 130,
+			lineHeight: 170,
+			fontSize: 13,
+			fontWeight: 700,
+			items: ["Remote Campus", "Remote Campus", "Remote Campus"],
+		},
+		nodes: [
+			{ id: "main", kind: "router", name: "Main Campus", x: 125, y: 310 },
+			{ id: "internet", kind: "network", shape: "cloud", name: "Internet", x: 475, y: 310 },
+			{ id: "remote1", kind: "router", name: "", x: 820, y: 120 },
+			{ id: "remote2", kind: "router", name: "", x: 820, y: 310 },
+			{ id: "remote3", kind: "router", name: "", x: 820, y: 500 },
+		],
+		links: [
+			{ from: "main", to: "internet", color: "#facc15", label: "S0/0/0", fixedLabel: true, labelX: 245, labelY: 292 },
+			{ from: "internet", to: "remote1", color: "#facc15" },
+			{ from: "internet", to: "remote2", color: "#facc15" },
+			{ from: "internet", to: "remote3", color: "#facc15" },
+		],
+	},
+	"pat-vlan-subnetting-100-200": {
+		title: "PAT at VLAN Subnetting (VLAN 100 at VLAN 200)",
+		viewBox: { x: 0, y: 0, width: 1250, height: 850 },
+		canvasBackground: "#fff",
+		nodes: [
+			{ id: "isp", kind: "network", shape: "cloud", name: "Internet / ISP", x: 630, y: 120, fontSize: 19 },
+			{ id: "router", kind: "router", name: "Router1", x: 630, y: 325 },
+			{ id: "switch", kind: "switch", name: "", x: 630, y: 535 },
+			{ id: "hostA", kind: "host", name: "Host A:", x: 350, y: 705, details: ["192.168.100.5"] },
+			{ id: "hostB", kind: "host", name: "Host B:", x: 910, y: 705, details: ["192.168.200.10"] },
+		],
+		links: [
+			{ from: "isp", to: "router", color: "#111827", points: [{ x: 630, y: 146 }, { x: 630, y: 309 }] },
+			{ from: "router", to: "switch", color: "#111827", points: [{ x: 610, y: 350 }, { x: 610, y: 515 }] },
+			{ from: "router", to: "switch", color: "#111827", points: [{ x: 650, y: 350 }, { x: 650, y: 515 }] },
+			{ from: "switch", to: "hostA", color: "#111827", points: [{ x: 596, y: 535 }, { x: 350, y: 535 }, { x: 350, y: 683 }] },
+			{ from: "switch", to: "hostB", color: "#111827", points: [{ x: 664, y: 535 }, { x: 910, y: 535 }, { x: 910, y: 683 }] },
+		],
+		flowArrows: [
+			{ points: [{ x: 350, y: 683 }, { x: 350, y: 535 }, { x: 596, y: 535 }], color: "#1683b5" },
+			{ points: [{ x: 664, y: 535 }, { x: 910, y: 535 }, { x: 910, y: 683 }], color: "#a3171b" },
+			{ points: [{ x: 670, y: 285 }, { x: 670, y: 185 }], color: "#a3171b" },
+			{ points: [{ x: 590, y: 185 }, { x: 590, y: 285 }], color: "#1683b5" },
+		],
+		connectionMarkers: [
+			{ x: 610, y: 382, fill: "#1683b5", radius: 11 },
+			{ x: 650, y: 382, fill: "#35a857", radius: 11 },
+		],
+		annotations: [
+			{ x: 55, y: 235, lines: ["VLAN 100 Traffic → Walang NAT ->"], fontSize: 21, fontWeight: 700, color: "#167798" },
+			{ x: 55, y: 264, lines: ["Internet (gamit ang 192.168.100.x)"], fontSize: 19, color: "#111827" },
+			{ x: 805, y: 235, lines: ["VLAN 200 Traffic → May PAT (Overload)"], fontSize: 21, fontWeight: 700, color: "#9b1c22" },
+			{ x: 805, y: 264, lines: ["-> Internet (isinasalin sa 209.165.201.2)"], fontSize: 19, color: "#111827" },
+			{ x: 785, y: 130, lines: ["209.165.201.2"], fontSize: 22, fontWeight: 700, color: "#111827" },
+			{ x: 785, y: 158, lines: ["(IP ng NAT outside)"], fontSize: 19, color: "#333" },
+			{
+				x: 607,
+				y: 258,
+				lines: ["gi1/0/0"],
+				textAnchor: "middle",
+				fontSize: 18,
+				fontWeight: 700,
+				color: "#fff",
+				box: { x: 550, y: 230, width: 115, height: 36, fill: "#555" },
+			},
+			{ x: 510, y: 350, lines: ["Router1"], textAnchor: "end", fontSize: 24, fontWeight: 700, color: "#111827" },
+			{
+				x: 590,
+				y: 425,
+				lines: ["gi2/0/1.100"],
+				textAnchor: "middle",
+				fontSize: 19,
+				fontWeight: 700,
+				color: "#fff",
+				box: { x: 505, y: 397, width: 170, height: 38, fill: "#1683b5" },
+			},
+			{
+				x: 765,
+				y: 425,
+				lines: ["gi2/0/1.200"],
+				textAnchor: "middle",
+				fontSize: 19,
+				fontWeight: 700,
+				color: "#fff",
+				box: { x: 680, y: 397, width: 170, height: 38, fill: "#35a857" },
+			},
+			{ x: 590, y: 463, lines: ["192.168.100.0/24"], textAnchor: "middle", fontSize: 19, color: "#111827" },
+			{ x: 765, y: 463, lines: ["192.168.200.0/24"], textAnchor: "middle", fontSize: 19, color: "#111827" },
+			{
+				x: 780,
+				y: 320,
+				lines: [
+					"access-list 99 permit 192.168.200.0 0.0.0.255",
+					"ip nat inside source list 99 interface gi1/0/0 overload",
+				],
+				lineHeight: 25,
+				fontSize: 16,
+				fontFamily: "monospace",
+				color: "#111827",
+				box: { x: 760, y: 290, width: 440, height: 72, fill: "#f8f8f8", stroke: "#555" },
+			},
+			{ x: 145, y: 495, lines: ["VLAN 100:"], fontSize: 22, fontWeight: 700, color: "#167798" },
+			{ x: 105, y: 525, lines: ["Gagamit ng sariling", "IP address (No NAT)"], lineHeight: 26, fontSize: 20, fontWeight: 700, color: "#111827" },
+			{ x: 970, y: 495, lines: ["VLAN 200:"], fontSize: 22, fontWeight: 700, color: "#9b1c22" },
+			{ x: 930, y: 525, lines: ["Isasailalim sa PAT", "(NAT overload)"], lineHeight: 26, fontSize: 20, fontWeight: 700, color: "#111827" },
+			{ x: 630, y: 600, lines: ["Multilayer", "Switch"], textAnchor: "middle", lineHeight: 28, fontSize: 21, fontWeight: 700, color: "#111827" },
+		],
+	},
+	"standard-acl-subnet-a-b-gi02": {
+		title: "Exhibit for Question 77: Network Topology",
+		viewBox: { x: 0, y: 0, width: 1200, height: 760 },
+		canvasBackground: "#fff",
+		nodes: [
+			{ id: "subnetA", kind: "network", shape: "cloud", name: "", x: 200, y: 350, scale: 1.45, fill: "#fff", stroke: "#2c697f" },
+			{ id: "subnetB", kind: "network", shape: "cloud", name: "", x: 1000, y: 350, scale: 1.45, fill: "#fff", stroke: "#2c697f" },
+			{ id: "core", kind: "network", shape: "cloud", name: "", x: 600, y: 575, scale: 1.45, fill: "#fff", stroke: "#2c697f" },
+			{ id: "pcA", kind: "host", name: "PC-A", x: 200, y: 310, details: ["(10.100.100.10)"] },
+			{ id: "pcB", kind: "host", name: "PC-B", x: 1000, y: 310, details: ["(192.168.10.10)"] },
+			{ id: "r1", kind: "router", name: "R1", x: 600, y: 335 },
+		],
+		links: [
+			{ from: "subnetA", to: "r1", color: "#111827", points: [{ x: 322, y: 350 }, { x: 568, y: 335 }] },
+			{ from: "r1", to: "subnetB", color: "#111827", points: [{ x: 632, y: 335 }, { x: 878, y: 350 }] },
+			{ from: "r1", to: "core", color: "#111827", points: [{ x: 600, y: 357 }, { x: 600, y: 478 }] },
+		],
+		flowArrows: [
+			{ points: [{ x: 405, y: 305 }, { x: 545, y: 305 }], color: "#57b46e" },
+			{ points: [{ x: 655, y: 305 }, { x: 795, y: 305 }], color: "#bf252a" },
+			{ points: [{ x: 615, y: 405 }, { x: 615, y: 465 }], color: "#8bcf9a" },
+		],
+		annotations: [
+			{ x: 200, y: 205, lines: ["Subnet A:"], textAnchor: "middle", fontSize: 22, fontWeight: 700, color: "#111827" },
+			{ x: 200, y: 233, lines: ["10.100.100.0/24"], textAnchor: "middle", fontSize: 20, fontWeight: 700, color: "#111827" },
+			{ x: 1000, y: 205, lines: ["Subnet B:"], textAnchor: "middle", fontSize: 22, fontWeight: 700, color: "#111827" },
+			{ x: 1000, y: 233, lines: ["192.168.0.0/16"], textAnchor: "middle", fontSize: 20, fontWeight: 700, color: "#111827" },
+			{ x: 430, y: 290, lines: ["permit"], textAnchor: "middle", fontSize: 19, color: "#111827" },
+			{ x: 520, y: 289, lines: ["✓"], textAnchor: "middle", fontSize: 29, fontWeight: 700, color: "#348a4b" },
+			{ x: 700, y: 290, lines: ["deny"], textAnchor: "middle", fontSize: 19, color: "#111827" },
+			{ x: 790, y: 289, lines: ["✕"], textAnchor: "middle", fontSize: 27, fontWeight: 700, color: "#b32026" },
+			{ x: 558, y: 319, lines: ["Gi0/0"], textAnchor: "end", fontSize: 17, color: "#111827" },
+			{ x: 435, y: 369, lines: ["GigabitEthernet0/0"], textAnchor: "middle", fontSize: 17, color: "#111827" },
+			{ x: 642, y: 319, lines: ["Gi0/1"], fontSize: 17, color: "#111827" },
+			{ x: 580, y: 394, lines: ["Gi0/2"], textAnchor: "end", fontSize: 17, color: "#111827" },
+			{ x: 630, y: 402, lines: ["GigabitEthernet0/2"], fontSize: 17, color: "#111827" },
+			{ x: 630, y: 425, lines: ["172.16.0.1"], fontSize: 17, color: "#111827" },
+			{
+				x: 700,
+				y: 493,
+				lines: ["99"],
+				textAnchor: "middle",
+				fontSize: 20,
+				fontWeight: 700,
+				color: "#fff",
+				box: { x: 675, y: 464, width: 50, height: 42, fill: "#315f82", stroke: "#244b68", rx: 12 },
+			},
+			{ x: 740, y: 480, lines: ["Outbound Access List", "Applied: ACL 99"], lineHeight: 23, fontSize: 18, color: "#111827" },
+			{ x: 600, y: 568, lines: ["Core Network /", "Destination"], textAnchor: "middle", lineHeight: 25, fontSize: 20, fontWeight: 700, color: "#111827" },
+			{
+				x: 95,
+				y: 701,
+				lines: [
+					"Scenario Goal: Create a standard access list that permits traffic from 'Subnet A' and denies",
+					"traffic from 'Subnet B', to be applied to traffic leaving Gi0/2.",
+				],
+				lineHeight: 23,
+				fontSize: 17,
+				color: "#111827",
+				box: { x: 80, y: 676, width: 1040, height: 60, fill: "#f4f4f4", stroke: "#777" },
+			},
 		],
 	},
 	"candidate-host-c-gateway": {
@@ -1214,20 +1553,32 @@ const NETWORK_TOPOLOGIES = {
 	},
 	"redundant-switch-network": {
 		title: "Redundant network topology",
-		note: "Router 1 connects to the ISP and both switches; all six hosts share a VLAN.",
+		note: "Router 1 connects to the ISP and both switches; the server and all six hosts are shown individually in the same VLAN.",
 		nodes: [
-			{ id: "isp", kind: "network", name: "ISP", x: 170, y: 105 },
-			{ id: "r1", kind: "router", name: "Router 1", x: 500, y: 115, details: ["192.168.1.1/24 · 192.168.1.2/24"] },
-			{ id: "s1", kind: "switch", name: "Switch 1", x: 350, y: 330 },
-			{ id: "s2", kind: "switch", name: "Switch 2", x: 650, y: 330 },
-			{ id: "server", kind: "host", name: "Server", x: 150, y: 450 },
-			{ id: "h1", kind: "host", name: "Hosts 1–3", x: 350, y: 500 },
-			{ id: "h2", kind: "host", name: "Hosts 4–6", x: 650, y: 500 },
+			{ id: "isp", kind: "network", name: "ISP", x: 500, y: 55 },
+			{ id: "r1", kind: "router", name: "Router 1", x: 500, y: 160 },
+			{ id: "s1", kind: "switch", name: "Switch 1", x: 340, y: 305 },
+			{ id: "s2", kind: "switch", name: "Switch 2", x: 660, y: 305 },
+			{ id: "server", kind: "host", name: "Server", x: 130, y: 425 },
+			{ id: "h1", kind: "host", name: "Host 1", x: 230, y: 485 },
+			{ id: "h2", kind: "host", name: "Host 2", x: 340, y: 515 },
+			{ id: "h3", kind: "host", name: "Host 3", x: 450, y: 485 },
+			{ id: "h4", kind: "host", name: "Host 4", x: 550, y: 485 },
+			{ id: "h5", kind: "host", name: "Host 5", x: 660, y: 515 },
+			{ id: "h6", kind: "host", name: "Host 6", x: 770, y: 485 },
 		],
 		links: [
-			{ from: "isp", to: "r1" }, { from: "r1", to: "s1" }, { from: "r1", to: "s2" },
-			{ from: "s1", to: "s2" }, { from: "s1", to: "server" },
-			{ from: "s1", to: "h1" }, { from: "s2", to: "h2" },
+			{ from: "isp", to: "r1" },
+			{ from: "r1", to: "s1", label: "10.142.137.1/24", labelX: 365, labelY: 235 },
+			{ from: "r1", to: "s2", label: "172.25.117.2/24", labelX: 635, labelY: 235 },
+			{ from: "s1", to: "s2" },
+			{ from: "s1", to: "server" },
+			{ from: "s1", to: "h1" },
+			{ from: "s1", to: "h2" },
+			{ from: "s1", to: "h3" },
+			{ from: "s2", to: "h4" },
+			{ from: "s2", to: "h5" },
+			{ from: "s2", to: "h6" },
 		],
 	},
 	"static-route-two-site": {
@@ -1269,11 +1620,22 @@ const NETWORK_TOPOLOGIES = {
 	"r1-r2-ntp-link": {
 		title: "Router1–Router2 NTP connection",
 		note: "Router1 (192.168.0.2) peers with Router2 (192.168.0.3); Router2 has Loopback0 172.17.0.1.",
+		viewBox: { x: 0, y: 0, width: 1000, height: 430 },
 		nodes: [
 			{ id: "r1", kind: "router", name: "Router1", x: 280, y: 220, details: ["192.168.0.2"] },
 			{ id: "r2", kind: "router", name: "Router2", x: 720, y: 220, details: ["192.168.0.3", "Loopback0 · 172.17.0.1"] },
 		],
 		links: [{ from: "r1", to: "r2", label: "NTP link", labelY: 170 }],
+		annotations: [
+			{
+				x: 500,
+				y: 385,
+				lines: ["The ntp server 192.168.0.2 command has been configured."],
+				textAnchor: "middle",
+				fontSize: 16,
+				color: "#333",
+			},
+		],
 	},
 	"isp-wan-r1": {
 		title: "ISP–WAN–R1 topology",
@@ -1538,6 +1900,19 @@ const NETWORK_TOPOLOGIES = {
 		links: [
 			{ from: "r14", to: "r86", label: "Transit · 10.73.65.64/30", labelX: 330, labelY: 280, labelConnector: true },
 			{ from: "r86", to: "lan", label: "Connected LAN", labelX: 680, labelY: 290, labelConnector: true },
+		],
+	},
+	"r86-static-route-to-r14-17216-34": {
+		title: "R86 route to R14 network",
+		note: "R86 reaches 172.16.34.0/29 through R14 over the 10.73.65.64/30 transit link.",
+		nodes: [
+			{ id: "r14", kind: "router", name: "R14", x: 260, y: 200, details: ["Loopback0 · 10.10.1.14/32", "Fa0/0 · 10.73.65.65/30"] },
+			{ id: "r86", kind: "router", name: "R86", x: 740, y: 200, details: ["Loopback0 · 10.10.1.86/32", "Fa0/0 · 10.73.65.66/30"] },
+			{ id: "destination", kind: "network", name: "172.16.34.0/29", x: 260, y: 465, details: ["Connected to R14"] },
+		],
+		links: [
+			{ from: "r14", to: "r86", label: "10.73.65.64/30 · Fa0/0 · .65 ↔ .66", labelY: 145 },
+			{ from: "r14", to: "destination", label: "Destination network", labelX: 345, labelY: 345 },
 		],
 	},
 	"lan-primary-backup-isps": {
@@ -2313,22 +2688,35 @@ Network 172.16.2.0 0.0.0.31`,
 	},
 	"ospf-four-router-broadcast": {
 		title: "Four-router OSPF broadcast network",
-		note: "R1–R4 share an OSPF segment; router IDs and priorities determine the DR and BDR.",
+		note: "All four routers connect to the same OSPF broadcast segment. The highest eligible priority wins the DR election.",
+		viewBox: { x: 0, y: 0, width: 1000, height: 620 },
+		broadcastArea: { x: 500, y: 310, rx: 320, ry: 210 },
 		nodes: [
-			{ id: "r1", kind: "router", name: "R1", x: 250, y: 140, details: ["RID 1.1.1.1 · Priority 2"] },
-			{ id: "r2", kind: "router", name: "R2", x: 750, y: 140, details: ["RID 2.2.2.2 · Priority 1"] },
-			{ id: "r3", kind: "router", name: "R3", x: 750, y: 500, details: ["RID 3.3.3.3 · Priority 2"] },
-			{ id: "r4", kind: "router", name: "R4", x: 250, y: 500, details: ["RID 4.4.4.4 · Priority 1"] },
-			{ id: "sw", kind: "network", name: "OSPF shared segment", x: 500, y: 320, details: ["192.168.100.0/16"] },
+			{ id: "r1", kind: "router", name: "R1", x: 260, y: 135, details: ["Router ID 1.1.1.1", "Priority 0", "Lo0 10.1.1.1/32"] },
+			{ id: "r2", kind: "router", name: "R2", x: 740, y: 135, details: ["Router ID 2.2.2.2", "Priority 3", "Lo0 10.2.2.2/32"] },
+			{ id: "r4", kind: "router", name: "R4", x: 260, y: 485, details: ["Router ID 4.4.4.4", "Priority 2", "Lo0 10.4.4.4/32"] },
+			{ id: "r3", kind: "router", name: "R3", x: 740, y: 485, details: ["Router ID 3.3.3.3", "Priority 1", "Lo0 10.3.3.3/32"] },
+			{ id: "sw", kind: "switch", name: "OSPF", x: 500, y: 300, details: ["172.16.100.0/16"] },
 		],
 		links: [
 			{ from: "r1", to: "sw" }, { from: "r2", to: "sw" },
-			{ from: "r3", to: "sw" }, { from: "r4", to: "sw" },
+			{ from: "r4", to: "sw" }, { from: "r3", to: "sw" },
 		],
 	},
 	"vlan-switch-web-server": {
 		title: "VLAN 10 and VLAN 20 web-server topology",
 		note: "Switch A connects VLAN 10 and VLAN 20 hosts to Switch B and the web server on 10.30.0.100/24.",
+		viewBox: { x: 0, y: 0, width: 1150, height: 620 },
+		rightLabels: {
+			x: 820,
+			y: 270,
+			lineHeight: 26,
+			items: [
+				"Int VLAN 10: 10.10.0.0/24",
+				"Int VLAN 20: 10.20.0.0/24",
+				"Int VLAN 30: 10.30.0.0/24",
+			],
+		},
 		nodes: [
 			{ id: "s1", kind: "switch", name: "Switch A", x: 350, y: 300 },
 			{ id: "s2", kind: "switch", name: "Switch B", x: 700, y: 300 },
@@ -2343,25 +2731,61 @@ Network 172.16.2.0 0.0.0.31`,
 			{ from: "s1", to: "p3" }, { from: "s2", to: "server" },
 		],
 	},
-	"r1-r2-database-security": {
-		title: "R1–R2 database and client network",
-		note: "R1 and R2 connect over Serial0/0/0; R1's Gi0/0 reaches the database server and Gi0/1 reaches the 172.19.108.0/24 client LAN.",
+	"r1-ssh-acl-pc1": {
+		title: "R1, SW1, and PC-1",
+		viewBox: { x: 0, y: 0, width: 1000, height: 560 },
+		rightLabels: {
+			x: 390,
+			y: 90,
+			lineHeight: 25,
+			fontFamily: "monospace",
+			fontSize: 14,
+			fontWeight: 500,
+			items: [
+				"interface Loopback1",
+				" ip address 192.168.1.1 255.255.255.0",
+				"!",
+				"interface Loopback2",
+				" ip address 192.168.2.1 255.255.255.0",
+				"!",
+				"interface Loopback3",
+				" ip address 192.168.3.1 255.255.255.0",
+				"!",
+				"interface GigabitEthernet0/0",
+				" ip address 172.16.1.62 255.255.255.224",
+			],
+		},
 		nodes: [
-			{ id: "db", kind: "host", name: "Internal Database Server", x: 120, y: 110, details: ["192.168.141.0/28"] },
-			{ id: "sw1", kind: "switch", name: "Database switch", x: 270, y: 250 },
-			{ id: "r1", kind: "router", name: "R1", x: 500, y: 250 },
-			{ id: "r2", kind: "router", name: "R2", x: 850, y: 250 },
-			{ id: "sw2", kind: "switch", name: "R1 LAN switch", x: 500, y: 455 },
-			{ id: "pc1", kind: "host", name: "PC", x: 500, y: 625, details: ["172.19.108.0/24"] },
-			{ id: "sw3", kind: "switch", name: "R2 LAN switch", x: 850, y: 455 },
-			{ id: "pc2", kind: "host", name: "PC", x: 850, y: 625, details: ["192.168.205.0/25"] },
+			{ id: "r1", kind: "router", name: "R1", x: 150, y: 100, details: ["172.16.1.62"] },
+			{ id: "sw1", kind: "switch", name: "SW1", x: 150, y: 270 },
+			{ id: "pc1", kind: "host", name: "PC-1", x: 150, y: 440, details: ["172.16.1.57/27"] },
 		],
 		links: [
-			{ from: "db", to: "sw1" }, { from: "sw1", to: "r1", label: "Gi0/0" },
-			{ from: "r1", to: "r2", label: "S0/0/0 ↔ S0/0/0", labelY: 200 },
-			{ from: "r1", to: "sw2", label: "Gi0/1", labelX: 565, labelY: 350 },
-			{ from: "sw2", to: "pc1" },
-			{ from: "r2", to: "sw3" }, { from: "sw3", to: "pc2" },
+			{ from: "r1", to: "sw1", color: "#dc2626", label: "gi0/0", fixedLabel: true, labelX: 220, labelY: 165 },
+			{ from: "sw1", to: "pc1", color: "#dc2626" },
+		],
+	},
+	"r1-r2-database-security": {
+		title: "R1–R2 database and client network",
+		viewBox: { x: 0, y: 0, width: 1000, height: 600 },
+		nodes: [
+			{ id: "dbSwitch", kind: "switch", name: "", x: 150, y: 190 },
+			{ id: "db", kind: "host", name: "Internal Database Server", x: 150, y: 330, details: ["192.168.141.0/28"] },
+			{ id: "r1", kind: "router", name: "R1", x: 380, y: 200 },
+			{ id: "r2", kind: "router", name: "R2", x: 760, y: 200 },
+			{ id: "sw1", kind: "switch", name: "", x: 380, y: 370 },
+			{ id: "pc1", kind: "host", name: "", x: 380, y: 520, details: ["172.19.108.0/24"] },
+			{ id: "sw2", kind: "switch", name: "", x: 760, y: 370 },
+			{ id: "pc2", kind: "host", name: "", x: 760, y: 520, details: ["192.168.205.0/25"] },
+		],
+		links: [
+			{ from: "dbSwitch", to: "db", color: "#dc2626" },
+			{ from: "dbSwitch", to: "r1", color: "#dc2626", label: "Gi0/0", fixedLabel: true, labelX: 270, labelY: 165 },
+			{ from: "r1", to: "r2", color: "#dc2626", label: "S0/0/0", fixedLabel: true, labelX: 450, labelY: 170, extraLabels: [{ text: "S0/0/0", x: 690, y: 170 }] },
+			{ from: "r1", to: "sw1", color: "#dc2626", label: "Gi0/1", fixedLabel: true, labelX: 430, labelY: 290 },
+			{ from: "sw1", to: "pc1", color: "#dc2626" },
+			{ from: "r2", to: "sw2", color: "#dc2626" },
+			{ from: "sw2", to: "pc2", color: "#dc2626" },
 		],
 	},
 	"static-nat-router-webserver": {
@@ -2409,9 +2833,10 @@ function topologyGeometryKind(node) {
 function topologyLabels(topology) {
 	const obstacles = topology.nodes.map((node) => {
 		const details = node.details ?? [];
+		const nameLines = node.kind === "network" ? wrapTopologyNodeLabel(node.name) : [node.name];
 		const width = Math.max(
 			nodeRadius(node.kind),
-			node.name.length * 7.2 + 16,
+			...nameLines.map((line) => line.length * 7.2 + 16),
 			...details.map((detail) => detail.length * 5.2 + 12),
 		);
 		const top = node.kind === "network" ? -27 : -30;
@@ -2499,7 +2924,12 @@ function topologyViewBox(topology, labels) {
 	};
 	topology.nodes.forEach((node) => {
 		const details = node.details ?? [];
-		const textWidth = Math.max(nodeRadius(node.kind), node.name.length * 4, ...details.map((detail) => detail.length * 2.8));
+		const nameLines = node.kind === "network" ? wrapTopologyNodeLabel(node.name) : [node.name];
+		const textWidth = Math.max(
+			nodeRadius(node.kind),
+			...nameLines.map((line) => line.length * 4),
+			...details.map((detail) => detail.length * 2.8),
+		);
 		include(node.x, node.y, textWidth + 10, 36);
 		include(node.x, node.y + 62 + details.length * 12, textWidth + 10, 8);
 	});
@@ -2531,6 +2961,18 @@ function includeViewBox(base, expanded) {
 }
 
 function TopologyLink({ link, nodes }) {
+	if (link.points?.length > 1) {
+		return (
+			<polyline
+				points={link.points.map(({ x, y }) => `${x},${y}`).join(" ")}
+				fill="none"
+				stroke={link.color ?? "#16a34a"}
+				strokeWidth={link.strokeWidth ?? 3}
+				strokeLinecap="round"
+				strokeLinejoin="round"
+			/>
+		);
+	}
 	const from = nodes.get(link.from);
 	const to = nodes.get(link.to);
 	const geometry = topologyLinkGeometry(
@@ -2547,6 +2989,77 @@ function TopologyLink({ link, nodes }) {
 			<line x1={x1} y1={y1} x2={x2} y2={y2} stroke={color} strokeWidth="3" />
 			<circle cx={x1} cy={y1} r="4" fill={color} />
 			<circle cx={x2} cy={y2} r="4" fill={color} />
+		</g>
+	);
+}
+
+function TopologyFlowArrow({ arrow }) {
+	if (!arrow.points || arrow.points.length < 2) return null;
+	const end = arrow.points[arrow.points.length - 1];
+	const previous = arrow.points[arrow.points.length - 2];
+	const angle = Math.atan2(end.y - previous.y, end.x - previous.x);
+	const headLength = 16;
+	const halfWidth = 8;
+	const baseX = end.x - Math.cos(angle) * headLength;
+	const baseY = end.y - Math.sin(angle) * headLength;
+	const sideX = Math.sin(angle) * halfWidth;
+	const sideY = Math.cos(angle) * halfWidth;
+	const headPoints = [
+		`${end.x},${end.y}`,
+		`${baseX - sideX},${baseY + sideY}`,
+		`${baseX + sideX},${baseY - sideY}`,
+	].join(" ");
+
+	return (
+		<g>
+			<polyline
+				points={arrow.points.map(({ x, y }) => `${x},${y}`).join(" ")}
+				fill="none"
+				stroke={arrow.color}
+				strokeWidth={arrow.strokeWidth ?? 4}
+				strokeLinecap="round"
+				strokeLinejoin="round"
+			/>
+			<polygon points={headPoints} fill={arrow.color} />
+		</g>
+	);
+}
+
+function TopologyAnnotation({ annotation }) {
+	const lines = annotation.lines ?? [annotation.text];
+	return (
+		<g>
+			{annotation.box && (
+				<rect
+					x={annotation.box.x}
+					y={annotation.box.y}
+					width={annotation.box.width}
+					height={annotation.box.height}
+					rx={annotation.box.rx ?? 2}
+					fill={annotation.box.fill ?? "none"}
+					stroke={annotation.box.stroke ?? "none"}
+					strokeWidth={annotation.box.strokeWidth ?? 1}
+				/>
+			)}
+			<text
+				x={annotation.x}
+				y={annotation.y}
+				textAnchor={annotation.textAnchor ?? "start"}
+				fontFamily={annotation.fontFamily}
+				fontSize={annotation.fontSize ?? 16}
+				fontWeight={annotation.fontWeight ?? 500}
+				fill={annotation.color ?? "#17233d"}
+			>
+				{lines.map((line, index) => (
+					<tspan
+						key={`${line}-${index}`}
+						x={annotation.x + (annotation.indentLines?.includes(index) ? annotation.indentWidth ?? 8 : 0)}
+						dy={index === 0 ? 0 : annotation.lineHeight ?? 20}
+					>
+						{line}
+					</tspan>
+				))}
+			</text>
 		</g>
 	);
 }
@@ -2611,8 +3124,8 @@ function TopologyLinkLabel({ link, nodes, labelPosition }) {
 				x={x}
 				y={labelPosition?.onCable ? y : y + 3}
 				textAnchor="middle"
-				fontSize="12"
-				fontWeight="600"
+				fontSize={link.labelFontSize ?? 12}
+				fontWeight={link.labelFontWeight ?? 600}
 				fill="#17233d"
 				paintOrder="stroke"
 				stroke="#fff"
@@ -2622,14 +3135,59 @@ function TopologyLinkLabel({ link, nodes, labelPosition }) {
 				{labelPosition?.text ?? link.label}
 				{link.secondaryLabel && <tspan x={x} dy="16">{link.secondaryLabel}</tspan>}
 			</text>
+			{link.extraLabels?.map((extraLabel, index) => (
+				<text
+					key={`${extraLabel.text}-${index}`}
+					x={extraLabel.x}
+					y={extraLabel.y}
+					textAnchor="middle"
+					fontSize={extraLabel.fontSize ?? 12}
+					fontWeight={extraLabel.fontWeight ?? 600}
+					fill="#17233d"
+					paintOrder="stroke"
+					stroke="#fff"
+					strokeWidth="3"
+					strokeLinejoin="round"
+				>
+					{extraLabel.text}
+				</text>
+			))}
 		</g>
 	);
 }
 
 function TopologyDevice({ node }) {
-	if (node.kind === "router") return <RouterIcon x={node.x} y={node.y} label={node.name} details={node.details} />;
-	if (node.kind === "switch") return <SwitchIcon x={node.x} y={node.y} label={node.name} details={node.details} />;
+	if (node.kind === "router") {
+		return node.scale
+			? <g transform={`translate(${node.x} ${node.y}) scale(${node.scale})`}><RouterIcon x={0} y={0} label={node.name} details={node.details} /></g>
+			: <RouterIcon x={node.x} y={node.y} label={node.name} details={node.details} />;
+	}
+	if (node.kind === "switch") {
+		return node.scale
+			? <g transform={`translate(${node.x} ${node.y}) scale(${node.scale})`}><SwitchIcon x={0} y={0} label={node.name} details={node.details} /></g>
+			: <SwitchIcon x={node.x} y={node.y} label={node.name} details={node.details} />;
+	}
+	if (node.kind === "network" && node.shape === "cloud") {
+		return (
+			<g transform={`translate(${node.x} ${node.y}) scale(${node.scale ?? 1})`}>
+				<path
+					d="M-56 26 C-76 26 -90 12 -88 -6 C-86 -24 -71 -36 -52 -35 C-49 -53 -34 -65 -16 -62 C-4 -80 20 -79 32 -60 C51 -63 68 -51 68 -33 C84 -33 95 -20 93 -4 C92 13 79 25 62 25 H-56 Z"
+					fill={node.fill ?? "#e8f4ff"}
+					stroke={node.stroke ?? "#80acd0"}
+					strokeWidth="2"
+				/>
+				<text x="0" y="5" textAnchor="middle" fontSize={node.fontSize ?? 13} fill="#26354b">{node.name}</text>
+			</g>
+		);
+	}
 	if (node.kind === "phone") {
+		if (node.scale) {
+			return (
+				<g transform={`translate(${node.x} ${node.y}) scale(${node.scale})`}>
+					<PhoneIcon x={0} y={0} label={node.name} details={node.details} />
+				</g>
+			);
+		}
 		return (
 			<g transform={`translate(${node.x} ${node.y})`}>
 				<path d="M-28 -15 H28 V12 H-28 Z" fill="#2879bd" stroke="#1b5b88" strokeWidth="1.5" />
@@ -2640,13 +3198,23 @@ function TopologyDevice({ node }) {
 	}
 	if (node.kind === "host") {
 		const server = /server/i.test(node.name);
-		return <PcIcon x={node.x} y={node.y} label={node.name} details={node.details} server={server} />;
+		return node.scale
+			? <g transform={`translate(${node.x} ${node.y}) scale(${node.scale})`}><PcIcon x={0} y={0} label={node.name} details={node.details} server={server} /></g>
+			: <PcIcon x={node.x} y={node.y} label={node.name} details={node.details} server={server} />;
 	}
 
+	const nameLines = wrapTopologyNodeLabel(node.name);
+	const lineHeight = 13;
+	const firstLineY = 4 - ((nameLines.length - 1) * lineHeight) / 2;
+	const fontSize = nameLines.length === 1 ? 12 : nameLines.length === 2 ? 11 : 9.5;
 	return (
 		<g transform={`translate(${node.x} ${node.y})`}>
 			<ellipse cx="0" cy="0" rx="72" ry="27" fill="#e0ecfb" stroke="#1775ee" strokeWidth="1.5" />
-			<text x="0" y="4" textAnchor="middle" fontSize="12" fontWeight="700" fill="#1775ee">{node.name}</text>
+			<text x="0" y={firstLineY} textAnchor="middle" fontSize={fontSize} fontWeight="700" fill="#1775ee">
+				{nameLines.map((line, index) => (
+					<tspan key={`${node.id}-${index}`} x="0" dy={index === 0 ? 0 : lineHeight}>{line}</tspan>
+				))}
+			</text>
 			{node.details?.map((detail, index) => (
 				<text key={detail} x="0" y={43 + index * 12} textAnchor="middle" fontSize="9.5" fill="#4b5b78">{detail}</text>
 			))}
@@ -2982,11 +3550,38 @@ export function ExhibitDiagram({ type, className = "", offlineLayout = false, co
 						? "mx-auto block h-auto w-full max-w-5xl !max-h-[min(38vh,20rem)]"
 						: "mx-auto block h-auto w-full max-w-5xl"}
 			>
-				<rect x={viewBox.x} y={viewBox.y} width={viewBox.width} height={viewBox.height} fill="#fff" />
+				<rect
+					x={viewBox.x}
+					y={viewBox.y}
+					width={viewBox.width}
+					height={viewBox.height}
+					fill={topology.canvasBackground ?? "#fff"}
+				/>
+				{topology.broadcastArea && (
+					<ellipse
+						cx={topology.broadcastArea.x}
+						cy={topology.broadcastArea.y}
+						rx={topology.broadcastArea.rx}
+						ry={topology.broadcastArea.ry}
+						fill="#ffd89a"
+					/>
+				)}
 				{topology.links.map((link, index) => (
 					<TopologyLink key={`${link.from}-${link.to}-${index}`} link={link} nodes={nodes} />
 				))}
+				{topology.flowArrows?.map((arrow, index) => (
+					<TopologyFlowArrow key={`flow-arrow-${index}`} arrow={arrow} />
+				))}
 				{topology.nodes.map((node) => <TopologyDevice key={node.id} node={node} />)}
+				{topology.connectionMarkers?.map((marker, index) => (
+					<circle
+						key={`connection-marker-${index}`}
+						cx={marker.x}
+						cy={marker.y}
+						r={marker.radius ?? 10}
+						fill={marker.fill ?? "#2bea32"}
+					/>
+				))}
 				{topology.links.map((link, index) => (
 					(labels.get(index) ?? []).map((labelPosition, labelIndex) => (
 						<TopologyLinkLabel
@@ -2997,6 +3592,23 @@ export function ExhibitDiagram({ type, className = "", offlineLayout = false, co
 						/>
 					))
 				))}
+				{topology.rightLabels?.items.map((label, index) => (
+					<text
+						key={label}
+						x={topology.rightLabels.x}
+						y={topology.rightLabels.y + index * topology.rightLabels.lineHeight}
+						textAnchor="start"
+						fontFamily={topology.rightLabels.fontFamily}
+						fontSize={topology.rightLabels.fontSize ?? 15}
+						fontWeight={topology.rightLabels.fontWeight ?? 700}
+						fill="#17233d"
+					>
+						{label}
+					</text>
+				))}
+				{topology.annotations?.map((annotation, index) => (
+					<TopologyAnnotation key={`annotation-${index}`} annotation={annotation} />
+				))}
 			</svg>
 			{topology.configuration && (
 				<pre className="mt-3 overflow-x-auto rounded-lg bg-[#f8fafc] p-3 font-mono text-xs text-[#26354b]">
@@ -3006,14 +3618,12 @@ export function ExhibitDiagram({ type, className = "", offlineLayout = false, co
 		</>
 	) : (
 		<div className={expanded ? "mx-auto w-[1000px]" : ""}>
-			<div className="grid gap-2 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)] md:items-center">
-				<TopologyNode role="Router" name="R1" details={"E0/0\nSubinterface E0/0.20"} />
+			<div className="grid gap-2 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)] md:items-center">
+				<TopologyNode role="Router" name="R1" />
 				<p className="text-center text-xs font-semibold text-[#526584]">E0/0 to E0/0</p>
-				<TopologyNode role="Switch" name="SW1" details={"E0/0 trunk\nE0/1 trunk: VLANs 10, 20"} />
+				<TopologyNode role="Switch" name="SW1" />
 				<p className="text-center text-xs font-semibold text-[#526584]">E0/1 to E0/1</p>
-				<TopologyNode role="Switch" name="SW2" details={"E0/1 trunk\nE0/2 access: VLAN 20"} />
-				<p className="text-center text-xs font-semibold text-[#526584]">E0/2</p>
-				<TopologyNode role="End device" name="VLAN 20 host" details="Connected to SW2 E0/2" />
+				<TopologyNode role="Switch" name="SW2" />
 			</div>
 		</div>
 	);

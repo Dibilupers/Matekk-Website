@@ -17,7 +17,6 @@ const CANDIDATES = [
 ];
 
 const LIVE_GAP_CANDIDATES = [
-  [24, "SW11 voice/data VLAN assignment; endpoint-to-port mapping and VLAN IDs were absent."],
   [29, "Permit traffic from G0/0 and deny traffic from Gi0/1; address and topology details were absent."],
   [66, "Configure SW1 Gi1/1 for voice and data; VLAN IDs were absent."],
   [82, "Limit Router A CDP visibility to Router C; topology and interface IDs were absent."],

@@ -91,6 +91,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [submitError, setSubmitError] = useState(null);
 	const shouldStartNewAttemptRef = useRef(shouldStartNewAttempt);
+	const hasLoadedOfflineAttemptRef = useRef(false);
 	const submitInFlightRef = useRef(false);
 	const submitExamRef = useRef(null);
 	const isViewingSavedResult = hasLinkedExamResult &&
@@ -170,6 +171,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 		let isActive = true;
 
 		async function loadExamAttempt() {
+			if (isOfflineExam && hasLoadedOfflineAttemptRef.current && !shouldStartNewAttemptRef.current) return;
 			setExamLoadState({ status: "loading", error: null });
 			// The question bank supplies each question's picture / printout; load it alongside the exam questions
 			const bankReady = isOfflineExam
@@ -292,6 +294,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 						throw new TypeError("The built-in offline CCNA question bank contains invalid questions.");
 					}
 					if (!isActive) return;
+					hasLoadedOfflineAttemptRef.current = true;
 					setAttemptId(offlineAttemptId);
 					setQuestions(offlineQuestions);
 					setAnswers(offlineAnswers);
@@ -465,26 +468,33 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 			serverResult,
 			score: serverResult?.score ?? null,
 		};
+		const persistSession = () => {
+			if (isOfflineExam) {
+				try {
+					window.localStorage.setItem(offlineSessionStorageKey, JSON.stringify(savedSession));
+				} catch (error) {
+					console.error(`Unable to save the offline ${exam.name} attempt.`, error);
+				}
+			} else {
+				try {
+					window.localStorage.removeItem(offlineSessionStorageKey);
+				} catch (error) {
+					console.error(`Unable to clear the saved offline ${exam.name} attempt.`, error);
+				}
+			}
+			if (sessionStorageKey) {
+				try {
+					window.sessionStorage.setItem(sessionStorageKey, JSON.stringify(savedSession));
+				} catch (error) {
+					console.error(`Unable to save the ${exam.name} session for this tab.`, error);
+				}
+			}
+		};
+		persistSession();
 		if (isOfflineExam) {
-			try {
-				window.localStorage.setItem(offlineSessionStorageKey, JSON.stringify(savedSession));
-			} catch (error) {
-				console.error(`Unable to save the offline ${exam.name} attempt.`, error);
-			}
-		} else {
-			try {
-				window.localStorage.removeItem(offlineSessionStorageKey);
-			} catch (error) {
-				console.error(`Unable to clear the saved offline ${exam.name} attempt.`, error);
-			}
+			window.addEventListener("pagehide", persistSession);
 		}
-		if (sessionStorageKey) {
-			try {
-				window.sessionStorage.setItem(sessionStorageKey, JSON.stringify(savedSession));
-			} catch (error) {
-				console.error(`Unable to save the ${exam.name} session for this tab.`, error);
-			}
-		}
+		return () => window.removeEventListener("pagehide", persistSession);
 	}, [answers, attemptId, currentIndex, deadline, exam.name, examLoadState.status, flaggedQuestions, isOfflineExam, isSubmitted, isViewingSavedResult, lockedQuestions, offlineSessionStorageKey, questions, serverResult, sessionStorageKey, submittedAt, userId]);
 
 	useEffect(() => {
@@ -507,6 +517,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 			if (isOfflineExam) {
 				setServerResult(gradeOfflineExam(questions, answers));
 				setSubmittedAt(Date.now());
+				setIsAnswerReviewVisible(true);
 				setIsSubmitted(true);
 				return;
 			}
@@ -528,6 +539,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 			}
 			setServerResult({ score: result.score, maxScore: questions.length, review: result.review });
 			setSubmittedAt(result.submittedAt ?? Date.now());
+			setIsAnswerReviewVisible(true);
 			setIsSubmitted(true);
 		} catch (error) {
 			console.error("Unable to submit the exam for backend grading.", error);

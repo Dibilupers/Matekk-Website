@@ -1,0 +1,2096 @@
+[
+    {
+        "legacy_question_index":  33,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-33.png"
+    },
+    {
+        "legacy_question_index":  41,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-41.png"
+    },
+    {
+        "legacy_question_index":  43,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-43.png"
+    },
+    {
+        "legacy_question_index":  44,
+        "after_exhibit_question_id":  1081,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-44.png"
+    },
+    {
+        "legacy_question_index":  45,
+        "after_exhibit_question_id":  1082,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-45.png"
+    },
+    {
+        "legacy_question_index":  46,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-46.png"
+    },
+    {
+        "legacy_question_index":  47,
+        "after_exhibit_question_id":  1084,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-47.png"
+    },
+    {
+        "legacy_question_index":  49,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-49.png"
+    },
+    {
+        "legacy_question_index":  50,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "image",
+        "image_file":  "ccna-exhibit-50.png"
+    },
+    {
+        "legacy_question_index":  51,
+        "after_exhibit_question_id":  1088,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-51.png"
+    },
+    {
+        "legacy_question_index":  52,
+        "after_exhibit_question_id":  1089,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-52.png"
+    },
+    {
+        "legacy_question_index":  59,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "image",
+        "image_file":  "ccna-exhibit-59.png"
+    },
+    {
+        "legacy_question_index":  60,
+        "after_exhibit_question_id":  1097,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-60.png"
+    },
+    {
+        "legacy_question_index":  61,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-61.png"
+    },
+    {
+        "legacy_question_index":  62,
+        "after_exhibit_question_id":  1099,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-62.png"
+    },
+    {
+        "legacy_question_index":  67,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-67.png"
+    },
+    {
+        "legacy_question_index":  71,
+        "after_exhibit_question_id":  1108,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-71.png"
+    },
+    {
+        "legacy_question_index":  72,
+        "after_exhibit_question_id":  1109,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-72.png"
+    },
+    {
+        "legacy_question_index":  79,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-79.png"
+    },
+    {
+        "legacy_question_index":  82,
+        "after_exhibit_question_id":  1119,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-82.png"
+    },
+    {
+        "legacy_question_index":  84,
+        "after_exhibit_question_id":  1121,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-84.png"
+    },
+    {
+        "legacy_question_index":  88,
+        "after_exhibit_question_id":  1125,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-88.png"
+    },
+    {
+        "legacy_question_index":  90,
+        "after_exhibit_question_id":  1127,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-90.png"
+    },
+    {
+        "legacy_question_index":  91,
+        "after_exhibit_question_id":  1128,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-91.png"
+    },
+    {
+        "legacy_question_index":  92,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-92.png"
+    },
+    {
+        "legacy_question_index":  93,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-93.png"
+    },
+    {
+        "legacy_question_index":  96,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-96.png"
+    },
+    {
+        "legacy_question_index":  97,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-97.png"
+    },
+    {
+        "legacy_question_index":  99,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-99.png"
+    },
+    {
+        "legacy_question_index":  100,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-100.png"
+    },
+    {
+        "legacy_question_index":  101,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-101.png"
+    },
+    {
+        "legacy_question_index":  103,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-103.png"
+    },
+    {
+        "legacy_question_index":  104,
+        "after_exhibit_question_id":  1141,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-104.png"
+    },
+    {
+        "legacy_question_index":  106,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-106.png"
+    },
+    {
+        "legacy_question_index":  109,
+        "after_exhibit_question_id":  1146,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-109.png"
+    },
+    {
+        "legacy_question_index":  110,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-110.png"
+    },
+    {
+        "legacy_question_index":  111,
+        "after_exhibit_question_id":  1148,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-111.png"
+    },
+    {
+        "legacy_question_index":  112,
+        "after_exhibit_question_id":  1149,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-112.png"
+    },
+    {
+        "legacy_question_index":  118,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-118.png"
+    },
+    {
+        "legacy_question_index":  120,
+        "after_exhibit_question_id":  1157,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-120.png"
+    },
+    {
+        "legacy_question_index":  121,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-121.png"
+    },
+    {
+        "legacy_question_index":  123,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-123.png"
+    },
+    {
+        "legacy_question_index":  124,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-124.png"
+    },
+    {
+        "legacy_question_index":  125,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-125.png"
+    },
+    {
+        "legacy_question_index":  126,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-126.png"
+    },
+    {
+        "legacy_question_index":  128,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-128.png"
+    },
+    {
+        "legacy_question_index":  130,
+        "after_exhibit_question_id":  1167,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-130.png"
+    },
+    {
+        "legacy_question_index":  131,
+        "after_exhibit_question_id":  1168,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-131.png"
+    },
+    {
+        "legacy_question_index":  132,
+        "after_exhibit_question_id":  1169,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-132.png"
+    },
+    {
+        "legacy_question_index":  137,
+        "after_exhibit_question_id":  1174,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-137.png"
+    },
+    {
+        "legacy_question_index":  139,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-139.png"
+    },
+    {
+        "legacy_question_index":  142,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-142.png"
+    },
+    {
+        "legacy_question_index":  157,
+        "after_exhibit_question_id":  1194,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-157.png"
+    },
+    {
+        "legacy_question_index":  158,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-158.png"
+    },
+    {
+        "legacy_question_index":  160,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "image",
+        "image_file":  "ccna-exhibit-160.png"
+    },
+    {
+        "legacy_question_index":  161,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-161.png"
+    },
+    {
+        "legacy_question_index":  162,
+        "after_exhibit_question_id":  1199,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-162.png"
+    },
+    {
+        "legacy_question_index":  163,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-163.png"
+    },
+    {
+        "legacy_question_index":  167,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-167.png"
+    },
+    {
+        "legacy_question_index":  177,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "image",
+        "image_file":  "ccna-exhibit-177.png"
+    },
+    {
+        "legacy_question_index":  181,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-181.png"
+    },
+    {
+        "legacy_question_index":  189,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-189.png"
+    },
+    {
+        "legacy_question_index":  192,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-192.png"
+    },
+    {
+        "legacy_question_index":  193,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-193.png"
+    },
+    {
+        "legacy_question_index":  201,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-201.png"
+    },
+    {
+        "legacy_question_index":  203,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-203.png"
+    },
+    {
+        "legacy_question_index":  215,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "image",
+        "image_file":  "ccna-exhibit-215.png"
+    },
+    {
+        "legacy_question_index":  264,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-264.png"
+    },
+    {
+        "legacy_question_index":  266,
+        "after_exhibit_question_id":  1305,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-266.png"
+    },
+    {
+        "legacy_question_index":  278,
+        "after_exhibit_question_id":  1317,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-278.png"
+    },
+    {
+        "legacy_question_index":  282,
+        "after_exhibit_question_id":  1321,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-282.png"
+    },
+    {
+        "legacy_question_index":  290,
+        "after_exhibit_question_id":  1329,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-290.png"
+    },
+    {
+        "legacy_question_index":  291,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "image",
+        "image_file":  "ccna-exhibit-291.png"
+    },
+    {
+        "legacy_question_index":  306,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-306.png"
+    },
+    {
+        "legacy_question_index":  329,
+        "after_exhibit_question_id":  13,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-329.png"
+    },
+    {
+        "legacy_question_index":  331,
+        "after_exhibit_question_id":  15,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-331.png"
+    },
+    {
+        "legacy_question_index":  332,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-332.png"
+    },
+    {
+        "legacy_question_index":  339,
+        "after_exhibit_question_id":  23,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-339.png"
+    },
+    {
+        "legacy_question_index":  345,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-345.png"
+    },
+    {
+        "legacy_question_index":  350,
+        "after_exhibit_question_id":  34,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-350.png"
+    },
+    {
+        "legacy_question_index":  354,
+        "after_exhibit_question_id":  38,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-354.png"
+    },
+    {
+        "legacy_question_index":  355,
+        "after_exhibit_question_id":  39,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-355.png"
+    },
+    {
+        "legacy_question_index":  381,
+        "after_exhibit_question_id":  65,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-381.png"
+    },
+    {
+        "legacy_question_index":  382,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-382.png"
+    },
+    {
+        "legacy_question_index":  385,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-385.png"
+    },
+    {
+        "legacy_question_index":  386,
+        "after_exhibit_question_id":  70,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-386.png"
+    },
+    {
+        "legacy_question_index":  387,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "diagram",
+        "image_file":  "ccna-exhibit-387.png"
+    },
+    {
+        "legacy_question_index":  389,
+        "after_exhibit_question_id":  73,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-389.png"
+    },
+    {
+        "legacy_question_index":  398,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-398.png"
+    },
+    {
+        "legacy_question_index":  405,
+        "after_exhibit_question_id":  89,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-405.png"
+    },
+    {
+        "legacy_question_index":  406,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-406.png"
+    },
+    {
+        "legacy_question_index":  415,
+        "after_exhibit_question_id":  99,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-415.png"
+    },
+    {
+        "legacy_question_index":  421,
+        "after_exhibit_question_id":  105,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-421.png"
+    },
+    {
+        "legacy_question_index":  426,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-426.png"
+    },
+    {
+        "legacy_question_index":  436,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-436.png"
+    },
+    {
+        "legacy_question_index":  453,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-453.png"
+    },
+    {
+        "legacy_question_index":  460,
+        "after_exhibit_question_id":  143,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-460.png"
+    },
+    {
+        "legacy_question_index":  474,
+        "after_exhibit_question_id":  157,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-474.png"
+    },
+    {
+        "legacy_question_index":  476,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-476.png"
+    },
+    {
+        "legacy_question_index":  478,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "image",
+        "image_file":  "ccna-exhibit-478.png"
+    },
+    {
+        "legacy_question_index":  486,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-486.png"
+    },
+    {
+        "legacy_question_index":  489,
+        "after_exhibit_question_id":  172,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-489.png"
+    },
+    {
+        "legacy_question_index":  491,
+        "after_exhibit_question_id":  174,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-491.png"
+    },
+    {
+        "legacy_question_index":  494,
+        "after_exhibit_question_id":  177,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-494.png"
+    },
+    {
+        "legacy_question_index":  495,
+        "after_exhibit_question_id":  178,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-495.png"
+    },
+    {
+        "legacy_question_index":  496,
+        "after_exhibit_question_id":  179,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-496.png"
+    },
+    {
+        "legacy_question_index":  497,
+        "after_exhibit_question_id":  180,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-497.png"
+    },
+    {
+        "legacy_question_index":  499,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-499.png"
+    },
+    {
+        "legacy_question_index":  500,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "diagram",
+        "image_file":  "ccna-exhibit-500.png"
+    },
+    {
+        "legacy_question_index":  502,
+        "after_exhibit_question_id":  185,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-502.png"
+    },
+    {
+        "legacy_question_index":  504,
+        "after_exhibit_question_id":  187,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-504.png"
+    },
+    {
+        "legacy_question_index":  505,
+        "after_exhibit_question_id":  188,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-505.png"
+    },
+    {
+        "legacy_question_index":  506,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-506.png"
+    },
+    {
+        "legacy_question_index":  507,
+        "after_exhibit_question_id":  190,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-507.png"
+    },
+    {
+        "legacy_question_index":  508,
+        "after_exhibit_question_id":  191,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-508.png"
+    },
+    {
+        "legacy_question_index":  509,
+        "after_exhibit_question_id":  192,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-509.png"
+    },
+    {
+        "legacy_question_index":  510,
+        "after_exhibit_question_id":  193,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-510.png"
+    },
+    {
+        "legacy_question_index":  515,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-515.png"
+    },
+    {
+        "legacy_question_index":  520,
+        "after_exhibit_question_id":  203,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-520.png"
+    },
+    {
+        "legacy_question_index":  521,
+        "after_exhibit_question_id":  204,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-521.png"
+    },
+    {
+        "legacy_question_index":  522,
+        "after_exhibit_question_id":  205,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-522.png"
+    },
+    {
+        "legacy_question_index":  523,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-523.png"
+    },
+    {
+        "legacy_question_index":  529,
+        "after_exhibit_question_id":  212,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-529.png"
+    },
+    {
+        "legacy_question_index":  531,
+        "after_exhibit_question_id":  214,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-531.png"
+    },
+    {
+        "legacy_question_index":  533,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-533.png"
+    },
+    {
+        "legacy_question_index":  538,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-538.png"
+    },
+    {
+        "legacy_question_index":  541,
+        "after_exhibit_question_id":  224,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-541.png"
+    },
+    {
+        "legacy_question_index":  542,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "diagram",
+        "image_file":  "ccna-exhibit-542.png"
+    },
+    {
+        "legacy_question_index":  545,
+        "after_exhibit_question_id":  228,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-545.png"
+    },
+    {
+        "legacy_question_index":  548,
+        "after_exhibit_question_id":  231,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-548.png"
+    },
+    {
+        "legacy_question_index":  551,
+        "after_exhibit_question_id":  234,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-551.png"
+    },
+    {
+        "legacy_question_index":  554,
+        "after_exhibit_question_id":  236,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-554.png"
+    },
+    {
+        "legacy_question_index":  558,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-558.png"
+    },
+    {
+        "legacy_question_index":  559,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-559.png"
+    },
+    {
+        "legacy_question_index":  560,
+        "after_exhibit_question_id":  242,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-560.png"
+    },
+    {
+        "legacy_question_index":  562,
+        "after_exhibit_question_id":  244,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-562.png"
+    },
+    {
+        "legacy_question_index":  563,
+        "after_exhibit_question_id":  245,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-563.png"
+    },
+    {
+        "legacy_question_index":  564,
+        "after_exhibit_question_id":  246,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-564.png"
+    },
+    {
+        "legacy_question_index":  566,
+        "after_exhibit_question_id":  248,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-566.png"
+    },
+    {
+        "legacy_question_index":  568,
+        "after_exhibit_question_id":  250,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-568.png"
+    },
+    {
+        "legacy_question_index":  569,
+        "after_exhibit_question_id":  251,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-569.png"
+    },
+    {
+        "legacy_question_index":  570,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "diagram",
+        "image_file":  "ccna-exhibit-570.png"
+    },
+    {
+        "legacy_question_index":  572,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-572.png"
+    },
+    {
+        "legacy_question_index":  574,
+        "after_exhibit_question_id":  256,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-574.png"
+    },
+    {
+        "legacy_question_index":  577,
+        "after_exhibit_question_id":  259,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-577.png"
+    },
+    {
+        "legacy_question_index":  578,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "image",
+        "image_file":  "ccna-exhibit-578.png"
+    },
+    {
+        "legacy_question_index":  579,
+        "after_exhibit_question_id":  261,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-579.png"
+    },
+    {
+        "legacy_question_index":  580,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-580.png"
+    },
+    {
+        "legacy_question_index":  581,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-581.png"
+    },
+    {
+        "legacy_question_index":  586,
+        "after_exhibit_question_id":  268,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-586.png"
+    },
+    {
+        "legacy_question_index":  588,
+        "after_exhibit_question_id":  270,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-588.png"
+    },
+    {
+        "legacy_question_index":  591,
+        "after_exhibit_question_id":  273,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-591.png"
+    },
+    {
+        "legacy_question_index":  592,
+        "after_exhibit_question_id":  274,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-592.png"
+    },
+    {
+        "legacy_question_index":  593,
+        "after_exhibit_question_id":  275,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-593.png"
+    },
+    {
+        "legacy_question_index":  599,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "image",
+        "image_file":  "ccna-exhibit-599.png"
+    },
+    {
+        "legacy_question_index":  602,
+        "after_exhibit_question_id":  284,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-602.png"
+    },
+    {
+        "legacy_question_index":  603,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "image",
+        "image_file":  "ccna-exhibit-603.png"
+    },
+    {
+        "legacy_question_index":  612,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "image",
+        "image_file":  "ccna-exhibit-612.png"
+    },
+    {
+        "legacy_question_index":  613,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-613.png"
+    },
+    {
+        "legacy_question_index":  616,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "diagram",
+        "image_file":  "ccna-exhibit-616.png"
+    },
+    {
+        "legacy_question_index":  617,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "diagram",
+        "image_file":  "ccna-exhibit-617.png"
+    },
+    {
+        "legacy_question_index":  618,
+        "after_exhibit_question_id":  300,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-618.png"
+    },
+    {
+        "legacy_question_index":  621,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "image",
+        "image_file":  "ccna-exhibit-621.png"
+    },
+    {
+        "legacy_question_index":  622,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-622.png"
+    },
+    {
+        "legacy_question_index":  627,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-627.png"
+    },
+    {
+        "legacy_question_index":  628,
+        "after_exhibit_question_id":  310,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-628.png"
+    },
+    {
+        "legacy_question_index":  629,
+        "after_exhibit_question_id":  311,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-629.png"
+    },
+    {
+        "legacy_question_index":  635,
+        "after_exhibit_question_id":  317,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-635.png"
+    },
+    {
+        "legacy_question_index":  641,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-641.png"
+    },
+    {
+        "legacy_question_index":  645,
+        "after_exhibit_question_id":  327,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-645.png"
+    },
+    {
+        "legacy_question_index":  646,
+        "after_exhibit_question_id":  328,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-646.png"
+    },
+    {
+        "legacy_question_index":  651,
+        "after_exhibit_question_id":  333,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-651.png"
+    },
+    {
+        "legacy_question_index":  655,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-655.png"
+    },
+    {
+        "legacy_question_index":  656,
+        "after_exhibit_question_id":  338,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-656.png"
+    },
+    {
+        "legacy_question_index":  657,
+        "after_exhibit_question_id":  339,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-657.png"
+    },
+    {
+        "legacy_question_index":  661,
+        "after_exhibit_question_id":  343,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-661.png"
+    },
+    {
+        "legacy_question_index":  662,
+        "after_exhibit_question_id":  344,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-662.png"
+    },
+    {
+        "legacy_question_index":  663,
+        "after_exhibit_question_id":  345,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-663.png"
+    },
+    {
+        "legacy_question_index":  667,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-667.png"
+    },
+    {
+        "legacy_question_index":  674,
+        "after_exhibit_question_id":  356,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-674.png"
+    },
+    {
+        "legacy_question_index":  675,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-675.png"
+    },
+    {
+        "legacy_question_index":  679,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "image",
+        "image_file":  "ccna-exhibit-679.png"
+    },
+    {
+        "legacy_question_index":  682,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "image",
+        "image_file":  "ccna-exhibit-682.png"
+    },
+    {
+        "legacy_question_index":  684,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-684.png"
+    },
+    {
+        "legacy_question_index":  685,
+        "after_exhibit_question_id":  367,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-685.png"
+    },
+    {
+        "legacy_question_index":  687,
+        "after_exhibit_question_id":  369,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-687.png"
+    },
+    {
+        "legacy_question_index":  689,
+        "after_exhibit_question_id":  371,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-689.png"
+    },
+    {
+        "legacy_question_index":  695,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "image",
+        "image_file":  "ccna-exhibit-695.png"
+    },
+    {
+        "legacy_question_index":  699,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-699.png"
+    },
+    {
+        "legacy_question_index":  701,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-701.png"
+    },
+    {
+        "legacy_question_index":  704,
+        "after_exhibit_question_id":  386,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-704.png"
+    },
+    {
+        "legacy_question_index":  705,
+        "after_exhibit_question_id":  387,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-705.png"
+    },
+    {
+        "legacy_question_index":  708,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-708.png"
+    },
+    {
+        "legacy_question_index":  711,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-711.png"
+    },
+    {
+        "legacy_question_index":  712,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-712.png"
+    },
+    {
+        "legacy_question_index":  713,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-713.png"
+    },
+    {
+        "legacy_question_index":  714,
+        "after_exhibit_question_id":  396,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-714.png"
+    },
+    {
+        "legacy_question_index":  716,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "diagram",
+        "image_file":  "ccna-exhibit-716.png"
+    },
+    {
+        "legacy_question_index":  717,
+        "after_exhibit_question_id":  399,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-717.png"
+    },
+    {
+        "legacy_question_index":  719,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-719.png"
+    },
+    {
+        "legacy_question_index":  720,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-720.png"
+    },
+    {
+        "legacy_question_index":  721,
+        "after_exhibit_question_id":  403,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-721.png"
+    },
+    {
+        "legacy_question_index":  723,
+        "after_exhibit_question_id":  405,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-723.png"
+    },
+    {
+        "legacy_question_index":  724,
+        "after_exhibit_question_id":  406,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-724.png"
+    },
+    {
+        "legacy_question_index":  729,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-729.png"
+    },
+    {
+        "legacy_question_index":  730,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-730.png"
+    },
+    {
+        "legacy_question_index":  736,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-736.png"
+    },
+    {
+        "legacy_question_index":  738,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-738.png"
+    },
+    {
+        "legacy_question_index":  754,
+        "after_exhibit_question_id":  436,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-754.png"
+    },
+    {
+        "legacy_question_index":  756,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-756.png"
+    },
+    {
+        "legacy_question_index":  758,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-758.png"
+    },
+    {
+        "legacy_question_index":  759,
+        "after_exhibit_question_id":  441,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-759.png"
+    },
+    {
+        "legacy_question_index":  760,
+        "after_exhibit_question_id":  442,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-760.png"
+    },
+    {
+        "legacy_question_index":  770,
+        "after_exhibit_question_id":  452,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-770.png"
+    },
+    {
+        "legacy_question_index":  772,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-772.png"
+    },
+    {
+        "legacy_question_index":  778,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-778.png"
+    },
+    {
+        "legacy_question_index":  782,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-782.png"
+    },
+    {
+        "legacy_question_index":  788,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-788.png"
+    },
+    {
+        "legacy_question_index":  790,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-790.png"
+    },
+    {
+        "legacy_question_index":  794,
+        "after_exhibit_question_id":  476,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-794.png"
+    },
+    {
+        "legacy_question_index":  797,
+        "after_exhibit_question_id":  479,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-797.png"
+    },
+    {
+        "legacy_question_index":  798,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-798.png"
+    },
+    {
+        "legacy_question_index":  800,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-800.png"
+    },
+    {
+        "legacy_question_index":  802,
+        "after_exhibit_question_id":  484,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-802.png"
+    },
+    {
+        "legacy_question_index":  804,
+        "after_exhibit_question_id":  486,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-804.png"
+    },
+    {
+        "legacy_question_index":  806,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-806.png"
+    },
+    {
+        "legacy_question_index":  807,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-807.png"
+    },
+    {
+        "legacy_question_index":  808,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-808.png"
+    },
+    {
+        "legacy_question_index":  816,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-816.png"
+    },
+    {
+        "legacy_question_index":  817,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-817.png"
+    },
+    {
+        "legacy_question_index":  824,
+        "after_exhibit_question_id":  506,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-824.png"
+    },
+    {
+        "legacy_question_index":  829,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "diagram",
+        "image_file":  "ccna-exhibit-829.png"
+    },
+    {
+        "legacy_question_index":  830,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-830.png"
+    },
+    {
+        "legacy_question_index":  834,
+        "after_exhibit_question_id":  516,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-834.png"
+    },
+    {
+        "legacy_question_index":  835,
+        "after_exhibit_question_id":  517,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-835.png"
+    },
+    {
+        "legacy_question_index":  837,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-837.png"
+    },
+    {
+        "legacy_question_index":  838,
+        "after_exhibit_question_id":  520,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-838.png"
+    },
+    {
+        "legacy_question_index":  839,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-839.png"
+    },
+    {
+        "legacy_question_index":  840,
+        "after_exhibit_question_id":  522,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-840.png"
+    },
+    {
+        "legacy_question_index":  848,
+        "after_exhibit_question_id":  530,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-848.png"
+    },
+    {
+        "legacy_question_index":  852,
+        "after_exhibit_question_id":  534,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-852.png"
+    },
+    {
+        "legacy_question_index":  856,
+        "after_exhibit_question_id":  538,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-856.png"
+    },
+    {
+        "legacy_question_index":  860,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-860.png"
+    },
+    {
+        "legacy_question_index":  869,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-869.png"
+    },
+    {
+        "legacy_question_index":  870,
+        "after_exhibit_question_id":  552,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-870.png"
+    },
+    {
+        "legacy_question_index":  872,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-872.png"
+    },
+    {
+        "legacy_question_index":  875,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-875.png"
+    },
+    {
+        "legacy_question_index":  876,
+        "after_exhibit_question_id":  558,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-876.png"
+    },
+    {
+        "legacy_question_index":  878,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-878.png"
+    },
+    {
+        "legacy_question_index":  881,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "diagram",
+        "image_file":  "ccna-exhibit-881.png"
+    },
+    {
+        "legacy_question_index":  882,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-882.png"
+    },
+    {
+        "legacy_question_index":  884,
+        "after_exhibit_question_id":  566,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-884.png"
+    },
+    {
+        "legacy_question_index":  887,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-887.png"
+    },
+    {
+        "legacy_question_index":  892,
+        "after_exhibit_question_id":  574,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-892.png"
+    },
+    {
+        "legacy_question_index":  898,
+        "after_exhibit_question_id":  580,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-898.png"
+    },
+    {
+        "legacy_question_index":  901,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "diagram",
+        "image_file":  "ccna-exhibit-901.png"
+    },
+    {
+        "legacy_question_index":  909,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-909.png"
+    },
+    {
+        "legacy_question_index":  910,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-910.png"
+    },
+    {
+        "legacy_question_index":  912,
+        "after_exhibit_question_id":  594,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-912.png"
+    },
+    {
+        "legacy_question_index":  914,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-914.png"
+    },
+    {
+        "legacy_question_index":  929,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-929.png"
+    },
+    {
+        "legacy_question_index":  932,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-932.png"
+    },
+    {
+        "legacy_question_index":  934,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-934.png"
+    },
+    {
+        "legacy_question_index":  935,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "diagram",
+        "image_file":  "ccna-exhibit-935.png"
+    },
+    {
+        "legacy_question_index":  940,
+        "after_exhibit_question_id":  624,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-940.png"
+    },
+    {
+        "legacy_question_index":  949,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-949.png"
+    },
+    {
+        "legacy_question_index":  964,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "diagram",
+        "image_file":  "ccna-exhibit-964.png"
+    },
+    {
+        "legacy_question_index":  968,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-968.png"
+    },
+    {
+        "legacy_question_index":  985,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-985.png"
+    },
+    {
+        "legacy_question_index":  987,
+        "after_exhibit_question_id":  671,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-987.png"
+    },
+    {
+        "legacy_question_index":  990,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-990.png"
+    },
+    {
+        "legacy_question_index":  991,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-991.png"
+    },
+    {
+        "legacy_question_index":  992,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-992.png"
+    },
+    {
+        "legacy_question_index":  1001,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1001.png"
+    },
+    {
+        "legacy_question_index":  1007,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1007.png"
+    },
+    {
+        "legacy_question_index":  1016,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1016.png"
+    },
+    {
+        "legacy_question_index":  1019,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1019.png"
+    },
+    {
+        "legacy_question_index":  1023,
+        "after_exhibit_question_id":  707,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-1023.png"
+    },
+    {
+        "legacy_question_index":  1025,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1025.png"
+    },
+    {
+        "legacy_question_index":  1040,
+        "after_exhibit_question_id":  724,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-1040.png"
+    },
+    {
+        "legacy_question_index":  1044,
+        "after_exhibit_question_id":  728,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-1044.png"
+    },
+    {
+        "legacy_question_index":  1049,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1049.png"
+    },
+    {
+        "legacy_question_index":  1052,
+        "after_exhibit_question_id":  736,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-1052.png"
+    },
+    {
+        "legacy_question_index":  1056,
+        "after_exhibit_question_id":  740,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-1056.png"
+    },
+    {
+        "legacy_question_index":  1060,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1060.png"
+    },
+    {
+        "legacy_question_index":  1065,
+        "after_exhibit_question_id":  749,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-1065.png"
+    },
+    {
+        "legacy_question_index":  1084,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1084.png"
+    },
+    {
+        "legacy_question_index":  1085,
+        "after_exhibit_question_id":  769,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-1085.png"
+    },
+    {
+        "legacy_question_index":  1086,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1086.png"
+    },
+    {
+        "legacy_question_index":  1087,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1087.png"
+    },
+    {
+        "legacy_question_index":  1089,
+        "after_exhibit_question_id":  773,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-1089.png"
+    },
+    {
+        "legacy_question_index":  1108,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1108.png"
+    },
+    {
+        "legacy_question_index":  1113,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1113.png"
+    },
+    {
+        "legacy_question_index":  1115,
+        "after_exhibit_question_id":  799,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-1115.png"
+    },
+    {
+        "legacy_question_index":  1116,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1116.png"
+    },
+    {
+        "legacy_question_index":  1123,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1123.png"
+    },
+    {
+        "legacy_question_index":  1124,
+        "after_exhibit_question_id":  808,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-1124.png"
+    },
+    {
+        "legacy_question_index":  1126,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1126.png"
+    },
+    {
+        "legacy_question_index":  1127,
+        "after_exhibit_question_id":  811,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-1127.png"
+    },
+    {
+        "legacy_question_index":  1130,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1130.png"
+    },
+    {
+        "legacy_question_index":  1138,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1138.png"
+    },
+    {
+        "legacy_question_index":  1140,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1140.png"
+    },
+    {
+        "legacy_question_index":  1145,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1145.png"
+    },
+    {
+        "legacy_question_index":  1147,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1147.png"
+    },
+    {
+        "legacy_question_index":  1149,
+        "after_exhibit_question_id":  833,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-1149.png"
+    },
+    {
+        "legacy_question_index":  1150,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1150.png"
+    },
+    {
+        "legacy_question_index":  1151,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1151.png"
+    },
+    {
+        "legacy_question_index":  1153,
+        "after_exhibit_question_id":  837,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-1153.png"
+    },
+    {
+        "legacy_question_index":  1161,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1161.png"
+    },
+    {
+        "legacy_question_index":  1167,
+        "after_exhibit_question_id":  851,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-1167.png"
+    },
+    {
+        "legacy_question_index":  1168,
+        "after_exhibit_question_id":  852,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-1168.png"
+    },
+    {
+        "legacy_question_index":  1180,
+        "after_exhibit_question_id":  864,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-1180.png"
+    },
+    {
+        "legacy_question_index":  1184,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1184.png"
+    },
+    {
+        "legacy_question_index":  1186,
+        "after_exhibit_question_id":  870,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-1186.png"
+    },
+    {
+        "legacy_question_index":  1187,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1187.png"
+    },
+    {
+        "legacy_question_index":  1190,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1190.png"
+    },
+    {
+        "legacy_question_index":  1200,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "diagram",
+        "image_file":  "ccna-exhibit-1200.png"
+    },
+    {
+        "legacy_question_index":  1211,
+        "after_exhibit_question_id":  895,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-1211.png"
+    },
+    {
+        "legacy_question_index":  1224,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1224.png"
+    },
+    {
+        "legacy_question_index":  1225,
+        "after_exhibit_question_id":  909,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-1225.png"
+    },
+    {
+        "legacy_question_index":  1226,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1226.png"
+    },
+    {
+        "legacy_question_index":  1228,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1228.png"
+    },
+    {
+        "legacy_question_index":  1231,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1231.png"
+    },
+    {
+        "legacy_question_index":  1235,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1235.png"
+    },
+    {
+        "legacy_question_index":  1237,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1237.png"
+    },
+    {
+        "legacy_question_index":  1238,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1238.png"
+    },
+    {
+        "legacy_question_index":  1242,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1242.png"
+    },
+    {
+        "legacy_question_index":  1258,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1258.png"
+    },
+    {
+        "legacy_question_index":  1260,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1260.png"
+    },
+    {
+        "legacy_question_index":  1261,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1261.png"
+    },
+    {
+        "legacy_question_index":  1262,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "diagram",
+        "image_file":  "ccna-exhibit-1262.png"
+    },
+    {
+        "legacy_question_index":  1269,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1269.png"
+    },
+    {
+        "legacy_question_index":  1275,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1275.png"
+    },
+    {
+        "legacy_question_index":  1276,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1276.png"
+    },
+    {
+        "legacy_question_index":  1277,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1277.png"
+    },
+    {
+        "legacy_question_index":  1278,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1278.png"
+    },
+    {
+        "legacy_question_index":  1285,
+        "after_exhibit_question_id":  996,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-1285.png"
+    },
+    {
+        "legacy_question_index":  1288,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1288.png"
+    },
+    {
+        "legacy_question_index":  1290,
+        "after_exhibit_question_id":  1001,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-1290.png"
+    },
+    {
+        "legacy_question_index":  1291,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1291.png"
+    },
+    {
+        "legacy_question_index":  1292,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1292.png"
+    },
+    {
+        "legacy_question_index":  1294,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1294.png"
+    },
+    {
+        "legacy_question_index":  1296,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1296.png"
+    },
+    {
+        "legacy_question_index":  1300,
+        "after_exhibit_question_id":  1011,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-1300.png"
+    },
+    {
+        "legacy_question_index":  1301,
+        "after_exhibit_question_id":  1012,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-1301.png"
+    },
+    {
+        "legacy_question_index":  1303,
+        "after_exhibit_question_id":  1014,
+        "exhibit_type":  "after-image",
+        "image_file":  "ccna-exhibit-1303.png"
+    },
+    {
+        "legacy_question_index":  1304,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "image",
+        "image_file":  "ccna-exhibit-1304.png"
+    },
+    {
+        "legacy_question_index":  1313,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1313.png"
+    },
+    {
+        "legacy_question_index":  1319,
+        "after_exhibit_question_id":  null,
+        "exhibit_type":  "text",
+        "image_file":  "ccna-exhibit-1319.png"
+    }
+]

@@ -9,6 +9,8 @@ import { CCNA_LEGACY_QUESTIONS } from "./ccnaLegacyQuestions";
 import { CCNA_LEGACY_200_301_QUESTIONS } from "./ccnaLegacyQuestionBank";
 import { splitPromptExhibit } from "../../../../../utils/splitPromptExhibit";
 import { findCcnaQuestionExplanation } from "../../../../../utils/ccnaQuestionExplanations";
+import { getCcnaExhibitImageByLegacyIndex } from "../../../../../utils/ccnaExhibitImages";
+import { shuffleMatchingChoices } from "./ccnaMatchingChoices";
 
 // Both legacy files come from the same CCNA 200-301 PDF. CCNA_LEGACY_QUESTIONS is the fuller set
 // (with explanations), so only questions it is missing are taken from the other file.
@@ -26,33 +28,6 @@ export function shuffle(items) {
     [shuffled[index], shuffled[randomIndex]] = [shuffled[randomIndex], shuffled[index]];
   }
   return shuffled;
-}
-
-function shuffleMatchingChoices(question) {
-  if (
-    !["match", "drag_drop"].includes(question.type) ||
-    question.matchStyle === "numbers" ||
-    !Array.isArray(question.items) ||
-    !Array.isArray(question.choices) ||
-    question.choices.length < 2 ||
-    !Array.isArray(question.answer) ||
-    question.answer.length !== question.items?.length ||
-    new Set(question.answer).size !== question.answer.length ||
-    question.answer.some((index) => !Number.isInteger(index) || index < 0 || index >= question.choices.length)
-  ) {
-    return question;
-  }
-
-  const choiceOrder = shuffle(question.choices.map((_, index) => index));
-  if (choiceOrder.every((index, shuffledIndex) => index === shuffledIndex)) {
-    choiceOrder.push(choiceOrder.shift());
-  }
-  const shuffledIndexes = new Map(choiceOrder.map((originalIndex, index) => [originalIndex, index]));
-  return {
-    ...question,
-    choices: choiceOrder.map((index) => question.choices[index]),
-    answer: question.answer.map((index) => shuffledIndexes.get(index)),
-  };
 }
 
 export const CCNA_QUESTION_BANK = [
@@ -83,15 +58,29 @@ export const CCNA_QUESTION_BANK = [
     moduleTitle: "Medium Exam",
   })),
   // Kept tagged so older CCNA 200-301 questions remain identifiable in the shared bank.
-  ...CCNA_LEGACY_ALL_QUESTIONS.map((question) => ({
-    ...question,
-    ...applyNativeExhibit(question),
-    // Router output pasted into the question text moves into the exhibit box
-    ...(question.exhibit ? {} : splitPromptExhibit(question.prompt)),
-    source: "legacy-ccna-200-301",
-    moduleNumber: null,
-    moduleTitle: "Legacy CCNA 200-301",
-  }))
+  ...CCNA_LEGACY_ALL_QUESTIONS.map((question) => {
+    const nativeExhibit = applyNativeExhibit(question);
+    const questionWithExhibit = {
+      ...question,
+      // Router output pasted into the question text moves into the exhibit box
+      ...(question.exhibit ? {} : splitPromptExhibit(question.prompt)),
+      ...nativeExhibit,
+    };
+    const exhibitImage =
+      /\bexhibit\b/i.test(questionWithExhibit.prompt) &&
+      !questionWithExhibit.hideExhibitImage &&
+      !questionWithExhibit.exhibitDiagram
+      ? getCcnaExhibitImageByLegacyIndex(question.legacyIndex)
+      : null;
+
+    return {
+      ...questionWithExhibit,
+      ...(!questionWithExhibit.exhibitImage && exhibitImage ? { exhibitImage } : {}),
+      source: "legacy-ccna-200-301",
+      moduleNumber: null,
+      moduleTitle: "Legacy CCNA 200-301",
+    };
+  })
     // Skip questions whose exhibit picture was lost when they were taken from the PDF (they can't be answered)
     .filter((question) =>
       !/\bexhibit\b/i.test(question.prompt) ||
@@ -212,7 +201,7 @@ function createExamQuestions(sourceQuestions, count, { jumbleMatchingAnswers = f
       ...otherQuestions.slice(otherStart, otherStart + Math.min(otherPerBlock, blockLength - matchingPerBlock - dragDropQuota - clickBoxesQuota - imageQuota)),
     ];
     questions.push(...shuffle(blockQuestions).map((question) =>
-      jumbleMatchingAnswers ? shuffleMatchingChoices(question) : question,
+      jumbleMatchingAnswers ? shuffleMatchingChoices(question, shuffle) : question,
     ));
   }
 

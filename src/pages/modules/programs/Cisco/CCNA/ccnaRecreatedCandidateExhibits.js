@@ -11,7 +11,7 @@ const diagramExhibit = (diagram, exhibitQuality = "illustrative") => ({
 });
 
 export const CCNA_RECREATED_CANDIDATE_EXHIBITS = new Map([
-  [24, diagramExhibit("candidate-vlan-roles-24", "partial")],
+  [24, diagramExhibit("candidate-vlan-roles-24", "source-backed")],
   [29, diagramExhibit("candidate-acl-sources-29", "partial")],
   [66, diagramExhibit("candidate-voice-data-66", "partial")],
   [82, diagramExhibit("candidate-cdp-target-82", "partial")],
@@ -127,18 +127,23 @@ Expected DNS server:      196.1.38.132`, "partial")],
   [955, diagramExhibit("candidate-wlc-955", "partial")],
   [992, diagramExhibit("candidate-wlc-992", "source-backed")],
   [1015, diagramExhibit("candidate-wlc-1015", "source-backed")],
-  [1096, textExhibit(`SW2#show running-config
+  [1096, {
+    ...textExhibit(`SW2
 vtp domain cisco
 vtp mode transparent
 vtp password test
-interface FastEthernet0/1
+interface fastethernet0/1
  description connection to SW1
  switchport mode trunk
- switchport trunk encapsulation dot1q`)],
-  [1197, textExhibit(`R1(config)#access-list 100 deny tcp host 172.16.1.33 any eq 22
-R1(config)#access-list 100 permit ip any any
-R1(config)#interface GigabitEthernet0/0
-R1(config-if)#ip access-group 100 in`)],
+ switchport trunk encapsulation
+ dot1q`),
+    diagram: "vtp-transparent-frame-flow",
+  }],
+  [1197, {
+    diagram: "r1-ssh-acl-pc1",
+    hideExhibitImage: true,
+    exhibitQuality: "source-backed",
+  }],
   [1254, textExhibit(`%PM-4-ERR_DISABLE: psecure-violation error detected on Fa0/1, putting Fa0/1 in err-disable state
 %PORT_SECURITY-2-PSECURE_VIOLATION: Security violation occurred, caused by MAC address 00AA.1AB9.D22F on port FastEthernet0/1
 %LINKPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/1, changed state to down
