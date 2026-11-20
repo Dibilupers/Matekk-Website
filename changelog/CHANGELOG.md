@@ -2,6 +2,25 @@
 
 Tracking begins 2026-10-17.
 
+## 2026-11-20 — `main`
+
+Commits included in this push:
+
+- `436e69a` — Corrected CCNA practice-lab topology and setup guidance, improved
+  Packet Tracer preconfiguration, and expanded simulator regression coverage.
+- `5db117d` — Added model-specific device recommendations, cable/interface
+  mappings, Packet Tracer notes, and build-guide tests for all 11 labs.
+- `15396e9` — Recorded the Packet Tracer build-guide changes in the changelog.
+- `00c38ec` — Completed the lab audit and fixes, added matching-question report
+  output, and expanded topology, worksheet, and solution regression tests.
+- `8dcc9c0` — Integrated the latest `main` while preserving its CCNA exam and
+  offline-exhibit changes.
+
+Validation before push: 17 practice-lab tests, CCNA classifier tests, targeted
+ESLint, production build, and Git whitespace checks passed. The combined CCNA
+bank test run had one previously known failure: the expected exhibit text for
+offline legacy question 282 (bank ID 1321) is undefined.
+
 ## 2026-11-20 — `fix/ccna-recreate-exhibit-images`
 
 Commits included in this push:
