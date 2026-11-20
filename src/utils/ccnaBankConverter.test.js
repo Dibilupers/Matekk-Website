@@ -11,6 +11,8 @@ let isValidQuestion;
 let applyNativeExhibit;
 let compositeSetQuestions;
 let getOfflineLegacyQuestionBank;
+let getOfflineReferExhibitQuestionBank;
+let ccnaLegacyQuestions;
 let builtInQuestionBank;
 let createShortExamQuestions;
 let setDatabaseQuestions;
@@ -32,7 +34,11 @@ before(async () => {
   ({ isValidQuestion } = await vite.ssrLoadModule("/src/utils/ccnaExamGrading.js"));
   ({ applyNativeExhibit } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaCompositeSetQuestions.js"));
   ({ CCNA_COMPOSITE_SET_QUESTIONS: compositeSetQuestions } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaCompositeSetQuestions.js"));
-  ({ getOfflineLegacyQuestionBank } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaOfflineExamQuestions.js"));
+  ({
+    getOfflineLegacyQuestionBank,
+    getOfflineReferExhibitQuestionBank,
+  } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaOfflineExamQuestions.js"));
+  ({ CCNA_LEGACY_QUESTIONS: ccnaLegacyQuestions } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaLegacyQuestions.js"));
   ({ CCNA_QUESTION_BANK: builtInQuestionBank } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaQuestionBank.jsx"));
   ({ createShortExamQuestions, setDatabaseQuestions } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaQuestionBank.jsx"));
   originalFetch = globalThis.fetch;
@@ -659,6 +665,213 @@ test("adds corrected exhibits to the bundled offline legacy question", () => {
   assert.equal(question.afterExhibit.title, "HEADQUARTERS SPANNING-TREE TOPOLOGY");
   assert.equal(question.hideExhibitImage, true);
   assert.equal(question.exhibitImage, undefined);
+});
+
+test("keeps drag-and-drop questions out of the offline Refer to Exhibit exam", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+
+  assert.equal(questions.length, 375);
+  assert.equal(new Set(questions.map((question) => question.bankId)).size, questions.length);
+  assert.ok(questions.every((question) => isValidQuestion(question)));
+  assert.ok(questions.every((question) => !["drag_drop", "match"].includes(question.type)));
+});
+
+test("adds the topology exhibit image to question 77 in the offline Refer to Exhibit exam", () => {
+  const question = getOfflineReferExhibitQuestionBank()[76];
+
+  assert.equal(question.legacyIndex, 345);
+  assert.match(question.exhibitImage, /ccna-question-77-acl-exhibit\.jpg$/);
+});
+
+test("hides redundant or mismatched images while preserving the needed exhibit", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  for (const [legacyIndex, expectedDiagram, shouldKeepAfterExhibit, expectedImage] of [
+    [44, undefined, true],
+    [51, undefined, true],
+    [62, undefined, true],
+    [494, "routers-abc-floating-route", false],
+    [507, "routers-abc-ospf-dr", true],
+    [542, "r4-supernet", false],
+    [570, "ospf-r1-r2-r3-priority", false],
+    [769, undefined, false, true],
+    [508, undefined, true],
+    [645, undefined, true],
+    [687, undefined, true],
+    [1300, undefined, true],
+    [1301, "wlc-security-tab-legacy", true],
+  ]) {
+    const question = questions.find((entry) => entry.legacyIndex === legacyIndex);
+
+    assert.ok(question, `Refer question ${legacyIndex} should remain in the offline bank`);
+    if (expectedDiagram) assert.equal(question.exhibitDiagram, expectedDiagram);
+    assert.deepEqual(question.offlineSourceExhibitImages, []);
+    assert.equal(Boolean(question.afterExhibit?.imageUrl), shouldKeepAfterExhibit);
+    if (expectedImage) assert.ok(question.exhibitImage);
+  }
+
+  const floatingRouteQuestion = questions.find((entry) => entry.legacyIndex === 494);
+  assert.equal(floatingRouteQuestion.afterExhibit, undefined);
+  assert.equal(floatingRouteQuestion.exhibitDiagram, "routers-abc-floating-route");
+
+  const jsonQuestion = questions.find((entry) => entry.legacyIndex === 769);
+  assert.equal(jsonQuestion.afterExhibit, undefined);
+  assert.equal(jsonQuestion.exhibitDiagram, undefined);
+  assert.equal(jsonQuestion.exhibit, undefined);
+  assert.equal(jsonQuestion.hideExhibitImage, false);
+  assert.equal(jsonQuestion.exhibitQuality, "illustrative");
+});
+
+test("limits the image cleanup to Refer mode and retains needed OSPF source evidence", () => {
+  const referQuestions = getOfflineReferExhibitQuestionBank();
+  const legacyQuestions = getOfflineLegacyQuestionBank();
+  const referQuestion = referQuestions.find((entry) => entry.legacyIndex === 494);
+  const regularQuestion = legacyQuestions.find((entry) => entry.legacyIndex === 494);
+  const wlcQuestion = referQuestions.find((entry) => entry.legacyIndex === 1301);
+  const ospfQuestion = referQuestions.find((entry) => entry.legacyIndex === 616);
+
+  assert.deepEqual(referQuestion.offlineSourceExhibitImages, []);
+  assert.equal(regularQuestion.offlineSourceExhibitImages.length, 1);
+  assert.equal(wlcQuestion.exhibitDiagram, "wlc-security-tab-legacy");
+  assert.deepEqual(wlcQuestion.offlineSourceExhibitImages, []);
+  assert.ok(wlcQuestion.afterExhibit.imageUrl);
+
+  assert.equal(ospfQuestion.exhibitDiagram, "ospf-drother-r1");
+  assert.match(ospfQuestion.offlineSourceExhibitImages[0], /ccna-question-298\.png$/);
+});
+
+test("pairs question 875 with the verified offline exhibit and corrects Option B masks", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 875);
+  const question = questions[questionIndex];
+
+  assert.ok(question);
+  assert.equal(questionIndex + 1, 250);
+  assert.match(question.exhibitImage, /ccna-question-875-ip-address-exhibit\.jpg$/);
+  assert.equal(question.afterExhibit, undefined);
+  assert.equal(question.answer, 1);
+  assert.equal(
+    question.options[1],
+    [
+      "R7#",
+      "interface FastEthernet1/0",
+      "ip address 10.88.31.126 255.255.255.192",
+      "R8#",
+      "interface FastEthernet0/0",
+      "ip address 10.19.63.94 255.255.255.240",
+      "R9#",
+      "interface FastEthernet1/1",
+      "ip address 10.23.98.158 255.255.255.224",
+    ].join("\n"),
+  );
+  assert.match(question.explanation, /last usable address is 10\.19\.63\.94/);
+});
+
+test("pairs root-bridge question 962 with the verified offline exhibit", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 962);
+  const question = questions[questionIndex];
+
+  assert.ok(question);
+  assert.equal(questionIndex + 1, 272);
+  assert.match(question.exhibitImage, /ccna-question-962-stp-root-bridge-exhibit\.jpg$/);
+  assert.equal(question.afterExhibit, undefined);
+  assert.deepEqual(question.offlineSourceExhibitImages, []);
+  assert.equal(question.answer, 2);
+  assert.match(question.options[0], /32768[\s\S]*0f:d7:9e:13:ab:82/i);
+  assert.match(question.options[2], /32768[\s\S]*01:1c:6c:66:b7:70/i);
+});
+
+test("pairs question 963 with the verified offline IP configuration exhibit", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 963);
+  const question = questions[questionIndex];
+
+  assert.ok(question);
+  assert.equal(questionIndex + 1, 273);
+  assert.match(question.exhibitImage, /ccna-question-963-ipconfig-exhibit\.png$/);
+  assert.equal(question.afterExhibit, undefined);
+  assert.equal(question.answer, 2);
+  assert.match(question.explanation, /192\.168\.10\.0\/24/);
+  assert.match(question.explanation, /192\.168\.1\.1 is outside that subnet/);
+  assert.doesNotMatch(question.explanation, /10\.2\.2\.0\/29/);
+});
+
+test("pairs Host A question 1114 with its exhibit and corrects its offline Refer answer", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 1114);
+  const question = questions[questionIndex];
+  const sourceQuestion = ccnaLegacyQuestions.find((entry) => entry.legacyIndex === 1114);
+
+  assert.ok(question);
+  assert.ok(sourceQuestion);
+  assert.equal(questionIndex + 1, 307);
+  assert.match(question.exhibitImage, /ccna-question-1114-host-a-exhibit\.png$/);
+  assert.equal(question.answer, 1);
+  assert.match(question.explanation, /192\.168\.1\.255\/24, which is the broadcast address/);
+  assert.equal(sourceQuestion.answer, 3);
+});
+
+test("pairs Host C question 1152 with its exhibit and verifies the offline gateway answer", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 1152);
+  const question = questions[questionIndex];
+
+  assert.ok(question);
+  assert.equal(questionIndex + 1, 324);
+  assert.match(question.exhibitImage, /ccna-question-1152-host-c-network-config\.jpg$/);
+  assert.equal(question.answer, 1);
+  assert.match(question.explanation, /192\.168\.1\.12.*192\.168\.1\.0\/24/);
+  assert.match(question.explanation, /192\.168\.2\.1, which is outside its subnet/);
+});
+
+test("pairs question 1130 with the supplied VLAN topology in the offline Refer exam", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 1130);
+  const question = questions[questionIndex];
+
+  assert.ok(question);
+  assert.equal(questionIndex + 1, 314);
+  assert.match(question.exhibitImage, /ccna-question-1130-switch-vlan-topology\.jpg$/);
+  assert.equal(question.afterExhibit, undefined);
+  assert.deepEqual(question.offlineSourceExhibitImages, []);
+  assert.equal(question.answer, 1);
+});
+
+test("pairs WLAN question 1143 with the composite exhibit in the offline Refer exam", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 1143);
+  const question = questions[questionIndex];
+
+  assert.ok(question);
+  assert.equal(questionIndex + 1, 317);
+  assert.match(question.exhibitImage, /ccna-question-1130-switch-vlan-topology\.jpg$/);
+  assert.equal(question.afterExhibit, undefined);
+  assert.deepEqual(question.answer, [2, 4]);
+});
+
+test("pairs WLAN question 1028 with the verified offline Advanced-tab exhibit", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 1028);
+  const question = questions[questionIndex];
+
+  assert.ok(question);
+  assert.equal(questionIndex + 1, 287);
+  assert.match(question.exhibitImage, /ccna-question-1028-wlan-advanced-exhibit\.png$/);
+  assert.equal(question.afterExhibit, undefined);
+  assert.deepEqual(question.answer, [0, 2]);
+  assert.match(question.options[0], /Client Band Select/);
+  assert.match(question.options[2], /Allow AAA Override/);
+});
+
+test("formats the VLAN exhibit separately for question 303 in the offline Refer exam", () => {
+  const question = getOfflineReferExhibitQuestionBank().find((entry) => entry.legacyIndex === 1112);
+
+  assert.ok(question);
+  assert.match(question.prompt, /^Refer to the exhibit\.\n\nVoIP is being implemented/);
+  assert.doesNotMatch(question.prompt, /SW_1#show vlan|fddi-default/);
+  assert.match(question.exhibit, /^SW_1#show vlan\n\nVLAN\s+Name\s+Status\s+Ports/);
+  assert.match(question.exhibit, /72\s+Data Vlan\s+active\s+Et0\/0/);
+  assert.deepEqual(question.offlineSourceExhibitImages, []);
 });
 
 test("uses the corrected PDF panel image for an offline image-only exhibit", () => {
