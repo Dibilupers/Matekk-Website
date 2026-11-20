@@ -17,11 +17,6 @@ import { topologyFitScale } from "../../../../utils/topologyFit";
    ========================================================================== */
 
 const PACKET_TRACER_URL = "https://www.netacad.com/resources/lab-downloads";
-const LEVEL_STYLE = {
-	Beginner: "bg-green-100 text-green-800",
-	Intermediate: "bg-amber-100 text-amber-800",
-	Advanced: "bg-red-100 text-red-800",
-};
 const FEATURED_LAB_IDS = new Set([6, 7, 8, 9, 10, 11]);
 const FEATURED_LABS = PRACTICE_LABS.filter(({ id }) => FEATURED_LAB_IDS.has(id));
 const ADDITIONAL_LABS = PRACTICE_LABS.filter(({ id }) => !FEATURED_LAB_IDS.has(id));
@@ -510,21 +505,7 @@ function LabWorkspace({ lab, selectLab, fromDashboard, labStartRef }) {
 				className={`group h-full rounded-2xl border-2 p-4 text-left transition duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1775EE] focus-visible:ring-offset-2 ${selected ? "border-[#1775EE] bg-white shadow-md" : "border-transparent bg-[#EBF5FD] hover:border-[#c5e1f4] hover:bg-white hover:shadow-sm"}`}
 			>
 				<span className="block font-bold text-[#17233d] group-hover:text-[#005b6b]">{l.title}</span>
-				{selected && (
-					<>
-						<span className="mt-3 flex flex-wrap items-center gap-2">
-							<span className={`inline-block rounded-full px-2.5 py-1 text-xs font-bold ${LEVEL_STYLE[l.level]}`}>
-								Lab {l.id} · {l.level}
-							</span>
-							{l.id === 5 && (
-								<span className="inline-block rounded-full bg-violet-100 px-2.5 py-1 text-xs font-bold text-violet-800">
-									Bonus lab
-								</span>
-							)}
-						</span>
-						<span className="mt-2 block text-sm leading-5 text-gray-600">{l.summary}</span>
-					</>
-				)}
+				<span className="mt-2 block text-sm leading-5 text-gray-600">{l.summary}</span>
 			</button>
 		);
 	}
@@ -653,7 +634,6 @@ function LabWorkspace({ lab, selectLab, fromDashboard, labStartRef }) {
 					<div className="flex items-center justify-between mb-2">
 						<h5 className="text-[#1775EE]">Topology</h5>
 						<div className="flex items-center gap-2">
-							<span className={`text-xs font-bold px-2.5 py-1 rounded-full ${LEVEL_STYLE[lab.level]}`}>{lab.level}</span>
 							<button
 								type="button"
 								onClick={() => setTopologyOpen(true)}
