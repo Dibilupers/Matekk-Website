@@ -6,6 +6,17 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `0d73e7b` — Simplified CCNA practice-lab cards to show titles and descriptions
+  without difficulty, lab-number, or bonus badges, and removed the topology
+  difficulty badge.
+
+Validation before push: 17 practice-lab regression tests, targeted ESLint, and
+the production build passed. Vite reported a large-bundle warning.
+
+## 2026-11-20 — `main`
+
+Commits included in this push:
+
 - `967854a` — Added device-local autosave and restoration for CCNA practice
   labs and the topology sandbox, preserved separate worksheet and terminal
   attempts when switching views, and surfaced local-storage failures.
