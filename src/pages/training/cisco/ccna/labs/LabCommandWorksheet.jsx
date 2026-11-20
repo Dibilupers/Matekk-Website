@@ -1,27 +1,35 @@
-import { useState } from "react";
 import { CheckCircle2, Circle, Maximize2, XCircle } from "lucide-react";
 import { applyWorksheetCommands } from "./worksheetCommands";
 import { createLabState } from "./labEngine";
 import LabTopology from "./LabTopology";
 
-export default function LabCommandWorksheet({ lab, state, setState, activeDevice, onReset, onExpand }) {
-	const [answers, setAnswers] = useState({});
-	const [submitted, setSubmitted] = useState(false);
-	const [failedSlots, setFailedSlots] = useState([]);
+export default function LabCommandWorksheet({
+	lab,
+	state,
+	setState,
+	activeDevice,
+	answers,
+	setAnswers,
+	submitted,
+	setSubmitted,
+	failedSlots,
+	setFailedSlots,
+	onStateSubmitted,
+	onReset,
+	onExpand,
+}) {
 	const completedCount = lab.tasks.filter((task) => task.check(state, lab)).length;
 
 	function submit(event) {
 		event.preventDefault();
 		const result = applyWorksheetCommands(lab, lab.worksheet, answers, createLabState(lab));
 		setState(result.state);
+		onStateSubmitted(result.state);
 		setFailedSlots(result.failedSlots);
 		setSubmitted(true);
 	}
 
 	function reset() {
-		setAnswers({});
-		setFailedSlots([]);
-		setSubmitted(false);
 		onReset();
 	}
 
@@ -102,7 +110,7 @@ export default function LabCommandWorksheet({ lab, state, setState, activeDevice
 							Submit
 						</button>
 						<button type="button" onClick={reset} className="rounded border border-[#9ca3af] px-3 py-1 text-xs text-[#374151] hover:bg-gray-100">
-							Reset
+							Reset worksheet
 						</button>
 					</div>
 				</form>

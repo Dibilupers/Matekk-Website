@@ -7,6 +7,7 @@ import { buildPacketTracerGuide, canReach, createLabState, execute, promptFor } 
 import LabTopology from "./labs/LabTopology";
 import LabCommandWorksheet from "./labs/LabCommandWorksheet";
 import TopologySandbox from "./labs/TopologySandbox";
+import { readPracticeLabProgress, writePracticeLabProgress } from "./labs/practiceLabProgressStorage";
 import { topologyFitScale } from "../../../../utils/topologyFit";
 
 /* ==========================================================================
@@ -245,26 +246,161 @@ function TopologyFullscreen({ lab, state, device, onClose }) {
 }
 
 // ---------- page ----------
-function LabWorkspace({ lab, selectLab, fromDashboard, labStartRef }) {
+const PRACTICE_LAB_PROGRESS_VERSION = 1;
 
-	const [state, setState] = useState(() => createLabState(lab));
-	const [consoles, setConsoles] = useState(() => freshConsoles(lab));
-	const [device, setDevice] = useState(lab.editable[0]);
-	const [achieved, setAchieved] = useState({});
-	const [input, setInput] = useState("");
+function isRecord(value) {
+	return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+function isValidLabStateSnapshot(state, lab) {
+	return isRecord(state)
+		&& isRecord(state.devices)
+		&& Object.keys(state.devices).length === Object.keys(lab.devices).length
+		&& Object.entries(lab.devices).every(([name, device]) => {
+			const savedDevice = state.devices[name];
+			return isRecord(savedDevice)
+				&& savedDevice.kind === device.kind
+				&& isRecord(savedDevice.interfaces)
+				&& Object.keys(device.interfaces).every((interfaceName) => isRecord(savedDevice.interfaces[interfaceName]));
+		})
+		&& isRecord(state.consoles)
+		&& isRecord(state.initial);
+}
+
+function isBooleanRecord(value) {
+	return isRecord(value) && Object.values(value).every((entry) => typeof entry === "boolean");
+}
+
+function isValidLabProgress(progress, lab) {
+	return isRecord(progress)
+		&& progress.version === PRACTICE_LAB_PROGRESS_VERSION
+		&& progress.labId === lab.id
+		&& isValidLabStateSnapshot(progress.terminalState, lab)
+		&& isValidLabStateSnapshot(progress.worksheetState, lab)
+		&& isRecord(progress.consoles)
+		&& lab.editable.every((name) => {
+			const consoleState = progress.consoles[name];
+			return isRecord(consoleState)
+				&& Array.isArray(consoleState.lines)
+				&& consoleState.lines.every((line) => typeof line === "string")
+				&& Array.isArray(consoleState.history)
+				&& consoleState.history.every((line) => typeof line === "string");
+		})
+		&& lab.editable.includes(progress.device)
+		&& typeof progress.input === "string"
+		&& isBooleanRecord(progress.terminalAchieved)
+		&& isBooleanRecord(progress.worksheetAchieved)
+		&& isRecord(progress.worksheetAnswers)
+		&& Object.values(progress.worksheetAnswers).every((answer) => typeof answer === "string")
+		&& typeof progress.worksheetSubmitted === "boolean"
+		&& Array.isArray(progress.worksheetFailedSlots)
+		&& progress.worksheetFailedSlots.every(Number.isInteger)
+		&& ["worksheet", "terminal"].includes(progress.labView)
+		&& typeof progress.showHints === "boolean"
+		&& typeof progress.showSolution === "boolean"
+		&& typeof progress.examMode === "boolean"
+		&& typeof progress.submitted === "boolean";
+}
+
+function LabWorkspace({ lab, selectLab, fromDashboard, labStartRef }) {
+	const storageKey = `matekk-ccna-practice-lab:session:v${PRACTICE_LAB_PROGRESS_VERSION}:${lab.id}`;
+	const [restoreResult] = useState(() => {
+		const result = readPracticeLabProgress(storageKey, (progress) => isValidLabProgress(progress, lab));
+		if (result.error) console.error(`Unable to restore saved CCNA practice lab ${lab.id} progress.`, result.error);
+		return result;
+	});
+	const restored = restoreResult.value;
+	const [labView, setLabView] = useState(() => lab.worksheet ? restored?.labView ?? "worksheet" : "terminal");
+	const [terminalState, setTerminalState] = useState(() => restored?.terminalState ?? createLabState(lab));
+	const [worksheetState, setWorksheetState] = useState(() => restored?.worksheetState ?? createLabState(lab));
+	const [consoles, setConsoles] = useState(() => restored?.consoles ?? freshConsoles(lab));
+	const [device, setDevice] = useState(() => restored?.device ?? lab.editable[0]);
+	const [terminalAchieved, setTerminalAchieved] = useState(() => restored?.terminalAchieved ?? {});
+	const [worksheetAchieved, setWorksheetAchieved] = useState(() => restored?.worksheetAchieved ?? {});
+	const [input, setInput] = useState(() => restored?.input ?? "");
+	const [worksheetAnswers, setWorksheetAnswers] = useState(() => restored?.worksheetAnswers ?? {});
+	const [worksheetSubmitted, setWorksheetSubmitted] = useState(() => restored?.worksheetSubmitted ?? false);
+	const [worksheetFailedSlots, setWorksheetFailedSlots] = useState(() => restored?.worksheetFailedSlots ?? []);
+	const [showHints, setShowHints] = useState(() => restored?.showHints ?? false);
+	const [showSolution, setShowSolution] = useState(() => restored?.showSolution ?? false);
+	const [examMode, setExamMode] = useState(() => restored?.examMode ?? false);
+	const [submitted, setSubmitted] = useState(() => restored?.submitted ?? false);
+	const [persistenceMessage, setPersistenceMessage] = useState(() => (
+		restoreResult.error
+			? "Saved work could not be restored; a fresh workspace was opened."
+			: restored
+				? "Restored saved work from this device."
+				: "Your practice work saves automatically on this device."
+	));
+	const saveErrorLogged = useRef(false);
+	const isWorksheetView = Boolean(lab.worksheet && labView === "worksheet");
+	const state = isWorksheetView ? worksheetState : terminalState;
+	const setState = isWorksheetView ? setWorksheetState : setTerminalState;
+	const achieved = isWorksheetView ? worksheetAchieved : terminalAchieved;
+	const setAchieved = isWorksheetView ? setWorksheetAchieved : setTerminalAchieved;
 	const [histPos, setHistPos] = useState(-1);
-	const [showHints, setShowHints] = useState(false);
-	const [showSolution, setShowSolution] = useState(false);
-	const [examMode, setExamMode] = useState(false);
-	const [labView, setLabView] = useState("worksheet");
 	const [topologyOpen, setTopologyOpen] = useState(false);
 	const [showTopologySandbox, setShowTopologySandbox] = useState(false);
 	const [showLabPicker, setShowLabPicker] = useState(false);
 	const closeTopology = useCallback(() => setTopologyOpen(false), []);
-	const [submitted, setSubmitted] = useState(false);
 	const termRef = useRef(null);
 	const inputRef = useRef(null);
 
+	const savedProgress = useMemo(() => ({
+		version: PRACTICE_LAB_PROGRESS_VERSION,
+		labId: lab.id,
+		terminalState,
+		worksheetState,
+		consoles,
+		device,
+		terminalAchieved,
+		worksheetAchieved,
+		input,
+		worksheetAnswers,
+		worksheetSubmitted,
+		worksheetFailedSlots,
+		labView,
+		showHints,
+		showSolution,
+		examMode,
+		submitted,
+	}), [
+		lab.id,
+		terminalState,
+		worksheetState,
+		consoles,
+		device,
+		terminalAchieved,
+		worksheetAchieved,
+		input,
+		worksheetAnswers,
+		worksheetSubmitted,
+		worksheetFailedSlots,
+		labView,
+		showHints,
+		showSolution,
+		examMode,
+		submitted,
+	]);
+
+	useEffect(() => {
+		let nextMessage;
+		try {
+			writePracticeLabProgress(storageKey, savedProgress);
+			saveErrorLogged.current = false;
+			nextMessage = restoreResult.error
+				? "Current work is saved. Previous saved work could not be restored."
+				: "Saved on this device.";
+		} catch (error) {
+			if (!saveErrorLogged.current) {
+				console.error(`Unable to save CCNA practice lab ${lab.id} progress.`, error);
+			}
+			saveErrorLogged.current = true;
+			nextMessage = "Could not save this lab on your device. Your latest work may be lost if you leave.";
+		}
+		const statusTimer = window.setTimeout(() => setPersistenceMessage(nextMessage), 0);
+		return () => window.clearTimeout(statusTimer);
+	}, [storageKey, savedProgress, lab.id, restoreResult.error]);
 
 	const liveStatus = useMemo(() => {
 		const s = {};
@@ -328,14 +464,35 @@ function LabWorkspace({ lab, selectLab, fromDashboard, labStartRef }) {
 	}
 
 	function reset() {
-		setState(createLabState(lab));
+		if (isWorksheetView) {
+			setWorksheetState(createLabState(lab));
+			setWorksheetAchieved({});
+			setWorksheetAnswers({});
+			setWorksheetSubmitted(false);
+			setWorksheetFailedSlots([]);
+			return;
+		}
+		setTerminalState(createLabState(lab));
 		setConsoles(freshConsoles(lab));
 		setDevice(lab.editable[0]);
-		setAchieved({});
+		setTerminalAchieved({});
 		setInput("");
 		setShowSolution(false);
 		setSubmitted(false);
+		setHistPos(-1);
 		inputRef.current?.focus();
+	}
+
+	function rememberWorksheetAchievements(nextState) {
+		const newlyAchieved = lab.tasks.filter(
+			(task) => task.sticky && !worksheetAchieved[task.id] && task.check(nextState, lab),
+		);
+		if (newlyAchieved.length) {
+			setWorksheetAchieved((current) => ({
+				...current,
+				...Object.fromEntries(newlyAchieved.map((task) => [task.id, true])),
+			}));
+		}
 	}
 
 	function renderLabCard(l) {
@@ -417,26 +574,30 @@ function LabWorkspace({ lab, selectLab, fromDashboard, labStartRef }) {
 					</>
 				)}
 				{lab.worksheet && (
-					<div className="flex flex-wrap items-center gap-2" role="group" aria-label="Practice lab view">
-						<span className="text-sm font-semibold text-[#334155]">Lab format:</span>
-						<button
-							type="button"
-							aria-pressed={labView === "worksheet"}
-							onClick={() => setLabView("worksheet")}
-							className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${labView === "worksheet" ? "border-[#1775EE] bg-[#1775EE] text-white" : "border-[#1775EE] bg-white text-[#1775EE] hover:bg-blue-50"}`}
-						>
-							Current worksheet (default)
-						</button>
-						<button
-							type="button"
-							aria-pressed={labView === "terminal"}
-							onClick={() => setLabView("terminal")}
-							className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${labView === "terminal" ? "border-[#1775EE] bg-[#1775EE] text-white" : "border-[#1775EE] bg-white text-[#1775EE] hover:bg-blue-50"}`}
-						>
-							Terminal
-						</button>
-					</div>
+					<>
+						<div className="flex flex-wrap items-center gap-2" role="group" aria-label="Practice lab view">
+							<span className="text-sm font-semibold text-[#334155]">Lab format:</span>
+							<button
+								type="button"
+								aria-pressed={labView === "worksheet"}
+								onClick={() => setLabView("worksheet")}
+								className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${labView === "worksheet" ? "border-[#1775EE] bg-[#1775EE] text-white" : "border-[#1775EE] bg-white text-[#1775EE] hover:bg-blue-50"}`}
+							>
+								Current worksheet (default)
+							</button>
+							<button
+								type="button"
+								aria-pressed={labView === "terminal"}
+								onClick={() => setLabView("terminal")}
+								className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${labView === "terminal" ? "border-[#1775EE] bg-[#1775EE] text-white" : "border-[#1775EE] bg-white text-[#1775EE] hover:bg-blue-50"}`}
+							>
+								Terminal
+							</button>
+						</div>
+						<p className="text-xs text-gray-600">Worksheet and Terminal keep separate configurations. Switching views preserves both.</p>
+					</>
 				)}
+				<p role="status" aria-live="polite" className="text-xs text-gray-600">{persistenceMessage}</p>
 				<div>
 					<button
 						type="button"
@@ -473,9 +634,16 @@ function LabWorkspace({ lab, selectLab, fromDashboard, labStartRef }) {
 					<>
 						<LabCommandWorksheet
 							lab={lab}
-							state={state}
-							setState={setState}
+							state={worksheetState}
+							setState={setWorksheetState}
 							activeDevice={device}
+							answers={worksheetAnswers}
+							setAnswers={setWorksheetAnswers}
+							submitted={worksheetSubmitted}
+							setSubmitted={setWorksheetSubmitted}
+							failedSlots={worksheetFailedSlots}
+							setFailedSlots={setWorksheetFailedSlots}
+							onStateSubmitted={rememberWorksheetAchievements}
 							onReset={reset}
 							onExpand={() => setTopologyOpen(true)}
 						/>
@@ -582,7 +750,7 @@ function LabWorkspace({ lab, selectLab, fromDashboard, labStartRef }) {
 								<Eye className="w-4 h-4" /> {showSolution ? "Hide solution" : "Show solution"}
 							</button>
 							<button type="button" onClick={reset} className="inline-flex items-center gap-1.5 rounded-full border border-gray-400 text-gray-700 px-3 py-1.5 text-sm hover:bg-gray-700 hover:text-white transition">
-								<RotateCcw className="w-4 h-4" /> Reset lab
+								<RotateCcw className="w-4 h-4" /> Reset terminal
 							</button>
 						</div>
 						{showSolution && (
