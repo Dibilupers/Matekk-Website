@@ -6,6 +6,18 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `a64fd79` - Removed the Refer-to-Exhibit offline exam card and its
+  availability note from the CCNA exam selector; the audit route remains
+  development-only.
+
+Validation before push: targeted ESLint, `npm run build`, and
+`git diff --check` passed. Verified the production bundle contains no
+Refer-to-Exhibit card or offline-availability message.
+
+## 2026-11-21 - main
+
+Commits included in this push:
+
 - `74d1156` - Completed the CCNA exhibit redraw audit, added source-backed
   topology and terminal corrections with regression tests, and redrew the
   R14–R86 PC10 host-route exhibit from the supplied screenshot. Kept the
