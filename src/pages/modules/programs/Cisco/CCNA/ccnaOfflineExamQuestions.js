@@ -782,6 +782,27 @@ Permit OSPF (protocol 89) from 10.100.1.2 and block other neighbors.`,
     removeExhibitLeadIn: true,
     exhibitQuality: "partial",
   }],
+  [840, {
+    exhibit: `Site B routing-table evidence
+Destination 192.168.0.10 is in 192.168.0.0/24.
+The route table does not contain 192.168.0.0/24 or a usable default route.
+Traffic from Site B therefore cannot be delivered to Site A.`,
+    hideExhibitImage: true,
+    hideAfterExhibit: true,
+    removeExhibitLeadIn: true,
+    exhibitQuality: "source-backed",
+  }],
+  [870, {
+    exhibit: `SW_1 and SW_12 trunk migration
+The two companies use separate network vendors and currently use different trunk encapsulations.
+Configure both switch sides for 802.1Q trunking and retain all VLANs across the merged link.
+SWx(config-if)# switchport mode trunk
+SWx(config-if)# switchport trunk encapsulation dot1q`,
+    hideExhibitImage: true,
+    hideAfterExhibit: true,
+    removeExhibitLeadIn: true,
+    exhibitQuality: "source-backed",
+  }],
   [747, {
     exhibit: `R1#show ip ospf interface g0/0/0
 GigabitEthernet0/0/0 is up, line protocol is up
@@ -804,27 +825,6 @@ Hello 10, Dead 40, Retransmit 5`,
     hideAfterExhibit: true,
     removeExhibitLeadIn: true,
     exhibitQuality: "partial",
-  }],
-  [840, {
-    exhibit: `Site B routing-table evidence
-Destination 192.168.0.10 is in 192.168.0.0/24.
-The route table does not contain 192.168.0.0/24 or a usable default route.
-Traffic from Site B therefore cannot be delivered to Site A.`,
-    hideExhibitImage: true,
-    hideAfterExhibit: true,
-    removeExhibitLeadIn: true,
-    exhibitQuality: "source-backed",
-  }],
-  [870, {
-    exhibit: `SW_1 and SW_12 trunk migration
-The two companies use separate network vendors and currently use different trunk encapsulations.
-Configure both switch sides for 802.1Q trunking and retain all VLANs across the merged link.
-SWx(config-if)# switchport mode trunk
-SWx(config-if)# switchport trunk encapsulation dot1q`,
-    hideExhibitImage: true,
-    hideAfterExhibit: true,
-    removeExhibitLeadIn: true,
-    exhibitQuality: "source-backed",
   }],
   [1148, {
     hideExhibitImage: true,

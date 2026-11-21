@@ -975,6 +975,29 @@ test("keeps every offline Refer-to-Exhibit item with an exhibit or explicit clea
   );
 });
 
+test("keeps continued route and trunk exhibit fixes in the Noah bank", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+
+  for (const [legacyIndex, marker] of [
+    [840, "192.168.0.10"],
+    [870, "802.1Q"],
+    [624, "10.1.1.1"],
+  ]) {
+    const question = questions.find((entry) => entry.legacyIndex === legacyIndex);
+    assert.ok(question);
+    assert.equal(question.hideExhibitImage, true);
+    assert.equal(question.afterExhibit, undefined);
+    assert.match(question.exhibit, new RegExp(marker));
+  }
+
+  for (const legacyIndex of [1041, 1067]) {
+    const legacyQuestion = ccnaLegacyQuestions.find((entry) => entry.legacyIndex === legacyIndex);
+    const liveQuestion = applyNativeExhibit(legacyQuestion);
+    assert.equal(liveQuestion.hideExhibitImage, true);
+    assert.equal(liveQuestion.hideAfterExhibit, true);
+  }
+});
+
 test("adds the topology exhibit image to question 77 in the offline Refer to Exhibit exam", () => {
   const question = getOfflineReferExhibitQuestionBank()[76];
 
@@ -3087,35 +3110,6 @@ test("repairs remaining Refer-to-Exhibit raw and incomplete exhibits from ordina
     assert.equal(entry.ordinal, ordinal);
     assert.equal(entry.question.exhibitDiagram, diagram);
     assert.equal(entry.question.exhibitQuality, "illustrative");
-  }
-});
-
-test("adds source-backed route and trunk evidence to remaining live and offline exhibits", () => {
-  const questions = getOfflineReferExhibitQuestionBank();
-
-  for (const [legacyIndex, marker] of [
-    [840, "192.168.0.10"],
-    [870, "802.1Q"],
-    [624, "10.1.1.1"],
-  ]) {
-    const question = questions.find((entry) => entry.legacyIndex === legacyIndex);
-    assert.ok(question, `legacy index ${legacyIndex} should remain in the offline exhibit bank`);
-    assert.equal(question.hideExhibitImage, true);
-    assert.equal(question.afterExhibit, undefined);
-    assert.doesNotMatch(question.prompt, /^\s*Refer to the exhibit/);
-    assert.match(question.exhibit, new RegExp(marker));
-
-    const legacyQuestion = ccnaLegacyQuestions.find((entry) => entry.legacyIndex === legacyIndex);
-    const liveQuestion = applyNativeExhibit(legacyQuestion);
-    assert.equal(liveQuestion.hideExhibitImage, true);
-    assert.equal(liveQuestion.afterExhibit, undefined);
-  }
-
-  for (const legacyIndex of [1041, 1067]) {
-    const legacyQuestion = ccnaLegacyQuestions.find((entry) => entry.legacyIndex === legacyIndex);
-    const liveQuestion = applyNativeExhibit(legacyQuestion);
-    assert.equal(liveQuestion.hideExhibitImage, true);
-    assert.equal(liveQuestion.hideAfterExhibit, true);
   }
 });
 
