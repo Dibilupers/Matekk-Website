@@ -276,7 +276,7 @@ test("aligns the Question 1305 exhibit markers with their routing-table values",
 });
 
 test("reconstructs candidate exhibits from the local source records", () => {
-	assert.equal(CCNA_RECREATED_CANDIDATE_EXHIBITS.size, 50);
+	assert.equal(CCNA_RECREATED_CANDIDATE_EXHIBITS.size, 53);
 
 	const jsonQuestion = applyNativeExhibit({ bankId: 303 });
 	assert.match(jsonQuestion.exhibit, /"Routers": \["R1", "R2", "R3"\]/);

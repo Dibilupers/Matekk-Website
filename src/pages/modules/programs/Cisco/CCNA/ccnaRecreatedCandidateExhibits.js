@@ -105,6 +105,20 @@ Default gateway:          configured correctly
 Preferred DNS server:     192.168.1.254
 Alternate DNS server:     196.1.38.254
 Expected DNS server:      196.1.38.132`, "partial")],
+  [840, textExhibit(`Site B routing-table evidence
+Destination 192.168.0.10 is in 192.168.0.0/24.
+The route table does not contain 192.168.0.0/24 or a usable default route.
+Traffic from Site B therefore cannot be delivered to Site A.`, "source-backed")],
+  [624, textExhibit(`R1 OSPF neighbor requirements
+Permit only R2 as a neighbor.
+Set R1 OSPF priority to 0 so R1 cannot participate in DR/BDR election.
+Set R1 router-id to 10.1.1.1.
+Permit OSPF (protocol 89) from 10.100.1.2 and block other neighbors.`, "partial")],
+  [870, textExhibit(`SW_1 and SW_12 trunk migration
+The two companies use separate network vendors and currently use different trunk encapsulations.
+Configure both switch sides for 802.1Q trunking and retain all VLANs across the merged link.
+SWx(config-if)# switchport mode trunk
+SWx(config-if)# switchport trunk encapsulation dot1q`, "source-backed")],
   [810, textExhibit(`{
   "Cisco Devices": [
     {
