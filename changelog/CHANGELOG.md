@@ -6,6 +6,16 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `c7fd1d2` - Prewarm the complete CCNA question bank when users open the
+  CCNA page while online, so database-backed offline exams are prepared
+  without requiring the All Questions exam to be opened first.
+
+Validation before push: targeted ESLint and production build passed.
+
+## 2026-11-21 - main
+
+Commits included in this push:
+
 - `aed7bc7` - Merged the completed Noah CCNA exhibit rollout into main.
 - `b675698` - Fixed stale offline cached-bank and saved-session exhibits.
 - `fa76c09` - Completed and aligned the refer-to-exhibit audit fixes.
