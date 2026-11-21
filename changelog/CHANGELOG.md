@@ -6,6 +6,18 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `c594b56` - Completed the CCNA refer-to-exhibit audit fixes across the
+  offline, live/legacy, and shared exam paths. Hid mismatched raw exhibits,
+  added source-backed and clearly labeled partial redraws, and added focused
+  375-item bank consistency regressions.
+
+Validation before push: 137 CCNA bank-converter tests, 37 shared exhibit
+tests, targeted ESLint, production build, and `git diff --check` passed.
+
+## 2026-11-21 - main
+
+Commits included in this push:
+
 - `a64fd79` - Removed the Refer-to-Exhibit offline exam card and its
   availability note from the CCNA exam selector; the audit route remains
   development-only.
