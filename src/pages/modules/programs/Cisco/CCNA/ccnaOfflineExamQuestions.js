@@ -803,6 +803,51 @@ SWx(config-if)# switchport trunk encapsulation dot1q`,
     removeExhibitLeadIn: true,
     exhibitQuality: "source-backed",
   }],
+  [848, {
+    exhibit: `[PARTIAL — original source exhibit unavailable.]
+PC1 LAN: 172.16.5.0/24
+R1-to-R2 transit: 192.168.2.0/24
+Destination LAN: 10.10.10.0/24
+Available corrected routes in the choices:
+10.10.10.0/24 via 192.168.2.3
+10.10.10.0/29 via 192.168.2.2
+The original link layout and exact split cannot be verified.`,
+    hideExhibitImage: true,
+    hideAfterExhibit: true,
+    removeExhibitLeadIn: true,
+    exhibitQuality: "partial",
+  }],
+  [856, {
+    exhibit: `[PARTIAL — original source exhibit unavailable.]
+All four MDF-DC switches share the same VLAN and default STP priority.
+The lowest MAC address determines the root among equal-priority switches.
+Keyed switch: MDF-DC-3
+MAC from the choices: 08:0E:18:1A:3C:9D`,
+    hideExhibitImage: true,
+    hideAfterExhibit: true,
+    removeExhibitLeadIn: true,
+    exhibitQuality: "partial",
+  }],
+  [876, {
+    exhibit: `[PARTIAL — source and answer labels differ.]
+Available after-exhibit LAN: 172.25.0.0/24
+Keyed route: 172.25.25.0/24 via 192.168.2.2
+The original branch-office network and link address cannot be reconciled, so no additional topology is inferred.`,
+    hideExhibitImage: true,
+    hideAfterExhibit: true,
+    removeExhibitLeadIn: true,
+    exhibitQuality: "partial",
+  }],
+  [884, {
+    exhibit: `[PARTIAL — source and answer labels differ.]
+Available after-exhibit DHCP server: 192.168.202.30
+Keyed helper address: 192.168.20.2
+The server address and keyed choice cannot be reconciled, so no address is guessed.`,
+    hideExhibitImage: true,
+    hideAfterExhibit: true,
+    removeExhibitLeadIn: true,
+    exhibitQuality: "partial",
+  }],
   [747, {
     exhibit: `R1#show ip ospf interface g0/0/0
 GigabitEthernet0/0/0 is up, line protocol is up

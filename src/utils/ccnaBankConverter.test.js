@@ -998,6 +998,24 @@ test("keeps continued route and trunk exhibit fixes in the Noah bank", () => {
   }
 });
 
+test("clearly labels the remaining partial source-answer conflicts", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+
+  for (const [legacyIndex, marker] of [
+    [848, "172.16.5.0/24"],
+    [856, "MDF-DC-3"],
+    [876, "172.25.25.0/24"],
+    [884, "192.168.20.2"],
+  ]) {
+    const question = questions.find((entry) => entry.legacyIndex === legacyIndex);
+    assert.ok(question);
+    assert.equal(question.exhibitQuality, "partial");
+    assert.equal(question.hideExhibitImage, true);
+    assert.equal(question.afterExhibit, undefined);
+    assert.match(question.exhibit, new RegExp(marker));
+  }
+});
+
 test("adds the topology exhibit image to question 77 in the offline Refer to Exhibit exam", () => {
   const question = getOfflineReferExhibitQuestionBank()[76];
 
@@ -3084,7 +3102,8 @@ test("repairs remaining Refer-to-Exhibit raw and incomplete exhibits from ordina
   assert.equal(misaddressedTopology.ordinal, 243);
   assert.equal(misaddressedTopology.question.exhibitQuality, "partial");
   assert.equal(misaddressedTopology.question.afterExhibit, undefined);
-  assert.match(misaddressedTopology.question.exhibit, /overlapping 10\.10\.10\.0\/24 and 10\.10\.10\.4\/24/);
+  assert.match(misaddressedTopology.question.exhibit, /172\.16\.5\.0\/24/);
+  assert.match(misaddressedTopology.question.exhibit, /10\.10\.10\.0\/24 via 192\.168\.2\.3/);
   assert.deepEqual(misaddressedTopology.question.answer, [3, 4]);
 
   for (const [legacyIndex, ordinal, expectedText] of [

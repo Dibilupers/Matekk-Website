@@ -2034,15 +2034,24 @@ router eigrp 100
 		exhibitQuality: "source-backed",
 	}],
 	[848, {
-		exhibit: `[PARTIAL / ILLUSTRATIVE — original source exhibit unavailable.]
-The available redraw labels PC1's LAN as 172.16.5.0/24 and the destination LAN as 10.10.10.0/24. It also labels overlapping 10.10.10.0/24 and 10.10.10.4/24 routed links. The original topology and link addressing cannot be verified.`,
+		exhibit: `[PARTIAL — original source exhibit unavailable.]
+PC1 LAN: 172.16.5.0/24
+R1-to-R2 transit: 192.168.2.0/24
+Destination LAN: 10.10.10.0/24
+Available corrected routes in the choices:
+10.10.10.0/24 via 192.168.2.3
+10.10.10.0/29 via 192.168.2.2
+The original link layout and exact split cannot be verified.`,
 		hideExhibitImage: true,
 		hideAfterExhibit: true,
 		exhibitQuality: "partial",
 	}],
 	[856, {
-		exhibit: `[PARTIAL / ILLUSTRATIVE — original source exhibit unavailable.]
-The available redraw shows four switches in a shared VLAN but does not show the bridge IDs needed to elect a root bridge.`,
+		exhibit: `[PARTIAL — original source exhibit unavailable.]
+All four MDF-DC switches share the same VLAN and default STP priority.
+The lowest MAC address determines the root among equal-priority switches.
+Keyed switch: MDF-DC-3
+MAC from the choices: 08:0E:18:1A:3C:9D`,
 		hideExhibitImage: true,
 		hideAfterExhibit: true,
 		exhibitQuality: "partial",
@@ -2059,8 +2068,10 @@ SWx(config-if)# switchport trunk encapsulation dot1q`,
 		exhibitQuality: "source-backed",
 	}],
 	[876, {
-		exhibit: `[PARTIAL / ILLUSTRATIVE — original source exhibit unavailable.]
-The available after-exhibit labels the remote office LAN as 172.25.0.0/24, while the answer choices use 172.25.25.0/24. This mismatch cannot be resolved from the available source.`,
+		exhibit: `[PARTIAL — source and answer labels differ.]
+Available after-exhibit LAN: 172.25.0.0/24
+Keyed route: 172.25.25.0/24 via 192.168.2.2
+The original branch-office network and link address cannot be reconciled, so no additional topology is inferred.`,
 		hideExhibitImage: true,
 		hideAfterExhibit: true,
 		exhibitQuality: "partial",
