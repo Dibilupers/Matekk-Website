@@ -422,14 +422,7 @@ function ModuleCard({ module, index, openSection, onToggle, quizProgress, tutori
 
 export default function CCNA() {
 	const { profile, isOnline, isOfflinePinUnlocked } = useAuth();
-	const availableExamFormats = !isOnline
-		? [...EXAM_FORMATS, {
-			name: "Refer to Exhibit",
-			questions: "All",
-			duration: "No time limit",
-			description: "Offline exhibit questions; drag-and-drop questions stay in the regular exams.",
-		}]
-		: EXAM_FORMATS;
+	const availableExamFormats = EXAM_FORMATS;
 	const userId = profile?.userId;
 	const canTakeExamWithoutAccount = !isOnline && isOfflinePinUnlocked;
 	const canTakeExams = Boolean(userId) || canTakeExamWithoutAccount;
@@ -1240,7 +1233,6 @@ export default function CCNA() {
 						</header>
 						<p className="mt-3 text-sm leading-6 text-[#71819b]">
 							The first three formats randomly select a set of questions. All Questions Exam goes through every question from the Questions table in random order, with no time limit.
-							{!isOnline && " Refer to Exhibit is available offline; drag-and-drop questions remain in the regular exam formats."}
 						</p>
 						<div className="mt-6 grid gap-3 sm:grid-cols-2">
 							{availableExamFormats.map((format) => {
