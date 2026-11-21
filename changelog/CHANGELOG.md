@@ -6,6 +6,20 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `aed7bc7` - Merged the completed Noah CCNA exhibit rollout into main.
+- `b675698` - Fixed stale offline cached-bank and saved-session exhibits.
+- `fa76c09` - Completed and aligned the refer-to-exhibit audit fixes.
+- `7f84f2d` - Aligned Noah's exhibit subsystem with main and added cache
+  invalidation for offline CCNA exams.
+- `6e9c729` - Clarified the remaining partial exhibit/source conflicts.
+
+Validation before push: 139 CCNA bank-converter tests, 37 shared exhibit
+tests, targeted ESLint, production build, and `git diff --check` passed.
+
+## 2026-11-21 - main
+
+Commits included in this push:
+
 - `c594b56` - Completed the CCNA refer-to-exhibit audit fixes across the
   offline, live/legacy, and shared exam paths. Hid mismatched raw exhibits,
   added source-backed and clearly labeled partial redraws, and added focused
