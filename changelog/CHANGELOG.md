@@ -2,6 +2,18 @@
 
 Tracking begins 2026-10-17.
 
+## 2026-11-21 - main
+
+Commits included in this push:
+
+- `74d1156` - Completed the CCNA exhibit redraw audit, added source-backed
+  topology and terminal corrections with regression tests, and redrew the
+  R14–R86 PC10 host-route exhibit from the supplied screenshot. Kept the
+  audit-only exam route development-gated.
+
+Validation before push: 136 focused CCNA tests, targeted ESLint,
+`npm run build`, and `git diff --check` passed.
+
 ## 2026-11-20 - main
 
 Commits included in this push:
