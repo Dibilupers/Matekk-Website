@@ -253,23 +253,29 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 							const currentQuestion = question.offlineBankSource === "database"
 								? currentCachedQuestionsById.get(question.id ?? question.bankId)
 								: currentLegacyQuestionsById.get(question.id ?? question.bankId);
-							const restoredQuestion = {
-								...(currentQuestion ?? {}),
-								...question,
-								offlineLegacy: true,
-							};
-							if (currentQuestion) {
-								restoredQuestion.type = currentQuestion.type;
-								restoredQuestion.prompt = currentQuestion.prompt;
-								restoredQuestion.hideExhibitImage = currentQuestion.hideExhibitImage === true;
-								if (currentQuestion.hideExhibitImage) {
-									delete restoredQuestion.exhibitImage;
-								} else if (currentQuestion.exhibitImage) {
-									restoredQuestion.exhibitImage = currentQuestion.exhibitImage;
-								} else {
-									delete restoredQuestion.exhibitImage;
+							const refreshedQuestion = currentQuestion
+								? applyNativeExhibit({
+									...currentQuestion,
+									legacyIndex: currentQuestion.legacyIndex ?? question.legacyIndex,
+									bankId: currentQuestion.bankId ?? question.bankId ?? question.id,
+								})
+								: null;
+							const restoredQuestion = refreshedQuestion
+								? {
+									...question,
+									...refreshedQuestion,
+									offlineLegacy: true,
 								}
+								: {
+									...question,
+									offlineLegacy: true,
+								};
+							if (!refreshedQuestion?.exhibitImage || refreshedQuestion.hideExhibitImage) {
+								delete restoredQuestion.exhibitImage;
 							}
+							if (!refreshedQuestion?.exhibitDiagram) delete restoredQuestion.exhibitDiagram;
+							if (!refreshedQuestion?.exhibit) delete restoredQuestion.exhibit;
+							if (!refreshedQuestion?.afterExhibit) delete restoredQuestion.afterExhibit;
 							return restoredQuestion;
 						})
 						: cachedQuestionBank

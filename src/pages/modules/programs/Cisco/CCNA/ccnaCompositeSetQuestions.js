@@ -1953,6 +1953,11 @@ Neighbor ID  Pri  State        Dead Time  Address      Interface
 		exhibitQuality: "source-backed",
 	}],
 	[624, {
+		exhibit: `R1 OSPF neighbor requirements
+Permit only R2 as a neighbor.
+Set R1 OSPF priority to 0 so R1 cannot participate in DR/BDR election.
+Set R1 router-id to 10.1.1.1.
+Permit OSPF (protocol 89) from 10.100.1.2 and block other neighbors.`,
 		hideExhibitImage: true,
 		hideAfterExhibit: true,
 		removeExhibitLeadIn: true,
@@ -1994,7 +1999,16 @@ Hello 10, Dead 40, Retransmit 5`,
 	}],
 	[837, { hideExhibitImage: true }],
 	[839, { hideExhibitImage: true }],
-	[840, { exhibitQuality: "partial" }],
+	[840, {
+		exhibit: `Site B routing-table evidence
+Destination 192.168.0.10 is in 192.168.0.0/24.
+The route table does not contain 192.168.0.0/24 or a usable default route.
+Traffic from Site B therefore cannot be delivered to Site A.`,
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		removeExhibitLeadIn: true,
+		exhibitQuality: "source-backed",
+	}],
 	[844, {
 		prompt: "An engineer must translate the PC1 IP address to 10.199.77.100 and permit PC1 to ping the loopback 0 interface on router R2. Which configuration must be used?",
 		exhibit: `R1#
@@ -2020,23 +2034,44 @@ router eigrp 100
 		exhibitQuality: "source-backed",
 	}],
 	[848, {
-		exhibit: `[PARTIAL / ILLUSTRATIVE — original source exhibit unavailable.]
-The available redraw labels PC1's LAN as 172.16.5.0/24 and the destination LAN as 10.10.10.0/24. It also labels overlapping 10.10.10.0/24 and 10.10.10.4/24 routed links. The original topology and link addressing cannot be verified.`,
+		exhibit: `[PARTIAL — original source exhibit unavailable.]
+PC1 LAN: 172.16.5.0/24
+R1-to-R2 transit: 192.168.2.0/24
+Destination LAN: 10.10.10.0/24
+Available corrected routes in the choices:
+10.10.10.0/24 via 192.168.2.3
+10.10.10.0/29 via 192.168.2.2
+The original link layout and exact split cannot be verified.`,
 		hideExhibitImage: true,
 		hideAfterExhibit: true,
 		exhibitQuality: "partial",
 	}],
 	[856, {
-		exhibit: `[PARTIAL / ILLUSTRATIVE — original source exhibit unavailable.]
-The available redraw shows four switches in a shared VLAN but does not show the bridge IDs needed to elect a root bridge.`,
+		exhibit: `[PARTIAL — original source exhibit unavailable.]
+All four MDF-DC switches share the same VLAN and default STP priority.
+The lowest MAC address determines the root among equal-priority switches.
+Keyed switch: MDF-DC-3
+MAC from the choices: 08:0E:18:1A:3C:9D`,
 		hideExhibitImage: true,
 		hideAfterExhibit: true,
 		exhibitQuality: "partial",
 	}],
-	[870, { exhibitQuality: "partial" }],
+	[870, {
+		exhibit: `SW_1 and SW_12 trunk migration
+The two companies use separate network vendors and currently use different trunk encapsulations.
+Configure both switch sides for 802.1Q trunking and retain all VLANs across the merged link.
+SWx(config-if)# switchport mode trunk
+SWx(config-if)# switchport trunk encapsulation dot1q`,
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		removeExhibitLeadIn: true,
+		exhibitQuality: "source-backed",
+	}],
 	[876, {
-		exhibit: `[PARTIAL / ILLUSTRATIVE — original source exhibit unavailable.]
-The available after-exhibit labels the remote office LAN as 172.25.0.0/24, while the answer choices use 172.25.25.0/24. This mismatch cannot be resolved from the available source.`,
+		exhibit: `[PARTIAL — source and answer labels differ.]
+Available after-exhibit LAN: 172.25.0.0/24
+Keyed route: 172.25.25.0/24 via 192.168.2.2
+The original branch-office network and link address cannot be reconciled, so no additional topology is inferred.`,
 		hideExhibitImage: true,
 		hideAfterExhibit: true,
 		exhibitQuality: "partial",
@@ -2126,12 +2161,16 @@ SW1  Priority 28672  MAC 00:10:a1:51:57:51
 SW2  Priority 28672  MAC 00:10:a1:82:03:94
 SW3  Priority 12288  MAC 00:10:a1:95:2b:77
 SW4  Priority 12288  MAC 00:10:a1:03:42:e8`,
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
 		exhibitQuality: "partial",
 	}],
 	[1067, {
 		exhibit: `[PARTIAL / ILLUSTRATIVE — original source exhibit unavailable.]
 R2 Ethernet0/1 MAC address: 12D8.BAC2.0001
 LAN prefix: 2001:DB8:D955:1008::/64`,
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
 		exhibitQuality: "partial",
 	}],
 	[1076, {

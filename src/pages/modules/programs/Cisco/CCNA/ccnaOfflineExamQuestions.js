@@ -772,6 +772,77 @@ Neighbor ID  Pri  State        Dead Time  Address      Interface
     exhibitQuality: "source-backed",
   }],
   [624, {
+    exhibit: `R1 OSPF neighbor requirements
+Permit only R2 as a neighbor.
+Set R1 OSPF priority to 0 so R1 cannot participate in DR/BDR election.
+Set R1 router-id to 10.1.1.1.
+Permit OSPF (protocol 89) from 10.100.1.2 and block other neighbors.`,
+    hideExhibitImage: true,
+    hideAfterExhibit: true,
+    removeExhibitLeadIn: true,
+    exhibitQuality: "partial",
+  }],
+  [840, {
+    exhibit: `Site B routing-table evidence
+Destination 192.168.0.10 is in 192.168.0.0/24.
+The route table does not contain 192.168.0.0/24 or a usable default route.
+Traffic from Site B therefore cannot be delivered to Site A.`,
+    hideExhibitImage: true,
+    hideAfterExhibit: true,
+    removeExhibitLeadIn: true,
+    exhibitQuality: "source-backed",
+  }],
+  [870, {
+    exhibit: `SW_1 and SW_12 trunk migration
+The two companies use separate network vendors and currently use different trunk encapsulations.
+Configure both switch sides for 802.1Q trunking and retain all VLANs across the merged link.
+SWx(config-if)# switchport mode trunk
+SWx(config-if)# switchport trunk encapsulation dot1q`,
+    hideExhibitImage: true,
+    hideAfterExhibit: true,
+    removeExhibitLeadIn: true,
+    exhibitQuality: "source-backed",
+  }],
+  [848, {
+    exhibit: `[PARTIAL — original source exhibit unavailable.]
+PC1 LAN: 172.16.5.0/24
+R1-to-R2 transit: 192.168.2.0/24
+Destination LAN: 10.10.10.0/24
+Available corrected routes in the choices:
+10.10.10.0/24 via 192.168.2.3
+10.10.10.0/29 via 192.168.2.2
+The original link layout and exact split cannot be verified.`,
+    hideExhibitImage: true,
+    hideAfterExhibit: true,
+    removeExhibitLeadIn: true,
+    exhibitQuality: "partial",
+  }],
+  [856, {
+    exhibit: `[PARTIAL — original source exhibit unavailable.]
+All four MDF-DC switches share the same VLAN and default STP priority.
+The lowest MAC address determines the root among equal-priority switches.
+Keyed switch: MDF-DC-3
+MAC from the choices: 08:0E:18:1A:3C:9D`,
+    hideExhibitImage: true,
+    hideAfterExhibit: true,
+    removeExhibitLeadIn: true,
+    exhibitQuality: "partial",
+  }],
+  [876, {
+    exhibit: `[PARTIAL — source and answer labels differ.]
+Available after-exhibit LAN: 172.25.0.0/24
+Keyed route: 172.25.25.0/24 via 192.168.2.2
+The original branch-office network and link address cannot be reconciled, so no additional topology is inferred.`,
+    hideExhibitImage: true,
+    hideAfterExhibit: true,
+    removeExhibitLeadIn: true,
+    exhibitQuality: "partial",
+  }],
+  [884, {
+    exhibit: `[PARTIAL — source and answer labels differ.]
+Available after-exhibit DHCP server: 192.168.202.30
+Keyed helper address: 192.168.20.2
+The server address and keyed choice cannot be reconciled, so no address is guessed.`,
     hideExhibitImage: true,
     hideAfterExhibit: true,
     removeExhibitLeadIn: true,
