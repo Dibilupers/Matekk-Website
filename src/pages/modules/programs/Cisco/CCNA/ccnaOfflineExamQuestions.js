@@ -74,6 +74,7 @@ VLAN  Name                 Status    Ports
   [542, { offlineSourceExhibitImages: [] }],
   [570, { offlineSourceExhibitImages: [] }],
   [645, { offlineSourceExhibitImages: ["/src/assets/ccna-offline-exams-images/ccna-question-327.png"] }],
+  [655, { exhibitImage: undefined, hideExhibitImage: true }],
   [687, { offlineSourceExhibitImages: [] }],
   [1300, { offlineSourceExhibitImages: [] }],
   [1301, { offlineSourceExhibitImages: [] }],
@@ -85,6 +86,210 @@ VLAN  Name                 Status    Ports
     exhibitImage: jsonObject769ExhibitImg,
     hideExhibitImage: false,
     exhibitQuality: "illustrative",
+  }],
+  [663, {
+    exhibitQuality: "source-backed",
+    offlineSourceExhibitImages: [],
+  }],
+  [674, { exhibitQuality: "illustrative" }],
+  [689, { exhibitQuality: "source-backed" }],
+  [701, {
+    prompt: "After configuring a new static route on the CPE, the engineer entered the following commands to verify the configuration. When is the static default route installed into the routing table?",
+    exhibit: `[Static-route configuration output is missing from the available source.]
+CPE# ping 203.0.113.1
+
+Type escape sequence to abort.
+
+Sending 5, 100-byte ICMP Echos to 203.0.113.1, timeout is 2 seconds:
+
+!!!!!
+
+Success rate is 100 percent (5/5), round-trip min/avg/max = 1/1/1 ms
+
+CPE# show ip route
+
+Gateway of last resort is 198.51.100.1 to network 0.0.0.0
+
+B* 0.0.0.0/0 [20/0] via 198.51.100.1, 00:02:07
+
+198.51.100.0/24 is variably subnetted, 2 subnets, 2 masks
+C 198.51.100.0/30 is directly connected, Ethernet0/0
+L 198.51.100.2/32 is directly connected, Ethernet0/0
+
+203.0.113.0/24 is variably subnetted, 2 subnets, 2 masks
+C 203.0.113.0/30 is directly connected, Ethernet0/1
+L 203.0.113.2/32 is directly connected, Ethernet0/1`,
+    explanation: "The active eBGP default route has administrative distance 20. A floating static default route configured with a higher administrative distance is installed after the eBGP default route is withdrawn or becomes invalid. The available exhibit omits the static-route configuration, so its exact administrative distance cannot be verified.",
+    exhibitImage: undefined,
+    hideExhibitImage: true,
+    exhibitQuality: "illustrative",
+  }],
+  [704, {
+    exhibitDiagram: "two-router-port-security-704",
+    exhibit: `Workstation  MAC address
+PC1          00:50:79:66:68:62
+PC2          28:39:26:34:52:37
+PC3          00:50:79:66:68:37
+PC4          00:50:79:66:68:59`,
+    exhibitImage: undefined,
+    hideExhibitImage: true,
+    afterExhibit: undefined,
+    exhibitQuality: "source-backed",
+  }],
+  [705, {
+    afterExhibit: {
+      title: "R2 WAN connection to the ISP",
+      text: "R1 connects to R2 on GigabitEthernet0/0. R2 connects to the ISP on GigabitEthernet0/1. R1 connects through SW1 to a file server and a network management server on 2001:DB8:D8D2:1008::/64. R2 connects through SW2 to IP phones and workstations on 2001:DB8:D8D2:1009::/64.",
+      imageUrl: getBundledCcnaAfterExhibitImage(387),
+      questionId: 387,
+    },
+    exhibitQuality: "source-backed",
+  }],
+  [708, { exhibitQuality: "source-backed" }],
+  [711, {
+    prompt: "The SW1 and SW2 Gi0/0 ports are preconfigured. The requirements are: allow all PCs to communicate at Layer 3, use VLAN 5 for untagged traffic, and disable VLAN 1. Which configuration set meets these requirements?",
+    exhibit: `Option A
+SW1
+interface Gi0/1
+ switchport mode trunk
+ switchport trunk allowed vlan 5,7,9,108
+interface Gi0/2
+ switchport mode trunk
+ switchport trunk allowed vlan 7,9,108
+
+SW2
+interface Gi0/1
+ switchport mode trunk
+ switchport trunk allowed vlan 7
+interface Gi0/7
+ switchport mode trunk
+ switchport trunk allowed vlan 5,7,9,108
+
+Option B
+SW1
+interface Gi0/1
+ switchport mode trunk
+ switchport trunk allowed vlan 5,7,9,108
+ switchport trunk native vlan 5
+interface Gi0/2
+ switchport mode access
+ switchport trunk allowed vlan 7,9,108
+
+SW2
+interface Gi0/1
+ switchport mode access
+ no switchport access vlan 1
+ switchport access vlan 7
+interface Gi0/7
+ switchport mode trunk
+ switchport trunk allowed vlan 7,9,108
+ switchport trunk native vlan 5
+
+Option C
+SW1
+interface Gi0/1
+ switchport mode trunk
+ switchport trunk allowed vlan 5,7,9,108
+ switchport trunk native vlan 5
+interface Gi0/2
+ switchport mode trunk
+ switchport trunk allowed vlan 5,7,9,108
+
+SW2
+interface Gi0/1
+ switchport mode access
+ switchport access vlan 7
+interface Gi0/7
+ switchport mode trunk
+ switchport trunk allowed vlan 7,9,108
+
+Option D
+SW1
+interface Gi0/1
+ switchport mode trunk
+ switchport trunk allowed vlan 5,7,9,108
+ switchport trunk native vlan 5
+interface Gi0/2
+ switchport mode trunk
+ switchport trunk allowed vlan 5,7,9,108
+
+SW2
+interface Gi0/1
+ switchport mode access
+ switchport access vlan 7
+interface Gi0/7
+ switchport mode trunk
+ switchport trunk allowed vlan 5,7,9,108
+ switchport trunk native vlan 5`,
+    exhibitImage: undefined,
+    hideExhibitImage: true,
+    offlineSourceExhibitImages: [],
+    exhibitQuality: "source-backed",
+  }],
+  [714, {
+    exhibitDiagram: "r1-r2-point-to-point-714",
+    exhibitImage: undefined,
+    hideExhibitImage: true,
+    afterExhibit: undefined,
+    exhibitQuality: "source-backed",
+  }],
+  [716, {
+    exhibitDiagram: "ipv6-block-r1-r2-716",
+    exhibitImage: undefined,
+    hideExhibitImage: true,
+    afterExhibit: undefined,
+    offlineSourceExhibitImages: [],
+    exhibitQuality: "partial",
+  }],
+  [717, {
+    prompt: "Which router or router group is configured as an NTP client?",
+    options: [
+      "R1 and R2",
+      "R1",
+      "R2 and R3",
+      "R1, R3, and R4",
+    ],
+    exhibit: `Router1(config)#ntp master 7
+Router1(config)#ntp server 209.165.200.226
+Router2(config)#ntp server 209.165.200.225
+Router2(config)#ntp master 7`,
+    exhibitDiagram: undefined,
+    exhibitImage: undefined,
+    hideExhibitImage: true,
+    afterExhibit: undefined,
+    offlineSourceExhibitImages: [],
+    exhibitQuality: "partial",
+  }],
+  [719, { exhibitQuality: "source-backed" }],
+  [720, {
+    prompt: "In which structure does the word “warning” directly reside?",
+    exhibit: `{
+  "myCar": {
+    "name": "thunder",
+    "wheels": ["good", "good", "pressureLow", "warning"],
+    "gasLight": false
+  },
+  "oldCar": {
+    "name": "sleepy",
+    "wheels": ["pressureLow", "pressureLow", "pressureLow", "pressureLow"],
+    "color": "rust"
+    "gasLight": true
+  },
+  "newCar": {
+    "name": "lightning",
+    "wheels": ["pressureLow", "good", "pressureLow", "good"],
+    "color": "blue"
+    "gasLight": true
+  }
+}`,
+    exhibitImage: undefined,
+    hideExhibitImage: true,
+    exhibitQuality: "source-backed",
+  }],
+  [702, {
+    prompt: "Wireless LAN access must be set up to force all clients from the NA WLAN to authenticate against the local database. The WLAN is configured for local EAP authentication. The time that users access the network must not be limited. Which action completes this configuration?",
+    exhibitImage: undefined,
+    hideExhibitImage: true,
   }],
   [875, {
     offlineSourceExhibitImages: [],
@@ -204,6 +409,37 @@ explanation: "Host A is configured with 192.168.1.255/24, which is the broadcast
   [1152, {
 answer: 1,
 explanation: "Host C is configured with IP address 192.168.1.12 and subnet mask 255.255.255.0, so it is on the 192.168.1.0/24 subnet. The router's LAN address is 192.168.1.1, but Host C's default gateway is set to 192.168.2.1, which is outside its subnet. The default gateway is preventing Host C from reaching the internet.",
+  }],
+  [687, {
+    explanation: "The port-security maximum must allow the two intended MAC addresses, and `violation restrict` logs violations without shutting down the interface. Do not configure a static MAC address. Sticky learning is also dynamic, but it additionally writes learned addresses to the running configuration; persistence was not required here, so sticky learning is not one of the two necessary settings.",
+  }],
+  [704, {
+    optionIndex: 1,
+    option: `SW1(config-if)#switchport mode access
+SW1(config-if)#switchport port-security
+SW1(config-if)#switchport port-security mac-address 0050.7966.6862`,
+    explanation: "Use access mode because the port must not carry tagged VLANs, then enable port security and statically allow PC1's MAC address, 0050.7966.6862. This allows PC1 and rejects other source MAC addresses on the port.",
+  }],
+  [705, {
+    explanation: "Option D is the only standard unicast global-scope address among the choices; the link-local address is not Internet-routable, the second option is malformed, and the anycast option is not a unicast interface address. The 2001:db8::/32 prefix is reserved for documentation, however, so the literal address shown is an example rather than a real public Internet address.",
+  }],
+  [708, {
+    explanation: "Configure `ip ospf network point-to-point` on GigabitEthernet0/0. A point-to-point OSPF network does not elect a DR or BDR, so the neighbor state appears as FULL/- rather than FULL/DR.",
+  }],
+  [711, {
+    explanation: "Option D sets VLAN 5 as the native VLAN on SW1 Gi0/1 and SW2 Gi0/7, excludes VLAN 1 from the trunks, keeps SW1 Gi0/2 in trunk mode so it can carry the required VLANs, and places SW2 Gi0/1 in access VLAN 7. Option B puts SW1 Gi0/2 in access mode, so it cannot carry the required VLANs.",
+  }],
+  [714, {
+    explanation: "A /29 (255.255.255.248) subnet has six usable host addresses. Assigning 10.10.10.1 and 10.10.10.4 leaves four usable addresses for growth, meeting the requirement while using fewer addresses than a /28 or /24. A /30 has only two usable addresses and no spare host addresses.",
+  }],
+  [717, {
+    explanation: "The `ntp server` command configures a router to synchronize as an NTP client. The available configuration shows that command on both R1 and R2, so the supported answer is R1 and R2. No NTP-client configuration for R3 is present in the available source.",
+  }],
+  [719, {
+    explanation: "The destination 192.168.2.2 matches both 192.168.2.0/28 and 192.168.2.0/29. The /29 route is more specific, so longest-prefix match selects option D.",
+  }],
+  [720, {
+    explanation: "The word `warning` is a string element inside the `wheels` array of `myCar`, so its direct structure is an array. The source exhibit omits commas after the `color` values for `oldCar` and `newCar`; those are preserved as shown.",
   }],
 ]);
 
@@ -358,6 +594,39 @@ const OFFLINE_LEGACY_QUESTION_IMAGE_IDS = new Map([
 ]);
 
 const OFFLINE_LEGACY_QUESTION_OVERRIDES = new Map([
+  [655, {
+    prompt: "Refer to the exhibit.\n\nAn engineer is configuring a Layer 3 port channel with LACP. The first device is configured with LACP active mode, and both member interfaces can see the neighbor in the CDP table. Which configuration on the neighbor allows the port channel to form?",
+    exhibit: `interface g2/0/0
+channel-group 1 mode active
+
+interface g4/0/0
+channel-group 1 mode active
+
+interface Port-channel1
+ip address 203.0.113.65 255.255.255.252
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Port-channel1, changed state to down`,
+    options: [
+      "Bring up the neighboring interfaces using the no shutdown command.",
+      "Change the EtherChannel mode on the neighboring interfaces to auto.",
+      "Configure the neighboring member interfaces for LACP passive mode.",
+      "Configure the IP address of the neighboring device.",
+    ],
+    explanation: "The first device uses LACP active mode. Configure the neighboring member interfaces with `channel-group 1 mode passive`. The active side initiates LACP and the passive side responds, allowing the channel to form. CDP already confirms that the physical interfaces can see the neighbor; PAgP auto is incompatible with LACP, and an IP address does not resolve a Layer 2 EtherChannel negotiation mismatch.",
+    offlineSourceExhibitImages: ["/src/assets/ccna-offline-exams-images/ccna-exhibit-655.png"],
+    hideExhibitImage: true,
+    exhibitQuality: "source-backed",
+  }],
+  [662, {
+    options: [
+      "0.0.0.0/0[1/0] via 10.10.10.2",
+      "10.10.13.0/25[110/2] via 10.10.10.6",
+      "10.10.13.0/25[110/2] via 10.10.10.2",
+      "10.10.13.0/25[108/0] via 10.10.10.10",
+    ],
+    explanation: "The default route `0.0.0.0/0` via `10.10.10.2` is less specific than routes to Host B's `10.10.13.0/25` network. For that same `/25`, the static route via `10.10.10.10` has administrative distance 108, lower than OSPF's 110, so R1 selects option D.",
+    exhibitQuality: "illustrative",
+  }],
   [266, {
     choices: [
       "route source",
@@ -490,8 +759,189 @@ const OFFLINE_LEGACY_QUESTION_OVERRIDES = new Map([
 ]);
 
 const LEGACY_QUESTION_NATIVE_EXHIBITS = new Map([
+  [452, {
+    exhibit: `R3#show ip ospf neighbor
+Neighbor ID  Pri  State        Dead Time  Address      Interface
+1.1.1.1       1   2WAY/DROTHER 00:00:35   172.16.10.1  GigabitEthernet0/0
+2.2.2.2       1   2WAY/DROTHER 00:00:35   172.16.10.2  GigabitEthernet0/0
+4.4.4.4       1   FULL/BDR     00:00:35   172.16.10.4  GigabitEthernet0/0
+5.5.5.5       1   FULL/DR      00:00:35   172.16.10.5  GigabitEthernet0/0`,
+    hideExhibitImage: true,
+    hideAfterExhibit: true,
+    removeExhibitLeadIn: true,
+    exhibitQuality: "source-backed",
+  }],
+  [624, {
+    hideExhibitImage: true,
+    hideAfterExhibit: true,
+    removeExhibitLeadIn: true,
+    exhibitQuality: "partial",
+  }],
+  [747, {
+    exhibit: `R1#show ip ospf interface g0/0/0
+GigabitEthernet0/0/0 is up, line protocol is up
+Internet address is 192.168.1.2/24, Area 0
+Process ID 1, Router ID 192.168.1.2, Network Type POINT-TO-POINT, Cost: 1
+Hello 15, Dead 20, Retransmit 5
+
+R2#show ip ospf interface g0/0/0
+GigabitEthernet0/0/0 is up, line protocol is up
+Internet address is 192.168.1.1/24, Area 0
+Process ID 1, Router ID 10.1.1.1, Network Type POINT-TO-POINT, Cost: 1
+Hello 10, Dead 40, Retransmit 5`,
+    hideExhibitImage: true,
+    hideAfterExhibit: true,
+    removeExhibitLeadIn: true,
+    exhibitQuality: "source-backed",
+  }],
+  [809, {
+    hideExhibitImage: true,
+    hideAfterExhibit: true,
+    removeExhibitLeadIn: true,
+    exhibitQuality: "partial",
+  }],
+  [1148, {
+    hideExhibitImage: true,
+    hideAfterExhibit: true,
+    removeExhibitLeadIn: true,
+    exhibitQuality: "partial",
+  }],
   [340, { diagram: "candidate-vlan-roles-24", hideExhibitImage: true }],
   [355, { diagram: "switch-config-two-column-39", hideExhibitImage: true }],
+  [663, { hideExhibitImage: true }],
+  [662, {
+    diagram: "four-router-host-route",
+    exhibit: `R1#show ip route
+Gateway of last resort is 10.10.10.2 to network 0.0.0.0
+
+S* 0.0.0.0/0 [1/0] via 10.10.10.2
+O 10.10.13.0/25 [110/2] via 10.10.10.2
+S 10.10.13.0/25 [108/0] via 10.10.10.10`,
+    hideExhibitImage: true,
+    hideAfterExhibit: true,
+    exhibitQuality: "illustrative",
+  }],
+  [674, {
+    diagram: "r1-r2-r3-static-route",
+    hideExhibitImage: true,
+    hideAfterExhibit: true,
+    exhibitQuality: "illustrative",
+  }],
+  [689, {
+    diagram: "two-site-serial-file-server",
+    hideExhibitImage: true,
+    hideAfterExhibit: true,
+  }],
+  [721, {
+    diagram: "r1-floating-default-routes-legacy-721",
+    exhibit: `R1(config)#ip route 0.0.0.0 0.0.0.0 172.16.20.2
+R1(config)#ip route 0.0.0.0 0.0.0.0 10.0.0.2 20`,
+    hideExhibitImage: true,
+    hideAfterExhibit: true,
+    exhibitQuality: "source-backed",
+  }],
+  [723, {
+    diagram: "nat-router-lans-internet-legacy-723",
+    hideExhibitImage: true,
+    hideAfterExhibit: true,
+    exhibitQuality: "source-backed",
+  }],
+  [724, {
+    diagram: "switch-voice-vlan-phone-review-724",
+    hideExhibitImage: true,
+    hideAfterExhibit: true,
+    exhibitQuality: "illustrative",
+  }],
+  [732, {
+    diagram: "candidate-wlc-414",
+    hideExhibitImage: true,
+    hideAfterExhibit: true,
+    exhibitQuality: "source-backed",
+  }],
+  [736, {
+    hideAfterExhibit: true,
+    exhibitQuality: "source-backed",
+  }],
+  [754, {
+    diagram: "three-router-specific-host-route-review-754",
+    hideExhibitImage: true,
+    hideAfterExhibit: true,
+    exhibitQuality: "partial",
+  }],
+  [760, {
+    diagram: "internet-router-pc-ipconfig-review-760",
+    exhibit: `Ethernet adapter Ethernet:
+IPv4 Address: 10.2.2.2
+Subnet Mask: 255.255.255.192
+Default Gateway: 10.2.2.1
+DNS Servers: 8.8.8.8`,
+    hideExhibitImage: true,
+    hideAfterExhibit: true,
+    exhibitQuality: "partial",
+  }],
+  [770, {
+    diagram: "etherchannel-min-links-review-770",
+    hideExhibitImage: true,
+    hideAfterExhibit: true,
+    exhibitQuality: "partial",
+  }],
+  [778, {
+    exhibit: `NewSW(config)#interface f0/0
+NewSW(config-if)#switchport mode trunk
+NewSW(config-if)#switchport trunk allowed vlan 2,10
+NewSW(config-if)#switchport trunk native vlan 2`,
+    hideExhibitImage: true,
+    hideAfterExhibit: true,
+    exhibitQuality: "partial",
+  }],
+  [794, {
+    diagram: "candidate-wlc-794-max-clients-review",
+    hideExhibitImage: true,
+    hideAfterExhibit: true,
+    exhibitQuality: "partial",
+  }],
+  [797, {
+    diagram: "cpe-dual-isp-review-797",
+    hideExhibitImage: true,
+    hideAfterExhibit: true,
+    exhibitQuality: "partial",
+  }],
+  [802, {
+    diagram: "r2-eui64-review-802",
+    hideExhibitImage: true,
+    hideAfterExhibit: true,
+    exhibitQuality: "partial",
+  }],
+  [804, {
+    diagram: "lacp-passive-channel-review-804",
+    hideExhibitImage: true,
+    hideAfterExhibit: true,
+    exhibitQuality: "partial",
+  }],
+  [824, {
+    diagram: "r14-r86-eigrp-floating-route-review-824",
+    hideExhibitImage: true,
+    hideAfterExhibit: true,
+    exhibitQuality: "partial",
+  }],
+  [829, {
+    diagram: "ipv6-dhcpv6-lan",
+    hideExhibitImage: true,
+    hideAfterExhibit: true,
+    exhibitQuality: "source-backed",
+  }],
+  [830, {
+    hideExhibitImage: true,
+    hideAfterExhibit: true,
+    removeExhibitLeadIn: true,
+    exhibitQuality: "source-backed",
+  }],
+  [835, {
+    diagram: "r86-static-route-to-r14-17216-34",
+    hideExhibitImage: true,
+    hideAfterExhibit: true,
+    exhibitQuality: "source-backed",
+  }],
   [382, { diagram: "voice-data-vlan300-400", hideExhibitImage: true }],
   [50, { diagram: "router-on-a-stick-vlan20", hideExhibitImage: true }],
   [59, { diagram: "vtp-transparent-frame-flow", hideExhibitImage: true }],
@@ -581,7 +1031,7 @@ const OFFLINE_LEGACY_QUESTION_CANDIDATES = CCNA_LEGACY_QUESTIONS
     const offlineSourceExhibitImages = numberedExhibitVariants.map(({ image }) => image);
     const nativeExhibit = LEGACY_QUESTION_NATIVE_EXHIBITS.get(question.legacyIndex);
     const promptNativeExhibit = applyNativeExhibit(question);
-    const afterExhibit = promptNativeExhibit.hideAfterExhibit
+    const afterExhibit = (nativeExhibit?.hideAfterExhibit || promptNativeExhibit.hideAfterExhibit)
       ? undefined
       : AFTER_EXHIBITS_BY_LEGACY_INDEX.get(question.legacyIndex);
     const exhibitDiagram = (typeof nativeExhibit === "string" ? nativeExhibit : nativeExhibit?.diagram) ??
@@ -621,7 +1071,9 @@ const OFFLINE_LEGACY_QUESTION_CANDIDATES = CCNA_LEGACY_QUESTIONS
       ...(exhibitImage ? { exhibitImage } : {}),
       ...(hideExhibitImage ? { hideExhibitImage: true } : {}),
       ...(exhibitDiagram ? { exhibitDiagram } : {}),
-      ...(promptNativeExhibit.exhibitQuality ? { exhibitQuality: promptNativeExhibit.exhibitQuality } : {}),
+      ...(nativeExhibit?.exhibitQuality || promptNativeExhibit.exhibitQuality
+        ? { exhibitQuality: nativeExhibit?.exhibitQuality ?? promptNativeExhibit.exhibitQuality }
+        : {}),
       ...(exhibit ? { exhibit } : {}),
       ...(afterExhibit
         ? {

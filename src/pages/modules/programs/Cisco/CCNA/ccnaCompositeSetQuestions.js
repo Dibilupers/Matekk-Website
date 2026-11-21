@@ -1940,6 +1940,251 @@ D 192.168.0.0/24 [90/201728] via 172.16.0.2, 00:00:04, FastEthernet0/0`,
 
 const LEGACY_NATIVE_EXHIBITS = new Map([
 	[405, { diagram: "router-internet-two-lans-four-pcs", hideExhibitImage: true }],
+	[452, {
+		exhibit: `R3#show ip ospf neighbor
+Neighbor ID  Pri  State        Dead Time  Address      Interface
+1.1.1.1       1   2WAY/DROTHER 00:00:35   172.16.10.1  GigabitEthernet0/0
+2.2.2.2       1   2WAY/DROTHER 00:00:35   172.16.10.2  GigabitEthernet0/0
+4.4.4.4       1   FULL/BDR     00:00:35   172.16.10.4  GigabitEthernet0/0
+5.5.5.5       1   FULL/DR      00:00:35   172.16.10.5  GigabitEthernet0/0`,
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		removeExhibitLeadIn: true,
+		exhibitQuality: "source-backed",
+	}],
+	[624, {
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		removeExhibitLeadIn: true,
+		exhibitQuality: "partial",
+	}],
+	[747, {
+		exhibit: `R1#show ip ospf interface g0/0/0
+GigabitEthernet0/0/0 is up, line protocol is up
+Internet address is 192.168.1.2/24, Area 0
+Process ID 1, Router ID 192.168.1.2, Network Type POINT-TO-POINT, Cost: 1
+Hello 15, Dead 20, Retransmit 5
+
+R2#show ip ospf interface g0/0/0
+GigabitEthernet0/0/0 is up, line protocol is up
+Internet address is 192.168.1.1/24, Area 0
+Process ID 1, Router ID 10.1.1.1, Network Type POINT-TO-POINT, Cost: 1
+Hello 10, Dead 40, Retransmit 5`,
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		removeExhibitLeadIn: true,
+		exhibitQuality: "source-backed",
+	}],
+	[809, {
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		removeExhibitLeadIn: true,
+		exhibitQuality: "partial",
+	}],
+	[1148, {
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		removeExhibitLeadIn: true,
+		exhibitQuality: "partial",
+	}],
+	[836, {
+		diagram: "candidate-wlc-518",
+		hideExhibitImage: true,
+		exhibitQuality: "illustrative",
+	}],
+	[837, { hideExhibitImage: true }],
+	[839, { hideExhibitImage: true }],
+	[840, { exhibitQuality: "partial" }],
+	[844, {
+		prompt: "An engineer must translate the PC1 IP address to 10.199.77.100 and permit PC1 to ping the loopback 0 interface on router R2. Which configuration must be used?",
+		exhibit: `R1#
+!
+interface Loopback0
+ ip address 10.1.1.1 255.255.255.255
+!
+interface FastEthernet0/0
+ ip address 10.139.91.1 255.255.255.252
+ ip virtual—reassembly in
+!
+interface FastEthernet1/0
+ ip address 172.16.29.1 255.255.255.0
+ ip virtual-reassembly in
+!
+router eigrp 100
+ network 10.1.1.1 0.0.0.0
+ network 10.139.91.0 0.0.0.3
+!
+--output suppressed--`,
+		hideExhibitImage: true,
+		removeExhibitLeadIn: true,
+		exhibitQuality: "source-backed",
+	}],
+	[848, {
+		exhibit: `[PARTIAL / ILLUSTRATIVE — original source exhibit unavailable.]
+The available redraw labels PC1's LAN as 172.16.5.0/24 and the destination LAN as 10.10.10.0/24. It also labels overlapping 10.10.10.0/24 and 10.10.10.4/24 routed links. The original topology and link addressing cannot be verified.`,
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "partial",
+	}],
+	[856, {
+		exhibit: `[PARTIAL / ILLUSTRATIVE — original source exhibit unavailable.]
+The available redraw shows four switches in a shared VLAN but does not show the bridge IDs needed to elect a root bridge.`,
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "partial",
+	}],
+	[870, { exhibitQuality: "partial" }],
+	[876, {
+		exhibit: `[PARTIAL / ILLUSTRATIVE — original source exhibit unavailable.]
+The available after-exhibit labels the remote office LAN as 172.25.0.0/24, while the answer choices use 172.25.25.0/24. This mismatch cannot be resolved from the available source.`,
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "partial",
+	}],
+	[883, {
+		prompt: "The network engineer is configuring router R2 as a replacement router on the network. After the initial configuration is applied it is determined that R2 failed to show R1 as a neighbor. Which configuration must be applied to R2 to complete the OSPF configuration and enable it to establish the neighbor relationship with R1?",
+		exhibit: `R1#show ip ospf interface g0/0/0
+GigabitEthernet0/0/0 is up, line protocol is up
+ Internet address is 192.168.1.2/24, Area 0
+ Process ID 1, Router ID 192.168.1.2, Network Type POINT-TO-POINT, Cost: 1
+ Transmit Delay is 1 sec, State POINT-TO-POINT,
+ Timer intervals configured, Hello 15, Dead 40, Wait 40, Retransmit 5
+ Hello due in 00:00:08
+ Index 1/1, flood queue length 0
+ Next 0x0(0) /0x0(0)
+ Last flood scan length is 1, maximum is 1
+ Last flood scan time is 0 msec, maximum is 0 msec
+ Suppress hello for 0 neighbor(s)
+
+R2#show ip ospf interface g0/0/0
+GigabitEthernet0/0/0 is up, line protocol is up
+ Internet address is 192.168.1.1/24, Area 0
+ Process ID 1, Router ID 10.1.1.1, Network Type POINT-TO-POINT, Cost: 1
+ Transmit Delay is 1 sec, State POINT-TO-POINT,
+ Timer intervals configured, Hello 15, Dead 45, Wait 15, Retransmit 5
+ Hello due in 00:00:11
+ Index 1/1, flood queue length 0
+ Next 0x0(0)/0x0(0)
+ Last flood scan length is 1, maximum is 1
+ Last flood scan time is 0 msec, maximum is 0 msec
+ Suppress hello for 0 neighbor(s)`,
+		hideExhibitImage: true,
+		removeExhibitLeadIn: true,
+		exhibitQuality: "source-backed",
+	}],
+	[884, {
+		exhibit: `[PARTIAL / ILLUSTRATIVE — original source exhibit unavailable.]
+The available after-exhibit identifies the DHCP server as 192.168.202.30, but none of the keyed ip helper-address choices contains that address. The server address and keyed answer cannot be reconciled.`,
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "partial",
+	}],
+	[911, {
+		diagram: "candidate-wlc-593",
+		hideExhibitImage: true,
+		exhibitQuality: "illustrative",
+	}],
+	[920, {
+		prompt: "The network engineer is configuring router R2 as a replacement router on the network. After the initial configuration is applied it is determined that R2 failed to show R1 as a neighbor. Which configuration must be applied to R2 to complete the OSPF configuration and enable it to establish the neighbor relationship with R1?",
+		exhibit: `R1#show ip ospf interface g0/0/0
+GigabitEthernet0/0/0 is up, line protocol is up
+ Internet address is 192.168.1.2/24, Area 0
+ Process ID 1, Router ID 192.168.1.2, Network Type POINT-TO-POINT, Cost: 1
+ Transmit Delay is 1 sec, State POINT-TO-POINT,
+ Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+ Hello due in 00:00:08
+ Index 1/1, flood queue length 0
+ Next 0x0(0) /0x0(0)
+ Last flood scan length is 1, maximum is 1
+ Last flood scan time is 0 msec, maximum is 0 msec
+ Suppress hello for 0 neighbor(s)
+
+R2#show ip ospf interface g0/0/0
+GigabitEthernet0/0/0 is up, line protocol is up
+ Internet address is 192.168.1.1/24, Area 0
+ Process ID 1, Router ID 10.1.1.1, Network Type POINT-TO-POINT, Cost: 1
+ Transmit Delay is 1 sec, State POINT-TO-POINT,
+ Timer intervals configured, Hello 15, Dead 40, Wait 40, Retransmit 5
+ Hello due in 00:00:11
+ Index 1/1, flood queue length 0
+ Next 0x0(0)/0x0(0)
+ Last flood scan length is 1, maximum is 1
+ Last flood scan time is 0 msec, maximum is 0 msec
+ Suppress hello for 0 neighbor(s)`,
+		hideExhibitImage: true,
+		removeExhibitLeadIn: true,
+		exhibitQuality: "source-backed",
+	}],
+	[982, {
+		diagram: "candidate-wlc-666",
+		hideExhibitImage: true,
+		exhibitQuality: "illustrative",
+	}],
+	[1041, {
+		exhibit: `[PARTIAL / ILLUSTRATIVE — original source exhibit unavailable; bridge IDs transcribed from the answer choices.]
+SW1  Priority 28672  MAC 00:10:a1:51:57:51
+SW2  Priority 28672  MAC 00:10:a1:82:03:94
+SW3  Priority 12288  MAC 00:10:a1:95:2b:77
+SW4  Priority 12288  MAC 00:10:a1:03:42:e8`,
+		exhibitQuality: "partial",
+	}],
+	[1067, {
+		exhibit: `[PARTIAL / ILLUSTRATIVE — original source exhibit unavailable.]
+R2 Ethernet0/1 MAC address: 12D8.BAC2.0001
+LAN prefix: 2001:DB8:D955:1008::/64`,
+		exhibitQuality: "partial",
+	}],
+	[1076, {
+		diagram: "candidate-wlc-1076",
+		hideExhibitImage: true,
+		exhibitQuality: "illustrative",
+	}],
+	[1110, {
+		diagram: "candidate-wlc-794",
+		hideExhibitImage: true,
+		exhibitQuality: "illustrative",
+	}],
+	[1148, {
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		removeExhibitLeadIn: true,
+		exhibitQuality: "partial",
+	}],
+	[1159, {
+		prompt: "A network engineer started to change default settings on SW1 to allow remote access and has entered the following in the configuration mode:\n\nSW1#(config)#line vty 0 15\nSW1#(config-line)#password Labtest32!\n\nWhich set of commands are needed to allow only SSH access and hide passwords in the running configuration?",
+		exhibit: `SW1#conf t
+Enter configuration commands, one per line. End with CNTL/Z.
+SW1(config)#enable password test!2E
+SW1(config)#line con 0
+SW1(config-line)#password Labtest32!
+SH1(config-line)#exit
+SW1(config)#`,
+		hideExhibitImage: true,
+		removeExhibitLeadIn: true,
+		exhibitQuality: "source-backed",
+	}],
+	[1199, {
+		diagram: "candidate-wlc-1199-interface",
+		hideExhibitImage: true,
+		exhibitQuality: "illustrative",
+	}],
+	[1245, {
+		diagram: "candidate-wlc-955",
+		hideExhibitImage: true,
+		exhibitQuality: "illustrative",
+	}],
+	[830, {
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		removeExhibitLeadIn: true,
+		exhibitQuality: "source-backed",
+	}],
+	[835, {
+		diagram: "r86-static-route-to-r14-17216-34",
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "source-backed",
+	}],
 	[415, {
 		diagram: "r4-mixed-routing",
 		hideExhibitImage: true,
@@ -2301,6 +2546,22 @@ export function getBuiltInQuestionByPrompt(prompt) {
 	if (/connections must be blocked from pc2 to the file server/i.test(prompt)) {
 		return { exhibitDiagram: "candidate-pc2-file-server-policy-703", hideExhibitImage: true };
 	}
+	if (/ospf neighbor relationship must be configured using these guidelines/i.test(prompt)) {
+		return {
+			hideExhibitImage: true,
+			hideAfterExhibit: true,
+			removeExhibitLeadIn: true,
+			exhibitQuality: "partial",
+		};
+	}
+	if (/all routers in the network are configured correctly/i.test(prompt)) {
+		return {
+			hideExhibitImage: true,
+			hideAfterExhibit: true,
+			removeExhibitLeadIn: true,
+			exhibitQuality: "partial",
+		};
+	}
 	const builtInQuestion = BUILT_IN_QUESTION_BY_PROMPT.get(normalizePrompt(prompt));
 	if (builtInQuestion) return builtInQuestion;
 
@@ -2342,6 +2603,14 @@ export function getBuiltInQuestionByPrompt(prompt) {
 	if (/an ipv6 address must be obtained automatically on the lan interface on r1/i.test(prompt)) {
 		return { exhibitDiagram: "ipv6-dhcpv6-lan" };
 	}
+	if (/router-y#show ip route[\s\S]*pc a is communicating with another device at ip address/i.test(prompt)) {
+		return {
+			hideExhibitImage: true,
+			hideAfterExhibit: true,
+			removeExhibitLeadIn: true,
+			exhibitQuality: "source-backed",
+		};
+	}
 	return null;
 }
 
@@ -2376,8 +2645,13 @@ export function applyNativeExhibit(question) {
 		...(Array.isArray(databaseExhibit?.offlineSourceExhibitImages)
 			? { offlineSourceExhibitImages: databaseExhibit.offlineSourceExhibitImages }
 			: {}),
+		...(typeof databaseExhibit?.prompt === "string" ? { prompt: databaseExhibit.prompt } : {}),
 		...(removeExhibitLeadIn && typeof question.prompt === "string"
-			? { prompt: question.prompt.replace(/^\s*Refer to (?:the )?exhibit\.?\s*/i, "") }
+			? {
+				prompt: typeof databaseExhibit?.prompt === "string"
+					? databaseExhibit.prompt
+					: question.prompt.replace(/^\s*Refer to (?:the )?exhibit\.?\s*/i, ""),
+			}
 			: {}),
 		exhibitImage: exhibitImage ?? undefined,
 		...(hideExhibitImage ? { hideExhibitImage: true } : {}),
