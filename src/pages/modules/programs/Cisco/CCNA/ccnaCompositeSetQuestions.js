@@ -901,7 +901,12 @@ const DATABASE_NATIVE_EXHIBITS = new Map([
 	[23, "stp-hq-four-switch"],
 	[65, "sw1-sw2-dtp-trunk"],
 	[70, "stp-branch-four-switch"],
-	[99, "r4-mixed-routing"],
+	[99, {
+		diagram: "r4-mixed-routing",
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "illustrative",
+	}],
 	[177, {
 		diagram: "routers-abc-floating-route-source",
 		hideExhibitImage: true,
@@ -987,8 +992,18 @@ PC4          00:50:79:66:68:44`,
 	[38, "r1-r2-ntp-link"],
 	[73, "isp-wan-r1"],
 	[89, "router-two-branch-hosts"],
-	[105, "ipv6-three-router-policy"],
-	[157, "two-site-r1-r2-wan"],
+	[105, {
+		diagram: "ipv6-three-router-policy",
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "source-backed",
+	}],
+	[157, {
+		diagram: "two-site-r1-r2-wan",
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "illustrative",
+	}],
 	[172, {
 		diagram: "rtr1-access-list-lan",
 		exhibit: `RTR-1
@@ -1010,6 +1025,9 @@ line vty 0 4
  password 7 083238384A11
  login
 end`,
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "source-backed",
 	}],
 	[178, "r1-primary-backup-internet"],
 	[179, "management-server-filter"],
@@ -1302,6 +1320,9 @@ interface FastEthernet0/1
 !
 interface FastEthernet0/2
  channel-group 1 mode passive`,
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "partial",
 	}],
 	[174, {
 		exhibit: `Switch#show ip dhcp snooping
@@ -1917,6 +1938,326 @@ D 192.168.0.0/24 [90/201728] via 172.16.0.2, 00:00:04, FastEthernet0/0`,
 	[1329, "dhcp-relay-r1-r2-server"],
 ]);
 
+const LEGACY_NATIVE_EXHIBITS = new Map([
+	[405, { diagram: "router-internet-two-lans-four-pcs", hideExhibitImage: true }],
+	[415, {
+		diagram: "r4-mixed-routing",
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "illustrative",
+	}],
+	[421, {
+		diagram: "ipv6-three-router-policy",
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "source-backed",
+	}],
+	[460, {
+		...DATABASE_NATIVE_EXHIBITS.get(143),
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "partial",
+	}],
+	[474, {
+		diagram: "two-site-r1-r2-wan",
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "illustrative",
+	}],
+	[478, {
+		diagram: "wireless-zone-overlap",
+		hideExhibitImage: true,
+		exhibitQuality: "partial",
+	}],
+	[486, { hideExhibitImage: true }],
+	[489, {
+		...DATABASE_NATIVE_EXHIBITS.get(172),
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "source-backed",
+	}],
+	[496, {
+		diagram: "management-server-filter",
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "source-backed",
+	}],
+	[497, {
+		diagram: "mpls-qos-branches",
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "source-backed",
+	}],
+	[502, {
+		exhibit: `MacOS$ ifconfig
+en0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
+ options=400<CHANNEL_IO>
+ ether 6e:25:b8:f3:40:09
+ inet6 fe80::226:c09f:57cc:3343%en0 prefixlen 64 secured scopeid 0x6
+ inet 10.8.112.46 netmask 0xffffe000 broadcast 10.8.159.255
+ nd6 options=201<PERFORMNUD,DAD>
+ media: autoselect
+ status: active`,
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "source-backed",
+	}],
+	[505, {
+		exhibit: `R1#show ip route
+Codes: C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2
+       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, * - candidate default, U - per-user static route
+       o - ODR, P - periodic downloaded static route
+
+Gateway of last resort is not set
+
+C    192.168.5.3 is directly connected, Loopback0
+10.0.0.0/8 is variably subnetted, 4 subnets, 2 masks
+O    10.0.1.3/32 [110/100] via 192.168.0.40, 00:33:32, Serial0
+C    10.0.1.0/24 is directly connected, Serial0
+O    10.0.1.190/32 [110/50] via 192.168.0.7, 00:33:32, GigabitEthernet0/0
+O    10.0.1.0/24 [110/10] via 192.168.0.4, 00:33:32, GigabitEthernet0/0
+D    10.0.1.0/28 [90/10] via 192.168.0.7, 00:33:32, GigabitEthernet0/0`,
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "source-backed",
+	}],
+	[507, {
+		diagram: "routers-abc-ospf-dr",
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "illustrative",
+	}],
+	[510, {
+		diagram: "r1-secure-remote-access",
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "source-backed",
+	}],
+	[519, {
+		exhibit: `Router  Interface  Assigned hosts
+R7      Fa1/0               923
+R8      Fa0/0               225
+R9      Fa1/1             3,641`,
+		exhibitQuality: "illustrative",
+	}],
+	[529, {
+		diagram: "nat-router-lan-pcs",
+		exhibit: `R1#show run
+!
+interface GigabitEthernet0/0
+ ip address 172.16.0.5 255.255.255.0
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/1
+ ip address 209.165.200.130 255.255.255.224
+ duplex auto
+ speed auto
+!
+ip nat inside source list 1 interface GigabitEthernet0/1 overload
+!
+access-list 1 permit 172.16.0.1
+access-list 1 permit 172.16.0.2`,
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "source-backed",
+	}],
+	[541, {
+		diagram: "ospf-r1-r2-r3-broadcast",
+		exhibit: `R1#show ip ospf neighbor
+Neighbor ID     Pri   State           Dead Time   Address       Interface
+192.168.100.2    1    FULL/BDR        00:00:32    192.168.100.2 FastEthernet0/0
+192.168.100.3    1    FULL/DR         00:00:31    192.168.100.3 FastEthernet0/0`,
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "source-backed",
+	}],
+	[548, {
+		diagram: "ospf-backup-route-server",
+		hideExhibitImage: true,
+		exhibitQuality: "source-backed",
+	}],
+	[551, {
+		diagram: "ospf-point-to-point-r1-r2-source",
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "source-backed",
+	}],
+	[554, {
+		exhibit: `TenGigabitEthernet0/0 is up, line protocol is up
+Hardware is BUILT-IN-2T+6X1GE, address is 74a0.2f7a.6304 (bia 74a0.2f7a.0123)
+Description: Uplink
+Internet address is 10.1.1.1/24
+MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+reliability 255/255, txload 1/255, rxload 1/255
+Encapsulation ARPA, loopback not set
+Keepalive not supported
+Full Duplex, 10000Mbps, link type is force-up, media type is unknown media type
+output flow-control is on, input flow-control is on
+ARP type: ARPA, ARP Timeout 04:00:00
+Last input 00:00:00, output 00:00:40, output hang never
+Last clearing of "show interface" counters never
+Input queue: 0/375/0/0 (size/max/drops/flushes); Total output drops: 0
+Queueing strategy: fifo
+Output queue: 0/40 (size/max)
+5 minute input rate 8630567 bits/sec, 1369 packets/sec
+5 minute output rate 242270 bits/sec, 642 packets/sec
+176199615 packets input, 31060561099 bytes, 0 no buffer
+Received 35517 broadcasts (0 IP multicasts)
+0 runts, 0 giants, 0 throttles
+0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+0 watchdog, 12369 multicast, 0 pause input
+224199309 packets output, 7494988820 bytes, 0 underruns
+0 output errors, 0 collisions, 1 interface resets
+0 unknown protocol drops
+0 babbles, 0 late collision, 0 deferred
+0 lost carrier, 0 no carrier, 0 pause output
+0 output buffer failures, 0 output buffers swapped out
+1 carrier transitions`,
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "source-backed",
+	}],
+	[560, {
+		diagram: "pc-switch-link-status",
+		hideExhibitImage: true,
+		exhibitQuality: "source-backed",
+	}],
+	[562, {
+		diagram: "ipv6-ho-isp-cloud",
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "source-backed",
+	}],
+	[563, {
+		diagram: "dhcp-client-router-server",
+		exhibit: `Router#show run
+Building configuration...
+!
+interface GigabitEthernet0/0
+ ip address 10.10.10.1 255.255.255.0
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/1
+ ip address 172.16.2.1 255.255.255.0
+ duplex auto
+ speed auto
+!`,
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "source-backed",
+	}],
+	[578, {
+		diagram: "wlc-security-80211r-source",
+		hideExhibitImage: true,
+		exhibitQuality: "source-backed",
+	}],
+	[591, {
+		diagram: "dual-wan-site-routing",
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "source-backed",
+	}],
+	[593, {
+		diagram: "vlan5-vlan10-four-hosts",
+		exhibit: `Switch2(config)#interface fa0/1
+Switch2(config-if)#switchport mode dynamic auto
+Switch2(config-if)#switchport trunk allowed vlan 5,10`,
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "source-backed",
+	}],
+	[599, {
+		diagram: "wlc-security-layer2-source",
+		hideExhibitImage: true,
+		exhibitQuality: "source-backed",
+	}],
+	[602, {
+		diagram: "lacp-three-parallel-switches",
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "source-backed",
+	}],
+	[603, {
+		diagram: "wlc-radius-server-source",
+		hideExhibitImage: true,
+		exhibitQuality: "source-backed",
+	}],
+	[612, {
+		diagram: "wlc-layer2-enterprise-source",
+		hideExhibitImage: true,
+		exhibitQuality: "source-backed",
+	}],
+	[616, {
+		diagram: "ospf-drother-r1",
+		exhibit: `R1#show ip ospf neighbor
+Neighbor ID  Pri  State    Dead Time  Address       Interface
+192.168.100.2  1  FULL/BDR 00:00:39   192.168.100.2 FastEthernet0/0
+192.168.100.3  1  FULL/DR  00:00:32   192.168.100.3 FastEthernet0/0`,
+		hideExhibitImage: true,
+		exhibitQuality: "source-backed",
+	}],
+	[621, {
+		exhibit: `{
+  "Routers": ["R1", "R2", "R3"],
+  "Switches": ["SW1", "SW2", "SW3"]
+}`,
+		hideExhibitImage: true,
+		exhibitQuality: "source-backed",
+	}],
+	[622, {
+		exhibit: `SW4#                            SW4
+interface Gi0/2                 interface Gi0/7
+ switchport mode trunk          switchport mode trunk
+ switchport trunk allowed vlan  switchport trunk
+ allowed vlan 108`,
+		offlineSourceExhibitImages: ["/src/assets/ccna-offline-exams-images/ccna-exhibit-622.png"],
+		hideExhibitImage: true,
+		exhibitQuality: "source-backed",
+	}],
+	[624, { removeExhibitLeadIn: true }],
+	[627, {
+		offlineSourceExhibitImages: ["/src/assets/ccna-offline-exams-images/ccna-exhibit-627.png"],
+		hideExhibitImage: true,
+		exhibitQuality: "source-backed",
+	}],
+	[629, {
+		diagram: "r1-r2-r3-network",
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "source-backed",
+	}],
+	[635, {
+		diagram: "dual-circuit-r1-r2-hosts",
+		exhibit: `R1#show ip route
+Gateway of last resort is 10.10.10.2 to network 0.0.0.0
+S* 0.0.0.0/0 [1/0] via 10.10.10.2
+
+R2#show ip route
+Gateway of last resort is 10.10.10.1 to network 0.0.0.0
+S* 0.0.0.0/0 [1/0] via 10.10.10.1`,
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "source-backed",
+	}],
+	[646, {
+		diagram: "ospf-two-site-workstations",
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "source-backed",
+	}],
+	[641, {
+		offlineSourceExhibitImages: ["/src/assets/ccna-offline-exams-images/ccna-exhibit-641.png"],
+		hideExhibitImage: true,
+		exhibitQuality: "source-backed",
+	}],
+]);
+
 export function getBuiltInQuestionByPrompt(prompt) {
 	if (typeof prompt !== "string") return null;
 	if (/which configuration enables sw2 to establish an lacp etherchannel/i.test(prompt)) {
@@ -1973,6 +2314,14 @@ export function getBuiltInQuestionByPrompt(prompt) {
 			removeExhibitLeadIn: true,
 		};
 	}
+	if (/router r14 is in the process of being configured[\s\S]*establish a host route to pc\s*10/i.test(prompt)) {
+		return {
+			exhibitDiagram: "r14-r86-pc10-host-route",
+			hideExhibitImage: true,
+			hideAfterExhibit: true,
+			exhibitQuality: "source-backed",
+		};
+	}
 	if (/routers\s+r14\s+and\s+r86\s+to\s+form\s+an\s+ospfv2\s+adjacency\s+(?:while\s+acting\s+as|and\s+act\s+as)\s+a\s+central\s+point\s+for\s+exchanging\s+ospf\s+information\s+between\s+routers/i.test(prompt)) {
 		return {
 			exhibitDiagram: "r14-r86-ospf-adjacency",
@@ -1999,6 +2348,7 @@ export function getBuiltInQuestionByPrompt(prompt) {
 export function applyNativeExhibit(question) {
 	const builtInQuestion = getBuiltInQuestionByPrompt(question?.prompt);
 	const databaseExhibit = CCNA_RECREATED_CANDIDATE_EXHIBITS.get(question?.bankId) ??
+		LEGACY_NATIVE_EXHIBITS.get(question?.legacyIndex) ??
 		DATABASE_NATIVE_EXHIBITS.get(question?.bankId);
 	const questionOverride = typeof databaseExhibit === "object" ? databaseExhibit : {};
 	const exhibitDiagram = (typeof databaseExhibit === "string" ? databaseExhibit : databaseExhibit?.diagram) ??
@@ -2008,12 +2358,14 @@ export function applyNativeExhibit(question) {
 	const hasNativeTextExhibit = typeof exhibit === "string";
 	const hideExhibitImage = databaseExhibit?.hideExhibitImage === true ||
 		builtInQuestion?.hideExhibitImage === true;
+	const hideAfterExhibit = databaseExhibit?.hideAfterExhibit === true ||
+		builtInQuestion?.hideAfterExhibit === true;
 	const removeExhibitLeadIn = databaseExhibit?.removeExhibitLeadIn === true ||
 		builtInQuestion?.removeExhibitLeadIn === true;
 	const hasQuestionOverride = ["type", "items", "choices", "answer"].some((key) =>
 		Object.prototype.hasOwnProperty.call(questionOverride, key),
 	);
-	if (!exhibitDiagram && !exhibitImage && !hasNativeTextExhibit && !hideExhibitImage && !removeExhibitLeadIn && !hasQuestionOverride) return question;
+	if (!exhibitDiagram && !exhibitImage && !hasNativeTextExhibit && !hideExhibitImage && !hideAfterExhibit && !removeExhibitLeadIn && !hasQuestionOverride) return question;
 
 	return {
 		...question,
@@ -2021,14 +2373,20 @@ export function applyNativeExhibit(question) {
 		...(Object.prototype.hasOwnProperty.call(questionOverride, "items") ? { items: questionOverride.items } : {}),
 		...(Object.prototype.hasOwnProperty.call(questionOverride, "choices") ? { choices: questionOverride.choices } : {}),
 		...(Object.prototype.hasOwnProperty.call(questionOverride, "answer") ? { answer: questionOverride.answer } : {}),
+		...(Array.isArray(databaseExhibit?.offlineSourceExhibitImages)
+			? { offlineSourceExhibitImages: databaseExhibit.offlineSourceExhibitImages }
+			: {}),
 		...(removeExhibitLeadIn && typeof question.prompt === "string"
 			? { prompt: question.prompt.replace(/^\s*Refer to (?:the )?exhibit\.?\s*/i, "") }
 			: {}),
 		exhibitImage: exhibitImage ?? undefined,
 		...(hideExhibitImage ? { hideExhibitImage: true } : {}),
+		...(hideAfterExhibit ? { afterExhibit: undefined, hideAfterExhibit: true } : {}),
 		...(exhibitDiagram ? { exhibitDiagram } : {}),
 		...(hasNativeTextExhibit ? { exhibit, nativeExhibitText: true } : {}),
-		...(databaseExhibit?.exhibitQuality ? { exhibitQuality: databaseExhibit.exhibitQuality } : {}),
+		...(databaseExhibit?.exhibitQuality || builtInQuestion?.exhibitQuality
+			? { exhibitQuality: databaseExhibit?.exhibitQuality ?? builtInQuestion?.exhibitQuality }
+			: {}),
 		...(builtInQuestion?.exhibit ? { exhibit: builtInQuestion.exhibit } : {}),
 	};
 }

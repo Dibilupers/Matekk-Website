@@ -30,6 +30,7 @@ import {
 } from "../../../../../utils/ccnaAfterExhibits";
 import { getCcnaExhibitImageByLegacyIndex } from "../../../../../utils/ccnaExhibitImages";
 import { shuffleMatchingChoices } from "./ccnaMatchingChoices";
+import routerLans405SourceExhibit from "../../../../../assets/ccna-offline-exams-images/ccna-question-405.png";
 
 const CONNECT_DOTS_LEGACY_QUESTION_INDEX = 654;
 const OFFLINE_REFER_EXHIBIT_QUESTION_IDS = new Set(
@@ -38,6 +39,7 @@ const OFFLINE_REFER_EXHIBIT_QUESTION_IDS = new Set(
     .map((question) => question.legacyIndex),
 );
 const OFFLINE_REFER_EXHIBIT_IMAGE_OVERRIDES = new Map([
+  [405, { offlineSourceExhibitImages: [routerLans405SourceExhibit] }],
   [345, { exhibitImage: aclQuestion77ExhibitImg }],
   [341, { exhibitImage: patVlan341ExhibitImg }],
   [382, { exhibitImage: voiceDataVlan382ExhibitImg }],
@@ -67,12 +69,11 @@ VLAN  Name                 Status    Ports
   [44, { offlineSourceExhibitImages: [] }],
   [51, { offlineSourceExhibitImages: [] }],
   [62, { offlineSourceExhibitImages: [] }],
-  [494, { offlineSourceExhibitImages: [], afterExhibit: undefined }],
-  [507, { offlineSourceExhibitImages: [] }],
+  [494, { afterExhibit: undefined, exhibitQuality: "illustrative" }],
+  [496, { afterExhibit: undefined }],
   [542, { offlineSourceExhibitImages: [] }],
   [570, { offlineSourceExhibitImages: [] }],
-  [508, { offlineSourceExhibitImages: [] }],
-  [645, { offlineSourceExhibitImages: [] }],
+  [645, { offlineSourceExhibitImages: ["/src/assets/ccna-offline-exams-images/ccna-question-327.png"] }],
   [687, { offlineSourceExhibitImages: [] }],
   [1300, { offlineSourceExhibitImages: [] }],
   [1301, { offlineSourceExhibitImages: [] }],
@@ -479,6 +480,9 @@ const OFFLINE_LEGACY_QUESTION_OVERRIDES = new Map([
       "R5(config)#interface Gi0/1\nR5(config-if)#no cdp enable\nR5(config-if)#exit\nR5(config)#no lldp run\nR5(config)#cdp run\nR5#show cdp neighbor\nR5#show lldp neighbor",
     ],
   }],
+  [489, {
+    prompt: "Refer to the exhibit.\n\nThe access list denies Telnet access from PC-1 to RTR-1 and should allow it from other hosts. PC-2 gets \"% Connection refused by remote host\" when trying to Telnet. Without permitting Telnet from PC-1, what must be done to allow the traffic?",
+  }],
   [724, {
     prompt: "A multivendor network is being configured for VoIP. Which configuration enables neighbor discovery on interface GigabitEthernet1/0/1 while keeping it disabled on the other interfaces?",
     explanation: "Option D is the intended choice, but it is incomplete on its own: LLDP must first be enabled globally with “lldp run”. To keep LLDP disabled on the other interfaces, disable LLDP transmit and receive on those interfaces.",
@@ -576,8 +580,10 @@ const OFFLINE_LEGACY_QUESTION_CANDIDATES = CCNA_LEGACY_QUESTIONS
       : undefined;
     const offlineSourceExhibitImages = numberedExhibitVariants.map(({ image }) => image);
     const nativeExhibit = LEGACY_QUESTION_NATIVE_EXHIBITS.get(question.legacyIndex);
-    const afterExhibit = AFTER_EXHIBITS_BY_LEGACY_INDEX.get(question.legacyIndex);
     const promptNativeExhibit = applyNativeExhibit(question);
+    const afterExhibit = promptNativeExhibit.hideAfterExhibit
+      ? undefined
+      : AFTER_EXHIBITS_BY_LEGACY_INDEX.get(question.legacyIndex);
     const exhibitDiagram = (typeof nativeExhibit === "string" ? nativeExhibit : nativeExhibit?.diagram) ??
       promptNativeExhibit.exhibitDiagram;
     const hideExhibitImage = nativeExhibit?.hideExhibitImage || promptNativeExhibit.hideExhibitImage;
@@ -588,6 +594,10 @@ const OFFLINE_LEGACY_QUESTION_CANDIDATES = CCNA_LEGACY_QUESTIONS
         legacyIndexedExhibit;
     const exhibit = nativeExhibit?.exhibit || (promptNativeExhibit.nativeExhibitText ? promptNativeExhibit.exhibit : undefined);
     const nativePrompt = promptNativeExhibit.prompt;
+    const nativeSourceExhibitImages = Array.isArray(promptNativeExhibit.offlineSourceExhibitImages)
+      ? promptNativeExhibit.offlineSourceExhibitImages
+      : [];
+    const allOfflineSourceExhibitImages = [...new Set([...offlineSourceExhibitImages, ...nativeSourceExhibitImages])];
     const removeExhibitLeadIn = nativeExhibit?.removeExhibitLeadIn ||
       (typeof nativePrompt === "string" && nativePrompt !== question.prompt);
     const promptWithoutExhibitLeadIn = typeof nativePrompt === "string" && nativePrompt !== question.prompt
@@ -602,13 +612,16 @@ const OFFLINE_LEGACY_QUESTION_CANDIDATES = CCNA_LEGACY_QUESTIONS
       ...(removeExhibitLeadIn
         ? { prompt: promptWithoutExhibitLeadIn }
         : {}),
-      ...(offlineSourceExhibitImages.length ? { offlineSourceExhibitImages } : {}),
+      ...(allOfflineSourceExhibitImages.length
+        ? { offlineSourceExhibitImages: allOfflineSourceExhibitImages }
+        : {}),
       ...(isConnectDotsQuestion
         ? { prompt: "Connect each Wi-Fi term on the left to its matching description on the right." }
         : {}),
       ...(exhibitImage ? { exhibitImage } : {}),
       ...(hideExhibitImage ? { hideExhibitImage: true } : {}),
       ...(exhibitDiagram ? { exhibitDiagram } : {}),
+      ...(promptNativeExhibit.exhibitQuality ? { exhibitQuality: promptNativeExhibit.exhibitQuality } : {}),
       ...(exhibit ? { exhibit } : {}),
       ...(afterExhibit
         ? {

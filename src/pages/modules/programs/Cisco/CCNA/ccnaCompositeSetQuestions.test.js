@@ -63,6 +63,99 @@ test("recreates Question 1199's database and client topology", () => {
 	assert.equal(question.hideExhibitImage, true);
 });
 
+test("redraws legacy question 405 without reusing the database question 405 exhibit", () => {
+	const legacyQuestion = CCNA_LEGACY_QUESTIONS.find(({ legacyIndex }) => legacyIndex === 405);
+	const question = applyNativeExhibit(legacyQuestion);
+
+	assert.equal(question.exhibitDiagram, "router-internet-two-lans-four-pcs");
+	assert.equal(question.hideExhibitImage, true);
+	assert.equal(applyNativeExhibit({ bankId: 405 }).exhibitDiagram, "nat-router-lans-internet");
+});
+
+test("reconstructs the missing mixed-protocol exhibit without retaining its mismatched after image", () => {
+	for (const question of [
+		applyNativeExhibit({ legacyIndex: 415, afterExhibit: { imageUrl: "stale-image.png" } }),
+		applyNativeExhibit({ bankId: 99, afterExhibit: { imageUrl: "stale-image.png" } }),
+	]) {
+		assert.equal(question.exhibitDiagram, "r4-mixed-routing");
+		assert.equal(question.hideExhibitImage, true);
+		assert.equal(question.hideAfterExhibit, true);
+		assert.equal(question.afterExhibit, undefined);
+		assert.equal(question.exhibitQuality, "illustrative");
+	}
+});
+
+test("redraws legacy index 421 from its source exhibit instead of the mismatched after image", () => {
+	for (const question of [
+		applyNativeExhibit({ legacyIndex: 421, afterExhibit: { imageUrl: "stale-image.png" } }),
+		applyNativeExhibit({ bankId: 105, afterExhibit: { imageUrl: "stale-image.png" } }),
+	]) {
+		assert.equal(question.exhibitDiagram, "ipv6-three-router-policy");
+		assert.equal(question.hideExhibitImage, true);
+		assert.equal(question.hideAfterExhibit, true);
+		assert.equal(question.afterExhibit, undefined);
+		assert.equal(question.exhibitQuality, "source-backed");
+	}
+});
+
+test("uses the corrected LACP terminal for legacy index 460 instead of its conflicting PAgP image", () => {
+	for (const question of [
+		applyNativeExhibit({ legacyIndex: 460, afterExhibit: { imageUrl: "stale-image.png" } }),
+		applyNativeExhibit({ bankId: 143, afterExhibit: { imageUrl: "stale-image.png" } }),
+	]) {
+		assert.equal(question.hideExhibitImage, true);
+		assert.equal(question.hideAfterExhibit, true);
+		assert.equal(question.afterExhibit, undefined);
+		assert.equal(question.exhibitQuality, "partial");
+		assert.match(question.exhibit, /Protocol\s+Ports\n1\s+Po1\(SD\)\s+LACP/);
+		assert.match(question.exhibit, /channel-group 1 mode passive/);
+	}
+});
+
+test("reconstructs legacy index 474 from the question-matched site topology", () => {
+	for (const question of [
+		applyNativeExhibit({ legacyIndex: 474, afterExhibit: { imageUrl: "stale-image.png" } }),
+		applyNativeExhibit({ bankId: 157, afterExhibit: { imageUrl: "stale-image.png" } }),
+	]) {
+		assert.equal(question.exhibitDiagram, "two-site-r1-r2-wan");
+		assert.equal(question.hideExhibitImage, true);
+		assert.equal(question.hideAfterExhibit, true);
+		assert.equal(question.afterExhibit, undefined);
+		assert.equal(question.exhibitQuality, "illustrative");
+	}
+});
+
+test("redraws legacy index 478 as overlapping wireless zones with the original channel legend", () => {
+	for (const question of [
+		applyNativeExhibit({ legacyIndex: 478 }),
+		applyNativeExhibit({ bankId: 161 }),
+	]) {
+		assert.equal(question.exhibitDiagram, "wireless-zone-overlap");
+		assert.equal(question.hideExhibitImage, true);
+		assert.equal(question.exhibitQuality, "partial");
+	}
+});
+
+test("hides legacy index 486's image because its options already contain the complete configurations", () => {
+	const question = applyNativeExhibit({ legacyIndex: 486 });
+
+	assert.equal(question.hideExhibitImage, true);
+});
+
+test("reuses the source-backed access-list topology and terminal for legacy index 489", () => {
+	for (const question of [
+		applyNativeExhibit({ legacyIndex: 489, afterExhibit: { imageUrl: "stale-image.png" } }),
+		applyNativeExhibit({ bankId: 172, afterExhibit: { imageUrl: "stale-image.png" } }),
+	]) {
+		assert.equal(question.exhibitDiagram, "rtr1-access-list-lan");
+		assert.equal(question.hideExhibitImage, true);
+		assert.equal(question.hideAfterExhibit, true);
+		assert.equal(question.afterExhibit, undefined);
+		assert.equal(question.exhibitQuality, "source-backed");
+		assert.match(question.exhibit, /access-list 10 deny host 10\.150\.1\.1/);
+	}
+});
+
 test("keeps Question 130's DR/BDR answer aligned with its exhibit priorities", () => {
 	const question = CCNA_LEGACY_QUESTIONS.find(({ legacyIndex }) => legacyIndex === 130);
 
@@ -105,6 +198,20 @@ test("rebuilds Question 246 as a complete route topology and hides the source im
 
 	assert.equal(question.exhibitDiagram, "r14-r86-static-route-172");
 	assert.equal(question.hideExhibitImage, true);
+});
+
+test("rebuilds the R14-to-PC10 host-route exhibit for the database and legacy question", () => {
+	const prompt = "Refer to the exhibit. Router R14 is in the process of being configured. Which configuration must be used to establish a host route to PC 10?";
+	for (const question of [
+		applyNativeExhibit({ prompt, bankId: 834, afterExhibit: { imageUrl: "unrelated.png" } }),
+		applyNativeExhibit({ prompt, legacyIndex: 834, afterExhibit: { imageUrl: "unrelated.png" } }),
+	]) {
+		assert.equal(question.exhibitDiagram, "r14-r86-pc10-host-route");
+		assert.equal(question.hideExhibitImage, true);
+		assert.equal(question.hideAfterExhibit, true);
+		assert.equal(question.afterExhibit, undefined);
+		assert.equal(question.exhibitQuality, "source-backed");
+	}
 });
 
 test("rebuilds the R86 route to R14's 172.16.34.0/29 network", () => {

@@ -357,6 +357,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 						? { prompt: cleanText(apiQuestion.prompt) }
 						: splitPromptExhibit(cleanText(apiQuestion.prompt));
 					const exhibitDiagram = bankQuestion?.exhibitDiagram;
+					const hideAfterExhibit = bankQuestion?.hideAfterExhibit === true;
 					const exhibitImage = hideExhibitImage || exhibitDiagram || bankQuestion?.nativeExhibitText
 						? undefined
 						: bankQuestion?.exhibitImage || apiQuestion.imageUrl;
@@ -384,6 +385,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 						...(shouldDisplayExhibit ? { exhibit: displayedExhibit } : {}),
 						...(exhibitDiagram ? { exhibitDiagram } : {}),
 						...(hideExhibitImage ? { hideExhibitImage: true } : {}),
+						...(hideAfterExhibit ? { afterExhibit: undefined, hideAfterExhibit: true } : {}),
 						...(bankQuestion?.hidePrompt ? { hidePrompt: true } : {}),
 						...(bankQuestion?.exhibitImageCropTop ? { exhibitImageCropTop: true } : {}),
 						...(exhibitImage ? { exhibitImage } : {}),

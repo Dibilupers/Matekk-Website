@@ -21,7 +21,7 @@ R5 Gi0/1: disable neighbor discovery
 R5 Gi0/2: permit neighbor discovery
 R6 Gi0/2: IP address not present in the live question record`, "partial")],
   [198, diagramExhibit("candidate-etherchannel-198", "partial")],
-  [161, diagramExhibit("candidate-wifi-zones", "partial")],
+  [161, diagramExhibit("wireless-zone-overlap", "partial")],
   [260, diagramExhibit("candidate-wlc-260", "partial")],
   [281, diagramExhibit("candidate-wlc-281", "source-backed")],
   [285, diagramExhibit("candidate-wlc-285", "source-backed")],

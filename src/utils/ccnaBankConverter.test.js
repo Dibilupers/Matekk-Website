@@ -956,6 +956,992 @@ test("adds the topology exhibit image to question 77 in the offline Refer to Exh
   assert.match(question.exhibitImage, /ccna-question-77-acl-exhibit\.jpg$/);
 });
 
+test("redraws review Question 88 while retaining its source exhibit for comparison", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 405);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 88);
+  assert.equal(question.exhibitDiagram, "router-internet-two-lans-four-pcs");
+  assert.equal(question.hideExhibitImage, true);
+  assert.match(markup, /ccna-question-405\.png/);
+  assert.match(markup, /aria-label="Router, Internet, and two switched LANs"/);
+});
+
+test("redraws review item 90 from its mapped text and hides the mismatched candidate image", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 415);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(React.createElement(QuestionExhibits, { question }));
+
+  assert.equal(questionIndex + 1, 90);
+  assert.equal(question.exhibitDiagram, "r4-mixed-routing");
+  assert.equal(question.exhibitQuality, "illustrative");
+  assert.equal(question.afterExhibit, undefined);
+  assert.match(markup, /EIGRP 44/);
+  assert.match(markup, /EIGRP 777/);
+  assert.doesNotMatch(markup, /EIGRP 4444/);
+});
+
+test("redraws review item 91 from its source exhibit while retaining that source for comparison", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 421);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 91);
+  assert.equal(question.exhibitDiagram, "ipv6-three-router-policy");
+  assert.equal(question.exhibitQuality, "source-backed");
+  assert.equal(question.afterExhibit, undefined);
+  assert.match(markup, /ccna-question-105\.png/);
+  assert.match(markup, /fd00:59:12::1\/64/);
+  assert.match(markup, /fd00:59:12::2\/64/);
+  assert.match(markup, /fd00:59:13::1\/64/);
+  assert.match(markup, /fd00:59:13::3\/64/);
+  assert.match(markup, /2001:db8:23::14\/64/);
+});
+
+test("uses the corrected LACP terminal for review item 96 and retains its source image", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 460);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 96);
+  assert.equal(question.exhibitQuality, "partial");
+  assert.equal(question.hideExhibitImage, true);
+  assert.equal(question.afterExhibit, undefined);
+  assert.match(question.exhibit, /Protocol\s+Ports\n1\s+Po1\(SD\)\s+LACP/);
+  assert.match(question.exhibit, /channel-group 1 mode passive/);
+  assert.match(markup, /ccna-question-143\.png/);
+});
+
+test("redraws review item 97 from question-matched site details and retains its source image", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 474);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 97);
+  assert.equal(question.exhibitDiagram, "two-site-r1-r2-wan");
+  assert.equal(question.exhibitQuality, "illustrative");
+  assert.equal(question.afterExhibit, undefined);
+  assert.equal(question.answer, 1);
+  assert.match(markup, /ccna-question-157\.png/);
+  assert.match(markup, /209\.165\.200\.0\/24/);
+  assert.match(markup, /192\.168\.1\.0\/24/);
+  assert.match(markup, /10\.1\.1\.0\/24/);
+});
+
+test("redraws review item 99's wireless zones and keeps the original for comparison", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 478);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 99);
+  assert.equal(question.exhibitDiagram, "wireless-zone-overlap");
+  assert.equal(question.exhibitQuality, "partial");
+  assert.equal(question.answer, 2);
+  assert.match(markup, /ccna-question-161\.png/);
+  for (const label of ["Zone 1", "Zone 8", "Channel 1", "Channel 6", "Channel 11"]) {
+    assert.match(markup, new RegExp(label));
+  }
+});
+
+test("keeps review item 100 self-contained without its duplicated command-choice image", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 486);
+  const question = questions[questionIndex];
+
+  assert.equal(questionIndex + 1, 100);
+  assert.doesNotMatch(question.prompt, /^Refer to (?:the )?exhibit/i);
+  assert.equal(question.hideExhibitImage, true);
+  assert.equal(question.exhibitImage, undefined);
+  assert.equal(question.options.length, 4);
+  assert.equal(question.answer, 2);
+  assert.match(question.options[2], /no lldp run[\s\S]*show cdp neighbor detail/i);
+});
+
+test("redraws review item 101 with its source-backed access-list exhibit and one lead-in", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 489);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 101);
+  assert.equal(question.exhibitDiagram, "rtr1-access-list-lan");
+  assert.equal(question.exhibitQuality, "source-backed");
+  assert.equal(question.afterExhibit, undefined);
+  assert.equal((question.prompt.match(/Refer to the exhibit/gi) ?? []).length, 1);
+  assert.match(question.exhibit, /access-list 10 deny host 10\.150\.1\.1/);
+  assert.match(markup, /ccna-question-172\.png/);
+  assert.match(markup, /10\.150\.1\.2\/24/);
+});
+
+test("keeps review item 103's question-matched redraw and original source for comparison", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 494);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 103);
+  assert.equal(question.exhibitDiagram, "routers-abc-floating-route");
+  assert.equal(question.exhibitQuality, "illustrative");
+  assert.equal(question.afterExhibit, undefined);
+  assert.match(markup, /ccna-question-177\.png/);
+  assert.match(markup, /192\.168\.1\.0\/24/);
+  assert.doesNotMatch(question.exhibit ?? "", /172\.168\.177\.2/);
+});
+
+test("redraws review item 105's management and server topology with source addressing", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 496);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 105);
+  assert.equal(question.exhibitDiagram, "management-server-filter");
+  assert.equal(question.exhibitQuality, "source-backed");
+  assert.equal(question.afterExhibit, undefined);
+  assert.match(markup, /ccna-question-179\.png/);
+  for (const address of ["10\\.1\\.1\\.0\\/24", "192\\.168\\.1\\.0\\/24", "172\\.16\\.2\\.0\\/24", "172\\.16\\.2\\.2"]) {
+    assert.match(markup, new RegExp(address));
+  }
+  assert.match(markup, /\.15 ↔ \.10/);
+});
+
+test("redraws review item 106 with its IP phone, PC, and original source for comparison", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 497);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 106);
+  assert.equal(question.exhibitDiagram, "mpls-qos-branches");
+  assert.equal(question.exhibitQuality, "source-backed");
+  assert.equal(question.afterExhibit, undefined);
+  assert.match(markup, /ccna-question-180\.png/);
+  assert.match(markup, /IP phone/);
+  assert.match(markup, /Branch host/);
+});
+
+test("redraws review item 109 from the source terminal instead of its conflicting fixed image", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 502);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 109);
+  assert.equal(question.exhibitQuality, "source-backed");
+  assert.equal(question.afterExhibit, undefined);
+  assert.match(question.exhibit, /inet 10\.8\.112\.46 netmask 0xffffe000 broadcast 10\.8\.159\.255/);
+  assert.match(markup, /ccna-question-185\.png/);
+  assert.match(markup, /10\.8\.112\.46/);
+  assert.equal(question.answer, 2);
+});
+
+test("redraws review item 111 with its source route prefixes and metrics", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 505);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 111);
+  assert.equal(question.exhibitQuality, "source-backed");
+  assert.equal(question.afterExhibit, undefined);
+  assert.match(question.exhibit, /O\s+10\.0\.1\.190\/32 \[110\/50\]/);
+  assert.match(question.exhibit, /D\s+10\.0\.1\.0\/28 \[90\/10\] via 192\.168\.0\.7/);
+  assert.doesNotMatch(question.exhibit, /10\.0\.1\.0\/29/);
+  assert.match(markup, /ccna-question-188\.png/);
+  assert.equal(question.answer, 0);
+});
+
+test("replaces review item 113's mismatched route diagram with an illustrative OSPF broadcast segment", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 507);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 113);
+  assert.equal(question.exhibitDiagram, "routers-abc-ospf-dr");
+  assert.equal(question.exhibitQuality, "illustrative");
+  assert.equal(question.afterExhibit, undefined);
+  assert.match(markup, /ccna-question-190\.png/);
+  assert.match(markup, /Shared segment/);
+  assert.equal(question.answer, 1);
+});
+
+test("keeps review item 114's matching MAC-table redraw and fixes its port label", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 508);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 114);
+  assert.match(question.afterExhibit.text, /Fa0\/1 Fa0\/2 Fa0\/3 Fa0\/4/);
+  assert.doesNotMatch(question.afterExhibit.text, /Fa0\/11/);
+  assert.match(markup, /ccna-question-191\.png/);
+  assert.match(markup, /ccna-after-exhibit-191\.png/);
+  assert.equal(question.answer, 2);
+});
+
+test("keeps review item 115's VLAN redraw and fixes its source-backed port label", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 509);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 115);
+  assert.match(question.afterExhibit.text, /Fa0\/1 Fa0\/2/);
+  assert.doesNotMatch(question.afterExhibit.text, /Fa0\/11/);
+  assert.match(markup, /ccna-question-192\.png/);
+  assert.match(markup, /ccna-after-exhibit-192\.png/);
+  assert.equal(question.answer, 2);
+});
+
+test("redraws review item 116's shared LAN and R1 internet link from the source", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 510);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 116);
+  assert.equal(question.exhibitDiagram, "r1-secure-remote-access");
+  assert.equal(question.exhibitQuality, "source-backed");
+  assert.equal(question.afterExhibit, undefined);
+  assert.match(markup, /ccna-question-193\.png/);
+  assert.match(markup, /192\.24\.105\.0\/24/);
+  assert.match(markup, /Serial0\/1/);
+  assert.deepEqual(question.answer, [1, 4]);
+});
+
+test("reconstructs review item 118's missing host-capacity exhibit from its explanation", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 519);
+  const question = questions[questionIndex];
+
+  assert.equal(questionIndex + 1, 118);
+  assert.match(question.prompt, /^Refer to the exhibit\./);
+  assert.equal(question.exhibitQuality, "illustrative");
+  assert.match(question.exhibit, /R7\s+Fa1\/0\s+923/);
+  assert.match(question.exhibit, /R8\s+Fa0\/0\s+225/);
+  assert.match(question.exhibit, /R9\s+Fa1\/1\s+3,641/);
+  assert.equal(question.answer, 2);
+});
+
+test("keeps review item 121's LLDP timer exhibit aligned with its source", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 522);
+  const question = questions[questionIndex];
+
+  assert.equal(questionIndex + 1, 121);
+  assert.match(question.afterExhibit.text, /sent every 60 seconds/);
+  assert.match(question.afterExhibit.text, /hold time advertised is 180 seconds/);
+  assert.match(question.afterExhibit.text, /reinitialization delay is 2 seconds/);
+});
+
+test("redraws review item 123's NAT exhibit from its source topology and configuration", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 529);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 123);
+  assert.equal(question.exhibitDiagram, "nat-router-lan-pcs");
+  assert.equal(question.exhibitQuality, "source-backed");
+  assert.equal(question.afterExhibit, undefined);
+  assert.match(question.exhibit, /ip address 172\.16\.0\.5 255\.255\.255\.0/);
+  assert.match(question.exhibit, /access-list 1 permit 172\.16\.0\.1[\s\S]*access-list 1 permit 172\.16\.0\.2/);
+  assert.match(markup, /172\.16\.0\.1/);
+  assert.match(markup, /172\.16\.0\.2/);
+  assert.match(markup, /209\.165\.200\.130\/27/);
+  assert.match(markup, /ip nat inside source list 1 interface GigabitEthernet0\/1 overload/);
+  assert.match(markup, /ccna-question-212\.png/);
+  assert.doesNotMatch(markup, /ccna-after-exhibit-212\.png/);
+});
+
+test("redraws review item 127's OSPF segment and neighbor table from its source", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 541);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 127);
+  assert.equal(question.exhibitDiagram, "ospf-r1-r2-r3-broadcast");
+  assert.equal(question.exhibitQuality, "source-backed");
+  assert.equal(question.afterExhibit, undefined);
+  assert.match(question.exhibit, /192\.168\.100\.2\s+1\s+FULL\/BDR\s+00:00:32/);
+  assert.match(question.exhibit, /192\.168\.100\.3\s+1\s+FULL\/DR\s+00:00:31/);
+  assert.match(markup, /ccna-question-224\.png/);
+  assert.match(markup, /192\.168\.100\.0\/24/);
+  assert.doesNotMatch(markup, /ccna-after-exhibit-224\.png/);
+});
+
+test("corrects review item 129's SSH terminal to match its source domain", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 545);
+  const question = questions[questionIndex];
+
+  assert.equal(questionIndex + 1, 129);
+  assert.match(question.afterExhibit.text, /ip domain-name lab\.local/);
+  assert.doesNotMatch(question.afterExhibit.text, /CNAC\.com/);
+});
+
+test("redraws review item 130's OSPF backup-route topology and source route output", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 548);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 130);
+  assert.equal(question.exhibitDiagram, "ospf-backup-route-server");
+  assert.equal(question.exhibitQuality, "source-backed");
+  assert.equal(question.afterExhibit.imageUrl, null);
+  assert.match(question.afterExhibit.text, /Routing entry for 10\.1\.1\.0\/24/);
+  assert.match(question.afterExhibit.text, /172\.16\.2\.2 on GigabitEthernet0\/0/);
+  assert.match(markup, /ccna-question-231\.png/);
+  assert.match(markup, /10\.1\.1\.0\/24/);
+  assert.match(markup, /172\.16\.2\.0\/24/);
+  assert.doesNotMatch(markup, /192\.168\.100\.2/);
+  assert.doesNotMatch(markup, /ccna-after-exhibit-231\.png/);
+});
+
+test("redraws review item 131's OSPF link and LANs from the source", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 551);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 131);
+  assert.equal(question.exhibitDiagram, "ospf-point-to-point-r1-r2-source");
+  assert.equal(question.exhibitQuality, "source-backed");
+  assert.equal(question.afterExhibit, undefined);
+  assert.match(markup, /ccna-question-234\.png/);
+  assert.match(markup, /172\.137\.191\.0\/30/);
+  assert.match(markup, /172\.139\.8\.0\/24/);
+  assert.match(markup, /10\.168\.119\.0\/24/);
+  assert.doesNotMatch(markup, /10\.0\.0\.0\/30/);
+  assert.doesNotMatch(markup, /ccna-after-exhibit-234\.png/);
+});
+
+test("redraws review item 132's interface output from the source values", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 554);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 132);
+  assert.equal(question.exhibitQuality, "source-backed");
+  assert.equal(question.afterExhibit, undefined);
+  assert.match(question.exhibit, /74a0\.2f7a\.6304 \(bia 74a0\.2f7a\.0123\)/);
+  assert.match(question.exhibit, /5 minute input rate 8630567 bits\/sec, 1369 packets\/sec/);
+  assert.match(question.exhibit, /0 output errors, 0 collisions, 1 interface resets/);
+  assert.doesNotMatch(question.exhibit, /8662414049 collisions/);
+  assert.match(markup, /ccna-question-236\.png/);
+  assert.doesNotMatch(markup, /ccna-after-exhibit-236\.png/);
+});
+
+test("redraws review item 135's PC-switch link and exact switch status row", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 560);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 135);
+  assert.equal(question.exhibitDiagram, "pc-switch-link-status");
+  assert.equal(question.exhibitQuality, "source-backed");
+  assert.equal(question.afterExhibit.imageUrl, null);
+  assert.match(question.afterExhibit.text, /Fa0\/1 connected 20 auto auto 10\/100BaseTX/);
+  assert.match(markup, /100 Mbps · full duplex/);
+  assert.match(markup, /Fa0\/1 connected 20 auto auto 10\/100BaseTX/);
+  assert.match(markup, /ccna-question-242\.png/);
+  assert.doesNotMatch(markup, /ccna-after-exhibit-242\.png/);
+});
+
+test("redraws review item 136's two-router IPv6 topology and source MAC", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 562);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 136);
+  assert.equal(question.exhibitDiagram, "ipv6-ho-isp-cloud");
+  assert.equal(question.exhibitQuality, "source-backed");
+  assert.equal(question.afterExhibit, undefined);
+  assert.match(markup, /ccna-question-244\.png/);
+  assert.match(markup, /2001:db8:4:1::\/64/);
+  assert.match(markup, /C601\.420F\.0007/);
+  assert.match(markup, /R0/);
+  assert.match(markup, /R1/);
+  assert.doesNotMatch(markup, /2001:DB8:44:90::\/64/);
+  assert.doesNotMatch(markup, /ccna-after-exhibit-244\.png/);
+});
+
+test("redraws review item 137's DHCP topology and configuration", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 563);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 137);
+  assert.equal(question.exhibitDiagram, "dhcp-client-router-server");
+  assert.equal(question.exhibitQuality, "source-backed");
+  assert.equal(question.afterExhibit, undefined);
+  assert.match(question.exhibit, /ip address 10\.10\.10\.1 255\.255\.255\.0/);
+  assert.match(question.exhibit, /ip address 172\.16\.2\.1 255\.255\.255\.0/);
+  assert.match(markup, /ccna-question-245\.png/);
+  assert.match(markup, /172\.16\.2\.2/);
+  assert.doesNotMatch(markup, /Gii0\/11/);
+  assert.doesNotMatch(markup, /ccna-after-exhibit-245\.png/);
+});
+
+test("correctly labels review item 139's primary and backup ISP links", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 566);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 139);
+  assert.match(question.afterExhibit.text, /LAN connects to Router1 on G0\/1/);
+  assert.match(question.afterExhibit.text, /G1\/0 reaches the primary ISP and G1\/1 reaches the backup ISP/);
+  assert.match(markup, /G0\/1[\s\S]*G1\/0[\s\S]*G1\/1/);
+  assert.doesNotMatch(markup, /Gii\d+\/\d+/);
+  assert.match(markup, /ccna-question-248\.png/);
+});
+
+test("keeps review item 140's source VLAN exhibit and flags the answer mismatch", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 568);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 140);
+  assert.equal(question.answer, 2);
+  assert.equal(question.afterExhibit.imageUrl, null);
+  assert.match(question.afterExhibit.text, /Existing VLANs: 1, 100, 101, 102, 103/);
+  assert.match(question.afterExhibit.text, /New VLAN: 300/);
+  assert.match(markup, /New VLAN: 300/);
+  assert.doesNotMatch(markup, /VLAN 104/);
+  assert.match(markup, /ccna-question-250\.png/);
+  assert.doesNotMatch(markup, /ccna-after-exhibit-250\.png/);
+});
+
+test("keeps review item 141's source interface counters and flags the answer mismatch", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 569);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 141);
+  assert.equal(question.answer, 1);
+  assert.equal(question.afterExhibit.imageUrl, null);
+  assert.match(question.afterExhibit.text, /GigabitEthernet0\/0 is up, line protocol is up/);
+  assert.match(question.afterExhibit.text, /address is 74a0\.2f7a\.1396/);
+  assert.match(question.afterExhibit.text, /0 input errors, 0 CRC/);
+  assert.doesNotMatch(question.afterExhibit.text, /3612699 input errors/);
+  assert.match(markup, /ccna-question-251\.png/);
+  assert.doesNotMatch(markup, /ccna-after-exhibit-251\.png/);
+});
+
+test("reproduces review item 145's source SSH base configuration", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 577);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 145);
+  assert.equal(question.afterExhibit.imageUrl, null);
+  assert.match(question.afterExhibit.text, /Current configuration : 1597 bytes/);
+  assert.match(question.afterExhibit.text, /hostname Router\n!/);
+  assert.doesNotMatch(question.afterExhibit.text, /1530 bytes|boot-start-marker\nboot-end-marker !!!/);
+  assert.match(markup, /ccna-question-259\.png/);
+  assert.doesNotMatch(markup, /ccna-after-exhibit-259\.png/);
+});
+
+test("redraws review item 146's WLC security settings from the source image", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 578);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 146);
+  assert.equal(question.exhibitDiagram, "wlc-security-80211r-source");
+  assert.equal(question.exhibitQuality, "source-backed");
+  assert.match(markup, /Protected Management Frame/);
+  assert.match(markup, /WPA\+WPA2 Parameters/);
+  assert.match(markup, /GCMP256/);
+  assert.match(markup, /FT 802\.1X/);
+  assert.match(markup, /FT PSK/);
+  assert.match(markup, /aria-label="Disabled"/);
+  assert.match(markup, /ccna-question-260\.png/);
+  assert.doesNotMatch(markup, /candidate-wlc-260/);
+});
+
+test("keeps review item 147's source EtherChannel configuration and flags the LACP mismatch", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 579);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 147);
+  assert.equal(question.answer, 2);
+  assert.equal(question.afterExhibit.imageUrl, null);
+  assert.match(question.afterExhibit.text, /Switch 2[\s\S]*interface Po1[\s\S]*switchport mode trunk/);
+  assert.match(question.afterExhibit.text, /switchport access vlan 20/);
+  assert.doesNotMatch(question.afterExhibit.text, /channel-group/);
+  assert.match(markup, /ccna-question-261\.png/);
+  assert.doesNotMatch(markup, /ccna-after-exhibit-261\.png/);
+});
+
+test("documents review item 150's VLAN exhibit and flags the keyed VLAN mismatch", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 586);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 150);
+  assert.equal(question.answer, 0);
+  assert.match(question.afterExhibit.text, /Data VLAN: 50/);
+  assert.match(question.afterExhibit.text, /Voice VLAN: 61/);
+  assert.match(markup, /ccna-question-268\.png/);
+  assert.match(markup, /ccna-after-exhibit-268\.png/);
+});
+
+test("corrects review item 151's OSPF area label to match the source", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 588);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 151);
+  assert.equal(question.answer, 0);
+  assert.match(question.afterExhibit.text, /OSPF area 10/);
+  assert.doesNotMatch(question.afterExhibit.text, /area 20/);
+  assert.match(markup, /ccna-question-270\.png/);
+  assert.match(markup, /ccna-after-exhibit-270\.png/);
+});
+
+test("redraws review item 152 as the source's two direct router links", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 591);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 152);
+  assert.equal(question.answer, 3);
+  assert.equal(question.exhibitDiagram, "dual-wan-site-routing");
+  assert.equal(question.exhibitQuality, "source-backed");
+  assert.equal(question.afterExhibit, undefined);
+  assert.match(markup, /172\.16\.0\.0\/30/);
+  assert.match(markup, /172\.16\.0\.4\/30/);
+  assert.match(markup, /OSPF Area 10/);
+  assert.doesNotMatch(markup, /WAN 1|WAN 2/);
+  assert.match(markup, /ccna-question-273\.png/);
+  assert.doesNotMatch(markup, /ccna-after-exhibit-273\.png/);
+});
+
+test("restores review item 153's source CDP advertisement interval", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 592);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 153);
+  assert.equal(question.afterExhibit.imageUrl, null);
+  assert.match(question.afterExhibit.text, /Sending CDP packets every 30 seconds/);
+  assert.doesNotMatch(question.afterExhibit.text, /every 60 seconds/);
+  assert.match(markup, /ccna-question-274\.png/);
+  assert.doesNotMatch(markup, /ccna-after-exhibit-274\.png/);
+});
+
+test("redraws review item 154's trunk exhibit and preserves its VLAN discrepancy", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 593);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 154);
+  assert.equal(question.answer, 0);
+  assert.equal(question.exhibitDiagram, "vlan5-vlan10-four-hosts");
+  assert.equal(question.exhibitQuality, "source-backed");
+  assert.equal(question.afterExhibit, undefined);
+  assert.match(markup, /Fa0\/1 ↔ Fa0\/1 · VLAN 100/);
+  assert.match(markup, /switchport trunk allowed vlan 5,10/);
+  assert.match(markup, /ccna-question-275\.png/);
+  assert.doesNotMatch(markup, /ccna-after-exhibit-275\.png/);
+});
+
+test("redraws review item 155's WPA security panel from the source image", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 599);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 155);
+  assert.equal(question.exhibitDiagram, "wlc-security-layer2-source");
+  assert.equal(question.exhibitQuality, "source-backed");
+  assert.match(markup, /Security Type/);
+  assert.match(markup, /Enterprise/);
+  assert.match(markup, /WPA2\+WPA3 Parameters/);
+  assert.match(markup, /CCMP128\(AES\)/);
+  assert.match(markup, /Pre-Shared Key/);
+  assert.match(markup, /PSK-SHA2/);
+  assert.match(markup, /ccna-question-281\.png/);
+});
+
+test("redraws review item 156's three LACP links with source interface labels", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 602);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 156);
+  assert.equal(question.exhibitDiagram, "lacp-three-parallel-switches");
+  assert.equal(question.exhibitQuality, "source-backed");
+  assert.equal(question.afterExhibit, undefined);
+  assert.match(markup, /G1\/1 ↔ G1\/1/);
+  assert.match(markup, /G1\/2 ↔ G1\/2/);
+  assert.match(markup, /G1\/3 ↔ G1\/3/);
+  assert.doesNotMatch(markup, /Gii11/);
+  assert.match(markup, /ccna-question-284\.png/);
+  assert.doesNotMatch(markup, /ccna-after-exhibit-284\.png/);
+});
+
+test("redraws review item 157's RADIUS settings and retains unchecked Network User", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 603);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 157);
+  assert.equal(question.answer, 2);
+  assert.equal(question.exhibitDiagram, "wlc-radius-server-source");
+  assert.equal(question.exhibitQuality, "source-backed");
+  assert.match(markup, /RADIUS Authentication Servers &gt; New/);
+  assert.match(markup, /192\.168\.11\.2/);
+  assert.match(markup, /Network User[\s\S]*aria-label="Disabled"/);
+  assert.match(markup, /Management[\s\S]*aria-label="Disabled"/);
+  assert.match(markup, /ccna-question-285\.png/);
+});
+
+test("redraws review item 158's WLC Layer 2 and authentication settings", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 612);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 158);
+  assert.deepEqual(question.answer, [1, 4]);
+  assert.equal(question.exhibitDiagram, "wlc-layer2-enterprise-source");
+  assert.equal(question.exhibitQuality, "source-backed");
+  assert.match(markup, /Layer 2 Security[\s\S]*None/);
+  assert.match(markup, /Fast Transition/);
+  assert.match(markup, /PMF[\s\S]*Disabled/);
+  assert.match(markup, /WPA2 Encryption[\s\S]*AES \[ \][\s\S]*TKIP \[ \]/);
+  assert.match(markup, /802\.1X[\s\S]*aria-label="Disabled"/);
+  assert.match(markup, /ccna-question-294\.png/);
+});
+
+test("redraws review item 160's OSPF shared segment and neighbor table", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 616);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 160);
+  assert.equal(question.answer, 1);
+  assert.equal(question.exhibitDiagram, "ospf-drother-r1");
+  assert.equal(question.exhibitQuality, "source-backed");
+  assert.match(question.exhibit, /192\.168\.100\.2\s+1\s+FULL\/BDR/);
+  assert.match(question.exhibit, /192\.168\.100\.3\s+1\s+FULL\/DR/);
+  assert.match(markup, /Fa0\/0/);
+  assert.match(markup, /Fa0\/2/);
+  assert.match(markup, /Fa0\/1/);
+  assert.match(markup, /10\.0\.0\.0\/24/);
+  assert.match(markup, /Area 0/);
+  assert.match(markup, /ccna-question-298\.png/);
+});
+
+test("restores review item 161's source Puppet auto_cost value", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 618);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 161);
+  assert.equal(question.afterExhibit.imageUrl, null);
+  assert.match(question.afterExhibit.text, /auto_cost => '1000'/);
+  assert.doesNotMatch(question.afterExhibit.text, /auto_cost => '100'/);
+  assert.match(markup, /ccna-question-300\.png/);
+  assert.doesNotMatch(markup, /ccna-after-exhibit-300\.png/);
+});
+
+test("redraws review item 162's JSON exhibit as formatted source text", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 621);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 162);
+  assert.equal(question.answer, 2);
+  assert.equal(question.exhibitQuality, "source-backed");
+  assert.match(question.exhibit, /"Routers": \["R1", "R2", "R3"\]/);
+  assert.match(question.exhibit, /"Switches": \["SW1", "SW2", "SW3"\]/);
+  assert.match(markup, /&quot;R1&quot;/);
+  assert.match(markup, /ccna-question-303\.png/);
+});
+
+test("redraws review item 163's visible SW4 terminal snippets", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 622);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 163);
+  assert.equal(question.exhibitQuality, "source-backed");
+  assert.equal(question.hideExhibitImage, true);
+  assert.match(question.offlineSourceExhibitImages[0], /ccna-exhibit-622\.png$/);
+  assert.match(question.exhibit, /interface Gi0\/2/);
+  assert.match(question.exhibit, /interface Gi0\/7/);
+  assert.match(question.exhibit, /allowed vlan 108/);
+  assert.match(markup, /interface Gi0\/2/);
+  assert.match(markup, /ccna-exhibit-622\.png/);
+});
+
+test("removes the exhibit lead-in when review item 164 has no source exhibit", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 624);
+  const question = questions[questionIndex];
+
+  assert.equal(questionIndex + 1, 164);
+  assert.doesNotMatch(question.prompt, /^\s*Refer to the exhibit\./i);
+  assert.equal(question.exhibitImage, undefined);
+  assert.equal(question.answer, 1);
+});
+
+test("uses review item 165's existing ARP-inspection terminal text instead of its raster", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 627);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 165);
+  assert.equal(question.hideExhibitImage, true);
+  assert.equal(question.exhibitImage, undefined);
+  assert.match(question.exhibit, /ip arp inspection vlan 5-10/);
+  assert.match(question.exhibit, /switchport access vlan 5/);
+  assert.match(markup, /ccna-exhibit-627\.png/);
+  assert.match(markup, /switchport access vlan 5/);
+});
+
+test("redraws review item 167's routed-network exhibit with source interface and host labels", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 629);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 167);
+  assert.equal(question.exhibitDiagram, "r1-r2-r3-network");
+  assert.equal(question.afterExhibit, undefined);
+  assert.match(markup, /Gi0\/1 · \.1/);
+  assert.match(markup, /Gi0\/1 · \.2/);
+  assert.match(markup, /Gi0\/1 · \.3/);
+  assert.match(markup, /Int Gi0\/0 · 10\.0\.3\.0\/24/);
+  assert.match(markup, /ccna-question-311\.png/);
+  assert.doesNotMatch(markup, /ccna-after-exhibit-311\.png/);
+});
+
+test("redraws review item 168's redundant circuits and preserves both route tables", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 635);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 168);
+  assert.equal(question.exhibitDiagram, "dual-circuit-r1-r2-hosts");
+  assert.equal(question.afterExhibit, undefined);
+  assert.match(question.exhibit, /via 10\.10\.10\.2/);
+  assert.match(question.exhibit, /via 10\.10\.10\.1/);
+  assert.match(markup, /Primary Circuit/);
+  assert.match(markup, /Secondary Circuit/);
+  assert.match(markup, /\.1/);
+  assert.match(markup, /\.2/);
+  assert.match(markup, /\.5/);
+  assert.match(markup, /\.6/);
+  assert.match(markup, /via 10\.10\.10\.2/);
+  assert.match(markup, /ccna-question-317\.png/);
+  assert.doesNotMatch(markup, /ccna-after-exhibit-317\.png/);
+});
+
+test("uses review item 169's existing route-table text instead of its raster", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 641);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 169);
+  assert.equal(question.hideExhibitImage, true);
+  assert.equal(question.exhibitImage, undefined);
+  assert.match(question.exhibit, /Gateway of last resort is 10\.56\.0\.1/);
+  assert.match(question.exhibit, /10\.56\.128\.0\/18 is directly connected, Vlan57/);
+  assert.match(markup, /ccna-exhibit-641\.png/);
+  assert.match(markup, /10\.56\.128\.0\/18 is directly connected, Vlan57/);
+});
+
+test("keeps review item 170's source topology available only for local comparison", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 645);
+  const question = questions[questionIndex];
+  const localMarkup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+  const normalMarkup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question }),
+  );
+
+  assert.equal(questionIndex + 1, 170);
+  assert.match(localMarkup, /ccna-question-327\.png/);
+  assert.match(localMarkup, /ccna-after-exhibit-327\.png/);
+  assert.doesNotMatch(normalMarkup, /ccna-question-327\.png/);
+  assert.match(question.afterExhibit.text, /PC_A[\s\S]*PC_B[\s\S]*VLAN 200/);
+});
+
+test("redraws review item 171's complete OSPF workstation and IP-phone topology", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 646);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question, includeOfflineSourceImages: true }),
+  );
+
+  assert.equal(questionIndex + 1, 171);
+  assert.equal(question.exhibitDiagram, "ospf-two-site-workstations");
+  assert.equal(question.afterExhibit, undefined);
+  assert.match(markup, /SW3/);
+  assert.match(markup, /SW4/);
+  assert.match(markup, /IP/);
+  assert.match(markup, /10\.0\.0\.0\/30/);
+  assert.match(markup, /10\.0\.1\.0\/24/);
+  assert.match(markup, /10\.0\.2\.0\/24/);
+  assert.match(markup, /ccna-question-328\.png/);
+  assert.doesNotMatch(markup, /ccna-after-exhibit-328\.png/);
+});
+
+test("redraws the R14-to-PC10 host-route exhibit from the provided screenshot details", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 834);
+  const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question }),
+  );
+
+  assert.equal(question.exhibitDiagram, "r14-r86-pc10-host-route");
+  assert.equal(question.answer, 2);
+  assert.equal(question.afterExhibit, undefined);
+  assert.match(markup, /R14/);
+  assert.match(markup, /R86/);
+  assert.match(markup, /10\.73\.65\.64\/30/);
+  assert.match(markup, /10\.80\.65\.0\/28/);
+  assert.match(markup, /10\.80\.65\.10/);
+  assert.match(markup, /Loopback0 · 10\.10\.1\.14\/32/);
+  assert.match(markup, /Loopback0 · 10\.10\.1\.86\/32/);
+  assert.match(markup, /Fa0\/1/);
+});
+
 test("hides redundant or mismatched images while preserving the needed exhibit", () => {
   const questions = getOfflineReferExhibitQuestionBank();
   for (const [legacyIndex, expectedDiagram, shouldKeepAfterExhibit, expectedImage] of [
@@ -963,7 +1949,7 @@ test("hides redundant or mismatched images while preserving the needed exhibit",
     [51, undefined, true],
     [62, undefined, true],
     [494, "routers-abc-floating-route", false],
-    [507, "routers-abc-ospf-dr", true],
+    [507, "routers-abc-ospf-dr", false],
     [542, "r4-supernet", false],
     [570, "ospf-r1-r2-r3-priority", false],
     [769, undefined, false, true],
@@ -977,7 +1963,14 @@ test("hides redundant or mismatched images while preserving the needed exhibit",
 
     assert.ok(question, `Refer question ${legacyIndex} should remain in the offline bank`);
     if (expectedDiagram) assert.equal(question.exhibitDiagram, expectedDiagram);
-    assert.deepEqual(question.offlineSourceExhibitImages, []);
+    if ([494, 507, 508, 509].includes(legacyIndex)) {
+      const sourceImageId = { 494: 177, 507: 190, 508: 191, 509: 192 }[legacyIndex];
+      assert.match(question.offlineSourceExhibitImages[0], new RegExp(`ccna-question-${sourceImageId}\\.png$`));
+    } else if (legacyIndex === 645) {
+      assert.deepEqual(question.offlineSourceExhibitImages, ["/src/assets/ccna-offline-exams-images/ccna-question-327.png"]);
+    } else {
+      assert.deepEqual(question.offlineSourceExhibitImages, []);
+    }
     assert.equal(Boolean(question.afterExhibit?.imageUrl), shouldKeepAfterExhibit);
     if (expectedImage) assert.ok(question.exhibitImage);
   }
@@ -1002,7 +1995,11 @@ test("limits the image cleanup to Refer mode and retains needed OSPF source evid
   const wlcQuestion = referQuestions.find((entry) => entry.legacyIndex === 1301);
   const ospfQuestion = referQuestions.find((entry) => entry.legacyIndex === 616);
 
-  assert.deepEqual(referQuestion.offlineSourceExhibitImages, []);
+  assert.match(referQuestion.offlineSourceExhibitImages[0], /ccna-question-177\.png$/);
+  const ospfDrQuestion = referQuestions.find((entry) => entry.legacyIndex === 507);
+  assert.match(ospfDrQuestion.offlineSourceExhibitImages[0], /ccna-question-190\.png$/);
+  const macLearningQuestion = referQuestions.find((entry) => entry.legacyIndex === 508);
+  assert.match(macLearningQuestion.offlineSourceExhibitImages[0], /ccna-question-191\.png$/);
   assert.equal(regularQuestion.offlineSourceExhibitImages.length, 1);
   assert.equal(wlcQuestion.exhibitDiagram, "wlc-security-tab-legacy");
   assert.deepEqual(wlcQuestion.offlineSourceExhibitImages, []);
