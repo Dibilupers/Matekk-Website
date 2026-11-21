@@ -39,6 +39,7 @@ import useGradebookQuizStats from "../../useGradebookQuizStats";
 import { getProfileDisplayName } from "../../../../../utils/profile";
 import ProgramBackgroundParticles from "../../ProgramBackgroundParticles";
 import ScoreRotationCard from "../../ScoreRotationCard";
+import { loadCcnaAllQuestionsBank } from "../../../../../utils/ccnaQuestionBankApi";
 
 const modules = CCNA_CURRICULUM.map((section) => ({
 	...section,
@@ -434,6 +435,17 @@ export default function CCNA() {
 	const [selectedExamFormat, setSelectedExamFormat] = useState(null);
 	const [retakeQuizModule, setRetakeQuizModule] = useState(null);
 	const [retakeExamFormat, setRetakeExamFormat] = useState(null);
+
+	useEffect(() => {
+		if (!isOnline) return undefined;
+
+		let cancelled = false;
+		loadCcnaAllQuestionsBank()
+			.catch((error) => {
+				if (!cancelled) console.warn("Unable to prepare the CCNA offline question bank.", error);
+			});
+		return () => { cancelled = true; };
+	}, [isOnline]);
 
 	useEffect(() => {
 		const updateBackButtonVisibility = () => setHasScrolled(window.scrollY > 120);
