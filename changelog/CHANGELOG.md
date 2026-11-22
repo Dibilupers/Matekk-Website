@@ -6,6 +6,17 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `d98e525` - Fixed the DC-1/HQ-1 Question 299 live and offline drag-and-drop
+  rendering and bumped the offline CCNA bank cache so stale dropdown data is
+  refreshed.
+
+Validation before push: 189 focused CCNA tests, targeted ESLint,
+`npm run build`, and `git diff --check` passed.
+
+## 2026-11-22 - main
+
+Commits included in this push:
+
 - `3888ec1` - Reverted the overbroad drag-and-drop normalization changelog.
 - `e498434` - Reverted the overbroad conversion of prompts containing drag
   instructions. Numbered and instruction-only matching questions remain unchanged.
