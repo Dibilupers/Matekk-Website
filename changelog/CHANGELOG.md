@@ -6,6 +6,17 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `27dbd44` - Fixed legacy 617's drag-and-drop interaction, removed duplicated
+  text from five mapped exhibits, and changed the SW11 VLAN exhibit canvas to
+  white.
+
+Validation before push: 43 CCNA exhibit tests, 146 bank-converter tests,
+targeted ESLint, `npm run build`, and `git diff --check` passed.
+
+## 2026-11-22 - main
+
+Commits included in this push:
+
 - `5568021` - Completed the CCNA CLI terminal-exhibit audit across the
   All Questions and offline paths, corrected legacy 909/816/1159 handling,
   redrew legacy 50/59, and preserved answer data.
