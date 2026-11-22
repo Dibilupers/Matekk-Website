@@ -6,6 +6,17 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `2aa65bc` - Converted 13 legacy matching questions that mark unused options,
+  values, commands, or answers into drag-and-drop while preserving their
+  answer mappings and offline behavior.
+
+Validation before push: 192 focused CCNA tests, `npm run build`, and
+`git diff --check` passed.
+
+## 2026-11-22 - main
+
+Commits included in this push:
+
 - `3d93d79` - Initially changed repeated-answer dropdowns to drag-and-drop.
 - `b39487c` - Reverted that interaction change; repeated-answer questions use
   the existing numbered input mode.
