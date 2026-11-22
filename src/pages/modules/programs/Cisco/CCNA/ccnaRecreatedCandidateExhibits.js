@@ -1,7 +1,8 @@
-const textExhibit = (exhibit, exhibitQuality = "source-backed") => ({
+const textExhibit = (exhibit, exhibitQuality = "source-backed", prompt) => ({
   exhibit,
   exhibitQuality,
   hideExhibitImage: true,
+  ...(prompt ? { prompt } : {}),
 });
 
 const diagramExhibit = (diagram, exhibitQuality = "illustrative") => ({
@@ -71,7 +72,7 @@ R6 Gi0/2: IP address not present in the live question record`, "partial")],
     "color": "blue"
     "gasLight": true
   }
-}`)],
+}`, "source-backed", "In which structure does the word “warning” directly reside?")],
   [414, diagramExhibit("candidate-wlc-414", "source-backed")],
   [451, textExhibit(`! Illustrative one-object JSON; original content is unavailable.
 { "example": "one JSON object" }`, "illustrative")],
@@ -97,7 +98,9 @@ GigabitEthernet1 is up, line protocol is up
   reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
   Keepalive set (10 sec)
-  Full Duplex, 1000Mbps, link type is auto, media type is RJ45`)],
+  Full Duplex, 1000Mbps, link type is auto, media type is RJ45`,
+  "source-backed",
+  "Which format matches the Modified EUI-64 IPv6 interface address for the network 2001:db8::/64?")],
   [666, diagramExhibit("candidate-wlc-666", "source-backed")],
   [703, diagramExhibit("candidate-pc2-file-server-policy-703", "illustrative")],
   [712, diagramExhibit("candidate-wlc-712", "source-backed")],
@@ -132,7 +135,9 @@ SWx(config-if)# switchport trunk encapsulation dot1q`, "source-backed")],
       "name": "Cisco 6800 Switch"
     }
   ]
-! The closing brace for the outer object is missing.`, "source-backed")],
+! The closing brace for the outer object is missing.`,
+  "source-backed",
+  "What is missing from this output for it to be executed?")],
   [827, diagramExhibit("candidate-wlc-827", "source-backed")],
   [832, diagramExhibit("candidate-router2-route-sources-832", "illustrative")],
   [836, diagramExhibit("candidate-host-c-gateway", "source-backed")],
@@ -166,9 +171,13 @@ interface fastethernet0/1
   [1254, textExhibit(`%PM-4-ERR_DISABLE: psecure-violation error detected on Fa0/1, putting Fa0/1 in err-disable state
 %PORT_SECURITY-2-PSECURE_VIOLATION: Security violation occurred, caused by MAC address 00AA.1AB9.D22F on port FastEthernet0/1
 %LINKPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/1, changed state to down
-%LINK-3-UPDOWN: Interface FastEthernet0/1, changed state to down`)],
+%LINK-3-UPDOWN: Interface FastEthernet0/1, changed state to down`,
+  "source-backed",
+  "Which port security violation mode is configured on interface Fa0/1?")],
   [1330, textExhibit(`SW1#show running-config
 ip arp inspection vlan 2-10
 interface FastEthernet0/1
- ip arp inspection trust`, "partial")],
+ ip arp inspection trust`,
+  "partial",
+  "If the network environment is operating normally, which type of device must be connected to interface FastEthernet 0/1?")],
 ]);

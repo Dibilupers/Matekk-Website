@@ -362,7 +362,7 @@ const NETWORK_TOPOLOGIES = {
 	"candidate-vlan-roles-24": {
 		title: "Exhibit: SW11 VLAN Configuration",
 		viewBox: { x: 0, y: 0, width: 1000, height: 640 },
-		canvasBackground: "#f1f0ec",
+		canvasBackground: "#fff",
 		rightLabels: {
 			x: 760,
 			y: 565,

@@ -563,6 +563,48 @@ test("converts recovered CCNA matching questions when the raw response omits the
   }
 });
 
+test("converts the DC-1/HQ-1 interface assignment into a drag-and-drop question", () => {
+  const prompt = `The IP address configurations must be completed on the DC-1 and HQ-1 routers based on these requirements.
+
+DC-1 Gi1/0 must be the last usable address on a /30
+DC-1 Gi1/1 must be the first usable address on a /29
+DC-1 Gi1/2 must be the last usable address on a /28
+HQ-1 Gi1/3 must be the last usable address on a /29
+
+Drag and drop the commands from the left onto the destination interfaces on the right. Not all commands are used.`;
+  const { question, problem } = convertBankRow({
+    ...rawRow(299, prompt),
+    choices: null,
+    correct_answer: `DC-1:
++ ip address 209.165.202.130 255.255.255.252
++ ip address 192.168.4.9 255.255.255.248
++ ip address 192.168.3.14 255.255.255.240
+
+HQ-1:
++ ip address 192.168.3.14 255.255.255.248`,
+  });
+
+  assert.equal(problem, undefined);
+  assert.equal(question.type, "drag_drop");
+  assert.deepEqual(question.items, [
+    "DC-1 Gi1/0: last usable address on a /30",
+    "DC-1 Gi1/1: first usable address on a /29",
+    "DC-1 Gi1/2: last usable address on a /28",
+    "HQ-1 Gi1/3: last usable address on a /29",
+  ]);
+  assert.deepEqual(
+    question.items.map((_, index) => question.choices[question.answer[index]]),
+    [
+      "ip address 209.165.202.130 255.255.255.252",
+      "ip address 192.168.4.9 255.255.255.248",
+      "ip address 192.168.3.14 255.255.255.240",
+      "ip address 192.168.3.14 255.255.255.248",
+    ],
+  );
+  assert.equal(new Set(question.answer).size, question.items.length);
+  assert.ok(isValidQuestion(question));
+});
+
 test("rejects recovered matching questions if a present answer key conflicts with its saved mapping", () => {
   const { question, problem } = convertBankRow({
     ...rawRow(1306, "Drag and drop each broadcast IP address on the left to the Broadcast Address column on the right."),
@@ -633,10 +675,15 @@ test("replaces recreated matching-activity screenshots with their existing inter
     assert.equal(question.hideExhibitImage, true, `offline question ${legacyIndex} should hide the duplicate activity image`);
   }
   const offlineQuestion299 = getOfflineLegacyQuestionBank().find((entry) => entry.legacyIndex === 617);
-  assert.equal(offlineQuestion299.type, "match");
+  assert.equal(offlineQuestion299.type, "drag_drop");
   assert.deepEqual(offlineQuestion299.items, ["DC-1 Gi1/0", "DC-1 Gi1/1", "DC-1 Gi1/2", "HQ-1 Gi1/3"]);
   assert.deepEqual(offlineQuestion299.answer, [2, 5, 4, 6]);
   assert.equal(offlineQuestion299.choices.length, 7);
+  const builtInQuestion617 = builtInQuestionBank.find((entry) => entry.legacyIndex === 617);
+  assert.equal(builtInQuestion617.type, "drag_drop");
+  assert.deepEqual(builtInQuestion617.items, offlineQuestion299.items);
+  assert.deepEqual(builtInQuestion617.choices, offlineQuestion299.choices);
+  assert.deepEqual(builtInQuestion617.answer, offlineQuestion299.answer);
   const offlineQuestion266 = getOfflineLegacyQuestionBank().find((entry) => entry.legacyIndex === 266);
   assert.equal(offlineQuestion266.choices.length, 7);
   assert.equal(offlineQuestion266.matchStyle, "assign");

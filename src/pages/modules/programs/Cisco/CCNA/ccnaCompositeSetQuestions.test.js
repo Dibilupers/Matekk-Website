@@ -300,6 +300,33 @@ test("selects answer-enriched candidate topologies for matching live question ID
 	assert.equal(legacyQuestion.hideExhibitImage, true);
 });
 
+test("removes text exhibits duplicated in mapped question prompts", () => {
+	const cases = [
+		[402, 720, "In which structure does the word “warning” directly reside?"],
+		[633, 949, "Which format matches the Modified EUI-64 IPv6 interface address for the network 2001:db8::/64?"],
+		[810, 1126, "What is missing from this output for it to be executed?"],
+		[1254, 215, "Which port security violation mode is configured on interface Fa0/1?"],
+		[1330, 291, "If the network environment is operating normally, which type of device must be connected to interface FastEthernet 0/1?"],
+	];
+
+	for (const [bankId, legacyIndex, expectedPrompt] of cases) {
+		const sourceQuestion = CCNA_LEGACY_QUESTIONS.find((item) => item.legacyIndex === legacyIndex);
+		const mappedExhibit = CCNA_RECREATED_CANDIDATE_EXHIBITS.get(bankId);
+		const question = applyNativeExhibit({
+			...sourceQuestion,
+			bankId,
+			exhibit: mappedExhibit.exhibit,
+		});
+
+		assert.equal(question.prompt, expectedPrompt, `bank question ${bankId} should show only its question prompt`);
+		assert.equal(question.exhibit, mappedExhibit.exhibit);
+		assert.equal(question.hideExhibitImage, true);
+		assert.equal(question.type, sourceQuestion.type);
+		assert.deepEqual(question.options, sourceQuestion.options);
+		assert.deepEqual(question.answer, sourceQuestion.answer);
+	}
+});
+
 test("uses the VLAN 100/200 PAT exhibit for the matching question prompt", () => {
 	const question = applyNativeExhibit({
 		prompt: "Refer to exhibit. Which configuration must be applied to the router that configures PAT to translate all addresses in VLAN 200 while allowing devices on VLAN 100 to use their own IP addresses?",

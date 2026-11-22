@@ -9085,22 +9085,27 @@ export const CCNA_LEGACY_QUESTIONS = [
     "legacyIndex": 617,
     "legacyNumber": 80,
     "prompt": "Refer to the exhibit.\n\nThe IP address configurations must be completed on the DC-1 and HQ-1 routers based on these\nrequirements.\n\nDC-1 Gi1/0 must be the last usable address on a /30\nDC-1 Gi1/1 must be the first usable address on a /29\n\nDC-1 Gi1/2 must be the last usable address on a /28\nHQ-1 Gi1/3 must be the last usable address on a /29\n\nDrag and drop the commands from the left onto the destination interfaces on the right. Not all\ncommands are used.",
-    "type": "match",
+    "type": "drag_drop",
     "items": [
-      "ip address 209.165.202.130 255.255.255.252",
-      "ip address 192.168.4.9 255.255.255.248",
-      "ip address 192.168.3.14 255.255.255.240",
-      "ip address 192.168.3.14 255.255.255.248"
+      "DC-1 Gi1/0",
+      "DC-1 Gi1/1",
+      "DC-1 Gi1/2",
+      "HQ-1 Gi1/3"
     ],
     "choices": [
-      "DC-1",
-      "HQ-1"
+      "ip address 192.168.4.13 255.255.255.240",
+      "ip address 209.165.202.129 255.255.255.252",
+      "ip address 209.165.202.130 255.255.255.252",
+      "ip address 209.165.202.131 255.255.255.252",
+      "ip address 192.168.3.14 255.255.255.240",
+      "ip address 192.168.4.9 255.255.255.248",
+      "ip address 192.168.3.14 255.255.255.248"
     ],
     "answer": [
-      0,
-      0,
-      0,
-      1
+      2,
+      5,
+      4,
+      6
     ],
     "explanation": ""
   },

@@ -310,7 +310,7 @@ function interfaceRequirementMatch(row, body) {
   return {
     prompt: "Assign each IP address configuration to the router interface that meets its subnet requirement.",
     body: {
-      type: "match",
+      type: "drag_drop",
       items: requirements.map(({ router, iface, position, prefix }) =>
         `${router} ${iface}: ${position} usable address on a /${prefix}`,
       ),
