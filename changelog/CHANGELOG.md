@@ -2,6 +2,18 @@
 
 Tracking begins 2026-10-17.
 
+## 2026-11-22 - main
+
+Commits included in this push:
+
+- `6bd8d62` - Completed the CCNA exhibit corrections, including matching
+  exhibits and offline bank rendering/grading fixes.
+
+Validation before push: 196 CCNA tests, `npm run build`, and the production
+offline-cache check passed (789/789 image assets cached; 20 CCNA exhibit
+images rendered with network access disabled). The authenticated exam route
+could not be verified because the test browser had no valid session.
+
 ## 2026-11-21 - main
 
 Commits included in this push:
