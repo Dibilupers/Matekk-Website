@@ -269,12 +269,13 @@ const NETWORK_TOPOLOGIES = {
 	"switch-config-two-column-39": {
 		title: "Switch A and Switch B configuration",
 		viewBox: { x: 0, y: 0, width: 640, height: 320 },
+		fillWidth: true,
 		canvasBackground: "#fff",
 		nodes: [],
 		links: [],
 		annotations: [
-			{ x: 0, y: 0, lines: [], box: { x: 15, y: 15, width: 613, height: 300, fill: "#fff", stroke: "#4b4b4b", strokeWidth: 2, rx: 0 } },
-			{ x: 0, y: 0, lines: [], box: { x: 321, y: 16, width: 2, height: 298, fill: "#4b4b4b", stroke: "none", rx: 0 } },
+			{ x: 0, y: 0, lines: [], box: { x: 0, y: 0, width: 640, height: 320, fill: "#fff", stroke: "#4b4b4b", strokeWidth: 2, rx: 0 } },
+			{ x: 0, y: 0, lines: [], box: { x: 320, y: 1, width: 2, height: 318, fill: "#4b4b4b", stroke: "none", rx: 0 } },
 			{
 				x: 27,
 				y: 39,
@@ -4179,6 +4180,8 @@ export function ExhibitDiagram({ type, className = "", offlineLayout = false, co
 				aria-label={title}
 				className={expanded
 					? "mx-auto block h-auto w-[1000px]"
+					: topology.fillWidth
+						? "mx-auto block h-auto w-full"
 					: offlineLayout || compact
 						? "mx-auto block h-auto w-full max-w-5xl !max-h-[min(38vh,20rem)]"
 						: "mx-auto block h-auto w-full max-w-5xl"}
