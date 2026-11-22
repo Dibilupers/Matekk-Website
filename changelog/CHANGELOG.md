@@ -6,6 +6,16 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `83e191c` - Prefer bundled exhibit images over stale database URLs for mapped
+  CCNA exhibit questions and bump the offline question-bank cache to v5.
+
+Validation before push: 147 focused CCNA tests, targeted ESLint, and
+`npm run build` passed. The build emitted a non-fatal chunk-size warning.
+
+## 2026-11-22 - main
+
+Commits included in this push:
+
 - `2aa65bc` - Converted 13 legacy matching questions that mark unused options,
   values, commands, or answers into drag-and-drop while preserving their
   answer mappings and offline behavior.
