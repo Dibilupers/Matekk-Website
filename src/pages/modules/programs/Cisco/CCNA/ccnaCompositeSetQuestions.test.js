@@ -7,13 +7,13 @@ import {
 import { CCNA_RECREATED_CANDIDATE_EXHIBITS } from "./ccnaRecreatedCandidateExhibits.js";
 import { CCNA_LEGACY_QUESTIONS } from "./ccnaLegacyQuestions.js";
 
-test("applies the Question 299 IP-address matching override", () => {
+test("applies the Question 299 IP-address drag-and-drop override", () => {
 	const question = applyNativeExhibit({
 		bankId: 299,
 		prompt: "Refer to the exhibit. Match the interface to its IP address.",
 	});
 
-	assert.equal(question.type, "match");
+	assert.equal(question.type, "drag_drop");
 	assert.deepEqual(question.items, ["DC-1 Gi1/0", "DC-1 Gi1/1", "DC-1 Gi1/2", "HQ-1 Gi1/3"]);
 	assert.deepEqual(question.answer, [2, 5, 4, 6]);
 	assert.equal(question.choices.length, 7);

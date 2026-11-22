@@ -1192,6 +1192,7 @@ const OFFLINE_LEGACY_QUESTION_CANDIDATES = CCNA_LEGACY_QUESTIONS
                 : "click_boxes",
           }
         : {}),
+      ...(promptNativeExhibit.type === "drag_drop" ? { type: "drag_drop" } : {}),
       id: question.legacyIndex,
       bankId: question.legacyIndex,
       offlineLegacy: true,

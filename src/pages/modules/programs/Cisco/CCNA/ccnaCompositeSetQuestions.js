@@ -866,7 +866,7 @@ const DATABASE_NATIVE_EXHIBITS = new Map([
 	[299, {
 		hideExhibitImage: true,
 		removeExhibitLeadIn: true,
-		type: "match",
+		type: "drag_drop",
 		items: ["DC-1 Gi1/0", "DC-1 Gi1/1", "DC-1 Gi1/2", "HQ-1 Gi1/3"],
 		choices: [
 			"ip address 192.168.4.13 255.255.255.240",
