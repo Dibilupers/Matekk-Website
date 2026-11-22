@@ -17,15 +17,6 @@ const match = (prompt, items, choices, answer, explanation, exhibit) => ({ type:
 const siteExhibit = (diagram, text) => ({ diagram, text });
 
 const AAA = ["Accounting", "Authentication", "Authorization"];
-const DROPDOWN_LAYOUT_MATCH_EXCEPTIONS = new Set([268, 282]);
-
-export function isDropdownLayoutDragCandidate(question) {
-	if (!question || DROPDOWN_LAYOUT_MATCH_EXCEPTIONS.has(question.legacyIndex ?? question.id)) return false;
-	if (question.type !== "match" && question.type !== undefined) return false;
-	if (!Array.isArray(question.items) || !Array.isArray(question.choices) || !Array.isArray(question.answer)) return false;
-	return question.choices.length < question.items.length ||
-		new Set(question.answer).size < question.answer.length;
-}
 
 export const CCNA_COMPOSITE_SET_QUESTIONS = [
 	// ---------------- Set A ----------------
@@ -2880,7 +2871,6 @@ const DUPLICATE_TERMINAL_SOURCE_IMAGE_LEGACY_INDEXES = new Set([
 
 export function applyNativeExhibit(question) {
 	const builtInQuestion = getBuiltInQuestionByPrompt(question?.prompt);
-	const dropdownLayoutDragCandidate = isDropdownLayoutDragCandidate(question);
 	const parsedPrompt = !question?.exhibit && typeof question?.prompt === "string"
 		? splitPromptExhibit(question.prompt)
 		: null;
@@ -2911,7 +2901,7 @@ export function applyNativeExhibit(question) {
 		Object.prototype.hasOwnProperty.call(questionOverride, key),
 	);
 	if (!exhibitDiagram && !exhibitImage && !hasNativeTextExhibit && !hideExhibitImage && !hideAfterExhibit &&
-		!removeExhibitLeadIn && !hasQuestionOverride && !dropdownLayoutDragCandidate) return question;
+		!removeExhibitLeadIn && !hasQuestionOverride) return question;
 	const prompt = typeof databaseExhibit?.prompt === "string"
 		? databaseExhibit.prompt
 		: typeof parsedPrompt?.exhibit === "string"
@@ -2923,7 +2913,6 @@ export function applyNativeExhibit(question) {
 	return {
 		...question,
 		...(Object.prototype.hasOwnProperty.call(questionOverride, "type") ? { type: questionOverride.type } : {}),
-		...(dropdownLayoutDragCandidate ? { type: "drag_drop", dragDropMode: "items-to-choices" } : {}),
 		...(Object.prototype.hasOwnProperty.call(questionOverride, "items") ? { items: questionOverride.items } : {}),
 		...(Object.prototype.hasOwnProperty.call(questionOverride, "choices") ? { choices: questionOverride.choices } : {}),
 		...(Object.prototype.hasOwnProperty.call(questionOverride, "answer") ? { answer: questionOverride.answer } : {}),
