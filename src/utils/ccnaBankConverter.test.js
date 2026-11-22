@@ -20,6 +20,8 @@ let createOfflineLegacyExamQuestions;
 let ExhibitDiagram;
 let QuestionExhibits;
 let getOfflineReferExhibitQuestionBank;
+let shouldUseDragDropInteraction;
+let isConfirmedMatchQuestion;
 let ccnaLegacyQuestions;
 let builtInQuestionBank;
 let createShortExamQuestions;
@@ -43,7 +45,11 @@ before(async () => {
   ({ loadCachedCcnaAllQuestionsBank } = await vite.ssrLoadModule("/src/utils/ccnaOfflineQuestionBank.js"));
   ({ createOfflineCcnaExamQuestions } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaOfflineTimedExam.js"));
   ({ isValidQuestion } = await vite.ssrLoadModule("/src/utils/ccnaExamGrading.js"));
-  ({ applyNativeExhibit } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaCompositeSetQuestions.js"));
+  ({
+    applyNativeExhibit,
+    isConfirmedMatchQuestion,
+    shouldUseDragDropInteraction,
+  } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaCompositeSetQuestions.js"));
   ({ CCNA_COMPOSITE_SET_QUESTIONS: compositeSetQuestions } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaCompositeSetQuestions.js"));
   ({
     getOfflineLegacyQuestionBank,
@@ -704,7 +710,39 @@ test("replaces recreated matching-activity screenshots with their existing inter
   assert.match(offlinePatQuestion.afterExhibit.text, /ip nat inside source list 1 interface Gi0\/1 overload/);
 });
 
-test("keeps the Router1 routing-method question prompt and matching controls while replacing its screenshot with a topology", () => {
+test("keeps explicit drag prompts draggable in online and offline legacy banks", () => {
+  const offlineByIndex = new Map(getOfflineLegacyQuestionBank().map((question) => [question.legacyIndex, question]));
+  const builtInByIndex = new Map(builtInQuestionBank.map((question) => [question.legacyIndex, question]));
+  const explicitDragPrompts = ccnaLegacyQuestions.filter(({ prompt }) => /\bdrag\b/i.test(prompt));
+
+  assert.equal(explicitDragPrompts.length, 132);
+  for (const sourceQuestion of explicitDragPrompts) {
+    const shouldDrag = shouldUseDragDropInteraction(sourceQuestion);
+    const offlineQuestion = offlineByIndex.get(sourceQuestion.legacyIndex);
+    const builtInQuestion = builtInByIndex.get(sourceQuestion.legacyIndex);
+
+    if (shouldDrag) {
+      assert.equal(applyNativeExhibit(sourceQuestion).type, "drag_drop", `native question ${sourceQuestion.legacyIndex}`);
+      if (offlineQuestion) {
+        assert.equal(offlineQuestion.type, "drag_drop", `offline question ${sourceQuestion.legacyIndex}`);
+      }
+      if (builtInQuestion) {
+        assert.equal(builtInQuestion.type, "drag_drop", `built-in question ${sourceQuestion.legacyIndex}`);
+      }
+      const needsManyToOne = sourceQuestion.choices.length < sourceQuestion.items.length ||
+        new Set(sourceQuestion.answer).size < sourceQuestion.answer.length;
+      if (needsManyToOne) {
+        assert.equal(offlineQuestion?.dragDropMode, "items-to-choices", `offline question ${sourceQuestion.legacyIndex}`);
+        assert.equal(builtInQuestion?.dragDropMode, "items-to-choices", `built-in question ${sourceQuestion.legacyIndex}`);
+      }
+    } else if (isConfirmedMatchQuestion(sourceQuestion)) {
+      assert.equal(offlineQuestion?.type, "match", `offline question ${sourceQuestion.legacyIndex}`);
+      assert.equal(builtInQuestion?.type, "match", `built-in question ${sourceQuestion.legacyIndex}`);
+    }
+  }
+});
+
+test("keeps the Router1 routing-method prompt, drag-and-drop controls, and topology", () => {
   const { question } = convertBankRow({
     ...rawRow(441, "Refer to the exhibit. The Router1 routing table has multiple methods to reach 10.10.10.0/24. Drag and drop the network conditions."),
     imageUrl: "https://example.com/questions/ccna-question-441.png",
@@ -718,7 +756,9 @@ test("keeps the Router1 routing-method question prompt and matching controls whi
   assert.match(question.prompt, /multiple methods to reach 10\.10\.10\.0\/24/);
   assert.equal(question.type, "match");
   assert.equal(question.hideExhibitImage, true);
-  assert.equal(applyNativeExhibit({ ...question, bankId: 441 }).exhibitDiagram, "routing-protocols-prefix");
+  const nativeQuestion = applyNativeExhibit({ ...question, bankId: 441 });
+  assert.equal(nativeQuestion.type, "drag_drop");
+  assert.equal(nativeQuestion.exhibitDiagram, "routing-protocols-prefix");
   assert.equal(offlineQuestion.exhibitDiagram, "routing-protocols-prefix");
   assert.equal(offlineQuestion.hideExhibitImage, true);
 });
@@ -2268,7 +2308,8 @@ test("rebuilds legacy drag-and-drop item 799 without changing its matching answe
   );
 
   assert.ok(question);
-  assert.equal(question.type, "match");
+  assert.equal(question.type, "drag_drop");
+  assert.equal(question.dragDropMode, "items-to-choices");
   assert.deepEqual(question.items, source.items);
   assert.deepEqual(question.choices, source.choices);
   assert.deepEqual(question.answer, source.answer);
@@ -2296,7 +2337,8 @@ test("reconstructs legacy drag-and-drop exhibit 888 from its saved answer key", 
 
   assert.equal(source.type, "match");
   assert.ok(question);
-  assert.equal(question.type, "match");
+  assert.equal(question.type, "drag_drop");
+  assert.equal(question.dragDropMode, "items-to-choices");
   assert.equal(question.prompt, source.prompt);
   assert.deepEqual(question.items, source.items);
   assert.deepEqual(question.choices, source.choices);

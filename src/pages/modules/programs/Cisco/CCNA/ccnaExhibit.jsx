@@ -580,15 +580,6 @@ const NETWORK_TOPOLOGIES = {
 			{ from: "policy", to: "other", label: "Allowed" },
 		],
 	},
-	"candidate-router2-route-sources-832": {
-		title: "Router 2 route-learning context",
-		note: "The live row contains route-set options but no topology, neighbor identities, or routing-protocol data. The exact installed routes cannot be reconstructed.",
-		nodes: [
-			{ id: "router2", kind: "router", name: "Router 2", x: 380, y: 220, details: ["Installed routes unavailable"] },
-			{ id: "neighbors", kind: "network", name: "Neighbor advertisements", x: 800, y: 220, details: ["Topology and protocols unavailable"] },
-		],
-		links: [{ from: "neighbors", to: "router2", label: "Route sources missing" }],
-	},
 	"candidate-workstation-fqdn-924": {
 		title: "Workstation-to-server name resolution",
 		note: "The prompt names Workstation 1, Server 1, and FQDN access. The live row omits the IP, gateway, and DNS values needed for a source-faithful exhibit.",
@@ -837,7 +828,7 @@ const NETWORK_TOPOLOGIES = {
 	},
 	"dc-hq-interface-addressing": {
 		title: "DC-1 and HQ-1 interface addressing",
-		note: "Select the address command that matches each interface requirement; no link between the routers is specified.",
+		note: "Assign each address command to its matching interface requirement; no link between the routers is specified.",
 		nodes: [
 			{
 				id: "dc1",

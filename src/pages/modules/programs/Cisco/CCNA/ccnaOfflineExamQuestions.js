@@ -19,7 +19,12 @@ import wlcP2pBlocking992ExhibitImg from "../../../../../assets/ccna-exam/ccna-qu
 import patVlan341ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-341-pat-vlan.webp";
 import voiceDataVlan382ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-382-voice-data-vlan.webp";
 import { CCNA_LEGACY_QUESTIONS } from "./ccnaLegacyQuestions";
-import { applyNativeExhibit, CCNA_RECREATED_TEXT_EXHIBITS } from "./ccnaCompositeSetQuestions";
+import {
+  applyNativeExhibit,
+  CCNA_RECREATED_TEXT_EXHIBITS,
+  isConfirmedMatchQuestion,
+  shouldUseDragDropInteraction,
+} from "./ccnaCompositeSetQuestions";
 import { findCcnaQuestionExplanation } from "../../../../../utils/ccnaQuestionExplanations";
 import { isValidQuestion } from "../../../../../utils/ccnaExamGrading";
 import { splitPromptExhibit } from "../../../../../utils/splitPromptExhibit";
@@ -1181,17 +1186,20 @@ const OFFLINE_LEGACY_QUESTION_CANDIDATES = CCNA_LEGACY_QUESTIONS
           }
         : {}),
       ...(question.type === "match" &&
+      !isConfirmedMatchQuestion(question) &&
       question.items?.length === question.choices?.length &&
       question.answer?.length === question.items.length &&
       new Set(question.answer).size === question.answer.length
         ? {
             type: isConnectDotsQuestion
               ? "match"
-              : /\bdrag\b/i.test(question.prompt)
+              : shouldUseDragDropInteraction(question)
                 ? "drag_drop"
                 : "click_boxes",
           }
         : {}),
+      ...(promptNativeExhibit.type === "drag_drop" ? { type: "drag_drop" } : {}),
+      ...(promptNativeExhibit.dragDropMode ? { dragDropMode: promptNativeExhibit.dragDropMode } : {}),
       id: question.legacyIndex,
       bankId: question.legacyIndex,
       offlineLegacy: true,

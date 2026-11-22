@@ -3,22 +3,47 @@ import test from "node:test";
 import {
 	applyNativeExhibit,
 	CCNA_RECREATED_TEXT_EXHIBITS,
+	isConfirmedMatchQuestion,
+	shouldUseDragDropInteraction,
 } from "./ccnaCompositeSetQuestions.js";
 import { CCNA_RECREATED_CANDIDATE_EXHIBITS } from "./ccnaRecreatedCandidateExhibits.js";
 import { CCNA_LEGACY_QUESTIONS } from "./ccnaLegacyQuestions.js";
 
-test("applies the Question 299 IP-address matching override", () => {
+test("applies the Question 299 IP-address drag-and-drop override", () => {
 	const question = applyNativeExhibit({
 		bankId: 299,
 		prompt: "Refer to the exhibit. Match the interface to its IP address.",
 	});
 
-	assert.equal(question.type, "match");
+	assert.equal(question.type, "drag_drop");
 	assert.deepEqual(question.items, ["DC-1 Gi1/0", "DC-1 Gi1/1", "DC-1 Gi1/2", "HQ-1 Gi1/3"]);
 	assert.deepEqual(question.answer, [2, 5, 4, 6]);
 	assert.equal(question.choices.length, 7);
 	assert.equal(question.hideExhibitImage, true);
 	assert.equal(question.prompt, "Match the interface to its IP address.");
+});
+
+test("uses drag-and-drop interaction for explicit drag prompts across the legacy bank", () => {
+	const explicitDragPrompts = CCNA_LEGACY_QUESTIONS.filter(({ prompt }) => /\bdrag\b/i.test(prompt));
+	const dragDropQuestions = explicitDragPrompts.filter(shouldUseDragDropInteraction);
+	const confirmedMatches = explicitDragPrompts.filter(isConfirmedMatchQuestion);
+
+	assert.equal(explicitDragPrompts.length, 132);
+	assert.equal(dragDropQuestions.length, 130);
+	assert.deepEqual(confirmedMatches.map(({ legacyIndex }) => legacyIndex).sort((a, b) => a - b), [268, 282]);
+
+	for (const sourceQuestion of dragDropQuestions) {
+		const question = applyNativeExhibit(sourceQuestion);
+		assert.equal(question.type, "drag_drop", `legacy question ${sourceQuestion.legacyIndex}`);
+		if (sourceQuestion.choices.length < sourceQuestion.items.length ||
+			new Set(sourceQuestion.answer).size < sourceQuestion.answer.length) {
+			assert.equal(question.dragDropMode, "items-to-choices", `legacy question ${sourceQuestion.legacyIndex}`);
+		}
+	}
+
+	for (const sourceQuestion of confirmedMatches) {
+		assert.equal(applyNativeExhibit(sourceQuestion).type, "match");
+	}
 });
 
 test("uses source-matching WLC security values for Question 1012", () => {
@@ -370,7 +395,7 @@ test("redraws Question 403 as a route-focused topology and hides the source imag
 	assert.match(question.exhibit, /10\.0\.0\.2 20/);
 });
 
-test("keeps Questions 516 and 517 as distinct matching activities without the shared route diagram", () => {
+test("keeps Questions 516 and 517 as distinct drag-and-drop activities without the shared route diagram", () => {
 	const question516 = applyNativeExhibit({
 		bankId: 516,
 		type: "match",
@@ -390,8 +415,9 @@ test("keeps Questions 516 and 517 as distinct matching activities without the sh
 
 	assert.equal(question516.exhibitDiagram, undefined);
 	assert.equal(question517.exhibitDiagram, undefined);
-	assert.equal(question516.type, "match");
-	assert.equal(question517.type, "match");
+	assert.equal(question516.type, "drag_drop");
+	assert.equal(question517.type, "drag_drop");
+	assert.equal(question516.dragDropMode, "items-to-choices");
 	assert.notEqual(question516.prompt, question517.prompt);
 	assert.deepEqual(question516.items, ["records user commands", "logs session statistics"]);
 	assert.deepEqual(question517.items, ["used to reliably share files between devices"]);
@@ -472,8 +498,16 @@ test("reconstructs candidate exhibits from the local source records", () => {
 	assert.match(illustrativeQuestion.exhibit, /original content is unavailable/i);
 });
 
+test("does not add an unsupported topology to the Router 2 route question", () => {
+	const question = applyNativeExhibit({ bankId: 832 });
+
+	assert.equal(CCNA_RECREATED_CANDIDATE_EXHIBITS.has(832), true);
+	assert.equal(question.exhibitDiagram, undefined);
+	assert.equal(question.hideExhibitImage, true);
+});
+
 test("adds partial exhibits for live rows missing both image and inline exhibit data", () => {
-	for (const bankId of [29, 66, 82, 159, 169, 198, 557, 703, 832, 924]) {
+	for (const bankId of [29, 66, 82, 159, 169, 198, 557, 703, 924]) {
 		const question = applyNativeExhibit({ bankId, prompt: "Refer to the exhibit." });
 		assert.equal(question.hideExhibitImage, true);
 		assert.ok(question.exhibitDiagram || question.exhibit);
