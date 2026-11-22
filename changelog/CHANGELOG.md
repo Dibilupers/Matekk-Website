@@ -6,6 +6,19 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `3888ec1` - Reverted the overbroad drag-and-drop normalization changelog.
+- `e498434` - Reverted the overbroad conversion of prompts containing drag
+  instructions. Numbered and instruction-only matching questions remain unchanged.
+- `a30e235` - Preserved the image-based DC-1/HQ-1 Question 299 as drag-and-drop
+  across live and offline banks.
+
+Validation before push: 189 focused CCNA tests, targeted ESLint,
+`npm run build`, and `git diff --check` passed.
+
+## 2026-11-22 - main
+
+Commits included in this push:
+
 - `27dbd44` - Fixed legacy 617's drag-and-drop interaction, removed duplicated
   text from five mapped exhibits, and changed the SW11 VLAN exhibit canvas to
   white.
