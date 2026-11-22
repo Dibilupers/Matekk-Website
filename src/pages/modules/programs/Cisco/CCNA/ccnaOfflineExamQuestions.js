@@ -1193,7 +1193,6 @@ const OFFLINE_LEGACY_QUESTION_CANDIDATES = CCNA_LEGACY_QUESTIONS
           }
         : {}),
       ...(promptNativeExhibit.type === "drag_drop" ? { type: "drag_drop" } : {}),
-      ...(promptNativeExhibit.dragDropMode ? { dragDropMode: promptNativeExhibit.dragDropMode } : {}),
       ...(promptNativeExhibit.type === "drag_drop" ? { type: "drag_drop" } : {}),
       id: question.legacyIndex,
       bankId: question.legacyIndex,
