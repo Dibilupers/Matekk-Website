@@ -6,18 +6,6 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
-- `0e0f8f9` - Normalized explicit drag-and-drop prompts across live, built-in,
-  and offline CCNA banks. Preserved the 268 and 282 matching exceptions,
-  removed the incorrect drag borrowing from timed exams, and added
-  many-to-one drag-and-drop support.
-
-Validation before push: 192 focused CCNA tests, targeted ESLint,
-`npm run build`, and `git diff --check` passed.
-
-## 2026-11-22 - main
-
-Commits included in this push:
-
 - `27dbd44` - Fixed legacy 617's drag-and-drop interaction, removed duplicated
   text from five mapped exhibits, and changed the SW11 VLAN exhibit canvas to
   white.
