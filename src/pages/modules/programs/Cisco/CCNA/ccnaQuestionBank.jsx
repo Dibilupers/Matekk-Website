@@ -129,6 +129,7 @@ function createExamQuestions(sourceQuestions, count, { jumbleMatchingAnswers = f
   const imagePerBlock = 1;
   const blockSize = 50;
   const blockCount = Math.ceil(count / blockSize);
+  const requiredMatchingCount = blockCount * matchingPerBlock;
   const uniqueSource = getUniqueQuestions(sourceQuestions);
   const sourceMatching = uniqueSource.filter((question) => question.type === "match");
   const sourceDragDrop = uniqueSource.filter((question) => question.type === "drag_drop");
@@ -145,76 +146,59 @@ function createExamQuestions(sourceQuestions, count, { jumbleMatchingAnswers = f
     !["match", "drag_drop", "click_boxes", "image"].includes(question.type),
   );
   const matchingPool = getUniqueQuestions([...sourceMatching, ...builtInMatching]);
-  const matchingQuota = Math.min(matchingPerBlock, Math.floor(matchingPool.length / blockCount));
-  const requiredMatchingCount = blockCount * matchingQuota;
   const dragDropPool = getUniqueQuestions([...sourceDragDrop, ...builtInDragDrop]);
   const clickBoxesPool = getUniqueQuestions([...sourceClickBoxes, ...builtInClickBoxes]);
   const imagePool = getUniqueQuestions([...sourceImages, ...builtInImages]);
   const otherPool = getUniqueQuestions([...sourceOther, ...builtInOther]);
   const matchingQuestions = shuffle(matchingPool).slice(0, requiredMatchingCount);
-  const questionKey = (question) =>
-    question.bankId ?? question.id ?? question.legacyIndex ??
-      (typeof question.prompt === "string" ? question.prompt.trim().toLowerCase() : "");
   const requiredDragDropCount = blockCount * dragDropPerBlock;
   const requiredClickBoxesCount = blockCount * clickBoxesPerBlock;
   const clickBoxesShortage = Math.max(0, requiredClickBoxesCount - clickBoxesPool.length);
   const randomizedDragDropPool = shuffle(dragDropPool);
-  const dragDropQuota = randomizedDragDropPool.length >= requiredDragDropCount ? dragDropPerBlock : 0;
-  const dragDropQuestions = randomizedDragDropPool.slice(0, blockCount * dragDropQuota);
-  const dragDropQuestionKeys = new Set(dragDropQuestions.map(questionKey));
-  const clickBoxesCompatibleDragDrop = randomizedDragDropPool.filter((question) =>
-    Array.isArray(question.items) &&
-    Array.isArray(question.choices) &&
-    Array.isArray(question.answer) &&
-    question.items.length === question.choices.length &&
-    question.answer.length === question.items.length &&
-    new Set(question.answer).size === question.answer.length &&
-    !dragDropQuestionKeys.has(questionKey(question)),
-  );
-  const canBorrowClickBoxes = clickBoxesCompatibleDragDrop.length >= clickBoxesShortage;
+  const canBorrowClickBoxes = randomizedDragDropPool.length >= requiredDragDropCount + clickBoxesShortage;
+  const dragDropQuota = canBorrowClickBoxes && randomizedDragDropPool.length >= requiredDragDropCount
+    ? dragDropPerBlock
+    : 0;
   const borrowedClickBoxes = canBorrowClickBoxes
-    ? clickBoxesCompatibleDragDrop.slice(0, clickBoxesShortage)
+    ? randomizedDragDropPool.slice(requiredDragDropCount, requiredDragDropCount + clickBoxesShortage)
       .map((question) => ({ ...question, type: "click_boxes" }))
     : [];
   const clickBoxesQuota = clickBoxesPool.length + borrowedClickBoxes.length >= requiredClickBoxesCount
     ? clickBoxesPerBlock
     : 0;
   const imageQuota = imagePool.length >= blockCount * imagePerBlock ? imagePerBlock : 0;
+  const borrowedIds = new Set(borrowedClickBoxes.map((question) => question.bankId ?? question.id));
+  const dragDropQuestions = randomizedDragDropPool
+    .filter((question) => !borrowedIds.has(question.bankId ?? question.id))
+    .slice(0, blockCount * dragDropQuota);
   const clickBoxesQuestions = shuffle([...clickBoxesPool, ...borrowedClickBoxes])
     .slice(0, blockCount * clickBoxesQuota);
   const imageQuestions = shuffle(imagePool).slice(0, blockCount * imageQuota);
-  const reservedQuestions = [
-    ...matchingQuestions,
-    ...dragDropQuestions,
-    ...clickBoxesQuestions,
-    ...imageQuestions,
+  const reservedQuestionCount = matchingQuestions.length + dragDropQuestions.length +
+    clickBoxesQuestions.length + imageQuestions.length;
+  const fallbackQuestions = [
+    ...(dragDropQuota ? [] : dragDropPool),
+    ...(clickBoxesQuota ? [] : clickBoxesPool),
+    ...(imageQuota ? [] : imagePool),
   ];
-  const reservedQuestionCount = reservedQuestions.length;
-  const reservedPrompts = new Set(reservedQuestions.map((question) => question.prompt.trim().toLowerCase()));
-  const fallbackQuestions = getUniqueQuestions([
-    ...matchingPool,
-    ...dragDropPool,
-    ...clickBoxesPool,
-    ...imagePool,
-  ]).filter((question) => !reservedPrompts.has(question.prompt.trim().toLowerCase()));
   const otherQuestions = shuffle(getUniqueQuestions([...otherPool, ...fallbackQuestions]))
     .slice(0, count - reservedQuestionCount);
   const questions = [];
 
   for (let blockIndex = 0; blockIndex < blockCount; blockIndex += 1) {
     const blockLength = Math.min(blockSize, count - blockIndex * blockSize);
-    const matchingStart = blockIndex * matchingQuota;
+    const matchingStart = blockIndex * matchingPerBlock;
     const dragDropStart = blockIndex * dragDropQuota;
     const clickBoxesStart = blockIndex * clickBoxesQuota;
     const imageStart = blockIndex * imageQuota;
-    const otherPerBlock = blockSize - matchingQuota - dragDropQuota - clickBoxesQuota - imageQuota;
+    const otherPerBlock = blockSize - matchingPerBlock - dragDropQuota - clickBoxesQuota - imageQuota;
     const otherStart = blockIndex * otherPerBlock;
     const blockQuestions = [
-      ...matchingQuestions.slice(matchingStart, matchingStart + matchingQuota),
+      ...matchingQuestions.slice(matchingStart, matchingStart + matchingPerBlock),
       ...dragDropQuestions.slice(dragDropStart, dragDropStart + dragDropQuota),
       ...clickBoxesQuestions.slice(clickBoxesStart, clickBoxesStart + clickBoxesQuota),
       ...imageQuestions.slice(imageStart, imageStart + imageQuota),
-      ...otherQuestions.slice(otherStart, otherStart + Math.min(otherPerBlock, blockLength - matchingQuota - dragDropQuota - clickBoxesQuota - imageQuota)),
+      ...otherQuestions.slice(otherStart, otherStart + Math.min(otherPerBlock, blockLength - matchingPerBlock - dragDropQuota - clickBoxesQuota - imageQuota)),
     ];
     questions.push(...shuffle(blockQuestions).map((question) =>
       jumbleMatchingAnswers ? shuffleMatchingChoices(question, shuffle) : question,

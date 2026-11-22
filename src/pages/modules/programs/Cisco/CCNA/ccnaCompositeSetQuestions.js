@@ -18,21 +18,6 @@ const siteExhibit = (diagram, text) => ({ diagram, text });
 
 const AAA = ["Accounting", "Authentication", "Authorization"];
 
-const NON_DRAG_DROP_MATCH_PROMPTS = [
-	/access[-\s]?list\s+107/i,
-	/static nat for the webserver/i,
-];
-const EXPLICIT_DRAG_DROP_PROMPT = /\bdrag\s*(?:and\s*drop|&\s*drop|drop|each|the)\b/i;
-
-export function isConfirmedMatchQuestion(question) {
-	return NON_DRAG_DROP_MATCH_PROMPTS.some((pattern) => pattern.test(question?.prompt ?? ""));
-}
-
-export function shouldUseDragDropInteraction(question) {
-	return !isConfirmedMatchQuestion(question) &&
-		EXPLICIT_DRAG_DROP_PROMPT.test(question?.prompt ?? "");
-}
-
 export const CCNA_COMPOSITE_SET_QUESTIONS = [
 	// ---------------- Set A ----------------
 	one("Which statement about the Cisco ACI fabric is most accurate?", [
@@ -881,7 +866,7 @@ const DATABASE_NATIVE_EXHIBITS = new Map([
 	[299, {
 		hideExhibitImage: true,
 		removeExhibitLeadIn: true,
-		type: "drag_drop",
+		type: "match",
 		items: ["DC-1 Gi1/0", "DC-1 Gi1/1", "DC-1 Gi1/2", "HQ-1 Gi1/3"],
 		choices: [
 			"ip address 192.168.4.13 255.255.255.240",
@@ -2885,7 +2870,6 @@ const DUPLICATE_TERMINAL_SOURCE_IMAGE_LEGACY_INDEXES = new Set([
 ]);
 
 export function applyNativeExhibit(question) {
-	const useDragDrop = shouldUseDragDropInteraction(question);
 	const builtInQuestion = getBuiltInQuestionByPrompt(question?.prompt);
 	const parsedPrompt = !question?.exhibit && typeof question?.prompt === "string"
 		? splitPromptExhibit(question.prompt)
@@ -2916,18 +2900,7 @@ export function applyNativeExhibit(question) {
 	const hasQuestionOverride = ["type", "items", "choices", "answer"].some((key) =>
 		Object.prototype.hasOwnProperty.call(questionOverride, key),
 	);
-	const dragDropItems = questionOverride.items ?? question?.items;
-	const dragDropChoices = questionOverride.choices ?? question?.choices;
-	const dragDropAnswer = questionOverride.answer ?? question?.answer;
-	const dragDropMode = useDragDrop &&
-		Array.isArray(dragDropItems) &&
-		Array.isArray(dragDropChoices) &&
-		(dragDropChoices.length < dragDropItems.length ||
-			(Array.isArray(dragDropAnswer) && new Set(dragDropAnswer).size < dragDropAnswer.length))
-		? "items-to-choices"
-		: undefined;
-	if (!exhibitDiagram && !exhibitImage && !hasNativeTextExhibit && !hideExhibitImage && !hideAfterExhibit &&
-		!removeExhibitLeadIn && !hasQuestionOverride && !useDragDrop) return question;
+	if (!exhibitDiagram && !exhibitImage && !hasNativeTextExhibit && !hideExhibitImage && !hideAfterExhibit && !removeExhibitLeadIn && !hasQuestionOverride) return question;
 	const prompt = typeof databaseExhibit?.prompt === "string"
 		? databaseExhibit.prompt
 		: typeof parsedPrompt?.exhibit === "string"
@@ -2939,11 +2912,9 @@ export function applyNativeExhibit(question) {
 	return {
 		...question,
 		...(Object.prototype.hasOwnProperty.call(questionOverride, "type") ? { type: questionOverride.type } : {}),
-		...(useDragDrop ? { type: "drag_drop" } : {}),
 		...(Object.prototype.hasOwnProperty.call(questionOverride, "items") ? { items: questionOverride.items } : {}),
 		...(Object.prototype.hasOwnProperty.call(questionOverride, "choices") ? { choices: questionOverride.choices } : {}),
 		...(Object.prototype.hasOwnProperty.call(questionOverride, "answer") ? { answer: questionOverride.answer } : {}),
-		...(dragDropMode ? { dragDropMode } : {}),
 		...(Array.isArray(databaseExhibit?.offlineSourceExhibitImages)
 			? { offlineSourceExhibitImages: databaseExhibit.offlineSourceExhibitImages }
 			: {}),
