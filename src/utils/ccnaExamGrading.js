@@ -54,18 +54,6 @@ export function isQuestionAnswered(question, value) {
 	if (type === "text") return typeof value === "string" && value.trim().length > 0;
 	if (type === "multi") return Array.isArray(question?.answer) && Array.isArray(value) && value.length === question.answer.length;
 	if (isMatchingQuestion(question)) {
-		if (question.dragDropMode === "items-to-choices") {
-			return Array.isArray(question.items) &&
-				Array.isArray(question.choices) &&
-				question.choices.length > 0 &&
-				Array.isArray(value) &&
-				value.length === question.items.length &&
-				value.every((choiceIndex) =>
-					choiceIndex == null ||
-					(Number.isInteger(choiceIndex) && choiceIndex >= 0 && choiceIndex < question.choices.length),
-				) &&
-				question.choices.every((_, choiceIndex) => value.includes(choiceIndex));
-		}
 		return Array.isArray(question?.items) &&
 			Array.isArray(question?.choices) &&
 			Array.isArray(value) &&

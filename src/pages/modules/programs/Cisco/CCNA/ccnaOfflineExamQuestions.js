@@ -33,6 +33,7 @@ import { shuffleMatchingChoices } from "./ccnaMatchingChoices";
 import routerLans405SourceExhibit from "../../../../../assets/ccna-offline-exams-images/ccna-question-405.png";
 
 const CONNECT_DOTS_LEGACY_QUESTION_INDEX = 654;
+const UNUSED_OPTIONS_PROMPT = /\bnot all (?:the )?(?:options|values|commands|answers) are used\b/i;
 const OFFLINE_REFER_EXHIBIT_QUESTION_IDS = new Set(
   CCNA_LEGACY_QUESTIONS
     .filter((question) => /\bexhibit\b/i.test(question.prompt))
@@ -1183,7 +1184,8 @@ const OFFLINE_LEGACY_QUESTION_CANDIDATES = CCNA_LEGACY_QUESTIONS
       ...(question.type === "match" &&
       question.items?.length === question.choices?.length &&
       question.answer?.length === question.items.length &&
-      new Set(question.answer).size === question.answer.length
+      new Set(question.answer).size === question.answer.length &&
+      !UNUSED_OPTIONS_PROMPT.test(question.prompt)
         ? {
             type: isConnectDotsQuestion
               ? "match"

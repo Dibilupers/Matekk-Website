@@ -31,11 +31,11 @@ export function DragDropQuestionInput({ question, value, onChange, disabled }) {
 		return (
 			<div className="space-y-4">
 				<p className="text-sm text-[#70809a]">
-					Place at least one item in every category. You can leave other items unassigned.
+					Drag each command onto the router where it belongs. Multiple commands may go to the same router; unused commands stay unassigned.
 				</p>
 				<div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
-					<section aria-label="Draggable items" className="ccna-drag-drop-source-panel space-y-2 rounded-2xl border border-[#d9e1ef] bg-[#f7f9fc] p-3">
-						<h3 className="text-xs font-bold uppercase tracking-wide text-[#64748b]">Items</h3>
+					<section aria-label="Draggable commands" className="ccna-drag-drop-source-panel space-y-2 rounded-2xl border border-[#d9e1ef] bg-[#f7f9fc] p-3">
+						<h3 className="text-xs font-bold uppercase tracking-wide text-[#64748b]">Commands</h3>
 						{question.items.map((item, itemIndex) => (
 							<button
 								key={itemIndex}
@@ -62,8 +62,8 @@ export function DragDropQuestionInput({ question, value, onChange, disabled }) {
 							</button>
 						))}
 					</section>
-					<section aria-label="Category drop targets" className="space-y-2">
-						<h3 className="text-xs font-bold uppercase tracking-wide text-[#64748b]">Categories</h3>
+					<section aria-label="Router drop targets" className="space-y-2">
+						<h3 className="text-xs font-bold uppercase tracking-wide text-[#64748b]">Routers</h3>
 						{question.choices.map((choice, choiceIndex) => {
 							const assignedItems = assignments.flatMap((target, itemIndex) =>
 								target === choiceIndex ? [itemIndex] : [],
@@ -89,7 +89,7 @@ export function DragDropQuestionInput({ question, value, onChange, disabled }) {
 									}}
 									role="button"
 									tabIndex={disabled ? -1 : 0}
-									aria-label={`Drop items for ${choice}`}
+									aria-label={`Drop commands for ${choice}`}
 									className={`min-h-20 rounded-xl border p-3 text-left transition ${
 										activeChoice !== null && !disabled
 											? "cursor-pointer border-dashed border-[#005b6b] bg-[#f0f7f7]"
@@ -118,7 +118,7 @@ export function DragDropQuestionInput({ question, value, onChange, disabled }) {
 											</div>
 										)) : (
 											<div className="rounded-lg border border-dashed border-[#cbd5e1] px-2 py-2 text-sm text-[#94a3b8]">
-												Drop items here
+												Drop commands here
 											</div>
 										)}
 									</div>

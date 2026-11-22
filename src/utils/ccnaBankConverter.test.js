@@ -22,9 +22,6 @@ let QuestionExhibits;
 let getOfflineReferExhibitQuestionBank;
 let ccnaLegacyQuestions;
 let builtInQuestionBank;
-let DragDropQuestionInput;
-let isAnswerCorrect;
-let isQuestionAnswered;
 let createShortExamQuestions;
 let setDatabaseQuestions;
 let originalFetch;
@@ -45,10 +42,9 @@ before(async () => {
   ({ default: ccnaExhibitImageMap } = await vite.ssrLoadModule("/src/assets/ccna-exhibit-image-map.json"));
   ({ loadCachedCcnaAllQuestionsBank } = await vite.ssrLoadModule("/src/utils/ccnaOfflineQuestionBank.js"));
   ({ createOfflineCcnaExamQuestions } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaOfflineTimedExam.js"));
-  ({ isAnswerCorrect, isQuestionAnswered, isValidQuestion } = await vite.ssrLoadModule("/src/utils/ccnaExamGrading.js"));
+  ({ isValidQuestion } = await vite.ssrLoadModule("/src/utils/ccnaExamGrading.js"));
   ({ applyNativeExhibit } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaCompositeSetQuestions.js"));
   ({ CCNA_COMPOSITE_SET_QUESTIONS: compositeSetQuestions } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaCompositeSetQuestions.js"));
-  ({ DragDropQuestionInput } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaExamDragDrop.jsx"));
   ({
     getOfflineLegacyQuestionBank,
     createOfflineLegacyExamQuestions,
@@ -689,7 +685,7 @@ test("replaces recreated matching-activity screenshots with their existing inter
   assert.deepEqual(builtInQuestion617.choices, offlineQuestion299.choices);
   assert.deepEqual(builtInQuestion617.answer, offlineQuestion299.answer);
   const offlineQuestion266 = getOfflineLegacyQuestionBank().find((entry) => entry.legacyIndex === 266);
-  assert.equal(offlineQuestion266.type, "drag_drop");
+  assert.equal(offlineQuestion266.type, "match");
   assert.equal(offlineQuestion266.choices.length, 7);
   assert.equal(offlineQuestion266.matchStyle, "assign");
   assert.equal(
@@ -709,7 +705,7 @@ test("replaces recreated matching-activity screenshots with their existing inter
   assert.match(offlinePatQuestion.afterExhibit.text, /ip nat inside source list 1 interface Gi0\/1 overload/);
 });
 
-test("keeps unused-option legacy drag-and-drop questions consistent across built-in and offline banks", () => {
+test("keeps unused-option legacy questions in their original matching type", () => {
   const unusedOptionsPrompt = /\bnot all (?:the )?(?:options|values|commands|answers) are used\b/i;
   const candidates = ccnaLegacyQuestions.filter((question) =>
     question.type === "match" && unusedOptionsPrompt.test(question.prompt),
@@ -718,12 +714,10 @@ test("keeps unused-option legacy drag-and-drop questions consistent across built
 
   assert.equal(candidates.length, 13);
   for (const sourceQuestion of candidates) {
-    const expectedManyToOne = sourceQuestion.choices.length < sourceQuestion.items.length ||
-      new Set(sourceQuestion.answer).size < sourceQuestion.answer.length;
     for (const [bankName, bank] of [["built-in", builtInQuestionBank], ["offline", offlineQuestions]]) {
       const question = bank.find((entry) => entry.legacyIndex === sourceQuestion.legacyIndex);
       assert.ok(question, `legacy question ${sourceQuestion.legacyIndex} should be available`);
-      assert.equal(question.type, "drag_drop", `legacy question ${sourceQuestion.legacyIndex}`);
+      assert.equal(question.type, "match", `legacy question ${sourceQuestion.legacyIndex}`);
       assert.equal(question.answer.length, question.items.length, `legacy question ${sourceQuestion.legacyIndex} should map every item`);
       const unusedChoices = question.choices.filter((_, index) => !question.answer.includes(index));
       if (unusedChoices.length) {
@@ -732,27 +726,12 @@ test("keeps unused-option legacy drag-and-drop questions consistent across built
         assert.deepEqual(unusedChoices, ["next-hop interface", "subnet mask"]);
       }
       assert.match(question.prompt, unusedOptionsPrompt, `legacy question ${sourceQuestion.legacyIndex} should preserve its source wording`);
+      assert.equal(question.dragDropMode, undefined, `legacy question ${sourceQuestion.legacyIndex} should not use drag-and-drop mode`);
       assert.deepEqual(question.items, sourceQuestion.items);
       for (const choice of sourceQuestion.choices) {
         assert.ok(question.choices.includes(choice), `legacy question ${sourceQuestion.legacyIndex} should retain ${choice}`);
       }
       assert.deepEqual(question.answer, sourceQuestion.answer);
-      assert.equal(
-        question.dragDropMode,
-        expectedManyToOne ? "items-to-choices" : undefined,
-        `legacy question ${sourceQuestion.legacyIndex}`,
-      );
-      if (question.dragDropMode === "items-to-choices") {
-        const onePerCategory = question.items.map(() => null);
-        question.choices.forEach((_, choiceIndex) => {
-          onePerCategory[question.answer.findIndex((answer) => answer === choiceIndex)] = choiceIndex;
-        });
-        assert.equal(
-          isQuestionAnswered(question, onePerCategory),
-          true,
-          `legacy question ${sourceQuestion.legacyIndex} should allow advancing once every category has an item`,
-        );
-      }
     }
   }
 });
@@ -992,43 +971,6 @@ test("jumbles offline matching choices without changing their correct answers", 
     setDatabaseQuestions([]);
     Math.random = originalRandom;
   }
-});
-
-test("allows advancing after each wireless category is answered", () => {
-  const question = builtInQuestionBank.find((entry) => entry.legacyIndex === 583);
-  assert.ok(question);
-  assert.deepEqual(question.items, [
-    "requires a management IP address",
-    "accessible for management via Telnet, SSH, or a web GUI",
-    "managed from a web-based dashboard",
-    "supports automatic deployment",
-  ]);
-  assert.deepEqual(question.choices, ["Autonomous Access Point", "Cloud-Based Access Point"]);
-  assert.deepEqual(question.answer, [0, 0, 1, 1]);
-  assert.deepEqual(
-    question.items.map((_, index) => question.choices[question.answer[index]]),
-    [
-      "Autonomous Access Point",
-      "Autonomous Access Point",
-      "Cloud-Based Access Point",
-      "Cloud-Based Access Point",
-    ],
-  );
-  assert.equal(isQuestionAnswered(question, [0, 1, null, null]), true);
-  assert.equal(isQuestionAnswered(question, [0, 0, null, null]), false);
-  assert.equal(isAnswerCorrect(question, [0, 1, null, null]), false);
-  assert.equal(isQuestionAnswered(question, question.answer), true);
-
-  const markup = renderToStaticMarkup(React.createElement(DragDropQuestionInput, {
-    question,
-    value: [0, 0, null, null],
-    onChange: () => {},
-  }));
-  assert.match(markup, /at least one item in every category/);
-  assert.match(markup, /leave other items unassigned/);
-  assert.match(markup, />Items</);
-  assert.match(markup, />Categories</);
-  assert.doesNotMatch(markup, /commands|routers/i);
 });
 
 test("shuffles the legacy offline SNMP matches without changing their correct answers", () => {
@@ -2359,7 +2301,7 @@ test("keeps self-contained legacy item 702 in the all-questions bank without a f
   assert.equal(question.answer, source.answer);
 });
 
-test("rebuilds legacy drag-and-drop item 799 without changing its matching answer", () => {
+test("rebuilds legacy matching item 799 without changing its answer", () => {
   const source = ccnaLegacyQuestions.find((entry) => entry.legacyIndex === 799);
   const question = builtInQuestionBank.find((entry) => entry.legacyIndex === 799);
   const markup = renderToStaticMarkup(
@@ -2367,7 +2309,7 @@ test("rebuilds legacy drag-and-drop item 799 without changing its matching answe
   );
 
   assert.ok(question);
-  assert.equal(question.type, "drag_drop");
+  assert.equal(question.type, "match");
   assert.deepEqual(question.items, source.items);
   assert.deepEqual(question.choices, source.choices);
   assert.deepEqual(question.answer, source.answer);
