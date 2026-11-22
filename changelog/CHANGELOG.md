@@ -6,6 +6,20 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `3d93d79` - Initially changed repeated-answer dropdowns to drag-and-drop.
+- `b39487c` - Reverted that interaction change; repeated-answer questions use
+  the existing numbered input mode.
+- `2ddc245` - Expanded legacy 39's two-switch configuration exhibit to fill its
+  display box.
+- `6b65e71` - Removed a redundant offline interaction override.
+
+Validation before push: 190 focused CCNA tests, targeted ESLint,
+`npm run build`, and `git diff --check` passed.
+
+## 2026-11-22 - main
+
+Commits included in this push:
+
 - `d98e525` - Fixed the DC-1/HQ-1 Question 299 live and offline drag-and-drop
   rendering and bumped the offline CCNA bank cache so stale dropdown data is
   refreshed.
