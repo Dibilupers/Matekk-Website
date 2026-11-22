@@ -23,11 +23,7 @@ export function loadCcnaQuestionBank() {
       const ccnaRows = rows
         .filter((row) => isCcnaQuestionModule(row.module))
         .map((row) => {
-          if (
-            row.imageUrl ||
-            row.afterExhibitImageUrl ||
-            !/\bexhibit\b/i.test(row.question_text ?? "")
-          ) {
+          if (row.afterExhibitImageUrl || !/\bexhibit\b/i.test(row.question_text ?? "")) {
             return row;
           }
           const imageUrl = getCcnaExhibitImageByBankId(row.id);
@@ -63,8 +59,6 @@ export function loadCcnaAllQuestionsBank() {
           .filter(isValidQuestion)
           .map((question) => {
             if (
-              question.imageUrl ||
-              question.exhibitImage ||
               question.afterExhibit ||
               question.hideExhibitImage ||
               !/\bexhibit\b/i.test(question.prompt ?? "")

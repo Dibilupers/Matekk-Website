@@ -766,6 +766,9 @@ test("restores omitted matching rows and mapped exhibit images in the merged CCN
       module: "CCNA Part 9",
       topic: "Routing",
     }));
+  const mappedQuestion = usableQuestions.find((question) => question.bankId === 192);
+  mappedQuestion.prompt = "Refer to the exhibit. Which switch configuration is correct?";
+  mappedQuestion.exhibitImage = "https://broken.example.com/ccna-exhibit-509.png";
   const signedAfterExhibitUrl = "https://example.com/storage/ccna-after-exhibit-23.png?token=short-lived";
   usableQuestions[22].afterExhibit = {
     questionId: 23,
@@ -780,7 +783,10 @@ test("restores omitted matching rows and mapped exhibit images in the merged CCN
     rawRow(608, "Drag and drop characteristics of northbound APIs to the right."),
     rawRow(1306, "Drag and drop each broadcast IP address on the left to the Broadcast Address column on the right."),
   ].map((row) => ({ ...row, choices: null, correct_answer: null }));
-  omittedRows.push(rawRow(1081, "Refer to the exhibit. Which interface is configured for this task?"));
+  omittedRows.push({
+    ...rawRow(1081, "Refer to the exhibit. Which interface is configured for this task?"),
+    imageUrl: "https://broken.example.com/ccna-exhibit-44.png",
+  });
 
   globalThis.fetch = async (url) => {
     const payload = String(url).endsWith("/all-usable")
@@ -808,10 +814,13 @@ test("restores omitted matching rows and mapped exhibit images in the merged CCN
     result.questions.find((question) => question.bankId === 23).afterExhibit.imageUrl,
     signedAfterExhibitUrl,
   );
+  const mappedQuestionImage = getCcnaExhibitImageByBankId(192);
+  assert.equal(result.questions.find((question) => question.bankId === 192).exhibitImage, mappedQuestionImage);
   assert.match(
     cachedQuestions.find((question) => question.bankId === 23).afterExhibit.imageUrl,
     /ccna-after-exhibit-23\.png$/,
   );
+  assert.equal(cachedQuestions.find((question) => question.bankId === 192).exhibitImage, mappedQuestionImage);
   assert.deepEqual(
     cachedQuestions.map((question) => question.bankId),
     result.questions.map((question) => question.bankId),
