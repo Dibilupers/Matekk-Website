@@ -6,6 +6,18 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `5568021` - Completed the CCNA CLI terminal-exhibit audit across the
+  All Questions and offline paths, corrected legacy 909/816/1159 handling,
+  redrew legacy 50/59, and preserved answer data.
+
+Validation before push: 187 focused CCNA tests, targeted ESLint,
+`git diff --check`, and the production build passed. The build emitted
+non-fatal chunk warnings.
+
+## 2026-11-22 - main
+
+Commits included in this push:
+
 - `6bd8d62` - Completed the CCNA exhibit corrections, including matching
   exhibits and offline bank rendering/grading fixes.
 
