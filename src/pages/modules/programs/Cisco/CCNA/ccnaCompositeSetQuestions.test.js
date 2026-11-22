@@ -48,6 +48,9 @@ test("converts legacy matches that say some options or values are unused to drag
 	for (const sourceQuestion of candidates) {
 		const question = applyNativeExhibit(sourceQuestion);
 		assert.equal(question.type, "drag_drop", `legacy question ${sourceQuestion.legacyIndex}`);
+		assert.equal(question.answer.length, question.items.length, `legacy question ${sourceQuestion.legacyIndex} must map every item`);
+		assert.equal(new Set(question.answer).size, question.choices.length, `legacy question ${sourceQuestion.legacyIndex} must use every category`);
+		assert.match(question.prompt, unusedOptionsPrompt, `legacy question ${sourceQuestion.legacyIndex} must preserve its source wording`);
 		assert.deepEqual(question.items, sourceQuestion.items);
 		assert.deepEqual(question.choices, sourceQuestion.choices);
 		assert.deepEqual(question.answer, sourceQuestion.answer);
