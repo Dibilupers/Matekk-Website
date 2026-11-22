@@ -6,6 +6,17 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `680ce50` - Let grouped drag-and-drop questions advance once each category
+  has an assignment, while retaining original unused-option wording and
+  grading incomplete mappings as incorrect.
+
+Validation before push: 193 focused CCNA tests, targeted ESLint,
+`npm run build`, and `git diff --check` passed.
+
+## 2026-11-22 - main
+
+Commits included in this push:
+
 - `83e191c` - Prefer bundled exhibit images over stale database URLs for mapped
   CCNA exhibit questions and bump the offline question-bank cache to v5.
 
