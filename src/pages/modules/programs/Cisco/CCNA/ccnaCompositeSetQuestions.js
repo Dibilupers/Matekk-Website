@@ -2,6 +2,7 @@
 // Network topologies and WLC settings panels are rendered natively; mixed CLI exhibits stay as pictures.
 // Answer keys were worked out from the question content (not supplied in the source).
 import { CCNA_RECREATED_CANDIDATE_EXHIBITS } from "./ccnaRecreatedCandidateExhibits.js";
+import { splitPromptExhibit } from "../../../../../utils/splitPromptExhibit.js";
 
 const ex = (exhibit) => (exhibit && typeof exhibit === "object"
 	? {
@@ -1217,7 +1218,6 @@ SW4 · priority 12288 · MAC 0C:00:18:A1:B3:19`,
 	}],
 	[864, "ospf-seven-router-bandwidth"],
 	[895, "r1-r2-link-local-lans"],
-	[909, "router-on-a-stick-vlan2-vlan3"],
 	[934, "four-router-subnet-growth"],
 	[996, "ospf-multipath-reference-bandwidth"],
 	[1011, {
@@ -1940,6 +1940,16 @@ D 192.168.0.0/24 [90/201728] via 172.16.0.2, 00:00:04, FastEthernet0/0`,
 ]);
 
 const LEGACY_NATIVE_EXHIBITS = new Map([
+	[50, {
+		diagram: "router-on-a-stick-vlan20",
+		hideExhibitImage: true,
+		exhibitQuality: "source-backed",
+	}],
+	[59, {
+		diagram: "vtp-transparent-frame-flow",
+		hideExhibitImage: true,
+		exhibitQuality: "source-backed",
+	}],
 	[405, { diagram: "router-internet-two-lans-four-pcs", hideExhibitImage: true }],
 	[452, {
 		exhibit: `R3#show ip ospf neighbor
@@ -2354,14 +2364,18 @@ LAN prefix: 2001:DB8:D955:1008::/64`,
 		exhibitQuality: "partial",
 	}],
 	[1159, {
-		prompt: "A network engineer started to change default settings on SW1 to allow remote access and has entered the following in the configuration mode:\n\nSW1#(config)#line vty 0 15\nSW1#(config-line)#password Labtest32!\n\nWhich set of commands are needed to allow only SSH access and hide passwords in the running configuration?",
+		prompt: "A network engineer started to change default settings on SW1 to allow remote access and has entered the following in the configuration mode:\n\nWhich set of commands are needed to allow only SSH access and hide passwords in the running configuration?",
 		exhibit: `SW1#conf t
 Enter configuration commands, one per line. End with CNTL/Z.
 SW1(config)#enable password test!2E
 SW1(config)#line con 0
 SW1(config-line)#password Labtest32!
 SH1(config-line)#exit
-SW1(config)#`,
+SW1(config)#
+
+ SW1#(config)#line vty 0 15
+ SW1#(config-line)#password
+ Labtest32!`,
 		hideExhibitImage: true,
 		removeExhibitLeadIn: true,
 		exhibitQuality: "source-backed",
@@ -2850,8 +2864,16 @@ NetBIOS over Tcpip. . . . . : Enabled`,
 	return null;
 }
 
+const DUPLICATE_TERMINAL_SOURCE_IMAGE_LEGACY_INDEXES = new Set([
+	41, 43, 46, 100, 103, 123, 126, 161, 163, 167, 189, 385, 499, 506, 523,
+	655, 701, 712, 729, 782, 798, 808, 816, 860, 909, 991, 1116, 1313,
+]);
+
 export function applyNativeExhibit(question) {
 	const builtInQuestion = getBuiltInQuestionByPrompt(question?.prompt);
+	const parsedPrompt = !question?.exhibit && typeof question?.prompt === "string"
+		? splitPromptExhibit(question.prompt)
+		: null;
 	const databaseExhibit = CCNA_RECREATED_CANDIDATE_EXHIBITS.get(question?.bankId) ??
 		LEGACY_NATIVE_EXHIBITS.get(question?.legacyIndex) ??
 		DATABASE_NATIVE_EXHIBITS.get(question?.bankId);
@@ -2859,18 +2881,33 @@ export function applyNativeExhibit(question) {
 	const exhibitDiagram = (typeof databaseExhibit === "string" ? databaseExhibit : databaseExhibit?.diagram) ??
 		builtInQuestion?.exhibitDiagram;
 	const exhibitImage = typeof databaseExhibit === "object" ? databaseExhibit.image : undefined;
-	const exhibit = typeof databaseExhibit === "object" ? databaseExhibit.exhibit : undefined;
+	const exhibit = (typeof databaseExhibit === "object" ? databaseExhibit.exhibit : undefined) ??
+		parsedPrompt?.exhibit;
 	const hasNativeTextExhibit = typeof exhibit === "string";
+	const hasTerminalTextExhibit = hasNativeTextExhibit || typeof question?.exhibit === "string";
+	const sourceImageIndex = Number(/ccna-exhibit-(\d+)\.png(?:[?#].*)?$/i.exec(
+		String(question?.exhibitImage ?? question?.imageUrl ?? ""),
+	)?.[1]);
 	const hideExhibitImage = databaseExhibit?.hideExhibitImage === true ||
-		builtInQuestion?.hideExhibitImage === true;
+		builtInQuestion?.hideExhibitImage === true ||
+		(hasTerminalTextExhibit && DUPLICATE_TERMINAL_SOURCE_IMAGE_LEGACY_INDEXES.has(Number(question?.legacyIndex))) ||
+		(hasTerminalTextExhibit && DUPLICATE_TERMINAL_SOURCE_IMAGE_LEGACY_INDEXES.has(sourceImageIndex));
 	const hideAfterExhibit = databaseExhibit?.hideAfterExhibit === true ||
 		builtInQuestion?.hideAfterExhibit === true;
 	const removeExhibitLeadIn = databaseExhibit?.removeExhibitLeadIn === true ||
-		builtInQuestion?.removeExhibitLeadIn === true;
+		builtInQuestion?.removeExhibitLeadIn === true ||
+		typeof parsedPrompt?.exhibit === "string";
 	const hasQuestionOverride = ["type", "items", "choices", "answer"].some((key) =>
 		Object.prototype.hasOwnProperty.call(questionOverride, key),
 	);
 	if (!exhibitDiagram && !exhibitImage && !hasNativeTextExhibit && !hideExhibitImage && !hideAfterExhibit && !removeExhibitLeadIn && !hasQuestionOverride) return question;
+	const prompt = typeof databaseExhibit?.prompt === "string"
+		? databaseExhibit.prompt
+		: typeof parsedPrompt?.exhibit === "string"
+			? parsedPrompt.prompt.replace(/^\s*Refer to (?:the )?exhibit\.?\s*/i, "")
+			: removeExhibitLeadIn && typeof question?.prompt === "string"
+				? question.prompt.replace(/^\s*Refer to (?:the )?exhibit\.?\s*/i, "")
+				: undefined;
 
 	return {
 		...question,
@@ -2881,15 +2918,10 @@ export function applyNativeExhibit(question) {
 		...(Array.isArray(databaseExhibit?.offlineSourceExhibitImages)
 			? { offlineSourceExhibitImages: databaseExhibit.offlineSourceExhibitImages }
 			: {}),
-		...(typeof databaseExhibit?.prompt === "string" ? { prompt: databaseExhibit.prompt } : {}),
-		...(removeExhibitLeadIn && typeof question.prompt === "string"
-			? {
-				prompt: typeof databaseExhibit?.prompt === "string"
-					? databaseExhibit.prompt
-					: question.prompt.replace(/^\s*Refer to (?:the )?exhibit\.?\s*/i, ""),
-			}
+		...(typeof prompt === "string" ? { prompt } : {}),
+		...(databaseExhibit || exhibitDiagram || hideExhibitImage
+			? { exhibitImage: exhibitImage ?? undefined }
 			: {}),
-		exhibitImage: exhibitImage ?? undefined,
 		...(hideExhibitImage ? { hideExhibitImage: true } : {}),
 		...(hideAfterExhibit ? { afterExhibit: undefined, hideAfterExhibit: true } : {}),
 		...(exhibitDiagram ? { exhibitDiagram } : {}),

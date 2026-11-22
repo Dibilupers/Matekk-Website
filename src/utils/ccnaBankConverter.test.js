@@ -73,7 +73,7 @@ after(async () => {
   await vite.close();
 });
 
-test("maps original exhibit images to legacy and live-bank question IDs", () => {
+test("maps original exhibit images and hides terminal screenshots duplicated by their text", () => {
   assert.equal(ccnaExhibitImageMap.length, 349);
   const legacyIndexes = new Set();
   for (const entry of ccnaExhibitImageMap) {
@@ -89,13 +89,17 @@ test("maps original exhibit images to legacy and live-bank question IDs", () => 
 
   const offlineQuestion = getOfflineLegacyQuestionBank().find((question) => question.legacyIndex === 41);
   assert.ok(offlineQuestion);
-  assert.match(offlineQuestion.exhibitImage, /ccna-exhibit-41\.png$/);
+  assert.equal(offlineQuestion.hideExhibitImage, true);
+  assert.equal(offlineQuestion.exhibitImage, undefined);
+  assert.match(offlineQuestion.exhibit, /Trunking Native Mode VLAN: 99/);
 
   const builtInQuestion = builtInQuestionBank.find(
     (question) => question.source === "legacy-ccna-200-301" && question.legacyIndex === 41,
   );
   assert.ok(builtInQuestion);
-  assert.match(builtInQuestion.exhibitImage, /ccna-exhibit-41\.png$/);
+  assert.equal(builtInQuestion.hideExhibitImage, true);
+  assert.equal(builtInQuestion.exhibitImage, undefined);
+  assert.match(builtInQuestion.exhibit, /Trunking Native Mode VLAN: 99/);
 });
 
 test("makes the LACP question self-contained when its source image only repeats the choices", () => {
@@ -161,7 +165,7 @@ test("recreates the native-VLAN trunk exhibit and retains its separate fixed exh
   assert.match(liveQuestion.exhibit, /Fa0\/1\s+1-4094/);
 });
 
-test("replaces the blurry subinterface topology with its native diagram", () => {
+test("redraws legacy 50's source topology in the offline and all-questions banks", () => {
   const question = getOfflineLegacyQuestionBank().find((item) => item.legacyIndex === 50);
   assert.ok(question);
   assert.equal(question.exhibitDiagram, "router-on-a-stick-vlan20");
@@ -177,12 +181,18 @@ test("replaces the blurry subinterface topology with its native diagram", () => 
   assert.match(markup, /R1/);
   assert.match(markup, /SW1/);
   assert.match(markup, /SW2/);
-  assert.match(markup, /E0\/0 to E0\/0/);
-  assert.match(markup, /E0\/1 to E0\/1/);
+  assert.equal((markup.match(/E0\/0/g) ?? []).length, 2);
+  assert.equal((markup.match(/E0\/1/g) ?? []).length, 2);
   assert.doesNotMatch(markup, /VLAN 20 host/);
+
+  const liveQuestion = applyNativeExhibit(ccnaLegacyQuestions.find((item) => item.legacyIndex === 50));
+  assert.equal(liveQuestion.exhibitDiagram, question.exhibitDiagram);
+  assert.equal(liveQuestion.hideExhibitImage, true);
+  assert.equal(liveQuestion.exhibit, question.exhibit);
+  assert.equal(liveQuestion.answer, question.answer);
 });
 
-test("replaces the VTP frame-flow screenshot with its native topology", () => {
+test("redraws legacy 59's source frame-flow image in the offline and all-questions banks", () => {
   const question = getOfflineLegacyQuestionBank().find((item) => item.legacyIndex === 59);
   assert.ok(question);
   assert.equal(question.exhibitDiagram, "vtp-transparent-frame-flow");
@@ -198,11 +208,21 @@ test("replaces the VTP frame-flow screenshot with its native topology", () => {
     compact: true,
   }));
   assert.match(markup, /PC A/);
-  assert.match(markup, /SW2/);
   assert.match(markup, /PC B/);
-  assert.match(markup, /VTP transparent/);
-  assert.match(markup, /Trunk · VLAN ID 2/);
-  assert.match(markup, /Access · untagged/);
+  assert.match(markup, /PC A is attached to/);
+  assert.match(markup, /VLAN ID of 2 to its frames/);
+  assert.match(markup, /remove the/);
+  assert.match(markup, /sending it to PC B/);
+  assert.match(markup, />VLAN ID</);
+  assert.match(markup, />Frame</);
+  assert.equal((markup.match(/>Trunk</g) ?? []).length, 2);
+  assert.doesNotMatch(markup, /Access ·|VTP transparent/);
+
+  const liveQuestion = applyNativeExhibit(ccnaLegacyQuestions.find((item) => item.legacyIndex === 59));
+  assert.equal(liveQuestion.exhibitDiagram, question.exhibitDiagram);
+  assert.equal(liveQuestion.hideExhibitImage, true);
+  assert.equal(liveQuestion.exhibit, question.exhibit);
+  assert.equal(liveQuestion.answer, question.answer);
 });
 
 test("redraws the redundant-network exhibit with every original host and address", () => {
@@ -3165,7 +3185,8 @@ test("formats the VLAN exhibit separately for question 303 in the offline Refer 
   const question = getOfflineReferExhibitQuestionBank().find((entry) => entry.legacyIndex === 1112);
 
   assert.ok(question);
-  assert.match(question.prompt, /^Refer to the exhibit\.\n\nVoIP is being implemented/);
+  assert.match(question.prompt, /^VoIP is being implemented/);
+  assert.doesNotMatch(question.prompt, /^\s*Refer to (?:the )?exhibit\./i);
   assert.doesNotMatch(question.prompt, /SW_1#show vlan|fddi-default/);
   assert.match(question.exhibit, /^SW_1#show vlan\n\nVLAN\s+Name\s+Status\s+Ports/);
   assert.match(question.exhibit, /72\s+Data Vlan\s+active\s+Et0\/0/);
@@ -3233,6 +3254,13 @@ test("repairs remaining Refer-to-Exhibit raw and incomplete exhibits from ordina
     const liveQuestion = applyNativeExhibit(legacyQuestion);
     assert.equal(liveQuestion.prompt, entry.question.prompt);
     assert.equal(liveQuestion.exhibit, entry.question.exhibit);
+    if (legacyIndex === 1159) {
+      assert.doesNotMatch(entry.question.prompt, /SW1#\(config\)#line vty 0 15/);
+      assert.match(entry.question.exhibit, /SW1#\(config\)#line vty 0 15/);
+      assert.match(entry.question.exhibit, /SW1#\(config-line\)#password\n Labtest32!/);
+      assert.equal(entry.question.type, legacyQuestion.type);
+      assert.equal(entry.question.answer, legacyQuestion.answer);
+    }
   }
 
   const misaddressedTopology = byIndex(848);
@@ -3289,5 +3317,78 @@ test("offline timed CCNA formats sample their existing lengths from the cached s
       `${examKey} exam should sample questions from the shared bank`,
     );
     assert.ok(questions.every((question) => isValidQuestion(question)));
+  }
+});
+
+test("renders legacy terminal exhibits without their duplicate source screenshots", () => {
+  const legacyIndexes = [
+    41, 43, 46, 100, 103, 123, 126, 161, 163, 167, 189, 385, 499, 506,
+    523, 655, 701, 712, 729, 782, 798, 808, 816, 860, 909, 991, 1116, 1313,
+  ];
+  const questions = getOfflineLegacyQuestionBank();
+
+  for (const legacyIndex of legacyIndexes) {
+    const question = questions.find((entry) => entry.legacyIndex === legacyIndex);
+
+    assert.ok(question?.exhibit, `legacy index ${legacyIndex} should have a terminal exhibit`);
+    assert.equal(question.hideExhibitImage, true, `legacy index ${legacyIndex} should hide its duplicate screenshot`);
+    const markup = renderToStaticMarkup(
+      React.createElement(QuestionExhibits, { question }),
+    );
+    assert.match(markup, /ccna-term/);
+    assert.doesNotMatch(markup, /<img\b/);
+  }
+});
+
+test("keeps extracted CLI exhibits and cleaned prompts in the complete offline bank", () => {
+  const expectedOutputs = new Map([
+    [747, "R1#show ip ospf interface g0/0/0"],
+    [844, "interface Loopback0"],
+    [883, "R1#show ip ospf interface"],
+    [920, "R1#show ip ospf interface"],
+    [1112, "SW_1#show vlan"],
+    [909, "network 192.168.12.1 0.0.0.0 area 1"],
+    [816, "172.22.0.0/24 is subnetted"],
+  ]);
+  const questions = getOfflineLegacyQuestionBank();
+
+  for (const [legacyIndex, outputMarker] of expectedOutputs) {
+    const sourceQuestion = ccnaLegacyQuestions.find((entry) => entry.legacyIndex === legacyIndex);
+    const question = questions.find((entry) => entry.legacyIndex === legacyIndex);
+
+    assert.ok(question, `legacy index ${legacyIndex} should remain in the offline bank`);
+    assert.ok(question.exhibit?.includes(outputMarker));
+    assert.ok(!question.prompt.includes(outputMarker));
+    assert.doesNotMatch(question.prompt, /^\s*Refer to (?:the )?exhibit\./i);
+    assert.equal(question.type, sourceQuestion.type);
+    if (legacyIndex === 909 || legacyIndex === 816) {
+      assert.equal(question.exhibitDiagram, undefined);
+      assert.equal(question.hideExhibitImage, true);
+      assert.equal(question.exhibitImage, undefined);
+    }
+    if (legacyIndex === 816) {
+      assert.match(question.exhibit, /^R7#/);
+      assert.doesNotMatch(question.prompt, /R7#/);
+    }
+    if (legacyIndex === 1159) {
+      assert.doesNotMatch(question.prompt, /SW1#\(config\)#line vty 0 15/);
+      assert.match(question.exhibit, /SW1#\(config\)#line vty 0 15/);
+      assert.match(question.exhibit, /SW1#\(config-line\)#password\n Labtest32!/);
+    }
+    if ([747, 844, 883, 920, 1112].includes(legacyIndex)) {
+      assert.equal(question.options.length, sourceQuestion.options.length);
+      if (legacyIndex === 747) {
+        assert.match(question.options[0], /hello-interval 15/);
+      } else if (legacyIndex === 844) {
+        assert.match(question.options[0], /ip nat inside source static 172\.16\.29\.78 10\.199\.77\.100/);
+      } else if (legacyIndex === 1112) {
+        assert.match(question.options[0], /switchport trunk allowed vlan/);
+      } else {
+        assert.match(question.options[0], /hello-interval 10/);
+      }
+    } else {
+      assert.deepEqual(question.options, sourceQuestion.options);
+    }
+    assert.equal(question.answer, sourceQuestion.answer);
   }
 });

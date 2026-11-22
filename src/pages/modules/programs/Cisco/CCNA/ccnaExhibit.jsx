@@ -247,6 +247,25 @@ function TopologyNode({ role, name, details }) {
 }
 
 const NETWORK_TOPOLOGIES = {
+	"router-on-a-stick-vlan20": {
+		title: "R1 to SW1 to SW2",
+		viewBox: { x: 0, y: 0, width: 900, height: 230 },
+		nodes: [
+			{ id: "r1", kind: "router", name: "R1", x: 120, y: 135 },
+			{ id: "sw1", kind: "switch", name: "SW1", x: 450, y: 135 },
+			{ id: "sw2", kind: "switch", name: "SW2", x: 780, y: 135 },
+		],
+		links: [
+			{ from: "r1", to: "sw1", color: "#475569", strokeWidth: 2 },
+			{ from: "sw1", to: "sw2", color: "#475569", strokeWidth: 2 },
+		],
+		annotations: [
+			{ x: 235, y: 105, text: "E0/0", textAnchor: "middle", fontSize: 14, fontWeight: 700, color: "#17233d" },
+			{ x: 335, y: 105, text: "E0/0", textAnchor: "middle", fontSize: 14, fontWeight: 700, color: "#17233d" },
+			{ x: 565, y: 105, text: "E0/1", textAnchor: "middle", fontSize: 14, fontWeight: 700, color: "#17233d" },
+			{ x: 665, y: 105, text: "E0/1", textAnchor: "middle", fontSize: 14, fontWeight: 700, color: "#17233d" },
+		],
+	},
 	"switch-config-two-column-39": {
 		title: "Switch A and Switch B configuration",
 		viewBox: { x: 0, y: 0, width: 640, height: 320 },
@@ -490,20 +509,60 @@ const NETWORK_TOPOLOGIES = {
 		],
 	},
 	"vtp-transparent-frame-flow": {
-		title: "VTP domain and VLAN 2 frame flow",
-		note: "The sending switch adds VLAN ID 2 to frames from PC A; the receiving switch removes the VLAN ID before sending frames to PC B.",
+		title: "VLAN 2 frame path from PC A to PC B",
+		viewBox: { x: 0, y: 0, width: 1000, height: 540 },
 		nodes: [
-			{ id: "pcA", kind: "host", name: "PC A", x: 120, y: 440, details: ["VLAN 2"] },
-			{ id: "sw1", kind: "switch", name: "Switch", x: 120, y: 240 },
-			{ id: "sw2", kind: "switch", name: "SW2", x: 500, y: 240, details: ["VTP transparent"] },
-			{ id: "sw3", kind: "switch", name: "Switch", x: 880, y: 240 },
-			{ id: "pcB", kind: "host", name: "PC B", x: 880, y: 440 },
+			{ id: "pcA", kind: "host", name: "PC A", x: 140, y: 455, scale: 0.7 },
+			{ id: "sw1", kind: "switch", name: "", x: 140, y: 325 },
+			{ id: "sw2", kind: "switch", name: "", x: 500, y: 325 },
+			{ id: "sw3", kind: "switch", name: "", x: 860, y: 325 },
+			{ id: "pcB", kind: "host", name: "PC B", x: 860, y: 455, scale: 0.7 },
 		],
 		links: [
-			{ from: "pcA", to: "sw1", label: "Access · VLAN 2" },
-			{ from: "sw1", to: "sw2", label: "Trunk · VLAN ID 2" },
-			{ from: "sw2", to: "sw3", label: "Trunk · VLAN ID 2" },
-			{ from: "sw3", to: "pcB", label: "Access · untagged" },
+			{ from: "sw1", to: "sw2", label: "Trunk", labelX: 320, labelY: 278, fixedLabel: true, color: "#dc2626", strokeWidth: 3 },
+			{ from: "sw2", to: "sw3", label: "Trunk", labelX: 680, labelY: 278, fixedLabel: true, color: "#dc2626", strokeWidth: 3 },
+		],
+		annotations: [
+			{
+				x: 215,
+				y: 56,
+				lines: ["PC A is attached to", "VLAN 2 so I add a", "VLAN ID of 2 to its frames"],
+				textAnchor: "middle",
+				lineHeight: 24,
+				fontSize: 18,
+				color: "#4b3150",
+				box: { x: 40, y: 22, width: 350, height: 106, fill: "#f4c2e0", stroke: "#d783b9", strokeWidth: 1.5, rx: 24 },
+			},
+			{
+				x: 785,
+				y: 56,
+				lines: ["I have to remove the", "VLAN ID before", "sending it to PC B"],
+				textAnchor: "middle",
+				lineHeight: 24,
+				fontSize: 18,
+				color: "#4b3150",
+				box: { x: 610, y: 22, width: 350, height: 106, fill: "#f4c2e0", stroke: "#d783b9", strokeWidth: 1.5, rx: 24 },
+			},
+			{
+				x: 444,
+				y: 213,
+				text: "VLAN ID",
+				textAnchor: "middle",
+				fontSize: 13,
+				fontWeight: 700,
+				color: "#17233d",
+				box: { x: 393, y: 190, width: 102, height: 30, fill: "#f6d76b", stroke: "#4b5563", strokeWidth: 1, rx: 0 },
+			},
+			{
+				x: 545,
+				y: 213,
+				text: "Frame",
+				textAnchor: "middle",
+				fontSize: 13,
+				fontWeight: 700,
+				color: "#17233d",
+				box: { x: 495, y: 190, width: 100, height: 30, fill: "#b9e8a4", stroke: "#4b5563", strokeWidth: 1, rx: 0 },
+			},
 		],
 	},
 	"candidate-pc2-file-server-policy-703": {
@@ -3420,7 +3479,7 @@ function TopologyLink({ link, nodes }) {
 	const color = link.color ?? "#16a34a";
 	return (
 		<g>
-			<line x1={x1} y1={y1} x2={x2} y2={y2} stroke={color} strokeWidth="3" />
+			<line x1={x1} y1={y1} x2={x2} y2={y2} stroke={color} strokeWidth={link.strokeWidth ?? 3} />
 			<circle cx={x1} cy={y1} r="4" fill={color} />
 			<circle cx={x2} cy={y2} r="4" fill={color} />
 		</g>
@@ -4099,10 +4158,9 @@ function WlcSettingsPanel({ variant, expanded, config }) {
 export function ExhibitDiagram({ type, className = "", offlineLayout = false, compact = false }) {
 	const [openTheme, setOpenTheme] = useState(null);
 	const wrapRef = useRef(null);
-	const isRouterOnAStick = type === "router-on-a-stick-vlan20";
-	const topology = isRouterOnAStick ? null : NETWORK_TOPOLOGIES[type];
+	const topology = NETWORK_TOPOLOGIES[type];
 	const wlcExhibit = WLC_EXHIBITS[type];
-	if (!isRouterOnAStick && !topology && !wlcExhibit) return null;
+	if (!topology && !wlcExhibit) return null;
 	const title = topology?.title ?? wlcExhibit?.title ?? "Network topology";
 	const coverageHatchId = `${type}-coverage-hatch`;
 	const nodes = topology ? new Map(topology.nodes.map((node) => [node.id, node])) : null;
@@ -4201,17 +4259,7 @@ export function ExhibitDiagram({ type, className = "", offlineLayout = false, co
 				</pre>
 			)}
 		</>
-	) : (
-		<div className={expanded ? "mx-auto w-[1000px]" : ""}>
-			<div className="grid gap-2 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)] md:items-center">
-				<TopologyNode role="Router" name="R1" />
-				<p className="text-center text-xs font-semibold text-[#526584]">E0/0 to E0/0</p>
-				<TopologyNode role="Switch" name="SW1" />
-				<p className="text-center text-xs font-semibold text-[#526584]">E0/1 to E0/1</p>
-				<TopologyNode role="Switch" name="SW2" />
-			</div>
-		</div>
-	);
+	) : null;
 	return (
 		<>
 			<section ref={wrapRef} aria-label={title} className={`mb-4 rounded-2xl border border-[#d9e1ef] bg-[#f7f9fc] ${offlineLayout ? "p-3 sm:p-4" : "p-4 sm:p-5"} shadow-sm ${className}`}>
@@ -4225,7 +4273,7 @@ export function ExhibitDiagram({ type, className = "", offlineLayout = false, co
 						<Maximize2 size={13} /> Expand
 					</button>
 				</div>
-				{topology && <p className="mb-3 text-sm leading-5 text-[#526584]">{topology.note}</p>}
+				{topology?.note && <p className="mb-3 text-sm leading-5 text-[#526584]">{topology.note}</p>}
 				<div className={topology || wlcExhibit ? "overflow-x-auto rounded-xl border border-[#e2e8f0] bg-white p-2 sm:p-3" : ""}>{renderDiagram()}</div>
 			</section>
 			{openTheme && (

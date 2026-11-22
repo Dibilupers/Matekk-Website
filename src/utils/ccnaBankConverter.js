@@ -566,9 +566,9 @@ export function convertBankRow(row) {
         ? parsedOptionTable.options
         : Object.fromEntries(choiceEntries.map(([letter]) => [letter, parsedOptionTable.options[letter]]))
     : choices;
-  const { prompt, exhibit } = hasCompleteOptionTable
-    ? { prompt: parsedOptionTable.prompt }
-    : splitPromptExhibit(rawText);
+  const { prompt, exhibit } = splitPromptExhibit(
+    hasCompleteOptionTable ? parsedOptionTable.prompt : rawText,
+  );
   const afterExhibitText = typeof row.afterExhibitText === "string" ? row.afterExhibitText.trim() : "";
   const afterExhibitImageUrl = typeof row.afterExhibitImageUrl === "string" ? row.afterExhibitImageUrl : null;
   const afterExhibit = afterExhibitText || afterExhibitImageUrl

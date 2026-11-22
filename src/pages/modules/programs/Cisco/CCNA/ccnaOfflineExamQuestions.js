@@ -50,7 +50,7 @@ const OFFLINE_REFER_EXHIBIT_IMAGE_OVERRIDES = new Map([
   [1232, { exhibitImage: workstationServerFqdn924ExhibitImg }],
   [1281, { exhibitImage: wlcP2pBlocking992ExhibitImg }],
   [1112, {
-    prompt: "Refer to the exhibit.\n\nVoIP is being implemented in the network using VLAN ID 73 and named “VoIP”. Each user needs a Cisco IP phone at their desk. Switchport e0/0 has been configured as an access port in the data VLAN. Cisco Discovery Protocol is enabled globally. Which command sequence completed the configuration?",
+    prompt: "VoIP is being implemented in the network using VLAN ID 73 and named “VoIP”. Each user needs a Cisco IP phone at their desk. Switchport e0/0 has been configured as an access port in the data VLAN. Cisco Discovery Protocol is enabled globally. Which command sequence completed the configuration?",
     exhibit: `SW_1#show vlan
 
 VLAN  Name                 Status    Ports
@@ -1046,8 +1046,6 @@ NewSW(config-if)#switchport trunk native vlan 2`,
     exhibitQuality: "source-backed",
   }],
   [382, { diagram: "voice-data-vlan300-400", hideExhibitImage: true }],
-  [50, { diagram: "router-on-a-stick-vlan20", hideExhibitImage: true }],
-  [59, { diagram: "vtp-transparent-frame-flow", hideExhibitImage: true }],
   [84, { diagram: "redundant-switch-network", hideExhibitImage: true }],
   [130, { diagram: "ospf-four-router-broadcast", hideExhibitImage: true }],
   [157, { diagram: "vlan-switch-web-server", hideExhibitImage: true }],
@@ -1153,9 +1151,11 @@ const OFFLINE_LEGACY_QUESTION_CANDIDATES = CCNA_LEGACY_QUESTIONS
     const allOfflineSourceExhibitImages = [...new Set([...offlineSourceExhibitImages, ...nativeSourceExhibitImages])];
     const removeExhibitLeadIn = nativeExhibit?.removeExhibitLeadIn ||
       (typeof nativePrompt === "string" && nativePrompt !== question.prompt);
-    const promptWithoutExhibitLeadIn = typeof nativePrompt === "string" && nativePrompt !== question.prompt
-      ? nativePrompt
-      : question.prompt.replace(/^\s*Refer to (?:the )?exhibit\.?\s*/i, "");
+    const promptWithoutExhibitLeadIn = typeof offlineOverride?.prompt === "string"
+      ? offlineOverride.prompt.replace(/^\s*Refer to (?:the )?exhibit\.?\s*/i, "")
+      : typeof nativePrompt === "string" && nativePrompt !== question.prompt
+        ? nativePrompt
+        : question.prompt.replace(/^\s*Refer to (?:the )?exhibit\.?\s*/i, "");
 
     return {
       ...question,

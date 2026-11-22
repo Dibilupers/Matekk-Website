@@ -178,6 +178,25 @@ test("uses the voice-and-data VLAN topology for Question 268", () => {
 	assert.equal(applyNativeExhibit({ bankId: 268 }).exhibitDiagram, "voice-vlan-two-switch");
 });
 
+test("applies source-backed redraws for legacy indexes 50 and 59 in the shared bank path", () => {
+	for (const [legacyIndex, expectedDiagram] of [
+		[50, "router-on-a-stick-vlan20"],
+		[59, "vtp-transparent-frame-flow"],
+	]) {
+		const sourceQuestion = CCNA_LEGACY_QUESTIONS.find((item) => item.legacyIndex === legacyIndex);
+		const question = applyNativeExhibit(sourceQuestion);
+
+		assert.equal(question.exhibitDiagram, expectedDiagram);
+		assert.equal(question.hideExhibitImage, true);
+		assert.equal(question.exhibitQuality, "source-backed");
+		assert.doesNotMatch(question.prompt, /^\s*Refer to (?:the )?exhibit\./i);
+		assert.ok(question.exhibit);
+		assert.equal(question.type, sourceQuestion.type);
+		assert.deepEqual(question.options, sourceQuestion.options);
+		assert.equal(question.answer, sourceQuestion.answer);
+	}
+});
+
 test("redraws Question 382's voice and data VLAN exhibit", () => {
 	const question = applyNativeExhibit({ bankId: 382 });
 
@@ -443,4 +462,71 @@ test("hides Question 491's unrelated image and removes its stale exhibit lead-in
 
 	assert.equal(question.hideExhibitImage, true);
 	assert.equal(question.prompt, "Local access for R4 must be established.");
+});
+
+test("moves a raw all-questions OSPF configuration into a terminal exhibit", () => {
+	const sourceQuestion = CCNA_LEGACY_QUESTIONS.find(({ legacyIndex }) => legacyIndex === 909);
+	const question = applyNativeExhibit({
+		...sourceQuestion,
+		exhibitImage: "/src/assets/ccna-offline-exams-images/ccna-exhibit-909.png",
+	});
+
+	assert.equal(
+		question.prompt,
+		"A network engineer started to configure two directly-connected routers as shown. Which command sequence must the engineer configure on R2 so that the two routers become OSPF neighbors?",
+	);
+	assert.match(question.exhibit, /^R1\r?\n/);
+	assert.match(question.exhibit, /router ospf 1/);
+	assert.match(question.exhibit, /network 192\.168\.12\.1 0\.0\.0\.0 area 1/);
+	assert.equal(question.exhibitDiagram, undefined);
+	assert.equal(question.hideExhibitImage, true);
+	assert.equal(question.type, sourceQuestion.type);
+	assert.deepEqual(question.options, sourceQuestion.options);
+	assert.equal(question.answer, sourceQuestion.answer);
+});
+
+test("moves a routing-table prompt into its terminal exhibit and hides the duplicate image", () => {
+	const sourceQuestion = CCNA_LEGACY_QUESTIONS.find(({ legacyIndex }) => legacyIndex === 816);
+	const question = applyNativeExhibit({
+		...sourceQuestion,
+		exhibitImage: "/src/assets/ccna-offline-exams-images/ccna-exhibit-816.png",
+	});
+
+	assert.equal(
+		question.prompt,
+		"According to the output, which parameter set is validated using the routing table of R7?",
+	);
+	assert.match(question.exhibit, /^R7#\r?\n/);
+	assert.match(question.exhibit, /172\.22\.0\.0\/24 is subnetted/);
+	assert.equal(question.hideExhibitImage, true);
+	assert.equal(question.exhibitImage, undefined);
+	assert.equal(question.type, sourceQuestion.type);
+	assert.deepEqual(question.options, sourceQuestion.options);
+	assert.equal(question.answer, sourceQuestion.answer);
+});
+
+test("extracts embedded terminal output before formatted answer tables without changing answers", () => {
+	const expectedOutputs = new Map([
+		[747, "R1#show ip ospf interface g0/0/0"],
+		[844, "R1#\n\n!\n\ninterface Loopback0"],
+		[883, "R1#show ip ospf interface"],
+		[920, "R1#show ip ospf interface"],
+		[1112, "SW_1#show vlan"],
+	]);
+
+	for (const [legacyIndex, outputMarker] of expectedOutputs) {
+		const sourceQuestion = CCNA_LEGACY_QUESTIONS.find((item) => item.legacyIndex === legacyIndex);
+		const question = applyNativeExhibit({
+			...sourceQuestion,
+			legacyIndex: undefined,
+			bankId: 900000 + legacyIndex,
+		});
+
+		assert.ok(question.exhibit?.includes(outputMarker), `legacy index ${legacyIndex} should have terminal output`);
+		assert.ok(!question.prompt.includes(outputMarker), `legacy index ${legacyIndex} should not repeat terminal output in its prompt`);
+		assert.doesNotMatch(question.prompt, /^\s*Refer to (?:the )?exhibit\./i);
+		assert.equal(question.type, sourceQuestion.type);
+		assert.deepEqual(question.options, sourceQuestion.options);
+		assert.equal(question.answer, sourceQuestion.answer);
+	}
 });
