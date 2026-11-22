@@ -626,7 +626,9 @@ export function QuestionInput({ question, value, onChange, disabled, fortiosOffl
 		(!Array.isArray(question.answer) || new Set(question.answer).size === question.answer.length);
 	const localMatchMode = type === "image" || question.matchStyle === "numbers"
 		? "group"
-		: Array.isArray(question.answer) ? matchMode(question) : hasGroupSizes ? "group" : isOneToOne ? "assign" : "select";
+		: question.matchStyle === "assign"
+			? "assign"
+			: Array.isArray(question.answer) ? matchMode(question) : hasGroupSizes ? "group" : isOneToOne ? "assign" : "select";
 
 	if (type === "study") {
 		return (

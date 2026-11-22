@@ -628,6 +628,7 @@ ip address 203.0.113.65 255.255.255.252
     exhibitQuality: "illustrative",
   }],
   [266, {
+    matchStyle: "assign",
     choices: [
       "route source",
       "administrative distance",
@@ -876,6 +877,37 @@ Hello 10, Dead 40, Retransmit 5`,
     hideAfterExhibit: true,
     removeExhibitLeadIn: true,
     exhibitQuality: "partial",
+  }],
+  [1226, {
+    exhibit: `Wireless LAN adapter Wi-Fi:
+
+Connection-specific DNS Suffix        . :
+
+Description . . . . . . . . . . . : Intel(R) Wi-Fi 6 AX201 160MHz
+
+Physical Address. . . . . . . . . : AC-63-DA-AC-B4-AD
+
+DHCP Enabled. . . . . . . . . . . : No
+Autoconfiguration Enabled . . . . : Yes
+
+IPv6 Address. . . . . . . . . . . : ::70D6:5432:6D8A:90B2(Preferred)
+Temporary IPv6 Address. . . . . . : ::dc3f:a66c:f996:bdb9(Preferred)
+Link-local IPv6 Address . . . . . : fe80::7096:5693:6d8a:90ba%8(Preferred)
+
+IPv4 Address. . . . . . . . . . . : 172.16.1.8(Preferred)
+Subnet Mask. . . . . . . . . . . . : 255.255.255.240
+Default Gateway . . . . . . . . . : 172.16.1.1
+
+DHCPv6 IAID. . . . . . . . . . . . : 116155351
+DHCPv6 Client DUID. . . . . . . . : 00-01-00-01-2B-BE-0A-47-3C-15-AB-80-12-F6
+
+DNS Servers . . . . . . . . . . . : 172.16.1.3
+                                      172.16.1.4
+NetBIOS over Tcpip. . . . . : Enabled`,
+    hideExhibitImage: true,
+    hideAfterExhibit: true,
+    removeExhibitLeadIn: true,
+    exhibitQuality: "source-backed",
   }],
   [340, { diagram: "candidate-vlan-roles-24", hideExhibitImage: true }],
   [355, { diagram: "switch-config-two-column-39", hideExhibitImage: true }],

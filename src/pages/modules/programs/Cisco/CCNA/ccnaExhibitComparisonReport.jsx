@@ -9,7 +9,9 @@ const CANDIDATES = [
   [71, 387], [161, 478], [225, 542], [252, 570], [260, 578], [281, 599], [285, 603],
   [294, 612], [298, 616], [299, 617], [303, 621], [361, 679], [364, 682], [377, 695],
   [384, 702], [398, 716], [402, 720], [414, 732], [451, 769], [481, 799], [511, 829],
-  [518, 836], [563, 881], [570, 888], [583, 901], [593, 911], [619, 935], [633, 949],
+  [518, 836], [563, 881],
+  [570, 888, "Saved answer key verified; all five destinations are assigned."],
+  [583, 901], [593, 911], [619, 935], [633, 949],
   [666, 982], [712, 1028], [760, 1076], [794, 1110], [798, 1114], [810, 1126],
   [827, 1143], [836, 1152], [838, 1154], [854, 1170], [872, 1188], [883, 1199],
   [884, 1200], [890, 1206], [911, 1227], [955, 1245], [973, 1262], [992, 1281],
@@ -464,8 +466,8 @@ export default function CcnaExhibitComparisonReport() {
         }
       `}</style>
       <ReportSummaryPage />
-      {CANDIDATES.map(([bankId, legacyIndex]) => (
-        <ReportPage key={bankId} bankId={bankId} legacyIndex={legacyIndex} />
+      {CANDIDATES.map(([bankId, legacyIndex, qualityLabel]) => (
+        <ReportPage key={bankId} bankId={bankId} legacyIndex={legacyIndex} qualityLabel={qualityLabel} />
       ))}
       {LIVE_GAP_CANDIDATES.map((candidate) => (
         <ReportPage key={candidate.bankId} {...candidate} />

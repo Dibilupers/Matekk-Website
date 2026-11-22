@@ -235,6 +235,29 @@ test("uses the IPv6 WAN exhibit for both its live-bank ID and legacy prompt", ()
 	assert.equal(byPrompt.hideExhibitImage, true);
 });
 
+test("reconstructs live question 570's OSPF destination groups from its saved answer key", () => {
+	const items = ["10.10.10.16", "10.10.13.129", "10.10.100.128", "10.10.13.1", "10.10.13.150"];
+	const choices = ["Internet", "Router1"];
+	const answer = [0, 0, 0, 1, 1];
+	const question = applyNativeExhibit({
+		bankId: 570,
+		legacyIndex: 888,
+		afterExhibit: { imageUrl: "questions/ccna-after-exhibit-570.png" },
+		items,
+		choices,
+		answer,
+	});
+
+	assert.equal(question.exhibitDiagram, "ospf-destination-segments-888");
+	assert.equal(question.exhibitQuality, "illustrative");
+	assert.equal(question.hideExhibitImage, true);
+	assert.equal(question.hideAfterExhibit, true);
+	assert.equal(question.afterExhibit, undefined);
+	assert.deepEqual(question.items, items);
+	assert.deepEqual(question.choices, choices);
+	assert.deepEqual(question.answer, answer);
+});
+
 test("selects answer-enriched candidate topologies for matching live question IDs", () => {
 	const expectedDiagrams = new Map([
 		[24, "candidate-vlan-roles-24"],
@@ -352,6 +375,7 @@ test("extends the Question 1305 matching choices without changing its answer", (
 
 	assert.deepEqual(question.answer, originalAnswer);
 	assert.deepEqual(question.choices.slice(-2), ["next-hop interface", "subnet mask"]);
+	assert.equal(question.matchStyle, "assign");
 	assert.equal(question.exhibit, CCNA_RECREATED_TEXT_EXHIBITS.routingTableComponents);
 	assert.match(question.exhibit, /GigabitEthernet0\/0\/1/);
 	assert.equal(question.hideExhibitImage, true);

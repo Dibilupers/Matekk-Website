@@ -617,7 +617,9 @@ test("replaces recreated matching-activity screenshots with their existing inter
   assert.deepEqual(offlineQuestion299.items, ["DC-1 Gi1/0", "DC-1 Gi1/1", "DC-1 Gi1/2", "HQ-1 Gi1/3"]);
   assert.deepEqual(offlineQuestion299.answer, [2, 5, 4, 6]);
   assert.equal(offlineQuestion299.choices.length, 7);
-  assert.equal(getOfflineLegacyQuestionBank().find((entry) => entry.legacyIndex === 266).choices.length, 7);
+  const offlineQuestion266 = getOfflineLegacyQuestionBank().find((entry) => entry.legacyIndex === 266);
+  assert.equal(offlineQuestion266.choices.length, 7);
+  assert.equal(offlineQuestion266.matchStyle, "assign");
   assert.equal(
     getOfflineLegacyQuestionBank().find((entry) => entry.legacyIndex === 759).exhibitDiagram,
     "routing-protocols-prefix",
@@ -2178,6 +2180,81 @@ test("removes review item 189's exhibit lead-in when no exhibit source exists", 
   assert.doesNotMatch(markup, /ccna-exhibit-702\.png|ccna-after-exhibit/);
 });
 
+test("keeps self-contained legacy item 702 in the all-questions bank without a false exhibit", () => {
+  const source = ccnaLegacyQuestions.find((entry) => entry.legacyIndex === 702);
+  const question = builtInQuestionBank.find((entry) => entry.legacyIndex === 702);
+
+  assert.ok(question);
+  assert.equal(question.prompt, source.prompt.replace(/^\s*Refer to (?:the )?exhibit\.?\s*/i, ""));
+  assert.equal(question.hideExhibitImage, true);
+  assert.equal(question.exhibitImage, undefined);
+  assert.equal(question.exhibitDiagram, undefined);
+  assert.deepEqual(question.options, source.options);
+  assert.equal(question.answer, source.answer);
+});
+
+test("rebuilds legacy drag-and-drop item 799 without changing its matching answer", () => {
+  const source = ccnaLegacyQuestions.find((entry) => entry.legacyIndex === 799);
+  const question = builtInQuestionBank.find((entry) => entry.legacyIndex === 799);
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question }),
+  );
+
+  assert.ok(question);
+  assert.equal(question.type, "match");
+  assert.deepEqual(question.items, source.items);
+  assert.deepEqual(question.choices, source.choices);
+  assert.deepEqual(question.answer, source.answer);
+  assert.equal(question.exhibitDiagram, "static-route-three-router-799");
+  assert.equal(question.exhibitQuality, "illustrative");
+  assert.equal(question.hideExhibitImage, true);
+  assert.equal(question.afterExhibit, undefined);
+  assert.match(markup, /10\.10\.13\.0\/25/);
+  assert.match(markup, /10\.10\.14\.0\/24/);
+  assert.match(markup, /10\.10\.10\.2/);
+  assert.doesNotMatch(markup, /ccna-after-exhibit/);
+  assert.equal(
+    getOfflineReferExhibitQuestionBank().some((entry) => entry.legacyIndex === 799),
+    false,
+  );
+});
+
+test("reconstructs legacy drag-and-drop exhibit 888 from its saved answer key", () => {
+  const offlineQuestions = getOfflineReferExhibitQuestionBank();
+  const source = ccnaLegacyQuestions.find((entry) => entry.legacyIndex === 888);
+  const question = builtInQuestionBank.find((entry) => entry.legacyIndex === 888);
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question }),
+  );
+
+  assert.equal(source.type, "match");
+  assert.ok(question);
+  assert.equal(question.type, "match");
+  assert.equal(question.prompt, source.prompt);
+  assert.deepEqual(question.items, source.items);
+  assert.deepEqual(question.choices, source.choices);
+  assert.deepEqual(question.answer, source.answer);
+  assert.equal(question.exhibitDiagram, "ospf-destination-segments-888");
+  assert.equal(question.exhibitQuality, "illustrative");
+  assert.equal(question.hideExhibitImage, true);
+  assert.equal(question.hideAfterExhibit, true);
+  assert.equal(question.afterExhibit, undefined);
+  assert.match(markup, /OSPF between sites/);
+  assert.doesNotMatch(markup, /unavailable/i);
+  const keyedDestinations = [
+    "Internet",
+    source.items[0],
+    source.items[1],
+    source.items[2],
+    "Router1",
+    source.items[3],
+    source.items[4],
+  ].map((text) => markup.indexOf(`>${text}</tspan>`));
+  assert.ok(keyedDestinations.every((position) => position >= 0));
+  assert.deepEqual(keyedDestinations, [...keyedDestinations].sort((a, b) => a - b));
+  assert.equal(offlineQuestions.some((entry) => entry.legacyIndex === 888), false);
+});
+
 test("redraws review item 190 from its source and matches the static MAC to PC1", () => {
   const questions = getOfflineReferExhibitQuestionBank();
   const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 704);
@@ -2810,6 +2887,66 @@ test("cleans the remaining missing or terminal-only exhibit gaps", () => {
   assert.match(ospfTimers.exhibit, /Hello 15, Dead 20/);
   assert.match(ospfTimers.exhibit, /Hello 10, Dead 40/);
   assert.equal(ospfTimers.answer, 0);
+});
+
+test("moves legacy ipconfig outputs into terminal exhibits without changing their questions", () => {
+  const questions = getOfflineReferExhibitQuestionBank();
+  const exactOutputQuestionStarts = new Map([
+    [1060, /\n\nWhat does the host do/],
+    [1123, /\n\nWhich address will the client/],
+    [1190, /\n\nThe user has connectivity/],
+  ]);
+  const expectedPrompts = new Map([
+    [1060, "What does the host do when using the IPv4 Preferred function?"],
+    [1123, "Which address will the client contact to renew their IP address when the current lease expires?"],
+    [1190, "The user has connectivity to devices on network 192.168.3.0/24 but cannot reach users on the network\n10.10.1.0/24. What is the first step to verify connectivity?"],
+    [1226, "During initial configuration testing, the Windows workstation PC1 cannot connect with the 172.16.2.0/24\nnetwork. Which set of actions corrects the configuration?"],
+  ]);
+
+  for (const [legacyIndex, marker] of [
+    [1060, "Connection-specific DNS Suffix"],
+    [1123, "wireless LAN adapter Wi-Fi"],
+    [1190, "ipconfig"],
+    [1226, "Wireless LAN adapter Wi-Fi"],
+  ]) {
+    const source = ccnaLegacyQuestions.find((entry) => entry.legacyIndex === legacyIndex);
+    const question = questions.find((entry) => entry.legacyIndex === legacyIndex);
+    const liveQuestion = applyNativeExhibit(source);
+    const markup = renderToStaticMarkup(
+      React.createElement(QuestionExhibits, { question }),
+    );
+
+    assert.ok(question, `legacy index ${legacyIndex} should be in the offline exhibit bank`);
+    assert.equal(question.type, source.type);
+    assert.equal(question.answer, source.answer);
+    assert.deepEqual(question.options, source.options);
+    assert.equal(question.hideExhibitImage, true);
+    assert.equal(question.afterExhibit, undefined);
+    assert.doesNotMatch(question.prompt, /^\s*Refer to the exhibit/);
+    assert.equal(question.prompt, expectedPrompts.get(legacyIndex));
+    assert.ok(question.exhibit.includes(marker));
+    assert.ok(markup.includes(marker));
+    if (legacyIndex === 1190) {
+      assert.ok(question.exhibit.includes("C:\\Users\\ADMIN>ipconfig"));
+    }
+    assert.doesNotMatch(markup, /<img\b|ccna-exhibit-|ccna-after-exhibit-/);
+
+    assert.equal(liveQuestion.type, source.type);
+    assert.equal(liveQuestion.answer, source.answer);
+    assert.deepEqual(liveQuestion.options, source.options);
+    assert.equal(liveQuestion.hideExhibitImage, true);
+    assert.equal(liveQuestion.hideAfterExhibit, true);
+    assert.equal(liveQuestion.prompt, expectedPrompts.get(legacyIndex));
+
+    const questionStart = exactOutputQuestionStarts.get(legacyIndex);
+    if (questionStart) {
+      const sourceOutput = source.prompt
+        .replace(/^Refer to the exhibit\.\n\n/i, "")
+        .split(questionStart)[0];
+      assert.equal(question.exhibit, sourceOutput);
+      assert.equal(liveQuestion.exhibit, sourceOutput);
+    }
+  }
 });
 
 test("redraws the R14-to-PC10 host-route exhibit from the provided screenshot details", () => {

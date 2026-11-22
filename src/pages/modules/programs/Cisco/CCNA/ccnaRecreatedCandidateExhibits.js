@@ -77,7 +77,12 @@ R6 Gi0/2: IP address not present in the live question record`, "partial")],
 { "example": "one JSON object" }`, "illustrative")],
   [481, diagramExhibit("candidate-static-route", "illustrative")],
   [518, diagramExhibit("candidate-wlc-518", "source-backed")],
-  [570, diagramExhibit("candidate-ospf-destinations", "illustrative")],
+  [570, {
+    diagram: "ospf-destination-segments-888",
+    hideExhibitImage: true,
+    hideAfterExhibit: true,
+    exhibitQuality: "illustrative",
+  }],
   [593, diagramExhibit("candidate-wlc-593", "source-backed")],
   [557, textExhibit(`Router subnet addressing
 Router/interface | Connected subnet | Last usable address

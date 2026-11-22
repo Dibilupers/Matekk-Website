@@ -381,3 +381,13 @@ The diagram renderer does not infer labels from the original screenshot; topolog
 - Question 1321's after panel is configuration-only and matches the original PAT overload exhibit.
 - Question 1329 was visually checked: both interface labels sit on their wires, with IP addresses below.
 - Focused CCNA tests, targeted lint, and the production build passed after implementation. No commit or push was made.
+
+## Legacy ipconfig terminal review — 2026-11-22
+
+- Moved legacy indexes 1060, 1123, and 1190 into source-backed terminal exhibits. Removed their exhibit lead-ins, hid the source and after-exhibit rasters, and preserved the original output text, question types, options, and answer keys. Revalidated the existing terminal treatment for index 1226.
+- Audited all 389 legacy prompts containing “exhibit”. The offline Refer-to-Exhibit exam includes 375 valid single-answer items; 14 matching items are excluded by its existing type filter: 264, 266, 278, 282, 617, 675, 699, 713, 759, 799, 888, 929, 1001, and 1258.
+- Of the 375 included items, indexes 702 and 809 have no separate exhibit, but their stems/options are self-contained and their stale lead-ins are removed. Index 1148 has a partial native terminal exhibit; its source and after-image rasters stay hidden.
+- Matching item 799 now has an illustrative R1–R2–R3 topology reconstructed from its keyed next-hop commands. Its drag-and-drop type, items, choices, and answer mapping are unchanged; it is available in the bundled All Questions bank and remains excluded from the single-answer Refer-to-Exhibit exam.
+- Matching item 888 (live-bank ID 570) now shows all five destinations under Internet or Router1 exactly as the saved key assigns them. The generic after-image has only the Site A–Site B OSPF path, and legacy index 570's source image is a different OSPF priority question; neither supplies destination prefixes. No conflicting answer source was found. The exhibit keeps the stated OSPF relationship, shows every keyed assignment, and does not invent masks. Its drag-and-drop type and key are unchanged; it remains excluded from the single-answer Refer-to-Exhibit exam.
+- Audited the supplied `Images` folder: its 349 source exhibit PNGs and 81 after-exhibit PNGs are byte-identical to assets already bundled in the repo; its nested `Website-Recreated` folder is empty. The folder adds no source evidence beyond the saved key for item 888.
+- Validation: all 181 focused CCNA exhibit-mapping and bank-converter tests passed, targeted ESLint passed, and `git diff --check` passed. No commit or push was made.

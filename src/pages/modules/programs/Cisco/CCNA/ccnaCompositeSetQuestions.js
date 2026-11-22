@@ -881,6 +881,7 @@ const DATABASE_NATIVE_EXHIBITS = new Map([
 	[1305, {
 		hideExhibitImage: true,
 		exhibit: CCNA_RECREATED_TEXT_EXHIBITS.routingTableComponents,
+		matchStyle: "assign",
 		choices: [
 			"route source",
 			"administrative distance",
@@ -1963,6 +1964,10 @@ Permit OSPF (protocol 89) from 10.100.1.2 and block other neighbors.`,
 		removeExhibitLeadIn: true,
 		exhibitQuality: "partial",
 	}],
+	[702, {
+		hideExhibitImage: true,
+		removeExhibitLeadIn: true,
+	}],
 	[747, {
 		exhibit: `R1#show ip ospf interface g0/0/0
 GigabitEthernet0/0/0 is up, line protocol is up
@@ -1980,6 +1985,18 @@ Hello 10, Dead 40, Retransmit 5`,
 		removeExhibitLeadIn: true,
 		exhibitQuality: "source-backed",
 	}],
+	[799, {
+		diagram: "static-route-three-router-799",
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "illustrative",
+	}],
+	[888, {
+		diagram: "ospf-destination-segments-888",
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "illustrative",
+	}],
 	[809, {
 		hideExhibitImage: true,
 		hideAfterExhibit: true,
@@ -1991,6 +2008,153 @@ Hello 10, Dead 40, Retransmit 5`,
 		hideAfterExhibit: true,
 		removeExhibitLeadIn: true,
 		exhibitQuality: "partial",
+	}],
+	[1060, {
+		prompt: "What does the host do when using the IPv4 Preferred function?",
+		exhibit: ` Connection-specific DNS Suffix . :
+
+    Description .................: Intel(R) Ethernet Connection (2) I218-V
+
+    Physical Address.............: D0-50-99-47-A9-7F
+
+    DHCP Enabled.................: Yes
+
+    Autoconfiguration Enabled....: Yes
+
+    Link-local IPv6 Address .....: fe80::8809:9772:c583:6bl8%15(Preferred)
+
+    IPv4 Address.................: 192.168.69.132(Preferred)
+
+    Subnet Mask .................: 255.255.255.0
+
+    Lease Obtained...............: Thursday, January 21, 2021 11:10:46 PM
+
+    Lease Expires ...............: Wednesday, February 3, 2021 11:27:29 AM
+
+    Default Gateway..............: 192.168.69.1
+
+    DHCP Server .................: 192.168.69.1
+
+    DHCPv6 IAID .................: 231755929
+
+    DHCPv6 Client DUID...........: 00-01-00-01-26-D7-BB-3F-D0-50-99-47-A9-7F
+
+    DNS Servers .................: 192.168.69.1
+
+    NetBIOS over Tcpip...........: Enabled`,
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		removeExhibitLeadIn: true,
+		exhibitQuality: "source-backed",
+	}],
+	[1123, {
+		prompt: "Which address will the client contact to renew their IP address when the current lease expires?",
+		exhibit: ` wireless LAN adapter Wi-Fi
+
+ Connection-specific DNS Suffix
+ Description ..........                : Intel(R) dual Band wireless-AC 7265
+ Physical Address........              : C8-21-5B-B4-D3-E0
+ DHCP Enabled..........                : YES
+ Autoconfiguration Enabled . . .: YES
+ Link-local IPv6 Address . . . .: fe80::45a1:b3fa:2f37:bf37%2(Preferred)
+ IPv4 Address..........                : 192.168.25.103((Preferred)
+
+ Subnet Mask..........                 : 255.255.255.0
+ Lease Obtained.........               : June 11, 2019 10:21:31 AM
+ Lease Expires .........               : June 12, 2019 10:21:36 AM
+ Default Gateway ........              : 192.168.25.1
+ DHCP Server ..........                : 192.168.25.100
+ DHCPV6 IAID..........                 : 46670168
+ DHCPv6 Client DUID.......             : 00-01-00-20-FF-05-55-3C-52-82-33-D3-84
+ DNS Servers ..........                : 192.168.25.254
+
+                                              192.168.25.254`,
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		removeExhibitLeadIn: true,
+		exhibitQuality: "source-backed",
+	}],
+	[1190, {
+		prompt: "The user has connectivity to devices on network 192.168.3.0/24 but cannot reach users on the network\n10.10.1.0/24. What is the first step to verify connectivity?",
+		exhibit: ` C:\\Users\\ADMIN>ipconfig
+
+ Windows IP Configuration
+
+ Ethernet adapter Ethernet:
+
+ <...>
+
+     Physical Address . . . . . . . . . . . : 04-42-1A-EE-AA-5E
+
+     DHCP Enabled . . . . . . . . . . . . . : Yes
+
+     Autoconfiguration Enabled. . . . . . . : Yes
+
+     Link-local IPv6 Address. . . . . . . . :
+
+ fe80::8a79:bcde:34dc:c11e35%(Preferred)
+
+     Ipv4 Address . . . . . . . . . . . . . : 192.168.3.20(Preferred)
+
+     Subnet Mask. . . . . . . . . . . . . . : 255.255.255.0
+
+     Lease Obtained . . . . . . . . . . . . : Thursday, 16 March 2023
+
+ 6:25:01 AM
+
+     Lease Expires. . . . . . . . . . . . . : Sunday, 26 March 2023
+
+ 4:17:26 PM
+
+     Default Gateway. . . . . . . . . . . . : 192.168.3.1
+
+     DHCP Server. . . . . . . . . . . . . . : 192.168.3.1
+
+     DHCPv6 IAID. . . . . . . . . . . . . . : 201605658
+
+     DHCPv6 Client DUID . . . . . . . . . . : 00-01-00-01-2A-3F-45-34-03-
+
+ 13-23-EE-AD-5E
+
+     DNS Servers. . . . . . . . . . . . . . : 10.10.1.254
+
+     NetBIOS over Tcpip . . . . . . . . . . : Enabled`,
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		removeExhibitLeadIn: true,
+		exhibitQuality: "source-backed",
+	}],
+	[1226, {
+		prompt: "During initial configuration testing, the Windows workstation PC1 cannot connect with the 172.16.2.0/24\nnetwork. Which set of actions corrects the configuration?",
+		exhibit: `Wireless LAN adapter Wi-Fi:
+
+Connection-specific DNS Suffix        . :
+
+Description . . . . . . . . . . . : Intel(R) Wi-Fi 6 AX201 160MHz
+
+Physical Address. . . . . . . . . : AC-63-DA-AC-B4-AD
+
+DHCP Enabled. . . . . . . . . . . : No
+Autoconfiguration Enabled . . . . : Yes
+
+IPv6 Address. . . . . . . . . . . : ::70D6:5432:6D8A:90B2(Preferred)
+Temporary IPv6 Address. . . . . . : ::dc3f:a66c:f996:bdb9(Preferred)
+Link-local IPv6 Address . . . . . : fe80::7096:5693:6d8a:90ba%8(Preferred)
+
+IPv4 Address. . . . . . . . . . . : 172.16.1.8(Preferred)
+Subnet Mask. . . . . . . . . . . . : 255.255.255.240
+Default Gateway . . . . . . . . . : 172.16.1.1
+
+DHCPv6 IAID. . . . . . . . . . . . : 116155351
+DHCPv6 Client DUID. . . . . . . . : 00-01-00-01-2B-BE-0A-47-3C-15-AB-80-12-F6
+
+DNS Servers . . . . . . . . . . . : 172.16.1.3
+                                      172.16.1.4
+NetBIOS over Tcpip. . . . . : Enabled`,
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		removeExhibitLeadIn: true,
+		exhibitQuality: "source-backed",
 	}],
 	[836, {
 		diagram: "candidate-wlc-518",
@@ -2544,6 +2708,39 @@ S* 0.0.0.0/0 [1/0] via 10.10.10.1`,
 
 export function getBuiltInQuestionByPrompt(prompt) {
 	if (typeof prompt !== "string") return null;
+	if (/initial configuration testing[\s\S]*172\.16\.2\.0\/24/i.test(prompt)) {
+		return {
+			exhibit: `Wireless LAN adapter Wi-Fi:
+
+Connection-specific DNS Suffix        . :
+
+Description . . . . . . . . . . . : Intel(R) Wi-Fi 6 AX201 160MHz
+
+Physical Address. . . . . . . . . : AC-63-DA-AC-B4-AD
+
+DHCP Enabled. . . . . . . . . . . : No
+Autoconfiguration Enabled . . . . : Yes
+
+IPv6 Address. . . . . . . . . . . : ::70D6:5432:6D8A:90B2(Preferred)
+Temporary IPv6 Address. . . . . . : ::dc3f:a66c:f996:bdb9(Preferred)
+Link-local IPv6 Address . . . . . : fe80::7096:5693:6d8a:90ba%8(Preferred)
+
+IPv4 Address. . . . . . . . . . . : 172.16.1.8(Preferred)
+Subnet Mask. . . . . . . . . . . . : 255.255.255.240
+Default Gateway . . . . . . . . . : 172.16.1.1
+
+DHCPv6 IAID. . . . . . . . . . . . : 116155351
+DHCPv6 Client DUID. . . . . . . . : 00-01-00-01-2B-BE-0A-47-3C-15-AB-80-12-F6
+
+DNS Servers . . . . . . . . . . . : 172.16.1.3
+                                      172.16.1.4
+NetBIOS over Tcpip. . . . . : Enabled`,
+			hideExhibitImage: true,
+			hideAfterExhibit: true,
+			removeExhibitLeadIn: true,
+			exhibitQuality: "source-backed",
+		};
+	}
 	if (/which configuration enables sw2 to establish an lacp etherchannel/i.test(prompt)) {
 		return { hideExhibitImage: true, removeExhibitLeadIn: true };
 	}
@@ -2699,6 +2896,9 @@ export function applyNativeExhibit(question) {
 		...(hasNativeTextExhibit ? { exhibit, nativeExhibitText: true } : {}),
 		...(databaseExhibit?.exhibitQuality || builtInQuestion?.exhibitQuality
 			? { exhibitQuality: databaseExhibit?.exhibitQuality ?? builtInQuestion?.exhibitQuality }
+			: {}),
+		...(databaseExhibit?.matchStyle
+			? { matchStyle: databaseExhibit.matchStyle }
 			: {}),
 		...(builtInQuestion?.exhibit ? { exhibit: builtInQuestion.exhibit } : {}),
 	};
