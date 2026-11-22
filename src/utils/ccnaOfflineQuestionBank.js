@@ -1,8 +1,8 @@
 import { isValidQuestion } from "./ccnaExamGrading";
 import { isCcnaQuestionModule } from "./ccnaQuestionModule";
 
-const CACHE_NAME = "matekk-ccna-all-questions-offline-v3";
-const CACHE_PATH = "/__offline__/ccna-all-questions-v3";
+const CACHE_NAME = "matekk-ccna-all-questions-offline-v4";
+const CACHE_PATH = "/__offline__/ccna-all-questions-v4";
 
 function createCacheRequest() {
 	if (typeof window === "undefined") {

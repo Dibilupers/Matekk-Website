@@ -155,21 +155,26 @@ function createExamQuestions(sourceQuestions, count, { jumbleMatchingAnswers = f
   const requiredClickBoxesCount = blockCount * clickBoxesPerBlock;
   const clickBoxesShortage = Math.max(0, requiredClickBoxesCount - clickBoxesPool.length);
   const randomizedDragDropPool = shuffle(dragDropPool);
-  const canBorrowClickBoxes = randomizedDragDropPool.length >= requiredDragDropCount + clickBoxesShortage;
+  const borrowedClickBoxSources = randomizedDragDropPool
+    .filter((question) =>
+      question.items?.length === question.choices?.length &&
+      question.answer?.length === question.items.length &&
+      new Set(question.answer).size === question.answer.length,
+    )
+    .slice(0, clickBoxesShortage);
+  const canBorrowClickBoxes = borrowedClickBoxSources.length === clickBoxesShortage &&
+    randomizedDragDropPool.length - borrowedClickBoxSources.length >= requiredDragDropCount;
   const dragDropQuota = canBorrowClickBoxes && randomizedDragDropPool.length >= requiredDragDropCount
     ? dragDropPerBlock
     : 0;
-  const borrowedClickBoxes = canBorrowClickBoxes
-    ? randomizedDragDropPool.slice(requiredDragDropCount, requiredDragDropCount + clickBoxesShortage)
-      .map((question) => ({ ...question, type: "click_boxes" }))
-    : [];
+  const borrowedClickBoxes = borrowedClickBoxSources.map((question) => ({ ...question, type: "click_boxes" }));
   const clickBoxesQuota = clickBoxesPool.length + borrowedClickBoxes.length >= requiredClickBoxesCount
     ? clickBoxesPerBlock
     : 0;
   const imageQuota = imagePool.length >= blockCount * imagePerBlock ? imagePerBlock : 0;
-  const borrowedIds = new Set(borrowedClickBoxes.map((question) => question.bankId ?? question.id));
+  const borrowedClickBoxSourceSet = new Set(borrowedClickBoxSources);
   const dragDropQuestions = randomizedDragDropPool
-    .filter((question) => !borrowedIds.has(question.bankId ?? question.id))
+    .filter((question) => !borrowedClickBoxSourceSet.has(question))
     .slice(0, blockCount * dragDropQuota);
   const clickBoxesQuestions = shuffle([...clickBoxesPool, ...borrowedClickBoxes])
     .slice(0, blockCount * clickBoxesQuota);

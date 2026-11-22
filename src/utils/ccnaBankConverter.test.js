@@ -685,6 +685,7 @@ test("replaces recreated matching-activity screenshots with their existing inter
   assert.deepEqual(builtInQuestion617.choices, offlineQuestion299.choices);
   assert.deepEqual(builtInQuestion617.answer, offlineQuestion299.answer);
   const offlineQuestion266 = getOfflineLegacyQuestionBank().find((entry) => entry.legacyIndex === 266);
+  assert.equal(offlineQuestion266.type, "drag_drop");
   assert.equal(offlineQuestion266.choices.length, 7);
   assert.equal(offlineQuestion266.matchStyle, "assign");
   assert.equal(
@@ -702,6 +703,35 @@ test("replaces recreated matching-activity screenshots with their existing inter
   assert.equal(offlinePatQuestion.exhibitDiagram, undefined);
   assert.equal(offlinePatQuestion.exhibit, undefined);
   assert.match(offlinePatQuestion.afterExhibit.text, /ip nat inside source list 1 interface Gi0\/1 overload/);
+});
+
+test("keeps unused-option legacy drag-and-drop questions consistent across built-in and offline banks", () => {
+  const unusedOptionsPrompt = /\bnot all (?:the )?(?:options|values|commands|answers) are used\b/i;
+  const candidates = ccnaLegacyQuestions.filter((question) =>
+    question.type === "match" && unusedOptionsPrompt.test(question.prompt),
+  );
+  const offlineQuestions = getOfflineLegacyQuestionBank();
+
+  assert.equal(candidates.length, 13);
+  for (const sourceQuestion of candidates) {
+    const expectedManyToOne = sourceQuestion.choices.length < sourceQuestion.items.length ||
+      new Set(sourceQuestion.answer).size < sourceQuestion.answer.length;
+    for (const bank of [builtInQuestionBank, offlineQuestions]) {
+      const question = bank.find((entry) => entry.legacyIndex === sourceQuestion.legacyIndex);
+      assert.ok(question, `legacy question ${sourceQuestion.legacyIndex} should be available`);
+      assert.equal(question.type, "drag_drop", `legacy question ${sourceQuestion.legacyIndex}`);
+      assert.deepEqual(question.items, sourceQuestion.items);
+      for (const choice of sourceQuestion.choices) {
+        assert.ok(question.choices.includes(choice), `legacy question ${sourceQuestion.legacyIndex} should retain ${choice}`);
+      }
+      assert.deepEqual(question.answer, sourceQuestion.answer);
+      assert.equal(
+        question.dragDropMode,
+        expectedManyToOne ? "items-to-choices" : undefined,
+        `legacy question ${sourceQuestion.legacyIndex}`,
+      );
+    }
+  }
 });
 
 test("keeps the Router1 routing-method question prompt and matching controls while replacing its screenshot with a topology", () => {
@@ -2268,7 +2298,7 @@ test("rebuilds legacy drag-and-drop item 799 without changing its matching answe
   );
 
   assert.ok(question);
-  assert.equal(question.type, "match");
+  assert.equal(question.type, "drag_drop");
   assert.deepEqual(question.items, source.items);
   assert.deepEqual(question.choices, source.choices);
   assert.deepEqual(question.answer, source.answer);
