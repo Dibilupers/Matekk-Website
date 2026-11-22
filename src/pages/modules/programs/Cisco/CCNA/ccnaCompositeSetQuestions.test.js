@@ -3,6 +3,7 @@ import test from "node:test";
 import {
 	applyNativeExhibit,
 	CCNA_RECREATED_TEXT_EXHIBITS,
+	isDropdownLayoutDragCandidate,
 } from "./ccnaCompositeSetQuestions.js";
 import { CCNA_RECREATED_CANDIDATE_EXHIBITS } from "./ccnaRecreatedCandidateExhibits.js";
 import { CCNA_LEGACY_QUESTIONS } from "./ccnaLegacyQuestions.js";
@@ -19,6 +20,19 @@ test("applies the Question 299 IP-address drag-and-drop override", () => {
 	assert.equal(question.choices.length, 7);
 	assert.equal(question.hideExhibitImage, true);
 	assert.equal(question.prompt, "Match the interface to its IP address.");
+});
+
+test("converts dropdown-layout repeated-answer matches without touching 268 or 282", () => {
+	const candidates = CCNA_LEGACY_QUESTIONS.filter(isDropdownLayoutDragCandidate);
+
+	assert.equal(candidates.length, 75);
+	assert.equal(candidates.some(({ legacyIndex }) => legacyIndex === 268), false);
+	assert.equal(candidates.some(({ legacyIndex }) => legacyIndex === 282), false);
+	for (const sourceQuestion of candidates) {
+		const question = applyNativeExhibit(sourceQuestion);
+		assert.equal(question.type, "drag_drop", `legacy question ${sourceQuestion.legacyIndex}`);
+		assert.equal(question.dragDropMode, "items-to-choices", `legacy question ${sourceQuestion.legacyIndex}`);
+	}
 });
 
 test("uses source-matching WLC security values for Question 1012", () => {
