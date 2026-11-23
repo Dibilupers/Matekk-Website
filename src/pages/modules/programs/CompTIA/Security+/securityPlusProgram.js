@@ -7,6 +7,7 @@ const SECURITY_PLUS_PROGRAM = {
 	title: "Security+",
 	badge: SecurityPlusBadge,
 	coursePath: "/training/comptia/security+",
+	practiceLabPath: "/modules/programs/comptia-security-plus/practice-lab",
 	gradebookPath: "/modules/programs/comptia-security-plus/gradebook",
 	headline: "Build confidence in",
 	highlight: "cybersecurity.",

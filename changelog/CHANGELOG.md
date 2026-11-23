@@ -17,6 +17,28 @@ application root and unknown-route fallback.
 
 Commits included in this push:
 
+- `37d9cfa` - Restored the original matching question type for all 13 legacy
+  questions marked with unused options or values, removed the drag-and-drop
+  progression override, and bumped the offline question cache to v6.
+
+Validation before push: 192 focused CCNA tests, targeted ESLint,
+`npm run build`, and `git diff --check` passed.
+
+## 2026-11-22 - main
+
+Commits included in this push:
+
+- `680ce50` - Let grouped drag-and-drop questions advance once each category
+  has an assignment, while retaining original unused-option wording and
+  grading incomplete mappings as incorrect.
+
+Validation before push: 193 focused CCNA tests, targeted ESLint,
+`npm run build`, and `git diff --check` passed.
+
+## 2026-11-22 - main
+
+Commits included in this push:
+
 - `83e191c` - Prefer bundled exhibit images over stale database URLs for mapped
   CCNA exhibit questions and bump the offline question-bank cache to v5.
 

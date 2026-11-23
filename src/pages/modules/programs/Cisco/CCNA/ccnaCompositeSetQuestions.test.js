@@ -38,7 +38,7 @@ test("keeps repeated-answer matches in numbered mode instead of drag-and-drop", 
 	}
 });
 
-test("converts legacy matches that say some options or values are unused to drag-and-drop", () => {
+test("preserves the original matching type for questions with unused options or values", () => {
 	const unusedOptionsPrompt = /\bnot all (?:the )?(?:options|values|commands|answers) are used\b/i;
 	const candidates = CCNA_LEGACY_QUESTIONS.filter((question) =>
 		question.type === "match" && unusedOptionsPrompt.test(question.prompt),
@@ -47,18 +47,15 @@ test("converts legacy matches that say some options or values are unused to drag
 	assert.equal(candidates.length, 13);
 	for (const sourceQuestion of candidates) {
 		const question = applyNativeExhibit(sourceQuestion);
-		assert.equal(question.type, "drag_drop", `legacy question ${sourceQuestion.legacyIndex}`);
+		assert.equal(question.type, "match", `legacy question ${sourceQuestion.legacyIndex}`);
+		assert.equal(question.answer.length, question.items.length, `legacy question ${sourceQuestion.legacyIndex} must map every item`);
+		assert.equal(new Set(question.answer).size, question.choices.length, `legacy question ${sourceQuestion.legacyIndex} must use every category`);
+		assert.match(question.prompt, unusedOptionsPrompt, `legacy question ${sourceQuestion.legacyIndex} must preserve its source wording`);
 		assert.deepEqual(question.items, sourceQuestion.items);
 		assert.deepEqual(question.choices, sourceQuestion.choices);
 		assert.deepEqual(question.answer, sourceQuestion.answer);
-
-		const needsManyToOne = sourceQuestion.choices.length < sourceQuestion.items.length ||
-			new Set(sourceQuestion.answer).size < sourceQuestion.answer.length;
-		assert.equal(
-			question.dragDropMode,
-			needsManyToOne ? "items-to-choices" : undefined,
-			`legacy question ${sourceQuestion.legacyIndex}`,
-		);
+		assert.equal(question.dragDropMode, undefined, `legacy question ${sourceQuestion.legacyIndex}`);
+		assert.equal(matchMode(question), matchMode(sourceQuestion), `legacy question ${sourceQuestion.legacyIndex}`);
 	}
 
 	const withoutLegacyIdentity = { ...candidates[0] };
