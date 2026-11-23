@@ -6,6 +6,17 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `89e4bd8` - Restore question 624's partially reconstructed OSPF terminal in
+  the legacy and database-backed banks, strip its unsupported exhibit lead-in,
+  and preserve its options and answer.
+
+Validation before push: all 150 `ccnaBankConverter.test.js` tests, targeted
+ESLint, `npm run build`, and `git diff --check` passed.
+
+## 2026-11-23 - main
+
+Commits included in this push:
+
 - `beff369` - Remove the unsupported exhibit lead-ins from self-contained CCNA
   questions 702 and 809 in the database-backed bank, and restore question
   1148's recreated terminal in the legacy/offline bank.
