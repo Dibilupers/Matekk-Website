@@ -2905,6 +2905,7 @@ const TOPOLOGY_EXHIBIT_RECREATIONS_BY_LEGACY_INDEX = new Map(
 			diagram,
 			hideExhibitImage: true,
 			hideAfterExhibit: !PRESERVE_TOPOLOGY_AFTER_EXHIBIT_LEGACY_INDEXES.has(legacyIndex),
+			removeExhibitLeadIn: true,
 		}]),
 );
 
@@ -2938,6 +2939,8 @@ export function applyNativeExhibit(question) {
 			promptLegacyIndex = 695;
 		} else if (/preconfigured secret key and ssid and must have a secured key hashing algorithm/i.test(question.prompt)) {
 			promptLegacyIndex = 1304;
+		} else if (/what is the next-hop ip address for r2 so that pc2 reaches the application server via eigrp/i.test(question.prompt)) {
+			promptLegacyIndex = 852;
 		}
 	}
 	const legacyIndex = question?.legacyIndex ?? promptLegacyIndex;

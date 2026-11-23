@@ -381,6 +381,23 @@ test("replaces topology after-images with native diagrams in legacy and live que
 	assert.equal(routerOnAStickQuestion.afterExhibit, undefined);
 });
 
+test("resolves legacy question 852's EIGRP exhibit when its live ID differs", () => {
+	const sourceQuestion = CCNA_LEGACY_QUESTIONS.find((item) => item.legacyIndex === 852);
+	const liveQuestion = applyNativeExhibit({
+		bankId: 999997,
+		prompt: sourceQuestion.prompt,
+		options: sourceQuestion.options,
+		answer: sourceQuestion.answer,
+	});
+
+	assert.equal(liveQuestion.legacyIndex, 852);
+	assert.equal(liveQuestion.exhibitDiagram, "eigrp-three-router-pc-server");
+	assert.equal(liveQuestion.hideExhibitImage, true);
+	assert.equal(liveQuestion.prompt, "What is the next-hop IP address for R2 so that PC2 reaches the application server via EIGRP?");
+	assert.deepEqual(liveQuestion.options, sourceQuestion.options);
+	assert.equal(liveQuestion.answer, sourceQuestion.answer);
+});
+
 test("removes text exhibits duplicated in mapped question prompts", () => {
 	const cases = [
 		[402, 720, "In which structure does the word “warning” directly reside?"],
