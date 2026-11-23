@@ -2692,7 +2692,6 @@ interface Gi0/2                 interface Gi0/7
 		hideExhibitImage: true,
 		exhibitQuality: "source-backed",
 	}],
-	[624, { removeExhibitLeadIn: true }],
 	[627, {
 		offlineSourceExhibitImages: ["/src/assets/ccna-offline-exams-images/ccna-exhibit-627.png"],
 		hideExhibitImage: true,
@@ -2881,11 +2880,16 @@ const DUPLICATE_TERMINAL_SOURCE_IMAGE_LEGACY_INDEXES = new Set([
 
 export function applyNativeExhibit(question) {
 	const builtInQuestion = getBuiltInQuestionByPrompt(question?.prompt);
+	const promptLegacyIndex = typeof question?.prompt === "string" &&
+		/an ospf neighbor relationship must be configured using these guidelines/i.test(question.prompt)
+		? 624
+		: undefined;
+	const legacyIndex = question?.legacyIndex ?? promptLegacyIndex;
 	const parsedPrompt = !question?.exhibit && typeof question?.prompt === "string"
 		? splitPromptExhibit(question.prompt)
 		: null;
 	const databaseExhibit = CCNA_RECREATED_CANDIDATE_EXHIBITS.get(question?.bankId) ??
-		LEGACY_NATIVE_EXHIBITS.get(question?.legacyIndex) ??
+		LEGACY_NATIVE_EXHIBITS.get(legacyIndex) ??
 		DATABASE_NATIVE_EXHIBITS.get(question?.bankId);
 	const questionOverride = typeof databaseExhibit === "object" ? databaseExhibit : {};
 	const exhibitDiagram = (typeof databaseExhibit === "string" ? databaseExhibit : databaseExhibit?.diagram) ??

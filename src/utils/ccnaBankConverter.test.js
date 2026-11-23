@@ -1971,15 +1971,42 @@ test("redraws review item 163's visible SW4 terminal snippets", () => {
   assert.match(markup, /ccna-exhibit-622\.png/);
 });
 
-test("removes the exhibit lead-in when review item 164 has no source exhibit", () => {
+test("rebuilds review item 164's partial OSPF exhibit and removes its lead-in", () => {
   const questions = getOfflineReferExhibitQuestionBank();
   const questionIndex = questions.findIndex((entry) => entry.legacyIndex === 624);
   const question = questions[questionIndex];
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question }),
+  );
 
   assert.equal(questionIndex + 1, 164);
   assert.doesNotMatch(question.prompt, /^\s*Refer to the exhibit\./i);
   assert.equal(question.exhibitImage, undefined);
+  assert.equal(question.exhibitQuality, "partial");
+  assert.match(question.exhibit, /10\.100\.1\.2/);
+  assert.match(markup, /10\.100\.1\.2/);
   assert.equal(question.answer, 1);
+});
+
+test("resolves question 624's exhibit by prompt when the database ID differs", () => {
+  const source = ccnaLegacyQuestions.find((entry) => entry.legacyIndex === 624);
+  const promptOnlyDatabaseQuestion = applyNativeExhibit({
+    bankId: 999999,
+    prompt: source.prompt,
+    options: source.options,
+    answer: source.answer,
+  });
+  const builtInQuestion = builtInQuestionBank.find((entry) => entry.legacyIndex === 624);
+  const expectedPrompt = source.prompt.replace(/^\s*Refer to (?:the )?exhibit\.?\s*/i, "");
+
+  for (const question of [promptOnlyDatabaseQuestion, builtInQuestion]) {
+    assert.equal(question.prompt, expectedPrompt);
+    assert.equal(question.hideExhibitImage, true);
+    assert.equal(question.exhibitQuality, "partial");
+    assert.match(question.exhibit, /10\.100\.1\.2/);
+    assert.deepEqual(question.options, source.options);
+    assert.equal(question.answer, source.answer);
+  }
 });
 
 test("uses review item 165's existing ARP-inspection terminal text instead of its raster", () => {
