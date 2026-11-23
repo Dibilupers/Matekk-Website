@@ -218,7 +218,20 @@ function createExamQuestions(sourceQuestions, count, { jumbleMatchingAnswers = f
 let databaseQuestions = null;
 export function setDatabaseQuestions(questions) {
   databaseQuestions = Array.isArray(questions) && questions.length
-    ? questions.map(applyNativeExhibit)
+    ? questions.map((question) => {
+      const questionWithExhibit = applyNativeExhibit(question);
+      const sourceExhibitImage =
+        !questionWithExhibit.hideExhibitImage &&
+        !questionWithExhibit.exhibitDiagram &&
+        !questionWithExhibit.exhibitImage &&
+        /\bexhibit\b/i.test(questionWithExhibit.prompt ?? "")
+        ? getCcnaExhibitImageByLegacyIndex(questionWithExhibit.legacyIndex)
+        : null;
+
+      return sourceExhibitImage
+        ? { ...questionWithExhibit, exhibitImage: sourceExhibitImage }
+        : questionWithExhibit;
+    })
     : null;
 }
 

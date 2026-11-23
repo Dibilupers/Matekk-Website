@@ -2722,6 +2722,11 @@ S* 0.0.0.0/0 [1/0] via 10.10.10.1`,
 		hideAfterExhibit: true,
 		exhibitQuality: "source-backed",
 	}],
+	[1161, {
+		prompt: `Refer to the exhibit.
+
+The active route to 10.220.100.96/27 is learned via BGP from Router D (AD 20). If it becomes unavailable, Router Y has three alternate routes: a floating static route via Router B (AD 105), an OSPF route (AD 110), and an external EIGRP route (AD 170). The routing protocol defaults have not been changed. Which router will Router Y use next?`,
+	}],
 	[641, {
 		offlineSourceExhibitImages: ["/src/assets/ccna-offline-exams-images/ccna-exhibit-641.png"],
 		hideExhibitImage: true,
@@ -2880,10 +2885,36 @@ const DUPLICATE_TERMINAL_SOURCE_IMAGE_LEGACY_INDEXES = new Set([
 
 export function applyNativeExhibit(question) {
 	const builtInQuestion = getBuiltInQuestionByPrompt(question?.prompt);
-	const promptLegacyIndex = typeof question?.prompt === "string" &&
-		/an ospf neighbor relationship must be configured using these guidelines/i.test(question.prompt)
-		? 624
-		: undefined;
+	let promptLegacyIndex;
+	if (typeof question?.prompt === "string") {
+		if (/an ospf neighbor relationship must be configured using these guidelines/i.test(question.prompt)) {
+			promptLegacyIndex = 624;
+		} else if (/the route for 10\.220\.100\.96\/27 has been very unstable/i.test(question.prompt)) {
+			promptLegacyIndex = 1161;
+		} else if (/what is represented by[\s\S]*r1[\s\S]*sw1[\s\S]*within the json output/i.test(question.prompt)) {
+			promptLegacyIndex = 621;
+		} else if (/between which zones do wireless users expect to experience intermittent connectivity/i.test(question.prompt)) {
+			promptLegacyIndex = 478;
+		} else if (/users need to connect to the wireless network with ieee 802\.11r-compatible devices/i.test(question.prompt)) {
+			promptLegacyIndex = 578;
+		} else if (/what must be configured to enable 802\.11w on the wlan/i.test(question.prompt)) {
+			promptLegacyIndex = 599;
+		} else if (/network engineer configures the cisco wlc to authenticate local wireless clients against a radius\s+server/i.test(question.prompt)) {
+			promptLegacyIndex = 603;
+		} else if (/highest encryption and authentication\s+using domain credentials from ldap/i.test(question.prompt)) {
+			promptLegacyIndex = 612;
+		} else if (/what configuration on r1 denies ssh access from pc-1 to any r1 interface/i.test(question.prompt)) {
+			promptLegacyIndex = 160;
+		} else if (/clients on the wlan are required to use 802\.11r/i.test(question.prompt)) {
+			promptLegacyIndex = 679;
+		} else if (/how many objects are present in the given json-encoded data/i.test(question.prompt)) {
+			promptLegacyIndex = 682;
+		} else if (/single wlan to process the client data traffic without sending it to the wlc/i.test(question.prompt)) {
+			promptLegacyIndex = 695;
+		} else if (/preconfigured secret key and ssid and must have a secured key hashing algorithm/i.test(question.prompt)) {
+			promptLegacyIndex = 1304;
+		}
+	}
 	const legacyIndex = question?.legacyIndex ?? promptLegacyIndex;
 	const parsedPrompt = !question?.exhibit && typeof question?.prompt === "string"
 		? splitPromptExhibit(question.prompt)
@@ -2915,7 +2946,11 @@ export function applyNativeExhibit(question) {
 		Object.prototype.hasOwnProperty.call(questionOverride, key),
 	);
 	if (!exhibitDiagram && !exhibitImage && !hasNativeTextExhibit && !hideExhibitImage && !hideAfterExhibit &&
-		!removeExhibitLeadIn && !hasQuestionOverride) return question;
+		!removeExhibitLeadIn && !hasQuestionOverride) {
+		return question?.legacyIndex == null && promptLegacyIndex !== undefined
+			? { ...question, legacyIndex: promptLegacyIndex }
+			: question;
+	}
 	const prompt = typeof databaseExhibit?.prompt === "string"
 		? databaseExhibit.prompt
 		: typeof parsedPrompt?.exhibit === "string"
@@ -2926,6 +2961,9 @@ export function applyNativeExhibit(question) {
 
 	return {
 		...question,
+		...(question?.legacyIndex == null && promptLegacyIndex !== undefined
+			? { legacyIndex: promptLegacyIndex }
+			: {}),
 		...(Object.prototype.hasOwnProperty.call(questionOverride, "type") ? { type: questionOverride.type } : {}),
 		...(Object.prototype.hasOwnProperty.call(questionOverride, "items") ? { items: questionOverride.items } : {}),
 		...(Object.prototype.hasOwnProperty.call(questionOverride, "choices") ? { choices: questionOverride.choices } : {}),

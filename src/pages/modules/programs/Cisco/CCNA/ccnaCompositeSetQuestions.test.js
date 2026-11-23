@@ -599,3 +599,61 @@ test("extracts embedded terminal output before formatted answer tables without c
 		assert.equal(question.answer, sourceQuestion.answer);
 	}
 });
+test("clarifies the backup-route administrative distances for legacy question 1161", () => {
+	const sourceQuestion = CCNA_LEGACY_QUESTIONS.find(({ legacyIndex }) => legacyIndex === 1161);
+	const expectedPrompt = `Refer to the exhibit.
+
+The active route to 10.220.100.96/27 is learned via BGP from Router D (AD 20). If it becomes unavailable, Router Y has three alternate routes: a floating static route via Router B (AD 105), an OSPF route (AD 110), and an external EIGRP route (AD 170). The routing protocol defaults have not been changed. Which router will Router Y use next?`;
+
+	for (const question of [
+		applyNativeExhibit(sourceQuestion),
+		applyNativeExhibit({
+			bankId: 999999,
+			prompt: sourceQuestion.prompt,
+			options: sourceQuestion.options,
+			answer: sourceQuestion.answer,
+		}),
+	]) {
+		assert.equal(question.prompt, expectedPrompt);
+		assert.match(question.exhibit, /B 10\.220\.100\.96\/27 \[20\/0\] via 10\.224\.1\.3/);
+		assert.deepEqual(question.options, sourceQuestion.options);
+		assert.equal(question.answer, sourceQuestion.answer);
+	}
+});
+
+test("rebuilds legacy question 621's JSON exhibit when the live database ID differs", () => {
+	const sourceQuestion = CCNA_LEGACY_QUESTIONS.find(({ legacyIndex }) => legacyIndex === 621);
+	const mojibakePrompt = "Refer to the exhibit.\n\nWhat is represented by â€œR1â€� and â€œSW1â€� within the JSON output?";
+
+	for (const question of [
+		applyNativeExhibit(sourceQuestion),
+		applyNativeExhibit({
+			bankId: 999999,
+			prompt: sourceQuestion.prompt,
+			options: sourceQuestion.options,
+			answer: sourceQuestion.answer,
+		}),
+		applyNativeExhibit({ bankId: 999998, prompt: mojibakePrompt }),
+	]) {
+		assert.equal(question.hideExhibitImage, true);
+		assert.equal(question.exhibitQuality, "source-backed");
+		assert.equal(question.nativeExhibitText, true);
+		assert.match(question.exhibit, /"Routers": \["R1", "R2", "R3"\]/);
+		assert.match(question.exhibit, /"Switches": \["SW1", "SW2", "SW3"\]/);
+	}
+});
+
+test("resolves source-backed wireless exhibits when the live database ID differs", () => {
+	for (const legacyIndex of [478, 578, 599, 603, 612]) {
+		const sourceQuestion = CCNA_LEGACY_QUESTIONS.find((item) => item.legacyIndex === legacyIndex);
+		const sourceExhibit = applyNativeExhibit(sourceQuestion);
+		const liveQuestion = applyNativeExhibit({
+			bankId: 999999,
+			prompt: sourceQuestion.prompt,
+		});
+
+		assert.equal(liveQuestion.exhibitDiagram, sourceExhibit.exhibitDiagram);
+		assert.equal(liveQuestion.hideExhibitImage, true);
+		assert.equal(liveQuestion.exhibitQuality, sourceExhibit.exhibitQuality);
+	}
+});

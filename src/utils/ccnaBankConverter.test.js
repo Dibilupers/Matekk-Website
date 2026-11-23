@@ -24,6 +24,7 @@ let ccnaLegacyQuestions;
 let builtInQuestionBank;
 let createShortExamQuestions;
 let setDatabaseQuestions;
+let getDatabaseQuestionById;
 let originalFetch;
 let originalCaches;
 let originalWindow;
@@ -54,7 +55,7 @@ before(async () => {
   ({ QuestionExhibits } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaExamQuestionViews.jsx"));
   ({ CCNA_LEGACY_QUESTIONS: ccnaLegacyQuestions } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaLegacyQuestions.js"));
   ({ CCNA_QUESTION_BANK: builtInQuestionBank } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaQuestionBank.jsx"));
-  ({ createShortExamQuestions, setDatabaseQuestions } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaQuestionBank.jsx"));
+  ({ createShortExamQuestions, setDatabaseQuestions, getDatabaseQuestionById } = await vite.ssrLoadModule("/src/pages/modules/programs/Cisco/CCNA/ccnaQuestionBank.jsx"));
   originalFetch = globalThis.fetch;
   originalCaches = globalThis.caches;
   originalWindow = globalThis.window;
@@ -100,6 +101,35 @@ test("maps original exhibit images and hides terminal screenshots duplicated by 
   assert.equal(builtInQuestion.hideExhibitImage, true);
   assert.equal(builtInQuestion.exhibitImage, undefined);
   assert.match(builtInQuestion.exhibit, /Trunking Native Mode VLAN: 99/);
+});
+
+test("uses source exhibit images when live question IDs differ from their legacy mappings", () => {
+  const legacyIndexes = [160, 679, 682, 695, 1304];
+  const questions = legacyIndexes.map((legacyIndex) => {
+    const sourceQuestion = ccnaLegacyQuestions.find((question) => question.legacyIndex === legacyIndex);
+    assert.ok(sourceQuestion, `legacy question ${legacyIndex} should exist`);
+
+    return {
+      bankId: 900000 + legacyIndex,
+      prompt: sourceQuestion.prompt,
+      imageUrl: `https://example.com/questions/ccna-question-${900000 + legacyIndex}.png`,
+    };
+  });
+
+  try {
+    setDatabaseQuestions(questions);
+
+    for (const legacyIndex of legacyIndexes) {
+      const bankId = 900000 + legacyIndex;
+      const question = getDatabaseQuestionById(bankId);
+
+      assert.equal(question.legacyIndex, legacyIndex);
+      assert.equal(question.exhibitImage, getCcnaExhibitImageByLegacyIndex(legacyIndex));
+      assert.notEqual(question.exhibitImage, question.imageUrl);
+    }
+  } finally {
+    setDatabaseQuestions([]);
+  }
 });
 
 test("makes the LACP question self-contained when its source image only repeats the choices", () => {
