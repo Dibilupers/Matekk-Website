@@ -1,7 +1,10 @@
 // CCNA composite question set (85 questions) used in the Medium Exam.
 // Network topologies and WLC settings panels are rendered natively; mixed CLI exhibits stay as pictures.
 // Answer keys were worked out from the question content (not supplied in the source).
-import { CCNA_RECREATED_CANDIDATE_EXHIBITS } from "./ccnaRecreatedCandidateExhibits.js";
+import {
+	CCNA_RECREATED_CANDIDATE_EXHIBITS,
+	CCNA_TOPOLOGY_EXHIBIT_RECREATIONS,
+} from "./ccnaRecreatedCandidateExhibits.js";
 import { splitPromptExhibit } from "../../../../../utils/splitPromptExhibit.js";
 
 const ex = (exhibit) => (exhibit && typeof exhibit === "object"
@@ -880,6 +883,7 @@ const DATABASE_NATIVE_EXHIBITS = new Map([
 	}],
 	[1305, {
 		hideExhibitImage: true,
+		hideAfterExhibit: true,
 		exhibit: CCNA_RECREATED_TEXT_EXHIBITS.routingTableComponents,
 		matchStyle: "assign",
 		choices: [
@@ -2785,6 +2789,14 @@ NetBIOS over Tcpip. . . . . : Enabled`,
 	if (/configure interfaces gi1\/1 and gi1\/3 on switch sw11/i.test(prompt)) {
 		return { exhibitDiagram: "candidate-vlan-roles-24", hideExhibitImage: true };
 	}
+	if (/configurations for the switch and pcs are complete[\s\S]*vlans 2 and 3 communicate back and forth/i.test(prompt)) {
+		return {
+			exhibitDiagram: "router-on-a-stick-vlan2-vlan3",
+			hideExhibitImage: true,
+			hideAfterExhibit: true,
+			exhibitQuality: "source-backed",
+		};
+	}
 	if (/which configuration must be applied to the router that configures pat to translate all addresses in vlan 200/i.test(prompt)) {
 		return { exhibitDiagram: "pat-vlan-subnetting-100-200", hideExhibitImage: true };
 	}
@@ -2883,6 +2895,19 @@ const DUPLICATE_TERMINAL_SOURCE_IMAGE_LEGACY_INDEXES = new Set([
 	655, 701, 712, 729, 782, 798, 808, 816, 860, 909, 991, 1116, 1313,
 ]);
 
+const PRESERVE_TOPOLOGY_AFTER_EXHIBIT_LEGACY_INDEXES = new Set([
+	44, 51, 62, 84, 339, 508, 509, 566, 586, 588, 645,
+]);
+
+const TOPOLOGY_EXHIBIT_RECREATIONS_BY_LEGACY_INDEX = new Map(
+	CCNA_TOPOLOGY_EXHIBIT_RECREATIONS
+		.map(({ legacyIndex, diagram }) => [legacyIndex, {
+			diagram,
+			hideExhibitImage: true,
+			hideAfterExhibit: !PRESERVE_TOPOLOGY_AFTER_EXHIBIT_LEGACY_INDEXES.has(legacyIndex),
+		}]),
+);
+
 export function applyNativeExhibit(question) {
 	const builtInQuestion = getBuiltInQuestionByPrompt(question?.prompt);
 	let promptLegacyIndex;
@@ -2916,12 +2941,19 @@ export function applyNativeExhibit(question) {
 		}
 	}
 	const legacyIndex = question?.legacyIndex ?? promptLegacyIndex;
+	const topologyExhibit = TOPOLOGY_EXHIBIT_RECREATIONS_BY_LEGACY_INDEX.get(legacyIndex);
 	const parsedPrompt = !question?.exhibit && typeof question?.prompt === "string"
 		? splitPromptExhibit(question.prompt)
 		: null;
-	const databaseExhibit = CCNA_RECREATED_CANDIDATE_EXHIBITS.get(question?.bankId) ??
+	const currentDatabaseExhibit = CCNA_RECREATED_CANDIDATE_EXHIBITS.get(question?.bankId) ??
 		LEGACY_NATIVE_EXHIBITS.get(legacyIndex) ??
 		DATABASE_NATIVE_EXHIBITS.get(question?.bankId);
+	const databaseExhibit = topologyExhibit
+		? {
+			...(currentDatabaseExhibit && typeof currentDatabaseExhibit === "object" ? currentDatabaseExhibit : {}),
+			...topologyExhibit,
+		}
+		: currentDatabaseExhibit;
 	const questionOverride = typeof databaseExhibit === "object" ? databaseExhibit : {};
 	const exhibitDiagram = (typeof databaseExhibit === "string" ? databaseExhibit : databaseExhibit?.diagram) ??
 		builtInQuestion?.exhibitDiagram;
@@ -2933,11 +2965,16 @@ export function applyNativeExhibit(question) {
 	const sourceImageIndex = Number(/ccna-exhibit-(\d+)\.png(?:[?#].*)?$/i.exec(
 		String(question?.exhibitImage ?? question?.imageUrl ?? ""),
 	)?.[1]);
+	const hasMappedTopologyAfterExhibit = Boolean(exhibitDiagram &&
+		/TOPOLOGY/i.test(question?.afterExhibit?.title ?? "") &&
+		!PRESERVE_TOPOLOGY_AFTER_EXHIBIT_LEGACY_INDEXES.has(legacyIndex));
 	const hideExhibitImage = databaseExhibit?.hideExhibitImage === true ||
+		hasMappedTopologyAfterExhibit ||
 		builtInQuestion?.hideExhibitImage === true ||
 		(hasTerminalTextExhibit && DUPLICATE_TERMINAL_SOURCE_IMAGE_LEGACY_INDEXES.has(Number(question?.legacyIndex))) ||
 		(hasTerminalTextExhibit && DUPLICATE_TERMINAL_SOURCE_IMAGE_LEGACY_INDEXES.has(sourceImageIndex));
 	const hideAfterExhibit = databaseExhibit?.hideAfterExhibit === true ||
+		hasMappedTopologyAfterExhibit ||
 		builtInQuestion?.hideAfterExhibit === true;
 	const removeExhibitLeadIn = databaseExhibit?.removeExhibitLeadIn === true ||
 		builtInQuestion?.removeExhibitLeadIn === true ||

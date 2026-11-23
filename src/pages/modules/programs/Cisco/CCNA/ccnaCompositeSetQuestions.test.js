@@ -4,7 +4,10 @@ import {
 	applyNativeExhibit,
 	CCNA_RECREATED_TEXT_EXHIBITS,
 } from "./ccnaCompositeSetQuestions.js";
-import { CCNA_RECREATED_CANDIDATE_EXHIBITS } from "./ccnaRecreatedCandidateExhibits.js";
+import {
+	CCNA_RECREATED_CANDIDATE_EXHIBITS,
+	CCNA_TOPOLOGY_EXHIBIT_RECREATIONS,
+} from "./ccnaRecreatedCandidateExhibits.js";
 import { CCNA_LEGACY_QUESTIONS } from "./ccnaLegacyQuestions.js";
 import { matchMode } from "../../../../../utils/ccnaExamGrading.js";
 
@@ -342,6 +345,42 @@ test("selects answer-enriched candidate topologies for matching live question ID
 	assert.equal(legacyQuestion.hideExhibitImage, true);
 });
 
+test("replaces topology after-images with native diagrams in legacy and live questions", () => {
+	const preservedAfterExhibitIndexes = new Set([44, 51, 62, 84, 339, 508, 509, 566, 586, 588, 645]);
+	for (const { legacyIndex, diagram } of CCNA_TOPOLOGY_EXHIBIT_RECREATIONS) {
+		const preserveAfterExhibit = preservedAfterExhibitIndexes.has(legacyIndex);
+		const afterExhibit = { imageUrl: "raster-topology.png" };
+		const question = applyNativeExhibit({
+			legacyIndex,
+			afterExhibit,
+		});
+
+		assert.equal(question.exhibitDiagram, diagram);
+		assert.equal(question.hideExhibitImage, true);
+		assert.equal(Boolean(question.hideAfterExhibit), !preserveAfterExhibit);
+		assert.equal(question.afterExhibit, preserveAfterExhibit ? afterExhibit : undefined);
+	}
+
+	const liveQuestion = applyNativeExhibit({
+		bankId: 99,
+		afterExhibit: { title: "R4 mixed-protocol routing topology", imageUrl: "raster-topology.png" },
+	});
+	assert.equal(liveQuestion.exhibitDiagram, "r4-mixed-routing");
+	assert.equal(liveQuestion.hideExhibitImage, true);
+	assert.equal(liveQuestion.hideAfterExhibit, true);
+	assert.equal(liveQuestion.afterExhibit, undefined);
+
+	const routerOnAStickQuestion = applyNativeExhibit({
+		bankId: 909,
+		prompt: "Refer to the exhibit. Configurations for the switch and PCs are complete. Which configuration must be applied so that VLANs 2 and 3 communicate back and forth?",
+		afterExhibit: { title: "Router-on-a-stick VLAN 2 and VLAN 3", imageUrl: "raster-topology.png" },
+	});
+	assert.equal(routerOnAStickQuestion.exhibitDiagram, "router-on-a-stick-vlan2-vlan3");
+	assert.equal(routerOnAStickQuestion.hideExhibitImage, true);
+	assert.equal(routerOnAStickQuestion.hideAfterExhibit, true);
+	assert.equal(routerOnAStickQuestion.afterExhibit, undefined);
+});
+
 test("removes text exhibits duplicated in mapped question prompts", () => {
 	const cases = [
 		[402, 720, "In which structure does the word “warning” directly reside?"],
@@ -415,6 +454,7 @@ test("redraws Question 403 as a route-focused topology and hides the source imag
 test("keeps Questions 516 and 517 as distinct matching activities without the shared route diagram", () => {
 	const question516 = applyNativeExhibit({
 		bankId: 516,
+		afterExhibit: { imageUrl: "unrelated-topology.png" },
 		type: "match",
 		prompt: "Drag and drop the descriptions or AAA services from the left onto the corresponding services on the right.",
 		items: ["records user commands", "logs session statistics"],
@@ -423,6 +463,7 @@ test("keeps Questions 516 and 517 as distinct matching activities without the sh
 	});
 	const question517 = applyNativeExhibit({
 		bankId: 517,
+		afterExhibit: { imageUrl: "unrelated-topology.png" },
 		type: "match",
 		prompt: "Drag and drop the TCP or UDP details from the left onto their corresponding protocols on the right.",
 		items: ["used to reliably share files between devices"],
@@ -431,7 +472,11 @@ test("keeps Questions 516 and 517 as distinct matching activities without the sh
 	});
 
 	assert.equal(question516.exhibitDiagram, undefined);
+	assert.equal(question516.hideAfterExhibit, true);
+	assert.equal(question516.afterExhibit, undefined);
 	assert.equal(question517.exhibitDiagram, undefined);
+	assert.equal(question517.hideAfterExhibit, true);
+	assert.equal(question517.afterExhibit, undefined);
 	assert.equal(question516.type, "match");
 	assert.equal(question517.type, "match");
 	assert.notEqual(question516.prompt, question517.prompt);
@@ -469,6 +514,17 @@ test("extends the Question 1305 matching choices without changing its answer", (
 	assert.equal(question.hideExhibitImage, true);
 });
 
+test("shows Question 1305's recreated exhibit without its duplicate after-exhibit image", () => {
+	const question = applyNativeExhibit({
+		bankId: 1305,
+		afterExhibit: { imageUrl: "duplicate-exhibit.png" },
+	});
+
+	assert.equal(question.exhibit, CCNA_RECREATED_TEXT_EXHIBITS.routingTableComponents);
+	assert.equal(question.afterExhibit, undefined);
+	assert.equal(question.hideAfterExhibit, true);
+});
+
 test("aligns the Question 1305 exhibit markers with their routing-table values", () => {
 	const question = applyNativeExhibit({ bankId: 1305 });
 	const lines = question.exhibit.split("\n");
@@ -495,7 +551,7 @@ test("aligns the Question 1305 exhibit markers with their routing-table values",
 });
 
 test("reconstructs candidate exhibits from the local source records", () => {
-	assert.equal(CCNA_RECREATED_CANDIDATE_EXHIBITS.size, 53);
+	assert.equal(CCNA_RECREATED_CANDIDATE_EXHIBITS.size, 55);
 
 	const jsonQuestion = applyNativeExhibit({ bankId: 303 });
 	assert.match(jsonQuestion.exhibit, /"Routers": \["R1", "R2", "R3"\]/);
@@ -599,6 +655,7 @@ test("extracts embedded terminal output before formatted answer tables without c
 		assert.equal(question.answer, sourceQuestion.answer);
 	}
 });
+
 test("clarifies the backup-route administrative distances for legacy question 1161", () => {
 	const sourceQuestion = CCNA_LEGACY_QUESTIONS.find(({ legacyIndex }) => legacyIndex === 1161);
 	const expectedPrompt = `Refer to the exhibit.
