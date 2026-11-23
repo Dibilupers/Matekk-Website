@@ -6,6 +6,7 @@ import {
 	ArrowRight,
 	BookOpen,
 	Check,
+	FlaskConical,
 	ChevronDown,
 	ChevronLeft,
 	ChevronRight,
@@ -360,6 +361,14 @@ export default function CompTIAProgramDashboard({ program }) {
 								>
 									View All Modules <ArrowRight size={18} />
 								</button>
+								{program.practiceLabPath && (
+									<Link
+										to={program.practiceLabPath}
+										className="flex h-12 items-center gap-2 rounded-full border border-[#c8102e] px-5 text-sm font-bold text-[#c8102e] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-[#fff1f3] hover:shadow-[0_10px_20px_rgba(200,16,46,0.12)] active:translate-y-0 sm:h-[58px] sm:px-7 sm:text-base"
+									>
+										<FlaskConical size={18} /> Practice Lab <ArrowRight size={18} />
+									</Link>
+								)}
 							</div>
 						</div>
 						<div className="order-3 mt-8 grid w-full min-w-0 max-w-[810px] grid-cols-3 overflow-hidden rounded-2xl border border-[#ead7dc] bg-white shadow-[0_12px_28px_rgba(200,16,46,0.08)] sm:mt-11">

@@ -6,6 +6,7 @@ const NETWORK_PLUS_PROGRAM = {
 	title: "Network+",
 	badge: NetworkPlusBadge,
 	coursePath: "/training/comptia/network",
+	practiceLabPath: "/modules/programs/comptia-network-plus/practice-lab",
 	gradebookPath: "/modules/programs/comptia-network-plus/gradebook",
 	headline: "Build confidence in",
 	highlight: "networking.",

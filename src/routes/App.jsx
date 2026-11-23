@@ -135,6 +135,7 @@ import CCNAGradebook from "../pages/modules/programs/Cisco/CCNA/ccnaGradebook";
 import AplusDashboard from "../pages/modules/programs/CompTIA/A+ (Core 1 & 2)/aplusDashboard";
 import NetworkPlusDashboard from "../pages/modules/programs/CompTIA/Network+/networkPlusDashboard";
 import SecurityPlusDashboard from "../pages/modules/programs/CompTIA/Security+/securityPlusDashboard";
+import CompTIAPracticeLab from "../pages/modules/programs/CompTIA/CompTIAPracticeLab";
 import FortiOSDashboard, { FORTIOS_MODULES } from "../pages/modules/programs/Fortinet/FortiOS/fortiosDashboard";
 import FortiOSExam from "../pages/modules/programs/Fortinet/FortiOS/fortiosExam";
 import FortiOSExamRoute from "../pages/modules/programs/Fortinet/FortiOS/FortiOSExamRoute";
@@ -458,6 +459,22 @@ export default function App() {
           element={
             <ProtectedRoute>
               <SecurityPlusDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/comptia-network-plus/practice-lab"
+          element={
+            <ProtectedRoute>
+              <CompTIAPracticeLab programKey="comptia-network-plus" />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/modules/programs/comptia-security-plus/practice-lab"
+          element={
+            <ProtectedRoute>
+              <CompTIAPracticeLab programKey="comptia-security-plus" />
             </ProtectedRoute>
           }
         />
