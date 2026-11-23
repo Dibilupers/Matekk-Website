@@ -2301,6 +2301,48 @@ test("keeps self-contained legacy item 702 in the all-questions bank without a f
   assert.equal(question.answer, source.answer);
 });
 
+test("removes only the exhibit lead-in from database-backed questions 702 and 809", () => {
+  for (const legacyIndex of [702, 809]) {
+    const source = ccnaLegacyQuestions.find((entry) => entry.legacyIndex === legacyIndex);
+    const question = applyNativeExhibit({
+      bankId: legacyIndex,
+      prompt: source.prompt,
+      options: source.options,
+      answer: source.answer,
+    });
+
+    assert.equal(
+      question.prompt,
+      source.prompt.replace(/^\s*Refer to (?:the )?exhibit\.?\s*/i, ""),
+    );
+    assert.equal(question.hideExhibitImage, true);
+    assert.equal(question.exhibit, undefined);
+    assert.equal(question.exhibitDiagram, undefined);
+    assert.deepEqual(question.options, source.options);
+    assert.deepEqual(question.answer, source.answer);
+  }
+});
+
+test("shows legacy 1148's recreated terminal in database and offline banks", () => {
+  const source = ccnaLegacyQuestions.find((entry) => entry.legacyIndex === 1148);
+  const databaseQuestion = applyNativeExhibit({ bankId: 1148, prompt: source.prompt });
+  const offlineQuestion = getOfflineReferExhibitQuestionBank()
+    .find((entry) => entry.legacyIndex === 1148);
+  const markup = renderToStaticMarkup(
+    React.createElement(QuestionExhibits, { question: offlineQuestion }),
+  );
+
+  for (const question of [databaseQuestion, offlineQuestion]) {
+    assert.match(question.exhibit, /R1\(config\)#router eigrp 1/);
+    assert.match(question.exhibit, /R2\(config\)#router bgp 65001/);
+    assert.equal(question.hideExhibitImage, true);
+    assert.doesNotMatch(question.prompt, /Refer to the exhibit/);
+  }
+  assert.equal(databaseQuestion.nativeExhibitText, true);
+  assert.match(markup, /R2\(config\)#router bgp 65001/);
+  assert.doesNotMatch(markup, /ccna-question-1148\.png/);
+});
+
 test("rebuilds legacy matching item 799 without changing its answer", () => {
   const source = ccnaLegacyQuestions.find((entry) => entry.legacyIndex === 799);
   const question = builtInQuestionBank.find((entry) => entry.legacyIndex === 799);
