@@ -2,6 +2,17 @@
 
 Tracking begins 2026-10-17.
 
+## 2026-11-23 - main
+
+Commits included in this push:
+
+- Pending commit - Added a React render error boundary and replaced the empty
+  unknown-route page with a responsive 404 screen, preventing routing and
+  hydration failures from leaving users on a blank view.
+
+Validation before push: production build passed; targeted changes verify the
+application root and unknown-route fallback.
+
 ## 2026-11-22 - main
 
 Commits included in this push:
