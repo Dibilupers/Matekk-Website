@@ -6,6 +6,17 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `e935517` - Added native diagrams for 48 legacy topology exhibits, retained
+  source comparisons where needed, removed unrelated images from two matching
+  questions, and rebuilt the router-on-a-stick exhibit by prompt.
+
+Validation before push: all 151 CCNA bank-converter tests, all 50 CCNA
+composite-exhibit tests, and `git diff --check` passed.
+
+## 2026-11-23 - main
+
+Commits included in this push:
+
 - `6a8abae1` - Resolve CCNA exhibit mappings by prompt when live database IDs
   differ, restore five source-matched image exhibits, and clarify Q24's
   alternate-route details.
