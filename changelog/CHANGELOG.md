@@ -6,6 +6,17 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `49dfa43` - Resolve legacy question 852's EIGRP topology by prompt when the
+  live database ID differs, and remove the obsolete exhibit lead-in when a
+  mapped native topology is available.
+
+Validation before push: all 151 CCNA bank-converter tests, all 51 CCNA
+composite-exhibit tests, and `git diff --check` passed.
+
+## 2026-11-23 - main
+
+Commits included in this push:
+
 - `e935517` - Added native diagrams for 48 legacy topology exhibits, retained
   source comparisons where needed, removed unrelated images from two matching
   questions, and rebuilt the router-on-a-stick exhibit by prompt.
