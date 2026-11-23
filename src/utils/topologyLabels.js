@@ -3,6 +3,37 @@ function intersects(a, b, gap) {
 		&& Math.abs(a.y - b.y) < (a.height + b.height) / 2 + gap;
 }
 
+export function wrapTopologyNodeLabel(label, maxLineLength = 16) {
+	if (!Number.isInteger(maxLineLength) || maxLineLength < 1) {
+		throw new RangeError("Topology node label line length must be a positive integer.");
+	}
+
+	const lines = [];
+	let currentLine = "";
+	for (const word of String(label).trim().split(/\s+/).filter(Boolean)) {
+		const characters = Array.from(word);
+		const segments = [];
+		for (let index = 0; index < characters.length; index += maxLineLength) {
+			segments.push(characters.slice(index, index + maxLineLength).join(""));
+		}
+
+		segments.forEach((segment, index) => {
+			if (currentLine && currentLine.length + 1 + segment.length <= maxLineLength) {
+				currentLine += ` ${segment}`;
+			} else {
+				if (currentLine) lines.push(currentLine);
+				currentLine = segment;
+			}
+			if (index < segments.length - 1) {
+				lines.push(currentLine);
+				currentLine = "";
+			}
+		});
+	}
+	if (currentLine) lines.push(currentLine);
+	return lines;
+}
+
 export function placeTopologyLabels(labels, obstacles, gap = 3) {
 	const placed = [];
 

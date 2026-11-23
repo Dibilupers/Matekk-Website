@@ -34,11 +34,16 @@ const VOICE_VLAN_WORKSHEET = [
 		],
 	},
 	{
-		title: 'Task 3. Create VLAN 10 named "Engineering" on SW-1',
+		title: 'Task 3. Create VLAN 10 ("Engineering") and VLAN 11 on SW-1, and VLAN 30 on SW-2',
+		instructions: "Create each VLAN on the switch that uses it:",
 		slots: [
 			{ devices: ["SW-1"], prompt: "SW-1(config)#", context: "config" },
 			{ devices: ["SW-1"], prompt: "SW-1(config-vlan)#", context: "config-vlan", vlan: "10" },
 			{ devices: ["SW-1"], prompt: "SW-1(config-vlan)#", context: "config-vlan", vlan: "10" },
+			{ devices: ["SW-1"], prompt: "SW-1(config)#", context: "config" },
+			{ devices: ["SW-1"], prompt: "SW-1(config-vlan)#", context: "config-vlan", vlan: "11" },
+			{ devices: ["SW-2"], prompt: "SW-2(config)#", context: "config" },
+			{ devices: ["SW-2"], prompt: "SW-2(config-vlan)#", context: "config-vlan", vlan: "30" },
 		],
 	},
 	{
@@ -84,10 +89,12 @@ const voiceVlanTasks = [
 		},
 	},
 	{
-		id: "sw1-vlan10",
-		text: 'Create VLAN 10 on SW-1 and name it "Engineering".',
-		hint: "configure terminal → vlan 10 → name Engineering",
-		check: (state) => state.devices["SW-1"].vlans["10"] === "Engineering",
+		id: "create-vlans",
+		text: 'Create VLAN 10 named "Engineering" and VLAN 11 on SW-1, and VLAN 30 on SW-2.',
+		hint: "On SW-1: vlan 10 → name Engineering → vlan 11. On SW-2: vlan 30.",
+		check: (state) => state.devices["SW-1"].vlans["10"] === "Engineering" &&
+			state.devices["SW-1"].vlans["11"] !== undefined &&
+			state.devices["SW-2"].vlans["30"] !== undefined,
 	},
 	{
 		id: "lldp-link",
@@ -116,13 +123,13 @@ const voiceVlanSolution = {
 	"SW-1": [
 		"enable", "configure terminal",
 		"interface e0/1", "switchport mode access", "switchport access vlan 10", "switchport voice vlan 11", "exit",
-		"vlan 10", "name Engineering", "exit",
+		"vlan 10", "name Engineering", "exit", "vlan 11", "exit",
 		"lldp run", "interface e0/0", "lldp transmit", "lldp receive", "exit",
 		"interface e0/2", "no cdp enable", "end", "copy running-config startup-config",
 	],
 	"SW-2": [
 		"enable", "configure terminal",
-		"interface e0/1", "switchport mode access", "switchport access vlan 30", "exit",
+		"vlan 30", "exit", "interface e0/1", "switchport mode access", "switchport access vlan 30", "exit",
 		"lldp run", "interface e0/0", "lldp transmit", "lldp receive", "end",
 		"copy running-config startup-config",
 	],
@@ -130,9 +137,9 @@ const voiceVlanSolution = {
 
 const voiceVlanLab = {
 	level: "Beginner",
-	summary: "Configure phone-and-PC access, a data VLAN, LLDP between switches, and disable CDP on the router link.",
+	summary: "Configure phone-and-PC access, data and voice VLANs, LLDP between switches, and disable CDP on the router link.",
 	editable: ["SW-1", "SW-2"],
-	worksheetInstructions: "R1 is preconfigured for VLANs 10 and 30. All physical cabling is in place; configure switch connectivity for the end devices.",
+	worksheetInstructions: "This is a Layer 2 switch-configuration exercise. All cabling is in place; configure the endpoint VLANs, switch ports, LLDP, and CDP. Router gateways and end-to-end IP connectivity are not configured or tested in this lab.",
 	devices: {
 		"SW-1": switchDevice("SW-1", ["e0/0", "e0/1", "e0/2"]),
 		"SW-2": switchDevice("SW-2", ["e0/0", "e0/1"]),
@@ -141,20 +148,19 @@ const voiceVlanLab = {
 			hostname: "R1",
 			interfaces: {
 				"g0/0": { ip: "10.10.1.1", mask: "255.255.255.0", up: true },
-				"g0/1": { ip: "192.168.30.1", mask: "255.255.255.0", up: true },
 			},
 		},
 		"IP Phone": {
 			kind: "pc",
 			hostname: "",
-			gateway: "10.11.1.1",
+			gateway: "",
 			interfaces: {
 				fa0: { ip: "10.11.1.10", mask: "255.255.255.0" },
 				fa1: {},
 			},
 		},
-		PC1: pc("10.10.1.10", "255.255.255.0", "10.10.1.1"),
-		PC2: pc("192.168.30.10", "255.255.255.0", "192.168.30.1"),
+		PC1: pc("10.10.1.10", "255.255.255.0", ""),
+		PC2: pc("192.168.30.10", "255.255.255.0", ""),
 	},
 	links: [
 		{ a: "R1:g0/0", b: "SW-1:e0/2" },
@@ -167,10 +173,10 @@ const voiceVlanLab = {
 		width: 760,
 		height: 480,
 		nodes: {
-			R1: { x: 310, y: 35, details: ["VLAN 10 · 10.10.1.1", "VLAN 30 · 192.168.30.1"] },
+			R1: { x: 310, y: 35, details: ["G0/0 · 10.10.1.1/24", "No inter-VLAN routing"] },
 			"SW-1": { x: 310, y: 170, sub: "Data VLAN 10 · Voice VLAN 11" },
 			"SW-2": { x: 610, y: 110, sub: "Data VLAN 30" },
-			"IP Phone": { x: 140, y: 280, label: "IP Phone", sub: "Voice VLAN 11 · 10.11.1.10" },
+			"IP Phone": { x: 140, y: 280, label: "IP Phone", sub: "Voice VLAN 11" },
 			PC1: { x: 140, y: 465, sub: "VLAN 10 · 10.10.1.10" },
 			PC2: { x: 610, y: 285, sub: "VLAN 30 · 192.168.30.10" },
 		},
@@ -182,7 +188,8 @@ const voiceVlanLab = {
 		label: "Switch ports and LLDP match the voice VLAN topology",
 		check: (state) => voiceVlanTasks.slice(0, 5).every((task) => task.check(state)),
 	},
-	ptDevices: "two Catalyst switches (SW-1, SW-2), one router (R1), one IP phone, and two PCs",
+	ptDevices: "two Catalyst switches (SW-1, SW-2: Catalyst 2960-24TT or 3560-24PS), one router (R1: Cisco 2911 or 1941), one 7960 IP phone, and two PCs (PC1, PC2)",
+	ptNotes: "Verify with show vlan brief, show interfaces switchport, and show lldp neighbors. Confirm CDP is disabled on SW-1 FastEthernet0/3 with show running-config interface FastEthernet0/3.",
 	hasPacketTracerFile: false,
 };
 
@@ -194,7 +201,7 @@ const LAB2 = {
 	id: 2,
 	level: "Intermediate",
 	title: "Voice VLANs and LLDP",
-	summary: "Create matching data and voice VLANs, configure access and phone ports, and enable LLDP between the switches.",
+	summary: "Create matching data and voice VLANs, configure access ports with voice VLAN settings, and enable LLDP between the switches.",
 	editable: LAB2_DEVICES,
 	devices: {
 		"SW-1": switchDevice("SW-1", ["e0/0", ...LAB2_PORTS]),
@@ -208,7 +215,7 @@ const LAB2 = {
 			"SW-1": {
 				x: 180,
 				y: 120,
-				details: ["VLAN 77 · User_VLAN", "VLAN 177 · Voice_VLAN", "E0/1–E0/3 · data + voice"],
+				details: ["VLAN 77 · User_VLAN", "VLAN 177 · Voice_VLAN", "E0/1–E0/3 · data + voice", "Layer 2 only · no router required"],
 			},
 			"SW-2": {
 				x: 540,
@@ -252,7 +259,7 @@ const LAB2 = {
 			check: (state) => LAB2_DEVICES.every((name) => isSaved(state, name)),
 		},
 	],
-	worksheetInstructions: "All physical cabling is in place. Configure both switches for the data and voice VLANs shown in the topology.",
+	worksheetInstructions: "This is a Layer 2 switch-only exercise; no router is required. All physical cabling is in place. Configure both switches for the data and voice VLANs shown. The E0/1–E0/3 ports are practice access ports; endpoint devices are not drawn in this topology.",
 	worksheet: [
 		{
 			title: "Task 1. Create VLAN 77 (User_VLAN) and VLAN 177 (Voice_VLAN)",
@@ -292,12 +299,12 @@ const LAB2 = {
 	],
 	solution: {
 		"SW-1": [
-			"enable", "configure terminal", "vlan 77", "name User_VLAN", "vlan 177", "name Voice_VLAN", "exit",
+			"enable", "configure terminal", "vlan 77", "name User_VLAN", "exit", "vlan 177", "name Voice_VLAN", "exit",
 			"interface range e0/1 - 3", "switchport mode access", "switchport access vlan 77", "switchport voice vlan 177",
 			"exit", "lldp run", "interface e0/0", "lldp transmit", "lldp receive", "end", "copy running-config startup-config",
 		],
 		"SW-2": [
-			"enable", "configure terminal", "vlan 77", "name User_VLAN", "vlan 177", "name Voice_VLAN", "exit",
+			"enable", "configure terminal", "vlan 77", "name User_VLAN", "exit", "vlan 177", "name Voice_VLAN", "exit",
 			"interface range e0/1 - 3", "switchport mode access", "switchport access vlan 77", "switchport voice vlan 177",
 			"exit", "lldp run", "interface e0/0", "lldp transmit", "lldp receive", "end", "copy running-config startup-config",
 		],
@@ -307,7 +314,8 @@ const LAB2 = {
 		check: (state) => ["create-vlans", "configure-access-ports", "enable-lldp"]
 			.every((id) => LAB2.tasks.find((task) => task.id === id).check(state)),
 	},
-	ptDevices: "two Catalyst switches (SW-1, SW-2)",
+	ptDevices: "two Catalyst switches (SW-1, SW-2: Catalyst 2960-24TT or 3560-24PS)",
+	ptNotes: "This Layer 2 switch-only exercise needs no router or end devices. FastEthernet0/2–0/4 (E0/1–E0/3) are practice access ports. Verify with show vlan brief, show interfaces switchport, and show lldp neighbors.",
 	hasPacketTracerFile: false,
 };
 
@@ -328,7 +336,7 @@ const LAB3 = {
 	level: "Advanced",
 	title: "Allowed VLANs, Native VLAN, and LACP",
 	summary: "Restrict trunk VLANs, set the native VLAN, and form an LACP EtherChannel between SW-3 and SW-4.",
-	worksheetInstructions: "Router R1 is configured for VLANs 5 and 6. Trunk ports are preconfigured; inspect the initial configuration before making the requested changes.",
+	worksheetInstructions: "This is a switch-configuration exercise. Switch ports start as trunks; R1 is shown as a reference device and is not configured for VLAN 5/6 routing. VLAN database setup and traffic forwarding are outside this lab; inspect the initial switch configuration before making the requested changes.",
 	editable: LAB3_SWITCHES,
 	devices: {
 		"SW-1": trunkedSwitch("SW-1", ["e0/0", "e0/1", "e0/2"]),
@@ -342,7 +350,7 @@ const LAB3 = {
 		},
 	},
 	links: [
-		{ a: "R1:g0/0", b: "SW-1:e0/0", net: "VLANs 5, 6" },
+		{ a: "R1:g0/0", b: "SW-1:e0/0", net: "R1 uplink" },
 		{ a: "SW-1:e0/1", b: "SW-2:e0/1", lane: -5 },
 		{ a: "SW-1:e0/2", b: "SW-3:e0/2" },
 		{ a: "SW-2:e0/2", b: "SW-4:e0/2" },
@@ -353,7 +361,7 @@ const LAB3 = {
 		width: 740,
 		height: 390,
 		nodes: {
-			R1: { x: 370, y: 35, sub: "Preconfigured · VLANs 5 and 6" },
+			R1: { x: 370, y: 35, sub: "Reference device · no VLAN routing" },
 			"SW-1": { x: 240, y: 150, sub: "Allowed VLANs · E0/0" },
 			"SW-2": { x: 500, y: 150, sub: "Native VLAN · E0/1" },
 			"SW-3": { x: 240, y: 315, sub: "LACP active · Po34" },
@@ -457,7 +465,8 @@ const LAB3 = {
 		label: "Allowed VLANs, native VLAN, and LACP settings are configured",
 		check: (state) => LAB3.tasks.slice(0, 4).every((task) => task.check(state)),
 	},
-	ptDevices: "five switches/routers: R1 and SW-1 through SW-4",
+	ptDevices: "one router (R1: Cisco 2911 or 1941) and four Catalyst switches (SW-1 through SW-4: Catalyst 3560-24PS, or 2960-24TT without dot1q encapsulation)",
+	ptNotes: "R1 is a reference device; this exercise does not configure VLAN routing. On Catalyst 2960-24TT switches, omit \"switchport trunk encapsulation dot1q\" in pre-configuration. Verify with show interfaces trunk and show etherchannel summary.",
 	hasPacketTracerFile: false,
 };
 
@@ -625,7 +634,8 @@ const LAB4 = {
 		label: "Primary and backup paths, default routes, and saved configurations are complete",
 		check: (state, lab) => LAB4.tasks.every((task) => task.check(state, lab)),
 	},
-	ptDevices: "four routers (R1–R4), one ISP router, and one PC",
+	ptDevices: "five Cisco 2911 routers (R1–R4 and ISP; 2911 provides 3 GigabitEthernet ports for R3 and R4) and one PC (PC1)",
+	ptNotes: "To test failover in Packet Tracer, ping 10.0.41.10 from R1 (via R2), then run \"shutdown\" on R1 GigabitEthernet0/0 and ping 10.0.41.10 again (via R3).",
 	hasPacketTracerFile: false,
 };
 
@@ -728,7 +738,8 @@ const LAB5 = {
 		label: "IPv4 and IPv6 addressing, connectivity, and saved configurations are complete",
 		check: (state, lab) => LAB5.tasks.every((task) => task.check(state, lab)),
 	},
-	ptDevices: "two routers (R1 and R2)",
+	ptDevices: "two routers (R1 and R2: Cisco 2911 or 1941)",
+	ptNotes: "In Packet Tracer, run \"ping 192.168.180.30\" and \"ping ipv6 2001:db8:acca::2\" from R1. Enable \"ipv6 unicast-routing\" in global config if your Packet Tracer router model requires it.",
 	hasPacketTracerFile: false,
 };
 
@@ -825,7 +836,8 @@ const LAB6 = {
 		label: "The /26 and /125 interfaces are up, reachable, and saved",
 		check: (state, lab) => LAB6.tasks.every((task) => task.check(state, lab)),
 	},
-	ptDevices: "two routers (R1 and R2)",
+	ptDevices: "two routers (R1 and R2: Cisco 2911 or 1941)",
+	ptNotes: "In Packet Tracer, run \"ping 10.26.0.2\" and \"ping ipv6 2001:db8:26::2\" from R1. Enable \"ipv6 unicast-routing\" in global config if your Packet Tracer router model requires it.",
 	hasPacketTracerFile: false,
 };
 
@@ -836,11 +848,12 @@ const LAB7 = {
 	title: "VLANs and Access Port Membership",
 	summary: "Create matching staff and guest VLANs, assign end-device ports, and carry both VLANs across a trunk.",
 	editable: LAB7_SWITCHES,
+	worksheetInstructions: "This is a Layer 2 VLAN exercise. No router or default gateway is present, so inter-VLAN communication is not expected.",
 	devices: {
 		"SW-1": switchDevice("SW-1", ["e0/0", "e0/1"]),
 		"SW-2": switchDevice("SW-2", ["e0/0", "e0/1"]),
-		PC1: pc("192.168.20.10", "255.255.255.0", "192.168.20.1"),
-		PC2: pc("192.168.30.10", "255.255.255.0", "192.168.30.1"),
+		PC1: pc("192.168.20.10", "255.255.255.0", ""),
+		PC2: pc("192.168.30.10", "255.255.255.0", ""),
 	},
 	links: [
 		{ a: "SW-1:e0/0", b: "SW-2:e0/0", net: "802.1Q · VLANs 20, 30" },
@@ -951,7 +964,8 @@ const LAB7 = {
 		label: "Both VLANs, access ports, and the trunk are configured and saved",
 		check: (state) => LAB7.tasks.every((task) => task.check(state)),
 	},
-	ptDevices: "two Catalyst switches (SW-1 and SW-2), two PCs",
+	ptDevices: "two Catalyst switches (SW-1 and SW-2: Catalyst 2960-24TT or 3560-24PS) and two PCs (PC1, PC2)",
+	ptNotes: "No router is present, so inter-VLAN ping between PC1 (VLAN 20) and PC2 (VLAN 30) is not expected. Verify with show vlan brief and show interfaces trunk.",
 	hasPacketTracerFile: false,
 };
 
@@ -963,11 +977,12 @@ const LAB8 = {
 	title: "Access Ports and LACP Trunk EtherChannel",
 	summary: "Place end devices in an access VLAN and bundle two trunk links with LACP active/passive negotiation.",
 	editable: LAB8_SWITCHES,
+	worksheetInstructions: "This is a Layer 2 switching exercise; no router is present, so no default gateway is configured or needed for same-subnet traffic in VLAN 40.",
 	devices: {
 		"SW-1": switchDevice("SW-1", ["e0/0", "e0/1", "e0/2"]),
 		"SW-2": switchDevice("SW-2", ["e0/0", "e0/1", "e0/2"]),
-		PC1: pc("192.168.40.10", "255.255.255.0", "192.168.40.1"),
-		PC2: pc("192.168.40.20", "255.255.255.0", "192.168.40.1"),
+		PC1: pc("192.168.40.10", "255.255.255.0", ""),
+		PC2: pc("192.168.40.20", "255.255.255.0", ""),
 	},
 	links: [
 		{ a: "SW-1:e0/0", b: "SW-2:e0/0", net: "Po10 · LACP", lane: -12 },
@@ -986,6 +1001,15 @@ const LAB8 = {
 		},
 	},
 	tasks: [
+		{
+			id: "create-vlans",
+			text: "Create VLANs 40 and 50 on both switches.",
+			hint: "On each switch, use vlan 40, then vlan 50.",
+			check: (state) => LAB8_SWITCHES.every((name) => (
+				state.devices[name].vlans["40"] !== undefined &&
+				state.devices[name].vlans["50"] !== undefined
+			)),
+		},
 		{
 			id: "configure-access-ports",
 			text: "Configure E0/2 on both switches as access ports in VLAN 40.",
@@ -1025,7 +1049,15 @@ const LAB8 = {
 	],
 	worksheet: [
 		{
-			title: "Task 1. Configure E0/2 as access ports in VLAN 40",
+			title: "Task 1. Create VLANs 40 and 50",
+			instructions: "On both switches:",
+			slots: [
+				{ devices: LAB8_SWITCHES, prompt: "SW-1, SW-2(config)#", context: "config" },
+				{ devices: LAB8_SWITCHES, prompt: "SW-1, SW-2(config)#", context: "config" },
+			],
+		},
+		{
+			title: "Task 2. Configure E0/2 as access ports in VLAN 40",
 			slots: [
 				{ devices: LAB8_SWITCHES, prompt: "SW-1, SW-2(config)#", context: "config" },
 				{ devices: LAB8_SWITCHES, prompt: "SW-1, SW-2(config-if)#", context: "config-if", iface: "e0/2" },
@@ -1033,7 +1065,7 @@ const LAB8 = {
 			],
 		},
 		{
-			title: "Task 2. Configure the two member links as trunks",
+			title: "Task 3. Configure the two member links as trunks",
 			instructions: "On both switches:",
 			slots: [
 				{ devices: LAB8_SWITCHES, prompt: "SW-1, SW-2(config)#", context: "config" },
@@ -1042,7 +1074,7 @@ const LAB8 = {
 			],
 		},
 		{
-			title: "Task 3. Negotiate channel group 10 with LACP",
+			title: "Task 4. Negotiate channel group 10 with LACP",
 			slots: [
 				{ devices: ["SW-1"], prompt: "SW-1(config)#", context: "config" },
 				{ devices: ["SW-1"], prompt: "SW-1(config-if-range)#", context: "config-if-range" },
@@ -1057,12 +1089,14 @@ const LAB8 = {
 	],
 	solution: {
 		"SW-1": [
-			"enable", "configure terminal", "interface e0/2", "switchport mode access", "switchport access vlan 40",
+			"enable", "configure terminal", "vlan 40", "exit", "vlan 50", "exit",
+			"interface e0/2", "switchport mode access", "switchport access vlan 40",
 			"interface range e0/0 - 1", "switchport mode trunk", "switchport trunk allowed vlan 40,50",
 			"channel-group 10 mode active", "end", "copy running-config startup-config",
 		],
 		"SW-2": [
-			"enable", "configure terminal", "interface e0/2", "switchport mode access", "switchport access vlan 40",
+			"enable", "configure terminal", "vlan 40", "exit", "vlan 50", "exit",
+			"interface e0/2", "switchport mode access", "switchport access vlan 40",
 			"interface range e0/0 - 1", "switchport mode trunk", "switchport trunk allowed vlan 40,50",
 			"channel-group 10 mode passive", "end", "copy running-config startup-config",
 		],
@@ -1071,7 +1105,8 @@ const LAB8 = {
 		label: "Access ports and both LACP EtherChannel trunk members are configured and saved",
 		check: (state) => LAB8.tasks.every((task) => task.check(state)),
 	},
-	ptDevices: "two Catalyst switches (SW-1 and SW-2), two PCs",
+	ptDevices: "two Catalyst switches (SW-1 and SW-2: Catalyst 2960-24TT or 3560-24PS) and two PCs (PC1, PC2)",
+	ptNotes: "Both PCs share VLAN 40 and 192.168.40.0/24; test connectivity with \"ping 192.168.40.20\" from PC1 after LACP converges. Verify with show etherchannel summary and show interfaces trunk.",
 	hasPacketTracerFile: false,
 };
 
@@ -1082,6 +1117,7 @@ const LAB9 = {
 	title: "Standard ACL: Permit a Trusted Host",
 	summary: "Use a numbered standard ACL to allow one trusted host into a remote server network and block other LAN sources.",
 	editable: LAB9_ROUTERS,
+	worksheetInstructions: "The online task check tests traffic sourced from both PCs. In Packet Tracer, verify the policy by pinging the server from each PC's command prompt; a ping sourced by R1 does not test the inbound LAN ACL.",
 	devices: {
 		R1: {
 			kind: "router",
@@ -1141,8 +1177,8 @@ const LAB9 = {
 		},
 		{
 			id: "verify-filtering",
-			text: "Verify the trusted PC can reach the server while the guest PC is denied.",
-			hint: "The ACL is inbound on R1's LAN interface. It permits .10; the implicit deny blocks .20.",
+			text: "From Trusted PC, verify the server responds; from Guest PC, verify the server is denied.",
+			hint: "Use ping 192.168.50.10 from each PC. The ACL on R1 E0/0 permits .10; its implicit deny blocks .20.",
 			check: (state, lab) => canReach(lab, state, "Trusted PC", "192.168.50.10") &&
 				!canReach(lab, state, "Guest PC", "192.168.50.10"),
 		},
@@ -1170,8 +1206,9 @@ const LAB9 = {
 			],
 		},
 		{
-			title: "Task 3. Test the routed path from R1",
-			slots: [{ devices: ["R1"], prompt: "R1#", context: "priv" }],
+			title: "Task 3. Verify host-source ACL behavior",
+			instructions: "The online task result checks both PC sources. In Packet Tracer, ping 192.168.50.10 from Trusted PC and Guest PC; do not use an R1-originated ping as the ACL test.",
+			slots: [],
 		},
 		{
 			title: "Save both router configurations",
@@ -1183,8 +1220,7 @@ const LAB9 = {
 			"enable", "configure terminal",
 			"ip route 192.168.50.0 255.255.255.0 10.0.12.2",
 			"access-list 10 permit host 192.168.10.10",
-			"interface e0/0", "ip access-group 10 in", "end",
-			"ping 192.168.50.10", "copy running-config startup-config",
+			"interface e0/0", "ip access-group 10 in", "end", "copy running-config startup-config",
 		],
 		R2: [
 			"enable", "configure terminal",
@@ -1196,7 +1232,8 @@ const LAB9 = {
 		label: "The trusted host reaches the server, the guest is filtered, and both routers are saved",
 		check: (state, lab) => LAB9.tasks.every((task) => task.check(state, lab)),
 	},
-	ptDevices: "two routers (R1 and R2), one switch, two PCs, one server",
+	ptDevices: "two routers (R1 and R2: Cisco 2911 or 1941), one Catalyst switch (SW-1: Catalyst 2960-24TT), two PCs (Trusted PC, Guest PC), and one server (Server)",
+	ptNotes: "Verify the ACL in Packet Tracer by pinging 192.168.50.10 from Trusted PC (succeeds) and Guest PC (fails); a ping sourced from R1 does not test the inbound LAN ACL.",
 	hasPacketTracerFile: false,
 };
 
@@ -1258,7 +1295,7 @@ const LAB10 = {
 		{
 			id: "verify-routing",
 			text: "Verify PC1 can reach the server across both routers.",
-			hint: "From R1, inspect show ip route and ping 172.16.20.20. The end-to-end check also verifies the return path.",
+			hint: "In Packet Tracer, ping 172.16.20.20 from PC1. The online task check simulates that PC1-sourced path; use show ip route on R1 to inspect its specific route.",
 			check: (state, lab) => canReach(lab, state, "PC1", "172.16.20.20"),
 		},
 		{
@@ -1279,10 +1316,8 @@ const LAB10 = {
 		},
 		{
 			title: "Task 3. Verify the route table and end-to-end path",
-			slots: [
-				{ devices: ["R1"], prompt: "R1#", context: "priv" },
-				{ devices: ["R1"], prompt: "R1#", context: "priv" },
-			],
+			instructions: "Enter show ip route on R1. The online task result checks PC1-to-server reachability; in Packet Tracer, ping the server from PC1's command prompt.",
+			slots: [{ devices: ["R1"], prompt: "R1#", context: "priv" }],
 		},
 		{
 			title: "Save both router configurations",
@@ -1292,7 +1327,7 @@ const LAB10 = {
 	solution: {
 		R1: [
 			"enable", "configure terminal", "ip route 172.16.20.0 255.255.255.0 10.10.12.2",
-			"end", "show ip route", "ping 172.16.20.20", "copy running-config startup-config",
+			"end", "show ip route", "copy running-config startup-config",
 		],
 		R2: [
 			"enable", "configure terminal", "ip route 0.0.0.0 0.0.0.0 10.10.12.1",
@@ -1303,7 +1338,8 @@ const LAB10 = {
 		label: "Static and default routes carry traffic between both LANs",
 		check: (state, lab) => LAB10.tasks.every((task) => task.check(state, lab)),
 	},
-	ptDevices: "two routers (R1 and R2), one PC, one server",
+	ptDevices: "two routers (R1 and R2: Cisco 2911 or 1941), one PC (PC1), and one server (Server)",
+	ptNotes: "Verify end-to-end connectivity in Packet Tracer by running \"ping 172.16.20.20\" from PC1's Command Prompt, and inspect \"show ip route\" on R1.",
 	hasPacketTracerFile: false,
 };
 
@@ -1315,23 +1351,24 @@ const LAB11 = {
 	id: 11,
 	level: "Advanced",
 	title: "OSPF DR Election on a Broadcast LAN",
-	summary: "Enable OSPF on a shared Ethernet segment, set router IDs and interface priorities, and identify the initial DR.",
+	summary: "Set OSPF interface priorities before enabling the shared-segment election, then identify the initial DR.",
 	editable: LAB11_ROUTERS,
+	worksheetInstructions: "All E0/0 interfaces start shutdown so the election cannot begin during setup. Configure priorities and OSPF on all routers first, then bring up R3 E0/0 before R2 and R1. OSPF does not preempt an elected DR; enabling R1 first can elect R1 and prevent R3 from taking over. If an election has already completed in another order, restart OSPF on all routers before checking the intended result.",
 	devices: {
 		R1: {
 			kind: "router",
 			hostname: "R1",
-			interfaces: { "e0/0": { ip: "10.11.0.1", mask: "255.255.255.248", up: true } },
+			interfaces: { "e0/0": { ip: "10.11.0.1", mask: "255.255.255.248", up: false } },
 		},
 		R2: {
 			kind: "router",
 			hostname: "R2",
-			interfaces: { "e0/0": { ip: "10.11.0.2", mask: "255.255.255.248", up: true } },
+			interfaces: { "e0/0": { ip: "10.11.0.2", mask: "255.255.255.248", up: false } },
 		},
 		R3: {
 			kind: "router",
 			hostname: "R3",
-			interfaces: { "e0/0": { ip: "10.11.0.3", mask: "255.255.255.248", up: true } },
+			interfaces: { "e0/0": { ip: "10.11.0.3", mask: "255.255.255.248", up: false } },
 		},
 		"SW-1": switchDevice("SW-1", ["e0/0", "e0/1", "e0/2"]),
 	},
@@ -1352,9 +1389,17 @@ const LAB11 = {
 	},
 	tasks: [
 		{
+			id: "set-dr-priorities",
+			text: "Before enabling OSPF, set R1 E0/0 priority to 100 and R2/R3 E0/0 priority to 150.",
+			hint: "Under interface e0/0, use ip ospf priority 100 on R1 and ip ospf priority 150 on R2 and R3. R3 wins the tie by router ID.",
+			check: (state) => LAB11_ROUTERS.every((name) => (
+				state.devices[name].interfaces["e0/0"].ospfPriority === LAB11_PRIORITIES[name]
+			)),
+		},
+		{
 			id: "configure-ospf",
-			text: "On all routers, start OSPF process 10, set the shown router ID, and advertise 10.11.0.0/29 in area 0.",
-			hint: "Use router ospf 10 → router-id <ID> → network 10.11.0.0 0.0.0.7 area 0.",
+			text: "On all routers, start OSPF process 10, set each router ID (R1: 1.1.1.1, R2: 2.2.2.2, R3: 3.3.3.3), and advertise 10.11.0.0/29 in area 0.",
+			hint: "On each router: router ospf 10 → router-id <ID> → network 10.11.0.0 0.0.0.7 area 0.",
 			check: (state) => LAB11_ROUTERS.every((name) => {
 				const ospf = state.devices[name].ospf;
 				return ospf?.processId === 10 &&
@@ -1365,12 +1410,10 @@ const LAB11 = {
 			}),
 		},
 		{
-			id: "set-dr-priorities",
-			text: "Set R1 E0/0 priority to 100 and R2/R3 E0/0 priority to 150. R3 should win the priority tie with its higher router ID.",
-			hint: "Under interface e0/0, use ip ospf priority 100 on R1 and ip ospf priority 150 on R2 and R3.",
-			check: (state) => LAB11_ROUTERS.every((name) => (
-				state.devices[name].interfaces["e0/0"].ospfPriority === LAB11_PRIORITIES[name]
-			)),
+			id: "enable-interfaces",
+			text: "After configuring all routers, bring up R3 E0/0 first, then R2 and R1, so R3 is present for the initial DR election.",
+			hint: "On R3, R2, then R1: use interface e0/0 followed by no shutdown. OSPF does not preempt an elected DR.",
+			check: (state) => LAB11_ROUTERS.every((name) => state.devices[name].interfaces["e0/0"].up),
 		},
 		{
 			id: "verify-dr",
@@ -1387,14 +1430,21 @@ const LAB11 = {
 	],
 	worksheet: [
 		{
-			title: "Task 1. Enable OSPF process 10 and set each router ID",
+			title: "Task 1. Set interface priorities before enabling OSPF",
+			slots: LAB11_ROUTERS.flatMap((name) => [
+				{ devices: [name], prompt: `${name}(config)#`, context: "config" },
+				{ devices: [name], prompt: `${name}(config-if)#`, context: "config-if", iface: "e0/0" },
+			]),
+		},
+		{
+			title: "Task 2. Enable OSPF process 10 and set each router ID",
 			slots: LAB11_ROUTERS.flatMap((name) => [
 				{ devices: [name], prompt: `${name}(config)#`, context: "config" },
 				{ devices: [name], prompt: `${name}(config-router)#`, context: "config-router" },
 			]),
 		},
 		{
-			title: "Task 2. Advertise the shared /29 segment in area 0",
+			title: "Task 3. Advertise the shared /29 segment in area 0",
 			slots: LAB11_ROUTERS.map((name) => ({
 				devices: [name],
 				prompt: `${name}(config-router)#`,
@@ -1402,8 +1452,8 @@ const LAB11 = {
 			})),
 		},
 		{
-			title: "Task 3. Set interface priorities for the DR election",
-			slots: LAB11_ROUTERS.flatMap((name) => [
+			title: "Task 4. Bring up R3 E0/0 first, then R2 and R1",
+			slots: ["R3", "R2", "R1"].flatMap((name) => [
 				{ devices: [name], prompt: `${name}(config)#`, context: "config" },
 				{ devices: [name], prompt: `${name}(config-if)#`, context: "config-if", iface: "e0/0" },
 			]),
@@ -1414,27 +1464,28 @@ const LAB11 = {
 		},
 	],
 	solution: {
-		R1: [
-			"enable", "configure terminal", "router ospf 10", "router-id 1.1.1.1",
-			"network 10.11.0.0 0.0.0.7 area 0", "exit",
-			"interface e0/0", "ip ospf priority 100", "end", "copy running-config startup-config",
+		R3: [
+			"enable", "configure terminal", "interface e0/0", "ip ospf priority 150", "exit",
+			"router ospf 10", "router-id 3.3.3.3", "network 10.11.0.0 0.0.0.7 area 0", "exit",
+			"interface e0/0", "no shutdown", "end", "copy running-config startup-config",
 		],
 		R2: [
-			"enable", "configure terminal", "router ospf 10", "router-id 2.2.2.2",
-			"network 10.11.0.0 0.0.0.7 area 0", "exit",
-			"interface e0/0", "ip ospf priority 150", "end", "copy running-config startup-config",
+			"enable", "configure terminal", "interface e0/0", "ip ospf priority 150", "exit",
+			"router ospf 10", "router-id 2.2.2.2", "network 10.11.0.0 0.0.0.7 area 0", "exit",
+			"interface e0/0", "no shutdown", "end", "copy running-config startup-config",
 		],
-		R3: [
-			"enable", "configure terminal", "router ospf 10", "router-id 3.3.3.3",
-			"network 10.11.0.0 0.0.0.7 area 0", "exit",
-			"interface e0/0", "ip ospf priority 150", "end", "copy running-config startup-config",
+		R1: [
+			"enable", "configure terminal", "interface e0/0", "ip ospf priority 100", "exit",
+			"router ospf 10", "router-id 1.1.1.1", "network 10.11.0.0 0.0.0.7 area 0", "exit",
+			"interface e0/0", "no shutdown", "end", "copy running-config startup-config",
 		],
 	},
 	finalCheck: {
 		label: "OSPF is enabled and R3 wins the initial DR election",
 		check: (state, lab) => LAB11.tasks.every((task) => task.check(state, lab)),
 	},
-	ptDevices: "three routers (R1, R2, R3) and one Catalyst switch",
+	ptDevices: "three routers (R1, R2, R3: Cisco 2911 or 1941) and one Catalyst switch (SW-1: Catalyst 2960-24TT)",
+	ptNotes: "Configure priorities and OSPF process 10 on all routers first. Bring R3 GigabitEthernet0/0 up before R2 and R1; OSPF does not preempt the first DR. Verify R3 with show ip ospf neighbor and show ip ospf interface GigabitEthernet0/0.",
 	hasPacketTracerFile: false,
 };
 

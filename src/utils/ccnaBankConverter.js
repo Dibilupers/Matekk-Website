@@ -310,7 +310,7 @@ function interfaceRequirementMatch(row, body) {
   return {
     prompt: "Assign each IP address configuration to the router interface that meets its subnet requirement.",
     body: {
-      type: "match",
+      type: "drag_drop",
       items: requirements.map(({ router, iface, position, prefix }) =>
         `${router} ${iface}: ${position} usable address on a /${prefix}`,
       ),
@@ -532,6 +532,14 @@ function remakeSkippedQuestion(row, choices) {
 export function convertBankRow(row) {
   const rawText = cleanText(row.question_text);
   if (!rawText) return { problem: "question text is empty" };
+  const isR86StaticRouteQuestion =
+    /static route must be configured on r86/i.test(rawText) &&
+    /172\.16\.34\.0\/29/i.test(rawText) &&
+    /resides on r14/i.test(rawText);
+  const recreatedExhibitDiagram = isR86StaticRouteQuestion
+    ? "r86-static-route-to-r14-17216-34"
+    : null;
+  const isSelfContainedLacpQuestion = /which configuration enables sw2 to establish an lacp etherchannel/i.test(rawText);
   const questionType = normalizeQuestionType(row.question_type);
   const parsedOptionTable = questionType === "single" ? parseOptionTable(rawText) : null;
   const choices = parseChoices(row.choices);
@@ -558,9 +566,9 @@ export function convertBankRow(row) {
         ? parsedOptionTable.options
         : Object.fromEntries(choiceEntries.map(([letter]) => [letter, parsedOptionTable.options[letter]]))
     : choices;
-  const { prompt, exhibit } = hasCompleteOptionTable
-    ? { prompt: parsedOptionTable.prompt }
-    : splitPromptExhibit(rawText);
+  const { prompt, exhibit } = splitPromptExhibit(
+    hasCompleteOptionTable ? parsedOptionTable.prompt : rawText,
+  );
   const afterExhibitText = typeof row.afterExhibitText === "string" ? row.afterExhibitText.trim() : "";
   const afterExhibitImageUrl = typeof row.afterExhibitImageUrl === "string" ? row.afterExhibitImageUrl : null;
   const afterExhibit = afterExhibitText || afterExhibitImageUrl
@@ -572,12 +580,22 @@ export function convertBankRow(row) {
         questionId: row.id,
       }
     : null;
-  let exhibitImage = row.imageUrl || undefined;
+  let exhibitImage = isSelfContainedLacpQuestion || recreatedExhibitDiagram ? undefined : row.imageUrl || undefined;
   const cleanedPrompt = removeDuplicateExhibitLeadIn(cleanText(prompt));
   let questionPrompt = cleanedPrompt;
-  const hasSeparateExhibit = Boolean(afterExhibit || exhibitImage || (exhibit && !/^Option [A-H]$/i.test(exhibit.trim())));
+  const hasSeparateExhibit = Boolean(
+    recreatedExhibitDiagram || afterExhibit || exhibitImage || (exhibit && !/^Option [A-H]$/i.test(exhibit.trim())),
+  );
   questionPrompt = hasSeparateExhibit ? removeTrailingOptionExhibitLabel(questionPrompt) : questionPrompt;
-  if (mentionsExhibit(rawText) && !exhibit && !exhibitImage && !afterExhibit && !hasCompleteOptionTable) {
+  if (
+    mentionsExhibit(rawText) &&
+    !exhibit &&
+    !exhibitImage &&
+    !afterExhibit &&
+    !hasCompleteOptionTable &&
+    !recreatedExhibitDiagram &&
+    !isSelfContainedLacpQuestion
+  ) {
     return { problem: "referenced exhibit has no available text or image" };
   }
 
@@ -647,7 +665,7 @@ export function convertBankRow(row) {
     // This image is a screenshot of the matching activity, now replaced by the interactive version.
     exhibitImage = undefined;
   }
-  const displayPrompt = row.id === 299
+  const displayPrompt = row.id === 299 || isSelfContainedLacpQuestion
     ? questionPrompt.replace(/^\s*Refer to (?:the )?exhibit\.?\s*/i, "")
     : questionPrompt;
   return {
@@ -662,9 +680,11 @@ export function convertBankRow(row) {
       ...(row.id === 481 && /questions\/ccna-question-481\.png$/i.test(row.imageUrl ?? "")
         ? { hidePrompt: true }
         : {}),
-      ...([181, 299, 382, 441, 570, 608, 1305, 1306, 1317, 1321].includes(row.id)
+      ...(isR86StaticRouteQuestion || isSelfContainedLacpQuestion ||
+        [181, 299, 382, 441, 570, 608, 1305, 1306, 1317, 1321].includes(row.id)
         ? { hideExhibitImage: true }
         : {}),
+      ...(recreatedExhibitDiagram ? { exhibitDiagram: recreatedExhibitDiagram } : {}),
       ...body,
       ...(afterExhibit
         ? {
@@ -674,7 +694,9 @@ export function convertBankRow(row) {
             hideExhibitImage: true,
           }
         : {}),
-      explanation: remade?.explanation || cleanText(row.explanation) || findCcnaQuestionExplanation(prompt),
+      explanation: isSelfContainedLacpQuestion
+        ? "The active mode enables LACP and initiates negotiation. Desirable and auto are PAgP modes, while on configures a static EtherChannel. The channel-group number is locally significant and may differ between switches."
+        : remade?.explanation || cleanText(row.explanation) || findCcnaQuestionExplanation(prompt),
       bankId: row.id,
       moduleNumber: null,
       moduleTitle: row.module,

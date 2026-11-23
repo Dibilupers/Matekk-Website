@@ -9,6 +9,8 @@ import { CCNA_LEGACY_QUESTIONS } from "./ccnaLegacyQuestions";
 import { CCNA_LEGACY_200_301_QUESTIONS } from "./ccnaLegacyQuestionBank";
 import { splitPromptExhibit } from "../../../../../utils/splitPromptExhibit";
 import { findCcnaQuestionExplanation } from "../../../../../utils/ccnaQuestionExplanations";
+import { getCcnaExhibitImageByLegacyIndex } from "../../../../../utils/ccnaExhibitImages";
+import { shuffleMatchingChoices } from "./ccnaMatchingChoices";
 
 // Both legacy files come from the same CCNA 200-301 PDF. CCNA_LEGACY_QUESTIONS is the fuller set
 // (with explanations), so only questions it is missing are taken from the other file.
@@ -26,33 +28,6 @@ export function shuffle(items) {
     [shuffled[index], shuffled[randomIndex]] = [shuffled[randomIndex], shuffled[index]];
   }
   return shuffled;
-}
-
-function shuffleMatchingChoices(question) {
-  if (
-    !["match", "drag_drop"].includes(question.type) ||
-    question.matchStyle === "numbers" ||
-    !Array.isArray(question.items) ||
-    !Array.isArray(question.choices) ||
-    question.choices.length < 2 ||
-    !Array.isArray(question.answer) ||
-    question.answer.length !== question.items?.length ||
-    new Set(question.answer).size !== question.answer.length ||
-    question.answer.some((index) => !Number.isInteger(index) || index < 0 || index >= question.choices.length)
-  ) {
-    return question;
-  }
-
-  const choiceOrder = shuffle(question.choices.map((_, index) => index));
-  if (choiceOrder.every((index, shuffledIndex) => index === shuffledIndex)) {
-    choiceOrder.push(choiceOrder.shift());
-  }
-  const shuffledIndexes = new Map(choiceOrder.map((originalIndex, index) => [originalIndex, index]));
-  return {
-    ...question,
-    choices: choiceOrder.map((index) => question.choices[index]),
-    answer: question.answer.map((index) => shuffledIndexes.get(index)),
-  };
 }
 
 export const CCNA_QUESTION_BANK = [
@@ -83,15 +58,29 @@ export const CCNA_QUESTION_BANK = [
     moduleTitle: "Medium Exam",
   })),
   // Kept tagged so older CCNA 200-301 questions remain identifiable in the shared bank.
-  ...CCNA_LEGACY_ALL_QUESTIONS.map((question) => ({
-    ...question,
-    ...applyNativeExhibit(question),
-    // Router output pasted into the question text moves into the exhibit box
-    ...(question.exhibit ? {} : splitPromptExhibit(question.prompt)),
-    source: "legacy-ccna-200-301",
-    moduleNumber: null,
-    moduleTitle: "Legacy CCNA 200-301",
-  }))
+  ...CCNA_LEGACY_ALL_QUESTIONS.map((question) => {
+    const nativeExhibit = applyNativeExhibit(question);
+    const questionWithExhibit = {
+      ...question,
+      // Router output pasted into the question text moves into the exhibit box
+      ...(question.exhibit ? {} : splitPromptExhibit(question.prompt)),
+      ...nativeExhibit,
+    };
+    const exhibitImage =
+      /\bexhibit\b/i.test(questionWithExhibit.prompt) &&
+      !questionWithExhibit.hideExhibitImage &&
+      !questionWithExhibit.exhibitDiagram
+      ? getCcnaExhibitImageByLegacyIndex(question.legacyIndex)
+      : null;
+
+    return {
+      ...questionWithExhibit,
+      ...(!questionWithExhibit.exhibitImage && exhibitImage ? { exhibitImage } : {}),
+      source: "legacy-ccna-200-301",
+      moduleNumber: null,
+      moduleTitle: "Legacy CCNA 200-301",
+    };
+  })
     // Skip questions whose exhibit picture was lost when they were taken from the PDF (they can't be answered)
     .filter((question) =>
       !/\bexhibit\b/i.test(question.prompt) ||
@@ -166,21 +155,26 @@ function createExamQuestions(sourceQuestions, count, { jumbleMatchingAnswers = f
   const requiredClickBoxesCount = blockCount * clickBoxesPerBlock;
   const clickBoxesShortage = Math.max(0, requiredClickBoxesCount - clickBoxesPool.length);
   const randomizedDragDropPool = shuffle(dragDropPool);
-  const canBorrowClickBoxes = randomizedDragDropPool.length >= requiredDragDropCount + clickBoxesShortage;
+  const borrowedClickBoxSources = randomizedDragDropPool
+    .filter((question) =>
+      question.items?.length === question.choices?.length &&
+      question.answer?.length === question.items.length &&
+      new Set(question.answer).size === question.answer.length,
+    )
+    .slice(0, clickBoxesShortage);
+  const canBorrowClickBoxes = borrowedClickBoxSources.length === clickBoxesShortage &&
+    randomizedDragDropPool.length - borrowedClickBoxSources.length >= requiredDragDropCount;
   const dragDropQuota = canBorrowClickBoxes && randomizedDragDropPool.length >= requiredDragDropCount
     ? dragDropPerBlock
     : 0;
-  const borrowedClickBoxes = canBorrowClickBoxes
-    ? randomizedDragDropPool.slice(requiredDragDropCount, requiredDragDropCount + clickBoxesShortage)
-      .map((question) => ({ ...question, type: "click_boxes" }))
-    : [];
+  const borrowedClickBoxes = borrowedClickBoxSources.map((question) => ({ ...question, type: "click_boxes" }));
   const clickBoxesQuota = clickBoxesPool.length + borrowedClickBoxes.length >= requiredClickBoxesCount
     ? clickBoxesPerBlock
     : 0;
   const imageQuota = imagePool.length >= blockCount * imagePerBlock ? imagePerBlock : 0;
-  const borrowedIds = new Set(borrowedClickBoxes.map((question) => question.bankId ?? question.id));
+  const borrowedClickBoxSourceSet = new Set(borrowedClickBoxSources);
   const dragDropQuestions = randomizedDragDropPool
-    .filter((question) => !borrowedIds.has(question.bankId ?? question.id))
+    .filter((question) => !borrowedClickBoxSourceSet.has(question))
     .slice(0, blockCount * dragDropQuota);
   const clickBoxesQuestions = shuffle([...clickBoxesPool, ...borrowedClickBoxes])
     .slice(0, blockCount * clickBoxesQuota);
@@ -212,7 +206,7 @@ function createExamQuestions(sourceQuestions, count, { jumbleMatchingAnswers = f
       ...otherQuestions.slice(otherStart, otherStart + Math.min(otherPerBlock, blockLength - matchingPerBlock - dragDropQuota - clickBoxesQuota - imageQuota)),
     ];
     questions.push(...shuffle(blockQuestions).map((question) =>
-      jumbleMatchingAnswers ? shuffleMatchingChoices(question) : question,
+      jumbleMatchingAnswers ? shuffleMatchingChoices(question, shuffle) : question,
     ));
   }
 

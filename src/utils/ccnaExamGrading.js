@@ -98,6 +98,7 @@ export function matchMode(question) {
 	if (!isMatchingQuestion(question)) return null;
 	const { items, choices, answer } = question ?? {};
 	if (!Array.isArray(items) || !Array.isArray(choices)) return null;
+	if (question.matchStyle === "assign") return "assign";
 	if (
 		question.type === "image" &&
 		Array.isArray(question.groupSizes) &&

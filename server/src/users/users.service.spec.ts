@@ -38,6 +38,26 @@ describe('UsersService', () => {
     expect(service).toBeDefined();
   });
 
+  it('includes the current role in the authenticated user for role-based endpoint checks', async () => {
+    findUnique.mockResolvedValue({
+      id: 48,
+      username: 'admin-user',
+      role: 'Admin',
+      active_status: true,
+    });
+
+    await expect(service.findAuthUserById(48)).resolves.toEqual({
+      userId: 48,
+      username: 'admin-user',
+      role: 'Admin',
+      active_status: true,
+    });
+    expect(findUnique).toHaveBeenCalledWith({
+      where: { id: 48 },
+      select: { id: true, username: true, role: true, active_status: true },
+    });
+  });
+
   it('returns an approval status derived from the active flag', async () => {
     findMany.mockResolvedValue([
       {

@@ -7,10 +7,13 @@ let PRACTICE_LABS;
 let HIDDEN_PRACTICE_LABS;
 let createLabState;
 let execute;
+let configCommands;
 let applyWorksheetCommands;
 let canReach;
 let canReachIpv6;
 let getOspfDr;
+let buildPacketTracerGuide;
+let ptIfName;
 
 before(async () => {
 	vite = await createServer({
@@ -20,7 +23,7 @@ before(async () => {
 		appType: "custom",
 	});
 	({ PRACTICE_LABS, HIDDEN_PRACTICE_LABS } = await vite.ssrLoadModule("/src/pages/training/cisco/ccna/labs/labDefinitions.js"));
-	({ createLabState, execute, canReach, canReachIpv6, getOspfDr } = await vite.ssrLoadModule("/src/pages/training/cisco/ccna/labs/labEngine.js"));
+	({ createLabState, execute, configCommands, canReach, canReachIpv6, getOspfDr, buildPacketTracerGuide, ptIfName } = await vite.ssrLoadModule("/src/pages/training/cisco/ccna/labs/labEngine.js"));
 	({ applyWorksheetCommands } = await vite.ssrLoadModule("/src/pages/training/cisco/ccna/labs/worksheetCommands.js"));
 });
 
@@ -47,8 +50,100 @@ test("every lab final check accepts its lab topology", () => {
 	}
 });
 
-test("the new labs' terminal solutions execute and pass every task", () => {
-	for (const lab of PRACTICE_LABS.filter(({ id }) => id >= 5)) {
+test("every lab topology displays all devices and links only existing interfaces", () => {
+	for (const lab of PRACTICE_LABS) {
+		assert.deepEqual(
+			Object.keys(lab.layout.nodes).sort(),
+			Object.keys(lab.devices).sort(),
+			`Lab ${lab.id} should display every declared device and no undeclared devices`,
+		);
+		const linkedDevices = new Set();
+		for (const link of lab.links) {
+			for (const endpoint of [link.a, link.b]) {
+				const [deviceName, interfaceName] = endpoint.split(":");
+				assert.ok(lab.devices[deviceName], `Lab ${lab.id} link ${endpoint} should reference a declared device`);
+				assert.ok(
+					lab.devices[deviceName].interfaces[interfaceName],
+					`Lab ${lab.id} link ${endpoint} should reference a declared interface`,
+				);
+				linkedDevices.add(deviceName);
+			}
+		}
+		assert.deepEqual(
+			[...linkedDevices].sort(),
+			Object.keys(lab.devices).sort(),
+			`Lab ${lab.id} should connect every displayed device`,
+		);
+	}
+});
+
+test("worksheet prompts target editable devices and real interfaces", () => {
+	for (const lab of PRACTICE_LABS) {
+		for (const group of lab.worksheet ?? []) {
+			for (const slot of group.slots) {
+				for (const name of slot.devices) {
+					assert.ok(lab.editable.includes(name), `Lab ${lab.id} worksheet should only target editable device ${name}`);
+					if (slot.iface) {
+						assert.ok(
+							lab.devices[name].interfaces[slot.iface],
+							`Lab ${lab.id} worksheet should only target existing interface ${name}:${slot.iface}`,
+						);
+					}
+				}
+			}
+		}
+	}
+});
+
+test("Layer 2 labs omit nonexistent gateways from Packet Tracer setup", () => {
+	for (const [labId, deviceNames] of [
+		[1, ["IP Phone", "PC1", "PC2"]],
+		[7, ["PC1", "PC2"]],
+		[8, ["PC1", "PC2"]],
+	]) {
+		const lab = PRACTICE_LABS.find(({ id }) => id === labId);
+		for (const deviceName of deviceNames) {
+			const device = lab.devices[deviceName];
+			assert.equal(device.gateway, "");
+			assert.ok(configCommands(device).every((command) => !command.startsWith("Default gateway ")));
+		}
+	}
+});
+
+test("Packet Tracer build guides use Packet Tracer interface names and complete preconfiguration", () => {
+	for (const lab of PRACTICE_LABS) {
+		const guide = buildPacketTracerGuide(lab);
+		assert.ok(guide.includes(`DEVICES: ${lab.ptDevices}`), `Lab ${lab.id} should list Packet Tracer devices`);
+		assert.ok(guide.includes("PRE-CONFIGURATION"), `Lab ${lab.id} should include preconfiguration`);
+		assert.ok(guide.includes("YOUR TASKS"), `Lab ${lab.id} should include tasks`);
+		for (const name of Object.keys(lab.devices)) {
+			assert.ok(guide.includes(`[${name}]`), `Lab ${lab.id} should include setup for ${name}`);
+		}
+		for (const link of lab.links) {
+			const [deviceA, interfaceA] = link.a.split(":");
+			const [deviceB, interfaceB] = link.b.split(":");
+			assert.ok(
+				guide.split("\n").some((line) => (
+					line.includes(`${deviceA} ${ptIfName(lab.devices[deviceA], interfaceA, deviceA)}`) &&
+					line.includes(`${deviceB} ${ptIfName(lab.devices[deviceB], interfaceB, deviceB)}`)
+				)),
+				`Lab ${lab.id} guide should cable ${link.a} to ${link.b}`,
+			);
+		}
+	}
+
+	const lab1 = PRACTICE_LABS.find(({ id }) => id === 1);
+	const lab1Guide = buildPacketTracerGuide(lab1);
+	assert.ok(lab1Guide.includes("FastEthernet0/2 (E0/1)"), "switch E0/1 should map to Packet Tracer FastEthernet0/2");
+	assert.ok(lab1Guide.includes("GigabitEthernet0/0"), "router G0/0 should map to Packet Tracer GigabitEthernet0/0");
+	assert.ok(lab1Guide.includes("Switch"), "IP Phone fa0 should map to the Switch port");
+	assert.ok(lab1Guide.includes("PC"), "IP Phone fa1 should map to the PC port");
+	assert.equal(ptIfName(lab1.devices["SW-1"], "e0/1", "SW-1"), "FastEthernet0/2");
+	assert.equal(ptIfName(lab1.devices.R1, "g0/0", "R1"), "GigabitEthernet0/0");
+});
+
+test("every lab's terminal solution executes and passes every task", () => {
+	for (const lab of PRACTICE_LABS) {
 		let state = createLabState(lab);
 		for (const [device, commands] of Object.entries(lab.solution)) {
 			for (const command of commands) {
@@ -72,7 +167,7 @@ test("the recreated voice VLAN lab matches its topology and worksheet", () => {
 	const answers = [
 		"interface e0/1", "switchport mode access", "switchport access vlan 10", "switchport voice vlan 11",
 		"interface e0/1", "switchport mode access", "switchport access vlan 30",
-		"vlan 10", "name Engineering", "exit",
+		"vlan 10", "name Engineering", "exit", "vlan 11", "exit", "vlan 30", "exit",
 		"lldp run", "interface e0/0", "lldp transmit", "lldp receive",
 		"interface e0/2", "no cdp enable", "copy running-config startup-config",
 	];
@@ -82,6 +177,8 @@ test("the recreated voice VLAN lab matches its topology and worksheet", () => {
 	for (const task of lab.tasks) assert.ok(task.check(result.state), `${task.id} should pass`);
 	assert.ok(lab.finalCheck.check(result.state));
 	assert.equal(lab.links.length, 5);
+	assert.equal(result.state.devices["SW-1"].vlans["11"], "");
+	assert.equal(result.state.devices["SW-2"].vlans["30"], "");
 });
 
 test("the two-switch VLAN and voice-port worksheet configures every range member", () => {
@@ -214,6 +311,7 @@ test("the VLAN and LACP worksheets pass their configuration checks", () => {
 
 	const lacpLab = PRACTICE_LABS.find(({ id }) => id === 8);
 	const lacpAnswers = [
+		"vlan 40", "vlan 50",
 		"interface e0/2", "switchport mode access", "switchport access vlan 40",
 		"interface range e0/0 - 1", "switchport mode trunk", "switchport trunk allowed vlan 40,50",
 		"interface range e0/0 - 1", "channel-group 10 mode active",
@@ -232,7 +330,6 @@ test("standard ACLs filter packets by source and routing labs verify both direct
 		"ip route 192.168.10.0 255.255.255.0 10.0.12.1",
 		"access-list 10 permit host 192.168.10.10",
 		"interface e0/0", "ip access-group 10 in",
-		"ping 192.168.50.10",
 		"copy running-config startup-config",
 	];
 	const aclResult = applyWorksheetCommands(aclLab, aclLab.worksheet, aclAnswers, createLabState(aclLab));
@@ -247,7 +344,7 @@ test("standard ACLs filter packets by source and routing labs verify both direct
 	const routeAnswers = [
 		"ip route 172.16.20.0 255.255.255.0 10.10.12.2",
 		"ip route 0.0.0.0 0.0.0.0 10.10.12.1",
-		"show ip route", "ping 172.16.20.20",
+		"show ip route",
 		"copy running-config startup-config",
 	];
 	const routeResult = applyWorksheetCommands(routeLab, routeLab.worksheet, routeAnswers, createLabState(routeLab));
@@ -258,16 +355,23 @@ test("standard ACLs filter packets by source and routing labs verify both direct
 
 test("OSPF DR election uses interface priority then router ID", () => {
 	const lab = PRACTICE_LABS.find(({ id }) => id === 11);
+	assert.deepEqual(Object.keys(lab.solution), ["R3", "R2", "R1"]);
+	const bringUpGroup = lab.worksheet.find(({ title }) => title.startsWith("Task 4"));
+	assert.deepEqual([...new Set(bringUpGroup.slots.flatMap(({ devices }) => devices))], ["R3", "R2", "R1"]);
+	assert.match(buildPacketTracerGuide(lab), /bring R3 GigabitEthernet0\/0 up before R2 and R1/i);
 	const answers = [
+		"interface e0/0", "ip ospf priority 100",
+		"interface e0/0", "ip ospf priority 150",
+		"interface e0/0", "ip ospf priority 150",
 		"router ospf 10", "router-id 1.1.1.1",
 		"router ospf 10", "router-id 2.2.2.2",
 		"router ospf 10", "router-id 3.3.3.3",
 		"network 10.11.0.0 0.0.0.7 area 0",
 		"network 10.11.0.0 0.0.0.7 area 0",
 		"network 10.11.0.0 0.0.0.7 area 0",
-		"interface e0/0", "ip ospf priority 100",
-		"interface e0/0", "ip ospf priority 150",
-		"interface e0/0", "ip ospf priority 150",
+		"interface e0/0", "no shutdown",
+		"interface e0/0", "no shutdown",
+		"interface e0/0", "no shutdown",
 		"copy running-config startup-config",
 	];
 	const result = applyWorksheetCommands(lab, lab.worksheet, answers, createLabState(lab));

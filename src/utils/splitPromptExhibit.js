@@ -1,4 +1,4 @@
-import { DEVICE_LABEL, looksLikeCode } from "./answerTextStyle";
+import { DEVICE_LABEL, looksLikeCode } from "./answerTextStyle.js";
 // The legacy CCNA questions were pulled out of a PDF, so router output / configs sit inside the
 // question text. This separates them: prose stays as the question, device output becomes the
 // `exhibit` (shown in the dark monospace box, keeping its line breaks and column spacing).
@@ -20,6 +20,7 @@ const INLINE_CODE_START = [
   /\bOutput from R1\b/i,
   /\bSW\d+#/i,
   /\b[A-Za-z0-9][\w.-]*(?:\([^)]*\))?#\s*(?:show|config|conf|ip|interface|router|enable|copy|ping|traceroute|access-list|line|username|hostname|vtp|spanning|switchport|no )/i,
+  /(?:^|\n)[ \t]*[A-Za-z0-9][\w.-]*(?:\([^)]*\))?#(?=(?:[ \t]*\r?\n)+[ \t]*(?:!|interface\b|router\b|ip\b|ipv6\b|no\b|hostname\b|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}))/i,
   /\b(?:RIP|OSPF|EIGRP)\s+\d{1,3}(?:\.\d+){1,3}\/\d+/i,
   /\bSW\d+\s*=\s*\d+/i,
   /\bMacOs\$\s*ifconfig\b/i,
@@ -28,7 +29,7 @@ const INLINE_CODE_START = [
   /\bIBGP route\b/i,
   /\binterface\s+GigabitEthernet\d/i,
 ];
-const TRAILING_QUESTION = /\b(?:Which|What|How|Why|When|Where)\b[^?]{0,500}\?(?:\s*\([^)]*\))?\s*$/gi;
+const TRAILING_QUESTION = /\b(?:According to the output,\s*)?(?:Which|What|How|Why|When|Where)\b[^?]{0,500}\?(?:\s*\([^)]*\))?\s*$/gi;
 
 function isCode(block) {
   if (!block.trim()) return false;
@@ -145,7 +146,15 @@ function splitPromptExhibitRaw(prompt) {
 
   const structured = splitStructuredExhibit(prompt);
   if (structured) return structured;
-  if (FORMATTED_OPTION_COLUMNS.test(prompt)) return { prompt };
+  const formattedOptions = FORMATTED_OPTION_COLUMNS.exec(prompt);
+  if (formattedOptions) {
+    const inlineCode = splitInlineCodeExhibit(prompt.slice(0, formattedOptions.index));
+    if (!inlineCode?.exhibit) return { prompt };
+    return {
+      prompt: [inlineCode.prompt, prompt.slice(formattedOptions.index).trim()].filter(Boolean).join("\n\n"),
+      exhibit: inlineCode.exhibit,
+    };
+  }
 
   const inlineCode = splitInlineCodeExhibit(prompt);
   if (inlineCode) return inlineCode;

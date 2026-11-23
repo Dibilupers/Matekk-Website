@@ -2,817 +2,305 @@
 
 Tracking begins 2026-10-17.
 
-## 2026-11-14 — `main`
+## 2026-11-22 - main
 
 Commits included in this push:
 
-- `bd728c0` — Shuffled choices on CCNA matching questions without changing
-  answer grading, added 57 before-and-after matching examples to the exhibit
-  comparison PDF, and included the updated project proposal PDF from the
-  worktree.
+- `37d9cfa` - Restored the original matching question type for all 13 legacy
+  questions marked with unused options or values, removed the drag-and-drop
+  progression override, and bumped the offline question cache to v6.
 
-Validation before push: focused matching tests, targeted ESLint, production
-build, PDF checks (121 pages; 57 matching examples; all 161 mapped exhibit
-images present locally), and Git whitespace checks passed. 22 exhibit records
-remain flagged for source/content review; no authenticated live-bank review was
-run.
+Validation before push: 192 focused CCNA tests, targeted ESLint,
+`npm run build`, and `git diff --check` passed.
 
-## 2026-11-14 — `main`
+## 2026-11-22 - main
 
 Commits included in this push:
 
-- `0d2c3ec` — Added partial/illustrative exhibits for 11 live gap rows, hid
-  Question 491's unrelated image and stale exhibit cue, and added the updated
-  63-page before-and-after PDF. Added a configurable backend host binding for
-  local validation.
+- `680ce50` - Let grouped drag-and-drop questions advance once each category
+  has an assignment, while retaining original unused-option wording and
+  grading incomplete mappings as incorrect.
 
-Validation before push: 14 focused exhibit tests, targeted ESLint, frontend and
-backend builds, Git whitespace checks, and PDF signature/page-count checks
-passed. `ccnaBankConverter.test.js` had one failing assertion for offline
-legacy question 282 (bank ID 1321) expecting the original exhibit text.
+Validation before push: 193 focused CCNA tests, targeted ESLint,
+`npm run build`, and `git diff --check` passed.
 
-## 2026-11-14 — `main`
+## 2026-11-22 - main
 
 Commits included in this push:
 
-- `b7c13f7` — Removed the before-and-after PDF download button from the CCNA
-  practice-labs page.
+- `83e191c` - Prefer bundled exhibit images over stale database URLs for mapped
+  CCNA exhibit questions and bump the offline question-bank cache to v5.
 
-Validation before push: targeted ESLint, frontend production build, and Git
-whitespace checks passed.
+Validation before push: 147 focused CCNA tests, targeted ESLint, and
+`npm run build` passed. The build emitted a non-fatal chunk-size warning.
 
-## 2026-11-14 — `main`
-
-Commits included in this push:
-
-- `e9a09e1` — Collapsed the CCNA practice-lab list behind a “More labs” control
-  and smoothly scrolled to the lab workspace when a student selects a lab.
-
-Validation before push: targeted ESLint, frontend production build, and Git
-whitespace checks passed.
-
-## 2026-11-13 — `main`
+## 2026-11-22 - main
 
 Commits included in this push:
 
-- `fa9a62f` — Replaced the text-based CCNA practice-lab PDF with real
-  before-and-after website screenshots for Labs 5–11, fixed the final-check
-  topology argument and Lab 7 solution sequence, and added regression tests.
+- `2aa65bc` - Converted 13 legacy matching questions that mark unused options,
+  values, commands, or answers into drag-and-drop while preserving their
+  answer mappings and offline behavior.
 
-Validation before push: 13 focused practice-lab tests, targeted ESLint,
-frontend production build, Git whitespace checks, and PDF page/image checks.
+Validation before push: 192 focused CCNA tests, `npm run build`, and
+`git diff --check` passed.
 
-## 2026-11-13 — `main`
-
-Commits included in this push:
-
-- `8f213e1` — Unlocked the dual-stack Lab 5, added six CCNA practice labs with
-  tested ACL and OSPF simulator support, simplified the lab picker to reveal
-  details only for the selected lab, and added a seven-lab before-and-after PDF.
-
-Validation before push: 11 focused practice-lab tests, targeted ESLint,
-frontend production build, Git whitespace checks, and PDF page/content checks.
-
-## 2026-11-13 — `main`
+## 2026-11-22 - main
 
 Commits included in this push:
 
-- `266c428` — Corrected Question 403's route-focused topology and removed the
-  incorrect shared route diagram from Questions 516 and 517, preserving their
-  separate matching activities.
+- `3d93d79` - Initially changed repeated-answer dropdowns to drag-and-drop.
+- `b39487c` - Reverted that interaction change; repeated-answer questions use
+  the existing numbered input mode.
+- `2ddc245` - Expanded legacy 39's two-switch configuration exhibit to fill its
+  display box.
+- `6b65e71` - Removed a redundant offline interaction override.
 
-Also updated the requested 162-page comparison PDF with reviewed after-panel
-redraws for Questions 369, 403, 516/517, 1011, 1099, and 1199; the original
-before panels were preserved.
+Validation before push: 190 focused CCNA tests, targeted ESLint,
+`npm run build`, and `git diff --check` passed.
 
-Validation before push: 11 focused CCNA tests, targeted ESLint, production
-build, Git whitespace checks, and PDF page/content checks.
-
-## 2026-11-13 — `main`
-
-Commits included in this push:
-
-- `e09ff2f` — Rebuilt CCNA Questions 246 and 273 as original topologies,
-  corrected exhibit mappings and topology labels, and updated the comparison
-  PDF and repair notes.
-
-Validation before push: 33 focused tests, targeted ESLint, production build,
-Git whitespace checks, and SHA-256 verification that the requested comparison
-PDF matches the reviewed 162-page copy.
-
-## 2026-11-12 — `main`
+## 2026-11-22 - main
 
 Commits included in this push:
 
-- `16fd932` — Prevented topology interface and descriptive labels from
-  overlapping device labels or each other while keeping cable labels on or near
-  their associated links.
+- `d98e525` - Fixed the DC-1/HQ-1 Question 299 live and offline drag-and-drop
+  rendering and bumped the offline CCNA bank cache so stale dropdown data is
+  refreshed.
 
-Validation before push: nine topology geometry/label tests, targeted ESLint,
-frontend production build, and a live Lab 3 render with no text collisions.
+Validation before push: 189 focused CCNA tests, targeted ESLint,
+`npm run build`, and `git diff --check` passed.
 
-## 2026-11-12 — `main`
-
-Commits included in this push:
-
-- `fe11982` — Removed topology label backplates, placed interface labels on
-  their connected cables in practice labs and CCNA exhibits, and updated the
-  proposal with matching Lab 3 before/after screenshots.
-
-Validation before push: eight topology geometry/label tests, targeted ESLint,
-frontend production build, and seven-page proposal verification.
-
-## 2026-11-12 — `main`
+## 2026-11-22 - main
 
 Commits included in this push:
 
-- `ded0d13` — Added the seven-page project proposal PDF with practice-lab,
-  CCNA exhibit, and reconstructed topology comparisons.
+- `3888ec1` - Reverted the overbroad drag-and-drop normalization changelog.
+- `e498434` - Reverted the overbroad conversion of prompts containing drag
+  instructions. Numbered and instruction-only matching questions remain unchanged.
+- `a30e235` - Preserved the image-based DC-1/HQ-1 Question 299 as drag-and-drop
+  across live and offline banks.
 
-Validation before push: verified the seven-page PDF and embedded comparison
-images; Git whitespace checks passed.
+Validation before push: 189 focused CCNA tests, targeted ESLint,
+`npm run build`, and `git diff --check` passed.
 
-## 2026-11-09 — `main`
-
-Commits included in this push:
-
-- `6aee17e` — Made the IOS terminal the default for the voice VLAN practice lab
-  and added a toggle back to its worksheet format.
-
-Validation before push: seven focused practice-lab tests, targeted ESLint,
-frontend production build, and Git whitespace checks.
-
-## 2026-11-09 — `main`
+## 2026-11-22 - main
 
 Commits included in this push:
 
-- `f669842` — Kept topology label boxes clear of cable lines and other labels,
-  expanding collision placement until it finds an open position.
+- `27dbd44` - Fixed legacy 617's drag-and-drop interaction, removed duplicated
+  text from five mapped exhibits, and changed the SW11 VLAN exhibit canvas to
+  white.
 
-Validation before push: nineteen focused topology and practice-lab tests,
-targeted ESLint, frontend production build, Git whitespace checks, and a local
-practice-lab preview with no overlapping link labels.
+Validation before push: 43 CCNA exhibit tests, 146 bank-converter tests,
+targeted ESLint, `npm run build`, and `git diff --check` passed.
 
-## 2026-11-09 — `main`
-
-Commits included in this push:
-
-- `627f136` — Raised SW-2 in the Voice VLAN practice topology and repositioned
-  port labels along their links, keeping labels clear of the cable lines.
-
-Validation before push: seventeen focused topology and practice-lab tests,
-targeted ESLint, frontend production build, Git whitespace checks, and a
-practice-lab topology preview.
-
-## 2026-11-09 — `main`
+## 2026-11-22 - main
 
 Commits included in this push:
 
-- `70ec721` — Aligned practice-lab and CCNA exam topology cables with device
-  outlines and positioned link labels beside their actual cable segments.
+- `5568021` - Completed the CCNA CLI terminal-exhibit audit across the
+  All Questions and offline paths, corrected legacy 909/816/1159 handling,
+  redrew legacy 50/59, and preserved answer data.
 
-Validation before push: twelve focused practice-lab and geometry tests,
-targeted ESLint, frontend production build, Git whitespace checks, and a
-practice-lab topology preview.
+Validation before push: 187 focused CCNA tests, targeted ESLint,
+`git diff --check`, and the production build passed. The build emitted
+non-fatal chunk warnings.
 
-## 2026-11-09 — `main`
-
-Commits included in this push:
-
-- `be220b8` — Limited successful contact-form submissions to one per day,
-  retained a 60-second retry cooldown after failures, added a send confirmation,
-  and displayed the support email after successful delivery.
-
-Validation before push: targeted ESLint, frontend production build, and Git
-whitespace checks passed.
-
-## 2026-11-08 — `main`
+## 2026-11-22 - main
 
 Commits included in this push:
 
-- Pending — Repositioned the Lab 4 ISP link to prevent topology-label overlap
-  and hid Lab 5 from the website's practice-lab list.
+- `6bd8d62` - Completed the CCNA exhibit corrections, including matching
+  exhibits and offline bank rendering/grading fixes.
 
-Validation before push: eleven focused practice-lab and topology-label tests,
-targeted ESLint, frontend production build, and Git whitespace checks passed.
+Validation before push: 196 CCNA tests, `npm run build`, and the production
+offline-cache check passed (789/789 image assets cached; 20 CCNA exhibit
+images rendered with network access disabled). The authenticated exam route
+could not be verified because the test browser had no valid session.
 
-## 2026-11-08 — `main`
-
-Commits included in this push:
-
-- `d43f85f` — Replaced the duplicate Practice Lab 4 with static routing and
-  failover, added Practice Lab 5 for IPv4/IPv6 router connectivity, and extended
-  the simulator with IPv6 addressing and ping support.
-
-Validation before push: seven focused practice-lab tests, targeted ESLint,
-frontend production build, and Git whitespace checks passed.
-
-## 2026-11-08 — `main`
+## 2026-11-21 - main
 
 Commits included in this push:
 
-- `72cb376` — Added a mobile Courses shortcut, updated recreated CCNA exam
-  exhibits and matching-question bank data, and validated the contact CAPTCHA
-  action in its request DTO.
+- `c7fd1d2` - Prewarm the complete CCNA question bank when users open the
+  CCNA page while online, so database-backed offline exams are prepared
+  without requiring the All Questions exam to be opened first.
 
-Validation before push: frontend and backend production builds, fourteen
-focused CCNA bank/exhibit tests, five CAPTCHA tests, targeted ESLint, and Git
-whitespace checks passed.
+Validation before push: targeted ESLint and production build passed.
 
-## 2026-11-08 — `main`
+## 2026-11-21 - main
 
 Commits included in this push:
 
-- `cb94681` — Increased spacing between Lab 3's parallel LACP links so their
-  port labels no longer overlap.
+- `aed7bc7` - Merged the completed Noah CCNA exhibit rollout into main.
+- `b675698` - Fixed stale offline cached-bank and saved-session exhibits.
+- `fa76c09` - Completed and aligned the refer-to-exhibit audit fixes.
+- `7f84f2d` - Aligned Noah's exhibit subsystem with main and added cache
+  invalidation for offline CCNA exams.
+- `6e9c729` - Clarified the remaining partial exhibit/source conflicts.
 
-Validation before push: ten focused topology and lab tests, production build,
-and Git whitespace checks passed.
+Validation before push: 139 CCNA bank-converter tests, 37 shared exhibit
+tests, targeted ESLint, production build, and `git diff --check` passed.
 
-## 2026-11-08 — `main`
+## 2026-11-21 - main
 
 Commits included in this push:
 
-- `549f1c6` — Tightened topology label placement to keep labels close to their
-  cables and removed redundant trunk, native-VLAN, and duplicate LACP labels
-  from Practice Lab 3.
+- `c594b56` - Completed the CCNA refer-to-exhibit audit fixes across the
+  offline, live/legacy, and shared exam paths. Hid mismatched raw exhibits,
+  added source-backed and clearly labeled partial redraws, and added focused
+  375-item bank consistency regressions.
 
-Validation before push: thirteen focused topology and lab tests, targeted
+Validation before push: 137 CCNA bank-converter tests, 37 shared exhibit
+tests, targeted ESLint, production build, and `git diff --check` passed.
+
+## 2026-11-21 - main
+
+Commits included in this push:
+
+- `a64fd79` - Removed the Refer-to-Exhibit offline exam card and its
+  availability note from the CCNA exam selector; the audit route remains
+  development-only.
+
+Validation before push: targeted ESLint, `npm run build`, and
+`git diff --check` passed. Verified the production bundle contains no
+Refer-to-Exhibit card or offline-availability message.
+
+## 2026-11-21 - main
+
+Commits included in this push:
+
+- `74d1156` - Completed the CCNA exhibit redraw audit, added source-backed
+  topology and terminal corrections with regression tests, and redrew the
+  R14–R86 PC10 host-route exhibit from the supplied screenshot. Kept the
+  audit-only exam route development-gated.
+
+Validation before push: 136 focused CCNA tests, targeted ESLint,
+`npm run build`, and `git diff --check` passed.
+
+## 2026-11-20 - main
+
+Commits included in this push:
+
+- `ce17cc8` - Hid the Refer-to-Exhibit card and route from production builds
+  while keeping them available in development.
+
+Validation before push: focused exam-route tests, targeted ESLint, production
+build, and `git diff --check` passed. The production bundle contains neither
+the offline-exhibit route nor its exam-card summary.
+
+## 2026-11-20 - Noah
+
+Commits included in this push:
+
+- `9c59c37` - Bundled the supplied CCNA exhibit images and mapped them to the
+  offline Refer-to-Exhibit question bank.
+- `d45d827` - Recorded the rebased offline exhibit push.
+- `7accf1a` - Added the Refer-to-Exhibit exam card and route to main.
+- `398dbc4` - Kept the Refer-to-Exhibit exam offline-only on main.
+- `c58277a` - Added corrected exhibit panels and legacy image mappings,
+  redrew native exam exhibits, and aligned live and offline question data.
+- `aa7c59c` - Merged the latest main exam rollout into Noah.
+
+Validation before push: 83 focused CCNA tests, targeted ESLint, production
+build, and `git diff --check` passed. ESLint disabled the existing
+`react-refresh/only-export-components` rule for the CCNA question-bank module.
+
+## 2026-11-20 - main
+
+Commits included in this push:
+
+- `c58277a` - Added corrected exhibit panels and legacy image mappings,
+  redrew native exam exhibits, and aligned live and offline question data.
+- `aa7c59c` - Merged the latest main exam rollout into Noah.
+
+Validation before push: 83 focused CCNA tests, targeted ESLint, production
+build, and `git diff --check` passed. ESLint disabled the existing
+`react-refresh/only-export-components` rule for the CCNA question-bank module.
+
+## 2026-11-20 - main
+
+Commits included in this push:
+
+- Restored Refer to Exhibit as an offline-only main-deployment exam; hidden when the app is online.
+
+- Bundled Refer to Exhibit exam on public main deployments, including the CCNA exam card and route.
+
+- `9c59c37` - Bundled the localhost/offline-only CCNA exhibit images and mapped them to the Refer-to-Exhibit question bank.
+
+Validation before push: `npm run build` passed. Focused CCNA tests passed 47 of 48 checks; the remaining question 1321 PAT assertion is unrelated to the offline exhibit mapping.
+
+## 2026-11-20 - main
+
+Commits included in this push:
+
+- `0d73e7b` - Simplified CCNA practice-lab cards to show titles and descriptions
+  without difficulty, lab-number, or bonus badges, and removed the topology
+  difficulty badge.
+
+Validation before push: 17 practice-lab regression tests, targeted ESLint, and
+the production build passed. Vite reported a large-bundle warning.
+
+## 2026-11-20 - main
+
+Commits included in this push:
+
+- `967854a` - Added device-local autosave and restoration for CCNA practice
+  labs and the topology sandbox, preserved separate worksheet and terminal
+  attempts when switching views, and surfaced local-storage failures.
+
+Validation before push: 21 practice-lab and storage tests, targeted ESLint,
+production build, and browser checks for worksheet drafts, terminal state, and
+sandbox topology surviving reloads passed. Vite reported a large-bundle warning.
+
+## 2026-11-20 - main
+
+Commits included in this push:
+
+- `ad08531` - Featured Labs 6-11, kept the worksheet as the default, added
+  draggable sandbox devices, and blocked unsupported same-device connections.
+
+Validation before push: all 17 practice-lab tests, targeted ESLint, production
+build, Packet Tracer build-guide setup and solution replay for all 11 labs
+(featured Labs 6-11 first), and browser checks for lab ordering, grid layout,
+and connection handling passed.
+
+## 2026-11-20 - main
+
+Commits included in this push:
+
+- `436e69a` - Corrected CCNA practice-lab topology and setup guidance, improved
+  Packet Tracer preconfiguration, and expanded topology and simulator regression coverage.
+- `5db117d` - Added model-specific device recommendations, cable/interface
+  mappings, Packet Tracer notes, and build-guide tests for all 11 labs.
+- `15396e9` - Recorded the Packet Tracer build-guide changes in the changelog.
+- `00c38ec` - Completed the lab audit and fixes, added matching-question report
+  output, and expanded topology, worksheet, and solution regression tests.
+- `8dcc9c0` - Integrated the latest main while preserving CCNA exam and
+  offline-exhibit changes.
+
+Validation before push: 17 practice-lab tests, CCNA classifier tests, targeted
 ESLint, production build, and Git whitespace checks passed.
 
-## 2026-11-08 — `main`
+## 2026-11-20 - fix/ccna-recreate-exhibit-images
 
 Commits included in this push:
 
-- `2920393` — Added collision-aware positioning for practice-lab and exam
-  topology link labels so annotations avoid device labels and one another.
+- `5db117d` - Improved the Packet Tracer build steps for all 11 CCNA practice
+  labs with model-specific device recommendations, cable and interface
+  mappings, Lab 11 router-ID corrections, and focused build-guide regression
+  coverage.
 
-Validation before push: twelve focused topology and lab tests, targeted ESLint,
-production build, and Git whitespace checks passed.
+Validation before push: 15 focused practice-lab tests, production build, and
+Git whitespace checks passed.
 
-## 2026-11-08 — `main`
-
-Commits included in this push:
-
-- `9d35c62` — Added a shared viewport-fit calculation for practice and exam
-  topology diagrams, fitting the complete diagram initially and recalculating
-  when the viewer size changes.
-
-Validation before push: ten focused topology and lab tests, targeted ESLint,
-production build, and Git whitespace checks passed.
-
-## 2026-11-08 — `main`
+## 2026-11-16 - main
 
 Commits included in this push:
 
-- `d7f7ca0` — Replaced CCNA Practice Labs 1–3 from the supplied worksheet and
-  corrected the Lab 4 topology spacing to prevent labels and devices from
-  overlapping.
-
-Validation before push: six focused lab tests, targeted ESLint, production
-build, and Git whitespace checks passed.
-
-## 2026-11-08 — `main`
-
-Commits included in this push:
-
-- `c3e4b0c` — Sent the required `contact` action with hCaptcha verification
-  requests from the Contact and Enrollment forms.
-
-Validation before push: frontend production build, targeted ESLint, and Git
-whitespace checks passed.
-
-## 2026-11-08 — `main`
-
-Commits included in this push:
-
-- `3619424` — Replaced reCAPTCHA with hCaptcha across the contact, inquiry, and
-  enrollment forms, and hid the source exhibit image when it is recreated in
-  CCNA exam questions.
-
-Validation before push: frontend production build, focused CCNA tests, 19
-focused backend tests, targeted ESLint/Oxlint, and Git whitespace checks passed.
-
-## 2026-11-07 — `main`
-
-Commits included in this push:
-
-- `b545876` — Added the Advanced voice VLAN and neighbor-discovery lab in a
-  screenshot-style command worksheet, with a fullscreen topology expand control.
-
-Validation before push: focused lab tests, targeted ESLint, production build,
-and Git whitespace checks passed.
-
-## 2026-11-07 — `main`
-
-Commits included in this push:
-
-- `9d5dee2` — Removed the broken recreated exhibit image from CCNA question
-  1306 while preserving its drag-and-drop format.
-
-Validation before push: ten focused CCNA bank and offline-exam tests, targeted
-ESLint, frontend production build, and Git whitespace checks passed.
-
-## 2026-11-07 — `main`
-
-Commits included in this push:
-
-- `ed410da` — Saved the complete merged CCNA question bank for offline use and
-  enabled the Short, Medium, and Long offline exams to sample from it while
-  preserving their existing question counts. The All Questions exam also uses
-  the saved bank, with the older bundled bank as a first-use fallback.
-
-Validation before push: ten focused CCNA bank and offline-exam tests, targeted
-ESLint, frontend production build, and Git whitespace checks passed.
-
-## 2026-11-07 — `main`
-
-Commits included in this push:
-
-- `19392b6` — Removed bulk read and clear actions from the exam notification
-  menu while retaining per-notification dismissal.
-
-Validation before push: exam notification and route regression tests, targeted
-ESLint, frontend production build, and Git whitespace checks passed.
-
-## 2026-11-07 — `main`
-
-Commits included in this push:
-
-- `ae76ae5` — Integrated the latest notification-management update while
-  retaining per-item unread state, the mark-all menu, and clear/dismiss actions.
-
-Validation before push: notification read-state and exam-route regression tests,
-targeted ESLint, frontend production build, and Git whitespace checks passed.
-
-- `db5cb2f` — Merged the latest `origin/main` changes and resolved the
-  notification conflict so opening the dropdown does not mark every item read.
-
-Validation before push: notification read-state and exam-route regression tests,
-targeted ESLint, frontend production build, and Git whitespace checks passed.
-
-- `e3d67b2` — Added unread exam notification indicators, persistent read state,
-  subdued styling for read updates, and a menu to mark all notifications read.
-
-Validation before push: notification read-state and exam-route regression tests,
-targeted ESLint, frontend production build, and Git whitespace checks passed.
-
-## 2026-11-07 — `main`
-
-Commits included in this push:
-
-- `73ae61e` — Added individual notification dismissal, a Read all action, and
-  Clear notifications while preserving exam progress and persisting dismissed
-  state per user.
-
-Validation before push: exam notification and route regression tests, targeted
-ESLint, frontend production build, and Git whitespace checks passed.
-
-## 2026-11-07 — `main`
-
-Commits included in this push:
-
-- `90ad7ec` — Changed the exam notification badge to count unread updates,
-  persist read state per user, and clear the count when the panel is opened.
-
-Validation before push: exam notification and route regression tests, targeted
-ESLint, frontend production build, and Git whitespace checks passed.
-
-## 2026-11-07 — `main`
-
-Commits included in this push:
-
-- `97f3e2a` — Allowed periods in contact names so middle initials such as
-  “L.” pass name validation.
-
-Validation before push: targeted ESLint, frontend production build, and Git
-whitespace checks passed.
-
-## 2026-11-07 — `main`
-
-Commits included in this push:
-
-- `b068b48` — Fixed exam notification destinations by sharing canonical routes
-  with exam formats and app routing, preserving the legacy CCNA link, and
-  adding route regression tests.
-
-Validation before push: exam route regression tests, targeted ESLint, frontend
-production build, and Git whitespace checks passed.
-
-## 2026-11-07 — `main`
-
-Commits included in this push:
-
-- `f793c0c` — Added a search-friendly site title and description, and updated
-  contact form validation with the requested field limits.
-
-Validation before push: frontend production build, targeted ESLint, and Git
-whitespace checks passed.
-
-## 2026-11-07 — `main`
-
-Commits included in this push:
-
-- `e67fff6` — Restored the website source state at `ea16d514`, including persistent offline module PIN unlock behavior.
-
-Validation before push: targeted ESLint, frontend production build, and Git whitespace checks passed.
-
-## 2026-10-30 — `main`
-
-Commits included in this push:
-
-- `c5ad68e` — Fixed stale answer choices appearing after moving to the next
-  CompTIA exam question. Choice rows now use question-specific, index-based
-  React keys so duplicate option text cannot cause rows from a previous
-  question to be reused.
-
-Validation before push: frontend production build, targeted ESLint, and Git
-whitespace checks passed.
-
-## 2026-10-30 — `main`
-
-Commits included in this push:
-
-- `55ac698` — Versioned timed CompTIA exam sessions and reject restored timed
-  sessions containing review-only items, so simulations appear only at the end
-  of All Questions exams.
-
-Validation before push: frontend production build, targeted ESLint, exam-format
-checks for timed and All Questions exams, and Git whitespace checks passed.
-
-## 2026-10-30 — `main`
-
-Commits included in this push:
-
-- `493a927` — Kept CompTIA Network+ and Security+ simulations out of timed
-  Short, Medium, and Long exams; All Questions exams retain review-only
-  simulations at the end.
-- `d9f8663` — Merged the latest `main` into `emman`, preserving the offline
-  Security+ simulation flow alongside the updated online exam formats.
-
-Validation before push: frontend production build, targeted ESLint, simulation
-placement checks for Network+, Security+, and offline Security+, and Git
-whitespace checks passed.
-
-## 2026-10-25 — `main`
-
-Commits included in this push:
-
-- `3b60bd5` — Switched the homepage Contact and Inquire Now forms to reCAPTCHA v3 token execution, removed the incompatible v2 checkbox integration, and validated backend action and score.
-
-Validation before push: frontend production build, targeted ESLint, 13 focused backend CAPTCHA/inquiry tests, backend build, and Git whitespace checks passed.
-
-## 2026-10-25 — `main`
-
-Commits included in this push:
-
-- `104ab8e` — Connected the homepage Contact and Inquire Now forms to backend
-  Google reCAPTCHA verification; form submissions now require a valid token
-  before email delivery or inquiry storage.
-- `cd016e4` — Updated both forms to use the newly registered production site
-  key, avoiding a stale deployment environment value overriding it.
-
-Validation before push: frontend production build and targeted ESLint; confirmed
-the new site key is bundled and the old key is absent; backend build, 17
-CAPTCHA/environment/inquiry tests, and Git whitespace checks passed.
-
-## 2026-10-25 — `main`
-
-Commits included in this push:
-
-- `2b3dd96` — Restored same-origin `/api` requests so the existing Vercel rewrite reaches `matekk-website1.vercel.app` while preserving the frontend authentication cookie. The direct cross-origin API override did not fix the production question data.
-
-Validation before push: frontend production build, targeted API config ESLint, Git whitespace checks, and unauthenticated production question API check (401, confirming the route responds and requires a session) passed.
-
-## 2026-10-25 — `main`
-
-Commits included in this push:
-
-- `ed41f42` — Aligned the production frontend API base URL with `Ryuuen8/Matekk-Website1`, while keeping the local `/api` development proxy.
-
-Validation before push: frontend production build, targeted API config ESLint, Git whitespace checks, and unauthenticated production endpoint route check passed. The backend returned 401 for its protected question route without a session; the previous production `/api` route returned 404.
-
-## 2026-10-25 — `main`
-
-Commits included in this push:
-
-- `fddc196` — Connected the CompTIA Network+ and Security+ exhibit images to their matching question records.
-- `b1fb719` — Merged `emman` into the latest `main`, preserving offline CompTIA prompt styling while rendering question images in exams and restored sessions.
-
-Validation before push: frontend production build and Git whitespace checks passed.
-
-## 2026-10-24 — `main`
-
-Commits included in this push:
-
-- `3eca0e8` — Included all CompTIA Security+ and Network+ bank rows in their all-questions exams, with multiple-select and text-answer support and ungraded review handling for simulations or malformed items. Dimmed and disabled the unfinished Start Quiz and View All Modules buttons on CompTIA and FortiOS dashboards.
-- `ab9245f` — Merged the `emman` branch into the latest `main`.
-
-Validation before push: focused question-service tests, backend build and lint, frontend production build, targeted frontend ESLint, and Git whitespace checks passed.
-
-## 2026-10-24 — `main`
-
-Commits included in this push:
-
-- `0c65886` — Restored CCNA questions 181, 382, 608, and 1306 using guarded frontend answer mappings when the raw bank omits `correct_answer`. Verified the merged all-questions loader reaches 1,367 from 1,363 usable questions plus these four rows. No API/backend changes.
-
-Validation before push: nine focused CCNA converter/loader/exhibit tests (including a 1,367-question assertion), targeted ESLint, frontend production build, and Git whitespace checks passed.
-
-## 2026-10-24 — `main`
-
-Commits included in this push:
-
-- `5d73a31` — Restored drag-and-drop presentation and local exhibits for CCNA questions 181, 382, 608, and 1306. The frontend now matches the recovered answer keys against the expected options; no API/backend changes.
-
-Validation before push: eight focused CCNA converter/loader/exhibit tests, targeted ESLint, frontend production build, and Git whitespace checks passed.
-
-## 2026-10-24 — CCNA offline exam
-
-- Changed built-in offline CCNA question prompts to regular weight, following the FortiOS offline reference. Online CCNA exam prompts keep their existing semibold style.
-
-## 2026-10-24 — `main`
-
-Commits included in this push:
-
-- `c756854` — Restored 150 missing CCNA multi-answer questions in the frontend using snapshot answer keys guarded by prompt-and-choice fingerprints. No API/backend changes.
-
-Validation before push: six focused CCNA converter tests, targeted ESLint, frontend production build, and Git whitespace checks passed.
-
-## 2026-10-24 — FortiOS offline exam
-
-Commits included:
-
-- `05e59d7` — Matched cached FortiOS question IDs to bundled exhibit images so offline exams and restored sessions use the local image.
-- `fd241f3` — Organized FortiOS offline question prompts into readable paragraphs, separating the exhibit instruction and final question where possible.
-- `034f8d1` — Kept sentence-style FortiOS answers, including text containing `->`, out of terminal styling in offline exams and reviews.
-- `09e87f9`, `bb43222` — Reduced FortiOS offline prompt font size and changed question text to regular weight.
-- Synced the 101 unique FortiOS questions from the supplied exports into the offline bank, including explanations and source references, 40 multi-select questions, and one matching question. Offline review displays linked sources; cached offline loading accepts all question types and in-progress All Questions exams add newly bundled questions.
-
-Question count check: The two supplied exports contain 101 unique FortiOS IDs (3403–3503); the prior offline bundle contained 90, all present in the exports. Automated checks were not run.
-
-## 2026-10-24 — `main`
-
-Commits included in this push:
-
-- `df4a7dc` — Restored CCNA raw-bank conversion for choice IDs and question-type aliases, and merged the converted rows with the validated all-usable bank without duplicate question IDs. Frontend only; no API/backend changes.
-
-Validation before push: four focused CCNA converter/loader tests, targeted ESLint, frontend production build, and Git whitespace checks passed.
-
-## 2026-10-24 — `main`
-
-Commits included in this push:
-
-- `d7d5472` — Made FortiOS explanation source links visually clear and easier to click.
-- `b987de3` — Recorded the source-link change in the push changelog.
-- `a3bb0f8` — Merged the latest `origin/main` updates before publishing.
-
-Validation before push: production frontend build after syncing the latest `main`, targeted ESLint for the source-link component, and Git whitespace checks passed.
-
-## 2026-10-24 — `main`
-
-Commits included in this push:
-
-- `61d9f90` — Fixed the All Questions exam filter to use the converted question's `moduleTitle` field, so CCNA bank questions are not all discarded.
-
-Validation before push: targeted ESLint, frontend production build, and Git whitespace checks passed.
-
-## 2026-10-24 — `main`
-
-Commits included in this push:
-
-- `8181753` — Restored the 157 skipped CCNA question rows by converting the raw question bank in the frontend and remaking its unsupported question formats. No API/backend changes.
-
-Validation before push: targeted ESLint, frontend production build, conversion and grading checks for all 157 report rows, and Git whitespace checks passed.
-
-## 2026-10-24 — `main`
-
-Commits included in this push:
-
-- `b8ae9e2` — Adjusted device-detail text baselines so labels no longer overlap their backplates in practice and exam topologies.
-
-Validation before push: targeted ESLint, frontend production build, browser verification of the practice topology label, and Git whitespace checks passed. The build reports the existing large-bundle warning.
-
-## 2026-10-24 — `main`
-
-Commits included in this push:
-
-- `40c0826` — Prevented the first device added to a practice topology sandbox from being enlarged to fill the diagram.
-
-Validation before push: targeted ESLint, frontend production build, browser verification of the first router's displayed size, and Git whitespace checks passed. The build reports the existing large-bundle warning.
-
-## 2026-10-24 — `main`
-
-Commits included in this push:
-
-- `65890d1` — Centered CCNA topology diagrams, improved practice-lab label framing, and added an interactive practice topology sandbox with a redesigned animated toggle card.
-- `cc55111` — Merged the latest `origin/main` updates before publishing.
-
-Validation before push: targeted ESLint, frontend production build, and Git whitespace checks passed. The build reports the existing large-bundle warning.
-
-## 2026-10-24 — `main`
-
-Commits included in this push:
-
-- `c79ca3c` — Added FortiOS explanation source links and populated the bundled offline questions with explanations.
-- `b1b41a4` — Merged `emman` into the latest `main`, preserving the main-branch FortiOS offline question normalization changes.
-
-Validation before push: frontend production build, targeted ESLint checks for the changed exam files, and Git whitespace checks passed. Full-repository lint still reports existing findings outside the merge changes.
-
-## 2026-10-24 — `main`
-
-Commits included in this push:
-
-- `9c20772` — Randomized questions in All Questions Exams and improved shared exam topology/image exhibits with clearer labels, spacing, and framing.
-- `2448a9f` — Added the changelog entry for this push.
-- `f04b84d` — Merged the latest `main` changes before publishing.
-
-Validation before push: targeted ESLint on the exam changes, frontend production build, focused all-question shuffle check, and Git whitespace checks passed. A broader ESLint run also reports an existing unused `shuffle` helper and hook-dependency warning in `FortiOSOfflineExam.jsx`; these are unrelated to the exam exhibit changes.
-
-## 2026-10-24 — `main`
-
-Commits included in this push:
-
-- `35b68e3` — Removed the exact `module=CCNA` bank request filter so the all-questions exam can load CCNA submodule questions from backend deployments that only support exact module matching.
-
-Validation before push: frontend production build, targeted ESLint, and Git whitespace checks passed. No production API endpoint was called.
-
-## 2026-10-24 — `main`
-
-Commits included in this push:
-
-- `dc9a609` — Scoped the all-questions request and backend bank query to CCNA modules, retained images on multi-answer questions, and removed the skipped-question warning from the exam.
-
-Validation before push: 37 focused question-service tests, backend build, frontend production build, frontend ESLint, and Git whitespace checks passed. No production API endpoint was called.
-
-## 2026-10-23 — `main`
-
-Commits included in this push:
-
-- `dfad973` — Reverted the raw-row CCNA frontend conversion, restoring the existing all-usable question-bank behavior (1,211 CCNA questions). No API or backend changes.
-
-Validation before push: authenticated production check confirmed the existing all-usable route returns 1,211 CCNA questions; targeted CCNA module tests and ESLint passed.
-
-## 2026-10-23 — `main`
-
-Commits included in this push:
-
-- `800c22f` — Normalize CCNA database choices stored as records with IDs and text, and resolve correct answers by choice ID.
-- `71c42fb` — Restore the frontend all-questions bank loading path and retain usable CCNA rows, including questions with unavailable exhibits. No API or backend changes.
-
-Validation before push: 14 focused CCNA conversion/module tests, frontend production build, targeted ESLint, and CRLF-aware Git whitespace checks passed. Production question-count verification remains pending.
-
-## 2026-10-23 — `main`
-
-- `4a56bf4` — Reverted the frontend CCNA all-questions conversion after production returned only 6 questions and reported 1,361 skipped. Restored the previous all-usable question-bank path; no API or backend changes.
-
-Validation before push: frontend production build, targeted ESLint, and Git whitespace checks passed.
-
-## 2026-10-23 — `main`
-
-Commits included in this push:
-
-- `fb9edf0` — Load all usable CCNA questions from the existing unfiltered question-bank endpoint, convert and filter them in the frontend, and retain questions that reference unavailable exhibits. No API or backend changes.
-
-Validation before push: 12 focused CCNA conversion/module tests, frontend production build, targeted ESLint, and Git whitespace checks passed.
-
-## 2026-10-23 — `main`
-
-Commits included in this push:
-
-- `0c1c976` — Added a separate FortiOS offline exam route with a bundled 90-question bank and a FortiOS-specific signed-image cache flow. No backend code or CCNA source files were changed by this commit.
-- `74dbb3f` — Merged the latest `origin/main` into `jhonard` before integrating the FortiOS offline route.
-
-Validation before push: frontend production build, targeted ESLint for the changed route/cache files, and Git whitespace checks passed. Browser validation against the deployed API and offline image loading remains pending.
-
-## 2026-10-23 — `main`
-
-- `74ff021` — Restricted FortiOS multiple-select parsing to FortiOS-filtered bank requests so other course banks remain unchanged.
-
-Validation before push: 36 targeted question-service tests, backend build, targeted Oxlint, and Git whitespace checks passed.
-
-## 2026-10-23 — `main`
-
-Commits included in this push:
-
-- `2a1b948` — Added more Fortinet FortiOS exam questions.
-- `7e9c697` — Merged the latest remote `main` changes into `emman`.
-- `a2baf4e` — Fixed FortiOS question formats and the exam timer.
-- `a952276` — Merged the exam UI updates into `main`, keeping the backend unchanged in the merge.
-- `8439b41` — Added FortiOS choice-ID parsing, multiple-select/order support, and course-specific question-bank filtering while preserving CCNA grading.
-
-Validation before push: 36 targeted question-service tests, backend build, targeted Oxlint, frontend production build, targeted ESLint, and Git whitespace checks passed.
-
-## 2026-10-23 — `main`
-
-- `cec88b2` — Restored graded CCNA multi-answer questions and special question formats, including drag-and-drop questions 289, 382, 481, 608, and 1306, plus the confirmed answer for 720. Only backend conversion/grading changed; endpoint wiring, API client, proxy, routing, and course filtering were left unchanged. The remaining 25 image exhibits are not included.
-
-Validation before push: 14 targeted question-service tests, backend build, frontend production build, targeted ESLint/Oxlint, and Git whitespace checks passed. The full service spec still has one pre-existing failure: a module-filter test expects an argument not accepted by the current endpoint method.
-
-## 2026-10-23 — `main`
-
-Commits included in this push:
-
-- `9b41ea5` — Filtered the all-questions exam to CCNA modules only without changing the live API path.
-- `59f31e0` — Documented the CCNA filter push to `Noah`.
-- `18cb9c1` — Merged the reviewed CCNA filter changes from `Noah` into the latest `main`.
-- `79fc536` — Preserved the existing skipped-question count notice in the CCNA all-questions exam.
-
-Validation before push: 9 targeted filter tests, ESLint on changed files, frontend production build, and Git whitespace checks passed.
-
-## 2026-10-23 — `Noah`
-
-- `9b41ea5` — Filtered the all-questions exam to CCNA modules only without changing the live API path.
-
-Validation before push: 9 targeted filter tests, ESLint on changed files, frontend production build, and Git whitespace checks passed.
-
-## 2026-10-19 — `main`
-
-- Reverted commit `9888be7` (`Filter all-question banks by course`) at the user's request.
-
-## 2026-10-19 — `main`
-
-- Reverted commit `6366191` (`Fix CCNA question-bank filtering`) at the user's request.
-
-## 2026-10-19 — `main`
-
-Merged `emman` into the latest `main` as `99d8b21`, including:
-
-- `96da371` — Added a Fortinet → FortiOS shortcut to the My Gradebook program chooser.
-- `99d8b21` — Merged the FortiOS gradebook shortcut into `main`.
-
-Validation before push: targeted ESLint, frontend production build, and Git whitespace checks passed.
-
-## 2026-10-19 — Backend deployment compatibility
-
-- Load Helmet through Node's CommonJS bridge with its declared middleware type to avoid Vercel's incorrect default-import typing.
-
-Validation: backend TypeScript check, NestJS build, and Git whitespace checks passed locally.
-
-## 2026-10-19 — `main`
-
-Merged `emman` into `main` as `3cf8955`, including:
-
-- `22b044f` — Updated CompTIA mobile layouts and FortiOS dashboards, exam formats, timeout notices, and gradebook handling.
-- `3cf8955` — Merged the `emman` branch into the latest `origin/main`.
-
-Validation before push: targeted ESLint, frontend production build, and Git whitespace checks passed.
-
-## 2026-10-19 — `main`
-
-Merged `emman` as `5839b45`, including:
-
-- `2ca9c8d` — Added the FortiOS learning dashboard, gradebook support, and FortiOS exam routes and formats.
-- `b5c274e` — Scoped the FortiOS question-bank request to the `Fortinet FortiOS` module.
-- `5839b45` — Merged the FortiOS program and exam updates into `main`.
-
-Also added the shared Program Overview, Learning Focus, course-outline navigation, and certification badge cards to CCNA, CCNA Automation, CCNA Cybersecurity, and FortiOS.
-
-Validation before push: targeted ESLint, frontend production build, and Git whitespace checks passed.
-
-## 2026-10-19 — `main` (follow-up sync)
-
-- `36da77c` — Marked the FortiOS merge entry as pushed.
-- `44b4772` — Merged the latest `origin/main` updates into local `main`, including the CCNA offline exam changes, without conflicts.
-
-Validation before push: frontend production build and Git whitespace checks passed. Targeted ESLint passed for FortiOS and dashboard files; the newly synced upstream `ccnaAllQuestionsExam.jsx` reports an unused `skippedCount` variable.
-
-## 2026-10-17 — `main`
-
-Pushed merge commit `7a82e8e` (`Merge origin/main into main`), including merge commit `851d5d5` (`Merge jhonard into main`) and branch commits `31c0189` and `f012548`.
-
-Changes included in the push:
-
-- Expanded CCNA Automation study content and curriculum for objectives 2.1–7.9, with dedicated lessons covering APIs, Cisco platforms, application deployment and security, infrastructure automation, and network fundamentals.
-- Added offline module access using a 4–6 digit PIN, including admin-only online provisioning, backend validation/configuration, offline route gating, and setup documentation.
-- Added Packet Tracer lab downloads and updated the Practice Lab download flow for context files and Packet Tracer files.
-- Updated shared program and CCNA exam interfaces, module study-content rendering, gradebook handling, and related quiz/progress behavior.
-- Integrated the remote `origin/main` commit `e76d544` (`bug fixed`) before pushing, preserving its CompTIA Network+ and Security+ exam updates.
-
-Validation before push: frontend production build, server build, 19 focused server tests, targeted ESLint, and Git whitespace checks passed.
-
-## 2026-10-17 — `main`
-
-- Merged `a92cb7f` as `b107654` (`Merge changelog instructions into main`), adding the repository Copilot push-log instructions and the initial changelog.
-- Added repository Copilot instructions requiring a dated changelog entry before assistant-prepared pushes.
-- Added the `changelog/` folder and initialized this push log.
-
-Documentation-only changes; no build or test run was needed.
-
-## 2026-10-19 — `Noah` (pending push)
-
-- Added the supplied exhibit for CCNA question 1306 and converted its broadcast-address choices into numbered answer slots.
-- Added the confirmed answer key A to CCNA question 720 so it is included in the usable bank.
-- Corrected CCNA question 181 to use numbered matching instead of multi-select, and added its supplied image as an exhibit. Added question 608's image and numbered answer slots.
-- Added the recovered image for CCNA question 382 and converted it into a gradable Ansible feature-matching question.
-- Rebuilt CCNA question 481 as a native router topology followed by its prompt and a numbered static-route matching question.
-- Added a reminder on the login verification screen to check the spam or junk folder if the code email is missing.
-- Scoped all-question and regular question-bank requests to the selected course module, separating CCNA questions from CompTIA and other course banks.
-- Included the separately labeled `CCNA 200-301 Set …` rows in the CCNA question bank so legacy CCNA questions aren't excluded by the course filter.
-- Removed the skipped-question count warning from the student-facing CCNA all-questions exam; unsupported rows remain excluded from scoring and display.
-- Converted 150 valid CCNA "Choose two/three" rows with stored multi-letter answer keys into graded multi-select questions.
-- Converted CCNA Part 9, question 70 (database ID 289) from flattened QoS term definitions into the existing drag-and-drop matching interaction. The configured database contains 1,367 CCNA rows, and the current loader returns all 1,367 as usable.
-- Added a confirmation step and a fresh-start retry option to the completed CCNA all-questions exam.
-
-## 2026-10-19 — `main`
-
-- Reverted the changes introduced by merge commit `1701c01` while preserving other mainline commits and subsequent independent changes. Retained four CCNA images required by the later offline exam bank.
+- `5cf2c9c` - Corrected CCNA practice-lab topology and verification instructions,
+  added missing VLAN setup, and removed nonexistent default gateways from the
+  Packet Tracer setup guide.
+
+Validation before push: 14 practice-lab tests, targeted ESLint, production
+build, and Git whitespace checks passed. Vite reported its large-chunk advisory.

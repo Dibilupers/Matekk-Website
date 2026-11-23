@@ -1,9 +1,11 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Network, Plus, RotateCcw, Trash2, Unplug } from "lucide-react";
 import { canReach, createLabState, execute, isIp, isMask, promptFor } from "./labEngine";
 import LabTopology from "./LabTopology";
+import { readPracticeLabProgress, writePracticeLabProgress } from "./practiceLabProgressStorage";
 
 const PORT_COUNT = 4;
+const SANDBOX_STORAGE_KEY = "matekk-ccna-practice-lab:sandbox:v1";
 const makePorts = (kind) => kind === "pc"
 	? { fa0: { ip: "", mask: "", up: true } }
 	: Object.fromEntries(
@@ -26,6 +28,79 @@ function createSandbox() {
 	return { lab, state: createLabState(lab) };
 }
 
+function isRecord(value) {
+	return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+function createConsoleSession() {
+	return { deviceName: "", lines: {}, input: "" };
+}
+
+function isValidSandboxProgress(progress) {
+	if (!isRecord(progress) || progress.version !== 1 || !isRecord(progress.sandbox)) return false;
+	const { lab, state } = progress.sandbox;
+	if (
+		!isRecord(lab)
+		|| lab.id !== "sandbox"
+		|| !isRecord(lab.devices)
+		|| !Array.isArray(lab.editable)
+		|| !Array.isArray(lab.links)
+		|| !Array.isArray(lab.tasks)
+		|| !isRecord(state)
+		|| !isRecord(state.devices)
+		|| !isRecord(state.consoles)
+		|| !isRecord(state.initial)
+	) return false;
+
+	const deviceNames = Object.keys(lab.devices);
+	if (Object.keys(state.devices).length !== deviceNames.length) return false;
+	for (const name of deviceNames) {
+		const device = lab.devices[name];
+		const savedDevice = state.devices[name];
+		if (
+			!isRecord(device)
+			|| !["router", "switch", "pc"].includes(device.kind)
+			|| !isRecord(device.interfaces)
+			|| !isRecord(savedDevice)
+			|| savedDevice.kind !== device.kind
+			|| !isRecord(savedDevice.interfaces)
+			|| Object.keys(device.interfaces).some((interfaceName) => !isRecord(savedDevice.interfaces[interfaceName]))
+		) return false;
+	}
+
+	const hasEndpoint = (endpoint) => {
+		if (typeof endpoint !== "string") return false;
+		const [deviceName, interfaceName, ...extra] = endpoint.split(":");
+		return extra.length === 0 && Boolean(lab.devices[deviceName]?.interfaces?.[interfaceName]);
+	};
+	if (!lab.links.every((link) => isRecord(link) && hasEndpoint(link.a) && hasEndpoint(link.b) && typeof link.net === "string")) return false;
+	if (!lab.editable.every((name) => lab.devices[name]?.kind === "router")) return false;
+	if (!isRecord(progress.nodePositions)) return false;
+	if (!Object.entries(progress.nodePositions).every(([name, position]) => (
+		Boolean(lab.devices[name]) && isRecord(position) && Number.isFinite(position.x) && Number.isFinite(position.y)
+	))) return false;
+	if (typeof progress.sourcePort !== "string" || (progress.sourcePort && !hasEndpoint(progress.sourcePort))) return false;
+	if (typeof progress.destinationPort !== "string" || (progress.destinationPort && !hasEndpoint(progress.destinationPort))) return false;
+	if (typeof progress.selectedPc !== "string" || (progress.selectedPc && lab.devices[progress.selectedPc]?.kind !== "pc")) return false;
+	if (typeof progress.pingFrom !== "string" || (progress.pingFrom && !lab.devices[progress.pingFrom])) return false;
+	if (typeof progress.pingTarget !== "string" || typeof progress.pingResult !== "string" || typeof progress.pcConfigError !== "string") return false;
+	if (!isRecord(progress.pcDrafts) || !Object.entries(progress.pcDrafts).every(([name, draft]) => (
+		lab.devices[name]?.kind === "pc"
+		&& isRecord(draft)
+		&& ["ip", "mask", "gateway"].every((key) => typeof draft[key] === "string")
+	))) return false;
+	if (
+		!isRecord(progress.consoleSession)
+		|| typeof progress.consoleSession.deviceName !== "string"
+		|| (progress.consoleSession.deviceName && lab.devices[progress.consoleSession.deviceName]?.kind !== "router")
+		|| typeof progress.consoleSession.input !== "string"
+		|| !isRecord(progress.consoleSession.lines)
+	) return false;
+	return Object.entries(progress.consoleSession.lines).every(([name, lines]) => (
+		lab.devices[name]?.kind === "router" && Array.isArray(lines) && lines.every((line) => typeof line === "string")
+	));
+}
+
 function getNextDeviceName(devices, kind) {
 	const prefix = { router: "R", switch: "SW", pc: "PC" }[kind];
 	let number = 1;
@@ -33,7 +108,7 @@ function getNextDeviceName(devices, kind) {
 	return `${prefix}${number}`;
 }
 
-function withSandboxLayout(lab, state) {
+function withSandboxLayout(lab, state, positions) {
 	const entries = Object.entries(lab.devices);
 	const columns = Math.max(1, Math.min(3, entries.length));
 	const nodes = Object.fromEntries(entries.map(([name, device], index) => {
@@ -42,9 +117,10 @@ function withSandboxLayout(lab, state) {
 		const address = firstInterface
 			? `${firstInterface[0].toUpperCase()} · ${firstInterface[1].ip}`
 			: device.kind === "switch" ? "Layer 2 switch" : "No IP address";
+		const position = positions[name];
 		return [name, {
-			x: 120 + (index % columns) * 250,
-			y: 100 + Math.floor(index / columns) * 185,
+			x: position?.x ?? 120 + (index % columns) * 250,
+			y: position?.y ?? 100 + Math.floor(index / columns) * 185,
 			sub: address,
 		}];
 	}));
@@ -58,10 +134,8 @@ function withSandboxLayout(lab, state) {
 	};
 }
 
-function CommandConsole({ lab, state, setState, routers }) {
-	const [deviceName, setDeviceName] = useState("");
-	const [lines, setLines] = useState({});
-	const [input, setInput] = useState("");
+function CommandConsole({ lab, state, setState, routers, session, setSession }) {
+	const { deviceName, lines, input } = session;
 	const selectedDevice = routers.includes(deviceName) ? deviceName : routers[0] ?? "";
 	const output = lines[selectedDevice] ?? [`${selectedDevice}>`, "Use the CLI to configure this router, then try ping or show ip route.", ""];
 
@@ -70,11 +144,14 @@ function CommandConsole({ lab, state, setState, routers }) {
 		if (!selectedDevice) return;
 		const result = execute(lab, state, selectedDevice, input);
 		setState(result.state);
-		setLines((previous) => ({
+		setSession((previous) => ({
 			...previous,
-			[selectedDevice]: [...(previous[selectedDevice] ?? output), `${promptFor(state, selectedDevice)}${input}`, ...result.out],
+			lines: {
+				...previous.lines,
+				[selectedDevice]: [...(previous.lines[selectedDevice] ?? output), `${promptFor(state, selectedDevice)}${input}`, ...result.out],
+			},
+			input: "",
 		}));
-		setInput("");
 	}
 
 	return (
@@ -85,7 +162,7 @@ function CommandConsole({ lab, state, setState, routers }) {
 					<button
 						key={name}
 						type="button"
-						onClick={() => setDeviceName(name)}
+						onClick={() => setSession((current) => ({ ...current, deviceName: name }))}
 						aria-pressed={name === selectedDevice}
 						className={`rounded-full px-3 py-1.5 text-sm font-semibold ${name === selectedDevice ? "bg-[#1775EE] text-white" : "border border-[#1775EE] text-[#1775EE]"}`}
 					>
@@ -101,7 +178,7 @@ function CommandConsole({ lab, state, setState, routers }) {
 							<span className="whitespace-pre">{promptFor(state, selectedDevice)}</span>
 							<input
 								value={input}
-								onChange={(event) => setInput(event.target.value)}
+								onChange={(event) => setSession((current) => ({ ...current, input: event.target.value }))}
 								aria-label={`${selectedDevice} command`}
 								autoComplete="off"
 								autoCapitalize="off"
@@ -120,19 +197,77 @@ function CommandConsole({ lab, state, setState, routers }) {
 }
 
 export default function TopologySandbox() {
-	const [sandbox, setSandbox] = useState(createSandbox);
-	const [sourcePort, setSourcePort] = useState("");
-	const [destinationPort, setDestinationPort] = useState("");
-	const [selectedPc, setSelectedPc] = useState("");
-	const [pingFrom, setPingFrom] = useState("");
-	const [pingTarget, setPingTarget] = useState("");
-	const [pingResult, setPingResult] = useState("");
-	const [pcConfigError, setPcConfigError] = useState("");
-	const [consoleGeneration, setConsoleGeneration] = useState(0);
+	const [restoreResult] = useState(() => {
+		const result = readPracticeLabProgress(SANDBOX_STORAGE_KEY, isValidSandboxProgress);
+		if (result.error) console.error("Unable to restore the saved CCNA topology sandbox.", result.error);
+		return result;
+	});
+	const restored = restoreResult.value;
+	const [sandbox, setSandbox] = useState(() => restored?.sandbox ?? createSandbox());
+	const [nodePositions, setNodePositions] = useState(() => restored?.nodePositions ?? {});
+	const [sourcePort, setSourcePort] = useState(() => restored?.sourcePort ?? "");
+	const [destinationPort, setDestinationPort] = useState(() => restored?.destinationPort ?? "");
+	const [selectedPc, setSelectedPc] = useState(() => restored?.selectedPc ?? "");
+	const [pingFrom, setPingFrom] = useState(() => restored?.pingFrom ?? "");
+	const [pingTarget, setPingTarget] = useState(() => restored?.pingTarget ?? "");
+	const [pingResult, setPingResult] = useState(() => restored?.pingResult ?? "");
+	const [pcConfigError, setPcConfigError] = useState(() => restored?.pcConfigError ?? "");
+	const [pcDrafts, setPcDrafts] = useState(() => restored?.pcDrafts ?? {});
+	const [consoleSession, setConsoleSession] = useState(() => restored?.consoleSession ?? createConsoleSession());
+	const [persistenceMessage, setPersistenceMessage] = useState(() => (
+		restoreResult.error
+			? "Saved sandbox could not be restored; an empty topology was opened."
+			: restored
+				? "Restored your topology from this device."
+				: "Your topology saves automatically on this device."
+	));
+	const saveErrorLogged = useRef(false);
 	const { lab, state } = sandbox;
 	const routers = Object.entries(lab.devices).filter(([, device]) => device.kind === "router").map(([name]) => name);
 	const pcs = Object.entries(lab.devices).filter(([, device]) => device.kind === "pc").map(([name]) => name);
-	const renderedLab = useMemo(() => withSandboxLayout(lab, state), [lab, state]);
+	const savedProgress = useMemo(() => ({
+		version: 1,
+		sandbox,
+		nodePositions,
+		sourcePort,
+		destinationPort,
+		selectedPc,
+		pingFrom,
+		pingTarget,
+		pingResult,
+		pcConfigError,
+		pcDrafts,
+		consoleSession,
+	}), [
+		sandbox,
+		nodePositions,
+		sourcePort,
+		destinationPort,
+		selectedPc,
+		pingFrom,
+		pingTarget,
+		pingResult,
+		pcConfigError,
+		pcDrafts,
+		consoleSession,
+	]);
+	useEffect(() => {
+		let nextMessage;
+		try {
+			writePracticeLabProgress(SANDBOX_STORAGE_KEY, savedProgress);
+			saveErrorLogged.current = false;
+			nextMessage = restoreResult.error
+				? "Current topology is saved. Previous saved topology could not be restored."
+				: "Saved on this device.";
+		} catch (error) {
+			if (!saveErrorLogged.current) console.error("Unable to save the CCNA topology sandbox.", error);
+			saveErrorLogged.current = true;
+			nextMessage = "Could not save your topology on this device. Your latest work may be lost if you leave.";
+		}
+		const statusTimer = window.setTimeout(() => setPersistenceMessage(nextMessage), 0);
+		return () => window.clearTimeout(statusTimer);
+	}, [savedProgress, restoreResult.error]);
+	const renderedLab = useMemo(() => withSandboxLayout(lab, state, nodePositions), [lab, state, nodePositions]);
 	const endpoints = Object.entries(state.devices).flatMap(([deviceName, device]) =>
 		Object.keys(device.interfaces).map((ifName) => `${deviceName}:${ifName}`),
 	);
@@ -140,6 +275,8 @@ export default function TopologySandbox() {
 	const availablePorts = endpoints.filter((endpoint) => !usedPorts.has(endpoint));
 	const sourceOptions = availablePorts.filter((endpoint) => endpoint !== destinationPort);
 	const destinationOptions = availablePorts.filter((endpoint) => endpoint !== sourcePort);
+	const sameDeviceConnection = sourcePort && destinationPort
+		&& sourcePort.split(":")[0] === destinationPort.split(":")[0];
 
 	function updateSandbox(updateLab, updateState) {
 		setSandbox((current) => ({
@@ -202,18 +339,32 @@ export default function TopologySandbox() {
 			},
 		);
 		if (selectedPc === name) setSelectedPc(nextName.find((deviceName) => lab.devices[deviceName]?.kind === "pc") ?? "");
+		setPcDrafts((current) => {
+			const drafts = { ...current };
+			delete drafts[name];
+			return drafts;
+		});
+		setConsoleSession((current) => ({
+			...current,
+			deviceName: current.deviceName === name ? "" : current.deviceName,
+			lines: Object.fromEntries(Object.entries(current.lines).filter(([deviceName]) => deviceName !== name)),
+		}));
+		setNodePositions((current) => {
+			const positions = { ...current };
+			delete positions[name];
+			return positions;
+		});
 		if (pingFrom === name) {
 			setPingFrom(nextName.find((deviceName) => ["pc", "router"].includes(lab.devices[deviceName]?.kind)) ?? "");
 		}
 		if (sourcePort.startsWith(`${name}:`)) setSourcePort("");
 		if (destinationPort.startsWith(`${name}:`)) setDestinationPort("");
-		if (lab.devices[name]?.kind === "router") setConsoleGeneration((current) => current + 1);
 		setPingResult("");
 	}
 
 	function connectPorts(event) {
 		event.preventDefault();
-		if (!sourcePort || !destinationPort || sourcePort === destinationPort) return;
+		if (!sourcePort || !destinationPort || sameDeviceConnection) return;
 		updateSandbox(
 			(currentLab) => ({
 				...currentLab,
@@ -268,6 +419,7 @@ export default function TopologySandbox() {
 
 	function resetSandbox() {
 		setSandbox(createSandbox());
+		setNodePositions({});
 		setSourcePort("");
 		setDestinationPort("");
 		setSelectedPc("");
@@ -275,7 +427,12 @@ export default function TopologySandbox() {
 		setPingTarget("");
 		setPingResult("");
 		setPcConfigError("");
-		setConsoleGeneration((current) => current + 1);
+		setPcDrafts({});
+		setConsoleSession(createConsoleSession());
+	}
+
+	function moveNode(name, position) {
+		setNodePositions((current) => ({ ...current, [name]: position }));
 	}
 
 	return (
@@ -288,13 +445,14 @@ export default function TopologySandbox() {
 					<h4 className="mt-2 text-xl font-bold text-[#17233d]">Topology Sandbox</h4>
 					<p className="mt-1 max-w-3xl text-sm leading-6 text-gray-600">
 						Create a small network, connect device ports, configure router interfaces and routes, then test connectivity.
-						Switches forward traffic between connected ports; VLANs and wireless networks are not simulated.
+						Drag devices to arrange the topology, or focus a device and use the arrow keys. Switches forward traffic between connected ports; VLANs and wireless networks are not simulated.
 					</p>
 				</div>
 				<button type="button" onClick={resetSandbox} className="inline-flex items-center gap-2 rounded-full border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50">
 					<RotateCcw size={15} /> Clear topology
 				</button>
 			</header>
+			<p role="status" aria-live="polite" className="text-xs text-gray-600">{persistenceMessage}</p>
 
 			<div className="flex flex-wrap gap-2">
 				{[
@@ -311,7 +469,7 @@ export default function TopologySandbox() {
 			<div className="overflow-x-auto rounded-2xl border border-[#d6e0ee] bg-[#f8fafc] p-3">
 				{Object.keys(lab.devices).length ? (
 					<div className="mx-auto min-w-[580px] max-w-5xl">
-						<LabTopology lab={renderedLab} state={state} activeDevice={null} />
+						<LabTopology lab={renderedLab} state={state} activeDevice={null} onNodePositionChange={moveNode} />
 					</div>
 				) : (
 					<div className="flex min-h-40 flex-col items-center justify-center gap-2 text-center text-sm text-gray-500">
@@ -336,7 +494,7 @@ export default function TopologySandbox() {
 							))}
 						</ul>
 						<form onSubmit={connectPorts} className="space-y-2 border-t border-[#d6e0ee] pt-3">
-							<p className="text-sm font-semibold text-[#263654]">Connect two free ports</p>
+							<p className="text-sm font-semibold text-[#263654]">Connect two free ports on different devices</p>
 							<div className="grid gap-2 sm:grid-cols-[1fr_auto_1fr]">
 								<select aria-label="First port" value={sourcePort} onChange={(event) => setSourcePort(event.target.value)} className="min-w-0 rounded-lg border border-gray-300 bg-white px-2 py-2 text-sm">
 									<option value="">Choose port</option>
@@ -348,7 +506,8 @@ export default function TopologySandbox() {
 									{destinationOptions.map((port) => <option key={port} value={port}>{port}</option>)}
 								</select>
 							</div>
-							<button type="submit" disabled={!sourcePort || !destinationPort} className="rounded-full border border-[#1775EE] px-4 py-2 text-sm font-semibold text-[#1775EE] hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50">Connect</button>
+							{sameDeviceConnection && <p role="alert" className="text-sm text-red-600">Choose ports on two different devices; same-device connections are not supported.</p>}
+							<button type="submit" disabled={!sourcePort || !destinationPort || sameDeviceConnection} className="rounded-full border border-[#1775EE] px-4 py-2 text-sm font-semibold text-[#1775EE] hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50">Connect</button>
 						</form>
 						{lab.links.length > 0 && (
 							<ul className="space-y-1">
@@ -391,7 +550,26 @@ export default function TopologySandbox() {
 										].map(([name, label, value]) => (
 											<label key={name} className="text-xs font-semibold text-gray-600">
 												{label}
-												<input name={name} defaultValue={value} placeholder={name === "gateway" ? "Optional" : "Required"} className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-2 py-2 text-sm font-normal text-[#17233d]" />
+												<input
+													name={name}
+													value={pcDrafts[selectedPc]?.[name] ?? value}
+													onChange={(event) => {
+														const nextValue = event.target.value;
+														setPcDrafts((current) => {
+															const currentDraft = current[selectedPc] ?? {
+																ip: state.devices[selectedPc].interfaces.fa0.ip,
+																mask: state.devices[selectedPc].interfaces.fa0.mask,
+																gateway: state.devices[selectedPc].gateway,
+															};
+															return {
+																...current,
+																[selectedPc]: { ...currentDraft, [name]: nextValue },
+															};
+														});
+													}}
+													placeholder={name === "gateway" ? "Optional" : "Required"}
+													className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-2 py-2 text-sm font-normal text-[#17233d]"
+												/>
 											</label>
 										))}
 										{pcConfigError && <p role="alert" className="text-sm text-red-600 sm:col-span-3">{pcConfigError}</p>}
@@ -423,7 +601,14 @@ export default function TopologySandbox() {
 				</form>
 			)}
 
-			<CommandConsole key={consoleGeneration} lab={lab} state={state} setState={(nextState) => setSandbox((current) => ({ ...current, state: nextState }))} routers={routers} />
+			<CommandConsole
+				lab={lab}
+				state={state}
+				setState={(nextState) => setSandbox((current) => ({ ...current, state: nextState }))}
+				routers={routers}
+				session={consoleSession}
+				setSession={setConsoleSession}
+			/>
 		</section>
 	);
 }

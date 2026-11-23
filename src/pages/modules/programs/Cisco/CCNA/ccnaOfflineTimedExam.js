@@ -6,7 +6,10 @@ import {
 } from "./ccnaQuestionBank";
 
 export function createOfflineCcnaExamQuestions(examKey, questions) {
-	setDatabaseQuestions(questions);
+	setDatabaseQuestions(questions.map((question) => ({
+		...question,
+		offlineBankSource: "database",
+	})));
 
 	const examQuestions = {
 		short: () => createShortExamQuestions({ jumbleMatchingAnswers: true }),

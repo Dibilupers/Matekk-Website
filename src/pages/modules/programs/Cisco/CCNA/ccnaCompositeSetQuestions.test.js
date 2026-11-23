@@ -5,19 +5,62 @@ import {
 	CCNA_RECREATED_TEXT_EXHIBITS,
 } from "./ccnaCompositeSetQuestions.js";
 import { CCNA_RECREATED_CANDIDATE_EXHIBITS } from "./ccnaRecreatedCandidateExhibits.js";
+import { CCNA_LEGACY_QUESTIONS } from "./ccnaLegacyQuestions.js";
+import { matchMode } from "../../../../../utils/ccnaExamGrading.js";
 
-test("applies the Question 299 IP-address matching override", () => {
+test("applies the Question 299 IP-address drag-and-drop override", () => {
 	const question = applyNativeExhibit({
 		bankId: 299,
 		prompt: "Refer to the exhibit. Match the interface to its IP address.",
 	});
 
-	assert.equal(question.type, "match");
+	assert.equal(question.type, "drag_drop");
 	assert.deepEqual(question.items, ["DC-1 Gi1/0", "DC-1 Gi1/1", "DC-1 Gi1/2", "HQ-1 Gi1/3"]);
 	assert.deepEqual(question.answer, [2, 5, 4, 6]);
 	assert.equal(question.choices.length, 7);
 	assert.equal(question.hideExhibitImage, true);
 	assert.equal(question.prompt, "Match the interface to its IP address.");
+});
+
+test("keeps repeated-answer matches in numbered mode instead of drag-and-drop", () => {
+	const candidates = CCNA_LEGACY_QUESTIONS.filter((question) =>
+		question.type === "match" &&
+		Array.isArray(question.answer) &&
+		(question.choices.length < question.items.length ||
+			new Set(question.answer).size < question.answer.length) &&
+		![268, 282].includes(question.legacyIndex),
+	);
+
+	assert.equal(candidates.length, 75);
+	for (const sourceQuestion of candidates) {
+		assert.equal(sourceQuestion.type, "match", `legacy question ${sourceQuestion.legacyIndex}`);
+		assert.equal(matchMode(sourceQuestion), "group", `legacy question ${sourceQuestion.legacyIndex}`);
+	}
+});
+
+test("preserves the original matching type for questions with unused options or values", () => {
+	const unusedOptionsPrompt = /\bnot all (?:the )?(?:options|values|commands|answers) are used\b/i;
+	const candidates = CCNA_LEGACY_QUESTIONS.filter((question) =>
+		question.type === "match" && unusedOptionsPrompt.test(question.prompt),
+	);
+
+	assert.equal(candidates.length, 13);
+	for (const sourceQuestion of candidates) {
+		const question = applyNativeExhibit(sourceQuestion);
+		assert.equal(question.type, "match", `legacy question ${sourceQuestion.legacyIndex}`);
+		assert.equal(question.answer.length, question.items.length, `legacy question ${sourceQuestion.legacyIndex} must map every item`);
+		assert.equal(new Set(question.answer).size, question.choices.length, `legacy question ${sourceQuestion.legacyIndex} must use every category`);
+		assert.match(question.prompt, unusedOptionsPrompt, `legacy question ${sourceQuestion.legacyIndex} must preserve its source wording`);
+		assert.deepEqual(question.items, sourceQuestion.items);
+		assert.deepEqual(question.choices, sourceQuestion.choices);
+		assert.deepEqual(question.answer, sourceQuestion.answer);
+		assert.equal(question.dragDropMode, undefined, `legacy question ${sourceQuestion.legacyIndex}`);
+		assert.equal(matchMode(question), matchMode(sourceQuestion), `legacy question ${sourceQuestion.legacyIndex}`);
+	}
+
+	const withoutLegacyIdentity = { ...candidates[0] };
+	delete withoutLegacyIdentity.legacyIndex;
+	assert.equal(applyNativeExhibit(withoutLegacyIdentity).type, "match");
 });
 
 test("uses source-matching WLC security values for Question 1012", () => {
@@ -33,14 +76,323 @@ test("uses the source-faithful three-router exhibit for Question 177", () => {
 	assert.equal(question.hideExhibitImage, true);
 });
 
+test("uses the source-faithful four-router OSPF exhibit for Question 1167", () => {
+	const question = applyNativeExhibit({ bankId: 1167 });
+
+	assert.equal(question.exhibitDiagram, "ospf-four-router-broadcast");
+	assert.equal(question.hideExhibitImage, true);
+});
+
+test("adds the three VLAN subnet labels to Question 1194's topology", () => {
+	const question = applyNativeExhibit({ bankId: 1194 });
+
+	assert.equal(question.exhibitDiagram, "vlan-switch-web-server");
+	assert.equal(question.hideExhibitImage, true);
+});
+
+test("recreates Question 1197's R1-to-PC-1 exhibit with its source configuration", () => {
+	const question = applyNativeExhibit({ bankId: 1197 });
+
+	assert.equal(question.exhibitDiagram, "r1-ssh-acl-pc1");
+	assert.equal(question.hideExhibitImage, true);
+	assert.equal(question.exhibitQuality, "source-backed");
+});
+
+test("recreates Question 1199's database and client topology", () => {
+	const question = applyNativeExhibit({ bankId: 1199 });
+
+	assert.equal(question.exhibitDiagram, "r1-r2-database-security");
+	assert.equal(question.hideExhibitImage, true);
+});
+
+test("redraws legacy question 405 without reusing the database question 405 exhibit", () => {
+	const legacyQuestion = CCNA_LEGACY_QUESTIONS.find(({ legacyIndex }) => legacyIndex === 405);
+	const question = applyNativeExhibit(legacyQuestion);
+
+	assert.equal(question.exhibitDiagram, "router-internet-two-lans-four-pcs");
+	assert.equal(question.hideExhibitImage, true);
+	assert.equal(applyNativeExhibit({ bankId: 405 }).exhibitDiagram, "nat-router-lans-internet");
+});
+
+test("reconstructs the missing mixed-protocol exhibit without retaining its mismatched after image", () => {
+	for (const question of [
+		applyNativeExhibit({ legacyIndex: 415, afterExhibit: { imageUrl: "stale-image.png" } }),
+		applyNativeExhibit({ bankId: 99, afterExhibit: { imageUrl: "stale-image.png" } }),
+	]) {
+		assert.equal(question.exhibitDiagram, "r4-mixed-routing");
+		assert.equal(question.hideExhibitImage, true);
+		assert.equal(question.hideAfterExhibit, true);
+		assert.equal(question.afterExhibit, undefined);
+		assert.equal(question.exhibitQuality, "illustrative");
+	}
+});
+
+test("redraws legacy index 421 from its source exhibit instead of the mismatched after image", () => {
+	for (const question of [
+		applyNativeExhibit({ legacyIndex: 421, afterExhibit: { imageUrl: "stale-image.png" } }),
+		applyNativeExhibit({ bankId: 105, afterExhibit: { imageUrl: "stale-image.png" } }),
+	]) {
+		assert.equal(question.exhibitDiagram, "ipv6-three-router-policy");
+		assert.equal(question.hideExhibitImage, true);
+		assert.equal(question.hideAfterExhibit, true);
+		assert.equal(question.afterExhibit, undefined);
+		assert.equal(question.exhibitQuality, "source-backed");
+	}
+});
+
+test("uses the corrected LACP terminal for legacy index 460 instead of its conflicting PAgP image", () => {
+	for (const question of [
+		applyNativeExhibit({ legacyIndex: 460, afterExhibit: { imageUrl: "stale-image.png" } }),
+		applyNativeExhibit({ bankId: 143, afterExhibit: { imageUrl: "stale-image.png" } }),
+	]) {
+		assert.equal(question.hideExhibitImage, true);
+		assert.equal(question.hideAfterExhibit, true);
+		assert.equal(question.afterExhibit, undefined);
+		assert.equal(question.exhibitQuality, "partial");
+		assert.match(question.exhibit, /Protocol\s+Ports\n1\s+Po1\(SD\)\s+LACP/);
+		assert.match(question.exhibit, /channel-group 1 mode passive/);
+	}
+});
+
+test("reconstructs legacy index 474 from the question-matched site topology", () => {
+	for (const question of [
+		applyNativeExhibit({ legacyIndex: 474, afterExhibit: { imageUrl: "stale-image.png" } }),
+		applyNativeExhibit({ bankId: 157, afterExhibit: { imageUrl: "stale-image.png" } }),
+	]) {
+		assert.equal(question.exhibitDiagram, "two-site-r1-r2-wan");
+		assert.equal(question.hideExhibitImage, true);
+		assert.equal(question.hideAfterExhibit, true);
+		assert.equal(question.afterExhibit, undefined);
+		assert.equal(question.exhibitQuality, "illustrative");
+	}
+});
+
+test("redraws legacy index 478 as overlapping wireless zones with the original channel legend", () => {
+	for (const question of [
+		applyNativeExhibit({ legacyIndex: 478 }),
+		applyNativeExhibit({ bankId: 161 }),
+	]) {
+		assert.equal(question.exhibitDiagram, "wireless-zone-overlap");
+		assert.equal(question.hideExhibitImage, true);
+		assert.equal(question.exhibitQuality, "partial");
+	}
+});
+
+test("hides legacy index 486's image because its options already contain the complete configurations", () => {
+	const question = applyNativeExhibit({ legacyIndex: 486 });
+
+	assert.equal(question.hideExhibitImage, true);
+});
+
+test("reuses the source-backed access-list topology and terminal for legacy index 489", () => {
+	for (const question of [
+		applyNativeExhibit({ legacyIndex: 489, afterExhibit: { imageUrl: "stale-image.png" } }),
+		applyNativeExhibit({ bankId: 172, afterExhibit: { imageUrl: "stale-image.png" } }),
+	]) {
+		assert.equal(question.exhibitDiagram, "rtr1-access-list-lan");
+		assert.equal(question.hideExhibitImage, true);
+		assert.equal(question.hideAfterExhibit, true);
+		assert.equal(question.afterExhibit, undefined);
+		assert.equal(question.exhibitQuality, "source-backed");
+		assert.match(question.exhibit, /access-list 10 deny host 10\.150\.1\.1/);
+	}
+});
+
+test("keeps Question 130's DR/BDR answer aligned with its exhibit priorities", () => {
+	const question = CCNA_LEGACY_QUESTIONS.find(({ legacyIndex }) => legacyIndex === 130);
+
+	assert.equal(question.options[question.answer], "Router R2 will become the DR and router R4 will become the BDR.");
+	assert.match(question.explanation, /Priority 0.*ineligible/i);
+});
+
+test("recreates Question 1157's interface summary and hides its mismatched image", () => {
+	const question = applyNativeExhibit({ bankId: 1157 });
+
+	assert.equal(question.exhibit, CCNA_RECREATED_TEXT_EXHIBITS.routerInterfaceBrief);
+	assert.equal(question.hideExhibitImage, true);
+	assert.match(question.exhibit, /192\.168\.0\.1/);
+	assert.match(question.exhibit, /10\.10\.10\.20/);
+	assert.match(question.exhibit, /172\.16\.15\.10/);
+	assert.doesNotMatch(question.exhibit, /10\.0\.8\.29|10\.7\.3\.28/);
+});
+
 test("uses the voice-and-data VLAN topology for Question 268", () => {
 	assert.equal(applyNativeExhibit({ bankId: 268 }).exhibitDiagram, "voice-vlan-two-switch");
+});
+
+test("applies source-backed redraws for legacy indexes 50 and 59 in the shared bank path", () => {
+	for (const [legacyIndex, expectedDiagram] of [
+		[50, "router-on-a-stick-vlan20"],
+		[59, "vtp-transparent-frame-flow"],
+	]) {
+		const sourceQuestion = CCNA_LEGACY_QUESTIONS.find((item) => item.legacyIndex === legacyIndex);
+		const question = applyNativeExhibit(sourceQuestion);
+
+		assert.equal(question.exhibitDiagram, expectedDiagram);
+		assert.equal(question.hideExhibitImage, true);
+		assert.equal(question.exhibitQuality, "source-backed");
+		assert.doesNotMatch(question.prompt, /^\s*Refer to (?:the )?exhibit\./i);
+		assert.ok(question.exhibit);
+		assert.equal(question.type, sourceQuestion.type);
+		assert.deepEqual(question.options, sourceQuestion.options);
+		assert.equal(question.answer, sourceQuestion.answer);
+	}
+});
+
+test("redraws Question 382's voice and data VLAN exhibit", () => {
+	const question = applyNativeExhibit({ bankId: 382 });
+
+	assert.equal(question.exhibitDiagram, "voice-data-vlan300-400");
+	assert.equal(question.hideExhibitImage, true);
+});
+
+test("redraws Question 39's switch configurations as a two-column exhibit", () => {
+	const question = applyNativeExhibit({ bankId: 39 });
+
+	assert.equal(question.exhibitDiagram, "switch-config-two-column-39");
+	assert.equal(question.hideExhibitImage, true);
+	assert.equal(question.exhibit, undefined);
 });
 
 test("rebuilds Question 246 as a complete route topology and hides the source image", () => {
 	const question = applyNativeExhibit({ bankId: 246 });
 
 	assert.equal(question.exhibitDiagram, "r14-r86-static-route-172");
+	assert.equal(question.hideExhibitImage, true);
+});
+
+test("rebuilds the R14-to-PC10 host-route exhibit for the database and legacy question", () => {
+	const prompt = "Refer to the exhibit. Router R14 is in the process of being configured. Which configuration must be used to establish a host route to PC 10?";
+	for (const question of [
+		applyNativeExhibit({ prompt, bankId: 834, afterExhibit: { imageUrl: "unrelated.png" } }),
+		applyNativeExhibit({ prompt, legacyIndex: 834, afterExhibit: { imageUrl: "unrelated.png" } }),
+	]) {
+		assert.equal(question.exhibitDiagram, "r14-r86-pc10-host-route");
+		assert.equal(question.hideExhibitImage, true);
+		assert.equal(question.hideAfterExhibit, true);
+		assert.equal(question.afterExhibit, undefined);
+		assert.equal(question.exhibitQuality, "source-backed");
+	}
+});
+
+test("rebuilds the R86 route to R14's 172.16.34.0/29 network", () => {
+	const question = applyNativeExhibit({
+		prompt: "Refer to the exhibit. A static route must be configured on R86 to forward traffic for the 172.16.34.0/29 network, which resides on R14.",
+	});
+
+	assert.equal(question.exhibitDiagram, "r86-static-route-to-r14-17216-34");
+	assert.equal(question.hideExhibitImage, true);
+});
+
+test("uses the IPv6 WAN exhibit for both its live-bank ID and legacy prompt", () => {
+	const byBankId = applyNativeExhibit({ bankId: 159 });
+	const byPrompt = applyNativeExhibit({
+		prompt: "Refer to the exhibit. Which IPv6 configuration is required for R17 to successfully ping the WAN interface on R18?",
+	});
+
+	assert.equal(byBankId.exhibitDiagram, "candidate-ipv6-wan-159");
+	assert.equal(byBankId.hideExhibitImage, true);
+	assert.equal(byPrompt.exhibitDiagram, "candidate-ipv6-wan-159");
+	assert.equal(byPrompt.hideExhibitImage, true);
+});
+
+test("reconstructs live question 570's OSPF destination groups from its saved answer key", () => {
+	const items = ["10.10.10.16", "10.10.13.129", "10.10.100.128", "10.10.13.1", "10.10.13.150"];
+	const choices = ["Internet", "Router1"];
+	const answer = [0, 0, 0, 1, 1];
+	const question = applyNativeExhibit({
+		bankId: 570,
+		legacyIndex: 888,
+		afterExhibit: { imageUrl: "questions/ccna-after-exhibit-570.png" },
+		items,
+		choices,
+		answer,
+	});
+
+	assert.equal(question.exhibitDiagram, "ospf-destination-segments-888");
+	assert.equal(question.exhibitQuality, "illustrative");
+	assert.equal(question.hideExhibitImage, true);
+	assert.equal(question.hideAfterExhibit, true);
+	assert.equal(question.afterExhibit, undefined);
+	assert.deepEqual(question.items, items);
+	assert.deepEqual(question.choices, choices);
+	assert.deepEqual(question.answer, answer);
+});
+
+test("selects answer-enriched candidate topologies for matching live question IDs", () => {
+	const expectedDiagrams = new Map([
+		[24, "candidate-vlan-roles-24"],
+		[66, "candidate-voice-data-66"],
+		[82, "candidate-cdp-target-82"],
+		[198, "candidate-etherchannel-198"],
+		[703, "candidate-pc2-file-server-policy-703"],
+	]);
+
+	for (const [bankId, exhibitDiagram] of expectedDiagrams) {
+		const question = applyNativeExhibit({ bankId });
+		assert.equal(question.exhibitDiagram, exhibitDiagram);
+		assert.equal(question.hideExhibitImage, true);
+	}
+
+	assert.equal(applyNativeExhibit({ bankId: 24 }).exhibitQuality, "source-backed");
+	const legacyQuestion = applyNativeExhibit({
+		prompt: "Refer to the exhibit. An administrator must configure interfaces Gi1/1 and Gi1/3 on switch SW11.",
+	});
+	assert.equal(legacyQuestion.exhibitDiagram, "candidate-vlan-roles-24");
+	assert.equal(legacyQuestion.hideExhibitImage, true);
+});
+
+test("removes text exhibits duplicated in mapped question prompts", () => {
+	const cases = [
+		[402, 720, "In which structure does the word “warning” directly reside?"],
+		[633, 949, "Which format matches the Modified EUI-64 IPv6 interface address for the network 2001:db8::/64?"],
+		[810, 1126, "What is missing from this output for it to be executed?"],
+		[1254, 215, "Which port security violation mode is configured on interface Fa0/1?"],
+		[1330, 291, "If the network environment is operating normally, which type of device must be connected to interface FastEthernet 0/1?"],
+	];
+
+	for (const [bankId, legacyIndex, expectedPrompt] of cases) {
+		const sourceQuestion = CCNA_LEGACY_QUESTIONS.find((item) => item.legacyIndex === legacyIndex);
+		const mappedExhibit = CCNA_RECREATED_CANDIDATE_EXHIBITS.get(bankId);
+		const question = applyNativeExhibit({
+			...sourceQuestion,
+			bankId,
+			exhibit: mappedExhibit.exhibit,
+		});
+
+		assert.equal(question.prompt, expectedPrompt, `bank question ${bankId} should show only its question prompt`);
+		assert.equal(question.exhibit, mappedExhibit.exhibit);
+		assert.equal(question.hideExhibitImage, true);
+		assert.equal(question.type, sourceQuestion.type);
+		assert.deepEqual(question.options, sourceQuestion.options);
+		assert.deepEqual(question.answer, sourceQuestion.answer);
+	}
+});
+
+test("uses the VLAN 100/200 PAT exhibit for the matching question prompt", () => {
+	const question = applyNativeExhibit({
+		prompt: "Refer to exhibit. Which configuration must be applied to the router that configures PAT to translate all addresses in VLAN 200 while allowing devices on VLAN 100 to use their own IP addresses?",
+	});
+
+	assert.equal(question.exhibitDiagram, "pat-vlan-subnetting-100-200");
+	assert.equal(question.hideExhibitImage, true);
+});
+
+test("uses the Subnet A/B outbound ACL exhibit for the matching question prompt", () => {
+	const question = applyNativeExhibit({
+		prompt: "Refer to the exhibit. Option A: permit 10.100.100.0 0.0.0.255; deny 192.168.0.0 0.0.255.255. An access list is required to permit traffic from any host on interface G0/0 and deny traffic from interface Gi0/1. Which access list must be applied?",
+	});
+
+	assert.equal(question.exhibitDiagram, "standard-acl-subnet-a-b-gi02");
+	assert.equal(question.hideExhibitImage, true);
+});
+
+test("uses the Router1/Router2 NTP exhibit for the matching question prompt", () => {
+	const question = applyNativeExhibit({
+		prompt: "Refer to the exhibit. The ntp server 192.168.0.3 command has been configured on Router1 to make it an NTP client of router 2. Which command must be configured on Router2 so that it operates in server-only mode?",
+	});
+
+	assert.equal(question.exhibitDiagram, "r1-r2-ntp-link");
 	assert.equal(question.hideExhibitImage, true);
 });
 
@@ -111,6 +463,7 @@ test("extends the Question 1305 matching choices without changing its answer", (
 
 	assert.deepEqual(question.answer, originalAnswer);
 	assert.deepEqual(question.choices.slice(-2), ["next-hop interface", "subnet mask"]);
+	assert.equal(question.matchStyle, "assign");
 	assert.equal(question.exhibit, CCNA_RECREATED_TEXT_EXHIBITS.routingTableComponents);
 	assert.match(question.exhibit, /GigabitEthernet0\/0\/1/);
 	assert.equal(question.hideExhibitImage, true);
@@ -142,7 +495,7 @@ test("aligns the Question 1305 exhibit markers with their routing-table values",
 });
 
 test("reconstructs candidate exhibits from the local source records", () => {
-	assert.equal(CCNA_RECREATED_CANDIDATE_EXHIBITS.size, 50);
+	assert.equal(CCNA_RECREATED_CANDIDATE_EXHIBITS.size, 53);
 
 	const jsonQuestion = applyNativeExhibit({ bankId: 303 });
 	assert.match(jsonQuestion.exhibit, /"Routers": \["R1", "R2", "R3"\]/);
@@ -150,6 +503,7 @@ test("reconstructs candidate exhibits from the local source records", () => {
 
 	const terminalQuestion = applyNativeExhibit({ bankId: 1096 });
 	assert.match(terminalQuestion.exhibit, /vtp mode transparent/);
+	assert.equal(terminalQuestion.exhibitDiagram, "vtp-transparent-frame-flow");
 	assert.equal(terminalQuestion.exhibitQuality, "source-backed");
 
 	const wirelessQuestion = applyNativeExhibit({ bankId: 260 });
@@ -161,7 +515,7 @@ test("reconstructs candidate exhibits from the local source records", () => {
 });
 
 test("adds partial exhibits for live rows missing both image and inline exhibit data", () => {
-	for (const bankId of [24, 29, 66, 82, 159, 169, 198, 557, 703, 832, 924]) {
+	for (const bankId of [29, 66, 82, 159, 169, 198, 557, 703, 832, 924]) {
 		const question = applyNativeExhibit({ bankId, prompt: "Refer to the exhibit." });
 		assert.equal(question.hideExhibitImage, true);
 		assert.ok(question.exhibitDiagram || question.exhibit);
@@ -177,4 +531,71 @@ test("hides Question 491's unrelated image and removes its stale exhibit lead-in
 
 	assert.equal(question.hideExhibitImage, true);
 	assert.equal(question.prompt, "Local access for R4 must be established.");
+});
+
+test("moves a raw all-questions OSPF configuration into a terminal exhibit", () => {
+	const sourceQuestion = CCNA_LEGACY_QUESTIONS.find(({ legacyIndex }) => legacyIndex === 909);
+	const question = applyNativeExhibit({
+		...sourceQuestion,
+		exhibitImage: "/src/assets/ccna-offline-exams-images/ccna-exhibit-909.png",
+	});
+
+	assert.equal(
+		question.prompt,
+		"A network engineer started to configure two directly-connected routers as shown. Which command sequence must the engineer configure on R2 so that the two routers become OSPF neighbors?",
+	);
+	assert.match(question.exhibit, /^R1\r?\n/);
+	assert.match(question.exhibit, /router ospf 1/);
+	assert.match(question.exhibit, /network 192\.168\.12\.1 0\.0\.0\.0 area 1/);
+	assert.equal(question.exhibitDiagram, undefined);
+	assert.equal(question.hideExhibitImage, true);
+	assert.equal(question.type, sourceQuestion.type);
+	assert.deepEqual(question.options, sourceQuestion.options);
+	assert.equal(question.answer, sourceQuestion.answer);
+});
+
+test("moves a routing-table prompt into its terminal exhibit and hides the duplicate image", () => {
+	const sourceQuestion = CCNA_LEGACY_QUESTIONS.find(({ legacyIndex }) => legacyIndex === 816);
+	const question = applyNativeExhibit({
+		...sourceQuestion,
+		exhibitImage: "/src/assets/ccna-offline-exams-images/ccna-exhibit-816.png",
+	});
+
+	assert.equal(
+		question.prompt,
+		"According to the output, which parameter set is validated using the routing table of R7?",
+	);
+	assert.match(question.exhibit, /^R7#\r?\n/);
+	assert.match(question.exhibit, /172\.22\.0\.0\/24 is subnetted/);
+	assert.equal(question.hideExhibitImage, true);
+	assert.equal(question.exhibitImage, undefined);
+	assert.equal(question.type, sourceQuestion.type);
+	assert.deepEqual(question.options, sourceQuestion.options);
+	assert.equal(question.answer, sourceQuestion.answer);
+});
+
+test("extracts embedded terminal output before formatted answer tables without changing answers", () => {
+	const expectedOutputs = new Map([
+		[747, "R1#show ip ospf interface g0/0/0"],
+		[844, "R1#\n\n!\n\ninterface Loopback0"],
+		[883, "R1#show ip ospf interface"],
+		[920, "R1#show ip ospf interface"],
+		[1112, "SW_1#show vlan"],
+	]);
+
+	for (const [legacyIndex, outputMarker] of expectedOutputs) {
+		const sourceQuestion = CCNA_LEGACY_QUESTIONS.find((item) => item.legacyIndex === legacyIndex);
+		const question = applyNativeExhibit({
+			...sourceQuestion,
+			legacyIndex: undefined,
+			bankId: 900000 + legacyIndex,
+		});
+
+		assert.ok(question.exhibit?.includes(outputMarker), `legacy index ${legacyIndex} should have terminal output`);
+		assert.ok(!question.prompt.includes(outputMarker), `legacy index ${legacyIndex} should not repeat terminal output in its prompt`);
+		assert.doesNotMatch(question.prompt, /^\s*Refer to (?:the )?exhibit\./i);
+		assert.equal(question.type, sourceQuestion.type);
+		assert.deepEqual(question.options, sourceQuestion.options);
+		assert.equal(question.answer, sourceQuestion.answer);
+	}
 });

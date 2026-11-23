@@ -53,6 +53,54 @@ const FULL_NAME = (ifName) => {
 };
 export const fullIfName = FULL_NAME;
 
+export function ptIfName(device, ifName, deviceName = "") {
+	if (deviceName === "IP Phone") {
+		if (ifName === "fa0") return "Switch";
+		if (ifName === "fa1") return "PC";
+		return FULL_NAME(ifName);
+	}
+	if (device?.kind === "switch") {
+		const match = ifName.match(/^e0\/(\d+)$/);
+		if (match) return `FastEthernet0/${Number(match[1]) + 1}`;
+		const gMatch = ifName.match(/^g0\/(\d+)$/);
+		if (gMatch) return `GigabitEthernet0/${Number(gMatch[1]) + 1}`;
+		return FULL_NAME(ifName);
+	}
+	if (device?.kind === "router") {
+		const match = ifName.match(/^[eg]0\/(\d+)$/);
+		if (match) return `GigabitEthernet0/${match[1]}`;
+		return FULL_NAME(ifName);
+	}
+	return FULL_NAME(ifName);
+}
+
+function ptCableType(devA, devB, nameA = "", nameB = "") {
+	if (devA?.kind === "switch" && devB?.kind === "switch") return "Copper Cross-Over";
+	if (devA?.kind === "router" && devB?.kind === "router") return "Copper Cross-Over";
+	if (devA?.kind === "router" && devB?.kind === "pc" && nameB !== "IP Phone") return "Copper Cross-Over";
+	if (devB?.kind === "router" && devA?.kind === "pc" && nameA !== "IP Phone") return "Copper Cross-Over";
+	return "Copper Straight-Through";
+}
+
+function formatTaskForPacketTracer(lab, text) {
+	const editableKind = lab.devices[lab.editable[0]]?.kind;
+	if (editableKind === "switch") {
+		return text.replace(/\bE0\/(\d+)(?:–E0\/(\d+))?\b/g, (match, start, end) => (
+			end !== undefined
+				? `FastEthernet0/${Number(start) + 1}–0/${Number(end) + 1} (${match})`
+				: `FastEthernet0/${Number(start) + 1} (${match})`
+		));
+	}
+	if (editableKind === "router") {
+		return text.replace(/\bE0\/(\d+)(?:–E0\/(\d+))?\b/g, (match, start, end) => (
+			end !== undefined
+				? `GigabitEthernet0/${start}–0/${end} (${match})`
+				: `GigabitEthernet0/${start} (${match})`
+		));
+	}
+	return text;
+}
+
 // ---------- lab state ----------
 export function createLabState(lab) {
 	const devices = structuredClone(lab.devices);
@@ -383,12 +431,24 @@ export function runningConfig(d) {
 }
 
 /* IOS commands that recreate a device's configuration (used for Packet Tracer build steps). */
-export function configCommands(d) {
+export function configCommands(d, options = {}) {
+	const { packetTracer = false, deviceName = "" } = options;
+	if (packetTracer && deviceName === "IP Phone") {
+		return [
+			"Physical tab: install the AC power adapter (skip if connected to a PoE switch such as 3560-24PS)",
+			"No static IP configuration is required for this Layer 2 lab",
+		];
+	}
 	if (d.kind === "pc") {
 		const i = Object.values(d.interfaces)[0];
-		return [`IP address ${i.ip}`, `Subnet mask ${i.mask}`, `Default gateway ${d.gateway}`];
+		return [
+			`IP address ${i.ip}`,
+			`Subnet mask ${i.mask}`,
+			...(d.gateway ? [`Default gateway ${d.gateway}`] : []),
+		];
 	}
 	const out = ["enable", "configure terminal", `hostname ${d.hostname}`];
+	const ifaceName = (ifName) => (packetTracer ? ptIfName(d, ifName, deviceName) : ifName);
 	if (d.kind === "switch") {
 		for (const [vlanId, name] of Object.entries(d.vlans ?? {}).sort(([left], [right]) => Number(left) - Number(right))) {
 			out.push(`vlan ${vlanId}`);
@@ -397,7 +457,18 @@ export function configCommands(d) {
 		}
 		if (d.lldpEnabled) out.push("lldp run");
 		for (const [ifName, intf] of Object.entries(d.interfaces)) {
-			out.push(`interface ${ifName}`);
+			const hasConfig = intf.switchportMode === "trunk" ||
+				intf.switchportMode === "access" ||
+				intf.accessVlan !== undefined ||
+				intf.voiceVlan !== undefined ||
+				Boolean(intf.trunkAllowedVlans) ||
+				(intf.trunkNativeVlan !== undefined && intf.trunkNativeVlan !== 1) ||
+				intf.portChannel !== undefined ||
+				Boolean(intf.lldpTransmit) ||
+				Boolean(intf.lldpReceive) ||
+				intf.cdpEnabled === false;
+			if (!hasConfig) continue;
+			out.push(`interface ${ifaceName(ifName)}`);
 			if (intf.switchportMode === "trunk") {
 				out.push(" switchport trunk encapsulation dot1q", " switchport mode trunk");
 			} else if (intf.switchportMode === "access") {
@@ -417,13 +488,18 @@ export function configCommands(d) {
 		return out;
 	}
 	for (const [ifName, i] of Object.entries(d.interfaces)) {
-		if (!i.ip && !i.ipv6) continue;
-		out.push(`interface ${ifName}`);
+		const hasIp = Boolean(i.ip || i.ipv6);
+		const needsState = i.up || (hasIp && !ifName.startsWith("lo"));
+		if (!hasIp && !needsState) continue;
+		out.push(`interface ${ifaceName(ifName)}`);
 		if (i.ip) out.push(` ip address ${i.ip} ${i.mask}`);
 		if (i.ipv6) out.push(` ipv6 address ${i.ipv6}`);
-		if (i.up || ifName.startsWith("lo")) out.push(" no shutdown");
+		if (!ifName.startsWith("lo")) {
+			if (i.up) out.push(" no shutdown");
+			else if (hasIp) out.push(" shutdown");
+		}
+		out.push("exit");
 	}
-	out.push("exit");
 	for (const [aclId, entries] of Object.entries(d.accessLists || {})) {
 		for (const entry of entries) out.push(`access-list ${aclId} ${entry.action} ${entry.source} ${entry.wildcard}`);
 	}
@@ -438,6 +514,57 @@ export function configCommands(d) {
 	for (const r of d.routes) out.push(`ip route ${r.net} ${r.mask} ${r.via}${r.ad && r.ad !== 1 ? ` ${r.ad}` : ""}`);
 	out.push("end");
 	return out;
+}
+
+export function buildPacketTracerGuide(lab) {
+	const lines = [
+		`MATEKK Cybercore Academy — CCNA Practice Lab ${lab.id} (${lab.level})`,
+		lab.title,
+		"Packet Tracer build guide (Packet Tracer 8.2 or newer)",
+		"=".repeat(70),
+		"",
+		`DEVICES: ${lab.ptDevices}`,
+		"",
+		"CABLING",
+		"-------",
+		...lab.links.map((l) => {
+			const [ad, ai] = l.a.split(":");
+			const [bd, bi] = l.b.split(":");
+			const devA = lab.devices[ad];
+			const devB = lab.devices[bd];
+			const ptA = ptIfName(devA, ai, ad);
+			const ptB = ptIfName(devB, bi, bd);
+			const refA = ptA === FULL_NAME(ai) ? "" : ` (${ai.toUpperCase()})`;
+			const refB = ptB === FULL_NAME(bi) ? "" : ` (${bi.toUpperCase()})`;
+			const cable = ptCableType(devA, devB, ad, bd);
+			const details = l.net ? `${cable} · ${l.net}` : cable;
+			return `  ${ad} ${ptA}${refA}  <->  ${bd} ${ptB}${refB}   [${details}]`;
+		}),
+		"",
+		"PRE-CONFIGURATION (enter these on each device before you start)",
+		"---------------------------------------------------------------",
+	];
+	const start = createLabState(lab);
+	for (const [name, d] of Object.entries(lab.devices)) {
+		const suffix = name === "IP Phone"
+			? "  (Physical tab)"
+			: d.kind === "pc"
+				? "  (Desktop > IP Configuration)"
+				: "";
+		lines.push("", `[${name}]${suffix}`);
+		lines.push(...configCommands(start.devices[name], { packetTracer: true, deviceName: name }).map((c) => `  ${c}`));
+	}
+	lines.push(
+		"",
+		"YOUR TASKS",
+		"----------",
+		...lab.tasks.map((t, i) => `${i + 1}. ${formatTaskForPacketTracer(lab, t.text)}`),
+	);
+	if (lab.ptNotes) {
+		lines.push("", "PACKET TRACER NOTES", "-------------------", `  ${lab.ptNotes}`);
+	}
+	lines.push("", "FINAL CHECK", "-----------", `  ${lab.finalCheck.label}`, "", "Tip: practise the same tasks online first in the MATEKK CCNA Practice Lab.");
+	return lines.join("\n");
 }
 
 function showIpRoute(lab, state, devName) {

@@ -6,6 +6,7 @@ import { isValidQuestion } from "./ccnaExamGrading";
 import { isCcnaQuestionModule } from "./ccnaQuestionModule";
 import { cacheCcnaAllQuestionsBank } from "./ccnaOfflineQuestionBank";
 import { getBundledCcnaAfterExhibitImage } from "./ccnaAfterExhibits";
+import { getCcnaExhibitImageByBankId } from "./ccnaExhibitImages";
 
 let cached = null; // { questions, problems }
 let pending = null;
@@ -19,7 +20,15 @@ export function loadCcnaQuestionBank() {
       if (!response.ok) throw new Error(`Question bank request failed (${response.status}).`);
       const rows = await response.json();
       if (!Array.isArray(rows)) throw new TypeError("Question bank response was not a list.");
-      const ccnaRows = rows.filter((row) => isCcnaQuestionModule(row.module));
+      const ccnaRows = rows
+        .filter((row) => isCcnaQuestionModule(row.module))
+        .map((row) => {
+          if (row.afterExhibitImageUrl || !/\bexhibit\b/i.test(row.question_text ?? "")) {
+            return row;
+          }
+          const imageUrl = getCcnaExhibitImageByBankId(row.id);
+          return imageUrl ? { ...row, imageUrl } : row;
+        });
       const { questions, problems } = convertBank(ccnaRows);
       cached = { questions: questions.filter(isValidQuestion), problems, rowCount: ccnaRows.length };
       if (problems.length) console.warn(`CCNA question bank: ${problems.length} question(s) could not be converted and were skipped.`, problems);
@@ -48,7 +57,17 @@ export function loadCcnaAllQuestionsBank() {
         usableBank.questions
           .filter((question) => isCcnaQuestionModule(question.module))
           .filter(isValidQuestion)
-          .map((question) => [question.bankId, question]),
+          .map((question) => {
+            if (
+              question.afterExhibit ||
+              question.hideExhibitImage ||
+              !/\bexhibit\b/i.test(question.prompt ?? "")
+            ) {
+              return [question.bankId, question];
+            }
+            const imageUrl = getCcnaExhibitImageByBankId(question.bankId);
+            return [question.bankId, imageUrl ? { ...question, exhibitImage: imageUrl } : question];
+          }),
       );
       rawBank.questions.forEach((question) => {
         if (!questionsById.has(question.bankId)) questionsById.set(question.bankId, question);

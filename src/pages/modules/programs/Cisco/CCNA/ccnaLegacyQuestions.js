@@ -1782,13 +1782,13 @@ export const CCNA_LEGACY_QUESTIONS = [
     "legacyNumber": 5,
     "prompt": "Refer to the exhibit. If the switch reboots and all routers have to re-establish OSPF adjacencies, which\nrouters will become the new DR and BDR?",
     "options": [
-      "Router R3 will become the DR and router R1 will become the BDR.",
+      "Router R2 will become the DR and router R4 will become the BDR.",
       "Router R4 will become the DR and router R3 will become the BDR.",
       "Router R1 will become the DR and router R2 will become the BDR.",
       "Router R3 will become the DR and router R2 will become the BDR."
     ],
     "answer": 0,
-    "explanation": "After the new election, R3 and R1 have highest priority (of 2) so they will be elected DR and BDR. R3 will be\nelected DR because its has higher router ID (of 3.3.3.3)."
+    "explanation": "R1 has priority 0 and is ineligible for DR/BDR election. R2 has the highest eligible priority (3), so it becomes DR. R4 has the next-highest priority (2), so it becomes BDR."
   },
   {
     "legacyIndex": 131,
@@ -9085,22 +9085,27 @@ export const CCNA_LEGACY_QUESTIONS = [
     "legacyIndex": 617,
     "legacyNumber": 80,
     "prompt": "Refer to the exhibit.\n\nThe IP address configurations must be completed on the DC-1 and HQ-1 routers based on these\nrequirements.\n\nDC-1 Gi1/0 must be the last usable address on a /30\nDC-1 Gi1/1 must be the first usable address on a /29\n\nDC-1 Gi1/2 must be the last usable address on a /28\nHQ-1 Gi1/3 must be the last usable address on a /29\n\nDrag and drop the commands from the left onto the destination interfaces on the right. Not all\ncommands are used.",
-    "type": "match",
+    "type": "drag_drop",
     "items": [
-      "ip address 209.165.202.130 255.255.255.252",
-      "ip address 192.168.4.9 255.255.255.248",
-      "ip address 192.168.3.14 255.255.255.240",
-      "ip address 192.168.3.14 255.255.255.248"
+      "DC-1 Gi1/0",
+      "DC-1 Gi1/1",
+      "DC-1 Gi1/2",
+      "HQ-1 Gi1/3"
     ],
     "choices": [
-      "DC-1",
-      "HQ-1"
+      "ip address 192.168.4.13 255.255.255.240",
+      "ip address 209.165.202.129 255.255.255.252",
+      "ip address 209.165.202.130 255.255.255.252",
+      "ip address 209.165.202.131 255.255.255.252",
+      "ip address 192.168.3.14 255.255.255.240",
+      "ip address 192.168.4.9 255.255.255.248",
+      "ip address 192.168.3.14 255.255.255.248"
     ],
     "answer": [
-      0,
-      0,
-      0,
-      1
+      2,
+      5,
+      4,
+      6
     ],
     "explanation": ""
   },
@@ -16969,7 +16974,7 @@ export const CCNA_LEGACY_QUESTIONS = [
       "Option D"
     ],
     "answer": 1,
-    "explanation": "The Etherchannel group numbers are only locally significant and can be different on two ends."
+    "explanation": "The active mode enables LACP and initiates negotiation. Desirable and auto are PAgP modes, while on configures a static EtherChannel. The channel-group number is locally significant and may differ between switches."
   },
   {
     "legacyIndex": 1139,

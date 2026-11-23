@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { linkUp } from "./labEngine";
 import { placeTopologyLabels } from "../../../../../utils/topologyLabels";
 import {
@@ -30,10 +31,11 @@ export function RouterIcon({ x, y, label, sub, details, active }) {
 	);
 }
 
-export function SwitchIcon({ x, y, label, sub, details }) {
+export function SwitchIcon({ x, y, label, sub, details, active }) {
 	const deviceDetails = details ?? (sub ? [sub] : []);
 	return (
 		<g transform={`translate(${x} ${y})`}>
+			{active && <ellipse cx="0" cy="-4" rx="44" ry="22" fill="none" stroke="#1775EE" strokeWidth="2" strokeDasharray="4 3" />}
 			<path d="M-34 -7 L-22 -20 H34 L23 -7 Z" fill="#4a9bda" stroke="#0f4c81" strokeWidth="1.5" />
 			<path d="M-34 -7 H23 V12 H-34 Z" fill="#1f6fb2" stroke="#0f4c81" strokeWidth="1.5" />
 			<path d="M23 -7 L34 -20 V0 L23 12 Z" fill="#155d99" stroke="#0f4c81" strokeWidth="1.5" />
@@ -73,6 +75,24 @@ export function PcIcon({ x, y, label, sub, details, server }) {
 	);
 }
 
+export function PhoneIcon({ x, y, label, sub, details }) {
+	const deviceDetails = details ?? (sub ? [sub] : []);
+	return (
+		<g transform={`translate(${x} ${y})`}>
+			<path d="M-14 -14 Q0 -22 14 -14 L11 -9 Q0 -14 -11 -9 Z" fill="#1f2937" />
+			<rect x="-19" y="-9" width="38" height="21" rx="3" fill="#1f2937" />
+			<rect x="-12" y="-5" width="24" height="7" rx="1" fill="#60a5fa" />
+			<g fill="#d1d5db">
+				<circle cx="-10" cy="6" r="1.5" /><circle cx="0" cy="6" r="1.5" /><circle cx="10" cy="6" r="1.5" />
+			</g>
+			<text x="0" y="40" textAnchor="middle" fontSize="13" fontWeight="700" fill="#17233d">{label}</text>
+			{deviceDetails.map((detail, index) => (
+				<text key={detail} x="0" y={60 + index * 12} textAnchor="middle" fontSize="9.5" fill="#4b5b78">{detail}</text>
+			))}
+		</g>
+	);
+}
+
 function CloudIcon({ x, y, label, sub }) {
 	return (
 		<g transform={`translate(${x} ${y})`}>
@@ -84,7 +104,12 @@ function CloudIcon({ x, y, label, sub }) {
 }
 
 const SHORT = (ifName) => (ifName.startsWith("g") ? `G${ifName.slice(1)}` : ifName.startsWith("fa") ? "Fa0" : ifName);
-const geometryKind = (device, name) => device.kind === "pc" && name.startsWith("SRV") ? "server" : device.kind;
+const geometryKind = (device, name) => {
+	if (device.kind !== "pc") return device.kind;
+	if (name.toLowerCase().includes("phone")) return "phone";
+	if (name.toLowerCase().startsWith("srv") || name.toLowerCase().includes("server")) return "server";
+	return "pc";
+};
 
 function TopologyLabel({ x, y, children, fontSize = 9.5, fontWeight = 500 }) {
 	return (
@@ -229,14 +254,69 @@ export default function LabTopology({
 	lab,
 	state,
 	activeDevice,
+	onNodePositionChange,
 	className = "mx-auto h-auto w-full max-w-5xl",
 	style,
 	svgRef,
 }) {
+	const dragRef = useRef(null);
 	const { layout } = lab;
 	const pos = (name) => layout.nodes[name];
 	const labels = topologyLabels(lab, state);
 	const viewBox = topologyViewBox(lab, state, labels);
+	function handleNodePointerDown(event, name, node) {
+		if (!onNodePositionChange || event.button !== 0) return;
+		const svg = event.currentTarget.ownerSVGElement;
+		const matrix = svg?.getScreenCTM();
+		if (!svg || !matrix) return;
+		const nodePoint = svg.createSVGPoint();
+		nodePoint.x = node.x;
+		nodePoint.y = node.y;
+		const screenNode = nodePoint.matrixTransform(matrix);
+		dragRef.current = {
+			name,
+			pointerId: event.pointerId,
+			offsetX: event.clientX - screenNode.x,
+			offsetY: event.clientY - screenNode.y,
+		};
+		event.preventDefault();
+		svg.setPointerCapture(event.pointerId);
+	}
+	function handlePointerMove(event) {
+		const drag = dragRef.current;
+		if (!drag || drag.pointerId !== event.pointerId) return;
+		const matrix = event.currentTarget.getScreenCTM();
+		if (!matrix) return;
+		const point = event.currentTarget.createSVGPoint();
+		point.x = event.clientX - drag.offsetX;
+		point.y = event.clientY - drag.offsetY;
+		const position = point.matrixTransform(matrix.inverse());
+		onNodePositionChange(drag.name, { x: position.x, y: position.y });
+	}
+	function handlePointerUp(event) {
+		const drag = dragRef.current;
+		if (!drag || drag.pointerId !== event.pointerId) return;
+		dragRef.current = null;
+		if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+			event.currentTarget.releasePointerCapture(event.pointerId);
+		}
+	}
+	function handleNodeKeyDown(event, name, node) {
+		if (!onNodePositionChange) return;
+		const direction = {
+			ArrowDown: { x: 0, y: 1 },
+			ArrowLeft: { x: -1, y: 0 },
+			ArrowRight: { x: 1, y: 0 },
+			ArrowUp: { x: 0, y: -1 },
+		}[event.key];
+		if (!direction) return;
+		event.preventDefault();
+		const step = event.shiftKey ? 40 : 10;
+		onNodePositionChange(name, {
+			x: node.x + direction.x * step,
+			y: node.y + direction.y * step,
+		});
+	}
 	const cloudLink = layout.cloud
 		? topologyLinkGeometry(
 			{ x: layout.cloud.x, y: layout.cloud.y },
@@ -246,7 +326,18 @@ export default function LabTopology({
 		)
 		: null;
 	return (
-		<svg ref={svgRef} viewBox={`${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`} className={className} style={style} role="img" aria-label={`Lab topology: ${lab.title}`}>
+		<svg
+			ref={svgRef}
+			viewBox={`${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`}
+			className={className}
+			style={onNodePositionChange ? { ...style, touchAction: "none" } : style}
+			role={onNodePositionChange ? "group" : "img"}
+			aria-label={`Lab topology: ${lab.title}`}
+			onPointerMove={handlePointerMove}
+			onPointerUp={handlePointerUp}
+			onPointerCancel={handlePointerUp}
+			onLostPointerCapture={handlePointerUp}
+		>
 			{cloudLink && (
 				<line x1={cloudLink.x1} y1={cloudLink.y1} x2={cloudLink.x2} y2={cloudLink.y2} stroke="#94a3b8" strokeWidth="2" strokeDasharray="4 4" />
 			)}
@@ -275,9 +366,28 @@ export default function LabTopology({
 			})}
 			{Object.entries(layout.nodes).map(([name, n]) => {
 				const d = state.devices[name];
-				if (d.kind === "pc") return <PcIcon key={name} x={n.x} y={n.y} label={n.label ?? name} sub={n.sub} details={n.details} server={name.startsWith("SRV")} />;
-				if (d.kind === "switch") return <SwitchIcon key={name} x={n.x} y={n.y} label={name} sub={n.sub} details={n.details} />;
-				return <RouterIcon key={name} x={n.x} y={n.y} label={d.hostname} sub={n.sub} details={n.details} active={activeDevice === name} />;
+				const icon = geometryKind(d, name) === "phone"
+					? <PhoneIcon x={n.x} y={n.y} label={n.label ?? name} sub={n.sub} details={n.details} />
+					: d.kind === "pc"
+						? <PcIcon x={n.x} y={n.y} label={n.label ?? name} sub={n.sub} details={n.details} server={geometryKind(d, name) === "server"} />
+						: d.kind === "switch"
+							? <SwitchIcon x={n.x} y={n.y} label={name} sub={n.sub} details={n.details} active={activeDevice === name} />
+							: <RouterIcon x={n.x} y={n.y} label={d.hostname} sub={n.sub} details={n.details} active={activeDevice === name} />;
+				return (
+					<g
+						key={name}
+						data-topology-node={onNodePositionChange ? name : undefined}
+						role={onNodePositionChange ? "group" : undefined}
+						aria-label={onNodePositionChange ? `Move ${d.kind} ${name}; use arrow keys to reposition` : undefined}
+						tabIndex={onNodePositionChange ? 0 : undefined}
+						aria-keyshortcuts={onNodePositionChange ? "ArrowLeft ArrowRight ArrowUp ArrowDown" : undefined}
+						style={onNodePositionChange ? { cursor: "grab", touchAction: "none" } : undefined}
+						onPointerDown={(event) => handleNodePointerDown(event, name, n)}
+						onKeyDown={(event) => handleNodeKeyDown(event, name, n)}
+					>
+						{icon}
+					</g>
+				);
 			})}
 			{layout.cloud && <CloudIcon x={layout.cloud.x} y={layout.cloud.y} label={layout.cloud.label} sub={layout.cloud.sub} />}
 			{lab.links.map((link, index) => (

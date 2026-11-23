@@ -34,10 +34,12 @@ import {
 import { readCcnaExamProgress, readCcnaShortExamProgress } from "../../../../../utils/ccnaShortExamSession";
 import { readCcnaMockExamResults } from "../../../../../utils/ccnaGradebook";
 import { CCNA_EXAMS } from "./ccnaExamFormats";
+import { CCNA_OFFLINE_EXHIBIT_QUESTIONS_ROUTE } from "../../../../../utils/examRoutes";
 import useGradebookQuizStats from "../../useGradebookQuizStats";
 import { getProfileDisplayName } from "../../../../../utils/profile";
 import ProgramBackgroundParticles from "../../ProgramBackgroundParticles";
 import ScoreRotationCard from "../../ScoreRotationCard";
+import { loadCcnaAllQuestionsBank } from "../../../../../utils/ccnaQuestionBankApi";
 
 const modules = CCNA_CURRICULUM.map((section) => ({
 	...section,
@@ -421,6 +423,7 @@ function ModuleCard({ module, index, openSection, onToggle, quizProgress, tutori
 
 export default function CCNA() {
 	const { profile, isOnline, isOfflinePinUnlocked } = useAuth();
+	const availableExamFormats = EXAM_FORMATS;
 	const userId = profile?.userId;
 	const canTakeExamWithoutAccount = !isOnline && isOfflinePinUnlocked;
 	const canTakeExams = Boolean(userId) || canTakeExamWithoutAccount;
@@ -432,6 +435,17 @@ export default function CCNA() {
 	const [selectedExamFormat, setSelectedExamFormat] = useState(null);
 	const [retakeQuizModule, setRetakeQuizModule] = useState(null);
 	const [retakeExamFormat, setRetakeExamFormat] = useState(null);
+
+	useEffect(() => {
+		if (!isOnline) return undefined;
+
+		let cancelled = false;
+		loadCcnaAllQuestionsBank()
+			.catch((error) => {
+				if (!cancelled) console.warn("Unable to prepare the CCNA offline question bank.", error);
+			});
+		return () => { cancelled = true; };
+	}, [isOnline]);
 
 	useEffect(() => {
 		const updateBackButtonVisibility = () => setHasScrolled(window.scrollY > 120);
@@ -605,6 +619,14 @@ export default function CCNA() {
 			path: "/modules/programs/ccna/exam/all",
 			summary: "Every question from the Questions table · Random order · No time limit",
 		},
+		...(import.meta.env.DEV
+			? {
+				"Refer to Exhibit": {
+					path: CCNA_OFFLINE_EXHIBIT_QUESTIONS_ROUTE,
+					summary: "Offline Refer to Exhibit questions only · Drag-and-drop questions excluded · No time limit",
+				},
+			}
+			: {}),
 	};
 
 	useEffect(() => {
@@ -1225,7 +1247,7 @@ export default function CCNA() {
 							The first three formats randomly select a set of questions. All Questions Exam goes through every question from the Questions table in random order, with no time limit.
 						</p>
 						<div className="mt-6 grid gap-3 sm:grid-cols-2">
-							{EXAM_FORMATS.map((format) => {
+							{availableExamFormats.map((format) => {
 								const isSelected = selectedExamFormat === format.name;
 								const examRun = examRuns[format.name];
 								return (
@@ -1259,7 +1281,7 @@ export default function CCNA() {
 								);
 							})}
 						</div>
-						{selectedExamFormat && (
+						{selectedExamFormat && availableExamFormats.some((format) => format.name === selectedExamFormat) && (
 							<div className="mt-5 grid grid-cols-1 gap-3 rounded-xl bg-[#f5f9f9] p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
 								<div className="min-w-0 sm:pr-3">
 									<p className="text-sm text-[#526584]">{examRuns[selectedExamFormat]?.summary ?? `${selectedExamFormat} selected.`}</p>

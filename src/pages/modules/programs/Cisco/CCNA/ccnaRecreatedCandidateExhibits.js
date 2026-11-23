@@ -1,7 +1,8 @@
-const textExhibit = (exhibit, exhibitQuality = "source-backed") => ({
+const textExhibit = (exhibit, exhibitQuality = "source-backed", prompt) => ({
   exhibit,
   exhibitQuality,
   hideExhibitImage: true,
+  ...(prompt ? { prompt } : {}),
 });
 
 const diagramExhibit = (diagram, exhibitQuality = "illustrative") => ({
@@ -11,7 +12,7 @@ const diagramExhibit = (diagram, exhibitQuality = "illustrative") => ({
 });
 
 export const CCNA_RECREATED_CANDIDATE_EXHIBITS = new Map([
-  [24, diagramExhibit("candidate-vlan-roles-24", "partial")],
+  [24, diagramExhibit("candidate-vlan-roles-24", "source-backed")],
   [29, diagramExhibit("candidate-acl-sources-29", "partial")],
   [66, diagramExhibit("candidate-voice-data-66", "partial")],
   [82, diagramExhibit("candidate-cdp-target-82", "partial")],
@@ -21,7 +22,7 @@ R5 Gi0/1: disable neighbor discovery
 R5 Gi0/2: permit neighbor discovery
 R6 Gi0/2: IP address not present in the live question record`, "partial")],
   [198, diagramExhibit("candidate-etherchannel-198", "partial")],
-  [161, diagramExhibit("candidate-wifi-zones", "partial")],
+  [161, diagramExhibit("wireless-zone-overlap", "partial")],
   [260, diagramExhibit("candidate-wlc-260", "partial")],
   [281, diagramExhibit("candidate-wlc-281", "source-backed")],
   [285, diagramExhibit("candidate-wlc-285", "source-backed")],
@@ -71,13 +72,18 @@ R6 Gi0/2: IP address not present in the live question record`, "partial")],
     "color": "blue"
     "gasLight": true
   }
-}`)],
+}`, "source-backed", "In which structure does the word “warning” directly reside?")],
   [414, diagramExhibit("candidate-wlc-414", "source-backed")],
   [451, textExhibit(`! Illustrative one-object JSON; original content is unavailable.
 { "example": "one JSON object" }`, "illustrative")],
   [481, diagramExhibit("candidate-static-route", "illustrative")],
   [518, diagramExhibit("candidate-wlc-518", "source-backed")],
-  [570, diagramExhibit("candidate-ospf-destinations", "illustrative")],
+  [570, {
+    diagram: "ospf-destination-segments-888",
+    hideExhibitImage: true,
+    hideAfterExhibit: true,
+    exhibitQuality: "illustrative",
+  }],
   [593, diagramExhibit("candidate-wlc-593", "source-backed")],
   [557, textExhibit(`Router subnet addressing
 Router/interface | Connected subnet | Last usable address
@@ -92,7 +98,9 @@ GigabitEthernet1 is up, line protocol is up
   reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
   Keepalive set (10 sec)
-  Full Duplex, 1000Mbps, link type is auto, media type is RJ45`)],
+  Full Duplex, 1000Mbps, link type is auto, media type is RJ45`,
+  "source-backed",
+  "Which format matches the Modified EUI-64 IPv6 interface address for the network 2001:db8::/64?")],
   [666, diagramExhibit("candidate-wlc-666", "source-backed")],
   [703, diagramExhibit("candidate-pc2-file-server-policy-703", "illustrative")],
   [712, diagramExhibit("candidate-wlc-712", "source-backed")],
@@ -105,6 +113,20 @@ Default gateway:          configured correctly
 Preferred DNS server:     192.168.1.254
 Alternate DNS server:     196.1.38.254
 Expected DNS server:      196.1.38.132`, "partial")],
+  [840, textExhibit(`Site B routing-table evidence
+Destination 192.168.0.10 is in 192.168.0.0/24.
+The route table does not contain 192.168.0.0/24 or a usable default route.
+Traffic from Site B therefore cannot be delivered to Site A.`, "source-backed")],
+  [624, textExhibit(`R1 OSPF neighbor requirements
+Permit only R2 as a neighbor.
+Set R1 OSPF priority to 0 so R1 cannot participate in DR/BDR election.
+Set R1 router-id to 10.1.1.1.
+Permit OSPF (protocol 89) from 10.100.1.2 and block other neighbors.`, "partial")],
+  [870, textExhibit(`SW_1 and SW_12 trunk migration
+The two companies use separate network vendors and currently use different trunk encapsulations.
+Configure both switch sides for 802.1Q trunking and retain all VLANs across the merged link.
+SWx(config-if)# switchport mode trunk
+SWx(config-if)# switchport trunk encapsulation dot1q`, "source-backed")],
   [810, textExhibit(`{
   "Cisco Devices": [
     {
@@ -113,7 +135,9 @@ Expected DNS server:      196.1.38.132`, "partial")],
       "name": "Cisco 6800 Switch"
     }
   ]
-! The closing brace for the outer object is missing.`, "source-backed")],
+! The closing brace for the outer object is missing.`,
+  "source-backed",
+  "What is missing from this output for it to be executed?")],
   [827, diagramExhibit("candidate-wlc-827", "source-backed")],
   [832, diagramExhibit("candidate-router2-route-sources-832", "illustrative")],
   [836, diagramExhibit("candidate-host-c-gateway", "source-backed")],
@@ -127,24 +151,33 @@ Expected DNS server:      196.1.38.132`, "partial")],
   [955, diagramExhibit("candidate-wlc-955", "partial")],
   [992, diagramExhibit("candidate-wlc-992", "source-backed")],
   [1015, diagramExhibit("candidate-wlc-1015", "source-backed")],
-  [1096, textExhibit(`SW2#show running-config
+  [1096, {
+    ...textExhibit(`SW2
 vtp domain cisco
 vtp mode transparent
 vtp password test
-interface FastEthernet0/1
+interface fastethernet0/1
  description connection to SW1
  switchport mode trunk
- switchport trunk encapsulation dot1q`)],
-  [1197, textExhibit(`R1(config)#access-list 100 deny tcp host 172.16.1.33 any eq 22
-R1(config)#access-list 100 permit ip any any
-R1(config)#interface GigabitEthernet0/0
-R1(config-if)#ip access-group 100 in`)],
+ switchport trunk encapsulation
+ dot1q`),
+    diagram: "vtp-transparent-frame-flow",
+  }],
+  [1197, {
+    diagram: "r1-ssh-acl-pc1",
+    hideExhibitImage: true,
+    exhibitQuality: "source-backed",
+  }],
   [1254, textExhibit(`%PM-4-ERR_DISABLE: psecure-violation error detected on Fa0/1, putting Fa0/1 in err-disable state
 %PORT_SECURITY-2-PSECURE_VIOLATION: Security violation occurred, caused by MAC address 00AA.1AB9.D22F on port FastEthernet0/1
 %LINKPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/1, changed state to down
-%LINK-3-UPDOWN: Interface FastEthernet0/1, changed state to down`)],
+%LINK-3-UPDOWN: Interface FastEthernet0/1, changed state to down`,
+  "source-backed",
+  "Which port security violation mode is configured on interface Fa0/1?")],
   [1330, textExhibit(`SW1#show running-config
 ip arp inspection vlan 2-10
 interface FastEthernet0/1
- ip arp inspection trust`, "partial")],
+ ip arp inspection trust`,
+  "partial",
+  "If the network environment is operating normally, which type of device must be connected to interface FastEthernet 0/1?")],
 ]);

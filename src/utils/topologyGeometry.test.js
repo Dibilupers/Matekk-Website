@@ -8,7 +8,7 @@ import {
 	topologyPortLabelParts,
 	topologyPortLabelPositions,
 } from "./topologyGeometry.js";
-import { placeTopologyLabels } from "./topologyLabels.js";
+import { placeTopologyLabels, wrapTopologyNodeLabel } from "./topologyLabels.js";
 
 test("connects vertical links to the visible device boundaries", () => {
 	const link = topologyLinkGeometry(
@@ -128,4 +128,12 @@ test("places an unconfigured label next to the cable midpoint", () => {
 
 	assert.equal(label.x, 100);
 	assert.equal(label.y, 86);
+});
+
+test("wraps long network node names into ellipse-friendly lines", () => {
+	const lines = wrapTopologyNodeLabel("Neighbor advertisements");
+
+	assert.deepEqual(lines, ["Neighbor", "advertisements"]);
+	assert.ok(lines.every((line) => Array.from(line).length <= 16));
+	assert.deepEqual(wrapTopologyNodeLabel("192.168.10.0/24"), ["192.168.10.0/24"]);
 });

@@ -3,10 +3,11 @@ import { createPortal } from "react-dom";
 import { Link, useSearchParams } from "react-router-dom";
 import { CheckCircle2, ChevronDown, ChevronUp, Circle, Download, Eye, Lightbulb, Maximize2, Network, RotateCcw, X, XCircle, ZoomIn, ZoomOut } from "lucide-react";
 import { PRACTICE_LABS } from "./labs/labDefinitions";
-import { canReach, configCommands, createLabState, execute, fullIfName, promptFor } from "./labs/labEngine";
+import { buildPacketTracerGuide, canReach, createLabState, execute, promptFor } from "./labs/labEngine";
 import LabTopology from "./labs/LabTopology";
 import LabCommandWorksheet from "./labs/LabCommandWorksheet";
 import TopologySandbox from "./labs/TopologySandbox";
+import { readPracticeLabProgress, writePracticeLabProgress } from "./labs/practiceLabProgressStorage";
 import { topologyFitScale } from "../../../../utils/topologyFit";
 
 /* ==========================================================================
@@ -16,11 +17,9 @@ import { topologyFitScale } from "../../../../utils/topologyFit";
    ========================================================================== */
 
 const PACKET_TRACER_URL = "https://www.netacad.com/resources/lab-downloads";
-const LEVEL_STYLE = {
-	Beginner: "bg-green-100 text-green-800",
-	Intermediate: "bg-amber-100 text-amber-800",
-	Advanced: "bg-red-100 text-red-800",
-};
+const FEATURED_LAB_IDS = new Set([6, 7, 8, 9, 10, 11]);
+const FEATURED_LABS = PRACTICE_LABS.filter(({ id }) => FEATURED_LAB_IDS.has(id));
+const ADDITIONAL_LABS = PRACTICE_LABS.filter(({ id }) => !FEATURED_LAB_IDS.has(id));
 
 const welcome = (name) => [
 	`Cisco IOS Software, ISR Software (Practice Simulator) — ${name}`,
@@ -35,41 +34,11 @@ function freshConsoles(lab) {
 }
 
 // ---------- Packet Tracer section ----------
-function buildGuideText(lab) {
-	const lines = [
-		"MATEKK Cybercore Academy — CCNA Practice Lab " + lab.id + " (" + lab.level + ")",
-		lab.title,
-		"Packet Tracer build guide (Packet Tracer 8.2 or newer)",
-		"=".repeat(70),
-		"",
-		"DEVICES: " + lab.ptDevices,
-		"",
-		"CABLING",
-		"-------",
-		...lab.links.map((l) => {
-			const [ad, ai] = l.a.split(":");
-			const [bd, bi] = l.b.split(":");
-			return `  ${ad} ${fullIfName(ai)}  <->  ${bd} ${fullIfName(bi)}   (${l.net})`;
-		}),
-		"",
-		"PRE-CONFIGURATION (enter these on each device before you start)",
-		"---------------------------------------------------------------",
-	];
-	const start = createLabState(lab);
-	for (const [name, d] of Object.entries(lab.devices)) {
-		lines.push("", `[${name}]${d.kind === "pc" ? "  (Desktop > IP Configuration)" : ""}`);
-		lines.push(...configCommands(start.devices[name]).map((c) => "  " + c));
-	}
-	lines.push("", "YOUR TASKS", "----------", ...lab.tasks.map((t, i) => `${i + 1}. ${t.text}`));
-	lines.push("", "FINAL CHECK", "-----------", `  ${lab.finalCheck.label}`, "", "Tip: practise the same tasks online first in the MATEKK CCNA Practice Lab.");
-	return lines.join("\n");
-}
-
 function PacketTracerSection({ lab }) {
 	const pktFile = `/downloads/ccna-lab${lab.id}.pkt`;
 	const [showDownloadPicker, setShowDownloadPicker] = useState(false);
 	const [showSteps, setShowSteps] = useState(false);
-	const guide = useMemo(() => buildGuideText(lab), [lab]);
+	const guide = useMemo(() => buildPacketTracerGuide(lab), [lab]);
 	const guideUrl = useMemo(() => URL.createObjectURL(new Blob([guide], { type: "text/plain" })), [guide]);
 	useEffect(() => () => URL.revokeObjectURL(guideUrl), [guideUrl]);
 
@@ -272,26 +241,161 @@ function TopologyFullscreen({ lab, state, device, onClose }) {
 }
 
 // ---------- page ----------
-function LabWorkspace({ lab, selectLab, fromDashboard, labStartRef }) {
+const PRACTICE_LAB_PROGRESS_VERSION = 1;
 
-	const [state, setState] = useState(() => createLabState(lab));
-	const [consoles, setConsoles] = useState(() => freshConsoles(lab));
-	const [device, setDevice] = useState(lab.editable[0]);
-	const [achieved, setAchieved] = useState({});
-	const [input, setInput] = useState("");
+function isRecord(value) {
+	return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+function isValidLabStateSnapshot(state, lab) {
+	return isRecord(state)
+		&& isRecord(state.devices)
+		&& Object.keys(state.devices).length === Object.keys(lab.devices).length
+		&& Object.entries(lab.devices).every(([name, device]) => {
+			const savedDevice = state.devices[name];
+			return isRecord(savedDevice)
+				&& savedDevice.kind === device.kind
+				&& isRecord(savedDevice.interfaces)
+				&& Object.keys(device.interfaces).every((interfaceName) => isRecord(savedDevice.interfaces[interfaceName]));
+		})
+		&& isRecord(state.consoles)
+		&& isRecord(state.initial);
+}
+
+function isBooleanRecord(value) {
+	return isRecord(value) && Object.values(value).every((entry) => typeof entry === "boolean");
+}
+
+function isValidLabProgress(progress, lab) {
+	return isRecord(progress)
+		&& progress.version === PRACTICE_LAB_PROGRESS_VERSION
+		&& progress.labId === lab.id
+		&& isValidLabStateSnapshot(progress.terminalState, lab)
+		&& isValidLabStateSnapshot(progress.worksheetState, lab)
+		&& isRecord(progress.consoles)
+		&& lab.editable.every((name) => {
+			const consoleState = progress.consoles[name];
+			return isRecord(consoleState)
+				&& Array.isArray(consoleState.lines)
+				&& consoleState.lines.every((line) => typeof line === "string")
+				&& Array.isArray(consoleState.history)
+				&& consoleState.history.every((line) => typeof line === "string");
+		})
+		&& lab.editable.includes(progress.device)
+		&& typeof progress.input === "string"
+		&& isBooleanRecord(progress.terminalAchieved)
+		&& isBooleanRecord(progress.worksheetAchieved)
+		&& isRecord(progress.worksheetAnswers)
+		&& Object.values(progress.worksheetAnswers).every((answer) => typeof answer === "string")
+		&& typeof progress.worksheetSubmitted === "boolean"
+		&& Array.isArray(progress.worksheetFailedSlots)
+		&& progress.worksheetFailedSlots.every(Number.isInteger)
+		&& ["worksheet", "terminal"].includes(progress.labView)
+		&& typeof progress.showHints === "boolean"
+		&& typeof progress.showSolution === "boolean"
+		&& typeof progress.examMode === "boolean"
+		&& typeof progress.submitted === "boolean";
+}
+
+function LabWorkspace({ lab, selectLab, fromDashboard, labStartRef }) {
+	const storageKey = `matekk-ccna-practice-lab:session:v${PRACTICE_LAB_PROGRESS_VERSION}:${lab.id}`;
+	const [restoreResult] = useState(() => {
+		const result = readPracticeLabProgress(storageKey, (progress) => isValidLabProgress(progress, lab));
+		if (result.error) console.error(`Unable to restore saved CCNA practice lab ${lab.id} progress.`, result.error);
+		return result;
+	});
+	const restored = restoreResult.value;
+	const [labView, setLabView] = useState(() => lab.worksheet ? restored?.labView ?? "worksheet" : "terminal");
+	const [terminalState, setTerminalState] = useState(() => restored?.terminalState ?? createLabState(lab));
+	const [worksheetState, setWorksheetState] = useState(() => restored?.worksheetState ?? createLabState(lab));
+	const [consoles, setConsoles] = useState(() => restored?.consoles ?? freshConsoles(lab));
+	const [device, setDevice] = useState(() => restored?.device ?? lab.editable[0]);
+	const [terminalAchieved, setTerminalAchieved] = useState(() => restored?.terminalAchieved ?? {});
+	const [worksheetAchieved, setWorksheetAchieved] = useState(() => restored?.worksheetAchieved ?? {});
+	const [input, setInput] = useState(() => restored?.input ?? "");
+	const [worksheetAnswers, setWorksheetAnswers] = useState(() => restored?.worksheetAnswers ?? {});
+	const [worksheetSubmitted, setWorksheetSubmitted] = useState(() => restored?.worksheetSubmitted ?? false);
+	const [worksheetFailedSlots, setWorksheetFailedSlots] = useState(() => restored?.worksheetFailedSlots ?? []);
+	const [showHints, setShowHints] = useState(() => restored?.showHints ?? false);
+	const [showSolution, setShowSolution] = useState(() => restored?.showSolution ?? false);
+	const [examMode, setExamMode] = useState(() => restored?.examMode ?? false);
+	const [submitted, setSubmitted] = useState(() => restored?.submitted ?? false);
+	const [persistenceMessage, setPersistenceMessage] = useState(() => (
+		restoreResult.error
+			? "Saved work could not be restored; a fresh workspace was opened."
+			: restored
+				? "Restored saved work from this device."
+				: "Your practice work saves automatically on this device."
+	));
+	const saveErrorLogged = useRef(false);
+	const isWorksheetView = Boolean(lab.worksheet && labView === "worksheet");
+	const state = isWorksheetView ? worksheetState : terminalState;
+	const setState = isWorksheetView ? setWorksheetState : setTerminalState;
+	const achieved = isWorksheetView ? worksheetAchieved : terminalAchieved;
+	const setAchieved = isWorksheetView ? setWorksheetAchieved : setTerminalAchieved;
 	const [histPos, setHistPos] = useState(-1);
-	const [showHints, setShowHints] = useState(false);
-	const [showSolution, setShowSolution] = useState(false);
-	const [examMode, setExamMode] = useState(false);
-	const [labView, setLabView] = useState("terminal");
 	const [topologyOpen, setTopologyOpen] = useState(false);
 	const [showTopologySandbox, setShowTopologySandbox] = useState(false);
 	const [showLabPicker, setShowLabPicker] = useState(false);
 	const closeTopology = useCallback(() => setTopologyOpen(false), []);
-	const [submitted, setSubmitted] = useState(false);
 	const termRef = useRef(null);
 	const inputRef = useRef(null);
 
+	const savedProgress = useMemo(() => ({
+		version: PRACTICE_LAB_PROGRESS_VERSION,
+		labId: lab.id,
+		terminalState,
+		worksheetState,
+		consoles,
+		device,
+		terminalAchieved,
+		worksheetAchieved,
+		input,
+		worksheetAnswers,
+		worksheetSubmitted,
+		worksheetFailedSlots,
+		labView,
+		showHints,
+		showSolution,
+		examMode,
+		submitted,
+	}), [
+		lab.id,
+		terminalState,
+		worksheetState,
+		consoles,
+		device,
+		terminalAchieved,
+		worksheetAchieved,
+		input,
+		worksheetAnswers,
+		worksheetSubmitted,
+		worksheetFailedSlots,
+		labView,
+		showHints,
+		showSolution,
+		examMode,
+		submitted,
+	]);
+
+	useEffect(() => {
+		let nextMessage;
+		try {
+			writePracticeLabProgress(storageKey, savedProgress);
+			saveErrorLogged.current = false;
+			nextMessage = restoreResult.error
+				? "Current work is saved. Previous saved work could not be restored."
+				: "Saved on this device.";
+		} catch (error) {
+			if (!saveErrorLogged.current) {
+				console.error(`Unable to save CCNA practice lab ${lab.id} progress.`, error);
+			}
+			saveErrorLogged.current = true;
+			nextMessage = "Could not save this lab on your device. Your latest work may be lost if you leave.";
+		}
+		const statusTimer = window.setTimeout(() => setPersistenceMessage(nextMessage), 0);
+		return () => window.clearTimeout(statusTimer);
+	}, [storageKey, savedProgress, lab.id, restoreResult.error]);
 
 	const liveStatus = useMemo(() => {
 		const s = {};
@@ -311,6 +415,7 @@ function LabWorkspace({ lab, selectLab, fromDashboard, labStartRef }) {
 	const finalOk = lab.finalCheck.check
 		? lab.finalCheck.check(state, lab)
 		: canReach(lab, state, lab.finalCheck.from, lab.finalCheck.to);
+	const consoleTitle = lab.devices[device]?.kind === "switch" ? "Switch Console" : "Router Console";
 	const con = consoles[device];
 
 	useEffect(() => {
@@ -354,14 +459,55 @@ function LabWorkspace({ lab, selectLab, fromDashboard, labStartRef }) {
 	}
 
 	function reset() {
-		setState(createLabState(lab));
+		if (isWorksheetView) {
+			setWorksheetState(createLabState(lab));
+			setWorksheetAchieved({});
+			setWorksheetAnswers({});
+			setWorksheetSubmitted(false);
+			setWorksheetFailedSlots([]);
+			return;
+		}
+		setTerminalState(createLabState(lab));
 		setConsoles(freshConsoles(lab));
 		setDevice(lab.editable[0]);
-		setAchieved({});
+		setTerminalAchieved({});
 		setInput("");
 		setShowSolution(false);
 		setSubmitted(false);
+		setHistPos(-1);
 		inputRef.current?.focus();
+	}
+
+	function rememberWorksheetAchievements(nextState) {
+		const newlyAchieved = lab.tasks.filter(
+			(task) => task.sticky && !worksheetAchieved[task.id] && task.check(nextState, lab),
+		);
+		if (newlyAchieved.length) {
+			setWorksheetAchieved((current) => ({
+				...current,
+				...Object.fromEntries(newlyAchieved.map((task) => [task.id, true])),
+			}));
+		}
+	}
+
+	function renderLabCard(l) {
+		const selected = l.id === lab.id;
+		return (
+			<button
+				key={l.id}
+				type="button"
+				onClick={() => {
+					setShowLabPicker(false);
+					selectLab(l.id);
+				}}
+				aria-label={`Open Lab ${l.id}: ${l.title}`}
+				aria-pressed={selected}
+				className={`group h-full rounded-2xl border-2 p-4 text-left transition duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1775EE] focus-visible:ring-offset-2 ${selected ? "border-[#1775EE] bg-white shadow-md" : "border-transparent bg-[#EBF5FD] hover:border-[#c5e1f4] hover:bg-white hover:shadow-sm"}`}
+			>
+				<span className="block font-bold text-[#17233d] group-hover:text-[#005b6b]">{l.title}</span>
+				<span className="mt-2 block text-sm leading-5 text-gray-600">{l.summary}</span>
+			</button>
+		);
 	}
 
 	return (
@@ -387,75 +533,52 @@ function LabWorkspace({ lab, selectLab, fromDashboard, labStartRef }) {
 						<h4 className="mt-1 text-lg font-bold text-[#17233d]">Choose a lab</h4>
 						<p className="mt-1 text-sm text-[#71819b]">Currently open: {lab.title}</p>
 					</div>
-					<button
-						type="button"
-						onClick={() => setShowLabPicker((visible) => !visible)}
-						aria-expanded={showLabPicker}
-						aria-controls="ccna-practice-lab-picker"
-						className="inline-flex items-center gap-2 rounded-full border border-[#1775EE] px-4 py-2 text-sm font-semibold text-[#1775EE] transition hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1775EE] focus-visible:ring-offset-2"
-					>
-						{showLabPicker ? "Fewer labs" : `More labs (${PRACTICE_LABS.length})`}
-						{showLabPicker ? <ChevronUp size={16} aria-hidden="true" /> : <ChevronDown size={16} aria-hidden="true" />}
-					</button>
 				</div>
-				{showLabPicker && (
-					<div id="ccna-practice-lab-picker" className="grid gap-3 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-						{PRACTICE_LABS.map((l) => {
-							const selected = l.id === lab.id;
-							return (
-								<button
-									key={l.id}
-									type="button"
-									onClick={() => {
-										setShowLabPicker(false);
-										selectLab(l.id);
-									}}
-									aria-label={`Open Lab ${l.id}: ${l.title}`}
-									aria-pressed={selected}
-									className={`group h-full rounded-2xl border-2 p-4 text-left transition duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1775EE] focus-visible:ring-offset-2 ${selected ? "border-[#1775EE] bg-white shadow-md" : "border-transparent bg-[#EBF5FD] hover:border-[#c5e1f4] hover:bg-white hover:shadow-sm"}`}
-								>
-									<span className="block font-bold text-[#17233d] group-hover:text-[#005b6b]">{l.title}</span>
-									{selected && (
-										<>
-											<span className="mt-3 flex flex-wrap items-center gap-2">
-												<span className={`inline-block rounded-full px-2.5 py-1 text-xs font-bold ${LEVEL_STYLE[l.level]}`}>
-													Lab {l.id} · {l.level}
-												</span>
-												{l.id === 5 && (
-													<span className="inline-block rounded-full bg-violet-100 px-2.5 py-1 text-xs font-bold text-violet-800">
-														Bonus lab
-													</span>
-												)}
-											</span>
-											<span className="mt-2 block text-sm leading-5 text-gray-600">{l.summary}</span>
-										</>
-									)}
-								</button>
-							);
-						})}
-					</div>
+				<div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+					{FEATURED_LABS.map(renderLabCard)}
+				</div>
+				{ADDITIONAL_LABS.length > 0 && (
+					<>
+						<button
+							type="button"
+							onClick={() => setShowLabPicker((visible) => !visible)}
+							aria-expanded={showLabPicker}
+							aria-controls="ccna-additional-labs"
+							className="inline-flex items-center gap-2 self-center rounded-full border border-[#1775EE] px-4 py-2 text-sm font-semibold text-[#1775EE] transition hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1775EE] focus-visible:ring-offset-2"
+						>
+							{showLabPicker ? "Fewer labs" : `More labs (${ADDITIONAL_LABS.length})`}
+							{showLabPicker ? <ChevronUp size={16} aria-hidden="true" /> : <ChevronDown size={16} aria-hidden="true" />}
+						</button>
+						<div id="ccna-additional-labs" hidden={!showLabPicker} className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+							{ADDITIONAL_LABS.map(renderLabCard)}
+						</div>
+					</>
 				)}
 				{lab.worksheet && (
-					<div className="flex flex-wrap items-center gap-2" role="group" aria-label="Practice lab view">
-						<span className="text-sm font-semibold text-[#334155]">Lab format:</span>
-						<button
-							type="button"
-							aria-pressed={labView === "terminal"}
-							onClick={() => setLabView("terminal")}
-							className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${labView === "terminal" ? "border-[#1775EE] bg-[#1775EE] text-white" : "border-[#1775EE] bg-white text-[#1775EE] hover:bg-blue-50"}`}
-						>
-							Terminal (default)
-						</button>
-						<button
-							type="button"
-							aria-pressed={labView === "worksheet"}
-							onClick={() => setLabView("worksheet")}
-							className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${labView === "worksheet" ? "border-[#1775EE] bg-[#1775EE] text-white" : "border-[#1775EE] bg-white text-[#1775EE] hover:bg-blue-50"}`}
-						>
-							Current worksheet
-						</button>
-					</div>
+					<>
+						<div className="flex flex-wrap items-center gap-2" role="group" aria-label="Practice lab view">
+							<span className="text-sm font-semibold text-[#334155]">Lab format:</span>
+							<button
+								type="button"
+								aria-pressed={labView === "worksheet"}
+								onClick={() => setLabView("worksheet")}
+								className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${labView === "worksheet" ? "border-[#1775EE] bg-[#1775EE] text-white" : "border-[#1775EE] bg-white text-[#1775EE] hover:bg-blue-50"}`}
+							>
+								Current worksheet (default)
+							</button>
+							<button
+								type="button"
+								aria-pressed={labView === "terminal"}
+								onClick={() => setLabView("terminal")}
+								className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${labView === "terminal" ? "border-[#1775EE] bg-[#1775EE] text-white" : "border-[#1775EE] bg-white text-[#1775EE] hover:bg-blue-50"}`}
+							>
+								Terminal
+							</button>
+						</div>
+						<p className="text-xs text-gray-600">Worksheet and Terminal keep separate configurations. Switching views preserves both.</p>
+					</>
 				)}
+				<p role="status" aria-live="polite" className="text-xs text-gray-600">{persistenceMessage}</p>
 				<div>
 					<button
 						type="button"
@@ -492,9 +615,16 @@ function LabWorkspace({ lab, selectLab, fromDashboard, labStartRef }) {
 					<>
 						<LabCommandWorksheet
 							lab={lab}
-							state={state}
-							setState={setState}
+							state={worksheetState}
+							setState={setWorksheetState}
 							activeDevice={device}
+							answers={worksheetAnswers}
+							setAnswers={setWorksheetAnswers}
+							submitted={worksheetSubmitted}
+							setSubmitted={setWorksheetSubmitted}
+							failedSlots={worksheetFailedSlots}
+							setFailedSlots={setWorksheetFailedSlots}
+							onStateSubmitted={rememberWorksheetAchievements}
 							onReset={reset}
 							onExpand={() => setTopologyOpen(true)}
 						/>
@@ -504,7 +634,6 @@ function LabWorkspace({ lab, selectLab, fromDashboard, labStartRef }) {
 					<div className="flex items-center justify-between mb-2">
 						<h5 className="text-[#1775EE]">Topology</h5>
 						<div className="flex items-center gap-2">
-							<span className={`text-xs font-bold px-2.5 py-1 rounded-full ${LEVEL_STYLE[lab.level]}`}>{lab.level}</span>
 							<button
 								type="button"
 								onClick={() => setTopologyOpen(true)}
@@ -523,7 +652,7 @@ function LabWorkspace({ lab, selectLab, fromDashboard, labStartRef }) {
 						<LabTopology lab={lab} state={state} activeDevice={device} />
 					</button>
 					{topologyOpen && <TopologyFullscreen lab={lab} state={state} device={device} onClose={closeTopology} />}
-					<p className="text-xs text-gray-600 mt-1">Green links are up; red dashed links are down. The router you are configuring is circled.</p>
+					<p className="text-xs text-gray-600 mt-1">Green links are up; red dashed links are down. The device you are configuring is circled.</p>
 				</div>}
 			</div>
 
@@ -601,7 +730,7 @@ function LabWorkspace({ lab, selectLab, fromDashboard, labStartRef }) {
 								<Eye className="w-4 h-4" /> {showSolution ? "Hide solution" : "Show solution"}
 							</button>
 							<button type="button" onClick={reset} className="inline-flex items-center gap-1.5 rounded-full border border-gray-400 text-gray-700 px-3 py-1.5 text-sm hover:bg-gray-700 hover:text-white transition">
-								<RotateCcw className="w-4 h-4" /> Reset lab
+								<RotateCcw className="w-4 h-4" /> Reset terminal
 							</button>
 						</div>
 						{showSolution && (
@@ -621,9 +750,9 @@ function LabWorkspace({ lab, selectLab, fromDashboard, labStartRef }) {
 				<section className="flex flex-col gap-2 min-w-0 lg:h-full">
 					<div className="flex flex-wrap items-center justify-between gap-2">
 						<div className="flex flex-wrap items-center gap-2">
-							<h5>Router Console</h5>
+							<h5>{consoleTitle}</h5>
 							{lab.editable.length > 1 && (
-								<div className="flex gap-1.5" role="tablist" aria-label="Choose router">
+								<div className="flex gap-1.5" role="tablist" aria-label="Choose device">
 									{lab.editable.map((n) => (
 										<button
 											key={n}
@@ -661,7 +790,7 @@ function LabWorkspace({ lab, selectLab, fromDashboard, labStartRef }) {
 								value={input}
 								onChange={(e) => setInput(e.target.value)}
 								onKeyDown={onKeyDown}
-								aria-label="Router command"
+								aria-label={`${consoleTitle.replace(" Console", "")} command`}
 								autoComplete="off"
 								autoCapitalize="off"
 								spellCheck={false}
@@ -701,7 +830,10 @@ export default function CCNAPracticeLab({ fromDashboard = false }) {
 	const [params, setParams] = useSearchParams();
 	const scrollToSelectedLabRef = useRef(false);
 	const labStartRef = useRef(null);
-	const labIndex = Math.min(PRACTICE_LABS.length - 1, Math.max(0, Number(params.get("lab") || 1) - 1));
+	const requestedLab = Number(params.get("lab") || 1);
+	const labIndex = Number.isInteger(requestedLab)
+		? Math.min(PRACTICE_LABS.length - 1, Math.max(0, requestedLab - 1))
+		: 0;
 	const lab = PRACTICE_LABS[labIndex];
 
 	useEffect(() => {

@@ -11,7 +11,10 @@ import { loadCcnaAllQuestionsBank } from "../../../../../utils/ccnaQuestionBankA
 import { loadCachedCcnaAllQuestionsBank } from "../../../../../utils/ccnaOfflineQuestionBank";
 import { QuestionExhibits, QuestionInput, QuestionPrompt, QuestionReview } from "./ccnaExamQuestionViews";
 import { applyNativeExhibit } from "./ccnaCompositeSetQuestions";
-import { getOfflineLegacyQuestionBank } from "./ccnaOfflineExamQuestions";
+import {
+	getOfflineLegacyQuestionBank,
+	getOfflineReferExhibitQuestionBank,
+} from "./ccnaOfflineExamQuestions";
 
 function isValidSavedAnswer(question, answer) {
 	if (["match", "drag_drop", "click_boxes", "image"].includes(question.type)) {
@@ -39,11 +42,14 @@ function shuffleQuestions(items) {
 	return shuffled;
 }
 
-export default function CCNAAllQuestionsExam() {
+export default function CCNAAllQuestionsExam({ exhibitsOnly = false }) {
 	const { profile, isOnline } = useAuth();
-	const storageKey = profile?.userId === null || profile?.userId === undefined
+	const baseStorageKey = profile?.userId === null || profile?.userId === undefined
 		? null
 		: `matekk-ccna-all-questions:${encodeURIComponent(String(profile.userId))}`;
+	const storageKey = baseStorageKey
+		? `${baseStorageKey}${exhibitsOnly ? ":offline-exhibits" : ""}`
+		: null;
 	const [loadState, setLoadState] = useState({ status: "loading", error: null });
 	const [questionBankSource, setQuestionBankSource] = useState(null);
 	const [loadAttempt, setLoadAttempt] = useState(0);
@@ -72,6 +78,7 @@ export default function CCNAAllQuestionsExam() {
 	const resultSummaryRef = useRef(null);
 	const previouslySubmittedRef = useRef(false);
 	const question = questions[currentIndex];
+	const canSkipQuestion = exhibitsOnly && !isOnline;
 	const answeredCount = useMemo(
 		() => questions.reduce((count, item, index) => count + Number(isQuestionAnswered(item, answers[index])), 0),
 		[answers, questions],
@@ -106,7 +113,13 @@ export default function CCNAAllQuestionsExam() {
 	useEffect(() => {
 		let isActive = true;
 		setLoadState({ status: "loading", error: null });
-		const bankRequest = isOnline
+		const bankRequest = exhibitsOnly
+			? Promise.resolve({
+				questions: getOfflineReferExhibitQuestionBank(),
+				skippedCount: 0,
+				source: "bundled",
+			})
+			: isOnline
 			? loadCcnaAllQuestionsBank().then((bank) => ({ ...bank, source: "online" }))
 			: loadCachedCcnaAllQuestionsBank().then((questions) => questions
 				? { questions, skippedCount: 0, source: "cached-online" }
@@ -126,7 +139,7 @@ export default function CCNAAllQuestionsExam() {
 				}
 				if (!isActive) return;
 
-				let orderedQuestions = shuffleQuestions(bankQuestions);
+				let orderedQuestions = exhibitsOnly ? bankQuestions : shuffleQuestions(bankQuestions);
 				if (storageKey) {
 					try {
 						const saved = window.localStorage.getItem(storageKey);
@@ -139,7 +152,8 @@ export default function CCNAAllQuestionsExam() {
 							const matchesBank = parsed?.version === 1 &&
 								savedQuestionIds.length === bankQuestions.length &&
 								new Set(savedQuestionIds).size === bankQuestions.length &&
-								savedQuestionIds.every((id) => questionById.has(id));
+								savedQuestionIds.every((id) => questionById.has(id)) &&
+								(!exhibitsOnly || savedQuestionIds.every((id, index) => id === bankQuestions[index].bankId));
 							if (matchesBank) {
 								orderedQuestions = savedQuestionIds.map((id) => questionById.get(id));
 								const restoredAnswers = {};
@@ -200,7 +214,7 @@ export default function CCNAAllQuestionsExam() {
 		return () => {
 			isActive = false;
 		};
-	}, [isOnline, loadAttempt, storageKey]);
+	}, [exhibitsOnly, isOnline, loadAttempt, storageKey]);
 
 	useEffect(() => {
 		if (loadState.status !== "ready" || !storageKey || questions.length === 0) return;
@@ -239,10 +253,12 @@ export default function CCNAAllQuestionsExam() {
 		return () => window.cancelAnimationFrame(animationFrame);
 	}, [currentIndex, isSubmitted, question]);
 
-	function goToQuestion(index) {
+	function goToQuestion(index, { skipUnanswered = false } = {}) {
 		if (!Number.isInteger(index) || index < 0 || index >= questions.length) return;
 		if (!isSubmitted) {
-			if (index > currentIndex && !isQuestionAnswered(question, answers[currentIndex])) return;
+			if (index > currentIndex &&
+				!isQuestionAnswered(question, answers[currentIndex]) &&
+				!(skipUnanswered && canSkipQuestion)) return;
 			if (index > furthestOpenedIndex + 1) return;
 			setFurthestOpenedIndex((furthest) => Math.max(furthest, index));
 		}
@@ -287,7 +303,7 @@ export default function CCNAAllQuestionsExam() {
 	}
 
 	function restartExam() {
-		setQuestions((currentQuestions) => shuffleQuestions(currentQuestions));
+		if (!exhibitsOnly) setQuestions((currentQuestions) => shuffleQuestions(currentQuestions));
 		setAnswers({});
 		setFlaggedQuestions({});
 		setCurrentIndex(0);
@@ -325,6 +341,22 @@ export default function CCNAAllQuestionsExam() {
 		);
 	}
 
+	if (exhibitsOnly && isOnline) {
+		return (
+			<main className="flex min-h-screen items-center justify-center bg-[#f5f9f9] px-4 py-16 text-[#17233d] sm:px-8">
+				<section className="w-full max-w-xl rounded-2xl border border-[#d6e5e7] bg-white p-8 text-center shadow-sm">
+					<h1 className="text-2xl font-bold">Offline Refer to Exhibit exam</h1>
+					<p className="mt-3 text-sm leading-6 text-[#64748b]">
+						This question set is available only while the app is offline.
+					</p>
+					<Link to="/modules/programs/ccna" className="mt-6 inline-flex rounded-full bg-[#005b6b] px-6 py-3 font-semibold text-white transition hover:bg-[#004653]">
+						Return to CCNA
+					</Link>
+				</section>
+			</main>
+		);
+	}
+
 	if (!question) return null;
 
 	return (
@@ -342,7 +374,7 @@ export default function CCNAAllQuestionsExam() {
 						<div className="hidden min-w-0 border-l border-[#cbd5e1] pl-4 sm:block">
 							<p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#70809a]">CCNA composite exam</p>
 							<p className="mt-1 truncate text-sm font-bold text-[#17233d]">
-								All Questions Exam · {questionBankSource === "cached-online"
+								{exhibitsOnly ? "Refer to Exhibit Exam" : "All Questions Exam"} · {questionBankSource === "cached-online"
 									? "Saved Online Question Bank"
 									: questionBankSource === "bundled"
 										? "Built-in Offline Question Bank"
@@ -381,7 +413,9 @@ export default function CCNAAllQuestionsExam() {
 					<>
 						<section aria-label="Exam progress" className="mb-5 rounded-2xl border border-[#d6e5e7] bg-white p-5 shadow-sm sm:mb-6 sm:p-8">
 							<div className="flex flex-wrap items-center justify-between gap-3">
-								<p className="rounded-xl bg-[#e1f5ef] px-4 py-2 text-sm font-semibold text-[#075b4a]">All Questions Exam</p>
+								<p className="rounded-xl bg-[#e1f5ef] px-4 py-2 text-sm font-semibold text-[#075b4a]">
+									{exhibitsOnly ? "Refer to Exhibit Exam" : "All Questions Exam"}
+								</p>
 								<div className="shrink-0 rounded-full border border-[#c9dfe2] bg-white px-3 py-2 text-xs font-semibold text-[#005b6b] sm:px-4 sm:text-sm">
 									No time limit
 								</div>
@@ -455,10 +489,10 @@ export default function CCNAAllQuestionsExam() {
 									prompt={question.prompt}
 									offline={!isOnline}
 									compactExhibit
-									hasSeparateExhibit={Boolean(question.afterExhibit || question.exhibit || question.exhibitImage || question.exhibitDiagram)}
+									hasSeparateExhibit={Boolean(question.afterExhibit || question.exhibit || question.exhibitImage || question.exhibitDiagram || question.offlineSourceExhibitImages?.length)}
 								/>
 							)}
-							<QuestionExhibits question={question} className="mb-6" compact />
+							<QuestionExhibits question={question} className="mb-6" compact includeOfflineSourceImages={exhibitsOnly} />
 							<QuestionInput
 								key={currentIndex}
 								question={question}
@@ -466,6 +500,15 @@ export default function CCNAAllQuestionsExam() {
 								onChange={(value) => setAnswers((previous) => ({ ...previous, [currentIndex]: value }))}
 							/>
 							<div className="mt-7 flex flex-wrap items-center justify-end gap-3">
+								{canSkipQuestion && currentIndex < questions.length - 1 && (
+									<button
+										type="button"
+										onClick={() => goToQuestion(currentIndex + 1, { skipUnanswered: true })}
+										className="inline-flex items-center gap-2 rounded-full border border-[#c9dfe2] bg-white px-6 py-3 font-semibold text-[#005b6b] transition hover:bg-[#e8f3f4]"
+									>
+										Skip question <ChevronRight size={18} />
+									</button>
+								)}
 								{currentIndex === questions.length - 1 ? (
 									<button type="button" onClick={() => setIsSubmitConfirmationOpen(true)} className="rounded-full bg-[#005b6b] px-6 py-3 font-semibold text-white transition hover:bg-[#004653]">
 										Finish and review
@@ -606,10 +649,10 @@ export default function CCNAAllQuestionsExam() {
 									prompt={question.prompt}
 									offline={!isOnline}
 									compactExhibit
-									hasSeparateExhibit={Boolean(question.afterExhibit || question.exhibit || question.exhibitImage || question.exhibitDiagram)}
+									hasSeparateExhibit={Boolean(question.afterExhibit || question.exhibit || question.exhibitImage || question.exhibitDiagram || question.offlineSourceExhibitImages?.length)}
 								/>
 							)}
-							<QuestionExhibits question={question} className="mb-6" compact />
+							<QuestionExhibits question={question} className="mb-6" compact includeOfflineSourceImages={exhibitsOnly} />
 							<QuestionReview question={question} value={answers[currentIndex]} />
 							{question.explanation && <p className="mt-5 rounded-xl bg-[#f5f9f9] px-4 py-3 text-sm leading-6 text-[#596983]"><strong className="text-[#005b6b]">Explanation: </strong>{question.explanation}</p>}
 							<div className={`mt-7 flex flex-wrap gap-3 ${isOnline ? "justify-between" : "justify-end"}`}>
