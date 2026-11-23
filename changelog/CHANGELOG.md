@@ -6,6 +6,17 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `beff369` - Remove the unsupported exhibit lead-ins from self-contained CCNA
+  questions 702 and 809 in the database-backed bank, and restore question
+  1148's recreated terminal in the legacy/offline bank.
+
+Validation before push: focused CCNA suites, targeted ESLint,
+`npm run build`, and `git diff --check` passed.
+
+## 2026-11-23 - main
+
+Commits included in this push:
+
 - Pending commit - Added a React render error boundary and replaced the empty
   unknown-route page with a responsive 404 screen, preventing routing and
   hydration failures from leaving users on a blank view.
