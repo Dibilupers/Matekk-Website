@@ -1,233 +1,401 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, ArrowRight, CheckCircle2, FlaskConical, RotateCcw, XCircle } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle2, ChevronDown, Circle, Eye, FlaskConical, Lightbulb, RotateCcw, Terminal } from "lucide-react";
+import { COMPTIA_PRACTICE_LABS } from "./comptiaPracticeLabDefinitions";
 
-const PRACTICE_LABS = {
-	"comptia-security-plus": {
-		name: "Security+",
-		certification: "SY0-701",
-		dashboardPath: "/modules/programs/comptia-security-plus",
-		scenarioTitle: "Respond to a suspicious account sign-in",
-		scenarioDescription: "Review a fictional identity alert and make defensive decisions to secure an employee account.",
-		steps: [
-			{
-				id: "investigate",
-				title: "Triage the alert",
-				context: "The identity dashboard reports a successful sign-in from an unfamiliar region, followed by an MFA push the employee did not approve.",
-				prompt: "What is the best first step to validate the alert?",
-				options: [
-					{ id: "preserve", label: "Preserve the sign-in and MFA event records, then contact the employee through a trusted channel." },
-					{ id: "delete", label: "Delete the alert so the account owner is not interrupted." },
-					{ id: "broadcast", label: "Send the employee's sign-in details to the whole organization." },
-				],
-				answer: "preserve",
-				explanation: "Preserved logs support investigation, and a trusted channel helps verify whether the activity is legitimate without exposing account details.",
-			},
-			{
-				id: "contain",
-				title: "Contain possible account misuse",
-				context: "The employee confirms the sign-in was not theirs. The identity provider shows an active session.",
-				prompt: "Which containment action most directly limits continued access?",
-				options: [
-					{ id: "revoke", label: "Temporarily disable sign-in and revoke active sessions while the account is investigated." },
-					{ id: "wait", label: "Wait for the session to expire on its own." },
-					{ id: "share", label: "Ask the employee to share their password so you can test it." },
-				],
-				answer: "revoke",
-				explanation: "Disabling sign-in and revoking sessions contain access while preserving time to investigate and recover the account safely.",
-			},
-			{
-				id: "improve",
-				title: "Strengthen account protection",
-				context: "The employee used a password and push-based MFA. Your organization supports phishing-resistant authenticators.",
-				prompt: "Which improvement best reduces the risk of repeated MFA-prompt abuse?",
-				options: [
-					{ id: "fido", label: "Enroll a phishing-resistant FIDO2 security key and review conditional-access rules." },
-					{ id: "reuse", label: "Reuse the current password on fewer work sites." },
-					{ id: "disable-mfa", label: "Turn off MFA to prevent future push notifications." },
-				],
-				answer: "fido",
-				explanation: "Phishing-resistant authentication helps prevent credential and push-fatigue abuse; conditional access adds context-based controls.",
-			},
-		],
-	},
+const PROGRAM_DETAILS = {
 	"comptia-network-plus": {
 		name: "Network+",
-		certification: "N10-009",
-		dashboardPath: "/modules/programs/comptia-network-plus",
-		scenarioTitle: "Restore a workstation's network access",
-		scenarioDescription: "Work through a fictional office-network outage using evidence and a structured troubleshooting approach.",
-		steps: [
-			{
-				id: "identify",
-				title: "Identify the symptom",
-				context: "A workstation has link lights, but its address is 169.254.18.42 and it cannot reach internal services.",
-				prompt: "What does this address most strongly suggest?",
-				options: [
-					{ id: "dhcp", label: "The workstation did not receive a DHCP lease and assigned itself a link-local IPv4 address." },
-					{ id: "dns", label: "DNS is resolving every internal hostname to a public address." },
-					{ id: "gateway", label: "The default gateway is responding with an IPv6 address." },
-				],
-				answer: "dhcp",
-				explanation: "An IPv4 address in 169.254.0.0/16 is link-local and commonly indicates that DHCP configuration was not obtained.",
-			},
-			{
-				id: "inspect",
-				title: "Check the switch port",
-				context: "The DHCP service is healthy for other users. The workstation was recently moved to a different desk.",
-				prompt: "Which check best tests whether the move changed the workstation's network segment?",
-				options: [
-					{ id: "vlan", label: "Inspect the switch port's access VLAN and compare it with the workstation's intended VLAN." },
-					{ id: "speed", label: "Increase the workstation's link speed without checking the switch." },
-					{ id: "dns-flush", label: "Clear the workstation's DNS cache before checking its IP configuration." },
-				],
-				answer: "vlan",
-				explanation: "A port assigned to the wrong VLAN can prevent the client from reaching its expected DHCP scope. Check the segment before changing client settings.",
-			},
-			{
-				id: "verify",
-				title: "Verify the fix",
-				context: "The port was found in the guest VLAN instead of the employee VLAN. It has now been corrected according to the network plan.",
-				prompt: "What is the best next step to verify service restoration?",
-				options: [
-					{ id: "renew", label: "Renew the DHCP lease, confirm the expected address, gateway, and DNS settings, then test internal access." },
-					{ id: "static", label: "Assign an arbitrary static IP address that appears unused." },
-					{ id: "close", label: "Close the ticket as soon as the port configuration is saved." },
-				],
-				answer: "renew",
-				explanation: "Renewing the lease and testing the expected configuration confirms that DHCP and end-to-end access are working before documenting resolution.",
-			},
-		],
+		exam: "N10-009",
+		dashboard: "/modules/programs/comptia-network-plus",
+	},
+	"comptia-security-plus": {
+		name: "Security+",
+		exam: "SY0-701",
+		dashboard: "/modules/programs/comptia-security-plus",
 	},
 };
 
-export default function CompTIAPracticeLab({ programKey }) {
-	const lab = PRACTICE_LABS[programKey];
-	const [stepIndex, setStepIndex] = useState(0);
-	const [selectedOption, setSelectedOption] = useState("");
-	const [result, setResult] = useState(null);
-	const [completedSteps, setCompletedSteps] = useState([]);
-	const step = lab.steps[stepIndex];
-	const isComplete = stepIndex === lab.steps.length;
+function createConsole(device) {
+	return {
+		mode: "user",
+		interfaceName: "",
+		lines: [
+			`${device} Practice Simulator`,
+			"Type ? at any prompt to see commands available in this lab.",
+			"Press RETURN to get started!",
+			"",
+		],
+		history: [],
+	};
+}
 
-	function checkAnswer() {
-		if (!selectedOption) return;
-		const isCorrect = selectedOption === step.answer;
-		setResult({ isCorrect, explanation: isCorrect ? step.explanation : "Review the scenario evidence and try another response." });
-		if (isCorrect) setCompletedSteps((current) => [...current, step.id]);
+function createConsoles(lab) {
+	return Object.fromEntries(lab.devices.map((device) => [device, createConsole(device)]));
+}
+
+function promptFor(device, terminal) {
+	if (terminal.mode === "priv") return `${device}#`;
+	if (terminal.mode === "config") return `${device}(config)#`;
+	if (terminal.mode === "interface") return `${device}(config-if)#`;
+	if (terminal.mode === "vlan") return `${device}(config-vlan)#`;
+	if (terminal.mode === "dhcp") return `${device}(dhcp-config)#`;
+	if (terminal.mode === "wlan") return `${device}(wlan-config)#`;
+	if (terminal.mode === "radio") return `${device}(radio-config)#`;
+	if (terminal.mode === "archive") return `${device}(config-archive)#`;
+	return `${device}>`;
+}
+
+function normalizeCommand(value) {
+	return value.trim().replace(/\s+/g, " ").toLowerCase();
+}
+
+function applyModeCommand(command, terminal) {
+	if (command === "enable" && terminal.mode === "user") {
+		return { ...terminal, mode: "priv" };
+	}
+	if (["configure terminal", "conf t"].includes(command) && terminal.mode === "priv") {
+		return { ...terminal, mode: "config" };
+	}
+	if (command === "end" && terminal.mode !== "user") {
+		return { ...terminal, mode: "priv", interfaceName: "" };
+	}
+	if (command === "exit") {
+		if (terminal.mode === "priv") return { ...terminal, mode: "user", interfaceName: "" };
+		if (terminal.mode === "config") return { ...terminal, mode: "priv", interfaceName: "" };
+		if (terminal.mode !== "user") return { ...terminal, mode: "config", interfaceName: "" };
+	}
+	if (terminal.mode === "config" && /^interface(?:\s+range)?\s+.+/.test(command)) {
+		return { ...terminal, mode: "interface", interfaceName: command.replace(/^interface(?:\s+range)?\s+/, "") };
+	}
+	if (terminal.mode === "config" && /^vlan\s+\d+$/.test(command)) {
+		return { ...terminal, mode: "vlan" };
+	}
+	if (terminal.mode === "config" && /^ip dhcp pool\s+.+/.test(command)) {
+		return { ...terminal, mode: "dhcp" };
+	}
+	if (terminal.mode === "config" && command === "archive") {
+		return { ...terminal, mode: "archive" };
+	}
+	if (/^wlan\s+\d+$/.test(command)) return { ...terminal, mode: "wlan" };
+	if (/^ap name\s+.+\s+radio\s+\d+$/.test(command)) return { ...terminal, mode: "radio" };
+	if (terminal.mode === "interface" && command === "exit") {
+		return { ...terminal, mode: "config", interfaceName: "" };
+	}
+	return terminal;
+}
+
+function executeCommand(lab, device, terminal, rawCommand, taskProgress) {
+	const command = normalizeCommand(rawCommand);
+	if (!command) return { terminal, output: [], taskProgress };
+
+	for (const item of lab.tasks) {
+		const actionIndex = taskProgress[item.id] ?? 0;
+		const expectedAction = item.actions[actionIndex];
+		if (!expectedAction || normalizeCommand(expectedAction.command) !== command) continue;
+		if (expectedAction.device && expectedAction.device !== device) {
+			return { terminal, output: [`% Run this command on ${expectedAction.device}.`], taskProgress };
+		}
+		if (expectedAction.context !== "any" && expectedAction.context !== terminal.mode) {
+			return { terminal, output: [`% This command requires ${expectedAction.context} mode. Current mode: ${terminal.mode}.`], taskProgress };
+		}
+		if (expectedAction.interfaceName && expectedAction.interfaceName !== terminal.interfaceName) {
+			return { terminal, output: [`% Select interface ${expectedAction.interfaceName} before running this command.`], taskProgress };
+		}
+		const nextProgress = { ...taskProgress, [item.id]: actionIndex + 1 };
+		return {
+			terminal: applyModeCommand(command, terminal),
+			output: [expectedAction.output],
+			taskProgress: nextProgress,
+		};
 	}
 
-	function continueLab() {
-		setStepIndex((current) => current + 1);
-		setSelectedOption("");
-		setResult(null);
+	if (command === "?" || command === "help") {
+		const available = lab.tasks.flatMap((item) => item.actions.map((entry) => entry.command));
+		return {
+			terminal,
+			output: ["Available lab commands:", ...new Set(["enable", "configure terminal", "interface <name>", "exit", "end", ...available])],
+			taskProgress,
+		};
+	}
+	if (command === "enable" || command === "configure terminal" || command === "conf t" ||
+		command === "exit" || command === "end" || /^interface(?:\s+range)?\s+.+/.test(command) ||
+		/^vlan\s+\d+$/.test(command) || /^ip dhcp pool\s+.+/.test(command) || command === "archive" ||
+		/^wlan\s+\d+$/.test(command) || /^ap name\s+.+\s+radio\s+\d+$/.test(command)) {
+		const nextTerminal = applyModeCommand(command, terminal);
+		if (nextTerminal === terminal) {
+			return { terminal, output: [`% Cannot run "${rawCommand.trim()}" from ${terminal.mode} mode.`], taskProgress };
+		}
+		return { terminal: nextTerminal, output: [], taskProgress };
+	}
+	if (command.startsWith("show ") || command.startsWith("ping ") || command.startsWith("traceroute ")) {
+		return { terminal, output: [`No additional simulator output for "${rawCommand.trim()}".`], taskProgress };
+	}
+	return { terminal, output: [`% Invalid command. Type ? to see the commands available in this lab.`], taskProgress };
+}
+
+export default function CompTIAPracticeLab({ programKey }) {
+	const programLabs = COMPTIA_PRACTICE_LABS[programKey];
+	const program = PROGRAM_DETAILS[programKey];
+	const [selectedLabId, setSelectedLabId] = useState(1);
+	const lab = programLabs.find((item) => item.id === selectedLabId) ?? programLabs[0];
+	const [consoles, setConsoles] = useState(() => createConsoles(lab));
+	const [device, setDevice] = useState(lab.devices[0]);
+	const [taskProgress, setTaskProgress] = useState({});
+	const [input, setInput] = useState("");
+	const [historyPosition, setHistoryPosition] = useState(-1);
+	const [showLabPicker, setShowLabPicker] = useState(false);
+	const [showHints, setShowHints] = useState(false);
+	const [showSolution, setShowSolution] = useState(false);
+	const terminalRef = useRef(null);
+	const inputRef = useRef(null);
+	const terminal = consoles[device];
+	const completedCount = lab.tasks.filter((item) => (taskProgress[item.id] ?? 0) >= item.actions.length).length;
+	const allDone = completedCount === lab.tasks.length;
+
+	useEffect(() => {
+		if (terminalRef.current) terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
+	}, [terminal.lines]);
+
+	function selectLab(nextId) {
+		const nextLab = programLabs.find((item) => item.id === nextId);
+		setSelectedLabId(nextLab.id);
+		setConsoles(createConsoles(nextLab));
+		setDevice(nextLab.devices[0]);
+		setTaskProgress({});
+		setInput("");
+		setHistoryPosition(-1);
+		setShowHints(false);
+		setShowSolution(false);
+		setShowLabPicker(false);
+	}
+
+	function submitCommand(event) {
+		event.preventDefault();
+		if (!input.trim()) return;
+		const prompt = promptFor(device, terminal);
+		const result = executeCommand(lab, device, terminal, input, taskProgress);
+		setTaskProgress(result.taskProgress);
+		setConsoles((current) => ({
+			...current,
+			[device]: {
+				...result.terminal,
+				lines: [...terminal.lines, `${prompt}${input}`, ...result.output],
+				history: [...terminal.history, input],
+			},
+		}));
+		setInput("");
+		setHistoryPosition(-1);
+	}
+
+	function handleHistory(event) {
+		if (event.key === "ArrowUp" && terminal.history.length) {
+			event.preventDefault();
+			const nextPosition = historyPosition === -1
+				? terminal.history.length - 1
+				: Math.max(0, historyPosition - 1);
+			setHistoryPosition(nextPosition);
+			setInput(terminal.history[nextPosition]);
+		} else if (event.key === "ArrowDown" && historyPosition !== -1) {
+			event.preventDefault();
+			const nextPosition = historyPosition + 1;
+			if (nextPosition >= terminal.history.length) {
+				setHistoryPosition(-1);
+				setInput("");
+			} else {
+				setHistoryPosition(nextPosition);
+				setInput(terminal.history[nextPosition]);
+			}
+		}
 	}
 
 	function resetLab() {
-		setStepIndex(0);
-		setSelectedOption("");
-		setResult(null);
-		setCompletedSteps([]);
+		setConsoles(createConsoles(lab));
+		setDevice(lab.devices[0]);
+		setTaskProgress({});
+		setInput("");
+		setHistoryPosition(-1);
+		setShowSolution(false);
+		inputRef.current?.focus();
 	}
 
+	const solutionDevices = lab.devices.map((name) => ({
+		name,
+		commands: lab.tasks.flatMap((item) => item.actions
+			.filter((itemAction) => !itemAction.device || itemAction.device === name)
+			.map((itemAction) => itemAction.command)),
+	}));
+
 	return (
-		<main className="min-h-screen bg-[#fffafb] px-4 py-8 text-[#111a2d] sm:px-8 sm:py-12">
-			<div className="mx-auto max-w-5xl">
-				<Link to={lab.dashboardPath} className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-bold text-[#c8102e] shadow-sm transition hover:bg-[#fff1f3]">
-					<ArrowLeft size={17} /> Back to CompTIA {lab.name}
+		<main className="min-h-screen bg-white px-4 py-8 text-[#111a2d] sm:px-8 sm:py-10">
+			<div className="mx-auto max-w-[1440px]">
+				<Link to={program.dashboard} className="inline-flex items-center gap-2 rounded-full bg-[#fff5f6] px-4 py-2 text-sm font-bold text-[#c8102e] transition hover:bg-[#ffe9ed]">
+					<ArrowLeft size={17} /> Back to CompTIA {program.name}
 				</Link>
 
-				<header className="mt-8 rounded-3xl border border-[#f0cbd3] bg-white p-6 shadow-[0_12px_28px_rgba(200,16,46,0.07)] sm:p-9">
+				<header className="mx-auto mt-5 max-w-5xl rounded-3xl border border-[#f0cbd3] bg-[#fffafb] p-6 shadow-[0_12px_28px_rgba(200,16,46,0.07)] sm:p-8">
 					<div className="inline-flex items-center gap-2 rounded-full border border-[#f0cbd3] bg-[#fff5f6] px-4 py-2 text-sm font-semibold text-[#b20d29]">
-						<FlaskConical size={16} /> CompTIA {lab.name} · {lab.certification} Practice Lab
+						<FlaskConical size={16} /> CompTIA {program.name} · {program.exam} Practice Lab
 					</div>
-					<h1 className="mt-5 text-3xl font-bold tracking-tight sm:text-4xl">{lab.scenarioTitle}</h1>
-					<p className="mt-3 max-w-3xl leading-7 text-[#66738d]">{lab.scenarioDescription}</p>
-					<p className="mt-4 text-sm text-[#66738d]">Original learning scenario · No changes are made to real systems.</p>
+					<h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">{lab.title}</h1>
+					<p className="mt-2 max-w-3xl leading-7 text-[#66738d]">{lab.summary}</p>
+					<p className="mt-3 text-xs text-[#8a96aa]">Interactive command simulator · Changes are limited to this practice session.</p>
 				</header>
 
-				<section className="mt-6 overflow-hidden rounded-3xl border border-[#ead7dc] bg-white shadow-sm">
-					<div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#f2e3e6] px-6 py-4 sm:px-8">
+				<section className="mx-auto mt-5 max-w-5xl">
+					<div className="flex flex-wrap items-end justify-between gap-3">
 						<div>
-							<p className="text-xs font-bold uppercase tracking-[0.14em] text-[#b20d29]">Simulation progress</p>
-							<p className="mt-1 text-sm font-semibold text-[#53617a]">
-								{isComplete ? "Scenario complete" : `Step ${stepIndex + 1} of ${lab.steps.length}`}
-							</p>
+							<p className="text-xs font-bold uppercase tracking-[0.16em] text-[#c8102e]">Practice library</p>
+							<h2 className="mt-1 text-lg font-bold text-[#17233d]">Simulation {lab.id} of {programLabs.length}</h2>
 						</div>
-						<div className="flex items-center gap-3">
-							<span className="text-sm text-[#66738d]">{completedSteps.length}/{lab.steps.length} steps correct</span>
-							<button type="button" onClick={resetLab} className="inline-flex items-center gap-2 rounded-full border border-[#ead7dc] px-3 py-2 text-sm font-semibold text-[#53617a] transition hover:bg-[#fff5f6]">
-								<RotateCcw size={15} /> Reset
-							</button>
-						</div>
+						<button
+							type="button"
+							onClick={() => setShowLabPicker((visible) => !visible)}
+							aria-expanded={showLabPicker}
+							aria-controls="comptia-practice-lab-picker"
+							className="inline-flex items-center gap-2 rounded-full border border-[#c8102e] px-4 py-2 text-sm font-semibold text-[#c8102e] transition hover:bg-[#fff5f6]"
+						>
+							{showLabPicker ? "Close simulations" : `Choose simulation (${programLabs.length})`}
+							<ChevronDown size={16} />
+						</button>
 					</div>
-
-					{isComplete ? (
-						<div className="p-6 sm:p-8">
-							<div className="flex items-start gap-4 rounded-2xl bg-[#f0faf4] p-5 text-[#166534]">
-								<CheckCircle2 className="mt-0.5 shrink-0" size={22} />
-								<div>
-									<h2 className="text-lg font-bold">Nice work — simulation completed.</h2>
-									<p className="mt-1 text-sm leading-6">You completed all {completedSteps.length} steps. Reset the lab to try the scenario again.</p>
-								</div>
-							</div>
-						</div>
-					) : (
-						<div className="p-6 sm:p-8">
-							<div className="rounded-2xl bg-[#f8f9fc] p-5">
-								<p className="text-sm font-bold text-[#53617a]">{step.title}</p>
-								<p className="mt-2 leading-7 text-[#44516a]">{step.context}</p>
-							</div>
-							<fieldset className="mt-6">
-								<legend className="text-lg font-bold leading-7">{step.prompt}</legend>
-								<div className="mt-4 space-y-3">
-									{step.options.map((option) => (
-										<label
-											key={option.id}
-											className={`flex cursor-pointer items-start gap-3 rounded-2xl border p-4 transition ${
-												selectedOption === option.id
-													? "border-[#c8102e] bg-[#fff5f6]"
-													: "border-[#ead7dc] hover:border-[#c8102e]/50 hover:bg-[#fffafb]"
-											}`}
-										>
-											<input
-												type="radio"
-												name={`practice-step-${step.id}`}
-												value={option.id}
-												checked={selectedOption === option.id}
-												onChange={() => {
-													setSelectedOption(option.id);
-													setResult(null);
-												}}
-												className="mt-1 accent-[#c8102e]"
-											/>
-											<span className="text-sm leading-6 text-[#44516a]">{option.label}</span>
-										</label>
-									))}
-								</div>
-							</fieldset>
-
-							{result && (
-								<div role={result.isCorrect ? "status" : "alert"} className={`mt-5 flex items-start gap-3 rounded-2xl p-4 ${result.isCorrect ? "bg-[#f0faf4] text-[#166534]" : "bg-[#fff5f0] text-[#9a3412]"}`}>
-									{result.isCorrect ? <CheckCircle2 className="mt-0.5 shrink-0" size={19} /> : <XCircle className="mt-0.5 shrink-0" size={19} />}
-									<p className="text-sm leading-6">{result.explanation}</p>
-								</div>
-							)}
-
-							<div className="mt-6 flex flex-wrap justify-end gap-3">
-								{result?.isCorrect ? (
-									<button type="button" onClick={continueLab} className="inline-flex items-center gap-2 rounded-full bg-[#c8102e] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#a80e27]">
-										{stepIndex === lab.steps.length - 1 ? "Finish simulation" : "Next step"} <ArrowRight size={17} />
-									</button>
-								) : (
-									<button type="button" onClick={checkAnswer} disabled={!selectedOption} className="inline-flex items-center gap-2 rounded-full bg-[#c8102e] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#a80e27] disabled:cursor-not-allowed disabled:opacity-40">
-										Check response <ArrowRight size={17} />
-									</button>
-								)}
-							</div>
+					{showLabPicker && (
+						<div id="comptia-practice-lab-picker" className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+							{programLabs.map((item) => (
+								<button
+									key={item.id}
+									type="button"
+									onClick={() => selectLab(item.id)}
+									aria-pressed={item.id === lab.id}
+									className={`rounded-xl border p-3 text-left transition ${item.id === lab.id ? "border-[#c8102e] bg-[#fff5f6]" : "border-[#ead7dc] bg-white hover:border-[#c8102e]/50"}`}
+								>
+									<span className="block text-xs font-bold uppercase tracking-wide text-[#b20d29]">Simulation {item.id}</span>
+									<span className="mt-1 block text-sm font-semibold text-[#17233d]">{item.title}</span>
+								</button>
+							))}
 						</div>
 					)}
 				</section>
+
+				<div className="mx-auto mt-5 grid max-w-[1440px] gap-5 lg:grid-cols-[minmax(300px,0.38fr)_minmax(0,0.62fr)]">
+					<aside className="rounded-2xl border border-[#dbe7ea] bg-white p-5 shadow-[0_12px_28px_rgba(15,35,55,0.08)]">
+						<div className="flex items-center justify-between gap-3">
+							<h2 className="text-xl font-bold text-[#005b6b]">Tasks</h2>
+							<span className="text-sm font-bold text-[#17233d]">{completedCount}/{lab.tasks.length} done</span>
+						</div>
+						<div className="mt-4 h-2 overflow-hidden rounded-full bg-[#e7f1f2]">
+							<div className="h-full rounded-full bg-[#0b7887] transition-[width]" style={{ width: `${(completedCount / lab.tasks.length) * 100}%` }} />
+						</div>
+						<ol className="mt-5 space-y-4">
+							{lab.tasks.map((item, index) => {
+								const done = (taskProgress[item.id] ?? 0) >= item.actions.length;
+								return (
+									<li key={item.id} className="flex items-start gap-2.5 text-sm leading-6 text-[#26354d]">
+										{done
+											? <CheckCircle2 className="mt-1 shrink-0 text-emerald-600" size={19} />
+											: <Circle className="mt-1 shrink-0 text-slate-400" size={19} />}
+										<div>
+											<p className={done ? "text-emerald-700" : ""}><strong>{index + 1}.</strong> {item.text}</p>
+											{showHints && !done && <p className="mt-1 text-xs leading-5 text-[#66738d]">Hint: {item.hint}</p>}
+										</div>
+									</li>
+								);
+							})}
+						</ol>
+
+						{allDone && (
+							<div className="mt-5 rounded-xl bg-emerald-50 p-3 text-sm font-semibold text-emerald-800" role="status">
+								Lab complete! All tasks in this simulation are done.
+								{lab.id < programLabs.length && (
+									<button type="button" onClick={() => selectLab(lab.id + 1)} className="mt-2 flex items-center gap-1 underline underline-offset-4">
+										Next simulation <ArrowRight size={14} />
+									</button>
+								)}
+							</div>
+						)}
+
+						<div className="mt-5 flex flex-wrap gap-2">
+							<button type="button" onClick={() => setShowHints((visible) => !visible)} className="inline-flex items-center gap-1.5 rounded-full border border-[#0b7887] px-3 py-2 text-sm font-semibold text-[#005b6b] transition hover:bg-[#eef8f9]">
+								<Lightbulb size={15} /> {showHints ? "Hide hints" : "Show hints"}
+							</button>
+							<button type="button" onClick={() => setShowSolution((visible) => !visible)} className="inline-flex items-center gap-1.5 rounded-full border border-[#0b7887] px-3 py-2 text-sm font-semibold text-[#005b6b] transition hover:bg-[#eef8f9]">
+								<Eye size={15} /> {showSolution ? "Hide solution" : "Show solution"}
+							</button>
+							<button type="button" onClick={resetLab} className="inline-flex items-center gap-1.5 rounded-full border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">
+								<RotateCcw size={15} /> Reset terminal
+							</button>
+						</div>
+
+						{showSolution && (
+							<div className="mt-4 space-y-3">
+								<p className="text-sm font-bold text-[#17233d]">Solution commands</p>
+								{solutionDevices.map(({ name, commands }) => (
+									<div key={name}>
+										<p className="mb-1 text-xs font-bold text-[#53617a]">{name}</p>
+										<pre className="overflow-auto rounded-xl bg-[#0b1220] p-3 text-xs leading-5 text-[#d1fae5]">{commands.join("\n")}</pre>
+									</div>
+								))}
+							</div>
+						)}
+					</aside>
+
+					<section className="flex min-w-0 flex-col gap-2">
+						<div className="flex flex-wrap items-center justify-between gap-2">
+							<div className="flex flex-wrap items-center gap-2">
+								<h2 className="inline-flex items-center gap-2 text-lg font-bold text-[#17233d]">
+									<Terminal size={19} /> {lab.devices.length > 1 ? "Device Console" : `${device} Console`}
+								</h2>
+								{lab.devices.length > 1 && (
+									<div className="flex gap-1.5" role="tablist" aria-label="Choose simulated device">
+										{lab.devices.map((name) => (
+											<button
+												key={name}
+												type="button"
+												role="tab"
+												aria-selected={name === device}
+												onClick={() => {
+													setDevice(name);
+													setInput("");
+													setHistoryPosition(-1);
+													inputRef.current?.focus();
+												}}
+												className={`rounded-full px-3.5 py-1 text-sm font-bold transition ${name === device ? "bg-[#005b6b] text-white" : "border border-[#0b7887] text-[#005b6b] hover:bg-[#eef8f9]"}`}
+											>
+												{name}
+											</button>
+										))}
+									</div>
+								)}
+							</div>
+							<span className="text-xs text-[#7b879b]">↑ / ↓ for command history</span>
+						</div>
+
+						<div
+							ref={terminalRef}
+							onClick={() => inputRef.current?.focus()}
+							className="h-[28rem] min-w-0 overflow-auto rounded-2xl bg-[#0b1220] p-4 font-mono text-[13px] leading-5 text-[#d1fae5] shadow-lg"
+						>
+							{terminal.lines.map((line, index) => (
+								<div key={`${index}-${line}`} className="whitespace-pre-wrap break-words">{line || "\u00a0"}</div>
+							))}
+							<form onSubmit={submitCommand} className="flex min-w-0">
+								<span className="whitespace-pre">{promptFor(device, terminal)}</span>
+								<input
+									ref={inputRef}
+									value={input}
+									onChange={(event) => setInput(event.target.value)}
+									onKeyDown={handleHistory}
+									aria-label={`${device} command`}
+									autoComplete="off"
+									autoCapitalize="off"
+									spellCheck={false}
+									className="min-w-0 flex-1 bg-transparent text-[#d1fae5] outline-none"
+								/>
+							</form>
+						</div>
+						<p className="text-xs leading-5 text-[#7b879b]">This is an isolated learning simulator. Commands update only the scenario state in this browser session.</p>
+					</section>
+				</div>
 			</div>
 		</main>
 	);
