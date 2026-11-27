@@ -6,6 +6,7 @@ import {
 	CCNA_TOPOLOGY_EXHIBIT_RECREATIONS,
 } from "./ccnaRecreatedCandidateExhibits.js";
 import { splitPromptExhibit } from "../../../../../utils/splitPromptExhibit.js";
+import { parseFormattedOptions } from "./ccnaExamQuestionFormatting.js";
 import {
 	getCcnaExhibitImageByBankId,
 	getCcnaExhibitImageByLegacyIndex,
@@ -13,7 +14,6 @@ import {
 import jsonObject769ExhibitImg from "../../../../../assets/ccna-exam/ccna-json-object-exhibit-769.svg";
 import pcIpConfig963ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-963-ipconfig-exhibit.png";
 import hostA1114ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-1114-host-a-exhibit.png";
-import hostC1152ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-1152-host-c-network-config.jpg";
 import wlcWpa2Psk1154ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-1154-wlc-wpa2.jpg";
 import wlcWpa2Aes1170ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-1170-wlc-wpa2-aes.jpg";
 import workstationServerFqdn1232ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-924-workstation-server-fqdn.jpg";
@@ -2591,9 +2591,28 @@ en0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
 	}],
 	[963, { image: pcIpConfig963ExhibitImg, hideAfterExhibit: true, exhibitQuality: "source-backed" }],
 	[1114, { image: hostA1114ExhibitImg, hideAfterExhibit: true, exhibitQuality: "source-backed" }],
-	[1152, { image: hostC1152ExhibitImg, hideAfterExhibit: true, exhibitQuality: "source-backed" }],
+	[1187, {
+		prompt: "An administrator must add TCP DNS access to the Services ACL while retaining its existing services. Which configuration updates the ACL efficiently?",
+		exhibit: `CPE# show ip access-list Services
+Extended IP access list Services
+
+10 permit tcp 10.0.0.0 0.255.255.255 any eq www
+20 permit tcp 10.0.0.0 0.255.255.255 any eq 443
+30 permit udp 10.0.0.0 0.255.255.255 host 198.51.100.11 eq domain
+40 deny ip any any log`,
+		options: [
+			"ip access-list extended Services\n permit tcp 10.0.0.0 0.255.255.255 host 198.51.100.11 eq domain",
+			"no ip access-list extended Services\nip access-list extended Services\n 30 permit tcp 10.0.0.0 0.255.255.255 host 198.51.100.11 eq domain",
+			"no ip access-list extended Services\nip access-list extended Services\n permit udp 10.0.0.0 0.255.255.255 any eq 53\n permit tcp 10.0.0.0 0.255.255.255 host 198.51.100.11 eq domain\n deny ip any any log",
+			"ip access-list extended Services\n 35 permit tcp 10.0.0.0 0.255.255.255 host 198.51.100.11 eq domain",
+		],
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "source-backed",
+	}],
+	[1152, { diagram: "host-internet-connectivity-1152", hideExhibitImage: true, hideAfterExhibit: true, exhibitQuality: "source-backed" }],
 	[1112, {
-		prompt: "Refer to the exhibit. VoIP is being implemented in the network using VLAN ID 73 and named ‘VoIP’. Each user needs a Cisco IP phone at their desk. Switchport e0/0 has been configured as an access port in the data VLAN. Cisco Discovery Protocol is enabled globally. Which command sequence completed the configuration?",
+		prompt: "VoIP is being implemented in the network using VLAN ID 73 and named ‘VoIP’. Each user needs a Cisco IP phone at their desk. Switchport e0/0 has been configured as an access port in the data VLAN. Cisco Discovery Protocol is enabled globally. Which command sequence completed the configuration?",
 		exhibit: `SW_1#show vlan
 
 VLAN  Name                 Status    Ports
@@ -2606,6 +2625,12 @@ VLAN  Name                 Status    Ports
 1003  token-ring-default   act/unsup
 1004  fddinet-default     act/unsup
 1005  trnet-default       act/unsup`,
+		options: [
+			"vlan 73\nname VoIP\ne0/0\nswitchport trunk allowed vlan 72,73\nswitchport voice vlan 73",
+			"vlan 73\nname VoIP\ne0/0\nswitchport mode trunk\nchannel-group 73 mode active",
+			"vlan 73\nname VoIP\ne0/0\nswitchport voice vlan 73",
+			"vlan73\nname VoIP\ne0/0\nswitchport voice vlan dot1p",
+		],
 		hideExhibitImage: true,
 		hideAfterExhibit: true,
 		exhibitQuality: "source-backed",
@@ -2645,7 +2670,11 @@ D    10.0.1.0/28 [90/10] via 192.168.0.7, 00:33:32, GigabitEthernet0/0`,
 	[732, { diagram: "candidate-wlc-414", hideExhibitImage: true, exhibitQuality: "source-backed" }],
 	[1143, { hideExhibitImage: true, removeExhibitLeadIn: true }],
 	[1188, { hideExhibitImage: true, removeExhibitLeadIn: true }],
-	[1227, { hideExhibitImage: true, removeExhibitLeadIn: true }],
+	[1227, {
+		prompt: "Which configuration is needed to configure a WLAN with WPA2 only and with a password that is 63 characters long?",
+		hideExhibitImage: true,
+		removeExhibitLeadIn: true,
+	}],
 	[510, {
 		diagram: "r1-secure-remote-access",
 		hideExhibitImage: true,
@@ -2958,6 +2987,8 @@ NetBIOS over Tcpip. . . . . : Enabled`,
 	}
 	if (/ospf neighbor relationship must be configured using these guidelines/i.test(prompt)) {
 		return {
+			prompt: `An OSPF neighbor relationship must be configured using these guidelines:\n\n– R1 is only permitted to establish a neighbor with R2.\n– R1 will never participate in DR elections.\n– R1 will use a router-id of 10.1.1.1.\n\nWhich configuration must be used?`,
+			suppressInlineExhibit: true,
 			hideExhibitImage: true,
 			hideAfterExhibit: true,
 			removeExhibitLeadIn: true,
@@ -3092,6 +3123,8 @@ export function applyNativeExhibit(question) {
 			promptLegacyIndex = 602;
 		} else if (/voip is being implemented in the network using vlan id 73[\s\S]*which command sequence completed the configuration/i.test(question.prompt)) {
 			promptLegacyIndex = 1112;
+		} else if (/this acl is configured to allow client access only to http, https, and dns services via udp[\s\S]*which configuration updates the acl efficiently/i.test(question.prompt)) {
+			promptLegacyIndex = 1187;
 		} else if (/how many json objects are presented/i.test(question.prompt)) {
 			promptLegacyIndex = 769;
 		} else if (/newly configured pc fails to connect to the internet using tcp port 80 to www\.cisco\.com/i.test(question.prompt)) {
@@ -3165,6 +3198,11 @@ export function applyNativeExhibit(question) {
 	const parsedPrompt = !question?.exhibit && typeof question?.prompt === "string"
 		? splitPromptExhibit(question.prompt)
 		: null;
+	const hasPlaceholderOptions = Array.isArray(question?.options) && question.options.length > 1 &&
+		question.options.every((option, index) => String(option).trim().toLowerCase() === `option ${String.fromCharCode(65 + index).toLowerCase()}`);
+	const parsedOptions = hasPlaceholderOptions && typeof question?.prompt === "string"
+		? parseFormattedOptions(question.prompt)
+		: null;
 	const currentDatabaseExhibit = (matchedLegacyIndex !== undefined
 		? LEGACY_NATIVE_EXHIBITS.get(matchedLegacyIndex)
 		: undefined) ??
@@ -3181,8 +3219,10 @@ export function applyNativeExhibit(question) {
 	const exhibitDiagram = (typeof databaseExhibit === "string" ? databaseExhibit : databaseExhibit?.diagram) ??
 		builtInQuestion?.exhibitDiagram;
 	const databaseExhibitImage = typeof databaseExhibit === "object" ? databaseExhibit.image : undefined;
-	const exhibit = (typeof databaseExhibit === "object" ? databaseExhibit.exhibit : undefined) ??
-		parsedPrompt?.exhibit;
+	const suppressInlineExhibit = databaseExhibit?.suppressInlineExhibit === true;
+	const exhibit = suppressInlineExhibit
+		? undefined
+		: (typeof databaseExhibit === "object" ? databaseExhibit.exhibit : undefined) ?? parsedPrompt?.exhibit;
 	const hasNativeTextExhibit = typeof exhibit === "string";
 	const hasTerminalTextExhibit = hasNativeTextExhibit || typeof question?.exhibit === "string";
 	const sourceImageIndex = Number(/ccna-exhibit-(\d+)\.png(?:[?#].*)?$/i.exec(
@@ -3211,9 +3251,9 @@ export function applyNativeExhibit(question) {
 		: undefined;
 	const recoverTruncatedPrompt = typeof sourcePrompt === "string" &&
 		normalizeExhibitLookupPrompt(legacySourceQuestion.prompt).includes(normalizeExhibitLookupPrompt(question.prompt));
-	const hasQuestionOverride = ["type", "items", "choices", "answer"].some((key) =>
+	const hasQuestionOverride = ["type", "items", "choices", "options", "answer"].some((key) =>
 		Object.prototype.hasOwnProperty.call(questionOverride, key),
-	);
+	) || Boolean(parsedOptions);
 	if (!exhibitDiagram && !exhibitImage && !hasNativeTextExhibit && !hideExhibitImage && !hideAfterExhibit &&
 		!removeExhibitLeadIn && !hasQuestionOverride && !recoverTruncatedPrompt) {
 		return legacyIndex !== question?.legacyIndex && legacyIndex !== undefined
@@ -3224,6 +3264,8 @@ export function applyNativeExhibit(question) {
 		? databaseExhibit.prompt
 		: typeof sourcePrompt === "string"
 			? sourcePrompt
+		: typeof parsedOptions?.prompt === "string"
+			? parsedOptions.prompt
 		: typeof parsedPrompt?.exhibit === "string"
 			? parsedPrompt.prompt.replace(/^\s*Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\.?\s*/i, "")
 			: removeExhibitLeadIn && typeof question?.prompt === "string"
@@ -3238,6 +3280,9 @@ export function applyNativeExhibit(question) {
 		...(Object.prototype.hasOwnProperty.call(questionOverride, "type") ? { type: questionOverride.type } : {}),
 		...(Object.prototype.hasOwnProperty.call(questionOverride, "items") ? { items: questionOverride.items } : {}),
 		...(Object.prototype.hasOwnProperty.call(questionOverride, "choices") ? { choices: questionOverride.choices } : {}),
+		...(Object.prototype.hasOwnProperty.call(questionOverride, "options")
+			? { options: questionOverride.options }
+			: parsedOptions ? { options: Object.values(parsedOptions.options) } : {}),
 		...(Object.prototype.hasOwnProperty.call(questionOverride, "answer") ? { answer: questionOverride.answer } : {}),
 		...(Array.isArray(databaseExhibit?.offlineSourceExhibitImages)
 			? { offlineSourceExhibitImages: databaseExhibit.offlineSourceExhibitImages }
@@ -3247,6 +3292,8 @@ export function applyNativeExhibit(question) {
 			? { exhibitImage: exhibitImage ?? undefined }
 			: {}),
 		...(hideExhibitImage ? { hideExhibitImage: true } : {}),
+		...(suppressInlineExhibit ? { suppressInlineExhibit: true } : {}),
+		...(suppressInlineExhibit ? { exhibit: undefined } : {}),
 		...(hideAfterExhibit ? { afterExhibit: undefined, hideAfterExhibit: true } : {}),
 		...(exhibitDiagram ? { exhibitDiagram } : {}),
 		...(hasNativeTextExhibit ? { exhibit, nativeExhibitText: true } : {}),

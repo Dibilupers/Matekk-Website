@@ -5,7 +5,6 @@ import pcIpConfig963ExhibitImg from "../../../../../assets/ccna-exam/ccna-questi
 import wlanAdvanced1028ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-1028-wlan-advanced-exhibit.png";
 import hostA1114ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-1114-host-a-exhibit.png";
 import vlanSwitchTopology1130ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-1130-switch-vlan-topology.jpg";
-import hostC1152ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-1152-host-c-network-config.jpg";
 import wlcWpa2Psk1154ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-1154-wlc-wpa2.jpg";
 import stpTopology1167ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-1167-stp-topology.jpg";
 import wlcWpa2Aes1170ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-1170-wlc-wpa2-aes.jpg";
@@ -330,10 +329,10 @@ Router2(config)#ntp master 7`,
   [1152, {
     offlineSourceExhibitImages: [],
     afterExhibit: undefined,
-    exhibitDiagram: undefined,
+    exhibitDiagram: "host-internet-connectivity-1152",
     exhibit: undefined,
-    exhibitImage: hostC1152ExhibitImg,
-    hideExhibitImage: false,
+    exhibitImage: undefined,
+    hideExhibitImage: true,
   }],
   [1154, {
     offlineSourceExhibitImages: [],
@@ -1169,6 +1168,7 @@ const OFFLINE_LEGACY_QUESTION_CANDIDATES = CCNA_LEGACY_QUESTIONS
         : {}),
       ...(promptNativeExhibit.type === "drag_drop" ? { type: "drag_drop" } : {}),
       ...(promptNativeExhibit.dragDropMode ? { dragDropMode: promptNativeExhibit.dragDropMode } : {}),
+      ...(Array.isArray(promptNativeExhibit.options) ? { options: promptNativeExhibit.options } : {}),
       id: question.legacyIndex,
       bankId: question.legacyIndex,
       offlineLegacy: true,

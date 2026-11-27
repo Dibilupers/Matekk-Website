@@ -15,6 +15,7 @@ function isMatchingQuestion(question) {
 
 export function isValidQuestion(question) {
 	const type = questionType(question);
+	if (typeof question?.prompt !== "string" || !question.prompt.trim()) return false;
 	if (type === "study") return typeof question?.prompt === "string" && question.prompt.trim().length > 0;
 	if (type === "text") {
 		return typeof question?.prompt === "string" &&
@@ -33,6 +34,9 @@ export function isValidQuestion(question) {
 					new Set(question.answer).size === question.answer.length));
 	}
 	if (!Array.isArray(question?.options)) return false;
+	if (question.options.length > 1 && question.options.every((option, index) =>
+		String(option).trim().toLowerCase() === `option ${String.fromCharCode(65 + index).toLowerCase()}`,
+	)) return false;
 	if (type === "multi") {
 		return Array.isArray(question.answer) &&
 			question.answer.length > 0 &&

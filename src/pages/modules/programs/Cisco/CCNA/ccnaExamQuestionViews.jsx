@@ -451,7 +451,7 @@ function hasMatchContent(question, includeAnswer = false) {
 function InvalidQuestionMessage() {
 	return (
 		<p role="alert" className="rounded-xl border border-[#f2c6c3] bg-[#fff8f6] px-4 py-3 text-sm font-medium text-[#a44b13]">
-			This question has invalid answer data. Reload the page to try again.
+			This question is incomplete or has invalid answer data. Reload the exam to try again.
 		</p>
 	);
 }
@@ -637,6 +637,11 @@ export function QuestionInput({ question, value, onChange, disabled, fortiosOffl
 	const type = questionType(question);
 	const questionKey = question.bankId ?? question.id ?? question.prompt;
 	const isMatching = ["match", "drag_drop", "click_boxes", "image"].includes(type);
+	const hasPlaceholderOptions = Array.isArray(question?.options) && question.options.length > 1 &&
+		question.options.every((option, index) => String(option).trim().toLowerCase() === `option ${String.fromCharCode(65 + index).toLowerCase()}`);
+	if (typeof question?.prompt !== "string" || !question.prompt.trim() || hasPlaceholderOptions) {
+		return <InvalidQuestionMessage />;
+	}
 	// Backend exams don't include the answer key; "type the numbers" questions come with their box sizes instead
 	const hasGroupSizes = Array.isArray(question.groupSizes) && question.groupSizes.length === question.choices?.length &&
 		question.groupSizes.reduce((sum, size) => sum + size, 0) === question.items?.length;

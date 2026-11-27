@@ -348,8 +348,10 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 					const exhibitFields = [
 						"legacyIndex", "exhibit", "exhibitDiagram", "exhibitImage", "exhibitImageCropTop",
 						"afterExhibit", "hideExhibitImage", "hideAfterExhibit", "nativeExhibitText", "exhibitQuality",
+						"suppressInlineExhibit",
 					];
 					const bankExhibitFallbacks = Object.fromEntries(exhibitFields
+						.filter((field) => field !== "exhibit" || mappedApiQuestion.suppressInlineExhibit !== true)
 						.filter((field) => mappedApiQuestion[field] === undefined && cachedBankQuestion?.[field] !== undefined)
 						.map((field) => [field, cachedBankQuestion[field]]));
 					const bankQuestion = { ...mappedApiQuestion, ...bankExhibitFallbacks };
@@ -362,15 +364,25 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 					// Keep that text whole (the question view lays the table out itself) and list the answers A, B, C, D in order.
 					const isOptionTable = Array.isArray(apiQuestion.options) &&
 						apiQuestion.options.every((option) => /^\s*Option [A-H]\s*$/i.test(String(option)));
+					const expandedOptionSource = Array.isArray(mappedApiQuestion.options)
+						? mappedApiQuestion.options
+						: cachedBankQuestion?.options;
 					const hasExpandedOptionTable = isOptionTable &&
-						Array.isArray(cachedBankQuestion?.options) &&
-						cachedBankQuestion.options.length === apiQuestion.options.length &&
-						cachedBankQuestion.options.every((option) =>
+						Array.isArray(expandedOptionSource) &&
+						expandedOptionSource.length === apiQuestion.options.length &&
+						expandedOptionSource.every((option) =>
 							typeof option === "string" && option.trim() && !/^\s*Option [A-H]\s*$/i.test(option),
 						);
-					const mappedPrompt = cleanText(mappedApiQuestion.prompt ?? apiQuestion.prompt);
-					const { prompt, exhibit } = hasExpandedOptionTable
-						? { prompt: cachedBankQuestion.prompt }
+					const apiPrompt = cleanText(mappedApiQuestion.prompt ?? apiQuestion.prompt);
+					const cachedPrompt = cleanText(cachedBankQuestion?.prompt ?? "");
+					const mappedPrompt = apiPrompt.trim() ? apiPrompt : cachedPrompt;
+					if (!mappedPrompt.trim()) {
+						throw new TypeError(`Question ${apiQuestion.id} has no prompt in the exam response or local question bank.`);
+					}
+					const { prompt, exhibit } = bankQuestion.suppressInlineExhibit
+						? { prompt: mappedPrompt, exhibit: undefined }
+						: hasExpandedOptionTable
+						? { prompt: apiPrompt !== cleanText(apiQuestion.prompt) && apiPrompt.trim() ? mappedPrompt : cachedPrompt.trim() ? cachedPrompt : mappedPrompt }
 						: isOptionTable
 						? { prompt: mappedPrompt }
 						: splitPromptExhibit(mappedPrompt);
@@ -379,7 +391,9 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 					const exhibitImage = hideExhibitImage || exhibitDiagram || bankQuestion?.nativeExhibitText
 						? undefined
 						: bankQuestion?.exhibitImage || apiQuestion.imageUrl;
-					const displayedExhibit = bankQuestion?.exhibit && !isOptionTable ? bankQuestion.exhibit : exhibit;
+					const displayedExhibit = bankQuestion?.suppressInlineExhibit
+						? undefined
+						: bankQuestion?.exhibit && !isOptionTable ? bankQuestion.exhibit : exhibit;
 					const hasSeparateExhibit = Boolean(
 						exhibitDiagram || exhibitImage || (displayedExhibit && !/^Option [A-H]$/i.test(displayedExhibit.trim())),
 					);
@@ -392,7 +406,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 					const rawOptions = isOptionTable
 						? [...apiQuestion.options].sort((left, right) => String(left).trim().localeCompare(String(right).trim()))
 						: apiQuestion.options;
-					const orderedOptions = hasExpandedOptionTable ? cachedBankQuestion.options : rawOptions;
+					const orderedOptions = hasExpandedOptionTable ? expandedOptionSource : rawOptions;
 					return {
 						...apiQuestion,
 						prompt: displayPrompt,
