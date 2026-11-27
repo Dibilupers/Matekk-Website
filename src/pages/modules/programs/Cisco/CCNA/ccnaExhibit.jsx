@@ -2132,6 +2132,19 @@ const NETWORK_TOPOLOGIES = {
 		],
 		links: [{ from: "client", to: "r1", label: "Gi0/0", labelY: 250 }, { from: "r1", to: "server", label: "Gi0/1", labelY: 250 }],
 	},
+	"dhcp-relay-vlan10": {
+		title: "DHCP relay from VLAN 10",
+		note: "Clients on VLAN 10 use the DHCP server on VLAN 20; SW1 relays the broadcast between subnets.",
+		nodes: [
+			{ id: "clients", kind: "network", name: "VLAN 10 · DHCP clients", x: 180, y: 300, details: ["192.168.10.0/24"] },
+			{ id: "sw1", kind: "switch", name: "SW1 · Layer 3", x: 500, y: 300, details: ["VLAN 10 SVI", "VLAN 20 SVI"] },
+			{ id: "server", kind: "host", name: "DHCP Server", x: 820, y: 300, details: ["192.168.20.2", "VLAN 20 · 192.168.20.0/24"] },
+		],
+		links: [
+			{ from: "clients", to: "sw1", label: "VLAN 10", labelY: 250 },
+			{ from: "sw1", to: "server", label: "VLAN 20", labelY: 250 },
+		],
+	},
 	"r14-r86-static-route-172": {
 		title: "R14 to R86 route path",
 		note: "R14 reaches 172.21.34.0/25 through R86. Router interface and loopback addresses are shown at each endpoint.",

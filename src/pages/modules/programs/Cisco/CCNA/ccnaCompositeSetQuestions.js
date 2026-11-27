@@ -10,7 +10,15 @@ import {
 	getCcnaExhibitImageByBankId,
 	getCcnaExhibitImageByLegacyIndex,
 } from "../../../../../utils/ccnaExhibitImages.js";
-import stpRootBridge962ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-962-stp-root-bridge-exhibit.jpg";
+import jsonObject769ExhibitImg from "../../../../../assets/ccna-exam/ccna-json-object-exhibit-769.svg";
+import pcIpConfig963ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-963-ipconfig-exhibit.png";
+import hostA1114ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-1114-host-a-exhibit.png";
+import hostC1152ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-1152-host-c-network-config.jpg";
+import wlcWpa2Psk1154ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-1154-wlc-wpa2.jpg";
+import wlcWpa2Aes1170ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-1170-wlc-wpa2-aes.jpg";
+import workstationServerFqdn1232ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-924-workstation-server-fqdn.jpg";
+import patVlan341ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-341-pat-vlan.webp";
+import sw11Vlan340ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-340-sw11-vlan.jpg";
 import { CCNA_LEGACY_QUESTIONS } from "./ccnaLegacyQuestions.js";
 
 const normalizeExhibitLookupPrompt = (prompt) => {
@@ -2011,8 +2019,22 @@ const LEGACY_NATIVE_EXHIBITS = new Map([
 		hideAfterExhibit: true,
 		exhibitQuality: "partial",
 	}],
-	[962, {
-		image: stpRootBridge962ExhibitImg,
+	[884, {
+		diagram: "dhcp-relay-vlan10",
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "illustrative",
+	}],
+	[962, { hideExhibitImage: true, removeExhibitLeadIn: true }],
+	[802, {
+		diagram: "r2-eui64-review-802",
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "partial",
+	}],
+	[564, {
+		diagram: "r14-r86-static-route-172",
+		hideExhibitImage: true,
 		hideAfterExhibit: true,
 		exhibitQuality: "source-backed",
 	}],
@@ -2421,16 +2443,7 @@ GigabitEthernet0/0/0 is up, line protocol is up
 		hideExhibitImage: true,
 		exhibitQuality: "illustrative",
 	}],
-	[1041, {
-		exhibit: `[PARTIAL / ILLUSTRATIVE — original source exhibit unavailable; bridge IDs transcribed from the answer choices.]
-SW1  Priority 28672  MAC 00:10:a1:51:57:51
-SW2  Priority 28672  MAC 00:10:a1:82:03:94
-SW3  Priority 12288  MAC 00:10:a1:95:2b:77
-SW4  Priority 12288  MAC 00:10:a1:03:42:e8`,
-		hideExhibitImage: true,
-		hideAfterExhibit: true,
-		exhibitQuality: "partial",
-	}],
+	[1041, { hideExhibitImage: true, removeExhibitLeadIn: true }],
 	[1067, {
 		exhibit: `[PARTIAL / ILLUSTRATIVE — original source exhibit unavailable.]
 R2 Ethernet0/1 MAC address: 12D8.BAC2.0001
@@ -2547,9 +2560,9 @@ SW1(config)#
 		exhibit: `MacOS$ ifconfig
 en0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
  options=400<CHANNEL_IO>
- ether 6e:25:b8:f3:40:09
+ ether f0:18:98:64:60:32
  inet6 fe80::226:c09f:57cc:3343%en0 prefixlen 64 secured scopeid 0x6
- inet 10.8.112.46 netmask 0xffffe000 broadcast 10.8.159.255
+ inet 10.8.138.14 netmask 0xffffe000 broadcast 10.8.159.255
  nd6 options=201<PERFORMNUD,DAD>
  media: autoselect
  status: active`,
@@ -2557,6 +2570,20 @@ en0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
 		hideAfterExhibit: true,
 		exhibitQuality: "source-backed",
 	}],
+	[769, {
+		image: jsonObject769ExhibitImg,
+		hideAfterExhibit: true,
+		exhibitQuality: "illustrative",
+	}],
+	[963, { image: pcIpConfig963ExhibitImg, hideAfterExhibit: true, exhibitQuality: "source-backed" }],
+	[1114, { image: hostA1114ExhibitImg, hideAfterExhibit: true, exhibitQuality: "source-backed" }],
+	[1152, { image: hostC1152ExhibitImg, hideAfterExhibit: true, exhibitQuality: "source-backed" }],
+	[1154, { image: wlcWpa2Psk1154ExhibitImg, hideAfterExhibit: true, exhibitQuality: "source-backed" }],
+	[1170, { image: wlcWpa2Aes1170ExhibitImg, hideAfterExhibit: true, exhibitQuality: "source-backed" }],
+	[1206, { diagram: "candidate-wlc-890", hideExhibitImage: true, exhibitQuality: "source-backed" }],
+	[1232, { image: workstationServerFqdn1232ExhibitImg, hideAfterExhibit: true, exhibitQuality: "source-backed" }],
+	[341, { image: patVlan341ExhibitImg, hideAfterExhibit: true, exhibitQuality: "source-backed" }],
+	[340, { image: sw11Vlan340ExhibitImg, hideAfterExhibit: true, exhibitQuality: "source-backed" }],
 	[505, {
 		exhibit: `R1#show ip route
 Codes: C - connected, S - static, R - RIP, M - mobile, B - BGP
@@ -2580,12 +2607,13 @@ D    10.0.1.0/28 [90/10] via 192.168.0.7, 00:33:32, GigabitEthernet0/0`,
 		hideAfterExhibit: true,
 		exhibitQuality: "source-backed",
 	}],
-	[507, {
-		diagram: "routers-abc-ospf-dr",
-		hideExhibitImage: true,
-		hideAfterExhibit: true,
-		exhibitQuality: "illustrative",
-	}],
+	[104, { hideExhibitImage: true, removeExhibitLeadIn: true }],
+	[507, { hideExhibitImage: true, removeExhibitLeadIn: true }],
+	[579, { hideExhibitImage: true, removeExhibitLeadIn: true }],
+	[732, { diagram: "candidate-wlc-414", hideExhibitImage: true, exhibitQuality: "source-backed" }],
+	[1143, { hideExhibitImage: true, removeExhibitLeadIn: true }],
+	[1188, { hideExhibitImage: true, removeExhibitLeadIn: true }],
+	[1227, { hideExhibitImage: true, removeExhibitLeadIn: true }],
 	[510, {
 		diagram: "r1-secure-remote-access",
 		hideExhibitImage: true,
@@ -2732,12 +2760,7 @@ Switch2(config-if)#switchport trunk allowed vlan 5,10`,
 		hideExhibitImage: true,
 		exhibitQuality: "source-backed",
 	}],
-	[602, {
-		diagram: "lacp-three-parallel-switches",
-		hideExhibitImage: true,
-		hideAfterExhibit: true,
-		exhibitQuality: "source-backed",
-	}],
+	[602, { hideExhibitImage: true, removeExhibitLeadIn: true }],
 	[603, {
 		diagram: "wlc-radius-server-source",
 		hideExhibitImage: true,
@@ -3023,6 +3046,50 @@ export function applyNativeExhibit(question) {
 			promptLegacyIndex = 578;
 		} else if (/what must be configured to enable 802\.11w on the wlan/i.test(question.prompt)) {
 			promptLegacyIndex = 599;
+		} else if (/which configuration is needed to configure a wlan with wpa2 only[\s\S]*password that is 63 characters long/i.test(question.prompt)) {
+			promptLegacyIndex = 1227;
+		} else if (/after running the code in the exhibit[\s\S]*netconf server[\s\S]*only the interface.s configuration/i.test(question.prompt)) {
+			promptLegacyIndex = 350;
+		} else if (/configured ip addressing details to investigate a firewall rule issue[\s\S]*en0 interface/i.test(question.prompt)) {
+			promptLegacyIndex = 502;
+		} else if (/router a is elected as the dr for ospf area 0/i.test(question.prompt)) {
+			promptLegacyIndex = 507;
+		} else if (/must be applied so that only switch 1 sends lacp initiation packets/i.test(question.prompt)) {
+			promptLegacyIndex = 579;
+		} else if (/which configuration establishes a layer 2 lacp etherchannel when applied to both switches/i.test(question.prompt)) {
+			promptLegacyIndex = 602;
+		} else if (/how many json objects are presented/i.test(question.prompt)) {
+			promptLegacyIndex = 769;
+		} else if (/newly configured pc fails to connect to the internet using tcp port 80 to www\.cisco\.com/i.test(question.prompt)) {
+			promptLegacyIndex = 963;
+		} else if (/what is preventing host a from reaching the internet/i.test(question.prompt)) {
+			promptLegacyIndex = 1114;
+		} else if (/which configuration parameter is preventing host c from reaching the internet/i.test(question.prompt)) {
+			promptLegacyIndex = 1152;
+		} else if (/secure preshared key based ssid using wpa2/i.test(question.prompt) && /2\.4 ghz and 5 ghz/i.test(question.prompt)) {
+			promptLegacyIndex = 1154;
+		} else if (/after the engineer selects the wpa \+ wpa2 option from the layer 2 security tab/i.test(question.prompt)) {
+			promptLegacyIndex = 1170;
+		} else if (/settings must be verified on workstation 1[\s\S]*fully qualified domain name/i.test(question.prompt)) {
+			promptLegacyIndex = 1232;
+		} else if (/configuration must be applied to the router that configures pat to translate all addresses in vlan 200/i.test(question.prompt)) {
+			promptLegacyIndex = 341;
+		} else if (/router r1 is running three different routing protocols[\s\S]*172\.16\.32\.1/i.test(question.prompt)) {
+			promptLegacyIndex = 104;
+		} else if (/which ipv6 address configuration must be applied to the router fa0\/1 interface[\s\S]*unique 64-bit ipv6 address/i.test(question.prompt)) {
+			promptLegacyIndex = 562;
+		} else if (/static route must be configured on r14[\s\S]*172\.21\.34\.0\/25/i.test(question.prompt)) {
+			promptLegacyIndex = 564;
+		} else if (/ipv6 address for the lan segment on router r2 must be configured using the eui-64 format/i.test(question.prompt) &&
+			Array.isArray(question?.options) && question.options.some((option) => /D8D2:1009:10A0:ABFF:FECC:1/i.test(String(option)))) {
+			promptLegacyIndex = 802;
+		} else if (/dhcp server is configured with a dhcp pool for each of the subnets represented/i.test(question.prompt)) {
+			promptLegacyIndex = 884;
+		} else if (/which switch becomes the root bridge/i.test(question.prompt) &&
+			Array.isArray(question?.options) && question.options.some((option) => /00:10:a1:03:42:e8/i.test(String(option)))) {
+			promptLegacyIndex = 1041;
+		} else if (/which functionalities will this ssid have while being used by wireless clients/i.test(question.prompt)) {
+			promptLegacyIndex = 1206;
 		} else if (/which switch becomes the root of the spanning tree for vlan 110/i.test(question.prompt) &&
 			/switch 1[\s\S]*32778[\s\S]*switch 4[\s\S]*64000/i.test(question.prompt)) {
 			promptLegacyIndex = 339;
