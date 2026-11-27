@@ -2087,6 +2087,16 @@ Permit OSPF (protocol 89) from 10.100.1.2 and block other neighbors.`,
 		removeExhibitLeadIn: true,
 		exhibitQuality: "partial",
 	}],
+	[964, {
+		options: [
+			"R14#\ninterface FastEthernet0/0\n ip address 10.73.65.65 255.255.255.252\n ip ospf priority 0\n ip mtu 1500\nrouter ospf 10\n router-id 10.10.1.14\n network 10.10.1.14 0.0.0.0 area 0\n network 10.73.65.64 0.0.0.3 area 0\n\nR86#\ninterface FastEthernet0/0\n ip address 10.73.65.66 255.255.255.252\n ip mtu 1500\nrouter ospf 10\n router-id 10.10.1.86\n network 10.10.1.86 0.0.0.0 area 0\n network 10.73.65.64 0.0.0.3 area 0",
+			"R14#\ninterface Loopback0\n ip ospf 10 area 0\ninterface FastEthernet0/0\n ip address 10.73.65.65 255.255.255.252\n ip ospf priority 255\n ip ospf 10 area 0\n ip mtu 1500\nrouter ospf 10\n router-id 10.10.1.14\n\nR86#\ninterface Loopback0\n ip ospf 10 area 0\ninterface FastEthernet0/0\n ip address 10.73.65.66 255.255.255.252\n ip ospf 10 area 0\n ip mtu 1500\nrouter ospf 10\n router-id 10.10.1.86",
+			"R14#\ninterface FastEthernet0/0\n ip address 10.73.65.65 255.255.255.252\n ip ospf priority 255\n ip mtu 1500\nrouter ospf 10\n router-id 10.10.1.14\n network 10.10.1.14 0.0.0.0 area 0\n network 10.73.65.64 0.0.0.3 area 0\n\nR86#\ninterface FastEthernet0/0\n ip address 10.73.65.66 255.255.255.252\n ip mtu 1400\nrouter ospf 10\n router-id 10.10.1.86\n network 10.10.1.86 0.0.0.0 area 0\n network 10.73.65.64 0.0.0.3 area 0",
+			"R14#\ninterface Loopback0\n ip ospf 10 area 0\ninterface FastEthernet0/0\n ip address 10.73.65.65 255.255.255.252\n ip ospf 10 area 0\n ip mtu 1500\nrouter ospf 10\n router-id 10.10.1.14\n network 10.10.1.14 0.0.0.0 area 0\n network 10.73.65.64 0.0.0.3 area 0\n\nR86#\ninterface FastEthernet0/0\n ip address 10.73.65.66 255.255.255.252\n ip mtu 1400\nrouter ospf 10\n router-id 10.10.1.86\n network 10.10.1.86 0.0.0.0 area 0\n network 10.73.65.64 0.0.0.3 area 0",
+		],
+		hideExhibitImage: true,
+		exhibitQuality: "source-backed",
+	}],
 	[663, {
 		exhibit: `Windows PC > ipconfig /all (relevant excerpt)
 
@@ -3093,6 +3103,8 @@ export function applyNativeExhibit(question) {
 			promptLegacyIndex = 50;
 		} else if (/an ospf neighbor relationship must be configured using these guidelines/i.test(question.prompt)) {
 			promptLegacyIndex = 624;
+		} else if (/all interfaces are configured with duplex auto and ip ospf network broadcast[\s\S]*routers r14 and r86 to form an ospfv2 adjacency/i.test(question.prompt)) {
+			promptLegacyIndex = 964;
 		} else if (/the route for 10\.220\.100\.96\/27 has been very unstable/i.test(question.prompt)) {
 			promptLegacyIndex = 1161;
 		} else if (/what is represented by[\s\S]*r1[\s\S]*sw1[\s\S]*within the json output/i.test(question.prompt)) {
