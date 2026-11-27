@@ -368,11 +368,12 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 						cachedBankQuestion.options.every((option) =>
 							typeof option === "string" && option.trim() && !/^\s*Option [A-H]\s*$/i.test(option),
 						);
+					const mappedPrompt = cleanText(mappedApiQuestion.prompt ?? apiQuestion.prompt);
 					const { prompt, exhibit } = hasExpandedOptionTable
 						? { prompt: cachedBankQuestion.prompt }
 						: isOptionTable
-						? { prompt: cleanText(apiQuestion.prompt) }
-						: splitPromptExhibit(cleanText(apiQuestion.prompt));
+						? { prompt: mappedPrompt }
+						: splitPromptExhibit(mappedPrompt);
 					const exhibitDiagram = bankQuestion?.exhibitDiagram;
 					const hideAfterExhibit = bankQuestion?.hideAfterExhibit === true;
 					const exhibitImage = hideExhibitImage || exhibitDiagram || bankQuestion?.nativeExhibitText
