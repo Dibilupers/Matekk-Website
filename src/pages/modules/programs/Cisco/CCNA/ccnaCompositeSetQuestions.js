@@ -905,7 +905,13 @@ const DATABASE_NATIVE_EXHIBITS = new Map([
 	[181, { hideExhibitImage: true }],
 	[382, { diagram: "voice-data-vlan300-400", hideExhibitImage: true }],
 	[608, { hideExhibitImage: true }],
-	[491, { hideExhibitImage: true, removeExhibitLeadIn: true }],
+	[491, {
+		exhibit: `Switch#show ip dhcp snooping statistics detail
+
+Packets received on untrusted ports: 32`,
+		hideExhibitImage: true,
+		exhibitQuality: "source-backed",
+	}],
 	[299, {
 		hideExhibitImage: true,
 		removeExhibitLeadIn: true,
@@ -3017,6 +3023,13 @@ export function applyNativeExhibit(question) {
 			promptLegacyIndex = 578;
 		} else if (/what must be configured to enable 802\.11w on the wlan/i.test(question.prompt)) {
 			promptLegacyIndex = 599;
+		} else if (/which switch becomes the root of the spanning tree for vlan 110/i.test(question.prompt) &&
+			/switch 1[\s\S]*32778[\s\S]*switch 4[\s\S]*64000/i.test(question.prompt)) {
+			promptLegacyIndex = 339;
+		} else if (/the dhcp server and clients are connected to the same switch[\s\S]*clients on vlan 1/i.test(question.prompt)) {
+			promptLegacyIndex = 491;
+		} else if (/which configuration enables an etherchannel to form dynamically between sw1 and sw2/i.test(question.prompt)) {
+			promptLegacyIndex = 515;
 		} else if (/network engineer configures the cisco wlc to authenticate local wireless clients against a radius\s+server/i.test(question.prompt)) {
 			promptLegacyIndex = 603;
 		} else if (/highest encryption and authentication\s+using domain credentials from ldap/i.test(question.prompt)) {

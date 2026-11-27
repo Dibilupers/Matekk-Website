@@ -340,8 +340,19 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 				await bankReady;
 				if (!isActive) return;
 				const loadedQuestions = apiAttempt.questions.map((apiQuestion) => {
-					const bankQuestion = getDatabaseQuestionById(apiQuestion.id) ??
-						applyNativeExhibit({ ...apiQuestion, bankId: apiQuestion.id });
+					// Resolve exhibits against the question text returned for this attempt. The
+					// local bank can contain colliding IDs, so resolving by ID first can attach
+					// a different record and skip prompt-based exhibit mappings entirely.
+					const mappedApiQuestion = applyNativeExhibit({ ...apiQuestion, bankId: apiQuestion.id });
+					const cachedBankQuestion = getDatabaseQuestionById(apiQuestion.id);
+					const exhibitFields = [
+						"legacyIndex", "exhibit", "exhibitDiagram", "exhibitImage", "exhibitImageCropTop",
+						"afterExhibit", "hideExhibitImage", "hideAfterExhibit", "nativeExhibitText", "exhibitQuality",
+					];
+					const bankExhibitFallbacks = Object.fromEntries(exhibitFields
+						.filter((field) => mappedApiQuestion[field] === undefined && cachedBankQuestion?.[field] !== undefined)
+						.map((field) => [field, cachedBankQuestion[field]]));
+					const bankQuestion = { ...mappedApiQuestion, ...bankExhibitFallbacks };
 					const hideExhibitImage = bankQuestion?.hideExhibitImage === true ||
 						(apiQuestion.type === "match" && RECREATED_MATCH_EXHIBIT_QUESTION_IDS.has(apiQuestion.id));
 					// Fix text saved with the wrong encoding ("â€œwarningâ€" -> “warning”) for display.
@@ -352,13 +363,13 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 					const isOptionTable = Array.isArray(apiQuestion.options) &&
 						apiQuestion.options.every((option) => /^\s*Option [A-H]\s*$/i.test(String(option)));
 					const hasExpandedOptionTable = isOptionTable &&
-						Array.isArray(bankQuestion?.options) &&
-						bankQuestion.options.length === apiQuestion.options.length &&
-						bankQuestion.options.every((option) =>
+						Array.isArray(cachedBankQuestion?.options) &&
+						cachedBankQuestion.options.length === apiQuestion.options.length &&
+						cachedBankQuestion.options.every((option) =>
 							typeof option === "string" && option.trim() && !/^\s*Option [A-H]\s*$/i.test(option),
 						);
 					const { prompt, exhibit } = hasExpandedOptionTable
-						? { prompt: bankQuestion.prompt }
+						? { prompt: cachedBankQuestion.prompt }
 						: isOptionTable
 						? { prompt: cleanText(apiQuestion.prompt) }
 						: splitPromptExhibit(cleanText(apiQuestion.prompt));
@@ -380,7 +391,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 					const rawOptions = isOptionTable
 						? [...apiQuestion.options].sort((left, right) => String(left).trim().localeCompare(String(right).trim()))
 						: apiQuestion.options;
-					const orderedOptions = hasExpandedOptionTable ? bankQuestion.options : rawOptions;
+					const orderedOptions = hasExpandedOptionTable ? cachedBankQuestion.options : rawOptions;
 					return {
 						...apiQuestion,
 						prompt: displayPrompt,
