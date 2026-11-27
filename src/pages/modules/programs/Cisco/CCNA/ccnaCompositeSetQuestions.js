@@ -2592,6 +2592,24 @@ en0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
 	[963, { image: pcIpConfig963ExhibitImg, hideAfterExhibit: true, exhibitQuality: "source-backed" }],
 	[1114, { image: hostA1114ExhibitImg, hideAfterExhibit: true, exhibitQuality: "source-backed" }],
 	[1152, { image: hostC1152ExhibitImg, hideAfterExhibit: true, exhibitQuality: "source-backed" }],
+	[1112, {
+		prompt: "Refer to the exhibit. VoIP is being implemented in the network using VLAN ID 73 and named ‘VoIP’. Each user needs a Cisco IP phone at their desk. Switchport e0/0 has been configured as an access port in the data VLAN. Cisco Discovery Protocol is enabled globally. Which command sequence completed the configuration?",
+		exhibit: `SW_1#show vlan
+
+VLAN  Name                 Status    Ports
+----  -------------------  --------  ---------------------------
+1     default              active    Et0/2, Et1/0, Et1/0, Et1/3
+5     MGMT Vlan             active    Et1/1
+6     Server Vlan           active
+72    Data Vlan             active    Et0/0
+1002  fddi-default         act/unsup
+1003  token-ring-default   act/unsup
+1004  fddinet-default     act/unsup
+1005  trnet-default       act/unsup`,
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "source-backed",
+	}],
 	[1154, { image: wlcWpa2Psk1154ExhibitImg, hideAfterExhibit: true, exhibitQuality: "source-backed" }],
 	[1170, { image: wlcWpa2Aes1170ExhibitImg, hideAfterExhibit: true, exhibitQuality: "source-backed" }],
 	[1206, { diagram: "candidate-wlc-890", hideExhibitImage: true, exhibitQuality: "source-backed" }],
@@ -3072,6 +3090,8 @@ export function applyNativeExhibit(question) {
 			promptLegacyIndex = 579;
 		} else if (/which configuration establishes a layer 2 lacp etherchannel when applied to both switches/i.test(question.prompt)) {
 			promptLegacyIndex = 602;
+		} else if (/voip is being implemented in the network using vlan id 73[\s\S]*which command sequence completed the configuration/i.test(question.prompt)) {
+			promptLegacyIndex = 1112;
 		} else if (/how many json objects are presented/i.test(question.prompt)) {
 			promptLegacyIndex = 769;
 		} else if (/newly configured pc fails to connect to the internet using tcp port 80 to www\.cisco\.com/i.test(question.prompt)) {
