@@ -4,6 +4,7 @@ import { getDisplayedOption, getOptionTableExhibit, parseFormattedOptions } from
 import { ExhibitDiagram, ExhibitImage, ExhibitText } from "./ccnaExhibit";
 import { looksLikeCode, tidySentence } from "../../../../../utils/answerTextStyle";
 import {
+	splitPromptExhibit,
 	removeDuplicateExhibitLeadIn,
 	removeTrailingOptionExhibitLabel,
 } from "../../../../../utils/splitPromptExhibit";
@@ -12,6 +13,18 @@ import { DragDropQuestionInput, DragDropQuestionReview } from "./ccnaExamDragDro
 import { ClickBoxesQuestionInput, ClickBoxesQuestionReview } from "./ccnaExamClickBoxes";
 
 const OPTION_LABELS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+function splitInlineQuestionExhibit(rawPrompt) {
+	rawPrompt = String(rawPrompt ?? "");
+	if (!/^\s*Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\b/i.test(rawPrompt)) return null;
+	const split = splitPromptExhibit(rawPrompt);
+	if (typeof split.exhibit !== "string" || !split.exhibit.trim()) return null;
+	const prompt = String(split.prompt ?? rawPrompt)
+		.replace(/^\s*Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\.?\s*/i, "")
+		.trim();
+	return { prompt, exhibit: split.exhibit.trim() };
+}
+
 function letter(index) {
 	let label = "";
 	for (let number = index + 1; number > 0; number = Math.floor((number - 1) / OPTION_LABELS.length)) {
@@ -448,14 +461,17 @@ export function QuestionPrompt({
 	prompt,
 	imageUrl,
 	hideExhibitImage = false,
-	hasSeparateExhibit = Boolean(imageUrl),
+	hasSeparateExhibit = Boolean(imageUrl && !hideExhibitImage),
 	offline = false,
 	regularWeight = false,
 	fortiosOffline = false,
 	compactExhibit = false,
 }) {
 	const rawPrompt = String(prompt ?? "");
-	const readablePrompt = offline ? rawPrompt
+	const parsedInlineExhibit = splitInlineQuestionExhibit(rawPrompt);
+	const inlineExhibit = parsedInlineExhibit && !hasSeparateExhibit ? parsedInlineExhibit : null;
+	const promptForDisplay = parsedInlineExhibit?.prompt ?? rawPrompt;
+	const readablePrompt = offline ? promptForDisplay
 		.replace(/\r\n/g, "\n")
 		.split(/\n\s*\n/)
 		.map((paragraph) => {
@@ -465,9 +481,11 @@ export function QuestionPrompt({
 			const isList = lines.every((line) => /^(?:[-*•+]\s|\d+[.)]\s|[A-Z][.)]\s)/.test(line));
 			return isList ? lines.join("\n") : lines.join(" ");
 		})
-		.join("\n\n") : rawPrompt;
+		.join("\n\n") : promptForDisplay;
 	const normalizedPrompt = removeDuplicateExhibitLeadIn(
-		hasSeparateExhibit ? removeTrailingOptionExhibitLabel(readablePrompt) : readablePrompt,
+		(hasSeparateExhibit || inlineExhibit)
+			? removeTrailingOptionExhibitLabel(readablePrompt)
+			: readablePrompt,
 	);
 	const formattedOptions = parseFormattedOptions(normalizedPrompt, { offline });
 	// A scrambled "Option A / Option B" table: show the question, then the whole table as it appears in the source
@@ -478,6 +496,7 @@ export function QuestionPrompt({
 				<PromptText text={optionTable.prompt} offline={offline} regularWeight={regularWeight || offline} fortiosOffline={fortiosOffline} />
 				{imageUrl && !hideExhibitImage && <ExhibitImage src={imageUrl} lazy compact={compactExhibit} imageClassName="max-h-[32rem]" />}
 				<ExhibitText text={optionTable.exhibit} />
+				{inlineExhibit && <ExhibitText text={inlineExhibit.exhibit} />}
 			</div>
 		);
 	}
@@ -520,6 +539,7 @@ export function QuestionPrompt({
 					</pre>
 				</section>
 			)}
+			{inlineExhibit && <ExhibitText text={inlineExhibit.exhibit} />}
 		</div>
 	);
 }
@@ -537,7 +557,6 @@ export function QuestionExhibits({ question, className = "mb-6", compact = false
 				</figure>
 			))
 		: null;
-
 	if (question.afterExhibit) {
 		const sourceExhibits = (
 			<>

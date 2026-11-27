@@ -2598,7 +2598,7 @@ Network 172.16.2.0 0.0.0.31`,
 	},
 	"static-route-three-router-799": {
 		title: "R1–R2–R3 static-route topology",
-		note: "Illustrative reconstruction from the keyed commands: 10.10.13.0/25 is behind R3 and 10.10.14.0/24 is behind R1. Transit masks are unavailable.",
+		note: "Illustrative reconstruction from the keyed commands. LAN A is 10.10.14.0/24 behind R1; LAN B is 10.10.13.0/25 behind R3. Transit next hops are R1–R2: R2 10.10.10.1 / R1 10.10.10.2, and R2–R3: R3 10.10.10.5 / R2 10.10.10.6. The source does not establish transit masks or host addresses.",
 		nodes: [
 			{ id: "lan14", kind: "network", name: "10.10.14.0/24", x: 100, y: 300 },
 			{ id: "r1", kind: "router", name: "R1", x: 330, y: 300 },

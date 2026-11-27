@@ -874,9 +874,10 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 								{!question.hidePrompt && (
 									<QuestionPrompt
 										prompt={question.prompt}
+										hideExhibitImage={question.hideExhibitImage}
 										offline={isOfflineExam}
 										compactExhibit
-										hasSeparateExhibit={Boolean(question.exhibit || question.exhibitImage || question.exhibitDiagram)}
+										hasSeparateExhibit={Boolean(question.exhibit || question.exhibitDiagram || question.afterExhibit || (question.exhibitImage && !question.hideExhibitImage))}
 									/>
 								)}
 								{question.exhibitDiagram && <ExhibitDiagram type={question.exhibitDiagram} offlineLayout={isOfflineExam} compact />}
@@ -1039,9 +1040,10 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 												{!item.hidePrompt && (
 													<QuestionPrompt
 														prompt={item.prompt}
+														hideExhibitImage={item.hideExhibitImage}
 														offline={isOfflineExam}
 														compactExhibit
-														hasSeparateExhibit={Boolean(item.exhibit || item.exhibitImage || item.exhibitDiagram)}
+														hasSeparateExhibit={Boolean(item.exhibit || item.exhibitDiagram || item.afterExhibit || (item.exhibitImage && !item.hideExhibitImage))}
 													/>
 												)}
 								{item.exhibitDiagram && <ExhibitDiagram type={item.exhibitDiagram} className="mt-4" offlineLayout={isOfflineExam} compact />}

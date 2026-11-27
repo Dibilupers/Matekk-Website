@@ -14,7 +14,7 @@ const CODE_HINTS = [
 // A plain question sentence that comes after the output (e.g. "Which two commands ...?")
 const QUESTION_START = /^\s*(Which|What|How|Why|When|Where|Drag|An? |The |If |After |Refer)\b/;
 
-const EXHIBIT_CUE = /\brefer\s+to\s+(?:the\s+)?exhibit\b\s*\.?/i;
+const EXHIBIT_CUE = /\brefer\s+(?:to\s+)?(?:the\s+)?exhibits?\b\s*\.?/i;
 const FORMATTED_OPTION_COLUMNS = /^\s*Option [A-H]\s*:?[ \t]{2,}Option [A-H]\b/im;
 const INLINE_CODE_START = [
   /\bOutput from R1\b/i,
@@ -213,8 +213,8 @@ export function splitPromptExhibit(prompt) {
 
 export function removeDuplicateExhibitLeadIn(prompt) {
   return String(prompt ?? "")
-    .replace(/^\s*Refer to (?:the )?exhibit\.?\s*(?:\r?\n\s*)+(Refer to (?:the )?exhibit\.?)/i, "$1")
-    .replace(/^(Refer to (?:the )?exhibit\.)(?:[ \t]+)(?=\S)/i, "$1\n\n")
+    .replace(/^\s*Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\.?\s*(?:\r?\n\s*)+(Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\.?)/i, "$1")
+    .replace(/^(Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\.)(?:[ \t]+)(?=\S)/i, "$1\n\n")
     .trim();
 }
 

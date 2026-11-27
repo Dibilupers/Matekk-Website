@@ -487,9 +487,10 @@ export default function CCNAAllQuestionsExam({ exhibitsOnly = false }) {
 							{!question.hidePrompt && (
 								<QuestionPrompt
 									prompt={question.prompt}
+									hideExhibitImage={question.hideExhibitImage}
 									offline={!isOnline}
 									compactExhibit
-									hasSeparateExhibit={Boolean(question.afterExhibit || question.exhibit || question.exhibitImage || question.exhibitDiagram || question.offlineSourceExhibitImages?.length)}
+									hasSeparateExhibit={Boolean(question.afterExhibit || question.exhibit || (question.exhibitImage && !question.hideExhibitImage) || question.exhibitDiagram || (exhibitsOnly && question.offlineSourceExhibitImages?.length))}
 								/>
 							)}
 							<QuestionExhibits question={question} className="mb-6" compact includeOfflineSourceImages={exhibitsOnly} />
@@ -647,9 +648,10 @@ export default function CCNAAllQuestionsExam({ exhibitsOnly = false }) {
 							{!question.hidePrompt && (
 								<QuestionPrompt
 									prompt={question.prompt}
+									hideExhibitImage={question.hideExhibitImage}
 									offline={!isOnline}
 									compactExhibit
-									hasSeparateExhibit={Boolean(question.afterExhibit || question.exhibit || question.exhibitImage || question.exhibitDiagram || question.offlineSourceExhibitImages?.length)}
+									hasSeparateExhibit={Boolean(question.afterExhibit || question.exhibit || (question.exhibitImage && !question.hideExhibitImage) || question.exhibitDiagram || (exhibitsOnly && question.offlineSourceExhibitImages?.length))}
 								/>
 							)}
 							<QuestionExhibits question={question} className="mb-6" compact includeOfflineSourceImages={exhibitsOnly} />

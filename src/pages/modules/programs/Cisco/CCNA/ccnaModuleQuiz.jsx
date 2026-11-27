@@ -27,6 +27,7 @@ import {
 } from "../../../../../utils/programModuleQuizProgress";
 import { saveGradebookAssessment } from "../../../../../utils/gradebookApi";
 import { QuestionInput, QuestionPrompt, QuestionReview } from "./ccnaExamQuestionViews";
+import { ExhibitText } from "./ccnaExhibit";
 
 const CCNA_SOURCE_URL = "https://www.cisco.com/site/us/en/learn/training-certifications/certifications/enterprise/ccna/index.html";
 
@@ -564,8 +565,9 @@ export default function CCNAModuleQuiz() {
 									prompt={currentQuestion.prompt}
 									imageUrl={currentQuestion.imageUrl}
 									hideExhibitImage={currentQuestion.hideExhibitImage}
-									hasSeparateExhibit={Boolean(currentQuestion.exhibit || currentQuestion.imageUrl)}
+									hasSeparateExhibit={Boolean(currentQuestion.exhibit || (currentQuestion.imageUrl && !currentQuestion.hideExhibitImage))}
 								/>
+								{currentQuestion.exhibit && <ExhibitText text={currentQuestion.exhibit} className="mb-6" />}
 								<QuestionInput
 									key={attempt.currentIndex}
 									question={currentQuestion}
@@ -714,8 +716,9 @@ export default function CCNAModuleQuiz() {
 												prompt={question.prompt}
 												imageUrl={question.imageUrl}
 												hideExhibitImage={question.hideExhibitImage}
-												hasSeparateExhibit={Boolean(question.exhibit || question.imageUrl)}
+												hasSeparateExhibit={Boolean(question.exhibit || (question.imageUrl && !question.hideExhibitImage))}
 											/>
+											{question.exhibit && <ExhibitText text={question.exhibit} className="mt-5" />}
 											<div className="mt-5">
 												<QuestionReview question={question} value={question.selectedAnswer} />
 											</div>

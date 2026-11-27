@@ -1987,6 +1987,21 @@ Permit OSPF (protocol 89) from 10.100.1.2 and block other neighbors.`,
 		removeExhibitLeadIn: true,
 		exhibitQuality: "partial",
 	}],
+	[663, {
+		exhibit: `Windows PC > ipconfig /all (relevant excerpt)
+
+Wireless LAN adapter Wi-Fi:
+   IPv4 Address . . . . . . . . . . : 192.168.1.226
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . . : 192.168.1.100
+   DHCP Server . . . . . . . . . . . : 192.168.1.254
+   DNS Servers . . . . . . . . . . . : 192.168.1.253
+                                       192.168.1.254`,
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		removeExhibitLeadIn: true,
+		exhibitQuality: "partial",
+	}],
 	[702, {
 		hideExhibitImage: true,
 		removeExhibitLeadIn: true,
@@ -2921,6 +2936,12 @@ export function applyNativeExhibit(question) {
 			promptLegacyIndex = 621;
 		} else if (/between which zones do wireless users expect to experience intermittent connectivity/i.test(question.prompt)) {
 			promptLegacyIndex = 478;
+		} else if (/which address will the client contact to renew their ip address when the current lease expires/i.test(question.prompt)) {
+			promptLegacyIndex = 1123;
+		} else if (/what does the host do when using the ipv4 preferred function/i.test(question.prompt)) {
+			promptLegacyIndex = 1060;
+		} else if (/the user has connectivity to devices on network 192\.168\.3\.0\/24/i.test(question.prompt)) {
+			promptLegacyIndex = 1190;
 		} else if (/users need to connect to the wireless network with ieee 802\.11r-compatible devices/i.test(question.prompt)) {
 			promptLegacyIndex = 578;
 		} else if (/what must be configured to enable 802\.11w on the wlan/i.test(question.prompt)) {
@@ -2994,9 +3015,9 @@ export function applyNativeExhibit(question) {
 	const prompt = typeof databaseExhibit?.prompt === "string"
 		? databaseExhibit.prompt
 		: typeof parsedPrompt?.exhibit === "string"
-			? parsedPrompt.prompt.replace(/^\s*Refer to (?:the )?exhibit\.?\s*/i, "")
+			? parsedPrompt.prompt.replace(/^\s*Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\.?\s*/i, "")
 			: removeExhibitLeadIn && typeof question?.prompt === "string"
-				? question.prompt.replace(/^\s*Refer to (?:the )?exhibit\.?\s*/i, "")
+				? question.prompt.replace(/^\s*Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\.?\s*/i, "")
 				: undefined;
 
 	return {

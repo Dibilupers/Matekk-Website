@@ -1139,10 +1139,10 @@ const OFFLINE_LEGACY_QUESTION_CANDIDATES = CCNA_LEGACY_QUESTIONS
     const removeExhibitLeadIn = nativeExhibit?.removeExhibitLeadIn ||
       (typeof nativePrompt === "string" && nativePrompt !== question.prompt);
     const promptWithoutExhibitLeadIn = typeof offlineOverride?.prompt === "string"
-      ? offlineOverride.prompt.replace(/^\s*Refer to (?:the )?exhibit\.?\s*/i, "")
+      ? offlineOverride.prompt.replace(/^\s*Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\.?\s*/i, "")
       : typeof nativePrompt === "string" && nativePrompt !== question.prompt
         ? nativePrompt
-        : question.prompt.replace(/^\s*Refer to (?:the )?exhibit\.?\s*/i, "");
+        : question.prompt.replace(/^\s*Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\.?\s*/i, "");
 
     return {
       ...question,
