@@ -6,6 +6,47 @@ import {
 	CCNA_TOPOLOGY_EXHIBIT_RECREATIONS,
 } from "./ccnaRecreatedCandidateExhibits.js";
 import { splitPromptExhibit } from "../../../../../utils/splitPromptExhibit.js";
+import {
+	getCcnaExhibitImageByBankId,
+	getCcnaExhibitImageByLegacyIndex,
+} from "../../../../../utils/ccnaExhibitImages.js";
+import stpRootBridge962ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-962-stp-root-bridge-exhibit.jpg";
+import { CCNA_LEGACY_QUESTIONS } from "./ccnaLegacyQuestions.js";
+
+const normalizeExhibitLookupPrompt = (prompt) => {
+	const split = splitPromptExhibit(String(prompt ?? ""));
+	return String(split.prompt ?? prompt ?? "")
+		.replace(/^\s*Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\.?\s*/i, "")
+		.replace(/\s+/g, " ")
+		.trim()
+		.toLowerCase();
+};
+
+const normalizeExhibitLookupOptions = (options) => Array.isArray(options)
+	? options.map((option) => String(option ?? "").replace(/\s+/g, " ").trim().toLowerCase()).sort().join("\u001f")
+	: "";
+
+const LEGACY_EXHIBIT_PROMPT_MATCHES = new Map();
+for (const legacyQuestion of CCNA_LEGACY_QUESTIONS) {
+	if (!/^\s*Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\b/i.test(legacyQuestion.prompt ?? "")) continue;
+	const key = normalizeExhibitLookupPrompt(legacyQuestion.prompt);
+	if (!key) continue;
+	const matches = LEGACY_EXHIBIT_PROMPT_MATCHES.get(key) ?? [];
+	matches.push({
+		legacyIndex: legacyQuestion.legacyIndex,
+		options: normalizeExhibitLookupOptions(legacyQuestion.options),
+	});
+	LEGACY_EXHIBIT_PROMPT_MATCHES.set(key, matches);
+}
+
+function findLegacyExhibitIndex(question) {
+	if (!/^\s*Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\b/i.test(question?.prompt ?? "")) return undefined;
+	const matches = LEGACY_EXHIBIT_PROMPT_MATCHES.get(normalizeExhibitLookupPrompt(question.prompt)) ?? [];
+	if (matches.length === 1) return matches[0].legacyIndex;
+	const optionKey = normalizeExhibitLookupOptions(question.options);
+	const optionMatches = optionKey ? matches.filter((match) => match.options === optionKey) : [];
+	return optionMatches.length === 1 ? optionMatches[0].legacyIndex : undefined;
+}
 
 const ex = (exhibit) => (exhibit && typeof exhibit === "object"
 	? {
@@ -1958,6 +1999,23 @@ const LEGACY_NATIVE_EXHIBITS = new Map([
 		hideExhibitImage: true,
 		exhibitQuality: "source-backed",
 	}],
+	[716, {
+		diagram: "ipv6-block-r1-r2-716",
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "partial",
+	}],
+	[962, {
+		image: stpRootBridge962ExhibitImg,
+		hideAfterExhibit: true,
+		exhibitQuality: "source-backed",
+	}],
+	[794, {
+		diagram: "candidate-wlc-794-max-clients-review",
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "partial",
+	}],
 	[59, {
 		diagram: "vtp-transparent-frame-flow",
 		hideExhibitImage: true,
@@ -2928,7 +2986,18 @@ export function applyNativeExhibit(question) {
 	const builtInQuestion = getBuiltInQuestionByPrompt(question?.prompt);
 	let promptLegacyIndex;
 	if (typeof question?.prompt === "string") {
-		if (/an ospf neighbor relationship must be configured using these guidelines/i.test(question.prompt)) {
+		if (/wlan to connect with the 172\.16\.10\.0\/24 network on vlan 20[\s\S]*limit the number of devices[\s\S]*userwl ssid to 125/i.test(question.prompt)) {
+			promptLegacyIndex = 794;
+		} else if (/primary route across gi0\/0 is configured on both routers[\s\S]*secondary route/i.test(question.prompt)) {
+			promptLegacyIndex = 591;
+		} else if (/ipv6 is being implemented within the enterprise[\s\S]*dynamic assignment using the assigned ipv6 block/i.test(question.prompt)) {
+			promptLegacyIndex = 716;
+		} else if (/which switch becomes the root bridge/i.test(question.prompt) &&
+			Array.isArray(question?.options) && question.options.some((option) => /0f:d7:9e:13:ab:82/i.test(String(option)))) {
+			promptLegacyIndex = 962;
+		} else if (/what commands are needed to add a subinterface to ethernet0\/0 on r1[\s\S]*vlan 20[\s\S]*10\.20\.20\.1/i.test(question.prompt)) {
+			promptLegacyIndex = 50;
+		} else if (/an ospf neighbor relationship must be configured using these guidelines/i.test(question.prompt)) {
 			promptLegacyIndex = 624;
 		} else if (/the route for 10\.220\.100\.96\/27 has been very unstable/i.test(question.prompt)) {
 			promptLegacyIndex = 1161;
@@ -2964,24 +3033,32 @@ export function applyNativeExhibit(question) {
 			promptLegacyIndex = 852;
 		}
 	}
-	const legacyIndex = question?.legacyIndex ?? promptLegacyIndex;
+	const matchedLegacyIndex = promptLegacyIndex ?? findLegacyExhibitIndex(question);
+	const legacyIndex = matchedLegacyIndex ?? question?.legacyIndex;
 	const topologyExhibit = TOPOLOGY_EXHIBIT_RECREATIONS_BY_LEGACY_INDEX.get(legacyIndex);
+	const promptSpecificExhibit = typeof question?.prompt === "string" &&
+		/wlan to connect with the 172\.16\.10\.0\/24 network on vlan 20[\s\S]*limit the number of devices[\s\S]*userwl ssid to 125/i.test(question.prompt)
+		? LEGACY_NATIVE_EXHIBITS.get(794)
+		: null;
 	const parsedPrompt = !question?.exhibit && typeof question?.prompt === "string"
 		? splitPromptExhibit(question.prompt)
 		: null;
-	const currentDatabaseExhibit = CCNA_RECREATED_CANDIDATE_EXHIBITS.get(question?.bankId) ??
+	const currentDatabaseExhibit = (matchedLegacyIndex !== undefined
+		? LEGACY_NATIVE_EXHIBITS.get(matchedLegacyIndex)
+		: undefined) ??
+		CCNA_RECREATED_CANDIDATE_EXHIBITS.get(question?.bankId) ??
 		LEGACY_NATIVE_EXHIBITS.get(legacyIndex) ??
 		DATABASE_NATIVE_EXHIBITS.get(question?.bankId);
-	const databaseExhibit = topologyExhibit
+	const databaseExhibit = promptSpecificExhibit ?? (topologyExhibit
 		? {
 			...(currentDatabaseExhibit && typeof currentDatabaseExhibit === "object" ? currentDatabaseExhibit : {}),
 			...topologyExhibit,
 		}
-		: currentDatabaseExhibit;
+		: currentDatabaseExhibit);
 	const questionOverride = typeof databaseExhibit === "object" ? databaseExhibit : {};
 	const exhibitDiagram = (typeof databaseExhibit === "string" ? databaseExhibit : databaseExhibit?.diagram) ??
 		builtInQuestion?.exhibitDiagram;
-	const exhibitImage = typeof databaseExhibit === "object" ? databaseExhibit.image : undefined;
+	const databaseExhibitImage = typeof databaseExhibit === "object" ? databaseExhibit.image : undefined;
 	const exhibit = (typeof databaseExhibit === "object" ? databaseExhibit.exhibit : undefined) ??
 		parsedPrompt?.exhibit;
 	const hasNativeTextExhibit = typeof exhibit === "string";
@@ -2995,8 +3072,12 @@ export function applyNativeExhibit(question) {
 	const hideExhibitImage = databaseExhibit?.hideExhibitImage === true ||
 		hasMappedTopologyAfterExhibit ||
 		builtInQuestion?.hideExhibitImage === true ||
-		(hasTerminalTextExhibit && DUPLICATE_TERMINAL_SOURCE_IMAGE_LEGACY_INDEXES.has(Number(question?.legacyIndex))) ||
+		(hasTerminalTextExhibit && DUPLICATE_TERMINAL_SOURCE_IMAGE_LEGACY_INDEXES.has(Number(legacyIndex))) ||
 		(hasTerminalTextExhibit && DUPLICATE_TERMINAL_SOURCE_IMAGE_LEGACY_INDEXES.has(sourceImageIndex));
+	const exhibitImage = databaseExhibitImage ?? (!hideExhibitImage && !exhibitDiagram &&
+		/^\s*Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\b/i.test(question?.prompt ?? "")
+		? getCcnaExhibitImageByLegacyIndex(legacyIndex) ?? getCcnaExhibitImageByBankId(question?.bankId)
+		: undefined);
 	const hideAfterExhibit = databaseExhibit?.hideAfterExhibit === true ||
 		hasMappedTopologyAfterExhibit ||
 		builtInQuestion?.hideAfterExhibit === true;
@@ -3008,8 +3089,8 @@ export function applyNativeExhibit(question) {
 	);
 	if (!exhibitDiagram && !exhibitImage && !hasNativeTextExhibit && !hideExhibitImage && !hideAfterExhibit &&
 		!removeExhibitLeadIn && !hasQuestionOverride) {
-		return question?.legacyIndex == null && promptLegacyIndex !== undefined
-			? { ...question, legacyIndex: promptLegacyIndex }
+		return legacyIndex !== question?.legacyIndex && legacyIndex !== undefined
+			? { ...question, legacyIndex }
 			: question;
 	}
 	const prompt = typeof databaseExhibit?.prompt === "string"
@@ -3022,8 +3103,8 @@ export function applyNativeExhibit(question) {
 
 	return {
 		...question,
-		...(question?.legacyIndex == null && promptLegacyIndex !== undefined
-			? { legacyIndex: promptLegacyIndex }
+		...(legacyIndex !== question?.legacyIndex && legacyIndex !== undefined
+			? { legacyIndex }
 			: {}),
 		...(Object.prototype.hasOwnProperty.call(questionOverride, "type") ? { type: questionOverride.type } : {}),
 		...(Object.prototype.hasOwnProperty.call(questionOverride, "items") ? { items: questionOverride.items } : {}),

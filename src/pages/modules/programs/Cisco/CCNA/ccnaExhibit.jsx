@@ -2187,16 +2187,7 @@ const NETWORK_TOPOLOGIES = {
 	},
 	"dual-wan-site-routing": {
 		title: "Dual-link R1–R2 branch network",
-		note: "OSPF Area 10 · R1–R2 links: 172.16.0.0/30 on Gi0/0 and 172.16.0.4/30 on Gi0/1 · SW3 LAN: 172.16.1.0/24 · SW4 LAN: 172.16.2.0/27",
-		configuration: `SW3
-Router OSPF 200
-Network 172.16.0.0 0.0.0.3
-Network 172.16.1.0 0.0.0.3
-
-SW4
-Router OSPF 200
-Network 172.16.0.0 0.0.0.3
-Network 172.16.2.0 0.0.0.31`,
+		note: "R1–R2 links: 172.16.0.0/30 on Gi0/0 and 172.16.0.4/30 on Gi0/1 · SW3 LAN: 172.16.1.0/24 · SW4 LAN: 172.16.2.0/27",
 		nodes: [
 			{ id: "r1", kind: "router", name: "R1", x: 330, y: 310 },
 			{ id: "r2", kind: "router", name: "R2", x: 670, y: 310 },

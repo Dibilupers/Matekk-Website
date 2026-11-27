@@ -26,7 +26,6 @@ export const CCNA_TOPOLOGY_EXHIBIT_RECREATIONS = [
   [651, "ospf-four-router-election"],
   [704, "two-router-four-pc-macs"],
   [770, "etherchannel-three-switch"],
-  [794, "wlan-ap-wlc-network"],
   [856, "stp-four-switch-square"],
   [1089, "stp-four-switch-mesh"],
   [1186, "inter-vlan-routing-sw1"],
@@ -193,7 +192,7 @@ SWx(config-if)# switchport trunk encapsulation dot1q`, "source-backed")],
       "name": "Cisco 6800 Switch"
     }
   ]
-! The closing brace for the outer object is missing.`,
+`,
   "source-backed",
   "What is missing from this output for it to be executed?")],
   [827, diagramExhibit("candidate-wlc-827", "source-backed")],

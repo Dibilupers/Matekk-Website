@@ -34,6 +34,7 @@ const TRAILING_QUESTION = /\b(?:According to the output,\s*)?(?:Which|What|How|W
 function isCode(block) {
   if (!block.trim()) return false;
   if (/^[{[]/.test(block.trim())) return true;
+  if (/^Entry\s*#$/i.test(block.trim())) return true;
   if (/^[^\n?]{1,60}:\s*$/.test(block.trim())) return true; // a heading for the output, e.g. "Configured interfaces:"
   if (/^\s/.test(block) && !QUESTION_START.test(block)) return true;
   return CODE_HINTS.some((re) => re.test(block));
@@ -65,6 +66,7 @@ function splitStructuredExhibit(prompt) {
   let inString = false;
   let escaped = false;
   let end = -1;
+  let incompleteObjectEnd = -1;
   for (let index = start; index < prompt.length; index += 1) {
     const character = prompt[index];
     if (inString) {
@@ -82,8 +84,14 @@ function splitStructuredExhibit(prompt) {
         end = index + 1;
         break;
       }
+      if (opener === "{" && character === "]" && stack.length === 1 &&
+        /^(?:Which|What|How|Why|When|Where)\b/i.test(prompt.slice(index + 1).trim())) {
+        incompleteObjectEnd = index + 1;
+        break;
+      }
     }
   }
+  if (end < 0) end = incompleteObjectEnd;
   if (end < 0) return null;
 
   const exhibit = prompt.slice(start, end).trim();
