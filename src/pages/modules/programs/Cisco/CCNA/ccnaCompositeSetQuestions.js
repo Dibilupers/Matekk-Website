@@ -2986,7 +2986,9 @@ export function applyNativeExhibit(question) {
 	const builtInQuestion = getBuiltInQuestionByPrompt(question?.prompt);
 	let promptLegacyIndex;
 	if (typeof question?.prompt === "string") {
-		if (/wlan to connect with the 172\.16\.10\.0\/24 network on vlan 20[\s\S]*limit the number of devices[\s\S]*userwl ssid to 125/i.test(question.prompt)) {
+		if (/floating static route on an external eigrp network[\s\S]*destination subnet is the \/29 on the lan interface of r86[\s\S]*command must be executed on r14/i.test(question.prompt)) {
+			promptLegacyIndex = 824;
+		} else if (/wlan to connect with the 172\.16\.10\.0\/24 network on vlan 20[\s\S]*limit the number of devices[\s\S]*userwl ssid to 125/i.test(question.prompt)) {
 			promptLegacyIndex = 794;
 		} else if (/primary route across gi0\/0 is configured on both routers[\s\S]*secondary route/i.test(question.prompt)) {
 			promptLegacyIndex = 591;
@@ -3036,9 +3038,12 @@ export function applyNativeExhibit(question) {
 	const matchedLegacyIndex = promptLegacyIndex ?? findLegacyExhibitIndex(question);
 	const legacyIndex = matchedLegacyIndex ?? question?.legacyIndex;
 	const topologyExhibit = TOPOLOGY_EXHIBIT_RECREATIONS_BY_LEGACY_INDEX.get(legacyIndex);
-	const promptSpecificExhibit = typeof question?.prompt === "string" &&
-		/wlan to connect with the 172\.16\.10\.0\/24 network on vlan 20[\s\S]*limit the number of devices[\s\S]*userwl ssid to 125/i.test(question.prompt)
-		? LEGACY_NATIVE_EXHIBITS.get(794)
+	const promptSpecificExhibit = typeof question?.prompt === "string"
+		? /floating static route on an external eigrp network[\s\S]*destination subnet is the \/29 on the lan interface of r86[\s\S]*command must be executed on r14/i.test(question.prompt)
+			? TOPOLOGY_EXHIBIT_RECREATIONS_BY_LEGACY_INDEX.get(824)
+			: /wlan to connect with the 172\.16\.10\.0\/24 network on vlan 20[\s\S]*limit the number of devices[\s\S]*userwl ssid to 125/i.test(question.prompt)
+				? LEGACY_NATIVE_EXHIBITS.get(794)
+				: null
 		: null;
 	const parsedPrompt = !question?.exhibit && typeof question?.prompt === "string"
 		? splitPromptExhibit(question.prompt)
