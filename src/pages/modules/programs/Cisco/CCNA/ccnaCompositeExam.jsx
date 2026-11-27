@@ -174,11 +174,11 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 			if (isOfflineExam && hasLoadedOfflineAttemptRef.current && !shouldStartNewAttemptRef.current) return;
 			setExamLoadState({ status: "loading", error: null });
 			// The question bank supplies each question's picture / printout; load it alongside the exam questions
-			const bankReady = isOfflineExam
-				? Promise.resolve()
-				: loadCcnaAllQuestionsBank()
-				.then(({ questions: bankQuestions }) => setDatabaseQuestions(bankQuestions))
-				.catch((error) => console.error("Unable to load and save the complete CCNA question bank.", error));
+			if (!isOfflineExam) {
+				loadCcnaAllQuestionsBank()
+					.then(({ questions: bankQuestions }) => setDatabaseQuestions(bankQuestions))
+					.catch((error) => console.error("Unable to load and save the complete CCNA question bank.", error));
+			}
 			try {
 				let savedSession = null;
 				const isRetake = shouldStartNewAttemptRef.current;
@@ -337,8 +337,8 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 				if (apiAttempt.questions.length !== exam.questionCount) {
 					throw new TypeError(`The backend did not return ${exam.questionCount} questions for this exam.`);
 				}
-				await bankReady;
-				if (!isActive) return;
+				// The attempt already contains its questions. Keep the full-bank download and offline
+				// cache warm-up in the background instead of blocking the first question on it.
 				const loadedQuestions = apiAttempt.questions.map((apiQuestion) => {
 					// Resolve exhibits against the question text returned for this attempt. The
 					// local bank can contain colliding IDs, so resolving by ID first can attach
