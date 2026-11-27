@@ -48,8 +48,22 @@ for (const legacyQuestion of CCNA_LEGACY_QUESTIONS) {
 }
 
 function findLegacyExhibitIndex(question) {
-	if (!/^\s*Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\b/i.test(question?.prompt ?? "")) return undefined;
-	const matches = LEGACY_EXHIBIT_PROMPT_MATCHES.get(normalizeExhibitLookupPrompt(question.prompt)) ?? [];
+	const rawPrompt = String(question?.prompt ?? "");
+	const hasExhibitLeadIn = /^\s*Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\b/i.test(rawPrompt);
+	const normalizedPrompt = normalizeExhibitLookupPrompt(rawPrompt);
+	const matches = hasExhibitLeadIn
+		? LEGACY_EXHIBIT_PROMPT_MATCHES.get(normalizedPrompt) ?? []
+		: CCNA_LEGACY_QUESTIONS
+			.filter((legacyQuestion) => /^\s*Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\b/i.test(legacyQuestion.prompt ?? ""))
+			.filter((legacyQuestion) => {
+				const sourcePrompt = normalizeExhibitLookupPrompt(legacyQuestion.prompt);
+				return normalizedPrompt.length >= 12 && sourcePrompt.includes(normalizedPrompt);
+			})
+			.map((legacyQuestion) => ({
+				legacyIndex: legacyQuestion.legacyIndex,
+				options: normalizeExhibitLookupOptions(legacyQuestion.options),
+			}));
+	if (!matches.length) return undefined;
 	if (matches.length === 1) return matches[0].legacyIndex;
 	const optionKey = normalizeExhibitLookupOptions(question.options);
 	const optionMatches = optionKey ? matches.filter((match) => match.options === optionKey) : [];
@@ -2760,7 +2774,7 @@ Switch2(config-if)#switchport trunk allowed vlan 5,10`,
 		hideExhibitImage: true,
 		exhibitQuality: "source-backed",
 	}],
-	[602, { hideExhibitImage: true, removeExhibitLeadIn: true }],
+	[602, { diagram: "lacp-three-parallel-switches", hideExhibitImage: true }],
 	[603, {
 		diagram: "wlc-radius-server-source",
 		hideExhibitImage: true,
@@ -3125,6 +3139,9 @@ export function applyNativeExhibit(question) {
 				? LEGACY_NATIVE_EXHIBITS.get(794)
 				: null
 		: null;
+	const legacySourceQuestion = matchedLegacyIndex !== undefined
+		? CCNA_LEGACY_QUESTIONS.find((candidate) => candidate.legacyIndex === matchedLegacyIndex)
+		: undefined;
 	const parsedPrompt = !question?.exhibit && typeof question?.prompt === "string"
 		? splitPromptExhibit(question.prompt)
 		: null;
@@ -3169,17 +3186,24 @@ export function applyNativeExhibit(question) {
 	const removeExhibitLeadIn = databaseExhibit?.removeExhibitLeadIn === true ||
 		builtInQuestion?.removeExhibitLeadIn === true ||
 		typeof parsedPrompt?.exhibit === "string";
+	const sourcePrompt = legacySourceQuestion && !/^\s*Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\b/i.test(question?.prompt ?? "")
+		? splitPromptExhibit(legacySourceQuestion.prompt).prompt
+		: undefined;
+	const recoverTruncatedPrompt = typeof sourcePrompt === "string" &&
+		normalizeExhibitLookupPrompt(legacySourceQuestion.prompt).includes(normalizeExhibitLookupPrompt(question.prompt));
 	const hasQuestionOverride = ["type", "items", "choices", "answer"].some((key) =>
 		Object.prototype.hasOwnProperty.call(questionOverride, key),
 	);
 	if (!exhibitDiagram && !exhibitImage && !hasNativeTextExhibit && !hideExhibitImage && !hideAfterExhibit &&
-		!removeExhibitLeadIn && !hasQuestionOverride) {
+		!removeExhibitLeadIn && !hasQuestionOverride && !recoverTruncatedPrompt) {
 		return legacyIndex !== question?.legacyIndex && legacyIndex !== undefined
 			? { ...question, legacyIndex }
 			: question;
 	}
 	const prompt = typeof databaseExhibit?.prompt === "string"
 		? databaseExhibit.prompt
+		: typeof sourcePrompt === "string"
+			? sourcePrompt
 		: typeof parsedPrompt?.exhibit === "string"
 			? parsedPrompt.prompt.replace(/^\s*Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\.?\s*/i, "")
 			: removeExhibitLeadIn && typeof question?.prompt === "string"
