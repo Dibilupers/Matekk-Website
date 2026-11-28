@@ -2067,6 +2067,29 @@ const LEGACY_NATIVE_EXHIBITS = new Map([
 			"SW4\ninterface Gi0/2\n switchport mode access\n switchport access vlan 14\n\nSW11#\ninterface Gi0/2\n switchport mode access\n switchport access vlan 14\n!\ninterface Gi0/0\n switchport mode access\n switchport access vlan 14\n!\ninterface Gi0/1\n switchport mode trunk\n\nSW9#\ninterface Gi0/2\n switchport mode access\n switchport access vlan 14",
 		],
 	}],
+	[1130, {
+		prompt: "The engineer configured the VLANs on the new AccSw2 switch. A router on-a-stick is connected to both switches. How must the ports be configured on AccSw2 to establish full connectivity between the two switches and for Server1?",
+		suppressInlineExhibit: true,
+		hideExhibitImage: true,
+		removeExhibitLeadIn: true,
+		options: [
+			"interface GigabitEthernet1/3\n switchport mode access\n switchport access vlan 10\n!\ninterface GigabitEthernet1/24\n switchport mode trunk\n switchport trunk allowed vlan 2,10",
+			"interface GigabitEthernet1/3\n switchport mode access\n switchport access vlan 10\n!\ninterface GigabitEthernet1/24\n switchport mode trunk",
+			"interface GigabitEthernet1/1\n switchport mode access\n switchport access vlan 11\n!\ninterface GigabitEthernet1/24\n switchport mode trunk",
+			"interface GigabitEthernet1/1\n switchport access vlan 11\n!\ninterface GigabitEthernet1/24\n switchport mode trunk\n switchport trunk allowed vlan 10,11",
+		],
+	}],
+	[1138, {
+		prompt: "Which configuration enables SW2 to establish an LACP EtherChannel?",
+		suppressInlineExhibit: true,
+		removeExhibitLeadIn: true,
+		options: [
+			"SW2(config)#interface gigabitEthernet0/1\nSW2(config-if)#channel-group 2 mode active\nSW2(config-if)#interface gigabitEthernet0/2\nSW2(config-if)#channel-group 2 mode desirable",
+			"SW2(config)#interface gigabitEthernet0/1\nSW2(config-if)#channel-group 1 mode active\nSW2(config-if)#interface gigabitEthernet0/2\nSW2(config-if)#channel-group 1 mode active",
+			"SW2(config)#interface gigabitEthernet0/1\nSW2(config-if)#channel-group 1 mode on\nSW2(config-if)#interface gigabitEthernet0/2\nSW2(config-if)#channel-group 1 mode on",
+			"SW2(config)#interface gigabitEthernet0/1\nSW2(config-if)#channel-group 2 mode auto\nSW2(config-if)#interface glgabitEthernet0/2\nSW2(config-if)#channel-group 2 mode auto",
+		],
+	}],
 	[1131, {
 		type: "multi",
 		options: [
@@ -3143,7 +3166,11 @@ export function applyNativeExhibit(question) {
 	const builtInQuestion = getBuiltInQuestionByPrompt(question?.prompt);
 	let promptLegacyIndex;
 	if (typeof question?.prompt === "string") {
-		if (/engineer must configure gigabitethernet1\/1 to accommodate voice and data traffic/i.test(question.prompt)) {
+		if (/engineer configured the vlans on the new accsw2 switch[\s\S]*full connectivity between the two switches and for server1/i.test(question.prompt)) {
+			promptLegacyIndex = 1130;
+		} else if (/which configuration enables sw2 to establish an lacp etherchannel/i.test(question.prompt)) {
+			promptLegacyIndex = 1138;
+		} else if (/engineer must configure gigabitethernet1\/1 to accommodate voice and data traffic/i.test(question.prompt)) {
 			promptLegacyIndex = 382;
 		} else if (/routers r14 and r86 to form an ospfv2 adjacency[\s\S]*central point for exchanging ospf information/i.test(question.prompt)) {
 			promptLegacyIndex = 500;
