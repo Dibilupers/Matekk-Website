@@ -13,6 +13,21 @@ let pending = null;
 let cachedAllQuestions = null;
 let pendingAllQuestions = null;
 
+async function convertBankWithoutBlocking(rows) {
+  const questions = [];
+  const problems = [];
+  const batchSize = 32;
+  for (let start = 0; start < rows.length; start += batchSize) {
+    const converted = convertBank(rows.slice(start, start + batchSize));
+    questions.push(...converted.questions);
+    problems.push(...converted.problems);
+    if (start + batchSize < rows.length) {
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    }
+  }
+  return { questions, problems };
+}
+
 export function loadCcnaQuestionBank() {
   if (cached) return Promise.resolve(cached);
   pending ??= fetch(`${API_URL}/questions/bank`, { credentials: "include" })
@@ -29,7 +44,7 @@ export function loadCcnaQuestionBank() {
           const imageUrl = getCcnaExhibitImageByBankId(row.id);
           return imageUrl ? { ...row, imageUrl } : row;
         });
-      const { questions, problems } = convertBank(ccnaRows);
+      const { questions, problems } = await convertBankWithoutBlocking(ccnaRows);
       cached = { questions: questions.filter(isValidQuestion), problems, rowCount: ccnaRows.length };
       if (problems.length) console.warn(`CCNA question bank: ${problems.length} question(s) could not be converted and were skipped.`, problems);
       return cached;

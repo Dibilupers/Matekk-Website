@@ -216,23 +216,52 @@ function createExamQuestions(sourceQuestions, count, { jumbleMatchingAnswers = f
 // The exams draw from the database question bank once it has loaded (see ccnaQuestionBankApi.js);
 // until then, or if it can't be reached, they use the questions built into the site.
 let databaseQuestions = null;
-export function setDatabaseQuestions(questions) {
-  databaseQuestions = Array.isArray(questions) && questions.length
-    ? questions.map((question) => {
-      const questionWithExhibit = applyNativeExhibit(question);
-      const sourceExhibitImage =
-        !questionWithExhibit.hideExhibitImage &&
-        !questionWithExhibit.exhibitDiagram &&
-        !questionWithExhibit.exhibitImage &&
-        /\bexhibit\b/i.test(questionWithExhibit.prompt ?? "")
-        ? getCcnaExhibitImageByLegacyIndex(questionWithExhibit.legacyIndex)
-        : null;
+let databaseQuestionLoadGeneration = 0;
 
-      return sourceExhibitImage
-        ? { ...questionWithExhibit, exhibitImage: sourceExhibitImage }
-        : questionWithExhibit;
-    })
-    : null;
+function prepareDatabaseQuestion(question) {
+	const questionWithExhibit = applyNativeExhibit(question);
+	const sourceExhibitImage =
+		!questionWithExhibit.hideExhibitImage &&
+		!questionWithExhibit.exhibitDiagram &&
+		!questionWithExhibit.exhibitImage &&
+		/\bexhibit\b/i.test(questionWithExhibit.prompt ?? "")
+		? getCcnaExhibitImageByLegacyIndex(questionWithExhibit.legacyIndex)
+		: null;
+
+	return sourceExhibitImage
+		? { ...questionWithExhibit, exhibitImage: sourceExhibitImage }
+		: questionWithExhibit;
+}
+
+export function setDatabaseQuestions(questions) {
+	databaseQuestionLoadGeneration += 1;
+	databaseQuestions = Array.isArray(questions) && questions.length
+		? questions.map(prepareDatabaseQuestion)
+		: null;
+}
+
+// The complete bank is enriched in the background while the exam is open. Yield between small
+// batches so exhibit matching cannot freeze answer clicks on the active exam page.
+export async function setDatabaseQuestionsYielding(questions) {
+	const generation = ++databaseQuestionLoadGeneration;
+	if (!Array.isArray(questions) || !questions.length) {
+		databaseQuestions = null;
+		return;
+	}
+
+	const prepared = [];
+	const batchSize = 32;
+	for (let start = 0; start < questions.length; start += batchSize) {
+		if (generation !== databaseQuestionLoadGeneration) return;
+		const end = Math.min(start + batchSize, questions.length);
+		for (let index = start; index < end; index += 1) {
+			prepared.push(prepareDatabaseQuestion(questions[index]));
+		}
+		if (end < questions.length) {
+			await new Promise((resolve) => setTimeout(resolve, 0));
+		}
+	}
+	if (generation === databaseQuestionLoadGeneration) databaseQuestions = prepared;
 }
 
 export function getDatabaseQuestionById(id) {

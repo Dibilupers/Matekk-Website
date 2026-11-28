@@ -19,7 +19,7 @@ import { cleanText } from "../../../../../utils/ccnaBankConverter";
 import { ExhibitDiagram, ExhibitImage, ExhibitText } from "./ccnaExhibit";
 import { loadCcnaAllQuestionsBank } from "../../../../../utils/ccnaQuestionBankApi";
 import { loadCachedCcnaAllQuestionsBank } from "../../../../../utils/ccnaOfflineQuestionBank";
-import { getDatabaseQuestionById, setDatabaseQuestions } from "./ccnaQuestionBank";
+import { getDatabaseQuestionById, setDatabaseQuestionsYielding } from "./ccnaQuestionBank";
 import { createOfflineCcnaExamQuestions } from "./ccnaOfflineTimedExam";
 import { applyNativeExhibit } from "./ccnaCompositeSetQuestions";
 import { createOfflineLegacyExamQuestions, getOfflineLegacyQuestionBank } from "./ccnaOfflineExamQuestions";
@@ -176,7 +176,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 			// The question bank supplies each question's picture / printout; load it alongside the exam questions
 			if (!isOfflineExam) {
 				loadCcnaAllQuestionsBank()
-					.then(({ questions: bankQuestions }) => setDatabaseQuestions(bankQuestions))
+					.then(({ questions: bankQuestions }) => setDatabaseQuestionsYielding(bankQuestions))
 					.catch((error) => console.error("Unable to load and save the complete CCNA question bank.", error));
 			}
 			try {

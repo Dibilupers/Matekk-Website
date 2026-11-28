@@ -30,39 +30,50 @@ const normalizeExhibitLookupPrompt = (prompt) => {
 		.toLowerCase();
 };
 
+const normalizeLegacyQuestionPrompt = (prompt) => String(prompt ?? "")
+	.replace(/^\s*Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\.?\s*/i, "")
+	.replace(/\s+/g, " ")
+	.trim()
+	.toLowerCase();
+
 const normalizeExhibitLookupOptions = (options) => Array.isArray(options)
 	? options.map((option) => String(option ?? "").replace(/\s+/g, " ").trim().toLowerCase()).sort().join("\u001f")
 	: "";
 
 const LEGACY_EXHIBIT_PROMPT_MATCHES = new Map();
+const LEGACY_QUESTION_PROMPT_PREFIX_MATCHES = new Map();
 for (const legacyQuestion of CCNA_LEGACY_QUESTIONS) {
-	if (!/^\s*Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\b/i.test(legacyQuestion.prompt ?? "")) continue;
 	const key = normalizeExhibitLookupPrompt(legacyQuestion.prompt);
-	if (!key) continue;
-	const matches = LEGACY_EXHIBIT_PROMPT_MATCHES.get(key) ?? [];
-	matches.push({
+	const sourceKey = normalizeLegacyQuestionPrompt(legacyQuestion.prompt);
+	if (!key || !sourceKey) continue;
+	const match = {
 		legacyIndex: legacyQuestion.legacyIndex,
 		options: normalizeExhibitLookupOptions(legacyQuestion.options),
-	});
-	LEGACY_EXHIBIT_PROMPT_MATCHES.set(key, matches);
+		prompt: sourceKey,
+	};
+	const prefix = sourceKey.slice(0, 64);
+	const prefixMatches = LEGACY_QUESTION_PROMPT_PREFIX_MATCHES.get(prefix) ?? [];
+	prefixMatches.push(match);
+	LEGACY_QUESTION_PROMPT_PREFIX_MATCHES.set(prefix, prefixMatches);
+	if (/^\s*Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\b/i.test(legacyQuestion.prompt ?? "")) {
+		const exhibitMatches = LEGACY_EXHIBIT_PROMPT_MATCHES.get(key) ?? [];
+		exhibitMatches.push(match);
+		LEGACY_EXHIBIT_PROMPT_MATCHES.set(key, exhibitMatches);
+	}
 }
 
 function findLegacyExhibitIndex(question) {
 	const rawPrompt = String(question?.prompt ?? "");
 	const hasExhibitLeadIn = /^\s*Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\b/i.test(rawPrompt);
 	const normalizedPrompt = normalizeExhibitLookupPrompt(rawPrompt);
-	const matches = hasExhibitLeadIn
+	if (normalizedPrompt.length < 64) return undefined;
+	const prefix = normalizedPrompt.slice(0, 64);
+	const prefixMatches = LEGACY_QUESTION_PROMPT_PREFIX_MATCHES.get(prefix) ?? [];
+	const partialMatches = prefixMatches.filter((match) => match.prompt.includes(normalizedPrompt));
+	const exactExhibitMatches = hasExhibitLeadIn
 		? LEGACY_EXHIBIT_PROMPT_MATCHES.get(normalizedPrompt) ?? []
-		: CCNA_LEGACY_QUESTIONS
-			.filter((legacyQuestion) => /^\s*Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\b/i.test(legacyQuestion.prompt ?? ""))
-			.filter((legacyQuestion) => {
-				const sourcePrompt = normalizeExhibitLookupPrompt(legacyQuestion.prompt);
-				return normalizedPrompt.length >= 12 && sourcePrompt.includes(normalizedPrompt);
-			})
-			.map((legacyQuestion) => ({
-				legacyIndex: legacyQuestion.legacyIndex,
-				options: normalizeExhibitLookupOptions(legacyQuestion.options),
-			}));
+		: [];
+	const matches = partialMatches.length ? partialMatches : exactExhibitMatches;
 	if (!matches.length) return undefined;
 	if (matches.length === 1) return matches[0].legacyIndex;
 	const optionKey = normalizeExhibitLookupOptions(question.options);
@@ -2022,6 +2033,50 @@ D 192.168.0.0/24 [90/201728] via 172.16.0.2, 00:00:04, FastEthernet0/0`,
 ]);
 
 const LEGACY_NATIVE_EXHIBITS = new Map([
+	[382, {
+		diagram: "voice-data-vlan300-400",
+		hideExhibitImage: true,
+		options: [
+			"interface GigabitEthernet1/1\n switchport mode access\n switchport access vlan 300\n switchport voice vlan 400",
+			"interface GigabitEthernet1/1\n switchport mode access\n switchport access vlan 400\n switchport voice vlan 300",
+			"interface GigabitEthernet1/1\n switchport mode trunk\n switchport access vlan 300\n switchport voice vlan 400",
+			"interface GigabitEthernet1/1\n switchport mode trunk\n switchport trunk vlan 300\n switchport trunk vlan 400",
+		],
+	}],
+	[500, {
+		options: [
+			"R14#\ninterface FastEthernet0/0\n ip address 10.73.65.65 255.255.255.252\n ip ospf network broadcast\n ip ospf priority 0\n ip mtu 1400\nrouter ospf 10\n router-id 10.10.1.14\n network 10.10.1.14 0.0.0.0 area 0\n network 10.73.65.64 0.0.0.3 area 0\n\nR86#\ninterface Loopback0\n ip address 10.10.1.86 255.255.255.255\ninterface FastEthernet0/0\n ip address 10.73.65.66 255.255.255.252\n ip ospf network broadcast\n ip mtu 1500\nrouter ospf 10\n router-id 10.10.1.86\n network 10.10.1.86 0.0.0.0 area 0\n network 10.73.65.64 0.0.0.3 area 0",
+			"R14#\ninterface FastEthernet0/0\n ip address 10.73.65.65 255.255.255.252\n ip ospf network broadcast\n ip ospf priority 255\n ip mtu 1500\nrouter ospf 10\n router-id 10.10.1.14\n network 10.10.1.14 0.0.0.0 area 0\n network 10.73.65.64 0.0.0.3 area 0\n\nR86#\ninterface Loopback0\n ip address 10.10.1.86 255.255.255.255\ninterface FastEthernet0/0\n ip address 10.73.65.66 255.255.255.252\n ip ospf network broadcast\n ip mtu 1500\nrouter ospf 10\n router-id 10.10.1.86\n network 10.10.1.86 0.0.0.0 area 0\n network 10.73.65.64 0.0.0.3 area 0",
+			"R14#\ninterface Loopback0\n ip ospf 10 area 0\ninterface FastEthernet0/0\n ip address 10.73.65.65 255.255.255.252\n ip ospf network broadcast\n ip ospf 10 area 0\n ip mtu 1500\nrouter ospf 10\n ip ospf priority 255\n router-id 10.10.1.14\n\nR86#\ninterface Loopback0\n ip ospf 10 area 0\ninterface FastEthernet0/0\n ip address 10.73.65.66 255.255.255.252\n ip ospf network broadcast\n ip ospf 10 area 0\n ip mtu 1500\nrouter ospf 10\n router-id 10.10.1.86",
+			"R14#\ninterface FastEthernet0/0\n ip address 10.73.65.65 255.255.255.252\n ip ospf network broadcast\n ip ospf priority 255\n ip mtu 1500\nrouter ospf 10\n router-id 10.10.1.14\n network 10.10.1.14 0.0.0.0 area 0\n network 10.73.65.64 0.0.0.3 area 0\n\nR86#\ninterface FastEthernet0/0\n ip address 10.73.65.66 255.255.255.252\n ip ospf network broadcast\n ip mtu 1400\nrouter ospf 10\n router-id 10.10.1.86\n network 10.10.1.86 0.0.0.0 area 0\n network 10.73.65.64 0.0.0.3 area 0",
+		],
+	}],
+	[532, {
+		options: [
+			"enable secret priv4t3p4ss\n!\nline console 0\n password p4ssw0rd1\n login\n!\nline vty 0 15\n password s3cr3t2\n login",
+			"enable secret privilege 15 priv4t3p4ss\n!\nline console 0\n password p4ssw0rdi\n login\n!\nline vty 0 15\n password s3cr3t2\n login",
+			"enable secret priv413p4ss\n!\nline console 0\n password login p4ssw0rd1\n!\nline vty 0 15\n password login s3cr3t2\n login",
+			"enable secret priv4t3p4ss\n!\nline console 0\n password p4ssw0rd1\n!\nline vty 0 15\n password s3cr3t2",
+		],
+	}],
+	[622, {
+		options: [
+			"SW4#\ninterface Gi0/2\n switchport mode trunk\n switchport trunk allowed vlan 14,108\n\nSW11#\ninterface Gi0/2\n switchport mode trunk\n switchport trunk allowed vlan 14,108\n!\ninterface Gi0/1\n switchport mode trunk\n switchport trunk allowed vlan 14,108\n\nSW9#\ninterface Gi0/2\n switchport mode trunk\n switchport trunk allowed vlan 14",
+			"SW4\ninterface Gi0/7\n switchport mode trunk\n switchport trunk allowed vlan 108\n!\ninterface Gi0/2\n switchport mode access\n switchport access vlan 14\n\nSW11#\ninterface Gi0/2\n switchport mode trunk\n switchport trunk allowed vlan 14,108\n!\ninterface Gi0/1\n switchport mode trunk\n switchport trunk allowed vlan 14,108\n\nSW9#\ninterface Gi0/2\n switchport mode access\n switchport access vlan 14",
+			"SW4\ninterface Gi0/2\n switchport mode trunk\n switchport trunk allowed vlan 14\n\nSW11#\ninterface Gi0/1\n switchport mode trunk\n switchport trunk allowed vlan 14\n\nSW9#\ninterface Gi0/2\n switchport mode trunk\n switchport trunk allowed vlan 108",
+			"SW4\ninterface Gi0/2\n switchport mode access\n switchport access vlan 14\n\nSW11#\ninterface Gi0/2\n switchport mode access\n switchport access vlan 14\n!\ninterface Gi0/0\n switchport mode access\n switchport access vlan 14\n!\ninterface Gi0/1\n switchport mode trunk\n\nSW9#\ninterface Gi0/2\n switchport mode access\n switchport access vlan 14",
+		],
+	}],
+	[1131, {
+		type: "multi",
+		options: [
+			"ip dhcp snooping\n!\ninterface Port-channel1\n switchport port-security maximum 1\n switchport port-security",
+			"ip dhcp snooping vlan 1-4094\nip dhcp snooping\n!\ninterface Port-channel1\n ip dhcp snooping trust",
+			"ip dhcp snooping vlan 1-4094\n!\ninterface Port-channel1\n switchport protected\n switchport port-security maximum 1",
+			"ip arp inspection trust\n!\ninterface Port-channel1\n switchport port-security maximum 4094\n switchport port-security\n ip verify source mac-check",
+			"ip arp inspection vlan 1-4094\n!\ninterface Port-channel1\n ip arp inspection trust",
+		],
+	}],
 	[50, {
 		diagram: "router-on-a-stick-vlan20",
 		hideExhibitImage: true,
@@ -3088,7 +3143,15 @@ export function applyNativeExhibit(question) {
 	const builtInQuestion = getBuiltInQuestionByPrompt(question?.prompt);
 	let promptLegacyIndex;
 	if (typeof question?.prompt === "string") {
-		if (/floating static route on an external eigrp network[\s\S]*destination subnet is the \/29 on the lan interface of r86[\s\S]*command must be executed on r14/i.test(question.prompt)) {
+		if (/engineer must configure gigabitethernet1\/1 to accommodate voice and data traffic/i.test(question.prompt)) {
+			promptLegacyIndex = 382;
+		} else if (/routers r14 and r86 to form an ospfv2 adjacency[\s\S]*central point for exchanging ospf information/i.test(question.prompt)) {
+			promptLegacyIndex = 500;
+		} else if (/factory-default router with these (?:three )?passwords/i.test(question.prompt)) {
+			promptLegacyIndex = 532;
+		} else if (/configuration establishes a successful ping from pc2 to pc7 without interruption/i.test(question.prompt)) {
+			promptLegacyIndex = 622;
+		} else if (/floating static route on an external eigrp network[\s\S]*destination subnet is the \/29 on the lan interface of r86[\s\S]*command must be executed on r14/i.test(question.prompt)) {
 			promptLegacyIndex = 824;
 		} else if (/wlan to connect with the 172\.16\.10\.0\/24 network on vlan 20[\s\S]*limit the number of devices[\s\S]*userwl ssid to 125/i.test(question.prompt)) {
 			promptLegacyIndex = 794;
@@ -3174,6 +3237,8 @@ export function applyNativeExhibit(question) {
 			promptLegacyIndex = 339;
 		} else if (/the dhcp server and clients are connected to the same switch[\s\S]*clients on vlan 1/i.test(question.prompt)) {
 			promptLegacyIndex = 491;
+		} else if (/attempted arp spoofing attack[\s\S]*port-channel1[\s\S]*choose two/i.test(question.prompt)) {
+			promptLegacyIndex = 1131;
 		} else if (/which configuration enables an etherchannel to form dynamically between sw1 and sw2/i.test(question.prompt)) {
 			promptLegacyIndex = 515;
 		} else if (/network engineer configures the cisco wlc to authenticate local wireless clients against a radius\s+server/i.test(question.prompt)) {
@@ -3212,8 +3277,13 @@ export function applyNativeExhibit(question) {
 		: null;
 	const hasPlaceholderOptions = Array.isArray(question?.options) && question.options.length > 1 &&
 		question.options.every((option, index) => String(option).trim().toLowerCase() === `option ${String.fromCharCode(65 + index).toLowerCase()}`);
-	const parsedOptions = hasPlaceholderOptions && typeof question?.prompt === "string"
-		? parseFormattedOptions(question.prompt)
+	const needsOptionRecovery = !Array.isArray(question?.options) || question.options.length < 2 || hasPlaceholderOptions;
+	const parsedOptions = needsOptionRecovery && typeof question?.prompt === "string"
+		? parseFormattedOptions(question.prompt) ??
+			(legacySourceQuestion?.prompt && legacySourceQuestion.prompt !== question.prompt
+				? parseFormattedOptions(legacySourceQuestion.prompt) ??
+					parseFormattedOptions(legacySourceQuestion.prompt, { offline: true })
+				: null)
 		: null;
 	const currentDatabaseExhibit = (matchedLegacyIndex !== undefined
 		? LEGACY_NATIVE_EXHIBITS.get(matchedLegacyIndex)
@@ -3266,6 +3336,21 @@ export function applyNativeExhibit(question) {
 	const hasQuestionOverride = ["type", "items", "choices", "options", "answer"].some((key) =>
 		Object.prototype.hasOwnProperty.call(questionOverride, key),
 	) || Boolean(parsedOptions);
+	const recoveredOptions = Object.prototype.hasOwnProperty.call(questionOverride, "options")
+		? questionOverride.options
+		: parsedOptions ? Object.values(parsedOptions.options) : question?.options;
+	const answerIsValidForRecoveredOptions = question?.type === "multi"
+		? Array.isArray(question.answer) && question.answer.length > 0 &&
+			question.answer.every((answer) => Number.isInteger(answer) && answer >= 0 && answer < (recoveredOptions?.length ?? 0))
+		: Number.isInteger(question?.answer) && question.answer >= 0 && question.answer < (recoveredOptions?.length ?? 0);
+	const recoveredAnswer = !answerIsValidForRecoveredOptions &&
+		(legacySourceQuestion?.type ?? "single") === (question?.type ?? "single") &&
+		(question?.type === "multi"
+			? Array.isArray(legacySourceQuestion?.answer) && legacySourceQuestion.answer.length > 0 &&
+				legacySourceQuestion.answer.every((answer) => Number.isInteger(answer) && answer >= 0 && answer < (recoveredOptions?.length ?? 0))
+			: Number.isInteger(legacySourceQuestion?.answer) && legacySourceQuestion.answer >= 0 && legacySourceQuestion.answer < (recoveredOptions?.length ?? 0))
+		? legacySourceQuestion.answer
+		: undefined;
 	if (!exhibitDiagram && !exhibitImage && !hasNativeTextExhibit && !hideExhibitImage && !hideAfterExhibit &&
 		!removeExhibitLeadIn && !hasQuestionOverride && !recoverTruncatedPrompt) {
 		return legacyIndex !== question?.legacyIndex && legacyIndex !== undefined
@@ -3274,10 +3359,10 @@ export function applyNativeExhibit(question) {
 	}
 	const prompt = typeof databaseExhibit?.prompt === "string"
 		? databaseExhibit.prompt
-		: typeof sourcePrompt === "string"
-			? sourcePrompt
 		: typeof parsedOptions?.prompt === "string"
 			? parsedOptions.prompt
+		: typeof sourcePrompt === "string"
+			? sourcePrompt
 		: typeof parsedPrompt?.exhibit === "string"
 			? parsedPrompt.prompt.replace(/^\s*Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\.?\s*/i, "")
 			: removeExhibitLeadIn && typeof question?.prompt === "string"
@@ -3296,6 +3381,7 @@ export function applyNativeExhibit(question) {
 			? { options: questionOverride.options }
 			: parsedOptions ? { options: Object.values(parsedOptions.options) } : {}),
 		...(Object.prototype.hasOwnProperty.call(questionOverride, "answer") ? { answer: questionOverride.answer } : {}),
+		...(recoveredAnswer !== undefined ? { answer: recoveredAnswer } : {}),
 		...(Array.isArray(databaseExhibit?.offlineSourceExhibitImages)
 			? { offlineSourceExhibitImages: databaseExhibit.offlineSourceExhibitImages }
 			: {}),
