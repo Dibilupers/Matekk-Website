@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import type { Request as ExpressRequest } from 'express';
 import { QuestionsService } from './questions.service.js';
-import { CreateQuestionDto, StartExamDto, SubmitExamDto } from './dto/questions.dto.js';
+import { CreateQuestionDto, SubmitExamDto } from './dto/questions.dto.js';
 import { AdminGuard } from '../auth/guards/admin.guard.js';
 
 @Controller('questions')
@@ -34,34 +34,11 @@ export class QuestionsController {
   // These routes inherit the global JWT and active-account guards, but not the admin-only bank guard.
   @Post('exams/:examKey/start')
   @Header('Cache-Control', 'no-store')
-  @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
   startExam(
     @Param('examKey') examKey: string,
     @Request() request: ExpressRequest & { user: { userId: number } },
-    @Body() startExamDto: StartExamDto = {},
   ) {
-    return this.questionsService.startExam(
-      examKey,
-      request.user.userId,
-      startExamDto.excludeQuestionIds ?? [],
-    );
-  }
-
-  @Post('exams/:examKey/attempt/:attemptId/repair')
-  @Header('Cache-Control', 'no-store')
-  @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
-  repairExam(
-    @Param('examKey') examKey: string,
-    @Param('attemptId') attemptId: string,
-    @Request() request: ExpressRequest & { user: { userId: number } },
-    @Body() startExamDto: StartExamDto = {},
-  ) {
-    return this.questionsService.repairExamAttempt(
-      examKey,
-      attemptId,
-      request.user.userId,
-      startExamDto.excludeQuestionIds ?? [],
-    );
+    return this.questionsService.startExam(examKey, request.user.userId);
   }
 
   @Get('exams/:examKey/attempt/:attemptId')

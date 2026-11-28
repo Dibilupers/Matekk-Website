@@ -23,7 +23,7 @@ import { getDatabaseQuestionById, setDatabaseQuestionsYielding } from "./ccnaQue
 import { createOfflineCcnaExamQuestions } from "./ccnaOfflineTimedExam";
 import { applyNativeExhibit } from "./ccnaCompositeSetQuestions";
 import { createOfflineLegacyExamQuestions, getOfflineLegacyQuestionBank } from "./ccnaOfflineExamQuestions";
-import { repairCcnaExamAttempt, resumeCcnaExam, startCcnaExam, submitCcnaExam } from "../../../../../utils/ccnaExamApi";
+import { resumeCcnaExam, startCcnaExam, submitCcnaExam } from "../../../../../utils/ccnaExamApi";
 const EXAM_PASS_PERCENTAGE = 80;
 const RECREATED_MATCH_EXHIBIT_QUESTION_IDS = new Set([570]);
 const isMatchingQuestion = (question) => ["match", "drag_drop", "click_boxes", "image"].includes(question?.type);
@@ -345,12 +345,7 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 				if (apiAttempt.questions.length !== exam.questionCount) {
 					throw new TypeError(`The backend did not return ${exam.questionCount} questions for this exam.`);
 				}
-				const excludedQuestionIds = new Set();
-				let repairAttempts = 0;
-				while (true) {
-				const invalidQuestionIds = new Set();
 				const loadedQuestions = apiAttempt.questions.map((apiQuestion) => {
-					try {
 					// Resolve exhibits against the question text returned for this attempt. The
 					// local bank can contain colliding IDs, so resolving by ID first can attach
 					// a different record and skip prompt-based exhibit mappings entirely.
@@ -445,61 +440,32 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 						...(bankQuestion?.exhibitImageCropTop ? { exhibitImageCropTop: true } : {}),
 						...(exhibitImage ? { exhibitImage } : {}),
 					};
-					} catch (error) {
-						invalidQuestionIds.add(apiQuestion.id);
-						console.warn(`Skipping invalid CCNA question ${apiQuestion.id} while preparing the exam.`, error);
-						return null;
-					}
 				});
-				loadedQuestions.forEach((loadedQuestion, index) => {
-					if (!loadedQuestion || !isValidQuestion(loadedQuestion)) {
-						invalidQuestionIds.add(apiAttempt.questions[index]?.id);
-					}
-				});
-				if (invalidQuestionIds.size > 0) {
-					if (apiAttempt.isSubmitted) {
-						throw new TypeError("A saved completed exam contains invalid question data and cannot be safely changed.");
-					}
-					invalidQuestionIds.forEach((id) => excludedQuestionIds.add(id));
-					if (excludedQuestionIds.size > 150 || repairAttempts >= 8) {
-						throw new TypeError("The exam found too many invalid questions to replace automatically. Please try again later.");
-					}
-					repairAttempts += 1;
-					apiAttempt = await repairCcnaExamAttempt(examKey, apiAttempt.attemptId, [...invalidQuestionIds]);
-					if (apiAttempt.questions.length !== exam.questionCount) {
-						throw new TypeError(`The backend did not return ${exam.questionCount} replacement questions for this exam.`);
-					}
-					continue;
-				}
 
-				const savedQuestionIndexes = new Map(
-					(savedSession?.questions ?? []).map((question, index) => [question.id, index]),
-				);
-				const restoredQuestionIndexes = new Map();
-				loadedQuestions.forEach((loadedQuestion, index) => {
-					const savedIndex = savedQuestionIndexes.get(loadedQuestion.id);
-					const savedQuestion = savedSession?.questions?.[savedIndex];
-					if (savedIndex !== undefined && savedQuestion &&
-						(savedQuestion.type ?? "single") === loadedQuestion.type &&
-						JSON.stringify(savedQuestion.options) === JSON.stringify(loadedQuestion.options) &&
-						JSON.stringify(savedQuestion.items) === JSON.stringify(loadedQuestion.items) &&
-						JSON.stringify(savedQuestion.choices) === JSON.stringify(loadedQuestion.choices)) {
-						restoredQuestionIndexes.set(savedIndex, index);
-					}
-				});
-				const restoreQuestionState = (savedState) => {
-					if (!savedState || typeof savedState !== "object" || Array.isArray(savedState)) return {};
-					return Object.fromEntries([...restoredQuestionIndexes]
-						.filter(([savedIndex]) => Object.prototype.hasOwnProperty.call(savedState, savedIndex))
-						.map(([savedIndex, loadedIndex]) => [loadedIndex, savedState[savedIndex]]));
-				};
-				const restoredAnswers = restoreQuestionState(savedSession?.answers);
-				const restoredIndex = Number.isInteger(savedSession?.currentIndex) &&
+				const cachedQuestionsMatch = savedSession?.questions?.length === loadedQuestions.length &&
+					savedSession.questions.every((savedQuestion, index) =>
+						savedQuestion.id === loadedQuestions[index].id &&
+						(savedQuestion.type ?? "single") === loadedQuestions[index].type &&
+						JSON.stringify(savedQuestion.options) === JSON.stringify(loadedQuestions[index].options) &&
+						JSON.stringify(savedQuestion.items) === JSON.stringify(loadedQuestions[index].items) &&
+						JSON.stringify(savedQuestion.choices) === JSON.stringify(loadedQuestions[index].choices),
+					);
+				const restoredAnswers = cachedQuestionsMatch && savedSession.answers &&
+					typeof savedSession.answers === "object" && !Array.isArray(savedSession.answers)
+					? savedSession.answers
+					: {};
+				const restoredIndex = cachedQuestionsMatch && Number.isInteger(savedSession.currentIndex) &&
 					savedSession.currentIndex >= 0 && savedSession.currentIndex < loadedQuestions.length
 					? savedSession.currentIndex
 					: 0;
-				const restoredLocks = restoreQuestionState(savedSession?.lockedQuestions);
-				const restoredFlags = restoreQuestionState(savedSession?.flaggedQuestions);
+				const restoredLocks = cachedQuestionsMatch && savedSession.lockedQuestions &&
+					typeof savedSession.lockedQuestions === "object" && !Array.isArray(savedSession.lockedQuestions)
+					? savedSession.lockedQuestions
+					: {};
+				const restoredFlags = cachedQuestionsMatch && savedSession.flaggedQuestions &&
+					typeof savedSession.flaggedQuestions === "object" && !Array.isArray(savedSession.flaggedQuestions)
+					? savedSession.flaggedQuestions
+					: {};
 				const result = apiAttempt.isSubmitted
 					? {
 						score: apiAttempt.score,
@@ -522,8 +488,6 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 				setExamLoadState({ status: "ready", error: null });
 				shouldStartNewAttemptRef.current = false;
 				if (isRetake) navigate(location.pathname, { replace: true, state: null });
-				break;
-				}
 			} catch (error) {
 				console.error(`Unable to load the ${exam.name} questions from the backend.`, error);
 				if (isActive) setExamLoadState({
