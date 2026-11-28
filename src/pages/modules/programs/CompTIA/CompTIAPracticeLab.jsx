@@ -283,8 +283,8 @@ export default function CompTIAPracticeLab({ programKey }) {
 							<h2 className="text-xl font-bold text-[#c8102e]">Tasks</h2>
 							<span className="text-sm font-bold text-[#17233d]">{completedCount}/{lab.tasks.length} done</span>
 						</div>
-						<div className="mt-4 h-2 overflow-hidden rounded-full bg-[#e7f1f2]">
-							<div className="h-full rounded-full bg-[#0b7887] transition-[width]" style={{ width: `${(completedCount / lab.tasks.length) * 100}%` }} />
+						<div className="mt-4 h-2 overflow-hidden rounded-full bg-[#ffe9ed]">
+							<div className="h-full rounded-full bg-[#c8102e] transition-[width]" style={{ width: `${(completedCount / lab.tasks.length) * 100}%` }} />
 						</div>
 						<ol className="mt-5 space-y-4">
 							{lab.tasks.map((item, index) => {
@@ -315,10 +315,10 @@ export default function CompTIAPracticeLab({ programKey }) {
 						)}
 
 						<div className="mt-5 flex flex-wrap gap-2">
-							<button type="button" onClick={() => setShowHints((visible) => !visible)} className="inline-flex items-center gap-1.5 rounded-full border border-[#0b7887] px-3 py-2 text-sm font-semibold text-[#005b6b] transition hover:bg-[#eef8f9]">
+							<button type="button" onClick={() => setShowHints((visible) => !visible)} className="inline-flex items-center gap-1.5 rounded-full border border-[#c8102e] px-3 py-2 text-sm font-semibold text-[#c8102e] transition hover:bg-[#fff5f6]">
 								<Lightbulb size={15} /> {showHints ? "Hide hints" : "Show hints"}
 							</button>
-							<button type="button" onClick={() => setShowSolution((visible) => !visible)} className="inline-flex items-center gap-1.5 rounded-full border border-[#0b7887] px-3 py-2 text-sm font-semibold text-[#005b6b] transition hover:bg-[#eef8f9]">
+							<button type="button" onClick={() => setShowSolution((visible) => !visible)} className="inline-flex items-center gap-1.5 rounded-full border border-[#c8102e] px-3 py-2 text-sm font-semibold text-[#c8102e] transition hover:bg-[#fff5f6]">
 								<Eye size={15} /> {showSolution ? "Hide solution" : "Show solution"}
 							</button>
 							<button type="button" onClick={resetLab} className="inline-flex items-center gap-1.5 rounded-full border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">
