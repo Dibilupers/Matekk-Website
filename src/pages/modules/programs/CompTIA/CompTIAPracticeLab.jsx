@@ -359,7 +359,7 @@ export default function CompTIAPracticeLab({ programKey }) {
 													setHistoryPosition(-1);
 													inputRef.current?.focus();
 												}}
-												className={`rounded-full px-3.5 py-1 text-sm font-bold transition ${name === device ? "bg-[#005b6b] text-white" : "border border-[#0b7887] text-[#005b6b] hover:bg-[#eef8f9]"}`}
+												className={`rounded-full px-3.5 py-1 text-sm font-bold transition ${name === device ? "bg-[#c8102e] text-white" : "border border-[#c8102e] text-[#c8102e] hover:bg-[#fff5f6]"}`}
 											>
 												{name}
 											</button>
