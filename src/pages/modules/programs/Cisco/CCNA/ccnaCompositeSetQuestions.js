@@ -3341,14 +3341,23 @@ export function applyNativeExhibit(question) {
 		: (typeof databaseExhibit === "object" ? databaseExhibit.exhibit : undefined) ?? parsedPrompt?.exhibit;
 	const hasNativeTextExhibit = typeof exhibit === "string";
 	const hasTerminalTextExhibit = hasNativeTextExhibit || typeof question?.exhibit === "string";
-	const sourceImageIndex = Number(/ccna-exhibit-(\d+)\.png(?:[?#].*)?$/i.exec(
+	const sourceImageIndex = Number(/ccna-exhibit-(\d+)(?:-[^/?#.]*)?\.(?:png|jpe?g|webp|svg)(?:[?#].*)?$/i.exec(
 		String(question?.exhibitImage ?? question?.imageUrl ?? ""),
 	)?.[1]);
+	const hasLegacyIndexedSourceImage = sourceImageIndex === Number(legacyIndex) ||
+		(Number.isInteger(Number(legacyIndex)) &&
+			!question?.exhibitImage &&
+			!question?.imageUrl &&
+			/^\s*Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\b/i.test(question?.prompt ?? ""));
+	const hasMatchingNativeExhibitImage = (hasTerminalTextExhibit || typeof parsedPrompt?.exhibit === "string") &&
+		!databaseExhibitImage &&
+		hasLegacyIndexedSourceImage;
 	const hasMappedTopologyAfterExhibit = Boolean(exhibitDiagram &&
 		/TOPOLOGY/i.test(question?.afterExhibit?.title ?? "") &&
 		!PRESERVE_TOPOLOGY_AFTER_EXHIBIT_LEGACY_INDEXES.has(legacyIndex));
 	const hideExhibitImage = databaseExhibit?.hideExhibitImage === true ||
 		hasMappedTopologyAfterExhibit ||
+		hasMatchingNativeExhibitImage ||
 		builtInQuestion?.hideExhibitImage === true ||
 		(hasTerminalTextExhibit && DUPLICATE_TERMINAL_SOURCE_IMAGE_LEGACY_INDEXES.has(Number(legacyIndex))) ||
 		(hasTerminalTextExhibit && DUPLICATE_TERMINAL_SOURCE_IMAGE_LEGACY_INDEXES.has(sourceImageIndex));
