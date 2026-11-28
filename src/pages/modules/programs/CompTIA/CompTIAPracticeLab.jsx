@@ -227,7 +227,7 @@ export default function CompTIAPracticeLab({ programKey }) {
 	}));
 
 	return (
-		<main className="min-h-screen bg-white px-4 py-8 text-[#111a2d] sm:px-8 sm:py-10">
+		<main className="min-h-screen bg-white px-4 pb-8 pt-4 text-[#111a2d] sm:px-8 sm:pb-10 sm:pt-4">
 			<div className="mx-auto max-w-[1440px]">
 				<Link to={program.dashboard} className="inline-flex items-center gap-2 rounded-full bg-[#fff5f6] px-4 py-2 text-sm font-bold text-[#c8102e] transition hover:bg-[#ffe9ed]">
 					<ArrowLeft size={17} /> Back to CompTIA {program.name}
@@ -280,7 +280,7 @@ export default function CompTIAPracticeLab({ programKey }) {
 				<div className="mx-auto mt-5 grid max-w-[1440px] gap-5 lg:grid-cols-[minmax(300px,0.38fr)_minmax(0,0.62fr)]">
 					<aside className="rounded-2xl border border-[#dbe7ea] bg-white p-5 shadow-[0_12px_28px_rgba(15,35,55,0.08)]">
 						<div className="flex items-center justify-between gap-3">
-							<h2 className="text-xl font-bold text-[#005b6b]">Tasks</h2>
+							<h2 className="text-xl font-bold text-[#c8102e]">Tasks</h2>
 							<span className="text-sm font-bold text-[#17233d]">{completedCount}/{lab.tasks.length} done</span>
 						</div>
 						<div className="mt-4 h-2 overflow-hidden rounded-full bg-[#e7f1f2]">
