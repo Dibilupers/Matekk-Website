@@ -140,9 +140,14 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 			const question = questions[index];
 			const isMatch = isMatchingQuestion(question);
 			const optionIndexes = (value) => (Array.isArray(value) ? value : [value])
-				.map((option) => Number.isInteger(option)
-					? option
-					: question?.options.indexOf(typeof option === "string" ? cleanText(option) : option));
+				.map((option) => {
+					if (Number.isInteger(option)) return option;
+					const options = question?.options ?? [];
+					const exactIndex = options.indexOf(typeof option === "string" ? cleanText(option) : option);
+					if (exactIndex >= 0) return exactIndex;
+					const label = typeof option === "string" ? /^Option ([A-H])$/i.exec(cleanText(option)) : null;
+					return label ? label[1].toUpperCase().charCodeAt(0) - "A".charCodeAt(0) : -1;
+				});
 			return {
 				...question,
 				index,
