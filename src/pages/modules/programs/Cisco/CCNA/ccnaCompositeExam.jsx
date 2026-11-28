@@ -173,12 +173,13 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 		async function loadExamAttempt() {
 			if (isOfflineExam && hasLoadedOfflineAttemptRef.current && !shouldStartNewAttemptRef.current) return;
 			setExamLoadState({ status: "loading", error: null });
-			// The question bank supplies each question's picture / printout; load it alongside the exam questions
-			if (!isOfflineExam) {
-				loadCcnaAllQuestionsBank()
+			// Wait until local question fallbacks are ready so incomplete API records can be repaired
+			// before the attempt is displayed. Processing yields between batches to keep the page responsive.
+			const bankReady = isOfflineExam
+				? Promise.resolve()
+				: loadCcnaAllQuestionsBank()
 					.then(({ questions: bankQuestions }) => setDatabaseQuestionsYielding(bankQuestions))
 					.catch((error) => console.error("Unable to load and save the complete CCNA question bank.", error));
-			}
 			try {
 				let savedSession = null;
 				const isRetake = shouldStartNewAttemptRef.current;
@@ -320,6 +321,8 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 					return;
 				}
 
+				await bankReady;
+				if (!isActive) return;
 				let apiAttempt;
 				if (savedSession) {
 					try {
@@ -337,14 +340,19 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 				if (apiAttempt.questions.length !== exam.questionCount) {
 					throw new TypeError(`The backend did not return ${exam.questionCount} questions for this exam.`);
 				}
-				// The attempt already contains its questions. Keep the full-bank download and offline
-				// cache warm-up in the background instead of blocking the first question on it.
 				const loadedQuestions = apiAttempt.questions.map((apiQuestion) => {
 					// Resolve exhibits against the question text returned for this attempt. The
 					// local bank can contain colliding IDs, so resolving by ID first can attach
 					// a different record and skip prompt-based exhibit mappings entirely.
 					const mappedApiQuestion = applyNativeExhibit({ ...apiQuestion, bankId: apiQuestion.id });
 					const cachedBankQuestion = getDatabaseQuestionById(apiQuestion.id);
+					const normalizeQuestionKey = (value) => cleanText(value ?? "")
+						.replace(/^\s*Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\.?\s*/i, "")
+						.replace(/\s+/g, " ").trim().toLowerCase();
+					const attemptPromptKey = normalizeQuestionKey(mappedApiQuestion.prompt ?? apiQuestion.prompt);
+					const cachedPromptKey = normalizeQuestionKey(cachedBankQuestion?.prompt);
+					const cachedQuestionMatchesAttempt = attemptPromptKey.length >= 64 && cachedPromptKey.length >= 64 &&
+						(attemptPromptKey.includes(cachedPromptKey) || cachedPromptKey.includes(attemptPromptKey));
 					const exhibitFields = [
 						"legacyIndex", "exhibit", "exhibitDiagram", "exhibitImage", "exhibitImageCropTop",
 						"afterExhibit", "hideExhibitImage", "hideAfterExhibit", "nativeExhibitText", "exhibitQuality",
@@ -362,19 +370,19 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 					const cleanList = (list) => (Array.isArray(list) ? list.map((value) => (typeof value === "string" ? cleanText(value) : value)) : list);
 					// "Option A / Option B …" questions: the options are described in a table inside the question text.
 					// Keep that text whole (the question view lays the table out itself) and list the answers A, B, C, D in order.
-					const isOptionTable = Array.isArray(apiQuestion.options) &&
+					const isOptionTable = Array.isArray(apiQuestion.options) && apiQuestion.options.length > 1 &&
 						apiQuestion.options.every((option) => /^\s*Option [A-H]\s*$/i.test(String(option)));
-					const expandedOptionSource = Array.isArray(mappedApiQuestion.options)
+					const isExpandedOptionList = (options) => Array.isArray(options) && options.length > 1 &&
+						options.every((option) => typeof option === "string" && option.trim()) &&
+						!options.every((option, index) => String(option).trim().toLowerCase() === `option ${String.fromCharCode(65 + index).toLowerCase()}`);
+					const expandedOptionSource = isExpandedOptionList(mappedApiQuestion.options)
 						? mappedApiQuestion.options
-						: cachedBankQuestion?.options;
-					const hasExpandedOptionTable = isOptionTable &&
-						Array.isArray(expandedOptionSource) &&
-						expandedOptionSource.length === apiQuestion.options.length &&
-						expandedOptionSource.every((option) =>
-							typeof option === "string" && option.trim() && !/^\s*Option [A-H]\s*$/i.test(option),
-						);
+						: cachedQuestionMatchesAttempt && isExpandedOptionList(cachedBankQuestion?.options)
+							? cachedBankQuestion.options
+							: undefined;
+					const hasExpandedOptionTable = isOptionTable && isExpandedOptionList(expandedOptionSource);
 					const apiPrompt = cleanText(mappedApiQuestion.prompt ?? apiQuestion.prompt);
-					const cachedPrompt = cleanText(cachedBankQuestion?.prompt ?? "");
+					const cachedPrompt = cachedQuestionMatchesAttempt ? cleanText(cachedBankQuestion?.prompt ?? "") : "";
 					const mappedPrompt = apiPrompt.trim() ? apiPrompt : cachedPrompt;
 					if (!mappedPrompt.trim()) {
 						throw new TypeError(`Question ${apiQuestion.id} has no prompt in the exam response or local question bank.`);
@@ -410,6 +418,11 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 					return {
 						...apiQuestion,
 						prompt: displayPrompt,
+						...(Object.prototype.hasOwnProperty.call(mappedApiQuestion, "answer")
+							? { answer: mappedApiQuestion.answer }
+							: cachedQuestionMatchesAttempt && Object.prototype.hasOwnProperty.call(cachedBankQuestion ?? {}, "answer")
+								? { answer: cachedBankQuestion.answer }
+								: {}),
 						...(Array.isArray(orderedOptions) ? { options: cleanList(orderedOptions), rawOptions } : {}),
 						...(Array.isArray(apiQuestion.items) ? { items: cleanList(apiQuestion.items) } : {}),
 						...(Array.isArray(apiQuestion.choices) ? { choices: cleanList(apiQuestion.choices) } : {}),
