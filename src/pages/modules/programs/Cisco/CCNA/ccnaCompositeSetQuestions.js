@@ -2033,6 +2033,7 @@ D 192.168.0.0/24 [90/201728] via 172.16.0.2, 00:00:04, FastEthernet0/0`,
 ]);
 
 const LEGACY_NATIVE_EXHIBITS = new Map([
+	[711, { removeExhibitLeadIn: true }],
 	[778, {
 		removeExhibitLeadIn: true,
 	}],
@@ -2233,10 +2234,7 @@ Hello 10, Dead 40, Retransmit 5`,
 		exhibitQuality: "partial",
 	}],
 	[1148, {
-		hideExhibitImage: true,
-		hideAfterExhibit: true,
-		removeExhibitLeadIn: true,
-		exhibitQuality: "partial",
+		exhibitQuality: "source-backed",
 	}],
 	[1060, {
 		prompt: "What does the host do when using the IPv4 Preferred function?",
@@ -2568,11 +2566,7 @@ LAN prefix: 2001:DB8:D955:1008::/64`,
 		exhibitQuality: "illustrative",
 	}],
 	[1148, {
-		...DATABASE_NATIVE_EXHIBITS.get(1148),
-		hideExhibitImage: true,
-		hideAfterExhibit: true,
-		removeExhibitLeadIn: true,
-		exhibitQuality: "partial",
+		exhibitQuality: "source-backed",
 	}],
 	[1159, {
 		prompt: "A network engineer started to change default settings on SW1 to allow remote access and has entered the following in the configuration mode:\n\nWhich set of commands are needed to allow only SSH access and hide passwords in the running configuration?",
@@ -2702,6 +2696,7 @@ Extended IP access list Services
 		exhibitQuality: "source-backed",
 	}],
 	[1152, { diagram: "host-internet-connectivity-1152", hideExhibitImage: true, hideAfterExhibit: true, exhibitQuality: "source-backed" }],
+	[1151, { removeExhibitLeadIn: true }],
 	[1112, {
 		prompt: "VoIP is being implemented in the network using VLAN ID 73 and named ‘VoIP’. Each user needs a Cisco IP phone at their desk. Switchport e0/0 has been configured as an access port in the data VLAN. Cisco Discovery Protocol is enabled globally. Which command sequence completed the configuration?",
 		exhibit: `SW_1#show vlan
@@ -3088,10 +3083,7 @@ NetBIOS over Tcpip. . . . . : Enabled`,
 	}
 	if (/all routers in the network are configured correctly/i.test(prompt)) {
 		return {
-			hideExhibitImage: true,
-			hideAfterExhibit: true,
-			removeExhibitLeadIn: true,
-			exhibitQuality: "partial",
+			exhibitQuality: "source-backed",
 		};
 	}
 	const builtInQuestion = BUILT_IN_QUESTION_BY_PROMPT.get(normalizePrompt(prompt));
@@ -3169,7 +3161,12 @@ export function applyNativeExhibit(question) {
 	const builtInQuestion = getBuiltInQuestionByPrompt(question?.prompt);
 	let promptLegacyIndex;
 	if (typeof question?.prompt === "string") {
-		if (/engineer configured the vlans on the new accsw2 switch[\s\S]*full connectivity between the two switches and for server1/i.test(question.prompt)) {
+		if (/^\s*What is the issue with the(?: interface)?\s*\??\s*$/i.test(question.prompt) &&
+			Array.isArray(question?.options) &&
+			question.options.some((option) => /cable disconnect/i.test(String(option))) &&
+			question.options.some((option) => /duplex mismatch/i.test(String(option)))) {
+			promptLegacyIndex = 1086;
+		} else if (/engineer configured the vlans on the new accsw2 switch[\s\S]*full connectivity between the two switches and for server1/i.test(question.prompt)) {
 			promptLegacyIndex = 1130;
 		} else if (/which configuration enables sw2 to establish an lacp etherchannel/i.test(question.prompt)) {
 			promptLegacyIndex = 1138;

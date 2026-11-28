@@ -59,6 +59,7 @@ export const CCNA_TOPOLOGY_EXHIBIT_RECREATIONS = [
   [51, "switch-vlan200-two-pcs"],
   [157, "vlan-switch-web-server"],
   [290, "dhcp-relay-r1-r2-server"],
+  [1232, "workstation1-r1-switches-dns-server1"],
 ].map(([legacyIndex, diagram]) => ({
   legacyIndex,
   diagram,

@@ -603,6 +603,26 @@ const NETWORK_TOPOLOGIES = {
 			{ from: "network", to: "server" },
 		],
 	},
+	"workstation1-r1-switches-dns-server1": {
+		title: "Workstation 1 network topology",
+		note: "Redrawn from the source exhibit with its devices, links, interface addresses, subnets, and server names.",
+		viewBox: { x: 0, y: 0, width: 1120, height: 430 },
+		nodes: [
+			{ id: "workstation1", kind: "host", name: "Workstation 1", x: 95, y: 220, details: ["Subnet: 10.0.71.0/27"] },
+			{ id: "sw2", kind: "switch", name: "SW2", x: 300, y: 220 },
+			{ id: "r1", kind: "router", name: "R1", x: 520, y: 220, details: ["Gi0/0 · 10.0.71.1/27", "Gi0/1 · 10.0.63.1/24"] },
+			{ id: "sw1", kind: "switch", name: "SW1", x: 755, y: 220, details: ["Subnet: 10.0.63.0/24"] },
+			{ id: "dns", kind: "host", name: "DNS Server", x: 1010, y: 115, details: ["IP: 10.0.63.5/24", "FQDN: dns.corp.com"] },
+			{ id: "server1", kind: "host", name: "Server 1", x: 1010, y: 330, details: ["IP: 10.0.63.80/24", "FQDN: server1.corp.com"] },
+		],
+		links: [
+			{ from: "workstation1", to: "sw2" },
+			{ from: "sw2", to: "r1" },
+			{ from: "r1", to: "sw1" },
+			{ from: "sw1", to: "dns" },
+			{ from: "sw1", to: "server1" },
+		],
+	},
 	"candidate-wifi-zones": {
 		title: "2.4 GHz channel overlap",
 		note: "The source identifies Zones 3 and 4 as using Channel 11; other zone assignments were not recovered.",

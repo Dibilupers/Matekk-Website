@@ -832,10 +832,7 @@ Hello 10, Dead 40, Retransmit 5`,
     exhibitQuality: "partial",
   }],
   [1148, {
-    hideExhibitImage: true,
-    hideAfterExhibit: true,
-    removeExhibitLeadIn: true,
-    exhibitQuality: "partial",
+    exhibitQuality: "source-backed",
   }],
   [1226, {
     exhibit: `Wireless LAN adapter Wi-Fi:
