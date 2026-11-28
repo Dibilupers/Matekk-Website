@@ -3340,7 +3340,9 @@ export function applyNativeExhibit(question) {
 		? undefined
 		: (typeof databaseExhibit === "object" ? databaseExhibit.exhibit : undefined) ?? parsedPrompt?.exhibit;
 	const hasNativeTextExhibit = typeof exhibit === "string";
-	const hasTerminalTextExhibit = hasNativeTextExhibit || typeof question?.exhibit === "string";
+	const hasTerminalTextExhibit = hasNativeTextExhibit ||
+		typeof question?.exhibit === "string" ||
+		typeof builtInQuestion?.exhibit === "string";
 	const sourceImageIndex = Number(/ccna-exhibit-(\d+)(?:-[^/?#.]*)?\.(?:png|jpe?g|webp|svg)(?:[?#].*)?$/i.exec(
 		String(question?.exhibitImage ?? question?.imageUrl ?? ""),
 	)?.[1]);
