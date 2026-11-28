@@ -1063,14 +1063,17 @@ Fa0/1         1,12`,
 function parseOfflineAnswerTable(question) {
   if (!Array.isArray(question.options) || question.options.length < 2) return null;
   const hasPlaceholderOptions = question.options.every((option, index) =>
-    option === `Option ${String.fromCharCode(65 + index)}`,
+    /^Option [A-H]$/i.test(String(option).trim()),
   );
   if (!hasPlaceholderOptions) return null;
 
   const parsed = parseFormattedOptions(question.prompt, { offline: true });
   if (!parsed) return null;
 
-  const options = question.options.map((_, index) => parsed.options[String.fromCharCode(65 + index)]);
+  const options = question.options.map((placeholder) => {
+    const letter = /^Option ([A-H])$/i.exec(String(placeholder).trim())?.[1]?.toUpperCase();
+    return letter ? parsed.options[letter] : undefined;
+  });
   if (options.some((option) => typeof option !== "string" || !option.trim())) return null;
   return { prompt: parsed.prompt, options };
 }

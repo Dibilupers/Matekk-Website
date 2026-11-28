@@ -23,31 +23,7 @@ async function readExamResponse(response) {
 }
 
 function validateExamAttempt(attempt) {
-	const isMatchingQuestion = (question) =>
-		["match", "drag_drop", "click_boxes", "image"].includes(question?.type);
-	const isSingleQuestion = (question) =>
-		!isMatchingQuestion(question) &&
-		Array.isArray(question?.options) &&
-		question.options.length >= 2 &&
-		question.options.every((option) => typeof option === "string");
-	const isMatchQuestion = (question) =>
-		isMatchingQuestion(question) &&
-		Array.isArray(question.items) &&
-		question.items.length >= 2 &&
-		question.items.length <= 8 &&
-		question.items.every((item) => typeof item === "string") &&
-		Array.isArray(question.choices) &&
-		question.choices.length >= 2 &&
-		question.choices.length <= 8 &&
-		question.choices.every((choice) => typeof choice === "string") &&
-		(question.type !== "drag_drop" || question.items.length === question.choices.length) &&
-		(question.type !== "click_boxes" || question.items.length === question.choices.length) &&
-		(question.type !== "image" || Array.isArray(question.groupSizes)) &&
-		(question.groupSizes === undefined ||
-			(Array.isArray(question.groupSizes) &&
-				question.groupSizes.length === question.choices.length &&
-				question.groupSizes.every((size) => Number.isInteger(size) && size >= 0) &&
-				question.groupSizes.reduce((total, size) => total + size, 0) === question.items.length));
+	const supportedTypes = new Set(["single", "multi", "match", "drag_drop", "click_boxes", "image"]);
 	if (
 		!attempt ||
 		typeof attempt.attemptId !== "string" ||
@@ -56,10 +32,11 @@ function validateExamAttempt(attempt) {
 		!Array.isArray(attempt.questions) ||
 		attempt.questions.length === 0 ||
 		!attempt.questions.every((question) =>
-			Number.isInteger(question?.id) &&
-			typeof question.prompt === "string" &&
+			question && typeof question === "object" &&
+			Number.isInteger(question.id) &&
+			(question.type === undefined || supportedTypes.has(question.type)) &&
+			(question.prompt === undefined || question.prompt === null || typeof question.prompt === "string") &&
 			(question.imageUrl === undefined || question.imageUrl === null || typeof question.imageUrl === "string") &&
-			(isSingleQuestion(question) || isMatchQuestion(question)) &&
 			!("answer" in question) &&
 			!("correct_answer" in question),
 		)
@@ -69,10 +46,17 @@ function validateExamAttempt(attempt) {
 	return attempt;
 }
 
-export async function startCcnaExam(examKey) {
-	const response = await fetch(`${API_URL}/questions/exams/${encodeURIComponent(examKey)}/start`, {
+export async function startCcnaExam(examKey, excludeQuestionIds = []) {
+	const request = {
 		method: "POST",
 		credentials: "include",
+	};
+	if (excludeQuestionIds.length) {
+		request.headers = { "Content-Type": "application/json" };
+		request.body = JSON.stringify({ excludeQuestionIds });
+	}
+	const response = await fetch(`${API_URL}/questions/exams/${encodeURIComponent(examKey)}/start`, {
+		...request,
 	});
 	return validateExamAttempt(await readExamResponse(response));
 }
@@ -81,6 +65,19 @@ export async function resumeCcnaExam(examKey, attemptId) {
 	const response = await fetch(
 		`${API_URL}/questions/exams/${encodeURIComponent(examKey)}/attempt/${encodeURIComponent(attemptId)}`,
 		{ credentials: "include" },
+	);
+	return validateExamAttempt(await readExamResponse(response));
+}
+
+export async function repairCcnaExamAttempt(examKey, attemptId, excludeQuestionIds) {
+	const response = await fetch(
+		`${API_URL}/questions/exams/${encodeURIComponent(examKey)}/attempt/${encodeURIComponent(attemptId)}/repair`,
+		{
+			method: "POST",
+			credentials: "include",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ excludeQuestionIds }),
+		},
 	);
 	return validateExamAttempt(await readExamResponse(response));
 }

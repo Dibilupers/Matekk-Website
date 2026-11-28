@@ -34,9 +34,7 @@ export function isValidQuestion(question) {
 					new Set(question.answer).size === question.answer.length));
 	}
 	if (!Array.isArray(question?.options)) return false;
-	if (question.options.length > 1 && question.options.every((option, index) =>
-		String(option).trim().toLowerCase() === `option ${String.fromCharCode(65 + index).toLowerCase()}`,
-	)) return false;
+	if (question.options.length > 1 && question.options.every((option) => /^Option [A-H]$/i.test(String(option).trim()))) return false;
 	if (type === "multi") {
 		return Array.isArray(question.answer) &&
 			question.answer.length > 0 &&

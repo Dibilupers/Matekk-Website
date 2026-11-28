@@ -156,14 +156,16 @@ export class QuestionsService {
     return this.prisma.questions.findMany();
   }
 
-  async startExam(examKey: string, userId: number) {
+  async startExam(examKey: string, userId: number, excludeQuestionIds: number[] = []) {
     const config = this.getExamConfig(examKey);
     const bank = await this.prisma.questions.findMany();
+    const excludedIds = new Set(excludeQuestionIds);
     const seenPrompts = new Set<string>();
     const readableQuestions = bank.flatMap((record) => {
       const question = this.readQuestion(record);
       return question ? [question] : [];
     }).filter((question) => {
+      if (excludedIds.has(question.id)) return false;
       const promptKey = question.prompt.replace(/\s+/g, ' ').trim().toLowerCase();
       if (seenPrompts.has(promptKey)) return false;
       seenPrompts.add(promptKey);
@@ -257,6 +259,84 @@ export class QuestionsService {
     });
 
     return this.toAttemptResponse(attempt, questionSet);
+  }
+
+  async repairExamAttempt(examKey: string, attemptId: string, userId: number, invalidQuestionIds: number[]) {
+    this.getExamConfig(examKey);
+    const attempt = await this.prisma.examAttempt.findUnique({ where: { id: attemptId } });
+    if (!attempt || attempt.userId !== userId || attempt.examKey !== examKey) {
+      throw new NotFoundException('Exam attempt not found.');
+    }
+    if (attempt.submittedAt) {
+      throw new BadRequestException('A submitted exam cannot be changed.');
+    }
+
+    const invalidIds = new Set(invalidQuestionIds);
+    const questionSet = this.parseQuestionSet(attempt.questionSet);
+    const repairIndexes = questionSet.flatMap((question, index) =>
+      invalidIds.has(question.id) ? [index] : [],
+    );
+    if (!repairIndexes.length) return this.toAttemptResponse(attempt, questionSet);
+
+    const usedIds = new Set(questionSet
+      .filter((question) => !invalidIds.has(question.id))
+      .map(({ id }) => id));
+    const seenPrompts = new Set(questionSet
+      .filter((question) => !invalidIds.has(question.id))
+      .map(({ prompt }) => prompt.replace(/\s+/g, ' ').trim().toLowerCase()));
+    const bank = await this.prisma.questions.findMany();
+    const readableQuestions = bank.flatMap((record) => {
+      const question = this.readQuestion(record);
+      return question && !invalidIds.has(question.id) ? [question] : [];
+    }).filter((question) => {
+      const promptKey = question.prompt.replace(/\s+/g, ' ').trim().toLowerCase();
+      if (seenPrompts.has(promptKey)) return false;
+      seenPrompts.add(promptKey);
+      return true;
+    });
+    const lineMatchIds = pickLineMatchIds(
+      readableQuestions.filter((question): question is MatchExamQuestion => question.type === 'match'),
+    );
+    const usableQuestions: ExamQuestion[] = readableQuestions.map((question) => {
+      if (question.type !== 'match' || question.matchStyle === 'numbers') return question;
+      if (lineMatchIds.has(question.id) || question.choices.length > question.items.length) {
+        return { ...question, matchStyle: 'lines' as const };
+      }
+      if (question.items.length === question.choices.length) {
+        return { ...question, type: 'click_boxes' as const };
+      }
+      return question;
+    });
+
+    for (const index of repairIndexes) {
+      const brokenQuestion = questionSet[index];
+      const isMatching = brokenQuestion.type !== 'single';
+      const candidates = this.shuffle(usableQuestions.filter((candidate) => {
+        if (usedIds.has(candidate.id) || (candidate.type !== 'single') !== isMatching) return false;
+        if (candidate.type !== brokenQuestion.type) return false;
+        return candidate.type !== 'match' ||
+          brokenQuestion.type !== 'match' || candidate.matchStyle === brokenQuestion.matchStyle;
+      }));
+      const replacement = candidates[0] ?? this.shuffle(usableQuestions.filter((candidate) =>
+        !usedIds.has(candidate.id) && (candidate.type !== 'single') === isMatching,
+      ))[0];
+      if (!replacement) {
+        throw new BadRequestException('There are not enough valid questions to replace the damaged item in this exam.');
+      }
+      usedIds.add(replacement.id);
+      questionSet[index] = replacement.type === 'single'
+        ? { ...replacement, options: this.shuffle([...replacement.options]) }
+        : { ...replacement, choices: this.shuffle([...replacement.choices]) };
+    }
+
+    const saved = await this.prisma.examAttempt.updateMany({
+      where: { id: attemptId, userId, examKey, submittedAt: null },
+      data: { questionSet: questionSet satisfies Prisma.InputJsonValue },
+    });
+    if (!saved.count) throw new BadRequestException('This exam attempt has already been submitted.');
+    const repairedAttempt = await this.prisma.examAttempt.findUnique({ where: { id: attemptId } });
+    if (!repairedAttempt) throw new NotFoundException('Exam attempt not found.');
+    return this.toAttemptResponse(repairedAttempt, questionSet);
   }
 
   async resumeExam(examKey: string, attemptId: string, userId: number) {

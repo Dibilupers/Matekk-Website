@@ -3262,6 +3262,8 @@ export function applyNativeExhibit(question) {
 		} else if (/which switch becomes the root of the spanning tree for vlan 110/i.test(question.prompt) &&
 			/switch 1[\s\S]*32778[\s\S]*switch 4[\s\S]*64000/i.test(question.prompt)) {
 			promptLegacyIndex = 339;
+		} else if (/which set of commands must be applied to the two switches to configure an lacp layer 2 etherchannel/i.test(question.prompt)) {
+			promptLegacyIndex = 1016;
 		} else if (/the dhcp server and clients are connected to the same switch[\s\S]*clients on vlan 1/i.test(question.prompt)) {
 			promptLegacyIndex = 491;
 		} else if (/attempted arp spoofing attack[\s\S]*port-channel1[\s\S]*choose two/i.test(question.prompt)) {
@@ -3303,7 +3305,7 @@ export function applyNativeExhibit(question) {
 		? splitPromptExhibit(question.prompt)
 		: null;
 	const hasPlaceholderOptions = Array.isArray(question?.options) && question.options.length > 1 &&
-		question.options.every((option, index) => String(option).trim().toLowerCase() === `option ${String.fromCharCode(65 + index).toLowerCase()}`);
+		question.options.every((option) => /^Option [A-H]$/i.test(String(option).trim()));
 	const needsOptionRecovery = !Array.isArray(question?.options) || question.options.length < 2 || hasPlaceholderOptions;
 	const parsedOptions = needsOptionRecovery && typeof question?.prompt === "string"
 		? parseFormattedOptions(question.prompt) ??

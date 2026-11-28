@@ -638,7 +638,7 @@ export function QuestionInput({ question, value, onChange, disabled, fortiosOffl
 	const questionKey = question.bankId ?? question.id ?? question.prompt;
 	const isMatching = ["match", "drag_drop", "click_boxes", "image"].includes(type);
 	const hasPlaceholderOptions = Array.isArray(question?.options) && question.options.length > 1 &&
-		question.options.every((option, index) => String(option).trim().toLowerCase() === `option ${String.fromCharCode(65 + index).toLowerCase()}`);
+		question.options.every((option) => /^Option [A-H]$/i.test(String(option).trim()));
 	if (typeof question?.prompt !== "string" || !question.prompt.trim() || hasPlaceholderOptions) {
 		return <InvalidQuestionMessage />;
 	}

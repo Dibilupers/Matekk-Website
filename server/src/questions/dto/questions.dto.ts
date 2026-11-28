@@ -94,3 +94,12 @@ export class SubmitExamDto {
     @Type(() => ExamAnswerDto)
     answers: ExamAnswerDto[];
 }
+
+export class StartExamDto {
+    @IsOptional()
+    @IsArray()
+    @ArrayMaxSize(150)
+    @IsInt({ each: true })
+    @Min(1, { each: true })
+    excludeQuestionIds?: number[];
+}
