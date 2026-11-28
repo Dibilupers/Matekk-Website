@@ -2132,6 +2132,19 @@ const NETWORK_TOPOLOGIES = {
 		],
 		links: [{ from: "client", to: "r1", label: "Gi0/0", labelY: 250 }, { from: "r1", to: "server", label: "Gi0/1", labelY: 250 }],
 	},
+	"dhcp-relay-vlan10": {
+		title: "DHCP relay from VLAN 10",
+		note: "Clients on VLAN 10 use the DHCP server on VLAN 20; SW1 relays the broadcast between subnets.",
+		nodes: [
+			{ id: "clients", kind: "network", name: "VLAN 10 · DHCP clients", x: 180, y: 300, details: ["192.168.10.0/24"] },
+			{ id: "sw1", kind: "switch", name: "SW1 · Layer 3", x: 500, y: 300, details: ["VLAN 10 SVI", "VLAN 20 SVI"] },
+			{ id: "server", kind: "host", name: "DHCP Server", x: 820, y: 300, details: ["192.168.20.2", "VLAN 20 · 192.168.20.0/24"] },
+		],
+		links: [
+			{ from: "clients", to: "sw1", label: "VLAN 10", labelY: 250 },
+			{ from: "sw1", to: "server", label: "VLAN 20", labelY: 250 },
+		],
+	},
 	"r14-r86-static-route-172": {
 		title: "R14 to R86 route path",
 		note: "R14 reaches 172.21.34.0/25 through R86. Router interface and loopback addresses are shown at each endpoint.",
@@ -2187,16 +2200,7 @@ const NETWORK_TOPOLOGIES = {
 	},
 	"dual-wan-site-routing": {
 		title: "Dual-link R1–R2 branch network",
-		note: "OSPF Area 10 · R1–R2 links: 172.16.0.0/30 on Gi0/0 and 172.16.0.4/30 on Gi0/1 · SW3 LAN: 172.16.1.0/24 · SW4 LAN: 172.16.2.0/27",
-		configuration: `SW3
-Router OSPF 200
-Network 172.16.0.0 0.0.0.3
-Network 172.16.1.0 0.0.0.3
-
-SW4
-Router OSPF 200
-Network 172.16.0.0 0.0.0.3
-Network 172.16.2.0 0.0.0.31`,
+		note: "R1–R2 links: 172.16.0.0/30 on Gi0/0 and 172.16.0.4/30 on Gi0/1 · SW3 LAN: 172.16.1.0/24 · SW4 LAN: 172.16.2.0/27",
 		nodes: [
 			{ id: "r1", kind: "router", name: "R1", x: 330, y: 310 },
 			{ id: "r2", kind: "router", name: "R2", x: 670, y: 310 },
@@ -2598,7 +2602,7 @@ Network 172.16.2.0 0.0.0.31`,
 	},
 	"static-route-three-router-799": {
 		title: "R1–R2–R3 static-route topology",
-		note: "Illustrative reconstruction from the keyed commands: 10.10.13.0/25 is behind R3 and 10.10.14.0/24 is behind R1. Transit masks are unavailable.",
+		note: "Illustrative reconstruction from the keyed commands. LAN A is 10.10.14.0/24 behind R1; LAN B is 10.10.13.0/25 behind R3. Transit next hops are R1–R2: R2 10.10.10.1 / R1 10.10.10.2, and R2–R3: R3 10.10.10.5 / R2 10.10.10.6. The source does not establish transit masks or host addresses.",
 		nodes: [
 			{ id: "lan14", kind: "network", name: "10.10.14.0/24", x: 100, y: 300 },
 			{ id: "r1", kind: "router", name: "R1", x: 330, y: 300 },
@@ -2614,56 +2618,14 @@ Network 172.16.2.0 0.0.0.31`,
 		],
 	},
 	"ospf-destination-segments-888": {
-		title: "OSPF destination mapping between sites",
-		note: "Illustrative reconstruction from the saved answer key. OSPF connects Site A and Site B; all five destinations are assigned to the keyed Internet or Router1 segments below.",
-		viewBox: { x: 0, y: 0, width: 1100, height: 490 },
+		title: "OSPF links between sites",
+		note: "OSPF connects Site A and Site B.",
+		viewBox: { x: 0, y: 0, width: 1100, height: 230 },
 		nodes: [
 			{ id: "siteA", kind: "network", name: "Site A", x: 290, y: 105 },
 			{ id: "siteB", kind: "network", name: "Site B", x: 810, y: 105 },
 		],
 		links: [{ from: "siteA", to: "siteB", label: "OSPF between sites" }],
-		annotations: [
-			{
-				x: 290,
-				y: 255,
-				lines: ["Internet"],
-				textAnchor: "middle",
-				fontSize: 18,
-				fontWeight: 700,
-				color: "#17233d",
-				box: { x: 80, y: 220, width: 420, height: 220, rx: 14, fill: "#f1f8ff", stroke: "#80acd0" },
-			},
-			{
-				x: 290,
-				y: 300,
-				lines: ["10.10.10.16", "10.10.13.129", "10.10.100.128"],
-				textAnchor: "middle",
-				fontFamily: "monospace",
-				fontSize: 17,
-				lineHeight: 34,
-				color: "#26354b",
-			},
-			{
-				x: 810,
-				y: 255,
-				lines: ["Router1"],
-				textAnchor: "middle",
-				fontSize: 18,
-				fontWeight: 700,
-				color: "#17233d",
-				box: { x: 600, y: 220, width: 420, height: 220, rx: 14, fill: "#f1f8ff", stroke: "#80acd0" },
-			},
-			{
-				x: 810,
-				y: 300,
-				lines: ["10.10.13.1", "10.10.13.150"],
-				textAnchor: "middle",
-				fontFamily: "monospace",
-				fontSize: 17,
-				lineHeight: 34,
-				color: "#26354b",
-			},
-		],
 	},
 	"internet-router-pc-ipconfig": {
 		title: "PC Internet connectivity topology",
@@ -2675,6 +2637,26 @@ Network 172.16.2.0 0.0.0.31`,
 			{ id: "pc", kind: "host", name: "PC", x: 900, y: 270, details: ["10.2.2.2"] },
 		],
 		links: [{ from: "internet", to: "r" }, { from: "r", to: "sw" }, { from: "sw", to: "pc" }],
+	},
+	"host-internet-connectivity-1152": {
+		title: "Host connectivity to the Internet",
+		note: "Hosts A, B, and C share the 192.168.1.0/24 LAN through Switch1. Router1 G0/0 is 192.168.1.1/24; G0/1 connects toward the Internet.",
+		viewBox: { x: 0, y: 0, width: 1200, height: 720 },
+		nodes: [
+			{ id: "hostA", kind: "host", name: "Host A", x: 150, y: 135, details: ["IP 192.168.1.10", "Mask 255.255.255.0", "Gateway 192.168.1.1", "DNS 8.8.8.8"] },
+			{ id: "hostB", kind: "host", name: "Host B", x: 150, y: 360, details: ["IP 192.168.1.11", "Mask 255.255.255.0", "Gateway 192.168.1.1", "DNS 8.8.8.8"] },
+			{ id: "hostC", kind: "host", name: "Host C", x: 150, y: 585, details: ["IP 192.168.1.12", "Mask 255.255.255.0", "Gateway 192.168.2.1", "DNS 8.8.8.8"] },
+			{ id: "switch1", kind: "switch", name: "Switch1", x: 480, y: 360 },
+			{ id: "router1", kind: "router", name: "Router1", x: 790, y: 360, details: ["G0/0 192.168.1.1/24"] },
+			{ id: "internet", kind: "cloud", name: "Internet", x: 1080, y: 360 },
+		],
+		links: [
+			{ from: "hostA", to: "switch1" },
+			{ from: "hostB", to: "switch1" },
+			{ from: "hostC", to: "switch1" },
+			{ from: "switch1", to: "router1", label: "G0/0", labelX: 635, labelY: 325 },
+			{ from: "router1", to: "internet", label: "G0/1", labelY: 325 },
+		],
 	},
 	"cpe-dual-isp": {
 		title: "CPE dual-ISP headquarters topology",

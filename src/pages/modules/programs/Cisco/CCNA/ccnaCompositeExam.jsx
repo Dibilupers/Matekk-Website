@@ -19,7 +19,7 @@ import { cleanText } from "../../../../../utils/ccnaBankConverter";
 import { ExhibitDiagram, ExhibitImage, ExhibitText } from "./ccnaExhibit";
 import { loadCcnaAllQuestionsBank } from "../../../../../utils/ccnaQuestionBankApi";
 import { loadCachedCcnaAllQuestionsBank } from "../../../../../utils/ccnaOfflineQuestionBank";
-import { getDatabaseQuestionById, setDatabaseQuestions } from "./ccnaQuestionBank";
+import { getDatabaseQuestionById, setDatabaseQuestionsYielding } from "./ccnaQuestionBank";
 import { createOfflineCcnaExamQuestions } from "./ccnaOfflineTimedExam";
 import { applyNativeExhibit } from "./ccnaCompositeSetQuestions";
 import { createOfflineLegacyExamQuestions, getOfflineLegacyQuestionBank } from "./ccnaOfflineExamQuestions";
@@ -173,12 +173,13 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 		async function loadExamAttempt() {
 			if (isOfflineExam && hasLoadedOfflineAttemptRef.current && !shouldStartNewAttemptRef.current) return;
 			setExamLoadState({ status: "loading", error: null });
-			// The question bank supplies each question's picture / printout; load it alongside the exam questions
+			// Wait until local question fallbacks are ready so incomplete API records can be repaired
+			// before the attempt is displayed. Processing yields between batches to keep the page responsive.
 			const bankReady = isOfflineExam
 				? Promise.resolve()
 				: loadCcnaAllQuestionsBank()
-				.then(({ questions: bankQuestions }) => setDatabaseQuestions(bankQuestions))
-				.catch((error) => console.error("Unable to load and save the complete CCNA question bank.", error));
+					.then(({ questions: bankQuestions }) => setDatabaseQuestionsYielding(bankQuestions))
+					.catch((error) => console.error("Unable to load and save the complete CCNA question bank.", error));
 			try {
 				let savedSession = null;
 				const isRetake = shouldStartNewAttemptRef.current;
@@ -320,6 +321,8 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 					return;
 				}
 
+				await bankReady;
+				if (!isActive) return;
 				let apiAttempt;
 				if (savedSession) {
 					try {
@@ -337,11 +340,29 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 				if (apiAttempt.questions.length !== exam.questionCount) {
 					throw new TypeError(`The backend did not return ${exam.questionCount} questions for this exam.`);
 				}
-				await bankReady;
-				if (!isActive) return;
 				const loadedQuestions = apiAttempt.questions.map((apiQuestion) => {
-					const bankQuestion = getDatabaseQuestionById(apiQuestion.id) ??
-						applyNativeExhibit({ ...apiQuestion, bankId: apiQuestion.id });
+					// Resolve exhibits against the question text returned for this attempt. The
+					// local bank can contain colliding IDs, so resolving by ID first can attach
+					// a different record and skip prompt-based exhibit mappings entirely.
+					const mappedApiQuestion = applyNativeExhibit({ ...apiQuestion, bankId: apiQuestion.id });
+					const cachedBankQuestion = getDatabaseQuestionById(apiQuestion.id);
+					const normalizeQuestionKey = (value) => cleanText(value ?? "")
+						.replace(/^\s*Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\.?\s*/i, "")
+						.replace(/\s+/g, " ").trim().toLowerCase();
+					const attemptPromptKey = normalizeQuestionKey(mappedApiQuestion.prompt ?? apiQuestion.prompt);
+					const cachedPromptKey = normalizeQuestionKey(cachedBankQuestion?.prompt);
+					const cachedQuestionMatchesAttempt = attemptPromptKey.length >= 64 && cachedPromptKey.length >= 64 &&
+						(attemptPromptKey.includes(cachedPromptKey) || cachedPromptKey.includes(attemptPromptKey));
+					const exhibitFields = [
+						"legacyIndex", "exhibit", "exhibitDiagram", "exhibitImage", "exhibitImageCropTop",
+						"afterExhibit", "hideExhibitImage", "hideAfterExhibit", "nativeExhibitText", "exhibitQuality",
+						"suppressInlineExhibit",
+					];
+					const bankExhibitFallbacks = Object.fromEntries(exhibitFields
+						.filter((field) => field !== "exhibit" || mappedApiQuestion.suppressInlineExhibit !== true)
+						.filter((field) => mappedApiQuestion[field] === undefined && cachedBankQuestion?.[field] !== undefined)
+						.map((field) => [field, cachedBankQuestion[field]]));
+					const bankQuestion = { ...mappedApiQuestion, ...bankExhibitFallbacks };
 					const hideExhibitImage = bankQuestion?.hideExhibitImage === true ||
 						(apiQuestion.type === "match" && RECREATED_MATCH_EXHIBIT_QUESTION_IDS.has(apiQuestion.id));
 					// Fix text saved with the wrong encoding ("â€œwarningâ€" -> “warning”) for display.
@@ -349,25 +370,38 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 					const cleanList = (list) => (Array.isArray(list) ? list.map((value) => (typeof value === "string" ? cleanText(value) : value)) : list);
 					// "Option A / Option B …" questions: the options are described in a table inside the question text.
 					// Keep that text whole (the question view lays the table out itself) and list the answers A, B, C, D in order.
-					const isOptionTable = Array.isArray(apiQuestion.options) &&
+					const isOptionTable = Array.isArray(apiQuestion.options) && apiQuestion.options.length > 1 &&
 						apiQuestion.options.every((option) => /^\s*Option [A-H]\s*$/i.test(String(option)));
-					const hasExpandedOptionTable = isOptionTable &&
-						Array.isArray(bankQuestion?.options) &&
-						bankQuestion.options.length === apiQuestion.options.length &&
-						bankQuestion.options.every((option) =>
-							typeof option === "string" && option.trim() && !/^\s*Option [A-H]\s*$/i.test(option),
-						);
-					const { prompt, exhibit } = hasExpandedOptionTable
-						? { prompt: bankQuestion.prompt }
+					const isExpandedOptionList = (options) => Array.isArray(options) && options.length > 1 &&
+						options.every((option) => typeof option === "string" && option.trim()) &&
+						!options.every((option, index) => String(option).trim().toLowerCase() === `option ${String.fromCharCode(65 + index).toLowerCase()}`);
+					const expandedOptionSource = isExpandedOptionList(mappedApiQuestion.options)
+						? mappedApiQuestion.options
+						: cachedQuestionMatchesAttempt && isExpandedOptionList(cachedBankQuestion?.options)
+							? cachedBankQuestion.options
+							: undefined;
+					const hasExpandedOptionTable = isOptionTable && isExpandedOptionList(expandedOptionSource);
+					const apiPrompt = cleanText(mappedApiQuestion.prompt ?? apiQuestion.prompt);
+					const cachedPrompt = cachedQuestionMatchesAttempt ? cleanText(cachedBankQuestion?.prompt ?? "") : "";
+					const mappedPrompt = apiPrompt.trim() ? apiPrompt : cachedPrompt;
+					if (!mappedPrompt.trim()) {
+						throw new TypeError(`Question ${apiQuestion.id} has no prompt in the exam response or local question bank.`);
+					}
+					const { prompt, exhibit } = bankQuestion.suppressInlineExhibit
+						? { prompt: mappedPrompt, exhibit: undefined }
+						: hasExpandedOptionTable
+						? { prompt: apiPrompt !== cleanText(apiQuestion.prompt) && apiPrompt.trim() ? mappedPrompt : cachedPrompt.trim() ? cachedPrompt : mappedPrompt }
 						: isOptionTable
-						? { prompt: cleanText(apiQuestion.prompt) }
-						: splitPromptExhibit(cleanText(apiQuestion.prompt));
+						? { prompt: mappedPrompt }
+						: splitPromptExhibit(mappedPrompt);
 					const exhibitDiagram = bankQuestion?.exhibitDiagram;
 					const hideAfterExhibit = bankQuestion?.hideAfterExhibit === true;
 					const exhibitImage = hideExhibitImage || exhibitDiagram || bankQuestion?.nativeExhibitText
 						? undefined
 						: bankQuestion?.exhibitImage || apiQuestion.imageUrl;
-					const displayedExhibit = bankQuestion?.exhibit && !isOptionTable ? bankQuestion.exhibit : exhibit;
+					const displayedExhibit = bankQuestion?.suppressInlineExhibit
+						? undefined
+						: bankQuestion?.exhibit && !isOptionTable ? bankQuestion.exhibit : exhibit;
 					const hasSeparateExhibit = Boolean(
 						exhibitDiagram || exhibitImage || (displayedExhibit && !/^Option [A-H]$/i.test(displayedExhibit.trim())),
 					);
@@ -380,10 +414,15 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 					const rawOptions = isOptionTable
 						? [...apiQuestion.options].sort((left, right) => String(left).trim().localeCompare(String(right).trim()))
 						: apiQuestion.options;
-					const orderedOptions = hasExpandedOptionTable ? bankQuestion.options : rawOptions;
+					const orderedOptions = hasExpandedOptionTable ? expandedOptionSource : rawOptions;
 					return {
 						...apiQuestion,
 						prompt: displayPrompt,
+						...(Object.prototype.hasOwnProperty.call(mappedApiQuestion, "answer")
+							? { answer: mappedApiQuestion.answer }
+							: cachedQuestionMatchesAttempt && Object.prototype.hasOwnProperty.call(cachedBankQuestion ?? {}, "answer")
+								? { answer: cachedBankQuestion.answer }
+								: {}),
 						...(Array.isArray(orderedOptions) ? { options: cleanList(orderedOptions), rawOptions } : {}),
 						...(Array.isArray(apiQuestion.items) ? { items: cleanList(apiQuestion.items) } : {}),
 						...(Array.isArray(apiQuestion.choices) ? { choices: cleanList(apiQuestion.choices) } : {}),
@@ -874,9 +913,10 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 								{!question.hidePrompt && (
 									<QuestionPrompt
 										prompt={question.prompt}
+										hideExhibitImage={question.hideExhibitImage}
 										offline={isOfflineExam}
 										compactExhibit
-										hasSeparateExhibit={Boolean(question.exhibit || question.exhibitImage || question.exhibitDiagram)}
+										hasSeparateExhibit={Boolean(question.exhibit || question.exhibitDiagram || question.afterExhibit || (question.exhibitImage && !question.hideExhibitImage))}
 									/>
 								)}
 								{question.exhibitDiagram && <ExhibitDiagram type={question.exhibitDiagram} offlineLayout={isOfflineExam} compact />}
@@ -1039,9 +1079,10 @@ export default function CCNACompositeExam({ examKey = "short" }) {
 												{!item.hidePrompt && (
 													<QuestionPrompt
 														prompt={item.prompt}
+														hideExhibitImage={item.hideExhibitImage}
 														offline={isOfflineExam}
 														compactExhibit
-														hasSeparateExhibit={Boolean(item.exhibit || item.exhibitImage || item.exhibitDiagram)}
+														hasSeparateExhibit={Boolean(item.exhibit || item.exhibitDiagram || item.afterExhibit || (item.exhibitImage && !item.hideExhibitImage))}
 													/>
 												)}
 								{item.exhibitDiagram && <ExhibitDiagram type={item.exhibitDiagram} className="mt-4" offlineLayout={isOfflineExam} compact />}

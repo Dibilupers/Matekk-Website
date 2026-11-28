@@ -1,19 +1,15 @@
 import aclQuestion77ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-77-acl-exhibit.jpg";
 import jsonObject769ExhibitImg from "../../../../../assets/ccna-exam/ccna-json-object-exhibit-769.svg";
 import ipAddressAssignmentExhibitImg from "../../../../../assets/ccna-exam/ccna-question-875-ip-address-exhibit.jpg";
-import stpRootBridge962ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-962-stp-root-bridge-exhibit.jpg";
 import pcIpConfig963ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-963-ipconfig-exhibit.png";
 import wlanAdvanced1028ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-1028-wlan-advanced-exhibit.png";
 import hostA1114ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-1114-host-a-exhibit.png";
 import vlanSwitchTopology1130ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-1130-switch-vlan-topology.jpg";
-import hostC1152ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-1152-host-c-network-config.jpg";
 import wlcWpa2Psk1154ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-1154-wlc-wpa2.jpg";
 import stpTopology1167ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-1167-stp-topology.jpg";
 import wlcWpa2Aes1170ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-1170-wlc-wpa2-aes.jpg";
 import sw11Vlan340ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-340-sw11-vlan.jpg";
-import wlcMacFiltering872ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-872-wlc-mac-filtering.jpg";
 import wlcSae890ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-890-wlc-sae.jpg";
-import wlc63CharPsk911ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-911-wlc-63-char-psk.jpg";
 import workstationServerFqdn924ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-924-workstation-server-fqdn.jpg";
 import wlcP2pBlocking992ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-992-wlc-p2p-blocking.webp";
 import patVlan341ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-341-pat-vlan.webp";
@@ -45,9 +41,7 @@ const OFFLINE_REFER_EXHIBIT_IMAGE_OVERRIDES = new Map([
   [341, { exhibitImage: patVlan341ExhibitImg }],
   [382, { exhibitImage: voiceDataVlan382ExhibitImg }],
   [340, { exhibitImage: sw11Vlan340ExhibitImg }],
-  [1188, { exhibitImage: wlcMacFiltering872ExhibitImg }],
   [1206, { exhibitImage: wlcSae890ExhibitImg }],
-  [1227, { exhibitImage: wlc63CharPsk911ExhibitImg }],
   [1232, { exhibitImage: workstationServerFqdn924ExhibitImg }],
   [1281, { exhibitImage: wlcP2pBlocking992ExhibitImg }],
   [1112, {
@@ -300,14 +294,6 @@ Router2(config)#ntp master 7`,
     exhibitImage: ipAddressAssignmentExhibitImg,
     hideExhibitImage: false,
   }],
-  [962, {
-    offlineSourceExhibitImages: [],
-    afterExhibit: undefined,
-    exhibitDiagram: undefined,
-    exhibit: undefined,
-    exhibitImage: stpRootBridge962ExhibitImg,
-    hideExhibitImage: false,
-  }],
   [963, {
     offlineSourceExhibitImages: [],
     afterExhibit: undefined,
@@ -340,21 +326,13 @@ Router2(config)#ntp master 7`,
     exhibitImage: vlanSwitchTopology1130ExhibitImg,
     hideExhibitImage: false,
   }],
-  [1143, {
-    offlineSourceExhibitImages: [],
-    afterExhibit: undefined,
-    exhibitDiagram: undefined,
-    exhibit: undefined,
-    exhibitImage: vlanSwitchTopology1130ExhibitImg,
-    hideExhibitImage: false,
-  }],
   [1152, {
     offlineSourceExhibitImages: [],
     afterExhibit: undefined,
-    exhibitDiagram: undefined,
+    exhibitDiagram: "host-internet-connectivity-1152",
     exhibit: undefined,
-    exhibitImage: hostC1152ExhibitImg,
-    hideExhibitImage: false,
+    exhibitImage: undefined,
+    hideExhibitImage: true,
   }],
   [1154, {
     offlineSourceExhibitImages: [],
@@ -827,14 +805,8 @@ The original branch-office network and link address cannot be reconciled, so no 
     exhibitQuality: "partial",
   }],
   [884, {
-    exhibit: `[PARTIAL — source and answer labels differ.]
-Available after-exhibit DHCP server: 192.168.202.30
-Keyed helper address: 192.168.20.2
-The server address and keyed choice cannot be reconciled, so no address is guessed.`,
-    hideExhibitImage: true,
+    exhibitQuality: "illustrative",
     hideAfterExhibit: true,
-    removeExhibitLeadIn: true,
-    exhibitQuality: "partial",
   }],
   [747, {
     exhibit: `R1#show ip ospf interface g0/0/0
@@ -1139,10 +1111,10 @@ const OFFLINE_LEGACY_QUESTION_CANDIDATES = CCNA_LEGACY_QUESTIONS
     const removeExhibitLeadIn = nativeExhibit?.removeExhibitLeadIn ||
       (typeof nativePrompt === "string" && nativePrompt !== question.prompt);
     const promptWithoutExhibitLeadIn = typeof offlineOverride?.prompt === "string"
-      ? offlineOverride.prompt.replace(/^\s*Refer to (?:the )?exhibit\.?\s*/i, "")
+      ? offlineOverride.prompt.replace(/^\s*Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\.?\s*/i, "")
       : typeof nativePrompt === "string" && nativePrompt !== question.prompt
         ? nativePrompt
-        : question.prompt.replace(/^\s*Refer to (?:the )?exhibit\.?\s*/i, "");
+        : question.prompt.replace(/^\s*Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\.?\s*/i, "");
 
     return {
       ...question,
@@ -1196,6 +1168,7 @@ const OFFLINE_LEGACY_QUESTION_CANDIDATES = CCNA_LEGACY_QUESTIONS
         : {}),
       ...(promptNativeExhibit.type === "drag_drop" ? { type: "drag_drop" } : {}),
       ...(promptNativeExhibit.dragDropMode ? { dragDropMode: promptNativeExhibit.dragDropMode } : {}),
+      ...(Array.isArray(promptNativeExhibit.options) ? { options: promptNativeExhibit.options } : {}),
       id: question.legacyIndex,
       bankId: question.legacyIndex,
       offlineLegacy: true,

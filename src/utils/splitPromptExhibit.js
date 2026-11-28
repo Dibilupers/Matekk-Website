@@ -14,7 +14,7 @@ const CODE_HINTS = [
 // A plain question sentence that comes after the output (e.g. "Which two commands ...?")
 const QUESTION_START = /^\s*(Which|What|How|Why|When|Where|Drag|An? |The |If |After |Refer)\b/;
 
-const EXHIBIT_CUE = /\brefer\s+to\s+(?:the\s+)?exhibit\b\s*\.?/i;
+const EXHIBIT_CUE = /\brefer\s+(?:to\s+)?(?:the\s+)?exhibits?\b\s*\.?/i;
 const FORMATTED_OPTION_COLUMNS = /^\s*Option [A-H]\s*:?[ \t]{2,}Option [A-H]\b/im;
 const INLINE_CODE_START = [
   /\bOutput from R1\b/i,
@@ -34,6 +34,7 @@ const TRAILING_QUESTION = /\b(?:According to the output,\s*)?(?:Which|What|How|W
 function isCode(block) {
   if (!block.trim()) return false;
   if (/^[{[]/.test(block.trim())) return true;
+  if (/^Entry\s*#$/i.test(block.trim())) return true;
   if (/^[^\n?]{1,60}:\s*$/.test(block.trim())) return true; // a heading for the output, e.g. "Configured interfaces:"
   if (/^\s/.test(block) && !QUESTION_START.test(block)) return true;
   return CODE_HINTS.some((re) => re.test(block));
@@ -65,6 +66,7 @@ function splitStructuredExhibit(prompt) {
   let inString = false;
   let escaped = false;
   let end = -1;
+  let incompleteObjectEnd = -1;
   for (let index = start; index < prompt.length; index += 1) {
     const character = prompt[index];
     if (inString) {
@@ -82,8 +84,14 @@ function splitStructuredExhibit(prompt) {
         end = index + 1;
         break;
       }
+      if (opener === "{" && character === "]" && stack.length === 1 &&
+        /^(?:Which|What|How|Why|When|Where)\b/i.test(prompt.slice(index + 1).trim())) {
+        incompleteObjectEnd = index + 1;
+        break;
+      }
     }
   }
+  if (end < 0) end = incompleteObjectEnd;
   if (end < 0) return null;
 
   const exhibit = prompt.slice(start, end).trim();
@@ -213,8 +221,8 @@ export function splitPromptExhibit(prompt) {
 
 export function removeDuplicateExhibitLeadIn(prompt) {
   return String(prompt ?? "")
-    .replace(/^\s*Refer to (?:the )?exhibit\.?\s*(?:\r?\n\s*)+(Refer to (?:the )?exhibit\.?)/i, "$1")
-    .replace(/^(Refer to (?:the )?exhibit\.)(?:[ \t]+)(?=\S)/i, "$1\n\n")
+    .replace(/^\s*Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\.?\s*(?:\r?\n\s*)+(Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\.?)/i, "$1")
+    .replace(/^(Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\.)(?:[ \t]+)(?=\S)/i, "$1\n\n")
     .trim();
 }
 

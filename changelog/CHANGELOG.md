@@ -6,6 +6,50 @@ Tracking begins 2026-10-17.
 
 Commits included in this push:
 
+- `49dfa43` - Resolve legacy question 852's EIGRP topology by prompt when the
+  live database ID differs, and remove the obsolete exhibit lead-in when a
+  mapped native topology is available.
+
+Validation before push: all 151 CCNA bank-converter tests, all 51 CCNA
+composite-exhibit tests, and `git diff --check` passed.
+
+## 2026-11-23 - main
+
+Commits included in this push:
+
+- `e935517` - Added native diagrams for 48 legacy topology exhibits, retained
+  source comparisons where needed, removed unrelated images from two matching
+  questions, and rebuilt the router-on-a-stick exhibit by prompt.
+
+Validation before push: all 151 CCNA bank-converter tests, all 50 CCNA
+composite-exhibit tests, and `git diff --check` passed.
+
+## 2026-11-23 - main
+
+Commits included in this push:
+
+- `6a8abae1` - Resolve CCNA exhibit mappings by prompt when live database IDs
+  differ, restore five source-matched image exhibits, and clarify Q24's
+  alternate-route details.
+
+Validation before push: 48 CCNA composite tests, 151 CCNA bank-converter tests,
+and `git diff --check` passed.
+
+## 2026-11-23 - main
+
+Commits included in this push:
+
+- `89e4bd8` - Restore question 624's partially reconstructed OSPF terminal in
+  the legacy and database-backed banks, strip its unsupported exhibit lead-in,
+  and preserve its options and answer.
+
+Validation before push: all 150 `ccnaBankConverter.test.js` tests, targeted
+ESLint, `npm run build`, and `git diff --check` passed.
+
+## 2026-11-23 - main
+
+Commits included in this push:
+
 - `beff369` - Remove the unsupported exhibit lead-ins from self-contained CCNA
   questions 702 and 809 in the database-backed bank, and restore question
   1148's recreated terminal in the legacy/offline bank.

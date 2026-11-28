@@ -602,7 +602,7 @@ function CCNACompositeExamPage({ examKey = "short", programKey = null, examForma
 									prompt={question.prompt}
 									imageUrl={question.exhibitImage || question.imageUrl}
 									hideExhibitImage={question.hideExhibitImage}
-									hasSeparateExhibit={Boolean(question.exhibit || question.exhibitImage || question.imageUrl)}
+									hasSeparateExhibit={Boolean(question.exhibit || ((question.exhibitImage || question.imageUrl) && !question.hideExhibitImage))}
 									regularWeight={isCompTIAExam && !isOnline}
 								/>
 								{/* Device output extracted from the question stays separate from its prompt. */}

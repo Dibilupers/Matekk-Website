@@ -1,8 +1,85 @@
 // CCNA composite question set (85 questions) used in the Medium Exam.
 // Network topologies and WLC settings panels are rendered natively; mixed CLI exhibits stay as pictures.
 // Answer keys were worked out from the question content (not supplied in the source).
-import { CCNA_RECREATED_CANDIDATE_EXHIBITS } from "./ccnaRecreatedCandidateExhibits.js";
+import {
+	CCNA_RECREATED_CANDIDATE_EXHIBITS,
+	CCNA_TOPOLOGY_EXHIBIT_RECREATIONS,
+} from "./ccnaRecreatedCandidateExhibits.js";
 import { splitPromptExhibit } from "../../../../../utils/splitPromptExhibit.js";
+import { parseFormattedOptions } from "./ccnaExamQuestionFormatting.js";
+import {
+	getCcnaExhibitImageByBankId,
+	getCcnaExhibitImageByLegacyIndex,
+} from "../../../../../utils/ccnaExhibitImages.js";
+import jsonObject769ExhibitImg from "../../../../../assets/ccna-exam/ccna-json-object-exhibit-769.svg";
+import pcIpConfig963ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-963-ipconfig-exhibit.png";
+import hostA1114ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-1114-host-a-exhibit.png";
+import wlcWpa2Psk1154ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-1154-wlc-wpa2.jpg";
+import wlcWpa2Aes1170ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-1170-wlc-wpa2-aes.jpg";
+import workstationServerFqdn1232ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-924-workstation-server-fqdn.jpg";
+import patVlan341ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-341-pat-vlan.webp";
+import sw11Vlan340ExhibitImg from "../../../../../assets/ccna-exam/ccna-question-340-sw11-vlan.jpg";
+import { CCNA_LEGACY_QUESTIONS } from "./ccnaLegacyQuestions.js";
+
+const normalizeExhibitLookupPrompt = (prompt) => {
+	const split = splitPromptExhibit(String(prompt ?? ""));
+	return String(split.prompt ?? prompt ?? "")
+		.replace(/^\s*Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\.?\s*/i, "")
+		.replace(/\s+/g, " ")
+		.trim()
+		.toLowerCase();
+};
+
+const normalizeLegacyQuestionPrompt = (prompt) => String(prompt ?? "")
+	.replace(/^\s*Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\.?\s*/i, "")
+	.replace(/\s+/g, " ")
+	.trim()
+	.toLowerCase();
+
+const normalizeExhibitLookupOptions = (options) => Array.isArray(options)
+	? options.map((option) => String(option ?? "").replace(/\s+/g, " ").trim().toLowerCase()).sort().join("\u001f")
+	: "";
+
+const LEGACY_EXHIBIT_PROMPT_MATCHES = new Map();
+const LEGACY_QUESTION_PROMPT_PREFIX_MATCHES = new Map();
+for (const legacyQuestion of CCNA_LEGACY_QUESTIONS) {
+	const key = normalizeExhibitLookupPrompt(legacyQuestion.prompt);
+	const sourceKey = normalizeLegacyQuestionPrompt(legacyQuestion.prompt);
+	if (!key || !sourceKey) continue;
+	const match = {
+		legacyIndex: legacyQuestion.legacyIndex,
+		options: normalizeExhibitLookupOptions(legacyQuestion.options),
+		prompt: sourceKey,
+	};
+	const prefix = sourceKey.slice(0, 64);
+	const prefixMatches = LEGACY_QUESTION_PROMPT_PREFIX_MATCHES.get(prefix) ?? [];
+	prefixMatches.push(match);
+	LEGACY_QUESTION_PROMPT_PREFIX_MATCHES.set(prefix, prefixMatches);
+	if (/^\s*Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\b/i.test(legacyQuestion.prompt ?? "")) {
+		const exhibitMatches = LEGACY_EXHIBIT_PROMPT_MATCHES.get(key) ?? [];
+		exhibitMatches.push(match);
+		LEGACY_EXHIBIT_PROMPT_MATCHES.set(key, exhibitMatches);
+	}
+}
+
+function findLegacyExhibitIndex(question) {
+	const rawPrompt = String(question?.prompt ?? "");
+	const hasExhibitLeadIn = /^\s*Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\b/i.test(rawPrompt);
+	const normalizedPrompt = normalizeExhibitLookupPrompt(rawPrompt);
+	if (normalizedPrompt.length < 64) return undefined;
+	const prefix = normalizedPrompt.slice(0, 64);
+	const prefixMatches = LEGACY_QUESTION_PROMPT_PREFIX_MATCHES.get(prefix) ?? [];
+	const partialMatches = prefixMatches.filter((match) => match.prompt.includes(normalizedPrompt));
+	const exactExhibitMatches = hasExhibitLeadIn
+		? LEGACY_EXHIBIT_PROMPT_MATCHES.get(normalizedPrompt) ?? []
+		: [];
+	const matches = partialMatches.length ? partialMatches : exactExhibitMatches;
+	if (!matches.length) return undefined;
+	if (matches.length === 1) return matches[0].legacyIndex;
+	const optionKey = normalizeExhibitLookupOptions(question.options);
+	const optionMatches = optionKey ? matches.filter((match) => match.options === optionKey) : [];
+	return optionMatches.length === 1 ? optionMatches[0].legacyIndex : undefined;
+}
 
 const ex = (exhibit) => (exhibit && typeof exhibit === "object"
 	? {
@@ -861,7 +938,13 @@ const DATABASE_NATIVE_EXHIBITS = new Map([
 	[181, { hideExhibitImage: true }],
 	[382, { diagram: "voice-data-vlan300-400", hideExhibitImage: true }],
 	[608, { hideExhibitImage: true }],
-	[491, { hideExhibitImage: true, removeExhibitLeadIn: true }],
+	[491, {
+		exhibit: `Switch#show ip dhcp snooping statistics detail
+
+Packets received on untrusted ports: 32`,
+		hideExhibitImage: true,
+		exhibitQuality: "source-backed",
+	}],
 	[299, {
 		hideExhibitImage: true,
 		removeExhibitLeadIn: true,
@@ -880,6 +963,7 @@ const DATABASE_NATIVE_EXHIBITS = new Map([
 	}],
 	[1305, {
 		hideExhibitImage: true,
+		hideAfterExhibit: true,
 		exhibit: CCNA_RECREATED_TEXT_EXHIBITS.routingTableComponents,
 		matchStyle: "assign",
 		choices: [
@@ -1949,10 +2033,85 @@ D 192.168.0.0/24 [90/201728] via 172.16.0.2, 00:00:04, FastEthernet0/0`,
 ]);
 
 const LEGACY_NATIVE_EXHIBITS = new Map([
+	[382, {
+		diagram: "voice-data-vlan300-400",
+		hideExhibitImage: true,
+		options: [
+			"interface GigabitEthernet1/1\n switchport mode access\n switchport access vlan 300\n switchport voice vlan 400",
+			"interface GigabitEthernet1/1\n switchport mode access\n switchport access vlan 400\n switchport voice vlan 300",
+			"interface GigabitEthernet1/1\n switchport mode trunk\n switchport access vlan 300\n switchport voice vlan 400",
+			"interface GigabitEthernet1/1\n switchport mode trunk\n switchport trunk vlan 300\n switchport trunk vlan 400",
+		],
+	}],
+	[500, {
+		options: [
+			"R14#\ninterface FastEthernet0/0\n ip address 10.73.65.65 255.255.255.252\n ip ospf network broadcast\n ip ospf priority 0\n ip mtu 1400\nrouter ospf 10\n router-id 10.10.1.14\n network 10.10.1.14 0.0.0.0 area 0\n network 10.73.65.64 0.0.0.3 area 0\n\nR86#\ninterface Loopback0\n ip address 10.10.1.86 255.255.255.255\ninterface FastEthernet0/0\n ip address 10.73.65.66 255.255.255.252\n ip ospf network broadcast\n ip mtu 1500\nrouter ospf 10\n router-id 10.10.1.86\n network 10.10.1.86 0.0.0.0 area 0\n network 10.73.65.64 0.0.0.3 area 0",
+			"R14#\ninterface FastEthernet0/0\n ip address 10.73.65.65 255.255.255.252\n ip ospf network broadcast\n ip ospf priority 255\n ip mtu 1500\nrouter ospf 10\n router-id 10.10.1.14\n network 10.10.1.14 0.0.0.0 area 0\n network 10.73.65.64 0.0.0.3 area 0\n\nR86#\ninterface Loopback0\n ip address 10.10.1.86 255.255.255.255\ninterface FastEthernet0/0\n ip address 10.73.65.66 255.255.255.252\n ip ospf network broadcast\n ip mtu 1500\nrouter ospf 10\n router-id 10.10.1.86\n network 10.10.1.86 0.0.0.0 area 0\n network 10.73.65.64 0.0.0.3 area 0",
+			"R14#\ninterface Loopback0\n ip ospf 10 area 0\ninterface FastEthernet0/0\n ip address 10.73.65.65 255.255.255.252\n ip ospf network broadcast\n ip ospf 10 area 0\n ip mtu 1500\nrouter ospf 10\n ip ospf priority 255\n router-id 10.10.1.14\n\nR86#\ninterface Loopback0\n ip ospf 10 area 0\ninterface FastEthernet0/0\n ip address 10.73.65.66 255.255.255.252\n ip ospf network broadcast\n ip ospf 10 area 0\n ip mtu 1500\nrouter ospf 10\n router-id 10.10.1.86",
+			"R14#\ninterface FastEthernet0/0\n ip address 10.73.65.65 255.255.255.252\n ip ospf network broadcast\n ip ospf priority 255\n ip mtu 1500\nrouter ospf 10\n router-id 10.10.1.14\n network 10.10.1.14 0.0.0.0 area 0\n network 10.73.65.64 0.0.0.3 area 0\n\nR86#\ninterface FastEthernet0/0\n ip address 10.73.65.66 255.255.255.252\n ip ospf network broadcast\n ip mtu 1400\nrouter ospf 10\n router-id 10.10.1.86\n network 10.10.1.86 0.0.0.0 area 0\n network 10.73.65.64 0.0.0.3 area 0",
+		],
+	}],
+	[532, {
+		options: [
+			"enable secret priv4t3p4ss\n!\nline console 0\n password p4ssw0rd1\n login\n!\nline vty 0 15\n password s3cr3t2\n login",
+			"enable secret privilege 15 priv4t3p4ss\n!\nline console 0\n password p4ssw0rdi\n login\n!\nline vty 0 15\n password s3cr3t2\n login",
+			"enable secret priv413p4ss\n!\nline console 0\n password login p4ssw0rd1\n!\nline vty 0 15\n password login s3cr3t2\n login",
+			"enable secret priv4t3p4ss\n!\nline console 0\n password p4ssw0rd1\n!\nline vty 0 15\n password s3cr3t2",
+		],
+	}],
+	[622, {
+		options: [
+			"SW4#\ninterface Gi0/2\n switchport mode trunk\n switchport trunk allowed vlan 14,108\n\nSW11#\ninterface Gi0/2\n switchport mode trunk\n switchport trunk allowed vlan 14,108\n!\ninterface Gi0/1\n switchport mode trunk\n switchport trunk allowed vlan 14,108\n\nSW9#\ninterface Gi0/2\n switchport mode trunk\n switchport trunk allowed vlan 14",
+			"SW4\ninterface Gi0/7\n switchport mode trunk\n switchport trunk allowed vlan 108\n!\ninterface Gi0/2\n switchport mode access\n switchport access vlan 14\n\nSW11#\ninterface Gi0/2\n switchport mode trunk\n switchport trunk allowed vlan 14,108\n!\ninterface Gi0/1\n switchport mode trunk\n switchport trunk allowed vlan 14,108\n\nSW9#\ninterface Gi0/2\n switchport mode access\n switchport access vlan 14",
+			"SW4\ninterface Gi0/2\n switchport mode trunk\n switchport trunk allowed vlan 14\n\nSW11#\ninterface Gi0/1\n switchport mode trunk\n switchport trunk allowed vlan 14\n\nSW9#\ninterface Gi0/2\n switchport mode trunk\n switchport trunk allowed vlan 108",
+			"SW4\ninterface Gi0/2\n switchport mode access\n switchport access vlan 14\n\nSW11#\ninterface Gi0/2\n switchport mode access\n switchport access vlan 14\n!\ninterface Gi0/0\n switchport mode access\n switchport access vlan 14\n!\ninterface Gi0/1\n switchport mode trunk\n\nSW9#\ninterface Gi0/2\n switchport mode access\n switchport access vlan 14",
+		],
+	}],
+	[1131, {
+		type: "multi",
+		options: [
+			"ip dhcp snooping\n!\ninterface Port-channel1\n switchport port-security maximum 1\n switchport port-security",
+			"ip dhcp snooping vlan 1-4094\nip dhcp snooping\n!\ninterface Port-channel1\n ip dhcp snooping trust",
+			"ip dhcp snooping vlan 1-4094\n!\ninterface Port-channel1\n switchport protected\n switchport port-security maximum 1",
+			"ip arp inspection trust\n!\ninterface Port-channel1\n switchport port-security maximum 4094\n switchport port-security\n ip verify source mac-check",
+			"ip arp inspection vlan 1-4094\n!\ninterface Port-channel1\n ip arp inspection trust",
+		],
+	}],
 	[50, {
 		diagram: "router-on-a-stick-vlan20",
 		hideExhibitImage: true,
 		exhibitQuality: "source-backed",
+	}],
+	[716, {
+		diagram: "ipv6-block-r1-r2-716",
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "partial",
+	}],
+	[884, {
+		diagram: "dhcp-relay-vlan10",
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "illustrative",
+	}],
+	[962, { hideExhibitImage: true, removeExhibitLeadIn: true }],
+	[802, {
+		diagram: "r2-eui64-review-802",
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "partial",
+	}],
+	[564, {
+		diagram: "r14-r86-static-route-172",
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "source-backed",
+	}],
+	[794, {
+		diagram: "candidate-wlc-794-max-clients-review",
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "partial",
 	}],
 	[59, {
 		diagram: "vtp-transparent-frame-flow",
@@ -1978,6 +2137,31 @@ Permit only R2 as a neighbor.
 Set R1 OSPF priority to 0 so R1 cannot participate in DR/BDR election.
 Set R1 router-id to 10.1.1.1.
 Permit OSPF (protocol 89) from 10.100.1.2 and block other neighbors.`,
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		removeExhibitLeadIn: true,
+		exhibitQuality: "partial",
+	}],
+	[964, {
+		options: [
+			"R14#\ninterface FastEthernet0/0\n ip address 10.73.65.65 255.255.255.252\n ip ospf priority 0\n ip mtu 1500\nrouter ospf 10\n router-id 10.10.1.14\n network 10.10.1.14 0.0.0.0 area 0\n network 10.73.65.64 0.0.0.3 area 0\n\nR86#\ninterface FastEthernet0/0\n ip address 10.73.65.66 255.255.255.252\n ip mtu 1500\nrouter ospf 10\n router-id 10.10.1.86\n network 10.10.1.86 0.0.0.0 area 0\n network 10.73.65.64 0.0.0.3 area 0",
+			"R14#\ninterface Loopback0\n ip ospf 10 area 0\ninterface FastEthernet0/0\n ip address 10.73.65.65 255.255.255.252\n ip ospf priority 255\n ip ospf 10 area 0\n ip mtu 1500\nrouter ospf 10\n router-id 10.10.1.14\n\nR86#\ninterface Loopback0\n ip ospf 10 area 0\ninterface FastEthernet0/0\n ip address 10.73.65.66 255.255.255.252\n ip ospf 10 area 0\n ip mtu 1500\nrouter ospf 10\n router-id 10.10.1.86",
+			"R14#\ninterface FastEthernet0/0\n ip address 10.73.65.65 255.255.255.252\n ip ospf priority 255\n ip mtu 1500\nrouter ospf 10\n router-id 10.10.1.14\n network 10.10.1.14 0.0.0.0 area 0\n network 10.73.65.64 0.0.0.3 area 0\n\nR86#\ninterface FastEthernet0/0\n ip address 10.73.65.66 255.255.255.252\n ip mtu 1400\nrouter ospf 10\n router-id 10.10.1.86\n network 10.10.1.86 0.0.0.0 area 0\n network 10.73.65.64 0.0.0.3 area 0",
+			"R14#\ninterface Loopback0\n ip ospf 10 area 0\ninterface FastEthernet0/0\n ip address 10.73.65.65 255.255.255.252\n ip ospf 10 area 0\n ip mtu 1500\nrouter ospf 10\n router-id 10.10.1.14\n network 10.10.1.14 0.0.0.0 area 0\n network 10.73.65.64 0.0.0.3 area 0\n\nR86#\ninterface FastEthernet0/0\n ip address 10.73.65.66 255.255.255.252\n ip mtu 1400\nrouter ospf 10\n router-id 10.10.1.86\n network 10.10.1.86 0.0.0.0 area 0\n network 10.73.65.64 0.0.0.3 area 0",
+		],
+		hideExhibitImage: true,
+		exhibitQuality: "source-backed",
+	}],
+	[663, {
+		exhibit: `Windows PC > ipconfig /all (relevant excerpt)
+
+Wireless LAN adapter Wi-Fi:
+   IPv4 Address . . . . . . . . . . : 192.168.1.226
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . . : 192.168.1.100
+   DHCP Server . . . . . . . . . . . : 192.168.1.254
+   DNS Servers . . . . . . . . . . . : 192.168.1.253
+                                       192.168.1.254`,
 		hideExhibitImage: true,
 		hideAfterExhibit: true,
 		removeExhibitLeadIn: true,
@@ -2338,16 +2522,7 @@ GigabitEthernet0/0/0 is up, line protocol is up
 		hideExhibitImage: true,
 		exhibitQuality: "illustrative",
 	}],
-	[1041, {
-		exhibit: `[PARTIAL / ILLUSTRATIVE — original source exhibit unavailable; bridge IDs transcribed from the answer choices.]
-SW1  Priority 28672  MAC 00:10:a1:51:57:51
-SW2  Priority 28672  MAC 00:10:a1:82:03:94
-SW3  Priority 12288  MAC 00:10:a1:95:2b:77
-SW4  Priority 12288  MAC 00:10:a1:03:42:e8`,
-		hideExhibitImage: true,
-		hideAfterExhibit: true,
-		exhibitQuality: "partial",
-	}],
+	[1041, { hideExhibitImage: true, removeExhibitLeadIn: true }],
 	[1067, {
 		exhibit: `[PARTIAL / ILLUSTRATIVE — original source exhibit unavailable.]
 R2 Ethernet0/1 MAC address: 12D8.BAC2.0001
@@ -2464,9 +2639,9 @@ SW1(config)#
 		exhibit: `MacOS$ ifconfig
 en0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
  options=400<CHANNEL_IO>
- ether 6e:25:b8:f3:40:09
+ ether f0:18:98:64:60:32
  inet6 fe80::226:c09f:57cc:3343%en0 prefixlen 64 secured scopeid 0x6
- inet 10.8.112.46 netmask 0xffffe000 broadcast 10.8.159.255
+ inet 10.8.138.14 netmask 0xffffe000 broadcast 10.8.159.255
  nd6 options=201<PERFORMNUD,DAD>
  media: autoselect
  status: active`,
@@ -2474,6 +2649,63 @@ en0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
 		hideAfterExhibit: true,
 		exhibitQuality: "source-backed",
 	}],
+	[769, {
+		image: jsonObject769ExhibitImg,
+		hideAfterExhibit: true,
+		exhibitQuality: "illustrative",
+	}],
+	[963, { image: pcIpConfig963ExhibitImg, hideAfterExhibit: true, exhibitQuality: "source-backed" }],
+	[1114, { image: hostA1114ExhibitImg, hideAfterExhibit: true, exhibitQuality: "source-backed" }],
+	[1187, {
+		prompt: "An administrator must add TCP DNS access to the Services ACL while retaining its existing services. Which configuration updates the ACL efficiently?",
+		exhibit: `CPE# show ip access-list Services
+Extended IP access list Services
+
+10 permit tcp 10.0.0.0 0.255.255.255 any eq www
+20 permit tcp 10.0.0.0 0.255.255.255 any eq 443
+30 permit udp 10.0.0.0 0.255.255.255 host 198.51.100.11 eq domain
+40 deny ip any any log`,
+		options: [
+			"ip access-list extended Services\n permit tcp 10.0.0.0 0.255.255.255 host 198.51.100.11 eq domain",
+			"no ip access-list extended Services\nip access-list extended Services\n 30 permit tcp 10.0.0.0 0.255.255.255 host 198.51.100.11 eq domain",
+			"no ip access-list extended Services\nip access-list extended Services\n permit udp 10.0.0.0 0.255.255.255 any eq 53\n permit tcp 10.0.0.0 0.255.255.255 host 198.51.100.11 eq domain\n deny ip any any log",
+			"ip access-list extended Services\n 35 permit tcp 10.0.0.0 0.255.255.255 host 198.51.100.11 eq domain",
+		],
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "source-backed",
+	}],
+	[1152, { diagram: "host-internet-connectivity-1152", hideExhibitImage: true, hideAfterExhibit: true, exhibitQuality: "source-backed" }],
+	[1112, {
+		prompt: "VoIP is being implemented in the network using VLAN ID 73 and named ‘VoIP’. Each user needs a Cisco IP phone at their desk. Switchport e0/0 has been configured as an access port in the data VLAN. Cisco Discovery Protocol is enabled globally. Which command sequence completed the configuration?",
+		exhibit: `SW_1#show vlan
+
+VLAN  Name                 Status    Ports
+----  -------------------  --------  ---------------------------
+1     default              active    Et0/2, Et1/0, Et1/0, Et1/3
+5     MGMT Vlan             active    Et1/1
+6     Server Vlan           active
+72    Data Vlan             active    Et0/0
+1002  fddi-default         act/unsup
+1003  token-ring-default   act/unsup
+1004  fddinet-default     act/unsup
+1005  trnet-default       act/unsup`,
+		options: [
+			"vlan 73\nname VoIP\ne0/0\nswitchport trunk allowed vlan 72,73\nswitchport voice vlan 73",
+			"vlan 73\nname VoIP\ne0/0\nswitchport mode trunk\nchannel-group 73 mode active",
+			"vlan 73\nname VoIP\ne0/0\nswitchport voice vlan 73",
+			"vlan73\nname VoIP\ne0/0\nswitchport voice vlan dot1p",
+		],
+		hideExhibitImage: true,
+		hideAfterExhibit: true,
+		exhibitQuality: "source-backed",
+	}],
+	[1154, { image: wlcWpa2Psk1154ExhibitImg, hideAfterExhibit: true, exhibitQuality: "source-backed" }],
+	[1170, { image: wlcWpa2Aes1170ExhibitImg, hideAfterExhibit: true, exhibitQuality: "source-backed" }],
+	[1206, { diagram: "candidate-wlc-890", hideExhibitImage: true, exhibitQuality: "source-backed" }],
+	[1232, { image: workstationServerFqdn1232ExhibitImg, hideAfterExhibit: true, exhibitQuality: "source-backed" }],
+	[341, { image: patVlan341ExhibitImg, hideAfterExhibit: true, exhibitQuality: "source-backed" }],
+	[340, { image: sw11Vlan340ExhibitImg, hideAfterExhibit: true, exhibitQuality: "source-backed" }],
 	[505, {
 		exhibit: `R1#show ip route
 Codes: C - connected, S - static, R - RIP, M - mobile, B - BGP
@@ -2497,11 +2729,16 @@ D    10.0.1.0/28 [90/10] via 192.168.0.7, 00:33:32, GigabitEthernet0/0`,
 		hideAfterExhibit: true,
 		exhibitQuality: "source-backed",
 	}],
-	[507, {
-		diagram: "routers-abc-ospf-dr",
+	[104, { hideExhibitImage: true, removeExhibitLeadIn: true }],
+	[507, { hideExhibitImage: true, removeExhibitLeadIn: true }],
+	[579, { hideExhibitImage: true, removeExhibitLeadIn: true }],
+	[732, { diagram: "candidate-wlc-414", hideExhibitImage: true, exhibitQuality: "source-backed" }],
+	[1143, { hideExhibitImage: true, removeExhibitLeadIn: true }],
+	[1188, { hideExhibitImage: true, removeExhibitLeadIn: true }],
+	[1227, {
+		prompt: "Which configuration is needed to configure a WLAN with WPA2 only and with a password that is 63 characters long?",
 		hideExhibitImage: true,
-		hideAfterExhibit: true,
-		exhibitQuality: "illustrative",
+		removeExhibitLeadIn: true,
 	}],
 	[510, {
 		diagram: "r1-secure-remote-access",
@@ -2649,12 +2886,7 @@ Switch2(config-if)#switchport trunk allowed vlan 5,10`,
 		hideExhibitImage: true,
 		exhibitQuality: "source-backed",
 	}],
-	[602, {
-		diagram: "lacp-three-parallel-switches",
-		hideExhibitImage: true,
-		hideAfterExhibit: true,
-		exhibitQuality: "source-backed",
-	}],
+	[602, { diagram: "lacp-three-parallel-switches", hideExhibitImage: true }],
 	[603, {
 		diagram: "wlc-radius-server-source",
 		hideExhibitImage: true,
@@ -2692,7 +2924,6 @@ interface Gi0/2                 interface Gi0/7
 		hideExhibitImage: true,
 		exhibitQuality: "source-backed",
 	}],
-	[624, { removeExhibitLeadIn: true }],
 	[627, {
 		offlineSourceExhibitImages: ["/src/assets/ccna-offline-exams-images/ccna-exhibit-627.png"],
 		hideExhibitImage: true,
@@ -2722,6 +2953,11 @@ S* 0.0.0.0/0 [1/0] via 10.10.10.1`,
 		hideExhibitImage: true,
 		hideAfterExhibit: true,
 		exhibitQuality: "source-backed",
+	}],
+	[1161, {
+		prompt: `Refer to the exhibit.
+
+The active route to 10.220.100.96/27 is learned via BGP from Router D (AD 20). If it becomes unavailable, Router Y has three alternate routes: a floating static route via Router B (AD 105), an OSPF route (AD 110), and an external EIGRP route (AD 170). The routing protocol defaults have not been changed. Which router will Router Y use next?`,
 	}],
 	[641, {
 		offlineSourceExhibitImages: ["/src/assets/ccna-offline-exams-images/ccna-exhibit-641.png"],
@@ -2781,6 +3017,14 @@ NetBIOS over Tcpip. . . . . : Enabled`,
 	if (/configure interfaces gi1\/1 and gi1\/3 on switch sw11/i.test(prompt)) {
 		return { exhibitDiagram: "candidate-vlan-roles-24", hideExhibitImage: true };
 	}
+	if (/configurations for the switch and pcs are complete[\s\S]*vlans 2 and 3 communicate back and forth/i.test(prompt)) {
+		return {
+			exhibitDiagram: "router-on-a-stick-vlan2-vlan3",
+			hideExhibitImage: true,
+			hideAfterExhibit: true,
+			exhibitQuality: "source-backed",
+		};
+	}
 	if (/which configuration must be applied to the router that configures pat to translate all addresses in vlan 200/i.test(prompt)) {
 		return { exhibitDiagram: "pat-vlan-subnetting-100-200", hideExhibitImage: true };
 	}
@@ -2808,6 +3052,8 @@ NetBIOS over Tcpip. . . . . : Enabled`,
 	}
 	if (/ospf neighbor relationship must be configured using these guidelines/i.test(prompt)) {
 		return {
+			prompt: `An OSPF neighbor relationship must be configured using these guidelines:\n\n– R1 is only permitted to establish a neighbor with R2.\n– R1 will never participate in DR elections.\n– R1 will use a router-id of 10.1.1.1.\n\nWhich configuration must be used?`,
+			suppressInlineExhibit: true,
 			hideExhibitImage: true,
 			hideAfterExhibit: true,
 			removeExhibitLeadIn: true,
@@ -2879,53 +3125,263 @@ const DUPLICATE_TERMINAL_SOURCE_IMAGE_LEGACY_INDEXES = new Set([
 	655, 701, 712, 729, 782, 798, 808, 816, 860, 909, 991, 1116, 1313,
 ]);
 
+const PRESERVE_TOPOLOGY_AFTER_EXHIBIT_LEGACY_INDEXES = new Set([
+	44, 51, 62, 84, 339, 508, 509, 566, 586, 588, 645,
+]);
+
+const TOPOLOGY_EXHIBIT_RECREATIONS_BY_LEGACY_INDEX = new Map(
+	CCNA_TOPOLOGY_EXHIBIT_RECREATIONS
+		.map(({ legacyIndex, diagram }) => [legacyIndex, {
+			diagram,
+			hideExhibitImage: true,
+			hideAfterExhibit: !PRESERVE_TOPOLOGY_AFTER_EXHIBIT_LEGACY_INDEXES.has(legacyIndex),
+			removeExhibitLeadIn: true,
+		}]),
+);
+
 export function applyNativeExhibit(question) {
 	const builtInQuestion = getBuiltInQuestionByPrompt(question?.prompt);
+	let promptLegacyIndex;
+	if (typeof question?.prompt === "string") {
+		if (/engineer must configure gigabitethernet1\/1 to accommodate voice and data traffic/i.test(question.prompt)) {
+			promptLegacyIndex = 382;
+		} else if (/routers r14 and r86 to form an ospfv2 adjacency[\s\S]*central point for exchanging ospf information/i.test(question.prompt)) {
+			promptLegacyIndex = 500;
+		} else if (/factory-default router with these (?:three )?passwords/i.test(question.prompt)) {
+			promptLegacyIndex = 532;
+		} else if (/configuration establishes a successful ping from pc2 to pc7 without interruption/i.test(question.prompt)) {
+			promptLegacyIndex = 622;
+		} else if (/floating static route on an external eigrp network[\s\S]*destination subnet is the \/29 on the lan interface of r86[\s\S]*command must be executed on r14/i.test(question.prompt)) {
+			promptLegacyIndex = 824;
+		} else if (/wlan to connect with the 172\.16\.10\.0\/24 network on vlan 20[\s\S]*limit the number of devices[\s\S]*userwl ssid to 125/i.test(question.prompt)) {
+			promptLegacyIndex = 794;
+		} else if (/primary route across gi0\/0 is configured on both routers[\s\S]*secondary route/i.test(question.prompt)) {
+			promptLegacyIndex = 591;
+		} else if (/ipv6 is being implemented within the enterprise[\s\S]*dynamic assignment using the assigned ipv6 block/i.test(question.prompt)) {
+			promptLegacyIndex = 716;
+		} else if (/which switch becomes the root bridge/i.test(question.prompt) &&
+			Array.isArray(question?.options) && question.options.some((option) => /0f:d7:9e:13:ab:82/i.test(String(option)))) {
+			promptLegacyIndex = 962;
+		} else if (/what commands are needed to add a subinterface to ethernet0\/0 on r1[\s\S]*vlan 20[\s\S]*10\.20\.20\.1/i.test(question.prompt)) {
+			promptLegacyIndex = 50;
+		} else if (/an ospf neighbor relationship must be configured using these guidelines/i.test(question.prompt)) {
+			promptLegacyIndex = 624;
+		} else if (/all interfaces are configured with duplex auto and ip ospf network broadcast[\s\S]*routers r14 and r86 to form an ospfv2 adjacency/i.test(question.prompt)) {
+			promptLegacyIndex = 964;
+		} else if (/the route for 10\.220\.100\.96\/27 has been very unstable/i.test(question.prompt)) {
+			promptLegacyIndex = 1161;
+		} else if (/what is represented by[\s\S]*r1[\s\S]*sw1[\s\S]*within the json output/i.test(question.prompt)) {
+			promptLegacyIndex = 621;
+		} else if (/between which zones do wireless users expect to experience intermittent connectivity/i.test(question.prompt)) {
+			promptLegacyIndex = 478;
+		} else if (/which address will the client contact to renew their ip address when the current lease expires/i.test(question.prompt)) {
+			promptLegacyIndex = 1123;
+		} else if (/what does the host do when using the ipv4 preferred function/i.test(question.prompt)) {
+			promptLegacyIndex = 1060;
+		} else if (/the user has connectivity to devices on network 192\.168\.3\.0\/24/i.test(question.prompt)) {
+			promptLegacyIndex = 1190;
+		} else if (/users need to connect to the wireless network with ieee 802\.11r-compatible devices/i.test(question.prompt)) {
+			promptLegacyIndex = 578;
+		} else if (/what must be configured to enable 802\.11w on the wlan/i.test(question.prompt)) {
+			promptLegacyIndex = 599;
+		} else if (/which configuration is needed to configure a wlan with wpa2 only[\s\S]*password that is 63 characters long/i.test(question.prompt)) {
+			promptLegacyIndex = 1227;
+		} else if (/after running the code in the exhibit[\s\S]*netconf server[\s\S]*only the interface.s configuration/i.test(question.prompt)) {
+			promptLegacyIndex = 350;
+		} else if (/configured ip addressing details to investigate a firewall rule issue[\s\S]*en0 interface/i.test(question.prompt)) {
+			promptLegacyIndex = 502;
+		} else if (/router a is elected as the dr for ospf area 0/i.test(question.prompt)) {
+			promptLegacyIndex = 507;
+		} else if (/must be applied so that only switch 1 sends lacp initiation packets/i.test(question.prompt)) {
+			promptLegacyIndex = 579;
+		} else if (/which configuration establishes a layer 2 lacp etherchannel when applied to both switches/i.test(question.prompt)) {
+			promptLegacyIndex = 602;
+		} else if (/voip is being implemented in the network using vlan id 73[\s\S]*which command sequence completed the configuration/i.test(question.prompt)) {
+			promptLegacyIndex = 1112;
+		} else if (/this acl is configured to allow client access only to http, https, and dns services via udp[\s\S]*which configuration updates the acl efficiently/i.test(question.prompt)) {
+			promptLegacyIndex = 1187;
+		} else if (/how many json objects are presented/i.test(question.prompt)) {
+			promptLegacyIndex = 769;
+		} else if (/newly configured pc fails to connect to the internet using tcp port 80 to www\.cisco\.com/i.test(question.prompt)) {
+			promptLegacyIndex = 963;
+		} else if (/what is preventing host a from reaching the internet/i.test(question.prompt)) {
+			promptLegacyIndex = 1114;
+		} else if (/which configuration parameter is preventing host c from reaching the internet/i.test(question.prompt)) {
+			promptLegacyIndex = 1152;
+		} else if (/secure preshared key based ssid using wpa2/i.test(question.prompt) && /2\.4 ghz and 5 ghz/i.test(question.prompt)) {
+			promptLegacyIndex = 1154;
+		} else if (/after the engineer selects the wpa \+ wpa2 option from the layer 2 security tab/i.test(question.prompt)) {
+			promptLegacyIndex = 1170;
+		} else if (/settings must be verified on workstation 1[\s\S]*fully qualified domain name/i.test(question.prompt)) {
+			promptLegacyIndex = 1232;
+		} else if (/configuration must be applied to the router that configures pat to translate all addresses in vlan 200/i.test(question.prompt)) {
+			promptLegacyIndex = 341;
+		} else if (/router r1 is running three different routing protocols[\s\S]*172\.16\.32\.1/i.test(question.prompt)) {
+			promptLegacyIndex = 104;
+		} else if (/which ipv6 address configuration must be applied to the router fa0\/1 interface[\s\S]*unique 64-bit ipv6 address/i.test(question.prompt)) {
+			promptLegacyIndex = 562;
+		} else if (/static route must be configured on r14[\s\S]*172\.21\.34\.0\/25/i.test(question.prompt)) {
+			promptLegacyIndex = 564;
+		} else if (/ipv6 address for the lan segment on router r2 must be configured using the eui-64 format/i.test(question.prompt) &&
+			Array.isArray(question?.options) && question.options.some((option) => /D8D2:1009:10A0:ABFF:FECC:1/i.test(String(option)))) {
+			promptLegacyIndex = 802;
+		} else if (/dhcp server is configured with a dhcp pool for each of the subnets represented/i.test(question.prompt)) {
+			promptLegacyIndex = 884;
+		} else if (/which switch becomes the root bridge/i.test(question.prompt) &&
+			Array.isArray(question?.options) && question.options.some((option) => /00:10:a1:03:42:e8/i.test(String(option)))) {
+			promptLegacyIndex = 1041;
+		} else if (/which functionalities will this ssid have while being used by wireless clients/i.test(question.prompt)) {
+			promptLegacyIndex = 1206;
+		} else if (/which switch becomes the root of the spanning tree for vlan 110/i.test(question.prompt) &&
+			/switch 1[\s\S]*32778[\s\S]*switch 4[\s\S]*64000/i.test(question.prompt)) {
+			promptLegacyIndex = 339;
+		} else if (/the dhcp server and clients are connected to the same switch[\s\S]*clients on vlan 1/i.test(question.prompt)) {
+			promptLegacyIndex = 491;
+		} else if (/attempted arp spoofing attack[\s\S]*port-channel1[\s\S]*choose two/i.test(question.prompt)) {
+			promptLegacyIndex = 1131;
+		} else if (/which configuration enables an etherchannel to form dynamically between sw1 and sw2/i.test(question.prompt)) {
+			promptLegacyIndex = 515;
+		} else if (/network engineer configures the cisco wlc to authenticate local wireless clients against a radius\s+server/i.test(question.prompt)) {
+			promptLegacyIndex = 603;
+		} else if (/highest encryption and authentication\s+using domain credentials from ldap/i.test(question.prompt)) {
+			promptLegacyIndex = 612;
+		} else if (/what configuration on r1 denies ssh access from pc-1 to any r1 interface/i.test(question.prompt)) {
+			promptLegacyIndex = 160;
+		} else if (/clients on the wlan are required to use 802\.11r/i.test(question.prompt)) {
+			promptLegacyIndex = 679;
+		} else if (/how many objects are present in the given json-encoded data/i.test(question.prompt)) {
+			promptLegacyIndex = 682;
+		} else if (/single wlan to process the client data traffic without sending it to the wlc/i.test(question.prompt)) {
+			promptLegacyIndex = 695;
+		} else if (/preconfigured secret key and ssid and must have a secured key hashing algorithm/i.test(question.prompt)) {
+			promptLegacyIndex = 1304;
+		} else if (/what is the next-hop ip address for r2 so that pc2 reaches the application server via eigrp/i.test(question.prompt)) {
+			promptLegacyIndex = 852;
+		}
+	}
+	const matchedLegacyIndex = promptLegacyIndex ?? findLegacyExhibitIndex(question);
+	const legacyIndex = matchedLegacyIndex ?? question?.legacyIndex;
+	const topologyExhibit = TOPOLOGY_EXHIBIT_RECREATIONS_BY_LEGACY_INDEX.get(legacyIndex);
+	const promptSpecificExhibit = typeof question?.prompt === "string"
+		? /floating static route on an external eigrp network[\s\S]*destination subnet is the \/29 on the lan interface of r86[\s\S]*command must be executed on r14/i.test(question.prompt)
+			? TOPOLOGY_EXHIBIT_RECREATIONS_BY_LEGACY_INDEX.get(824)
+			: /wlan to connect with the 172\.16\.10\.0\/24 network on vlan 20[\s\S]*limit the number of devices[\s\S]*userwl ssid to 125/i.test(question.prompt)
+				? LEGACY_NATIVE_EXHIBITS.get(794)
+				: null
+		: null;
+	const legacySourceQuestion = matchedLegacyIndex !== undefined
+		? CCNA_LEGACY_QUESTIONS.find((candidate) => candidate.legacyIndex === matchedLegacyIndex)
+		: undefined;
 	const parsedPrompt = !question?.exhibit && typeof question?.prompt === "string"
 		? splitPromptExhibit(question.prompt)
 		: null;
-	const databaseExhibit = CCNA_RECREATED_CANDIDATE_EXHIBITS.get(question?.bankId) ??
-		LEGACY_NATIVE_EXHIBITS.get(question?.legacyIndex) ??
+	const hasPlaceholderOptions = Array.isArray(question?.options) && question.options.length > 1 &&
+		question.options.every((option, index) => String(option).trim().toLowerCase() === `option ${String.fromCharCode(65 + index).toLowerCase()}`);
+	const needsOptionRecovery = !Array.isArray(question?.options) || question.options.length < 2 || hasPlaceholderOptions;
+	const parsedOptions = needsOptionRecovery && typeof question?.prompt === "string"
+		? parseFormattedOptions(question.prompt) ??
+			(legacySourceQuestion?.prompt && legacySourceQuestion.prompt !== question.prompt
+				? parseFormattedOptions(legacySourceQuestion.prompt) ??
+					parseFormattedOptions(legacySourceQuestion.prompt, { offline: true })
+				: null)
+		: null;
+	const currentDatabaseExhibit = (matchedLegacyIndex !== undefined
+		? LEGACY_NATIVE_EXHIBITS.get(matchedLegacyIndex)
+		: undefined) ??
+		CCNA_RECREATED_CANDIDATE_EXHIBITS.get(question?.bankId) ??
+		LEGACY_NATIVE_EXHIBITS.get(legacyIndex) ??
 		DATABASE_NATIVE_EXHIBITS.get(question?.bankId);
+	const databaseExhibit = promptSpecificExhibit ?? (topologyExhibit
+		? {
+			...(currentDatabaseExhibit && typeof currentDatabaseExhibit === "object" ? currentDatabaseExhibit : {}),
+			...topologyExhibit,
+		}
+		: currentDatabaseExhibit);
 	const questionOverride = typeof databaseExhibit === "object" ? databaseExhibit : {};
 	const exhibitDiagram = (typeof databaseExhibit === "string" ? databaseExhibit : databaseExhibit?.diagram) ??
 		builtInQuestion?.exhibitDiagram;
-	const exhibitImage = typeof databaseExhibit === "object" ? databaseExhibit.image : undefined;
-	const exhibit = (typeof databaseExhibit === "object" ? databaseExhibit.exhibit : undefined) ??
-		parsedPrompt?.exhibit;
+	const databaseExhibitImage = typeof databaseExhibit === "object" ? databaseExhibit.image : undefined;
+	const suppressInlineExhibit = databaseExhibit?.suppressInlineExhibit === true;
+	const exhibit = suppressInlineExhibit
+		? undefined
+		: (typeof databaseExhibit === "object" ? databaseExhibit.exhibit : undefined) ?? parsedPrompt?.exhibit;
 	const hasNativeTextExhibit = typeof exhibit === "string";
 	const hasTerminalTextExhibit = hasNativeTextExhibit || typeof question?.exhibit === "string";
 	const sourceImageIndex = Number(/ccna-exhibit-(\d+)\.png(?:[?#].*)?$/i.exec(
 		String(question?.exhibitImage ?? question?.imageUrl ?? ""),
 	)?.[1]);
+	const hasMappedTopologyAfterExhibit = Boolean(exhibitDiagram &&
+		/TOPOLOGY/i.test(question?.afterExhibit?.title ?? "") &&
+		!PRESERVE_TOPOLOGY_AFTER_EXHIBIT_LEGACY_INDEXES.has(legacyIndex));
 	const hideExhibitImage = databaseExhibit?.hideExhibitImage === true ||
+		hasMappedTopologyAfterExhibit ||
 		builtInQuestion?.hideExhibitImage === true ||
-		(hasTerminalTextExhibit && DUPLICATE_TERMINAL_SOURCE_IMAGE_LEGACY_INDEXES.has(Number(question?.legacyIndex))) ||
+		(hasTerminalTextExhibit && DUPLICATE_TERMINAL_SOURCE_IMAGE_LEGACY_INDEXES.has(Number(legacyIndex))) ||
 		(hasTerminalTextExhibit && DUPLICATE_TERMINAL_SOURCE_IMAGE_LEGACY_INDEXES.has(sourceImageIndex));
+	const exhibitImage = databaseExhibitImage ?? (!hideExhibitImage && !exhibitDiagram &&
+		/^\s*Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\b/i.test(question?.prompt ?? "")
+		? getCcnaExhibitImageByLegacyIndex(legacyIndex) ?? getCcnaExhibitImageByBankId(question?.bankId)
+		: undefined);
 	const hideAfterExhibit = databaseExhibit?.hideAfterExhibit === true ||
+		hasMappedTopologyAfterExhibit ||
 		builtInQuestion?.hideAfterExhibit === true;
 	const removeExhibitLeadIn = databaseExhibit?.removeExhibitLeadIn === true ||
 		builtInQuestion?.removeExhibitLeadIn === true ||
 		typeof parsedPrompt?.exhibit === "string";
-	const hasQuestionOverride = ["type", "items", "choices", "answer"].some((key) =>
+	const sourcePrompt = legacySourceQuestion && !/^\s*Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\b/i.test(question?.prompt ?? "")
+		? splitPromptExhibit(legacySourceQuestion.prompt).prompt
+		: undefined;
+	const recoverTruncatedPrompt = typeof sourcePrompt === "string" &&
+		normalizeExhibitLookupPrompt(legacySourceQuestion.prompt).includes(normalizeExhibitLookupPrompt(question.prompt));
+	const hasQuestionOverride = ["type", "items", "choices", "options", "answer"].some((key) =>
 		Object.prototype.hasOwnProperty.call(questionOverride, key),
-	);
+	) || Boolean(parsedOptions);
+	const recoveredOptions = Object.prototype.hasOwnProperty.call(questionOverride, "options")
+		? questionOverride.options
+		: parsedOptions ? Object.values(parsedOptions.options) : question?.options;
+	const answerIsValidForRecoveredOptions = question?.type === "multi"
+		? Array.isArray(question.answer) && question.answer.length > 0 &&
+			question.answer.every((answer) => Number.isInteger(answer) && answer >= 0 && answer < (recoveredOptions?.length ?? 0))
+		: Number.isInteger(question?.answer) && question.answer >= 0 && question.answer < (recoveredOptions?.length ?? 0);
+	const recoveredAnswer = !answerIsValidForRecoveredOptions &&
+		(legacySourceQuestion?.type ?? "single") === (question?.type ?? "single") &&
+		(question?.type === "multi"
+			? Array.isArray(legacySourceQuestion?.answer) && legacySourceQuestion.answer.length > 0 &&
+				legacySourceQuestion.answer.every((answer) => Number.isInteger(answer) && answer >= 0 && answer < (recoveredOptions?.length ?? 0))
+			: Number.isInteger(legacySourceQuestion?.answer) && legacySourceQuestion.answer >= 0 && legacySourceQuestion.answer < (recoveredOptions?.length ?? 0))
+		? legacySourceQuestion.answer
+		: undefined;
 	if (!exhibitDiagram && !exhibitImage && !hasNativeTextExhibit && !hideExhibitImage && !hideAfterExhibit &&
-		!removeExhibitLeadIn && !hasQuestionOverride) return question;
+		!removeExhibitLeadIn && !hasQuestionOverride && !recoverTruncatedPrompt) {
+		return legacyIndex !== question?.legacyIndex && legacyIndex !== undefined
+			? { ...question, legacyIndex }
+			: question;
+	}
 	const prompt = typeof databaseExhibit?.prompt === "string"
 		? databaseExhibit.prompt
+		: typeof parsedOptions?.prompt === "string"
+			? parsedOptions.prompt
+		: typeof sourcePrompt === "string"
+			? sourcePrompt
 		: typeof parsedPrompt?.exhibit === "string"
-			? parsedPrompt.prompt.replace(/^\s*Refer to (?:the )?exhibit\.?\s*/i, "")
+			? parsedPrompt.prompt.replace(/^\s*Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\.?\s*/i, "")
 			: removeExhibitLeadIn && typeof question?.prompt === "string"
-				? question.prompt.replace(/^\s*Refer to (?:the )?exhibit\.?\s*/i, "")
+				? question.prompt.replace(/^\s*Refer\s+(?:to\s+)?(?:the\s+)?exhibits?\.?\s*/i, "")
 				: undefined;
 
 	return {
 		...question,
+		...(legacyIndex !== question?.legacyIndex && legacyIndex !== undefined
+			? { legacyIndex }
+			: {}),
 		...(Object.prototype.hasOwnProperty.call(questionOverride, "type") ? { type: questionOverride.type } : {}),
 		...(Object.prototype.hasOwnProperty.call(questionOverride, "items") ? { items: questionOverride.items } : {}),
 		...(Object.prototype.hasOwnProperty.call(questionOverride, "choices") ? { choices: questionOverride.choices } : {}),
+		...(Object.prototype.hasOwnProperty.call(questionOverride, "options")
+			? { options: questionOverride.options }
+			: parsedOptions ? { options: Object.values(parsedOptions.options) } : {}),
 		...(Object.prototype.hasOwnProperty.call(questionOverride, "answer") ? { answer: questionOverride.answer } : {}),
+		...(recoveredAnswer !== undefined ? { answer: recoveredAnswer } : {}),
 		...(Array.isArray(databaseExhibit?.offlineSourceExhibitImages)
 			? { offlineSourceExhibitImages: databaseExhibit.offlineSourceExhibitImages }
 			: {}),
@@ -2934,6 +3390,8 @@ export function applyNativeExhibit(question) {
 			? { exhibitImage: exhibitImage ?? undefined }
 			: {}),
 		...(hideExhibitImage ? { hideExhibitImage: true } : {}),
+		...(suppressInlineExhibit ? { suppressInlineExhibit: true } : {}),
+		...(suppressInlineExhibit ? { exhibit: undefined } : {}),
 		...(hideAfterExhibit ? { afterExhibit: undefined, hideAfterExhibit: true } : {}),
 		...(exhibitDiagram ? { exhibitDiagram } : {}),
 		...(hasNativeTextExhibit ? { exhibit, nativeExhibitText: true } : {}),
