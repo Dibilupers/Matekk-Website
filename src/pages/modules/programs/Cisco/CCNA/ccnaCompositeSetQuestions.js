@@ -3319,6 +3319,9 @@ export function applyNativeExhibit(question) {
 	const currentDatabaseExhibit = (matchedLegacyIndex !== undefined
 		? LEGACY_NATIVE_EXHIBITS.get(matchedLegacyIndex)
 		: undefined) ??
+		(matchedLegacyIndex !== undefined
+			? DATABASE_NATIVE_EXHIBITS.get(matchedLegacyIndex)
+			: undefined) ??
 		CCNA_RECREATED_CANDIDATE_EXHIBITS.get(question?.bankId) ??
 		LEGACY_NATIVE_EXHIBITS.get(legacyIndex) ??
 		DATABASE_NATIVE_EXHIBITS.get(question?.bankId);
