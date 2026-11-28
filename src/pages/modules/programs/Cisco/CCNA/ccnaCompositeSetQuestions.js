@@ -2033,6 +2033,9 @@ D 192.168.0.0/24 [90/201728] via 172.16.0.2, 00:00:04, FastEthernet0/0`,
 ]);
 
 const LEGACY_NATIVE_EXHIBITS = new Map([
+	[778, {
+		removeExhibitLeadIn: true,
+	}],
 	[382, {
 		diagram: "voice-data-vlan300-400",
 		hideExhibitImage: true,
